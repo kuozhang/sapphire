@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2010 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<plugin>
+
+  <extension-point id="services" name="Sapphire Model Element Services" schema="schemas/Services.exsd"/>
+  <extension-point id="serializers" name="Sapphire Model Element Services" schema="schemas/Serializers.exsd"/>
+  
+  <extension point="org.eclipse.jdt.apt.core.annotationProcessorFactory">
+    <factories enableDefault="true">
+      <factory class="org.eclipse.sapphire.modeling.annotations.processor.APFactory"/>
+    </factories>
+  </extension>
+
+  <extension point="org.eclipse.core.expressions.propertyTesters">
+    <propertyTester
+      id="org.eclipse.sapphire.modeling.internal.ModelPropertyPropertyTester"
+      class="org.eclipse.sapphire.modeling.internal.ModelPropertyPropertyTester"
+      namespace="sapphire.modeling.property"
+      properties="type"
+      type="org.eclipse.sapphire.modeling.ModelProperty">
+    </propertyTester>
+  </extension>
+  
+  <extension point="org.eclipse.sapphire.modeling.services">
+    <service impl="org.eclipse.sapphire.modeling.StandardModelElementService"/>
+    <service impl="org.eclipse.sapphire.modeling.serialization.ValueSerializationService"/>
+  </extension>
+  
+  <extension point="org.eclipse.sapphire.modeling.serializers">
+    <value-serializer type="java.lang.Enum" impl="org.eclipse.sapphire.modeling.serialization.internal.EnumSerializer"/>
+    <value-serializer type="java.lang.Boolean" impl="org.eclipse.sapphire.modeling.serialization.internal.BooleanSerializer"/>
+    <value-serializer type="java.lang.Integer" impl="org.eclipse.sapphire.modeling.serialization.internal.IntegerSerializer"/>
+    <value-serializer type="java.lang.Long" impl="org.eclipse.sapphire.modeling.serialization.internal.LongSerializer"/>
+    <value-serializer type="java.lang.Float" impl="org.eclipse.sapphire.modeling.serialization.internal.FloatSerializer"/>
+    <value-serializer type="java.lang.Double" impl="org.eclipse.sapphire.modeling.serialization.internal.DoubleSerializer"/>
+    <value-serializer type="java.math.BigInteger" impl="org.eclipse.sapphire.modeling.serialization.internal.BigIntegerSerializer"/>
+    <value-serializer type="java.math.BigDecimal" impl="org.eclipse.sapphire.modeling.serialization.internal.BigDecimalSerializer"/>
+    <value-serializer type="java.net.URL" impl="org.eclipse.sapphire.modeling.serialization.internal.UrlSerializer"/>
+    <value-serializer type="org.eclipse.core.runtime.IPath" impl="org.eclipse.sapphire.modeling.serialization.internal.PathSerializer"/>
+    <value-serializer type="org.eclipse.sapphire.modeling.java.JavaTypeName" impl="org.eclipse.sapphire.modeling.java.internal.JavaTypeNameSerializer"/>
+    <value-serializer type="org.eclipse.sapphire.modeling.java.JavaPackageName" impl="org.eclipse.sapphire.modeling.java.internal.JavaPackageNameSerializer"/>
+  </extension>
+  
+</plugin>

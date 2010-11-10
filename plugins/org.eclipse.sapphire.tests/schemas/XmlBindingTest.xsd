@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema
+  xmlns="http://www.w3.org/2001/XMLSchema" 
+  targetNamespace="http://xmlns.oracle.com/eclipse/tools/sapphire/tests/xml-binding"
+  xmlns:tns="http://xmlns.oracle.com/eclipse/tools/sapphire/tests/xml-binding"
+  elementFormDefault="qualified"> 
+
+    <element name="test-root">
+        <complexType>
+        	<sequence>
+        		<element name="value-prop-a" type="string" maxOccurs="1"
+        			minOccurs="0">
+        		</element>
+        		<element name="x" maxOccurs="1" minOccurs="0">
+        			<complexType>
+        				<sequence>
+        					<element name="y" maxOccurs="1"
+        						minOccurs="0">
+        						<complexType>
+        							<sequence>
+        								<element name="z">
+        									<complexType>
+        										<sequence>
+        											<element
+        												name="value-prop-b" type="string" maxOccurs="1"
+        												minOccurs="0">
+        											</element>
+        										</sequence>
+        										<attribute
+        											name="value-prop-d" type="string" use="optional">
+        										</attribute>
+        									</complexType>
+        								</element>
+        							</sequence>
+        						</complexType>
+        					</element>
+        				</sequence>
+        			</complexType>
+        		</element>
+        	</sequence>
+        	<attribute name="value-prop-c" type="string" use="optional"></attribute>
+        </complexType>
+    </element>
+    
+</schema>

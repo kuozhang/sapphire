@@ -1,0 +1,293 @@
+<definition 
+  xmlns="http://xmlns.oracle.com/eclipse/tools/sapphire/ui"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.oracle.com/eclipse/tools/sapphire/ui http://xmlns.oracle.com/eclipse/tools/sapphire/ui">
+
+  <import>
+    <bundle>org.eclipse.sapphire.ui</bundle>
+    <package>org.eclipse.sapphire.ui.assist</package>
+  </import>
+
+  <import>
+    <bundle>org.eclipse.sapphire.samples</bundle>
+    <package>org.eclipse.sapphire.samples.gallery</package>
+  </import>
+  
+  <editor-page>
+    <id>main</id>
+    <page-header-text>Sapphire Gallery</page-header-text>
+    <initial-selection>Simple Values</initial-selection>
+    <root-node>
+      <node>
+        <label>Simple Values</label>
+        <section>
+          <description>abc</description>
+        </section>
+        <node>
+          <label>Numbers</label>
+          <section>
+            <description>abc</description>
+          </section>
+          <node>
+            <label>Integer</label>
+            <property>IntegerValueGallery</property>
+            <section>
+              <content>
+                <property-editor>Simple</property-editor>
+                <property-editor>Positive</property-editor>
+                <property-editor>RangeConstrainedWithDefault</property-editor>
+              </content>
+            </section>
+          </node>
+          <node>
+            <label>Long Integer</label>
+            <property>LongIntegerValueGallery</property>
+            <section>
+              <content>
+                <property-editor>Simple</property-editor>
+                <property-editor>Positive</property-editor>
+                <property-editor>RangeConstrainedWithDefault</property-editor>
+              </content>
+            </section>
+          </node>
+          <node>
+            <label>Big Integer</label>
+            <property>BigIntegerValueGallery</property>
+            <section>
+              <content>
+                <property-editor>Simple</property-editor>
+                <property-editor>Positive</property-editor>
+                <property-editor>RangeConstrainedWithDefault</property-editor>
+              </content>
+            </section>
+          </node>
+          <node>
+            <label>Single Precision Float</label>
+            <property>FloatValueGallery</property>
+            <section>
+              <content>
+                <property-editor>Simple</property-editor>
+                <property-editor>Positive</property-editor>
+                <property-editor>RangeConstrainedWithDefault</property-editor>
+              </content>
+            </section>
+          </node>
+          <node>
+            <label>Double Precision Float</label>
+            <property>DoubleValueGallery</property>
+            <section>
+              <content>
+                <property-editor>Simple</property-editor>
+                <property-editor>Positive</property-editor>
+                <property-editor>RangeConstrainedWithDefault</property-editor>
+              </content>
+            </section>
+          </node>
+          <node>
+            <label>Decimal</label>
+            <property>BigDecimalValueGallery</property>
+            <section>
+              <content>
+                <property-editor>Simple</property-editor>
+                <property-editor>Positive</property-editor>
+                <property-editor>RangeConstrainedWithDefault</property-editor>
+              </content>
+            </section>
+          </node>
+        </node>
+        <node>
+          <label>Enums</label>
+          <property>EnumValueGallery</property>
+          <section>
+            <label>Enums</label>
+            <description>
+              This page shows two enum value properties being edited in three different ways. The first property is
+              a simple one relying on Enum.name() for serialization. The second one has customized serialization. Choice "yes"
+              can also be expressed as "true" or "1". Choice "maybe" can also be expressed as "0". Choice "no" can also be
+              expressed as "false" or "-1". Choice "no" use case-sensitive matching, while the other two do not.
+            </description> 
+          </section>
+          <section>
+            <label>Combo Boxes</label>
+            <content>
+              <property-editor>
+                <property>Simple</property>
+                <hint>
+                  <name>prefer.combo</name>
+                  <value>true</value>
+                </hint>
+              </property-editor>
+              <property-editor>
+                <property>CustomSerializedWithDefault</property>
+                <hint>
+                  <name>prefer.combo</name>
+                  <value>true</value>
+                </hint>
+              </property-editor>
+            </content>
+          </section>
+          <section>
+            <label>Radio Buttons (Horizontal Arrangement)</label>
+            <content>
+              <property-editor>
+                <property>Simple</property>
+                <hint>
+                  <name>prefer.radio.buttons</name>
+                  <value>true</value>
+                </hint>
+              </property-editor>
+              <property-editor>
+                <property>CustomSerializedWithDefault</property>
+                <hint>
+                  <name>prefer.radio.buttons</name>
+                  <value>true</value>
+                </hint>
+              </property-editor>
+            </content>
+          </section>
+          <section>
+            <label>Radio Buttons (Vertical Arrangement)</label>
+            <content>
+              <property-editor>
+                <property>Simple</property>
+                <hint>
+                  <name>prefer.vertical.radio.buttons</name>
+                  <value>true</value>
+                </hint>
+              </property-editor>
+              <property-editor>
+                <property>CustomSerializedWithDefault</property>
+                <hint>
+                  <name>prefer.vertical.radio.buttons</name>
+                  <value>true</value>
+                </hint>
+              </property-editor>
+            </content>
+          </section>
+        </node>
+        <node>
+          <label>Java Type Names</label>
+          <property>JavaTypeNameValueGallery</property>
+          <section>
+            <content>
+              <label>Takes a name of any Java type (class, interface, annotation or enum). The Java type doesn't need to exist.</label>
+              <spacer/>
+              <property-editor>OptionalAnyType</property-editor>
+              <spacer/>
+              <label>Takes a name of a class, which must exist.</label>
+              <spacer/>
+              <property-editor>RequiredClass1</property-editor>
+              <spacer/>
+              <label>Takes a name of a class, which must exist and must implement java.util.List interface.</label>
+              <spacer/>
+              <property-editor>RequiredClass2</property-editor>
+              <spacer/>
+              <label>Takes a name of a class, which must exist and must extend java.util.AbstractList class.</label>
+              <spacer/>
+              <property-editor>RequiredClass3</property-editor>
+              <spacer/>
+              <label>Takes a name of a class, which must exist and must extend java.util.AbstractList class while also implementing java.lang.Cloneable interface.</label>
+              <spacer/>
+              <property-editor>RequiredClass4</property-editor>
+              <spacer/>
+              <label>Takes a name of a class, which must exist, must be non-abstract and must extend java.util.AbstractList class.</label>
+              <spacer/>
+              <property-editor>RequiredClass5</property-editor>
+              <spacer/>
+              <label>Takes a name of an interface, which must exist.</label>
+              <spacer/>
+              <property-editor>RequiredInterface1</property-editor>
+              <spacer/>
+              <label>Takes a name of an interface, which must exist and must extend java.util.Set interface.</label>
+              <spacer/>
+              <property-editor>RequiredInterface2</property-editor>
+              <spacer/>
+              <label>Takes a name of an interface, which must exist and must extend java.util.Set interface while also extending java.lang.Cloneable interfaces.</label>
+              <spacer/>
+              <property-editor>RequiredInterface3</property-editor>
+              <spacer/>
+              <label>Takes a name of an annotation, which must exist.</label>
+              <spacer/>
+              <property-editor>RequiredAnnotation1</property-editor>
+              <spacer/>
+              <label>Takes a name of an enum, which must exist.</label>
+              <spacer/>
+              <property-editor>RequiredEnum1</property-editor>
+              <spacer/>
+              <label>Takes a name of a class or an interface, which must exist.</label>
+              <spacer/>
+              <property-editor>RequiredMixedType1</property-editor>
+              <spacer/>
+              <label>Takes a name of a class, an interface or an enum, which must exist.</label>
+              <spacer/>
+              <property-editor>RequiredMixedType2</property-editor>
+            </content>
+          </section>
+        </node>
+      </node>
+      <node>
+        <label>Browse Support</label>
+        <property>BrowseSupportGallery</property>
+        <section>
+          <content>
+            <property-editor>AbsoluteFilePath</property-editor>
+            <property-editor>AbsoluteFolderPath</property-editor>
+            <property-editor>RelativeFilePath</property-editor>
+            <property-editor>
+              <property>MultiOptionPath</property>
+              <browse-handler>
+                <class>AbsoluteFilePathValueBrowseHandler</class>
+                <param>
+                  <name>extensions</name>
+                  <value>jar,zip</value>
+                </param>
+              </browse-handler>
+              <browse-handler>
+                <class>AbsoluteFolderPathValueBrowseHandler</class>
+              </browse-handler>
+              <browse-handler>
+                <class>EclipseWorkspacePathValueBrowseHandler</class>
+                <param>
+                  <name>extensions</name>
+                  <value>jar,zip</value>
+                </param>
+                <param>
+                  <name>leading-slash</name>
+                  <value>true</value>
+                </param>
+              </browse-handler>
+            </property-editor>
+            <property-editor>
+              <property>List</property>
+              <child-property>
+                <name>MultiOptionPath</name>
+                <browse-handler>
+                  <class>AbsoluteFilePathValueBrowseHandler</class>
+                  <param>
+                    <name>extensions</name>
+                    <value>jar,zip</value>
+                  </param>
+                </browse-handler>
+                <browse-handler>
+                  <class>AbsoluteFolderPathValueBrowseHandler</class>
+                </browse-handler>
+                <browse-handler>
+                  <class>EclipseWorkspacePathValueBrowseHandler</class>
+                  <param>
+                    <name>extensions</name>
+                    <value>jar,zip</value>
+                  </param>
+                  <param>
+                    <name>leading-slash</name>
+                    <value>true</value>
+                  </param>
+                </browse-handler>
+              </child-property>
+            </property-editor>
+          </content>
+        </section>
+      </node>
+    </root-node>
+  </editor-page>
+  
+</definition>

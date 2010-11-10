@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+  <template name="sf-type" description="%Type" id="sapphire.modeling.Type" context="java-members" enabled="true">
+ModelElementType TYPE = new ModelElementType( ${enclosing_type}.class );
+${:import(org.eclipse.sapphire.modeling.ModelElementType)}
+${cursor}
+  </template>
+
+  <template name="sf-value" description="%ValueProperty" id="sapphire.modeling.ValueProperty" context="java-members" enabled="true">
+// *** ${name} ***
+
+@Label( standard = "${label}" )
+    
+ValueProperty PROP_${field} = new ValueProperty( TYPE, "${name}" );
+    
+Value&lt;String&gt; get${name}();
+void set${name}( String value );
+${:import(org.eclipse.sapphire.modeling.ValueProperty,org.eclipse.sapphire.modeling.Value,org.eclipse.sapphire.modeling.annotations.Label)}
+${cursor}
+  </template>
+
+  <template name="sf-value-typed" description="%ValuePropertyTyped" id="sapphire.modeling.ValuePropertyTyped" context="java-members" enabled="true">
+// *** ${name} ***
+
+@Type( base = ${type}.class )
+@Label( standard = "${label}" )
+    
+ValueProperty PROP_${field} = new ValueProperty( TYPE, "${name}" );
+    
+Value&lt;${type}&gt; get${name}();
+void set${name}( String value );
+void set${name}( ${type} value );
+${:import(org.eclipse.sapphire.modeling.ValueProperty,org.eclipse.sapphire.modeling.Value,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type)}
+${cursor}
+  </template>
+  
+  <template name="sf-element" description="%ElementProperty" id="sapphire.modeling.ElementProperty" context="java-members" enabled="true">
+// *** ${name} ***
+
+@Type( base = ${type}.class )
+@Label( standard = "${label}" )
+    
+ElementProperty PROP_${field} = new ElementProperty( TYPE, "${name}" );
+    
+${type} get${name}();
+${:import(org.eclipse.sapphire.modeling.ElementProperty,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type)}
+${cursor}
+  </template>
+  
+  <template name="sf-element-removable" description="%ElementPropertyRemovable" id="sapphire.modeling.ElementPropertyRemovable" context="java-members" enabled="true">
+// *** ${name} ***
+
+@Type( base = ${type}.class )
+@Label( standard = "${label}" )
+    
+ElementProperty PROP_${field} = new ElementProperty( TYPE, "${name}" );
+    
+${type} get${name}();
+${type} get${name}( boolean createIfNecessary );
+${:import(org.eclipse.sapphire.modeling.ElementProperty,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type)}
+${cursor}
+  </template>
+	
+  <template name="sf-list" description="%ListProperty" id="sapphire.modeling.ListProperty" context="java-members" enabled="true">
+// *** ${name} ***
+
+@Type( base = ${type}.class )
+@Label( standard = "${label}" )
+    
+ListProperty PROP_${field} = new ListProperty( TYPE, "${name}" );
+    
+ModelElementList&lt;${type}&gt; get${name}();
+${:import(org.eclipse.sapphire.modeling.ListProperty,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type,org.eclipse.sapphire.modeling.ModelElementList)}
+${cursor}
+  </template>
+
+</templates>

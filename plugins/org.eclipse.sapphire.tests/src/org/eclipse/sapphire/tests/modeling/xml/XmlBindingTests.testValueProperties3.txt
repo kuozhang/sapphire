@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<t:test-root xmlns:t="http://xmlns.oracle.com/eclipse/tools/sapphire/tests/xml-binding" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" value-prop-c="cccc" xsi:schemaLocation="http://xmlns.oracle.com/eclipse/tools/sapphire/tests/xml-binding http://xmlns.oracle.com/eclipse/tools/sapphire/tests/xml-binding/1.0">
+    <!--value-prop-e:eeee-->
+    <t:value-prop-a>aaaa</t:value-prop-a>
+    <t:x>
+        <t:y>
+            <t:z value-prop-d="dddd">
+                <!--value-prop-f:ffff-->
+                <t:value-prop-b>bbbb</t:value-prop-b>
+            </t:z>
+        </t:y>
+    </t:x>
+</t:test-root>

@@ -1,0 +1,827 @@
+<project name="sapphire" default="build">
+
+
+  <!--
+    *************************************************************************************************
+    * Initialization                                                                                *
+    *************************************************************************************************
+  -->
+
+
+  <import file="releng/ant-library/library.xml"/>
+
+
+  <target name="init" depends="init-library,init-jdk-15">
+
+    <dirname property="root.dir" file="${ant.file.sapphire}"/>
+    <property name="releng.dir" value="${root.dir}/releng"/>
+    <property name="build.dir" value="${root.dir}/build"/>
+
+    <property file="build.properties"/>
+    <property file="${releng.dir}/installables.properties"/>
+
+  </target>
+
+
+  <target name="init-bootstrap-platform" depends="init">
+
+    <property name="bootstrap.platform" value="${build.dir}/bootstrap"/>
+
+    <if>
+      <not><available file="${bootstrap.platform}"/></not>
+      <then>
+        <property file="${releng.dir}/repositories-${configuration.recommended}.properties" prefix="."/>
+        <mkdir dir="${bootstrap.platform}"/>
+        <unzip dest="${bootstrap.platform}">
+          <fileset dir="../../releng/eclipse">
+            <include name="eclipse-platform-${.eclipse.platform.version}-${current.platform}.zip"/>
+          </fileset>
+          <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
+        </unzip>
+        <adjust-eclipse-memory-settings install="${bootstrap.platform}" x64="${current.platform.x64}"/>
+        <var name=".eclipse.platform.version" unset="true"/>
+        <var name=".p2.repositories" unset="true"/>
+        <var name=".legacy.packages" unset="true"/>
+      </then>
+    </if>
+
+  </target>
+
+
+
+  <!--
+    *************************************************************************************************
+    * Repository Build                                                                              *
+    *************************************************************************************************
+  -->
+
+  <target name="build-repository" depends="init,init-bootstrap-platform">
+    <build-repository/>
+  </target>
+
+
+  <macrodef name="build-repository">
+    <sequential>
+
+      <if>
+        <not><isset property="build.repository.completed"/></not>
+        <then>
+          <if>
+            <available file="${build.dir}/repository"/>
+            <then>
+              <echo message="Found existing Sapphire repository..."/>
+              <var name="build.repository.completed" value="true"/>
+              <load-build-repository url="file:${build.dir}/repository"/>
+            </then>
+          </if>
+        </then>
+      </if>
+
+      <if>
+        <not><isset property="build.repository.completed"/></not>
+        <then>
+
+          <with-target-platform configuration="${configuration.recommended}">
+
+            <delete dir="${build.dir}/repository" quiet="true"/>
+            <mkdir dir="${build.dir}/repository"/>
+
+            <!-- Stage 1: This builds the modeling framework and the annotation processor. -->
+
+            <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage1" eclipse="${.target.platform}" root.dir="${root.dir}"/>
+
+            <unzip src="${build.dir}/org.eclipse.sapphire.stage1-${DSTAMP}.zip" dest="${build.dir}/repository">
+              <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
+            </unzip>
+
+            <delete file="${build.dir}/org.eclipse.sapphire.stage1-${DSTAMP}.zip"/>
+
+            <!-- Stage 2: This builds the UI framework including the supporting ant tasks. -->
+
+            <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage2" eclipse="${.target.platform}" root.dir="${root.dir}"/>
+
+            <delete dir="${build.dir}/repository"/>
+
+            <unzip src="${build.dir}/org.eclipse.sapphire.stage2-${DSTAMP}.zip" dest="${build.dir}/repository">
+              <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
+            </unzip>
+
+            <delete file="${build.dir}/org.eclipse.sapphire.stage2-${DSTAMP}.zip"/>
+
+            <!-- Stage 3: Now build everything together. -->
+
+            <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage3" eclipse="${.target.platform}" root.dir="${root.dir}"/>
+
+            <delete dir="${build.dir}/repository"/>
+
+            <unzip src="${build.dir}/org.eclipse.sapphire.stage3-${DSTAMP}.zip" dest="${build.dir}/repository">
+              <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
+            </unzip>
+
+            <delete file="${build.dir}/org.eclipse.sapphire.stage3-${DSTAMP}.zip"/>
+
+            <zip-dirs source.dir="${build.dir}/repository/features" suffix="jar"/>
+
+            <delete>
+              <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire.stage3_*.jar"/>
+            </delete>
+
+            <!-- Stage 4 -->
+
+            <echo message="Setting Require-Bundle version constraints..."/>
+
+            <mkdir dir="${build.dir}/repository/temp"/>
+
+            <expand-all source.dir="${build.dir}/repository/plugins" dest.dir="${build.dir}/repository/temp" suffix="jar">
+              <delete file="@{archive.file}"/>
+            </expand-all>
+
+            <with-target-platform configuration="${configuration.minreq}">
+              <create-inventory dest="${build.dir}/repository/temp/min-platform-inventory.txt">
+                <plugins>
+                  <pathelement location="${.target.platform}/plugins"/>
+                </plugins>
+              </create-inventory>
+            </with-target-platform>
+
+            <with-target-platform configuration="${configuration.recommended}">
+              <create-inventory dest="${build.dir}/repository/temp/target-platform-inventory.txt">
+                <plugins>
+                  <pathelement location="${.target.platform}/plugins"/>
+                </plugins>
+              </create-inventory>
+            </with-target-platform>
+
+            <set-bundle-version-constraints
+              minPlatformInventory="${build.dir}/repository/temp/min-platform-inventory.txt"
+              targetPlatformInventory="${build.dir}/repository/temp/target-platform-inventory.txt"
+              pluginsDirectory="${build.dir}/repository/temp">
+              <exclude id=".*\.source"/>
+              <rule bundle="org.junit" expr="[M1.M2.M3,5.0.0)"/>
+            </set-bundle-version-constraints>
+
+            <zip-dirs source.dir="${build.dir}/repository/temp" dest.dir="${build.dir}/repository/plugins" suffix="jar"/>
+
+            <delete dir="${build.dir}/repository/temp"/>
+
+            <!-- Stage 5 -->
+
+            <echo message="Packaging the repository..."/>
+
+            <property-from-set property=".sapphire.feature">
+              <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire_*.jar"/>
+            </property-from-set>
+
+            <var name="sapphire.version" unset="true"/>
+            <propertyregex property="sapphire.version" input="${.sapphire.feature}" regexp=".*_([0-9]*.[0-9]*.[0-9]*.[0-9]*).jar" select="\1"/>
+
+            <copy file="${releng.dir}/site.xml" tofile="${build.dir}/repository/site.xml"/>
+
+            <replace file="${build.dir}/repository/site.xml">
+              <replacefilter token="##version##" value="${sapphire.version}"/>
+            </replace>
+
+            <p2.publish.UpdateSite location="${build.dir}/repository"/>
+
+            <delete file="${build.dir}/repository/site.xml"/>
+
+            <load-build-repository url="file:${build.dir}/repository"/>
+
+            <property name="build.repository.completed" value="true"/>
+
+          </with-target-platform>
+
+        </then>
+        <else>
+
+          <!-- Determine the version of Sapphire in repository. -->
+
+          <property-from-set property=".sapphire.feature">
+            <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire_*.jar"/>
+          </property-from-set>
+
+          <var name="sapphire.version" unset="true"/>
+          <propertyregex property="sapphire.version" input="${.sapphire.feature}" regexp=".*_([0-9]*.[0-9]*.[0-9]*.[0-9]*).jar" select="\1"/>
+
+        </else>
+      </if>
+
+    </sequential>
+  </macrodef>
+
+
+
+  <!--
+    *************************************************************************************************
+    * Alternative Configurations Build                                                              *
+    *************************************************************************************************
+  -->
+
+  <!-- Builds against alternative supported configurations. The list of alternative
+       configurations is defined to exclude the recommended configuration, which is covered by the
+       build-repository target. The purpose of this target is only to verify clean compilation. As
+       such, unlike build-repository target, this target does not perform any of the post-build
+       processing or produce consumable binaries. -->
+
+  <target name="build-alt-configurations" unless="build.alt.configurations.completed" depends="init,init-bootstrap-platform,build-repository">
+
+    <for-each-configuration>
+      <if>
+        <not><equals arg1="${.configuration}" arg2="${configuration.recommended}"/></not>
+        <then>
+
+          <echo message="Building Sapphire with ${.configuration} configuration..."/>
+
+          <with-target-platform configuration="${.configuration}">
+            <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage3" eclipse="${.target.platform}" root.dir="${root.dir}"/>
+          </with-target-platform>
+
+          <delete file="${build.dir}/org.eclipse.sapphire.stage3-${DSTAMP}.zip"/>
+
+        </then>
+      </if>
+    </for-each-configuration>
+
+    <property name="build.alt.configurations.completed" value="true"/>
+
+  </target>
+
+
+
+  <!--
+    *************************************************************************************************
+    * Full Build                                                                                    *
+    *************************************************************************************************
+  -->
+
+  <target name="build" depends="build-repository">
+
+    <delete dir="${build.dir}/packages" quiet="true"/>
+    <mkdir dir="${build.dir}/packages"/>
+
+    <zip destfile="${build.dir}/packages/sapphire-repository-${sapphire.version}.zip">
+      <fileset dir="${build.dir}/repository"/>
+    </zip>
+
+    <zip destfile="${build.dir}/packages/sapphire-samples-${sapphire.version}.zip">
+      <fileset dir="${root.dir}/plugins/org.eclipse.sapphire.samples">
+        <exclude name=".apt_generated/**/*"/>
+        <exclude name=".resources/**/*"/>
+        <exclude name="bin/**/*"/>
+      </fileset>
+    </zip>
+
+    <checksum todir="${build.dir}/packages" fileext=".md5" algorithm="MD5">
+      <fileset dir="${build.dir}/packages" includes="*.zip"/>
+    </checksum>
+
+    <checksum todir="${build.dir}/packages" fileext=".sha1" algorithm="SHA1">
+      <fileset dir="${build.dir}/packages" includes="*.zip"/>
+    </checksum>
+
+  </target>
+
+
+  <!--
+    *************************************************************************************************
+    * Tests                                                                                         *
+    *************************************************************************************************
+  -->
+
+  <target name="run-tests" depends="build-repository">
+
+    <!-- Get ready to run tests. -->
+
+    <property name="tests.working.dir" value="${build.dir}/tests"/>
+    <delete dir="${tests.working.dir}" quiet="true"/>
+    <mkdir dir="${tests.working.dir}"/>
+
+    <install-eclipse dest="${tests.working.dir}/install" extensions="${iu.sapphire.tests.install}"/>
+
+    <!-- Run tests. -->
+
+    <eclipse location="${tests.working.dir}/install" application="org.eclipse.test.uitestapplication" failonerror="false" resultproperty="org.eclipse.test.result">
+      <arg line="-dev bin"/>
+      <arg line="-data ${tests.working.dir}/workspace"/>
+      <arg line="formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,${tests.working.dir}/test-results.xml"/>
+      <arg line="-testPluginName org.eclipse.sapphire.tests"/>
+      <arg line="-className org.eclipse.sapphire.tests.modeling.SapphireModelingFrameworkTests"/>
+      <arg line="-consolelog -debug"/>
+    </eclipse>
+
+    <!-- Collect various test artifacts and copy them to the results directory. -->
+
+    <fail message="JUnit results file not created!">
+      <condition>
+        <not>
+          <available file="${tests.working.dir}/test-results.xml"/>
+        </not>
+      </condition>
+    </fail>
+
+    <junitreport todir="${tests.working.dir}">
+      <fileset dir="${tests.working.dir}" includes="test-results.xml"/>
+      <report todir="${tests.working.dir}" format="noframes"/>
+    </junitreport>
+
+    <delete file="${tests.working.dir}/TESTS-TestSuites.xml"/>
+    <move file="${tests.working.dir}/junit-noframes.html" tofile="${tests.working.dir}/test-results.html"/>
+    
+    <!-- Check if the tests have passed or failed. -->
+
+    <if>
+      <equals arg1="${org.eclipse.test.result}" arg2="0"/>
+      <then>
+        <echo message="All tests have passed."/>
+      </then>
+      <else>
+        <fail message="One or more tests have failed."/>
+      </else>
+    </if>
+
+  </target>
+
+
+
+  <!--
+    *************************************************************************************************
+    * Development Environment                                                                       *
+    *************************************************************************************************
+  -->
+
+  <target name="create-dev-eclipse" depends="build-repository">
+
+    <property name="dev.eclipse.dir" value="${root.dir}/dev-eclipse"/>
+    <install-eclipse dest="${dev.eclipse.dir}" extensions="${iu.sapphire.dev.env}"/>
+
+  </target>
+
+
+  <target name="create-dev-target" depends="build-repository">
+
+    <property name="dev.target.dir" value="${root.dir}/dev-target"/>
+    <install-eclipse dest="${dev.target.dir}" extensions="${iu.sapphire.dev.target}"/>
+
+  </target>
+
+
+  <target name="clean-start" depends="clean,create-dev-eclipse,create-dev-target">
+  </target>
+
+
+
+  <!--
+    *************************************************************************************************
+    * Stats                                                                                         *
+    *************************************************************************************************
+  -->
+
+  <target name="stats" depends="init">
+
+    <property name="root" value="plugins"/>
+    <property name="line.count" value="0"/>
+
+    <for param="project.folder">
+      <path>
+        <dirset dir="${root}">
+          <include name="*"/> <!-- not recursive -->
+          <exclude name=".metadata"/>
+        </dirset>
+      </path>
+      <sequential>
+
+        <var name="line.count.project" value="0"/>
+
+        <for param="file">
+          <path>
+            <fileset dir="@{project.folder}">
+              <exclude name="bin/**"/>
+              <exclude name="build/**"/>
+              <exclude name=".javacc/**"/>
+              <exclude name=".resources/**"/>
+              <exclude name=".apt_generated/**"/>
+              <exclude name="**/*.zip"/>
+              <exclude name="**/*.jar"/>
+              <exclude name="**/*.png"/>
+              <exclude name="**/*.gif"/>
+              <exclude name="**/*.jpeg"/>
+              <exclude name="**/*.jpg"/>
+              <exclude name="zipcodes/**"/>
+            </fileset>
+          </path>
+          <sequential>
+            <var name="line.count.file" unset="true"/>
+            <resourcecount property="line.count.file">
+              <tokens>
+                <file file="@{file}"/>
+              </tokens>
+            </resourcecount>
+            <!-- <echo message="@{file} : ${line.count.file}"/> -->
+            <increment property="line.count.project" amount="${line.count.file}"/>
+            <var name="line.count.file" unset="true"/>
+          </sequential>
+        </for>
+
+        <basename property="project.name" file="@{project.folder}"/>
+
+        <echo message="${project.name}: ${line.count.project}"/>
+
+        <increment property="line.count" amount="${line.count.project}"/>
+        <var name="line.count.project" unset="true"/>
+        <var name="project.name" unset="true"/>
+
+      </sequential>
+    </for>
+
+    <echo message="Overall: ${line.count}"/>
+
+  </target>
+
+  <macrodef name="increment">
+    <attribute name="property"/>
+    <attribute name="amount"/>
+    <sequential>
+
+      <propertycopy name=".temp" from="@{property}" override="true"/>
+      <var name="@{property}" unset="true"/>
+      <math result="@{property}" operation="+" operand1="${.temp}" operand2="@{amount}" datatype="long"/>
+      <var name=".temp" unset="true"/>
+
+    </sequential>
+  </macrodef>
+
+
+
+  <!--
+    *************************************************************************************************
+    * Hudson                                                                                        *
+    *************************************************************************************************
+  -->
+
+  <target name="hudson-build" depends="clean,build,build-alt-configurations,run-tests">
+
+  </target>
+
+
+
+  <!--
+    *************************************************************************************************
+    * Cleanup                                                                                       *
+    *************************************************************************************************
+  -->
+
+  <target name="clean" depends="clean-bootstrap,clean-repository,clean-target-platforms">
+    
+    <delete dir="${build.dir}"/>
+
+  </target>
+
+
+  <target name="clean-bootstrap" depends="init">
+
+    <delete dir="${build.dir}/bootstrap" quiet="true"/>
+    <var name="bootstrap.platform" unset="true"/>
+
+  </target>
+
+
+  <target name="clean-repository" depends="init">
+
+    <delete dir="${build.dir}/repository" quiet="true"/>
+    <var name="build.repository.completed" unset="true"/>
+
+  </target>
+
+
+  <target name="clean-target-platforms" depends="init">
+
+    <for-each-configuration>
+      <delete dir="${build.dir}/target-@{configuration}" quiet="true"/>
+      <var name="target-@{configuration}" unset="true"/>
+    </for-each-configuration>
+
+  </target>
+
+
+
+  <!--
+    *************************************************************************************************
+    * Target Platform                                                                               *
+    *************************************************************************************************
+  -->
+
+
+  <macrodef name="create-target-platform">
+    <attribute name="configuration"/>
+    <sequential>
+
+      <if>
+        <not><isset property="target-@{configuration}"/></not>
+        <then>
+
+          <property name="target-@{configuration}" value="${build.dir}/target-@{configuration}"/>
+
+          <if>
+            <not><available file="${build.dir}/target-@{configuration}"/></not>
+            <then>
+              <install-eclipse dest="${build.dir}/target-@{configuration}" configuration="@{configuration}" extensions="${iu.sapphire.build.target}"/>
+            </then>
+          </if>
+
+        </then>
+      </if>
+
+    </sequential>
+  </macrodef>
+
+
+  <macrodef name="with-target-platform">
+    <attribute name="configuration"/>
+    <element name="body" implicit="yes"/>
+    <sequential>
+
+      <create-target-platform configuration="@{configuration}"/>
+      <propertycopy property=".target.platform" from="target-@{configuration}" override="true"/>
+      <body/>
+      <var name=".target.platform" unset="true"/>
+
+    </sequential>
+  </macrodef>
+
+
+
+
+  <!--
+    *************************************************************************************************
+    * Configuration and Repository Macros                                                           *
+    *************************************************************************************************
+  -->
+
+  <macrodef name="load-configuration">
+    <attribute name="name"/>
+    <sequential>
+
+      <if>
+        <not><isset property="repositories.@{name}"/></not>
+        <then>
+
+          <echo message="Loading configuration @{name}..."/>
+
+          <property file="${releng.dir}/repositories-@{name}.properties" prefix="."/>
+
+          <var name="eclipse.platform.version.@{name}" value="${.eclipse.platform.version}"/>
+
+          <if>
+            <isset property=".p2.repositories"/>
+            <then>
+              <for list="${.p2.repositories}" param="repo">
+                <sequential>
+                  <load-repository-archive fileRegEx="@{repo}" property="repositories.@{name}"/>
+                </sequential>
+              </for>
+            </then>
+          </if>
+
+          <if>
+            <isset property=".legacy.packages"/>
+            <then>
+              <for list="${.legacy.packages}" param="repo">
+                <sequential>
+                  <echo message="@{repo}"/>
+                  <load-repository-legacy fileRegEx="@{repo}" property="repositories.@{name}"/>
+                </sequential>
+              </for>
+            </then>
+          </if>
+
+          <var name=".eclipse.platform.version" unset="true"/>
+          <var name=".p2.repositories" unset="true"/>
+          <var name=".legacy.packages" unset="true"/>
+
+        </then>
+      </if>
+
+    </sequential>
+  </macrodef>
+
+
+  <macrodef name="with-configuration">
+    <attribute name="name"/>
+    <element name="body" implicit="yes"/>
+    <sequential>
+
+      <load-configuration name="@{name}"/>
+      <propertycopy property=".eclipse.platform.version" from="eclipse.platform.version.@{name}" override="true"/>
+      <propertycopy property=".repositories" from="repositories.@{name}" override="true"/>
+      <body/>
+      <var name=".eclipse.platform.version" unset="true"/>
+      <var name=".repositories" unset="true"/>
+
+    </sequential>
+  </macrodef>
+
+
+  <macrodef name="for-each-configuration">
+    <element name="body" implicit="yes"/>
+    <sequential>
+
+      <for list="${configurations}" param="configuration">
+        <sequential>
+          <var name=".configuration" value="@{configuration}"/>
+          <body/>
+          <var name=".configuration" unset="true"/>
+        </sequential>
+      </for>
+
+    </sequential>
+  </macrodef>
+
+
+  <macrodef name="load-build-repository">
+    <attribute name="url"/>
+    <sequential>
+      <load-repository url="@{url}" property="build.repositories"/>
+    </sequential>
+  </macrodef>
+
+
+  <macrodef name="load-repository">
+    <attribute name="url"/>
+    <attribute name="property"/>
+    <sequential>
+      <echo message="Loading repository @{url} ..."/>
+      <prepend property="@{property}" value="@{url}"/>
+    </sequential>
+  </macrodef>
+
+
+  <macrodef name="load-repository-archive">
+    <attribute name="fileRegEx"/>
+    <attribute name="property"/>
+    <sequential>
+      <property-from-set property=".path">
+        <fileset dir="../../releng/eclipse" includes="@{fileRegEx}"/>
+      </property-from-set>
+      <load-repository url="jar:file:${.path}!/" property="@{property}"/>
+      <var name=".path" unset="true"/>
+    </sequential>
+  </macrodef>
+
+
+  <macrodef name="load-repository-legacy">
+    <attribute name="fileRegEx"/>
+    <attribute name="property"/>
+    <sequential>
+
+      <property-from-set property=".path">
+        <fileset dir="../../releng/eclipse" includes="@{fileRegEx}"/>
+      </property-from-set>
+
+      <basename property=".basename" file="${.path}" suffix=".zip"/>
+      <property name=".repo" value="${root.dir}/../../releng/eclipse/${.basename}"/>
+
+      <if>
+        <not><available file="${.repo}"/></not>
+        <then>
+
+          <unzip src="${.path}" dest="${.repo}">
+            <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
+          </unzip>
+
+          <delete includeemptydirs="true">
+            <fileset dir="${.repo}">
+              <exclude name="plugins/**"/>
+              <exclude name="features/**"/>
+            </fileset>
+          </delete>
+
+          <p2.publish.FeaturesAndBundles location="${.repo}"/>
+
+          <delete includeemptydirs="true">
+            <fileset dir="${.repo}">
+              <exclude name="*.jar"/>
+              <exclude name="plugins/*.jar"/>
+              <exclude name="features/*.jar"/>
+            </fileset>
+          </delete>
+
+        </then>
+      </if>
+
+      <load-repository url="file:${.repo}" property="@{property}"/>
+
+      <var name=".path" unset="true"/>
+      <var name=".basename" unset="true"/>
+      <var name=".repo" unset="true"/>
+
+    </sequential>
+  </macrodef>
+
+
+  <macrodef name="install-eclipse">
+    <attribute name="dest"/>
+    <attribute name="configuration" default="${configuration.recommended}"/>
+    <attribute name="platform" default="${current.platform}"/>
+    <attribute name="extensions" default=""/>
+    <sequential>
+
+      <delete dir="@{dest}" quiet="true"/>
+      <mkdir dir="@{dest}"/>
+
+      <with-configuration name="@{configuration}">
+        <unzip dest="@{dest}">
+          <fileset dir="../../releng/eclipse">
+            <include name="eclipse-platform-${.eclipse.platform.version}-@{platform}.zip"/>
+          </fileset>
+          <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
+        </unzip>
+      </with-configuration>
+
+      <if>
+        <not><equals arg1="@{extensions}" arg2=""/></not>
+        <then>
+          <install-extensions dest="@{dest}" configuration="@{configuration}" extensions="@{extensions}"/>
+        </then>
+      </if>
+
+      <if>
+        <contains string="@{platform}" substring="x86_64"/>
+        <then>
+          <adjust-eclipse-memory-settings install="@{dest}" x64="true"/>
+        </then>
+        <else>
+          <adjust-eclipse-memory-settings install="@{dest}"/>
+        </else>
+      </if>
+
+    </sequential>
+  </macrodef>
+
+
+  <macrodef name="install-extensions">
+    <attribute name="dest"/>
+    <attribute name="configuration" default="${configuration.recommended}"/>
+    <attribute name="extensions"/>
+    <sequential>
+      <with-configuration name="@{configuration}">
+        <if>
+          <isset property="build.repositories"/>
+          <then>
+            <append property=".repositories" value="${build.repositories}"/>
+          </then>
+        </if>
+        <java classname="org.eclipse.core.launcher.Main" fork="true" failonerror="true">
+          <classpath>
+            <fileset dir="${bootstrap.platform}/plugins">
+              <include name="**/org.eclipse.equinox.launcher_*.jar"/>
+            </fileset>
+          </classpath>
+          <arg line="-application org.eclipse.equinox.p2.director"/>
+          <arg line="-metadataRepository ${.repositories}"/>
+          <arg line="-artifactRepository ${.repositories}"/>
+          <arg line="-destination @{dest}"/>
+          <arg line="-installIU @{extensions}"/>
+          <arg line="-vmargs"/>
+          <arg line="-Declipse.p2.data.area=@{dest}/p2"/>
+          <jvmarg line="-Xmx512m"/>
+        </java>
+      </with-configuration>
+    </sequential>
+  </macrodef>
+
+
+  <macrodef name="adjust-eclipse-memory-settings">
+    <attribute name="install"/>
+    <attribute name="x64" default="false"/>
+    <sequential>
+      <var name=".eclipse.ini" value="@{install}/eclipse.ini"/>
+      <if>
+        <not><available file="${.eclipse.ini}"/></not>
+        <then>
+          <var name=".eclipse.ini" value="@{install}/Eclipse.app/Contents/MacOS/eclipse.ini"/>
+        </then>
+      </if>
+      <if>
+        <available file="${.eclipse.ini}"/>
+        <then>
+          <if>
+            <istrue value="@{x64}"/>
+            <then>
+              <replaceregexp file="${.eclipse.ini}" match="([\n|\r]*)-Xmx[0-9]*m" replace="\1-Xmx1024m\1-XX:MaxPermSize=512m"/>
+            </then>
+            <else>
+              <replaceregexp file="${.eclipse.ini}" match="([\n|\r]*)-Xmx[0-9]*m" replace="\1-Xmx512m\1-XX:MaxPermSize=256m"/>
+            </else>
+          </if>
+          <replaceregexp file="${.eclipse.ini}" match="[\n|\r]*--launcher.XXMaxPermSize[\n|\r]*[0-9]*m" replace=""/>
+          <var name=".eclipse.ini" unset="true"/>
+        </then>
+        <else>
+          <fail message="Could not locate eclipse.ini file in @{install}"/>
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+
+</project>

@@ -1,0 +1,218 @@
+<definition 
+  xmlns="http://xmlns.oracle.com/eclipse/tools/sapphire/ui"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.oracle.com/eclipse/tools/sapphire/ui http://xmlns.oracle.com/eclipse/tools/sapphire/ui">
+
+  <import>
+    <bundle>org.eclipse.sapphire.samples</bundle>
+    <package>org.eclipse.sapphire.samples.ezbug</package>
+  </import>
+  
+  <composite>
+    <id>bug.report</id>
+    <help-context-id>org.eclipse.sapphire.samples.EzBug-General</help-context-id>
+    <content>
+      <property-editor>CustomerId</property-editor>
+      <property-editor>Title</property-editor>
+      <property-editor>
+        <property>Details</property>
+        <hint>
+          <name>expand.vertically</name>
+          <value>true</value>
+        </hint>
+      </property-editor>
+      <property-editor>ProductVersion</property-editor>
+      <property-editor>ProductStage</property-editor>
+      <property-editor>
+        <property>Hardware</property>
+        <child-property>
+          <name>Type</name>
+        </child-property>
+        <child-property>
+          <name>Make</name>
+        </child-property>
+        <child-property>
+          <name>ItemModel</name>
+        </child-property>
+      </property-editor>
+      <composite>
+        <indent>true</indent>
+        <content>
+          <separator>
+            <label>Details</label>
+          </separator>
+          <switching-panel>
+            <list-selection-controller>
+              <property>Hardware</property>
+            </list-selection-controller>
+            <panel>
+              <key>IHardwareItem</key>
+              <content>
+                <property-editor>
+                  <property>Description</property>
+                  <hint>
+                    <name>show.label.above</name>
+                    <value>true</value>
+                  </hint>
+                  <hint>
+                    <name>height</name>
+                    <value>5</value>
+                  </hint>
+                </property-editor>
+              </content>
+            </panel>
+            <default-panel>
+              <content>
+                <label>Select a hardware item above to view or edit additional parameters.</label>
+              </content>
+            </default-panel>
+          </switching-panel>
+        </content>
+      </composite>
+    </content>
+    <hint>
+      <name>expand.vertically</name>
+      <value>true</value>
+    </hint>
+    <hint>
+      <name>width</name>
+      <value>600</value>
+    </hint>
+    <hint>
+      <name>height</name>
+      <value>500</value>
+    </hint>
+  </composite>
+
+  <composite>
+    <id>bug.report.form.style</id>
+    <content>
+      <composite-ref>
+        <id>bug.report</id>
+      </composite-ref>
+    </content>
+    <hint>
+      <name>expand.vertically</name>
+      <value>true</value>
+    </hint>
+    <hint>
+      <name>prefer.form.style</name>
+      <value>true</value>
+    </hint>
+  </composite>
+
+  <composite>
+    <id>bug.report.form.style.scrolled</id>
+    <content>
+      <composite-ref>
+        <id>bug.report.form.style</id>
+      </composite-ref>
+    </content>
+    <scroll-vertically>true</scroll-vertically>
+    <hint>
+      <name>expand.vertically</name>
+      <value>true</value>
+    </hint>
+    <hint>
+      <name>prefer.form.style</name>
+      <value>true</value>
+    </hint>
+  </composite>
+  
+  <dialog>
+    <id>dialog1</id>
+    <label>Create Bug Report (Sapphire Sample)</label>
+    <initial-focus>Title</initial-focus>
+    <content>
+      <composite-ref>
+        <id>bug.report</id>
+      </composite-ref>
+    </content>
+    <hint>
+      <name>expand.vertically</name>
+      <value>true</value>
+    </hint>
+  </dialog>
+
+  <dialog>
+    <id>dialog2</id>
+    <label>Create Bug Report (Sapphire Sample)</label>
+    <initial-focus>Title</initial-focus>
+    <content>
+      <composite-ref>
+        <id>bug.report</id>
+      </composite-ref>
+    </content>
+    <hint>
+      <name>expand.vertically</name>
+      <value>true</value>
+    </hint>
+    <hint>
+      <name>prefer.form.style</name>
+      <value>true</value>
+    </hint>
+  </dialog>
+
+  <wizard>
+    <id>wizard</id>
+    <label>Create Bug Report (Sapphire Sample)</label>
+    <page>
+      <id>main.page</id>
+      <label>Create Bug Report</label>
+      <description>Create and submit a bug report.</description>
+      <initial-focus>Title</initial-focus>
+      <content>
+        <with>
+          <property>BugReport</property>
+          <content>
+            <composite-ref>
+              <id>bug.report</id>
+            </composite-ref>
+          </content>
+        </with>
+      </content>
+      <hint>
+        <name>expand.vertically</name>
+        <value>true</value>
+      </hint>
+    </page>
+  </wizard>
+  
+  <editor-page>
+    <id>editor.page</id>
+    <page-header-text>Bug Database (Sapphire Sample)</page-header-text>
+    <initial-selection>Bug Reports</initial-selection>
+    <root-node>
+      <node>
+        <label>Bug Reports</label>
+        <section>
+          <description>Use this editor to manage your bug database.</description>
+          <content>
+            <action-link>
+              <action-id>node:add</action-id>
+              <label>Add a bug report</label>
+            </action-link>
+          </content>
+        </section>
+        <node-list>
+          <property>BugReports</property>
+          <node-template>
+            <dynamic-label>
+              <property>Title</property>
+              <null-value-label>&lt;bug&gt;</null-value-label>
+            </dynamic-label>
+            <section>
+              <label>Bug Report</label>
+              <content>
+                <composite-ref>
+                  <id>bug.report</id>
+                </composite-ref>
+              </content>
+            </section>
+          </node-template>
+        </node-list>
+      </node>
+    </root-node>
+  </editor-page>
+  
+</definition>

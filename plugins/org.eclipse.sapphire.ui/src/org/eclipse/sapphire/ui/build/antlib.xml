@@ -1,0 +1,8 @@
+<?xml version="1.0"?> 
+
+<antlib>
+
+  <taskdef name="sapphire.extract-string-resources"
+           classname="org.eclipse.sapphire.ui.build.internal.StringResourcesExtractorAntTask"/>
+    
+</antlib> 

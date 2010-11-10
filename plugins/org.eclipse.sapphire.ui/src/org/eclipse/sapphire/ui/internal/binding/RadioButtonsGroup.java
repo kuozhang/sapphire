@@ -1,0 +1,198 @@
+/******************************************************************************
+ * Copyright (c) 2010 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************/
+
+package org.eclipse.sapphire.ui.internal.binding;
+
+import static org.eclipse.sapphire.ui.util.SwtUtil.setEnabledOnChildren;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.eclipse.sapphire.ui.SapphireCommands;
+import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+
+/**
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ */
+
+public class RadioButtonsGroup 
+
+    extends Composite
+    
+{
+    private final SapphireRenderingContext context;
+    private final List<Button> buttons;
+    private final List<Button> buttonsReadOnly;
+    private SelectionListener selectionListener;
+    private Button selection;
+    private List<SelectionListener> listeners;
+    
+    public RadioButtonsGroup( final SapphireRenderingContext context,
+                              final Composite composite,
+                              final boolean vertical )
+    {
+        super( composite, SWT.NONE );
+
+        this.context = context;
+        this.buttons = new ArrayList<Button>();
+        this.buttonsReadOnly = Collections.unmodifiableList( this.buttons );
+        this.selection = null;
+        this.listeners = new CopyOnWriteArrayList<SelectionListener>();
+        
+        final RowLayout layout = new RowLayout();
+        layout.wrap = false;
+        layout.pack = true;
+        layout.type = ( vertical ? SWT.VERTICAL : SWT.HORIZONTAL );
+        layout.marginTop = 0;
+        layout.marginBottom = 0;
+        layout.marginLeft = 0;
+        layout.marginRight = 0;
+        layout.spacing = 5;
+        
+        setLayout( layout );
+        
+        this.selectionListener = new SelectionAdapter()
+        {
+            @Override
+            public void widgetSelected( final SelectionEvent event )
+            {
+                handleWidgetSelectedEvent( event );
+            }
+        };
+    }
+    
+    @Override
+    public void setEnabled( boolean enabled )
+    {
+        super.setEnabled( enabled );
+        setEnabledOnChildren( this, enabled );
+    }
+    
+    public List<Button> getRadioButtons()
+    {
+        return this.buttonsReadOnly;
+    }
+    
+    public Button addRadioButton( final String text )
+    {
+        final Button button = new Button( this, SWT.RADIO );
+        button.setText( text );
+        this.context.adapt( button );
+        this.buttons.add( button );
+        
+        SapphireCommands.configurePropertyEditorContext( button );
+        
+        button.addDisposeListener
+        (
+            new DisposeListener()
+            {
+                public void widgetDisposed( final DisposeEvent event )
+                {
+                    RadioButtonsGroup.this.buttons.remove( button );
+                }
+            }
+        );
+        
+        button.addSelectionListener( this.selectionListener );
+        
+        return button;
+    }
+    
+    public Button getSelection()
+    {
+        return this.selection;
+    }
+    
+    public void setSelection( final Button button )
+    {
+        this.selection = button;
+        
+        final Control focusControl = button.getDisplay().getFocusControl();
+        boolean groupHasFocus = false;
+        
+        for( final Button b : this.buttons )
+        {
+            if( b != button )
+            {
+                b.setSelection( false );
+            }
+            
+            if( b == focusControl )
+            {
+                groupHasFocus = true;
+            }
+        }
+        
+        button.setSelection( true );
+        
+        if( groupHasFocus )
+        {
+            button.setFocus();
+        }
+    }
+
+    public int getSelectionIndex()
+    {
+        final Button selection = getSelection();
+        return ( selection == null ? -1 : this.buttons.indexOf( selection ) );
+    }
+    
+    public void setSelectionIndex( final int selection )
+    {
+        setSelection( this.buttons.get( selection ) );
+    }
+    
+    public void addSelectionListener( final SelectionListener listener ) 
+    {
+        this.listeners.add( listener );
+    }
+    
+    public void removeSelectionListener( final SelectionListener listener )
+    {
+        this.listeners.remove( listener );
+    }
+    
+    private void handleWidgetSelectedEvent( final SelectionEvent event )
+    {
+        final Button b = (Button) event.getSource();
+        
+        if( b.getSelection() == true )
+        {
+            this.selection = b;
+            
+            for( SelectionListener listener : this.listeners )
+            {
+                try
+                {
+                    listener.widgetSelected( event );
+                }
+                catch( Exception e )
+                {
+                    SapphireUiFrameworkPlugin.log( e );
+                }
+            }
+        }
+    }
+
+}

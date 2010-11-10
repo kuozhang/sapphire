@@ -1,0 +1,441 @@
+/******************************************************************************
+ * Copyright (c) 2010 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************/
+
+package org.eclipse.sapphire.ui.renderers.swt;
+
+import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_ASSIST_DECORATOR;
+import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
+import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_BORDER;
+import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_BROWSE_ONLY;
+import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_LISTENERS;
+import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_READ_ONLY;
+import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL;
+import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL_ABOVE;
+import static org.eclipse.sapphire.ui.SapphirePropertyEditor.RELATED_CONTROLS;
+import static org.eclipse.sapphire.ui.util.SwtUtil.gd;
+import static org.eclipse.sapphire.ui.util.SwtUtil.gdfill;
+import static org.eclipse.sapphire.ui.util.SwtUtil.gdhfill;
+import static org.eclipse.sapphire.ui.util.SwtUtil.gdhindent;
+import static org.eclipse.sapphire.ui.util.SwtUtil.gdvfill;
+import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
+import static org.eclipse.sapphire.ui.util.SwtUtil.glspacing;
+import static org.eclipse.sapphire.ui.util.SwtUtil.hspan;
+import static org.eclipse.sapphire.ui.util.SwtUtil.valign;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.EditFailedException;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.LongString;
+import org.eclipse.sapphire.modeling.annotations.SensitiveData;
+import org.eclipse.sapphire.ui.SapphireCommands;
+import org.eclipse.sapphire.ui.SapphireImageCache;
+import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.assist.BrowseHandler;
+import org.eclipse.sapphire.ui.assist.JumpHandler;
+import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
+import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.internal.binding.TextFieldBinding;
+import org.eclipse.sapphire.ui.listeners.ValuePropertyEditorListener;
+import org.eclipse.sapphire.ui.util.TextOverlayPainter;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.accessibility.AccessibleAdapter;
+import org.eclipse.swt.accessibility.AccessibleEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
+
+/**
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ */
+
+public class DefaultValuePropertyEditorRenderer
+
+    extends ValuePropertyEditorRenderer
+    
+{
+    private Text textField;
+
+    public DefaultValuePropertyEditorRenderer( final SapphireRenderingContext context,
+                                               final SapphirePropertyEditor part )
+    {
+        super( context, part );
+    }
+
+    @Override
+    protected void createContents( final Composite parent )
+    {
+        createContents( parent, false );
+    }
+    
+    protected Control createContents( final Composite parent,
+                                      final boolean suppressBrowseAction )
+    {
+        final SapphirePropertyEditor part = getPart();
+        final IModelElement element = part.getModelElement();
+        final ValueProperty property = (ValueProperty) part.getProperty();
+        
+        final boolean isLongString = property.hasAnnotation( LongString.class );
+        final boolean isDeprecated = property.hasAnnotation( Deprecated.class );
+        final boolean isReadOnly = ( property.isReadOnly() || part.getRenderingHint( HINT_READ_ONLY, false ) );
+        final boolean isSensitiveData = property.hasAnnotation( SensitiveData.class );
+
+        final List<BrowseHandler> browseHandlers;
+        
+        if( ! isReadOnly && ! suppressBrowseAction )
+        {
+            browseHandlers = part.createBrowseHandlers();
+        }
+        else
+        {
+            browseHandlers = Collections.emptyList();
+        }
+
+        final JumpHandler jumpHandler = part.createJumpHandler();
+        
+        final boolean needsBrowseButton = ! browseHandlers.isEmpty();
+        final boolean isBrowseOnly = ( part.getRenderingHint( HINT_BROWSE_ONLY, false ) && needsBrowseButton );
+        
+        final boolean showLabelAbove = part.getRenderingHint( HINT_SHOW_LABEL_ABOVE, false );
+        final boolean showLabelInline = part.getRenderingHint( HINT_SHOW_LABEL, ! showLabelAbove );
+        Label label = null;
+        
+        final int baseIndent = part.getLeftMarginHint() + 9;
+        
+        if( showLabelInline || showLabelAbove )
+        {
+            label = new Label( parent, SWT.NONE );
+            label.setText( property.getLabel( false, CapitalizationType.FIRST_WORD_ONLY, true ) + ":" );
+            label.setLayoutData( gdhindent( hspan( valign( gd(), isLongString ? SWT.TOP : SWT.CENTER ), showLabelAbove ? 2 : 1 ), baseIndent ) );
+            this.context.adapt( label );
+        }
+        
+        setSpanBothColumns( ! showLabelInline );
+        
+        final Composite textFieldParent = createMainComposite( parent );
+        
+        this.context.adapt( textFieldParent );
+
+        int textFieldParentColumns = 1;
+        if( needsBrowseButton ) textFieldParentColumns++;
+        if( isDeprecated ) textFieldParentColumns++;
+        
+        textFieldParent.setLayout( glayout( textFieldParentColumns, 0, 0, 0, 0 ) );
+        
+        final Composite nestedComposite = new Composite( textFieldParent, SWT.NONE );
+        nestedComposite.setLayoutData( isLongString ? gdfill() : valign( gdhfill(), SWT.CENTER ) );
+        nestedComposite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
+        this.context.adapt( nestedComposite );
+        
+        final PropertyEditorAssistDecorator decorator 
+            = new PropertyEditorAssistDecorator( part, this.context, nestedComposite );
+        
+        decorator.getControl().setLayoutData( valign( gd(), SWT.TOP ) );
+        decorator.addEditorControl( nestedComposite );
+        
+        final int style 
+            = ( part.getRenderingHint( HINT_BORDER, ! isReadOnly ) ? SWT.BORDER : SWT.NONE ) | 
+              ( isLongString ? SWT.MULTI | SWT.WRAP | SWT.V_SCROLL : SWT.NONE ) |
+              ( ( isReadOnly || isBrowseOnly ) ? SWT.READ_ONLY : SWT.NONE ) |
+              ( isSensitiveData ? SWT.PASSWORD : SWT.NONE );
+        
+        this.textField = new Text( nestedComposite, style );
+        this.textField.setLayoutData( gdfill() );
+        this.textField.setData( DATA_ASSIST_DECORATOR, decorator );
+        this.context.adapt( this.textField );
+        decorator.addEditorControl( this.textField );
+        
+        final TextOverlayPainter.Controller textOverlayPainterController;
+        
+        if( jumpHandler != null )
+        {
+            textOverlayPainterController = new TextOverlayPainter.Controller()
+            {
+                @Override
+                public boolean isHyperlinkEnabled()
+                {
+                    return jumpHandler.canLocateJumpTarget( part, 
+                                                            DefaultValuePropertyEditorRenderer.this.context,
+                                                            getModelElement(),
+                                                            property );
+                }
+
+                @Override
+                public void handleHyperlinkEvent()
+                {
+                    jumpHandler.jump( part, 
+                                      DefaultValuePropertyEditorRenderer.this.context,
+                                      getModelElement(),
+                                      property );
+                }
+
+                @Override
+                public String getDefaultText()
+                {
+                    final Value<?> value = (Value<?>) getProperty().invokeGetterMethod( getModelElement() );
+                    return value.getDefaultText();
+                }
+            };
+        }
+        else
+        {
+            textOverlayPainterController = new TextOverlayPainter.Controller()
+            {
+                @Override
+                public String getDefaultText()
+                {
+                    final Value<?> value = (Value<?>) getProperty().invokeGetterMethod( getModelElement() );
+                    return value.getDefaultText();
+                }
+            };
+        }
+        
+        TextOverlayPainter.install( this.textField, textOverlayPainterController );
+        
+        SapphireCommands.configurePropertyEditorContext( this.textField );
+        
+        if( isBrowseOnly )
+        {
+            final Color bgcolor = new Color( this.textField.getDisplay(), 235, 235, 235 );
+            this.textField.setBackground( bgcolor );
+            
+            this.textField.addDisposeListener
+            (
+                new DisposeListener()
+                {
+                    public void widgetDisposed( final DisposeEvent event )
+                    {
+                        bgcolor.dispose();
+                    }
+                }
+            );
+        }
+        
+        final List<Control> relatedControls = new ArrayList<Control>();
+        this.textField.setData( RELATED_CONTROLS, relatedControls );
+        
+        relatedControls.add( label );
+        
+        if( needsBrowseButton )
+        {
+            final ToolBar toolBar = new ToolBar( textFieldParent, SWT.FLAT );
+            toolBar.setLayoutData( gdvfill() );
+            this.context.adapt( toolBar );
+            decorator.addEditorControl( toolBar );
+            
+            SapphireCommands.configurePropertyEditorContext( toolBar );
+            
+            relatedControls.add( toolBar );
+
+            final ToolItem browseButton = new ToolItem( toolBar, SWT.PUSH );
+            browseButton.setImage( getImageCache().getImage( SapphireImageCache.ACTION_BROWSE ) );
+            browseButton.setToolTipText( Resources.browseButtonToolTip );
+            
+            final BrowseCommandHandler browseCommandHandler = new BrowseCommandHandler( this.context, browseHandlers )
+            {
+                @Override
+                protected Rectangle getInvokerBounds()
+                {
+                    Rectangle bounds = browseButton.getBounds();
+                    
+                    final Point convertedCoordinates = browseButton.getParent().toDisplay( bounds.x, bounds.y );
+                    bounds.x = convertedCoordinates.x;
+                    bounds.y = convertedCoordinates.y;
+                    
+                    return bounds;
+                }
+
+                @Override
+                protected void handleBrowseCompleted( final String text )
+                {
+                    try
+                    {
+                        property.invokeSetterMethod( element, text );
+                    }
+                    catch( Exception e )
+                    {
+                        // Log this exception unless the cause is EditFailedException. These exception
+                        // are the result of the user declining a particular action that is necessary
+                        // before the edit can happen (such as making a file writable).
+                        
+                        final EditFailedException editFailedException = EditFailedException.findAsCause( e );
+                        
+                        if( editFailedException == null )
+                        {
+                            SapphireUiFrameworkPlugin.log( e );
+                        }
+                    }
+
+                    if( ! DefaultValuePropertyEditorRenderer.this.textField.isDisposed() )
+                    {
+                        DefaultValuePropertyEditorRenderer.this.textField.setFocus();
+                        DefaultValuePropertyEditorRenderer.this.textField.setSelection( 0, DefaultValuePropertyEditorRenderer.this.textField.getText().length() );
+                    }
+                }
+            };
+            
+            browseButton.addSelectionListener
+            (
+                new SelectionAdapter()
+                {
+                    public void widgetSelected( final SelectionEvent event ) 
+                    {
+                        browseCommandHandler.execute( null );
+                    }
+                }
+            );
+            
+            SapphireCommands.attachBrowseHandler( this.textField, browseCommandHandler );
+            
+            toolBar.getAccessible().addAccessibleListener
+            (
+                new AccessibleAdapter()
+                {
+                    @Override
+                    public void getName( final AccessibleEvent event )
+                    {
+                        event.result = Resources.browseButtonToolTip;
+                    }
+                }
+            );
+        }
+        
+        if( isDeprecated )
+        {
+            final Text deprecatedLabel = new Text( textFieldParent, SWT.READ_ONLY );
+            deprecatedLabel.setLayoutData( gd() );
+            deprecatedLabel.setText( Resources.deprecatedLabelText );
+            this.context.adapt( deprecatedLabel );
+            deprecatedLabel.setForeground( parent.getDisplay().getSystemColor( SWT.COLOR_DARK_GRAY ) );
+        }
+        
+        this.binding = new TextFieldBinding( getModelElement(), property, this.context, this.textField );
+
+        this.textField.setData( DATA_BINDING, this.binding );
+        
+        addControl( this.textField );
+        
+        // Hookup property editor listeners.
+        
+        final List<Class<?>> listenerClasses 
+            = part.getRenderingHint( HINT_LISTENERS, Collections.<Class<?>>emptyList() );
+        
+        if( ! listenerClasses.isEmpty() )
+        {
+            final List<ValuePropertyEditorListener> listeners = new ArrayList<ValuePropertyEditorListener>();
+            
+            for( Class<?> cl : listenerClasses )
+            {
+                try
+                {
+                    final ValuePropertyEditorListener listener = (ValuePropertyEditorListener) cl.newInstance();
+                    listener.initialize( this.context, getModelElement(), property );
+                    listeners.add( listener );
+                }
+                catch( Exception e )
+                {
+                    SapphireUiFrameworkPlugin.log( e );
+                }
+            }
+            
+            if( ! listeners.isEmpty() )
+            {
+                this.textField.addModifyListener
+                (
+                    new ModifyListener()
+                    {
+                        public void modifyText( final ModifyEvent event )
+                        {
+                            for( ValuePropertyEditorListener listener : listeners )
+                            {
+                                try
+                                {
+                                    listener.handleValueChanged();
+                                }
+                                catch( Exception e )
+                                {
+                                    SapphireUiFrameworkPlugin.log( e );
+                                }
+                            }
+                        }
+                    }
+                );
+            }
+        }
+
+        return this.textField;
+    }
+
+    @Override
+    protected boolean canExpandVertically()
+    {
+        return getProperty().hasAnnotation( LongString.class );
+    }
+    
+    @Override
+    protected void handleFocusReceivedEvent()
+    {
+        this.textField.setFocus();
+    }
+
+    public static final class Factory
+    
+        extends PropertyEditorRendererFactory
+        
+    {
+        @Override
+        public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
+        {
+            return ( propertyEditorDefinition.getProperty() instanceof ValueProperty );
+        }
+        
+        @Override
+        public PropertyEditorRenderer create( final SapphireRenderingContext context,
+                                              final SapphirePropertyEditor part )
+        {
+            return new DefaultValuePropertyEditorRenderer( context, part );
+        }
+    }
+    
+    private static final class Resources
+    
+        extends NLS
+    
+    {
+        public static String deprecatedLabelText;
+        public static String browseButtonToolTip;
+        
+        static
+        {
+            initializeMessages( DefaultValuePropertyEditorRenderer.class.getName(), Resources.class );
+        }
+    }
+    
+}

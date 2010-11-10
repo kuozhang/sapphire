@@ -1,0 +1,68 @@
+<html>
+
+<head>
+  <title>Focus on Localization</title>
+  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>Focus on Localization</h1>
+
+<p>Localization is like build systems, something that most developers prefer not to think about. 
+Unfortunately, the developer must take explicit steps to manually externalize all user-visible 
+strings for the software to be localizable. The localizable strings go into a separate file and 
+the code references them by a key. The developer must come up with a key and then must manage the 
+list of externalized strings so that it stays in sync with the code. Some tools have been developed 
+to make this a little easier, but two types of problems remain very common:</p>
+
+<ol>
+  <li>Strings that should be externalized are not. It’s too easy for the developer to put the string 
+    directly into code and then forget to externalize it later.</li>
+  <li>The string resource files get out of sync with code. The case where the resource file is 
+    missing a string is easy enough to catch at runtime. The case where resource files contain 
+    orphaned strings not referenced in code is much harder to detect.</li>
+</ol>
+
+<p>Since Sapphire is a UI framework, localization is very important. Since Sapphire is focused on 
+ease of use and developer productivity, relying on current methods of localization is not 
+satisfactory.</p> 
+
+<p>Localizable strings largely occur in two places in Sapphire. You see them in the model 
+annotations (such as the @Label annotation) and you see them throughout the UI definition files. 
+Sapphire’s approach is to allow the developer to leave the strings in their original language at 
+point of use. The string resource files that will be translated are created at build time. The 
+build system takes the original string and applies a function to it to generate a key for the 
+string resources file. The same function is applied at runtime to derive the key to lookup the 
+translated string.</p> 
+
+<p>The critical concept is that the developer does not take any explicit steps to enable 
+localization. It just happens under the covers.</p>
+
+<p>The nature of the function that is used to derive the string resources file key is not 
+particularly important as long as the resulting key is not overly long and is reasonably free 
+from collisions. The current implementation takes the original string, chops it off at 20 
+characters and replaces some characters that are illegal in a property file key with an 
+underscore. Decent approach for the first cut, but we will likely replace it with an md5 hash 
+in the first version of Sapphire to ship at Eclipse Foundation.</p>
+
+<p>On top of the automatic externalization, Sapphire is architected to minimize the number of 
+strings that must be externalized in the first place. In particular, when the developer specifies 
+a property label, the string is expected to be all in lower case (except where acronyms or proper 
+nouns are used). Sapphire is able to transform the capitalization of the label to make it suitable 
+for different contexts. Three modes of capitalization are supported:</p>
+
+<ol>
+  <li>NO_CAPS:  Basically the original string as specified by developer. This is most frequently 
+    used for embedding inside validation messages.</li>
+  <li>FIRST_WORD_ONLY:  This is your typical label in the UI. The colon is added by the UI renderer 
+    where appropriate.</li>
+  <li>TITLE_STYLE:  This is typically used in column headers, section headers, dialog titles, etc.</li>
+</ol>
+
+<p>The current capitalization algorithm works well for English and reasonably well for other 
+languages, but it will need to be made pluggable in the future.</p>
+
+</body>
+
+</html>

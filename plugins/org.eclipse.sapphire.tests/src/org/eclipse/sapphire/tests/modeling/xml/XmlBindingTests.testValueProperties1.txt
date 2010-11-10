@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-root value-prop-c="cccc">
+    <!--value-prop-e:eeee-->
+    <value-prop-a>aaaa</value-prop-a>
+    <x>
+        <y>
+            <z value-prop-d="dddd">
+                <!--value-prop-f:ffff-->
+                <value-prop-b>bbbb</value-prop-b>
+            </z>
+        </y>
+    </x>
+</test-root>

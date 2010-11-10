@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+   <context id="ContactsEditor-Global" title="Contacts Database Editor">
+      <description>This would be the help content for the overall contacts database editor.</description>
+   </context>
+   <context id="ContactsEditor-ContactBasicInfoSection" title="Basic Info">
+      <description>This would be the help content for the basic info section.</description>
+   </context>
+    
+  <context id="ContactsEditor-ContactAddressSection" title="Address">
+    <description>This would be the help content for the address section.</description>
+  </context>
+  <context id="IContact-Category" title="Category">
+     <description>This would be the help content for the category property.</description>
+  </context>
+  <context id="EzBug-General" title="EzBug">
+     <description>This would be the help content for the EzBug system.</description>
+  </context>
+    
+</contexts>

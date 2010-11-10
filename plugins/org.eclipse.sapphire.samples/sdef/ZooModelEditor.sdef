@@ -1,0 +1,374 @@
+<definition 
+  xmlns="http://xmlns.oracle.com/eclipse/tools/sapphire/ui"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.oracle.com/eclipse/tools/sapphire/ui http://xmlns.oracle.com/eclipse/tools/sapphire/ui">
+
+  <import>
+    <bundle>org.eclipse.sapphire.samples</bundle>
+    <package>org.eclipse.sapphire.samples.zoo</package>
+    <package>org.eclipse.sapphire.samples.zoo.ui</package>
+  </import>
+  
+  <editor-page>
+    <id>main</id>
+    <page-header-text>Zoo</page-header-text>
+    <initial-selection>General</initial-selection>
+    <header-actions>
+      <action-group>
+        <action>
+          <class>ShowXmlSourceEditorPageAction</class>
+        </action>
+      </action-group>
+    </header-actions>
+    <root-node>
+      <node-ref>general</node-ref>
+      <node-ref>animals-single-node</node-ref>
+      <node-ref>animals-multiple-nodes</node-ref>
+      <node-ref>employees</node-ref>
+      <node-ref>all-creatures</node-ref>
+      <node-ref>structures</node-ref>
+      <node-ref>stats</node-ref>
+      <node-ref>financial-info</node-ref>
+    </root-node>
+  </editor-page>
+
+  <node>
+    <id>general</id>
+    <label>General</label>
+    <section>
+      <content>
+        <property-editor>Name</property-editor>
+        <group>
+          <label>Address</label>
+          <content>
+            <element-property-composite>
+              <property>Address</property>
+              <conditional>Specify address</conditional>
+              <default-panel>
+                <content>
+                  <label>The address block demonstrates non-trivial custom property value providers that depend on values of other properties. It also demonstrates a circular dependency among properties. For City, State and Zip, each property's validation state depends on the values of the other two properties.</label>
+                  <spacer/>  
+                  <property-editor>Street</property-editor>
+                  <property-editor>City</property-editor>
+                  <property-editor>State</property-editor>
+                  <property-editor>ZipCode</property-editor>
+                </content>
+              </default-panel>
+            </element-property-composite>
+          </content>
+        </group>
+      </content>
+    </section>
+    <section>
+      <label>Common Operations</label>
+      <content>
+        <action-link>
+          <action-id>editor:expand-all</action-id>
+          <label>Expand all</label>
+        </action-link>
+        <action-link>
+          <action-id>editor:collapse-all</action-id>
+          <label>Collapse all</label>
+        </action-link>
+      </content>
+    </section>      
+  </node>
+
+  <node>
+    <id>animals-single-node</id>
+    <label>Animals (Single Node)</label>
+    <section>
+      <description>This node shows an example of a heterogeneous list represented by a table and a switching panel..</description>
+      <content>
+        <property-editor>
+          <property>Animals</property>
+          <child-property>
+            <name>Name</name>
+          </child-property>
+          <hint><name>show.label</name><value>false</value></hint>
+        </property-editor>
+        <switching-panel>
+          <list-selection-controller>
+            <property>Animals</property>
+          </list-selection-controller>
+          <panel>
+            <key>ILion</key>
+            <content>
+              <separator>
+                <label>Lion</label>
+              </separator>
+              <property-editor>Name</property-editor>
+              <spacer/>
+              <property-editor>ManePresent</property-editor>
+              <property-editor>ManeColor</property-editor>
+            </content>
+          </panel>
+          <panel>
+            <key>IGiraffe</key>
+            <content>
+              <separator>
+                <label>Giraffe</label>
+              </separator>
+              <property-editor>Name</property-editor>
+              <property-editor>SpotCount</property-editor>
+            </content>
+          </panel>
+          <default-panel>
+            <content>
+              <separator>
+                <label>Details</label>
+              </separator>
+              <label>Select an animal above to edit additional parameters.</label>
+            </content>
+          </default-panel>
+        </switching-panel>
+      </content>
+    </section>
+  </node>
+  
+  <node>
+    <id>animals-multiple-nodes</id>
+    <label>Animals (Multiple Nodes)</label>
+    <actions>
+      <action-group>
+        <action>
+          <class>CountAction</class>
+        </action>
+      </action-group>
+    </actions>
+    <section>
+      <description>This node shows an example of a heterogeneous list represented by child nodes in the navigation tree.</description>
+      <content>
+        <action-link>
+          <action-id>node:add:IGiraffe</action-id>
+          <label>Add a giraffe</label>
+        </action-link>
+        <action-link>
+          <action-id>node:add:ILion</action-id>
+          <label>Add a lion</label>
+        </action-link>
+      </content>
+    </section>
+    <node-list>
+      <property>Animals</property>
+      <node-template>
+        <model-element-type>ILion</model-element-type>
+        <dynamic-label>
+          <property>Name</property>
+          <null-value-label>&lt;lion&gt;</null-value-label>
+        </dynamic-label>
+        <section>
+          <label>Lion</label>
+          <content>
+            <property-editor>Name</property-editor>
+            <spacer/>
+            <property-editor>ManePresent</property-editor>
+            <property-editor>ManeColor</property-editor>
+          </content>
+        </section>
+      </node-template>
+      <node-template>
+        <model-element-type>IGiraffe</model-element-type>
+        <dynamic-label>
+          <property>Name</property>
+          <null-value-label>&lt;giraffe&gt;</null-value-label>
+        </dynamic-label>
+        <section>
+          <label>Giraffe</label>
+          <content>
+            <property-editor>Name</property-editor>
+            <property-editor>SpotCount</property-editor>
+          </content>
+        </section>
+      </node-template>
+    </node-list>
+  </node>
+  
+  <node>
+    <id>employees</id>
+    <label>Employees</label>
+    <section>
+      <description>This node shows an example of a homogeneous list represented by child nodes in the navigation tree.</description>
+      <content>
+        <action-link>
+          <action-id>node:add</action-id>
+          <label>Add an employee</label>
+        </action-link>
+      </content>
+    </section>
+    <node-list>
+      <property>Employees</property>
+      <node-template>
+        <dynamic-label>
+          <property>FullName</property>
+          <null-value-label>&lt;employee&gt;</null-value-label>
+        </dynamic-label>
+        <section>
+          <label>Employee</label>
+          <content>
+            <property-editor>FirstName</property-editor>
+            <property-editor>LastName</property-editor>
+            <property-editor>FullName</property-editor>
+          </content>
+        </section>
+      </node-template>
+    </node-list>
+  </node>
+
+  <node>
+    <id>all-creatures</id>
+    <label>All Creatures</label>
+    <actions>
+      <action-group>
+        <action>
+          <class>CountAction</class>
+        </action>
+      </action-group>
+    </actions>
+    <section>
+      <description>This node shows an example of combining two lists as direct child nodes in the navigation tree. Observe that the add actions (toolbar button and the context menu) both cascade to show available types from both lists. Also observe that the up/down actions limit movement to within the respective lists.</description>
+      <content>
+        <action-link>
+          <action-id>node:add:IEmployee</action-id>
+          <label>Add an employee</label>
+        </action-link>
+        <action-link>
+          <action-id>node:add:IGiraffe</action-id>
+          <label>Add a giraffe</label>
+        </action-link>
+        <action-link>
+          <action-id>node:add:ILion</action-id>
+          <label>Add a lion</label>
+        </action-link>
+      </content>
+    </section>
+    <node-list>
+      <property>Employees</property>
+      <node-template>
+        <dynamic-label>
+          <property>FullName</property>
+          <null-value-label>&lt;employee&gt;</null-value-label>
+        </dynamic-label>
+        <section>
+          <label>Employee</label>
+          <content>
+            <property-editor>FirstName</property-editor>
+            <property-editor>LastName</property-editor>
+            <property-editor>FullName</property-editor>
+          </content>
+        </section>
+      </node-template>
+    </node-list>
+    <node-list>
+      <property>Animals</property>
+      <node-template>
+        <model-element-type>ILion</model-element-type>
+        <dynamic-label>
+          <property>Name</property>
+          <null-value-label>&lt;lion&gt;</null-value-label>
+        </dynamic-label>
+        <section>
+          <label>Lion</label>
+          <content>
+            <property-editor>Name</property-editor>
+            <spacer/>
+            <property-editor>ManePresent</property-editor>
+            <property-editor>ManeColor</property-editor>
+          </content>
+        </section>
+      </node-template>
+      <node-template>
+        <model-element-type>IGiraffe</model-element-type>
+        <dynamic-label>
+          <property>Name</property>
+          <null-value-label>&lt;giraffe&gt;</null-value-label>
+        </dynamic-label>
+        <section>
+          <label>Giraffe</label>
+          <content>
+            <property-editor>Name</property-editor>
+            <property-editor>SpotCount</property-editor>
+          </content>
+        </section>
+      </node-template>
+    </node-list>
+  </node>
+
+  <node>
+    <id>structures</id>
+    <label>Structures</label>
+    <section>
+      <description>The structures list uses custom XML binding. Add a few entries and take a look at the source view to see what is written.</description>
+      <content>
+        <action-link>
+          <action-id>node:add:IAnimalEnclosure</action-id>
+          <label>Add an animal enclosure</label>
+        </action-link>
+        <action-link>
+          <action-id>node:add:IRestroomBuilding</action-id>
+          <label>Add a restroom building</label>
+        </action-link>
+      </content>
+    </section>
+    <node-list>
+      <property>Structures</property>
+      <node-template>
+        <model-element-type>IAnimalEnclosure</model-element-type>
+        <dynamic-label>
+          <property>Name</property>
+          <null-value-label>&lt;animal-enclosure&gt;</null-value-label>
+        </dynamic-label>
+        <section>
+          <label>Animal Enclosure</label>
+          <content>
+            <property-editor>Name</property-editor>
+            <property-editor>Type</property-editor>
+            <property-editor>Size</property-editor>
+          </content>
+        </section>
+      </node-template>
+      <node-template>
+        <model-element-type>IRestroomBuilding</model-element-type>
+        <dynamic-label>
+          <property>Name</property>
+          <null-value-label>&lt;restroom-building&gt;</null-value-label>
+        </dynamic-label>
+        <section>
+          <label>Restroom Building</label>
+          <content>
+            <property-editor>Name</property-editor>
+            <spacer/>
+            <property-editor>FacilityForMenPresent</property-editor>
+            <property-editor>FacilityForWomenPresent</property-editor>
+            <property-editor>FacilityForFamiliesPresent</property-editor>
+          </content>
+        </section>
+      </node-template>
+    </node-list>
+  </node>
+
+  <node>
+    <id>stats</id>
+    <property>Stats</property>
+    <label>Stats</label>
+    <section>
+      <content>
+        <property-editor>AnimalsCount</property-editor>
+        <property-editor>AnimalsCountByType</property-editor>
+      </content>
+    </section>
+  </node>
+
+  <node>
+    <id>financial-info</id>
+    <property>FinancialInfo</property>
+    <label>Financial Info</label>
+    <section>
+      <content>
+        <property-editor>CurrentYearIncome</property-editor>
+        <property-editor>CurrentYearExpenses</property-editor>
+      </content>
+    </section>
+  </node>
+
+</definition>
