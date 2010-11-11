@@ -162,8 +162,9 @@
       </if>
 
       <pathconvert property=".system.classpath">
-        <fileset dir="${.location}/jre/lib">
-          <include name="*.jar"/>
+        <fileset dir="${.location}">
+          <include name="lib/*.jar"/>
+          <include name="jre/lib/*.jar"/>
         </fileset>
       </pathconvert>
 
