@@ -30,18 +30,7 @@
     <if>
       <not><available file="${bootstrap.platform}"/></not>
       <then>
-        <property file="${releng.dir}/repositories-${configuration.recommended}.properties" prefix="."/>
-        <mkdir dir="${bootstrap.platform}"/>
-        <with-download-from-eclipse file="/eclipse/downloads/drops/${.eclipse.platform.build}/eclipse-platform-${.eclipse.platform.version}-${current.platform}.zip">
-          <unzip src="${.download}" dest="${bootstrap.platform}">
-            <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
-          </unzip>
-        </with-download-from-eclipse>
-        <adjust-eclipse-memory-settings install="${bootstrap.platform}" x64="${current.platform.x64}"/>
-        <var name=".eclipse.platform.version" unset="true"/>
-        <var name=".eclipse.platform.build" unset="true"/>
-        <var name=".p2.repositories" unset="true"/>
-        <var name=".legacy.packages" unset="true"/>
+        <install-eclipse dest="${bootstrap.platform}"/>
       </then>
     </if>
 
