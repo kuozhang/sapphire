@@ -32,14 +32,14 @@
       <then>
         <property file="${releng.dir}/repositories-${configuration.recommended}.properties" prefix="."/>
         <mkdir dir="${bootstrap.platform}"/>
-        <unzip dest="${bootstrap.platform}">
-          <fileset dir="../../releng/eclipse">
-            <include name="eclipse-platform-${.eclipse.platform.version}-${current.platform}.zip"/>
-          </fileset>
-          <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
-        </unzip>
+        <with-download-from-eclipse file="/eclipse/downloads/drops/${.eclipse.platform.build}/eclipse-platform-${.eclipse.platform.version}-${current.platform}.zip">
+          <unzip src="${.download}" dest="${bootstrap.platform}">
+            <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
+          </unzip>
+        </with-download-from-eclipse>
         <adjust-eclipse-memory-settings install="${bootstrap.platform}" x64="${current.platform.x64}"/>
         <var name=".eclipse.platform.version" unset="true"/>
+        <var name=".eclipse.platform.build" unset="true"/>
         <var name=".p2.repositories" unset="true"/>
         <var name=".legacy.packages" unset="true"/>
       </then>
@@ -570,13 +570,16 @@
           <property file="${releng.dir}/repositories-@{name}.properties" prefix="."/>
 
           <var name="eclipse.platform.version.@{name}" value="${.eclipse.platform.version}"/>
+          <var name="eclipse.platform.build.@{name}" value="${.eclipse.platform.build}"/>
 
           <if>
             <isset property=".p2.repositories"/>
             <then>
               <for list="${.p2.repositories}" param="repo">
                 <sequential>
-                  <load-repository-archive fileRegEx="@{repo}" property="repositories.@{name}"/>
+                  <with-download-from-eclipse file="@{repo}">
+                    <load-repository-archive file="${.download}" property="repositories.@{name}"/>
+                  </with-download-from-eclipse>
                 </sequential>
               </for>
             </then>
@@ -588,13 +591,16 @@
               <for list="${.legacy.packages}" param="repo">
                 <sequential>
                   <echo message="@{repo}"/>
-                  <load-repository-legacy fileRegEx="@{repo}" property="repositories.@{name}"/>
+                  <with-download-from-eclipse file="@{repo}">
+                    <load-repository-legacy file="${.download}" property="repositories.@{name}"/>
+                  </with-download-from-eclipse>
                 </sequential>
               </for>
             </then>
           </if>
 
           <var name=".eclipse.platform.version" unset="true"/>
+          <var name=".eclipse.platform.build" unset="true"/>
           <var name=".p2.repositories" unset="true"/>
           <var name=".legacy.packages" unset="true"/>
 
@@ -612,9 +618,11 @@
 
       <load-configuration name="@{name}"/>
       <propertycopy property=".eclipse.platform.version" from="eclipse.platform.version.@{name}" override="true"/>
+      <propertycopy property=".eclipse.platform.build" from="eclipse.platform.build.@{name}" override="true"/>
       <propertycopy property=".repositories" from="repositories.@{name}" override="true"/>
       <body/>
       <var name=".eclipse.platform.version" unset="true"/>
+      <var name=".eclipse.platform.build" unset="true"/>
       <var name=".repositories" unset="true"/>
 
     </sequential>
@@ -637,6 +645,98 @@
   </macrodef>
 
 
+  <macrodef name="download-from-eclipse">
+    <attribute name="file"/>
+    <attribute name="property"/>
+    <sequential>
+    
+      <mkdir dir="downloads"/>
+      
+      <echo message="Downloading from Eclipse... @{file}"/>
+
+      <echo message="@{file}" file="downloads/url-checksum.txt"/>
+      <checksum file="downloads/url-checksum.txt" property=".url.checksum"/>
+      <delete file="downloads/url-checksum.txt"/>
+      
+      <echo message="URL checksum... ${.url.checksum}"/>
+      
+      <var name=".content.valid" value="false"/>
+      
+      <for list="1,2,3,4,5" param="counter">
+        <sequential>
+          <if>
+            <not><istrue value="${.content.valid}"/></not>
+            <then>
+
+              <if>
+                <available file="downloads/${.url.checksum}"/>
+                <then>
+                
+                  <!-- Download the expected checksum. -->
+                  
+                  <get src="http://www.eclipse.org/downloads/sums.php?file=@{file}&amp;type=md5" dest="downloads/content-checksum.txt"/>
+                  <loadfile srcfile="downloads/content-checksum.txt" property=".content.checksum"/>
+                  <delete file="downloads/content-checksum.txt"/>
+                  <propertyregex property=".content.checksum" override="true" input="${.content.checksum}" regexp="([^ ]*).*" select="\1"/>
+                  
+                  <!-- Verify the local file againsted the expected checksum. -->
+                  
+                  <checksum file="downloads/${.url.checksum}" property=".content.checksum.actual"/>
+                  
+                  <if>
+                    <equals arg1="${.content.checksum}" arg2="${.content.checksum.actual}"/>
+                    <then>
+                      <var name=".content.valid" value="true"/>
+                    </then>
+                  </if>
+                  
+                  <var name=".content.checksum" unset="true"/>
+                  <var name=".content.checksum.actual" unset="true"/>
+                  
+                </then>
+              </if>
+
+              <if>
+                <not><istrue value="${.content.valid}"/></not>
+                <then>
+                  <get src="http://www.eclipse.org/downloads/download.php?file=@{file}&amp;r=1" dest="downloads/${.url.checksum}"/>
+                </then>
+              </if>
+              
+            </then>
+          </if>
+        </sequential>
+      </for>
+      
+      <if>
+        <istrue value="${.content.valid}"/>
+        <then>
+          <var name="@{property}" value="${basedir}/downloads/${.url.checksum}"/>
+          <var name=".url.checksum" unset="true"/>
+          <var name=".content.valid" unset="true"/>
+        </then>
+        <else>
+          <fail message="Failed to download @{file} from Eclipse Foundation."/>
+        </else>
+      </if>
+      
+    </sequential>
+  </macrodef>
+  
+  
+  <macrodef name="with-download-from-eclipse">
+    <attribute name="file"/>
+    <element name="body" implicit="yes"/>
+    <sequential>
+
+      <download-from-eclipse file="@{file}" property=".download"/>
+      <body/>
+      <var name=".download" unset="true"/>
+
+    </sequential>
+  </macrodef>
+  
+
   <macrodef name="load-build-repository">
     <attribute name="url"/>
     <sequential>
@@ -656,49 +756,38 @@
 
 
   <macrodef name="load-repository-archive">
-    <attribute name="fileRegEx"/>
+    <attribute name="file"/>
     <attribute name="property"/>
     <sequential>
-      <property-from-set property=".path">
-        <fileset dir="../../releng/eclipse" includes="@{fileRegEx}"/>
-      </property-from-set>
-      <load-repository url="jar:file:${.path}!/" property="@{property}"/>
-      <var name=".path" unset="true"/>
+      <load-repository url="jar:file:@{file}!/" property="@{property}"/>
     </sequential>
   </macrodef>
 
 
   <macrodef name="load-repository-legacy">
-    <attribute name="fileRegEx"/>
+    <attribute name="file"/>
     <attribute name="property"/>
     <sequential>
 
-      <property-from-set property=".path">
-        <fileset dir="../../releng/eclipse" includes="@{fileRegEx}"/>
-      </property-from-set>
-
-      <basename property=".basename" file="${.path}" suffix=".zip"/>
-      <property name=".repo" value="${root.dir}/../../releng/eclipse/${.basename}"/>
-
       <if>
-        <not><available file="${.repo}"/></not>
+        <not><available file="@{file}.repo"/></not>
         <then>
 
-          <unzip src="${.path}" dest="${.repo}">
+          <unzip src="@{file}" dest="@{file}.repo">
             <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
           </unzip>
 
           <delete includeemptydirs="true">
-            <fileset dir="${.repo}">
+            <fileset dir="@{file}.repo">
               <exclude name="plugins/**"/>
               <exclude name="features/**"/>
             </fileset>
           </delete>
 
-          <p2.publish.FeaturesAndBundles location="${.repo}"/>
+          <p2.publish.FeaturesAndBundles location="@{file}.repo"/>
 
           <delete includeemptydirs="true">
-            <fileset dir="${.repo}">
+            <fileset dir="@{file}.repo">
               <exclude name="*.jar"/>
               <exclude name="plugins/*.jar"/>
               <exclude name="features/*.jar"/>
@@ -708,11 +797,7 @@
         </then>
       </if>
 
-      <load-repository url="file:${.repo}" property="@{property}"/>
-
-      <var name=".path" unset="true"/>
-      <var name=".basename" unset="true"/>
-      <var name=".repo" unset="true"/>
+      <load-repository url="file:@{file}.repo" property="@{property}"/>
 
     </sequential>
   </macrodef>
@@ -729,12 +814,11 @@
       <mkdir dir="@{dest}"/>
 
       <with-configuration name="@{configuration}">
-        <unzip dest="@{dest}">
-          <fileset dir="../../releng/eclipse">
-            <include name="eclipse-platform-${.eclipse.platform.version}-@{platform}.zip"/>
-          </fileset>
-          <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
-        </unzip>
+        <with-download-from-eclipse file="/eclipse/downloads/drops/${.eclipse.platform.build}/eclipse-platform-${.eclipse.platform.version}-@{platform}.zip">
+          <unzip src="${.download}" dest="@{dest}">
+            <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
+          </unzip>
+        </with-download-from-eclipse>
       </with-configuration>
 
       <if>
