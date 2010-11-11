@@ -814,11 +814,33 @@
       <mkdir dir="@{dest}"/>
 
       <with-configuration name="@{configuration}">
-        <with-download-from-eclipse file="/eclipse/downloads/drops/${.eclipse.platform.build}/eclipse-platform-${.eclipse.platform.version}-@{platform}.zip">
-          <unzip src="${.download}" dest="@{dest}">
-            <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
-          </unzip>
+        <if>
+          <contains string="@{platform}" substring="win32"/>
+          <then>
+            <var name=".format" value="zip"/>
+          </then>
+          <else>
+            <var name=".format" value="tar.gz"/>
+          </else>
+        </if>
+        <with-download-from-eclipse file="/eclipse/downloads/drops/${.eclipse.platform.build}/eclipse-platform-${.eclipse.platform.version}-@{platform}.${.format}">
+          <if>
+            <equals arg1="${.format}" value="zip"/>
+            <then>
+              <unzip src="${.download}" dest="@{dest}">
+                <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
+              </unzip>
+            </then>
+            <else>
+              <gunzip src="${.download}" dest="${.download}.tar"/>
+              <untar src="${.download}.tar" dest="@{dest}">
+                <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
+              </untar>
+              <delete file="${.download}.tar"/>
+            </else>
+          </if>
         </with-download-from-eclipse>
+        <var name=".format" unset="true"/>
       </with-configuration>
 
       <if>
