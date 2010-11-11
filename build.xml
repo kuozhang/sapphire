@@ -814,7 +814,7 @@
         </if>
         <with-download-from-eclipse file="/eclipse/downloads/drops/${.eclipse.platform.build}/eclipse-platform-${.eclipse.platform.version}-@{platform}.${.format}">
           <if>
-            <equals arg1="${.format}" value="zip"/>
+            <equals arg1="${.format}" arg2="zip"/>
             <then>
               <unzip src="${.download}" dest="@{dest}">
                 <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
