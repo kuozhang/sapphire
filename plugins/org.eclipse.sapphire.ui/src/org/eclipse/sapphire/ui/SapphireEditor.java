@@ -11,7 +11,11 @@
 
 package org.eclipse.sapphire.ui;
 
+import static org.eclipse.sapphire.ui.util.SwtUtil.gd;
+import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
+
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -25,6 +29,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CorruptedModelStoreExceptionInterceptor;
 import org.eclipse.sapphire.modeling.IModel;
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -33,12 +38,15 @@ import org.eclipse.sapphire.ui.actions.Action;
 import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage;
 import org.eclipse.sapphire.ui.internal.SapphireEditorContentOutline;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.osgi.service.prefs.BackingStoreException;
@@ -123,7 +131,17 @@ public abstract class SapphireEditor
         if( editorInput instanceof IURIEditorInput )
         {
             level1 = PREFS_INSTANCE_BY_URI;
-            level2 = ( (IURIEditorInput) editorInput ).getURI().toString();
+            
+            final URI uri = ( (IURIEditorInput) editorInput ).getURI();
+            
+            if( uri != null )
+            {
+                level2 = ( (IURIEditorInput) editorInput ).getURI().toString();
+            }
+            else
+            {
+                level2 = "$#%**invalid**%#$";
+            }
         }
         else
         {
@@ -253,38 +271,57 @@ public abstract class SapphireEditor
 
 	protected final void addPages() 
     {
-        try 
-        {
-            createSourcePages();
-            
-            this.model = createModel();
-            adaptModel( this.model );
-            
-            createFormPages();
-
-            createFileChangeListener();
-        }
-        catch( PartInitException e ) 
-        {
-            SapphireUiFrameworkPlugin.log( e );
-        }
-        
-        final String lastActivePage = getLastActivePage();
-    	int page = 0;
-    	
-    	if( lastActivePage != null )
-    	{
-            int count = getPageCount();
-            for (int i = 0; i < count; i++) {
-                String title = getPageText(i);
-                if (lastActivePage.equals(title)) {
-                    page = i;
-                    break;
-                }
+	    final IFile file = getFile();
+	    
+	    if( file.isAccessible() )
+	    {
+            try 
+            {
+                createSourcePages();
+                
+                this.model = createModel();
+                adaptModel( this.model );
+                
+                createFormPages();
+    
+                createFileChangeListener();
             }
-    	}
-        
-        setActivePage( page );
+            catch( PartInitException e ) 
+            {
+                SapphireUiFrameworkPlugin.log( e );
+            }
+            
+            final String lastActivePage = getLastActivePage();
+        	int page = 0;
+        	
+        	if( lastActivePage != null )
+        	{
+                int count = getPageCount();
+                for (int i = 0; i < count; i++) {
+                    String title = getPageText(i);
+                    if (lastActivePage.equals(title)) {
+                        page = i;
+                        break;
+                    }
+                }
+        	}
+            
+            setActivePage( page );
+	    }
+	    else
+	    {
+	        final Composite page = new Composite( getContainer(), SWT.NONE );
+	        page.setLayout( glayout( 1 ) );
+	        page.setBackground( getSite().getShell().getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+
+	        final FormText message = new FormText( page, SWT.NONE );
+	        message.setLayoutData( gd() );
+	        message.setBackground( getSite().getShell().getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+	        message.setText( Resources.resourceNotAccessible, false, false );
+	        
+	        addPage( page );
+	        setPageText( 0, Resources.errorPageTitle );
+	    }
     }
 	
 	protected abstract void createSourcePages() throws PartInitException;
@@ -448,7 +485,7 @@ public abstract class SapphireEditor
 	}
 	
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "rawtypes" )
     
     public Object getAdapter( final Class adapter ) 
     {
@@ -545,6 +582,17 @@ public abstract class SapphireEditor
     public void removeListener( final SapphirePartListener listener )
     {
         throw new UnsupportedOperationException();
+    }
+    
+    private static final class Resources extends NLS
+    {
+        public static String resourceNotAccessible;
+        public static String errorPageTitle;
+        
+        static
+        {
+            initializeMessages( SapphireEditor.class.getName(), Resources.class );
+        }
     }
     
 }
