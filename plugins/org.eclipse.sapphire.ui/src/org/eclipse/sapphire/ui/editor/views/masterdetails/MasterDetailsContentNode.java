@@ -610,12 +610,12 @@ public final class MasterDetailsContentNode
                     moveActionGroup.addAction( new NodeMoveUpAction() );
                     moveActionGroup.addAction( new NodeMoveDownAction() );
                 }
+
+                final ActionGroup goToSourceActionGroup = new ActionGroup();
+                goToSourceActionGroup.addAction( new NodeShowInSourceAction() );
+                this.menuActions.add( goToSourceActionGroup );
             }
 
-            final ActionGroup goToSourceActionGroup = new ActionGroup();
-            goToSourceActionGroup.addAction( new NodeShowInSourceAction() );
-            this.menuActions.add( goToSourceActionGroup );
-            
             ActionsHostUtil.initActions( this.menuActions, this.definition.getActionSetDef() );
             
             for( ActionGroup group : this.menuActions )
