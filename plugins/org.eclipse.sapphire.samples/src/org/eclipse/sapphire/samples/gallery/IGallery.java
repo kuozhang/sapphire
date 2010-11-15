@@ -105,5 +105,14 @@ public interface IGallery
     ElementProperty PROP_BROWSE_SUPPORT_GALLERY = new ElementProperty( TYPE, "BrowseSupportGallery" );
     
     IBrowseSupportGallery getBrowseSupportGallery();
-
+    
+    // *** MultiSelectListGallery ***
+    
+    @Type( base = IMultiSelectListGallery.class )
+    @Label( standard = "multi select list gallery" )
+    
+    ElementProperty PROP_MULTI_SELECT_LIST_GALLERY = new ElementProperty( TYPE, "MultiSelectListGallery" );
+    
+    IMultiSelectListGallery getMultiSelectListGallery();
+    
 }
