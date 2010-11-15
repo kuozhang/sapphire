@@ -56,6 +56,8 @@ public class SapphireWizard<M extends IExecutableModelElement>
         {
             setDefaultPageImageDescriptor( imageDescriptor );
         }
+        
+        setNeedsProgressMonitor( true );
     }
     
     public final M getModelElement()
