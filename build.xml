@@ -639,13 +639,15 @@
     <attribute name="property"/>
     <sequential>
     
-      <mkdir dir="downloads"/>
+      <property name="downloads" value="${basedir}/downloads"/>   <!-- Override to share downloads. -->
+      
+      <mkdir dir="${downloads}"/>
       
       <echo message="Downloading from Eclipse... @{file}"/>
 
-      <echo message="@{file}" file="downloads/url-checksum.txt"/>
-      <checksum file="downloads/url-checksum.txt" property=".url.checksum"/>
-      <delete file="downloads/url-checksum.txt"/>
+      <echo message="@{file}" file="${downloads}/url-checksum.txt"/>
+      <checksum file="${downloads}/url-checksum.txt" property=".url.checksum"/>
+      <delete file="${downloads}/url-checksum.txt"/>
       
       <echo message="URL checksum... ${.url.checksum}"/>
       
@@ -658,19 +660,19 @@
             <then>
 
               <if>
-                <available file="downloads/${.url.checksum}"/>
+                <available file="${downloads}/${.url.checksum}"/>
                 <then>
                 
                   <!-- Download the expected checksum. -->
                   
-                  <get src="http://www.eclipse.org/downloads/sums.php?file=@{file}&amp;type=md5" dest="downloads/content-checksum.txt"/>
-                  <loadfile srcfile="downloads/content-checksum.txt" property=".content.checksum"/>
-                  <delete file="downloads/content-checksum.txt"/>
+                  <get src="http://www.eclipse.org/downloads/sums.php?file=@{file}&amp;type=md5" dest="${downloads}/content-checksum.txt"/>
+                  <loadfile srcfile="${downloads}/content-checksum.txt" property=".content.checksum"/>
+                  <delete file="${downloads}/content-checksum.txt"/>
                   <propertyregex property=".content.checksum" override="true" input="${.content.checksum}" regexp="([^ ]*).*" select="\1"/>
                   
                   <!-- Verify the local file againsted the expected checksum. -->
                   
-                  <checksum file="downloads/${.url.checksum}" property=".content.checksum.actual"/>
+                  <checksum file="${downloads}/${.url.checksum}" property=".content.checksum.actual"/>
                   
                   <if>
                     <equals arg1="${.content.checksum}" arg2="${.content.checksum.actual}"/>
@@ -688,7 +690,7 @@
               <if>
                 <not><istrue value="${.content.valid}"/></not>
                 <then>
-                  <get src="http://www.eclipse.org/downloads/download.php?file=@{file}&amp;r=1" dest="downloads/${.url.checksum}"/>
+                  <get src="http://www.eclipse.org/downloads/download.php?file=@{file}&amp;r=1" dest="${downloads}/${.url.checksum}"/>
                 </then>
               </if>
               
@@ -700,7 +702,7 @@
       <if>
         <istrue value="${.content.valid}"/>
         <then>
-          <var name="@{property}" value="${basedir}/downloads/${.url.checksum}"/>
+          <var name="@{property}" value="${downloads}/${.url.checksum}"/>
           <var name=".url.checksum" unset="true"/>
           <var name=".content.valid" unset="true"/>
         </then>
