@@ -17,7 +17,6 @@ import static org.eclipse.sapphire.ui.build.internal.DomUtil.text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Properties;
