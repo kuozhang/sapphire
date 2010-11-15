@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -34,6 +33,7 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -48,7 +48,7 @@ public final class StringResourcesExtractorBuilder
     
 {
 
-	@Override
+    @Override
     @SuppressWarnings( "unchecked" )
     
     protected IProject[] build( final int kind,
@@ -125,37 +125,37 @@ public final class StringResourcesExtractorBuilder
                 
                 if( delta != null )
                 {
-	                delta.accept
-	                (
-	                    new IResourceDeltaVisitor()
-	                    {
-	                        public boolean visit( final IResourceDelta delta ) throws CoreException
-	                        {
-	                            final IResource resource = delta.getResource();
-	                            
-	                            if( resource.getType() == IResource.FOLDER )
-	                            {
-	                                return true;
-	                            }
-	                            else
-	                            {
-	                                if( resource.getFileExtension().toLowerCase().equals( "sdef" ) )
-	                                {
-	                                    if( delta.getKind() == IResourceDelta.REMOVED )
-	                                    {
-	                                        inputFilesRemoved.add( (IFile) resource );
-	                                    }
-	                                    else
-	                                    {
-	                                        inputFilesAddedOrModified.add( (IFile) resource );
-	                                    }
-	                                }
-	                                
-	                                return false;
-	                            }
-	                        }
-	                    }
-	                );
+                    delta.accept
+                    (
+                        new IResourceDeltaVisitor()
+                        {
+                            public boolean visit( final IResourceDelta delta ) throws CoreException
+                            {
+                                final IResource resource = delta.getResource();
+                                
+                                if( resource.getType() == IResource.FOLDER )
+                                {
+                                    return true;
+                                }
+                                else
+                                {
+                                    if( resource.getFileExtension().toLowerCase().equals( "sdef" ) )
+                                    {
+                                        if( delta.getKind() == IResourceDelta.REMOVED )
+                                        {
+                                            inputFilesRemoved.add( (IFile) resource );
+                                        }
+                                        else
+                                        {
+                                            inputFilesAddedOrModified.add( (IFile) resource );
+                                        }
+                                    }
+                                    
+                                    return false;
+                                }
+                            }
+                        }
+                    );
                 }
             }
             
@@ -217,17 +217,8 @@ public final class StringResourcesExtractorBuilder
                         
                         if( resourcesFileContent != null )
                         {
-                            final InputStream stream;
-                            
-                            try
-                            {
-                                final byte[] bytes = resourcesFileContent.getBytes( "8859_1" );
-                                stream = new ByteArrayInputStream( bytes );
-                            }
-                            catch( UnsupportedEncodingException e )
-                            {
-                                throw new RuntimeException( e );
-                            }
+                            final byte[] bytes = resourcesFileContent.getBytes();
+                            final InputStream stream = new ByteArrayInputStream( bytes );
                             
                             final IFile resourcesFile = getResourceFile( inputFolder, file, outputFolder );
                             
@@ -237,9 +228,11 @@ public final class StringResourcesExtractorBuilder
                             }
                             else
                             {
-                            	create( resourcesFile.getParent() );
+                                create( resourcesFile.getParent() );
                                 resourcesFile.create( stream, IResource.FORCE, null );
                             }
+                            
+                            resourcesFile.setDerived( true, new NullProgressMonitor() );
                         }
                     }
                     catch( Exception e )
@@ -290,19 +283,20 @@ public final class StringResourcesExtractorBuilder
     
     private static void create( final IContainer container )
     
-    	throws CoreException
-    	
+        throws CoreException
+        
     {
-    	if( container.getType() == IResource.FOLDER )
-    	{
-    		create( container.getParent() );
-    		
-    		if( ! container.exists() )
-    		{
-    			( (IFolder) container ).create(true, true, null);
-    		}
-    	}
+        if( container.getType() == IResource.FOLDER )
+        {
+            create( container.getParent() );
+            
+            if( ! container.exists() )
+            {
+                final IFolder folder = (IFolder) container;
+                folder.create( true, true, null );
+                folder.setDerived( true, new NullProgressMonitor() );
+            }
+        }
     }
-    
     
 }

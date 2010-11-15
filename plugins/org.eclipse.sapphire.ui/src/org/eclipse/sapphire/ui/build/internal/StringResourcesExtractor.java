@@ -17,7 +17,6 @@ import static org.eclipse.sapphire.ui.build.internal.DomUtil.text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -97,16 +96,7 @@ public final class StringResourcesExtractor
         final ByteArrayOutputStream resourcesFileContentBytes = new ByteArrayOutputStream();
         resourceLookupTable.store( resourcesFileContentBytes, null );
 
-        String resourcesFileContent = null;
-
-        try
-        {
-            resourcesFileContent = new String( resourcesFileContentBytes.toByteArray(), "ISO8859_1" );
-        }
-        catch( UnsupportedEncodingException e )
-        {
-            e.printStackTrace();
-        }
+        final String resourcesFileContent = new String( resourcesFileContentBytes.toByteArray() );
 
         return resourcesFileContent;
     }
