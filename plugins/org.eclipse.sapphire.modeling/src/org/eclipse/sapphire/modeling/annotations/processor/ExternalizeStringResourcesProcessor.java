@@ -95,12 +95,12 @@ public final class ExternalizeStringResourcesProcessor
                 
                 try
                 {
-                    pw = env.getFiler().createTextFile( Location.CLASS_TREE, pkg, new File( relpath ), "UTF-8" ); //$NON-NLS-1$
+                    pw = env.getFiler().createTextFile( Location.CLASS_TREE, pkg, new File( relpath ), null );
                     
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     resources.store( baos, null );
-                    String s = baos.toString("UTF-8"); //$NON-NLS-1$
-                    pw.print(s);
+                    String s = baos.toString();
+                    pw.print( s );
                 }
                 catch( IOException e )
                 {

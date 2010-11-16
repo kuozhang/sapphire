@@ -14,8 +14,8 @@ package org.eclipse.sapphire.ui;
 import static org.eclipse.sapphire.ui.util.SwtUtil.gdfill;
 import static org.eclipse.sapphire.ui.util.SwtUtil.gdwhint;
 import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
+import static org.eclipse.sapphire.ui.util.SwtUtil.makeTableSortable;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,7 +35,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -61,8 +60,6 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -207,47 +204,7 @@ public final class SlushBucketPropertyEditor
         
         viewerColumn.setLabelProvider( labelProvider );
         
-        this.sourceTable.setSortColumn( column );
-        this.sourceTable.setSortDirection( SWT.DOWN );
-        this.sourceTableViewer.setComparator( new SourceTableComparator( SWT.DOWN ) );
-
-        column.addSelectionListener
-        (
-            new SelectionAdapter()
-            {
-                @Override
-                public void widgetSelected( final SelectionEvent event )
-                {
-                    final int currentSortDirection = SlushBucketPropertyEditor.this.sourceTable.getSortDirection();
-                    final int newSortDirection;
-                    final TableColumn newSortColumn;
-                    final SourceTableComparator newComparator;
-                    
-                    if( currentSortDirection == SWT.NONE )
-                    {
-                        newSortDirection = SWT.DOWN;
-                        newSortColumn = column;
-                        newComparator = new SourceTableComparator( SWT.DOWN );
-                    }
-                    else if( currentSortDirection == SWT.DOWN )
-                    {
-                        newSortDirection = SWT.UP;
-                        newSortColumn = column;
-                        newComparator = new SourceTableComparator( SWT.UP );
-                    }
-                    else
-                    {
-                        newSortDirection = SWT.NONE;
-                        newSortColumn = null;
-                        newComparator = null;
-                    }
-
-                    SlushBucketPropertyEditor.this.sourceTable.setSortDirection( newSortDirection );
-                    SlushBucketPropertyEditor.this.sourceTable.setSortColumn( newSortColumn );
-                    SlushBucketPropertyEditor.this.sourceTableViewer.setComparator( newComparator );
-                }
-            }
-        );
+        makeTableSortable( this.sourceTableViewer );
         
         this.sourceTable.addMouseListener
         (
@@ -279,7 +236,7 @@ public final class SlushBucketPropertyEditor
                 @Override
                 public void keyPressed( final KeyEvent event )
                 {
-                    if( event.character == SWT.CR )
+                    if( event.character == ' ' )
                     {
                         handleSourceTableEnterKeyPressEvent();
                     }
@@ -444,39 +401,6 @@ public final class SlushBucketPropertyEditor
                                               final SapphirePropertyEditor part )
         {
             return new SlushBucketPropertyEditor( context, part );
-        }
-    }
-    
-    private static final class SourceTableComparator
-    
-        extends ViewerComparator
-        
-    {
-        private final int direction;
-        private final Collator collator;
-        
-        public SourceTableComparator( final int direction )
-        {
-            this.direction = direction;
-            this.collator = Collator.getInstance();
-        }
-        
-        @Override
-        public int compare( final Viewer viewer,
-                            final Object x,
-                            final Object y )
-        {
-            final String a = (String) x;
-            final String b = (String) y;
-            
-            int result = this.collator.compare( a, b );
-            
-            if( this.direction == SWT.UP )
-            {
-                result = result * -1;
-            }
-            
-            return result;
         }
     }
     

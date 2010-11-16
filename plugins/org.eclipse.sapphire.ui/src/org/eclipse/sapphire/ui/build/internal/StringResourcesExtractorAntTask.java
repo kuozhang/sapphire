@@ -93,7 +93,7 @@ public final class StringResourcesExtractorAntTask
 	                
 	                try
 	                {
-	                	final Writer writer = new OutputStreamWriter( out, "8859_1" );
+	                	final Writer writer = new OutputStreamWriter( out );
 	                	writer.write( resourceFileContent );
 	                	writer.flush();
 	                }

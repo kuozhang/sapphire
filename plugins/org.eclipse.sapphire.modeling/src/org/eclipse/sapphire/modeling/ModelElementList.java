@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
