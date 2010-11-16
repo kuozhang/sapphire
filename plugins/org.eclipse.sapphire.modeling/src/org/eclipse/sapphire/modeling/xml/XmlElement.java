@@ -11,14 +11,17 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import static org.eclipse.sapphire.modeling.xml.XmlUtil.EMPTY_STRING;
+
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.sapphire.modeling.IdentityCache;
+import org.eclipse.sapphire.modeling.util.ListFactory;
 import org.eclipse.sapphire.modeling.xml.schema.XmlContentModel;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchemasCache;
@@ -42,44 +45,52 @@ public final class XmlElement
     extends XmlNode
     
 {
-    private final XmlElement parent;
-    private final Element domElement;
+    private final IdentityCache<Element,XmlElement> elementsCache = new IdentityCache<Element,XmlElement>();
+    private final IdentityCache<Attr,XmlAttribute> attributesCache = new IdentityCache<Attr,XmlAttribute>();
+    private final IdentityCache<Comment,XmlComment> commentsCache = new IdentityCache<Comment,XmlComment>();
+    private final IdentityCache<Comment,XmlMetaComment> metaCommentsCache = new IdentityCache<Comment,XmlMetaComment>();
+
     private QName qname;
     private XmlContentModel contentModel;
     private boolean contentModelInitialized;
     
-    public XmlElement( final XmlElement parent,
-                       final Element domElement,
-                       final ModelStoreForXml modelStoreForXml )
+    public XmlElement( final XmlResourceStore store,
+                       final Element domElement )
     {
-        super( domElement, modelStoreForXml );
+        this( store, null, domElement );
+    }
+    
+    public XmlElement( final XmlElement parent,
+                       final Element domElement )
+    {
+        this( parent.getResourceStore(), parent, domElement );
+    }
 
-        this.parent = parent;
-        this.domElement = domElement;
+    private XmlElement( final XmlResourceStore store,
+                        final XmlElement parent,
+                        final Element domElement )
+    {
+        super( store, parent, domElement );
+
         this.qname = null;
         this.contentModel = null;
         this.contentModelInitialized = false;
     }
     
-    public XmlElement getParent()
-    {
-        return this.parent;
-    }
-    
     @Override
     public Element getDomNode()
     {
-        return this.domElement;
+        return (Element) super.getDomNode();
     }
     
     public String getLocalName()
     {
-        return this.domElement.getLocalName();
+        return getDomNode().getLocalName();
     }
     
     public String getNamespace()
     {
-        return this.domElement.getNamespaceURI();
+        return getDomNode().getNamespaceURI();
     }
     
     public QName getQualifiedName()
@@ -98,7 +109,7 @@ public final class XmlElement
         
         if( namespace != null )
         {
-            final Element root = this.domElement.getOwnerDocument().getDocumentElement();
+            final Element root = getDomNode().getOwnerDocument().getDocumentElement();
             final NamedNodeMap attributes = root.getAttributes();
             
             for( int i = 0, n = attributes.getLength(); i < n; i++ )
@@ -143,20 +154,31 @@ public final class XmlElement
     {
         if( ! this.contentModelInitialized )
         {
-            if( this.parent == null )
+            final XmlElement parent = getParent();
+            
+            if( parent == null )
             {
                 String schemaLocation = getSchemaLocation();
                 
                 // Try to find baseLocation and systemId of the DTD 
-            	String baseLocation = null;
-                if (schemaLocation == null)
+                
+                String baseLocation = null;
+                
+                if( schemaLocation == null )
                 {
-                	final DocumentType type = this.domElement.getOwnerDocument().getDoctype();
-                	if (type != null)
-                	{
-                		baseLocation = getModelStoreForXml().getFile().getAbsolutePath();
-                		schemaLocation = type.getSystemId();
-                	}
+                    final DocumentType type = getDomNode().getOwnerDocument().getDoctype();
+                    
+                    if( type != null )
+                    {
+                        final File file = getResourceStore().adapt( File.class );
+                        
+                        if( file != null )
+                        {
+                            baseLocation = file.getAbsolutePath();
+                        }
+                        
+                        schemaLocation = type.getSystemId();
+                    }
                 }
                 
                 if( schemaLocation != null )
@@ -176,7 +198,7 @@ public final class XmlElement
             }
             else
             {
-                final XmlContentModel parentXmlContentModel = this.parent.getContentModel();
+                final XmlContentModel parentXmlContentModel = parent.getContentModel();
                 
                 if( parentXmlContentModel != null )
                 {
@@ -193,7 +215,7 @@ public final class XmlElement
     @Override
     protected String getTextInternal()
     {
-        final NodeList nodes = this.domElement.getChildNodes();
+        final NodeList nodes = getDomNode().getChildNodes();
    
         String str = null;
         StringBuilder buf = null;
@@ -239,12 +261,15 @@ public final class XmlElement
     @Override
     public void setText( String elementText )
     {
+        validateEdit();
+        
         if( elementText == null )
         {
             elementText = EMPTY_STRING;
         }
          
-        final NodeList elementChildren = this.domElement.getChildNodes();
+        final Element domElement = getDomNode();
+        final NodeList elementChildren = domElement.getChildNodes();
         Text text = null;
          
         for( int i = 0, n = elementChildren.getLength(); i < n; i++ )
@@ -257,7 +282,7 @@ public final class XmlElement
             }
             else
             {
-                this.domElement.removeChild( elementChildren.item( i ) );
+                domElement.removeChild( elementChildren.item( i ) );
             }
         }
          
@@ -267,29 +292,62 @@ public final class XmlElement
         }
         else
         {
-            this.domElement.appendChild( this.domElement.getOwnerDocument().createTextNode( elementText ) );
+            domElement.appendChild( domElement.getOwnerDocument().createTextNode( elementText ) );
         }
+    }
+    
+    public List<XmlAttribute> getAttributes()
+    {
+        final ListFactory<XmlAttribute> result = new ListFactory<XmlAttribute>();
+        final NamedNodeMap attributes = getDomNode().getAttributes();
+        
+        this.attributesCache.track();
+        
+        for( int i = 0, count = attributes.getLength(); i < count; i++ )
+        {
+            final Attr attribute = (Attr) attributes.item( i );
+            XmlAttribute xmlAttribute = this.attributesCache.get( attribute );
+            
+            if( xmlAttribute == null )
+            {
+                xmlAttribute = new XmlAttribute( this, attribute );
+                this.attributesCache.put( attribute, xmlAttribute );
+            }
+
+            result.add( xmlAttribute );
+        }
+        
+        this.attributesCache.purge();
+        
+        return result.create();
     }
     
     public XmlAttribute getAttribute( final String name,
                                       final boolean createIfNecessary )
     {
-        Attr attrNode = this.domElement.getAttributeNode( name );
+        XmlAttribute attribute = null;
         
-        if( attrNode == null && createIfNecessary )
+        for( XmlAttribute attr : getAttributes() )
         {
-            attrNode = this.domElement.getOwnerDocument().createAttribute( name );
-            this.domElement.setAttributeNode( attrNode );
+            if( equal( attr.getLocalName(), name ) )
+            {
+                attribute = attr;
+                break;
+            }
         }
         
-        if( attrNode == null )
+        if( attribute == null && createIfNecessary )
         {
-            return null;
+            validateEdit();
+            
+            final Element domElement = getDomNode();
+            final Attr attr = domElement.getOwnerDocument().createAttribute( name );
+            domElement.setAttributeNode( attr );
+            attribute = new XmlAttribute( this, attr );
+            this.attributesCache.put( attr, attribute );
         }
-        else
-        {
-            return new XmlAttribute( attrNode, this.getModelStoreForXml() );
-        }
+        
+        return attribute;
     }
     
     public String getAttributeText( final String name )
@@ -310,6 +368,8 @@ public final class XmlElement
                                   final String value,
                                   final boolean removeIfNullOrEmpty )
     {
+        validateEdit();
+        
         final String val = ( value == null ? EMPTY_STRING : value );
         
         if( val.length() == 0 )
@@ -336,127 +396,71 @@ public final class XmlElement
     
     public List<XmlElement> getChildElements()
     {
-        Element firstElement = null;
-        List<XmlElement> elements = null;
-        final NodeList children = this.domElement.getChildNodes();
+        final ListFactory<XmlElement> result = new ListFactory<XmlElement>();
+        final NodeList children = getDomNode().getChildNodes();
         
-        for( int i = 0, n = children.getLength(); i < n; i++ )
+        this.elementsCache.track();
+        
+        for( int i = 0, count = children.getLength(); i < count; i++ )
         {
-            final Node node = children.item( i );
-    
-            if( node.getNodeType() == Node.ELEMENT_NODE )
+            final Node n = children.item( i );
+            
+            if( n.getNodeType() == Node.ELEMENT_NODE )
             {
-                final Element element = (Element) node;
-                
-                if( elements != null )
+                final Element element = (Element) n;
+                XmlElement xmlElement = this.elementsCache.get( element );
+            
+                if( xmlElement == null )
                 {
-                    elements.add( new XmlElement( this, element, this.getModelStoreForXml() ) );
+                    xmlElement = new XmlElement( this, element );
+                    this.elementsCache.put( element, xmlElement );
                 }
-                else if( firstElement != null )
-                {
-                    elements = new ArrayList<XmlElement>();
-                    elements.add( new XmlElement( this, firstElement, this.getModelStoreForXml() ) );
-                    elements.add( new XmlElement( this, element, this.getModelStoreForXml() ) );
-                    firstElement = null;
-                }
-                else
-                {
-                    firstElement = element;
-                }
-            }
-        }
-         
-        if( elements != null )
-        {
-            return elements;
-        }
-        else if( firstElement != null )
-        {
-            return Collections.singletonList( new XmlElement( this, firstElement, this.getModelStoreForXml() ) );
-        }
-        else
-        {
-            return Collections.emptyList();
-        }
-    }
-
-    public List<XmlElement> getChildElements( final QName childElementName )
-    {
-        final String namespace = this.domElement.getNamespaceURI();
     
-        Element firstElement = null;
-        List<XmlElement> elements = null;
-        final NodeList children = this.domElement.getChildNodes();
-         
-        for( int i = 0, n = children.getLength(); i < n; i++ )
-        {
-            final Node node = children.item( i );
-    
-            if( node.getNodeType() == Node.ELEMENT_NODE &&
-                equal( node.getNamespaceURI(), namespace ) &&
-                childElementName.equals( new QName( node.getNamespaceURI(), node.getLocalName() ) ) )
-            {
-                final Element element = (Element) node;
-                
-                if( elements != null )
-                {
-                    elements.add( new XmlElement( this, element, this.getModelStoreForXml() ) );
-                }
-                else if( firstElement != null )
-                {
-                    elements = new ArrayList<XmlElement>();
-                    elements.add( new XmlElement( this, firstElement, this.getModelStoreForXml() ) );
-                    elements.add( new XmlElement( this, element, this.getModelStoreForXml() ) );
-                    firstElement = null;
-                }
-                else
-                {
-                    firstElement = element;
-                }
+                result.add( xmlElement );
             }
         }
         
-        if( elements != null )
-        {
-            return elements;
-        }
-        else if( firstElement != null )
-        {
-            return Collections.singletonList( new XmlElement( this, firstElement, this.getModelStoreForXml() ) );
-        }
-        else
-        {
-            return Collections.emptyList();
-        }
-    }
-    
-    public List<XmlElement> getChildElements( final String childElementName )
-    {
-        return getChildElements( createQualifiedName( childElementName ) );
+        this.elementsCache.purge();
+        
+        return result.create();
     }
 
-    public XmlElement getChildElement( final QName qname,
+    public List<XmlElement> getChildElements( final QName name )
+    {
+        final ListFactory<XmlElement> result = new ListFactory<XmlElement>();
+        
+        for( XmlElement element : getChildElements() )
+        {
+            if( equal( normalizeToNull( element.getNamespace() ), normalizeToNull( name.getNamespaceURI() ) ) &&
+                equal( element.getLocalName(), name.getLocalPart() ) )
+            {
+                result.add( element );
+            }
+        }
+        
+        return result.create();
+    }
+    
+    public List<XmlElement> getChildElements( final String name )
+    {
+        return getChildElements( createQualifiedName( name ) );
+    }
+
+    public XmlElement getChildElement( final QName name,
                                        final boolean createIfNecessary )
     {
-        final String namespace = qname.getNamespaceURI();
-        final String localName = qname.getLocalPart();
-        final NodeList children = this.domElement.getChildNodes();
-         
-        for( int i = 0, n = children.getLength(); i < n; i++ )
+        for( XmlElement element : getChildElements() )
         {
-            final Node node = children.item( i );
-             
-            if( node.getNodeType() == Node.ELEMENT_NODE &&
-                equal( normalizeToNull( node.getNamespaceURI() ), normalizeToNull( namespace ) ) &&
-                node.getLocalName().equals( localName ) )
+            if( equal( normalizeToNull( element.getNamespace() ), normalizeToNull( name.getNamespaceURI() ) ) &&
+                equal( element.getLocalName(), name.getLocalPart() ) )
             {
-                return new XmlElement( this, (Element) node, this.getModelStoreForXml() );
+                return element;
             }
         }
          
         if( createIfNecessary )
         {
-            return addChildElement( qname );
+            return addChildElement( name );
         }
         else
         {
@@ -472,8 +476,11 @@ public final class XmlElement
     
     public XmlElement addChildElement( final QName name )
     {
-        final Document document = this.domElement.getOwnerDocument();
-        final NodeList nodes = this.domElement.getChildNodes();
+        validateEdit();
+        
+        final Element domElement = getDomNode();
+        final Document document = domElement.getOwnerDocument();
+        final NodeList nodes = domElement.getChildNodes();
         
         // Find the insertion position.
         
@@ -518,11 +525,12 @@ public final class XmlElement
             element = document.createElementNS( namespace, qname );
         }
         
-        this.domElement.insertBefore( element, refChild );
+        domElement.insertBefore( element, refChild );
         
-        final XmlElement wrappedElement = new XmlElement( this, element, this.getModelStoreForXml() );
+        final XmlElement wrappedElement = new XmlElement( this, element );
+        this.elementsCache.put( element, wrappedElement );
         
-        if( this.domElement.getNodeType() == Node.ELEMENT_NODE && this.domElement.getChildNodes().getLength() == 1 )
+        if( domElement.getNodeType() == Node.ELEMENT_NODE && domElement.getChildNodes().getLength() == 1 )
         {
             format();
         }
@@ -542,6 +550,7 @@ public final class XmlElement
     private String findNamespacePrefix( final String namespace,
                                         final String defaultPrefix )
     {
+        final Element domElement = getDomNode();
         String prefix = null;
         
         if( namespace != null && namespace.length() > 0 )
@@ -550,11 +559,11 @@ public final class XmlElement
             
             if( ns != null && ns.equals( namespace ) )
             {
-                prefix = this.domElement.getPrefix();
+                prefix = domElement.getPrefix();
             }
             else
             {
-                Element el = this.domElement;
+                Element el = domElement;
                 boolean found = false;
                 
                 while( el != null && ! found )
@@ -603,7 +612,7 @@ public final class XmlElement
                     prefix = defaultPrefix;
                     
                     final String xmlnsAttrName = "xmlns:" + defaultPrefix; //$NON-NLS-1$
-                    final Element root = this.domElement.getOwnerDocument().getDocumentElement();
+                    final Element root = domElement.getOwnerDocument().getDocumentElement();
                     root.setAttribute( xmlnsAttrName, namespace );
                     
                     if( ! namespace.equals( "http://www.w3.org/2001/XMLSchema-instance" ) ) //$NON-NLS-1$
@@ -636,7 +645,7 @@ public final class XmlElement
             final String schemaLocationAttrName 
                 = ( xsiNamespacePrefix == null ? "schemaLocation" : xsiNamespacePrefix + ":schemaLocation" );
             
-            final Element root = this.domElement.getOwnerDocument().getDocumentElement();
+            final Element root = getDomNode().getOwnerDocument().getDocumentElement();
             final String existingSchemaLocations = root.getAttribute( schemaLocationAttrName );
             final Map<String,String> schemaLocations = new LinkedHashMap<String,String>();
             
@@ -755,6 +764,8 @@ public final class XmlElement
                                   final String text,
                                   final boolean removeIfNullOrEmpty )
     {
+        validateEdit();
+        
         if( removeIfNullOrEmpty && ( text == null || text.trim().length() == 0 ) )
         {
             removeChildNode( path );
@@ -777,10 +788,12 @@ public final class XmlElement
         removeChildNode( this, path, 0 );
     }
 
-    private static void removeChildNode( final XmlElement el,
-                                         final XmlPath path,
-                                         final int pathPosition )
+    private void removeChildNode( final XmlElement el,
+                                  final XmlPath path,
+                                  final int pathPosition )
     {
+        validateEdit();
+        
         final XmlPath.Segment segment = path.getSegment( pathPosition );
         final XmlNode child = el.getChildNode( segment, false );
         
@@ -809,24 +822,27 @@ public final class XmlElement
     
     public void swap( final XmlElement y )
     {
+        validateEdit();
+        
         // It should be possible to implement this more optimally, but the
         // bookmark approach yields a very simple implementation which 
         // is therefore easier to prove as correct in all cases.
         
-        final Node parent = this.domElement.getParentNode();
+        final Element domElement = getDomNode();
+        final Node parent = domElement.getParentNode();
         final Document document = parent.getOwnerDocument();
         
         final Node xBookmark = document.createTextNode( EMPTY_STRING );
-        parent.insertBefore( xBookmark, this.domElement );
+        parent.insertBefore( xBookmark, domElement );
         
         final Node yBookmark = document.createTextNode( EMPTY_STRING );
-        parent.insertBefore( yBookmark, y.domElement );
+        parent.insertBefore( yBookmark, y.getDomNode() );
         
-        parent.removeChild( this.domElement );
-        parent.removeChild( y.domElement );
+        parent.removeChild( domElement );
+        parent.removeChild( y.getDomNode() );
         
-        parent.insertBefore( this.domElement, yBookmark );
-        parent.insertBefore( y.domElement, xBookmark );
+        parent.insertBefore( domElement, yBookmark );
+        parent.insertBefore( y.getDomNode(), xBookmark );
         
         parent.removeChild( xBookmark );
         parent.removeChild( yBookmark );
@@ -835,13 +851,16 @@ public final class XmlElement
     @Override
     public void remove()
     {
-        final Node parentDomNode = this.domElement.getParentNode();
+        validateEdit();
+        
+        final Element domElement = getDomNode();
+        final Node parentDomNode = domElement.getParentNode();
         
         if( parentDomNode != null )
         {
-            final Node previousSibling = this.domElement.getPreviousSibling();
+            final Node previousSibling = domElement.getPreviousSibling();
             
-            parentDomNode.removeChild( this.domElement );
+            parentDomNode.removeChild( domElement );
              
             if( previousSibling != null && previousSibling.getNodeType() == Node.TEXT_NODE &&
                 previousSibling.getNodeValue().trim().length() == 0 )
@@ -853,7 +872,7 @@ public final class XmlElement
     
     public boolean isEmpty()
     {
-        final NodeList nodes = this.domElement.getChildNodes();
+        final NodeList nodes = getDomNode().getChildNodes();
          
         for( int i = 0, n = nodes.getLength(); i < n; i++ )
         {
@@ -868,10 +887,44 @@ public final class XmlElement
         return true;
     }
     
+    public List<XmlComment> getComments()
+    {
+        final ListFactory<XmlComment> result = new ListFactory<XmlComment>();
+        final NodeList children = getDomNode().getChildNodes();
+        
+        this.commentsCache.track();
+        
+        for( int i = 0, count = children.getLength(); i < count; i++ )
+        {
+            final Node n = children.item( i );
+            
+            if( n.getNodeType() == Node.COMMENT_NODE )
+            {
+                final Comment comment = (Comment) n;
+                XmlComment xmlComment = this.commentsCache.get( comment );
+                
+                if( xmlComment == null )
+                {
+                    xmlComment = new XmlComment( this, comment );
+                    this.commentsCache.put( comment, xmlComment );
+                }
+                
+                result.add( xmlComment );
+            }
+        }
+        
+        this.commentsCache.purge();
+        
+        return result.create();
+    }
+    
     public XmlComment addComment( final String commentText )
     {
-        final Document document = this.domElement.getOwnerDocument();
-        final NodeList nodes = this.domElement.getChildNodes();
+        validateEdit();
+        
+        final Element domElement = getDomNode();
+        final Document document = domElement.getOwnerDocument();
+        final NodeList nodes = domElement.getChildNodes();
         int position = 0;
          
         for( int n = nodes.getLength(); position < n; position++ )
@@ -900,11 +953,12 @@ public final class XmlElement
         prevChild = ( prevPosition < nodes.getLength()) ? nodes.item( prevPosition ) : null;
     
         final Comment comment = document.createComment( commentText );
-        this.domElement.insertBefore( comment, refChild );
+        domElement.insertBefore( comment, refChild );
         
-        final XmlComment wrappedComment = new XmlComment( comment, this.getModelStoreForXml() );
+        final XmlComment wrappedComment = new XmlComment( this, comment );
+        this.commentsCache.put( comment, wrappedComment );
          
-        if( this.domElement.getNodeType() == Node.ELEMENT_NODE && this.domElement.getChildNodes().getLength() == 1 )
+        if( domElement.getNodeType() == Node.ELEMENT_NODE && domElement.getChildNodes().getLength() == 1 )
         {
             format();
         }
@@ -915,42 +969,60 @@ public final class XmlElement
          
         return wrappedComment;
     }
+    
+    public List<XmlMetaComment> getMetaComments()
+    {
+        final ListFactory<XmlMetaComment> result = new ListFactory<XmlMetaComment>();
+        final NodeList children = getDomNode().getChildNodes();
+        
+        this.metaCommentsCache.track();
+        
+        for( int i = 0, count = children.getLength(); i < count; i++ )
+        {
+            final Node n = children.item( i );
+            
+            if( n.getNodeType() == Node.COMMENT_NODE && n.getNodeValue().indexOf( ':' ) != -1 )
+            {
+                final Comment metaComment = (Comment) n;
+                XmlMetaComment xmlMetaComment = this.metaCommentsCache.get( metaComment );
+                
+                if( xmlMetaComment == null )
+                {
+                    xmlMetaComment = new XmlMetaComment( this, metaComment );
+                    this.metaCommentsCache.put( metaComment, xmlMetaComment );
+                }
+                
+                result.add( xmlMetaComment );
+            }
+        }
+        
+        this.metaCommentsCache.purge();
+        
+        return result.create();
+    }
      
     public XmlMetaComment getMetaComment( final String name,
                                           final boolean createIfNecessary )
     {
-        final String prefix = name + ":"; //$NON-NLS-1$
-        final NodeList children = this.domElement.getChildNodes();
-        Comment xmlMetaComment = null;
+        XmlMetaComment xmlMetaComment = null;
         
-        for( int i = 0, n = children.getLength(); i < n; i++ )
+        for( XmlMetaComment x : getMetaComments() )
         {
-            final Node child = children.item( i );
-             
-            if( child.getNodeType() == Node.COMMENT_NODE )
+            if( equal( x.getName(), name ) )
             {
-                final Comment comment = (Comment) child;
-                 
-                if( comment.getNodeValue().trim().startsWith( prefix ) )
-                {
-                    xmlMetaComment = comment;
-                }
+                xmlMetaComment = x;
+                break;
             }
         }
         
         if( xmlMetaComment == null && createIfNecessary )
         {
-            xmlMetaComment = addComment( prefix ).getDomComment();
+            final Comment comment = addComment( name + ":" ).getDomNode();
+            xmlMetaComment = new XmlMetaComment( this, comment );
+            this.metaCommentsCache.put( comment, xmlMetaComment );
         }
         
-        if( xmlMetaComment == null )
-        {
-            return null;
-        }
-        else
-        {
-            return new XmlMetaComment( xmlMetaComment, this.getModelStoreForXml() );
-        }
+        return xmlMetaComment;
     }
      
     public String getMetaCommentText( final String name )
@@ -970,6 +1042,8 @@ public final class XmlElement
     public void setMetaCommentText( final String name,
                                     String value )
     {
+        validateEdit();
+        
         if( value != null )
         {
             if( value.length() == 0 )
@@ -1004,7 +1078,7 @@ public final class XmlElement
             
             if( prefix.length() == 0 )
             {
-                namespace = this.domElement.getNamespaceURI();
+                namespace = getDomNode().getNamespaceURI();
             }
             
             final QName newQualifiedName 
@@ -1016,7 +1090,7 @@ public final class XmlElement
     
     private QName createQualifiedName( final String localName )
     {
-        final String namespace = this.domElement.getNamespaceURI();
+        final String namespace = getDomNode().getNamespaceURI();
         return new QName( namespace, localName );
     }
     

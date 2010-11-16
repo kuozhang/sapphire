@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.util.SwtUtil.gd;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhindent;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
-import static org.eclipse.sapphire.ui.util.SwtUtil.hspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import org.eclipse.sapphire.ui.def.ISapphireSeparatorDef;
 import org.eclipse.swt.SWT;
@@ -37,7 +37,7 @@ public final class SapphireSeparator
         final ISapphireSeparatorDef def = (ISapphireSeparatorDef) this.definition;
         
         final Composite separatorComposite = new Composite( context.getComposite(), SWT.NONE );
-        separatorComposite.setLayoutData( gdhindent( hspan( gdhfill(), 2 ), 10 ) );
+        separatorComposite.setLayoutData( gdhindent( gdhspan( gdhfill(), 2 ), 10 ) );
         separatorComposite.setLayout( glayout( 1, 0, 5 ) );
         context.adapt( separatorComposite );
         

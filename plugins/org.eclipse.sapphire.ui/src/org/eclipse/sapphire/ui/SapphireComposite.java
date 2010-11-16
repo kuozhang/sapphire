@@ -7,29 +7,33 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.util.SwtUtil.gd;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhhint;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdwhint;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
-import static org.eclipse.sapphire.ui.util.SwtUtil.hspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
+import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
+import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
@@ -116,14 +120,21 @@ public class SapphireComposite
         final int widthHint = this.definition.getHint( ISapphirePartDef.HINT_WIDTH, -1 );
         final int heightHint = this.definition.getHint( ISapphirePartDef.HINT_HEIGHT, -1 );
         
-        final GridData gd = gdwhint( gdhhint( hspan( ( expandVertically ? gdfill() : gdhfill() ), ( indent ? 1 : 2 ) ), heightHint ), widthHint );
+        final GridData gd = gdwhint( gdhhint( gdhspan( ( expandVertically ? gdfill() : gdhfill() ), ( indent ? 1 : 2 ) ), heightHint ), widthHint );
         
         final int marginLeft = def.getMarginLeft().getContent();
         final int marginRight = def.getMarginRight().getContent();
         final int marginTop = def.getMarginTop().getContent();
         final int marginBottom = def.getMarginBottom().getContent();
         
-        final Composite composite = new Composite( parent, SWT.NONE );
+        final Composite composite = new Composite( parent, SWT.NONE ) {
+        	public Point computeSize (int wHint, int hHint, boolean changed) {
+        		if (this.getChildren().length == 0) {
+        			return new Point(0, 0);
+        		}
+        		return super.computeSize(wHint, hHint, changed);
+        	}
+        };
         composite.setLayout( glayout( 2, marginLeft, marginRight, marginTop, marginBottom ) );
         ctxt.adapt( composite );
         
@@ -137,13 +148,27 @@ public class SapphireComposite
             composite.setLayoutData( gd );
         }
         
-        final String helpContextId = this.definition.getHelpContextId().getText();
+        final ISapphireDocumentationDef documentationDef = this.definition.getDocumentationDef().element();
         
-        if( helpContextId != null )
+        if ( documentationDef != null && documentationDef.getContent().getText() != null )
         {
-            PlatformUI.getWorkbench().getHelpSystem().setHelp( composite, helpContextId );
+            SapphireHelpSystem.setHelp( composite, documentationDef);
+        }
+        else 
+        {
+            final ISapphireDocumentationRef documentationRef = this.definition.getDocumentationRef().element();
+            
+            if ( documentationRef != null  )
+            {
+                final ISapphireDocumentationDef documentationDef2 = documentationRef.resolve();
+                if ( documentationDef2 != null ) 
+                {
+                    SapphireHelpSystem.setHelp( composite, documentationDef2 );
+                }
+            }
         }
         
+
         final SapphireRenderingContext innerContext = new SapphireRenderingContext( this, ctxt, composite );
         
         super.render( innerContext );
@@ -161,7 +186,7 @@ public class SapphireComposite
                 // Something changed in the tree of parts arranged beneath this composite part. If this is
                 // the composite closest to the affected part, it will need to re-render.
                 
-                ISapphirePart part = event.getContext().getPart();
+                ISapphirePart part = event.getPart();
                 Boolean needToReRender = null;
                 
                 while( part != null && needToReRender == null )

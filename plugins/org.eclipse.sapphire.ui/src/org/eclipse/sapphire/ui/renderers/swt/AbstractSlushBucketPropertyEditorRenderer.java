@@ -14,32 +14,32 @@ package org.eclipse.sapphire.ui.renderers.swt;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.RELATED_CONTROLS;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gd;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhhint;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhindent;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glspacing;
-import static org.eclipse.sapphire.ui.util.SwtUtil.hspan;
-import static org.eclipse.sapphire.ui.util.SwtUtil.valign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.ui.SapphireImageCache;
+import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionGroup;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphireActionHandlerFilter;
+import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.actions.Action;
-import org.eclipse.sapphire.ui.actions.ActionGroup;
-import org.eclipse.sapphire.ui.actions.ActionsRenderer;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.internal.EnhancedComposite;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -58,7 +58,7 @@ public abstract class AbstractSlushBucketPropertyEditorRenderer
     
 {
     public AbstractSlushBucketPropertyEditorRenderer( final SapphireRenderingContext context,
-                                              final SapphirePropertyEditor part )
+                                                      final SapphirePropertyEditor part )
     {
         super( context, part );
     }
@@ -79,13 +79,13 @@ public abstract class AbstractSlushBucketPropertyEditorRenderer
         {
             final String labelText = property.getLabel( false, CapitalizationType.FIRST_WORD_ONLY, true ) + ":";
             label = new Label( parent, SWT.NONE );
-            label.setLayoutData( gdhindent( valign( gd(), SWT.TOP ), leftMargin + 9 ) );
+            label.setLayoutData( gdhindent( gdvalign( gd(), SWT.TOP ), leftMargin + 9 ) );
             label.setText( labelText );
             this.context.adapt( label );
         }
         
         final Composite rootComposite = new EnhancedComposite( parent, SWT.NONE );
-        rootComposite.setLayoutData( gdhindent( hspan( gdhhint( gdhfill(), heightHint ), showLabelInline ? 1 : 2 ), showLabelInline ? 0 : leftMargin ) );
+        rootComposite.setLayoutData( gdhindent( gdhspan( gdhhint( gdhfill(), heightHint ), showLabelInline ? 1 : 2 ), showLabelInline ? 0 : leftMargin ) );
         rootComposite.setLayout( new FillLayout( SWT.HORIZONTAL ) );
         this.context.adapt( rootComposite );
 
@@ -94,7 +94,7 @@ public abstract class AbstractSlushBucketPropertyEditorRenderer
         this.context.adapt( sourceTableComposite );
         
         final Composite decoratorComposite = new Composite( sourceTableComposite, SWT.NONE );
-        decoratorComposite.setLayoutData( valign( gd(), SWT.TOP ) );
+        decoratorComposite.setLayoutData( gdvalign( gd(), SWT.TOP ) );
         decoratorComposite.setLayout( glayout( 1, 0, 2, 0, 0 ) );
         this.context.adapt( decoratorComposite );
         
@@ -129,18 +129,40 @@ public abstract class AbstractSlushBucketPropertyEditorRenderer
         decorator.addEditorControl( toolbar );
         
         final Table mainTable = (Table) super.createContents( tableComposite, true, true );
-
-        final Action moveRightAction = createAddAction();
-        moveRightAction.setLabel( Resources.moveRightActionLabel );
-        moveRightAction.setImageDescriptor( SapphireImageCache.ACTION_MOVE_RIGHT );
-        moveRightAction.setPart( part );
         
-        final ActionGroup moveRightActionGroup = new ActionGroup();
-        moveRightActionGroup.addAction( moveRightAction );
+        final SapphireActionGroup actions = getActions();
+        final SapphireAction moveRightAction = actions.getAction( SapphireActionSystem.ACTION_MOVE_RIGHT );
+        final SapphireActionHandler moveRightActionHandler = createMoveRightActionHandler();
+        moveRightActionHandler.init( moveRightAction, null );
+        moveRightAction.addHandler( moveRightActionHandler );
         
-        final List<ActionGroup> moveRightActions = new ArrayList<ActionGroup>();
-        moveRightActions.add( moveRightActionGroup );
-        ActionsRenderer.fillToolBar( toolbar, moveRightActions );
+        final SapphireToolBarActionPresentation actionsPresentation = new SapphireToolBarActionPresentation( getActionPresentationManager() );
+        actionsPresentation.setToolBar( toolbar );
+        
+        actionsPresentation.addFilter
+        (
+            new SapphireActionHandlerFilter()
+            {
+                @Override
+                public boolean check( final SapphireActionHandler handler )
+                {
+                    return ( handler == moveRightActionHandler );
+                }
+            }
+        );
+        
+        actionsPresentation.render();
+        
+        addOnDisposeOperation
+        (
+            new Runnable()
+            {
+                public void run()
+                {
+                    moveRightAction.removeHandler( moveRightActionHandler );
+                }
+            }
+        );
 
         final List<Control> relatedControls = getRelatedControls( mainTable );
         
@@ -159,7 +181,7 @@ public abstract class AbstractSlushBucketPropertyEditorRenderer
     
     protected abstract Control createSourceControl( Composite parent );
 
-    protected abstract Action createAddAction();
+    protected abstract SapphireActionHandler createMoveRightActionHandler();
     
     @SuppressWarnings( "unchecked" )
     private static List<Control> getRelatedControls( final Control control )
@@ -167,17 +189,4 @@ public abstract class AbstractSlushBucketPropertyEditorRenderer
         return (List<Control>) control.getData( RELATED_CONTROLS );
     }
     
-    private static final class Resources
-    
-        extends NLS
-    
-    {
-        public static String moveRightActionLabel;
-        
-        static
-        {
-            initializeMessages( AbstractSlushBucketPropertyEditorRenderer.class.getName(), Resources.class );
-        }
-    }
-
 }

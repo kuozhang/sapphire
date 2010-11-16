@@ -11,10 +11,7 @@
 
 package org.eclipse.sapphire.samples.contacts.ui;
 
-import org.eclipse.sapphire.modeling.IModel;
-import org.eclipse.sapphire.modeling.ModelStore;
-import org.eclipse.sapphire.modeling.xml.ModelStoreForXml;
-import org.eclipse.sapphire.samples.contacts.ContactsDatabaseFactory;
+import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
 import org.eclipse.sapphire.ui.xml.SapphireEditorForXml;
 
 /**
@@ -30,13 +27,8 @@ public final class ContactsDatabaseEditor
     {
         super( "org.eclipse.sapphire.samples" );
         
+        setRootModelElementType( IContactsDatabase.TYPE );
         setEditorDefinitionPath( "org.eclipse.sapphire.samples/sdef/ContactsDatabaseEditor.sdef/main" );
-    }
-
-    @Override
-    protected IModel createModel( final ModelStore modelStore )
-    {
-        return ContactsDatabaseFactory.load( (ModelStoreForXml) modelStore );
     }
     
 }

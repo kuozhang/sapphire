@@ -2,24 +2,25 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.sapphire.ui;singleton:=true
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 0.2.0.qualifier
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.sapphire.ui,
- org.eclipse.sapphire.ui.actions,
  org.eclipse.sapphire.ui.assist,
  org.eclipse.sapphire.ui.assist.internal;x-internal:=true,
  org.eclipse.sapphire.ui.def,
+ org.eclipse.sapphire.ui.def.internal;x-friends:="org.eclipse.sapphire.sdk",
  org.eclipse.sapphire.ui.editor.views.masterdetails,
- org.eclipse.sapphire.ui.editor.views.masterdetails.actions,
  org.eclipse.sapphire.ui.internal,
  org.eclipse.sapphire.ui.internal.binding,
- org.eclipse.sapphire.ui.java,
  org.eclipse.sapphire.ui.listeners,
  org.eclipse.sapphire.ui.renderers.swt,
  org.eclipse.sapphire.ui.swt,
+ org.eclipse.sapphire.ui.swt.renderer,
+ org.eclipse.sapphire.ui.swt.renderer.actions,
  org.eclipse.sapphire.ui.util,
- org.eclipse.sapphire.ui.xml
+ org.eclipse.sapphire.ui.xml,
+ META-INF
 Require-Bundle: org.eclipse.debug.ui,
  org.eclipse.jdt.ui,
  org.eclipse.ui.forms;visibility:=reexport,

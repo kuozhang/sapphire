@@ -23,7 +23,7 @@ public final class CompositeRefMethods
 {
     public static ISapphireCompositeDef resolve( final ISapphireCompositeRef ref )
     {
-        final ISapphireUiDef rootdef = (ISapphireUiDef) ref.getModel();
+        final ISapphireUiDef rootdef = ref.nearest( ISapphireUiDef.class );
         return rootdef.getCompositeDef( ref.getId().getText(), true );
     }
     

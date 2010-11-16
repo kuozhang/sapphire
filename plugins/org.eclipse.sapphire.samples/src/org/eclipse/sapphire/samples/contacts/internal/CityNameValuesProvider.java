@@ -13,7 +13,8 @@ package org.eclipse.sapphire.samples.contacts.internal;
 
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.modeling.annotations.PossibleValuesProviderImpl;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.samples.contacts.IAddress;
 import org.eclipse.sapphire.samples.zipcodes.ZipCodesDatabase;
 
@@ -23,18 +24,30 @@ import org.eclipse.sapphire.samples.zipcodes.ZipCodesDatabase;
 
 public final class CityNameValuesProvider
 
-    extends PossibleValuesProviderImpl
+    extends PossibleValuesService
     
 {
     @Override
     protected void fillPossibleValues( final SortedSet<String> values )
     {
-        final IAddress address = (IAddress) getModelElement();
+        final IAddress address = (IAddress) element();
         
         final String zipCode = address.getZipCode().getText();
         final String stateCode = address.getState().getText();
         
         values.addAll( ZipCodesDatabase.getCities( zipCode, stateCode ) );
+    }
+
+    @Override
+    public String getInvalidValueMessage( final String invalidValue )
+    {
+        return NLS.bind( "\"{0}\" is not a valid city for the specified state and ZIP code.", invalidValue );
+    }
+
+    @Override
+    public boolean isCaseSensitive()
+    {
+        return false;
     }
 
 }

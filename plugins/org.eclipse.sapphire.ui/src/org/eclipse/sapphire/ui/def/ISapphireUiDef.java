@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.def;
@@ -14,31 +15,28 @@ package org.eclipse.sapphire.ui.def;
 import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.sapphire.modeling.IModel;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBindingModelImpl;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBindingMapping;
-import org.eclipse.sapphire.modeling.xml.annotations.RootXmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 import org.eclipse.sapphire.ui.def.internal.SapphireUiDefMethods;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBindingModelImpl
-
-@RootXmlBinding( namespace = "http://xmlns.oracle.com/eclipse/tools/sapphire/ui",
-                 elementName = "definition" )
+@GenerateImpl
+@XmlRootBinding( elementName = "definition" )
 
 public interface ISapphireUiDef
 
-    extends IModel
+    extends IModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireUiDef.class );
@@ -46,7 +44,7 @@ public interface ISapphireUiDef
     // *** ImportDirectives ***
     
     @Type( base = IImportDirective.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "import", type = IImportDirective.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "import", type = IImportDirective.class ) )
                              
     ListProperty PROP_IMPORT_DIRECTIVES = new ListProperty( TYPE, "ImportDirectives" );
     
@@ -61,7 +59,7 @@ public interface ISapphireUiDef
     // *** CompositeDefs ***
     
     @Type( base = ISapphireCompositeDef.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "composite", type = ISapphireCompositeDef.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "composite", type = ISapphireCompositeDef.class ) )
                              
     ListProperty PROP_COMPOSITE_DEFS = new ListProperty( TYPE, "CompositeDefs" );
     
@@ -74,10 +72,26 @@ public interface ISapphireUiDef
     ISapphireCompositeDef getCompositeDef( String id,
                                            boolean searchImportedDefinitions );
     
+    // *** DocumentationDefs ***
+    
+    @Type( base = ISapphireDocumentationDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "documentation", type = ISapphireDocumentationDef.class ) )
+                             
+    ListProperty PROP_DOCUMENTATION_DEFS = new ListProperty( TYPE, "DocumentationDefs" );
+    
+    ModelElementList<ISapphireDocumentationDef> getDocumentationDefs();
+    
+    // *** Method : getDocumentationDef ***
+    
+    @DelegateImplementation( SapphireUiDefMethods.class )
+    
+    ISapphireDocumentationDef getDocumentationDef( String id,
+                                               boolean searchImportedDefinitions );
+
     // *** MasterDetailsTreeNodeDefs ***
     
     @Type( base = IMasterDetailsTreeNodeDef.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "node", type = IMasterDetailsTreeNodeDef.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "node", type = IMasterDetailsTreeNodeDef.class ) )
     
     ListProperty PROP_MASTER_DETAILS_TREE_NODE_DEFS = new ListProperty( TYPE, "MasterDetailsTreeNodeDefs" );
     
@@ -93,7 +107,7 @@ public interface ISapphireUiDef
     // *** MasterDetailsTreeNodeFactoryDefs ***
     
     @Type( base = IMasterDetailsTreeNodeFactoryDef.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "node-list", type = IMasterDetailsTreeNodeFactoryDef.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "node-list", type = IMasterDetailsTreeNodeFactoryDef.class ) )
     
     ListProperty PROP_MASTER_DETAILS_TREE_NODE_FACTORY_DEFS = new ListProperty( TYPE, "MasterDetailsTreeNodeFactoryDefs" );
     
@@ -109,7 +123,7 @@ public interface ISapphireUiDef
     // *** EditorPageDefs ***
     
     @Type( base = IEditorPageDef.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "editor-page", type = IEditorPageDef.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "editor-page", type = IEditorPageDef.class ) )
     
     ListProperty PROP_EDITOR_PAGE_DEFS = new ListProperty( TYPE, "EditorPageDefs" );
     
@@ -118,7 +132,7 @@ public interface ISapphireUiDef
     // *** DialogDefs ***
     
     @Type( base = ISapphireDialogDef.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "dialog", type = ISapphireDialogDef.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "dialog", type = ISapphireDialogDef.class ) )
     
     ListProperty PROP_DIALOG_DEFS = new ListProperty( TYPE, "DialogDefs" );
     
@@ -134,7 +148,7 @@ public interface ISapphireUiDef
     // *** WizardDefs ***
     
     @Type( base = ISapphireWizardDef.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "wizard", type = ISapphireWizardDef.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "wizard", type = ISapphireWizardDef.class ) )
     
     ListProperty PROP_WIZARD_DEFS = new ListProperty( TYPE, "WizardDefs" );
     

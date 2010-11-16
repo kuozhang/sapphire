@@ -46,7 +46,7 @@ public final class SapphireListControlledPageBook
     @Override
     protected Object parsePageKey( final String pageKeyString )
     {
-        final ISapphireUiDef rootdef = (ISapphireUiDef) this.definition.getModel();
+        final ISapphireUiDef rootdef = this.definition.nearest( ISapphireUiDef.class );
         final Class<?> cl = rootdef.resolveClass( pageKeyString );
         return ClassBasedKey.create( cl );
     }

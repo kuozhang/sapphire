@@ -11,6 +11,9 @@
 
 package org.eclipse.sapphire.modeling;
 
+import java.util.Collection;
+import java.util.SortedSet;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -22,6 +25,27 @@ public interface IModelElement
 {
     ModelElementType getModelElementType();
     ModelProperty getParentProperty();
+    
+    Object read( ModelProperty property );
+    
+    <T> Value<T> read( ValueProperty property );
+    
+    <T extends IModelElement> ModelElementHandle<T> read( ElementProperty property );
+
+    <T extends IModelElement> ModelElementList<T> read( ListProperty property );
+
+    <T> Transient<T> read( TransientProperty property );
+    
+    SortedSet<String> read( ModelPath path );
+
+    void read( ModelPath path,
+               Collection<String> result );
+    
+    void write( ValueProperty property,
+                Object value );
+    
+    void write( TransientProperty property,
+                Object value );
     
     /**
      * Updates the cached value of the specified model property if the underlying
@@ -105,15 +129,7 @@ public interface IModelElement
     
     <S extends ModelElementService> S service( Class<S> serviceType );
     
-    /**
-     * Retrieves the standard service for this model element. This service is provided
-     * by the Sapphire framework and is available for all model elements. This method
-     * will never return <code>null</code>.
-     * 
-     * @return the standard service
-     */
-    
-    StandardModelElementService service();
+    <S extends ModelPropertyService> S service( ModelProperty property, Class<S> serviceType );
     
     boolean isPropertyEnabled( ModelProperty property );
     

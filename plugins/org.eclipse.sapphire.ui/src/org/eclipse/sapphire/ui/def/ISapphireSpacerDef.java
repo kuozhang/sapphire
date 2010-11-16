@@ -15,10 +15,10 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @Label( standard = "spacer" )
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface ISapphireSpacerDef
 
@@ -39,7 +39,7 @@ public interface ISapphireSpacerDef
     
     @Type( base = Integer.class )
     @Label( standard = "size" )
-    @DefaultValue( "5" )
+    @DefaultValue( text = "5" )
     @NumericRange( min = "1" )
     @XmlBinding( path = "size" )
     

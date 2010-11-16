@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
-import org.eclipse.sapphire.modeling.annotations.ValuePropertyCustomBindingImpl;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
+import org.eclipse.sapphire.modeling.ValueBindingImpl;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
+import org.eclipse.sapphire.modeling.xml.XmlResource;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.xml.XmlElement;
 
 public final class LocalNumberBinding
 
-    extends ValuePropertyCustomBindingImpl
+    extends ValueBindingImpl
     
 {
     private static final String EL_NUMBER = "number";
@@ -29,7 +29,7 @@ public final class LocalNumberBinding
     @Override
     public String read()
     {
-        final XmlElement el = ( (IModelElementForXml) getModelElement() ).getXmlElement( false );
+        final XmlElement el = ( (XmlResource) element().resource() ).getXmlElement( false );
         
         final String pnStr = el.getChildNodeText( EL_NUMBER );
         final ParsedPhoneNumber pn = new ParsedPhoneNumber( pnStr );
@@ -40,7 +40,7 @@ public final class LocalNumberBinding
     @Override
     public void write( final String value )
     {
-        final XmlElement el = ( (IModelElementForXml) getModelElement() ).getXmlElement( false );
+        final XmlElement el = ( (XmlResource) element().resource() ).getXmlElement( false );
         
         final String pnStr = el.getChildNodeText( EL_NUMBER );
         final ParsedPhoneNumber pn = new ParsedPhoneNumber( pnStr );

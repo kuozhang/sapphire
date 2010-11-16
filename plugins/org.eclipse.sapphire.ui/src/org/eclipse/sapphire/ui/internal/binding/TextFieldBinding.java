@@ -92,7 +92,7 @@ public class TextFieldBinding
     {
         if( ! this.text.isDisposed() && ( this.text.getStyle() & SWT.READ_ONLY ) == 0 ) 
         {
-            ( (ValueProperty) getProperty() ).invokeSetterMethod( getModelElement(), this.textContent );
+            getModelElement().write( (ValueProperty) getProperty(), this.textContent );
         }
     }
     

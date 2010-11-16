@@ -13,7 +13,8 @@ package org.eclipse.sapphire.samples.contacts.internal;
 
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.modeling.annotations.PossibleValuesProviderImpl;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.samples.contacts.IContact;
 import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
 
@@ -23,7 +24,7 @@ import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
 
 public final class ContactCategoryValuesProvider
 
-    extends PossibleValuesProviderImpl
+    extends PossibleValuesService
     
 {
     @Override
@@ -31,8 +32,8 @@ public final class ContactCategoryValuesProvider
     {
         values.add( "Personal" );
         
-        final IContact c = (IContact) getModelElement();
-        final IContactsDatabase cdb = (IContactsDatabase) c.getModel();
+        final IContact c = (IContact) element();
+        final IContactsDatabase cdb = c.nearest( IContactsDatabase.class );
         
         for( IContact contact : cdb.getContacts() )
         {
@@ -41,6 +42,12 @@ public final class ContactCategoryValuesProvider
                 values.add( contact.getCategory().getText( true ) );
             }
         }
+    }
+
+    @Override
+    public int getInvalidValueSeverity( String invalidValue )
+    {
+        return IStatus.OK;
     }
     
 }

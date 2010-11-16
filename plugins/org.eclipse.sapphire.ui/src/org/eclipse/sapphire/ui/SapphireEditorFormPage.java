@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -17,19 +18,20 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.help.IContext;
 import org.eclipse.jface.text.TextSelection;
-import org.eclipse.sapphire.modeling.IModel;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelStore;
+import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlNode;
-import org.eclipse.sapphire.ui.actions.Action;
-import org.eclipse.sapphire.ui.xml.ModelStoreForXmlEditor;
+import org.eclipse.sapphire.modeling.xml.XmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
+import org.eclipse.sapphire.ui.internal.SapphireActionManager;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
@@ -50,6 +52,7 @@ public abstract class SapphireEditorFormPage
 {
     private final SapphireEditor editor;
     private final IModelElement rootModelElement;
+    private final SapphireActionManager actionsManager;
     
     public SapphireEditorFormPage( final SapphireEditor editor,
                                    final IModelElement rootModelElement ) 
@@ -58,9 +61,10 @@ public abstract class SapphireEditorFormPage
 
         this.editor = editor;
         this.rootModelElement = rootModelElement;
+        this.actionsManager = new SapphireActionManager( this, getActionContexts() );
     }
     
-	public SapphireEditor getEditor()
+    public SapphireEditor getEditor()
     {
         return this.editor;
     }
@@ -71,11 +75,6 @@ public abstract class SapphireEditorFormPage
     }
     
     public abstract String getId();
-    
-    public IModel getModel()
-    {
-        return this.editor.getModel();
-    }
     
     public final Preferences getGlobalPreferences( final boolean createIfNecessary )
     
@@ -111,14 +110,7 @@ public abstract class SapphireEditorFormPage
     
     public ITextEditor getSourceView()
     {
-        final ModelStore modelStore = this.rootModelElement.getModel().getModelStore();
-        
-        if( modelStore instanceof ModelStoreForXmlEditor )
-        {
-            return ( (ModelStoreForXmlEditor) modelStore ).getXmlEditor();
-        }
-        
-        return null;
+        return this.rootModelElement.adapt( ITextEditor.class );
     }
     
     @SuppressWarnings( "restriction" )
@@ -134,7 +126,7 @@ public abstract class SapphireEditorFormPage
             
             if( property != null )
             {
-                final List<XmlNode> xmlNodes = getXmlNodes( (IModelElementForXml) element, property );
+                final List<XmlNode> xmlNodes = getXmlNodes( element, property );
                 
                 if( ! xmlNodes.isEmpty() )
                 {
@@ -175,16 +167,36 @@ public abstract class SapphireEditorFormPage
             
             if( ! range.isInitialized() )
             {
-                IModelElementForXml modElement = (IModelElementForXml) element;
-                XmlElement xmlElement = modElement.getXmlElement();
+                IModelElement modElement = element;
+                Resource resource = modElement.resource();
+                XmlElement xmlElement = null;
+                
+                if( resource != null )
+                {
+                    xmlElement = ( (XmlResource) resource ).getXmlElement();
+                }
                 
                 while( xmlElement == null && modElement != null )
                 {
-                    modElement = (IModelElementForXml) modElement.getParent();
+                    final IModelParticle parent = modElement.parent();
+                    
+                    if( parent instanceof ModelElementList )
+                    {
+                        modElement = (IModelElement) parent.parent();
+                    }
+                    else
+                    {
+                        modElement = (IModelElement) parent;
+                    }
                     
                     if( modElement != null )
                     {
-                        xmlElement = modElement.getXmlElement();
+                        resource = modElement.resource();
+                        
+                        if( resource != null )
+                        {
+                            xmlElement = ( (XmlResource) resource ).getXmlElement();
+                        }
                     }
                 }
                     
@@ -200,43 +212,21 @@ public abstract class SapphireEditorFormPage
         }
     }
     
-    public boolean isOptimalConversionPossible( final IModelElement element,
-                                                final ModelProperty property )
-    {
-        if( element != null )
-        {
-            if( property != null )
-            {
-                if( ! getXmlNodes( (IModelElementForXml) element, property ).isEmpty() )
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                if( ( (IModelElementForXml) element ).getXmlElement() != null )
-                {
-                    return true;
-                }
-            }
-        }
-        
-        return false;
-    }
-    
-    private static List<XmlNode> getXmlNodes( final IModelElementForXml modelElement,
+    private static List<XmlNode> getXmlNodes( final IModelElement modelElement,
                                               final ModelProperty property )
     {
         if( property instanceof ListProperty )
         {
-            final ModelElementList<?> list = (ModelElementList<?>) property.invokeGetterMethod( modelElement );
+            final ModelElementList<?> list = modelElement.read( (ListProperty) property );
             final List<XmlNode> xmlNodes = new ArrayList<XmlNode>();
             
             for( IModelElement element : list )
             {
-                if( element instanceof IModelElementForXml )
+                final Resource resource = element.resource();
+                
+                if( resource instanceof XmlResource )
                 {
-                    final XmlNode xmlNode = ( (IModelElementForXml) element ).getXmlElement();
+                    final XmlNode xmlNode = ( (XmlResource) resource ).getXmlElement();
                     
                     if( xmlNode != null )
                     {
@@ -249,16 +239,20 @@ public abstract class SapphireEditorFormPage
         }
         else
         {
-            final XmlNode xmlNode = modelElement.getXmlNode( property );
+            final Resource resource = modelElement.resource();
             
-            if( xmlNode != null )
+            if( resource instanceof XmlResource )
             {
-                return Collections.singletonList( xmlNode );
+                final XmlResource r = (XmlResource) resource;
+                final XmlNode xmlNode = ( (XmlValueBindingImpl) r.binding( (ValueProperty ) property ) ).getXmlNode();
+                
+                if( xmlNode != null )
+                {
+                    return Collections.singletonList( xmlNode );
+                }
             }
-            else
-            {
-                return Collections.emptyList();
-            }
+            
+            return Collections.emptyList();
         }
     }
     
@@ -300,10 +294,10 @@ public abstract class SapphireEditorFormPage
         }
     }
 
-	// *********************
-	// ISapphirePart Methods
-	// *********************
-	
+    // *********************
+    // ISapphirePart Methods
+    // *********************
+    
     public ISapphirePart getParentPart()
     {
         return this.editor;
@@ -334,28 +328,16 @@ public abstract class SapphireEditorFormPage
         return this.rootModelElement;
     }
     
-    public Action getAction( String id )
-    {
-        if( this.editor != null )
-        {
-            return this.editor.getAction( id );
-        }
-        else
-        {
-            return null;
-        }
-    }
-    
     public IStatus getValidationState()
     {
         throw new UnsupportedOperationException();
     }
     
-    public String getHelpContextId()
+    public IContext getDocumentationContext()
     {
         return null;
     }
-    
+
     public SapphireImageCache getImageCache()
     {
         return this.editor.getImageCache();
@@ -376,8 +358,34 @@ public abstract class SapphireEditorFormPage
         throw new UnsupportedOperationException();
     }
     
+    public Set<String> getActionContexts()
+    {
+        return Collections.singleton( SapphireActionSystem.CONTEXT_EDITOR_PAGE );
+    }
+    
+    public final String getMainActionContext()
+    {
+        return this.actionsManager.getMainActionContext();
+    }
+    
+    public final SapphireActionGroup getActions()
+    {
+        return this.actionsManager.getActions();
+    }
+    
+    public final SapphireActionGroup getActions( final String context )
+    {
+        return this.actionsManager.getActions( context );
+    }
+    
+    public final SapphireAction getAction( final String id )
+    {
+        return this.actionsManager.getAction( id );
+    }
+    
     public void dispose()
     {
+        this.actionsManager.dispose();
     }
 
 }

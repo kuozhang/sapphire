@@ -11,27 +11,26 @@
 
 package org.eclipse.sapphire.samples.ezbug;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.IModelForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBindingModelImpl;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBindingMapping;
-import org.eclipse.sapphire.modeling.xml.annotations.RootXmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBindingModelImpl
-@RootXmlBinding( elementName = "bug-database" )
+@GenerateImpl
+@XmlRootBinding( elementName = "bug-database" )
 
 public interface IBugDatabase
 
-    extends IModelForXml
+    extends IModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( IBugDatabase.class );
@@ -40,7 +39,7 @@ public interface IBugDatabase
     
     @Type( base = IBugReport.class )
     @Label( standard = "bug report" )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "bug", type = IBugReport.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "bug", type = IBugReport.class ) )
     
     ListProperty PROP_BUG_REPORTS = new ListProperty( TYPE, "BugReports" );
     

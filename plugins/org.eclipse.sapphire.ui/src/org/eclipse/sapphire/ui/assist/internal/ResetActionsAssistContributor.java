@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.assist.internal;
 
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.DefaultValueService;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -53,12 +54,12 @@ public final class ResetActionsAssistContributor
         
         if( prop instanceof ValueProperty )
         {
-            final Value<?> val = ( (Value<?>) ( (ValueProperty) prop ).invokeGetterMethod( element ) );
+            final Value<?> val = element.read( (ValueProperty) prop );
 
             if( val.getText( false ) != null )
             {
                 final boolean hasDefaultValue
-                    = ( element.service().getDefaultValue( (ValueProperty) prop ) != null );
+                    = ( element.service( prop, DefaultValueService.class ).getDefaultValue() != null );
                 
                 final boolean isBooleanType = prop.getTypeClass().equals( Boolean.class );
                 
@@ -75,7 +76,7 @@ public final class ResetActionsAssistContributor
                         @Override
                         public void linkActivated( final HyperlinkEvent event )
                         {
-                            ( (ValueProperty) prop ).invokeSetterMethod( element, null );
+                            element.write( (ValueProperty) prop, null );
                         }
                     }
                 );
@@ -86,7 +87,7 @@ public final class ResetActionsAssistContributor
         }
         else if( prop instanceof ListProperty )
         {
-            final ModelElementList<?> list = ( (ModelElementList<?>) prop.invokeGetterMethod( element ) );
+            final ModelElementList<?> list = element.read( (ListProperty) prop );
 
             if( ! list.isEmpty() )
             {

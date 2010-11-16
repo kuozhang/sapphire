@@ -16,37 +16,41 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
+import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
+import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementDisposedEvent;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.ui.assist.BrowseHandler;
-import org.eclipse.sapphire.ui.assist.BrowseHandlersExtensionPoint;
-import org.eclipse.sapphire.ui.assist.JumpHandler;
-import org.eclipse.sapphire.ui.assist.JumpHandlersExtensionPoint;
-import org.eclipse.sapphire.ui.def.ISapphireBrowseHandlerDef;
-import org.eclipse.sapphire.ui.def.ISapphireChildPropertyInfo;
+import org.eclipse.sapphire.modeling.xml.RootXmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
-import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.ISapphirePropertyEditorDef;
-import org.eclipse.sapphire.ui.def.ISapphirePropertyMetadata;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.BooleanPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.DefaultListPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.DefaultValuePropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.EnumPropertyEditorRenderer;
+import org.eclipse.sapphire.ui.renderers.swt.HtmlPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.NamedValuesPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorRendererFactory;
+import org.eclipse.sapphire.ui.renderers.swt.SlushBucketPropertyEditor;
 import org.eclipse.sapphire.ui.swt.SapphireControl;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -95,14 +99,16 @@ public final class SapphirePropertyEditor
         FACTORIES.add( new BooleanPropertyEditorRenderer.Factory() );
         FACTORIES.add( new EnumPropertyEditorRenderer.Factory() );
         FACTORIES.add( new NamedValuesPropertyEditorRenderer.Factory() );
+        FACTORIES.add( new HtmlPropertyEditorRenderer.Factory() );
         FACTORIES.add( new DefaultValuePropertyEditorRenderer.Factory() );
         FACTORIES.add( new SlushBucketPropertyEditor.Factory() );
         FACTORIES.add( new DefaultListPropertyEditorRenderer.Factory() );
     }
     
     private ModelProperty property;
-    private List<ChildPropertyHelper> childProperties;
-    private List<ChildPropertyHelper> childPropertiesReadOnly;
+    private List<ModelProperty> childProperties;
+    private List<ModelProperty> childPropertiesReadOnly;
+    private Map<IModelElement,Map<ModelProperty,SapphirePropertyEditor>> childPropertyEditors;
     private Map<String,Object> hints;
     private List<SapphirePropertyEditor> auxPropertyEditors;
     private List<SapphirePropertyEditor> auxPropertyEditorsReadOnly;
@@ -112,13 +118,14 @@ public final class SapphirePropertyEditor
     {
         super.init();
         
-        final ISapphireUiDef rootdef = (ISapphireUiDef) this.definition.getModel();
+        final ISapphireUiDef rootdef = this.definition.nearest( ISapphireUiDef.class );
         final ISapphirePropertyEditorDef propertyEditorPartDef = (ISapphirePropertyEditorDef) this.definition;
         
         this.property = resolve( propertyEditorPartDef.getProperty().getContent() );
         
-        this.childProperties = new ArrayList<ChildPropertyHelper>();
+        this.childProperties = new ArrayList<ModelProperty>();
         this.childPropertiesReadOnly = Collections.unmodifiableList( this.childProperties );
+        this.childPropertyEditors = new HashMap<IModelElement,Map<ModelProperty,SapphirePropertyEditor>>();
         
         final ModelElementType type = this.property.getType();
         
@@ -128,14 +135,14 @@ public final class SapphirePropertyEditor
             {
                 for( ModelProperty childProperty : type.getProperties() )
                 {
-                    this.childProperties.add( new ChildPropertyHelper( childProperty, null ) );
+                    this.childProperties.add( childProperty );
                 }
             }
             else
             {
-                for( ISapphireChildPropertyInfo childPropertyInfo : propertyEditorPartDef.getChildProperties() )
+                for( ISapphirePropertyEditorDef childPropertyEditor : propertyEditorPartDef.getChildProperties() )
                 {
-                    final String childPropertyName = childPropertyInfo.getName().getContent();
+                    final String childPropertyName = childPropertyEditor.getProperty().getContent();
                     final ModelProperty childProperty = type.getProperty( childPropertyName );
                     
                     if( childProperty == null )
@@ -144,7 +151,7 @@ public final class SapphirePropertyEditor
                     }
                     else
                     {
-                        this.childProperties.add( new ChildPropertyHelper( childProperty, childPropertyInfo ) );
+                        this.childProperties.add( childProperty );
                     }
                 }
             }
@@ -233,9 +240,74 @@ public final class SapphirePropertyEditor
         return this.property;
     }
     
-    public List<ChildPropertyHelper> getChildProperties()
+    public List<ModelProperty> getChildProperties()
     {
         return this.childPropertiesReadOnly;
+    }
+    
+    public SapphirePropertyEditor getChildPropertyEditor( final IModelElement element,
+                                                          final ModelProperty property )
+    {
+        Map<ModelProperty,SapphirePropertyEditor> propertyEditorsForElement = this.childPropertyEditors.get( element );
+        
+        if( propertyEditorsForElement == null )
+        {
+            propertyEditorsForElement = new HashMap<ModelProperty,SapphirePropertyEditor>();
+            this.childPropertyEditors.put( element, propertyEditorsForElement );
+            
+            final Map<ModelProperty,SapphirePropertyEditor> finalPropertyEditorsForElement = propertyEditorsForElement;
+            
+            element.addListener
+            (
+                new ModelElementListener()
+                {
+                    @Override
+                    public void handleElementDisposedEvent( final ModelElementDisposedEvent event )
+                    {
+                        for( SapphirePropertyEditor propertyEditor : finalPropertyEditorsForElement.values() )
+                        {
+                            propertyEditor.dispose();
+                        }
+                        
+                        SapphirePropertyEditor.this.childPropertyEditors.remove( element );
+                    }
+                }
+            );
+        }
+        
+        SapphirePropertyEditor propertyEditor = propertyEditorsForElement.get( property );
+        
+        if( propertyEditor == null )
+        {
+            final String propertyName = property.getName();
+            ISapphirePropertyEditorDef def = null;
+            
+            for( ISapphirePropertyEditorDef x : ( (ISapphirePropertyEditorDef) this.definition ).getChildProperties() )
+            {
+                if( propertyName.equals( x.getProperty().getText() ) )
+                {
+                    def = x;
+                    break;
+                }
+            }
+            
+            if( def == null )
+            {
+                // TODO: Remove XmlResource use when model can run without resource.
+                
+                final XmlResourceStore store = new XmlResourceStore( new ByteArrayResourceStore() );
+                final XmlResource resource = new RootXmlResource( store );
+                def = ISapphirePropertyEditorDef.TYPE.instantiate( resource );
+                def.setProperty( propertyName );
+            }
+            
+            propertyEditor = new SapphirePropertyEditor();
+            propertyEditor.init( this, element, def, this.params );
+            
+            propertyEditorsForElement.put( property, propertyEditor );
+        }
+        
+        return propertyEditor;
     }
     
     @SuppressWarnings( "unchecked" )
@@ -345,11 +417,19 @@ public final class SapphirePropertyEditor
         
         if( modelElement.isPropertyEnabled( this.property ) )
         {
-            final IModelParticle particle = (IModelParticle) this.property.invokeGetterMethod( modelElement );
+            final Object particle = modelElement.read( this.property );
             
-            if( particle != null )
+            if( particle instanceof Value<?> )
             {
-                return particle.validate();
+                return ( (Value<?>) particle ).validate();
+            }
+            else if( particle instanceof ModelElementList<?> )
+            {
+                return ( (ModelElementList<?>) particle ).validate();
+            }
+            else if( particle instanceof ModelElementHandle<?> )
+            {
+                return ( (ModelElementHandle<?>) particle ).validate();
             }
         }
         
@@ -445,148 +525,48 @@ public final class SapphirePropertyEditor
         
         return false;
     }
-    
-    public final List<BrowseHandler> createBrowseHandlers()
+
+    public String getActionContext()
     {
-        return createBrowseHandlers( (ISapphirePropertyEditorDef) getDefinition(), getModelElement(), (ValueProperty) this.property );
-    }
-    
-    private static final List<BrowseHandler> createBrowseHandlers( final ISapphirePropertyMetadata metadata,
-                                                                   final IModelElement element,
-                                                                   final ValueProperty property )
-    {
-        List<BrowseHandler> browseHandlers = null;
+        final String context;
         
-        if( metadata != null )
+        if( this.property instanceof ValueProperty )
         {
-            final ModelElementList<ISapphireBrowseHandlerDef> explicitBrowseHandlerDefs = metadata.getBrowseHandlers();
-            
-            if( ! explicitBrowseHandlerDefs.isEmpty() )
+            context = SapphireActionSystem.CONTEXT_VALUE_PROPERTY_EDITOR;
+        }
+        else if( this.property instanceof ElementProperty )
+        {
+            context = SapphireActionSystem.CONTEXT_ELEMENT_PROPERTY_EDITOR;
+        }
+        else if( this.property instanceof ListProperty )
+        {
+            context = SapphireActionSystem.CONTEXT_LIST_PROPERTY_EDITOR;
+        }
+        else
+        {
+            throw new IllegalStateException();
+        }
+        
+        return context;
+    }
+
+    @Override
+    public Set<String> getActionContexts()
+    {
+        return Collections.singleton( getActionContext() );
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        for( Map<ModelProperty,SapphirePropertyEditor> propertyEditorsForElement : this.childPropertyEditors.values() )
+        {
+            for( SapphirePropertyEditor propertyEditor : propertyEditorsForElement.values() )
             {
-                browseHandlers = new ArrayList<BrowseHandler>();
-                
-                for( ISapphireBrowseHandlerDef def : explicitBrowseHandlerDefs )
-                {
-                    BrowseHandler browseHandlerInstance = null;
-                    
-                    try
-                    {
-                        final Class<?> implClass = def.getImplClass().resolve();
-                        
-                        if( implClass != null )
-                        {
-                            browseHandlerInstance = (BrowseHandler) implClass.newInstance();
-                            
-                            final Map<String,String> params; 
-                            
-                            if( def.getParams().isEmpty() )
-                            {
-                                params = Collections.emptyMap();
-                            }
-                            else
-                            {
-                                params = new HashMap<String,String>();
-                                
-                                for( ISapphireParam param : def.getParams() )
-                                {
-                                    final String name = param.getName().getContent();
-                                    final String value = param.getValue().getContent();
-                                    
-                                    if( name != null && value != null )
-                                    {
-                                        params.put( name, value );
-                                    }
-                                }
-                            }
-                            
-                            browseHandlerInstance.init( element, property, params );
-                        }
-                    }
-                    catch( Exception e )
-                    {
-                        SapphireUiFrameworkPlugin.log( e );
-                    }
-                    
-                    if( browseHandlerInstance != null )
-                    {
-                        browseHandlers.add( browseHandlerInstance );
-                    }
-                }
+                propertyEditor.dispose();
             }
-        }
-        
-        if( browseHandlers == null )
-        {
-            browseHandlers = BrowseHandlersExtensionPoint.getBrowseHandlers( property );
-            
-            for( BrowseHandler browseHandler : browseHandlers )
-            {
-                browseHandler.init( element, property, Collections.<String,String>emptyMap() );
-            }
-        }
-        
-        return browseHandlers;
-    }
-    
-    public final JumpHandler createJumpHandler()
-    {
-        return createJumpHandler( (ISapphirePropertyEditorDef) getDefinition(), (ValueProperty) this.property );
-    }
-    
-    private static final JumpHandler createJumpHandler( final ISapphirePropertyMetadata metadata,
-                                                        final ValueProperty property )
-    {
-        if( metadata != null )
-        {
-            final Class<?> explicitJumpHandlerClass = metadata.getJumpHandler().resolve();
-            
-            if( explicitJumpHandlerClass != null )
-            {
-                JumpHandler jumpHandlerInstance = null;
-                
-                try
-                {
-                    jumpHandlerInstance = (JumpHandler) explicitJumpHandlerClass.newInstance();
-                }
-                catch( Exception e )
-                {
-                    SapphireUiFrameworkPlugin.log( e );
-                }
-                
-                return jumpHandlerInstance;
-            }
-        }
-        
-        return JumpHandlersExtensionPoint.getJumpHandler( property );
-    }
-    
-    public final class ChildPropertyHelper
-    {
-        private final ModelProperty property;
-        private final ISapphireChildPropertyInfo definition;
-        
-        public ChildPropertyHelper( final ModelProperty property,
-                                    final ISapphireChildPropertyInfo definition )
-        {
-            this.property = property;
-            this.definition = definition;
-        }
-        
-        public ModelProperty getProperty()
-        {
-            return this.property;
-        }
-        
-        public List<BrowseHandler> createBrowseHandlers( final IModelElement element )
-        {
-            final ValueProperty prop = (ValueProperty) this.property.refine( element );
-            return SapphirePropertyEditor.createBrowseHandlers( this.definition, element, prop );
-        }
-        
-        public JumpHandler createJumpHandler( final IModelElement element )
-        {
-            final ValueProperty prop = (ValueProperty) this.property.refine( element );
-            return SapphirePropertyEditor.createJumpHandler( this.definition, prop );
         }
     }
     

@@ -15,11 +15,11 @@ import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_ASSIST_DECORAT
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_EXPAND_VERTICALLY;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL_ABOVE;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhhint;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhindent;
-import static org.eclipse.sapphire.ui.util.SwtUtil.hspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,13 +42,12 @@ import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileExtensions;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
-import org.eclipse.sapphire.ui.SapphireCommands;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.assist.RelativePathValueBrowseHandler.ContainersOnlyViewerFilter;
-import org.eclipse.sapphire.ui.assist.RelativePathValueBrowseHandler.ExtensionBasedViewerFilter;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler.ContainersOnlyViewerFilter;
+import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler.ExtensionBasedViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -89,7 +88,7 @@ public final class EclipseWorkspacePathPropertyEditorRenderer
         final DrillDownComposite drillDown = new DrillDownComposite( parent, SWT.BORDER );
         
         GridData gd = ( expandVertically ? gdfill() : gdhhint( gdhfill(), heightHint ) );
-        gd = gdhindent( hspan( gd, showLabelAbove ? 2 : 1 ), baseIndent );
+        gd = gdhindent( gdhspan( gd, showLabelAbove ? 2 : 1 ), baseIndent );
         drillDown.setLayoutData( gd );
 
         final TreeViewer treeViewer = new TreeViewer( drillDown, SWT.NONE );
@@ -179,14 +178,13 @@ public final class EclipseWorkspacePathPropertyEditorRenderer
     
         textField.setData( DATA_BINDING, this.binding );
         
-        SapphireCommands.configurePropertyEditorContext( tree );
         addControl( tree );
         
         final IModelElement modelElement = getModelElement();
         
         if( modelElement != null )
         {
-            final Value<?> value = (Value<?>) getProperty().invokeGetterMethod( modelElement );
+            final Value<?> value = modelElement.read( getProperty() );
             final String val = value.getText();
             
             if( val != null )

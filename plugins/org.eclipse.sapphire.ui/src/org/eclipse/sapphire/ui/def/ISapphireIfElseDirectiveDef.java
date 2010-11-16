@@ -17,21 +17,19 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBindingMapping;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.internal.ClassReferenceResolver;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Label( standard = "if" )
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface ISapphireIfElseDirectiveDef
 
@@ -42,7 +40,7 @@ public interface ISapphireIfElseDirectiveDef
  
     // *** ConditionClass ***
     
-    @Reference( target = Class.class, resolver = ClassReferenceResolver.class )
+    @Reference( target = Class.class )
     @Label( standard = "condition class" )
     @XmlBinding( path = "condition/class" )
     
@@ -86,26 +84,26 @@ public interface ISapphireIfElseDirectiveDef
         }
     )
                       
-    @ListPropertyXmlBinding
+    @XmlListBinding
     ( 
         path = "then",
         mappings =
         {
-            @ListPropertyXmlBindingMapping( element = "property-editor", type = ISapphirePropertyEditorDef.class ),
-            @ListPropertyXmlBindingMapping( element = "separator", type = ISapphireSeparatorDef.class ),
-            @ListPropertyXmlBindingMapping( element = "spacer", type = ISapphireSpacerDef.class ),
-            @ListPropertyXmlBindingMapping( element = "label", type = ISapphireLabelDef.class ),
-            @ListPropertyXmlBindingMapping( element = "group", type = ISapphireGroupDef.class ),
-            @ListPropertyXmlBindingMapping( element = "with", type = ISapphireWithDirectiveDef.class ),
-            @ListPropertyXmlBindingMapping( element = "if", type = ISapphireIfElseDirectiveDef.class ),
-            @ListPropertyXmlBindingMapping( element = "composite", type = ISapphireCompositeDef.class ),
-            @ListPropertyXmlBindingMapping( element = "composite-ref", type = ISapphireCompositeRef.class ),
-            @ListPropertyXmlBindingMapping( element = "action-link", type = ISapphireActionLinkDef.class ),
-            @ListPropertyXmlBindingMapping( element = "custom", type = ISapphireCustomPartDef.class ),
-            @ListPropertyXmlBindingMapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
-            @ListPropertyXmlBindingMapping( element = "element-property-composite", type = ISapphireElementPropertyCompositeDef.class ),
-            @ListPropertyXmlBindingMapping( element = "switching-panel", type = ISapphirePageBookExtDef.class ),
-            @ListPropertyXmlBindingMapping( element = "tab-group", type = ISapphireTabGroupDef.class )
+            @XmlListBinding.Mapping( element = "property-editor", type = ISapphirePropertyEditorDef.class ),
+            @XmlListBinding.Mapping( element = "separator", type = ISapphireSeparatorDef.class ),
+            @XmlListBinding.Mapping( element = "spacer", type = ISapphireSpacerDef.class ),
+            @XmlListBinding.Mapping( element = "label", type = ISapphireLabelDef.class ),
+            @XmlListBinding.Mapping( element = "group", type = ISapphireGroupDef.class ),
+            @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),
+            @XmlListBinding.Mapping( element = "if", type = ISapphireIfElseDirectiveDef.class ),
+            @XmlListBinding.Mapping( element = "composite", type = ISapphireCompositeDef.class ),
+            @XmlListBinding.Mapping( element = "composite-ref", type = ISapphireCompositeRef.class ),
+            @XmlListBinding.Mapping( element = "action-link", type = ISapphireActionLinkDef.class ),
+            @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
+            @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
+            @XmlListBinding.Mapping( element = "element-property-composite", type = ISapphireElementPropertyCompositeDef.class ),
+            @XmlListBinding.Mapping( element = "switching-panel", type = ISapphirePageBookExtDef.class ),
+            @XmlListBinding.Mapping( element = "tab-group", type = ISapphireTabGroupDef.class )
         }
     )
                              
@@ -138,26 +136,26 @@ public interface ISapphireIfElseDirectiveDef
         }
     )
                       
-    @ListPropertyXmlBinding
+    @XmlListBinding
     ( 
         path = "else",
         mappings =
         {
-            @ListPropertyXmlBindingMapping( element = "property-editor", type = ISapphirePropertyEditorDef.class ),
-            @ListPropertyXmlBindingMapping( element = "separator", type = ISapphireSeparatorDef.class ),
-            @ListPropertyXmlBindingMapping( element = "spacer", type = ISapphireSpacerDef.class ),
-            @ListPropertyXmlBindingMapping( element = "label", type = ISapphireLabelDef.class ),
-            @ListPropertyXmlBindingMapping( element = "group", type = ISapphireGroupDef.class ),
-            @ListPropertyXmlBindingMapping( element = "with", type = ISapphireWithDirectiveDef.class ),
-            @ListPropertyXmlBindingMapping( element = "if", type = ISapphireIfElseDirectiveDef.class ),
-            @ListPropertyXmlBindingMapping( element = "composite", type = ISapphireCompositeDef.class ),
-            @ListPropertyXmlBindingMapping( element = "composite-ref", type = ISapphireCompositeRef.class ),
-            @ListPropertyXmlBindingMapping( element = "action-link", type = ISapphireActionLinkDef.class ),
-            @ListPropertyXmlBindingMapping( element = "custom", type = ISapphireCustomPartDef.class ),
-            @ListPropertyXmlBindingMapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
-            @ListPropertyXmlBindingMapping( element = "element-property-composite", type = ISapphireElementPropertyCompositeDef.class ),
-            @ListPropertyXmlBindingMapping( element = "switching-panel", type = ISapphirePageBookExtDef.class ),
-            @ListPropertyXmlBindingMapping( element = "tab-group", type = ISapphireTabGroupDef.class )
+            @XmlListBinding.Mapping( element = "property-editor", type = ISapphirePropertyEditorDef.class ),
+            @XmlListBinding.Mapping( element = "separator", type = ISapphireSeparatorDef.class ),
+            @XmlListBinding.Mapping( element = "spacer", type = ISapphireSpacerDef.class ),
+            @XmlListBinding.Mapping( element = "label", type = ISapphireLabelDef.class ),
+            @XmlListBinding.Mapping( element = "group", type = ISapphireGroupDef.class ),
+            @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),
+            @XmlListBinding.Mapping( element = "if", type = ISapphireIfElseDirectiveDef.class ),
+            @XmlListBinding.Mapping( element = "composite", type = ISapphireCompositeDef.class ),
+            @XmlListBinding.Mapping( element = "composite-ref", type = ISapphireCompositeRef.class ),
+            @XmlListBinding.Mapping( element = "action-link", type = ISapphireActionLinkDef.class ),
+            @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
+            @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
+            @XmlListBinding.Mapping( element = "element-property-composite", type = ISapphireElementPropertyCompositeDef.class ),
+            @XmlListBinding.Mapping( element = "switching-panel", type = ISapphirePageBookExtDef.class ),
+            @XmlListBinding.Mapping( element = "tab-group", type = ISapphireTabGroupDef.class )
         }
     )
                              

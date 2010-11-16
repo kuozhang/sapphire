@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<feature id="org.eclipse.sapphire" label="%featureName" provider-name="%providerName" version="0.1.0.qualifier" plugin="org.eclipse.sapphire">
+<feature id="org.eclipse.sapphire" label="%featureName" provider-name="%providerName" version="0.2.0.qualifier" plugin="org.eclipse.sapphire">
 
   <description>
     %description
@@ -16,6 +16,7 @@
 
   <plugin download-size="0" id="org.eclipse.sapphire" install-size="0" unpack="false" version="0.0.0"/>
   <plugin download-size="0" id="org.eclipse.sapphire.modeling" install-size="0" unpack="false" version="0.0.0"/>
+  <plugin download-size="0" id="org.eclipse.sapphire.modeling.extensibility" install-size="0" unpack="false" version="0.0.0"/>
   <plugin download-size="0" id="org.eclipse.sapphire.ui" install-size="0" unpack="false" version="0.0.0"/>
 
 </feature>

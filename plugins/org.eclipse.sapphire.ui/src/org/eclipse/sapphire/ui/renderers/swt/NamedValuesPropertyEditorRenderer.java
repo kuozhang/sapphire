@@ -11,15 +11,15 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
-import static org.eclipse.sapphire.ui.util.SwtUtil.gd;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhindent;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdvindent;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdwhint;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glspacing;
-import static org.eclipse.sapphire.ui.util.SwtUtil.hspan;
-import static org.eclipse.sapphire.ui.util.SwtUtil.valign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvindent;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
@@ -36,7 +36,7 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
-import org.eclipse.sapphire.ui.util.TextOverlayPainter;
+import org.eclipse.sapphire.ui.swt.renderer.TextOverlayPainter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -106,7 +106,7 @@ public final class NamedValuesPropertyEditorRenderer
         this.rootComposite.setLayout( glayout( 1, 0, 0 ) );
         
         final int baseIndent = part.getLeftMarginHint();
-        this.rootComposite.setLayoutData( gdvindent( gdhindent( hspan( gdhfill(), 2 ), baseIndent ), 5 ) );
+        this.rootComposite.setLayoutData( gdvindent( gdhindent( gdhspan( gdhfill(), 2 ), baseIndent ), 5 ) );
         
         final NamedValues namedValuesAnnotation = property.getAnnotation( NamedValues.class );
         final NamedValue[] namedValueAnnotations = namedValuesAnnotation.namedValues();
@@ -136,7 +136,7 @@ public final class NamedValuesPropertyEditorRenderer
         final PropertyEditorAssistDecorator decorator 
             = new PropertyEditorAssistDecorator( part, this.context, composite );
         
-        decorator.getControl().setLayoutData( valign( gd(), SWT.CENTER ) );
+        decorator.getControl().setLayoutData( gdvalign( gd(), SWT.CENTER ) );
         decorator.addEditorControl( this.rootComposite );
         decorator.addEditorControl( composite );
         this.rootComposite.setData( SapphirePropertyEditor.DATA_ASSIST_DECORATOR, decorator );        
@@ -189,8 +189,7 @@ public final class NamedValuesPropertyEditorRenderer
             @Override
             public String getDefaultText()
             {
-                final Value<?> value = (Value<?>) getProperty().invokeGetterMethod( getModelElement() );
-                return value.getDefaultText();
+                return getModelElement().read( getProperty() ).getDefaultText();
             }
         };
     
@@ -221,7 +220,7 @@ public final class NamedValuesPropertyEditorRenderer
                                       final String label ) 
     {
         final Button b = new Button( parent, SWT.RADIO );
-        b.setLayoutData( hspan( gd(), 2 ) );
+        b.setLayoutData( gdhspan( gd(), 2 ) );
         b.setText( label );
         
         return b;
@@ -269,7 +268,7 @@ public final class NamedValuesPropertyEditorRenderer
         
         try
         {
-            final Value<?> val = (Value<?>) getProperty().invokeGetterMethod( getModelElement() );
+            final Value<?> val = getModelElement().read( getProperty() );
             final String valueWithDefault = val.getText( true );
             NamedValueLocal namedValue = null;
 
@@ -329,7 +328,7 @@ public final class NamedValuesPropertyEditorRenderer
     {
         try
         {
-            getProperty().invokeSetterMethod( getModelElement(), value );
+            getModelElement().write( getProperty(), value );
         }
         catch( Exception e )
         {

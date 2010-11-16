@@ -15,13 +15,12 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IRemovable;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.BasePathsProvider;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
-import org.eclipse.sapphire.modeling.annotations.GenerateStub;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -32,11 +31,11 @@ import org.eclipse.sapphire.samples.calendar.internal.EventAttachmentLocalCopyBa
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateStub
+@GenerateImpl
 
 public interface IEventAttachment
 
-    extends IModelElement, IRemovable
+    extends IModelElement
 
 {
     ModelElementType TYPE = new ModelElementType( IEventAttachment.class );

@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
+import static org.eclipse.sapphire.modeling.xml.XmlUtil.EMPTY_STRING;
+
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -24,18 +26,27 @@ public final class XmlAttribute
     extends XmlNode
     
 {
-    private final Attr domAttr;
-    
-    public XmlAttribute( final Node domNode, final ModelStoreForXml modelStoreForXml )
+    public XmlAttribute( final XmlElement parent,
+                         final Node domNode )
     {
-        super( domNode, modelStoreForXml );
-        this.domAttr = (Attr) domNode;
+        super( parent.getResourceStore(), parent, domNode );
+    }
+    
+    @Override
+    public Attr getDomNode()
+    {
+        return (Attr) super.getDomNode();
+    }
+    
+    public String getLocalName()
+    {
+        return getDomNode().getLocalName();
     }
     
     @Override
     protected String getTextInternal()
     {
-        final String text = this.domAttr.getValue();
+        final String text = getDomNode().getValue();
         
         if( text == null )
         {
@@ -50,17 +61,21 @@ public final class XmlAttribute
     @Override
     public void setText( final String text )
     {
+        validateEdit();
+        
         final String txt = ( text == null ? EMPTY_STRING : text );
-        this.domAttr.setValue( txt );
+        getDomNode().setValue( txt );
     }
     
     @Override
     public void remove()
     {
-        Element ownerElm = this.domAttr.getOwnerElement();
-        String attrVal = this.domAttr.getName();
-        ownerElm.removeAttribute( attrVal );
+        validateEdit();
         
+        final Attr attr = getDomNode();
+        final Element ownerElm = attr.getOwnerElement();
+        final String attrVal = attr.getName();
+        ownerElm.removeAttribute( attrVal );
     }
     
 }

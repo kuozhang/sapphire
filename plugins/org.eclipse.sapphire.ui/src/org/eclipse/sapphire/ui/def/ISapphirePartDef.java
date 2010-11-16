@@ -7,25 +7,24 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.IRemovable;
+import org.eclipse.sapphire.modeling.ElementProperty;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.ListPropertyCustomBinding;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBindingMapping;
+import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.internal.SapphirePartDefHintsListController;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.ui.def.internal.SapphirePartDefHintsListBindingImpl;
 import org.eclipse.sapphire.ui.def.internal.SapphirePartDefMethods;
 
 /**
@@ -34,7 +33,7 @@ import org.eclipse.sapphire.ui.def.internal.SapphirePartDefMethods;
 
 public interface ISapphirePartDef
 
-    extends IModelElementForXml, IRemovable
+    extends IModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphirePartDef.class );
@@ -45,21 +44,29 @@ public interface ISapphirePartDef
     String HINT_HEIGHT = "height";
     String HINT_PREFER_FORM_STYLE = "prefer.form.style";
     
-    // *** HelpContextId ***
+    // *** Documentation ***
     
-    @Label( standard = "help context id" )
-    @XmlBinding( path = "help-context-id" )
+    @Type( base = ISapphireDocumentationDef.class )
+    @XmlBinding( path = "documentation" )
     
-    ValueProperty PROP_HELP_CONTEXT_ID = new ValueProperty( TYPE, "HelpContextId" );
+    ElementProperty PROP_DOCUMENTATION_DEF = new ElementProperty( TYPE, "DocumentationDef" );
     
-    Value<String> getHelpContextId();
-    void setHelpContextId( String helpContextId );
+    ModelElementHandle<ISapphireDocumentationDef> getDocumentationDef();
+
+    // *** DocumentationRef ***
     
+    @Type( base = ISapphireDocumentationRef.class )
+    @XmlBinding( path = "documentation-ref" )
+    
+    ElementProperty PROP_DOCUMENTATION_REF = new ElementProperty( TYPE, "DocumentationRef" );
+    
+    ModelElementHandle<ISapphireDocumentationRef> getDocumentationRef();
+
     // *** Hints ***
     
     @Label( standard = "hints" )
     @Type( base = ISapphireHint.class )
-    @ListPropertyCustomBinding( impl = SapphirePartDefHintsListController.class )
+    @CustomXmlListBinding( impl = SapphirePartDefHintsListBindingImpl.class )
     
     ListProperty PROP_HINTS = new ListProperty( TYPE, "Hints" );
     
@@ -89,10 +96,50 @@ public interface ISapphirePartDef
     
     @Label( standard = "listeners" )
     @Type( base = ISapphirePartListenerDef.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "listener", type = ISapphirePartListenerDef.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "listener", type = ISapphirePartListenerDef.class ) )
     
     ListProperty PROP_LISTENERS = new ListProperty( TYPE, "Listeners" );
     
     ModelElementList<ISapphirePartListenerDef> getListeners();
+    
+    // *** Actions ***
+    
+    @Type( base = ISapphireActionDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action", type = ISapphireActionDef.class ) )
+    @Label( standard = "action" )
+    
+    ListProperty PROP_ACTIONS = new ListProperty( TYPE, "Actions" );
+    
+    ModelElementList<ISapphireActionDef> getActions();
+    
+    // *** ActionHandlers ***
+    
+    @Type( base = ISapphireActionHandlerDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action-handler", type = ISapphireActionHandlerDef.class ) )
+    @Label( standard = "action handlers" )
+    
+    ListProperty PROP_ACTION_HANDLERS = new ListProperty( TYPE, "ActionHandlers" );
+    
+    ModelElementList<ISapphireActionHandlerDef> getActionHandlers();
+    
+    // *** ActionHandlerFactories ***
+    
+    @Type( base = ISapphireActionHandlerFactoryDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action-handler-factory", type = ISapphireActionHandlerFactoryDef.class ) )
+    @Label( standard = "action handler factories" )
+    
+    ListProperty PROP_ACTION_HANDLER_FACTORIES = new ListProperty( TYPE, "ActionHandlerFactories" );
+    
+    ModelElementList<ISapphireActionHandlerFactoryDef> getActionHandlerFactories();
+    
+    // *** ActionHandlerFilters ***
+    
+    @Type( base = ISapphireActionHandlerFilterDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action-handler-filter", type = ISapphireActionHandlerFilterDef.class ) )
+    @Label( standard = "action handler filters" )
+    
+    ListProperty PROP_ACTION_HANDLER_FILTERS = new ListProperty( TYPE, "ActionHandlerFilters" );
+    
+    ModelElementList<ISapphireActionHandlerFilterDef> getActionHandlerFilters();
     
 }

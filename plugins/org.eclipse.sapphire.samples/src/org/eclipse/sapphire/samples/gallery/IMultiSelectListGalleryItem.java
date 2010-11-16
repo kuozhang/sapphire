@@ -11,26 +11,25 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
-import org.eclipse.sapphire.modeling.IRemovable;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface IMultiSelectListGalleryItem
 
-    extends IModelElementForXml, IRemovable
+    extends IModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( IMultiSelectListGalleryItem.class );

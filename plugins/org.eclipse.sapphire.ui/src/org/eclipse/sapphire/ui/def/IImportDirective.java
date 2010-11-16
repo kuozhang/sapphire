@@ -12,22 +12,20 @@
 package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.sapphire.modeling.IRemovable;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBindingMapping;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.internal.ImportDirectiveMethods;
 
 /**
@@ -35,11 +33,11 @@ import org.eclipse.sapphire.ui.def.internal.ImportDirectiveMethods;
  */
 
 @Image( small = "org.eclipse.sapphire.ui/images/objects/bundle.gif" )
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface IImportDirective
 
-    extends IModelElementForXml, IRemovable
+    extends IModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( IImportDirective.class );
@@ -59,7 +57,7 @@ public interface IImportDirective
     
     @Label( standard = "packages" )
     @Type( base = IPackageReference.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "package", type = IPackageReference.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "package", type = IPackageReference.class ) )
                              
     ListProperty PROP_PACKAGES = new ListProperty( TYPE, "Packages" ); //$NON-NLS-1$
     
@@ -69,7 +67,7 @@ public interface IImportDirective
     
     @Label( standard = "definitions" )
     @Type( base = IDefinitionReference.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "definition", type = IDefinitionReference.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "definition", type = IDefinitionReference.class ) )
                              
     ListProperty PROP_DEFINITIONS = new ListProperty( TYPE, "Definitions" ); //$NON-NLS-1$
     

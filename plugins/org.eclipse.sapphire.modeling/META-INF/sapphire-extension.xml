@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2010 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.EnablementService</type>
+        <factory>org.eclipse.sapphire.modeling.internal.EnablementServiceFactory</factory>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.serialization.ValueSerializationService</type>
+        <factory>org.eclipse.sapphire.modeling.serialization.internal.ValueSerializationServiceFactory</factory>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.DefaultValueService</type>
+        <factory>org.eclipse.sapphire.modeling.internal.DefaultValueServiceFactory</factory>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.DerivedValueService</type>
+        <factory>org.eclipse.sapphire.modeling.internal.DerivedValueServiceFactory</factory>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.PossibleValuesService</type>
+        <factory>org.eclipse.sapphire.modeling.internal.PossibleValuesServiceFactory</factory>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ReferenceService</type>
+        <factory>org.eclipse.sapphire.modeling.internal.ReferenceServiceFactory</factory>
+    </model-property-service>
+    <value-serialization-service>
+        <type>java.lang.Enum</type>
+        <impl>org.eclipse.sapphire.modeling.serialization.internal.EnumSerializationService</impl>
+    </value-serialization-service>
+    <value-serialization-service>
+        <type>java.lang.Boolean</type>
+        <impl>org.eclipse.sapphire.modeling.serialization.internal.BooleanSerializationService</impl>
+    </value-serialization-service>
+    <value-serialization-service>
+        <type>java.lang.Integer</type>
+        <impl>org.eclipse.sapphire.modeling.serialization.internal.IntegerSerializationService</impl>
+    </value-serialization-service>
+    <value-serialization-service>
+        <type>java.lang.Long</type>
+        <impl>org.eclipse.sapphire.modeling.serialization.internal.LongSerializationService</impl>
+    </value-serialization-service>
+    <value-serialization-service>
+        <type>java.lang.Float</type>
+        <impl>org.eclipse.sapphire.modeling.serialization.internal.FloatSerializationService</impl>
+    </value-serialization-service>
+    <value-serialization-service>
+        <type>java.lang.Double</type>
+        <impl>org.eclipse.sapphire.modeling.serialization.internal.DoubleSerializationService</impl>
+    </value-serialization-service>
+    <value-serialization-service>
+        <type>java.math.BigInteger</type>
+        <impl>org.eclipse.sapphire.modeling.serialization.internal.BigIntegerSerializationService</impl>
+    </value-serialization-service>
+    <value-serialization-service>
+        <type>java.math.BigDecimal</type>
+        <impl>org.eclipse.sapphire.modeling.serialization.internal.BigDecimalSerializationService</impl>
+    </value-serialization-service>
+    <value-serialization-service>
+        <type>java.net.URL</type>
+        <impl>org.eclipse.sapphire.modeling.serialization.internal.UrlSerializationService</impl>
+    </value-serialization-service>
+    <value-serialization-service>
+        <type>org.eclipse.core.runtime.IPath</type>
+        <impl>org.eclipse.sapphire.modeling.serialization.internal.PathSerializationService</impl>
+    </value-serialization-service>
+    <value-serialization-service>
+        <type>org.eclipse.sapphire.modeling.java.JavaTypeName</type>
+        <impl>org.eclipse.sapphire.modeling.java.internal.JavaTypeNameSerializationService</impl>
+    </value-serialization-service>
+    <value-serialization-service>
+        <type>org.eclipse.sapphire.modeling.java.JavaPackageName</type>
+        <impl>org.eclipse.sapphire.modeling.java.internal.JavaPackageNameSerializationService</impl>
+    </value-serialization-service>
+</extension>

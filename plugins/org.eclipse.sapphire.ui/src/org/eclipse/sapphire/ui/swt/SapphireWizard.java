@@ -120,11 +120,11 @@ public class SapphireWizard<M extends IExecutableModelElement>
     
     protected void performPostFinish()
     {
-    	// The default implementation doesn't do anything.
+        // The default implementation doesn't do anything.
     }
     
-	protected final void openFileEditors( final IFile... files )
-	{
+    protected final void openFileEditors( final IFile... files )
+    {
         final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         
         if( window != null )
@@ -133,19 +133,19 @@ public class SapphireWizard<M extends IExecutableModelElement>
             
             for( IFile file : files )
             {
-            	if( file != null && file.isAccessible() )
-            	{
-	                try
-	                {
-	                    IDE.openEditor( page, file );
-	                } 
-	                catch( PartInitException e ) 
-	                {
-	                    SapphireUiFrameworkPlugin.log( e );
-	                }
-            	}
+                if( file != null && file.isAccessible() )
+                {
+                    try
+                    {
+                        IDE.openEditor( page, file );
+                    } 
+                    catch( PartInitException e ) 
+                    {
+                        SapphireUiFrameworkPlugin.log( e );
+                    }
+                }
             }
         }
-	}
+    }
     
 }

@@ -11,14 +11,14 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.IRemovable;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.Documentation;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -26,11 +26,11 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @Label( standard = "param" )
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface ISapphireParam
 
-    extends IModelElementForXml, IRemovable
+    extends IModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireParam.class );
@@ -40,6 +40,7 @@ public interface ISapphireParam
     @Label( standard = "name" )
     @NonNullValue
     @XmlBinding( path = "name" )
+    @Documentation( content = "The name of the parameter." )
     
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
     
@@ -51,6 +52,7 @@ public interface ISapphireParam
     @Label( standard = "value" )
     @NonNullValue
     @XmlBinding( path = "value" )
+    @Documentation( content = "The value of the parameter." )
     
     ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
     

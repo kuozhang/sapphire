@@ -11,9 +11,6 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.w3c.dom.Document;
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -26,16 +23,19 @@ public abstract class RootElementController
     public static final String XSI_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance"; //$NON-NLS-1$
     public static final String XSI_SCHEMA_LOCATION_ATTR = "xsi:schemaLocation"; //$NON-NLS-1$
     
-    protected ModelStoreForXml modelStore;
-    protected ModelElementType rootModelElementType;
+    private XmlResource resource;
     
-    public void init( final ModelStoreForXml modelStore,
-                      final ModelElementType rootModelElementType )
+    public void init( final XmlResource resource )
     {
-        this.modelStore = modelStore;
-        this.rootModelElementType = rootModelElementType;
+        this.resource = resource;
     }
     
-    public abstract void createRootElement( final Document document );
-    public abstract boolean checkRootElement( final Document document );
+    public final XmlResource resource()
+    {
+        return this.resource;
+    }
+    
+    public abstract void createRootElement();
+    public abstract boolean checkRootElement();
+    
 }

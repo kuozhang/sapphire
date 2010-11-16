@@ -11,10 +11,7 @@
 
 package org.eclipse.sapphire.samples.gallery.ui;
 
-import org.eclipse.sapphire.modeling.IModel;
-import org.eclipse.sapphire.modeling.ModelStore;
-import org.eclipse.sapphire.modeling.xml.ModelStoreForXml;
-import org.eclipse.sapphire.samples.gallery.GalleryFactory;
+import org.eclipse.sapphire.samples.gallery.IGallery;
 import org.eclipse.sapphire.ui.xml.SapphireEditorForXml;
 
 /**
@@ -30,13 +27,8 @@ public final class SapphireGallerySampleEditor
     {
         super( "org.eclipse.sapphire.samples" );
         
+        setRootModelElementType( IGallery.TYPE );
         setEditorDefinitionPath( "org.eclipse.sapphire.samples/sdef/GalleryEditor.sdef/main" );
-    }
-
-    @Override
-    protected IModel createModel( final ModelStore modelStore )
-    {
-        return GalleryFactory.load( (ModelStoreForXml) modelStore );
     }
     
 }

@@ -20,42 +20,38 @@ public abstract class ModelParticle
     implements IModelParticle
     
 {
-    protected final IModel model;
     private final IModelParticle parent;
+    private final Resource resource;
     
-    public ModelParticle( final IModelParticle parent )
+    public ModelParticle( final IModelParticle parent,
+                          final Resource resource )
     {
         this.parent = parent;
-
-        if( this.parent == null )
-        {
-            if( this instanceof IModel )
-            {
-                this.model = (IModel) this;
-            }
-            else
-            {
-                throw new IllegalArgumentException();
-            }
-        }
-        else
-        {
-            this.model = this.parent.getModel();
-        }
+        this.resource = resource;
     }
     
-    public final IModel getModel()
+    public final Resource resource()
     {
-        return this.model;
+        return this.resource;
     }
-
-    public IModelParticle getParent()
+    
+    public final IModelParticle root()
+    {
+        if( this.parent == null )
+        {
+            return this;
+        }
+        
+        return this.parent.root();
+    }
+    
+    public IModelParticle parent()
     {
         return this.parent;
     }
     
     @SuppressWarnings( "unchecked" )
-    public final <T> T findNearestParticle( final Class<T> particleType )
+    public final <T> T nearest( final Class<T> particleType )
     {
         if( particleType.isAssignableFrom( getClass() ) )
         {
@@ -65,13 +61,30 @@ public abstract class ModelParticle
         {
             if( this.parent != null )
             {
-                return this.parent.findNearestParticle( particleType );
+                return this.parent.nearest( particleType );
             }
             else
             {
                 return null;
             }
         }
+    }
+    
+    public <A> A adapt( final Class<A> adapterType )
+    {
+        A adapter = null;
+        
+        if( this.resource != null )
+        {
+            adapter = this.resource.adapt( adapterType );
+        }
+
+        if( adapter == null && this.parent != null )
+        {
+            adapter = this.parent.adapt( adapterType );
+        }
+        
+        return adapter;
     }
 
 }

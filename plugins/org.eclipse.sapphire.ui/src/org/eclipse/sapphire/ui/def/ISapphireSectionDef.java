@@ -11,23 +11,21 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.internal.ClassReferenceResolver;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface ISapphireSectionDef
 
@@ -49,7 +47,7 @@ public interface ISapphireSectionDef
     // *** Description ***
     
     @Label( standard = "description" )
-    @XmlBinding( path = "description", removeExtraWhitespace = true )
+    @XmlValueBinding( path = "description", collapseWhitespace = true )
     
     ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );
     
@@ -58,7 +56,7 @@ public interface ISapphireSectionDef
     
     // *** VisibleWhenConditionClass ***
     
-    @Reference( target = Class.class, resolver = ClassReferenceResolver.class )
+    @Reference( target = Class.class )
     @Label( standard = "visible when condition class" )
     @XmlBinding( path = "visible-when/condition/class" )
     
@@ -76,16 +74,5 @@ public interface ISapphireSectionDef
     
     Value<String> getVisibleWhenConditionParameter();
     void setVisibleWhenConditionParameter( String visibleWhenConditionParameter );
-    
-    // *** ActionSetDef ***
-    
-    @Type( base = IActionSetDef.class )
-    @Label( standard = "actions" )
-    @XmlBinding( path = "actions" )
-    
-    ElementProperty PROP_ACTION_SET_DEF = new ElementProperty( TYPE, "ActionSetDef" );
-    
-    IActionSetDef getActionSetDef();
-    IActionSetDef getActionSetDef( boolean createIfNecessary );
     
 }

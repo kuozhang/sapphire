@@ -17,16 +17,16 @@ package org.eclipse.sapphire.ui;
 
 public class SapphirePartEvent
 {
-    private final SapphirePartContext context;
+    private final ISapphirePart part;
     
-    public SapphirePartEvent( final SapphirePartContext context )
+    public SapphirePartEvent( final ISapphirePart part )
     {
-        this.context = context;
+        this.part = part;
     }
     
-    public SapphirePartContext getContext()
+    public final ISapphirePart getPart()
     {
-        return this.context;
+        return this.part;
     }
     
 }

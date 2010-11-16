@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import org.eclipse.sapphire.modeling.annotations.ValuePropertyCustomBindingImpl;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
 import org.eclipse.sapphire.modeling.xml.StandardXmlNamespaceResolver;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlPath;
+import org.eclipse.sapphire.modeling.xml.XmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
 import org.eclipse.sapphire.ui.def.ISapphirePageBookExtDef;
 import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
 
@@ -25,7 +25,7 @@ import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
 
 public final class PageBookPartDefControlPropertyBinding
 
-    extends ValuePropertyCustomBindingImpl
+    extends XmlValueBindingImpl
     
 {
     private static final StandardXmlNamespaceResolver NAMESPACE_RESOLVER = new StandardXmlNamespaceResolver( ISapphirePageBookExtDef.TYPE );
@@ -35,8 +35,8 @@ public final class PageBookPartDefControlPropertyBinding
     @Override
     public String read()
     {
-        final XmlElement el = ( (IModelElementForXml) getModelElement() ).getXmlElement( false );
-        final PageBookPartControlMethod method = ( (ISapphirePageBookExtDef) getModelElement() ).getControlMethod().getContent();
+        final XmlElement el = ( (XmlResource) element().resource() ).getXmlElement( false );
+        final PageBookPartControlMethod method = ( (ISapphirePageBookExtDef) element() ).getControlMethod().getContent();
         
         if( method == PageBookPartControlMethod.ENUM_VALUE )
         {
@@ -53,8 +53,8 @@ public final class PageBookPartDefControlPropertyBinding
     @Override
     public void write( final String value )
     {
-        final PageBookPartControlMethod method = ( (ISapphirePageBookExtDef) getModelElement() ).getControlMethod().getContent();
-        final XmlElement el = ( (IModelElementForXml) getModelElement() ).getXmlElement( true );
+        final PageBookPartControlMethod method = ( (ISapphirePageBookExtDef) element() ).getControlMethod().getContent();
+        final XmlElement el = ( (XmlResource) element().resource() ).getXmlElement( true );
         
         if( method == PageBookPartControlMethod.ENUM_VALUE )
         {

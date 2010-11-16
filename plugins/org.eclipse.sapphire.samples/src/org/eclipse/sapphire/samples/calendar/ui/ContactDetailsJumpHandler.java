@@ -11,13 +11,13 @@
 
 package org.eclipse.sapphire.samples.calendar.ui;
 
+import java.util.List;
+
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.samples.contacts.IContact;
-import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.SapphireJumpActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.assist.JumpHandler;
 import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsContentNode;
 import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsContentTree;
 import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage;
@@ -28,33 +28,29 @@ import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage;
 
 public final class ContactDetailsJumpHandler
 
-    extends JumpHandler
+    extends SapphireJumpActionHandler
     
 {
     @Override
-    public boolean isApplicable( final ValueProperty property )
+    protected void initDependencies( final List<String> dependencies )
     {
-        return true;
-    }
-    
-    @Override
-    public boolean canLocateJumpTarget( final SapphirePart part,
-                                        final SapphireRenderingContext context,
-                                        final IModelElement modelElement,
-                                        final ValueProperty property )
-    {
-        final IAttendee attendee = (IAttendee) modelElement;
-        return attendee.isInContactsDatabase().getContent();
+        super.initDependencies( dependencies );
+        dependencies.add( IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
     }
 
     @Override
-    public void jump( final SapphirePart part,
-                      final SapphireRenderingContext context,
-                      final IModelElement modelElement,
-                      final ValueProperty property )
+    protected void refreshEnablementState()
     {
-        final CalendarEditor editor = part.getNearestPart( CalendarEditor.class );
-        jump( editor, modelElement );
+        final IAttendee attendee = (IAttendee) getModelElement();
+        setEnabled( attendee.isInContactsDatabase().getContent() );
+    }
+
+    @Override
+    protected Object run( final SapphireRenderingContext context )
+    {
+        final CalendarEditor editor = context.getPart().getNearestPart( CalendarEditor.class );
+        jump( editor, getModelElement() );
+        return null;
     }
 
     public static void jump( final CalendarEditor editor,

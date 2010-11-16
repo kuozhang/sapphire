@@ -16,19 +16,18 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.internal.ImageReferenceResolver;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Label( standard = "tab group item" )
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface ISapphireTabGroupItemDef
 
@@ -50,7 +49,7 @@ public interface ISapphireTabGroupItemDef
     
     // *** ImagePath ***
     
-    @Reference( target = ImageDescriptor.class, resolver = ImageReferenceResolver.class )
+    @Reference( target = ImageDescriptor.class )
     @Label( standard = "image path" )
     @XmlBinding( path = "image" )
     

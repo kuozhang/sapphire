@@ -53,14 +53,13 @@ public abstract class ListPropertyEditorRenderer
         return (ListProperty) super.getProperty();
     }
 
-    @SuppressWarnings("unchecked")
     public final ModelElementList<IModelElement> getList()
     {
         final IModelElement modelElement = getModelElement();
         
         if( modelElement != null )
         {
-            return (ModelElementList<IModelElement>) getProperty().invokeGetterMethod( modelElement );
+            return modelElement.read( getProperty() );
         }
         
         return null;
@@ -80,6 +79,8 @@ public abstract class ListPropertyEditorRenderer
     @Override
     protected void handleDisposeEvent()
     {
+        super.handleDisposeEvent();
+        
         final ModelElementList<IModelElement> list = getList();
 
         if( list != null )

@@ -189,6 +189,10 @@ public final class ModelPath
             {
                 segments.add( ALL_DESCENDENTS_SEGMENT );
             }
+            else if( part.equals( "#" ) )
+            {
+                segments.add( ALL_SIBLINGS_SEGMENT );
+            }
             else
             {
                 int openBracket = part.indexOf( '[' );
@@ -264,7 +268,7 @@ public final class ModelPath
         @Override
         public String toString()
         {
-            return "*";
+            return "#";
         }
     }
     

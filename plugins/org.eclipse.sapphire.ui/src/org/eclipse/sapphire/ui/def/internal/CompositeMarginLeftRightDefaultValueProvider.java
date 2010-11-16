@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import org.eclipse.sapphire.modeling.annotations.DefaultValueProviderImpl;
+import org.eclipse.sapphire.modeling.DefaultValueService;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 
 /**
@@ -20,13 +20,13 @@ import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 
 public class CompositeMarginLeftRightDefaultValueProvider
 
-    extends DefaultValueProviderImpl
+    extends DefaultValueService
     
 {
     @Override
     public String getDefaultValue()
     {
-        final ISapphireCompositeDef def = (ISapphireCompositeDef) getModelElement();
+        final ISapphireCompositeDef def = (ISapphireCompositeDef) element();
         return def.getMarginWidth().getText();
     }
     

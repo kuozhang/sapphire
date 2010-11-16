@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
-import static org.eclipse.sapphire.ui.util.SwtUtil.gd;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glspacing;
-import static org.eclipse.sapphire.ui.util.SwtUtil.valign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
@@ -66,7 +66,7 @@ public final class BooleanPropertyEditorRenderer
         composite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
 
         final PropertyEditorAssistDecorator decorator = createDecorator( composite ); 
-        decorator.getControl().setLayoutData( valign( gd(), SWT.CENTER ) );
+        decorator.getControl().setLayoutData( gdvalign( gd(), SWT.CENTER ) );
         
         this.checkbox = new Button( composite, SWT.CHECK );
         this.checkbox.setLayoutData( gd() );

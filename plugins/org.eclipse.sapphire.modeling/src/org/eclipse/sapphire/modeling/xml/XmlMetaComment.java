@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
+import static org.eclipse.sapphire.modeling.xml.XmlUtil.EMPTY_STRING;
+
 import org.w3c.dom.Node;
 
 /**
@@ -22,9 +24,10 @@ public final class XmlMetaComment
     extends XmlComment
     
 {
-    public XmlMetaComment( final Node domNode, final ModelStoreForXml modelStoreForXml )
+    public XmlMetaComment( final XmlElement parent,
+                           final Node domNode )
     {
-        super( domNode, modelStoreForXml );
+        super( parent, domNode );
     }
     
     public String getName()
@@ -44,6 +47,8 @@ public final class XmlMetaComment
     
     public void setName( final String name )
     {
+        validateEdit();
+        
         final String n = ( name == null ? EMPTY_STRING : name.trim() );
         super.setText( n + ":" + getText() );
     }
@@ -67,6 +72,8 @@ public final class XmlMetaComment
     @Override
     public void setText( final String text )
     {
+        validateEdit();
+        
         final String txt = ( text == null ? EMPTY_STRING : text.trim() );
         super.setText( getName() + ":" + txt );
     }

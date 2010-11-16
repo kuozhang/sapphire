@@ -16,6 +16,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.eclipse.sapphire.modeling.ReferenceService;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -26,6 +28,6 @@ import java.lang.annotation.Target;
 public @interface Reference
 {
     Class<?> target();
-    Class<? extends ReferenceResolverImpl<?>> resolver();
+    Class<? extends ReferenceService> service() default ReferenceService.class;
     String[] params() default {};
 }

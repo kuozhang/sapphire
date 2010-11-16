@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [bugzilla 329114] RE-WRITE CONTEXT HELP BINDING FEATURE
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.annotations.processor;
@@ -20,6 +21,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NamedValues;
 
@@ -37,14 +39,16 @@ import com.sun.mirror.declaration.TypeDeclaration;
 
 public final class ExternalizeStringResourcesProcessor 
 {
-	public void process( final AnnotationProcessorEnvironment env ) 
-	{
+    public void process( final AnnotationProcessorEnvironment env ) 
+    {
         for( TypeDeclaration type : getAnnotatedTypes( env ) )
         {
             final Properties resources = new Properties();
 
             addResources( resources, "$type$", type.getAnnotation( Label.class ) ); //$NON-NLS-1$
-            
+
+            addHelpContentResources( resources, "$contentHelp$", type.getAnnotation( Documentation.class ) ); //$NON-NLS-1$
+
             for( FieldDeclaration field : type.getFields() )
             {
                 final String fieldName = field.getSimpleName();
@@ -73,6 +77,9 @@ public final class ExternalizeStringResourcesProcessor
                                 resources.put( propName + ".namedValue." + val.value(), val.label() ); //$NON-NLS-1$
                             }
                         }
+                        
+                        addHelpContentResources( resources, propName, field.getAnnotation( Documentation.class ) );
+
                     }
                     else
                     {
@@ -119,10 +126,10 @@ public final class ExternalizeStringResourcesProcessor
                 }
             }
         }
-	}
-	
-	private static Set<TypeDeclaration> getAnnotatedTypes( final AnnotationProcessorEnvironment env )
-	{
+    }
+    
+    private static Set<TypeDeclaration> getAnnotatedTypes( final AnnotationProcessorEnvironment env )
+    {
         final Set<TypeDeclaration> annotatedTypes = new HashSet<TypeDeclaration>(); 
         
         final AnnotationTypeDeclaration annotationDeclaration 
@@ -164,8 +171,8 @@ public final class ExternalizeStringResourcesProcessor
         }
         
         return annotatedTypes;
-	}
-	
+    }
+    
     private static void addResources( final Properties resources,
                                       final String entityName,
                                       final Label labelAnnotation )
@@ -188,6 +195,22 @@ public final class ExternalizeStringResourcesProcessor
         }
     }
     
+    private static void addHelpContentResources( final Properties resources,
+                                                   final String entityName, 
+                                                 final Documentation documentationAnnotation ) 
+    {
+        if( documentationAnnotation != null )
+        {
+            resources.put( entityName + ".documentation", documentationAnnotation.content() ); //$NON-NLS-1$
+
+            for( Documentation.Topic topic : documentationAnnotation.topics() )
+            {
+                // TODO use topic.href()?
+                resources.put( entityName + ".topic." + topic.href(), topic.label() ); //$NON-NLS-1$
+            }
+        }
+    }
+
     private static final String getPropertyName( final FieldDeclaration propField )
     {
         final String propFieldName = propField.getSimpleName();
@@ -212,5 +235,5 @@ public final class ExternalizeStringResourcesProcessor
         
         return buf.toString();
     }
-	
+    
 }

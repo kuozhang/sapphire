@@ -11,18 +11,18 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhindent;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
-import static org.eclipse.sapphire.ui.util.SwtUtil.hspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IRemovable;
 import org.eclipse.sapphire.modeling.LabelTransformer;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
@@ -79,17 +79,17 @@ public class SapphireElementPropertyComposite
         final ISapphireElementPropertyCompositeDef def = (ISapphireElementPropertyCompositeDef) this.definition;
         
         final Composite composite = new Composite( context.getComposite(), SWT.NONE );
-        composite.setLayoutData( hspan( gdhfill(), 2 ) );
+        composite.setLayoutData( gdhspan( gdhfill(), 2 ) );
         composite.setLayout( glayout( 1, 0, 0 ) );
         context.adapt( composite );
         
         final Button masterCheckBox = new Button( composite, SWT.CHECK );
-        masterCheckBox.setLayoutData( gdhindent( hspan( gdhfill(), 2 ), 10 ) );
+        masterCheckBox.setLayoutData( gdhindent( gdhspan( gdhfill(), 2 ), 10 ) );
         masterCheckBox.setText( LabelTransformer.transform( def.getConditionalLabel().getLocalizedText(), CapitalizationType.FIRST_WORD_ONLY, true ) );
         context.adapt( masterCheckBox );
         
         final Composite separatorComposite = new Composite( composite, SWT.NONE );
-        separatorComposite.setLayoutData( gdhindent( hspan( gdhfill(), 2 ), 10 ) );
+        separatorComposite.setLayoutData( gdhindent( gdhspan( gdhfill(), 2 ), 10 ) );
         separatorComposite.setLayout( glayout( 1, 0, 5 ) );
         context.adapt( separatorComposite );
         
@@ -106,7 +106,7 @@ public class SapphireElementPropertyComposite
             @Override
             public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
             {
-                final IModelElement subModelElement = (IModelElement) property.invokeGetterMethod( modelElement );
+                final IModelElement subModelElement = modelElement.read( property ).element();
                 
                 masterCheckBox.setSelection( subModelElement != null );
                 masterCheckBox.setEnabled( modelElement.isPropertyEnabled( property ) );
@@ -141,18 +141,15 @@ public class SapphireElementPropertyComposite
                 {
                     try
                     {
+                        final ModelElementHandle<?> handle = modelElement.read( property );
+                        
                         if( masterCheckBox.getSelection() == true )
                         {
-                            property.invokeGetterMethod( modelElement, true );
+                            handle.element( true );
                         }
                         else
                         {
-                            final IRemovable subModelElement = (IRemovable) property.invokeGetterMethod( modelElement );
-                            
-                            if( subModelElement != null )
-                            {
-                                subModelElement.remove();
-                            }
+                            handle.remove();
                         }
                     }
                     catch( Exception e )
@@ -187,7 +184,7 @@ public class SapphireElementPropertyComposite
     @Override
     protected Object parsePageKey( final String pageKeyString )
     {
-        final ISapphireUiDef rootdef = (ISapphireUiDef) this.definition.getModel();
+        final ISapphireUiDef rootdef = this.definition.nearest( ISapphireUiDef.class );
         final Class<?> cl = rootdef.resolveClass( pageKeyString );
         return ClassBasedKey.create( cl );
     }
@@ -195,7 +192,7 @@ public class SapphireElementPropertyComposite
     private void updateCurrentPage( final boolean force )
     {
         final IModelElement modelElement = getModelElement();
-        final IModelElement subModelElement = (IModelElement) this.property.invokeGetterMethod( modelElement );
+        final IModelElement subModelElement = modelElement.read( this.property ).element();
         
         if( force == true || this.modelElementForChildParts != subModelElement )
         {
@@ -236,7 +233,7 @@ public class SapphireElementPropertyComposite
             {
                 final IModelElement element = getModelElement();
                 
-                if( element.isPropertyEnabled( this.property ) && element.service().read( this.property ) != null )
+                if( element.isPropertyEnabled( this.property ) && element.read( this.property ) != null )
                 {
                     super.setFocus( path.tail() );
                 }

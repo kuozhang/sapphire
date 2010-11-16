@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui.swt;
 
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import java.util.Collections;
 

@@ -1,0 +1,541 @@
+<html>
+
+<head>
+  <title>Migration Guide for Sapphire 0.2 Milestone</title>
+  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+  <style type="text/css">
+    pre.source-code 
+    {
+      font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace; 
+      color: #000000;
+      background-color: #ffffff;
+      font-size: 12px;
+      border: 0px;
+      line-height: 14px;
+      padding: 5px;
+      margin-left: 0px;
+      margin-right: 0px;
+      overflow: auto
+    }
+</style></head>
+
+<body>
+
+<h1>Migration Guide for 0.2 Milestone</h1>
+
+<p>This documents covers code changes that need to be made by Sapphire adopters as part of migrating 
+to 0.2 milestone. Only changes from the previous milestone are covered.</p>
+
+<p>Table of Contents</p>
+
+<ol>
+  <li><a href="#annotations">Annotations</a></li>
+  <li><a href="#browse-handlers">Browse Handlers</a></li>
+  <li><a href="#jump-handlers">Jump Handlers</a></li>
+  <li><a href="#action-links">Action Links</a></li>
+  <li><a href="#misc">Miscellaneous</a></li>
+</ol>
+
+<a name="annotations"><h2>Annotations</h2></a>
+
+<p>Annotations on model elements:</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@DefaultValue( "something" )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@DefaultValue( text = "something" )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@DefaultValueProvider( impl = CustomImpl.class )
+
+public class CustomImpl extends DefaultValueProviderImpl
+{
+    ...
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@DefaultValue( service = CustomImpl.class )
+
+public class CustomImpl extends DefaultValueService
+{
+    ...
+}</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@PossibleValuesFromModel( path = "/SomeProperty" )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@PossibleValues( property = "/SomeProperty" )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@PossibleValuesProvider( impl = CustomImpl.class )
+
+public class CustomImpl extends PossibleValuesProviderImpl
+{
+    ...
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@PossibleValues( service = CustomImpl.class )
+
+public class CustomImpl extends PossibleValuesService
+{
+    ...
+}</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@ValueSerializer( impl = CustomImpl.class )
+
+public class CustomImpl extends ValueSerializerImpl
+{
+    ...
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@ValueSerialization( service = CustomImpl.class )
+
+public class CustomImpl extends ValueSerializationService
+{
+    ...
+}</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@Enabler( impl = CustomImpl.class )
+
+public class CustomImpl extends EnablerImpl
+{
+    ...
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@Enablement( service = CustomImpl.class )
+
+public class CustomImpl extends EnablementService
+{
+    ...
+}</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@EnabledWhen( "..." )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@Enablement( script = "..." )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@EnabledByBooleanProperty( "SomeProperty" )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@Enablement( property = "SomeProperty" )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@EnabledByEnumProperty( property = "SomeProperty", values = { "A", "B", "C" } )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@Enablement( property = "SomeProperty", propertyValue = "A,B,C" )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@Reference( target = Object.class, resolver = CustomImpl.class )
+
+public class CustomImpl extends ReferenceResolverImpl
+{
+    ...
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@Reference( target = Object.class, service = CustomImpl.class )
+
+public class CustomImpl extends ReferenceService
+{
+    ...
+}</code></pre>
+    </td>
+  </tr>
+</table>
+
+<a name="browse-handlers"><h2>Browse Handlers</h2></a>
+
+<p>Browse handler definition in the UI definition file:</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;browse-handler>
+        &lt;class>MyBrowseHandler&lt;/class>
+    &lt;/browse-handler>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;action-handler>
+        &lt;action>Sapphire.Browse&lt;/action>
+        &lt;impl>MyBrowseHandler&lt;/impl>
+    &lt;/action-handler>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+  </tr>
+</table>
+
+<p>Browse handler definition in an extension:</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;plugin></font>
+    &lt;extension point="org.eclipse.sapphire.ui.browseHandlers">
+        &lt;browse-handler factory="org.something.MyBrowseHandlerFactory"/>
+    &lt/extension>
+<font color="#888888">&lt;/plugin></font></code></pre>
+    </td>
+    <td>
+      <p>Sapphire no longer uses Eclipse extension system. Instead, create 
+        sapphire-extension.xml file in the META-INF folder. The extension must be located in the 
+        same classloader as Sapphire. On an OSGi system this is done by creating a fragment to
+        the org.eclipse.sapphire.ui bundle.</p>
+        
+      <p>Note that the factory concept has been removed. The browse handler implementation class
+        is specified directly. Applicability is controlled by a separate condition class that
+        must extends SapphireCondition.</p>
+         
+<pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension"></font>
+    &lt;action-handler>
+        &lt;action>Sapphire.Browse&lt;/action>
+        &lt;impl>org.something.MyBrowseHandler&lt;/impl>
+        &lt;condition>org.something.MyBrowseHandlerCondition&lt;/condition>
+    &lt;/action-handler>
+<font color="#888888">&lt;/extension></font></code></pre>
+    </td>
+  </tr>
+</table>
+
+<p>Browse handler implementation:</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>public class MyBrowseHandler extends BrowseHandler
+{
+    @Override
+    public String browse( SapphireRenderingContext context )
+    {
+        ...
+    }
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>public class MyBrowseHandler extends SapphireBrowseActionHandler
+{
+    @Override
+    public String browse( SapphireRenderingContext context )
+    {
+        ...
+    }
+}</code></pre>
+    </td>
+  </tr>
+</table>    
+
+<a name="jump-handlers"><h2>Jump Handlers</h2></a>
+
+<p>Jump handler definition in the UI definition file:</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;jump-handler>
+        &lt;class>MyJumpHandler&lt;/class>
+    &lt;/jump-handler>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;action-handler>
+        &lt;action>Sapphire.Jump&lt;/action>
+        &lt;impl>MyJumpHandler&lt;/impl>
+    &lt;/action-handler>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+  </tr>
+</table>    
+
+<p>Jump handler definition in an extension:</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;plugin></font>
+    &lt;extension point="org.eclipse.sapphire.ui.jumpHandlers">
+        &lt;jump-handler class="org.something.MyJumpHandler"/>
+    &lt/extension>
+<font color="#888888">&lt;/plugin></font></code></pre>
+    </td>
+    <td>
+      <p>Sapphire no longer uses Eclipse extension system. Instead, create 
+        sapphire-extension.xml file in the META-INF folder. The extension must be located in the 
+        same classloader as Sapphire. On an OSGi system this is done by creating a fragment to
+        the org.eclipse.sapphire.ui bundle.</p>
+        
+      <p>Note that the logic from the isApplicable method needs to be extracted into a separate
+        condition class. The condition class must extend SapphireCondition.</p>
+         
+<pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension"></font>
+    &lt;action-handler>
+        &lt;action>Sapphire.Jump&lt;/action>
+        &lt;impl>org.something.MyJumpHandler&lt;/impl>
+        &lt;condition>org.something.MyJumpHandlerCondition&lt;/condition>
+    &lt;/action-handler>
+<font color="#888888">&lt;/extension></font></code></pre>
+    </td>
+  </tr>
+</table>
+
+<p>Jump handler implementation:</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>public class MyJumpHandler extends JumpHandler
+{
+    @Override
+    public boolean isApplicable( ValueProperty property )
+    {
+        return true;
+    }
+    
+    @Override
+    public int getPriority()
+    {
+        return 0;
+    }
+    
+    @Override
+    public boolean canLocateJumpTarget( SapphirePart part,
+                                        SapphireRenderingContext context,
+                                        IModelElement element,
+                                        ValueProperty property )
+    {
+        // Logic for evaluating whether the jump handler is active goes here.
+        
+        return false
+    }
+
+    @Override
+    public void jump( SapphirePart part,
+                      SapphireRenderingContext context,
+                      IModelElement element,
+                      ValueProperty property )
+    {
+        // Logic for executing the jump goes here.
+    }
+}</code></pre>
+    </td>
+    <td>
+      <p>The isApplicable method has been replaced with a separate condition class that
+        is specified as part of handler definition. This is usually only necessary when
+        a jump handler is contributed in an extension (as opposed to locally as part of
+        a property editor definition).</p>
+      <p>The getPriority method has been replaced with location hints specified as part of
+        handler definition.</p>
+<pre class="source-code"><code>public class MyJumpHandler extends SapphireJumpActionHandler
+{
+    @Override
+    public void init( SapphireAction action,
+                      ISapphireActionHandlerDef def )
+    {
+        super.init( def );
+        
+        // Setup listeners on external resources relevant in determining whether
+        // the jump handler is active. The listeners should call refreshEnablementState
+        // method. If a listener infrastructure is not available, a polling thread
+        // can be used instead.
+        
+        // If all relevant resources are other properties in the same model, skip
+        // overriding this method and override initDependencies method instead.
+    }
+    
+    @Override
+    protected void initDependencies( List&lt;String> dependencies )
+    {
+        super.initDependencies( dependencies );
+        
+        // The default implementation will add the property whose editor the jump handler
+        // is attached to. If the enablement state of the jump handler is dependent on other
+        // properties in the model, paths to those properties should be added here.
+    }
+
+    @Override
+    protected void refreshEnablementState()
+    {
+        // Logic for evaluating whether the jump handler is active goes here.
+        
+        setEnabled( false );
+    }
+
+    @Override
+    protected Object run( SapphireRenderingContext context )
+    {
+        // Logic for executing the jump goes here.
+        
+        return null;
+    }
+
+    @Override    
+    public void dispose()
+    {
+        super.dispose();
+        
+        // Remove listeners and stop threads configured in the init method.
+    }
+}</code></pre>
+    </td>
+  </tr>
+</table>    
+
+<a name="action-links"><h2>Action Links</h2></a>
+
+<p>Defined by referencing existing action:</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;content></font>
+    &lt;action-link>
+        &lt;action-id>node:add&lt;/action-id>
+        &lt;label>Add a contact&lt;/label>
+    &lt;/action-link>
+<font color="#888888">&lt;/content></font></code></pre>
+    </td>
+    <td>
+      <p>While the XML markup for definining action links hasn't changed for this
+        scenario, the IDs for all system actions have changed. The appropriate
+        system action ID can be found <a href="../../ui/extensions/index.html">here</a>.</p>
+<pre class="source-code"><code><font color="#888888">&lt;content></font>
+    &lt;action-link>
+        &lt;action-id>Sapphire.Add&lt;/action-id>
+        &lt;label>Add a contact&lt;/label>
+    &lt;/action-link>
+<font color="#888888">&lt;/content></font></code></pre>
+    </td>
+  </tr>
+</table>    
+
+<p>Defined with inline action implementation:</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;content></font>
+    &lt;action-link>
+        &lt;action-class>MyAction&lt;/action-class>
+        &lt;label>Link&lt;/label>
+    &lt;/action-link>
+<font color="#888888">&lt;/content></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;content></font>
+    &lt;action-link>
+        &lt;action-id>MyAction&lt;/action-id>
+        &lt;label>Link&lt;/label>
+        &lt;action>
+            &lt;id>MyAction&lt;/id>
+        &lt;/action>
+        &lt;action-handler>
+            &lt;action>MyAction&lt;/action>
+            &lt;impl>MyActionHandler&lt;/impl>
+        &lt;/action-handler>
+    &lt;/action-link>
+<font color="#888888">&lt;/content></font></code></pre>
+    </td>
+  </tr>
+</table>    
+
+<a name="misc"><h2>Miscellaneous</h2></a>
+
+<p>Child property editor definition:</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;child-property>
+        &lt;name>MyChildProperty&lt;/name>
+    &lt;/child-property>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;child-property>
+        &lt;property>MyChildProperty&lt;/property>
+    &lt;/child-property>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+  </tr>
+</table>    
+
+<br/><br/>
+
+</body>
+
+</html>

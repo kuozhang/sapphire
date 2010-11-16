@@ -1,11 +1,9 @@
-<definition 
-  xmlns="http://xmlns.oracle.com/eclipse/tools/sapphire/ui"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://xmlns.oracle.com/eclipse/tools/sapphire/ui http://xmlns.oracle.com/eclipse/tools/sapphire/ui">
+<definition>
 
   <import>
     <bundle>org.eclipse.sapphire.samples</bundle>
     <package>org.eclipse.sapphire.samples.contacts</package>
+    <package>org.eclipse.sapphire.samples.contacts.internal</package>
     <package>org.eclipse.sapphire.samples.contacts.ui.internal</package>
   </import>
   
@@ -13,7 +11,10 @@
     <id>main</id>
     <page-header-text>Contacts</page-header-text>
     <initial-selection>Contacts</initial-selection>
-    <help-context-id>org.eclipse.sapphire.samples.ContactsEditor-Global</help-context-id>
+    <documentation>
+      <title>Contacts Database Editor</title>
+      <content>This would be the help content for the overall contacts database editor.</content>
+    </documentation>
     <root-node>
       <node>
         <label>Contacts</label>
@@ -21,7 +22,7 @@
           <description>Use this simple editor to organize your contacts.</description>
           <content>
             <action-link>
-              <action-id>node:add</action-id>
+              <action-id>Sapphire.Add</action-id>
               <label>Add a contact</label>
             </action-link>
           </content>
@@ -33,9 +34,20 @@
               <property>Name</property>
               <null-value-label>&lt;contact&gt;</null-value-label>
             </dynamic-label>
+            <action>
+              <id>SendContact</id>
+              <label>send contact...</label>
+            </action>
+            <action-handler>
+              <action>SendContact</action>
+              <impl>SendContactActionHandler</impl>
+            </action-handler>
             <section>
               <label>Basic Info</label>
-              <help-context-id>org.eclipse.sapphire.samples.ContactsEditor-ContactBasicInfoSection</help-context-id>
+              <documentation>
+                <title>Basic Info</title>
+                <content>This would be the help content for the basic info section.</content>
+              </documentation>
               <content>
                 <property-editor>Name</property-editor>
                 <property-editor>Category</property-editor>
@@ -43,7 +55,10 @@
             </section>
             <section>
               <label>Address</label>
-              <help-context-id>org.eclipse.sapphire.samples.ContactsEditor-ContactAddressSection</help-context-id>
+              <documentation>
+                <title>Address</title>
+                <content>This would be the help content for the address section.</content>
+              </documentation>
               <content>
                 <with>
                   <property>Address</property>
@@ -62,13 +77,13 @@
                 <property-editor>
                   <property>PhoneNumbers</property>
                   <child-property>
-                    <name>Type</name>
+                    <property>Type</property>
                   </child-property>
                   <child-property>
-                    <name>AreaCode</name>
+                    <property>AreaCode</property>
                   </child-property>
                   <child-property>
-                    <name>LocalNumber</name>
+                    <property>LocalNumber</property>
                   </child-property>
                   <hint>
                     <name>show.label</name>
@@ -89,10 +104,11 @@
                   <property-editor>
                     <property>WebSites</property>
                     <child-property>
-                      <name>Url</name>
-                      <browse-handler>
-                        <class>WebSiteUrlBrowseHandler</class>
-                      </browse-handler>
+                      <property>Url</property>
+                      <action-handler>
+                        <action>Sapphire.Browse</action>
+                        <impl>WebSiteUrlBrowseHandler</impl>
+                      </action-handler>
                     </child-property>
                     <hint>
                       <name>show.label</name>
@@ -111,7 +127,13 @@
                     <conditional>Delegate some tasks to an assistant</conditional>
                     <default-panel>
                       <content>
-                        <property-editor>Name</property-editor>
+                        <property-editor>
+                          <property>Name</property>
+                          <action-handler>
+                            <action>Sapphire.Create</action>
+                            <impl>AssistantCreateActionHandler</impl>
+                          </action-handler>
+                        </property-editor>
                         <property-editor>Notes</property-editor>
                         <property-editor>
                           <property>DelegatedTasks</property>
@@ -145,5 +167,34 @@
       </node>
     </root-node>
   </editor-page>
+  
+  <wizard>
+    <id>SendContactWizard</id>
+    <label>Send Contact</label>
+    <page>
+      <id>main.page</id>
+      <label>Send Contact</label>
+      <description>Send contact information via e-mail.</description>
+      <initial-focus>To</initial-focus>
+      <content>
+        <property-editor>To</property-editor>
+        <property-editor>
+          <property>MessageBody</property>
+          <hint>
+            <name>show.label</name>
+            <value>false</value>
+          </hint>
+          <hint>
+            <name>expand.vertically</name>
+            <value>true</value>
+          </hint>
+        </property-editor>
+      </content>
+      <hint>
+        <name>expand.vertically</name>
+        <value>true</value>
+      </hint>
+    </page>
+  </wizard>
   
 </definition>

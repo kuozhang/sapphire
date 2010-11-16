@@ -159,6 +159,11 @@ public final class PluginUtil
         }
     }
     
+    public static String getElementValue( final IConfigurationElement el )
+    {
+        return getElementValue( el, null );
+    }
+    
     public static String getElementValue( final IConfigurationElement el,
                                           final String defaultValue )
     {
@@ -192,7 +197,7 @@ public final class PluginUtil
                                           final Class<T> interfc )
     {
         final Bundle bundle = Platform.getBundle( pluginId );
-        final Class cl;
+        final Class<?> cl;
 
         try
         {
@@ -219,7 +224,7 @@ public final class PluginUtil
             return null;
         }
 
-        return cl;
+        return (Class<T>) cl;
     }
 
     public static <T> T instantiate( final String pluginId,

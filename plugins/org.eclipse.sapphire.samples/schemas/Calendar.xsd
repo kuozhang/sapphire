@@ -12,28 +12,28 @@
                 <element name="event" maxOccurs="unbounded" minOccurs="0">
                     <complexType>
                         <sequence>
-                        	<element name="subject" type="string"></element>
-                        	<element name="location" type="string"
-                        		maxOccurs="1" minOccurs="0">
-                        	</element>
-                        	<element name="notes" type="string"
-                        		maxOccurs="1" minOccurs="0">
-                        	</element>
-                        	<element name="start-time" type="string"></element>
-                        	<element name="end-time" type="string"></element>
-                        	<element name="attendee"
-                        		maxOccurs="unbounded" minOccurs="0">
-                        		<complexType>
-                        			<sequence>
-                        				<element name="name"
-                        					type="string">
-                        				</element>
-                        				<element name="type"
-                        					type="string" maxOccurs="1" minOccurs="0">
-                        				</element>
-                        			</sequence>
-                        		</complexType>
-                        	</element>
+                            <element name="subject" type="string"></element>
+                            <element name="location" type="string"
+                                maxOccurs="1" minOccurs="0">
+                            </element>
+                            <element name="notes" type="string"
+                                maxOccurs="1" minOccurs="0">
+                            </element>
+                            <element name="start-time" type="string"></element>
+                            <element name="end-time" type="string"></element>
+                            <element name="attendee"
+                                maxOccurs="unbounded" minOccurs="0">
+                                <complexType>
+                                    <sequence>
+                                        <element name="name"
+                                            type="string">
+                                        </element>
+                                        <element name="type"
+                                            type="string" maxOccurs="1" minOccurs="0">
+                                        </element>
+                                    </sequence>
+                                </complexType>
+                            </element>
                         </sequence>
                     </complexType>
                 </element>

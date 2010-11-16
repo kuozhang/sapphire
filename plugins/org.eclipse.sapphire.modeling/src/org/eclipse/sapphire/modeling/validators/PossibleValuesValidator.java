@@ -18,13 +18,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
-import org.eclipse.sapphire.modeling.annotations.PossibleValuesFromModel;
-import org.eclipse.sapphire.modeling.annotations.PossibleValuesProvider;
-import org.eclipse.sapphire.modeling.annotations.PossibleValuesProviderImpl;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 /**
@@ -38,23 +36,10 @@ public final class PossibleValuesValidator
 {
     public static boolean isNecessary( final ValueProperty property )
     {
-        final PossibleValuesProvider possibleValuesProviderAnnotation = property.getAnnotation( PossibleValuesProvider.class );
+        final PossibleValues annotation = property.getAnnotation( PossibleValues.class );
         
-        if( possibleValuesProviderAnnotation != null && possibleValuesProviderAnnotation.invalidValueSeverity() != IStatus.OK )
-        {
-            return true;
-        }
-        
-        final PossibleValues possibleValuesAnnotation = property.getAnnotation( PossibleValues.class );
-        
-        if( possibleValuesAnnotation != null && possibleValuesAnnotation.invalidValueSeverity() != IStatus.OK )
-        {
-            return true;
-        }
-        
-        final PossibleValuesFromModel possibleValuesFromModelAnnotation = property.getAnnotation( PossibleValuesFromModel.class );
-        
-        if( possibleValuesFromModelAnnotation != null && possibleValuesFromModelAnnotation.invalidValueSeverity() != IStatus.OK )
+        if( annotation != null && 
+            ( ! annotation.service().equals( PossibleValuesService.class ) || annotation.invalidValueSeverity() != IStatus.OK ) )
         {
             return true;
         }
@@ -65,12 +50,12 @@ public final class PossibleValuesValidator
     @Override
     public IStatus validate( final Value<?> value )
     {
-        final IModelElement modelElement = value.getParent();
+        final IModelElement modelElement = value.parent();
         final String valueString = value.getText( true );
         
         if( valueString != null )
         {
-            final PossibleValuesProviderImpl valuesProvider = modelElement.service().getPossibleValuesProvider( value.getProperty() );
+            final PossibleValuesService valuesProvider = modelElement.service( value.getProperty(), PossibleValuesService.class );
             
             if( valuesProvider != null )
             {

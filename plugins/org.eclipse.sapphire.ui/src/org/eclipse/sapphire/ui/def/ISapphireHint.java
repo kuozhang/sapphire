@@ -11,16 +11,15 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.IRemovable;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DefaultValueProvider;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.internal.SapphireHintValueDefaultValueProvider;
 
@@ -29,11 +28,11 @@ import org.eclipse.sapphire.ui.def.internal.SapphireHintValueDefaultValueProvide
  */
 
 @Label( standard = "hint" )
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface ISapphireHint
 
-    extends IModelElementForXml, IRemovable
+    extends IModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireHint.class );
@@ -84,7 +83,7 @@ public interface ISapphireHint
     @Label( standard = "value" )
     @NonNullValue
     @XmlBinding( path = "value" )
-    @DefaultValueProvider( impl = SapphireHintValueDefaultValueProvider.class )
+    @DefaultValue( service = SapphireHintValueDefaultValueProvider.class )
     
     ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
     

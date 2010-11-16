@@ -130,7 +130,7 @@ public final class Body
     
     public void closeBlock()
     {
-    	closeBlock( false );
+        closeBlock( false );
     }
 
     public void closeBlock( final boolean suffixWithSemicolon )

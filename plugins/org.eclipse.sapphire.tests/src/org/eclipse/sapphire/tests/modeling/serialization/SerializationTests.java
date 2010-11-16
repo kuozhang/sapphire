@@ -15,10 +15,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.modeling.ByteArrayModelStore;
-import org.eclipse.sapphire.modeling.xml.ModelStoreForXml;
-import org.eclipse.sapphire.tests.modeling.serialization.internal.SerializationTestsModel;
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -48,9 +44,7 @@ public final class SerializationTests
     
     public void testEnumSerialization1() throws Exception
     {
-        final ByteArrayModelStore modelStore = new ByteArrayModelStore();
-        final ModelStoreForXml xmlModelStore = new ModelStoreForXml( modelStore );
-        final ISerializationTestsModel model = new SerializationTestsModel( xmlModelStore );
+        final ISerializationTestsModel model = ISerializationTestsModel.TYPE.instantiate();
 
         model.setEnumProperty1( "YES" );
         assertEquals( ThreeChoiceAnswer.YES, model.getEnumProperty1().getContent() );
@@ -97,9 +91,7 @@ public final class SerializationTests
     
     public void testEnumSerialization2() throws Exception
     {
-        final ByteArrayModelStore modelStore = new ByteArrayModelStore();
-        final ModelStoreForXml xmlModelStore = new ModelStoreForXml( modelStore );
-        final ISerializationTestsModel model = new SerializationTestsModel( xmlModelStore );
+        final ISerializationTestsModel model = ISerializationTestsModel.TYPE.instantiate();
         
         model.setEnumProperty2( "YES" );
         assertEquals( ThreeChoiceAnswerCustomized.YES, model.getEnumProperty2().getContent() );
@@ -161,9 +153,7 @@ public final class SerializationTests
     
     public void testEnumSerialization3() throws Exception
     {
-        final ByteArrayModelStore modelStore = new ByteArrayModelStore();
-        final ModelStoreForXml xmlModelStore = new ModelStoreForXml( modelStore );
-        final ISerializationTestsModel model = new SerializationTestsModel( xmlModelStore );
+        final ISerializationTestsModel model = ISerializationTestsModel.TYPE.instantiate();
         
         model.setEnumProperty3( "1" );
         assertEquals( ThreeChoiceAnswer.YES, model.getEnumProperty3().getContent() );

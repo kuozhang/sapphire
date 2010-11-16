@@ -11,30 +11,28 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.IRemovable;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.BooleanPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBindingMapping;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface IActionSetDef
 
-    extends IModelElementForXml, IRemovable
+    extends IModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( IActionSetDef.class );
@@ -43,8 +41,8 @@ public interface IActionSetDef
     
     @Type( base = Boolean.class )
     @Label( standard = "suppress default actions" )
-    @DefaultValue( "false" )
-    @BooleanPropertyXmlBinding( path = "suppress-default-actions", treatExistenceAsValue = true, valueWhenPresent = true )
+    @DefaultValue( text = "false" )
+    @XmlValueBinding( path = "suppress-default-actions", mapExistanceToValue = "true;false" )
     
     ValueProperty PROP_SUPPRESS_DEFAULT_ACTIONS = new ValueProperty( TYPE, "SuppressDefaultActions" );
     
@@ -55,7 +53,7 @@ public interface IActionSetDef
     // *** Overrides ***
     
     @Type( base = IActionOverride.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "override", type = IActionOverride.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "override", type = IActionOverride.class ) )
                              
     ListProperty PROP_OVERRIDES = new ListProperty( TYPE, "Overrides" );
     
@@ -64,7 +62,7 @@ public interface IActionSetDef
     // *** Groups ***
     
     @Type( base = IActionGroupDef.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "action-group", type = IActionGroupDef.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action-group", type = IActionGroupDef.class ) )
                              
     ListProperty PROP_GROUPS = new ListProperty( TYPE, "Groups" );
     

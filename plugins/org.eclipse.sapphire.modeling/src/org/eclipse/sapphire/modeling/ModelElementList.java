@@ -22,6 +22,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
+@SuppressWarnings( "unchecked" )
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -33,22 +35,18 @@ public final class ModelElementList<T extends IModelElement>
 
 {
     private final ListProperty property;
-    private ModelElementListController<T> controller;
-    private List<T> data;
-    private boolean copyOnNextChange;
-    private boolean ignoreRefresh;
+    private ListBindingImpl binding;
+    private List<IModelElement> data;
     private IStatus valres;
     private ModelElementListener listMemberListener;
     
     public ModelElementList( final IModelElement parent,
                              final ListProperty property )
     {
-        super( parent );
+        super( parent, parent.resource() );
         
         this.property = property;
         this.data = Collections.emptyList();
-        this.copyOnNextChange = true;
-        this.ignoreRefresh = false;
         this.valres = null;
         
         this.listMemberListener = new ModelElementListener()
@@ -61,15 +59,16 @@ public final class ModelElementList<T extends IModelElement>
         };
     }
     
-    public final void init( final ModelElementListController<T> controller )
+    public final void init( final ListBindingImpl binding )
     {
-        this.controller = controller;
+        this.binding = binding;
+        refresh( true );
     }
 
     @Override
-    public IModelElement getParent()
+    public IModelElement parent()
     {
-        return (IModelElement) super.getParent();
+        return (IModelElement) super.parent();
     }
     
     public ListProperty getParentProperty()
@@ -89,90 +88,115 @@ public final class ModelElementList<T extends IModelElement>
 
     public boolean refresh()
     {
+        return refresh( false );
+    }
+    
+    private boolean refresh( final boolean isInitialRefresh )
+    {
+        if( this.binding == null )
+        {
+            throw new IllegalStateException();
+        }
+        
         boolean changed = false;
         
         synchronized( this )
         {
-            if( ! this.ignoreRefresh )
+            final List<Resource> newResources = this.binding.read();
+            final int newContentSize = newResources.size();
+            
+            boolean refreshNeeded;
+            
+            if( this.data.size() == newContentSize )
             {
-                final List<T> oldListElements = Collections.unmodifiableList( this.data );
-                final List<T> newListElements = new ArrayList<T>( this.controller.refresh( oldListElements ) );
+                refreshNeeded = false;
                 
-                boolean refreshNeeded = false;
-                
-                if( newListElements != oldListElements )
+                for( int i = 0; i < newContentSize; i++ )
                 {
-                    final int newListElementsSize = newListElements.size();
-                    
-                    if( newListElementsSize != oldListElements.size() )
+                    if( this.data.get( i ).resource() != newResources.get( i ) )
                     {
                         refreshNeeded = true;
+                        break;
                     }
-                    else
+                }
+            }
+            else
+            {
+                refreshNeeded = true;
+            }
+            
+            if( refreshNeeded )
+            {
+                final List<IModelElement> newContent = new ArrayList<IModelElement>( newContentSize );
+                
+                for( Resource resource : newResources )
+                {
+                    IModelElement modelElement = null;
+                    
+                    for( IModelElement x : this.data )
                     {
-                        for( int i = 0; i < newListElementsSize; i++ )
+                        if( resource == x.resource() )
                         {
-                            if( newListElements.get( i ) != oldListElements.get( i ) )
-                            {
-                                refreshNeeded = true;
-                                break;
-                            }
+                            modelElement = x;
+                            break;
+                        }
+                    }
+                    
+                    if( modelElement == null )
+                    {
+                        final ModelElementType type = this.binding.type( resource );
+                        modelElement = type.instantiate( this, this.property, resource );
+                    }
+                    
+                    newContent.add( modelElement );
+                }
+                
+                for( IModelElement x : this.data )
+                {
+                    boolean retained = false;
+
+                    for( IModelElement y : newContent )
+                    {
+                        if( x == y )
+                        {
+                            retained = true;
+                            break;
+                        }
+                    }
+
+                    if( ! retained )
+                    {
+                        try
+                        {
+                            x.dispose();
+                        }
+                        catch( Exception e )
+                        {
+                            SapphireModelingFrameworkPlugin.log( e );
                         }
                     }
                 }
                 
-                if( refreshNeeded )
+                this.data = newContent;
+                
+                for( T modelElement : this )
                 {
-                    for( T modelElement : oldListElements )
-                    {
-                        boolean retained = false;
-
-                        for( T x : newListElements )
-                        {
-                            if( x == modelElement )
-                            {
-                                retained = true;
-                                break;
-                            }
-                        }
-
-                        if( ! retained )
-                        {
-                            try
-                            {
-                                modelElement.dispose();
-                            }
-                            catch( Exception e )
-                            {
-                                SapphireModelingFrameworkPlugin.log( e );
-                            }
-                        }
-                    }
-                    
-                    this.data = newListElements;
-                    
-                    for( T modelElement : this )
-                    {
-                        modelElement.addListener( this.listMemberListener );
-                    }
-                    
-                    this.copyOnNextChange = false;
-                    changed = true;
+                    modelElement.addListener( this.listMemberListener );
                 }
+                
+                changed = true;
             }
         }
         
-        if( changed )
+        if( changed && ! isInitialRefresh )
         {
-            getParent().notifyPropertyChangeListeners( this.property );
+            parent().notifyPropertyChangeListeners( this.property );
         }
         
-        refreshValidationResult( true );
+        refreshValidationResult( ! isInitialRefresh );
         
-		return changed;
+        return changed;
     }
-    
-    @SuppressWarnings( "unchecked" )
     
     private void refreshValidationResult( final boolean notifyListenersIfChanged )
     {
@@ -200,15 +224,9 @@ public final class ModelElementList<T extends IModelElement>
             
             if( notifyListenersIfChanged )
             {
-                getParent().notifyPropertyChangeListeners( this.property );
+                parent().notifyPropertyChangeListeners( this.property );
             }
         }
-    }
-    
-    public void handleElementRemovedEvent()
-    {
-        refresh();
-        this.controller.handleElementRemovedEvent();
     }
     
     public T addNewElement()
@@ -218,39 +236,21 @@ public final class ModelElementList<T extends IModelElement>
     
     public T addNewElement( final ModelElementType type )
     {
-        final T newElement;
+        T newElement = null;
         
         synchronized( this )
         {
-            this.ignoreRefresh = true;
+            final Resource newResource = this.binding.add( type );
             
-            try
+            refresh();
+            
+            for( IModelElement element : this.data )
             {
-                newElement = this.controller.createNewElement( type );
-                
-                if( this.copyOnNextChange )
+                if( element.resource() == newResource )
                 {
-                    this.data = new ArrayList<T>( this.data );
-                    this.copyOnNextChange = false;
+                    newElement = (T) element;
+                    break;
                 }
-
-                newElement.addListener( this.listMemberListener );
-                
-                // On the surface, the following add call is incorrect due to an assumption that
-                // all list controllers will always add the new item to the end of the list. However,
-                // this method ends with a refresh call and if position at the end of the list is
-                // not correct, it will be adjusted.
-                
-                this.data.add( newElement );
-            }
-            finally
-            {
-                this.ignoreRefresh = false;
-            }
-            
-            if( refresh() == false )
-            {
-                getParent().notifyPropertyChangeListeners( this.property );
             }
         }
         
@@ -270,7 +270,7 @@ public final class ModelElementList<T extends IModelElement>
             
             if( index > 0 )
             {
-                final T previousModelElement = this.data.get( index - 1 );
+                final T previousModelElement = (T) this.data.get( index - 1 );
                 swap( modelElement, previousModelElement );
             }
         }
@@ -289,7 +289,7 @@ public final class ModelElementList<T extends IModelElement>
             
             if( index < this.data.size() - 1 )
             {
-                final T nextModelElement = this.data.get( index + 1 );
+                final T nextModelElement = (T) this.data.get( index + 1 );
                 swap( modelElement, nextModelElement );
             }
         }
@@ -305,36 +305,70 @@ public final class ModelElementList<T extends IModelElement>
                 throw new IllegalArgumentException();
             }
 
-            this.ignoreRefresh = true;
-            
-            try
-            {
-                this.controller.swap( a, b );
-            }
-            finally
-            {
-                this.ignoreRefresh = false;
-            }
-            
+            this.binding.swap( a.resource(), b.resource() );
             refresh();
         }
     }
 
-    public void clear()
+    public synchronized boolean remove( final Object object )
     {
-        List<T> entries = new ArrayList<T>(this);
-
-        for( T entry : entries )
+        if( contains( object ) )
         {
-            ( (IRemovable) entry ).remove();
+            final Resource resource = ( (IModelElement) object ).resource();
+            this.binding.remove( resource );
+            refresh();
+            
+            return true;
         }
         
-        refresh();
+        return false;
+    }
+
+    public synchronized T remove( final int index )
+    {
+        final IModelElement element = this.data.get( index );
+        remove( element );
+        return (T) element;
+    }
+
+    public synchronized boolean removeAll( final Collection<?> collection )
+    {
+        boolean changed = false;
+        
+        for( Object object : collection )
+        {
+            changed = remove( object ) || changed;
+        }
+        
+        return changed;
+    }
+
+    public synchronized boolean retainAll( final Collection<?> collection )
+    {
+        boolean changed = false;
+        
+        for( IModelElement element : this )
+        {
+            if( ! collection.contains( element ) )
+            {
+                changed = remove( element ) || changed;
+            }
+        }
+        
+        return changed;
+    }
+
+    public synchronized void clear()
+    {
+        for( IModelElement element : this )
+        {
+            remove( element );
+        }
     }
 
     public synchronized T get( final int index )
     {
-        return this.data.get( index );
+        return (T) this.data.get( index );
     }
 
     public synchronized int indexOf( final Object object )
@@ -369,20 +403,17 @@ public final class ModelElementList<T extends IModelElement>
 
     public synchronized Iterator<T> iterator()
     {
-        this.copyOnNextChange = true;
-        return new Itr<T>( this.data.iterator() );
+        return new Itr<T>( (Iterator<T>) this.data.iterator() );
     }
 
     public synchronized ListIterator<T> listIterator()
     {
-        this.copyOnNextChange = true;
-        return new ListItr<T>( this.data.listIterator() );
+        return new ListItr<T>( (ListIterator<T>) this.data.listIterator() );
     }
 
     public synchronized ListIterator<T> listIterator( final int index )
     {
-        this.copyOnNextChange = true;
-        return new ListItr<T>( this.data.listIterator( index ) );
+        return new ListItr<T>( (ListIterator<T>) this.data.listIterator( index ) );
     }
 
     public List<T> subList( final int fromIndex,
@@ -419,26 +450,6 @@ public final class ModelElementList<T extends IModelElement>
 
     public boolean addAll( final int index,
                            final Collection<? extends T> collection )
-    {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean remove( final Object object )
-    {
-        throw new UnsupportedOperationException();
-    }
-
-    public T remove( final int index )
-    {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean removeAll( final Collection<?> collection )
-    {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean retainAll( final Collection<?> collection )
     {
         throw new UnsupportedOperationException();
     }

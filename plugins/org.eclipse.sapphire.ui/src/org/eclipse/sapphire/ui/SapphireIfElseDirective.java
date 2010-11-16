@@ -32,7 +32,7 @@ public final class SapphireIfElseDirective
     
 {
     private ISapphireIfElseDirectiveDef def;
-    private SapphireConditionManager condition;
+    private SapphireCondition condition;
     private List<SapphirePart> thenContent;
     private List<SapphirePart> thenContentReadOnly;
     private List<SapphirePart> elseContent;
@@ -63,17 +63,23 @@ public final class SapphireIfElseDirective
         if( conditionClass != null )
         {
             final String conditionParameter = this.def.getConditionParameter().getText();
-
-            final Runnable onConditionChangeCallback = new Runnable()
-            {
-                public void run()
-                {
-                    updateValidationState();
-                    notifyStructureChangedEventListeners( new SapphirePartEvent( new SapphirePartContext( SapphireIfElseDirective.this ) ) );
-                }
-            };
+            this.condition = SapphireCondition.create( this, conditionClass, conditionParameter );
             
-            this.condition = SapphireConditionManager.create( this, conditionClass, conditionParameter, onConditionChangeCallback );
+            if( this.condition != null )
+            {
+                this.condition.addListener
+                (
+                    new SapphireCondition.Listener()
+                    {
+                        @Override
+                        public void handleConditionChanged()
+                        {
+                            updateValidationState();
+                            notifyStructureChangedEventListeners( new SapphirePartEvent( SapphireIfElseDirective.this ) );
+                        }
+                    }
+                );
+            }
         }
         
         this.thenContent = new ArrayList<SapphirePart>();

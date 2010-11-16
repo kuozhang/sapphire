@@ -11,26 +11,25 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBindingMapping;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBinding( elementPath = "multi-select-list" )
+@GenerateImpl
 
 public interface IMultiSelectListGallery
 
-    extends IModelElementForXml
+    extends IModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( IMultiSelectListGallery.class );
@@ -40,7 +39,7 @@ public interface IMultiSelectListGallery
     @Type( base = IMultiSelectListGalleryItem.class )
     @Label( standard = "list" )
     @NoDuplicates
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "item", type = IMultiSelectListGalleryItem.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "item", type = IMultiSelectListGalleryItem.class ) )
     
     ListProperty PROP_LIST = new ListProperty( TYPE, "List" );
     

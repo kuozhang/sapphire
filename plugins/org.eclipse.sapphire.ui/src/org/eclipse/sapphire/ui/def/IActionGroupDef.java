@@ -11,25 +11,23 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.IRemovable;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBindingMapping;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface IActionGroupDef
 
-    extends IModelElementForXml, IRemovable
+    extends IModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( IActionGroupDef.class );
@@ -37,7 +35,7 @@ public interface IActionGroupDef
     // *** ActionDefs ***
     
     @Type( base = IActionDef.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "action", type = IActionDef.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action", type = IActionDef.class ) )
                              
     ListProperty PROP_ACTION_DEFS = new ListProperty( TYPE, "ActionDefs" );
     

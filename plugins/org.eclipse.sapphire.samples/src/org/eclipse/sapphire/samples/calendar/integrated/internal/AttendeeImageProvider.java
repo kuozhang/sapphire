@@ -30,6 +30,7 @@ public final class AttendeeImageProvider
     private static final String IMG_PERSON_FADED = SapphireSamplesPlugin.PLUGIN_ID + "/images/person-faded.png";
 
     @Override
+    
     public String getSmallImagePath( final IModelElement element )
     {
         if( ( (IAttendee) element ).isInContactsDatabase().getContent() )
@@ -43,6 +44,7 @@ public final class AttendeeImageProvider
     }
 
     @Override
+    
     public String getSmallImagePath( final ModelElementType type )
     {
         return IMG_PERSON;

@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
-import static org.eclipse.sapphire.ui.util.SwtUtil.hspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,14 +60,14 @@ public abstract class SapphirePageBook
             this.pageDefs.put( key, page );
         }
         
-        this.defaultPageDef = def.getDefaultPage();
+        this.defaultPageDef = def.getDefaultPage().element();
     }
     
     @Override
     public void render( final SapphireRenderingContext context )
     {
         final Composite composite = new Composite( context.getComposite(), SWT.NONE );
-        composite.setLayoutData( hspan( gdhfill(), 2 ) );
+        composite.setLayoutData( gdhspan( gdhfill(), 2 ) );
         composite.setLayout( glayout( 2, 0, 0 ) );
         context.adapt( composite );
         

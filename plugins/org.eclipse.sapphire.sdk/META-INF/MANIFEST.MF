@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.sapphire.sdk;singleton:=true
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 0.2.0.qualifier
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.debug.ui,
@@ -15,9 +15,12 @@ Require-Bundle: org.eclipse.debug.ui,
  org.eclipse.wst.xml.ui,
  org.eclipse.wst.xml.core,
  org.eclipse.sapphire.modeling,
+ org.eclipse.sapphire.modeling.extensibility,
  org.eclipse.jdt.core,
  org.eclipse.core.runtime,
  org.eclipse.ui.workbench,
+ org.eclipse.help,
  org.eclipse.sapphire.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.eclipse.sapphire.sdk

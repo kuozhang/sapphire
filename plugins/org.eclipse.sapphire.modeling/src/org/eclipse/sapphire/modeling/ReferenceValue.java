@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.modeling;
 
-import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.annotations.ReferenceResolverImpl;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 /**
@@ -24,9 +22,7 @@ public final class ReferenceValue<T>
     extends Value<String>
     
 {
-    private final ReferenceResolverImpl<T> resolver;
-    
-    @SuppressWarnings( "unchecked" )
+    private final ReferenceService service;
     
     public ReferenceValue( final IModelElement parent,
                            final ValueProperty property,
@@ -34,29 +30,15 @@ public final class ReferenceValue<T>
     {
         super( parent, property, value );
         
-        final Reference referenceAnnotation = property.getAnnotation( Reference.class );
+        this.service = parent.service( property, ReferenceService.class );
         
-        if( referenceAnnotation != null )
-        {
-            final Class<? extends ReferenceResolverImpl<T>> referenceResolverClass 
-                = (Class<? extends ReferenceResolverImpl<T>>) referenceAnnotation.resolver();
-            
-            try
-            {
-                this.resolver = referenceResolverClass.newInstance();
-                this.resolver.init( getParent(), property, referenceAnnotation.params() );
-            }
-            catch( Exception e )
-            {
-                SapphireModelingFrameworkPlugin.log( e );
-                throw new RuntimeException( e );
-            }
-        }
-        else
+        if( this.service == null )
         {
             throw new IllegalArgumentException();
         }
     }
+    
+    @SuppressWarnings( "unchecked" )
     
     public T resolve()
     {
@@ -67,7 +49,7 @@ public final class ReferenceValue<T>
         {
             try
             {
-                result = this.resolver.resolve( ref );
+                result = (T) this.service.resolve( ref );
             }
             catch( Exception e )
             {

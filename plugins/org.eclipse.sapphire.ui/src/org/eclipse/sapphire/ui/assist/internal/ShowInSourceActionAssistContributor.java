@@ -66,7 +66,7 @@ public final class ShowInSourceActionAssistContributor
         
         if( prop instanceof ValueProperty )
         {
-            final Value<?> val = ( (Value<?>) ( (ValueProperty) prop ).invokeGetterMethod( element ) );
+            final Value<?> val = element.read( (ValueProperty) prop );
 
             if( val.getText( false ) != null )
             {
@@ -75,7 +75,7 @@ public final class ShowInSourceActionAssistContributor
         }
         else if( prop instanceof ListProperty )
         {
-            final ModelElementList<?> list = ( (ModelElementList<?>) ( (ListProperty) prop ).invokeGetterMethod( element ) );
+            final ModelElementList<?> list = element.read( (ListProperty) prop );
             
             if( list.size() > 0 )
             {

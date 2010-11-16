@@ -55,9 +55,9 @@ public class StandardRootElementController
     }
     
     @Override
-    public void createRootElement( final Document document )
+    public void createRootElement()
     {
-        createRootElement( document, getRootElementInfo() );
+        createRootElement( resource().root().getDomDocument(), getRootElementInfo() );
     }
     
     protected void createRootElement( final Document document,
@@ -116,9 +116,9 @@ public class StandardRootElementController
     }
 
     @Override
-    public boolean checkRootElement( final Document document )
+    public boolean checkRootElement()
     {
-        return checkRootElement( document, getRootElementInfo() );
+        return checkRootElement( resource().root().getDomDocument(), getRootElementInfo() );
     }
     
     protected boolean checkRootElement( final Document document,
@@ -145,10 +145,33 @@ public class StandardRootElementController
                                 final String defaultPrefix,
                                 final String elementName )
         {
-            this.namespace = namespace;
-            this.schemaLocation = schemaLocation;
-            this.defaultPrefix = defaultPrefix;
-            this.elementName = elementName;
+            this.namespace = normalizeToNull( namespace );
+            this.schemaLocation = normalizeToNull( schemaLocation );
+            this.defaultPrefix = normalizeToNull( defaultPrefix );
+            
+            if( elementName == null )
+            {
+                throw new IllegalArgumentException();
+            }
+            
+            this.elementName = elementName.trim();
+        }
+        
+        private static final String normalizeToNull( final String str )
+        {
+            String normalized = str;
+            
+            if( normalized != null )
+            {
+                normalized = normalized.trim();
+                
+                if( normalized.length() == 0 )
+                {
+                    normalized = null;
+                }
+            }
+            
+            return normalized;
         }
     }
 

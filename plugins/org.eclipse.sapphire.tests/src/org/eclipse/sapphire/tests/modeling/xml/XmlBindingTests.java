@@ -20,12 +20,10 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.modeling.ByteArrayModelStore;
-import org.eclipse.sapphire.modeling.CorruptedModelStoreExceptionInterceptor;
-import org.eclipse.sapphire.modeling.xml.ModelStoreForXml;
-import org.eclipse.sapphire.tests.modeling.xml.internal.XmlBindingTestModel;
-import org.eclipse.sapphire.tests.modeling.xml.internal.XmlBindingTestModelAltB;
-import org.eclipse.sapphire.tests.modeling.xml.internal.XmlBindingTestModelAltC;
+import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
+import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
+import org.eclipse.sapphire.modeling.xml.RootXmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -50,47 +48,49 @@ public final class XmlBindingTests
         suite.addTest( new XmlBindingTests( "testValueProperties1" ) );
         suite.addTest( new XmlBindingTests( "testValueProperties2" ) );
         suite.addTest( new XmlBindingTests( "testValueProperties3" ) );
+        suite.addTest( new XmlBindingTests( "testDefaultBindingWrite" ) );
+        suite.addTest( new XmlBindingTests( "testDefaultBindingRead" ) );
         
         return suite;
     }
     
     public void testValueProperties1() throws Exception
     {
-        final ByteArrayModelStore modelStore = new ByteArrayModelStore();
-        final ModelStoreForXml xmlModelStore = new ModelStoreForXml( modelStore );
-        final IXmlBindingTestModel model = new XmlBindingTestModel( xmlModelStore );
+        final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
+        final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
+        final IXmlBindingTestModel model = IXmlBindingTestModel.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         
-        testValueProperties( modelStore, model, loadResource( "testValueProperties1.txt" ) );
+        testValueProperties( resourceStore, model, loadResource( "testValueProperties1.txt" ) );
     }
     
     public void testValueProperties2() throws Exception
     {
-        final ByteArrayModelStore modelStore = new ByteArrayModelStore();
-        final ModelStoreForXml xmlModelStore = new ModelStoreForXml( modelStore );
-        final IXmlBindingTestModel model = new XmlBindingTestModelAltB( xmlModelStore );
+        final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
+        final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
+        final IXmlBindingTestModelAltB model = IXmlBindingTestModelAltB.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         
-        testValueProperties( modelStore, model, loadResource( "testValueProperties2.txt" ) );
+        testValueProperties( resourceStore, model, loadResource( "testValueProperties2.txt" ) );
     }
     
     public void testValueProperties3() throws Exception
     {
-        final ByteArrayModelStore modelStore = new ByteArrayModelStore();
-        final ModelStoreForXml xmlModelStore = new ModelStoreForXml( modelStore );
-        final IXmlBindingTestModel model = new XmlBindingTestModelAltC( xmlModelStore );
+        final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
+        final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
+        final IXmlBindingTestModelAltC model = IXmlBindingTestModelAltC.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         
-        testValueProperties( modelStore, model, loadResource( "testValueProperties3.txt" ) );
+        testValueProperties( resourceStore, model, loadResource( "testValueProperties3.txt" ) );
     }
 
-    private void testValueProperties( final ByteArrayModelStore modelStore,
+    private void testValueProperties( final ByteArrayResourceStore resourceStore,
                                       final IXmlBindingTestModel model,
                                       final String expected )
     
         throws Exception
         
     {
-        model.setCorruptedModelStoreExceptionInterceptor
+        model.resource().setCorruptedResourceExceptionInterceptor
         (
-             new CorruptedModelStoreExceptionInterceptor()
+             new CorruptedResourceExceptionInterceptor()
              {
                 @Override
                 public boolean shouldAttemptRepair()
@@ -107,17 +107,71 @@ public final class XmlBindingTests
         model.setValuePropertyE( "eeee" );
         model.setValuePropertyF( "ffff" );
         
-        model.save();
+        model.resource().save();
         
-        final String result = new String( modelStore.getContents(), "UTF-8" );
+        final String result = new String( resourceStore.getContents(), "UTF-8" );
         
         assertEqualsIgnoreNewLineDiffs( expected, result );
     }
     
-    private String loadResource( final String name )
-    
-        throws Exception
+    public void testDefaultBindingWrite() throws Exception
+    {
+        final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
+        final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
+        final IDefaultXmlBindingTestModel model = IDefaultXmlBindingTestModel.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         
+        model.resource().setCorruptedResourceExceptionInterceptor
+        (
+             new CorruptedResourceExceptionInterceptor()
+             {
+                @Override
+                public boolean shouldAttemptRepair()
+                {
+                    return true;
+                }
+             }
+        );
+        
+        model.setValuePropertyA( "aaaa" );
+        model.setValuePropertyB( "bbbb" );
+        
+        final IDefaultXmlBindingTestModelChildA listChild1 = (IDefaultXmlBindingTestModelChildA) model.getListPropertyA().addNewElement( IDefaultXmlBindingTestModelChildA.TYPE );
+        listChild1.setValuePropertyA( "cccc" );
+        
+        final IDefaultXmlBindingTestModelChildB listChild2 = (IDefaultXmlBindingTestModelChildB) model.getListPropertyA().addNewElement( IDefaultXmlBindingTestModelChildB.TYPE );
+        listChild2.setValuePropertyB( "dddd" );
+        
+        final IDefaultXmlBindingTestModelChildA listChild3 = (IDefaultXmlBindingTestModelChildA) model.getListPropertyA().addNewElement( IDefaultXmlBindingTestModelChildA.TYPE );
+        listChild3.setValuePropertyA( "eeee" );
+        
+        final IDefaultXmlBindingTestModelChildB elementChild = (IDefaultXmlBindingTestModelChildB) model.getElementPropertyA().element( true, IDefaultXmlBindingTestModelChildB.TYPE );
+        elementChild.setValuePropertyB( "ffff" );
+        
+        model.resource().save();
+        
+        final String result = new String( resourceStore.getContents(), "UTF-8" );
+        
+        assertEqualsIgnoreNewLineDiffs( loadResource( "testDefaultBinding.txt" ), result );
+    }
+    
+    public void testDefaultBindingRead() throws Exception
+    {
+        final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore( loadResourceAsStream( "testDefaultBinding.txt" ) );
+        final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
+        final IDefaultXmlBindingTestModel model = IDefaultXmlBindingTestModel.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
+        
+        assertEquals( "aaaa", model.getValuePropertyA().getText() );
+        assertEquals( "bbbb", model.getValuePropertyB().getText() );
+        
+        assertEquals( 3, model.getListPropertyA().size() );
+        assertEquals( "cccc", ( (IDefaultXmlBindingTestModelChildA) model.getListPropertyA().get( 0 ) ).getValuePropertyA().getText() );
+        assertEquals( "dddd", ( (IDefaultXmlBindingTestModelChildB) model.getListPropertyA().get( 1 ) ).getValuePropertyB().getText() );
+        assertEquals( "eeee", ( (IDefaultXmlBindingTestModelChildA) model.getListPropertyA().get( 2 ) ).getValuePropertyA().getText() );
+        
+        assertEquals( "ffff", ( (IDefaultXmlBindingTestModelChildB) model.getElementPropertyA().element( false ) ).getValuePropertyB().getText() );
+    }
+    
+    private InputStream loadResourceAsStream( final String name )
     {
         final InputStream in = getClass().getResourceAsStream( "XmlBindingTests." + name );
         
@@ -125,6 +179,16 @@ public final class XmlBindingTests
         {
             throw new IllegalArgumentException( name );
         }
+        
+        return in;
+    }
+    
+    private String loadResource( final String name )
+    
+        throws Exception
+        
+    {
+        final InputStream in = loadResourceAsStream( name );
         
         try
         {

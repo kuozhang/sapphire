@@ -61,7 +61,7 @@ public class RelativePathValueValidator
         
         if( path != null )
         {
-            final List<IPath> basePaths = this.basePathsProvider.getBasePaths( value.getParent() );
+            final List<IPath> basePaths = this.basePathsProvider.getBasePaths( value.parent() );
             
             for( IPath basePath : basePaths )
             {

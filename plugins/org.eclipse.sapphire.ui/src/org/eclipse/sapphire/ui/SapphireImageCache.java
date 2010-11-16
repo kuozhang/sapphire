@@ -26,8 +26,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.ImageProvider;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -92,14 +90,8 @@ public final class SapphireImageCache
     public static final ImageDescriptor ACTION_DESELECT_ALL
         = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/deselect-all.png" );
     
-    public static final ImageDescriptor ACTION_SHOW_XML_EDITOR_PAGE
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/show-xml-editor-page.png" );
-    
     public static final ImageDescriptor ACTION_SHOW_IN_SOURCE
         = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/show-in-source.png" );
-    
-    public static final ImageDescriptor ACTION_SHOW_HELP
-        = PlatformUI.getWorkbench().getSharedImages().getImageDescriptor( ISharedImages.IMG_LCL_LINKTO_HELP );    
     
     public static final ImageDescriptor ACTION_DEFAULT
         = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/default.png" );
@@ -128,12 +120,6 @@ public final class SapphireImageCache
     public static final ImageDescriptor OBJECT_CHECK_OFF
         = imageDescriptorFromPlugin( PLUGIN_ID, "images/objects/check-off.gif" );
     
-    public static final ImageDescriptor OBJECT_ERROR
-        = PlatformUI.getWorkbench().getSharedImages().getImageDescriptor( ISharedImages.IMG_OBJS_ERROR_TSK );
-    
-    public static final ImageDescriptor OBJECT_WARNING
-        = PlatformUI.getWorkbench().getSharedImages().getImageDescriptor( ISharedImages.IMG_OBJS_WARN_TSK );
-
     private final Map<ImageDescriptor,ImageHandle> imageDescToImageHandle = new HashMap<ImageDescriptor,ImageHandle>();
     
     private final Map<Class<? extends ImageProvider>,ImageProvider> imageProviderInstances 

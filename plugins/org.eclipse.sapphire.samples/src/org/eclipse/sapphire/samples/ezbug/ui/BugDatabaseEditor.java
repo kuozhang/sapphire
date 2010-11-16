@@ -11,10 +11,7 @@
 
 package org.eclipse.sapphire.samples.ezbug.ui;
 
-import org.eclipse.sapphire.modeling.IModel;
-import org.eclipse.sapphire.modeling.ModelStore;
-import org.eclipse.sapphire.modeling.xml.ModelStoreForXml;
-import org.eclipse.sapphire.samples.ezbug.internal.BugDatabase;
+import org.eclipse.sapphire.samples.ezbug.IBugDatabase;
 import org.eclipse.sapphire.ui.xml.SapphireEditorForXml;
 
 /**
@@ -30,13 +27,8 @@ public final class BugDatabaseEditor
     {
         super( "org.eclipse.sapphire.samples" );
         
+        setRootModelElementType( IBugDatabase.TYPE );
         setEditorDefinitionPath( "org.eclipse.sapphire.samples/sdef/EzBug.sdef/editor.page" );
-    }
-
-    @Override
-    protected IModel createModel( final ModelStore modelStore )
-    {
-        return new BugDatabase( (ModelStoreForXml) modelStore );
     }
     
 }

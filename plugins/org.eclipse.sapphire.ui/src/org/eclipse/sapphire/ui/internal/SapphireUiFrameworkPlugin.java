@@ -24,8 +24,8 @@ import org.osgi.framework.Bundle;
 
 public final class SapphireUiFrameworkPlugin
 {
-    public static final String PLUGIN_ID = "org.eclipse.sapphire.ui"; //$NON-NLS-1$
-
+    public static final String PLUGIN_ID = "org.eclipse.sapphire.ui";
+    
     private static final ILog platformLog
         = Platform.getLog( Platform.getBundle( PLUGIN_ID ) );
     
@@ -78,5 +78,5 @@ public final class SapphireUiFrameworkPlugin
     {
         log( createErrorStatus( message, e ) );
     }
-
+    
 }

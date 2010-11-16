@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui.swt;
 
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import java.util.Collections;
 
@@ -42,41 +42,18 @@ public final class SapphireControl
                             final IModelElement modelElement,
                             final String compositeDefPath )
     {
-        this( parent, modelElement, compositeDefPath, null );
-    }
-    
-    public SapphireControl( final Composite parent,
-                            final IModelElement modelElement,
-                            final String compositeDefPath,
-                            final String helpContextIdPrefix )
-    {
-        this( parent, modelElement, SapphireUiDefFactory.getCompositeDef( compositeDefPath ), helpContextIdPrefix );
+        this( parent, modelElement, SapphireUiDefFactory.getCompositeDef( compositeDefPath ) );
     }
     
     public SapphireControl( final Composite parent,
                             final IModelElement modelElement,
                             final ISapphireCompositeDef definition )
     {
-        this( parent, modelElement, definition, null );
-    }
-
-    public SapphireControl( final Composite parent,
-                            final IModelElement modelElement,
-                            final ISapphireCompositeDef definition,
-                            final String helpContextIdPrefix )
-    {
-        this( parent, (SapphireComposite) SapphirePart.create( null, modelElement, definition, Collections.<String,String>emptyMap() ), helpContextIdPrefix );
+        this( parent, (SapphireComposite) SapphirePart.create( null, modelElement, definition, Collections.<String,String>emptyMap() ) );
     }
 
     public SapphireControl( final Composite parent,
                             final SapphireComposite part )
-    {
-        this( parent, part, null );
-    }
-
-    public SapphireControl( final Composite parent,
-                            final SapphireComposite part,
-                            final String helpContextIdPrefix )
     {
         super( parent, SWT.NONE );
         
@@ -85,7 +62,6 @@ public final class SapphireControl
         setLayout( glayout( 1, 0, 0 ) );
         
         this.context = new SapphireRenderingContext( this.part, this );
-        this.context.setHelpContextIdPrefix( helpContextIdPrefix );
         this.part.render( this.context );
         
         for( Control child : getChildren() )  // should just be one

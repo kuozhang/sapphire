@@ -21,8 +21,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.eclipse.sapphire.modeling.ValidateEditException;
+import org.eclipse.sapphire.modeling.util.internal.DocumentationUtil;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
@@ -33,29 +34,54 @@ import org.w3c.dom.Text;
 
 public abstract class XmlNode
 {
-    protected static final String EMPTY_STRING = ""; //$NON-NLS-1$
-    
+    private final XmlResourceStore store;
+    private final XmlElement parent;
     private final Node domNode;
-    private final ModelStoreForXml modelStoreForXml;
     
-    public XmlNode( final Node domNode, final ModelStoreForXml modelStoreForXml )
+    public XmlNode( final XmlResourceStore store,
+                    final XmlElement parent,
+                    final Node domNode )
     {
-        if( domNode == null )
+        if( store == null )
         {
             throw new IllegalArgumentException();
         }
         
+        if( domNode == null )
+        {
+            throw new IllegalArgumentException();
+        }
+
+        this.store = store;
+        this.parent = parent;
         this.domNode = domNode;
-        this.modelStoreForXml = modelStoreForXml;
     }
     
-    public ModelStoreForXml getModelStoreForXml() 
+    public final XmlResourceStore getResourceStore()
     {
-    	return this.modelStoreForXml;
+        return this.store;
+    }
+    
+    public final XmlElement getParent()
+    {
+        return this.parent;
+    }
+    
+    public Node getDomNode()
+    {
+        return this.domNode;
+    }
+    
+    public final void validateEdit()
+    
+        throws ValidateEditException
+        
+    {
+        this.store.validateEdit();
     }
     
     @Override
-    public boolean equals( final Object obj )
+    public final boolean equals( final Object obj )
     {
         if( obj instanceof XmlNode )
         {
@@ -68,14 +94,9 @@ public abstract class XmlNode
     }
     
     @Override
-    public int hashCode()
+    public final int hashCode()
     {
         return this.domNode.hashCode();
-    }
-    
-    public Node getDomNode()
-    {
-        return this.domNode;
     }
     
     public final String getText()
@@ -92,36 +113,7 @@ public abstract class XmlNode
         
         if( removeExtraWhitespace )
         {
-            final StringBuilder buf = new StringBuilder();
-            boolean skipNextWhitespace = true;
-            
-            for( int i = 0, n = text.length(); i < n; i++ )
-            {
-                final char ch = text.charAt( i );
-                
-                if( Character.isWhitespace( ch ) )
-                {
-                    if( ! skipNextWhitespace )
-                    {
-                        buf.append( ' ' );
-                        skipNextWhitespace = true;
-                    }
-                }
-                else
-                {
-                    buf.append( ch );
-                    skipNextWhitespace = false;
-                }
-            }
-            
-            final int length = buf.length();
-            
-            if( length > 0 && buf.charAt( length - 1 ) == ' ' )
-            {
-                buf.deleteCharAt( length - 1 );
-            }
-            
-            text = buf.toString();
+            return DocumentationUtil.collapseString(text);
         }
         
         return text;
@@ -132,7 +124,7 @@ public abstract class XmlNode
     public abstract void setText( String text );
     
     @Override
-    public String toString()
+    public final String toString()
     {
         try
         {
@@ -143,7 +135,7 @@ public abstract class XmlNode
             
             final TransformerFactory factory = TransformerFactory.newInstance();
             final Transformer transformer = factory.newTransformer();
-            transformer.setOutputProperty( OutputKeys.OMIT_XML_DECLARATION, "yes" ); //$NON-NLS-1$
+            transformer.setOutputProperty( OutputKeys.OMIT_XML_DECLARATION, "yes" );
             
             transformer.transform( source, result );
             
@@ -156,18 +148,20 @@ public abstract class XmlNode
         }
     }
     
-    public void format()
+    public final void format()
     {
+        validateEdit();
+        
         removeFormatting();
          
         int depth = 0;
          
-        if (this.domNode.getParentNode() != null) {
-        for( Node n = this.domNode.getParentNode(); n.getNodeType() == Node.ELEMENT_NODE;
-             n = n.getParentNode() )
+        if( this.domNode.getParentNode() != null ) 
         {
-            depth++;
-        }
+            for( Node n = this.domNode.getParentNode(); n.getNodeType() == Node.ELEMENT_NODE; n = n.getParentNode() )
+            {
+                depth++;
+            }
         }
          
         format( depth );
@@ -181,7 +175,7 @@ public abstract class XmlNode
          
         for( int i = 0; i < depth; i++ )
         {
-            buf.append( "    " ); //$NON-NLS-1$
+            buf.append( "    " );
         }
          
         final String formatting = buf.toString();
@@ -202,33 +196,27 @@ public abstract class XmlNode
             this.domNode.appendChild( textBeforeClosingTag );
         }
         
-        final NodeList childNodeList = this.domNode.getChildNodes();
-        final List<XmlNode> childNodesToFormat = new ArrayList<XmlNode>();
-        
-        for( int i = 0, n = childNodeList.getLength(); i < n; i++ )
+        if( this instanceof XmlElement )
         {
-            final Node child = childNodeList.item( i );
-
-            if( child.getNodeType() == Node.ELEMENT_NODE )
+            final int depthPlusOne = depth + 1;
+            final XmlElement element = (XmlElement) this;
+            
+            for( XmlNode child : element.getChildElements() )
             {
-                childNodesToFormat.add( new XmlElement( (XmlElement) this, (Element) child, this.modelStoreForXml ) );
+                child.format( depthPlusOne );
             }
-            else if( child.getNodeType() == Node.COMMENT_NODE )
+            
+            for( XmlNode child : element.getComments() )
             {
-                childNodesToFormat.add( new XmlComment( child, this.getModelStoreForXml() ) );
+                child.format( depthPlusOne );
             }
-        }
-        
-        final int depthPlusOne = depth + 1;
-        
-        for( XmlNode childNode : childNodesToFormat )
-        {
-            childNode.format( depthPlusOne );
         }
     }
      
-    public void removeFormatting()
+    public final void removeFormatting()
     {
+        validateEdit();
+        
         final NodeList nodes = this.domNode.getChildNodes();
         final List<Node> textNodesToRemove = new ArrayList<Node>();
          
@@ -250,16 +238,21 @@ public abstract class XmlNode
             this.domNode.removeChild( n );
         }
         
-        for( int i = 0, n = nodes.getLength(); i < n; i++ )
+        if( this instanceof XmlElement )
         {
-            final Node child = nodes.item( i );
+            final XmlElement element = (XmlElement) this;
             
-            if( child.getNodeType() == Node.ELEMENT_NODE )
+            for( XmlNode child : element.getChildElements() )
             {
-                ( new XmlElement( (XmlElement) this, (Element) child, this.modelStoreForXml ) ).removeFormatting();
+                child.removeFormatting();
+            }
+            
+            for( XmlNode child : element.getComments() )
+            {
+                child.removeFormatting();
             }
         }
-         
+        
         final Node prevSibling = this.domNode.getPreviousSibling();
          
         if( prevSibling != null && prevSibling.getNodeType() == Node.TEXT_NODE )

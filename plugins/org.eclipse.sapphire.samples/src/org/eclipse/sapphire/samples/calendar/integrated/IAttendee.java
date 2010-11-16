@@ -12,12 +12,11 @@
 package org.eclipse.sapphire.samples.calendar.integrated;
 
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IRemovable;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.GenerateStub;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
@@ -31,11 +30,11 @@ import org.eclipse.sapphire.samples.calendar.integrated.internal.AttendeeImagePr
  */
 
 @Image( provider = AttendeeImageProvider.class )
-@GenerateStub
+@GenerateImpl
 
 public interface IAttendee
 
-    extends IModelElement, IRemovable
+    extends IModelElement
 
 {
     ModelElementType TYPE = new ModelElementType( IAttendee.class );
@@ -54,7 +53,7 @@ public interface IAttendee
     
     @Type( base = AttendeeType.class )
     @Label( standard = "type" )
-    @DefaultValue( "REQUIRED" )
+    @DefaultValue( text = "REQUIRED" )
 
     ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
 
@@ -66,7 +65,7 @@ public interface IAttendee
     
     @Type( base = Boolean.class )
     @Label( standard = "in contacts database" )
-    @DefaultValue( "false" )
+    @DefaultValue( text = "false" )
     @ReadOnly
     
     ValueProperty PROP_IN_CONTACTS_DATABASE = new ValueProperty( TYPE, "InContactsDatabase" );

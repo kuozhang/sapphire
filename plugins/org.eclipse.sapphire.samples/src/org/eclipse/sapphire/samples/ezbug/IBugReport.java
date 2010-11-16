@@ -11,32 +11,30 @@
 
 package org.eclipse.sapphire.samples.ezbug;
 
-import org.eclipse.sapphire.modeling.IRemovable;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBindingMapping;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface IBugReport
 
-    extends IModelElementForXml, IRemovable
+    extends IModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( IBugReport.class );
@@ -79,7 +77,7 @@ public interface IBugReport
     @Type( base = ProductVersion.class )
     @XmlBinding( path = "version" )
     @Label( standard = "&version" )
-    @DefaultValue( "2.5" )
+    @DefaultValue( text = "2.5" )
 
     ValueProperty PROP_PRODUCT_VERSION = new ValueProperty( TYPE, "ProductVersion" );
 
@@ -92,7 +90,7 @@ public interface IBugReport
     @Type( base = ProductStage.class )
     @XmlBinding( path = "stage" )
     @Label( standard = "&stage" )
-    @DefaultValue( "final" )
+    @DefaultValue( text = "final" )
 
     ValueProperty PROP_PRODUCT_STAGE = new ValueProperty( TYPE, "ProductStage" );
 
@@ -103,7 +101,7 @@ public interface IBugReport
     // *** Hardware ***
 
     @Type( base = IHardwareItem.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "hardware-item", type = IHardwareItem.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "hardware-item", type = IHardwareItem.class ) )
     @Label( standard = "&hardware" )
     
     ListProperty PROP_HARDWARE = new ListProperty( TYPE, "Hardware" );

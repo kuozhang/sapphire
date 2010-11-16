@@ -11,24 +11,22 @@
 
 package org.eclipse.sapphire.samples.contacts;
 
-import org.eclipse.sapphire.modeling.IRemovable;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
-import org.eclipse.sapphire.modeling.annotations.PossibleValuesFromModel;
+import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.Validator;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBindingMapping;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.samples.contacts.internal.AssistantNameValidator;
 
 /**
@@ -36,11 +34,11 @@ import org.eclipse.sapphire.samples.contacts.internal.AssistantNameValidator;
  */
 
 @Image( small = "org.eclipse.sapphire.samples/images/person.png" )
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface IAssistant
 
-    extends IModelElementForXml, IRemovable
+    extends IModelElement
 
 {
     ModelElementType TYPE = new ModelElementType( IAssistant.class );
@@ -52,9 +50,9 @@ public interface IAssistant
     @NonNullValue
     @Validator( impl = AssistantNameValidator.class )
 
-    @PossibleValuesFromModel
+    @PossibleValues
     ( 
-        path = "/Contacts/Name", 
+        property = "/Contacts/Name", 
         caseSensitive = false, 
         invalidValueMessage = "Could not find contact name \"{0}\" in the database." 
     )
@@ -78,7 +76,7 @@ public interface IAssistant
     // *** DelegatedTasks ***
     
     @Type( base = IAssistantTask.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "task", type = IAssistantTask.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "task", type = IAssistantTask.class ) )
     @Label( standard = "delegated tasks" )
                              
     ListProperty PROP_DELEGATED_TASKS = new ListProperty( TYPE, "DelegatedTasks" );

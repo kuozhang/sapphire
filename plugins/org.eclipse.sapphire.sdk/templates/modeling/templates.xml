@@ -61,7 +61,7 @@ ${type} get${name}( boolean createIfNecessary );
 ${:import(org.eclipse.sapphire.modeling.ElementProperty,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type)}
 ${cursor}
   </template>
-	
+    
   <template name="sf-list" description="%ListProperty" id="sapphire.modeling.ListProperty" context="java-members" enabled="true">
 // *** ${name} ***
 
@@ -72,6 +72,20 @@ ListProperty PROP_${field} = new ListProperty( TYPE, "${name}" );
     
 ModelElementList&lt;${type}&gt; get${name}();
 ${:import(org.eclipse.sapphire.modeling.ListProperty,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type,org.eclipse.sapphire.modeling.ModelElementList)}
+${cursor}
+  </template>
+
+  <template name="sf-transient" description="%TransientProperty" id="sapphire.modeling.TransientProperty" context="java-members" enabled="true">
+// *** ${name} ***
+
+@Type( base = ${type}.class )
+@Label( standard = "${label}" )
+    
+TransientProperty PROP_${field} = new TransientProperty( TYPE, "${name}" );
+    
+Transient&lt;${type}&gt; get${name}();
+void set${name}( ${type} value );
+${:import(org.eclipse.sapphire.modeling.TransientProperty,org.eclipse.sapphire.modeling.Transient,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type)}
 ${cursor}
   </template>
 

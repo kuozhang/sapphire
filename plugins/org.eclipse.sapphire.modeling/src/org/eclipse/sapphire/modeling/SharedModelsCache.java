@@ -16,26 +16,42 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * <p>Facility for managing shared model instances. Note that no exclusivity of access guarantees are made, so this
+ * cache should only be used by code needing read-only access to a model. Code that needs to modify the model
+ * should create it's own private model instance for the duration of the change operation.</p> 
+ * 
+ * <p>Models are stored in this cache using a key object. The only requirement on the key is that it correctly
+ * implements hashCode() and equals() methods. For many cases the supplied StandardKey class makes a good
+ * key. It combines ResourceStore (which identifies a file or another storage medium) and ModelElementType.</p>
+ * 
+ * <p>The cache is managed in a memory-sensitive manner. In particular, there is no guarantee that a retrieve
+ * call will return a non-null result even if you know that the particular model was stored in the cache. If 
+ * memory gets tight and there are no other references to the model in question, the model held in the cache
+ * will be garbage collected.</p>
+ * 
+ * <p>The cache will never return a model whose resource reports that it is out of date. Models that are not
+ * backed by a resource are never considered to be out of date.</p>
+ * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public final class SharedModelsCache
 {
-    private static final Map<Key,SoftReference<IModel>> cache = new HashMap<Key,SoftReference<IModel>>();
+    private static final Map<Object,SoftReference<IModelElement>> cache = new HashMap<Object,SoftReference<IModelElement>>();
     
-    public static synchronized IModel retrieve( final ModelStore modelStore,
-                                                final ModelElementType modelType )
+    public static synchronized IModelElement retrieve( final Object key )
     {
-        final Key key = new Key( modelStore, modelType );
-        final SoftReference<IModel> cachedModelRef = cache.get( key );
+        final SoftReference<IModelElement> cachedModelRef = cache.get( key );
         
         if( cachedModelRef != null )
         {
-            final IModel model = cachedModelRef.get();
+            final IModelElement model = cachedModelRef.get();
             
             if( model != null )
             {
-                if( ! model.getModelStore().isOutOfDate() )
+                final Resource resource = model.resource();
+                
+                if( resource == null || ! resource.isOutOfDate() )
                 {
                     return model;
                 }
@@ -47,37 +63,37 @@ public final class SharedModelsCache
         return null;
     }
     
-    public static synchronized void store( final IModel model )
+    public static synchronized void store( final Object key,
+                                           final IModelElement modelElement )
     {
-        final Key key = new Key( model.getModelStore(), model.getModelElementType() );
-        cache.put( key, new SoftReference<IModel>( model ) );
+        cache.put( key, new SoftReference<IModelElement>( modelElement ) );
     }
     
-    private static final class Key
+    public static final class StandardKey
     {
-        private final ModelStore modelStore;
-        private final ModelElementType modelType;
+        private final ResourceStore resourceStore;
+        private final ModelElementType modelElementType;
         
-        public Key( final ModelStore modelStore,
-                    final ModelElementType modelType )
+        public StandardKey( final ResourceStore resourceStore,
+                            final ModelElementType modelElementType )
         {
-            this.modelStore = modelStore;
-            this.modelType = modelType;
+            this.resourceStore = resourceStore;
+            this.modelElementType = modelElementType;
         }
         
         @Override
         public int hashCode()
         {
-            return this.modelStore.hashCode() ^ this.modelType.hashCode();
+            return this.resourceStore.hashCode() ^ this.modelElementType.hashCode();
         }
         
         @Override
         public boolean equals( final Object obj )
         {
-            if( obj instanceof Key )
+            if( obj instanceof StandardKey )
             {
-                final Key key = (Key) obj;
-                return this.modelStore.equals( key.modelStore ) && this.modelType.equals( key.modelType );
+                final StandardKey key = (StandardKey) obj;
+                return this.resourceStore.equals( key.resourceStore ) && this.modelElementType.equals( key.modelElementType );
             }
             
             return false;

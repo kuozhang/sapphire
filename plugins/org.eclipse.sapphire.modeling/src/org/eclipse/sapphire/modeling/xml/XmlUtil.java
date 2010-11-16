@@ -32,6 +32,11 @@ import org.w3c.dom.NodeList;
 
 public final class XmlUtil
 {
+    public static final String EMPTY_STRING = "";
+    
+    public static final String PI_XML_TARGET = "xml"; //$NON-NLS-1$
+    public static final String PI_XML_DATA = "version=\"1.0\" encoding=\"UTF-8\""; //$NON-NLS-1$
+
     private static final String XMLNS = "xmlns"; //$NON-NLS-1$
     private static final String XMLNS_COLON = "xmlns:"; //$NON-NLS-1$
     

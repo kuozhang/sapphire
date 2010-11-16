@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhindent;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdvindent;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
-import static org.eclipse.sapphire.ui.util.SwtUtil.hspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvindent;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.LabelTransformer;
@@ -41,7 +41,7 @@ public class SapphireGroup
         final String label = LabelTransformer.transform( def.getLabel().getLocalizedText(), CapitalizationType.FIRST_WORD_ONLY, true );
         
         final Group group = new Group( context.getComposite(), SWT.NONE );
-        group.setLayoutData( gdhindent( gdvindent( hspan( gdhfill(), 2 ), 5 ), 10 ) );
+        group.setLayoutData( gdhindent( gdvindent( gdhspan( gdhfill(), 2 ), 5 ), 10 ) );
         group.setLayout( glayout( 2, 5, 5, 8, 5 ) );
         group.setText( label );
         context.adapt( group );

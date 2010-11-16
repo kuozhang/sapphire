@@ -1,7 +1,4 @@
-<definition 
-  xmlns="http://xmlns.oracle.com/eclipse/tools/sapphire/ui"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://xmlns.oracle.com/eclipse/tools/sapphire/ui http://xmlns.oracle.com/eclipse/tools/sapphire/ui">
+<definition>
 
   <import>
     <bundle>org.eclipse.sapphire.samples</bundle>
@@ -10,7 +7,10 @@
   
   <composite>
     <id>bug.report</id>
-    <help-context-id>org.eclipse.sapphire.samples.EzBug-General</help-context-id>
+    <documentation>
+      <title>EzBug</title>
+      <content>This would be the help content for the EzBug system.</content>
+    </documentation>
     <content>
       <property-editor>CustomerId</property-editor>
       <property-editor>Title</property-editor>
@@ -26,13 +26,13 @@
       <property-editor>
         <property>Hardware</property>
         <child-property>
-          <name>Type</name>
+          <property>Type</property>
         </child-property>
         <child-property>
-          <name>Make</name>
+          <property>Make</property>
         </child-property>
         <child-property>
-          <name>ItemModel</name>
+          <property>ItemModel</property>
         </child-property>
       </property-editor>
       <composite>
@@ -189,7 +189,7 @@
           <description>Use this editor to manage your bug database.</description>
           <content>
             <action-link>
-              <action-id>node:add</action-id>
+              <action-id>Sapphire.Add</action-id>
               <label>Add a bug report</label>
             </action-link>
           </content>

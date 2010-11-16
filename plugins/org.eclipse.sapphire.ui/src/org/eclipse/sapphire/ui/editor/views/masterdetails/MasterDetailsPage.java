@@ -7,20 +7,24 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.editor.views.masterdetails;
 
+import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_OUTLINE_HIDE;
+import static org.eclipse.sapphire.ui.SapphireActionSystem.CONTEXT_EDITOR_PAGE;
+import static org.eclipse.sapphire.ui.SapphireActionSystem.CONTEXT_EDITOR_PAGE_OUTLINE;
+import static org.eclipse.sapphire.ui.SapphireActionSystem.CONTEXT_EDITOR_PAGE_OUTLINE_HEADER;
+import static org.eclipse.sapphire.ui.SapphireActionSystem.CONTEXT_EDITOR_PAGE_OUTLINE_NODE;
 import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twlayout;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhhint;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdwhint;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -33,9 +37,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.help.IContext;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -48,40 +50,36 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.sapphire.modeling.IModel;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.ui.SapphireCommands;
+import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionGroup;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SapphireEditorFormPage;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireSection;
-import org.eclipse.sapphire.ui.actions.Action;
-import org.eclipse.sapphire.ui.actions.ActionGroup;
-import org.eclipse.sapphire.ui.actions.ActionsCommandBridge;
-import org.eclipse.sapphire.ui.actions.ActionsRenderer;
-import org.eclipse.sapphire.ui.actions.ShowHelpAction;
 import org.eclipse.sapphire.ui.def.IEditorPageDef;
+import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
+import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
+import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.actions.CollapseAllAction;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.actions.ExpandAllAction;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.actions.HideOutlineAction;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.actions.MergedNodeAction;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.actions.NodeAction;
-import org.eclipse.sapphire.ui.internal.ActionsHostUtil;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireMenuActionPresentation;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarManagerActionPresentation;
+import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.sapphire.ui.util.internal.MutableReference;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.MenuAdapter;
-import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -94,10 +92,8 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.forms.DetailsPart;
@@ -128,17 +124,12 @@ public final class MasterDetailsPage
     extends SapphireEditorFormPage
     
 {
-	public static final String ACTION_CONTEXT_HEADER = "header"; //$NON-NLS-1$
-	public static final String ACTION_CONTEXT_OUTLINE_TOOLBAR = "outline-toolbar"; //$NON-NLS-1$
-	public static final String ACTION_CONTEXT_OUTLINE_MENU = "outline-menu"; //$NON-NLS-1$
-	
     static final String PREFS_CONTENT_TREE_STATE = "ContentTreeState"; //$NON-NLS-1$
     private static final String PREFS_VISIBLE = "Visible"; //$NON-NLS-1$
-	
-	private IEditorPageDef definition;
-	private final MasterDetailsContentTree contentTree;
+    
+    private IEditorPageDef definition;
+    private final MasterDetailsContentTree contentTree;
     private RootSection mainSection;
-    private Map<String,List<ActionGroup>> actionsByContext = null;
     private ContentOutline contentOutlinePage;
     
     public MasterDetailsPage( final SapphireEditor editor,
@@ -175,8 +166,29 @@ public final class MasterDetailsPage
         // Content Outline
         
         this.contentTree = new MasterDetailsContentTree( this, this.definition, rootModelElement );
+        
+        final SapphireAction outlineHideAction = getActions( CONTEXT_EDITOR_PAGE ).getAction( ACTION_OUTLINE_HIDE );
+        
+        final SapphireActionHandler outlineHideActionHandler = new SapphireActionHandler()
+        {
+            @Override
+            protected Object run( final SapphireRenderingContext context )
+            {
+                setDetailsMaximized( ! isDetailsMaximized() );
+                return null;
+            }
+        };
+        
+        outlineHideActionHandler.init( outlineHideAction, null );
+        outlineHideActionHandler.setChecked( isDetailsMaximized() );
+        outlineHideAction.addHandler( outlineHideActionHandler );
     }
 
+    public ISapphirePartDef getDefinition()
+    {
+        return this.definition;
+    }
+    
     @Override
     public String getId()
     {
@@ -184,11 +196,31 @@ public final class MasterDetailsPage
     }
     
     @Override
-    public String getHelpContextId()
+    public IContext getDocumentationContext()
     {
-        return this.definition.getHelpContextId().getText();
+        final ISapphireDocumentationDef def = this.definition.getDocumentationDef().element();
+        if ( def != null )
+        {
+            IContext context = SapphireHelpSystem.getContext( def );
+            if ( context != null )
+            {
+                return context;
+            }
+        }
+        
+        final ISapphireDocumentationRef documentationRef = this.definition.getDocumentationRef().element();
+        if ( documentationRef != null )
+        {
+            final ISapphireDocumentationDef documentationDef2 = documentationRef.resolve();
+            if ( documentationDef2 != null ) 
+            {
+                return SapphireHelpSystem.getContext( documentationDef2 );
+            }
+        }
+
+        return null;
     }
-    
+
     public MasterDetailsContentTree getContentTree()
     {
         return this.contentTree;
@@ -223,19 +255,33 @@ public final class MasterDetailsPage
         
         form.setText( this.definition.getPageHeaderText().getLocalizedText() );
         
-        this.mainSection = new RootSection( getModel() );
+        this.mainSection = new RootSection();
         this.mainSection.createContent( managedForm );
         
-        final String helpContextId = this.definition.getHelpContextId().getText();
+        final ISapphireDocumentationDef documentationDef = this.definition.getDocumentationDef().element();
         
-        if( helpContextId != null )
+        if ( documentationDef != null && documentationDef.getContent().getText() != null )
         {
-            PlatformUI.getWorkbench().getHelpSystem().setHelp( managedForm.getForm().getBody(), helpContextId );
+            SapphireHelpSystem.setHelp( managedForm.getForm().getBody(), documentationDef );
         }
-
-        final IToolBarManager toolbarManager = form.getToolBarManager();
-        ActionsRenderer.fillToolBarManager( toolbarManager, form.getShell(), getActions( ACTION_CONTEXT_HEADER ) );
-        ( (ToolBarManager) toolbarManager ).getControl().setCursor( null );
+        else
+        {
+            final ISapphireDocumentationRef documentationRef = this.definition.getDocumentationRef().element();
+            
+            if ( documentationRef != null  )
+            {
+                final ISapphireDocumentationDef helpContentDef2 = documentationRef.resolve();
+                if ( helpContentDef2 != null ) 
+                {
+                    SapphireHelpSystem.setHelp( managedForm.getForm().getBody(), helpContentDef2 );
+                }
+            }
+        }
+        
+        final SapphireActionGroup actions = getActions( CONTEXT_EDITOR_PAGE );
+        final SapphireToolBarManagerActionPresentation actionPresentation = new SapphireToolBarManagerActionPresentation( this, getSite().getShell(), actions );
+        actionPresentation.setToolBarManager( form.getToolBarManager() );
+        actionPresentation.render();
     }
     
     public IContentOutlinePage getContentOutlinePage()
@@ -261,7 +307,7 @@ public final class MasterDetailsPage
                 
                 if( ! contentTreeVisible )
                 {
-                	return true;
+                    return true;
                 }
             }
         }
@@ -289,180 +335,13 @@ public final class MasterDetailsPage
         }
     }
     
-    public List<ActionGroup> getActions( final String context )
-    {
-        initActions();
-        
-        List<ActionGroup> actions = this.actionsByContext.get( context );
-        
-        if( actions != null )
-        {
-            return actions;
-        }
-
-        return Collections.emptyList();
-    }
-    
     @Override
-    public Action getAction( final String id )
+    public Set<String> getActionContexts()
     {
-        initActions();
-        
-        for( List<ActionGroup> actions : this.actionsByContext.values() )
-        {
-            for( ActionGroup group : actions )
-            {
-                final Action action = group.getAction( id );
-                
-                if( action != null )
-                {
-                    return action;
-                }
-            }
-        }
-        
-        return null;
-    }
-    
-    private List<ActionGroup> getNodeActions( final List<MasterDetailsContentNode> nodes,
-                                              final String context )
-    {
-        final List<ActionGroup> result = new ArrayList<ActionGroup>();
-        
-        if( ! nodes.isEmpty() && context != null && context.equals( ACTION_CONTEXT_OUTLINE_MENU ) )
-        {
-            if( nodes.size() == 1 )
-            {
-                result.addAll( nodes.get( 0 ).getMenuActions() );
-            }
-            else
-            {
-                final List<Map<String,NodeAction>> index = new ArrayList<Map<String,NodeAction>>();
-                
-                for( MasterDetailsContentNode node : nodes )
-                {
-                    final Map<String,NodeAction> nodeIndex = new HashMap<String,NodeAction>();
-                    index.add( nodeIndex );
-                    
-                    for( ActionGroup group : node.getMenuActions() )
-                    {
-                        for( Action action : group.getActions() )
-                        {
-                            nodeIndex.put( action.getId(), (NodeAction) action ); 
-                        }
-                    }
-                }
-                
-                for( ActionGroup group : nodes.get( 0 ).getMenuActions() )
-                {
-                    final List<Action> actions = new ArrayList<Action>();
-                    
-                    for( Action action : group.getActions() )
-                    {
-                        final String id = action.getId();
-                        
-                        if( ( (NodeAction) action ).isMergingAllowed() == true )
-                        {
-                            List<NodeAction> actionsToMerge = new ArrayList<NodeAction>();
-                            
-                            for( Map<String,NodeAction> subIndex : index )
-                            {
-                                final Action a = subIndex.get( id );
-                                
-                                if( a != null )
-                                {
-                                    actionsToMerge.add( (NodeAction) a );
-                                }
-                                else
-                                {
-                                    actionsToMerge = null;
-                                    break;
-                                }
-                            }
-                            
-                            if( actionsToMerge != null )
-                            {
-                                final MergedNodeAction mergedAction = new MergedNodeAction();
-                                
-                                mergedAction.setId( id );
-                                mergedAction.setCommandId( action.getCommandId() );
-                                mergedAction.setType( action.getType() );
-                                mergedAction.setLabel( action.getLabel() );
-                                mergedAction.setPart( this );
-    
-                                mergedAction.setImageDescriptor( action.getImageDescriptor() );
-                                
-                                if( mergedAction.getImageDescriptor() == null )
-                                {
-                                    mergedAction.setImageDescriptor( action.getImageDescriptor() );
-                                }
-                                
-                                for( NodeAction a : actionsToMerge )
-                                {
-                                    mergedAction.addAction( a );
-                                }
-                                
-                                actions.add( mergedAction );
-                            }
-                        }
-                    }
-                    
-                    if( ! actions.isEmpty() )
-                    {
-                        result.add( new ActionGroup( actions ) );
-                    }
-                }
-            }
-        }
-        
-        result.addAll( getActions( context ) );
-        
-        return result;
-    }
-
-    private void initActions()
-    {
-        if( this.actionsByContext == null )
-        {
-            this.actionsByContext = new HashMap<String,List<ActionGroup>>();
-            
-            final List<ActionGroup> headerActionSet = new ArrayList<ActionGroup>();
-            
-            final ActionGroup defaultHeaderActions = new ActionGroup();
-            defaultHeaderActions.addAction( new HideOutlineAction() );
-            //defaultHeaderActions.addAction( new LinkWithSourceViewAction() );
-            defaultHeaderActions.addAction( new ShowHelpAction() );
-            headerActionSet.add( defaultHeaderActions );
-            
-            ActionsHostUtil.initActions( headerActionSet, this.definition.getHeaderActionSetDef() );
-            this.actionsByContext.put( ACTION_CONTEXT_HEADER, headerActionSet );
-            
-            final List<ActionGroup> outlineToolbarActionSet = new ArrayList<ActionGroup>();
-            
-            final ActionGroup expandAllCollapseAllActions = new ActionGroup();
-            expandAllCollapseAllActions.addAction( new ExpandAllAction() );
-            expandAllCollapseAllActions.addAction( new CollapseAllAction() );
-            outlineToolbarActionSet.add( expandAllCollapseAllActions );
-            
-            ActionsHostUtil.initActions( outlineToolbarActionSet, this.definition.getOutlineToolbarActionSetDef() );
-            this.actionsByContext.put( ACTION_CONTEXT_OUTLINE_TOOLBAR, outlineToolbarActionSet );
-            
-            final List<ActionGroup> outlineMenuActionSet = new ArrayList<ActionGroup>();
-            
-            ActionsHostUtil.initActions( outlineMenuActionSet, this.definition.getOutlineMenuActionSetDef() );
-            this.actionsByContext.put( ACTION_CONTEXT_OUTLINE_MENU, outlineMenuActionSet );
-            
-            for( List<ActionGroup> actions : this.actionsByContext.values() )
-            {
-                for( ActionGroup group : actions )
-                {
-                    for( Action action : group.getActions() )
-                    {
-                        action.setPart( this );
-                    }
-                }
-            }
-        }
+        final Set<String> contexts = new HashSet<String>();
+        contexts.addAll( super.getActionContexts() );
+        contexts.add( CONTEXT_EDITOR_PAGE_OUTLINE_HEADER );
+        return contexts;
     }
 
     @Override
@@ -545,8 +424,6 @@ public final class MasterDetailsPage
         
         final ContentOutlineFilteredTree filteredTree = new ContentOutlineFilteredTree( parent, treeStyle, contentTree );
         final TreeViewer treeViewer = filteredTree.getViewer();
-        
-        SapphireCommands.configureContentOutlineContext( treeViewer.getTree() );
         
         final ITreeContentProvider contentProvider = new ITreeContentProvider()
         {
@@ -697,17 +574,6 @@ public final class MasterDetailsPage
 
         contentTree.addListener( contentTreeListener );
         
-        treeViewer.getTree().addDisposeListener
-        (
-            new DisposeListener()
-            {
-                public void widgetDisposed( final DisposeEvent event )
-                {
-                    contentTree.removeListener( contentTreeListener );
-                }
-            }
-        );
-
         treeViewer.addSelectionChangedListener
         (
             new ISelectionChangedListener()
@@ -773,36 +639,26 @@ public final class MasterDetailsPage
         );
         
         final Tree tree = treeViewer.getTree();
-        final Menu menu = new Menu( tree );
-        tree.setMenu( menu );
         
-        menu.addMenuListener
-        (
-            new MenuAdapter()
-            {
-                public void menuShown( final MenuEvent event )
-                {
-                    for( MenuItem item : menu.getItems() )
-                    {
-                        item.dispose();
-                    }
-                    
-                    final List<MasterDetailsContentNode> selection = contentTree.getSelectedNodes();
-                    
-                    if( ! selection.isEmpty() )
-                    {
-                        final List<ActionGroup> actions = getNodeActions( selection, ACTION_CONTEXT_OUTLINE_MENU );
-                        ActionsRenderer.fillMenu( menu, actions );
-                    }
-                }
-            }
-        );
+        final ContentOutlineActionSupport actionSupport = new ContentOutlineActionSupport( contentTree, tree );
         
         treeViewer.setExpandedElements( contentTree.getExpandedNodes().toArray() );
         contentTreeListener.handleSelectionChange( contentTree.getSelectedNodes() );
         
         filteredTree.changeFilterText( contentTree.getFilterText() );
         
+        tree.addDisposeListener
+        (
+            new DisposeListener()
+            {
+                public void widgetDisposed( final DisposeEvent event )
+                {
+                    contentTree.removeListener( contentTreeListener );
+                    actionSupport.dispose();
+                }
+            }
+        );
+
         return filteredTree;
     }
     
@@ -909,8 +765,6 @@ public final class MasterDetailsPage
         private Composite outerComposite = null;
         private FilteredTree filteredTree = null;
         private TreeViewer treeViewer = null;
-        private IToolBarManager toolBarManager = null;
-        private ActionsCommandBridge actionsCommandBridge = null;
         
         public void init( final IPageSite pageSite ) 
         {
@@ -929,36 +783,16 @@ public final class MasterDetailsPage
             this.filteredTree.setLayoutData( gdfill() );
             
             this.treeViewer = this.filteredTree.getViewer();
-            this.toolBarManager = getSite().getActionBars().getToolBarManager();
-            this.actionsCommandBridge = new ActionsCommandBridge( this.treeViewer.getTree() );
             
-            this.treeViewer.addSelectionChangedListener
-            (
-                new ISelectionChangedListener()
-                {
-                    public void selectionChanged( final SelectionChangedEvent event )
-                    {
-                        refreshActions();
-                    }
-                }
-            );
+            final SapphireActionGroup actions = getActions( CONTEXT_EDITOR_PAGE_OUTLINE_HEADER );
             
-            refreshActions();
+            final SapphireToolBarManagerActionPresentation actionsPresentation 
+                = new SapphireToolBarManagerActionPresentation( MasterDetailsPage.this, getSite().getShell(), actions );
+            
+            actionsPresentation.setToolBarManager( getSite().getActionBars().getToolBarManager() );
+            actionsPresentation.render();
         }
         
-        private void refreshActions()
-        {
-            for( IContributionItem item : this.toolBarManager.getItems() )
-            {
-                this.toolBarManager.remove( item );
-            }
-            
-            final List<MasterDetailsContentNode> selection = getContentTree().getSelectedNodes();
-            final List<ActionGroup> actions = getNodeActions( selection, ACTION_CONTEXT_OUTLINE_TOOLBAR );
-            ActionsRenderer.fillToolBarManager( this.toolBarManager, getEditor().getSite().getShell(), actions );
-            this.actionsCommandBridge.setActions( getNodeActions( selection, ACTION_CONTEXT_OUTLINE_MENU ) );
-        }
-
         @Override
         public Control getControl()
         {
@@ -998,6 +832,100 @@ public final class MasterDetailsPage
         }
     }
     
+    private final class ContentOutlineActionSupport
+    {
+        private final MasterDetailsContentTree contentTree;
+        private final MasterDetailsContentTree.Listener contentOutlineListener;
+        private final Tree tree;
+        private final Menu menu;
+        private SapphireActionPresentationManager actionPresentationManager;
+        private SapphireActionGroup tempActions;
+        
+        private ContentOutlineActionSupport( final MasterDetailsContentTree contentOutline,
+                                             final Tree tree )
+        {
+            this.contentTree = contentOutline;
+            this.tree = tree;
+            
+            this.menu = new Menu( tree );
+            this.tree.setMenu( this.menu );
+            
+            this.contentOutlineListener = new MasterDetailsContentTree.Listener()
+            {
+                @Override
+                public void handleSelectionChange( final List<MasterDetailsContentNode> selection )
+                {
+                    handleSelectionChangedEvent( selection );
+                }
+            };
+
+            this.contentTree.addListener( this.contentOutlineListener );
+            
+            handleSelectionChangedEvent( contentOutline.getSelectedNodes() );
+        }
+        
+        private void handleSelectionChangedEvent( final List<MasterDetailsContentNode> selection )
+        {
+            for( MenuItem item : this.menu.getItems() )
+            {
+                item.dispose();
+            }
+            
+            if( this.tempActions != null )
+            {
+                this.tempActions.dispose();
+                this.tempActions = null;
+            }
+            
+            if( this.actionPresentationManager != null )
+            {
+                this.actionPresentationManager.dispose();
+                this.actionPresentationManager = null;
+            }
+            
+            final SapphireActionGroup actions;
+            
+            if( selection.size() == 1 )
+            {
+                final MasterDetailsContentNode node = selection.get( 0 );
+                actions = node.getActions( CONTEXT_EDITOR_PAGE_OUTLINE_NODE );
+            }
+            else
+            {
+                this.tempActions = new SapphireActionGroup( MasterDetailsPage.this, CONTEXT_EDITOR_PAGE_OUTLINE );
+                actions = this.tempActions;
+            }
+            
+            this.actionPresentationManager 
+                = new SapphireActionPresentationManager( new SapphireRenderingContext( MasterDetailsPage.this, this.menu.getShell() ), actions );
+            
+            final SapphireMenuActionPresentation menuActionPresentation = new SapphireMenuActionPresentation( this.actionPresentationManager );
+            menuActionPresentation.setMenu( this.menu );
+            menuActionPresentation.render();
+            
+            final SapphireKeyboardActionPresentation keyboardActionPresentation = new SapphireKeyboardActionPresentation( this.actionPresentationManager );
+            keyboardActionPresentation.attach( this.tree );
+            keyboardActionPresentation.render();
+        }
+        
+        public void dispose()
+        {
+            this.contentTree.removeListener( this.contentOutlineListener );
+            
+            if( this.tempActions != null )
+            {
+                this.tempActions.dispose();
+                this.tempActions = null;
+            }
+            
+            if( this.actionPresentationManager != null )
+            {
+                this.actionPresentationManager.dispose();
+                this.actionPresentationManager = null;
+            }
+        }
+    }
+    
     private final class RootSection 
     
         extends MasterDetailsBlock
@@ -1007,7 +935,7 @@ public final class MasterDetailsPage
         private List<IDetailsPage> detailsSections;
         private Control detailsSectionControl;
         
-        public RootSection( final IModel descriptor ) 
+        public RootSection() 
         {
             this.detailsSections = new ArrayList<IDetailsPage>();
             this.detailsSectionControl = null;
@@ -1047,7 +975,7 @@ public final class MasterDetailsPage
         @Override
         protected void registerPages( final DetailsPart detailsPart ) 
         {
-            final IDetailsPage detailsPage = new DetailsSection( MasterDetailsPage.this );
+            final IDetailsPage detailsPage = new DetailsSection();
             detailsPart.registerPage( MasterDetailsContentNode.class, detailsPage );
             this.detailsSections.add( detailsPage );
         }
@@ -1096,10 +1024,6 @@ public final class MasterDetailsPage
         private SectionPart sectionPart;
         private TreeViewer treeViewer;
         private Tree tree;
-        private ToolBar toolbar;
-        private boolean editorLevelNavToolBarActionsPresent = false;
-        private List<ActionGroup> actions;
-        private final ActionsCommandBridge actionsCommandBridge;
         
         public MasterSection( final IManagedForm managedForm,
                               final Composite parent) 
@@ -1157,36 +1081,16 @@ public final class MasterDetailsPage
                 }
             );
             
-            final GridLayout toolbarsCompositeLayout = glayout( 2, 0, 0 );
-            toolbarsCompositeLayout.horizontalSpacing = 0;
-            toolbarsCompositeLayout.verticalSpacing = 0;
+            final ToolBar toolbar = new ToolBar( this, SWT.FLAT | SWT.HORIZONTAL );
+            setTextClient( toolbar );
             
-            final List<ActionGroup> editorLevelNavigationToolBarActions = getActions( ACTION_CONTEXT_OUTLINE_TOOLBAR );
+            final SapphireActionGroup actions = getActions( CONTEXT_EDITOR_PAGE_OUTLINE_HEADER );
             
-            if( editorLevelNavigationToolBarActions.isEmpty() )
-            {
-                this.editorLevelNavToolBarActionsPresent = false;
-                this.toolbar = new ToolBar( this, SWT.FLAT | SWT.HORIZONTAL );
-                setTextClient( this.toolbar );
-            }
-            else
-            {
-                this.editorLevelNavToolBarActionsPresent = true;
-
-                final Composite toolbarsComposite = new Composite( this, SWT.NONE );
-                toolbarsComposite.setLayout( toolbarsCompositeLayout );
-                
-                this.toolbar = new ToolBar( toolbarsComposite, SWT.FLAT | SWT.HORIZONTAL );
-                this.toolbar.setLayoutData( gdhfill() );
-                
-                final ToolBar editorLevelActionsToolbar = new ToolBar( toolbarsComposite, SWT.FLAT | SWT.HORIZONTAL );
-                editorLevelActionsToolbar.setLayoutData( gdhfill() );
-                ActionsRenderer.fillToolBar( editorLevelActionsToolbar, getActions( ACTION_CONTEXT_OUTLINE_TOOLBAR ) );
-                
-                setTextClient( toolbarsComposite );
-            }
+            final SapphireToolBarActionPresentation actionsPresentation 
+                = new SapphireToolBarActionPresentation( MasterDetailsPage.this, getSite().getShell(), actions );
             
-            this.actionsCommandBridge = new ActionsCommandBridge( this.tree );
+            actionsPresentation.setToolBar( toolbar );
+            actionsPresentation.render();
             
             toolkit.paintBordersFor( this );
             setClient( client );
@@ -1200,30 +1104,12 @@ public final class MasterDetailsPage
             return new Font(display, fontDatas);
         }
         
-        public void refreshActions()
-        {
-            for( ToolItem item : this.toolbar.getItems() )
-            {
-                item.dispose();
-            }
-            
-            final List<MasterDetailsContentNode> selection = getContentTree().getSelectedNodes();
-
-            this.actions = getNodeActions( selection, null );
-            ActionsRenderer.fillToolBar( this.toolbar, this.actions, this.editorLevelNavToolBarActionsPresent );
-            
-            this.actionsCommandBridge.setActions( getNodeActions( selection, ACTION_CONTEXT_OUTLINE_MENU ) );
-            
-            this.toolbar.getParent().getParent().layout( true, true );
-        }
-        
         private void handleSelectionChangedEvent( final List<MasterDetailsContentNode> selection )
         {
             final IStructuredSelection sel
                 = ( selection.isEmpty() ? StructuredSelection.EMPTY : new StructuredSelection( selection.get( 0 ) ) );
             
             this.managedForm.fireSelectionChanged( this.sectionPart, sel );
-            refreshActions();
         }
     }
     
@@ -1233,17 +1119,13 @@ public final class MasterDetailsPage
         implements IDetailsPage
         
     {
-        protected final MasterDetailsPage mainPage;
         private MasterDetailsContentNode node;
         protected IManagedForm mform;
         protected FormToolkit toolkit;
         
-        public DetailsSection( final MasterDetailsPage mainPage )
+        public DetailsSection()
         {
             super( null, null );
-            
-            this.mainPage = mainPage;
-            this.node = null;
         }
         
         public SapphirePart getPart()
@@ -1260,6 +1142,7 @@ public final class MasterDetailsPage
         public final void createContents( final Composite parent ) 
         {
             this.composite = parent;
+            this.shell = this.composite.getShell();
             
             final TableWrapLayout twl = twlayout( 1, 10, 10, 10, 10 );
             twl.verticalSpacing = 20;
@@ -1312,12 +1195,6 @@ public final class MasterDetailsPage
             }
         }
         
-        @Override
-        protected String getHelpContextIdPrefix() 
-        {
-            return this.mainPage.getEditor().getHelpContextIdPrefix();
-        }
-        
         public void selectionChanged( final IFormPart part, 
                                       final ISelection selection ) 
         {
@@ -1361,5 +1238,5 @@ public final class MasterDetailsPage
             rootComposite.getParent().layout( true, true );
         }
     }
-    
+
 }

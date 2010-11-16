@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -21,6 +22,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.help.IContext;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementListener;
@@ -28,7 +30,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.ui.actions.Action;
 import org.eclipse.sapphire.ui.def.ICompositeParam;
 import org.eclipse.sapphire.ui.def.ISapphireActionLinkDef;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
@@ -69,6 +70,7 @@ public abstract class SapphirePart
     private IStatus validationState;
     private Set<SapphirePartListener> listeners;
     private SapphireImageCache imageCache;
+    private Map<String,SapphireActionGroup> actions;
     
     public final void init( final ISapphirePart parent,
                             final IModelElement modelElement,
@@ -181,18 +183,6 @@ public abstract class SapphirePart
         return this.modelElement;
     }
     
-    public Action getAction( final String id )
-    {
-        if( this.parent != null )
-        {
-            return this.parent.getAction( id );
-        }
-        else
-        {
-            return null;
-        }
-    }
-    
     public final IStatus getValidationState()
     {
         return this.validationState;
@@ -265,7 +255,7 @@ public abstract class SapphirePart
     {
         if( this.listeners != null )
         {
-            final SapphirePartEvent event = new SapphirePartEvent( new SapphirePartContext( this ) );
+            final SapphirePartEvent event = new SapphirePartEvent( this );
             
             for( SapphirePartListener listener : this.listeners )
             {
@@ -281,11 +271,11 @@ public abstract class SapphirePart
         }
     }
     
-    public String getHelpContextId()
+    public IContext getDocumentationContext()
     {
         return null;
     }
-    
+
     public SapphireImageCache getImageCache()
     {
         return this.imageCache;
@@ -395,6 +385,78 @@ public abstract class SapphirePart
         return null;
     }
     
+    /**
+     * Returns the action contexts defined by this part. The default implementation returns an empty set.
+     * Part implementations should override to define action contexts.
+     * 
+     * @return the action contexts defined by this part
+     */
+    
+    public Set<String> getActionContexts()
+    {
+        return Collections.emptySet();
+    }
+    
+    public String getMainActionContext()
+    {
+        final Set<String> contexts = getActionContexts();
+        
+        if( ! contexts.isEmpty() )
+        {
+            return contexts.iterator().next();
+        }
+        
+        return null;
+    }
+    
+    public final SapphireActionGroup getActions()
+    {
+        final String context = getMainActionContext();
+        
+        if( context != null )
+        {
+            return getActions( context );
+        }
+        
+        return null;
+    }
+    
+    public final SapphireActionGroup getActions( final String context )
+    {
+        if( this.actions == null )
+        {
+            this.actions = new HashMap<String,SapphireActionGroup>();
+            
+            for( String ctxt : getActionContexts() )
+            {
+                final SapphireActionGroup actionsForContext = new SapphireActionGroup( this, ctxt );
+                this.actions.put( ctxt.toLowerCase(), actionsForContext );
+            }
+        }
+        
+        return this.actions.get( context.toLowerCase() );
+    }
+    
+    public final SapphireAction getAction( final String id )
+    {
+        for( final String context : getActionContexts() )
+        {
+            final SapphireAction action = getActions( context ).getAction( id );
+            
+            if( action != null )
+            {
+                return action;
+            }
+        }
+        
+        if( this.parent != null )
+        {
+            return this.parent.getAction( id );
+        }
+        
+        return null;
+    }
+    
     public void dispose()
     {
         this.modelElement.removeListener( this.modelElementListener );
@@ -402,6 +464,14 @@ public abstract class SapphirePart
         if( this.parent == null )
         {
             this.imageCache.dispose();
+        }
+        
+        if( this.actions != null )
+        {
+            for( SapphireActionGroup actionsForContext : this.actions.values() )
+            {
+                actionsForContext.dispose();
+            }
         }
     }
     

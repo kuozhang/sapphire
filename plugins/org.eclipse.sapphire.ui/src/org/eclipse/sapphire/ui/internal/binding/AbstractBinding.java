@@ -106,7 +106,7 @@ public abstract class AbstractBinding
     
     public Object getPropertyValue()
     {
-        return this.property.invokeGetterMethod( this.modelElement );
+        return this.modelElement.read( this.property );
     }
     
     public final SapphireRenderingContext getContext()

@@ -46,7 +46,7 @@ public abstract class ValuePropertyEditorRenderer
     
     protected final <T> Value<T> getPropertyValue()
     {
-        return getProperty().invokeGetterMethod( getModelElement() );
+        return getModelElement().read( getProperty() );
     }
     
     protected final void setPropertyValue( final String value )
@@ -68,7 +68,7 @@ public abstract class ValuePropertyEditorRenderer
             
             try
             {
-                getProperty().invokeSetterMethod( getModelElement(), value );
+                getModelElement().write( getProperty(), value );
             }
             catch( Exception e )
             {

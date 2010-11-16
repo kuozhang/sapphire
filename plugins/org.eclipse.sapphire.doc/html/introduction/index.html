@@ -113,7 +113,7 @@ public interface IBugReport extends IModelElementForXml, IRemovable
     // *** Hardware ***
 
     @Type( base = IHardwareItem.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "hardware-item", type = IHardwareItem.class ) } )
+    @XmlListBinding( mappings = { @XmlListBinding.Mapping( element = "hardware-item", type = IHardwareItem.class ) } )
     @Label( standard = "hardware" )
     
     ListProperty PROP_HARDWARE = new ListProperty( TYPE, "Hardware" );
@@ -557,7 +557,7 @@ public interface IBugDatabase extends IModelForXml
     
     @Type( base = IBugReport.class )
     @Label( standard = "bug report" )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "bug", type = IBugReport.class ) } )
+    @XmlListBinding( mappings = { @XmlListBinding.Mapping( element = "bug", type = IBugReport.class ) } )
     
     ListProperty PROP_BUG_REPORTS = new ListProperty( TYPE, "BugReports" );
     

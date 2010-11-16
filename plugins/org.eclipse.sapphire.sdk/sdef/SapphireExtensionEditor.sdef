@@ -1,0 +1,281 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2010 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<definition>
+
+  <import>
+    <bundle>org.eclipse.sapphire.sdk</bundle>
+    <package>org.eclipse.sapphire.sdk.internal</package>
+  </import>
+
+  <editor-page>
+    <id>main</id>
+    <page-header-text>Sapphire Extension</page-header-text>
+    <initial-selection>Model Element Services</initial-selection>
+    <root-node>
+      <node>
+        <label>Model Element Services</label>
+        <section>
+          <description>Define services for model elements.</description>
+          <content>
+            <action-link>
+              <action-id>Sapphire.Add</action-id>
+              <label>Add a model element service</label>
+            </action-link>
+          </content>
+        </section>
+        <node-list>
+          <property>ModelElementServices</property>
+          <node-template>
+            <dynamic-label>
+              <property>TypeClass</property>
+              <null-value-label>&lt;service&gt;</null-value-label>
+            </dynamic-label>
+            <section>
+              <label>Model Element Service</label>
+              <content>
+                <property-editor>TypeClass</property-editor>
+                <property-editor>FactoryClass</property-editor>
+                <property-editor>
+                  <property>Description</property>
+                  <hint>
+                    <name>height</name>
+                    <value>5</value>
+                  </hint>
+                </property-editor>
+              </content>
+            </section>
+          </node-template>
+        </node-list>
+      </node>
+      <node>
+        <label>Model Property Services</label>
+        <section>
+          <description>Define services for model properties.</description>
+          <content>
+            <action-link>
+              <action-id>Sapphire.Add</action-id>
+              <label>Add a model property service</label>
+            </action-link>
+          </content>
+        </section>
+        <node-list>
+          <property>ModelPropertyServices</property>
+          <node-template>
+            <dynamic-label>
+              <property>TypeClass</property>
+              <null-value-label>&lt;service&gt;</null-value-label>
+            </dynamic-label>
+            <section>
+              <label>Model Property Service</label>
+              <content>
+                <property-editor>TypeClass</property-editor>
+                <property-editor>FactoryClass</property-editor>
+                <property-editor>
+                  <property>Description</property>
+                  <hint>
+                    <name>height</name>
+                    <value>5</value>
+                  </hint>
+                </property-editor>
+              </content>
+            </section>
+          </node-template>
+        </node-list>
+      </node>
+      <node>
+        <label>Value Serialization Services</label>
+        <section>
+          <description>Define value serialization services.</description>
+          <content>
+            <action-link>
+              <action-id>Sapphire.Add</action-id>
+              <label>Add a value serialization service</label>
+            </action-link>
+          </content>
+        </section>
+        <node-list>
+          <property>ValueSerializationServices</property>
+          <node-template>
+            <dynamic-label>
+              <property>TypeClass</property>
+              <null-value-label>&lt;service&gt;</null-value-label>
+            </dynamic-label>
+            <section>
+              <label>Value Serialization Service</label>
+              <content>
+                <property-editor>TypeClass</property-editor>
+                <property-editor>ImplClass</property-editor>
+                <property-editor>
+                  <property>Description</property>
+                  <hint>
+                    <name>height</name>
+                    <value>5</value>
+                  </hint>
+                </property-editor>
+              </content>
+            </section>
+          </node-template>
+        </node-list>
+      </node>
+      <node>
+        <label>Actions</label>
+        <section>
+          <description>Define actions that should be available globally in the system.</description>
+          <content>
+            <action-link>
+              <action-id>Sapphire.Add</action-id>
+              <label>Add an action</label>
+            </action-link>
+          </content>
+        </section>
+        <node-list>
+          <property>Actions</property>
+          <node-template>
+            <dynamic-label>
+              <property>Id</property>
+              <null-value-label>&lt;action&gt;</null-value-label>
+            </dynamic-label>
+            <section>
+              <label>Action</label>
+              <content>
+                <property-editor>Id</property-editor>
+                <property-editor>Label</property-editor>
+                <property-editor>KeyBinding</property-editor>
+                <property-editor>Type</property-editor>
+                <property-editor>Images</property-editor>
+                <property-editor>
+                  <property>Description</property>
+                  <hint>
+                    <name>height</name>
+                    <value>5</value>
+                  </hint>
+                </property-editor>
+              </content>
+            </section>
+            <section>
+              <label>Applicability</label>
+              <content>
+                <property-editor>ConditionClass</property-editor>
+                <property-editor>Contexts</property-editor>
+              </content>
+            </section>
+            <section>
+              <label>Location</label>
+              <content>
+                <property-editor>Group</property-editor>
+                <property-editor>LocationHints</property-editor>
+              </content>
+            </section>
+          </node-template>
+        </node-list>
+      </node>
+      <node>
+        <label>Action Handlers</label>
+        <section>
+          <description>Define action handlers that should be available globally in the system.</description>
+          <content>
+            <action-link>
+              <action-id>Sapphire.Add</action-id>
+              <label>Add an action handler</label>
+            </action-link>
+          </content>
+        </section>
+        <node-list>
+          <property>ActionHandlers</property>
+          <node-template>
+            <dynamic-label>
+              <property>Id</property>
+              <null-value-label>&lt;action-handler&gt;</null-value-label>
+            </dynamic-label>
+            <section>
+              <label>Action Handler</label>
+              <content>
+                <property-editor>Action</property-editor>
+                <property-editor>Id</property-editor>
+                <property-editor>Label</property-editor>
+                <property-editor>Images</property-editor>
+                <property-editor>
+                  <property>Description</property>
+                  <hint>
+                    <name>height</name>
+                    <value>5</value>
+                  </hint>
+                </property-editor>
+                <property-editor>ImplClass</property-editor>
+                <property-editor>Params</property-editor>
+              </content>
+            </section>
+            <section>
+              <label>Applicability</label>
+              <content>
+                <property-editor>ConditionClass</property-editor>
+                <property-editor>Contexts</property-editor>
+              </content>
+            </section>
+            <section>
+              <label>Location</label>
+              <content>
+                <property-editor>LocationHints</property-editor>
+              </content>
+            </section>
+          </node-template>
+        </node-list>
+      </node>
+      <node>
+        <label>Action Handler Factories</label>
+        <section>
+          <description>Define action handler factories that should be available globally in the system.</description>
+          <content>
+            <action-link>
+              <action-id>Sapphire.Add</action-id>
+              <label>Add an action handler factory</label>
+            </action-link>
+          </content>
+        </section>
+        <node-list>
+          <property>ActionHandlerFactories</property>
+          <node-template>
+            <dynamic-label>
+              <property>Action</property>
+              <null-value-label>&lt;action-handler-factory&gt;</null-value-label>
+            </dynamic-label>
+            <section>
+              <label>Action Handler Factory</label>
+              <content>
+                <property-editor>Action</property-editor>
+                <property-editor>
+                  <property>Description</property>
+                  <hint>
+                    <name>height</name>
+                    <value>5</value>
+                  </hint>
+                </property-editor>
+                <property-editor>ImplClass</property-editor>
+                <property-editor>Params</property-editor>
+              </content>
+            </section>
+            <section>
+              <label>Applicability</label>
+              <content>
+                <property-editor>ConditionClass</property-editor>
+                <property-editor>Contexts</property-editor>
+              </content>
+            </section>
+          </node-template>
+        </node-list>
+      </node>
+    </root-node>
+  </editor-page>
+  
+</definition>

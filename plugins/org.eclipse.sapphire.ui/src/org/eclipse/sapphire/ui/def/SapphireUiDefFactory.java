@@ -11,11 +11,13 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.BundleResourceModelStore;
-import org.eclipse.sapphire.modeling.ByteArrayModelStore;
+import org.eclipse.sapphire.modeling.BundleResourceStore;
+import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
+import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.SharedModelsCache;
-import org.eclipse.sapphire.modeling.xml.ModelStoreForXml;
-import org.eclipse.sapphire.ui.def.internal.SapphireUiDef;
+import org.eclipse.sapphire.modeling.xml.RootXmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
+import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -26,26 +28,36 @@ public final class SapphireUiDefFactory
     public static ISapphireUiDef load( final String bundleId,
                                        final String path )
     {
-        return load( new ModelStoreForXml( new BundleResourceModelStore( bundleId, path ) ), false );
+        try
+        {
+            return load( new XmlResourceStore( new BundleResourceStore( bundleId, path ) ), false );
+        }
+        catch( ResourceStoreException e )
+        {
+            SapphireUiFrameworkPlugin.log( e );
+            return null;
+        }
     }
     
-    public static ISapphireUiDef load( final ModelStoreForXml modelStore,
+    public static ISapphireUiDef load( final XmlResourceStore resourceStore,
                                        final boolean writable )
     {
         ISapphireUiDef model;
         
         if( writable )
         {
-            model = new SapphireUiDef( modelStore );
+            model = ISapphireUiDef.TYPE.instantiate( new RootXmlResource( resourceStore ) );
         }
         else
         {
-            model = (ISapphireUiDef) SharedModelsCache.retrieve( modelStore, ISapphireUiDef.TYPE );
+            final SharedModelsCache.StandardKey key = new SharedModelsCache.StandardKey( resourceStore, ISapphireUiDef.TYPE );
+            
+            model = (ISapphireUiDef) SharedModelsCache.retrieve( key );
             
             if( model == null )
             {
-                model = new SapphireUiDef( modelStore );
-                SharedModelsCache.store( model );
+                model = ISapphireUiDef.TYPE.instantiate( new RootXmlResource( resourceStore ) );
+                SharedModelsCache.store( key, model );
             }
         }
         
@@ -54,8 +66,7 @@ public final class SapphireUiDefFactory
     
     public static ISapphireUiDef create()
     {
-        final ModelStoreForXml modelStore = new ModelStoreForXml( new ByteArrayModelStore() );
-        return new SapphireUiDef( modelStore );
+        return load( new XmlResourceStore( new ByteArrayResourceStore() ), true  );
     }
     
     public static ISapphireCompositeDef getCompositeDef( final String path )

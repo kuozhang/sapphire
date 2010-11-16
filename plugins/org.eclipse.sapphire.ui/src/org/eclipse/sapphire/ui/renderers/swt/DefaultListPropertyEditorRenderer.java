@@ -11,6 +11,13 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
+import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_ADD;
+import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_ASSIST;
+import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_DELETE;
+import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_JUMP;
+import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_MOVE_DOWN;
+import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_MOVE_UP;
+import static org.eclipse.sapphire.ui.SapphireActionSystem.createFilterByActionId;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_COLUMN_WIDTHS;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_EXPAND_VERTICALLY;
@@ -19,17 +26,18 @@ import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_HEADER;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL_ABOVE;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.RELATED_CONTROLS;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gd;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhhint;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhindent;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdvfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdwhint;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glspacing;
-import static org.eclipse.sapphire.ui.util.SwtUtil.hspan;
-import static org.eclipse.sapphire.ui.util.SwtUtil.valign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
+import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.suppressDashedTableEntryBorder;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -72,10 +80,8 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EnumValueType;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IRemovable;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
@@ -85,29 +91,31 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.FixedOrderList;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
-import org.eclipse.sapphire.ui.SapphireCommands;
+import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionGroup;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor.ChildPropertyHelper;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.actions.Action;
-import org.eclipse.sapphire.ui.actions.ActionGroup;
-import org.eclipse.sapphire.ui.actions.ActionsCommandBridge;
-import org.eclipse.sapphire.ui.actions.ActionsRenderer;
-import org.eclipse.sapphire.ui.assist.BrowseHandler;
-import org.eclipse.sapphire.ui.assist.JumpHandler;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
+import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.internal.EnhancedComposite;
 import org.eclipse.sapphire.ui.internal.ReadOnlyComboBoxCellEditor;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
-import org.eclipse.sapphire.ui.util.HyperlinkTable;
+import org.eclipse.sapphire.ui.swt.renderer.HyperlinkTable;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireMenuActionPresentation;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireTextCellEditor;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
@@ -119,7 +127,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -131,22 +138,21 @@ import org.eclipse.swt.widgets.ToolBar;
 
 public class DefaultListPropertyEditorRenderer
 
-    extends PropertyEditorRenderer
+    extends ListPropertyEditorRenderer
     
 {
     public static final String DATA_SELECTION_PROVIDER = "selection.provider";
     
-    private PropertyEditorAssistDecorator decorator;
     private boolean exposeAddAction;
     private boolean exposeDeleteAction;
     private Table table;
     private TableViewer tableViewer;
     private SelectionProvider selectionProvider;
+    private List<ColumnHandler> columnHandlers;
     private Runnable refreshOperation;
-    private ModelElementListener listElementListener;
     
     public DefaultListPropertyEditorRenderer( final SapphireRenderingContext context,
-                                      final SapphirePropertyEditor part )
+                                              final SapphirePropertyEditor part )
     {
         super( context, part );
         
@@ -174,13 +180,24 @@ public class DefaultListPropertyEditorRenderer
         final int leftMargin = ( ignoreLeftMarginHint ? 0 : part.getLeftMarginHint() );
         final boolean showHeader = part.getRenderingHint( HINT_SHOW_HEADER, true );
         
+        final SapphireActionGroup actions = getActions();
+        final SapphireActionPresentationManager actionPresentationManager = getActionPresentationManager();
+        
+        final SapphireToolBarActionPresentation toolBarActionsPresentation = new SapphireToolBarActionPresentation( actionPresentationManager );
+        toolBarActionsPresentation.addFilter( createFilterByActionId( ACTION_ASSIST ) );
+        toolBarActionsPresentation.addFilter( createFilterByActionId( ACTION_JUMP ) );
+        
+        final SapphireMenuActionPresentation menuActionsPresentation = new SapphireMenuActionPresentation( actionPresentationManager );
+        menuActionsPresentation.addFilter( createFilterByActionId( ACTION_ASSIST ) );
+        menuActionsPresentation.addFilter( createFilterByActionId( ACTION_JUMP ) );
+        
         final Label label;
 
         if( showLabelInline || showLabelAbove )
         {
             final String labelText = property.getLabel( false, CapitalizationType.FIRST_WORD_ONLY, true ) + ":";
             label = new Label( parent, SWT.NONE );
-            label.setLayoutData( gdhindent( hspan( valign( gd(), SWT.TOP ), showLabelAbove ? 2 : 1 ), leftMargin + 9 ) );
+            label.setLayoutData( gdhindent( gdhspan( gdvalign( gd(), SWT.TOP ), showLabelAbove ? 2 : 1 ), leftMargin + 9 ) );
             label.setText( labelText );
             this.context.adapt( label );
         }
@@ -193,7 +210,7 @@ public class DefaultListPropertyEditorRenderer
         final int heightHint = part.getRenderingHint( ISapphirePartDef.HINT_HEIGHT, 10 ) * 15;
         
         GridData gd = ( expandVertically ? gdfill() : gdhhint( gdhfill(), heightHint ) );
-        gd = gdhindent( hspan( gd, showLabelInline ? 1 : 2 ), showLabelInline ? 0 : leftMargin );
+        gd = gdhindent( gdhspan( gd, showLabelInline ? 1 : 2 ), showLabelInline ? 0 : leftMargin );
         
         final Composite tableComposite = new EnhancedComposite( parent, SWT.NONE );
         tableComposite.setLayoutData( gd );
@@ -209,8 +226,8 @@ public class DefaultListPropertyEditorRenderer
             innerComposite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
             this.context.adapt( innerComposite );
             
-            this.decorator = new PropertyEditorAssistDecorator( part, this.context, innerComposite );
-            this.decorator.getControl().setLayoutData( valign( gd(), SWT.TOP ) );
+            this.decorator = createDecorator( innerComposite );
+            this.decorator.getControl().setLayoutData( gdvalign( gd(), SWT.TOP ) );
 
             this.decorator.addEditorControl( innerComposite );
         }
@@ -221,18 +238,18 @@ public class DefaultListPropertyEditorRenderer
         
         this.decorator.addEditorControl( tableComposite );
         
-        final List<ChildPropertyHelper> columnProperties = new ArrayList<ChildPropertyHelper>();
+        final List<ValueProperty> columnProperties = new ArrayList<ValueProperty>();
         
-        for( ChildPropertyHelper childProperty : part.getChildProperties() )
+        for( ModelProperty childProperty : part.getChildProperties() )
         {
-            if( childProperty.getProperty() instanceof ValueProperty )
+            if( childProperty instanceof ValueProperty )
             {
-                columnProperties.add( childProperty );
+                columnProperties.add( (ValueProperty) childProperty );
             }
         }
         
         final boolean singleColumnTable = ( columnProperties.size() == 1 );
-        final boolean renderAsList = ( singleColumnTable && ! showHeader && ! columnProperties.get( 0 ).getProperty().isOfType( Boolean.class ) );
+        final boolean renderAsList = ( singleColumnTable && ! showHeader && ! columnProperties.get( 0 ).isOfType( Boolean.class ) );
         
         final Composite tableParentComposite;
         final TableColumnLayout tableColumnLayout;
@@ -271,8 +288,6 @@ public class DefaultListPropertyEditorRenderer
             relatedControls.add( label );
         }
         
-        SapphireCommands.configurePropertyEditorContext( this.table );
-        
         this.table.addListener
         (
             SWT.MeasureItem, 
@@ -288,22 +303,21 @@ public class DefaultListPropertyEditorRenderer
             }
         );
         
-        final List<ColumnHandler> columnHandlers = new ArrayList<ColumnHandler>();
+        this.columnHandlers = new ArrayList<ColumnHandler>();
         
         final ColumnViewerEditorActivationStrategy activationStrategy = new ColumnViewerEditorActivationStrategy( this.tableViewer ) 
         {
             protected boolean isEditorActivationEvent( final ColumnViewerEditorActivationEvent event ) 
             {
                 final int columnIndex = ( (ViewerCell) event.getSource() ).getColumnIndex();
-                final ColumnHandler columnHandler = columnHandlers.get( columnIndex );
+                final ColumnHandler columnHandler = getColumnHandler( columnIndex );
                 return columnHandler.isEditorActivationEvent( event );
             }
         };
         
-        TableViewerEditor.create( this.tableViewer, null, activationStrategy, ColumnViewerEditor.DEFAULT );
+        TableViewerEditor.create( this.tableViewer, null, activationStrategy, ColumnViewerEditor.TABBING_HORIZONTAL | ColumnViewerEditor.TABBING_CYCLE_IN_ROW );
 
         this.table.setHeaderVisible( showHeader );
-        //this.table.setLinesVisible( showHeader && ! singleColumnTable );
         
         this.selectionProvider = new SelectionProvider( this.tableViewer );
         this.table.setData( DATA_SELECTION_PROVIDER, this.selectionProvider );
@@ -371,8 +385,6 @@ public class DefaultListPropertyEditorRenderer
         
         this.table.setData( DATA_BINDING, this.binding );
         
-        final List<ActionGroup> actions = new ArrayList<ActionGroup>();
-        
         if( renderAsList )
         {
             // Treat single column tables differently. For a single column table, we want
@@ -386,10 +398,8 @@ public class DefaultListPropertyEditorRenderer
             // TableViewer API for managing label providers and cell modification. 
             // Unfortunate and ugly, but true.
             
-            final ChildPropertyHelper memberPropertyHelper = columnProperties.get( 0 );
-            final ValueProperty memberProperty = (ValueProperty) memberPropertyHelper.getProperty();
-            
-            final ColumnHandler columnHandler = createColumnHandler( columnHandlers, memberPropertyHelper, true );
+            final ValueProperty memberProperty = columnProperties.get( 0 );
+            final ColumnHandler columnHandler = createColumnHandler( this.columnHandlers, memberProperty, true );
             
             final ITableLabelProvider labelProvider = new TableLabelProvider( (ColumnLabelProvider) columnHandler.getLabelProvider() );
             this.tableViewer.setLabelProvider( labelProvider );
@@ -460,10 +470,8 @@ public class DefaultListPropertyEditorRenderer
             final String columnWidthsHint = part.getRenderingHint( HINT_COLUMN_WIDTHS, "" );
             final StringTokenizer columnWidthsHintTokenizer = new StringTokenizer( columnWidthsHint, "," );
             
-            for( final ChildPropertyHelper memberPropertyHelper : columnProperties )
+            for( final ValueProperty memberProperty : columnProperties )
             {
-                final ValueProperty memberProperty = (ValueProperty) memberPropertyHelper.getProperty();
-                
                 final TableViewerColumn col2 = new TableViewerColumn( this.tableViewer, SWT.NONE );
                 col2.getColumn().setText( memberProperty.getLabel( false, CapitalizationType.TITLE_STYLE, false ) );
                 
@@ -503,7 +511,7 @@ public class DefaultListPropertyEditorRenderer
                 
                 tableColumnLayout.setColumnData( col2.getColumn(), columnWeightData );
                 
-                final ColumnHandler columnHandler = createColumnHandler( columnHandlers, memberPropertyHelper, showImages );
+                final ColumnHandler columnHandler = createColumnHandler( this.columnHandlers, memberProperty, showImages );
                 
                 showImages = false; // Only the first column should ever show the image.
                 
@@ -543,11 +551,14 @@ public class DefaultListPropertyEditorRenderer
                                 }
                             }
                             
-                            for( ActionGroup group : actions )
+                            for( SapphireAction action : actions.getActions() )
                             {
-                                for( Action action : group.getActions() )
+                                for( SapphireActionHandler handler : action.getActiveHandlers() )
                                 {
-                                    action.notifyChangeListeners();
+                                    if( handler instanceof AbstractActionHandler )
+                                    {
+                                        ( (AbstractActionHandler) handler ).refreshEnablement();
+                                    }
                                 }
                             }
                         }
@@ -555,17 +566,6 @@ public class DefaultListPropertyEditorRenderer
                 );
             }
         }
-        
-        this.listElementListener = new ModelElementListener()
-        {
-            @Override
-            public void propertyChanged( final ModelPropertyChangeEvent event )
-            {
-                handleListElementChangedEvent( event );
-            }
-        };
-        
-        attachListElementListener();
         
         final IStructuredContentProvider contentProvider = new IStructuredContentProvider()
         {
@@ -599,96 +599,169 @@ public class DefaultListPropertyEditorRenderer
         
         if( ! isReadOnly )
         {
-            Action addAction = null;
-            Action deleteAction = null;
+            this.table.addTraverseListener
+            (
+                new TraverseListener()
+                {
+                    public void keyTraversed( final TraverseEvent event )
+                    {
+                        handleTableTraverseEvent( event );
+                    }
+                }
+            );
             
             if( this.exposeAddAction )
             {
-                final Action.Listener addActionListener = new Action.Listener()
+                final SapphireAction addAction = actions.getAction( ACTION_ADD );
+                
+                for( ModelElementType memberType : getProperty().getAllPossibleTypes() )
+                {
+                    final SapphireActionHandler addActionHandler = new AddActionHandler( memberType );
+                    addActionHandler.init( addAction, null );
+                    addAction.addHandler( addActionHandler );
+                    
+                    addOnDisposeOperation
+                    (
+                        new Runnable()
+                        {
+                            public void run()
+                            {
+                                addAction.removeHandler( addActionHandler );
+                            }
+                        }
+                    );
+                }
+                
+                final SapphireActionHandler.Listener addActionHandlerListener = new SapphireActionHandler.Listener()
                 {
                     @Override
-                    public void handleActionExecuted( final Action action, final Object result )
+                    public void handleEvent( final SapphireActionHandler.Event event )
                     {
-                        if( DefaultListPropertyEditorRenderer.this.table.isDisposed() )
+                        if( event.getType().equals( SapphireActionHandler.EVENT_POST_EXECUTE ) )
                         {
-                            return;
-                        }
-                        
-                        final IModelElement newListElement = (IModelElement) result;
-    
-                        if( newListElement != null )
-                        {
-                            DefaultListPropertyEditorRenderer.this.refreshOperation.run();
-                            DefaultListPropertyEditorRenderer.this.tableViewer.setSelection( new StructuredSelection( newListElement ), true );
-                            DefaultListPropertyEditorRenderer.this.tableViewer.editElement( newListElement, 0 );
-                            DefaultListPropertyEditorRenderer.this.table.notifyListeners( SWT.Selection, null );
+                            if( DefaultListPropertyEditorRenderer.this.table.isDisposed() )
+                            {
+                                return;
+                            }
+                            
+                            final IModelElement newListElement = (IModelElement) ( (SapphireActionHandler.PostExecuteEvent) event ).getResult();
+        
+                            if( newListElement != null )
+                            {
+                                DefaultListPropertyEditorRenderer.this.refreshOperation.run();
+                                DefaultListPropertyEditorRenderer.this.tableViewer.setSelection( new StructuredSelection( newListElement ), true );
+                                DefaultListPropertyEditorRenderer.this.tableViewer.editElement( newListElement, 0 );
+                                DefaultListPropertyEditorRenderer.this.table.notifyListeners( SWT.Selection, null );
+                            }
                         }
                     }
                 };
-                
-                addAction = new AddAction( addActionListener );
-                addAction.setPart( part );
+
+                for( SapphireActionHandler addActionHandler : addAction.getActiveHandlers() )
+                {
+                    addActionHandler.addListener( addActionHandlerListener );
+                }
             }
             
             if( this.exposeDeleteAction )
             {
-                deleteAction = new DeleteAction();
-                deleteAction.setPart( part );
-            }
-
-            if( addAction != null || deleteAction != null )
-            {
-                final ActionGroup addDeleteActionGroup = new ActionGroup();
-                actions.add( addDeleteActionGroup );
-
-                if( addAction != null )
-                {
-                    addDeleteActionGroup.addAction( addAction );
-                }
+                final SapphireAction deleteAction = actions.getAction( ACTION_DELETE );
+                final SapphireActionHandler deleteActionHandler = new DeleteActionHandler();
+                deleteActionHandler.init( deleteAction, null );
+                deleteAction.addHandler( deleteActionHandler );
                 
-                if( deleteAction != null )
-                {
-                    addDeleteActionGroup.addAction( deleteAction );
-                }
+                addOnDisposeOperation
+                (
+                    new Runnable()
+                    {
+                        public void run()
+                        {
+                            deleteAction.removeHandler( deleteActionHandler );
+                        }
+                    }
+                );
             }
-            
+
             if( ! property.hasAnnotation( FixedOrderList.class ) )
             {
-                final ActionGroup moveActionGroup = new ActionGroup();
-                actions.add( moveActionGroup );
+                final SapphireAction moveUpAction = actions.getAction( ACTION_MOVE_UP );
+                final SapphireActionHandler moveUpActionHandler = new MoveUpActionHandler();
+                moveUpActionHandler.init( moveUpAction, null );
+                moveUpAction.addHandler( moveUpActionHandler );
                 
-                final Action.Listener moveActionListener = new Action.Listener()
-                {
-                    public void handleActionExecuted( final Action action, final Object result )
+                addOnDisposeOperation
+                (
+                    new Runnable()
                     {
-                        DefaultListPropertyEditorRenderer.this.refreshOperation.run();
+                        public void run()
+                        {
+                            moveUpAction.removeHandler( moveUpActionHandler );
+                        }
+                    }
+                );
+                
+                final SapphireAction moveDownAction = actions.getAction( ACTION_MOVE_DOWN );
+                final SapphireActionHandler moveDownActionHandler = new MoveDownActionHandler();
+                moveDownActionHandler.init( moveDownAction, null );
+                moveDownAction.addHandler( moveDownActionHandler );
+                
+                addOnDisposeOperation
+                (
+                    new Runnable()
+                    {
+                        public void run()
+                        {
+                            moveDownAction.removeHandler( moveDownActionHandler );
+                        }
+                    }
+                );
+
+                final SapphireActionHandler.Listener moveActionHandlerListener = new SapphireActionHandler.Listener()
+                {
+                    @Override
+                    public void handleEvent( final SapphireActionHandler.Event event )
+                    {
+                        if( event.getType().equals( SapphireActionHandler.EVENT_POST_EXECUTE ) )
+                        {
+                            DefaultListPropertyEditorRenderer.this.refreshOperation.run();
+                            
+                            // This is a workaround for a weird problem on SWT on Windows. If modifier keys are pressed
+                            // when the list is re-ordered (as in when issuing move up or move down command from the
+                            // keyboard), the focused row can detached from selected row.
+                            
+                            final IModelElement element = getSelectedElement();
+                            final TableItem[] items = DefaultListPropertyEditorRenderer.this.table.getItems();
+                            
+                            for( int i = 0; i < items.length; i++ )
+                            {
+                                if( items[ i ].getData() == element )
+                                {
+                                    DefaultListPropertyEditorRenderer.this.table.setSelection( i );
+                                    break;
+                                }
+                            }
+                        }
                     }
                 };
                 
-                final Action moveUpAction = new MoveUpAction( moveActionListener );
-                moveUpAction.setPart( part );
-                moveActionGroup.addAction( moveUpAction );
-                
-                final Action moveDownAction = new MoveDownAction( moveActionListener );
-                moveDownAction.setPart( part );
-                moveActionGroup.addAction( moveDownAction );
+                moveUpAction.addListener( moveActionHandlerListener );
+                moveDownAction.addListener( moveActionHandlerListener );
             }
             
             final ToolBar toolbar = new ToolBar( tableComposite, SWT.FLAT | SWT.VERTICAL );
             toolbar.setLayoutData( gdvfill() );
+            toolBarActionsPresentation.setToolBar( toolbar );
+            toolBarActionsPresentation.render();
             this.context.adapt( toolbar );
             this.decorator.addEditorControl( toolbar );
-            ActionsRenderer.fillToolBar( toolbar, actions );
-            
-            final ActionsCommandBridge actionsCommandBridge = new ActionsCommandBridge( this.table );
-            actionsCommandBridge.setActions( actions );
             
             final Menu menu = new Menu( this.table );
             this.table.setMenu( menu );
-            ActionsRenderer.fillMenu( menu, actions );
+            menuActionsPresentation.setMenu( menu );
+            menuActionsPresentation.render();
         }
         
-        final HyperlinkTable hyperlinkTable = new HyperlinkTable( this.table );
+        final HyperlinkTable hyperlinkTable = new HyperlinkTable( this.table, actions );
         
         hyperlinkTable.setController
         (
@@ -698,60 +771,45 @@ public class DefaultListPropertyEditorRenderer
                 public boolean isHyperlinkEnabled( final TableItem item,
                                                    final int column )
                 {
-                    final IModelElement element = (IModelElement) item.getData();
-                    final ChildPropertyHelper propertyHelper = columnProperties.get( column );
-                    final JumpHandler jumpHandler = propertyHelper.createJumpHandler( element );
+                    final SapphireActionHandler jumpHandler = getJumpHandler( item, column );
                     
                     if( jumpHandler != null )
                     {
-                        return jumpHandler.canLocateJumpTarget( part, DefaultListPropertyEditorRenderer.this.context, 
-                                                                element, (ValueProperty) propertyHelper.getProperty() );
+                        return jumpHandler.isEnabled();
                     }
-                    else
-                    {
-                        return false;
-                    }
+
+                    return false;
                 }
 
                 @Override
                 public void handleHyperlinkEvent( final TableItem item,
                                                   final int column )
                 {
-                    final IModelElement element = (IModelElement) item.getData();
-                    final ChildPropertyHelper propertyHelper = columnProperties.get( column );
-                    final JumpHandler jumpHandler = propertyHelper.createJumpHandler( element );
+                    final SapphireActionHandler jumpHandler = getJumpHandler( item, column );
                     
                     if( jumpHandler != null )
                     {
-                        jumpHandler.jump( part, DefaultListPropertyEditorRenderer.this.context, 
-                                          element, (ValueProperty) propertyHelper.getProperty() );
+                        jumpHandler.execute( DefaultListPropertyEditorRenderer.this.context );
                     }
+                }
+                
+                private SapphireActionHandler getJumpHandler( final TableItem item,
+                                                              final int column )
+                {
+                    final IModelElement element = (IModelElement) item.getData();
+                    final ValueProperty property = columnProperties.get( column );
+                    final SapphirePropertyEditor propertyEditor = getPart().getChildPropertyEditor( element, property );
+                    final SapphireActionGroup actions = propertyEditor.getActions();
+                    return actions.getAction( ACTION_JUMP ).getFirstActiveHandler();
                 }
             }
         );
         
+        suppressDashedTableEntryBorder( this.table );
+        
         addControl( this.table );
         
         return this.table;
-    }
-    
-    @Override
-    public final ListProperty getProperty()
-    {
-        return (ListProperty) super.getProperty();
-    }
-    
-    @SuppressWarnings("unchecked")
-    public final ModelElementList<IModelElement> getList()
-    {
-        final IModelElement modelElement = getModelElement();
-        
-        if( modelElement != null )
-        {
-            return (ModelElementList<IModelElement>) getProperty().invokeGetterMethod( modelElement );
-        }
-        
-        return null;
     }
     
     public final PropertyEditorAssistDecorator getDecorator()
@@ -784,6 +842,36 @@ public class DefaultListPropertyEditorRenderer
         this.exposeDeleteAction = exposeDeleteAction;
     }
     
+    public final IModelElement getSelectedElement()
+    {
+        final IStructuredSelection sel = (IStructuredSelection) DefaultListPropertyEditorRenderer.this.tableViewer.getSelection();
+        
+        if( sel == null )
+        {
+            return null;
+        }
+        else
+        {
+            return (IModelElement) sel.getFirstElement();
+        }
+    }
+    
+    public final List<IModelElement> getSelectedElements()
+    {
+        final IStructuredSelection sel = (IStructuredSelection) DefaultListPropertyEditorRenderer.this.tableViewer.getSelection();
+        final List<IModelElement> elements = new ArrayList<IModelElement>();
+        
+        if( sel != null )
+        {
+            for( Iterator<?> itr = sel.iterator(); itr.hasNext(); )
+            {
+                elements.add( (IModelElement) itr.next() );
+            }
+        }
+        
+        return elements;
+    }
+    
     public final void setSelection( final List<IModelElement> selection )
     {
         final IStructuredSelection sel = new StructuredSelection( selection );
@@ -798,12 +886,16 @@ public class DefaultListPropertyEditorRenderer
     @Override
     protected void handlePropertyChangedEvent()
     {
+        super.handlePropertyChangedEvent();
+        
         DefaultListPropertyEditorRenderer.this.refreshOperation.run();
-        attachListElementListener();
     }
     
+    @Override
     protected void handleListElementChangedEvent( final ModelPropertyChangeEvent event )
     {
+        super.handleListElementChangedEvent( event );
+        
         this.table.getDisplay().asyncExec
         (
             new Runnable()
@@ -829,65 +921,79 @@ public class DefaultListPropertyEditorRenderer
         }
     }
     
+    private void handleTableTraverseEvent( final TraverseEvent event )
+    {
+        if( event.detail == SWT.TRAVERSE_RETURN )
+        {
+            event.doit = false;
+
+            final IStructuredSelection selection = (IStructuredSelection) this.tableViewer.getSelection();
+            
+            if( selection.size() == 1 )
+            {
+                final IModelElement element = (IModelElement) selection.getFirstElement();
+                int firstEditableColumn = -1;
+                
+                for( int i = 0, n = getColumnCount(); i < n; i++ )
+                {
+                    final ColumnHandler handler = getColumnHandler( i );
+                    
+                    if( handler.getEditingSupport().canEdit( element ) )
+                    {
+                        firstEditableColumn = i;
+                        break;
+                    }
+                }
+                
+                if( firstEditableColumn != -1 )
+                {
+                    this.tableViewer.editElement( element, firstEditableColumn );
+                }
+            }
+        }
+    }
+
     @Override
     protected void handleFocusReceivedEvent()
     {
         this.table.setFocus();
     }
-
-    @Override
-    protected void handleDisposeEvent()
-    {
-        final ModelElementList<IModelElement> list = getList();
-
-        if( list != null )
-        {
-            for( IModelElement entry : list )
-            {
-                entry.removeListener( this.listElementListener );
-            }
-        }
-    }
-    
-    private void attachListElementListener()
-    {
-        final ModelElementList<IModelElement> list = getList();
-        
-        if( list != null )
-        {
-            for( IModelElement entry : list )
-            {
-                entry.addListener( this.listElementListener );
-            }
-        }
-    }
     
     private ColumnHandler createColumnHandler( final List<ColumnHandler> allColumnHandlers,
-                                               final ChildPropertyHelper childPropertyHelper,
+                                               final ValueProperty property,
                                                final boolean showImages )
     {
-        final ModelProperty property = childPropertyHelper.getProperty();
         final ColumnHandler columnHandler;
         
         if( property.isOfType( Boolean.class ) )
         {
             columnHandler = new BooleanPropertyColumnHandler( this.context, this.tableViewer, this.selectionProvider, getPart(), 
-                                                              allColumnHandlers, childPropertyHelper, showImages );
+                                                              allColumnHandlers, property, showImages );
         }
         else if( property.isOfType( Enum.class ) )
         {
             columnHandler = new EnumPropertyColumnHandler( this.context, this.tableViewer, this.selectionProvider, getPart(), 
-                                                           allColumnHandlers, childPropertyHelper, showImages );
+                                                           allColumnHandlers, property, showImages );
         }
         else
         {
             columnHandler = new ColumnHandler( this.context, this.tableViewer, this.selectionProvider, getPart(), 
-                                               allColumnHandlers, childPropertyHelper, showImages );
+                                               allColumnHandlers, property, showImages );
         }
         
         allColumnHandlers.add( columnHandler );
         
         return columnHandler;
+    }
+    
+    private int getColumnCount()
+    {
+        return this.table.getColumnCount();
+    }
+    
+    private ColumnHandler getColumnHandler( final int column )
+    {
+        return this.columnHandlers.get( column );
     }
 
     public static final class Factory
@@ -1026,7 +1132,7 @@ public class DefaultListPropertyEditorRenderer
         @Override
         public Color getForeground( final Object element )
         {
-            final Value<?> value = (Value<?>) this.columnHandler.getProperty().invokeGetterMethod( element );
+            final Value<?> value = ( (IModelElement) element ).read( this.columnHandler.getProperty() );
             
             if( value.getText( false ) == null )
             {
@@ -1074,7 +1180,6 @@ public class DefaultListPropertyEditorRenderer
         protected final SelectionProvider selectionProvider;
         protected final SapphirePropertyEditor listPropertyEditor;
         protected final List<ColumnHandler> allColumnHandlers;
-        protected final ChildPropertyHelper childPropertyHelper;
         protected final ValueProperty property;
         protected final boolean showElementImage;
         protected final Collator collator;
@@ -1086,7 +1191,7 @@ public class DefaultListPropertyEditorRenderer
                               final SelectionProvider selectionProvider,
                               final SapphirePropertyEditor listPropertyEditor,
                               final List<ColumnHandler> allColumnHandlers,
-                              final ChildPropertyHelper childPropertyHelper,
+                              final ValueProperty property,
                               final boolean showElementImage )
         {
             this.context = context;
@@ -1095,8 +1200,7 @@ public class DefaultListPropertyEditorRenderer
             this.selectionProvider = selectionProvider;
             this.listPropertyEditor = listPropertyEditor;
             this.allColumnHandlers = allColumnHandlers;
-            this.childPropertyHelper = childPropertyHelper;
-            this.property = (ValueProperty) childPropertyHelper.getProperty();
+            this.property = property;
             this.showElementImage = showElementImage;
             this.collator = Collator.getInstance();
         }
@@ -1143,13 +1247,13 @@ public class DefaultListPropertyEditorRenderer
         
         public final Value<?> getPropertyValue( final IModelElement element )
         {
-            return (Value<?>) this.property.invokeGetterMethod( element );
+            return element.read( this.property );
         }
         
         public final void setPropertyValue( final IModelElement element,
                                             final String value )
         {
-            this.property.invokeSetterMethod( element, value );            
+            element.write( this.property, value );
         }
         
         public final CellLabelProvider getLabelProvider()
@@ -1181,28 +1285,32 @@ public class DefaultListPropertyEditorRenderer
         {
             return new AbstractColumnEditingSupport( this )
             {
-                private BrowseableTextCellEditor cellEditor;
+                private SapphireTextCellEditor cellEditor;
     
                 @Override
-                public CellEditor getCellEditor( final Object element )
+                public CellEditor getCellEditor( final Object obj )
                 {
-                    if( this.cellEditor == null )
+                    if( this.cellEditor != null )
                     {
-                        final int style = ( getTable().getLinesVisible() ? SWT.NONE : SWT.BORDER );
-                        this.cellEditor = new BrowseableTextCellEditor( getListPropertyEditor(), getTableViewer(), getSelectionProvider(), style );
-    
-                        if( isElementImageDesired() )
-                        {
-                            this.cellEditor.setHorizonalIndent( 3 );
-                        }
+                        this.cellEditor.dispose();
                     }
-                        
-                    final List<BrowseHandler> browseHandlers 
-                        = ColumnHandler.this.childPropertyHelper.createBrowseHandlers( (IModelElement) element );
                     
-                    this.cellEditor.setBrowseHandlers( browseHandlers );
-                    this.cellEditor.setContext( getContext() );
-    
+                    final IModelElement element = (IModelElement) obj;
+                    final ValueProperty property = ColumnHandler.this.property;
+                    final SapphirePropertyEditor propertyEditor = getListPropertyEditor().getChildPropertyEditor( element, property );
+                    final SapphireActionGroup actions = propertyEditor.getActions();
+
+                    final int style = ( getTable().getLinesVisible() ? SWT.NONE : SWT.BORDER );
+                    
+                    this.cellEditor 
+                        = new SapphireTextCellEditor( getContext(), getTableViewer(), getSelectionProvider(), 
+                                                      element, getProperty(), actions, style );
+
+                    if( isElementImageDesired() )
+                    {
+                        this.cellEditor.setHorizonalIndent( 3 );
+                    }
+                    
                     return this.cellEditor;
                 }
     
@@ -1224,7 +1332,8 @@ public class DefaultListPropertyEditorRenderer
         public boolean isEditorActivationEvent( final ColumnViewerEditorActivationEvent event ) 
         {
             return event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION ||
-                   event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
+                   event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC ||
+                   event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL;
         }
         
         public int comparePropertyValues( final IModelElement x,
@@ -1294,12 +1403,12 @@ public class DefaultListPropertyEditorRenderer
                                           final SelectionProvider selectionProvider,
                                           final SapphirePropertyEditor listPropertyEditor,
                                           final List<ColumnHandler> allColumnHandlers,
-                                          final ChildPropertyHelper childPropertyHelper,
+                                          final ValueProperty property,
                                           final boolean showElementImage )
         {
-            super( context, tableViewer, selectionProvider, listPropertyEditor, allColumnHandlers, childPropertyHelper, showElementImage );
+            super( context, tableViewer, selectionProvider, listPropertyEditor, allColumnHandlers, property, showElementImage );
             
-            this.annotatedEnumeration = new EnumValueType( childPropertyHelper.getProperty().getTypeClass() );
+            this.annotatedEnumeration = new EnumValueType( property.getTypeClass() );
             this.enumValues = this.annotatedEnumeration.getItems();
         }
         
@@ -1353,7 +1462,7 @@ public class DefaultListPropertyEditorRenderer
                     final EnumValueType annotatedEnumeration = EnumPropertyColumnHandler.this.annotatedEnumeration;
                     final Enum<?>[] enumValues = EnumPropertyColumnHandler.this.enumValues;
                     
-                    final Value<?> value = (Value<?>) getProperty().invokeGetterMethod( element );
+                    final Value<?> value = ( (IModelElement) element ).read( getProperty() );
                     final String stringValue = value.getText( false );
                     
                     boolean needExtraEntry = false;
@@ -1371,7 +1480,7 @@ public class DefaultListPropertyEditorRenderer
                     for( int i = 0; i < enumValues.length; i++ )
                     {
                         final Enum<?> enumValue = enumValues[ i ];
-                        final String enumValueText = modelElement.service( ValueSerializationService.class ).encode( getProperty(), enumValue );
+                        final String enumValueText = modelElement.service( getProperty(), ValueSerializationService.class ).encode( enumValue );
                         this.cellEditorItems.add( enumValueText );
                         items[ i ] = annotatedEnumeration.getLabel( enumValue, false, CapitalizationType.FIRST_WORD_ONLY, false );
                     }
@@ -1428,10 +1537,10 @@ public class DefaultListPropertyEditorRenderer
                                              final SelectionProvider selectionProvider,
                                              final SapphirePropertyEditor listPropertyEditor,
                                              final List<ColumnHandler> allColumnHandlers,
-                                             final ChildPropertyHelper childPropertyHelper,
+                                             final ValueProperty property,
                                              final boolean showElementImage )
         {
-            super( context, tableViewer, selectionProvider, listPropertyEditor, allColumnHandlers, childPropertyHelper, showElementImage );
+            super( context, tableViewer, selectionProvider, listPropertyEditor, allColumnHandlers, property, showElementImage );
         }
 
         @Override
@@ -1596,41 +1705,39 @@ public class DefaultListPropertyEditorRenderer
         }
     }
     
-    private abstract class AbstractAction
+    private abstract class AbstractActionHandler
 
-        extends Action
+        extends SapphireActionHandler
         
     {
-        private final ModelPropertyListener listPropertyListener;
+        private ModelPropertyListener listPropertyListener;
         
-        public AbstractAction()
+        @Override
+        public void init( final SapphireAction action,
+                          final ISapphireActionHandlerDef def )
         {
+            super.init( action, def );
+
             this.listPropertyListener = new ModelPropertyListener()
             {
                 @Override
                 public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
                 {
-                    notifyChangeListeners();
+                    refreshEnablement();
                 }
             };
             
             getModelElement().addListener( this.listPropertyListener, getProperty().getName() );
         }
-        
-        @Override
-        public boolean isEnabled()
+
+        public final void refreshEnablement()
         {
-            final IModelElement modelElement = getModelElement();
-            
-            if( modelElement != null )
-            {
-                if( modelElement.isPropertyEnabled( getProperty() ) )
-                {
-                    return true;
-                }
-            }
-            
-            return false;
+            setEnabled( computeEnablementState() );
+        }
+        
+        protected boolean computeEnablementState()
+        {
+            return getModelElement().isPropertyEnabled( getProperty() );
         }
 
         @Override
@@ -1642,81 +1749,47 @@ public class DefaultListPropertyEditorRenderer
         }
     }
 
-    private final class AddAction
-
-        extends AbstractAction
+    private final class AddActionHandler
+    
+        extends AbstractActionHandler
         
     {
-        public AddAction( final Action.Listener actionListener )
+        private final ModelElementType type;
+        
+        public AddActionHandler( final ModelElementType type )
         {
-            setLabel( Resources.addActionLabel );
-            setImageDescriptor( SapphireImageCache.ACTION_ADD );
-            addListener( actionListener );
-            
-            if( getProperty().getAllPossibleTypes().size() > 1 )
-            {
-                final ActionGroup mainAddActionGroup = new ActionGroup();
-                addChildActionGroup( mainAddActionGroup );
-                
-                for( final ModelElementType memberType : getProperty().getAllPossibleTypes() )
-                {
-                    final TypeSpecificAddAction typeSpecificAddAction = new TypeSpecificAddAction( memberType );
-                    typeSpecificAddAction.addListener( actionListener );
-                    mainAddActionGroup.addAction( typeSpecificAddAction );
-                }
-            }
+            this.type = type;
         }
         
         @Override
-        protected Object run( final Shell shell )
+        public void init( final SapphireAction action,
+                          final ISapphireActionHandlerDef def )
         {
-            if( ! getChildActionGroups().isEmpty() )
+            super.init( action, def );
+            
+            final ImageDescriptor typeSpecificAddImage = getPart().getImageCache().getImageDescriptor( this.type );
+            
+            if( typeSpecificAddImage != null )
             {
-                throw new UnsupportedOperationException();
+                addImage( typeSpecificAddImage );
             }
-            else
-            {
-                return getList().addNewElement();
-            }
+
+            setLabel( this.type.getLabel( false, CapitalizationType.TITLE_STYLE, false ) );
         }
-        
-        private final class TypeSpecificAddAction
-        
-            extends Action
-            
+
+        @Override
+        protected Object run( final SapphireRenderingContext context )
         {
-            private final ModelElementType type;
-            
-            public TypeSpecificAddAction( final ModelElementType type )
-            {
-                this.type = type;
-                
-                ImageDescriptor typeSpecificAddImage 
-                    = DefaultListPropertyEditorRenderer.this.getPart().getImageCache().getImageDescriptor( this.type );
-                
-                if( typeSpecificAddImage == null )
-                {
-                    typeSpecificAddImage = getImageDescriptor();
-                }
-    
-                setLabel( this.type.getLabel( false, CapitalizationType.TITLE_STYLE, false ) );
-                setImageDescriptor( typeSpecificAddImage );
-            }
-    
-            @Override
-            protected Object run( final Shell shell )
-            {
-                return getList().addNewElement( this.type );
-            }
+            return getList().addNewElement( this.type );
         }
     }
     
-    private abstract class SelectionBasedAction
+    private abstract class SelectionBasedActionHandler
 
-        extends AbstractAction
+        extends AbstractActionHandler
         
     {
-        public SelectionBasedAction()
+        public SelectionBasedActionHandler()
         {
             DefaultListPropertyEditorRenderer.this.tableViewer.addSelectionChangedListener
             (
@@ -1724,57 +1797,20 @@ public class DefaultListPropertyEditorRenderer
                 {
                     public void selectionChanged( final SelectionChangedEvent event )
                     {
-                        notifyChangeListeners();
+                        refreshEnablement();
                     }
                 }
             );
         }
-        
-        public IModelElement getSelectedElement()
-        {
-            final IStructuredSelection sel = (IStructuredSelection) DefaultListPropertyEditorRenderer.this.tableViewer.getSelection();
-            
-            if( sel == null )
-            {
-                return null;
-            }
-            else
-            {
-                return (IModelElement) sel.getFirstElement();
-            }
-        }
-        
-        public List<IModelElement> getSelectedElements()
-        {
-            final IStructuredSelection sel = (IStructuredSelection) DefaultListPropertyEditorRenderer.this.tableViewer.getSelection();
-            final List<IModelElement> elements = new ArrayList<IModelElement>();
-            
-            if( sel != null )
-            {
-                for( Iterator<?> itr = sel.iterator(); itr.hasNext(); )
-                {
-                    elements.add( (IModelElement) itr.next() );
-                }
-            }
-            
-            return elements;
-        }
     }
     
-    private final class DeleteAction
+    private final class DeleteActionHandler
 
-        extends SelectionBasedAction
+        extends SelectionBasedActionHandler
         
     {
-        public DeleteAction()
-        {
-            setLabel( Resources.deleteActionLabel );
-            setImageDescriptor( SapphireImageCache.ACTION_DELETE );
-            setCommandId( "org.eclipse.ui.edit.delete" );
-        }
-        
         @Override
-        protected final Object run( final Shell shell )
+        protected final Object run( final SapphireRenderingContext context )
         {
             final IStructuredContentProvider contentProvider 
                 = (IStructuredContentProvider) DefaultListPropertyEditorRenderer.this.tableViewer.getContentProvider();
@@ -1803,10 +1839,12 @@ public class DefaultListPropertyEditorRenderer
                     preferNextElement = false;
                 }
             }
+            
+            final ModelElementList<IModelElement> list = getList();
 
             for( IModelElement element : elementsToDelete )
             {
-                ( (IRemovable) element ).remove();
+                list.remove( element );
             }
             
             DefaultListPropertyEditorRenderer.this.refreshOperation.run();
@@ -1819,78 +1857,64 @@ public class DefaultListPropertyEditorRenderer
             return null;
         }
         
-        public boolean isEnabled()
+        @Override
+        protected boolean computeEnablementState()
         {
-            if( ! super.isEnabled() )
-            {
-                return false;
-            }
-
-            return ! getSelectedElements().isEmpty(); 
+            return ( super.computeEnablementState() && ! getSelectedElements().isEmpty() );
         }
     }
 
-    private final class MoveUpAction
+    private final class MoveUpActionHandler
 
-        extends SelectionBasedAction
+        extends SelectionBasedActionHandler
         
     {
-        public MoveUpAction( final Action.Listener actionListener )
+        @Override
+        protected boolean computeEnablementState()
         {
-            setLabel( Resources.moveUpActionLabel );
-            setImageDescriptor( SapphireImageCache.ACTION_MOVE_UP );
-            setCommandId( SapphireCommands.COMMAND_MOVE_UP );
-            addListener( actionListener );
-        }
-        
-        public boolean isEnabled()
-        {
-            if( ! super.isEnabled() || getSelectedElements().size() != 1 || 
-                DefaultListPropertyEditorRenderer.this.tableViewer.getComparator() != null  )
+            if( ! super.computeEnablementState() || getSelectedElements().size() != 1 
+                || DefaultListPropertyEditorRenderer.this.tableViewer.getComparator() != null  )
             {
                 return false;
             }
-            
-            final IModelElement modelElement = getSelectedElement();
-            return ( getList().indexOf( modelElement ) > 0 );
+            else
+            {
+                final IModelElement modelElement = getSelectedElement();
+                return ( getList().indexOf( modelElement ) > 0 );
+            }
         }
 
         @Override
-        protected final Object run( final Shell shell )
+        protected final Object run( final SapphireRenderingContext context )
         {
             getList().moveUp( getSelectedElement() );
             return null;
         }
     }
     
-    private final class MoveDownAction
+    private final class MoveDownActionHandler
 
-        extends SelectionBasedAction
+        extends SelectionBasedActionHandler
         
     {
-        public MoveDownAction( final Action.Listener actionListener )
+        @Override
+        protected boolean computeEnablementState()
         {
-            setLabel( Resources.moveDownActionLabel );
-            setImageDescriptor( SapphireImageCache.ACTION_MOVE_DOWN );
-            setCommandId( SapphireCommands.COMMAND_MOVE_DOWN );
-            addListener( actionListener );
-        }
-        
-        public boolean isEnabled()
-        {
-            if( ! super.isEnabled() || getSelectedElements().size() != 1 || 
-                DefaultListPropertyEditorRenderer.this.tableViewer.getComparator() != null )
+            if( ! super.computeEnablementState() || getSelectedElements().size() != 1 
+                || DefaultListPropertyEditorRenderer.this.tableViewer.getComparator() != null  )
             {
                 return false;
             }
-            
-            final IModelElement modelElement = getSelectedElement();
-            final ModelElementList<?> list = getList();
-            return ( list.indexOf( modelElement ) < ( list.size() - 1 ) );
+            else
+            {
+                final IModelElement modelElement = getSelectedElement();
+                final ModelElementList<?> list = getList();
+                return ( list.indexOf( modelElement ) < ( list.size() - 1 ) );
+            }
         }
     
         @Override
-        protected final Object run( final Shell shell )
+        protected final Object run( final SapphireRenderingContext context )
         {
             getList().moveDown( getSelectedElement() );
             return null;
@@ -1973,10 +1997,6 @@ public class DefaultListPropertyEditorRenderer
         extends NLS
     
     {
-        public static String addActionLabel;
-        public static String deleteActionLabel;
-        public static String moveUpActionLabel;
-        public static String moveDownActionLabel;
         public static String emptyRowIndicator;
         
         static

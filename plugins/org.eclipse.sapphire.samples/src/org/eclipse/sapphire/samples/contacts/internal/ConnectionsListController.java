@@ -11,10 +11,9 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
-import org.eclipse.sapphire.modeling.xml.DelimitedListControllerForXml;
 import org.eclipse.sapphire.modeling.xml.StandardXmlNamespaceResolver;
+import org.eclipse.sapphire.modeling.xml.XmlDelimitedListBindingImpl;
 import org.eclipse.sapphire.modeling.xml.XmlPath;
-import org.eclipse.sapphire.samples.contacts.IConnection;
 import org.eclipse.sapphire.samples.contacts.IContact;
 
 /**
@@ -23,7 +22,7 @@ import org.eclipse.sapphire.samples.contacts.IContact;
 
 public final class ConnectionsListController
 
-    extends DelimitedListControllerForXml<IConnection>
+    extends XmlDelimitedListBindingImpl
 
 {
     private static final StandardXmlNamespaceResolver NAMESPACE_RESOLVER = new StandardXmlNamespaceResolver( IContact.TYPE );
@@ -31,19 +30,7 @@ public final class ConnectionsListController
     
     public ConnectionsListController()
     {
-        super( PATH_CONNECTIONS, ',' );
-    }
-
-    @Override
-    protected IConnection wrap( final Entry entry )
-    {
-        return new Connection( getList(), getProperty(), entry );
-    }
-
-    @Override
-    protected Entry unwrap( final IConnection connection )
-    {
-        return ( (Connection) connection ).getBase();
+        super( PATH_CONNECTIONS );
     }
     
 }

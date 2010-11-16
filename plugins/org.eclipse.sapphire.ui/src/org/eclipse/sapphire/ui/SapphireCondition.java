@@ -11,8 +11,10 @@
 
 package org.eclipse.sapphire.ui;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -20,20 +22,106 @@ import java.util.List;
 
 public abstract class SapphireCondition
 {
-    protected SapphirePartContext context;
-    protected String parameter;
+    private ISapphirePart part;
+    private boolean conditionState;
+    private final List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
     
-    public void init( final SapphirePartContext context,
-                      final String parameter )
+    public static SapphireCondition create( final ISapphirePart part,
+                                            final Class<?> conditionClass,
+                                            final String conditionParameter )
     {
-        this.context = context;
-        this.parameter = parameter;
+        try
+        {
+            final SapphireCondition condition = (SapphireCondition) conditionClass.newInstance();
+            condition.init( part, conditionParameter );
+            return condition;
+        }
+        catch( Exception e )
+        {
+            SapphireUiFrameworkPlugin.log( e );
+        }
+        
+        return null;
     }
     
-    public abstract boolean evaluate();
-    
-    public List<String> getDependencies()
+    public final void init( final ISapphirePart part,
+                            final String parameter )
     {
-        return Collections.emptyList();
+        this.part = part;
+        initCondition( part, parameter );
+        updateConditionState();
     }
+
+    protected void initCondition( final ISapphirePart part,
+                                  final String parameter )
+    {
+    }
+    
+    public final ISapphirePart getPart()
+    {
+        return this.part;
+    }
+    
+    protected abstract boolean evaluate();
+    
+    public final boolean getConditionState()
+    {
+        return this.conditionState;
+    }
+
+    protected final void updateConditionState()
+    {
+        final boolean newConditionState;
+        
+        try
+        {
+            newConditionState = evaluate();
+        }
+        catch( Exception e )
+        {
+            SapphireUiFrameworkPlugin.log( e );
+            return;
+        }
+        
+        if( this.conditionState != newConditionState )
+        {
+            this.conditionState = newConditionState;
+            notifyListeners();
+        }
+    }
+    
+    public void dispose()
+    {
+    }
+    
+    public final void addListener( final Listener listener )
+    {
+        this.listeners.add( listener );
+    }
+    
+    public final void removeListener( final Listener listener )
+    {
+        this.listeners.remove( listener );
+    }
+    
+    private final void notifyListeners()
+    {
+        for( Listener listener : this.listeners )
+        {
+            try
+            {
+                listener.handleConditionChanged();
+            }
+            catch( Exception e )
+            {
+                SapphireUiFrameworkPlugin.log( e );
+            }
+        }
+    }
+    
+    public static abstract class Listener
+    {
+        public abstract void handleConditionChanged();
+    }
+    
 }

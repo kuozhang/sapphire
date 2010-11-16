@@ -7,31 +7,31 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IRemovable;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface IEditorPageDef
 
-    extends IModelElementForXml, IRemovable
+    extends ISapphirePartDef
     
 {
     ModelElementType TYPE = new ModelElementType( IEditorPageDef.class );
@@ -49,7 +49,7 @@ public interface IEditorPageDef
     // *** PageName ***
     
     @Label( standard = "page name" )
-    @DefaultValue( "Design" )
+    @DefaultValue( text = "Design" )
     @XmlBinding( path = "page-name" )
     
     ValueProperty PROP_PAGE_NAME = new ValueProperty( TYPE, "PageName" );
@@ -60,7 +60,7 @@ public interface IEditorPageDef
     // *** PageHeaderText ***
     
     @Label( standard = "page header text" )
-    @DefaultValue( "Design View" )
+    @DefaultValue( text = "Design View" )
     @XmlBinding( path = "page-header-text" )
     
     ValueProperty PROP_PAGE_HEADER_TEXT = new ValueProperty( TYPE, "PageHeaderText" );
@@ -71,7 +71,7 @@ public interface IEditorPageDef
     // *** OutlineHeaderText ***
     
     @Label( standard = "outline header text" )
-    @DefaultValue( "Outline" )
+    @DefaultValue( text = "Outline" )
     @XmlBinding( path = "outline-header-text" )
     
     ValueProperty PROP_OUTLINE_HEADER_TEXT = new ValueProperty( TYPE, "OutlineHeaderText" );
@@ -89,16 +89,24 @@ public interface IEditorPageDef
     Value<String> getInitialSelectionPath();
     void setInitialSelectionPath( String initialSelectionPath );
     
-    // *** HelpContextId ***
+    // *** Documentation ***
     
-    @Label( standard = "help context id" )
-    @XmlBinding( path = "help-context-id" )
+    @Type( base = ISapphireDocumentationDef.class )
+    @XmlBinding( path = "documentation" )
     
-    ValueProperty PROP_HELP_CONTEXT_ID = new ValueProperty( TYPE, "HelpContextId" );
+    ElementProperty PROP_DOCUMENTATION_DEF = new ElementProperty( TYPE, "DocumentationDef" );
     
-    Value<String> getHelpContextId();
-    void setHelpContextId( String helpContextId );
+    ModelElementHandle<ISapphireDocumentationDef> getDocumentationDef();
+
+    // *** DocumentationRef ***
     
+    @Type( base = ISapphireDocumentationRef.class )
+    @XmlBinding( path = "documentation-ref" )
+    
+    ElementProperty PROP_DOCUMENTATION_REF = new ElementProperty( TYPE, "DocumentationRef" );
+    
+    ModelElementHandle<ISapphireDocumentationRef> getDocumentationRef();
+
     // *** RootNode ***
 
     @Type( base = IMasterDetailsTreeNodeDef.class )
@@ -106,31 +114,8 @@ public interface IEditorPageDef
     
     ElementProperty PROP_ROOT_NODE = new ElementProperty( TYPE, "RootNode" );
 
-    IMasterDetailsTreeNodeDef getRootNode();
-    IMasterDetailsTreeNodeDef getRootNode( boolean createIfNecessary );
+    ModelElementHandle<IMasterDetailsTreeNodeDef> getRootNode();
     
-    // *** HeaderActionSetDef ***
-    
-    @Type( base = IActionSetDef.class )
-    @Label( standard = "header actions" )
-    @XmlBinding( path = "header-actions" )
-    
-    ElementProperty PROP_HEADER_ACTION_SET_DEF = new ElementProperty( TYPE, "HeaderActionSetDef" );
-    
-    IActionSetDef getHeaderActionSetDef();
-    IActionSetDef getHeaderActionSetDef( boolean createIfNecessary );
-    
-    // *** OutlineToolbarActionSetDef ***
-    
-    @Type( base = IActionSetDef.class )
-    @Label( standard = "outline toolbar actions" )
-    @XmlBinding( path = "outline-toolbar-actions" )
-    
-    ElementProperty PROP_OUTLINE_TOOLBAR_ACTION_SET_DEF = new ElementProperty( TYPE, "OutlineToolbarActionSetDef" );
-    
-    IActionSetDef getOutlineToolbarActionSetDef();
-    IActionSetDef getOutlineToolbarActionSetDef( boolean createIfNecessary );
-
     // *** OutlineMenuActionSetDef ***
     
     @Type( base = IActionSetDef.class )
@@ -139,7 +124,6 @@ public interface IEditorPageDef
     
     ElementProperty PROP_OUTLINE_MENU_ACTION_SET_DEF = new ElementProperty( TYPE, "OutlineMenuActionSetDef" );
     
-    IActionSetDef getOutlineMenuActionSetDef();
-    IActionSetDef getOutlineMenuActionSetDef( boolean createIfNecessary );
+    ModelElementHandle<IActionSetDef> getOutlineMenuActionSetDef();
     
 }

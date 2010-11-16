@@ -26,7 +26,7 @@ public final class XmlDocumentSchemasCache
 
     public static XmlDocumentSchema getSchema( final String schemaLocation )
     {
-    	return getSchema(schemaLocation, null);
+        return getSchema(schemaLocation, null);
     }
 
     public static XmlDocumentSchema getSchema( final String schemaLocation, final String baseLocation )

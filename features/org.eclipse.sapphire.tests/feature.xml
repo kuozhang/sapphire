@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<feature id="org.eclipse.sapphire.tests" label="%featureName" provider-name="%providerName" version="0.1.0.qualifier" plugin="org.eclipse.sapphire.tests">
+<feature id="org.eclipse.sapphire.tests" label="%featureName" provider-name="%providerName" version="0.2.0.qualifier" plugin="org.eclipse.sapphire.tests">
 
   <description>
     %description
@@ -15,7 +15,7 @@
   </license>
 
   <requires>
-    <import feature="org.eclipse.sapphire" version="0.1.0"/>
+    <import feature="org.eclipse.sapphire" version="0.2.0"/>
   </requires>
 
   <plugin download-size="0" id="org.eclipse.sapphire.tests" install-size="0" unpack="false" version="0.0.0"/>

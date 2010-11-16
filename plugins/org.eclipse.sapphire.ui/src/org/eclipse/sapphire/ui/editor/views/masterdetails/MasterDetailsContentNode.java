@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.ui.editor.views.masterdetails;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -23,29 +22,22 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
-import org.eclipse.sapphire.modeling.IRemovable;
 import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.SapphireMultiStatus;
-import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.ProblemOverlayImageDescriptor;
+import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireCondition;
-import org.eclipse.sapphire.ui.SapphireConditionManager;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphirePartContext;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphirePropertyEnabledCondition;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireSection;
-import org.eclipse.sapphire.ui.actions.Action;
-import org.eclipse.sapphire.ui.actions.ActionGroup;
 import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeDef;
 import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeFactoryDef;
 import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeFactoryEntry;
@@ -53,13 +45,7 @@ import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeFactoryRef;
 import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeListEntry;
 import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeRef;
 import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.actions.NodeAddAction;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.actions.NodeDeleteAction;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.actions.NodeMoveDownAction;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.actions.NodeMoveUpAction;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.actions.NodeShowInSourceAction;
 import org.eclipse.sapphire.ui.editor.views.masterdetails.internal.ListPropertyNodeFactory;
-import org.eclipse.sapphire.ui.internal.ActionsHostUtil;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -96,10 +82,9 @@ public final class MasterDetailsContentNode
     private List<Object> rawChildren;
     private List<SapphireSection> sections;
     private List<SapphireSection> sectionsReadOnly;
-    private List<ActionGroup> menuActions = null;
-    private List<ActionGroup> toolbarActions = null;
     private boolean expanded;
-    private SapphireConditionManager visibleWhenCondition;
+    private SapphireCondition visibleWhenCondition;
+    private final List<SapphireCondition> allConditions = new ArrayList<SapphireCondition>();
     
     @Override
     protected void init()
@@ -124,7 +109,7 @@ public final class MasterDetailsContentNode
         
         if( this.modelElementProperty != null )
         {
-            this.modelElement = (IModelElement) this.modelElementProperty.invokeGetterMethod( getModelElement() );
+            this.modelElement = getModelElement().read( this.modelElementProperty ).element();
             
             this.modelElementListener = new ModelElementListener()
             {
@@ -179,15 +164,24 @@ public final class MasterDetailsContentNode
         
         if( visibleWhenConditionClass != null )
         {
-            final Runnable onConditionChangeCallback = new Runnable()
-            {
-                public void run()
-                {
-                    getContentTree().refresh();
-                }
-            };
+            this.visibleWhenCondition = SapphireCondition.create( this, visibleWhenConditionClass, visibleWhenConditionParameter );
             
-            this.visibleWhenCondition = SapphireConditionManager.create( this, visibleWhenConditionClass, visibleWhenConditionParameter, onConditionChangeCallback );
+            if( this.visibleWhenCondition != null )
+            {
+                this.allConditions.add( this.visibleWhenCondition );
+                
+                this.visibleWhenCondition.addListener
+                (
+                    new SapphireCondition.Listener()
+                    {
+                        @Override
+                        public void handleConditionChanged()
+                        {
+                            getContentTree().refresh();
+                        }
+                    }
+                );
+            }
         }
         
         this.expanded = false;
@@ -274,19 +268,12 @@ public final class MasterDetailsContentNode
                 
                 if( factoryVisibleWhenConditionClass != null )
                 {
-                    try
-                    {
-                        factoryVisibleWhenCondition = (SapphireCondition) factoryVisibleWhenConditionClass.newInstance();
-                    }
-                    catch( Exception e )
-                    {
-                        SapphireUiFrameworkPlugin.log( e );
-                    }
+                    final String parameter = def.getVisibleWhenConditionParameter().getText();
+                    factoryVisibleWhenCondition = SapphireCondition.create( this, factoryVisibleWhenConditionClass, parameter );
                     
                     if( factoryVisibleWhenCondition != null )
                     {
-                        final String parameter = def.getVisibleWhenConditionParameter().getText();
-                        factoryVisibleWhenCondition.init( new SapphirePartContext( this ), parameter );                
+                        this.allConditions.add( factoryVisibleWhenCondition );
                     }
                 }
                 
@@ -373,19 +360,7 @@ public final class MasterDetailsContentNode
     {
         if( this.labelProperty != null )
         {
-            final Method labelPropertyGetter = this.labelProperty.getGetterMethod();            
-            final Value<?> value;
-            
-            try
-            {
-                value = (Value<?>) labelPropertyGetter.invoke( this.modelElement );
-            }
-            catch( Exception e )
-            {
-                throw new RuntimeException( e );
-            }
-            
-            String label = value.getText( false );
+            String label = this.modelElement.read( this.labelProperty ).getText( false );
             
             if( label == null )
             {
@@ -572,117 +547,6 @@ public final class MasterDetailsContentNode
         getContentTree().setSelectedNode( this );
     }
     
-    public List<ActionGroup> getMenuActions()
-    {
-        if( this.menuActions == null )
-        {
-            this.menuActions = new ArrayList<ActionGroup>();
-            
-            final boolean isSameModelElementAsParent 
-                = ( this.parentNode != null ? this.modelElement == this.parentNode.getLocalModelElement() : false );
-            
-            final ActionGroup addDeleteActionGroup = new ActionGroup();
-            
-            if( ! getChildListProperties().isEmpty() )
-            {
-                addDeleteActionGroup.addAction( new NodeAddAction() );
-            }
-            
-            if( ! isSameModelElementAsParent && this.modelElement instanceof IRemovable )
-            {
-                addDeleteActionGroup.addAction( new NodeDeleteAction() );
-            }
-            
-            if( addDeleteActionGroup.getActions().size() > 0 )
-            {
-                this.menuActions.add( addDeleteActionGroup );
-            }
-            
-            if( ! isSameModelElementAsParent )
-            {
-                final IModelParticle parent = this.modelElement.getParent();
-                
-                if( parent instanceof ModelElementList<?> )
-                {
-                    final ActionGroup moveActionGroup = new ActionGroup();
-                    this.menuActions.add( moveActionGroup );
-
-                    moveActionGroup.addAction( new NodeMoveUpAction() );
-                    moveActionGroup.addAction( new NodeMoveDownAction() );
-                }
-
-                final ActionGroup goToSourceActionGroup = new ActionGroup();
-                goToSourceActionGroup.addAction( new NodeShowInSourceAction() );
-                this.menuActions.add( goToSourceActionGroup );
-            }
-
-            ActionsHostUtil.initActions( this.menuActions, this.definition.getActionSetDef() );
-            
-            for( ActionGroup group : this.menuActions )
-            {
-                for( Action action : group.getActions() )
-                {
-                    action.setPart( this );
-                }
-            }
-        }
-        
-        return this.menuActions;
-    }
-
-    public List<ActionGroup> getToolbarActions()
-    {
-        if( this.toolbarActions == null )
-        {
-            this.toolbarActions = new ArrayList<ActionGroup>();
-            
-            for( ActionGroup group : this.toolbarActions )
-            {
-                for( Action action : group.getActions() )
-                {
-                    action.setPart( this );
-                }
-            }
-        }
-        
-        return this.toolbarActions;
-    }
-    
-    @Override
-    public Action getAction( final String id )
-    {
-        for( ActionGroup group : getMenuActions() )
-        {
-            final Action action = group.getAction( id );
-            
-            if( action != null )
-            {
-                return action;
-            }
-        }
-
-        for( ActionGroup group : getToolbarActions() )
-        {
-            final Action action = group.getAction( id );
-            
-            if( action != null )
-            {
-                return action;
-            }
-        }
-        
-        final ISapphirePart parent = getParentPart();
-        
-        if( parent != null )
-        {
-            return parent.getAction( id );
-        }
-        else
-        {
-            return null;
-        }
-    }
-    
     public List<SapphireSection> getSections()
     {
         return this.sectionsReadOnly;
@@ -760,6 +624,12 @@ public final class MasterDetailsContentNode
     }
     
     @Override
+    public Set<String> getActionContexts()
+    {
+        return Collections.singleton( SapphireActionSystem.CONTEXT_EDITOR_PAGE_OUTLINE_NODE );
+    }
+
+    @Override
     protected IStatus computeValidationState()
     {
         final SapphireMultiStatus st = new SapphireMultiStatus();
@@ -830,6 +700,11 @@ public final class MasterDetailsContentNode
         for( SapphirePart child : getChildNodes() )
         {
             child.dispose();
+        }
+        
+        for( SapphireCondition condition : this.allConditions )
+        {
+            condition.dispose();
         }
     }
 

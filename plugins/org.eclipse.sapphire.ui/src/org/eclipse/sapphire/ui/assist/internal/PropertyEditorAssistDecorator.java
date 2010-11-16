@@ -21,9 +21,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.fieldassist.FieldDecoration;
@@ -34,7 +31,6 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.ui.SapphireCommands;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -106,10 +102,7 @@ public final class PropertyEditorAssistDecorator
                 @Override
                 public void mouseUp( final MouseEvent event )
                 {
-                    Point position = getControl().toDisplay( new Point( event.x, event.y ) );
-                    position = new Point( position.x + 5, position.y + 5 );
-                    
-                    openAssistDialog( position );
+                    openAssistDialog();
                 }
             }
         );
@@ -162,28 +155,29 @@ public final class PropertyEditorAssistDecorator
         }
         
         control.addMouseTrackListener( this.mouseTrackListener );
-        
-        final IHandler showAssistCommandHandler = new AbstractHandler() 
-        {
-            public Object execute( final ExecutionEvent event )
-            {
-                final Rectangle bounds = control.getBounds();
-                Point position = control.getParent().toDisplay( new Point( bounds.x, bounds.y ) );
-                position = new Point( position.x, position.y + bounds.height + 2 );
-                
-                openAssistDialog( position );
-                
-                return null;
-            }
-        };
-        
-        SapphireCommands.attachShowAssistHandler( control, showAssistCommandHandler );
     }
     
-    public void openAssistDialog( final Point position )
+    public void removeEditorControl( final Control control )
+    {
+        if( control instanceof Composite )
+        {
+            for( Control child : ( (Composite) control ).getChildren() )
+            {
+                removeEditorControl( child );
+            }
+        }
+        
+        control.removeMouseTrackListener( this.mouseTrackListener );
+    }
+
+    public void openAssistDialog()
     {
         if( this.assistContext != null && ! this.assistContext.isEmpty() )
         {
+            final Rectangle bounds = this.control.getBounds();
+            Point position = this.control.toDisplay( new Point( bounds.x, bounds.y ) );
+            position = new Point( position.x + bounds.width + 4, position.y + 2 );
+            
             final PropertyEditorAssistDialog dialog 
                 = new PropertyEditorAssistDialog( getShell(), position, this.assistContext );
             
@@ -202,12 +196,12 @@ public final class PropertyEditorAssistDecorator
         {
             if( this.property instanceof ValueProperty )
             {
-                final Value<?> value = (Value<?>) this.property.invokeGetterMethod( element );
+                final Value<?> value = element.read( (ValueProperty) this.property );
                 this.problem = value.validate();
             }
             else if( this.property instanceof ListProperty )
             {
-                final ModelElementList<?> list = (ModelElementList<?>) this.property.invokeGetterMethod( element );
+                final ModelElementList<?> list = element.read( (ListProperty) this.property );
                 this.problem = list.validate();
             }
             else

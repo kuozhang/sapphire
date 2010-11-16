@@ -11,56 +11,59 @@
 
 package org.eclipse.sapphire.samples.contacts;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IRemovable;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Transient;
+import org.eclipse.sapphire.modeling.TransientProperty;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
+import org.eclipse.sapphire.modeling.annotations.Documentation;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.ListPropertyCustomBinding;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
-import org.eclipse.sapphire.modeling.annotations.PossibleValuesProvider;
+import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.Validator;
 import org.eclipse.sapphire.modeling.validators.UniqueValueValidator;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBindingMapping;
+import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.samples.contacts.internal.ConnectionsListController;
 import org.eclipse.sapphire.samples.contacts.internal.ContactCategoryValuesProvider;
 import org.eclipse.sapphire.samples.contacts.internal.ContactMethods;
+import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Image( small = "org.eclipse.sapphire.samples/images/person.png" )
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface IContact
 
-    extends IModelElementForXml, IRemovable
+    extends IModelElement
 
 {
     ModelElementType TYPE = new ModelElementType( IContact.class );
 
     // *** Name ***
     
-    @XmlBinding( path = "@name" )
     @Label( standard = "name" )
     @NonNullValue
     @DependsOn( "*/Name" )
     @Validator( impl = UniqueValueValidator.class )
+    @XmlBinding( path = "@name" )
 
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
 
@@ -69,10 +72,11 @@ public interface IContact
     
     // *** Category ***
     
-    @XmlBinding( path = "%category" )
     @Label( standard = "category" )
-    @DefaultValue( "Personal" )
-    @PossibleValuesProvider( impl = ContactCategoryValuesProvider.class, invalidValueSeverity = IStatus.OK )
+    @DefaultValue( text = "Personal" )
+    @PossibleValues( service = ContactCategoryValuesProvider.class )
+    @XmlBinding( path = "%category" )
+    @Documentation( content = "This would be the help content for the category property." )
 
     ValueProperty PROP_CATEGORY = new ValueProperty( TYPE, "Category" );
 
@@ -81,8 +85,8 @@ public interface IContact
     
     // *** EMail ***
     
-    @XmlBinding( path = "e-mail" )
     @Label( standard = "E-Mail" )
+    @XmlBinding( path = "e-mail" )
 
     ValueProperty PROP_E_MAIL = new ValueProperty( TYPE, "EMail" );
 
@@ -92,11 +96,8 @@ public interface IContact
     // *** PhoneNumbers ***
     
     @Type( base = IPhoneNumber.class )
-    
-    @ListPropertyXmlBinding( path = "phone-numbers",
-                             mappings = { @ListPropertyXmlBindingMapping( element = "phone-number", type = IPhoneNumber.class ) } )
-                             
     @Label( standard = "phone numbers" )
+    @XmlListBinding( path = "phone-numbers", mappings = @XmlListBinding.Mapping( element = "phone-number", type = IPhoneNumber.class ) )
                              
     ListProperty PROP_PHONE_NUMBERS = new ListProperty( TYPE, "PhoneNumbers" );
     
@@ -105,11 +106,8 @@ public interface IContact
     // *** WebSites ***
     
     @Type( base = IWebSite.class )
-    
-    @ListPropertyXmlBinding( path = "web-sites",
-                             mappings = { @ListPropertyXmlBindingMapping( element = "web-site", type = IWebSite.class ) } )
-                             
     @Label( standard = "web sites" )
+    @XmlListBinding( path = "web-sites", mappings = @XmlListBinding.Mapping( element = "web-site", type = IWebSite.class ) )
                              
     ListProperty PROP_WEB_SITES = new ListProperty( TYPE, "WebSites" );
     
@@ -124,31 +122,40 @@ public interface IContact
     // *** Address ***
     
     @Type( base = IAddress.class )
+    @XmlBinding( path = "address" )
     
     ElementProperty PROP_ADDRESS = new ElementProperty( TYPE, "Address" );
 
-    IAddress getAddress();
+    ModelElementHandle<IAddress> getAddress();
 
     // *** Assistant ***
 
     @Type( base = IAssistant.class )
-    @XmlBinding( path = "assistant" )
     @Label( standard = "assistant" )
+    @XmlElementBinding( mappings = @XmlElementBinding.Mapping( element = "assistant", type = IAssistant.class ) )
     
     ElementProperty PROP_ASSISTANT = new ElementProperty( TYPE, "Assistant" );
 
-    IAssistant getAssistant();
-    IAssistant getAssistant( boolean createIfNecessary );
+    ModelElementHandle<IAssistant> getAssistant();
     
     // *** Connections ***
     
     @Label( standard = "connections" )
     @Type( base = IConnection.class )
-    @ListPropertyCustomBinding( impl = ConnectionsListController.class )
     @NoDuplicates
+    @CustomXmlListBinding( impl = ConnectionsListController.class )
                              
     ListProperty PROP_CONNECTIONS = new ListProperty( TYPE, "Connections" );
     
     ModelElementList<IConnection> getConnections();
+    
+    // *** Composite ***
+
+    @Type( base = Composite.class )
+
+    TransientProperty PROP_COMPOSITE = new TransientProperty( TYPE, "Composite" );
+
+    Transient<Composite> getComposite();
+    void setComposite( Composite value );
     
 }

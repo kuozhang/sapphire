@@ -14,26 +14,33 @@ package org.eclipse.sapphire.ui.renderers.swt;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_AUX_TEXT;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_AUX_TEXT_PROVIDER;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_EXPAND_VERTICALLY;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gd;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhhint;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhindent;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glspacing;
-import static org.eclipse.sapphire.ui.util.SwtUtil.hspan;
-import static org.eclipse.sapphire.ui.util.SwtUtil.valign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
-import org.eclipse.sapphire.ui.SapphireCommands;
+import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionGroup;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePartEvent;
 import org.eclipse.sapphire.ui.SapphirePartListener;
@@ -44,6 +51,8 @@ import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -67,6 +76,11 @@ public abstract class PropertyEditorRenderer
     private boolean spanBothColumns;
     
     protected AbstractBinding binding;
+    
+    private final SapphireActionGroup actions;
+    private final SapphireActionPresentationManager actionPresentationManager;
+    private final SapphireKeyboardActionPresentation actionPresentationKeyboard;
+    private final List<Runnable> onDisposeOperations = new ArrayList<Runnable>();
 
     public PropertyEditorRenderer( final SapphireRenderingContext context,
                                    final SapphirePropertyEditor part )
@@ -75,6 +89,10 @@ public abstract class PropertyEditorRenderer
         this.part = part;
         this.controls = new HashSet<Control>();
         this.spanBothColumns = false;
+        this.actions = part.getActions( part.getActionContext() );
+        this.actionPresentationManager = new SapphireActionPresentationManager( this.context, this.actions );
+        this.actionPresentationManager.setLabel( NLS.bind( Resources.actionsContextLabel, this.part.getProperty().getLabel( true, CapitalizationType.NO_CAPS, false ) ) );
+        this.actionPresentationKeyboard = new SapphireKeyboardActionPresentation( this.actionPresentationManager );
     }
     
     public SapphireRenderingContext getUiContext()
@@ -100,6 +118,16 @@ public abstract class PropertyEditorRenderer
     public SapphireImageCache getImageCache()
     {
         return this.part.getImageCache();
+    }
+    
+    public final SapphireActionGroup getActions()
+    {
+        return this.actions;
+    }
+    
+    public final SapphireActionPresentationManager getActionPresentationManager()
+    {
+        return this.actionPresentationManager;
     }
     
     protected boolean canExpandVertically()
@@ -151,7 +179,7 @@ public abstract class PropertyEditorRenderer
             final int hindent = this.part.getLeftMarginHint() + 9;
             
             this.auxTextControl = new Label( parent, SWT.NONE );
-            this.auxTextControl.setLayoutData( gdhindent( hspan( gdhfill(), this.spanBothColumns ? 2 : 1 ), hindent ) );
+            this.auxTextControl.setLayoutData( gdhindent( gdhspan( gdhfill(), this.spanBothColumns ? 2 : 1 ), hindent ) );
             this.auxTextControl.setForeground( parent.getDisplay().getSystemColor( SWT.COLOR_DARK_GRAY ) );
             
             addControl( this.auxTextControl );
@@ -194,6 +222,8 @@ public abstract class PropertyEditorRenderer
         };
         
         part.addListener( partListener );
+        
+        this.actionPresentationKeyboard.render();
         
         final DisposeListener disposeListener = new DisposeListener()
         {
@@ -243,8 +273,10 @@ public abstract class PropertyEditorRenderer
         
         if( this.spanBothColumns )
         {
-            gd = gdhindent( hspan( gd, 2 ), this.part.getLeftMarginHint() );
+            gd = gdhindent( gdhspan( gd, 2 ), this.part.getLeftMarginHint() );
         }
+        
+        gd = gdwhint( gd, 200 );
         
         final Composite composite = new Composite( parent, SWT.NONE );
         composite.setLayoutData( gd );
@@ -259,13 +291,13 @@ public abstract class PropertyEditorRenderer
             composite.setLayout( glspacing( glayout( count + 1, 0, 0 ), 5 ) );
             
             final Composite mainPropertyEditorComposite = new Composite( composite, SWT.NONE );
-            mainPropertyEditorComposite.setLayoutData( valign( gdfill(), SWT.CENTER ) );
+            mainPropertyEditorComposite.setLayoutData( gdvalign( gdfill(), SWT.CENTER ) );
             this.context.adapt( mainPropertyEditorComposite );
             
             for( SapphirePropertyEditor auxPropertyEditor : auxPropertyEditors )
             {
                 final Composite auxPropertyEditorComposite = new Composite( composite, SWT.NONE );
-                auxPropertyEditorComposite.setLayoutData( valign( gd(), SWT.CENTER ) );
+                auxPropertyEditorComposite.setLayoutData( gdvalign( gd(), SWT.CENTER ) );
                 auxPropertyEditorComposite.setLayout( glayout( 2, 0, 0 ) );
                 this.context.adapt( auxPropertyEditorComposite );
                 
@@ -279,6 +311,33 @@ public abstract class PropertyEditorRenderer
     protected final PropertyEditorAssistDecorator createDecorator( final Composite parent )
     {
         this.decorator = new PropertyEditorAssistDecorator( this.part, this.context, parent );
+        
+        final SapphireAction assistAction = this.actions.getAction( SapphireActionSystem.ACTION_ASSIST );
+        
+        final SapphireActionHandler assistActionHandler = new SapphireActionHandler()
+        {
+            @Override
+            protected Object run( final SapphireRenderingContext context )
+            {
+                PropertyEditorRenderer.this.decorator.openAssistDialog();
+                return null;
+            }
+        };
+        
+        assistActionHandler.init( assistAction, null );
+        assistAction.addHandler( assistActionHandler );
+        
+        addOnDisposeOperation
+        (
+            new Runnable()
+            {
+                public void run()
+                {
+                    assistAction.removeHandler( assistActionHandler );
+                }
+            }
+        );
+        
         return this.decorator;
     }
     
@@ -287,7 +346,16 @@ public abstract class PropertyEditorRenderer
         this.controls.add( control );
         
         control.setData( SapphirePropertyEditor.DATA_PROPERTY, getProperty() );
-        SapphireCommands.configurePropertyEditorContext( control );
+        
+        if( control instanceof Composite )
+        {
+            for( Control child : ( (Composite) control ).getChildren() )
+            {
+                addControl( child );
+            }
+        }
+        
+        this.actionPresentationKeyboard.attach( control );
     }
     
     protected void handlePropertyChangedEvent()
@@ -320,6 +388,32 @@ public abstract class PropertyEditorRenderer
     
     protected void handleDisposeEvent()
     {
+        for( Runnable op : this.onDisposeOperations )
+        {
+            try
+            {
+                op.run();
+            }
+            catch( Exception e )
+            {
+                SapphireUiFrameworkPlugin.log( e );
+            }
+        }
+    }
+    
+    protected final void addOnDisposeOperation( final Runnable op )
+    {
+        this.onDisposeOperations.add( op );
+    }
+    
+    private static final class Resources extends NLS
+    {
+        public static String actionsContextLabel;
+    
+        static
+        {
+            initializeMessages( PropertyEditorRenderer.class.getName(), Resources.class );
+        }
     }
     
 }

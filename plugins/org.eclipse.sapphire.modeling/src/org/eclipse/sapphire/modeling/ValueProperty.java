@@ -12,11 +12,9 @@
 package org.eclipse.sapphire.modeling;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -32,13 +30,10 @@ import org.eclipse.sapphire.modeling.annotations.EclipseWorkspacePath;
 import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
-import org.eclipse.sapphire.modeling.annotations.PossibleValuesFromModel;
-import org.eclipse.sapphire.modeling.annotations.PossibleValuesProvider;
-import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.modeling.java.JavaPackageName;
+import org.eclipse.sapphire.modeling.java.JavaTypeConstraints;
 import org.eclipse.sapphire.modeling.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.java.internal.JavaTypeNameValidator;
 import org.eclipse.sapphire.modeling.java.internal.QualifiedJavaIdentifierValueValidator;
@@ -92,8 +87,6 @@ public final class ValueProperty
         DOUBLE_KEYWORDS = Collections.unmodifiableSet( keywords );
     }
     
-    private final Method setterMethodGeneric;
-    private final Method setterMethodTyped;
     private final Set<ValueKeyword> keywords;
     
     public ValueProperty( final ModelElementType type,
@@ -113,44 +106,6 @@ public final class ValueProperty
                            final ValueProperty baseProperty )
     {
         super( type, propertyName, baseProperty );
-        
-        if( hasAnnotation( ReadOnly.class ) )
-        {
-            this.setterMethodGeneric = null;
-            this.setterMethodTyped = null;
-        }
-        else
-        {
-            final String propLowerCase = propertyName.toLowerCase();
-            final String setterMethodName = "set" + propLowerCase; //$NON-NLS-1$
-            Method setterGeneric = null;
-            Method setterTyped = null;
-            
-            for( Method method : type.getModelElementClass().getMethods() )
-            {
-                final String methodName = method.getName().toLowerCase();
-                
-                if( methodName.equals( setterMethodName ) )
-                {
-                    if( Arrays.equals( method.getParameterTypes(), new Class[] { String.class } ) )
-                    {
-                        setterGeneric = method;
-                    }
-                    else
-                    {
-                        setterTyped = method;
-                    }
-                }
-            }
-            
-            if( setterGeneric == null )
-            {
-                throw new IllegalStateException( propertyName );
-            }
-            
-            this.setterMethodGeneric = setterGeneric;
-            this.setterMethodTyped = setterTyped;
-        }
         
         // In the future, this could be generalized to make it possible for extenders that create their own
         // value types to define keywords. In fact, it should be possible to define keywords attached to a specific
@@ -178,49 +133,6 @@ public final class ValueProperty
         else
         {
             this.keywords = NO_KEYWORDS;
-        }
-    }
-    
-    public void invokeSetterMethod( final Object model,
-                                    final Object value )
-    {
-        if( this.setterMethodGeneric != null )
-        {
-            if( value == null || value instanceof String )
-            {
-                try
-                {
-                    this.setterMethodGeneric.invoke( model, value );
-                }
-                catch( Exception e )
-                {
-                    throw convertReflectiveInvocationException( e );
-                }
-            }
-            else
-            {
-                if( this.setterMethodTyped != null )
-                {
-                    try
-                    {
-                        this.setterMethodTyped.invoke( model, value );
-                    }
-                    catch( Exception e )
-                    {
-                        throw convertReflectiveInvocationException( e );
-                    }
-                }
-                else
-                {
-                    final String msg = NLS.bind( Resources.noTypedSetterMethod, getModelElementType().getModelElementClass().getName(), getName() );
-                    throw new RuntimeException( msg );
-                }
-            }
-        }
-        else
-        {
-            final String msg = NLS.bind( Resources.noSetterMethod, getModelElementType().getModelElementClass().getName(), getName() );
-            throw new RuntimeException( msg );
         }
     }
     
@@ -290,8 +202,8 @@ public final class ValueProperty
         }
         else if( Enum.class.isAssignableFrom( type ) )
         {
-        	EnumValueType enumValueType = null;
-        	
+            EnumValueType enumValueType = null;
+            
             for( Field field : type.getFields() )
             {
                 if( field.getName().equals( "TYPE" ) ) //$NON-NLS-1$
@@ -302,8 +214,8 @@ public final class ValueProperty
                         
                         if( fieldValue instanceof EnumValueType )
                         {
-                        	enumValueType = (EnumValueType) fieldValue;
-                        	break;
+                            enumValueType = (EnumValueType) fieldValue;
+                            break;
                         }
                     }
                     catch( IllegalAccessException e )
@@ -325,7 +237,7 @@ public final class ValueProperty
         {
             validators.add( new QualifiedJavaIdentifierValueValidator() );
         }
-        else if( JavaTypeName.class.isAssignableFrom( type ) )
+        else if( JavaTypeName.class.isAssignableFrom( type ) || hasAnnotation( JavaTypeConstraints.class ) )
         {
             validators.add( new QualifiedJavaIdentifierValueValidator() );
             validators.add( new JavaTypeNameValidator( this ) );
@@ -471,21 +383,12 @@ public final class ValueProperty
         return result;
     }
     
-    public boolean hasPossibleValuesProvider()
-    {
-        return hasAnnotation( PossibleValuesProvider.class ) || 
-               hasAnnotation( PossibleValues.class ) ||
-               hasAnnotation( PossibleValuesFromModel.class );
-    }
-    
     private static final class Resources
         
         extends NLS
 
     {
         public static String nullValueValidationMessage;
-        public static String noSetterMethod;
-        public static String noTypedSetterMethod;
         
         static
         {

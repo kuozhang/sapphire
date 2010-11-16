@@ -13,15 +13,16 @@ package org.eclipse.sapphire.ui.renderers.swt;
 
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL_ABOVE;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gd;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhindent;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdwhint;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glspacing;
-import static org.eclipse.sapphire.ui.util.SwtUtil.hspan;
-import static org.eclipse.sapphire.ui.util.SwtUtil.makeTableSortable;
-import static org.eclipse.sapphire.ui.util.SwtUtil.valign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
+import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.makeTableSortable;
+import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.suppressDashedTableEntryBorder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,13 +46,12 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IRemovable;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.PossibleValuesProviderImpl;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
@@ -119,7 +119,7 @@ public class CheckBoxListPropertyEditorRenderer
             throw new IllegalStateException();
         }
         
-        final PossibleValuesProviderImpl possibleValuesProvider = element.service().getPossibleValuesProvider( this.memberProperty );
+        final PossibleValuesService possibleValuesProvider = element.service( this.memberProperty, PossibleValuesService.class );
         
         // Create Controls
         
@@ -133,7 +133,7 @@ public class CheckBoxListPropertyEditorRenderer
         {
             label = new Label( parent, SWT.NONE );
             label.setText( listProperty.getLabel( false, CapitalizationType.FIRST_WORD_ONLY, true ) + ":" );
-            label.setLayoutData( gdhindent( hspan( valign( gd(), SWT.TOP ), showLabelAbove ? 2 : 1 ), baseIndent ) );
+            label.setLayoutData( gdhindent( gdhspan( gdvalign( gd(), SWT.TOP ), showLabelAbove ? 2 : 1 ), baseIndent ) );
             this.context.adapt( label );
         }
         
@@ -143,7 +143,7 @@ public class CheckBoxListPropertyEditorRenderer
         mainComposite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
         
         final PropertyEditorAssistDecorator decorator = createDecorator( mainComposite );
-        decorator.getControl().setLayoutData( valign( gd(), SWT.TOP ) );
+        decorator.getControl().setLayoutData( gdvalign( gd(), SWT.TOP ) );
         
         // Setting the whint in the following code is a hacky workaround for the problem
         // tracked by the following JFace bug:
@@ -168,6 +168,8 @@ public class CheckBoxListPropertyEditorRenderer
         
         this.context.adapt( mainComposite );
         decorator.addEditorControl( mainComposite );
+        
+        suppressDashedTableEntryBorder( this.table );
         
         // Bind to Model
         
@@ -364,7 +366,7 @@ public class CheckBoxListPropertyEditorRenderer
         super.handleListElementChangedEvent( event );
         this.tableViewer.refresh();
     }
-    
+
     private void handleCheckStateChangedEvent( final CheckStateChangedEvent event )
     {
         final Entry entry = (Entry) event.getElement();
@@ -403,7 +405,7 @@ public class CheckBoxListPropertyEditorRenderer
     
     private String readMemberProperty( final IModelElement element )
     {
-        final String text = element.service().read( this.memberProperty ).getText();
+        final String text = element.read( this.memberProperty ).getText();
         return ( text == null ? "" : text );
     }
     
@@ -441,7 +443,7 @@ public class CheckBoxListPropertyEditorRenderer
             }
             else
             {
-                final IStatus st = this.element.service().read( getMemberProperty() ).validate();
+                final IStatus st = this.element.read( getMemberProperty() ).validate();
                 image = getPart().getImageCache().getImage( getMemberType(), st.getSeverity() );
             }
             
@@ -470,17 +472,17 @@ public class CheckBoxListPropertyEditorRenderer
             if( this.element == null )
             {
                 this.element = getList().addNewElement();
-                this.element.service().write( getMemberProperty(), this.value );
+                this.element.write( getMemberProperty(), this.value );
             }
             else
             {
-                // Must null the element field before trying to remove it as remove will trigger
-                // property change event and it is possible for the resulting refresh to set the
-                // element field to a new value before returning.
+                // Must null the element field before trying to remove the element as remove will 
+                // trigger property change event and it is possible for the resulting refresh to 
+                // set the element field to a new value before returning.
                 
                 final IModelElement el = this.element;
                 this.element = null;
-                ( (IRemovable) el ).remove();
+                getList().remove( el );
             }
         }
     }

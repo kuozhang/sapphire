@@ -12,9 +12,9 @@
 package org.eclipse.sapphire.modeling.xml;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.xml.annotations.RootXmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespaces;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -58,7 +58,7 @@ public class StandardXmlNamespaceResolver
             }
         }
 
-        final RootXmlBinding rootXmlBindingAnnotation = this.type.getAnnotation( RootXmlBinding.class );
+        final XmlRootBinding rootXmlBindingAnnotation = this.type.getAnnotation( XmlRootBinding.class );
         
         if( rootXmlBindingAnnotation != null )
         {

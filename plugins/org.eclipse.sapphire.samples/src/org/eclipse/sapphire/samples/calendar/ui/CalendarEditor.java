@@ -14,15 +14,14 @@ package org.eclipse.sapphire.samples.calendar.ui;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.sapphire.modeling.IModel;
-import org.eclipse.sapphire.modeling.LayeredModelStore;
-import org.eclipse.sapphire.samples.calendar.CalendarFactory;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.samples.calendar.ICalendar;
-import org.eclipse.sapphire.samples.contacts.ContactsDatabaseFactory;
+import org.eclipse.sapphire.samples.calendar.integrated.internal.CalendarResource;
 import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage;
-import org.eclipse.sapphire.ui.xml.ModelStoreForXmlEditor;
+import org.eclipse.sapphire.ui.xml.XmlEditorResourceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -76,13 +75,11 @@ public final class CalendarEditor
     }
     
     @Override
-    protected IModel createModel()
+    protected IModelElement createModel()
     {
-        this.modelCalendar = CalendarFactory.load( new ModelStoreForXmlEditor( this, this.calendarSourceEditor ) );
-        this.modelContacts = ContactsDatabaseFactory.load( new ModelStoreForXmlEditor( this, this.contactsSourceEditor ) );
-
-        final LayeredModelStore modelStore = new LayeredModelStore( this.modelCalendar, this.modelContacts );
-        this.modelCalendarIntegrated = org.eclipse.sapphire.samples.calendar.integrated.CalendarFactory.load( modelStore );
+        this.modelCalendar = ICalendar.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.calendarSourceEditor ) ) );
+        this.modelContacts = IContactsDatabase.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.contactsSourceEditor ) ) );
+        this.modelCalendarIntegrated = org.eclipse.sapphire.samples.calendar.integrated.ICalendar.TYPE.instantiate( new CalendarResource( this.modelCalendar, this.modelContacts ) );
         
         return this.modelCalendarIntegrated;
     }

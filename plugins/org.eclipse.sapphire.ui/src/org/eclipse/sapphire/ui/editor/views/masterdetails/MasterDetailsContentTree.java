@@ -83,7 +83,7 @@ public final class MasterDetailsContentTree
     {
         if( this.root == null )
         {
-            final IMasterDetailsTreeNodeDef rootNodeDef = this.pageDef.getRootNode();
+            final IMasterDetailsTreeNodeDef rootNodeDef = this.pageDef.getRootNode().element();
             
             this.root = new MasterDetailsContentNode();
             this.root.init( this.page, this.rootModelElement, rootNodeDef, Collections.<String,String>emptyMap() );

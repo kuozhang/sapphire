@@ -14,10 +14,7 @@ package org.eclipse.sapphire.modeling.annotations.processor;
 import java.util.Collection;
 import java.util.Set;
 
-import org.eclipse.sapphire.modeling.annotations.GenerateStub;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBindingModelImpl;
-import org.eclipse.sapphire.modeling.xml.annotations.processor.GenerateXmlBindingProcessor;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 
 import com.sun.mirror.apt.AnnotationProcessor;
 import com.sun.mirror.apt.AnnotationProcessorEnvironment;
@@ -34,36 +31,32 @@ public final class Processor
     implements AnnotationProcessor
     
 {
-	private final AnnotationProcessorEnvironment _env;
-	private final GenerateStubProcessor generateStubProcessor;
-	private final GenerateXmlBindingProcessor generateImplProcessor;
-	private final ExternalizeStringResourcesProcessor generateLabelResourcesProcessor;
+    private final AnnotationProcessorEnvironment _env;
+    private final GenerateImplProcessor generateImplProcessor;
+    private final ExternalizeStringResourcesProcessor generateLabelResourcesProcessor;
 
-	public Processor( final Set<AnnotationTypeDeclaration> atds,
-			          final AnnotationProcessorEnvironment env ) 
-	{
-		this._env = env;
-		this.generateStubProcessor = new GenerateStubProcessor();
-		this.generateImplProcessor = new GenerateXmlBindingProcessor();
-		this.generateLabelResourcesProcessor = new ExternalizeStringResourcesProcessor();
-	}
+    public Processor( final Set<AnnotationTypeDeclaration> atds,
+                      final AnnotationProcessorEnvironment env ) 
+    {
+        this._env = env;
+        this.generateImplProcessor = new GenerateImplProcessor();
+        this.generateLabelResourcesProcessor = new ExternalizeStringResourcesProcessor();
+    }
 
-	public void process() 
-	{
-        process( GenerateStub.class.getName(), this.generateStubProcessor );
-	    process( GenerateXmlBindingModelImpl.class.getName(), this.generateImplProcessor );
-	    process( GenerateXmlBinding.class.getName(), this.generateImplProcessor );
-	    
-	    try
-	    {
-	        this.generateLabelResourcesProcessor.process( this._env );
-	    }
-	    catch( Exception e )
-	    {
-	        e.printStackTrace();
-	    }
-	}
-	
+    public void process() 
+    {
+        process( GenerateImpl.class.getName(), this.generateImplProcessor );
+        
+        try
+        {
+            this.generateLabelResourcesProcessor.process( this._env );
+        }
+        catch( Exception e )
+        {
+            e.printStackTrace();
+        }
+    }
+    
     private void process( final String annotationTypeName,
                           final SapphireAnnotationsProcessor processor ) 
     {
@@ -103,5 +96,5 @@ public final class Processor
             e.printStackTrace();
         }
     }
-	
+    
 }

@@ -11,13 +11,13 @@
 
 package org.eclipse.sapphire.ui.swt;
 
-import static org.eclipse.sapphire.ui.util.SwtUtil.gd;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhhint;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdwhint;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glspacing;
-import static org.eclipse.sapphire.ui.util.SwtUtil.valign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
 import java.util.Iterator;
 
@@ -99,7 +99,7 @@ public final class SapphireStatusDialog
         composite.setLayout( glspacing( glayout( 2, 10, 10 ), 10 ) );
         
         final Label imageLabel = new Label( composite, SWT.NONE );
-        imageLabel.setLayoutData( valign( gd(), SWT.TOP ) );
+        imageLabel.setLayoutData( gdvalign( gd(), SWT.TOP ) );
         
         if( this.status.getSeverity() == IStatus.ERROR )
         {

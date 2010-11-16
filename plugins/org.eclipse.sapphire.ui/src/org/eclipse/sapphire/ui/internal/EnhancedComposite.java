@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.internal;
 
-import static org.eclipse.sapphire.ui.util.SwtUtil.setEnabledOnChildren;
+import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.setEnabledOnChildren;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;

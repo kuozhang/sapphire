@@ -110,14 +110,10 @@ public final class FieldModel
         pw.print( this.type.getSimpleName() );
         pw.print( ' ' );
         pw.print( this.name );
-        pw.print( " = " );
         
-        if( this.value == null )
+        if( this.value != null )
         {
-            pw.print( "null" );
-        }
-        else
-        {
+            pw.print( " = " );
             pw.print( this.value );
         }
         

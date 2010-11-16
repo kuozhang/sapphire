@@ -14,8 +14,10 @@ package org.eclipse.sapphire.samples.calendar;
 import java.io.File;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.sapphire.modeling.xml.ModelStoreForXml;
-import org.eclipse.sapphire.samples.calendar.internal.Calendar;
+import org.eclipse.sapphire.modeling.ResourceStoreException;
+import org.eclipse.sapphire.modeling.WorkspaceFileResourceStore;
+import org.eclipse.sapphire.modeling.xml.RootXmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -24,18 +26,24 @@ import org.eclipse.sapphire.samples.calendar.internal.Calendar;
 public final class CalendarFactory
 {
     public static ICalendar load( final File file )
+    
+        throws ResourceStoreException
+        
     {
-        return load( new ModelStoreForXml( file ) );
+        return load( new XmlResourceStore( file ) );
     }
     
     public static ICalendar load( final IFile file )
+    
+        throws ResourceStoreException
+        
     {
-        return load( new ModelStoreForXml( file ) );
+        return load( new XmlResourceStore( new WorkspaceFileResourceStore( file ) ) );
     }
     
-    public static ICalendar load( final ModelStoreForXml modelStore )
+    public static ICalendar load( final XmlResourceStore resourceStore )
     {
-        return new Calendar( modelStore );
+        return ICalendar.TYPE.instantiate( new RootXmlResource( resourceStore ) );
     }
     
 }

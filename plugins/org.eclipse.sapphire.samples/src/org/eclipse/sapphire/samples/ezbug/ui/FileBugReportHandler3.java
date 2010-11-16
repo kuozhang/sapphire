@@ -16,10 +16,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.sapphire.modeling.ByteArrayModelStore;
-import org.eclipse.sapphire.modeling.xml.ModelStoreForXml;
 import org.eclipse.sapphire.samples.ezbug.IFileBugReportOp;
-import org.eclipse.sapphire.samples.ezbug.internal.FileBugReportOp;
 import org.eclipse.sapphire.ui.swt.SapphireWizard;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -41,8 +38,8 @@ public class FileBugReportHandler3
     {
         final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow( event );
         
-        final IFileBugReportOp op = new FileBugReportOp( new ModelStoreForXml( new ByteArrayModelStore() ) );
-        op.getBugReport( true );  // Force creation of the bug report.
+        final IFileBugReportOp op = IFileBugReportOp.TYPE.instantiate();
+        op.getBugReport().element( true );  // Force creation of the bug report.
         
         final SapphireWizard<IFileBugReportOp> wizard 
             = new SapphireWizard<IFileBugReportOp>( op, "org.eclipse.sapphire.samples/sdef/EzBug.sdef!wizard" );

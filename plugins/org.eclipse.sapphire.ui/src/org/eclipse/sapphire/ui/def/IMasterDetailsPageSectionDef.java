@@ -13,15 +13,15 @@ package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DefaultValueProvider;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.ui.def.internal.MasterDetailsPageSectionDefLabelDefaultValueProvider;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface IMasterDetailsPageSectionDef
 
@@ -32,7 +32,7 @@ public interface IMasterDetailsPageSectionDef
     
     // *** Label ***
     
-    @DefaultValueProvider( impl = MasterDetailsPageSectionDefLabelDefaultValueProvider.class )
+    @DefaultValue( service = MasterDetailsPageSectionDefLabelDefaultValueProvider.class )
     
     ValueProperty PROP_LABEL = new ValueProperty( TYPE, ISapphireSectionDef.PROP_LABEL );
     

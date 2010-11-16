@@ -7,15 +7,18 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
 
-import org.eclipse.help.HelpSystem;
-import org.eclipse.help.IContext;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.internal.SapphireHelpContext;
+import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
+import org.eclipse.swt.events.HelpEvent;
+import org.eclipse.swt.events.HelpListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -29,28 +32,37 @@ import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 
 public class SapphireRenderingContext 
 {
-    private final SapphirePart part;
+    private final ISapphirePart part;
     private final SapphireRenderingContext parent;
+    protected Shell shell;
     protected Composite composite;
-    private String helpContextIdPrefix;
     
-    public SapphireRenderingContext( final SapphirePart part,
+    public SapphireRenderingContext( final ISapphirePart part,
                                      final Composite composite )
     {
         this( part, null, composite );
     }
     
-    public SapphireRenderingContext( final SapphirePart part,
+    public SapphireRenderingContext( final ISapphirePart part,
                                      final SapphireRenderingContext parent,
                                      final Composite composite )
     {
         this.part = part;
         this.parent = parent;
+        this.shell = composite.getShell();
         this.composite = composite;
-        this.helpContextIdPrefix = null;
     }
     
-    public SapphirePart getPart()
+    public SapphireRenderingContext( final ISapphirePart part,
+                                     final Shell shell )
+    {
+        this.part = part;
+        this.parent = null;
+        this.shell = shell;
+        this.composite = null;
+    }
+    
+    public ISapphirePart getPart()
     {
         return this.part;
     }
@@ -62,12 +74,12 @@ public class SapphireRenderingContext
     
     public Shell getShell()
     {
-        return this.composite.getShell();
+        return this.shell;
     }
     
     public Display getDisplay()
     {
-        return this.composite.getDisplay();
+        return this.shell.getDisplay();
     }
     
     public Composite getComposite()
@@ -111,81 +123,20 @@ public class SapphireRenderingContext
                                final IModelElement modelElement,
                                final ModelProperty property )
     {
-        final String prefix = getHelpContextIdPrefix();
-
-        if( prefix != null )
+        final SapphireHelpContext context = new SapphireHelpContext(modelElement, property);
+        if (context.getText() != null || (context.getRelatedTopics() != null && context.getRelatedTopics().length > 0)) 
         {
-            String helpContextId = null;
-            ModelProperty p = property;
-            
-            while( p != null ) 
+            control.addHelpListener(new HelpListener() 
             {
-                final StringBuilder buf = new StringBuilder();
-                
-                buf.append( prefix );
-                buf.append( getUnqualifiedTypeName( p.getModelElementType() ) );
-                buf.append( '-' );
-                buf.append( property.getName() );
-                
-                IContext context = HelpSystem.getContext( buf.toString() );
-                
-                if( context != null ) 
+                public void helpRequested(HelpEvent event) 
                 {
-                    helpContextId = buf.toString();
-                    break;
+                    // determine a location in the upper right corner of the widget
+                    Point point = SapphireHelpSystem.computePopUpLocation(event.widget.getDisplay());
+                    // display the help
+                    PlatformUI.getWorkbench().getHelpSystem().displayContext(context, point.x, point.y);
                 }
-                
-                p = p.getBase();
-            }
-            
-            if( helpContextId == null )
-            {
-                final ModelElementType type = ModelElementType.getModelElementType( modelElement.getClass() );
-                final StringBuilder buf = new StringBuilder();
-                
-                buf.append( prefix );
-                buf.append( getUnqualifiedTypeName( type ) );
-                
-                IContext context = HelpSystem.getContext( buf.toString() );
-                
-                if( context != null ) 
-                {
-                    helpContextId = buf.toString();
-                }
-            }
-            
-            if( helpContextId != null )
-            {
-                PlatformUI.getWorkbench().getHelpSystem().setHelp( control, helpContextId );
-            }
+            });
         }
-    }
-    
-    protected String getHelpContextIdPrefix()
-    {
-        if( this.helpContextIdPrefix != null )
-        {
-            return this.helpContextIdPrefix;
-        }
-        else if( this.parent != null )
-        {
-            return this.parent.getHelpContextIdPrefix( );
-        }
-
-        return null;
-    }
-    
-    public void setHelpContextIdPrefix( final String helpContextIdPrefix )
-    {
-        this.helpContextIdPrefix = helpContextIdPrefix;
-    }
-    
-    private String getUnqualifiedTypeName( final ModelElementType type )
-    {
-        final String className = type.getModelElementClass().getName();
-        final int lastDot = className.lastIndexOf( '.' );
-        
-        return ( lastDot == -1 ? className : className.substring( lastDot + 1 ) );
     }
     
 }

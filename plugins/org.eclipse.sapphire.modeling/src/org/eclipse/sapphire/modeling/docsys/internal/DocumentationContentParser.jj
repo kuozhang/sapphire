@@ -1,0 +1,150 @@
+/******************************************************************************
+ * Copyright (c) 2010 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************/
+
+PARSER_BEGIN( DocumentationContentParser )
+    package org.eclipse.sapphire.modeling.docsys.internal;
+    
+    import org.eclipse.sapphire.modeling.docsys.*;
+    
+    public class DocumentationContentParser
+    {
+    }
+PARSER_END( DocumentationContentParser )
+
+TOKEN : { < BR : "[br/]" > }
+TOKEN : { < PBR : "[pbr/]" > }
+TOKEN : { < LI_OPEN : "[li]" > }
+TOKEN : { < LI_CLOSE : "[/li]" > }
+TOKEN : { < UL_OPEN : "[ul]" > }
+TOKEN : { < UL_CLOSE : "[/ul]" > }
+TOKEN : { < OL_OPEN : "[ol]" > }
+TOKEN : { < OL_CLOSE : "[/ol]" > }
+TOKEN : { < BOLD_OPEN : "[b]" > }
+TOKEN : { < BOLD_CLOSE : "[/b]" > }
+TOKEN : { < CHARACTER : ~[] > }
+
+DocumentationContent Start() :
+{
+    DocumentationContent content = new DocumentationContent();
+    DocumentationPart child = null;
+}
+{
+    (
+        child = Part()
+        {
+            content.addChild( child );
+        }
+    )*
+    { 
+        return content; 
+    }
+}
+
+DocumentationPart Part() :
+{
+    DocumentationPart part = null;
+    ListPart list = null;
+    ListItem item = null;
+    Token token = null;
+}
+{
+    (
+        <BR>
+        {
+            part = new LineBreakPart();
+        }
+    |
+        <PBR>
+        {
+            part = new ParagraphBreakPart();
+        }
+    |
+        <BOLD_OPEN>
+        {
+            part = new BoldPart( true );
+        }
+    |
+        <BOLD_CLOSE>
+        {
+            part = new BoldPart( false );
+        }
+    |
+        <UL_OPEN>
+        {
+            list = new UnorderedListPart();
+            part = list;
+        }
+        (
+            item = ListItem()
+            {
+                list.addItem( item );
+            }
+        )*
+        <UL_CLOSE>
+    |
+        <OL_OPEN>
+        {
+            list = new OrderedListPart();
+            part = list;
+        }
+        (
+            item = ListItem()
+            {
+                list.addItem( item );
+            }
+        )*
+        <OL_CLOSE>
+    |
+        part = Text()
+    )
+    {
+        return part;
+    }
+}
+
+ListItem ListItem() :
+{
+    ListItem item = null;
+    DocumentationPart child = null;
+}
+{
+    <LI_OPEN>
+    {
+        item = new ListItem();
+    }
+    (
+        child = Part()
+        {
+            item.addChild( child );
+        }
+    )*
+    <LI_CLOSE>
+    {
+        return item;
+    }
+}
+
+TextPart Text() :
+{
+    StringBuilder buf = new StringBuilder();
+    Token token = null;
+}
+{
+    (
+        token = <CHARACTER>
+        {
+            buf.append( token.image );
+        }
+    )+
+    {
+        return new TextPart( buf.toString() );
+    }
+}

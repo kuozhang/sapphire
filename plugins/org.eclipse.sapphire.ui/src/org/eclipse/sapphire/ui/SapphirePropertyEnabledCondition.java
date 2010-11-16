@@ -23,18 +23,18 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 
 public class SapphirePropertyEnabledCondition
 
-    extends SapphireCondition
+    extends SapphireModelCondition
     
 {
     private ModelProperty property;
     
     @Override
-    public void init( final SapphirePartContext context,
-                      final String parameter )
+    public void initCondition( final ISapphirePart part,
+                               final String parameter )
     {
-        super.init( context, parameter );
+        super.init( part, parameter );
         
-        final IModelElement element = this.context.getModelElement();
+        final IModelElement element = part.getModelElement();
         this.property = element.getModelElementType().getProperty( parameter );
     }
 
@@ -43,7 +43,7 @@ public class SapphirePropertyEnabledCondition
     {
         if( this.property != null )
         {
-            final IModelElement element = this.context.getModelElement();
+            final IModelElement element = getPart().getModelElement();
             return element.isPropertyEnabled( this.property );
         }
 

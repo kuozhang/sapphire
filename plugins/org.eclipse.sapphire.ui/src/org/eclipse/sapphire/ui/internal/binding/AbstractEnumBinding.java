@@ -74,7 +74,7 @@ public abstract class AbstractEnumBinding
         if( index >= 0 && index < this.enumValues.length )
         {
             final Enum<?> newValue = this.enumValues[ index ];
-            getModelElement().service().write( getProperty(), newValue );
+            getModelElement().write( getProperty(), newValue );
             removeMalformedItem();
         }
     }

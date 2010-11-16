@@ -49,7 +49,7 @@ public final class SapphireEnumControlledPageBook
         final String className = panelKeyString.substring( 0, lastDot );
         final String enumItemName = panelKeyString.substring( lastDot + 1 );
         
-        final ISapphireUiDef rootdef = (ISapphireUiDef) this.definition.getModel();
+        final ISapphireUiDef rootdef = this.definition.nearest( ISapphireUiDef.class );
         final Class<?> classObject = rootdef.resolveClass( className );
         final Field field;
         
@@ -86,7 +86,7 @@ public final class SapphireEnumControlledPageBook
     private void updateCurrentPage()
     {
         final IModelElement modelElement = getModelElement();
-        final Value<?> newEnumItemValue = (Value<?>) this.property.invokeGetterMethod( modelElement );
+        final Value<?> newEnumItemValue = modelElement.read( this.property );
         final Enum<?> newEnumItem = (Enum<?>) newEnumItemValue.getContent( true );
 
         changePage( modelElement, newEnumItem );

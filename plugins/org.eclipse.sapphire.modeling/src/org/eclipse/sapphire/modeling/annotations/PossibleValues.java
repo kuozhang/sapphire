@@ -17,6 +17,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.sapphire.modeling.PossibleValuesService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,8 +28,20 @@ import org.eclipse.core.runtime.IStatus;
 
 public @interface PossibleValues
 {
-    String[] values();
+    String[] values() default {};
+
+    /**
+     * Specifies that the set of possible values for a given value property comes from values
+     * located at the specified path in the model. The path must resolve to a value property.
+     * 
+     * <p>Note that this annotation creates an implied DependsOn relationship to the specified 
+     * path. It is not necessary to explicitly specify this relationship.</p>
+     */
+    
+    String property() default "";
     String invalidValueMessage() default "";
     int invalidValueSeverity() default IStatus.ERROR;
     boolean caseSensitive() default true;
+    Class<? extends PossibleValuesService> service() default PossibleValuesService.class;
+    String[] params() default {};
 }

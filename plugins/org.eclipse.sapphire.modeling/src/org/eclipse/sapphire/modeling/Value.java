@@ -40,7 +40,7 @@ public class Value<T>
                   final ValueProperty property,
                   final String value )
     {
-        super( parent );
+        super( parent, parent.resource() );
         
         this.property = property;
         this.raw = normalize( value );
@@ -88,16 +88,16 @@ public class Value<T>
     {
         if( ! this.defaultValueInitialized )
         {
-            this.defaultText = normalize( getParent().service().getDefaultValue( this.property ) );
+            this.defaultText = normalize( parent().service( this.property, DefaultValueService.class ).getDefaultValue() );
             this.defaultContent = parse( this.property.decodeKeywords( this.defaultText ) );
             this.defaultValueInitialized = true;
         }
     }
 
     @Override
-    public IModelElement getParent()
+    public IModelElement parent()
     {
-        return (IModelElement) super.getParent();
+        return (IModelElement) super.parent();
     }
     
     public ValueProperty getProperty()
@@ -141,8 +141,12 @@ public class Value<T>
         
         if( originalText != null )
         {
-            final ModelStore modelStore = getModel().getModelStore();
-            return modelStore.getLocalizedText( originalText, locale );
+            final Resource resource = resource();
+            
+            if( resource != null )
+            {
+                return resource.getLocalizedText( originalText, locale );
+            }
         }
         
         return null;
@@ -220,7 +224,7 @@ public class Value<T>
         
         final Value<?> value = (Value<?>) val;
         
-        return ( getParent() == value.getParent() ) && ( this.property == value.property ) &&
+        return ( parent() == value.parent() ) && ( this.property == value.property ) &&
                ( MiscUtil.equal( this.raw, value.raw ) ) && equal( this.valres, value.valres ) &&
                ( MiscUtil.equal( this.defaultText, value.defaultText ) ); 
     }
@@ -228,7 +232,7 @@ public class Value<T>
     @Override
     public int hashCode()
     {
-        int hashCode = getParent().hashCode();
+        int hashCode = parent().hashCode();
         hashCode = hashCode ^ this.property.hashCode();
         hashCode = hashCode ^ ( this.raw == null ? 1 : this.raw.hashCode() );
         
@@ -251,7 +255,7 @@ public class Value<T>
         }
         else
         {
-            return (T) getParent().service( ValueSerializationService.class ).decode( this.property, str );
+            return (T) parent().service( this.property, ValueSerializationService.class ).decode( str );
         }
     }
     

@@ -7,18 +7,25 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - Bugzilla 329102 -  excess scroll space in editor sections
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhindent;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdwhint;
-import static org.eclipse.sapphire.ui.util.SwtUtil.hspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -34,10 +41,43 @@ public final class SapphireLabel
     {
         final ISapphireLabelDef def = (ISapphireLabelDef) this.definition;
         
+        final GridData gd = gdhindent( gdwhint( gdhspan( gdhfill(), 2 ), 100 ), 9 ); 
         final Label l = new Label( context.getComposite(), SWT.WRAP );
-        l.setLayoutData( gdhindent( gdwhint( hspan( gdhfill(), 2 ), 100 ), 9 ) );
+        l.setLayoutData( gd );
         l.setText( def.getText().getLocalizedText() );
         context.adapt( l );
+        
+        l.addControlListener(new ControlListener() {
+            public void controlMoved(ControlEvent e) {
+            }
+            public void controlResized(ControlEvent e) {
+                if (l.getBounds().width != gd.widthHint) {
+                    gd.widthHint = l.getBounds().width - 20;
+                    relayout(context.getComposite());
+                }
+            }
+        });
+    }
+    
+    private void relayout(final Composite composite) {
+        composite.getDisplay().asyncExec(new Runnable() {
+            public void run() {
+                if (composite.isDisposed())
+                    return;
+                Composite parent = composite;
+                while (parent != null) {
+                    if (parent instanceof SharedScrolledComposite) {
+                        parent.layout(true, true);
+                        ((SharedScrolledComposite)parent).reflow(true);
+                        return;
+                    } else if (parent instanceof Shell) {
+                        parent.layout(true, true);
+                        return;
+                    }
+                    parent = parent.getParent();
+                }
+            }
+        });
     }
     
 }

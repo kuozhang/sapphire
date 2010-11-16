@@ -1,0 +1,127 @@
+/******************************************************************************
+ * Copyright (c) 2010 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************/
+
+package org.eclipse.sapphire.ui.def;
+
+import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.ReferenceValue;
+import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
+import org.eclipse.sapphire.modeling.annotations.Documentation;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.LongString;
+import org.eclipse.sapphire.modeling.annotations.MustExist;
+import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.java.JavaTypeConstraints;
+import org.eclipse.sapphire.modeling.java.JavaTypeKind;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
+import org.eclipse.sapphire.ui.def.internal.SapphireActionHandlerFactoryDefMethods;
+
+/**
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ */
+
+@Label( standard = "action handler factory" )
+@GenerateImpl
+
+public interface ISapphireActionHandlerFactoryDef
+
+    extends ISapphireConditionHostDef, ISapphireActionContextsHostDef
+    
+{
+    ModelElementType TYPE = new ModelElementType( ISapphireActionHandlerFactoryDef.class );
+    
+    // *** Action ***
+    
+    @Label( standard = "action" )
+    @NonNullValue
+    //@PossibleValuesFromModel( path = "/Actions/Id", invalidValueSeverity = IStatus.OK )
+    @XmlBinding( path = "action" )
+    
+    @Documentation( content = "The ID of the action that this factory is to provide handlers for." )
+    
+    ValueProperty PROP_ACTION = new ValueProperty( TYPE, "Action" );
+    
+    Value<String> getAction();
+    void setAction( String value );
+    
+    // *** Description ***
+    
+    @LongString
+    @Label( standard = "description" )
+    @XmlValueBinding( path = "description", collapseWhitespace = true )
+    
+    @Documentation( content = "Provides information about the action handler factory. The " +
+                              "description should be in the form of properly capitalized and punctuated sentences." )
+    
+    ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );
+    
+    Value<String> getDescription();
+    void setDescription( String value );
+    
+    // *** ImplClass ***
+    
+    @Reference( target = Class.class )
+    @Label( standard = "implementation class" )
+    @NonNullValue
+    @JavaTypeConstraints( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.ui.SapphireActionHandlerFactory" )
+    @MustExist
+    @XmlBinding( path = "impl" )
+    
+    @Documentation( content = "The action handler factory implementation class. Must extend SapphireActionHandlerFactory." )
+
+    ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );
+    
+    ReferenceValue<Class<?>> getImplClass();
+    void setImplClass( String implClass );
+    
+    // *** Params ***
+    
+    @Type( base = ISapphireParam.class )
+    @Label( standard = "params" )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "param", type = ISapphireParam.class ) )
+    
+    @Documentation( content = "Parameters that can be interpreted by the action handler factory." )
+    
+    ListProperty PROP_PARAMS = new ListProperty( TYPE, "Params" );
+    
+    ModelElementList<ISapphireParam> getParams();
+    
+    // *** Method: getParam ***
+    
+    @DelegateImplementation( SapphireActionHandlerFactoryDefMethods.class )
+    
+    String getParam( String name );
+    
+    // *** ConditionClass ***
+    
+    @Documentation( content = "A condition allows use of arbitrary logic to control whether the action handler factory is going to be " +
+                              "available or not in a given situation. Conditions must extends SapphireCondition class." )
+
+    ValueProperty PROP_CONDITION_CLASS = new ValueProperty( TYPE, ISapphireActionSystemPartDef.PROP_CONDITION_CLASS );
+
+    // *** Contexts ***
+    
+    @Documentation( content = "Every UI part that supports actions will define one or more context. An action handler factory can be " +
+                              "constrained to apply only to the specified contexts. If no context is specified, the " +
+                              "action handler factory will be treated as applicable to all contexts." )
+
+    ListProperty PROP_CONTEXTS = new ListProperty( TYPE, ISapphireActionSystemPartDef.PROP_CONTEXTS );
+    
+}

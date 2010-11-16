@@ -13,7 +13,6 @@ package org.eclipse.sapphire.modeling;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,8 +24,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
-import org.eclipse.sapphire.modeling.annotations.EnabledByBooleanProperty;
-import org.eclipse.sapphire.modeling.annotations.EnabledByEnumProperty;
+import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
 import org.eclipse.sapphire.modeling.annotations.PropertyListeners;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
@@ -57,7 +55,6 @@ public abstract class ModelProperty
     private final List<ModelElementType> allPossibleTypes;
     private final List<ModelElementType> allPossibleTypesReadOnly;
     
-    private final Method getterMethod;
     private final Map<Class<? extends Annotation>,Annotation> annotations;
     private ModelPropertyValidator<?> validator;
     private boolean isValidatorInitialized;
@@ -75,32 +72,6 @@ public abstract class ModelProperty
             this.propertyName = propertyName;
             this.baseProperty = baseProperty;
             this.dependencies = null;
-            
-            final String propLowerCase = this.propertyName.toLowerCase();
-            
-            final String alt1 = "get" + propLowerCase; //$NON-NLS-1$
-            final String alt2 = "is" + propLowerCase; //$NON-NLS-1$
-            
-            Method getter = null;
-            
-            for( Method method : this.modelElementType.getModelElementClass().getMethods() )
-            {
-                final String methodName = method.getName().toLowerCase();
-                
-                if( ( methodName.equals( alt1 ) || methodName.equals( alt2 ) ) 
-                    && method.getParameterTypes().length == 0 )
-                {
-                    getter = method;
-                    break;
-                }
-            }
-            
-            if( getter == null )
-            {
-                throw new IllegalStateException( propertyName );
-            }
-            
-            this.getterMethod = getter;
             this.annotations = new HashMap<Class<? extends Annotation>,Annotation>();
             
             gatherAnnotations();
@@ -177,7 +148,7 @@ public abstract class ModelProperty
             throw e;
         }
         
-        if( this instanceof ValueProperty )
+        if( ( this instanceof ValueProperty ) || ( this instanceof TransientProperty ) )
         {
             this.type = null;
             this.allPossibleTypes = Collections.emptyList();
@@ -247,45 +218,6 @@ public abstract class ModelProperty
     public ModelProperty getBase()
     {
         return this.baseProperty;
-    }
-    
-    public Method getGetterMethod()
-    {
-        return this.getterMethod;
-    }
-    
-    @SuppressWarnings( "unchecked" )
-    
-    public <T> T invokeGetterMethod( final Object model )
-    {
-        try
-        {
-            return (T) this.getterMethod.invoke( model );
-        }
-        catch( Exception e )
-        {
-            final Throwable cause = e.getCause();
-            
-            if( cause instanceof EditFailedException )
-            {
-                throw (EditFailedException) cause;
-            }
-            else
-            {
-                final Class<?> expectedClass = getModelElementType().getModelElementClass();
-                final Class<?> actualClass = model.getClass();
-                
-                final StringBuilder buf = new StringBuilder();
-                
-                buf.append( "Expected: " ); //$NON-NLS-1$
-                buf.append( expectedClass.getName() );
-                buf.append( '\n' );
-                buf.append( "Actual: " ); //$NON-NLS-1$
-                buf.append( actualClass.getName() );
-                
-                throw new RuntimeException( buf.toString(), cause );
-            }
-        }
     }
     
     @Override
@@ -569,18 +501,11 @@ public abstract class ModelProperty
                 }
             }
             
-            final EnabledByBooleanProperty enabledByBooleanProperty = getAnnotation( EnabledByBooleanProperty.class );
+            final Enablement enablementAnnotation = getAnnotation( Enablement.class );
             
-            if( enabledByBooleanProperty != null )
+            if( enablementAnnotation != null && enablementAnnotation.property().length() > 0 )
             {
-                dependenciesAsStrings.add( enabledByBooleanProperty.value() );
-            }
-            
-            final EnabledByEnumProperty enabledByEnumProperty = getAnnotation( EnabledByEnumProperty.class );
-            
-            if( enabledByEnumProperty != null )
-            {
-                dependenciesAsStrings.add( enabledByEnumProperty.property() );
+                dependenciesAsStrings.add( enablementAnnotation.property() );
             }
             
             final Set<ModelPath> dependencies = new HashSet<ModelPath>();

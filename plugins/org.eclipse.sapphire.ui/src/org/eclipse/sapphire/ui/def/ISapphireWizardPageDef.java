@@ -16,18 +16,17 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.internal.ImageReferenceResolver;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Label( standard = "wizard page" )
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface ISapphireWizardPageDef
 
@@ -58,7 +57,7 @@ public interface ISapphireWizardPageDef
     
     // *** Image ***
     
-    @Reference( target = ImageDescriptor.class, resolver = ImageReferenceResolver.class )
+    @Reference( target = ImageDescriptor.class )
     @Label( standard = "image" )
     @XmlBinding( path = "image" )
     

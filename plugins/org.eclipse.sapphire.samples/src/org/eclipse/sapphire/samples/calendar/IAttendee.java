@@ -11,29 +11,28 @@
 
 package org.eclipse.sapphire.samples.calendar;
 
-import org.eclipse.sapphire.modeling.IRemovable;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBinding
+@GenerateImpl
 @Image( small = "org.eclipse.sapphire.samples/images/person.png" )
 
 public interface IAttendee
 
-    extends IModelElementForXml, IRemovable
+    extends IModelElement
 
 {
     ModelElementType TYPE = new ModelElementType( IAttendee.class );
@@ -53,7 +52,7 @@ public interface IAttendee
     
     @Type( base = AttendeeType.class )
     @Label( standard = "type" )
-    @DefaultValue( "REQUIRED" )
+    @DefaultValue( text = "REQUIRED" )
     @XmlBinding( path = "type" )
 
     ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DefaultXmlBindingTestModel>
+    <ValuePropertyA>aaaa</ValuePropertyA>
+    <ValuePropertyB>bbbb</ValuePropertyB>
+    <ListPropertyA>
+        <DefaultXmlBindingTestModelChildA>
+            <ValuePropertyA>cccc</ValuePropertyA>
+        </DefaultXmlBindingTestModelChildA>
+        <DefaultXmlBindingTestModelChildB>
+            <ValuePropertyB>dddd</ValuePropertyB>
+        </DefaultXmlBindingTestModelChildB>
+        <DefaultXmlBindingTestModelChildA>
+            <ValuePropertyA>eeee</ValuePropertyA>
+        </DefaultXmlBindingTestModelChildA>
+    </ListPropertyA>
+    <ElementPropertyA>
+        <DefaultXmlBindingTestModelChildB>
+            <ValuePropertyB>ffff</ValuePropertyB>
+        </DefaultXmlBindingTestModelChildB>
+    </ElementPropertyA>
+</DefaultXmlBindingTestModel>

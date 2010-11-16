@@ -11,25 +11,25 @@
 
 package org.eclipse.sapphire.tests.modeling.xml;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.xml.IModelForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBindingModelImpl;
-import org.eclipse.sapphire.modeling.xml.annotations.RootXmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBindingModelImpl
-@RootXmlBinding( elementName = "test-root" )
+@GenerateImpl
+@XmlRootBinding( elementName = "test-root" )
 
 public interface IXmlBindingTestModel
 
-    extends IModelForXml
+    extends IModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( IXmlBindingTestModel.class );

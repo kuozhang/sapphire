@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2010 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<xsd:schema 
+  targetNamespace="http://www.eclipse.org/sapphire/xmlns/extension" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
+
+  <xsd:element name="extension">
+    <xsd:complexType>
+      <xsd:choice maxOccurs="unbounded" minOccurs="0">
+        <xsd:element ref="model-element-service"/>
+        <xsd:element ref="model-property-service"/>
+        <xsd:element ref="value-serializer"/>
+        <xsd:element ref="action"/>
+        <xsd:element ref="action-handler"/>
+        <xsd:element ref="action-handler-factory"/>
+      </xsd:choice>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="model-element-service">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="description" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+        <xsd:element name="type" type="xsd:string" maxOccurs="1" minOccurs="1"/>
+        <xsd:element name="factory" type="xsd:string" maxOccurs="1" minOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="model-property-service">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="description" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+        <xsd:element name="type" type="xsd:string" maxOccurs="1" minOccurs="1"/>
+        <xsd:element name="factory" type="xsd:string" maxOccurs="1" minOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="value-serializer">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="description" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+        <xsd:element name="type" type="xsd:string" maxOccurs="1" minOccurs="1"/>
+        <xsd:element name="impl" type="xsd:string" maxOccurs="1" minOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  
+  <xsd:element name="action">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="id" type="xsd:string" maxOccurs="1" minOccurs="1"/>
+        <xsd:element name="type" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+        <xsd:element name="label" type="xsd:string" maxOccurs="1" minOccurs="1"/>
+        <xsd:element name="image" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+        <xsd:element name="key-binding" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+        <xsd:element name="description" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+        <xsd:element name="location" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+        <xsd:element name="group" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+        <xsd:element name="context" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+        <xsd:element name="condition" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="action-handler">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="action" type="xsd:string" maxOccurs="1" minOccurs="1"/>
+        <xsd:element name="id" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+        <xsd:element name="label" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+        <xsd:element name="image" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+        <xsd:element name="description" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+        <xsd:element name="location" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+        <xsd:element name="context" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+        <xsd:element name="condition" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+        <xsd:element name="impl" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+        <xsd:element ref="param" maxOccurs="unbounded" minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+    
+  <xsd:element name="action-handler-factory">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="action" type="xsd:string" maxOccurs="1" minOccurs="1"/>
+        <xsd:element name="description" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+        <xsd:element name="context" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+        <xsd:element name="condition" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+        <xsd:element name="impl" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+        <xsd:element ref="param" maxOccurs="unbounded" minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="param">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="name" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+        <xsd:element name="value" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+    
+</xsd:schema>

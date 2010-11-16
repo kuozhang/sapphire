@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhhint;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
-import static org.eclipse.sapphire.ui.util.SwtUtil.hspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import org.eclipse.sapphire.ui.def.ISapphireSpacerDef;
 import org.eclipse.swt.SWT;
@@ -35,7 +35,7 @@ public final class SapphireSpacer
         final ISapphireSpacerDef def = (ISapphireSpacerDef) this.definition;
         
         final Composite spacer = new Composite( context.getComposite(), SWT.NONE );
-        spacer.setLayoutData( gdhhint( hspan( gdhfill(), 2 ), def.getSize().getContent() ) );
+        spacer.setLayoutData( gdhhint( gdhspan( gdhfill(), 2 ), def.getSize().getContent() ) );
         spacer.setLayout( glayout( 1, 0, 0, 0, 0 ) );
         context.adapt( spacer );
     }

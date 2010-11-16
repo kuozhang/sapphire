@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.assist.internal;
@@ -14,10 +15,9 @@ package org.eclipse.sapphire.ui.assist.internal;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueKeyword;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
+import org.eclipse.sapphire.modeling.util.internal.SapphireCommonUtil;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
@@ -45,7 +45,7 @@ public final class MinMaxInfoAssistContributor
         final ModelProperty property = context.getProperty();
         
         if( property instanceof ValueProperty && 
-            ( (Value<?>) property.invokeGetterMethod( element ) ).getText( false ) != null )
+            element.read( (ValueProperty) property ).getText( false ) != null )
         {
             final NumericRange range = property.getAnnotation( NumericRange.class );
             
@@ -58,7 +58,7 @@ public final class MinMaxInfoAssistContributor
                 
                 if( min.length() > 0 )
                 {
-                    String label = NLS.bind( Resources.minValueInfoMessage, normalizeForDisplay( valprop, min ) );
+                    String label = NLS.bind( Resources.minValueInfoMessage, SapphireCommonUtil.normalizeForDisplay( valprop, min ) );
                     label = "<p>" + escapeForXml( label ) + "</p>";
 
                     final PropertyEditorAssistContribution contribution = new PropertyEditorAssistContribution();
@@ -70,7 +70,7 @@ public final class MinMaxInfoAssistContributor
                 
                 if( max.length() > 0 )
                 {
-                    String label = NLS.bind( Resources.maxValueInfoMessage, normalizeForDisplay( valprop, max ) );
+                    String label = NLS.bind( Resources.maxValueInfoMessage, SapphireCommonUtil.normalizeForDisplay( valprop, max ) );
                     label = "<p>" + escapeForXml( label ) + "</p>";
 
                     final PropertyEditorAssistContribution contribution = new PropertyEditorAssistContribution();
@@ -79,21 +79,6 @@ public final class MinMaxInfoAssistContributor
                 }
             }
         }
-    }
-    
-    private static final String normalizeForDisplay( final ValueProperty property,
-                                                     final String value )
-    {
-        String result = property.encodeKeywords( property.decodeKeywords( value ) );
-        
-        ValueKeyword keyword = property.getKeyword( result );
-        
-        if( keyword != null )
-        {
-            result = keyword.toDisplayString();
-        }
-        
-        return result;
     }
     
     private static final class Resources

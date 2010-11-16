@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<feature id="org.eclipse.sapphire.stage1" label="Sapphire Build Stage 1" provider-name="Eclipse" version="0.1.0.qualifier">
+<feature id="org.eclipse.sapphire.stage1" label="Sapphire Build Stage 1" provider-name="Eclipse" version="0.2.0.qualifier">
 
   <plugin download-size="0" id="org.eclipse.sapphire.modeling" install-size="0" unpack="false" version="0.0.0"/>
 

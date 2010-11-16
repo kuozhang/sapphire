@@ -11,25 +11,25 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBinding( elementPath = "enum" )
+@GenerateImpl
 
 public interface IEnumValueGallery
 
-    extends IModelElementForXml
+    extends IModelElement
 
 {
     ModelElementType TYPE = new ModelElementType( IEnumValueGallery.class );
@@ -51,7 +51,7 @@ public interface IEnumValueGallery
     @Type( base = ThreeChoiceAnswerCustomized.class )
     @Label( standard = "custom serialized with default" )
     @XmlBinding( path = "custom-serialized-with-default" )
-    @DefaultValue( "maybe" )
+    @DefaultValue( text = "maybe" )
 
     ValueProperty PROP_CUSTOM_SERIALIZED_WITH_DEFAULT = new ValueProperty( TYPE, "CustomSerializedWithDefault" );
 

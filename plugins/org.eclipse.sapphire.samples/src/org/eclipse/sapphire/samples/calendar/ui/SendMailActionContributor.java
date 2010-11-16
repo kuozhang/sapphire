@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.samples.calendar.ui;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
@@ -31,23 +32,28 @@ public final class SendMailActionContributor
     @Override
     public void contribute( final PropertyEditorAssistContext context )
     {
-        final PropertyEditorAssistContribution contribution = new PropertyEditorAssistContribution();
-        contribution.setText( "<p><a href=\"action\" nowrap=\"true\">Send mail...</a></p>" );
+        final IAttendee attendee = (IAttendee) context.getModelElement();
         
-        contribution.setHyperlinkListener
-        (
-            new HyperlinkAdapter()
-            {
-                @Override
-                public void linkActivated( final HyperlinkEvent event )
+        if( attendee.getEMail().getText() != null )
+        {
+            final PropertyEditorAssistContribution contribution = new PropertyEditorAssistContribution();
+            contribution.setText( "<p><a href=\"action\" nowrap=\"true\">Send mail...</a></p>" );
+            
+            contribution.setHyperlinkListener
+            (
+                new HyperlinkAdapter()
                 {
-                    MessageDialog.openInformation( context.getShell(), "Mail", "Launch e-mail client here..."  );
+                    @Override
+                    public void linkActivated( final HyperlinkEvent event )
+                    {
+                        MessageDialog.openInformation( context.getShell(), "Mail", "Launch e-mail client here..."  );
+                    }
                 }
-            }
-        );
-        
-        final PropertyEditorAssistSection section = context.getSection( SECTION_ID_ACTIONS );
-        section.addContribution( contribution );
+            );
+            
+            final PropertyEditorAssistSection section = context.getSection( SECTION_ID_ACTIONS );
+            section.addContribution( contribution );
+        }
     }
     
 }

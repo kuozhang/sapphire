@@ -18,21 +18,19 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBindingMapping;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.internal.ImageReferenceResolver;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Label( standard = "wizard" )
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface ISapphireWizardDef
 
@@ -73,7 +71,7 @@ public interface ISapphireWizardDef
 
     // *** Image ***
     
-    @Reference( target = ImageDescriptor.class, resolver = ImageReferenceResolver.class )
+    @Reference( target = ImageDescriptor.class )
     @Label( standard = "image" )
     @XmlBinding( path = "image" )
     
@@ -85,7 +83,7 @@ public interface ISapphireWizardDef
     // *** PageDefs ***
     
     @Type( base = ISapphireWizardPageDef.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "page", type = ISapphireWizardPageDef.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "page", type = ISapphireWizardPageDef.class ) )
                              
     ListProperty PROP_PAGE_DEFS = new ListProperty( TYPE, "PageDefs" );
     

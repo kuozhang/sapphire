@@ -16,11 +16,8 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.sapphire.modeling.ByteArrayModelStore;
-import org.eclipse.sapphire.modeling.xml.ModelStoreForXml;
 import org.eclipse.sapphire.samples.ezbug.IBugReport;
 import org.eclipse.sapphire.samples.ezbug.IFileBugReportOp;
-import org.eclipse.sapphire.samples.ezbug.internal.FileBugReportOp;
 import org.eclipse.sapphire.ui.swt.SapphireDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -42,8 +39,8 @@ public class FileBugReportHandler2
     {
         final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow( event );
         
-        final IFileBugReportOp op = new FileBugReportOp( new ModelStoreForXml( new ByteArrayModelStore() ) );
-        final IBugReport report = op.getBugReport( true );
+        final IFileBugReportOp op = IFileBugReportOp.TYPE.instantiate();
+        final IBugReport report = op.getBugReport().element( true );
         
         final SapphireDialog dialog 
             = new SapphireDialog( window.getShell(), report, "org.eclipse.sapphire.samples/sdef/EzBug.sdef!dialog2" );

@@ -955,7 +955,7 @@ generates implementation classes for the annotated model elements.</p>
   <li><a href="#GenerateXmlBindingModelElementImpl">GenerateXmlBindingModelElementImpl</a></li>
   <li><a href="#GenerateXmlBindingModelImpl">GenerateXmlBindingModelImpl</a></li>
   <li><a href="#ListPropertyCustomXmlBinding">ListPropertyCustomXmlBinding</a></li>
-  <li><a href="#ListPropertyXmlBinding">ListPropertyXmlBinding</a></li>
+  <li><a href="#XmlListBinding">XmlListBinding</a></li>
   <li><a href="#ValuePropertyCustomXmlBinding">ValuePropertyCustomXmlBinding</a></li>
   <li><a href="#XmlBinding">XmlBinding</a></li>
   <li><a href="#XmlNamespace">XmlNamespace</a></li>
@@ -1084,7 +1084,7 @@ interface. Make sure that you have annotated them all using annotations describe
 <a name="ListPropertyCustomXmlBinding"><h3>ListPropertyCustomXmlBinding</h3></a>
 
 <p>Applies to list properties. This annotation is used for cases that are not possible to express
-using <a href="#ListPropertyXmlBinding">ListPropertyXmlBinding</a> annotation. This typically happens
+using <a href="#XmlListBinding">XmlListBinding</a> annotation. This typically happens
 when list member's type cannot be definitively determined by looking at just the XML element name. In
 those cases, you can implement a custom binding by writing a class that extends ModelElementListControllerForXml
 abstract class.</p>
@@ -1093,7 +1093,7 @@ abstract class.</p>
 
 <pre class="source-code"><code>@ListPropertyCustomXmlBinding( MyCustomModelElementListController.class )</code></pre>
 
-<a name="ListPropertyXmlBinding"><h3>ListPropertyXmlBinding</h3></a>
+<a name="XmlListBinding"><h3>XmlListBinding</h3></a>
 
 <p>Applies to list properties. This annotation can be used to specify XML binding for both homogeneous
 and heterogeneous lists as long as there is a direct mapping from XML element name to model element
@@ -1112,11 +1112,11 @@ a contacts database. Addresses come in different forms depending on the country 
 different model element types defined to handle them. You binding declaration might look something like the 
 following in this situation.</p>
 
-<pre class="source-code"><code>@ListPropertyXmlBinding( path = "addresses",
+<pre class="source-code"><code>@XmlListBinding( path = "addresses",
                          mappings = 
                          { 
-                             @ListPropertyXmlBindingMapping( element = "usa-address", type = IUsaAddress.class ),
-                             @ListPropertyXmlBindingMapping( element = "canadian-address", type = ICanadianAddress.class )
+                             @XmlListBinding.Mapping( element = "usa-address", type = IUsaAddress.class ),
+                             @XmlListBinding.Mapping( element = "canadian-address", type = ICanadianAddress.class )
                          } )</code></pre>
 
 <a name="ValuePropertyCustomXmlBinding"><h3>ValuePropertyCustomXmlBinding</h3></a>

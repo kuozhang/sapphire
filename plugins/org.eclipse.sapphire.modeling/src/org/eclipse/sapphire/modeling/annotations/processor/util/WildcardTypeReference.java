@@ -19,20 +19,20 @@ import java.util.Set;
 
 public class WildcardTypeReference
 
-	extends TypeReference
+    extends TypeReference
 
 {
-	public static final WildcardTypeReference INSTANCE = new WildcardTypeReference();
-	
+    public static final WildcardTypeReference INSTANCE = new WildcardTypeReference();
+    
     private WildcardTypeReference()
     {
-    	super( "?" );
+        super( "?" );
     }
 
     @Override
     public void contributeNecessaryImports( final Set<TypeReference> imports )
     {
-    	// Nothing to contribute.
+        // Nothing to contribute.
     }
     
 }

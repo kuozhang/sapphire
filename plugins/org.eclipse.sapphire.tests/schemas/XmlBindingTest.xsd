@@ -8,38 +8,38 @@
 
     <element name="test-root">
         <complexType>
-        	<sequence>
-        		<element name="value-prop-a" type="string" maxOccurs="1"
-        			minOccurs="0">
-        		</element>
-        		<element name="x" maxOccurs="1" minOccurs="0">
-        			<complexType>
-        				<sequence>
-        					<element name="y" maxOccurs="1"
-        						minOccurs="0">
-        						<complexType>
-        							<sequence>
-        								<element name="z">
-        									<complexType>
-        										<sequence>
-        											<element
-        												name="value-prop-b" type="string" maxOccurs="1"
-        												minOccurs="0">
-        											</element>
-        										</sequence>
-        										<attribute
-        											name="value-prop-d" type="string" use="optional">
-        										</attribute>
-        									</complexType>
-        								</element>
-        							</sequence>
-        						</complexType>
-        					</element>
-        				</sequence>
-        			</complexType>
-        		</element>
-        	</sequence>
-        	<attribute name="value-prop-c" type="string" use="optional"></attribute>
+            <sequence>
+                <element name="value-prop-a" type="string" maxOccurs="1"
+                    minOccurs="0">
+                </element>
+                <element name="x" maxOccurs="1" minOccurs="0">
+                    <complexType>
+                        <sequence>
+                            <element name="y" maxOccurs="1"
+                                minOccurs="0">
+                                <complexType>
+                                    <sequence>
+                                        <element name="z">
+                                            <complexType>
+                                                <sequence>
+                                                    <element
+                                                        name="value-prop-b" type="string" maxOccurs="1"
+                                                        minOccurs="0">
+                                                    </element>
+                                                </sequence>
+                                                <attribute
+                                                    name="value-prop-d" type="string" use="optional">
+                                                </attribute>
+                                            </complexType>
+                                        </element>
+                                    </sequence>
+                                </complexType>
+                            </element>
+                        </sequence>
+                    </complexType>
+                </element>
+            </sequence>
+            <attribute name="value-prop-c" type="string" use="optional"></attribute>
         </complexType>
     </element>
     

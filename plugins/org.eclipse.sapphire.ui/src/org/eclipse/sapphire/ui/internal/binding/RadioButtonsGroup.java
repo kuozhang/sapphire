@@ -11,14 +11,13 @@
 
 package org.eclipse.sapphire.ui.internal.binding;
 
-import static org.eclipse.sapphire.ui.util.SwtUtil.setEnabledOnChildren;
+import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.setEnabledOnChildren;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.eclipse.sapphire.ui.SapphireCommands;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.swt.SWT;
@@ -100,8 +99,6 @@ public class RadioButtonsGroup
         button.setText( text );
         this.context.adapt( button );
         this.buttons.add( button );
-        
-        SapphireCommands.configurePropertyEditorContext( button );
         
         button.addDisposeListener
         (

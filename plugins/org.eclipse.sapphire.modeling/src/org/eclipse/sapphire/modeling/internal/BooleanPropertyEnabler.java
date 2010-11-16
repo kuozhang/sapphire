@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.modeling.internal;
 
+import org.eclipse.sapphire.modeling.EnablementService;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.EnablerImpl;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -23,7 +23,7 @@ import org.eclipse.sapphire.modeling.annotations.EnablerImpl;
 
 public final class BooleanPropertyEnabler
 
-    extends EnablerImpl
+    extends EnablementService
     
 {
     private ValueProperty property;
@@ -58,7 +58,7 @@ public final class BooleanPropertyEnabler
     @Override
     public boolean isEnabled()
     {
-        final IModelElement element = getModelElement();
+        final IModelElement element = element();
         
         if( element.isPropertyEnabled( this.property ) )
         {
@@ -66,7 +66,7 @@ public final class BooleanPropertyEnabler
             
             try
             {
-                result = this.property.invokeGetterMethod( element );
+                result = element.read( this.property );
             }
             catch( Exception e )
             {

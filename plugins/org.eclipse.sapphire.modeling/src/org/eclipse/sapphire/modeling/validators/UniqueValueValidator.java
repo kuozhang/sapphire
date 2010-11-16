@@ -52,9 +52,9 @@ public class UniqueValueValidator
         
         if( str != null )
         {
-            final IModelElement modelElement = value.getParent();
+            final IModelElement modelElement = value.parent();
             final ValueProperty property = value.getProperty();
-            final IModelParticle parent = modelElement.getParent();
+            final IModelParticle parent = modelElement.parent();
             
             if( parent instanceof ModelElementList<?> )
             {
@@ -64,7 +64,7 @@ public class UniqueValueValidator
                 {
                     if( x != modelElement )
                     {
-                        final Value<?> xval = (Value<?>) property.invokeGetterMethod( x );
+                        final Value<?> xval = x.read( property );
                         
                         if( str.equals( xval.getText() ) )
                         {

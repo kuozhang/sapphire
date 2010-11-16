@@ -15,26 +15,27 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.IModelForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBindingModelImpl;
-import org.eclipse.sapphire.modeling.xml.annotations.RootXmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 import org.eclipse.sapphire.samples.ezbug.internal.FileBugReportOpMethods;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBindingModelImpl
-@RootXmlBinding( elementName = "report" )
+@GenerateImpl
+@XmlRootBinding( elementName = "report" )
 
 public interface IFileBugReportOp
 
-    extends IModelForXml, IExecutableModelElement
+    extends IModelElement, IExecutableModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( IFileBugReportOp.class );
@@ -47,8 +48,7 @@ public interface IFileBugReportOp
     
     ElementProperty PROP_BUG_REPORT = new ElementProperty( TYPE, "BugReport" );
     
-    IBugReport getBugReport();
-    IBugReport getBugReport( boolean createIfNecessary );
+    ModelElementHandle<IBugReport> getBugReport();
     
     // *** Method: execute ***
     

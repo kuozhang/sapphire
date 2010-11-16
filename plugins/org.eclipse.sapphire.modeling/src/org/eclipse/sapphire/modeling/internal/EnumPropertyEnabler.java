@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.EnablementService;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.EnablerImpl;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 
 /**
@@ -28,11 +28,11 @@ import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 
 public final class EnumPropertyEnabler
 
-    extends EnablerImpl
+    extends EnablementService
     
 {
     private ValueProperty property;
-    private ValueSerializationService serializationService;    
+    private ValueSerializationService serializer;    
     private Enum<?>[] values;
     
     @Override
@@ -60,14 +60,13 @@ public final class EnumPropertyEnabler
         }
         
         this.property = (ValueProperty) prop;
-        
-        this.serializationService = element.service( ValueSerializationService.class );
+        this.serializer = element.service( this.property, ValueSerializationService.class );
         
         final List<Enum<?>> valuesList = new ArrayList<Enum<?>>();
         
         for( String segment : params[ 1 ].split( "," ) )
         {
-            final Enum<?> value = (Enum<?>) this.serializationService.decode( this.property, segment );
+            final Enum<?> value = (Enum<?>) this.serializer.decode( segment );
             
             if( value != null )
             {
@@ -90,7 +89,7 @@ public final class EnumPropertyEnabler
     @Override
     public boolean isEnabled()
     {
-        final IModelElement element = getModelElement();
+        final IModelElement element = element();
         
         if( element.isPropertyEnabled( this.property ) )
         {
@@ -98,7 +97,7 @@ public final class EnumPropertyEnabler
             
             try
             {
-                result = this.property.invokeGetterMethod( element );
+                result = element.read( this.property );
             }
             catch( Exception e )
             {
@@ -111,7 +110,7 @@ public final class EnumPropertyEnabler
             {
                 for( Enum<?> value : this.values )
                 {
-                    if( value == this.serializationService.decode( this.property, res ) )
+                    if( value == this.serializer.decode( res ) )
                     {
                         return true;
                     }

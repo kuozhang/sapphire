@@ -41,6 +41,7 @@ public final class SapphireModelingFrameworkTests
         suite.addTest( FindInsertionPositionTests.suite() );
         suite.addTest( XmlBindingTests.suite() );
         suite.addTest( SerializationTests.suite() );
+        suite.addTest( TopologicalSorterTests.suite() );
         
         return suite;
     }

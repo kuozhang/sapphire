@@ -1,7 +1,4 @@
-<definition 
-  xmlns="http://xmlns.oracle.com/eclipse/tools/sapphire/ui"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://xmlns.oracle.com/eclipse/tools/sapphire/ui http://xmlns.oracle.com/eclipse/tools/sapphire/ui">
+<definition>
 
   <import>
     <bundle>org.eclipse.sapphire.samples</bundle>
@@ -21,7 +18,7 @@
           <description>Use this simple editor to organize your calendar.</description>
           <content>
             <action-link>
-              <action-id>node:add</action-id>
+              <action-id>Sapphire.Add</action-id>
               <label>Add an event</label>
             </action-link>
           </content>
@@ -67,8 +64,11 @@
                     <value>false</value>
                   </hint>
                   <child-property>
-                    <name>Name</name>
-                    <jump-handler>ContactDetailsJumpHandler</jump-handler>
+                    <property>Name</property>
+                    <action-handler>
+                      <action>Sapphire.Jump</action>
+                      <impl>ContactDetailsJumpHandler</impl>
+                    </action-handler>
                   </child-property>
                 </property-editor>
                 <separator>
@@ -83,7 +83,10 @@
                     <content>
                       <property-editor>
                         <property>Name</property>
-                        <jump-handler>ContactDetailsJumpHandler</jump-handler>
+                        <action-handler>
+                          <action>Sapphire.Jump</action>
+                          <impl>ContactDetailsJumpHandler</impl>
+                        </action-handler>
                       </property-editor>
                       <property-editor>Type</property-editor>
                       <property-editor>
@@ -95,9 +98,17 @@
                       </property-editor>
                       <spacer/>
                       <action-link>
-                        <action-class>ShowContactDetailsAction</action-class>
+                        <action-id>Sapphire.Sample.ShowContactDetails</action-id>
                         <label>Show contact details</label>
                         <show-image/>
+                        <action>
+                          <id>sapphire.sample.ShowContactDetails</id>
+                          <image>images/person.png</image>
+                        </action>
+                        <action-handler>
+                          <action>Sapphire.Sample.ShowContactDetails</action>
+                          <impl>ShowContactDetailsActionHandler</impl>
+                        </action-handler>
                       </action-link>
                     </content>
                   </panel>

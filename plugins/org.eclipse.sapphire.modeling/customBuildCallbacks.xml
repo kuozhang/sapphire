@@ -32,6 +32,14 @@
       javacchome="${javacc.home}"
       static="false"/>
 
+    <mkdir dir=".javacc/org/eclipse/sapphire/modeling/docsys/internal"/>
+    
+    <javacc
+      target="src/org/eclipse/sapphire/modeling/docsys/internal/DocumentationContentParser.jj"
+      outputdirectory=".javacc/org/eclipse/sapphire/modeling/docsys/internal"
+      javacchome="${javacc.home}"
+      static="false"/>
+
   </target>
 
 

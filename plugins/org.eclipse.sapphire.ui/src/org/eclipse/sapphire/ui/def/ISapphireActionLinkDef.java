@@ -12,24 +12,21 @@
 package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.BooleanPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.internal.ClassReferenceResolver;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Label( standard = "action link" )
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface ISapphireActionLinkDef
 
@@ -52,8 +49,8 @@ public interface ISapphireActionLinkDef
     
     @Type( base = Boolean.class )
     @Label( standard = "show image" )
-    @DefaultValue( "false" )
-    @BooleanPropertyXmlBinding( path = "show-image", treatExistenceAsValue = true, valueWhenPresent = true )
+    @DefaultValue( text = "false" )
+    @XmlValueBinding( path = "show-image", mapExistanceToValue = "true;false" )
     
     ValueProperty PROP_SHOW_IMAGE = new ValueProperty( TYPE, "ShowImage" );
     
@@ -70,16 +67,5 @@ public interface ISapphireActionLinkDef
     
     Value<String> getActionId();
     void setActionId( String actionId );
-    
-    // *** ImplClass ***
-    
-    @Reference( target = Class.class, resolver = ClassReferenceResolver.class )
-    @Label( standard = "implementation class" )
-    @XmlBinding( path = "action-class" )
-    
-    ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );
-    
-    ReferenceValue<Class<?>> getImplClass();
-    void setImplClass( String implClass );
     
 }

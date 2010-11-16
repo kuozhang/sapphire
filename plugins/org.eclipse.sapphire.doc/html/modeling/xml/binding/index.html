@@ -1,0 +1,60 @@
+<html>
+
+<head>
+  <title>Sapphire XML Binding</title>
+  <link rel="StyleSheet" href="../../../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>Sapphire XML Binding</h1>
+
+<p>Full content pending...</p>
+
+<a name="default-binding"><h2>Default XML Binding</h2></a>
+
+<p>There are cases when it is convenient to be able to take a model or a part of a model and
+serialize it as XML without spending time specifying detailed binding. This comes up, for
+instance, when debugging or writing unit tests. To address this requirement, Sapphire supports 
+default XML binding that doesn't require any XML binding annotations to be used.</p>
+
+<p>Default XML binding uses property and type names for element names in XML. More formally:</p>
+
+<ol>
+  <li>A model element is mapped to an XML element whose name is derived from model element
+  type. The local type name is used (no package prefix) and the 'I' prefix is removed.</li>
+  <li>A property is mapped to an XML element whose name is equal to the property name.</li>
+  <li>The value of a value property is stored as text content inside the property's XML element.</li>
+</ol>
+
+<p>Here is a small example of what default XML binding would produce for the Sapphire contacts
+sample if that sample didn't specify XML binding via explicit annotations:</p>
+
+<pre class="source-code"><code>&lt;ContactsDatabase>
+  &lt;Contacts>
+    &lt;Contact>
+      &lt;Name>John&lt;/Name>
+      &lt;PhoneNumbers>
+        &lt;PhoneNumber>
+          &lt;Type>home&lt;/Type>
+          &lt;AreaCode>555&lt;/AreaCode>
+          &lt;LocalNumber>555-5555&lt;/LocalNumber>
+        &lt;/PhoneNumber>
+        &lt;PhoneNumber>
+          &lt;Type>mobile&lt;/Type>
+          &lt;AreaCode>555&lt;/AreaCode>
+          &lt;LocalNumber>555-6666&lt;/LocalNumber>
+        &lt;/PhoneNumber>
+      &lt;/PhoneNumbers>
+    &lt;/Contact>
+    &lt;Contact>
+      &lt;Name>Beth&lt;/Name>
+    &lt;/Contact>
+  &lt;/Contacts>
+&lt;/ContactsDatabase></code></pre>
+
+<br/><br/>
+
+</body>
+
+</html>

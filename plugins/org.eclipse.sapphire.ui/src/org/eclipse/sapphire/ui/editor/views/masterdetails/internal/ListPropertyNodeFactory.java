@@ -57,7 +57,7 @@ public abstract class ListPropertyNodeFactory
     {
         if( this.visibleWhenCondition != null )
         {
-            return this.visibleWhenCondition.evaluate();
+            return this.visibleWhenCondition.getConditionState();
         }
         
         return true;
@@ -72,16 +72,7 @@ public abstract class ListPropertyNodeFactory
     {
         final Map<Object,MasterDetailsContentNode> newCache = new HashMap<Object,MasterDetailsContentNode>();
         final List<MasterDetailsContentNode> nodes = new ArrayList<MasterDetailsContentNode>();
-        final ModelElementList<?> list;
-        
-        try
-        {
-            list = (ModelElementList<?>) this.listProperty.invokeGetterMethod( this.modelElement );
-        }
-        catch( Exception e )
-        {
-            throw new RuntimeException( e );
-        }
+        final ModelElementList<?> list = this.modelElement.read( this.listProperty );
         
         for( IModelElement listEntryModelElement : list )
         {

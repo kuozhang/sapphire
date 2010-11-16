@@ -41,11 +41,6 @@
       name="Contacts Database Editor"/>
   </extension>
   
-  <extension point="org.eclipse.help.contexts">
-    <contexts file="help/context/contacts-help.xml" plugin="org.eclipse.sapphire.samples"/>
-  </extension>
-
-
   <!-- 
     *******************
     * Calendar Sample *
@@ -83,23 +78,6 @@
       filenames="sapphire-gallery.xml"
       id="org.eclipse.sapphire.samples.gallery.ui.SapphireGallerySampleEditor"
       name="Sapphire Gallery Sample Editor"/>
-  </extension>
-
-
-  <!-- 
-    **************
-    * Zoo Sample *
-    **************
-  -->
-  
-  <extension point="org.eclipse.ui.editors">
-    <editor
-      class="org.eclipse.sapphire.samples.zoo.ui.ZooModelEditor"
-      default="true"
-      filenames="zoo.xml"
-      id="org.eclipse.sapphire.samples.zoo.ui.ZooModelEditor"
-      name="Zoo Model Editor"
-      icon="images/penguin.png"/>
   </extension>
 
 

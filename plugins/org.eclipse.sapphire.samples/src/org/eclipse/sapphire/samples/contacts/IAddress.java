@@ -11,15 +11,15 @@
 
 package org.eclipse.sapphire.samples.contacts;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
-import org.eclipse.sapphire.modeling.annotations.PossibleValuesProvider;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
+import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 import org.eclipse.sapphire.samples.contacts.internal.CityNameValuesProvider;
@@ -30,14 +30,12 @@ import org.eclipse.sapphire.samples.contacts.internal.ZipCodeValuesProvider;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBinding( elementPath = "address" )
-
-@XmlNamespace( uri = "http://xmlns.oracle.com/eclipse/tools/sapphire/samples/address",
-               prefix = "a" )
+@GenerateImpl
+@XmlNamespace( uri = "http://xmlns.oracle.com/eclipse/tools/sapphire/samples/address", prefix = "a" )
 
 public interface IAddress
 
-    extends IModelElementForXml
+    extends IModelElement
 
 {
     ModelElementType TYPE = new ModelElementType( IAddress.class );
@@ -58,7 +56,7 @@ public interface IAddress
     @XmlBinding( path = "a:city" )
     @Label( standard = "city" )
     @NonNullValue
-    @PossibleValuesProvider( impl = CityNameValuesProvider.class, caseSensitive = false, invalidValueMessage = "\"{0}\" is not a valid city for the specified state and ZIP code." )
+    @PossibleValues( service = CityNameValuesProvider.class )
     @DependsOn( { "ZipCode", "State" } )
 
     ValueProperty PROP_CITY = new ValueProperty( TYPE, "City" );
@@ -71,7 +69,7 @@ public interface IAddress
     @XmlBinding( path = "a:state" )
     @Label( standard = "state" )
     @NonNullValue
-    @PossibleValuesProvider( impl = StateCodeValuesProvider.class, caseSensitive = false, invalidValueMessage = "\"{0}\" is not a valid state postal code for the specified city and ZIP code." )
+    @PossibleValues( service = StateCodeValuesProvider.class )
     @DependsOn( { "ZipCode", "City" } )
 
     ValueProperty PROP_STATE = new ValueProperty( TYPE, "State" );
@@ -84,7 +82,7 @@ public interface IAddress
     @XmlBinding( path = "a:zip" )
     @Label( standard = "ZIP code" )
     @NonNullValue
-    @PossibleValuesProvider( impl = ZipCodeValuesProvider.class, caseSensitive = false, invalidValueMessage = "\"{0}\" is not a valid ZIP code for the specified city and state." )
+    @PossibleValues( service = ZipCodeValuesProvider.class )
     @DependsOn( { "State", "City" } )
 
     ValueProperty PROP_ZIP_CODE = new ValueProperty( TYPE, "ZipCode" );

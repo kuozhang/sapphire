@@ -12,23 +12,25 @@
 package org.eclipse.sapphire.samples.gallery;
 
 import org.eclipse.sapphire.modeling.ElementProperty;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.IModelForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBindingModelImpl;
-import org.eclipse.sapphire.modeling.xml.annotations.RootXmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBindingModelImpl
-@RootXmlBinding( elementName = "gallery" )
+@GenerateImpl
+@XmlRootBinding( elementName = "gallery" )
 
 public interface IGallery
 
-    extends IModelForXml
+    extends IModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( IGallery.class );
@@ -36,83 +38,120 @@ public interface IGallery
     // *** IntegerValueGallery ***
     
     @Type( base = IIntegerValueGallery.class )
+    @XmlBinding( path = "integer" )
 
     ElementProperty PROP_INTEGER_VALUE_GALLERY = new ElementProperty( TYPE, "IntegerValueGallery" );
     
-    IIntegerValueGallery getIntegerValueGallery();
+    ModelElementHandle<IIntegerValueGallery> getIntegerValueGallery();
     
     // *** LongIntegerValueGallery ***
     
     @Type( base = ILongIntegerValueGallery.class )
+    @XmlBinding( path = "long-integer" )
 
     ElementProperty PROP_LONG_INTEGER_VALUE_GALLERY = new ElementProperty( TYPE, "LongIntegerValueGallery" );
     
-    ILongIntegerValueGallery getLongIntegerValueGallery();
+    ModelElementHandle<ILongIntegerValueGallery> getLongIntegerValueGallery();
     
     // *** BigIntegerValueGallery ***
 
     @Type( base = IBigIntegerValueGallery.class )
+    @XmlBinding( path = "big-integer" )
     
     ElementProperty PROP_BIG_INTEGER_VALUE_GALLERY = new ElementProperty( TYPE, "BigIntegerValueGallery" );
     
-    IBigIntegerValueGallery getBigIntegerValueGallery();
+    ModelElementHandle<IBigIntegerValueGallery> getBigIntegerValueGallery();
     
     // *** FloatValueGallery ***
 
     @Type( base = IFloatValueGallery.class )
+    @XmlBinding( path = "float" )
     
     ElementProperty PROP_FLOAT_VALUE_GALLERY = new ElementProperty( TYPE, "FloatValueGallery" );
     
-    IFloatValueGallery getFloatValueGallery();
+    ModelElementHandle<IFloatValueGallery> getFloatValueGallery();
     
     // *** DoubleValueGallery ***
 
     @Type( base = IDoubleValueGallery.class )
+    @XmlBinding( path = "double" )
     
     ElementProperty PROP_DOUBLE_VALUE_GALLERY = new ElementProperty( TYPE, "DoubleValueGallery" );
     
-    IDoubleValueGallery getDoubleValueGallery();
+    ModelElementHandle<IDoubleValueGallery> getDoubleValueGallery();
     
     // *** BigDecimalValueGallery ***
 
     @Type( base = IBigDecimalValueGallery.class )
+    @XmlBinding( path = "big-decimal" )
     
     ElementProperty PROP_BIG_DECIMAL_VALUE_GALLERY = new ElementProperty( TYPE, "BigDecimalValueGallery" );
     
-    IBigDecimalValueGallery getBigDecimalValueGallery();
+    ModelElementHandle<IBigDecimalValueGallery> getBigDecimalValueGallery();
     
     // *** EnumValueGallery ***
 
     @Type( base = IEnumValueGallery.class )
+    @XmlBinding( path = "enum" )
     
     ElementProperty PROP_ENUM_VALUE_GALLERY = new ElementProperty( TYPE, "EnumValueGallery" );
     
-    IEnumValueGallery getEnumValueGallery();
+    ModelElementHandle<IEnumValueGallery> getEnumValueGallery();
     
     // *** JavaTypeNameValueGallery ***
 
     @Type( base = IJavaTypeNameValueGallery.class )
+    @XmlBinding( path = "java-type-name" )
     
     ElementProperty PROP_JAVA_TYPE_NAME_VALUE_GALLERY = new ElementProperty( TYPE, "JavaTypeNameValueGallery" );
     
-    IJavaTypeNameValueGallery getJavaTypeNameValueGallery();
+    ModelElementHandle<IJavaTypeNameValueGallery> getJavaTypeNameValueGallery();
     
     // *** BrowseSupportGallery ***
     
     @Type( base = IBrowseSupportGallery.class )
     @Label( standard = "browse support gallery" )
+    @XmlBinding( path = "browse-support" )
     
     ElementProperty PROP_BROWSE_SUPPORT_GALLERY = new ElementProperty( TYPE, "BrowseSupportGallery" );
     
-    IBrowseSupportGallery getBrowseSupportGallery();
-    
+    ModelElementHandle<IBrowseSupportGallery> getBrowseSupportGallery();
+
     // *** MultiSelectListGallery ***
     
     @Type( base = IMultiSelectListGallery.class )
     @Label( standard = "multi select list gallery" )
+    @XmlBinding( path = "multi-select-list" )
     
     ElementProperty PROP_MULTI_SELECT_LIST_GALLERY = new ElementProperty( TYPE, "MultiSelectListGallery" );
     
-    IMultiSelectListGallery getMultiSelectListGallery();
+    ModelElementHandle<IMultiSelectListGallery> getMultiSelectListGallery();
     
+    // *** ValuePropertyActionsGallery ***
+    
+    @Type( base = IValuePropertyActionsGallery.class )
+    @Label( standard = "value property actions gallery" )
+    @XmlBinding( path = "value-property-actions-gallery" )
+    
+    ElementProperty PROP_VALUE_PROPERTY_ACTIONS_GALLERY = new ElementProperty( TYPE, "ValuePropertyActionsGallery" );
+    
+    ModelElementHandle<IValuePropertyActionsGallery> getValuePropertyActionsGallery();
+
+    // *** IHelpGallery ***
+    
+    @Type( base = IHelpGallery.class )
+    @XmlBinding( path = "help" )
+
+    ElementProperty PROP_HELP_GALLERY = new ElementProperty( TYPE, "HelpGallery" );
+    
+    ModelElementHandle<IHelpGallery> getHelpGallery();
+
+    // *** IExtendedHelpGallery ***
+    
+    @Type( base = IExtendedHelpGallery.class )
+    @XmlBinding( path = "extended-help" )
+
+    ElementProperty PROP_EXTENDED_HELP_GALLERY = new ElementProperty( TYPE, "ExtendedHelpGallery" );
+    
+    ModelElementHandle<IExtendedHelpGallery> getExtendedHelpGallery();
 }

@@ -34,4 +34,33 @@ public class MiscUtil
         return false;
     }
     
+
+    public static boolean contains( final Object[] array,
+                                    final Object object )
+    {
+        for( int i = 0; i < array.length; i++ )
+        {
+            if( array[ i ].equals( object ) )
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public static int indexOf( final Object[] array,
+                               final Object object )
+    {
+        for( int i = 0; i < array.length; i++ )
+        {
+            if( array[ i ].equals( object ) )
+            {
+                return i;
+            }
+        }
+        
+        throw new IllegalArgumentException();
+    }
+    
 }

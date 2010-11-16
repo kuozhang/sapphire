@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import org.eclipse.sapphire.modeling.annotations.ValuePropertyCustomBindingImpl;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
+import org.eclipse.sapphire.modeling.xml.XmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.xml.XmlElement;
 
 public final class PropertyEditorPropertyBinding
 
-    extends ValuePropertyCustomBindingImpl
+    extends XmlValueBindingImpl
 
 {
     private static final String EL_HINT = "hint"; //$NON-NLS-1$
@@ -30,23 +30,30 @@ public final class PropertyEditorPropertyBinding
     @Override
     public String read()
     {
-        final XmlElement el = ( (IModelElementForXml) getModelElement() ).getXmlElement( false );
-        final XmlElement propElement = el.getChildElement( EL_PROPERTY, false );
+        String value = null;
+        final XmlElement el = ( (XmlResource) element().resource() ).getXmlElement( false );
         
-        if( propElement != null )
+        if( el != null )
         {
-            return propElement.getText();
+            final XmlElement propElement = el.getChildElement( EL_PROPERTY, false );
+            
+            if( propElement != null )
+            {
+                value = propElement.getText();
+            }
+            else
+            {
+                value = el.getText();
+            }
         }
-        else
-        {
-            return el.getText();
-        }
+        
+        return value;
     }
 
     @Override
     public void write( final String value )
     {
-        final XmlElement el = ( (IModelElementForXml) getModelElement() ).getXmlElement( false );
+        final XmlElement el = ( (XmlResource) element().resource() ).getXmlElement( true );
         
         if( el.getChildElement( EL_PROPERTY, false ) != null ||
             el.getChildElement( EL_HINT, false ) != null )

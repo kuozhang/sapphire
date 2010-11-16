@@ -7,6 +7,8 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [bugzilla 329115] support more details link for long descriptions
+ *                 [bugzilla 329114] rewrite context help binding feature
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -14,23 +16,29 @@ package org.eclipse.sapphire.ui;
 import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twd;
 import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twdindent;
 import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twlayout;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Set;
 
-import org.eclipse.sapphire.ui.actions.Action;
-import org.eclipse.sapphire.ui.actions.ActionGroup;
-import org.eclipse.sapphire.ui.actions.ActionsRenderer;
-import org.eclipse.sapphire.ui.actions.RestoreDefaultsAction;
-import org.eclipse.sapphire.ui.actions.ShowHelpAction;
+import org.eclipse.help.IContext;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
+import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
-import org.eclipse.sapphire.ui.internal.ActionsHostUtil;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.SapphireTextPopup;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
+import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -43,8 +51,9 @@ public final class SapphireSection
     extends SapphireComposite
     
 {
+    private final static String BREAK_TOKEN = "###brk###";
+    
     private ISapphireSectionDef definition;
-    private List<ActionGroup> actions = null;
     private SapphireCondition visibleWhenCondition;
     
     @Override
@@ -60,20 +69,8 @@ public final class SapphireSection
         
         if( visibleWhenConditionClass != null )
         {
-            try
-            {
-                this.visibleWhenCondition = (SapphireCondition) visibleWhenConditionClass.newInstance();
-            }
-            catch( Exception e )
-            {
-                SapphireUiFrameworkPlugin.log( e );
-            }
-            
-            if( this.visibleWhenCondition != null )
-            {
-                final String parameter = this.definition.getVisibleWhenConditionParameter().getText();
-                this.visibleWhenCondition.init( new SapphirePartContext( this ), parameter );                
-            }
+            final String parameter = this.definition.getVisibleWhenConditionParameter().getText();
+            this.visibleWhenCondition = SapphireCondition.create( this, visibleWhenConditionClass, parameter );
         }
     }
     
@@ -95,9 +92,56 @@ public final class SapphireSection
         
         if( description != null )
         {
-            final Label descriptionControl = new Label( outerComposite, SWT.WRAP );
-            descriptionControl.setLayoutData( twdindent( twd(), 9 ) );
-            descriptionControl.setText( description.trim() );
+            final int index = description.indexOf(BREAK_TOKEN);
+            if (index > 0) {
+                final String displayDescription = description.substring(0, index);
+
+                final FormText text = new FormText( outerComposite, SWT.NONE );
+                text.setLayoutData( twdindent( twd(), 9 ) );
+                context.adapt( text );
+                
+                final StringBuilder buf = new StringBuilder();
+                buf.append( "<form><p vspace=\"false\">");
+                buf.append( displayDescription );
+                buf.append( "<a href=\"action\" nowrap=\"true\">");
+                buf.append( Resources.moreDetails );
+                buf.append( "</a></p></form>" );
+                
+                text.setText( buf.toString(), true, false );
+                
+                text.addHyperlinkListener
+                (
+                    new HyperlinkAdapter()
+                    {
+                        @Override
+                        public void linkActivated( final HyperlinkEvent event )
+                        {
+                            final Point cursor = text.getDisplay().getCursorLocation();
+                            final Rectangle bounds = text.getBounds();
+                            final Point location = text.toDisplay( new Point( bounds.x, bounds.y ) );
+                            final Rectangle displayBounds = new Rectangle(location.x, location.y, bounds.width, bounds.height);
+                            Point position;
+                            if (displayBounds.contains(cursor)) {
+                                position = cursor;
+                            } else {
+                                position = new Point(location.x, location.y + bounds.height + 2 );
+                            }
+                            StringBuffer buf = new StringBuffer();
+                            buf.append(displayDescription);
+                            buf.append(description.substring(index + BREAK_TOKEN.length(), description.length()));
+                            
+                            final SapphireTextPopup popup = new SapphireTextPopup(text.getDisplay(), position);
+                            popup.setText(buf.toString());
+                            popup.open();
+                        }
+                    }
+                );
+            }  
+            else {
+                final Label descriptionControl = new Label( outerComposite, SWT.WRAP );
+                descriptionControl.setLayoutData( twdindent( twd(), 9 ) );
+                descriptionControl.setText( description.trim() );
+            }
         }
         
         final Composite innerComposite = new Composite( outerComposite, SWT.NONE );
@@ -105,8 +149,13 @@ public final class SapphireSection
         innerComposite.setLayoutData( twd() );
         context.adapt( innerComposite );
         
+        final SapphireActionGroup actions = getActions();
+        final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager( context, actions );
+        final SapphireToolBarActionPresentation toolBarActionsPresentation = new SapphireToolBarActionPresentation( actionPresentationManager );
+        
         final ToolBar toolbar = new ToolBar( section, SWT.FLAT | SWT.HORIZONTAL );
-        ActionsRenderer.fillToolBar( toolbar, getActions() );
+        toolBarActionsPresentation.setToolBar( toolbar );
+        toolBarActionsPresentation.render();
         section.setTextClient( toolbar );
         
         toolkit.paintBordersFor( section );
@@ -114,43 +163,36 @@ public final class SapphireSection
         
         return innerComposite;
     }
-
-    public List<ActionGroup> getActions()
+    
+    @Override
+    public Set<String> getActionContexts()
     {
-        if( this.actions == null )
+        return Collections.singleton( SapphireActionSystem.CONTEXT_SECTION );
+    }
+
+    @Override
+    public IContext getDocumentationContext()
+    {
+        final ISapphireDocumentationDef def = this.definition.getDocumentationDef().element();
+        if ( def != null )
         {
-            this.actions = new ArrayList<ActionGroup>();
-            
-            final ActionGroup systemActionsGroup = new ActionGroup();
-            systemActionsGroup.addAction( new RestoreDefaultsAction() );
-            systemActionsGroup.addAction( new ShowHelpAction() );
-            
-            this.actions.add( systemActionsGroup );
-            
-            ActionsHostUtil.initActions( this.actions, this.definition.getActionSetDef() );
-            
-            for( ActionGroup group : this.actions )
+            IContext context = SapphireHelpSystem.getContext( def );
+            if ( context != null )
             {
-                for( Action action : group.getActions() )
-                {
-                    action.setPart( this );
-                }
+                return context;
             }
         }
-        
-        return this.actions;
-    }
-    
-    @Override
-    public Action getAction( final String id )
-    {
-        return super.getAction( id );
-    }
-    
-    @Override
-    public String getHelpContextId()
-    {
-        return this.definition.getHelpContextId().getText();
+
+        final ISapphireDocumentationRef documentationRef = this.definition.getDocumentationRef().element();
+        if ( documentationRef != null )
+        {
+            final ISapphireDocumentationDef documentationDef2 = documentationRef.resolve();
+            if ( documentationDef2 != null ) 
+            {
+                return SapphireHelpSystem.getContext( documentationDef2 );
+            }
+        }
+        return null;
     }
 
     public SapphireCondition getVisibleWhenCondition()
@@ -162,10 +204,34 @@ public final class SapphireSection
     {
         if( this.visibleWhenCondition != null )
         {
-            return this.visibleWhenCondition.evaluate();
+            return this.visibleWhenCondition.getConditionState();
         }
         
         return true;
     }
     
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        if( this.visibleWhenCondition != null )
+        {
+            this.visibleWhenCondition.dispose();
+        }
+    }
+
+    private static final class Resources
+    
+        extends NLS
+    
+    {
+        public static String moreDetails;
+        
+        static
+        {
+            initializeMessages( SapphireSection.class.getName(), Resources.class );
+        }
+    }
+
 }

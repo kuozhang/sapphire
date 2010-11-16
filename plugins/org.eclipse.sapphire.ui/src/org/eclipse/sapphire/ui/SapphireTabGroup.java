@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
-import static org.eclipse.sapphire.ui.util.SwtUtil.hspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +75,7 @@ public class SapphireTabGroup
             = ( Boolean.valueOf( this.definition.getHint( ISapphirePartDef.HINT_EXPAND_VERTICALLY ) ) == true );
     
         final TabFolder tabGroup = new TabFolder( context.getComposite(), SWT.TOP );
-        tabGroup.setLayoutData( hspan( ( expandVertically ? gdfill() : gdhfill() ), 2 ) );
+        tabGroup.setLayoutData( gdhspan( ( expandVertically ? gdfill() : gdhfill() ), 2 ) );
         context.adapt( tabGroup );
         
         for( final SapphirePart tabPart : this.tabParts )

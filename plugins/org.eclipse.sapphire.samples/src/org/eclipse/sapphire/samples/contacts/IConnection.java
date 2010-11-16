@@ -12,16 +12,15 @@
 package org.eclipse.sapphire.samples.contacts;
 
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IRemovable;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
-import org.eclipse.sapphire.modeling.annotations.GenerateStub;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
-import org.eclipse.sapphire.modeling.annotations.PossibleValuesFromModel;
+import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Validator;
 import org.eclipse.sapphire.modeling.validators.UniqueValueValidator;
 
@@ -30,11 +29,11 @@ import org.eclipse.sapphire.modeling.validators.UniqueValueValidator;
  */
 
 @Image( small = "org.eclipse.sapphire.samples/images/person.png" )
-@GenerateStub
+@GenerateImpl
 
 public interface IConnection
 
-    extends IModelElement, IRemovable
+    extends IModelElement
 
 {
     ModelElementType TYPE = new ModelElementType( IConnection.class );
@@ -46,9 +45,9 @@ public interface IConnection
     @DependsOn( "*/Name" )
     @Validator( impl = UniqueValueValidator.class )
     
-    @PossibleValuesFromModel
+    @PossibleValues
     ( 
-        path = "/Contacts/Name", 
+        property = "/Contacts/Name", 
         caseSensitive = false, 
         invalidValueMessage = "Could not find contact name \"{0}\" in the database." 
     )

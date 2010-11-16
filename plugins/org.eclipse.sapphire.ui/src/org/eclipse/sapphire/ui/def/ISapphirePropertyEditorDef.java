@@ -16,13 +16,13 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.annotations.ValuePropertyCustomBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBindingMapping;
+import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 import org.eclipse.sapphire.ui.def.internal.PropertyEditorPropertyBinding;
 
 /**
@@ -30,11 +30,12 @@ import org.eclipse.sapphire.ui.def.internal.PropertyEditorPropertyBinding;
  */
 
 @Label( standard = "property editor" )
-@GenerateXmlBinding
+@XmlRootBinding( elementName = "property-editor" )  // TODO: Remove when model can run without resource.
+@GenerateImpl
 
 public interface ISapphirePropertyEditorDef
 
-    extends ISapphirePartDef, ISapphirePropertyMetadata
+    extends ISapphirePartDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphirePropertyEditorDef.class );
@@ -43,7 +44,7 @@ public interface ISapphirePropertyEditorDef
     
     @Label( standard = "property" )
     @NonNullValue
-    @ValuePropertyCustomBinding( impl = PropertyEditorPropertyBinding.class )
+    @CustomXmlValueBinding( impl = PropertyEditorPropertyBinding.class )
     
     ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
     
@@ -52,18 +53,18 @@ public interface ISapphirePropertyEditorDef
     
     // *** ChildProperties ***
     
-    @Type( base = ISapphireChildPropertyInfo.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "child-property", type = ISapphireChildPropertyInfo.class ) } )
+    @Type( base = ISapphirePropertyEditorDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "child-property", type = ISapphirePropertyEditorDef.class ) )
     @Label( standard = "child properties" )
     
     ListProperty PROP_CHILD_PROPERTIES = new ListProperty( TYPE, "ChildProperties" );
     
-    ModelElementList<ISapphireChildPropertyInfo> getChildProperties();
+    ModelElementList<ISapphirePropertyEditorDef> getChildProperties();
     
     // *** AuxPropertyEditors ***
     
     @Type( base = ISapphirePropertyEditorDef.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "aux-property-editor", type = ISapphirePropertyEditorDef.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "aux-property-editor", type = ISapphirePropertyEditorDef.class ) )
                              
     ListProperty PROP_AUX_PROPERTY_EDITORS = new ListProperty( TYPE, "AuxPropertyEditors" );
     

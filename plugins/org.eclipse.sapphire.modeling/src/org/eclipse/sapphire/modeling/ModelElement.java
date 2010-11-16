@@ -11,10 +11,13 @@
 
 package org.eclipse.sapphire.modeling;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.core.runtime.IStatus;
@@ -24,10 +27,7 @@ import org.eclipse.sapphire.modeling.ModelPath.AllSiblingsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ModelRootSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.ModelPath.TypeFilterSegment;
-import org.eclipse.sapphire.modeling.annotations.PossibleValuesChangedEvent;
-import org.eclipse.sapphire.modeling.annotations.PossibleValuesProviderImpl;
-import org.eclipse.sapphire.modeling.annotations.PossibleValuesProviderListener;
-import org.eclipse.sapphire.modeling.extensibility.ServicesExtensionPoint;
+import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 /**
@@ -46,13 +46,15 @@ public abstract class ModelElement
     private Set<ModelElementListener> listeners;
     private Map<ModelProperty,Set<ModelPropertyListener>> propertyListeners;
     private final Map<ModelProperty,Boolean> enablementStatuses;
-    private final Map<Class<? extends ModelElementService>,ModelElementService> services;
+    private final Map<Class<? extends ModelElementService>,ModelElementService> elementServices;
+    private final Map<PropertyServiceKey,ModelPropertyService> propertyServices;
     
     public ModelElement( final ModelElementType type,
                          final IModelParticle parent,
-                         final ModelProperty parentProperty )
+                         final ModelProperty parentProperty,
+                         final Resource resource )
     {
-        super( parent );
+        super( parent, resource );
         
         this.type = type;
         this.parentProperty = parentProperty;
@@ -60,7 +62,10 @@ public abstract class ModelElement
         this.listeners = null;
         this.propertyListeners = null;
         this.enablementStatuses = new HashMap<ModelProperty,Boolean>();
-        this.services = new HashMap<Class<? extends ModelElementService>,ModelElementService>();
+        this.elementServices = new HashMap<Class<? extends ModelElementService>,ModelElementService>();
+        this.propertyServices = new HashMap<PropertyServiceKey,ModelPropertyService>();
+        
+        resource.init( this );
         
         final Map<ModelProperty,ModelPropertyListener> refreshListeners
             = new HashMap<ModelProperty,ModelPropertyListener>();
@@ -90,16 +95,16 @@ public abstract class ModelElement
             
             if( property instanceof ValueProperty )
             {
-                final PossibleValuesProviderImpl possibleValuesProvider = service().getPossibleValuesProvider( (ValueProperty) property );
+                final PossibleValuesService possibleValuesProvider = service( property, PossibleValuesService.class );
                 
                 if( possibleValuesProvider != null )
                 {
                     possibleValuesProvider.addListener
                     (
-                        new PossibleValuesProviderListener()
+                        new PossibleValuesService.Listener()
                         {
                             @Override
-                            public void handlePossibleValuesChangedEvent( final PossibleValuesChangedEvent event )
+                            public void handlePossibleValuesChangedEvent( final PossibleValuesService.PossibleValuesChangedEvent event )
                             {
                                 refresh( property );
                             }
@@ -143,6 +148,196 @@ public abstract class ModelElement
         return this.parentProperty;
     }
     
+    public Object read( final ModelProperty property )
+    {
+        final String msg = NLS.bind( Resources.cannotReadProperty, property.getName() );
+        throw new IllegalArgumentException( msg );
+    }
+    
+    @SuppressWarnings( "unchecked" )
+    
+    public final <T> Value<T> read( final ValueProperty property )
+    {
+        return (Value<T>) read( (ModelProperty) property );
+    }
+    
+    @SuppressWarnings( "unchecked" )
+    
+    public final <T extends IModelElement> ModelElementHandle<T> read( final ElementProperty property )
+    {
+        return (ModelElementHandle<T>) read( (ModelProperty) property );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    
+    public final <T extends IModelElement> ModelElementList<T> read( final ListProperty property )
+    {
+        return (ModelElementList<T>) read( (ModelProperty) property );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    
+    public final <T> Transient<T> read( final TransientProperty property )
+    {
+        return (Transient<T>) read( (ModelProperty) property );
+    }
+    
+    public final SortedSet<String> read( final ModelPath path )
+    {
+        final SortedSet<String> result = new TreeSet<String>();
+        read( path, result );
+        return result;
+    }
+
+    public final void read( final ModelPath path,
+                            final Collection<String> result )
+    {
+        synchronized( root() )
+        {
+            final ModelPath.Segment head = path.head();
+            
+            if( head instanceof ModelRootSegment )
+            {
+                ( (IModelElement) root() ).read( path.tail(), result );
+            }
+            else if( head instanceof ParentElementSegment )
+            {
+                IModelParticle parent = parent();
+                
+                if( parent == null )
+                {
+                    logInvalidModelPathMessage( path );
+                    return;
+                }
+                else
+                {
+                    if( parent instanceof ModelElementList<?> )
+                    {
+                        parent = parent.parent();
+                    }
+                }
+                
+                ( (IModelElement) parent ).read( path.tail(), result );
+            }
+            else if( head instanceof AllSiblingsSegment )
+            {
+                IModelParticle parent = parent();
+                
+                if( parent == null || ! ( parent instanceof ModelElementList<?> ) )
+                {
+                    logInvalidModelPathMessage( path );
+                    return;
+                }
+                
+                parent = parent.parent();
+                
+                final ModelPath p = ( new ModelPath( getParentProperty().getName() ) ).append( path.tail() );
+                ( (IModelElement) parent ).read( p, result );
+            }
+            else if( head instanceof AllDescendentsSegment )
+            {
+                for( ModelProperty property : getModelElementType().getProperties() )
+                {
+                    final Object obj = read( property );
+                    
+                    if( obj instanceof Value<?> )
+                    {
+                        final String val = ( (Value<?>) obj ).getText();
+                        
+                        if( val != null )
+                        {
+                            result.add( val );
+                        }
+                    }
+                    else if( obj instanceof IModelElement )
+                    {
+                        ( (IModelElement) obj ).read( path, result );
+                    }
+                    else if( obj instanceof ModelElementList<?> )
+                    {
+                        for( IModelElement entry : (ModelElementList<?>) obj )
+                        {
+                            entry.read( path, result );
+                        }
+                    }
+                }
+            }
+            else if( head instanceof TypeFilterSegment )
+            {
+                final String t = getModelElementType().getSimpleName();
+                boolean match = false;
+                
+                for( String type : ( (TypeFilterSegment) head ).getTypes() )
+                {
+                    if( type.equalsIgnoreCase( t ) )
+                    {
+                        match = true;
+                        break;
+                    }
+                }
+                
+                if( match )
+                {
+                    read( path.tail(), result );
+                }
+            }
+            else
+            {
+                final String propertyName = ( (ModelPath.PropertySegment) head ).getPropertyName();
+                final ModelProperty property = getModelElementType().getProperty( propertyName );
+
+                if( property == null )
+                {
+                    logInvalidModelPathMessage( path );
+                    return;
+                }
+                
+                final Object obj = read( property );
+                
+                if( obj instanceof Value<?> )
+                {
+                    final String val = ( (Value<?>) obj ).getText();
+                    
+                    if( val != null )
+                    {
+                        result.add( val );
+                    }
+                    
+                    if( path.length() != 1 )
+                    {
+                        logInvalidModelPathMessage( path );
+                        return;
+                    }
+                }
+                else if( obj instanceof IModelElement )
+                {
+                    ( (IModelElement) obj ).read( path.tail(), result );
+                }
+                else if( obj instanceof ModelElementList<?> )
+                {
+                    for( IModelElement entry : (ModelElementList<?>) obj )
+                    {
+                        entry.read( path.tail(), result );
+                    }
+                }
+            }
+        }
+    }
+    
+    public void write( final ValueProperty property,
+                       final Object value )
+    {
+        final String msg = NLS.bind( Resources.cannotWriteProperty, property.getName() );
+        throw new IllegalArgumentException( msg );
+    }
+    
+    public void write( final TransientProperty property,
+                       final Object value )
+    {
+        final String msg = NLS.bind( Resources.cannotWriteProperty, property.getName() );
+        throw new IllegalArgumentException( msg );
+    }
+    
     public final void refresh()
     {
         refresh( false, false );
@@ -156,7 +351,7 @@ public abstract class ModelElement
     public final void refresh( final boolean force,
                                final boolean deep )
     {
-        synchronized( this.model )
+        synchronized( root() )
         {
             for( ModelProperty property : getModelElementType().getProperties() )
             {
@@ -186,7 +381,7 @@ public abstract class ModelElement
         {
             if( property instanceof ElementProperty )
             {
-                final IModelElement child = service().read( (ElementProperty) property );
+                final IModelElement child = read( (ElementProperty) property ).element();
                 
                 if( child != null )
                 {
@@ -195,7 +390,7 @@ public abstract class ModelElement
             }
             else if( property instanceof ListProperty )
             {
-                for( IModelElement child : service().read( (ListProperty) property ) )
+                for( IModelElement child : read( (ListProperty) property ) )
                 {
                     child.refresh( force, true );
                 }
@@ -213,18 +408,18 @@ public abstract class ModelElement
     
     public final <S extends ModelElementService> S service( final Class<S> serviceType )
     {
-        synchronized( this.model )
+        synchronized( root() )
         {
-            ModelElementService service = this.services.get( serviceType );
+            ModelElementService service = this.elementServices.get( serviceType );
             
             if( service == null )
             {
-                service = ServicesExtensionPoint.getService( serviceType );
+                service = SapphireModelingExtensionSystem.createModelElementService( this, serviceType );
                 
                 if( service != null )
                 {
                     service.init( this );
-                    this.services.put( serviceType, service );
+                    this.elementServices.put( serviceType, service );
                 }
             }
             
@@ -232,14 +427,34 @@ public abstract class ModelElement
         }
     }
     
-    public final StandardModelElementService service()
+    @SuppressWarnings( "unchecked" )
+    
+    public final <S extends ModelPropertyService> S service( final ModelProperty property,
+                                                             final Class<S> serviceType )
     {
-        return service( StandardModelElementService.class );
+        synchronized( root() )
+        {
+            final PropertyServiceKey key = new PropertyServiceKey( property, serviceType );
+            ModelPropertyService service = this.propertyServices.get( key );
+            
+            if( service == null )
+            {
+                service = SapphireModelingExtensionSystem.createModelPropertyService( this, property, serviceType );
+                
+                if( service != null )
+                {
+                    service.init( this, property, new String[ 0 ] );
+                    this.propertyServices.put( key, service );
+                }
+            }
+            
+            return (S) service;
+        }
     }
     
     public final boolean isPropertyEnabled( final ModelProperty property )
     {
-        synchronized( this.model )
+        synchronized( root() )
         {
             Boolean status = this.enablementStatuses.get( property );
             
@@ -255,10 +470,10 @@ public abstract class ModelElement
     
     protected final boolean refreshPropertyEnabledStatus( final ModelProperty property )
     {
-        synchronized( this.model )
+        synchronized( root() )
         {
             final Boolean oldStatus = this.enablementStatuses.get( property );
-            final boolean newStatus = service().isEnabled( property );
+            final boolean newStatus = service( property, EnablementService.class ).isEnabled();
             
             this.enablementStatuses.put( property, newStatus );
             
@@ -282,38 +497,32 @@ public abstract class ModelElement
         
         for( ModelProperty property : this.type.getProperties() )
         {
-            if( service().isEnabled( property ) )
+            if( service( property, EnablementService.class ).isEnabled() )
             {
-                final Object val = property.invokeGetterMethod( this );
-                IStatus x = null;
+                final IStatus x;
                 
                 if( property instanceof ValueProperty )
                 {
-                    x = ( (Value<?>) val ).validate();
+                    x = read( (ValueProperty) property ).validate();
                 }
                 else if( property instanceof ListProperty )
                 {
-                	if ( val != null )
-                	{
-                		x = ( (ModelElementList<?>) val ).validate();
-                	}
+                    x = read( (ListProperty) property ).validate();
                 }
                 else if( property instanceof ElementProperty )
                 {
-                    if( val != null )
-                    {
-                        x = ( (IModelElement) val ).validate();
-                    }
+                    x = read( (ElementProperty) property ).validate();
+                }
+                else if( property instanceof TransientProperty )
+                {
+                    x = read( (TransientProperty) property ).validate();
                 }
                 else
                 {
                     throw new IllegalStateException();
                 }
                 
-                if( x != null )
-                {
-                    st.add( x );
-                }
+                st.add( x );
             }
         }
         
@@ -328,7 +537,7 @@ public abstract class ModelElement
             
             notifyValidationStateChangeListeners( oldValidationState, this.valres );
             
-            final IModelParticle parent = getParent();
+            final IModelParticle parent = parent();
             
             if( parent != null && parent instanceof IModelElement )
             {
@@ -337,14 +546,9 @@ public abstract class ModelElement
         }
     }
 
-    protected void validateEdit()
-    {
-        this.model.validateEdit();
-    }
-    
     public final void addListener( final ModelElementListener listener )
     {
-        synchronized( this.model )
+        synchronized( root() )
         {
             if( this.listeners == null )
             {
@@ -364,17 +568,17 @@ public abstract class ModelElement
     public final void addListener( final ModelPropertyListener listener,
                                    final ModelPath path )
     {
-        synchronized( this.model )
+        synchronized( root() )
         {
             final ModelPath.Segment head = path.head();
             
             if( head instanceof ModelRootSegment )
             {
-                getModel().addListener( listener, path.tail() );
+                ( (IModelElement) root() ).addListener( listener, path.tail() );
             }
             else if( head instanceof ParentElementSegment )
             {
-                IModelParticle parent = getParent();
+                IModelParticle parent = parent();
                 
                 if( parent == null )
                 {
@@ -385,7 +589,7 @@ public abstract class ModelElement
                 {
                     if( parent instanceof ModelElementList<?> )
                     {
-                        parent = parent.getParent();
+                        parent = parent.parent();
                     }
                 }
                 
@@ -393,7 +597,7 @@ public abstract class ModelElement
             }
             else if( head instanceof AllSiblingsSegment )
             {
-                IModelParticle parent = getParent();
+                IModelParticle parent = parent();
                 
                 if( parent == null || ! ( parent instanceof ModelElementList<?> ) )
                 {
@@ -401,7 +605,7 @@ public abstract class ModelElement
                     return;
                 }
                 
-                parent = parent.getParent();
+                parent = parent.parent();
                 
                 final ModelPath p = ( new ModelPath( this.parentProperty.getName() ) ).append( path.tail() );
                 ( (IModelElement) parent ).addListener( listener, p );
@@ -486,7 +690,7 @@ public abstract class ModelElement
     
     public final void removeListener( final ModelElementListener listener )
     {
-        synchronized( this.model )
+        synchronized( root() )
         {
             if( this.listeners != null )
             {
@@ -504,17 +708,17 @@ public abstract class ModelElement
     public final void removeListener( final ModelPropertyListener listener,
                                       final ModelPath path )
     {
-        synchronized( this.model )
+        synchronized( root() )
         {
             final ModelPath.Segment head = path.head();
             
             if( head instanceof ModelRootSegment )
             {
-                getModel().removeListener( listener, path.tail() );
+                ( (IModelElement) root() ).removeListener( listener, path.tail() );
             }
             else if( head instanceof ParentElementSegment )
             {
-                IModelParticle parent = getParent();
+                IModelParticle parent = parent();
                 
                 if( parent == null )
                 {
@@ -525,7 +729,7 @@ public abstract class ModelElement
                 {
                     if( parent instanceof ModelElementList<?> )
                     {
-                        parent = parent.getParent();
+                        parent = parent.parent();
                     }
                 }
                 
@@ -533,7 +737,7 @@ public abstract class ModelElement
             }
             else if( head instanceof AllSiblingsSegment )
             {
-                IModelParticle parent = getParent();
+                IModelParticle parent = parent();
                 
                 if( parent == null || ! ( parent instanceof ModelElementList<?> ) )
                 {
@@ -541,7 +745,7 @@ public abstract class ModelElement
                     return;
                 }
                 
-                parent = parent.getParent();
+                parent = parent.parent();
                 
                 final ModelPath p = ( new ModelPath( this.parentProperty.getName() ) ).append( path.tail() );
                 ( (IModelElement) parent ).removeListener( listener, p );
@@ -561,18 +765,18 @@ public abstract class ModelElement
                         
                         listeners.remove( pListener );
                         
-                        final Object val = property.invokeGetterMethod( ModelElement.this );
-                        
                         if( property instanceof ElementProperty )
                         {
-                            if( val != null )
+                            final IModelElement element = read( (ElementProperty) property ).element();
+                            
+                            if( element != null )
                             {
-                                ( (IModelElement) val ).removeListener( listener, path );
+                                element.removeListener( listener, path );
                             }
                         }
                         else if( property instanceof ListProperty )
                         {
-                            final ModelElementList<?> list = (ModelElementList<?>) val;
+                            final ModelElementList<?> list = read( (ListProperty) property );
                             
                             for( IModelElement x : list )
                             {
@@ -625,19 +829,20 @@ public abstract class ModelElement
                     
                     listeners.remove( pListener );
                     
-                    final Object val = property.invokeGetterMethod( ModelElement.this );
                     final ModelPath tail = path.tail();
                     
                     if( property instanceof ElementProperty )
                     {
-                        if( val != null )
+                        final IModelElement element = read( (ElementProperty) property ).element();
+                        
+                        if( element != null )
                         {
-                            ( (IModelElement) val ).removeListener( listener, tail );
+                            element.removeListener( listener, tail );
                         }
                     }
                     else if( property instanceof ListProperty )
                     {
-                        final ModelElementList<?> list = (ModelElementList<?>) val;
+                        final ModelElementList<?> list = read( (ListProperty) property );
                         
                         for( IModelElement x : list )
                         {
@@ -653,7 +858,7 @@ public abstract class ModelElement
     {
         final ModelPropertyChangeEvent event = new ModelPropertyChangeEvent( this, property );
         
-        synchronized( this.model )
+        synchronized( root() )
         {
             if( this.valres != null )
             {
@@ -714,7 +919,7 @@ public abstract class ModelElement
     {
         final ValidationStateChangeEvent event = new ValidationStateChangeEvent( this, oldValidationState, newValidationState );
         
-        synchronized( this.model )
+        synchronized( root() )
         {
             if( this.listeners != null )
             {
@@ -758,7 +963,7 @@ public abstract class ModelElement
     
     public final void dispose()
     {
-        synchronized( this.model )
+        synchronized( root() )
         {
             if( this.listeners != null )
             {
@@ -864,18 +1069,18 @@ public abstract class ModelElement
         @Override
         public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
         {
-            final Object val = this.property.invokeGetterMethod( ModelElement.this );
-            
             if( this.property instanceof ElementProperty )
             {
-                if( val != null )
+                final IModelElement element = read( (ElementProperty) this.property ).element();
+                
+                if( element != null )
                 {
-                    ( (IModelElement) val ).addListener( this.listener, this.path );
+                    element.addListener( this.listener, this.path );
                 }
             }
             else
             {
-                final ModelElementList<?> list = (ModelElementList<?>) val;
+                final ModelElementList<?> list = read( (ListProperty) this.property );
                 
                 for( IModelElement x : list )
                 {
@@ -886,6 +1091,37 @@ public abstract class ModelElement
             this.listener.handlePropertyChangedEvent( event );
         }
     }
+    
+    private static final class PropertyServiceKey
+    {
+        private final ModelProperty property;
+        private final Class<? extends ModelPropertyService> serviceType;
+        
+        public PropertyServiceKey( final ModelProperty property,
+                                   final Class<? extends ModelPropertyService> serviceType )
+        {
+            this.property = property;
+            this.serviceType = serviceType;
+        }
+
+        @Override
+        public boolean equals( final Object obj )
+        {
+            if( obj instanceof PropertyServiceKey )
+            {
+                final PropertyServiceKey key = (PropertyServiceKey) obj;
+                return ( this.property.equals( key.property ) && this.serviceType.equals( key.serviceType ) );
+            }
+            
+            return false;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return this.property.hashCode() ^ this.serviceType.hashCode();
+        }
+    }
      
     private static final class Resources
     
@@ -893,6 +1129,8 @@ public abstract class ModelElement
     
     {
         public static String invalidModelPath;
+        public static String cannotReadProperty;
+        public static String cannotWriteProperty;
         
         static
         {

@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.samples.contacts.IContact;
 import org.eclipse.sapphire.samples.contacts.IPhoneNumber;
 
@@ -23,11 +24,13 @@ public final class ContactMethods
     public static void removePhoneNumbersByAreaCode( final IContact contact,
                                                      final String areaCode )
     {
-        for( IPhoneNumber pn : contact.getPhoneNumbers() )
+        final ModelElementList<IPhoneNumber> list = contact.getPhoneNumbers();
+        
+        for( IPhoneNumber pn : list )
         {
             if( areaCode.equals( pn.getAreaCode().getText() ) )
             {
-                pn.remove();
+                list.remove( pn );
             }
         }
     }

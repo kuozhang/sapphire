@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.def.internal;
@@ -25,6 +26,7 @@ import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeDef;
 import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeFactoryDef;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphireDialogDef;
+import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.ISapphireWizardDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
@@ -96,6 +98,29 @@ public final class SapphireUiDefMethods
         return null;
     }
     
+    public static ISapphireDocumentationDef getDocumentationDef(final ISapphireUiDef rootdef, final String id,
+                                                            final boolean searchImportedDefinitions) {
+        if (id != null) {
+            for (ISapphireDocumentationDef def : rootdef.getDocumentationDefs()) {
+                if (id.equals(def.getId().getText())) {
+                    return def;
+                }
+            }
+
+            if (searchImportedDefinitions) {
+                for (ISapphireUiDef importedDefinition : rootdef.getImportedDefinitions()) {
+                    final ISapphireDocumentationDef def = importedDefinition.getDocumentationDef(id, true);
+
+                    if (def != null) {
+                        return def;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
     public static ISapphireDialogDef getDialogDef( final ISapphireUiDef rootdef,
                                                    final String id,
                                                    final boolean searchImportedDefinitions )

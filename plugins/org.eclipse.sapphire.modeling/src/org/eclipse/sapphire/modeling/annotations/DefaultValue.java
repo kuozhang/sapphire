@@ -16,6 +16,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.eclipse.sapphire.modeling.DefaultValueService;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -25,5 +27,7 @@ import java.lang.annotation.Target;
 
 public @interface DefaultValue
 {
-    String value();
+    String text() default "";
+    Class<? extends DefaultValueService> service() default DefaultValueService.class;
+    String[] params() default {};
 }

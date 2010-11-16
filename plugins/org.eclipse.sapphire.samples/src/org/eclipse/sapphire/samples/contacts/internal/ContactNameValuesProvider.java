@@ -13,7 +13,7 @@ package org.eclipse.sapphire.samples.contacts.internal;
 
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.modeling.annotations.PossibleValuesProviderImpl;
+import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.samples.contacts.IContact;
 import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
 
@@ -23,13 +23,13 @@ import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
 
 public final class ContactNameValuesProvider
 
-    extends PossibleValuesProviderImpl
+    extends PossibleValuesService
     
 {
     @Override
     protected void fillPossibleValues( final SortedSet<String> values )
     {
-        for( IContact contact : ( (IContactsDatabase) getModelElement().getModel() ).getContacts() )
+        for( IContact contact : element().nearest( IContactsDatabase.class ).getContacts() )
         {
             final String name = contact.getName().getText();
             

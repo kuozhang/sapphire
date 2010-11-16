@@ -23,7 +23,7 @@ public final class MasterDetailsTreeNodeRefMethods
 {
     public static IMasterDetailsTreeNodeDef resolve( final IMasterDetailsTreeNodeRef ref )
     {
-        final ISapphireUiDef rootdef = (ISapphireUiDef) ref.getModel();
+        final ISapphireUiDef rootdef = ref.nearest( ISapphireUiDef.class );
         return rootdef.getMasterDetailsTreeNodeDef( ref.getId().getText(), true );
     }
     

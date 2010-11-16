@@ -24,49 +24,49 @@ import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
 
 public class IPAddressValidator extends ModelPropertyValidator<Value<?>> {
 
-	@Override
-	public IStatus validate(Value<?> value) {
-		String address = value.getText();
-		int index;
+    @Override
+    public IStatus validate(Value<?> value) {
+        String address = value.getText();
+        int index;
 
-		if ((address != null) && !(address.equals(""))) {
-			for (int j = 0; j < 4; j++) {
-				index = address.indexOf(".");
-				if (index == -1 && j < 3) {
-					final String label = value.getProperty().getLabel(true, CapitalizationType.NO_CAPS, false);
-					return createErrorStatus(Resources.bind(Resources.ipAddressError, ((Value<?>) value).getText(), label));
-				}
+        if ((address != null) && !(address.equals(""))) {
+            for (int j = 0; j < 4; j++) {
+                index = address.indexOf(".");
+                if (index == -1 && j < 3) {
+                    final String label = value.getProperty().getLabel(true, CapitalizationType.NO_CAPS, false);
+                    return createErrorStatus(Resources.bind(Resources.ipAddressError, ((Value<?>) value).getText(), label));
+                }
 
-				if (j == 3) {
-					index = address.length();
-				}
+                if (j == 3) {
+                    index = address.length();
+                }
 
-				for (int i = 0; i < index; i++) {
-					if (!(Character.isDigit(address.charAt(i)))) {
-						final String label = value.getProperty().getLabel(true, CapitalizationType.NO_CAPS, false);
-						return createErrorStatus(Resources.bind(Resources.ipAddressError, ((Value<?>) value).getText(), label));
-					}
-				}
-				if (j < 3) {
-					address = address.substring(index + 1);
-				}
-			}
-		}
-		return Status.OK_STATUS;
-	}
-	
+                for (int i = 0; i < index; i++) {
+                    if (!(Character.isDigit(address.charAt(i)))) {
+                        final String label = value.getProperty().getLabel(true, CapitalizationType.NO_CAPS, false);
+                        return createErrorStatus(Resources.bind(Resources.ipAddressError, ((Value<?>) value).getText(), label));
+                    }
+                }
+                if (j < 3) {
+                    address = address.substring(index + 1);
+                }
+            }
+        }
+        return Status.OK_STATUS;
+    }
+    
     private static final class Resources
     
-	    extends NLS
-	    
-	{
-	    public static String ipAddressError;
-	
-	    static
-	    {
-	        initializeMessages( IPAddressValidator.class.getName(), Resources.class );
-	    }
-	}
+        extends NLS
+        
+    {
+        public static String ipAddressError;
+    
+        static
+        {
+            initializeMessages( IPAddressValidator.class.getName(), Resources.class );
+        }
+    }
 
 
 }

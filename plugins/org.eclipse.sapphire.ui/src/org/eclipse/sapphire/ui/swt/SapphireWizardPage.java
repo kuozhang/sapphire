@@ -7,28 +7,32 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt;
 
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import java.util.Collections;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.help.IContext;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphirePartContext;
 import org.eclipse.sapphire.ui.SapphirePartEvent;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireWizardPageListener;
 import org.eclipse.sapphire.ui.SapphireWizardPagePart;
+import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
+import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
+import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
@@ -119,23 +123,36 @@ public class SapphireWizardPage
         
         this.part.addListener( messageUpdateListener );
 
-        final String helpContextId = this.part.getDefinition().getHelpContextId().getText();
+        final ISapphireDocumentationDef documenetationDef = this.part.getDefinition().getDocumentationDef().element();
         
-        if( helpContextId != null )
+        if ( documenetationDef != null && documenetationDef.getContent().getText() != null )
         {
-            PlatformUI.getWorkbench().getHelpSystem().setHelp( innerComposite, helpContextId );
+            SapphireHelpSystem.setHelp( innerComposite, documenetationDef);
         }
-        
+        else 
+        {
+            final ISapphireDocumentationRef documenetationRef = this.part.getDefinition().getDocumentationRef().element();
+            
+            if ( documenetationRef != null  )
+            {
+                final ISapphireDocumentationDef helpContentDef2 = documenetationRef.resolve();
+                if ( helpContentDef2 != null ) 
+                {
+                    SapphireHelpSystem.setHelp( innerComposite, helpContentDef2 );
+                }
+            }
+        }
+
         setControl( composite );
     }
     
     public final void performHelp() 
     {
-        final String helpContextId = this.part.getDefinition().getHelpContextId().getText();
+        final IContext documentationContext = this.part.getDocumentationContext();
         
-        if( helpContextId != null )
+        if ( documentationContext != null  )
         {
-            PlatformUI.getWorkbench().getHelpSystem().displayHelp( helpContextId );
+            PlatformUI.getWorkbench().getHelpSystem().displayHelp( documentationContext );
         }
     }
 
@@ -154,7 +171,7 @@ public class SapphireWizardPage
             }
         }
 
-        final SapphirePartEvent event = new SapphirePartEvent( new SapphirePartContext( this.part ) );
+        final SapphirePartEvent event = new SapphirePartEvent( this.part );
         
         for( SapphirePartListener listener : this.part.getListeners() )
         {

@@ -77,6 +77,21 @@ public final class SapphireMultiStatus
             }
         }
     }
+    
+    public void merge( final IStatus status )
+    {
+        if( status.isMultiStatus() )
+        {
+            for( IStatus st : status.getChildren() )
+            {
+                add( st );
+            }
+        }
+        else
+        {
+            add( status );
+        }
+    }
 
     @Override
     public IStatus[] getChildren() 

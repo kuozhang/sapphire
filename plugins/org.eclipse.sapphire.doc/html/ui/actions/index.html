@@ -1,0 +1,304 @@
+<html>
+
+<head>
+  <title>Actions</title>
+  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>Actions</h1>
+
+<p>Every Sapphire UI part can expose operations that the user can invoke. These operations are called actions. While
+Sapphire does not prescribe how actions are surfaced to the user, a typical presentation would use buttons, menu items
+or links.</p>
+
+<p>This documents covers the API for defining actions, contributing handlers and other related topics.</p>
+
+<p>Table of Contents</p>
+
+<ol>
+  <li><a href="#actions">Actions</a></li>
+  <li><a href="#handlers">Handlers</a></li>
+  <li><a href="#handler-factories">Handler Factories</a></li>
+  <li><a href="#filters">Filters</a></li>
+  <li><a href="#links">Links</a></li>
+  <li><a href="#contexts">Contexts</a></li>
+  <li><a href="#extensions">Extensions</a></li>
+</ol>
+
+<a name="actions"><h2>Actions</h2></a>
+
+<p>An action is an abstract definition of an operation that a user may want to perform. It does not have a concrete
+implementation. That is provided by handlers that are attached separately. An action simply defines appearance,
+applicability and access.</p>
+
+<p>An action that does not have at least one active handler will not be presented to the user. This makes it possible
+to define actions fairly widely and only provide handlers in situations where it makes sense. By defining the action
+once instead of on every use, we are guaranteed the consistency of presentation.</p>
+
+<p><b>Example</b></p>
+
+<p>In this example, a message box action is declared. Note that the definition includes appearance (label and image)
+and presentation (location hints and key binding), but no sign of the implementation. The handler would need to be
+contributed separately. The handler definition would reference action id.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;action>
+        &lt;id>MessageBoxAction&lt;/id>
+        &lt;label>message&lt;/label>
+        &lt;image>images/balloon-yellow.png&lt;/image>
+        &lt;location>after:Sapphire.Browse&lt;/location>
+        &lt;location>before:Sapphire.Create&lt;/location>
+        &lt;key-binding>SHIFT+CONTROL+ALT+m&lt;/key-binding>
+    &lt;/action>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+
+<p><b>Details</b></p>
+
+##action-details##
+
+<a name="handlers"><h2>Handlers</h2></a>
+
+<p>An action handler is what performs the actual work for an action. Handlers can be contributed by multiple parties
+and multiple handlers can be active at the same time. If multiple handlers are active, the user will typically be
+given a choice of which handler to invoke. Exactly how the choice is presented is dependent on the presentation
+layer, but a common approach is to use a cascading menu or a popup menu that is activated when user clicks on an action 
+button.</p>
+
+<p><b>Example</b></p>
+
+<p>In this example, a handler is contributed for a browse action. The handler simply opens a dialog with a message.</p> 
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;action-handler>
+        &lt;action>Sapphire.Browse&lt;/action>
+        &lt;impl>MessageBoxActionHandler&lt;/impl>
+    &lt;/action-handler>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+
+<pre class="source-code"><code>public class MessageBoxActionHandler extends SapphireActionHandler
+{
+    @Override
+    protected Object run( SapphireRenderingContext context )
+    {
+        MessageDialog.openInformation( context.getShell(), "Message", "Hello World!" );
+        return null;
+    }
+}</code></pre>
+  
+<p><b>Details</b></p>
+
+##action-handler-details##
+
+<a name="handler-factories"><h2>Handler Factories</h2></a>
+
+<p>Sometimes it is necessary to be able to create handlers dynamically based on information that isn't known until
+runtime. When you contribute a handler, that handler is either activated or not depending on the provided condition. 
+When you contribute a handler factory, the factory can decide at runtime how many handlers to contribute.</p>
+
+<p><b>Example</b></p>
+
+<p>In this example, a handler factory is contribute for a browse action. The factory in turn contributes a handler for every
+file in the specified folder. Activating one of these handlers sets the property value to the absolute path of the file.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;action-handler-factory>
+        &lt;action>Sapphire.Browse&lt;/action>
+        &lt;impl>KeyFolderBrowseHandlerFactory&lt;/impl>
+        &lt;param>
+            &lt;name>folder&lt;/name>
+            &lt;value>c:\samples&lt;/value>
+        &lt;/param>
+    &lt;/action-handler-factory>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+
+<pre class="source-code"><code>public class KeyFolderBrowseHandlerFactory extends SapphireActionHandlerFactory
+{
+    private File folder;
+    
+    @Override
+    public void init( SapphireAction action, ISapphireActionHandlerFactoryDef def )
+    {
+        super.init( action, def );
+        this.folder = new File( def.getParam( "folder" ) );
+    }
+
+    @Override
+    public List<SapphireActionHandler> create()
+    {
+        List<SapphireActionHandler> handlers = new ArrayList<SapphireActionHandler>();
+        
+        for( File file : this.folder.listFiles() )
+        {
+            if( file.isFile() )
+            {
+                handlers.add( new Handler( file ) );
+            }
+        }
+        
+        return handlers;
+    }
+    
+    private static class Handler extends SapphireBrowseActionHandler
+    {
+        private final File file;
+        
+        public Handler( File file )
+        {
+            this.file = file;
+            setLabel( this.file.getName() );
+        }
+
+        @Override
+        protected String browse( SapphireRenderingContext context )
+        {
+            return this.file.getAbsolutePath();
+        }
+    }
+}</code></pre>
+
+<p><b>Details</b></p>
+
+##action-handler-factory-details##
+
+<a name="filters"><h2>Filters</h2></a>
+
+<p>In some scenarios it is useful to be able to suppress an action handler for a particular UI part 
+that might otherwise be relevant. The action handler in question may have been contributed globally via
+Sapphire's extensions mechanism, but it just doesn't make sense in a given context. The mechanism 
+for accomplishing this is action handler filters.</p>
+
+<p>Filters are specified when defining a UI part. A filter implementation must extend SapphireActionHandlerFilter
+class. Note that a filter returns true for what should be kept, so false should be returned for handlers
+that should be filtered out.</p>
+
+<p><b>Example</b></p>
+
+<p>In this example, a very simple filter is applied that removes all browse action handlers. Since an action
+will not be surfaced unless it has active handlers, this is equivalent to removing the browse action.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;action-handler-filter>
+        &lt;impl>MyFilter&lt;/impl>
+    &lt;/property-editor>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+
+<pre class="source-code"><code>public class MyFilter extends SapphireActionHandlerFilter
+{
+    @Override
+    public boolean check( SapphireActionHandler handler )
+    {
+        return ( ! handler.getAction().getId().equals( "Sapphire.Browse" ) );
+    }
+}</code></pre>
+
+<p><b>Details</b></p>
+
+##action-handler-filter-details##
+
+<a name="links"><h2>Links</h2></a>
+
+<p>Sometimes it is useful to present an adhoc link that is wired a specific action. This can be done with an action
+link, which is a UI part in its own right. An action link specifies the ID of the action that should be invoked when
+user clicks on the link. The action and its handler can be defined locally in the action link's definition. 
+Alternatively, the part hierarchy above the action link is searched until the action is found.</p>
+
+<p><b>Example</b></p>
+
+<p>In this example from the contacts sample, an "Add a contact" link is placed in the section associated with the
+"Contacts" node in the content outline. The Contacts node has the add action due to the way its child nodes are
+defined. Since the Contacts node is the nearest ancestor part to the action link that defines the add action, that is
+the action that ends up bound to the link.</p>
+
+<pre class="source-code"><code>&lt;action-link>
+    &lt;action-id>Sapphire.Add&lt;/action-id>
+    &lt;label>Add a contact&lt;/label>
+&lt;/action-link></code></pre>
+
+<img src="images/action-link.png" style="margin-left: 20px;"/>
+ 
+<a name="contexts"><h2>Contexts</h2></a>
+
+<p>Every UI part that supports actions must define one or more context. Actions are contributed to a context
+and the UI part displays all actions contributed to a context at the appropriate location.</p>
+
+<p>The following context are currently available:</p>
+
+<table>
+  <tr>
+    <th>Context</th>
+    <th>Typical Presentation</th>
+  </tr>
+  <tr>
+    <td>Sapphire.EditorPage</td>
+    <td>Buttons in the editor page header.</td>
+  </tr>
+  <tr>
+    <td>Sapphire.EditorPage.Outline</td>
+    <td>Menu items in the content outline's context menu.</td>
+  </tr>
+  <tr>
+    <td>Sapphire.EditorPage.Outline.Header</td>
+    <td>Buttons directly above the content outline.</td>
+  </tr>
+  <tr>
+    <td>Sapphire.EditorPage.Outline.Node</td>
+    <td>Menu items in the content outline's context menu.</td>
+  </tr>
+  <tr>
+    <td>Sapphire.ElementPropertyEditor</td>
+    <td>Buttons next to the property editor.</td>
+  </tr>
+  <tr>
+    <td>Sapphire.ListPropertyEditor</td>
+    <td>Buttons next to the property editor.</td>
+  </tr>
+  <tr>
+    <td>Sapphire.Section</td>
+    <td>Buttons in the section header.</td>
+  </tr>
+  <tr>
+    <td>Sapphire.ValuePropertyEditor</td>
+    <td>Buttons next to the property editor.</td>
+  </tr>
+</table>
+
+<a name="extensions"><h2>Extensions</h2></a>
+
+<p>While actions, handlers and handler factories can be contributed directly in a part's definition, sometimes
+it is more useful to contribute them in a system-wide fashion. This can be done using Sapphire's extension
+system.</p>
+
+<p>To contribute an extension, create sapphire-extension.xml file in the META-INF folder. The extension must
+be located in the same classloader as Sapphire. On an OSGi system this is done by creating a fragment to
+the org.eclipse.sapphire.ui bundle.</p>
+
+<p>The semantics and syntax of the contribution is identical to what is used in a part's definition. The biggest
+difference is that there is no implied scope, so it is very important to specify context and condition. If neither
+is specified, the contribution will be active for all UI parts, which is not very useful.</p>
+
+<p>The listing of <a href="../extensions/index.html">all extensions</a> currently contributed can be found in the 
+documentation.</p>
+
+<p><b>Example</b></p>
+
+<p>In this example, a message box action is contributed to all value property editors.</p>
+
+<pre class="source-code"><code>&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
+    &lt;action>
+        &lt;id>MessageBoxAction&lt;/id>
+        &lt;label>message&lt;/label>
+        &lt;image>images/balloon-yellow.png&lt;/image>
+        &lt;location>after:Sapphire.Browse&lt;/location>
+        &lt;location>before:Sapphire.Create&lt;/location>
+        &lt;key-binding>SHIFT+CONTROL+ALT+m&lt;/key-binding>
+        &lt;context>Sapphire.ValuePropertyEditor&lt;/context>
+    &lt;/action>
+&lt;/extension></code></pre>
+
+<br/><br/>
+
+</body>
+
+</html>

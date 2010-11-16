@@ -17,20 +17,18 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBindingMapping;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.internal.ClassReferenceResolver;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface IMasterDetailsTreeNodeFactoryDef
 
@@ -63,7 +61,7 @@ public interface IMasterDetailsTreeNodeFactoryDef
     
     @Label( standard = "definitions" )
     @Type( base = IMasterDetailsTreeNodeFactoryEntry.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "node-template", type = IMasterDetailsTreeNodeFactoryEntry.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "node-template", type = IMasterDetailsTreeNodeFactoryEntry.class ) )
     
     ListProperty PROP_TYPE_SPECIFIC_DEFINITIONS = new ListProperty( TYPE, "TypeSpecificDefinitions" );
     
@@ -71,7 +69,7 @@ public interface IMasterDetailsTreeNodeFactoryDef
     
     // *** VisibleWhenConditionClass ***
     
-    @Reference( target = Class.class, resolver = ClassReferenceResolver.class )
+    @Reference( target = Class.class )
     @Label( standard = "visible when condition class" )
     @XmlBinding( path = "visible-when/condition/class" )
     

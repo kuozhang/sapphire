@@ -14,8 +14,10 @@ package org.eclipse.sapphire.samples.gallery;
 import java.io.File;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.sapphire.modeling.xml.ModelStoreForXml;
-import org.eclipse.sapphire.samples.gallery.internal.Gallery;
+import org.eclipse.sapphire.modeling.ResourceStoreException;
+import org.eclipse.sapphire.modeling.WorkspaceFileResourceStore;
+import org.eclipse.sapphire.modeling.xml.RootXmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -23,19 +25,25 @@ import org.eclipse.sapphire.samples.gallery.internal.Gallery;
 
 public final class GalleryFactory
 {
-    public static IGallery load( final File file )
+    public static IGallery load( final File file ) 
+    
+        throws ResourceStoreException
+        
     {
-        return load( new ModelStoreForXml( file ) );
+        return load( new XmlResourceStore( file ) );
     }
     
-    public static IGallery load( final IFile file )
+    public static IGallery load( final IFile file ) 
+    
+        throws ResourceStoreException
+        
     {
-        return load( new ModelStoreForXml( file ) );
+        return load( new XmlResourceStore( new WorkspaceFileResourceStore( file ) ) );
     }
     
-    public static IGallery load( final ModelStoreForXml modelStore )
+    public static IGallery load( final XmlResourceStore resourceStore )
     {
-        return new Gallery( modelStore );
+        return IGallery.TYPE.instantiate( new RootXmlResource( resourceStore ) );
     }
     
 }

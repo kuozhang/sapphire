@@ -1,28 +1,40 @@
-<definition 
-  xmlns="http://xmlns.oracle.com/eclipse/tools/sapphire/ui"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://xmlns.oracle.com/eclipse/tools/sapphire/ui http://xmlns.oracle.com/eclipse/tools/sapphire/ui">
+<definition>
 
   <import>
     <bundle>org.eclipse.sapphire.ui</bundle>
-    <package>org.eclipse.sapphire.ui.assist</package>
+    <package>org.eclipse.sapphire.ui.swt.renderer.actions</package>
     <package>org.eclipse.sapphire.ui.renderers.swt</package>
   </import>
 
   <import>
     <bundle>org.eclipse.sapphire.samples</bundle>
     <package>org.eclipse.sapphire.samples.gallery</package>
+    <package>org.eclipse.sapphire.samples.gallery.internal</package>
   </import>
   
+  <documentation>
+    <id>documentation-id</id>
+    <title>Help gallery</title>
+    <content>content help for the help gallery</content>
+    <topic>
+      <label>Eclipse Home</label>
+      <href>http://www.eclipse.org</href>
+    </topic>
+  </documentation>
+
   <editor-page>
     <id>main</id>
     <page-header-text>Sapphire Gallery</page-header-text>
     <initial-selection>Simple Values</initial-selection>
+    <documentation>
+      <title>Sapphire Gallery</title>
+      <content>content help for Sapphire Gallery</content>
+    </documentation>
     <root-node>
       <node>
         <label>Simple Values</label>
         <section>
-          <description>abc</description>
+          <description>In some situations, the description text for say a section gets a bit long. The approach we've adopted is to include the summary in the section and then add section level help content. ###brk###This adequate, but may not be as intuitive as say a "More details..." link at the end of the on-screen description text with that pops up a tooltip-style window with complete information.</description>
         </section>
         <node>
           <label>Numbers</label>
@@ -33,6 +45,9 @@
             <label>Integer</label>
             <property>IntegerValueGallery</property>
             <section>
+              <documentation-ref>
+                <id>documentation-id</id>
+              </documentation-ref>
               <content>
                 <property-editor>Simple</property-editor>
                 <property-editor>Positive</property-editor>
@@ -234,20 +249,24 @@
             <property-editor>AbsoluteFilePath</property-editor>
             <property-editor>AbsoluteFolderPath</property-editor>
             <property-editor>RelativeFilePath</property-editor>
+            <property-editor>EclipseWorkspaceFilePath</property-editor>
             <property-editor>
               <property>MultiOptionPath</property>
-              <browse-handler>
-                <class>AbsoluteFilePathValueBrowseHandler</class>
+              <action-handler>
+                <action>Sapphire.Browse</action>
+                <impl>AbsoluteFilePathBrowseActionHandler</impl>
                 <param>
                   <name>extensions</name>
                   <value>jar,zip</value>
                 </param>
-              </browse-handler>
-              <browse-handler>
-                <class>AbsoluteFolderPathValueBrowseHandler</class>
-              </browse-handler>
-              <browse-handler>
-                <class>EclipseWorkspacePathValueBrowseHandler</class>
+              </action-handler>
+              <action-handler>
+                <action>Sapphire.Browse</action>
+                <impl>AbsoluteFolderPathBrowseActionHandler</impl>
+              </action-handler>
+              <action-handler>
+                <action>Sapphire.Browse</action>
+                <impl>EclipseWorkspacePathBrowseActionHandler</impl>
                 <param>
                   <name>extensions</name>
                   <value>jar,zip</value>
@@ -256,24 +275,27 @@
                   <name>leading-slash</name>
                   <value>true</value>
                 </param>
-              </browse-handler>
+              </action-handler>
             </property-editor>
             <property-editor>
               <property>List</property>
               <child-property>
-                <name>MultiOptionPath</name>
-                <browse-handler>
-                  <class>AbsoluteFilePathValueBrowseHandler</class>
+                <property>MultiOptionPath</property>
+                <action-handler>
+                  <action>Sapphire.Browse</action>
+                  <impl>AbsoluteFilePathBrowseActionHandler</impl>
                   <param>
                     <name>extensions</name>
                     <value>jar,zip</value>
                   </param>
-                </browse-handler>
-                <browse-handler>
-                  <class>AbsoluteFolderPathValueBrowseHandler</class>
-                </browse-handler>
-                <browse-handler>
-                  <class>EclipseWorkspacePathValueBrowseHandler</class>
+                </action-handler>
+                <action-handler>
+                  <action>Sapphire.Browse</action>
+                  <impl>AbsoluteFolderPathBrowseActionHandler</impl>
+                </action-handler>
+                <action-handler>
+                  <action>Sapphire.Browse</action>
+                  <impl>EclipseWorkspacePathBrowseActionHandler</impl>
                   <param>
                     <name>extensions</name>
                     <value>jar,zip</value>
@@ -282,7 +304,7 @@
                     <name>leading-slash</name>
                     <value>true</value>
                   </param>
-                </browse-handler>
+                </action-handler>
               </child-property>
             </property-editor>
           </content>
@@ -328,6 +350,383 @@
             </property-editor>
           </content>
         </section>
+      </node>
+      <node>
+        <label>Actions</label>
+        <property>ValuePropertyActionsGallery</property>
+        <section>
+          <content>
+            <property-editor>Entities</property-editor>
+          </content>
+        </section>
+        <section>
+          <description>Alternate UI which uses the compact list</description>
+          <content>
+            <property-editor>
+              <property>Entities</property>
+              <hint>
+                <name>factory</name>
+                <value>CompactListPropertyEditorRenderer$Factory</value>
+              </hint>
+            </property-editor>
+          </content>
+        </section>
+        <node>
+          <label>Value Property Editor</label>
+          <section>
+            <content>
+              <label>
+                The following sample shows actions in the context of a value property editor. The browse action handler
+                is contributed by the system. The create action handler is contributed in the sdef file. Notice how the 
+                create button gets disabled when the referenced entity already exists.
+              </label>
+              <spacer/>
+              <property-editor>
+                <property>Reference</property>
+                <action-handler>
+                  <action>Sapphire.Create</action>
+                  <impl>ValuePropertyActionsGalleryReferenceCreateActionHandler1</impl>
+                </action-handler>
+              </property-editor>
+              <spacer/>
+              <spacer/>
+              <label>
+                The following sample shows how multiple action handlers can be concurrently associated with the
+                same action. The create button is enabled if any of its action handlers are enabled. Pressing on the 
+                button activates a menu that shows all available action handlers. Notice how the action handler label 
+                can vary depending on a property value. 
+              </label>
+              <spacer/>
+              <property-editor>
+                <property>Reference</property>
+                <action-handler>
+                  <action>Sapphire.Create</action>
+                  <impl>ValuePropertyActionsGalleryReferenceCreateActionHandler1</impl>
+                </action-handler>
+                <action-handler>
+                  <action>Sapphire.Create</action>
+                  <impl>ValuePropertyActionsGalleryReferenceCreateActionHandler2</impl>
+                </action-handler>
+              </property-editor>
+              <spacer/>
+              <spacer/>
+              <label>
+                The following sample shows how to define a new action in the sdef file, how to position it in relation
+                to other actions, and how to associate images with action handlers. It also reinforces the concept
+                that arbitrary handlers can be added to any action by contributing message dialog handlers to create
+                and browse actions.
+              </label>
+              <spacer/>
+              <property-editor>
+                <property>Reference</property>
+                <action>
+                  <id>Sapphire.Sample.Message</id>
+                  <label>message</label>
+                  <image>images/balloon-yellow.png</image>
+                  <location>after:Sapphire.Browse</location>
+                  <location>before:Sapphire.Create</location>
+                  <key-binding>SHIFT+CONTROL+ALT+m</key-binding>
+                </action>
+                <action-handler>
+                  <action>Sapphire.Create</action>
+                  <id>create.1</id>
+                  <impl>ValuePropertyActionsGalleryReferenceCreateActionHandler1</impl>
+                </action-handler>
+                <action-handler>
+                  <action>Sapphire.Create</action>
+                  <id>create.2</id>
+                  <impl>ValuePropertyActionsGalleryReferenceCreateActionHandler2</impl>
+                </action-handler>
+                <action-handler>
+                  <action>Sapphire.Sample.Message</action>
+                  <id>Sapphire.Sample.Message.1</id>
+                  <impl>MessageBoxActionHandler</impl>
+                  <label>first message</label>
+                  <image>images/balloon-yellow.png</image>
+                  <param>
+                    <name>message</name>
+                    <value>This is the first message.</value>
+                  </param>
+                </action-handler>
+                <action-handler>
+                  <action>Sapphire.Sample.Message</action>
+                  <id>Sapphire.Sample.Message.2</id>
+                  <impl>MessageBoxActionHandler</impl>
+                  <label>second message</label>
+                  <image>images/balloon-blue.png</image>
+                  <location>after:Sapphire.Sample.Message.1</location>
+                  <param>
+                    <name>message</name>
+                    <value>This is the second message.</value>
+                  </param>
+                </action-handler>
+                <action-handler>
+                  <action>Sapphire.Sample.Message</action>
+                  <id>Sapphire.Sample.Message.3</id>
+                  <impl>MessageBoxActionHandler</impl>
+                  <label>third message</label>
+                  <image>images/balloon-red.png</image>
+                  <location>after:Sapphire.Sample.Message.2</location>
+                  <param>
+                    <name>message</name>
+                    <value>This is the third message.</value>
+                  </param>
+                </action-handler>
+                <action-handler>
+                  <action>Sapphire.Browse</action>
+                  <id>Sapphire.Sample.Message.4</id>
+                  <impl>MessageBoxActionHandler</impl>
+                  <label>fourth message</label>
+                  <image>images/balloon-yellow.png</image>
+                  <location>after:Sapphire.Browse.Possible</location>
+                  <param>
+                    <name>message</name>
+                    <value>This is the fourth message.</value>
+                  </param>
+                </action-handler>
+                <action-handler>
+                  <action>Sapphire.Create</action>
+                  <id>Sapphire.Sample.Message.5</id>
+                  <impl>MessageBoxActionHandler</impl>
+                  <label>fifth message</label>
+                  <image>images/balloon-yellow.png</image>
+                  <location>after:create.2</location>
+                  <param>
+                    <name>message</name>
+                    <value>This is the fifth message.</value>
+                  </param>
+                </action-handler>
+              </property-editor>
+              <spacer/>
+              <spacer/>
+              <label>
+                The following sample shows how to define a toggle action. Unlike a push action, a toggle action only
+                supports one active handler. The first handler in the sequence specified by location hints will be
+                used.
+              </label>
+              <spacer/>
+              <property-editor>
+                <property>Reference</property>
+                <action>
+                  <id>Sapphire.Sample.Prefix</id>
+                  <label>prefix</label>
+                  <image>images/prefix.png</image>
+                  <type>toggle</type>
+                  <location>after:Sapphire.Browse</location>
+                  <key-binding>SHIFT+CONTROL+ALT+p</key-binding>
+                </action>
+                <action-handler>
+                  <action>Sapphire.Sample.Prefix</action>
+                  <impl>PrefixActionHandlerForValue</impl>
+                  <param>
+                    <name>prefix</name>
+                    <value>Prefix</value>
+                  </param>
+                </action-handler>
+              </property-editor>
+            </content>
+          </section>
+        </node>
+        <node>
+          <label>List Property Editor</label>
+          <section>
+            <content>
+              <label>
+                The following sample shows actions inside a cell editor. In this case only system action handlers are used. 
+              </label>
+              <spacer/>
+              <property-editor>References</property-editor>
+              <spacer/>
+              <spacer/>
+              <label>
+                The following sample shows multiple actions inside a cell editor. The create action handler and the message
+                handler for the browse action are contributed in the sdef file. This sample also shows adding actions and
+                handlers to the list property editor itself.
+              </label>
+              <spacer/>
+              <property-editor>
+                <property>References</property>
+                <action>
+                  <id>Sapphire.Sample.Message</id>
+                  <label>message</label>
+                  <image>images/balloon-yellow.png</image>
+                  <location>before:Sapphire.Add</location>
+                  <key-binding>SHIFT+CONTROL+ALT+m</key-binding>
+                </action>
+                <action-handler>
+                  <action>Sapphire.Sample.Message</action>
+                  <id>Sapphire.Sample.Message.Yellow</id>
+                  <impl>MessageBoxActionHandler</impl>
+                  <label>yellow message</label>
+                  <image>images/balloon-yellow.png</image>
+                  <param>
+                    <name>message</name>
+                    <value>This is a yellow message.</value>
+                  </param>
+                </action-handler>
+                <action-handler>
+                  <action>Sapphire.Sample.Message</action>
+                  <id>Sapphire.Sample.Message.Blue</id>
+                  <impl>MessageBoxActionHandler</impl>
+                  <label>blue message</label>
+                  <image>images/balloon-blue.png</image>
+                  <param>
+                    <name>message</name>
+                    <value>This is a blue message.</value>
+                  </param>
+                </action-handler>
+                <action-handler>
+                  <action>Sapphire.Sample.Message</action>
+                  <id>Sapphire.Sample.Message.Red</id>
+                  <impl>MessageBoxActionHandler</impl>
+                  <label>red message</label>
+                  <image>images/balloon-red.png</image>
+                  <param>
+                    <name>message</name>
+                    <value>This is a red message.</value>
+                  </param>
+                </action-handler>
+                <action-handler>
+                  <action>Sapphire.Add</action>
+                  <id>Sapphire.Sample.Message.Yellow</id>
+                  <impl>MessageBoxActionHandler</impl>
+                  <label>yellow message</label>
+                  <image>images/balloon-yellow.png</image>
+                  <param>
+                    <name>message</name>
+                    <value>This is a yellow message.</value>
+                  </param>
+                </action-handler>
+                <action-handler>
+                  <action>Sapphire.Add</action>
+                  <id>Sapphire.Sample.Message.Blue</id>
+                  <impl>MessageBoxActionHandler</impl>
+                  <label>blue message</label>
+                  <image>images/balloon-blue.png</image>
+                  <param>
+                    <name>message</name>
+                    <value>This is a blue message.</value>
+                  </param>
+                </action-handler>
+                <child-property>
+                  <property>Reference</property>
+                  <action-handler>
+                    <action>Sapphire.Create</action>
+                    <impl>ValuePropertyActionsGalleryReferenceCreateActionHandler2</impl>
+                  </action-handler>
+                  <action-handler>
+                    <action>Sapphire.Browse</action>
+                    <id>Sapphire.Sample.Message</id>
+                    <impl>MessageBoxActionHandler</impl>
+                    <label>message</label>
+                    <image>images/balloon-yellow.png</image>
+                    <location>after:Sapphire.Browse.Possible</location>
+                    <param>
+                      <name>message</name>
+                      <value>This is a message.</value>
+                    </param>
+                  </action-handler>
+                </child-property>
+              </property-editor>
+              <spacer/>
+              <spacer/>
+              <label>
+                The following sample shows how to define toggle actions for a list property editor as well as inside
+                a cell editor. Unlike a push action, a toggle action only supports one active handler. The first 
+                handler in the sequence specified by location hints will be used.
+              </label>
+              <spacer/>
+              <label>
+                Note: There is currently no support for rendering of toggle states for actions inside a cell
+                editor. In that context, toggle actions will only operate as toggles at API level.
+              </label>
+              <spacer/>
+              <property-editor>
+                <property>References</property>
+                <action>
+                  <id>Sapphire.Sample.Prefix</id>
+                  <label>prefix first</label>
+                  <image>images/prefix.png</image>
+                  <type>toggle</type>
+                  <location>before:Sapphire.Add</location>
+                  <key-binding>SHIFT+CONTROL+ALT+p</key-binding>
+                </action>
+                <action-handler>
+                  <action>Sapphire.Sample.Prefix</action>
+                  <impl>PrefixActionHandlerForList</impl>
+                  <param>
+                    <name>prefix</name>
+                    <value>Prefix</value>
+                  </param>
+                </action-handler>
+                <child-property>
+                  <property>Reference</property>
+                  <action>
+                    <id>Sapphire.Sample.Prefix</id>
+                    <label>prefix</label>
+                    <image>images/prefix-mini.png</image>
+                    <type>toggle</type>
+                    <location>after:Sapphire.Browse</location>
+                    <key-binding>SHIFT+CONTROL+ALT+p</key-binding>
+                  </action>
+                  <action-handler>
+                    <action>Sapphire.Sample.Prefix</action>
+                    <impl>PrefixActionHandlerForValue</impl>
+                    <param>
+                      <name>prefix</name>
+                      <value>Prefix</value>
+                    </param>
+                  </action-handler>
+                </child-property>
+              </property-editor>
+            </content>
+          </section>
+        </node>
+      </node>
+      <node>
+        <label>Help Gallery</label>
+        <section>
+          <description>Help gallery shows content help capabilities in Sapphire.</description>
+          <documentation-ref>
+            <id>documentation-id</id>
+          </documentation-ref>
+        </section>
+        <node>
+          <label>Help</label>
+          <property>HelpGallery</property>
+          <section>
+            <description>Simple shows the help content annotation. Positive shows the help content provider annotation. Range constrained with default shows the auto-generated content help.</description>
+            <documentation>
+              <title>Help</title>
+              <content>Simple shows the help content annotation.[pbr/]Positive shows the help content provider annotation.[pbr/]Range constrained with default shows the auto-generated content help.</content>
+            </documentation>
+            <content>
+              <property-editor>Simple</property-editor>
+              <property-editor>Positive</property-editor>
+              <property-editor>RangeConstrainedWithDefault</property-editor>
+              <property-editor>SimpleChoice</property-editor>
+            </content>
+          </section>
+        </node>
+        <node>
+          <label>Extended Help</label>
+          <property>ExtendedHelpGallery</property>
+          <section>
+            <description>Content help for the ExtendedHelpGallery model element will be appended to all properties. Both Simple and Positive have options to augment, in which the parent's content help will be appended. </description>
+            <documentation>
+              <topic>
+                <label>Eclipse Home</label>
+                <href>http://www.eclipse.org</href>
+              </topic>
+            </documentation>
+            <content>
+              <property-editor>Simple</property-editor>
+              <property-editor>Positive</property-editor>
+              <property-editor>RangeConstrainedWithDefault</property-editor>
+              <property-editor>SimpleChoice</property-editor>
+            </content>
+          </section>
+        </node>
       </node>
     </root-node>
   </editor-page>

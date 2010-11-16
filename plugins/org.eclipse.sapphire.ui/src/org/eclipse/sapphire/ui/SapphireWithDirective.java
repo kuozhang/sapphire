@@ -35,7 +35,7 @@ public final class SapphireWithDirective
     {
         this.definition = (ISapphireWithDirectiveDef) super.definition;
         this.property = (ElementProperty) resolve( this.definition.getProperty().getContent() );
-        this.modelElementForChildParts = (IModelElement) this.property.invokeGetterMethod( getModelElement() );
+        this.modelElementForChildParts = getModelElement().read( this.property ).element();
         
         super.init();
     }

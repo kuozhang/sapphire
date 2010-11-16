@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
+import static org.eclipse.sapphire.modeling.xml.XmlUtil.EMPTY_STRING;
+
 import org.w3c.dom.Comment;
 import org.w3c.dom.Node;
 
@@ -23,23 +25,22 @@ public class XmlComment
     extends XmlNode
     
 {
-    private final Comment domComment;
-    
-    public XmlComment( final Node domNode, final ModelStoreForXml modelStoreForXml )
+    public XmlComment( final XmlElement parent,
+                       final Node domNode )
     {
-        super( domNode, modelStoreForXml );
-        this.domComment = (Comment) domNode;
+        super( parent.getResourceStore(), parent, domNode );
     }
     
-    public Comment getDomComment()
+    @Override
+    public Comment getDomNode()
     {
-        return this.domComment;
+        return (Comment) super.getDomNode();
     }
     
     @Override
     protected String getTextInternal()
     {
-        final String text = this.domComment.getData();
+        final String text = getDomNode().getData();
         
         if( text == null )
         {
@@ -54,17 +55,22 @@ public class XmlComment
     @Override
     public void setText( final String text )
     {
+        validateEdit();
+        
         final String txt = ( text == null ? EMPTY_STRING : text.trim() );
-        this.domComment.setData( txt );
+        getDomNode().setData( txt );
     }
     
     @Override
     public void remove()
     {
-        final Node parent = this.domComment.getParentNode();
-        final Node previousSibling = this.domComment.getPreviousSibling();
+        validateEdit();
+        
+        final Comment comment = getDomNode();
+        final Node parent = comment.getParentNode();
+        final Node previousSibling = comment.getPreviousSibling();
          
-        parent.removeChild( this.domComment );
+        parent.removeChild( comment );
          
         if( previousSibling.getNodeType() == Node.TEXT_NODE &&
             previousSibling.getNodeValue().trim().length() == 0 )
@@ -72,6 +78,5 @@ public class XmlComment
             parent.removeChild( previousSibling );
         }
     }
-    
     
 }

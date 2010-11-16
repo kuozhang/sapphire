@@ -12,17 +12,16 @@
 package org.eclipse.sapphire.samples.contacts;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.sapphire.modeling.IRemovable;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
-import org.eclipse.sapphire.modeling.annotations.ValuePropertyCustomBinding;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.samples.contacts.internal.AreaCodeBinding;
 import org.eclipse.sapphire.samples.contacts.internal.LocalNumberBinding;
@@ -31,11 +30,11 @@ import org.eclipse.sapphire.samples.contacts.internal.LocalNumberBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface IPhoneNumber
 
-    extends IModelElementForXml, IRemovable
+    extends IModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( IPhoneNumber.class );
@@ -43,7 +42,7 @@ public interface IPhoneNumber
     // *** Type ***
     
     @Label( standard = "type", full = "phone number type" )
-    @DefaultValue( "home" )
+    @DefaultValue( text = "home" )
     @XmlBinding( path = "type" )
     
     @PossibleValues
@@ -67,7 +66,7 @@ public interface IPhoneNumber
     
     @Label( standard = "area code" )
     @NonNullValue
-    @ValuePropertyCustomBinding( impl = AreaCodeBinding.class )
+    @CustomXmlValueBinding( impl = AreaCodeBinding.class )
     
     ValueProperty PROP_AREA_CODE = new ValueProperty( TYPE, "AreaCode" );
     
@@ -78,7 +77,7 @@ public interface IPhoneNumber
     
     @Label( standard = "local number" )
     @NonNullValue
-    @ValuePropertyCustomBinding( impl = LocalNumberBinding.class )
+    @CustomXmlValueBinding( impl = LocalNumberBinding.class )
     
     ValueProperty PROP_LOCAL_NUMBER = new ValueProperty( TYPE, "LocalNumber" );
     

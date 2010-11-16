@@ -18,19 +18,18 @@ import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_PREFER_RADIO_B
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_PREFER_VERTICAL_RADIO_BUTTONS;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.RELATED_CONTROLS;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gd;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhfill;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdhindent;
-import static org.eclipse.sapphire.ui.util.SwtUtil.gdwhint;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glayout;
-import static org.eclipse.sapphire.ui.util.SwtUtil.glspacing;
-import static org.eclipse.sapphire.ui.util.SwtUtil.hspan;
-import static org.eclipse.sapphire.ui.util.SwtUtil.valign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.ui.SapphireCommands;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
@@ -92,12 +91,12 @@ public final class EnumPropertyEditorRenderer
             if( preferVerticalRadioButtonBinding )
             {
                 final Composite composite = new Composite( parent, SWT.NONE );
-                composite.setLayoutData( hspan( gdhfill(), hspan ) );
+                composite.setLayoutData( gdhspan( gdhfill(), hspan ) );
                 composite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
                 this.context.adapt( composite );
                 
                 decorator = new PropertyEditorAssistDecorator( part, this.context, composite );
-                decorator.getControl().setLayoutData( valign( gd(), SWT.CENTER ) );
+                decorator.getControl().setLayoutData( gdvalign( gd(), SWT.CENTER ) );
                 
                 final Label label = new Label( composite, SWT.WRAP );
                 label.setLayoutData( gd() );
@@ -122,7 +121,7 @@ public final class EnumPropertyEditorRenderer
         if( preferVerticalRadioButtonBinding )
         {
             final RadioButtonsGroup buttonsGroup = new RadioButtonsGroup( this.context, parent, true );
-            buttonsGroup.setLayoutData( gdhindent( hspan( gdhfill(), hspan ), baseIndent + 20 ) );
+            buttonsGroup.setLayoutData( gdhindent( gdhspan( gdhfill(), hspan ), baseIndent + 20 ) );
             this.context.adapt( buttonsGroup );
             
             this.control = buttonsGroup;
@@ -133,14 +132,14 @@ public final class EnumPropertyEditorRenderer
             composite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
             this.context.adapt( composite );
             
-            decorator = new PropertyEditorAssistDecorator( part, this.context, composite );
+            decorator = createDecorator( composite );
             decorator.addEditorControl( composite );
             
             if( preferRadioButtonBinding || ( enumValues.length <= 3 && ! preferComboBinding ) )
             {
-                composite.setLayoutData( hspan( gd(), hspan ) );
+                composite.setLayoutData( gdhspan( gd(), hspan ) );
 
-                decorator.getControl().setLayoutData( valign( gd(), SWT.CENTER ) );
+                decorator.getControl().setLayoutData( gdvalign( gd(), SWT.CENTER ) );
 
                 final RadioButtonsGroup buttonsGroup = new RadioButtonsGroup( this.context, composite, false );
                 buttonsGroup.setLayoutData( gdhfill() );
@@ -151,16 +150,14 @@ public final class EnumPropertyEditorRenderer
             else
             {
                 final int whint = part.getRenderingHint( ISapphirePartDef.HINT_WIDTH, SWT.DEFAULT );
-                composite.setLayoutData( hspan( whint == SWT.DEFAULT ? gdhfill() : gdwhint( gd(), whint ), hspan ) );
+                composite.setLayoutData( gdhspan( whint == SWT.DEFAULT ? gdhfill() : gdwhint( gd(), whint ), hspan ) );
                 
-                decorator.getControl().setLayoutData( valign( gd(), SWT.TOP ) );
+                decorator.getControl().setLayoutData( gdvalign( gd(), SWT.TOP ) );
 
                 final Combo c = new Combo( composite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
                 c.setLayoutData( gdhfill() );
                 c.setVisibleItemCount( 10 );
                 this.context.adapt( c );
-                
-                SapphireCommands.configurePropertyEditorContext( c );
                 
                 this.control = c;
             }

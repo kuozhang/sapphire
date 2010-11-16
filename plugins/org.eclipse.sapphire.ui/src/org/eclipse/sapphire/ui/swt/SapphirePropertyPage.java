@@ -11,13 +11,12 @@
 
 package org.eclipse.sapphire.ui.swt;
 
-import java.io.IOException;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -103,11 +102,11 @@ public abstract class SapphirePropertyPage
     {
         try
         {
-            this.modelElement.getModel().save();
+            this.modelElement.resource().save();
             
             return true;
         }
-        catch( IOException e )
+        catch( ResourceStoreException e )
         {
             MessageDialog.openError( getShell(), Resources.errorDialogTitle, e.getMessage() );
             

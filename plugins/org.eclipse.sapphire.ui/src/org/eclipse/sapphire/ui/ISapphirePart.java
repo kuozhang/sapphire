@@ -7,13 +7,17 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.help.IContext;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.ui.actions.Action;
+import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -24,12 +28,18 @@ public interface ISapphirePart
     ISapphirePart getParentPart();
     <T> T getNearestPart( final Class<T> partType );
     IModelElement getModelElement();
-    Action getAction( String id );
     IStatus getValidationState();
-    String getHelpContextId();
+    IContext getDocumentationContext();
     SapphireImageCache getImageCache();
     void addListener( SapphirePartListener listener );
     void removeListener( SapphirePartListener listener );
     void dispose();
+    ISapphirePartDef getDefinition();
+    
+    Set<String> getActionContexts();
+    String getMainActionContext();
+    SapphireActionGroup getActions();
+    SapphireActionGroup getActions( String context );
+    SapphireAction getAction( String id );
     
 }

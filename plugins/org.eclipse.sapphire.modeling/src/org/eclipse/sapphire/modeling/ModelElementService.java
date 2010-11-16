@@ -27,7 +27,7 @@ public abstract class ModelElementService
         this.element = element;
     }
     
-    public final IModelElement getModelElement()
+    public final IModelElement element()
     {
         return this.element;
     }

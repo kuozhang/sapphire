@@ -11,22 +11,22 @@
 
 package org.eclipse.sapphire.samples.calendar.integrated;
 
-import org.eclipse.sapphire.modeling.IModel;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateStub;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateStub
+@GenerateImpl
 
 public interface ICalendar
 
-    extends IModel
+    extends IModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( ICalendar.class );

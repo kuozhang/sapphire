@@ -7,20 +7,20 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [bugzilla 329103] modernize the look of property editor assist popup
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.assist.internal;
 
 import java.util.Map;
 
-import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.SapphirePopup;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
@@ -44,10 +44,9 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 public class PropertyEditorAssistDialog
     
-    extends PopupDialog
+    extends SapphirePopup
 
 {
-    private final Point position;
     private final PropertyEditorAssistContext context;
     private final FormToolkit toolkit;
     private Composite composite;
@@ -56,9 +55,8 @@ public class PropertyEditorAssistDialog
                                        final Point point,
                                        final PropertyEditorAssistContext context )
     {
-        super( shell, SWT.TOOL, true, true, false, false, false, null, null );
+        super( shell.getDisplay(), point);
         
-        this.position = point;
         this.toolkit = new FormToolkit( Display.getDefault() );
         this.context = context;
     }
@@ -68,25 +66,18 @@ public class PropertyEditorAssistDialog
         super.configureShell( shell );
     }
     
-    protected Control createContents( final Composite parent )
+    @Override
+    protected Control createContentArea( final Composite parent )
     {
-        initializeBounds();
-        return createDialogArea( parent );
-    }
-    
-    protected Control createDialogArea( final Composite parent )
-    {
-        this.composite = (Composite) super.createDialogArea( parent );
-        
-        final Color bgcolor = getShell().getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND );
+        this.composite = (Composite) super.createContentArea( parent );
         
         final ScrolledForm form = this.toolkit.createScrolledForm( this.composite );
-        form.setBackground( bgcolor );
         
         TableWrapLayout layout = new TableWrapLayout();
-        layout.leftMargin = 10;
-        layout.rightMargin = 10;
-        layout.topMargin = 10;
+        layout.leftMargin = 5;
+        layout.rightMargin = 5;
+        layout.topMargin = 5;
+        layout.bottomMargin = 0;
         layout.verticalSpacing = 10;
         form.getBody().setLayout( layout );
         
@@ -101,7 +92,6 @@ public class PropertyEditorAssistDialog
                 = this.toolkit.createSection( form.getBody(), ExpandableComposite.EXPANDED );
             
             this.toolkit.createCompositeSeparator( section );
-            section.setBackground( bgcolor );
             section.clientVerticalSpacing = 9;
             section.setText( secdef.getLabel() );
             
@@ -125,7 +115,6 @@ public class PropertyEditorAssistDialog
             for( PropertyEditorAssistContribution contribution : secdef.getContributions() )
             {
                 final FormText text = new FormText( composite, SWT.WRAP );
-                text.setBackground( bgcolor );
                 
                 td = new TableWrapData();
                 td.align = TableWrapData.FILL;
@@ -136,7 +125,7 @@ public class PropertyEditorAssistDialog
                 {
                     text.setImage( image.getKey(), image.getValue() );
                 }
-
+                
                 final StringBuffer buffer = new StringBuffer();
                 buffer.append( "<form>" ); //$NON-NLS-1$
                 buffer.append( contribution.getText() );
@@ -185,16 +174,6 @@ public class PropertyEditorAssistDialog
         parent.pack();
         
         return this.composite;
-    }
-    
-    protected Point getInitialLocation( Point size )
-    {
-        if( this.position == null )
-        {
-            return super.getInitialLocation( size );
-        }
-        
-        return this.position;
     }
     
     public boolean close()

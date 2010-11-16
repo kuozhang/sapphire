@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.samples.gallery;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -19,28 +20,27 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.AbsolutePath;
 import org.eclipse.sapphire.modeling.annotations.BasePathsProvider;
+import org.eclipse.sapphire.modeling.annotations.EclipseWorkspacePath;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.ValidFileExtensions;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBindingMapping;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.samples.gallery.ui.CustomBasePathsProvider;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface IBrowseSupportGallery
 
-    extends IModelElementForXml
+    extends IModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( IBrowseSupportGallery.class );
@@ -92,6 +92,20 @@ public interface IBrowseSupportGallery
     void setRelativeFilePath( String value );
     void setRelativeFilePath( IPath value );
     
+    // *** EclipseWorkspaceFilePath ***
+    
+    @Type( base = IPath.class )
+    @Label( standard = "eclipse workspace file path" )
+    @EclipseWorkspacePath
+    @MustExist
+    @XmlBinding( path = "eclipse-workspace-file-path" )
+    
+    ValueProperty PROP_ECLIPSE_WORKSPACE_FILE_PATH = new ValueProperty( TYPE, "EclipseWorkspaceFilePath" );
+    
+    Value<IPath> getEclipseWorkspaceFilePath();
+    void setEclipseWorkspaceFilePath( String value );
+    void setEclipseWorkspaceFilePath( IPath value );
+    
     // *** MultiOptionPath ***
     
     @Type( base = IPath.class )
@@ -107,7 +121,7 @@ public interface IBrowseSupportGallery
     // *** List ***
     
     @Type( base = IBrowseSupportGalleryListEntry.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "list-entry", type = IBrowseSupportGalleryListEntry.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "list-entry", type = IBrowseSupportGalleryListEntry.class ) )
     @Label( standard = "list" )
     
     ListProperty PROP_LIST = new ListProperty( TYPE, "List" );

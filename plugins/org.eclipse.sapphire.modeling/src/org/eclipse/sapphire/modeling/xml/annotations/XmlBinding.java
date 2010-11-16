@@ -21,11 +21,9 @@ import java.lang.annotation.Target;
  */
 
 @Retention( RetentionPolicy.RUNTIME )
-@Target( { ElementType.FIELD, ElementType.TYPE } )
+@Target( ElementType.FIELD )
 
 public @interface XmlBinding
 {
     String path();
-    String options() default "";
-    boolean removeExtraWhitespace() default false;
 }

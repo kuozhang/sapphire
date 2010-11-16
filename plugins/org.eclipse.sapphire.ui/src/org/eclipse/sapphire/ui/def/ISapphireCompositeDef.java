@@ -15,12 +15,11 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.DefaultValueProvider;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.internal.CompositeMarginLeftRightDefaultValueProvider;
 import org.eclipse.sapphire.ui.def.internal.CompositeMarginTopBottomDefaultValueProvider;
@@ -31,7 +30,7 @@ import org.eclipse.sapphire.ui.def.internal.CompositeMarginWidthHeightDefaultVal
  */
 
 @Label( standard = "composite" )
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface ISapphireCompositeDef
 
@@ -55,7 +54,7 @@ public interface ISapphireCompositeDef
     
     @Type( base = Boolean.class )
     @Label( standard = "indent" )
-    @DefaultValue( "false" )
+    @DefaultValue( text = "false" )
     @XmlBinding( path = "indent" )
     
     ValueProperty PROP_INDENT = new ValueProperty( TYPE, "Indent" );
@@ -68,7 +67,7 @@ public interface ISapphireCompositeDef
     
     @Type( base = Boolean.class )
     @Label( standard = "scroll vertically" )
-    @DefaultValue( "false" )
+    @DefaultValue( text = "false" )
     @XmlBinding( path = "scroll-vertically" )
     
     ValueProperty PROP_SCROLL_VERTICALLY = new ValueProperty( TYPE, "ScrollVertically" );
@@ -81,7 +80,7 @@ public interface ISapphireCompositeDef
     
     @Type( base = Boolean.class )
     @Label( standard = "scroll horizontally" )
-    @DefaultValue( "false" )
+    @DefaultValue( text = "false" )
     @XmlBinding( path = "scroll-horizontally" )
 
     ValueProperty PROP_SCROLL_HORIZONTALLY = new ValueProperty( TYPE, "ScrollHorizontally" );
@@ -95,7 +94,7 @@ public interface ISapphireCompositeDef
     @Type( base = Integer.class )
     @Label( standard = "left margin" )
     @XmlBinding( path = "margin-left" )
-    @DefaultValueProvider( impl = CompositeMarginLeftRightDefaultValueProvider.class )
+    @DefaultValue( service = CompositeMarginLeftRightDefaultValueProvider.class )
     @DependsOn( "MarginWidth" )
     
     ValueProperty PROP_MARGIN_LEFT = new ValueProperty( TYPE, "MarginLeft" );
@@ -109,7 +108,7 @@ public interface ISapphireCompositeDef
     @Type( base = Integer.class )
     @Label( standard = "right margin" )
     @XmlBinding( path = "margin-right" )
-    @DefaultValueProvider( impl = CompositeMarginLeftRightDefaultValueProvider.class )
+    @DefaultValue( service = CompositeMarginLeftRightDefaultValueProvider.class )
     @DependsOn( "MarginWidth" )
     
     ValueProperty PROP_MARGIN_RIGHT = new ValueProperty( TYPE, "MarginRight" );
@@ -123,7 +122,7 @@ public interface ISapphireCompositeDef
     @Type( base = Integer.class )
     @Label( standard = "top margin" )
     @XmlBinding( path = "margin-top" )
-    @DefaultValueProvider( impl = CompositeMarginTopBottomDefaultValueProvider.class )
+    @DefaultValue( service = CompositeMarginTopBottomDefaultValueProvider.class )
     @DependsOn( "MarginHeight" )
     
     ValueProperty PROP_MARGIN_TOP = new ValueProperty( TYPE, "MarginTop" );
@@ -137,7 +136,7 @@ public interface ISapphireCompositeDef
     @Type( base = Integer.class )
     @Label( standard = "bottom margin" )
     @XmlBinding( path = "margin-bottom" )
-    @DefaultValueProvider( impl = CompositeMarginTopBottomDefaultValueProvider.class )
+    @DefaultValue( service = CompositeMarginTopBottomDefaultValueProvider.class )
     @DependsOn( "MarginHeight" )
     
     ValueProperty PROP_MARGIN_BOTTOM = new ValueProperty( TYPE, "MarginBottom" );
@@ -151,7 +150,7 @@ public interface ISapphireCompositeDef
     @Type( base = Integer.class )
     @Label( standard = "margin width" )
     @XmlBinding( path = "margin-width" )
-    @DefaultValueProvider( impl = CompositeMarginWidthHeightDefaultValueProvider.class )
+    @DefaultValue( service = CompositeMarginWidthHeightDefaultValueProvider.class )
     @DependsOn( { "ScrollVertically", "ScrollHorizontally" } )
     
     ValueProperty PROP_MARGIN_WIDTH = new ValueProperty( TYPE, "MarginWidth" );
@@ -165,7 +164,7 @@ public interface ISapphireCompositeDef
     @Type( base = Integer.class )
     @Label( standard = "margin height" )
     @XmlBinding( path = "margin-height" )
-    @DefaultValueProvider( impl = CompositeMarginWidthHeightDefaultValueProvider.class )
+    @DefaultValue( service = CompositeMarginWidthHeightDefaultValueProvider.class )
     @DependsOn( { "ScrollVertically", "ScrollHorizontally" } )
     
     ValueProperty PROP_MARGIN_HEIGHT = new ValueProperty( TYPE, "MarginHeight" );

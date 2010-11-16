@@ -14,7 +14,6 @@ package org.eclipse.sapphire.modeling.java.internal;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IJavaProject;
@@ -103,12 +102,7 @@ public final class JavaTypeNameValidator
         
         if( val != null )
         {
-            IProject project = (IProject) Platform.getAdapterManager().loadAdapter( value.getModel(), IProject.class.getName() );
-            
-            if( project == null )
-            {
-                project = value.getModel().getEclipseProject();
-            }
+            final IProject project = value.adapt( IProject.class );
             
             if( project != null )
             {

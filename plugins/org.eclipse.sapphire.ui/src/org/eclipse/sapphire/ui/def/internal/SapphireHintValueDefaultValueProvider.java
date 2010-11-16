@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import org.eclipse.sapphire.modeling.annotations.DefaultValueProviderImpl;
+import org.eclipse.sapphire.modeling.DefaultValueService;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
@@ -21,13 +21,13 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 public final class SapphireHintValueDefaultValueProvider
 
-    extends DefaultValueProviderImpl
+    extends DefaultValueService
     
 {
     @Override
     public String getDefaultValue()
     {
-        final ISapphireHint hint = (ISapphireHint) getModelElement();
+        final ISapphireHint hint = (ISapphireHint) element();
         return getDefaultValue( hint.getName().getText() );
     }
     

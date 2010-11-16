@@ -13,24 +13,24 @@ package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBindingMapping;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Label( standard = "element property composite" )
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface ISapphireElementPropertyCompositeDef
 
@@ -65,7 +65,7 @@ public interface ISapphireElementPropertyCompositeDef
     
     @Label( standard = "pages" )
     @Type( base = ISapphirePageBookKeyMapping.class )
-    @ListPropertyXmlBinding( mappings = { @ListPropertyXmlBindingMapping( element = "panel", type = ISapphirePageBookKeyMapping.class ) } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "panel", type = ISapphirePageBookKeyMapping.class ) )
     
     ListProperty PROP_PAGES = new ListProperty( TYPE, "Pages" );
     
@@ -79,7 +79,6 @@ public interface ISapphireElementPropertyCompositeDef
     
     ElementProperty PROP_DEFAULT_PAGE = new ElementProperty( TYPE, "DefaultPage" );
     
-    ISapphireCompositeDef getDefaultPage();
-    ISapphireCompositeDef getDefaultPage( boolean createIfNecessary );
+    ModelElementHandle<ISapphireCompositeDef> getDefaultPage();
 
 }

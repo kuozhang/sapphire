@@ -14,18 +14,17 @@ package org.eclipse.sapphire.ui.def;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.internal.ClassReferenceResolver;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Label( standard = "custom" )
-@GenerateXmlBinding
+@GenerateImpl
 
 public interface ISapphireCustomPartDef
 
@@ -36,7 +35,7 @@ public interface ISapphireCustomPartDef
  
     // *** ImplClass ***
     
-    @Reference( target = Class.class, resolver = ClassReferenceResolver.class )
+    @Reference( target = Class.class )
     @Label( standard = "implementation class" )
     @XmlBinding( path = "class" )
     

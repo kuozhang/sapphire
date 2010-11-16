@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import org.eclipse.sapphire.modeling.annotations.ValuePropertyCustomBindingImpl;
-import org.eclipse.sapphire.modeling.xml.IModelElementForXml;
 import org.eclipse.sapphire.modeling.xml.StandardXmlNamespaceResolver;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlPath;
+import org.eclipse.sapphire.modeling.xml.XmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
 import org.eclipse.sapphire.ui.def.ISapphirePageBookExtDef;
 import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
 
@@ -25,7 +25,7 @@ import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
 
 public final class PageBookPartDefControlMethodBinding
 
-    extends ValuePropertyCustomBindingImpl
+    extends XmlValueBindingImpl
 
 {
     private static final StandardXmlNamespaceResolver NAMESPACE_RESOLVER = new StandardXmlNamespaceResolver( ISapphirePageBookExtDef.TYPE );
@@ -35,7 +35,7 @@ public final class PageBookPartDefControlMethodBinding
     @Override
     public String read()
     {
-        final XmlElement el = ( (IModelElementForXml) getModelElement() ).getXmlElement( false );
+        final XmlElement el = ( (XmlResource) element().resource() ).getXmlElement( false );
         
         if( el.getChildNode( PATH_ENUM_CONTROLLER, false ) != null )
         {
@@ -52,7 +52,7 @@ public final class PageBookPartDefControlMethodBinding
     @Override
     public void write( final String value )
     {
-        final XmlElement el = ( (IModelElementForXml) getModelElement() ).getXmlElement( true );
+        final XmlElement el = ( (XmlResource) element().resource() ).getXmlElement( true );
         
         if( PageBookPartControlMethod.ENUM_VALUE.name().equals( value ) )
         {

@@ -19,5 +19,11 @@
   <extension point="org.eclipse.help.toc">
     <toc file="toc.xml" primary="true"/>
   </extension>
+  <extension
+        point="org.eclipse.help.contentProducer">
+     <contentProducer
+           producer="org.eclipse.sapphire.doc.internal.DynamicContentProducer">
+     </contentProducer>
+  </extension>
 
 </plugin>

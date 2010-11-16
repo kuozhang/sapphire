@@ -170,9 +170,9 @@ public final class XmlDocumentSchema
         
         if (resolvedSchemaLocation.endsWith("dtd"))
         {
-        	this.namespace = "";
-        	DTDParser.parse(resolvedSchemaLocation, this, this.contentModels, this.topLevelElements);
-        	return;
+            this.namespace = "";
+            DTDParser.parse(resolvedSchemaLocation, this, this.contentModels, this.topLevelElements);
+            return;
         }
         
         final Element root = parse( resolvedSchemaLocation );

@@ -31,7 +31,7 @@ public final class AssistantNameValidator
     public IStatus validate( final Value<String> value )
     {
         final String assistantName = value.getText();
-        final String contactName = ( (IContact) value.getParent().getParent() ).getName().getText();
+        final String contactName = value.nearest( IContact.class ).getName().getText();
         
         if( assistantName != null && contactName != null && assistantName.equals( contactName ) )
         {

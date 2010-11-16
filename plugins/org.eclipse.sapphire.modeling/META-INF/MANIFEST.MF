@@ -2,13 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.sapphire.modeling;singleton:=true
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 0.2.0.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Localization: plugin
 Export-Package: org.eclipse.sapphire.modeling,
  org.eclipse.sapphire.modeling.annotations,
  org.eclipse.sapphire.modeling.annotations.processor,
- org.eclipse.sapphire.modeling.extensibility,
+ org.eclipse.sapphire.modeling.docsys,
  org.eclipse.sapphire.modeling.internal,
  org.eclipse.sapphire.modeling.java,
  org.eclipse.sapphire.modeling.scripting,
@@ -17,7 +17,8 @@ Export-Package: org.eclipse.sapphire.modeling,
  org.eclipse.sapphire.modeling.validators,
  org.eclipse.sapphire.modeling.xml,
  org.eclipse.sapphire.modeling.xml.annotations,
- org.eclipse.sapphire.modeling.xml.schema
+ org.eclipse.sapphire.modeling.xml.schema,
+ META-INF
 Bundle-Vendor: %providerName
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.jdt.apt.core,
@@ -30,5 +31,6 @@ Require-Bundle: org.eclipse.jdt.apt.core,
  org.eclipse.wst.dtd.core,
  org.eclipse.emf,
  org.eclipse.emf.common,
- org.eclipse.emf.ecore
+ org.eclipse.emf.ecore,
+ org.eclipse.help
 

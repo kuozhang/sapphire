@@ -11,30 +11,29 @@
 
 package org.eclipse.sapphire.samples.contacts;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.IModelForXml;
-import org.eclipse.sapphire.modeling.xml.annotations.GenerateXmlBindingModelImpl;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.ListPropertyXmlBindingMapping;
-import org.eclipse.sapphire.modeling.xml.annotations.RootXmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateXmlBindingModelImpl
+@GenerateImpl
 
-@RootXmlBinding( namespace = "http://xmlns.oracle.com/eclipse/tools/sapphire/samples/contacts",
+@XmlRootBinding( namespace = "http://xmlns.oracle.com/eclipse/tools/sapphire/samples/contacts",
                  schemaLocation = "http://xmlns.oracle.com/eclipse/tools/sapphire/samples/contacts/1.0",
                  defaultPrefix = "c",
                  elementName = "contacts" )
 
 public interface IContactsDatabase
 
-    extends IModelForXml
+    extends IModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( IContactsDatabase.class );
@@ -42,12 +41,7 @@ public interface IContactsDatabase
     // *** Contacts ***
 
     @Type( base = IContact.class )
-    
-    @ListPropertyXmlBinding( path = "",
-                             mappings = 
-                             { 
-                                 @ListPropertyXmlBindingMapping( element = "contact", type = IContact.class )
-                             } )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "contact", type = IContact.class ) )
     
     ListProperty PROP_CONTACTS = new ListProperty( TYPE, "Contacts" );
     

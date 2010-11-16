@@ -19,8 +19,10 @@ import org.eclipse.core.runtime.IStatus;
 
 public interface IModelParticle
 {
-    IModel getModel();
-    IModelParticle getParent();
-    <T> T findNearestParticle( Class<T> particleType );    
+    Resource resource();
+    IModelParticle root();
+    IModelParticle parent();
+    <T> T nearest( Class<T> particleType );    
     IStatus validate();
+    <A> A adapt( Class<A> adapterType );
 }
