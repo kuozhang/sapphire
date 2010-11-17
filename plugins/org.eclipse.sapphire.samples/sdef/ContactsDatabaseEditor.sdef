@@ -17,7 +17,9 @@
     </documentation>
     <root-node>
       <node>
-        <label>Contacts</label>
+        <label>
+          <text>Contacts</text>
+        </label>
         <section>
           <description>Use this simple editor to organize your contacts.</description>
           <content>
@@ -30,10 +32,10 @@
         <node-list>
           <property>Contacts</property>
           <node-template>
-            <dynamic-label>
+            <label>
               <property>Name</property>
-              <null-value-label>&lt;contact&gt;</null-value-label>
-            </dynamic-label>
+              <null-value-text>&lt;contact&gt;</null-value-text>
+            </label>
             <action>
               <id>SendContact</id>
               <label>send contact...</label>
@@ -97,7 +99,9 @@
               </content>
             </section>
             <node>
-              <label>Web Sites</label>
+              <label>
+                <text>Web Sites</text>
+              </label>
               <image>images/web.png</image>
               <section>
                 <content>
@@ -119,7 +123,9 @@
               </section>
             </node>
             <node>
-              <label>Assistant</label>
+              <label>
+                <text>Assistant</text>
+              </label>
               <section>
                 <content>
                   <element-property-composite>
@@ -149,7 +155,9 @@
               </section>
             </node>
             <node>
-              <label>Connections</label>
+              <label>
+                <text>Connections</text>
+              </label>
               <section>
                 <content>
                   <property-editor>

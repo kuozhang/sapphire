@@ -26,8 +26,13 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.SapphireMultiStatus;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.expr.Expression;
+import org.eclipse.sapphire.modeling.expr.StaticExpression;
+import org.eclipse.sapphire.modeling.expr.TypeValidator;
+import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.ProblemOverlayImageDescriptor;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
@@ -38,6 +43,7 @@ import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphirePropertyEnabledCondition;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireSection;
+import org.eclipse.sapphire.ui.def.ILabelDef;
 import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeDef;
 import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeFactoryDef;
 import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeFactoryEntry;
@@ -73,7 +79,7 @@ public final class MasterDetailsContentNode
     private ElementProperty modelElementProperty;
     private ModelElementListener modelElementListener;
     private MasterDetailsContentNode parentNode;
-    private ValueProperty labelProperty;
+    private Expression<String> labelExpression;
     private Set<String> listProperties;
     private ImageDescriptor imageDescriptor;
     private ImageDescriptor imageDescriptorWithError;
@@ -127,7 +133,7 @@ public final class MasterDetailsContentNode
             this.modelElement = getModelElement();
         }
         
-        this.labelProperty = (ValueProperty) resolve( this.definition.getDynamicLabelProperty().getContent() );        
+        initLabelExpression();
         
         this.imageDescriptor = this.definition.getImagePath().resolve();
         this.imageDescriptorWithError = null;
@@ -324,6 +330,120 @@ public final class MasterDetailsContentNode
         }
     }
     
+    private void initLabelExpression()
+    {
+        final ILabelDef ldef = this.definition.getLabel().element();
+        
+        final Class<?> labelProviderClass = ldef.getProviderClass().resolve();
+        
+        if( labelProviderClass != null )
+        {
+            Expression<?> expr;
+            
+            try
+            {
+                expr = (Expression<?>) labelProviderClass.newInstance();
+                expr.init( this, new String[ 0 ] );
+            }
+            catch( Exception e )
+            {
+                SapphireModelingFrameworkPlugin.log( e );
+                expr = null;
+            }
+            
+            if( expr != null )
+            {
+                this.labelExpression = new TypeValidator<String>( expr, String.class );
+                this.labelExpression.init( this, new String[ 0 ] );
+            }
+        }
+        
+        if( this.labelExpression == null )
+        {
+            final ValueProperty labelProperty = (ValueProperty) resolve( ldef.getProperty().getContent() );
+            final String nullValueText = ldef.getNullValueText().getLocalizedText();
+            
+            if( labelProperty != null )
+            {
+                this.labelExpression = new Expression<String>()
+                {
+                    private final IModelElement element = MasterDetailsContentNode.this.modelElement;
+                    private ModelPropertyListener listener;
+                    
+                    @Override
+                    protected void initExpression( final Object context,
+                                                   final String[] params )
+                    {
+                        super.initExpression( context, params );
+                        
+                        this.listener = new ModelPropertyListener()
+                        {
+                            @Override
+                            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                            {
+                                refresh();
+                            }
+                        };
+                        
+                        this.element.addListener( this.listener, labelProperty.getName() );
+                    }
+
+                    @Override
+                    protected String evaluate()
+                    {
+                        String label = this.element.read( labelProperty ).getText( false );
+                        
+                        if( label == null )
+                        {
+                            label = nullValueText;
+                        }
+
+                        return label;
+                    }
+
+                    @Override
+                    public void dispose()
+                    {
+                        super.dispose();
+                        
+                        if( this.listener != null )
+                        {
+                            this.element.removeListener( this.listener, labelProperty.getName() );
+                        }
+                    }
+                };
+                
+                this.labelExpression.init( this, new String[ 0 ] );
+            }
+        }
+        
+        if( this.labelExpression == null )
+        {
+            this.labelExpression = new StaticExpression<String>( ldef.getText().getLocalizedText() );
+            this.labelExpression.init( this, new String[ 0 ] );
+        }
+        
+        this.labelExpression.addListener
+        (
+            new Expression.Listener()
+            {
+                @Override
+                public void handleValueChanged()
+                {
+                    final Runnable notifyOfUpdateOperation = new Runnable()
+                    {
+                        public void run()
+                        {
+                            getContentTree().notifyOfNodeUpdate( MasterDetailsContentNode.this );
+                        }
+                    };
+                    
+                    Display.getDefault().asyncExec( notifyOfUpdateOperation );
+                }
+            }
+        );
+    }
+    
     public MasterDetailsContentTree getContentTree()
     {
         return this.contentTree;
@@ -358,21 +478,7 @@ public final class MasterDetailsContentNode
     
     public String getLabel()
     {
-        if( this.labelProperty != null )
-        {
-            String label = this.modelElement.read( this.labelProperty ).getText( false );
-            
-            if( label == null )
-            {
-                label = this.definition.getDynamicLabelNullValueText().getLocalizedText();
-            }
-            
-            return label;
-        }
-        else
-        {
-            return this.definition.getLabel().getLocalizedText();
-        }
+        return this.labelExpression.value();
     }
 
     public ImageDescriptor getImageDescriptor()
@@ -653,19 +759,6 @@ public final class MasterDetailsContentNode
         super.handleModelElementChange( event );
         
         final ModelProperty property = event.getProperty();
-        
-        if( this.labelProperty == property )
-        {
-            final Runnable notifyOfUpdateOperation = new Runnable()
-            {
-                public void run()
-                {
-                    getContentTree().notifyOfNodeUpdate( MasterDetailsContentNode.this );
-                }
-            };
-            
-            Display.getDefault().asyncExec( notifyOfUpdateOperation );
-        }
         
         if( this.listProperties != null && this.listProperties.contains( property.getName() ) )
         {

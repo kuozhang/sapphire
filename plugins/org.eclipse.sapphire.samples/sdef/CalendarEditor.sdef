@@ -13,7 +13,9 @@
     <initial-selection>Events</initial-selection>
     <root-node>
       <node>
-        <label>Events</label>
+        <label>
+          <text>Events</text>
+        </label>
         <section>
           <description>Use this simple editor to organize your calendar.</description>
           <content>
@@ -26,12 +28,14 @@
         <node-list>
           <property>Events</property>
           <node-template>
-            <dynamic-label>
+            <label>
               <property>Subject</property>
-              <null-value-label>&lt;event&gt;</null-value-label>
-            </dynamic-label>
+              <null-value-text>&lt;event&gt;</null-value-text>
+            </label>
             <node>
-              <label>Attachments</label>
+              <label>
+                <text>Attachments</text>
+              </label>
               <section>
                 <content>
                   <property-editor>

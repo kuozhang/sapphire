@@ -9,25 +9,29 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.def.internal;
-
-import org.eclipse.sapphire.modeling.DefaultValueService;
-import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeDef;
+package org.eclipse.sapphire.modeling.expr;
 
 /**
+ * An expression that always evaluates to the same value. 
+ * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MasterDetailsPageSectionDefLabelDefaultValueProvider
+public final class StaticExpression<T>
 
-    extends DefaultValueService
-    
+    extends Expression<T>
+
 {
-    @Override
-    public String getDefaultValue()
-    {
-        final IMasterDetailsTreeNodeDef node = (IMasterDetailsTreeNodeDef) element().parent().parent();
-        return node.getLabel().element().getText().getLocalizedText();
-    }
+    private T value;
     
+    public StaticExpression( final T value )
+    {
+        this.value = value;
+    }
+
+    @Override
+    protected T evaluate()
+    {
+        return this.value;
+    }
 }

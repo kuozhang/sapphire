@@ -61,36 +61,16 @@ public interface IMasterDetailsTreeNodeDef
     
     Value<String> getProperty();
     void setProperty( String property );
-    
+
     // *** Label ***
     
+    @Type( base = ILabelDef.class )
     @Label( standard = "label" )
     @XmlBinding( path = "label" )
     
-    ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
+    ElementProperty PROP_LABEL = new ElementProperty( TYPE, "Label" );
     
-    Value<String> getLabel();
-    void setLabel( String label );
-    
-    // *** DynamicLabelProperty ***
-    
-    @Label( standard = "dynamic label property" )
-    @XmlBinding( path = "dynamic-label/property" )
-    
-    ValueProperty PROP_DYNAMIC_LABEL_PROPERTY = new ValueProperty( TYPE, "DynamicLabelProperty" );
-    
-    Value<String> getDynamicLabelProperty();
-    void setDynamicLabelProperty( String dynamicLabelProperty );
-    
-    // *** DynamicLabelNullValueText ***
-    
-    @Label( standard = "dynamic label property" )
-    @XmlBinding( path = "dynamic-label/null-value-label" )
-    
-    ValueProperty PROP_DYNAMIC_LABEL_NULL_VALUE_TEXT = new ValueProperty( TYPE, "DynamicLabelNullValueText" );
-    
-    Value<String> getDynamicLabelNullValueText();
-    void setDynamicLabelNullValueText( String dynamicLabelNullValueText );
+    ModelElementHandle<ILabelDef> getLabel();
     
     // *** UseModelElementImage ***
     

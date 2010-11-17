@@ -23,14 +23,16 @@
     <page-header-text>Sapphire UI Definition</page-header-text>
     <root-node>
       <node>
-        <label>Imports</label>
+        <label>
+          <text>Imports</text>
+        </label>
         <node-list>
           <property>ISapphireDefinition.PROP_IMPORT_DIRECTIVES</property>
           <node-template>
-            <dynamic-label>
+            <label>
               <property>IImportDirective.PROP_BUNDLE</property>
-              <null-value-label>&lt;import&gt;</null-value-label>
-            </dynamic-label>
+              <null-value-text>&lt;import&gt;</null-value-text>
+            </label>
             <section>
               <label>Import</label>
               <content>
@@ -43,14 +45,16 @@
         </node-list>
       </node>
       <node>
-        <label>Composites</label>
+        <label>
+          <text>Composites</text>
+        </label>
         <node-list>
           <property>ISapphireDefinition.PROP_NAMED_COMPOSITES</property>
           <node-template>
-            <dynamic-label>
+            <label>
               <property>INamedCompositeDefinition.PROP_ID</property>
-              <null-value-label>&lt;composite&gt;</null-value-label>
-            </dynamic-label>
+              <null-value-text>&lt;composite&gt;</null-value-text>
+            </label>
             <section>
               <content>
                 <property-editor>INamedCompositeDefinition.PROP_ID</property-editor>
@@ -68,7 +72,9 @@
     <property>ICompositeDefinition.PROP_CONTENT</property>
     <node-template>
       <model-element-type>IGroupDefinition</model-element-type>
-      <label>Group</label>
+      <label>
+        <text>Group</text>
+      </label>
       <section>
         <content>
           <property-editor>IGroupDefinition.PROP_LABEL</property-editor>
@@ -78,7 +84,9 @@
     </node-template>
     <node-template>
       <model-element-type>ILabelDefinition</model-element-type>
-      <label>Label</label>
+      <label>
+        <text>Label</text>
+      </label>
       <section>
         <content>
           <property-editor>ILabelDefinition.PROP_TEXT</property-editor>
@@ -88,10 +96,10 @@
     <node-template>
       <model-element-type>IPropertyEditorDefinition</model-element-type>
       <!--  editor - ${IPropertyEditorDefinition.PROP_PROPERTY} -->
-      <dynamic-label>
+      <label>
         <property>IPropertyEditorDefinition.PROP_PROPERTY</property>
-        <null-value-label>&lt;property-editor&gt;</null-value-label>
-      </dynamic-label>
+        <null-value-text>&lt;property-editor&gt;</null-value-text>
+      </label>
       <section>
         <label>Property Editor</label>
         <content>
@@ -102,7 +110,9 @@
     </node-template>
     <node-template>
       <model-element-type>ISeparatorDefinition</model-element-type>
-      <label>Separator</label>
+      <label>
+        <text>Separator</text>
+      </label>
       <section>
         <content>
           <property-editor>ISeparatorDefinition.PROP_LABEL</property-editor>
@@ -111,7 +121,9 @@
     </node-template>
     <node-template>
       <model-element-type>ISpacerDefinition</model-element-type>
-      <label>Spacer</label>
+      <label>
+        <text>Spacer</text>
+      </label>
       <section>
         <content>
           <property-editor>ISpacerDefinition.PROP_SIZE</property-editor>
@@ -120,7 +132,9 @@
     </node-template>
     <node-template>
       <model-element-type>IWithDefinition</model-element-type>
-      <label>With</label>
+      <label>
+        <text>With</text>
+      </label>
       <section>
         <content>
           <property-editor>IWithDefinition.PROP_PROPERTY</property-editor>
