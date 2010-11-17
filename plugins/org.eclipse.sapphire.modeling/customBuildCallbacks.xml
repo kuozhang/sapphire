@@ -37,7 +37,7 @@
     <javacc
       target="src/org/eclipse/sapphire/modeling/docsys/internal/DocumentationContentParser.jj"
       outputdirectory=".javacc/org/eclipse/sapphire/modeling/docsys/internal"
-      javacchome="${javacc.home}"
+      javacchome="${basedir}/javacc/bin/lib"
       static="false"/>
 
   </target>
