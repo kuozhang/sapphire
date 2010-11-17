@@ -5,8 +5,6 @@
 
 <project name="Build specific targets and properties" default="noDefault">
 
-  <import file="../../releng/javacc/build.xml"/>
-
 
   <!-- ===================================================================== -->
   <!-- Steps to do before the compilation target <name>                      -->
@@ -18,18 +16,20 @@
   <!--                      reference to the classpath structure.            -->
   <!-- ===================================================================== -->
 
-  <target name="pre.@dot" depends="init-javacc">
+  <target name="pre.@dot">
 
     <mkdir dir=".javacc"/>
-    <delete dir=".javacc"/>
-    <mkdir dir=".javacc"/>
+
+    <delete includeemptydirs="true">
+      <fileset dir=".javacc"/>
+    </delete>
 
     <mkdir dir=".javacc/org/eclipse/sapphire/modeling/scripting/internal/parser"/>
     
     <javacc
       target="src/org/eclipse/sapphire/modeling/scripting/internal/parser/ScriptParser.jj"
       outputdirectory=".javacc/org/eclipse/sapphire/modeling/scripting/internal/parser"
-      javacchome="${javacc.home}"
+      javacchome="${basedir}/javacc/bin/lib"
       static="false"/>
 
     <mkdir dir=".javacc/org/eclipse/sapphire/modeling/docsys/internal"/>
