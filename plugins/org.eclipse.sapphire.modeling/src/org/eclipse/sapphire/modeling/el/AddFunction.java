@@ -24,19 +24,31 @@ import java.math.BigInteger;
 
 public final class AddFunction
 
-    extends BinaryFunction<Number>
+    extends Function
 
 {
-    public AddFunction( final Function<?> operand1,
-                        final Function<?> operand2 )
+    public static AddFunction create( final FunctionContext context,
+                                      final Function a,
+                                      final Function b )
     {
-        super( operand1, operand2 );
+        final AddFunction function = new AddFunction();
+        function.init( context, a, b );
+        return function;
     }
-    
-    @Override
-    protected Number evaluate( final Object a,
-                               final Object b )
+
+    public static AddFunction create( final FunctionContext context,
+                                      final Number a,
+                                      final Number b )
     {
+        return create( context, Literal.create( context, a ), Literal.create( context, b ) );
+    }
+
+    @Override
+    protected Number evaluate()
+    {
+        final Object a = operand( 0 ).value();
+        final Object b = operand( 1 ).value();
+        
         if( a == null && b == null )
         {
             return (long) 0;

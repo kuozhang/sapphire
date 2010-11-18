@@ -215,7 +215,7 @@ public class Value<T>
             return true;
         }
         
-        if( val == null )
+        if( val == null || ! ( val instanceof Value ) )
         {
             return false;
         }

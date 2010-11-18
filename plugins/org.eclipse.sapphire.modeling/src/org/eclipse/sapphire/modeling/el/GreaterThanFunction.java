@@ -24,21 +24,26 @@ import org.eclipse.osgi.util.NLS;
 
 public final class GreaterThanFunction
 
-    extends BinaryFunction<Boolean>
+    extends Function
 
 {
-    public GreaterThanFunction( final Function<?> operand1,
-                                final Function<?> operand2 )
+    public static GreaterThanFunction create( final FunctionContext context,
+                                              final Function a,
+                                              final Function b )
     {
-        super( operand1, operand2 );
+        final GreaterThanFunction function = new GreaterThanFunction();
+        function.init( context, a, b );
+        return function;
     }
-    
-    @Override
+
     @SuppressWarnings( { "unchecked", "rawtypes" } )
+    @Override
     
-    protected Boolean evaluate( final Object a,
-                                final Object b )
+    protected Boolean evaluate()
     {
+        final Object a = operand( 0 ).value();
+        final Object b = operand( 1 ).value();
+        
         if( a == b )
         {
             return false;

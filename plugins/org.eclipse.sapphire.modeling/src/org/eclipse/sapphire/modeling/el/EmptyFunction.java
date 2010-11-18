@@ -13,6 +13,8 @@ package org.eclipse.sapphire.modeling.el;
 
 import java.util.Collection;
 
+import org.eclipse.sapphire.modeling.Value;
+
 /**
  * Function for determining if a value is null or empty. 
  * 
@@ -21,17 +23,22 @@ import java.util.Collection;
 
 public final class EmptyFunction
 
-    extends UnaryFunction<Boolean>
+    extends Function
 
 {
-    public EmptyFunction( final Function<?> operand )
+    public static EmptyFunction create( final FunctionContext context,
+                                        final Function operand )
     {
-        super( operand );
+        final EmptyFunction function = new EmptyFunction();
+        function.init( context, operand );
+        return function;
     }
-    
+
     @Override
-    protected Boolean evaluate( final Object a )
+    protected Boolean evaluate()
     {
+        final Object a = operand( 0 ).value();
+        
         if( a == null )
         {
             return true;
@@ -45,6 +52,10 @@ public final class EmptyFunction
             return true;
         }
         else if( a instanceof Collection && ( (Collection<?>) a ).isEmpty() )
+        {
+            return true;
+        }
+        else if( a instanceof Value<?> && ( (Value<?>) a ).getContent() == null )
         {
             return true;
         }

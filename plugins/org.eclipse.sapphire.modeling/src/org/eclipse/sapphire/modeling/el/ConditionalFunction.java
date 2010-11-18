@@ -17,76 +17,34 @@ package org.eclipse.sapphire.modeling.el;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ConditionalFunction<T>
+public final class ConditionalFunction
 
-    extends Function<T>
+    extends Function
 
 {
-    private final Function<?> condition;
-    private final Function<?> positive;
-    private final Function<?> negative;
-    
-    public ConditionalFunction( final Function<?> condition,
-                                final Function<?> positive,
-                                final Function<?> negative)
+    public static ConditionalFunction create( final FunctionContext context,
+                                              final Function condition,
+                                              final Function positive,
+                                              final Function negative )
     {
-        this.condition = condition;
-        this.positive = positive;
-        this.negative = negative;
-        
-        final Listener listener = new Listener()
-        {
-            @Override
-            public void handleValueChanged()
-            {
-                refresh();
-            }
-        };
-        
-        this.condition.addListener( listener );
-        this.positive.addListener( listener );
-        this.negative.addListener( listener );
+        final ConditionalFunction function = new ConditionalFunction();
+        function.init( context, condition, positive, negative );
+        return function;
     }
-    
+
     @Override
-    @SuppressWarnings( "unchecked" )
-    
-    protected final T evaluate()
+    protected final Object evaluate()
     {
-        final Boolean conditionValue = cast( condition().value(), Boolean.class );
+        final Boolean conditionValue = cast( operand( 0 ).value(), Boolean.class );
         
         if( conditionValue == true )
         {
-            return (T) positive().value();
+            return operand( 1 ).value();
         }
         else
         {
-            return (T) negative().value();
+            return operand( 2 ).value();
         }
     }
     
-    public Function<?> condition()
-    {
-        return this.condition;
-    }
-
-    public Function<?> positive()
-    {
-        return this.positive;
-    }
-
-    public Function<?> negative()
-    {
-        return this.negative;
-    }
-
-    @Override
-    public void dispose()
-    {
-        super.dispose();
-        this.condition.dispose();
-        this.positive.dispose();
-        this.negative.dispose();
-    }
-
 }

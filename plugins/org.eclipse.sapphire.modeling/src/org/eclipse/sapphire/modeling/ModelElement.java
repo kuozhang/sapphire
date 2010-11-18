@@ -618,7 +618,7 @@ public abstract class ModelElement
                     
                     listeners.add( listener );
                     
-                    if( ! ( property instanceof ValueProperty ) )
+                    if( property instanceof ListProperty || property instanceof ElementProperty )
                     {
                         final PropagationListener pListener 
                             = new PropagationListener( property, path, listener );
@@ -673,7 +673,7 @@ public abstract class ModelElement
                         logInvalidModelPathMessage( path );
                         return;
                     }
-                    else
+                    else if( property instanceof ListProperty || property instanceof ElementProperty )
                     {
                         final PropagationListener pListener 
                             = new PropagationListener( property, path.tail(), listener );

@@ -26,12 +26,16 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.SapphireMultiStatus;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.el.ConditionalFunction;
+import org.eclipse.sapphire.modeling.el.EmptyFunction;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.el.LiteralFunction;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.Literal;
+import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
+import org.eclipse.sapphire.modeling.el.PropertyReference;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.ProblemOverlayImageDescriptor;
@@ -79,7 +83,7 @@ public final class MasterDetailsContentNode
     private ElementProperty modelElementProperty;
     private ModelElementListener modelElementListener;
     private MasterDetailsContentNode parentNode;
-    private Function<String> labelFunction;
+    private Function labelFunction;
     private Set<String> listProperties;
     private ImageDescriptor imageDescriptor;
     private ImageDescriptor imageDescriptorWithError;
@@ -333,28 +337,21 @@ public final class MasterDetailsContentNode
     private void initLabelFunction()
     {
         final ILabelDef ldef = this.definition.getLabel().element();
+        final FunctionContext context = new ModelElementFunctionContext( this.modelElement );
         
         final Class<?> labelProviderClass = ldef.getProviderClass().resolve();
         
         if( labelProviderClass != null )
         {
-            Function<?> function;
-            
             try
             {
-                function = (Function<?>) labelProviderClass.newInstance();
-                function.init( this, new String[ 0 ] );
+                this.labelFunction = (Function) labelProviderClass.newInstance();
+                this.labelFunction.init( context );
             }
             catch( Exception e )
             {
                 SapphireModelingFrameworkPlugin.log( e );
-                function = null;
-            }
-            
-            if( function != null )
-            {
-                this.labelFunction = new FailSafeFunction<String>( function, String.class );
-                this.labelFunction.init( this, new String[ 0 ] );
+                this.labelFunction = null;
             }
         }
         
@@ -365,63 +362,19 @@ public final class MasterDetailsContentNode
             
             if( labelProperty != null )
             {
-                this.labelFunction = new Function<String>()
-                {
-                    private final IModelElement element = MasterDetailsContentNode.this.modelElement;
-                    private ModelPropertyListener listener;
-                    
-                    @Override
-                    protected void initFunction( final Object context,
-                                                 final String[] params )
-                    {
-                        super.initFunction( context, params );
-                        
-                        this.listener = new ModelPropertyListener()
-                        {
-                            @Override
-                            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
-                            {
-                                refresh();
-                            }
-                        };
-                        
-                        this.element.addListener( this.listener, labelProperty.getName() );
-                    }
-
-                    @Override
-                    protected String evaluate()
-                    {
-                        String label = this.element.read( labelProperty ).getText( false );
-                        
-                        if( label == null )
-                        {
-                            label = nullValueText;
-                        }
-
-                        return label;
-                    }
-
-                    @Override
-                    public void dispose()
-                    {
-                        super.dispose();
-                        
-                        if( this.listener != null )
-                        {
-                            this.element.removeListener( this.listener, labelProperty.getName() );
-                        }
-                    }
-                };
-                
-                this.labelFunction.init( this, new String[ 0 ] );
+                final Function condition = EmptyFunction.create( context, PropertyReference.create( context, labelProperty.getName() ) );
+                final Function altEmpty = Literal.create( context, nullValueText );
+                final Function altNotEmpty = PropertyReference.create( context, labelProperty.getName() );
+                this.labelFunction = ConditionalFunction.create( context, condition, altEmpty, altNotEmpty );
             }
         }
         
         if( this.labelFunction == null )
         {
-            this.labelFunction = new LiteralFunction<String>( ldef.getText().getLocalizedText() );
-            this.labelFunction.init( this, new String[ 0 ] );
+            this.labelFunction = Literal.create( context, ldef.getText().getLocalizedText() );
         }
+        
+        this.labelFunction = FailSafeFunction.create( context, this.labelFunction, String.class );
         
         this.labelFunction.addListener
         (
@@ -478,7 +431,14 @@ public final class MasterDetailsContentNode
     
     public String getLabel()
     {
-        return this.labelFunction.value();
+        String label = (String) this.labelFunction.value();
+        
+        if( label == null )
+        {
+            label = "#null#";
+        }
+        
+        return label;
     }
 
     public ImageDescriptor getImageDescriptor()

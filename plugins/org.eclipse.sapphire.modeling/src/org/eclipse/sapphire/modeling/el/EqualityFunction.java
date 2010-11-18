@@ -22,20 +22,24 @@ import java.math.BigInteger;
 
 public final class EqualityFunction
 
-    extends BinaryFunction<Boolean>
+    extends Function
 
 {
-    public EqualityFunction( final Function<?> operand1,
-                             final Function<?> operand2 )
+    public static EqualityFunction create( final FunctionContext context,
+                                           final Function a,
+                                           final Function b )
     {
-        super( operand1, operand2 );
+        final EqualityFunction function = new EqualityFunction();
+        function.init( context, a, b );
+        return function;
     }
-    
+
     @Override
-    
-    protected Boolean evaluate( final Object a,
-                                final Object b )
+    protected Boolean evaluate()
     {
+        final Object a = operand( 0 ).value();
+        final Object b = operand( 1 ).value();
+        
         if( a == b )
         {
             return true;

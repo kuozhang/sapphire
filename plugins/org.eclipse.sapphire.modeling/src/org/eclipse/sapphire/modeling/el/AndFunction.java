@@ -19,22 +19,24 @@ package org.eclipse.sapphire.modeling.el;
 
 public final class AndFunction
 
-    extends BinaryFunction<Boolean>
+    extends Function
 
 {
-    public AndFunction( final Function<?> operand1,
-                        final Function<?> operand2 )
+    public static AndFunction create( final FunctionContext context,
+                                      final Function a,
+                                      final Function b )
     {
-        super( operand1, operand2 );
+        final AndFunction function = new AndFunction();
+        function.init( context, a, b );
+        return function;
     }
-    
+
     @Override
-    protected Boolean evaluate( final Object a,
-                                final Object b )
+    protected Boolean evaluate()
     {
-        final Boolean x = cast( a, Boolean.class );
-        final Boolean y = cast( b, Boolean.class );
-        return ( x == null || y == null ? null : ( x && y ) );
+        final boolean a = cast( operand( 0 ).value(), Boolean.class );
+        final boolean b = cast( operand( 1 ).value(), Boolean.class );
+        return ( a && b );
     }
 
 }

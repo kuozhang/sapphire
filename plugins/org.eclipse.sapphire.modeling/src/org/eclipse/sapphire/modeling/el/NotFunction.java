@@ -19,19 +19,22 @@ package org.eclipse.sapphire.modeling.el;
 
 public final class NotFunction
 
-    extends UnaryFunction<Boolean>
+    extends Function
 
 {
-    public NotFunction( final Function<?> operand )
+    public static NotFunction create( final FunctionContext context,
+                                      final Function operand )
     {
-        super( operand );
+        final NotFunction function = new NotFunction();
+        function.init( context, operand );
+        return function;
     }
-    
+
     @Override
-    protected Boolean evaluate( final Object a )
+    protected Boolean evaluate()
     {
-        final Boolean x = cast( a, Boolean.class );
-        return ( x == null ? null : ! x );
+        final boolean a = cast( operand( 0 ).value(), Boolean.class );
+        return ( ! a );
     }
 
 }

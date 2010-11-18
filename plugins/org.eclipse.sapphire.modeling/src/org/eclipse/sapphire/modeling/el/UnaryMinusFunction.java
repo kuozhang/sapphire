@@ -26,17 +26,22 @@ import org.eclipse.osgi.util.NLS;
 
 public final class UnaryMinusFunction
 
-    extends UnaryFunction<Number>
+    extends Function
 
 {
-    public UnaryMinusFunction( final Function<?> operand )
+    public static UnaryMinusFunction create( final FunctionContext context,
+                                             final Function operand )
     {
-        super( operand );
+        final UnaryMinusFunction function = new UnaryMinusFunction();
+        function.init( context, operand );
+        return function;
     }
-    
+
     @Override
-    protected Number evaluate( final Object a )
+    protected Number evaluate()
     {
+        final Object a = operand( 0 ).value();
+        
         if( a == null )
         {
             return (long) 0;

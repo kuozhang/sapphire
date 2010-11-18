@@ -17,20 +17,28 @@ package org.eclipse.sapphire.modeling.el;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class LiteralFunction<T>
+public final class Literal
 
-    extends Function<T>
+    extends Function
 
 {
-    private T value;
+    private Object value;
     
-    public LiteralFunction( final T value )
+    public Literal( final Object value )
     {
         this.value = value;
     }
+    
+    public static Literal create( final FunctionContext context,
+                                  final Object obj )
+    {
+        final Literal literal = new Literal( obj );
+        literal.init( context );
+        return literal;
+    }
 
     @Override
-    protected T evaluate()
+    protected Object evaluate()
     {
         return this.value;
     }

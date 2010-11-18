@@ -18,38 +18,35 @@ package org.eclipse.sapphire.modeling.el;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class FailSafeFunction<T>
+public class FailSafeFunction
 
-    extends Function<T>
+    extends Function
 
 {
-    private final Function<?> operand;
-    private final Class<T> expectedValueType;
-    
-    public FailSafeFunction( final Function<?> operand,
-                             final Class<T> expectedValueType )
+    public static FailSafeFunction create( final FunctionContext context,
+                                           final Function operand,
+                                           final Function expectedType )
     {
-        this.operand = operand;
-        this.expectedValueType = expectedValueType;
-        
-        final Listener listener = new Listener()
-        {
-            @Override
-            public void handleValueChanged()
-            {
-                refresh();
-            }
-        };
-        
-        this.operand.addListener( listener );
+        final FailSafeFunction function = new FailSafeFunction();
+        function.init( context, operand, expectedType );
+        return function;
     }
-    
+
+    public static FailSafeFunction create( final FunctionContext context,
+                                           final Function operand,
+                                           final Class<?> expectedType )
+    {
+        return create( context, operand, Literal.create( context, expectedType ) );
+    }
+
     @Override
-    protected final T evaluate()
+    @SuppressWarnings( "unchecked" )
+    
+    protected final Object evaluate()
     {
         try
         {
-            return cast( operand().value(), this.expectedValueType );
+            return cast( operand( 0 ).value(), cast( operand( 1 ).value(), Class.class ) );
         }
         catch( FunctionException e )
         {
@@ -57,21 +54,9 @@ public class FailSafeFunction<T>
         }
     }
     
-    protected T handleFunctionException( final FunctionException e )
+    protected Object handleFunctionException( final FunctionException e )
     {
         return null;
     }
     
-    public Function<?> operand()
-    {
-        return this.operand;
-    }
-
-    @Override
-    public void dispose()
-    {
-        super.dispose();
-        this.operand.dispose();
-    }
-
 }
