@@ -1,6 +1,0 @@
-#Thu Nov 11 11:30:50 PST 2010
-eclipse.preferences.version=1
-encoding//bin/org/eclipse/sapphire/modeling/extensibility/IModelElementServiceDef.properties=UTF-8
-encoding//bin/org/eclipse/sapphire/modeling/extensibility/IModelPropertyServiceDef.properties=UTF-8
-encoding//bin/org/eclipse/sapphire/modeling/extensibility/ISapphireModelingExtensionDef.properties=UTF-8
-encoding//bin/org/eclipse/sapphire/modeling/extensibility/IValueSerializationServiceDef.properties=UTF-8

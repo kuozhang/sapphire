@@ -71,7 +71,7 @@ public interface ILabelDef
     
     @Reference( target = Class.class )
     @Label( standard = "provider class" )
-    @JavaTypeConstraints( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.modeling.Expression" )
+    @JavaTypeConstraints( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.modeling.el.Function" )
     @MustExist
     @XmlBinding( path = "class" )
     

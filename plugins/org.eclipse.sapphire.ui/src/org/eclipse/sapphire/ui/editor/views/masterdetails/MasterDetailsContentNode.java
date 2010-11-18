@@ -29,9 +29,9 @@ import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.SapphireMultiStatus;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.expr.Expression;
-import org.eclipse.sapphire.modeling.expr.StaticExpression;
-import org.eclipse.sapphire.modeling.expr.TypeValidator;
+import org.eclipse.sapphire.modeling.el.FailSafeFunction;
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.LiteralFunction;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.ProblemOverlayImageDescriptor;
@@ -79,7 +79,7 @@ public final class MasterDetailsContentNode
     private ElementProperty modelElementProperty;
     private ModelElementListener modelElementListener;
     private MasterDetailsContentNode parentNode;
-    private Expression<String> labelExpression;
+    private Function<String> labelFunction;
     private Set<String> listProperties;
     private ImageDescriptor imageDescriptor;
     private ImageDescriptor imageDescriptorWithError;
@@ -133,7 +133,7 @@ public final class MasterDetailsContentNode
             this.modelElement = getModelElement();
         }
         
-        initLabelExpression();
+        initLabelFunction();
         
         this.imageDescriptor = this.definition.getImagePath().resolve();
         this.imageDescriptorWithError = null;
@@ -330,7 +330,7 @@ public final class MasterDetailsContentNode
         }
     }
     
-    private void initLabelExpression()
+    private void initLabelFunction()
     {
         final ILabelDef ldef = this.definition.getLabel().element();
         
@@ -338,43 +338,43 @@ public final class MasterDetailsContentNode
         
         if( labelProviderClass != null )
         {
-            Expression<?> expr;
+            Function<?> function;
             
             try
             {
-                expr = (Expression<?>) labelProviderClass.newInstance();
-                expr.init( this, new String[ 0 ] );
+                function = (Function<?>) labelProviderClass.newInstance();
+                function.init( this, new String[ 0 ] );
             }
             catch( Exception e )
             {
                 SapphireModelingFrameworkPlugin.log( e );
-                expr = null;
+                function = null;
             }
             
-            if( expr != null )
+            if( function != null )
             {
-                this.labelExpression = new TypeValidator<String>( expr, String.class );
-                this.labelExpression.init( this, new String[ 0 ] );
+                this.labelFunction = new FailSafeFunction<String>( function, String.class );
+                this.labelFunction.init( this, new String[ 0 ] );
             }
         }
         
-        if( this.labelExpression == null )
+        if( this.labelFunction == null )
         {
             final ValueProperty labelProperty = (ValueProperty) resolve( ldef.getProperty().getContent() );
             final String nullValueText = ldef.getNullValueText().getLocalizedText();
             
             if( labelProperty != null )
             {
-                this.labelExpression = new Expression<String>()
+                this.labelFunction = new Function<String>()
                 {
                     private final IModelElement element = MasterDetailsContentNode.this.modelElement;
                     private ModelPropertyListener listener;
                     
                     @Override
-                    protected void initExpression( final Object context,
-                                                   final String[] params )
+                    protected void initFunction( final Object context,
+                                                 final String[] params )
                     {
-                        super.initExpression( context, params );
+                        super.initFunction( context, params );
                         
                         this.listener = new ModelPropertyListener()
                         {
@@ -413,19 +413,19 @@ public final class MasterDetailsContentNode
                     }
                 };
                 
-                this.labelExpression.init( this, new String[ 0 ] );
+                this.labelFunction.init( this, new String[ 0 ] );
             }
         }
         
-        if( this.labelExpression == null )
+        if( this.labelFunction == null )
         {
-            this.labelExpression = new StaticExpression<String>( ldef.getText().getLocalizedText() );
-            this.labelExpression.init( this, new String[ 0 ] );
+            this.labelFunction = new LiteralFunction<String>( ldef.getText().getLocalizedText() );
+            this.labelFunction.init( this, new String[ 0 ] );
         }
         
-        this.labelExpression.addListener
+        this.labelFunction.addListener
         (
-            new Expression.Listener()
+            new Function.Listener()
             {
                 @Override
                 public void handleValueChanged()
@@ -478,7 +478,7 @@ public final class MasterDetailsContentNode
     
     public String getLabel()
     {
-        return this.labelExpression.value();
+        return this.labelFunction.value();
     }
 
     public ImageDescriptor getImageDescriptor()

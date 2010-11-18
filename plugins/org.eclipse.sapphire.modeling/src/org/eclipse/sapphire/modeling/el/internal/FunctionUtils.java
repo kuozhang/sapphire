@@ -9,29 +9,26 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.expr;
+package org.eclipse.sapphire.modeling.el.internal;
 
 /**
- * An expression that always evaluates to the same value. 
- * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class StaticExpression<T>
-
-    extends Expression<T>
-
+public class FunctionUtils
 {
-    private T value;
-    
-    public StaticExpression( final T value )
+    public static boolean isDecimalString( final Object obj )
     {
-        this.value = value;
-    }
-
-    @Override
-    protected T evaluate()
-    {
-        return this.value;
+        if( obj instanceof String )
+        {
+            final String str = (String) obj;
+            
+            if( str.indexOf( '.' ) != -1 || str.indexOf( 'e' ) != -1 || str.indexOf( 'E' ) != -1 )
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

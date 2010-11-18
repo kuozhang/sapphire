@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.expr;
+package org.eclipse.sapphire.modeling.el;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -20,7 +20,7 @@ import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class Expression<T>
+public abstract class Function<T>
 {
     private Object context;
     private T value;
@@ -30,12 +30,12 @@ public abstract class Expression<T>
                             final String[] params )
     {
         this.context = context;
-        initExpression( context, params );
+        initFunction( context, params );
         refresh();
     }
 
-    protected void initExpression( final Object context,
-                                   final String[] params )
+    protected void initFunction( final Object context,
+                                 final String[] params )
     {
     }
     
@@ -116,6 +116,12 @@ public abstract class Expression<T>
     
     public void dispose()
     {
+    }
+    
+    protected <X> X cast( final Object obj,
+                          final Class<X> type )
+    {
+        return (X) obj;
     }
 
     public static abstract class Listener

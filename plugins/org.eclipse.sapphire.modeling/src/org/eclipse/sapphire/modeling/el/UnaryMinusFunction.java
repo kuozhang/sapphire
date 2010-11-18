@@ -1,0 +1,103 @@
+/******************************************************************************
+ * Copyright (c) 2010 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************/
+
+package org.eclipse.sapphire.modeling.el;
+
+import static org.eclipse.sapphire.modeling.el.internal.FunctionUtils.isDecimalString;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
+import org.eclipse.osgi.util.NLS;
+
+/**
+ * Arithmetic unary minus function. 
+ * 
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ */
+
+public final class UnaryMinusFunction
+
+    extends UnaryFunction<Number>
+
+{
+    public UnaryMinusFunction( final Function<?> operand )
+    {
+        super( operand );
+    }
+    
+    @Override
+    protected Number evaluate( final Object a )
+    {
+        if( a == null )
+        {
+            return (long) 0;
+        }
+        else if( a instanceof BigDecimal )
+        {
+            return ( (BigDecimal) a ).negate();
+        }
+        else if( a instanceof BigInteger )
+        {
+            return ( (BigInteger) a ).negate();
+        }
+        else if( a instanceof String )
+        {
+            if( isDecimalString( a ) )
+            {
+                return -( cast( a, Double.class ) );
+            }
+            else
+            {
+                return -( cast( a, Long.class ) );
+            }
+        }
+        else if( a instanceof Byte )
+        {
+            return -( (Byte) a );
+        }
+        else if( a instanceof Short )
+        {
+            return -( (Short) a );
+        }
+        else if( a instanceof Integer )
+        {
+            return -( (Integer) a );
+        }
+        else if( a instanceof Long )
+        {
+            return -( (Long) a );
+        }
+        else if( a instanceof Float )
+        {
+            return -( (Float) a );
+        }
+        else if( a instanceof Double )
+        {
+            return -( (Double) a );
+        }
+        else
+        {
+            throw new FunctionException( NLS.bind( Resources.cannotApplyMessage, a.getClass().getName() ) );
+        }
+    }
+    
+    private static final class Resources extends NLS
+    {
+        public static String cannotApplyMessage;
+        
+        static
+        {
+            initializeMessages( UnaryMinusFunction.class.getName(), Resources.class );
+        }
+    }
+
+}
