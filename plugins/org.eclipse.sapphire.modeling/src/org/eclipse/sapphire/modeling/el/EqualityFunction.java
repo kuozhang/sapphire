@@ -14,6 +14,8 @@ package org.eclipse.sapphire.modeling.el;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.eclipse.sapphire.modeling.Value;
+
 /**
  * Equality function. 
  * 
@@ -44,8 +46,22 @@ public final class EqualityFunction
         {
             return true;
         }
-        else if( a == null || b == null )
+        else if( a == null )
         {
+            if( b instanceof Value<?> )
+            {
+                return ( ( (Value<?>) b ).getText() == null );
+            }
+            
+            return false;
+        }
+        else if( b == null )
+        {
+            if( a instanceof Value<?> )
+            {
+                return ( ( (Value<?>) a ).getText() == null );
+            }
+            
             return false;
         }
         else if( a instanceof BigDecimal || b instanceof BigDecimal )
@@ -91,7 +107,7 @@ public final class EqualityFunction
         {
             final String x = cast( a, String.class );
             final String y = cast( b, String.class );
-            return ( x.compareTo( y ) > 0 );
+            return ( x.compareTo( y ) == 0 );
         }
         else
         {

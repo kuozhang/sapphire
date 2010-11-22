@@ -24,9 +24,7 @@
     <initial-selection>Model Element Services</initial-selection>
     <root-node>
       <node>
-        <label>
-          <text>Model Element Services</text>
-        </label>
+        <label>Model Element Services</label>
         <section>
           <description>Define services for model elements.</description>
           <content>
@@ -39,10 +37,7 @@
         <node-list>
           <property>ModelElementServices</property>
           <node-template>
-            <label>
-              <property>TypeClass</property>
-              <null-value-text>&lt;service&gt;</null-value-text>
-            </label>
+            <label>${ TypeClass == null ? "&lt;service&gt;" : TypeClass }</label>
             <section>
               <label>Model Element Service</label>
               <content>
@@ -61,9 +56,7 @@
         </node-list>
       </node>
       <node>
-        <label>
-          <text>Model Property Services</text>
-        </label>
+        <label>Model Property Services</label>
         <section>
           <description>Define services for model properties.</description>
           <content>
@@ -76,10 +69,7 @@
         <node-list>
           <property>ModelPropertyServices</property>
           <node-template>
-            <label>
-              <property>TypeClass</property>
-              <null-value-text>&lt;service&gt;</null-value-text>
-            </label>
+            <label>${ TypeClass == null ? "&lt;service&gt;" : TypeClass }</label>
             <section>
               <label>Model Property Service</label>
               <content>
@@ -98,9 +88,7 @@
         </node-list>
       </node>
       <node>
-        <label>
-          <text>Value Serialization Services</text>
-        </label>
+        <label>Value Serialization Services</label>
         <section>
           <description>Define value serialization services.</description>
           <content>
@@ -113,10 +101,7 @@
         <node-list>
           <property>ValueSerializationServices</property>
           <node-template>
-            <label>
-              <property>TypeClass</property>
-              <null-value-text>&lt;service&gt;</null-value-text>
-            </label>
+            <label>${ TypeClass == null ? "&lt;service&gt;" : TypeClass }</label>
             <section>
               <label>Value Serialization Service</label>
               <content>
@@ -135,9 +120,7 @@
         </node-list>
       </node>
       <node>
-        <label>
-          <text>Actions</text>
-        </label>
+        <label>Actions</label>
         <section>
           <description>Define actions that should be available globally in the system.</description>
           <content>
@@ -150,10 +133,7 @@
         <node-list>
           <property>Actions</property>
           <node-template>
-            <label>
-              <property>Id</property>
-              <null-value-text>&lt;action&gt;</null-value-text>
-            </label>
+            <label>${ Id == null ? "&lt;action&gt;" : Id }</label>
             <section>
               <label>Action</label>
               <content>
@@ -189,9 +169,7 @@
         </node-list>
       </node>
       <node>
-        <label>
-          <text>Action Handlers</text>
-        </label>
+        <label>Action Handlers</label>
         <section>
           <description>Define action handlers that should be available globally in the system.</description>
           <content>
@@ -204,10 +182,7 @@
         <node-list>
           <property>ActionHandlers</property>
           <node-template>
-            <label>
-              <property>Id</property>
-              <null-value-text>&lt;action-handler&gt;</null-value-text>
-            </label>
+            <label>${ Id == null ? "&lt;action-handler&gt;" : Id }</label>
             <section>
               <label>Action Handler</label>
               <content>
@@ -243,9 +218,7 @@
         </node-list>
       </node>
       <node>
-        <label>
-          <text>Action Handler Factories</text>
-        </label>
+        <label>Action Handler Factories</label>
         <section>
           <description>Define action handler factories that should be available globally in the system.</description>
           <content>
@@ -258,10 +231,7 @@
         <node-list>
           <property>ActionHandlerFactories</property>
           <node-template>
-            <label>
-              <property>Action</property>
-              <null-value-text>&lt;action-handler-factory&gt;</null-value-text>
-            </label>
+            <label>${ Action == null ? "&lt;action-handler-factory&gt;" : Action }</label>
             <section>
               <label>Action Handler Factory</label>
               <content>

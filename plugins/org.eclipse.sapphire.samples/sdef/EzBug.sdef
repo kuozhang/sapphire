@@ -184,9 +184,7 @@
     <initial-selection>Bug Reports</initial-selection>
     <root-node>
       <node>
-        <label>
-          <text>Bug Reports</text>
-        </label>
+        <label>Bug Reports</label>
         <section>
           <description>Use this editor to manage your bug database.</description>
           <content>
@@ -199,10 +197,7 @@
         <node-list>
           <property>BugReports</property>
           <node-template>
-            <label>
-              <property>Title</property>
-              <null-value-text>&lt;bug&gt;</null-value-text>
-            </label>
+            <label>${ Title == null ? "&lt;bug&gt;" : Title }</label>
             <section>
               <label>Bug Report</label>
               <content>

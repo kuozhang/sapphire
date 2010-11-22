@@ -40,6 +40,14 @@
       javacchome="${basedir}/javacc"
       static="false"/>
 
+    <mkdir dir=".javacc/org/eclipse/sapphire/modeling/el/parser/internal"/>
+    
+    <javacc
+      target="src/org/eclipse/sapphire/modeling/el/parser/internal/ExpressionLanguageParser.jj"
+      outputdirectory=".javacc/org/eclipse/sapphire/modeling/el/parser/internal"
+      javacchome="${basedir}/javacc"
+      static="false"/>
+
   </target>
 
 

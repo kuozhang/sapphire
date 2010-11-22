@@ -14,6 +14,7 @@ package org.eclipse.sapphire.modeling.el;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 /**
@@ -26,7 +27,13 @@ public class FunctionContext
     
     public Object property( final String name )
     {
-        throw new FunctionException( "abc" );
+        throw new FunctionException( NLS.bind( Resources.undefinedPropertyMessage, name ) );
+    }
+    
+    public Function function( final String name,
+                              final List<Function> arguments )
+    {
+        throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessage, name ) );
     }
     
     public final void addListener( final Listener listener )
@@ -61,6 +68,17 @@ public class FunctionContext
     public static abstract class Listener
     {
         public abstract void handlePropertyChanged( String property );
+    }
+    
+    private static final class Resources extends NLS
+    {
+        public static String undefinedPropertyMessage;
+        public static String undefinedFunctionMessage;
+        
+        static
+        {
+            initializeMessages( Function.class.getName(), Resources.class );
+        }
     }
     
 }

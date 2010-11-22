@@ -61,16 +61,16 @@ public interface IMasterDetailsTreeNodeDef
     
     Value<String> getProperty();
     void setProperty( String property );
-
+    
     // *** Label ***
     
-    @Type( base = ILabelDef.class )
     @Label( standard = "label" )
     @XmlBinding( path = "label" )
     
-    ElementProperty PROP_LABEL = new ElementProperty( TYPE, "Label" );
+    ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
     
-    ModelElementHandle<ILabelDef> getLabel();
+    Value<String> getLabel();
+    void setLabel( String value );
     
     // *** UseModelElementImage ***
     

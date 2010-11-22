@@ -30,6 +30,11 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.el.FailSafeFunction;
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
+import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.ui.def.ICompositeParam;
 import org.eclipse.sapphire.ui.def.ISapphireActionLinkDef;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
@@ -52,6 +57,7 @@ import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
 import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
 import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -146,6 +152,60 @@ public abstract class SapphirePart
         // The default implement doesn't do anything.
     }
     
+    protected final Function initExpression( final String expression,
+                                             final Runnable refreshOp )
+    {
+        return initExpression( getModelElement(), expression, refreshOp );
+    }
+    
+    protected static final Function initExpression( final IModelElement contextModelElement,
+                                                    final String expression,
+                                                    final Runnable refreshOp )
+    {
+        final FunctionContext context = new ModelElementFunctionContext( contextModelElement );
+        Function result = null;
+        
+        if( expression != null )
+        {
+            try
+            {
+                result = ExpressionLanguageParser.parse( context, expression );
+            }
+            catch( Exception e )
+            {
+                SapphireUiFrameworkPlugin.log( e );
+                result = null;
+            }
+        }
+        
+        if( result != null )
+        {
+            result = FailSafeFunction.create( context, result, String.class );
+            
+            result.addListener
+            (
+                new Function.Listener()
+                {
+                    @Override
+                    public void handleValueChanged()
+                    {
+                        final Runnable notifyOfUpdateOperation = new Runnable()
+                        {
+                            public void run()
+                            {
+                                refreshOp.run();
+                            }
+                        };
+                     
+                        Display.getDefault().asyncExec( notifyOfUpdateOperation );
+                    }
+                }
+            );
+        }
+        
+        return result;
+    }
+
     public abstract void render( final SapphireRenderingContext context );
     
     public ISapphirePartDef getDefinition()

@@ -191,6 +191,11 @@ public abstract class Function
     protected <X> X cast( Object obj,
                           final Class<X> type )
     {
+        if( obj instanceof Function )
+        {
+            throw new IllegalArgumentException();
+        }
+        
         if( type == String.class )
         {
             if( obj instanceof String )
@@ -216,6 +221,11 @@ public abstract class Function
         }
         else if( Number.class.isAssignableFrom( type ) )
         {
+            if( obj instanceof Value )
+            {
+                obj = ( (Value<?>) obj ).getContent();
+            }
+            
             if( obj == null || ( obj instanceof String && ( (String) obj ).length() == 0 ) )
             {
                 obj = (short) 0;
@@ -322,6 +332,11 @@ public abstract class Function
         }
         else if( type == Character.class )
         {
+            if( obj instanceof Value )
+            {
+                obj = ( (Value<?>) obj ).getContent();
+            }
+            
             if( obj == null || ( obj instanceof String && ( (String) obj ).length() == 0 ) )
             {
                 return (X) (Character) (char) 0;
@@ -347,6 +362,11 @@ public abstract class Function
         }
         else if( type == Boolean.class )
         {
+            if( obj instanceof Value )
+            {
+                obj = ( (Value<?>) obj ).getContent();
+            }
+            
             if( obj == null || ( obj instanceof String && ( (String) obj ).length() == 0 ) )
             {
                 return (X) Boolean.FALSE;
@@ -364,6 +384,11 @@ public abstract class Function
         }
         else if( Enum.class.isAssignableFrom( type ) )
         {
+            if( obj instanceof Value )
+            {
+                obj = ( (Value<?>) obj ).getContent();
+            }
+            
             if( obj == null )
             {
                 return null;
@@ -390,6 +415,11 @@ public abstract class Function
         }
         else
         {
+            if( obj instanceof Value )
+            {
+                obj = ( (Value<?>) obj ).getContent();
+            }
+            
             if( obj == null )
             {
                 return null;

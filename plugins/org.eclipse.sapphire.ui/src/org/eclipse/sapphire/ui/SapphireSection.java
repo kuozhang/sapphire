@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.eclipse.help.IContext;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
@@ -34,7 +35,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -55,6 +55,11 @@ public final class SapphireSection
     
     private ISapphireSectionDef definition;
     private SapphireCondition visibleWhenCondition;
+    private Section section;
+    private Function titleFunction;
+    private FormText descriptionFormText;
+    private Function descriptionFunction;
+    private String descriptionExtendedContent;
     
     @Override
     protected void init()
@@ -77,71 +82,62 @@ public final class SapphireSection
     @Override
     protected Composite createOuterComposite( final SapphireRenderingContext context )
     {
-        final String title = this.definition.getLabel().getLocalizedText();
         final String description = this.definition.getDescription().getLocalizedText();
         
         final FormToolkit toolkit = new FormToolkit( context.getDisplay() );
         
-        final Section section = toolkit.createSection( context.getComposite(), Section.TITLE_BAR );
-        section.setLayoutData( twd() );
-        section.setText( title.trim() );
+        this.section = toolkit.createSection( context.getComposite(), Section.TITLE_BAR );
+        this.section.setLayoutData( twd() );
         
-        final Composite outerComposite = new Composite( section, SWT.NONE );
+        this.titleFunction = initExpression
+        ( 
+            this.definition.getLabel().getLocalizedText(), 
+            new Runnable()
+            {
+                public void run()
+                {
+                    refreshTitle();
+                }
+            }
+        );
+        
+        refreshTitle();
+        
+        final Composite outerComposite = new Composite( this.section, SWT.NONE );
         outerComposite.setLayout( twlayout( 1, 0, 0, 0, 0 ) );
         context.adapt( outerComposite );
         
-        if( description != null )
-        {
-            final int index = description.indexOf(BREAK_TOKEN);
-            if (index > 0) {
-                final String displayDescription = description.substring(0, index);
-
-                final FormText text = new FormText( outerComposite, SWT.NONE );
-                text.setLayoutData( twdindent( twd(), 9 ) );
-                context.adapt( text );
-                
-                final StringBuilder buf = new StringBuilder();
-                buf.append( "<form><p vspace=\"false\">");
-                buf.append( displayDescription );
-                buf.append( "<a href=\"action\" nowrap=\"true\">");
-                buf.append( Resources.moreDetails );
-                buf.append( "</a></p></form>" );
-                
-                text.setText( buf.toString(), true, false );
-                
-                text.addHyperlinkListener
-                (
-                    new HyperlinkAdapter()
-                    {
-                        @Override
-                        public void linkActivated( final HyperlinkEvent event )
-                        {
-                            final Point cursor = text.getDisplay().getCursorLocation();
-                            final Rectangle bounds = text.getBounds();
-                            final Point location = text.toDisplay( new Point( bounds.x, bounds.y ) );
-                            final Rectangle displayBounds = new Rectangle(location.x, location.y, bounds.width, bounds.height);
-                            Point position;
-                            if (displayBounds.contains(cursor)) {
-                                position = cursor;
-                            } else {
-                                position = new Point(location.x, location.y + bounds.height + 2 );
-                            }
-                            StringBuffer buf = new StringBuffer();
-                            buf.append(displayDescription);
-                            buf.append(description.substring(index + BREAK_TOKEN.length(), description.length()));
-                            
-                            final SapphireTextPopup popup = new SapphireTextPopup(text.getDisplay(), position);
-                            popup.setText(buf.toString());
-                            popup.open();
-                        }
-                    }
-                );
-            }  
-            else {
-                final Label descriptionControl = new Label( outerComposite, SWT.WRAP );
-                descriptionControl.setLayoutData( twdindent( twd(), 9 ) );
-                descriptionControl.setText( description.trim() );
+        this.descriptionFunction = initExpression
+        ( 
+            this.definition.getDescription().getLocalizedText(), 
+            new Runnable()
+            {
+                public void run()
+                {
+                    refreshDescription();
+                }
             }
+        );
+        
+        if( this.descriptionFunction != null )
+        {
+            this.descriptionFormText = new FormText( outerComposite, SWT.NONE );
+            this.descriptionFormText.setLayoutData( twdindent( twd(), 9 ) );
+            context.adapt( this.descriptionFormText );
+            
+            this.descriptionFormText.addHyperlinkListener
+            (
+                new HyperlinkAdapter()
+                {
+                    @Override
+                    public void linkActivated( final HyperlinkEvent event )
+                    {
+                        activateExtendedDescriptionContentPopup();
+                    }
+                }
+            );
+
+            refreshDescription();
         }
         
         final Composite innerComposite = new Composite( outerComposite, SWT.NONE );
@@ -153,17 +149,109 @@ public final class SapphireSection
         final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager( context, actions );
         final SapphireToolBarActionPresentation toolBarActionsPresentation = new SapphireToolBarActionPresentation( actionPresentationManager );
         
-        final ToolBar toolbar = new ToolBar( section, SWT.FLAT | SWT.HORIZONTAL );
+        final ToolBar toolbar = new ToolBar( this.section, SWT.FLAT | SWT.HORIZONTAL );
         toolBarActionsPresentation.setToolBar( toolbar );
         toolBarActionsPresentation.render();
-        section.setTextClient( toolbar );
+        this.section.setTextClient( toolbar );
         
-        toolkit.paintBordersFor( section );
-        section.setClient( outerComposite );
+        toolkit.paintBordersFor( this.section );
+        this.section.setClient( outerComposite );
         
         return innerComposite;
     }
     
+    private void refreshTitle()
+    {
+        String title = null;
+        
+        if( this.titleFunction != null )
+        {
+            title = (String) this.titleFunction.value();
+        }
+        
+        if( title == null )
+        {
+            title = "#null#";
+        }
+        else
+        {
+            title = title.trim();
+        }
+        
+        this.section.setText( title.trim() );
+    }
+
+    private void refreshDescription()
+    {
+        String description = null;
+        
+        if( this.descriptionFunction != null )
+        {
+            description = (String) this.descriptionFunction.value();
+        }
+        
+        if( description == null )
+        {
+            description = "#null#";
+        }
+        else
+        {
+            description = description.trim();
+        }
+    
+        final int index = description.indexOf( BREAK_TOKEN );
+        
+        final StringBuilder buf = new StringBuilder();
+        buf.append( "<form><p vspace=\"false\">");
+    
+        if( index > 0 ) 
+        {
+            final String displayDescription = description.substring( 0, index );
+    
+            buf.append( displayDescription );
+            buf.append( "<a href=\"action\" nowrap=\"true\">");
+            buf.append( Resources.moreDetails );
+            buf.append( "</a>" );
+            
+            this.descriptionExtendedContent 
+                = displayDescription + description.substring( index + BREAK_TOKEN.length(), description.length() );
+        }  
+        else 
+        {
+            buf.append( description );
+            this.descriptionExtendedContent = null;
+        }
+        
+        buf.append( "</p></form>" );
+        this.descriptionFormText.setText( buf.toString(), true, false );
+    }
+
+    private void activateExtendedDescriptionContentPopup()
+    {
+        if( this.descriptionExtendedContent != null )
+        {
+            final Point cursor = this.descriptionFormText.getDisplay().getCursorLocation();
+            final Rectangle bounds = this.descriptionFormText.getBounds();
+            final Point location = this.descriptionFormText.toDisplay( new Point( bounds.x, bounds.y ) );
+            final Rectangle displayBounds = new Rectangle( location.x, location.y, bounds.width, bounds.height );
+            
+            Point position;
+            
+            if( displayBounds.contains( cursor ) ) 
+            {
+                position = cursor;
+            } 
+            else 
+            {
+                position = new Point( location.x, location.y + bounds.height + 2 );
+            }
+            
+            final SapphireTextPopup popup = new SapphireTextPopup( this.descriptionFormText.getDisplay(), position );
+            popup.setText( this.descriptionExtendedContent );
+            popup.open();
+        }
+    }
+
     @Override
     public Set<String> getActionContexts()
     {

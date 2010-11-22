@@ -27,16 +27,7 @@ import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.SapphireMultiStatus;
-import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.el.ConditionalFunction;
-import org.eclipse.sapphire.modeling.el.EmptyFunction;
-import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.el.FunctionContext;
-import org.eclipse.sapphire.modeling.el.Literal;
-import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
-import org.eclipse.sapphire.modeling.el.PropertyReference;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.ProblemOverlayImageDescriptor;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
@@ -47,7 +38,6 @@ import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphirePropertyEnabledCondition;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireSection;
-import org.eclipse.sapphire.ui.def.ILabelDef;
 import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeDef;
 import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeFactoryDef;
 import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeFactoryEntry;
@@ -137,7 +127,18 @@ public final class MasterDetailsContentNode
             this.modelElement = getModelElement();
         }
         
-        initLabelFunction();
+        this.labelFunction = initExpression
+        ( 
+            this.modelElement, 
+            this.definition.getLabel().getLocalizedText(), 
+            new Runnable()
+            {
+                public void run()
+                {
+                    getContentTree().notifyOfNodeUpdate( MasterDetailsContentNode.this );
+                }
+            }
+        );
         
         this.imageDescriptor = this.definition.getImagePath().resolve();
         this.imageDescriptorWithError = null;
@@ -334,69 +335,6 @@ public final class MasterDetailsContentNode
         }
     }
     
-    private void initLabelFunction()
-    {
-        final ILabelDef ldef = this.definition.getLabel().element();
-        final FunctionContext context = new ModelElementFunctionContext( this.modelElement );
-        
-        final Class<?> labelProviderClass = ldef.getProviderClass().resolve();
-        
-        if( labelProviderClass != null )
-        {
-            try
-            {
-                this.labelFunction = (Function) labelProviderClass.newInstance();
-                this.labelFunction.init( context );
-            }
-            catch( Exception e )
-            {
-                SapphireModelingFrameworkPlugin.log( e );
-                this.labelFunction = null;
-            }
-        }
-        
-        if( this.labelFunction == null )
-        {
-            final ValueProperty labelProperty = (ValueProperty) resolve( ldef.getProperty().getContent() );
-            final String nullValueText = ldef.getNullValueText().getLocalizedText();
-            
-            if( labelProperty != null )
-            {
-                final Function condition = EmptyFunction.create( context, PropertyReference.create( context, labelProperty.getName() ) );
-                final Function altEmpty = Literal.create( context, nullValueText );
-                final Function altNotEmpty = PropertyReference.create( context, labelProperty.getName() );
-                this.labelFunction = ConditionalFunction.create( context, condition, altEmpty, altNotEmpty );
-            }
-        }
-        
-        if( this.labelFunction == null )
-        {
-            this.labelFunction = Literal.create( context, ldef.getText().getLocalizedText() );
-        }
-        
-        this.labelFunction = FailSafeFunction.create( context, this.labelFunction, String.class );
-        
-        this.labelFunction.addListener
-        (
-            new Function.Listener()
-            {
-                @Override
-                public void handleValueChanged()
-                {
-                    final Runnable notifyOfUpdateOperation = new Runnable()
-                    {
-                        public void run()
-                        {
-                            getContentTree().notifyOfNodeUpdate( MasterDetailsContentNode.this );
-                        }
-                    };
-                    
-                    Display.getDefault().asyncExec( notifyOfUpdateOperation );
-                }
-            }
-        );
-    }
-    
     public MasterDetailsContentTree getContentTree()
     {
         return this.contentTree;
@@ -431,7 +369,12 @@ public final class MasterDetailsContentNode
     
     public String getLabel()
     {
-        String label = (String) this.labelFunction.value();
+        String label = null;
+        
+        if( this.labelFunction != null )
+        {
+            label = (String) this.labelFunction.value();
+        }
         
         if( label == null )
         {
@@ -758,6 +701,11 @@ public final class MasterDetailsContentNode
         for( SapphireCondition condition : this.allConditions )
         {
             condition.dispose();
+        }
+        
+        if( this.labelFunction != null )
+        {
+            this.labelFunction.dispose();
         }
     }
 

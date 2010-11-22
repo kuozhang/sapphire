@@ -11,31 +11,33 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import org.eclipse.sapphire.modeling.ModelElementHandle;
+
 /**
  * An function that pulls a property from the context. 
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PropertyReference
+public final class RootPropertyAccessFunction
 
     extends Function
 
 {
-    private String property;
     private FunctionContext.Listener listener;
     
-    public PropertyReference( final String property )
+    public static RootPropertyAccessFunction create( final FunctionContext context,
+                                                     final Function property )
     {
-        this.property = property;
+        final RootPropertyAccessFunction literal = new RootPropertyAccessFunction();
+        literal.init( context, property );
+        return literal;
     }
     
-    public static PropertyReference create( final FunctionContext context,
-                                            final String property )
+    public static RootPropertyAccessFunction create( final FunctionContext context,
+                                                     final String property )
     {
-        final PropertyReference literal = new PropertyReference( property );
-        literal.init( context );
-        return literal;
+        return create( context, Literal.create( context, property ) );
     }
     
     @Override
@@ -48,7 +50,7 @@ public final class PropertyReference
             @Override
             public void handlePropertyChanged( final String property )
             {
-                if( PropertyReference.this.property.equals( property ) )
+                if( cast( operand( 0 ).value(), String.class ).equals( property ) )
                 {
                     refresh();
                 }
@@ -61,7 +63,14 @@ public final class PropertyReference
     @Override
     protected Object evaluate()
     {
-        return context().property( this.property );
+        Object res = context().property( cast( operand( 0 ).value(), String.class ) );
+        
+        if( res instanceof ModelElementHandle<?> )
+        {
+            res = ( (ModelElementHandle<?>) res ).element();
+        }
+        
+        return res;
     }
 
     @Override

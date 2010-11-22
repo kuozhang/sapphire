@@ -32,23 +32,17 @@
     </documentation>
     <root-node>
       <node>
-        <label>
-          <text>Simple Values</text>
-        </label>
+        <label>Simple Values</label>
         <section>
           <description>In some situations, the description text for say a section gets a bit long. The approach we've adopted is to include the summary in the section and then add section level help content. ###brk###This adequate, but may not be as intuitive as say a "More details..." link at the end of the on-screen description text with that pops up a tooltip-style window with complete information.</description>
         </section>
         <node>
-          <label>
-            <text>Numbers</text>
-          </label>
+          <label>Numbers</label>
           <section>
             <description>abc</description>
           </section>
           <node>
-            <label>
-              <text>Integer</text>
-            </label>
+            <label>Integer</label>
             <property>IntegerValueGallery</property>
             <section>
               <documentation-ref>
@@ -62,9 +56,7 @@
             </section>
           </node>
           <node>
-            <label>
-              <text>Long Integer</text>
-            </label>
+            <label>Long Integer</label>
             <property>LongIntegerValueGallery</property>
             <section>
               <content>
@@ -75,9 +67,7 @@
             </section>
           </node>
           <node>
-            <label>
-              <text>Big Integer</text>
-            </label>
+            <label>Big Integer</label>
             <property>BigIntegerValueGallery</property>
             <section>
               <content>
@@ -88,9 +78,7 @@
             </section>
           </node>
           <node>
-            <label>
-              <text>Single Precision Float</text>
-            </label>
+            <label>Single Precision Float</label>
             <property>FloatValueGallery</property>
             <section>
               <content>
@@ -101,9 +89,7 @@
             </section>
           </node>
           <node>
-            <label>
-              <text>Double Precision Float</text>
-            </label>
+            <label>Double Precision Float</label>
             <property>DoubleValueGallery</property>
             <section>
               <content>
@@ -114,9 +100,7 @@
             </section>
           </node>
           <node>
-            <label>
-              <text>Decimal</text>
-            </label>
+            <label>Decimal</label>
             <property>BigDecimalValueGallery</property>
             <section>
               <content>
@@ -128,9 +112,7 @@
           </node>
         </node>
         <node>
-          <label>
-            <text>Enums</text>
-          </label>
+          <label>Enums</label>
           <property>EnumValueGallery</property>
           <section>
             <label>Enums</label>
@@ -200,9 +182,7 @@
           </section>
         </node>
         <node>
-          <label>
-            <text>Java Type Names</text>
-          </label>
+          <label>Java Type Names</label>
           <property>JavaTypeNameValueGallery</property>
           <section>
             <content>
@@ -262,9 +242,7 @@
         </node>
       </node>
       <node>
-        <label>
-          <text>Browse Support</text>
-        </label>
+        <label>Browse Support</label>
         <property>BrowseSupportGallery</property>
         <section>
           <content>
@@ -333,9 +311,7 @@
         </section>
       </node>
       <node>
-        <label>
-          <text>Multi-Select Lists</text>
-        </label>
+        <label>Multi-Select Lists</label>
         <property>MultiSelectListGallery</property>
         <section>
           <content>
@@ -376,9 +352,7 @@
         </section>
       </node>
       <node>
-        <label>
-          <text>Actions</text>
-        </label>
+        <label>Actions</label>
         <property>ValuePropertyActionsGallery</property>
         <section>
           <content>
@@ -398,9 +372,7 @@
           </content>
         </section>
         <node>
-          <label>
-            <text>Value Property Editor</text>
-          </label>
+          <label>Value Property Editor</label>
           <section>
             <content>
               <label>
@@ -556,9 +528,7 @@
           </section>
         </node>
         <node>
-          <label>
-            <text>List Property Editor</text>
-          </label>
+          <label>List Property Editor</label>
           <section>
             <content>
               <label>
@@ -714,9 +684,7 @@
         </node>
       </node>
       <node>
-        <label>
-          <text>Help Gallery</text>
-        </label>
+        <label>Help Gallery</label>
         <section>
           <description>Help gallery shows content help capabilities in Sapphire.</description>
           <documentation-ref>
@@ -724,9 +692,7 @@
           </documentation-ref>
         </section>
         <node>
-          <label>
-            <text>Help</text>
-          </label>
+          <label>Help</label>
           <property>HelpGallery</property>
           <section>
             <description>Simple shows the help content annotation. Positive shows the help content provider annotation. Range constrained with default shows the auto-generated content help.</description>
@@ -743,9 +709,7 @@
           </section>
         </node>
         <node>
-          <label>
-            <text>Extended Help</text>
-          </label>
+          <label>Extended Help</label>
           <property>ExtendedHelpGallery</property>
           <section>
             <description>Content help for the ExtendedHelpGallery model element will be appended to all properties. Both Simple and Positive have options to augment, in which the parent's content help will be appended. </description>

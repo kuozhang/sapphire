@@ -29,4 +29,8 @@ public class FunctionException
         super( message );
     }
     
+    public FunctionException( final Throwable e )
+    {
+        super( e );
+    }
 }
