@@ -65,6 +65,16 @@ public final class GridLayoutUtil
         return layout;
     }
     
+    public static final GridLayout glspacing( final GridLayout layout,
+    										  final int hspacing,
+    										  final int vspacing )
+	{
+		layout.horizontalSpacing = hspacing;
+		layout.verticalSpacing = vspacing;
+		
+		return layout;
+	}
+
     public static final GridData gd()
     {
         return new GridData();
