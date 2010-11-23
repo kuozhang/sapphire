@@ -26,7 +26,7 @@
         <node-list>
           <property>Events</property>
           <node-template>
-            <label>${ Subject == null ? &lt;event&gt; : Subject }</label>
+            <label>${ Subject == null ? "&lt;event&gt;" : Subject }</label>
             <node>
               <label>Attachments</label>
               <section>
