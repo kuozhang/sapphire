@@ -77,7 +77,7 @@ public class FunctionContext
         
         static
         {
-            initializeMessages( Function.class.getName(), Resources.class );
+            initializeMessages( FunctionContext.class.getName(), Resources.class );
         }
     }
     
