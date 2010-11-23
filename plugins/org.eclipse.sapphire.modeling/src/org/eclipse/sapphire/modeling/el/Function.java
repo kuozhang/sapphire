@@ -212,7 +212,9 @@ public abstract class Function
             }
             else if( obj instanceof Value )
             {
-                return (X) ( (Value) obj ).getText();
+                String res = ( (Value) obj ).getText();
+                res = ( res == null ? "" : res );
+                return (X) res;
             }
             else
             {

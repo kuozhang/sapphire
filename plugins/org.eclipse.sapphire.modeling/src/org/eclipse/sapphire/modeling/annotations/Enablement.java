@@ -16,8 +16,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.eclipse.sapphire.modeling.EnablementService;
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -27,9 +25,5 @@ import org.eclipse.sapphire.modeling.EnablementService;
 
 public @interface Enablement
 {
-    String property() default "";
-    String propertyValue() default "";
-    String script() default "";
-    Class<? extends EnablementService> service() default EnablementService.class;
-    String[] params() default {};
+    String expr();
 }

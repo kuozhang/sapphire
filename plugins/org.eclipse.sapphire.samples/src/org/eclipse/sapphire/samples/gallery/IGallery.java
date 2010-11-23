@@ -154,4 +154,14 @@ public interface IGallery
     ElementProperty PROP_EXTENDED_HELP_GALLERY = new ElementProperty( TYPE, "ExtendedHelpGallery" );
     
     ModelElementHandle<IExtendedHelpGallery> getExtendedHelpGallery();
+
+    // *** IEnablementGallery ***
+    
+    @Type( base = IEnablementGallery.class )
+    @XmlBinding( path = "enablement" )
+
+    ElementProperty PROP_ENABLEMENT_GALLERY = new ElementProperty( TYPE, "EnablementGallery" );
+    
+    ModelElementHandle<IEnablementGallery> getEnablementGallery();
+    
 }

@@ -242,6 +242,44 @@
         </node>
       </node>
       <node>
+        <label>Enablement</label>
+        <property>EnablementGallery</property>
+        <section>
+          <label>Controlling</label>
+          <content>
+            <label>
+              In many situations, a property's enablement state is dependent on values of other
+              properties. In this sample, the properties in the Controlling section influence the
+              enablement of properties in the Dependent section.
+            </label>
+            <spacer/>
+            <property-editor>ControllingPropBoolean</property-editor>
+            <property-editor>ControllingPropEnum</property-editor>
+          </content>
+        </section>
+        <section>
+          <label>Dependent</label>
+          <content>
+            <label>Enabled if boolean controlling property is set true.</label>
+            <spacer/>
+            <property-editor>DependentProp1</property-editor>
+            <spacer/>
+            <spacer/>
+            <label>Enabled if enum controlling property is set to yes.</label>
+            <spacer/>
+            <property-editor>DependentProp2</property-editor>
+            <spacer/>
+            <spacer/>
+            <label>
+              Enabled if boolean controlling property is set to false and enum controlling 
+              property is set to yes or maybe.
+            </label>
+            <spacer/>
+            <property-editor>DependentProp3</property-editor>
+          </content>
+        </section>
+      </node>
+      <node>
         <label>Browse Support</label>
         <property>BrowseSupportGallery</property>
         <section>
@@ -684,7 +722,7 @@
         </node>
       </node>
       <node>
-        <label>Help Gallery</label>
+        <label>Help</label>
         <section>
           <description>Help gallery shows content help capabilities in Sapphire.</description>
           <documentation-ref>

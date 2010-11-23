@@ -24,7 +24,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
-import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
 import org.eclipse.sapphire.modeling.annotations.PropertyListeners;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
@@ -499,13 +498,6 @@ public abstract class ModelProperty
                 {
                     dependenciesAsStrings.add( dependsOnPropertyRef );
                 }
-            }
-            
-            final Enablement enablementAnnotation = getAnnotation( Enablement.class );
-            
-            if( enablementAnnotation != null && enablementAnnotation.property().length() > 0 )
-            {
-                dependenciesAsStrings.add( enablementAnnotation.property() );
             }
             
             final Set<ModelPath> dependencies = new HashSet<ModelPath>();

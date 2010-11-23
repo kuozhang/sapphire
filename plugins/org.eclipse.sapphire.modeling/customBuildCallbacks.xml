@@ -24,14 +24,6 @@
       <fileset dir=".javacc"/>
     </delete>
 
-    <mkdir dir=".javacc/org/eclipse/sapphire/modeling/scripting/internal/parser"/>
-    
-    <javacc
-      target="src/org/eclipse/sapphire/modeling/scripting/internal/parser/ScriptParser.jj"
-      outputdirectory=".javacc/org/eclipse/sapphire/modeling/scripting/internal/parser"
-      javacchome="${basedir}/javacc"
-      static="false"/>
-
     <mkdir dir=".javacc/org/eclipse/sapphire/modeling/docsys/internal"/>
     
     <javacc

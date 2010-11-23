@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.sapphire.modeling.docsys.internal.DocumentationContentParser;
-import org.eclipse.sapphire.modeling.scripting.internal.parser.TokenMgrError;
+import org.eclipse.sapphire.modeling.el.parser.internal.TokenMgrError;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

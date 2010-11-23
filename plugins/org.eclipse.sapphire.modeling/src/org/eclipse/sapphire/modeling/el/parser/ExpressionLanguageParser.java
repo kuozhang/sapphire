@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionException;
 import org.eclipse.sapphire.modeling.el.parser.internal.ExpressionLanguageParserImpl;
-import org.eclipse.sapphire.modeling.scripting.internal.parser.TokenMgrError;
+import org.eclipse.sapphire.modeling.el.parser.internal.TokenMgrError;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

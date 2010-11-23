@@ -443,7 +443,6 @@ public abstract class ModelElement
                 
                 if( service != null )
                 {
-                    service.init( this, property, new String[ 0 ] );
                     this.propertyServices.put( key, service );
                 }
             }
