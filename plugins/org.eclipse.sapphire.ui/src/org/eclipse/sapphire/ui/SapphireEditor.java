@@ -186,7 +186,7 @@ public abstract class SapphireEditor
 
     public final String getLastActivePage()
     {
-        String lastActivePage = ( (SapphireEditorFormPage) this.pages.get( 0 ) ).getId();
+        String lastActivePage = getPageId( this.pages.get( 0 ) );
         
         try
         {
@@ -223,7 +223,7 @@ public abstract class SapphireEditor
         }
     }
 
-    public final IFile getFile()
+    public IFile getFile()
     {
         final IEditorInput editorInput = getEditorInput();
         
@@ -369,6 +369,24 @@ public abstract class SapphireEditor
         return page;
     }
     
+    public final String getPageId( final Object page )
+    {
+        String retId = null;
+        
+        for( String id : this.pagesById.keySet() )
+        {
+            final Object p = this.pagesById.get( id );
+            
+            if( p == page )
+            {
+                retId = id;
+                break;
+            }
+        }
+        
+        return retId;
+    }
+    
     public final void showPage( final String id )
     {
         final Object page = getPage( id );
@@ -407,7 +425,7 @@ public abstract class SapphireEditor
         }
     }
     
-    public final void doSave( final IProgressMonitor monitor ) 
+    public void doSave( final IProgressMonitor monitor ) 
     {
         try
         {
