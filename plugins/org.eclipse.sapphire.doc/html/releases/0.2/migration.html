@@ -138,7 +138,7 @@ public class CustomImpl extends EnablementService
 <pre class="source-code"><code>@EnabledWhen( "..." )</code></pre>
     </td>
     <td>
-<pre class="source-code"><code>@Enablement( script = "..." )</code></pre>
+<pre class="source-code"><code>@Enablement( expr = "..." )</code></pre>
     </td>
   </tr>
   <tr>
@@ -146,7 +146,7 @@ public class CustomImpl extends EnablementService
 <pre class="source-code"><code>@EnabledByBooleanProperty( "SomeProperty" )</code></pre>
     </td>
     <td>
-<pre class="source-code"><code>@Enablement( property = "SomeProperty" )</code></pre>
+<pre class="source-code"><code>@Enablement( expr = "${ SomeProperty }" )</code></pre>
     </td>
   </tr>
   <tr>
@@ -154,7 +154,7 @@ public class CustomImpl extends EnablementService
 <pre class="source-code"><code>@EnabledByEnumProperty( property = "SomeProperty", values = { "A", "B", "C" } )</code></pre>
     </td>
     <td>
-<pre class="source-code"><code>@Enablement( property = "SomeProperty", propertyValue = "A,B,C" )</code></pre>
+<pre class="source-code"><code>@Enablement( expr = "${ SomeProperty == 'A' || SomeProperty == 'B' || SomeProperty == 'C' }" )</code></pre>
     </td>
   </tr>
   <tr>
