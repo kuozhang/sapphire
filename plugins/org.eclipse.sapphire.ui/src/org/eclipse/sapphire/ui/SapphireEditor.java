@@ -183,7 +183,8 @@ public abstract class SapphireEditor
 
     public final String getLastActivePage()
     {        
-        String lastActivePage = getPageId(this.pages.get(0));
+        String lastActivePage = getPageId( this.pages.get( 0 ) );
+        
         try
         {
             final Preferences prefs = getInstancePreferences( false );
