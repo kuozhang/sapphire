@@ -11,17 +11,17 @@
 
 package org.eclipse.sapphire.modeling.internal;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.sapphire.modeling.EnablementService;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
-import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.el.FunctionContext;
-import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 
@@ -34,6 +34,15 @@ public final class EnablementServiceFactory
     extends ModelPropertyServiceFactory
     
 {
+    private static EnablementService DEFAULT_ENABLEMENT_SERVICE = new EnablementService()
+    {
+        @Override
+        public boolean isEnabled()
+        {
+            return true;
+        }
+    };
+    
     @Override
     public boolean applicable( final IModelElement element,
                                final ModelProperty property,
@@ -47,49 +56,122 @@ public final class EnablementServiceFactory
                                         final ModelProperty property,
                                         final Class<? extends ModelPropertyService> service )
     {
-        final FunctionContext context = new ModelElementFunctionContext( element );
-        Function function = null;
+        List<EnablementService> services = new ArrayList<EnablementService>();
         
         for( Enablement annotation : property.getAnnotations( Enablement.class ) )
         {
-            final String expr = annotation.expr();
-            Function f = null;
+            EnablementService svc = null;
             
-            if( expr != null )
+            if( ! annotation.service().equals( EnablementService.class ) )
             {
                 try
                 {
-                    f = ExpressionLanguageParser.parse( context, expr );
+                    svc = annotation.service().newInstance();
+                    svc.init( element, property, annotation.params() );
+                }
+                catch( Exception e )
+                {
+                    SapphireModelingFrameworkPlugin.log( e );
+                    svc = null;
+                }
+            }
+            
+            if( svc == null && annotation.expr().length() > 0 )
+            {
+                Function f = null;
+                
+                try
+                {
+                    f = ExpressionLanguageParser.parse( new ModelElementFunctionContext( element ), annotation.expr() );
                 }
                 catch( Exception e )
                 {
                     SapphireModelingFrameworkPlugin.log( e );
                     f = null;
                 }
+                
+                if( f != null )
+                {
+                    f = FailSafeFunction.create( f.context(), f, Boolean.class );
+                }
+                
+                svc = new FunctionBasedEnablementService( f );
+                svc.init( element, property, new String[ 0 ] );
             }
             
-            if( f != null )
+            if( svc != null )
             {
-                f = FailSafeFunction.create( context, f, Boolean.class );
-            }
-            
-            if( function == null )
-            {
-                function = f;
-            }
-            else
-            {
-                function = AndFunction.create( context, function, f );
+                services.add( svc );
             }
         }
         
-        if( function == null )
+        final int count = services.size();
+        final EnablementService result;
+        
+        if( count == 0 )
         {
-            function = Literal.create( context, Boolean.TRUE );
+            result = DEFAULT_ENABLEMENT_SERVICE;
+        }
+        else if( count == 1 )
+        {
+            result = services.get( 0 );
         }
         else
         {
-            function.addListener
+            result = new UnionEnablementService( services );
+        }
+        
+        return result;
+    }
+    
+    private static final class UnionEnablementService extends EnablementService
+    {
+        private final List<EnablementService> enablers;
+        
+        public UnionEnablementService( final List<EnablementService> enablers )
+        {
+            this.enablers = enablers;
+        }
+
+        @Override
+        public boolean isEnabled()
+        {
+            for( EnablementService enabler : this.enablers )
+            {
+                try
+                {
+                    if( ! enabler.isEnabled() )
+                    {
+                        return false;
+                    }
+                }
+                catch( Exception e )
+                {
+                    SapphireModelingFrameworkPlugin.log( e );
+                }
+            }
+
+            return true;
+        }
+    }
+    
+    private static final class FunctionBasedEnablementService extends EnablementService
+    {
+        private final Function function;
+        
+        public FunctionBasedEnablementService( final Function function )
+        {
+            this.function = function;
+        }
+        
+        @Override
+        public void init( final IModelElement element,
+                          final ModelProperty property,
+                          final String[] params )
+        {
+            super.init( element, property, params );
+            
+            this.function.addListener
             (
                 new Function.Listener()
                 {
@@ -101,33 +183,24 @@ public final class EnablementServiceFactory
                 }
             );
         }
-        
-        final Function finalFunction = function;
-
-        final EnablementService svc = new EnablementService()
+    
+        @Override
+        public boolean isEnabled()
         {
-            @Override
-            public boolean isEnabled()
+            Boolean enabled = null;
+            
+            if( this.function != null )
             {
-                Boolean enabled = null;
-                
-                if( finalFunction != null )
-                {
-                    enabled = (Boolean) finalFunction.value();
-                }
-                
-                if( enabled == null )
-                {
-                    enabled = false;
-                }
-                
-                return enabled;
+                enabled = (Boolean) this.function.value();
             }
-        };
-        
-        svc.init( element, property, new String[ 0 ] );
-        
-        return svc;
+            
+            if( enabled == null )
+            {
+                enabled = false;
+            }
+            
+            return enabled;
+        }
     }
     
 }
