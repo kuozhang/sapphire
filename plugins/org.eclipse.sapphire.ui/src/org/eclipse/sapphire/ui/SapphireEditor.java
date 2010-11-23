@@ -62,52 +62,52 @@ public abstract class SapphireEditor
     implements ISapphirePart
     
 {
-	private static final String PREFS_LAST_ACTIVE_PAGE = "LastActivePage"; //$NON-NLS-1$
-	private static final String PREFS_GLOBAL = "Global"; //$NON-NLS-1$
+    private static final String PREFS_LAST_ACTIVE_PAGE = "LastActivePage"; //$NON-NLS-1$
+    private static final String PREFS_GLOBAL = "Global"; //$NON-NLS-1$
     private static final String PREFS_INSTANCE_BY_URI = "InstanceByUri"; //$NON-NLS-1$
     private static final String PREFS_INSTANCE_BY_EDITOR_INPUT_TYPE = "InstanceByEditorInputType"; //$NON-NLS-1$
-	
-	private final String pluginId;
-	private String helpContextIdPrefix;
+    
+    private final String pluginId;
+    private String helpContextIdPrefix;
     private IModel model;
-	private IResourceChangeListener fileChangeListener;
+    private IResourceChangeListener fileChangeListener;
     private final SapphireImageCache imageCache;
     private final Map<String,Object> pagesById;
     private SapphireEditorContentOutline outline;
     
     public SapphireEditor( final String pluginId )
     {
-    	this.pluginId = pluginId;
-    	this.helpContextIdPrefix = pluginId + "."; //$NON-NLS-1$
-    	this.imageCache = new SapphireImageCache();
-    	this.pagesById = new HashMap<String,Object>();
-    	this.outline = null;
+        this.pluginId = pluginId;
+        this.helpContextIdPrefix = pluginId + "."; //$NON-NLS-1$
+        this.imageCache = new SapphireImageCache();
+        this.pagesById = new HashMap<String,Object>();
+        this.outline = null;
     }
     
     public final IModel getModel()
-	{
-	    return this.model;
-	}
+    {
+        return this.model;
+    }
 
-	protected abstract IModel createModel();
-	
-	protected void adaptModel( final IModel model )
-	{
-	    final CorruptedModelStoreExceptionInterceptor interceptor 
-	        = new CorruptedModelStoreExceptionInterceptorImpl( getEditorSite().getShell() );
-	    
+    protected abstract IModel createModel();
+    
+    protected void adaptModel( final IModel model )
+    {
+        final CorruptedModelStoreExceptionInterceptor interceptor 
+            = new CorruptedModelStoreExceptionInterceptorImpl( getEditorSite().getShell() );
+        
         this.model.setCorruptedModelStoreExceptionInterceptor( interceptor );
-	}
-	
+    }
+    
     public String getHelpContextIdPrefix()
     {
-    	return this.helpContextIdPrefix;
+        return this.helpContextIdPrefix;
     }
     
     public final Preferences getGlobalPreferences( final boolean createIfNecessary )
     
-    	throws BackingStoreException
-    	
+        throws BackingStoreException
+        
     {
         final Preferences prefs = getPreferencesRoot( createIfNecessary );
         
@@ -182,17 +182,16 @@ public abstract class SapphireEditor
     }
 
     public final String getLastActivePage()
-    {
-    	String lastActivePage = ( (SapphireEditorFormPage) this.pages.get( 0 ) ).getId();
-    	
+    {        
+        String lastActivePage = getPageId(this.pages.get(0));
         try
         {
-        	final Preferences prefs = getInstancePreferences( false );
-        	
-        	if( prefs != null )
-        	{
-        		lastActivePage = prefs.get( PREFS_LAST_ACTIVE_PAGE, lastActivePage );
-        	}
+            final Preferences prefs = getInstancePreferences( false );
+            
+            if( prefs != null )
+            {
+                lastActivePage = prefs.get( PREFS_LAST_ACTIVE_PAGE, lastActivePage );
+            }
         }
         catch( BackingStoreException e )
         {
@@ -206,13 +205,13 @@ public abstract class SapphireEditor
     {
         try
         {
-        	final Preferences prefs = getInstancePreferences( true );
-        	
-        	if( prefs != null )
-        	{
-        		prefs.put( PREFS_LAST_ACTIVE_PAGE, pageId );
-        		prefs.flush();
-        	}
+            final Preferences prefs = getInstancePreferences( true );
+            
+            if( prefs != null )
+            {
+                prefs.put( PREFS_LAST_ACTIVE_PAGE, pageId );
+                prefs.flush();
+            }
         }
         catch( BackingStoreException e )
         {
@@ -220,27 +219,27 @@ public abstract class SapphireEditor
         }
     }
 
-	public final IFile getFile()
-	{
-	    final IEditorInput editorInput = getEditorInput();
-	    
-	    if( editorInput instanceof FileEditorInput )
-	    {
-	        return ( (FileEditorInput) editorInput ).getFile();
-	    }
-	    else
-	    {
-	        return null;
-	    }
-	}
+    public IFile getFile()
+    {
+        final IEditorInput editorInput = getEditorInput();
+        
+        if( editorInput instanceof FileEditorInput )
+        {
+            return ( (FileEditorInput) editorInput ).getFile();
+        }
+        else
+        {
+            return null;
+        }
+    }
 
-	public final IProject getProject()
-	{
-	    final IFile ifile = getFile();
-	    return ( ifile == null ? null : ifile.getProject() );
-	}
-	
-	public final void init( final IEditorSite site, 
+    public final IProject getProject()
+    {
+        final IFile ifile = getFile();
+        return ( ifile == null ? null : ifile.getProject() );
+    }
+    
+    public final void init( final IEditorSite site, 
                             final IEditorInput input )
     
         throws PartInitException
@@ -250,31 +249,31 @@ public abstract class SapphireEditor
         
         doSetInput( input );
     }
-	
+    
     protected final void setInput( final IEditorInput input ) 
-	{
-	    doSetInput( input );
-	    super.setInput( input );
-	}
-
-	@Override
-	protected final void setInputWithNotify( final IEditorInput input ) 
-	{
-	    doSetInput( input );
-	    super.setInputWithNotify( input );
-	}
-
-	private void doSetInput( final IEditorInput input )
-	{
-	    setPartName( input.getName() );
-	}
-
-	protected final void addPages() 
     {
-	    final IFile file = getFile();
-	    
-	    if( file.isAccessible() )
-	    {
+        doSetInput( input );
+        super.setInput( input );
+    }
+
+    @Override
+    protected final void setInputWithNotify( final IEditorInput input ) 
+    {
+        doSetInput( input );
+        super.setInputWithNotify( input );
+    }
+
+    private void doSetInput( final IEditorInput input )
+    {
+        setPartName( input.getName() );
+    }
+
+    protected final void addPages() 
+    {
+        final IFile file = getFile();
+        
+        if( file.isAccessible() )
+        {
             try 
             {
                 createSourcePages();
@@ -292,10 +291,10 @@ public abstract class SapphireEditor
             }
             
             final String lastActivePage = getLastActivePage();
-        	int page = 0;
-        	
-        	if( lastActivePage != null )
-        	{
+            int page = 0;
+            
+            if( lastActivePage != null )
+            {
                 int count = getPageCount();
                 for (int i = 0; i < count; i++) {
                     String title = getPageText(i);
@@ -304,28 +303,28 @@ public abstract class SapphireEditor
                         break;
                     }
                 }
-        	}
+            }
             
             setActivePage( page );
-	    }
-	    else
-	    {
-	        final Composite page = new Composite( getContainer(), SWT.NONE );
-	        page.setLayout( glayout( 1 ) );
-	        page.setBackground( getSite().getShell().getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+        }
+        else
+        {
+            final Composite page = new Composite( getContainer(), SWT.NONE );
+            page.setLayout( glayout( 1 ) );
+            page.setBackground( getSite().getShell().getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
 
-	        final FormText message = new FormText( page, SWT.NONE );
-	        message.setLayoutData( gd() );
-	        message.setBackground( getSite().getShell().getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-	        message.setText( Resources.resourceNotAccessible, false, false );
-	        
-	        addPage( page );
-	        setPageText( 0, Resources.errorPageTitle );
-	    }
+            final FormText message = new FormText( page, SWT.NONE );
+            message.setLayoutData( gd() );
+            message.setBackground( getSite().getShell().getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+            message.setText( Resources.resourceNotAccessible, false, false );
+            
+            addPage( page );
+            setPageText( 0, Resources.errorPageTitle );
+        }
     }
-	
-	protected abstract void createSourcePages() throws PartInitException;
-	protected abstract void createFormPages() throws PartInitException;
+    
+    protected abstract void createSourcePages() throws PartInitException;
+    protected abstract void createFormPages() throws PartInitException;
     
     protected final void setPageId( final Object page,
                                     final String id )
@@ -366,6 +365,24 @@ public abstract class SapphireEditor
         return page;
     }
     
+    public final String getPageId( final Object page )
+    {
+        String retId = null;
+        
+        for( String id : this.pagesById.keySet() )
+        {
+            final Object p = this.pagesById.get( id );
+            
+            if( p == page )
+            {
+                retId = id;
+                break;
+            }
+        }
+        
+        return retId;
+    }
+    
     public final void showPage( final String id )
     {
         final Object page = getPage( id );
@@ -384,7 +401,7 @@ public abstract class SapphireEditor
         setActivePage( index );
     }
 
-	@Override
+    @Override
     protected final void pageChange( final int pageIndex )
     {
         super.pageChange( pageIndex );
@@ -404,7 +421,7 @@ public abstract class SapphireEditor
         }
     }
     
-    public final void doSave( final IProgressMonitor monitor ) 
+    public void doSave( final IProgressMonitor monitor ) 
     {
         try
         {
@@ -427,63 +444,63 @@ public abstract class SapphireEditor
     }
     
     protected final void createFileChangeListener()
-	{
-	    this.fileChangeListener = new IResourceChangeListener()
-	    {
-	        public void resourceChanged( final IResourceChangeEvent event )
-	        {
-	            handleFileChangedEvent( event );
-	        }
-	    };
-	    
-	    ResourcesPlugin.getWorkspace().addResourceChangeListener( this.fileChangeListener, IResourceChangeEvent.POST_CHANGE );
-	}
+    {
+        this.fileChangeListener = new IResourceChangeListener()
+        {
+            public void resourceChanged( final IResourceChangeEvent event )
+            {
+                handleFileChangedEvent( event );
+            }
+        };
+        
+        ResourcesPlugin.getWorkspace().addResourceChangeListener( this.fileChangeListener, IResourceChangeEvent.POST_CHANGE );
+    }
 
-	protected final void handleFileChangedEvent( final IResourceChangeEvent event )
-	{
-	    final IResourceDelta delta = event.getDelta();
-	    
-	    if( delta != null )
-	    {
-	        final IResourceDelta localDelta = delta.findMember( getFile().getFullPath() );
-	        
-	        if( localDelta != null )
-	        {
-	            PlatformUI.getWorkbench().getDisplay().asyncExec
-	            (
-	                new Runnable()
-	                {
-	                    public void run()
-	                    {
-	                        if( localDelta.getKind() == IResourceDelta.REMOVED )
-	                        {
-	                            getSite().getPage().closeEditor( SapphireEditor.this, false );
-	                        }
-	                    }
-	                }
-	            );
-	        }
-	    }
-	}
+    protected final void handleFileChangedEvent( final IResourceChangeEvent event )
+    {
+        final IResourceDelta delta = event.getDelta();
+        
+        if( delta != null )
+        {
+            final IResourceDelta localDelta = delta.findMember( getFile().getFullPath() );
+            
+            if( localDelta != null )
+            {
+                PlatformUI.getWorkbench().getDisplay().asyncExec
+                (
+                    new Runnable()
+                    {
+                        public void run()
+                        {
+                            if( localDelta.getKind() == IResourceDelta.REMOVED )
+                            {
+                                getSite().getPage().closeEditor( SapphireEditor.this, false );
+                            }
+                        }
+                    }
+                );
+            }
+        }
+    }
 
-	private final void disposeFileChangeListener()
-	{
-	    if( this.fileChangeListener != null )
-	    {
-	        ResourcesPlugin.getWorkspace().removeResourceChangeListener( this.fileChangeListener );
-	    }
-	}
+    private final void disposeFileChangeListener()
+    {
+        if( this.fileChangeListener != null )
+        {
+            ResourcesPlugin.getWorkspace().removeResourceChangeListener( this.fileChangeListener );
+        }
+    }
 
-	@Override
-	public final void dispose() 
-	{
-	    super.dispose();
-	    
-	    this.imageCache.dispose();
-	    
-	    disposeFileChangeListener();
-	}
-	
+    @Override
+    public final void dispose() 
+    {
+        super.dispose();
+        
+        this.imageCache.dispose();
+        
+        disposeFileChangeListener();
+    }
+    
     @Override
     @SuppressWarnings( "rawtypes" )
     
