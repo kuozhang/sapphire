@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.def.internal;
 import org.eclipse.sapphire.modeling.xml.StandardXmlNamespaceResolver;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlPath;
-import org.eclipse.sapphire.modeling.xml.XmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
 import org.eclipse.sapphire.ui.def.ISapphirePageBookExtDef;
 import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
@@ -35,7 +34,7 @@ public final class PageBookPartDefControlMethodBinding
     @Override
     public String read()
     {
-        final XmlElement el = ( (XmlResource) element().resource() ).getXmlElement( false );
+        final XmlElement el = xml( false );
         
         if( el.getChildNode( PATH_ENUM_CONTROLLER, false ) != null )
         {
@@ -52,7 +51,7 @@ public final class PageBookPartDefControlMethodBinding
     @Override
     public void write( final String value )
     {
-        final XmlElement el = ( (XmlResource) element().resource() ).getXmlElement( true );
+        final XmlElement el = xml( true );
         
         if( PageBookPartControlMethod.ENUM_VALUE.name().equals( value ) )
         {

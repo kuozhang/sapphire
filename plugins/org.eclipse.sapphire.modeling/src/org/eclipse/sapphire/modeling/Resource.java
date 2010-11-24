@@ -120,11 +120,16 @@ public abstract class Resource
         }
     }
     
+    @SuppressWarnings( "unchecked" )
     public <A> A adapt( final Class<A> adapterType )
     {
         A adapter = null;
         
-        if( this.parent != null )
+        if( adapterType.isInstance( this ) )
+        {
+            adapter = (A) this;
+        }
+        else if( this.parent != null )
         {
             adapter = this.parent.adapt( adapterType );
         }

@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.def.internal;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
-import org.eclipse.sapphire.modeling.xml.XmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
 
 /**
@@ -40,7 +39,7 @@ public final class LocationHintBinding
     @Override
     public String read()
     {
-        final XmlElement el = ( (XmlResource) element().resource() ).getXmlElement( false );
+        final XmlElement el = xml( false );
         
         if( el != null )
         {
@@ -70,7 +69,7 @@ public final class LocationHintBinding
     @Override
     public void write( final String value )
     {
-        final XmlElement el = ( (XmlResource) element().resource() ).getXmlElement( true );
+        final XmlElement el = xml( true );
         
         String text = this.prefix;
         

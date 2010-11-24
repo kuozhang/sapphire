@@ -24,7 +24,7 @@ public final class StandardXmlValueBindingImpl
     {
         super.init( element, property, params );
         
-        final XmlNamespaceResolver xmlNamespaceResolver = ( (XmlResource) element.resource() ).getXmlNamespaceResolver();
+        final XmlNamespaceResolver xmlNamespaceResolver = resource().getXmlNamespaceResolver();
         
         final XmlBinding genericBindingAnnotation = property.getAnnotation( XmlBinding.class );
         
@@ -107,7 +107,7 @@ public final class StandardXmlValueBindingImpl
     {
         String value = null;
         
-        final XmlElement element = ( (XmlResource) element().resource() ).getXmlElement( false );
+        final XmlElement element = xml( false );
         
         if( element != null )
         {
@@ -132,19 +132,17 @@ public final class StandardXmlValueBindingImpl
     @Override
     public void write( final String value )
     {
-        final XmlResource resource = ( (XmlResource) element().resource() );
-        
         if( this.treatExistanceAsValue )
         {
             final boolean nodeShouldBePresent = this.valueWhenPresent.equals( value );
             
             if( nodeShouldBePresent )
             {
-                resource.getXmlElement( true ).getChildNode( this.path, true );
+                xml( true ).getChildNode( this.path, true );
             }
             else
             {
-                final XmlElement element = resource.getXmlElement( false );
+                final XmlElement element = xml( false );
                 
                 if( element != null )
                 {
@@ -154,18 +152,18 @@ public final class StandardXmlValueBindingImpl
         }
         else if( this.path == null )
         {
-            resource.getXmlElement( true ).setText( value );
+            xml( true ).setText( value );
         }
         else
         {
-            resource.getXmlElement( true ).setChildNodeText( this.path, value, this.removeNodeOnSetIfNull );
+            xml( true ).setChildNodeText( this.path, value, this.removeNodeOnSetIfNull );
         }
     }
 
     @Override
     public XmlNode getXmlNode()
     {
-        final XmlElement element = ( (XmlResource) element().resource() ).getXmlElement( false );
+        final XmlElement element = xml( false );
         
         if( element != null )
         {

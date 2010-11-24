@@ -12,7 +12,6 @@
 package org.eclipse.sapphire.ui.def.internal;
 
 import org.eclipse.sapphire.modeling.xml.XmlElement;
-import org.eclipse.sapphire.modeling.xml.XmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
 
 /**
@@ -31,7 +30,7 @@ public final class PropertyEditorPropertyBinding
     public String read()
     {
         String value = null;
-        final XmlElement el = ( (XmlResource) element().resource() ).getXmlElement( false );
+        final XmlElement el = xml( false );
         
         if( el != null )
         {
@@ -53,7 +52,7 @@ public final class PropertyEditorPropertyBinding
     @Override
     public void write( final String value )
     {
-        final XmlElement el = ( (XmlResource) element().resource() ).getXmlElement( true );
+        final XmlElement el = xml( true );
         
         if( el.getChildElement( EL_PROPERTY, false ) != null ||
             el.getChildElement( EL_HINT, false ) != null )

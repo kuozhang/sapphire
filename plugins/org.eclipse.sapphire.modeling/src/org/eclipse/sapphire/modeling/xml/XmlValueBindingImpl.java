@@ -30,4 +30,38 @@ public abstract class XmlValueBindingImpl
         
         return null;
     }
+    
+    /**
+     * Convenience method for accessing the XML element associated with the model element that
+     * this binding is attached to. This XML element is the common starting point for
+     * implementing the binding.
+     * 
+     * <p>Equivalent to <code>element().adapt( XmlResource.class ).getXmlElement( createIfNecessary )</code>
+     * invocation.</p>
+     * 
+     * @param createIfNecessary whether or not the XML element should be created if it
+     *   doesn't exist already; typically set to true for write operations and to false
+     *   for read operations
+     * @return the XML element associated with the model element that this binding is
+     *   attached to or null 
+     */
+    
+    protected final XmlElement xml( final boolean createIfNecessary )
+    {
+        return resource().getXmlElement( createIfNecessary );
+    }
+    
+    /**
+     * Convenience method for accessing the XML resource that this binding is attached to.
+     * 
+     * <p>Equivalent to <code>element().adapt( XmlResource.class )</code> invocation.</p>
+     * 
+     * @return the XML resource that this binding is attached to
+     */
+    
+    protected final XmlResource resource()
+    {
+        return element().adapt( XmlResource.class );
+    }
+    
 }
