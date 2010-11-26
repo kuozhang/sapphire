@@ -23,9 +23,7 @@ public abstract class DelimitedListBindingImpl
     extends ListBindingImpl
 
 {
-    private ModelElementType listEntryType;
-    private ValueProperty listEntryProperty;
-    private Entry head;
+    private ListEntryResource head;
     
     @Override
     public void init( final IModelElement element,
@@ -33,30 +31,6 @@ public abstract class DelimitedListBindingImpl
                       final String[] params )
     {
         super.init( element, property, params );
-        
-        this.listEntryType = property.getType();
-        
-        for( ModelProperty prop : this.listEntryType.getProperties() )
-        {
-            if( this.listEntryProperty != null )
-            {
-                throw new IllegalStateException();
-            }
-            
-            if( prop instanceof ValueProperty )
-            {
-                this.listEntryProperty = (ValueProperty) prop;
-            }
-            else
-            {
-                throw new IllegalStateException();
-            }
-        }
-        
-        if( this.listEntryProperty == null )
-        {
-            throw new IllegalStateException();
-        }
     }
     
     @Override
@@ -79,12 +53,12 @@ public abstract class DelimitedListBindingImpl
         {
             if( this.head == null )
             {
-                this.head = new Entry();
+                this.head = createListEntryResource();
             }
             
             int i = 0;
-            Entry prev = null;
-            Entry entry = this.head;
+            ListEntryResource prev = null;
+            ListEntryResource entry = this.head;
             
             while( i < count && entry != null )
             {
@@ -114,7 +88,7 @@ public abstract class DelimitedListBindingImpl
         
         if( this.head != null )
         {
-            Entry entry = this.head;
+            ListEntryResource entry = this.head;
             
             while( entry != null )
             {
@@ -129,11 +103,11 @@ public abstract class DelimitedListBindingImpl
     @Override
     public final Resource add( final ModelElementType type )
     {
-        Entry entry = this.head;
+        ListEntryResource entry = this.head;
         
         if( entry == null )
         {
-            entry = new Entry();
+            entry = createListEntryResource();
             this.head = entry;
         }
         else
@@ -154,7 +128,7 @@ public abstract class DelimitedListBindingImpl
     @Override
     public void remove( final Resource resource )
     {
-        ( (Entry) resource ).remove();
+        ( (ListEntryResource) resource ).remove();
         writeListString();
     }
 
@@ -162,13 +136,13 @@ public abstract class DelimitedListBindingImpl
     public final void swap( final Resource x,
                             final Resource y )
     {
-        final Entry a = (Entry) x;
-        final Entry b = (Entry) y;
+        final ListEntryResource a = (ListEntryResource) x;
+        final ListEntryResource b = (ListEntryResource) y;
         
         if( a.next == b )
         {
-            final Entry aPrev = a.prev;
-            final Entry bNext = b.next;
+            final ListEntryResource aPrev = a.prev;
+            final ListEntryResource bNext = b.next;
             
             a.prev = b;
             a.next = bNext;
@@ -225,7 +199,7 @@ public abstract class DelimitedListBindingImpl
         {
             final StringBuilder buf = new StringBuilder();
             
-            for( Entry entry = this.head; entry != null; entry = entry.next )
+            for( ListEntryResource entry = this.head; entry != null; entry = entry.next )
             {
                 if( entry != this.head )
                 {
@@ -244,6 +218,11 @@ public abstract class DelimitedListBindingImpl
         }
         
         writeListString( str );
+    }
+    
+    protected ListEntryResource createListEntryResource()
+    {
+        return new DefaultListEntryResource();
     }
     
     private List<String> split( final String str )
@@ -276,50 +255,26 @@ public abstract class DelimitedListBindingImpl
         return list;
     }
     
-    private final class Entry
+    public abstract class ListEntryResource
     
         extends Resource
         
     {
-        public Entry prev;
-        public Entry next;
-        public String value;
+        private ListEntryResource prev;
+        private ListEntryResource next;
+        private String value;
         
-        public Entry()
+        public ListEntryResource()
         {
             super( DelimitedListBindingImpl.this.element().resource() );
         }
         
-        @Override
-        protected BindingImpl createBinding( final ModelProperty property )
-        {
-            if( property == DelimitedListBindingImpl.this.listEntryProperty )
-            {
-                return new ValueBindingImpl()
-                {
-                    @Override
-                    public String read()
-                    {
-                        return getValue();
-                    }
-                    
-                    @Override
-                    public void write( final String value )
-                    {
-                        setValue( value );
-                    }
-                };
-            }
-            
-            return null;
-        }
-
-        public String getValue()
+        public final String getValue()
         {
             return this.value;
         }
-
-        public void setValue( final String value )
+        
+        public final void setValue( final String value )
         {
             final List<String> segments = split( value );
             final int count = segments.size();
@@ -334,15 +289,15 @@ public abstract class DelimitedListBindingImpl
                 
                 for( int i = 1; i < count; i++ )
                 {
-                    final Entry entry = insertAfter();
-                    entry.binding( DelimitedListBindingImpl.this.listEntryProperty ).write( segments.get( i ) );
+                    final ListEntryResource entry = insertAfter();
+                    entry.setValue( segments.get( i ) );
                 }
             }
             
             writeListString();
         }
         
-        public void remove()
+        public final void remove()
         {
             if( this == DelimitedListBindingImpl.this.head )
             {
@@ -363,9 +318,9 @@ public abstract class DelimitedListBindingImpl
             this.next = null;
         }
 
-        private Entry insertAfter()
+        private ListEntryResource insertAfter()
         {
-            final Entry entry = new Entry();
+            final ListEntryResource entry = createListEntryResource();
     
             entry.prev = this;
             entry.next = this.next;
@@ -380,4 +335,63 @@ public abstract class DelimitedListBindingImpl
         }
     }
 
+    private final class DefaultListEntryResource
+    
+        extends ListEntryResource
+        
+    {
+        private ValueProperty listEntryProperty;
+        
+        public DefaultListEntryResource()
+        {
+            final ModelElementType listEntryType = property().getType();
+            
+            for( ModelProperty prop : listEntryType.getProperties() )
+            {
+                if( this.listEntryProperty != null )
+                {
+                    throw new IllegalStateException();
+                }
+                
+                if( prop instanceof ValueProperty )
+                {
+                    this.listEntryProperty = (ValueProperty) prop;
+                }
+                else
+                {
+                    throw new IllegalStateException();
+                }
+            }
+            
+            if( this.listEntryProperty == null )
+            {
+                throw new IllegalStateException();
+            }
+        }
+        
+        @Override
+        protected BindingImpl createBinding( final ModelProperty property )
+        {
+            if( property == this.listEntryProperty )
+            {
+                return new ValueBindingImpl()
+                {
+                    @Override
+                    public String read()
+                    {
+                        return getValue();
+                    }
+                    
+                    @Override
+                    public void write( final String value )
+                    {
+                        setValue( value );
+                    }
+                };
+            }
+            
+            return null;
+        }
+    }
+    
 }
