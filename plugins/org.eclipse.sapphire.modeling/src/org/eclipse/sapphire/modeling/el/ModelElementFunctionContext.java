@@ -53,6 +53,11 @@ public class ModelElementFunctionContext
         this.element.addListener( this.listener, "*" );
     }
     
+    public final IModelElement element()
+    {
+        return this.element;
+    }
+    
     @Override
     public Object property( final String name )
     {
