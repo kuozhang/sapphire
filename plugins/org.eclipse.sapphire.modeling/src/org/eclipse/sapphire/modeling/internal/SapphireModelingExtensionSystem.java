@@ -17,7 +17,9 @@ import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,6 +32,8 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
@@ -49,6 +53,8 @@ public final class SapphireModelingExtensionSystem
     private static final String EL_VALUE_SERIALIZATION_SERVICE = "value-serialization-service";
     private static final String EL_MODEL_ELEMENT_SERVICE = "model-element-service";
     private static final String EL_MODEL_PROPERTY_SERVICE = "model-property-service";
+    private static final String EL_FUNCTION = "function";
+    private static final String EL_NAME = "name";
     private static final String EL_TYPE = "type";
     private static final String EL_FACTORY = "factory";
     private static final String EL_IMPL = "impl";
@@ -57,6 +63,7 @@ public final class SapphireModelingExtensionSystem
     private static List<ModelElementServiceFactory> modelElementServiceFactories;
     private static List<ModelPropertyServiceFactory> modelPropertyServiceFactories;
     private static List<ValueSerializerFactory> valueSerializerFactories;
+    private static Map<String,FunctionFactory> functionFactories;
     
     public static ModelElementService createModelElementService( final IModelElement element,
                                                                  final Class<? extends ModelElementService> service )
@@ -92,8 +99,8 @@ public final class SapphireModelingExtensionSystem
     }
     
     public static ValueSerializationService createValueSerializer( final IModelElement element,
-                                                                final ValueProperty property,
-                                                                final Class<?> type )
+                                                                   final ValueProperty property,
+                                                                   final Class<?> type )
     {
         initialize();
         
@@ -108,6 +115,22 @@ public final class SapphireModelingExtensionSystem
         return null;
     }
     
+    public static Function createFunction( final String name,
+                                           final FunctionContext context,
+                                           final Function... operands )
+    {
+        initialize();
+        
+        final FunctionFactory factory = functionFactories.get( name );
+        
+        if( factory != null )
+        {
+            return factory.create( context, operands );
+        }
+        
+        return null;
+    }
+    
     private static synchronized void initialize()
     {
         if( ! initialized )
@@ -116,10 +139,12 @@ public final class SapphireModelingExtensionSystem
             modelElementServiceFactories = new ArrayList<ModelElementServiceFactory>();
             modelPropertyServiceFactories = new ArrayList<ModelPropertyServiceFactory>();
             valueSerializerFactories = new ArrayList<ValueSerializerFactory>();
+            functionFactories = new HashMap<String,FunctionFactory>();
             
             final List<BundleExtensionHandle> handles = new ArrayList<BundleExtensionHandle>();
             handles.add( new BundleExtensionHandle( SapphireModelingFrameworkPlugin.PLUGIN_ID ) );
             handles.add( new BundleExtensionHandle( "org.eclipse.sapphire.ui" ) );
+            handles.add( new BundleExtensionHandle( "org.eclipse.sapphire.tests" ) );
             
             for( BundleExtensionHandle handle : handles )
             {
@@ -162,6 +187,13 @@ public final class SapphireModelingExtensionSystem
                                         final Class<? extends ModelPropertyServiceFactory> serviceFactory = handle.loadClass( text( child( el, EL_FACTORY ) ) ); 
                                     
                                         modelPropertyServiceFactories.add( new ModelPropertyServiceFactoryProxy( serviceType, serviceFactory ) );
+                                    }
+                                    else if( elname.equals( EL_FUNCTION ) )
+                                    {
+                                        final String name = text( child( el, EL_NAME ) );
+                                        final Class<? extends Function> impl = handle.loadClass( text( child( el, EL_IMPL ) ) );
+                                        
+                                        functionFactories.put( name, new FunctionFactory( impl ) );
                                     }
                                 }
                                 catch( InvalidExtensionException e ) {}
@@ -277,23 +309,26 @@ public final class SapphireModelingExtensionSystem
         {
             final List<URL> files = new ArrayList<URL>();
 
-            try
+            if( this.bundle != null )
             {
-                final Enumeration<URL> urls = this.bundle.getResources( "META-INF/sapphire-extension.xml" );
-                
-                while( urls.hasMoreElements() )
+                try
                 {
-                    final URL url = urls.nextElement();
+                    final Enumeration<URL> urls = this.bundle.getResources( "META-INF/sapphire-extension.xml" );
                     
-                    if( url != null )
+                    while( urls.hasMoreElements() )
                     {
-                        files.add( url );
+                        final URL url = urls.nextElement();
+                        
+                        if( url != null )
+                        {
+                            files.add( url );
+                        }
                     }
                 }
-            }
-            catch( IOException e )
-            {
-                SapphireModelingFrameworkPlugin.log( e );
+                catch( IOException e )
+                {
+                    SapphireModelingFrameworkPlugin.log( e );
+                }
             }
             
             return files;
@@ -514,6 +549,40 @@ public final class SapphireModelingExtensionSystem
             }
             
             return serializer;
+        }
+    }
+    
+    private static final class FunctionFactory
+    {
+        private final Class<? extends Function> functionClass;
+        private boolean functionInstantiationFailed;
+        
+        public FunctionFactory( final Class<? extends Function> functionClass )
+        {
+            this.functionClass = functionClass;
+        }
+    
+        public Function create( final FunctionContext context,
+                                final Function... operands )
+        {
+            Function function = null;
+         
+            if( ! this.functionInstantiationFailed )
+            {
+                try
+                {
+                    function = this.functionClass.newInstance();
+                    function.init( context, operands );
+                }
+                catch( Exception e )
+                {
+                    SapphireModelingFrameworkPlugin.log( e );
+                    function = null;
+                    this.functionInstantiationFailed = true;
+                }
+            }
+            
+            return function;
         }
     }
     

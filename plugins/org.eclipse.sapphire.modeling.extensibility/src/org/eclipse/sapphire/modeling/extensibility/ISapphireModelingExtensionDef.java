@@ -65,4 +65,14 @@ public interface ISapphireModelingExtensionDef
     
     ModelElementList<IValueSerializationServiceDef> getValueSerializationServices();
     
+    // *** Functions ***
+    
+    @Type( base = IFunctionDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "function", type = IFunctionDef.class ) )
+    @Label( standard = "functions" )
+    
+    ListProperty PROP_FUNCTIONS = new ListProperty( TYPE, "Functions" );
+    
+    ModelElementList<IFunctionDef> getFunctions();
+    
 }

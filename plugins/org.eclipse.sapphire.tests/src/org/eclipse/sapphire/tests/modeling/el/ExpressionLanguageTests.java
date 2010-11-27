@@ -156,7 +156,7 @@ public final class ExpressionLanguageTests
             suite.addTest( new ExpressionLanguageTests( "composite" + String.valueOf( i ) ) );
         }
         
-        for( int i = 1; i <= 1; i++ )
+        for( int i = 1; i <= 3; i++ )
         {
             suite.addTest( new ExpressionLanguageTests( "functions" + String.valueOf( i ) ) );
         }
@@ -989,6 +989,16 @@ public final class ExpressionLanguageTests
         test( "${ 3 + eclipse:add( 4, 5 ) + subtract( 6, 7 ) + subtract( eclipse:add( 8 + 9, 10 + 11 ), 12 + 13 ) }", new BigInteger( "24" ), context ); 
     }
     
+    public void functions2()
+    {
+        test( "${ test:factorial( 7 ) }", new BigInteger( "5040" ) );
+    }
+    
+    public void functions3()
+    {
+        test( "${ test:factorial( 15 + 5 ) }", new BigInteger( "2432902008176640000" ) );
+    }
+
     private void properties( final String expr,
                              final Object expected )
     {

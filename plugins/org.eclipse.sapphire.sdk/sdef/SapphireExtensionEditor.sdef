@@ -120,6 +120,38 @@
         </node-list>
       </node>
       <node>
+        <label>Functions</label>
+        <section>
+          <description>Define expression language functions.</description>
+          <content>
+            <action-link>
+              <action-id>Sapphire.Add</action-id>
+              <label>Add an expression language function</label>
+            </action-link>
+          </content>
+        </section>
+        <node-list>
+          <property>Functions</property>
+          <node-template>
+            <label>${ Name == null ? "&lt;function&gt;" : Name }</label>
+            <section>
+              <label>Function</label>
+              <content>
+                <property-editor>Name</property-editor>
+                <property-editor>ImplClass</property-editor>
+                <property-editor>
+                  <property>Description</property>
+                  <hint>
+                    <name>height</name>
+                    <value>5</value>
+                  </hint>
+                </property-editor>
+              </content>
+            </section>
+          </node-template>
+        </node-list>
+      </node>
+      <node>
         <label>Actions</label>
         <section>
           <description>Define actions that should be available globally in the system.</description>

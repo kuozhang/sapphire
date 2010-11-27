@@ -26,6 +26,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.extensibility.IFunctionDef;
 import org.eclipse.sapphire.modeling.extensibility.IModelElementServiceDef;
 import org.eclipse.sapphire.modeling.extensibility.IModelPropertyServiceDef;
 import org.eclipse.sapphire.modeling.extensibility.IValueSerializationServiceDef;
@@ -55,6 +56,7 @@ public final class ExportSapphireExtensionSummaryOpMethods
         final List<IModelElementServiceDef> modelElementServices = new ArrayList<IModelElementServiceDef>();
         final List<IModelPropertyServiceDef> modelPropertyServices = new ArrayList<IModelPropertyServiceDef>();
         final List<IValueSerializationServiceDef> valueSerializationServices = new ArrayList<IValueSerializationServiceDef>();
+        final List<IFunctionDef> functions = new ArrayList<IFunctionDef>();
         
         final List<ISapphireActionDef> actions = new ArrayList<ISapphireActionDef>();
         final List<ISapphireActionHandlerDef> actionHandlers = new ArrayList<ISapphireActionHandlerDef>();
@@ -65,6 +67,7 @@ public final class ExportSapphireExtensionSummaryOpMethods
             modelElementServices.addAll( extension.getModelElementServices() );
             modelPropertyServices.addAll( extension.getModelPropertyServices() );
             valueSerializationServices.addAll( extension.getValueSerializationServices() );
+            functions.addAll( extension.getFunctions() );
             
             actions.addAll( extension.getActions() );
             actionHandlers.addAll( extension.getActionHandlers() );
@@ -72,6 +75,19 @@ public final class ExportSapphireExtensionSummaryOpMethods
         }
         
         // Sort extensions.
+        
+        Collections.sort
+        ( 
+            functions, 
+            new Comparator<IFunctionDef>()
+            {
+                public int compare( final IFunctionDef x,
+                                    final IFunctionDef y )
+                {
+                    return comp( x.getName().getContent(), y.getName().getContent() );
+                }
+            }
+        );
         
         Collections.sort
         ( 
@@ -289,6 +305,53 @@ public final class ExportSapphireExtensionSummaryOpMethods
                 
                 out.println( td( formatClassName( service.getTypeClass() ) ) );
                 out.println( td( formatClassName( service.getImplClass() ) ) );
+
+                out.println( "  </tr>" );
+            }
+            
+            out.println( "</table>" );
+        }
+        
+        if( ! functions.isEmpty() )
+        {
+            boolean writeDescriptionColumn = false;
+            
+            for( IFunctionDef function : functions )
+            {
+                if( function.getDescription().getText() != null )
+                {
+                    writeDescriptionColumn = true;
+                    break;
+                }
+            }
+            
+            out.println();
+            out.println( "<a name=\"actions\"><" + extCategoryHeaderLevel + ">Function</" + extCategoryHeaderLevel + "></a>" );
+            out.println();
+            out.println( "<table>" );
+            out.println( "  <tr>" );
+            out.println( "    <th>Name</th>" );
+            
+            if( writeDescriptionColumn )
+            {
+                out.println( "    <th>Description</th>" );
+            }
+            
+            out.println( "    <th>Implementation</th>" );
+            out.println( "  </tr>" );
+            
+            for( IFunctionDef function : functions )
+            {
+                out.println( "  <tr>" );
+            
+                out.println( td( function.getName() ) );
+
+                if( writeDescriptionColumn )
+                {
+                    out.println( td( function.getDescription() ) );
+                }
+                
+                out.println( td( formatClassName( function.getImplClass() ) ) );
 
                 out.println( "  </tr>" );
             }

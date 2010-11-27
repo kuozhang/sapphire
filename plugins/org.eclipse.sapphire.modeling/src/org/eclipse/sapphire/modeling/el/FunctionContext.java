@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 /**
@@ -33,6 +34,13 @@ public class FunctionContext
     public Function function( final String name,
                               final List<Function> arguments )
     {
+        final Function function = SapphireModelingExtensionSystem.createFunction( name, this, arguments.toArray( new Function[ arguments.size() ] ) );
+        
+        if( function != null )
+        {
+            return function;
+        }
+        
         throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessage, name ) );
     }
     
