@@ -15,6 +15,8 @@
 
 <plugin>
 
+  <extension point="org.eclipse.sapphire.modeling.extension"/>
+  
   <extension point="org.eclipse.wst.xml.core.catalogContributions">
     <catalogContribution>
       <system

@@ -19,8 +19,7 @@ Export-Package: org.eclipse.sapphire.ui,
  org.eclipse.sapphire.ui.swt.renderer,
  org.eclipse.sapphire.ui.swt.renderer.actions,
  org.eclipse.sapphire.ui.util,
- org.eclipse.sapphire.ui.xml,
- META-INF
+ org.eclipse.sapphire.ui.xml
 Require-Bundle: org.eclipse.debug.ui,
  org.eclipse.jdt.ui,
  org.eclipse.ui.forms;visibility:=reexport,

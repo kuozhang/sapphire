@@ -24,6 +24,9 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementService;
@@ -60,10 +63,18 @@ public final class SapphireModelingExtensionSystem
     private static final String EL_IMPL = "impl";
     
     private static boolean initialized = false;
+    private static List<BundleExtensionHandle> bundleExtensionHandles;
     private static List<ModelElementServiceFactory> modelElementServiceFactories;
     private static List<ModelPropertyServiceFactory> modelPropertyServiceFactories;
     private static List<ValueSerializerFactory> valueSerializerFactories;
     private static Map<String,FunctionFactory> functionFactories;
+    
+    public static List<BundleExtensionHandle> getBundleExtensionHandles()
+    {
+        initialize();
+        
+        return bundleExtensionHandles;
+    }
     
     public static ModelElementService createModelElementService( final IModelElement element,
                                                                  final Class<? extends ModelElementService> service )
@@ -141,12 +152,17 @@ public final class SapphireModelingExtensionSystem
             valueSerializerFactories = new ArrayList<ValueSerializerFactory>();
             functionFactories = new HashMap<String,FunctionFactory>();
             
-            final List<BundleExtensionHandle> handles = new ArrayList<BundleExtensionHandle>();
-            handles.add( new BundleExtensionHandle( SapphireModelingFrameworkPlugin.PLUGIN_ID ) );
-            handles.add( new BundleExtensionHandle( "org.eclipse.sapphire.ui" ) );
-            handles.add( new BundleExtensionHandle( "org.eclipse.sapphire.tests" ) );
+            bundleExtensionHandles = new ArrayList<BundleExtensionHandle>();
             
-            for( BundleExtensionHandle handle : handles )
+            final IExtensionRegistry registry = Platform.getExtensionRegistry();
+            final IExtensionPoint point = registry.getExtensionPoint( SapphireModelingFrameworkPlugin.PLUGIN_ID, "extension" );
+            
+            for( IExtension extension : point.getExtensions() )
+            {
+                bundleExtensionHandles.add( new BundleExtensionHandle( extension.getContributor().getName() ) );
+            }
+            
+            for( BundleExtensionHandle handle : bundleExtensionHandles )
             {
                 for( URL url : handle.findExtensionFiles() )
                 {
@@ -295,7 +311,7 @@ public final class SapphireModelingExtensionSystem
         return buf.toString().trim();
     }
 
-    private static final class BundleExtensionHandle
+    public static final class BundleExtensionHandle
     {
         private final Bundle bundle;
         
