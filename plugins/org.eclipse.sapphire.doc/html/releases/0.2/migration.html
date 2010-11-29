@@ -30,6 +30,8 @@ to 0.2 milestone. Only changes from the previous milestone are covered.</p>
 
 <ol>
   <li><a href="#annotations">Annotations</a></li>
+  <li><a href="#editor-for-xml">SapphireEditorForXml</a></li>
+  <li><a href="#condition">SapphireCondition</a></li>
   <li><a href="#browse-handlers">Browse Handlers</a></li>
   <li><a href="#jump-handlers">Jump Handlers</a></li>
   <li><a href="#action-links">Action Links</a></li>
@@ -173,6 +175,90 @@ public class CustomImpl extends ReferenceService
 {
     ...
 }</code></pre>
+    </td>
+  </tr>
+</table>
+
+<a name="editor-for-xml"><h2>SapphireEditorForXml</h2></a>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>public class SampleEditor extends SapphireEditorForXml 
+{
+    public SampleEditor() 
+    {
+        super( "org.something.ui" );
+        setEditorDefinitionPath( "org.something.ui/sdef/SampleEditor.sdef/main" );
+    }
+
+    @Override
+    protected IModel createModel( ModelStore modelStore ) 
+    {
+        ...
+    }
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>public class SampleEditor extends SapphireEditorForXml 
+{
+    public SampleEditor() 
+    {
+        super( "org.something.ui" );
+        setRootModelElementType( ISampleModel.TYPE );
+        setEditorDefinitionPath( "org.something.ui/sdef/SampleEditor.sdef/main" );
+    }
+}</code></pre>
+    </td>
+  </tr>
+</table>
+
+<a name="condition"><h2>SapphireCondition</h2></a>
+
+<p>Any existing implementations of SapphireCondition that override getDependencies() method should be
+changed to override SapphireModelCondition instead.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class SampleCondition extends</font> SapphireCondition 
+<font color="#888888">{
+    @Override
+    public boolean evaluate() 
+    {
+        ...
+    }
+	
+    @Override
+    public List<String> getDependencies()
+    {
+        ...
+    }	
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class SampleCondition extends</font> SapphireModelCondition 
+<font color="#888888">{
+    @Override
+    public boolean evaluate() 
+    {
+        ...
+    }
+	
+    @Override
+    public List<String> getDependencies()
+    {
+        ...
+    }	
+}</font></code></pre>
     </td>
   </tr>
 </table>
