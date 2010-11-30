@@ -171,6 +171,7 @@
                   <value>true</value>
                 </hint>
               </property-editor>
+              <spacer/>
               <property-editor>
                 <property>CustomSerializedWithDefault</property>
                 <hint>
@@ -178,6 +179,23 @@
                   <value>true</value>
                 </hint>
               </property-editor>
+              <spacer/>
+              <group>
+                <label>No Label (in Group)</label>
+                <content>
+                  <property-editor>
+                    <property>CustomSerializedWithDefault</property>
+                    <hint>
+                      <name>prefer.vertical.radio.buttons</name>
+                      <value>true</value>
+                    </hint>
+                    <hint>
+                      <name>show.label</name>
+                      <value>false</value>
+                    </hint>
+                  </property-editor>
+                </content>
+              </group>
             </content>
           </section>
         </node>
