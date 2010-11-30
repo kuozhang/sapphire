@@ -32,19 +32,16 @@ import org.eclipse.swt.widgets.Control;
 
 public abstract class AbstractBinding
 {
-    private IModelElement modelElement;
-    private ModelProperty property;
+    private SapphirePropertyEditor editor;
     private ModelPropertyListener propertyChangeListener;
     private SapphireRenderingContext context;
     private Control control;
     
-    public AbstractBinding( final IModelElement modelElement,
-                            final ModelProperty property,
+    public AbstractBinding( final SapphirePropertyEditor editor,
                             final SapphireRenderingContext context,
                             final Control control )
     {
-        this.modelElement = modelElement;
-        this.property = property;
+        this.editor = editor;
         this.context = context;
         this.control = control;
 
@@ -57,10 +54,7 @@ public abstract class AbstractBinding
             }
         };
 
-        if( this.modelElement != null )
-        {
-            this.modelElement.addListener( this.propertyChangeListener, this.property.getName() );
-        }
+        this.editor.getModelElement().addListener( this.propertyChangeListener, this.editor.getProperty().getName() );
         
         this.control.addDisposeListener
         (
@@ -73,40 +67,23 @@ public abstract class AbstractBinding
             }
         );
         
-        initialize( modelElement, property, context, control );
+        initialize( editor, context, control );
         updateTarget();
     }
     
     public final IModelElement getModelElement()
     {
-        return this.modelElement;
-    }
-    
-    public final void setModelElement( final IModelElement modelElement )
-    {
-        if( this.modelElement != null )
-        {
-            this.modelElement.removeListener( this.propertyChangeListener, this.property.getName() );
-        }
-        
-        this.modelElement = modelElement;
-        
-        if( this.modelElement != null )
-        {
-            this.modelElement.addListener( this.propertyChangeListener, this.property.getName() );
-        }
-        
-        updateTarget();
+        return this.editor.getModelElement();
     }
     
     public ModelProperty getProperty()
     {
-        return this.property;
+        return this.editor.getProperty();
     }
     
     public Object getPropertyValue()
     {
-        return this.modelElement.read( this.property );
+        return getModelElement().read( getProperty() );
     }
     
     public final SapphireRenderingContext getContext()
@@ -121,11 +98,6 @@ public abstract class AbstractBinding
     
     public final void updateModel()
     {
-        if( this.modelElement == null )
-        {
-            return;
-        }
-        
         boolean rollback = false;
         
         try
@@ -202,9 +174,7 @@ public abstract class AbstractBinding
             dec.refresh();
         }
         
-        final boolean enabled 
-            = ( this.modelElement == null ? false : this.modelElement.isPropertyEnabled( this.property ) );
-        
+        final boolean enabled = getModelElement().isPropertyEnabled( getProperty() );
         this.control.setEnabled( enabled );
         
         final Object relatedControls = this.control.getData( SapphirePropertyEditor.RELATED_CONTROLS );
@@ -230,14 +200,10 @@ public abstract class AbstractBinding
     
     public void dispose()
     {
-        if( this.modelElement != null )
-        {
-            this.modelElement.removeListener( this.propertyChangeListener, this.property.getName() );            
-        }
+        getModelElement().removeListener( this.propertyChangeListener, getProperty().getName() );            
     }
     
-    protected void initialize( IModelElement modelElement,
-                               ModelProperty property,
+    protected void initialize( SapphirePropertyEditor editor,
                                SapphireRenderingContext context,
                                Control control )
     {

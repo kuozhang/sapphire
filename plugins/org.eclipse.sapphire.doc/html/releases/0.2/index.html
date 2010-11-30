@@ -1,13 +1,13 @@
 <html>
 
 <head>
-  <title>Enhancements in Sapphire 0.2 Milestone</title>
+  <title>Enhancements in Sapphire 0.2</title>
   <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
 </head>
 
 <body>
 
-<h1>Enhancements in 0.2 Milestone</h1>
+<h1>Enhancements in 0.2</h1>
 
 <p>Intro paragraph goes here...</p>
 
@@ -26,6 +26,7 @@
     <li><a href="#actions">Better Actions API</a></li>
     <li><a href="#create-action">Create Action</a></li>
     <li><a href="#html">HTML Content Presentation</a></li>
+    <li><a href="#vertical-radio-buttons">More Options for Vertical Radio Buttons</a></li>
   </ol>
   <li><a href="#sdk">SDK</a></li>
   <ol type="A">
@@ -189,6 +190,69 @@ property value in a browser control. Currently, there is no support for resolvin
 resources (CSS, images, etc.) unless absolute URLs are used.</p> 
 
 <p><a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=328663">See Bugzilla</a></p>
+
+<h2><a name="vertical-radio-buttons">More Options for Vertical Radio Buttons</a></h2>
+
+<p>It is now possible to suppress the property label when editing an enum property with a 
+vertical radio buttons property editor. This is particularly useful when enclosing the
+radio buttons in an explanatory context, such as a group.</p>
+
+<img src="images/vertical-radio-buttons-1.png" style="margin-left: 20px;"/>
+
+<pre class="source-code"><code>&lt;group>
+  &lt;label>No Label (in Group)&lt;/label>
+  &lt;content>
+    &lt;property-editor>
+      &lt;property>CustomSerializedWithDefault&lt;/property>
+      &lt;hint>
+        &lt;name>prefer.vertical.radio.buttons&lt;/name>
+        &lt;value>true&lt;/value>
+      &lt;/hint>
+      &lt;hint>
+        &lt;name>show.label&lt;/name>
+        &lt;value>false&lt;/value>
+      &lt;/hint>
+    &lt;/property-editor>
+  &lt;/content>
+&lt;/group></code></pre>
+
+<p><a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=330696">See Bugzilla</a></p>
+
+<p>Another useful new facility is attaching auxiliary text to individual enum items. This can
+be used to further explain the choices to the user.</p>
+
+<img src="images/vertical-radio-buttons-2.png" style="margin-left: 20px;"/>
+
+<pre class="source-code"><code>&lt;group>
+  &lt;label>No Label (in Group with Aux Text)&lt;/label>
+  &lt;content>
+    &lt;property-editor>
+      &lt;property>CustomSerializedWithDefault&lt;/property>
+      &lt;hint>
+        &lt;name>prefer.vertical.radio.buttons&lt;/name>
+        &lt;value>true&lt;/value>
+      &lt;/hint>
+      &lt;hint>
+        &lt;name>show.label&lt;/name>
+        &lt;value>false&lt;/value>
+      &lt;/hint>
+      &lt;hint>
+        &lt;name>aux.text.yes&lt;/name>
+        &lt;value>Shows agreement or acceptance.&lt;/value>
+      &lt;/hint>
+      &lt;hint>
+        &lt;name>aux.text.maybe&lt;/name>
+        &lt;value>Indicating a lack of certainty. Expressing no commitment to a decision or a neutral viewpoint to a statement.&lt;/value>
+      &lt;/hint>
+      &lt;hint>
+        &lt;name>aux.text.no&lt;/name>
+        &lt;value>Not any possibility or allowance of doing something.&lt;/value>
+      &lt;/hint>
+    &lt;/property-editor>
+  &lt;/content>
+&lt;/group></code></pre>
+
+<p><a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=330697">See Bugzilla</a></p>
 
 <h2><a name="sdk"><a name="extensions-editor">Extensions Editor</a></a></h2>
 

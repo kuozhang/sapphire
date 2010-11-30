@@ -207,11 +207,6 @@ public abstract class PropertyEditorRenderer
         
         handlePropertyChangedEvent();
 
-        if( this.binding != null )
-        {
-            this.binding.setModelElement( getModelElement() );
-        }
-        
         final SapphirePartListener partListener = new SapphirePartListener()
         {
             @Override

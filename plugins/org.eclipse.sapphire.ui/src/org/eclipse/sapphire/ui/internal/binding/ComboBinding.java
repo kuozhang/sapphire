@@ -13,9 +13,7 @@ package org.eclipse.sapphire.ui.internal.binding;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EnumValueType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -33,21 +31,19 @@ public class ComboBinding
 {
     private Combo combo;
     
-    public ComboBinding( final IModelElement modelElement,
-                         final ValueProperty property,
+    public ComboBinding( final SapphirePropertyEditor editor,
                          final SapphireRenderingContext context,
                          final Combo combo )
     {
-        super( modelElement, property, context, combo );
+        super( editor, context, combo );
     }
     
     @Override
-    protected void initialize( final IModelElement modelElement,
-                               final ModelProperty property,
+    protected void initialize( final SapphirePropertyEditor editor,
                                final SapphireRenderingContext context,
                                final Control control )
     {
-        super.initialize( modelElement, property, context, control );
+        super.initialize( editor, context, control );
 
         this.combo = (Combo) control;
         

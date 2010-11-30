@@ -14,9 +14,10 @@ package org.eclipse.sapphire.ui.internal.binding;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EnumValueType;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
+import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -35,30 +36,32 @@ public final class RadioButtonsGroupBinding
     private RadioButtonsGroup buttonsGroup;
     private Button badValueButton;
     
-    public RadioButtonsGroupBinding( final IModelElement modelElement,
-                                     final ValueProperty property,
+    public RadioButtonsGroupBinding( final SapphirePropertyEditor editor,
                                      final SapphireRenderingContext context,
                                      final RadioButtonsGroup buttonsGroup )
     {
-        super( modelElement, property, context, buttonsGroup );
+        super( editor, context, buttonsGroup );
     }
     
     @Override
     
-    protected void initialize( final IModelElement modelElement,
-                               final ModelProperty property,
+    protected void initialize( final SapphirePropertyEditor editor,
                                final SapphireRenderingContext context,
                                final Control control )
     {
-        super.initialize( modelElement, property, context, control );
+        super.initialize( editor, context, control );
         
         this.buttonsGroup = (RadioButtonsGroup) control;
         
+        final IModelElement element = getModelElement();
+        final ValueProperty property = getProperty();
         final EnumValueType enumValueType = new EnumValueType( this.enumValues[ 0 ].getDeclaringClass() );
 
         for( Enum<?> enumItem : this.enumValues )
         {
-            final Button button = this.buttonsGroup.addRadioButton( enumValueType.getLabel( enumItem, false, CapitalizationType.FIRST_WORD_ONLY, true ) );
+            final String enumItemStr = element.service( property, ValueSerializationService.class ).encode( enumItem );
+            final String auxText = editor.getRenderingHint( SapphirePropertyEditor.HINT_AUX_TEXT + "." + enumItemStr, null );
+            final Button button = this.buttonsGroup.addRadioButton( enumValueType.getLabel( enumItem, false, CapitalizationType.FIRST_WORD_ONLY, true ), auxText );
             button.setData( enumItem );
         }
         
@@ -74,7 +77,6 @@ public final class RadioButtonsGroupBinding
             }
         );
     }
-    
     
     @Override
     

@@ -196,6 +196,35 @@
                   </property-editor>
                 </content>
               </group>
+              <spacer/>
+              <group>
+                <label>No Label (in Group with Aux Text)</label>
+                <content>
+                  <property-editor>
+                    <property>CustomSerializedWithDefault</property>
+                    <hint>
+                      <name>prefer.vertical.radio.buttons</name>
+                      <value>true</value>
+                    </hint>
+                    <hint>
+                      <name>show.label</name>
+                      <value>false</value>
+                    </hint>
+                    <hint>
+                      <name>aux.text.yes</name>
+                      <value>Shows agreement or acceptance.</value>
+                    </hint>
+                    <hint>
+                      <name>aux.text.maybe</name>
+                      <value>Indicating a lack of certainty. Expressing no commitment to a decision or a neutral viewpoint to a statement.</value>
+                    </hint>
+                    <hint>
+                      <name>aux.text.no</name>
+                      <value>Not any possibility or allowance of doing something.</value>
+                    </hint>
+                  </property-editor>
+                </content>
+              </group>
             </content>
           </section>
         </node>

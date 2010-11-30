@@ -192,11 +192,11 @@ public final class EnumPropertyEditorRenderer
         
         if( this.control instanceof RadioButtonsGroup )
         {
-            this.binding = new RadioButtonsGroupBinding( getModelElement(), property, this.context, (RadioButtonsGroup) this.control );            
+            this.binding = new RadioButtonsGroupBinding( getPart(), this.context, (RadioButtonsGroup) this.control );            
         }
         else
         {
-            this.binding = new ComboBinding( getModelElement(), property, this.context, (Combo) this.control );
+            this.binding = new ComboBinding( getPart(), this.context, (Combo) this.control );
         }
     
         this.control.setData( DATA_BINDING, this.binding );

@@ -23,7 +23,6 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LabelTransformer;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Value;
@@ -207,7 +206,7 @@ public final class NamedValuesPropertyEditorRenderer
         
         this.rootComposite.setData( "peditor", this );
         
-        this.binding = new NamedValuesBinding( getModelElement(), property, this.context );
+        this.binding = new NamedValuesBinding( getPart(), this.context );
         
         this.rootComposite.setData( SapphirePropertyEditor.DATA_BINDING, this.binding );
         
@@ -389,11 +388,10 @@ public final class NamedValuesPropertyEditorRenderer
         extends AbstractBinding
         
     {
-        public NamedValuesBinding( final IModelElement modelElement,
-                                   final ValueProperty property,
+        public NamedValuesBinding( final SapphirePropertyEditor editor,
                                    final SapphireRenderingContext context )
         {
-            super( modelElement, property, context, NamedValuesPropertyEditorRenderer.this.rootComposite );
+            super( editor, context, NamedValuesPropertyEditorRenderer.this.rootComposite );
         }
         
         @Override

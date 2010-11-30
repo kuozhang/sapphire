@@ -185,7 +185,7 @@ public class CompactListPropertyEditorRenderer
             }
         };
         
-        this.binding = new AbstractBinding( element, property, this.context, this.innerComposite )
+        this.binding = new AbstractBinding( getPart(), this.context, this.innerComposite )
         {
             @Override
             protected void doUpdateModel()

@@ -11,11 +11,17 @@
 
 package org.eclipse.sapphire.ui.internal.binding;
 
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.setEnabledOnChildren;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -30,6 +36,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -40,9 +47,11 @@ public class RadioButtonsGroup
     extends Composite
     
 {
+    private final boolean vertical;
     private final SapphireRenderingContext context;
     private final List<Button> buttons;
     private final List<Button> buttonsReadOnly;
+    private final Map<Button,Control> auxTextControls;
     private SelectionListener selectionListener;
     private Button selection;
     private List<SelectionListener> listeners;
@@ -53,23 +62,32 @@ public class RadioButtonsGroup
     {
         super( composite, SWT.NONE );
 
+        this.vertical = vertical;
         this.context = context;
         this.buttons = new ArrayList<Button>();
         this.buttonsReadOnly = Collections.unmodifiableList( this.buttons );
+        this.auxTextControls = new HashMap<Button,Control>();
         this.selection = null;
         this.listeners = new CopyOnWriteArrayList<SelectionListener>();
         
-        final RowLayout layout = new RowLayout();
-        layout.wrap = false;
-        layout.pack = true;
-        layout.type = ( vertical ? SWT.VERTICAL : SWT.HORIZONTAL );
-        layout.marginTop = 0;
-        layout.marginBottom = 0;
-        layout.marginLeft = 0;
-        layout.marginRight = 0;
-        layout.spacing = 5;
-        
-        setLayout( layout );
+        if( this.vertical )
+        {
+            setLayout( glayout( 1, 0, 0 ) );
+        }
+        else
+        {
+            final RowLayout layout = new RowLayout();
+            layout.wrap = false;
+            layout.pack = true;
+            layout.type = ( vertical ? SWT.VERTICAL : SWT.HORIZONTAL );
+            layout.marginTop = 0;
+            layout.marginBottom = 0;
+            layout.marginLeft = 0;
+            layout.marginRight = 0;
+            layout.spacing = 5;
+            
+            setLayout( layout );
+        }
         
         this.selectionListener = new SelectionAdapter()
         {
@@ -95,7 +113,14 @@ public class RadioButtonsGroup
     
     public Button addRadioButton( final String text )
     {
+        return addRadioButton( text, null );
+    }
+    
+    public Button addRadioButton( final String text,
+                                  final String auxText )
+    {
         final Button button = new Button( this, SWT.RADIO );
+        button.setLayoutData( this.vertical ? gd() : null );
         button.setText( text );
         this.context.adapt( button );
         this.buttons.add( button );
@@ -107,13 +132,39 @@ public class RadioButtonsGroup
                 public void widgetDisposed( final DisposeEvent event )
                 {
                     RadioButtonsGroup.this.buttons.remove( button );
+                    
+                    final Control auxTextControl = RadioButtonsGroup.this.auxTextControls.remove( button );
+                    
+                    if( auxTextControl != null )
+                    {
+                        auxTextControl.dispose();
+                    }
                 }
             }
         );
         
         button.addSelectionListener( this.selectionListener );
         
+        if( this.vertical && auxText != null )
+        {
+            final Composite auxTextComposite = new Composite( this, SWT.NONE );
+            auxTextComposite.setLayoutData( gdhfill() );
+            auxTextComposite.setLayout( glayout( 1, 16, 0, 0, 0 ) );
+            
+            final Label auxTextLabel = new Label( auxTextComposite, SWT.WRAP );
+            auxTextLabel.setLayoutData( gdwhint( gdhfill(), 100 ) );
+            auxTextLabel.setForeground( getDisplay().getSystemColor( SWT.COLOR_DARK_GRAY ) );
+            auxTextLabel.setText( auxText );
+            
+            this.auxTextControls.put( button, auxTextComposite );
+        }
+        
         return button;
+    }
+    
+    public void removeRadioButton( final Button button )
+    {
+        button.dispose();
     }
     
     public Button getSelection()

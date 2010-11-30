@@ -288,7 +288,7 @@ public class DefaultValuePropertyEditorRenderer
             deprecatedLabel.setForeground( parent.getDisplay().getSystemColor( SWT.COLOR_DARK_GRAY ) );
         }
         
-        this.binding = new TextFieldBinding( element, property, this.context, this.textField );
+        this.binding = new TextFieldBinding( getPart(), this.context, this.textField );
 
         this.textField.setData( DATA_BINDING, this.binding );
         

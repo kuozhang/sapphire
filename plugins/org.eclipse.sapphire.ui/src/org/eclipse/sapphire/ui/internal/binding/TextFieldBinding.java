@@ -11,12 +11,11 @@
 
 package org.eclipse.sapphire.ui.internal.binding;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
+import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -37,21 +36,19 @@ public class TextFieldBinding
     private String textContent;
     private DelayedTasksExecutor.Task onTextContentModifyTask;
     
-    public TextFieldBinding( final IModelElement modelElement,
-                             final ValueProperty property,
+    public TextFieldBinding( final SapphirePropertyEditor editor,
                              final SapphireRenderingContext context,
                              final Text text )
     {
-        super( modelElement, property, context, text );
+        super( editor, context, text );
     }
 
     @Override
-    protected void initialize( final IModelElement modelElement,
-                               final ModelProperty property,
+    protected void initialize( final SapphirePropertyEditor editor,
                                final SapphireRenderingContext context,
                                final Control control )
     {
-        super.initialize( modelElement, property, context, control );
+        super.initialize( editor, context, control );
 
         this.onTextContentModifyTask = new DelayedTasksExecutor.Task()
         {

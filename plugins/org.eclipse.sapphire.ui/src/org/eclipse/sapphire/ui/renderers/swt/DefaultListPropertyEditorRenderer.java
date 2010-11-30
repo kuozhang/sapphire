@@ -364,7 +364,7 @@ public class DefaultListPropertyEditorRenderer
             }
         };
         
-        this.binding = new AbstractBinding( element, property, this.context, this.table )
+        this.binding = new AbstractBinding( getPart(), this.context, this.table )
         {
             @Override
             protected void doUpdateModel()
