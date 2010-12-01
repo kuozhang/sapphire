@@ -38,7 +38,7 @@ public interface IValuePropertyActionsGalleryReference
     
     @Label( standard = "reference" )
     @PossibleValues( property = "../Entities/Name", invalidValueMessage = "{0} is not a known entity." )
-    @XmlValueBinding( path = "", removeNodeOnSetIfNull = false )
+    @XmlValueBinding( path = "" )
     
     ValueProperty PROP_REFERENCE = new ValueProperty( TYPE, "Reference" );
     

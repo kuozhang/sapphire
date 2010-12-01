@@ -37,7 +37,7 @@ public interface IValuePropertyActionsGalleryEntity
     
     @Label( standard = "name" )
     @NonNullValue
-    @XmlValueBinding( path = "", removeNodeOnSetIfNull = false )
+    @XmlValueBinding( path = "" )
     
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
     

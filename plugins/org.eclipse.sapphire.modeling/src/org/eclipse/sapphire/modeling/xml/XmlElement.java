@@ -766,7 +766,7 @@ public final class XmlElement
     {
         validateEdit();
         
-        if( removeIfNullOrEmpty && ( text == null || text.trim().length() == 0 ) )
+        if( removeIfNullOrEmpty && ( text == null || text.trim().length() == 0 ) && path.getSegmentCount() > 0 )
         {
             removeChildNode( path );
         }
