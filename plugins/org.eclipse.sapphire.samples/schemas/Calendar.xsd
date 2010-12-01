@@ -2,8 +2,8 @@
 
 <schema
   xmlns="http://www.w3.org/2001/XMLSchema" 
-  targetNamespace="http://xmlns.oracle.com/eclipse/tools/sapphire/samples/calendar"
-  xmlns:tns="http://xmlns.oracle.com/eclipse/tools/sapphire/samples/calendar"
+  targetNamespace="http://www.eclipse.org/sapphire/samples/calendar"
+  xmlns:tns="http://www.eclipse.org/sapphire/samples/calendar"
   elementFormDefault="qualified"> 
 
     <element name="calendar">

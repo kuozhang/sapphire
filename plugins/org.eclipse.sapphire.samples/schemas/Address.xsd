@@ -2,8 +2,8 @@
 
 <schema 
   xmlns="http://www.w3.org/2001/XMLSchema" 
-  targetNamespace="http://xmlns.oracle.com/eclipse/tools/sapphire/samples/address" 
-  xmlns:tns="http://xmlns.oracle.com/eclipse/tools/sapphire/samples/address" 
+  targetNamespace="http://www.eclipse.org/sapphire/samples/address" 
+  xmlns:tns="http://www.eclipse.org/sapphire/samples/address" 
   elementFormDefault="qualified">
   
     <element name="street" type="string"></element>

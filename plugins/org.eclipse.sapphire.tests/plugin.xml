@@ -20,7 +20,7 @@
   <extension point="org.eclipse.wst.xml.core.catalogContributions">
     <catalogContribution>
       <system
-        systemId="http://xmlns.oracle.com/eclipse/tools/sapphire/tests/xml-binding/1.0"
+        systemId="http://www.eclipse.org/sapphire/tests/xml-binding/1.0"
         uri="schemas/XmlBindingTest.xsd"/>
     </catalogContribution>
   </extension>

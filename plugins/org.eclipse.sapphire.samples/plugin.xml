@@ -24,10 +24,10 @@
   <extension point="org.eclipse.wst.xml.core.catalogContributions">
     <catalogContribution>
       <system
-        systemId="http://xmlns.oracle.com/eclipse/tools/sapphire/samples/address/1.0"
+        systemId="http://www.eclipse.org/sapphire/samples/address/1.0"
         uri="schemas/Address.xsd"/>
       <system
-        systemId="http://xmlns.oracle.com/eclipse/tools/sapphire/samples/contacts/1.0"
+        systemId="http://www.eclipse.org/sapphire/samples/contacts/1.0"
         uri="schemas/Contacts.xsd"/>
     </catalogContribution>
   </extension>
@@ -50,7 +50,7 @@
   <extension point="org.eclipse.wst.xml.core.catalogContributions">
     <catalogContribution>
       <system
-        systemId="http://xmlns.oracle.com/eclipse/tools/sapphire/samples/calendar/1.0"
+        systemId="http://www.eclipse.org/sapphire/samples/calendar/1.0"
         uri="schemas/Calendar.xsd"/>
     </catalogContribution>
   </extension>

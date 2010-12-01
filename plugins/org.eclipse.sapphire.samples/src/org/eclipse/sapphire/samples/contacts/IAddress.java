@@ -31,7 +31,7 @@ import org.eclipse.sapphire.samples.contacts.internal.ZipCodeValuesProvider;
  */
 
 @GenerateImpl
-@XmlNamespace( uri = "http://xmlns.oracle.com/eclipse/tools/sapphire/samples/address", prefix = "a" )
+@XmlNamespace( uri = "http://www.eclipse.org/sapphire/samples/address", prefix = "a" )
 
 public interface IAddress
 

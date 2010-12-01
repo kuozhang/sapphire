@@ -21,8 +21,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 
 @GenerateImpl
 
-@XmlRootBinding( namespace = "http://xmlns.oracle.com/eclipse/tools/sapphire/tests/xml-binding",
-                 schemaLocation = "http://xmlns.oracle.com/eclipse/tools/sapphire/tests/xml-binding/1.0",
+@XmlRootBinding( namespace = "http://www.eclipse.org/sapphire/tests/xml-binding",
+                 schemaLocation = "http://www.eclipse.org/sapphire/tests/xml-binding/1.0",
                  defaultPrefix = "t",
                  elementName = "test-root" )
 
