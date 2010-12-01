@@ -35,7 +35,7 @@ import org.eclipse.sapphire.samples.zoo.internal.StructuresModelElementListContr
 
 @GenerateXmlBindingModelImpl
 
-@RootXmlBinding( namespace = "http://xmlns.oracle.com/eclipse/tools/sapphire/samples/zoo",
+@RootXmlBinding( namespace = "http://www.eclipse.org/sapphire/samples/zoo",
                  defaultPrefix = "z",
                  elementName = "zoo" )
 

@@ -27,8 +27,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.RootXmlBinding;
 
 @GenerateXmlBindingModelImpl
 
-@RootXmlBinding( namespace = "http://xmlns.oracle.com/eclipse/tools/sapphire/samples/calendar",
-                 schemaLocation = "http://xmlns.oracle.com/eclipse/tools/sapphire/samples/calendar/1.0",
+@RootXmlBinding( namespace = "http://www.eclipse.org/sapphire/samples/calendar",
+                 schemaLocation = "http://www.eclipse.org/sapphire/samples/calendar/1.0",
                  defaultPrefix = "cal",
                  elementName = "calendar" )
 

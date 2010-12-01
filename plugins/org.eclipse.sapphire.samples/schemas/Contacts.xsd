@@ -2,12 +2,12 @@
 
 <schema
   xmlns="http://www.w3.org/2001/XMLSchema" 
-  targetNamespace="http://xmlns.oracle.com/eclipse/tools/sapphire/samples/contacts"
-  xmlns:tns="http://xmlns.oracle.com/eclipse/tools/sapphire/samples/contacts"
-  xmlns:a="http://xmlns.oracle.com/eclipse/tools/sapphire/samples/address"
+  targetNamespace="http://www.eclipse.org/sapphire/samples/contacts"
+  xmlns:tns="http://www.eclipse.org/sapphire/samples/contacts"
+  xmlns:a="http://www.eclipse.org/sapphire/samples/address"
   elementFormDefault="qualified"> 
 
-    <import namespace="http://xmlns.oracle.com/eclipse/tools/sapphire/samples/address" schemaLocation="http://xmlns.oracle.com/eclipse/tools/sapphire/samples/address/1.0" />
+    <import namespace="http://www.eclipse.org/sapphire/samples/address" schemaLocation="http://www.eclipse.org/sapphire/samples/address/1.0" />
     
     <element name="contacts">
         <complexType>

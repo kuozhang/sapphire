@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<t:test-root xmlns:t="http://xmlns.oracle.com/eclipse/tools/sapphire/tests/xml-binding" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" value-prop-c="cccc" xsi:schemaLocation="http://xmlns.oracle.com/eclipse/tools/sapphire/tests/xml-binding http://xmlns.oracle.com/eclipse/tools/sapphire/tests/xml-binding/1.0">
+<t:test-root xmlns:t="http://www.eclipse.org/sapphire/tests/xml-binding" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" value-prop-c="cccc" xsi:schemaLocation="http://www.eclipse.org/sapphire/tests/xml-binding http://www.eclipse.org/sapphire/tests/xml-binding/1.0">
     <!--value-prop-e:eeee-->
     <t:value-prop-a>aaaa</t:value-prop-a>
     <t:x>

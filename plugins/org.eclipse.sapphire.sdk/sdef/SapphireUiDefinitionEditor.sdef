@@ -1,7 +1,4 @@
-<definition 
-  xmlns="http://xmlns.oracle.com/eclipse/tools/sapphire/ui"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://xmlns.oracle.com/eclipse/tools/sapphire/ui http://xmlns.oracle.com/eclipse/tools/sapphire/ui">
+<definition>
 
   <import>
     <bundle>org.eclipse.sapphire.ui</bundle>

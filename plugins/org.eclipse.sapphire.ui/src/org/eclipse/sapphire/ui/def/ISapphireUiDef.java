@@ -32,9 +32,7 @@ import org.eclipse.sapphire.ui.def.internal.SapphireUiDefMethods;
  */
 
 @GenerateXmlBindingModelImpl
-
-@RootXmlBinding( namespace = "http://xmlns.oracle.com/eclipse/tools/sapphire/ui",
-                 elementName = "definition" )
+@RootXmlBinding( elementName = "definition" )
 
 public interface ISapphireUiDef
 

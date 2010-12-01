@@ -32,7 +32,7 @@ import org.eclipse.sapphire.samples.contacts.internal.ZipCodeValuesProvider;
 
 @GenerateXmlBinding( elementPath = "address" )
 
-@XmlNamespace( uri = "http://xmlns.oracle.com/eclipse/tools/sapphire/samples/address",
+@XmlNamespace( uri = "http://www.eclipse.org/sapphire/samples/address",
                prefix = "a" )
 
 public interface IAddress

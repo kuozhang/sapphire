@@ -994,7 +994,7 @@ address/%city</code></pre>
 <p>Suppose you have an address element, whose child elements belong to a different namespace. In your IAddress
 model element, you would first declare the namespace like follows:</p>
 
-<pre class="source-code"><code>@XmlNamespace( uri = "http://xmlns.oracle.com/eclipse/tools/sapphire/samples/address", prefix = "a" )</code></pre>
+<pre class="source-code"><code>@XmlNamespace( uri = "http://www.eclipse.org/sapphire/samples/address", prefix = "a" )</code></pre>
 
 <p>Once the namespace has been declared, you can write paths like the following in the XML binding annotations.</p>
 
@@ -1257,7 +1257,7 @@ of a given model element. If multiple namespaces need to be declared, you can us
 
 <p><b>Example:</b></p>
 
-<pre class="source-code"><code>@XmlNamespace( uri = "http://xmlns.oracle.com/eclipse/tools/sapphire/samples/address", prefix = "a" )</code></pre>
+<pre class="source-code"><code>@XmlNamespace( uri = "http://www.eclipse.org/sapphire/samples/address", prefix = "a" )</code></pre>
 
 <a name="XmlNamespaces"><h3>XmlNamespaces</h3></a>
 
@@ -1272,8 +1272,8 @@ can use the <a href="XmlNamespaces">XmlNamespace</a> annotation instead for more
 <pre class="source-code"><code>@XmlNamespaces
 (
     {
-        @XmlNamespace( uri = "http://xmlns.oracle.com/eclipse/tools/sapphire/samples/contacts", prefix = "c" ),
-        @XmlNamespace( uri = "http://xmlns.oracle.com/eclipse/tools/sapphire/samples/address", prefix = "a" )
+        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/samples/contacts", prefix = "c" ),
+        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/samples/address", prefix = "a" )
     }
 )</code></pre>
 
