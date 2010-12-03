@@ -1,0 +1,559 @@
+<html>
+
+<head>
+  <title>Sapphire Expression Language</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>Sapphire Expression Language</h1>
+
+<p>The expression language provides a convenient way to embed a bit of custom logic in various
+  parts of Sapphire without resorting to Java. Expressions can be used in some of the modeling
+  annotations as well as in UI definitions.</p>
+  
+<p>The syntax and semantics borrow extensively from JSP expression language and its precursors,
+  however there are a number of deviations. This document is the definitive reference.</p>
+
+<ul>
+  <li><a href="#expressions">Expressions</a></li>
+  <li><a href="#literals">Literals</a></li>
+  <li><a href="#arith">Arithmetic Operators</a></li>
+  <li><a href="#rel">Relational Operators</a></li>
+  <li><a href="#logical">Logical Operators</a></li>
+  <li><a href="#empty">Empty Operator</a></li>
+  <li><a href="#conditional">Conditional Operator</a></li>
+  <li><a href="#parentheses">Parentheses</a></li>
+  <li><a href="#precedence">Operator Precedence</a></li>
+  <li><a href="#functions">Functions</a></li>
+  <li><a href="#enums">Enums</a></li>
+  <li><a href="#conversion">Type Conversion</a></li>
+  <li><a href="#concat">String Concatenation</a></li>
+</ul>
+
+<a name="expressions"><h2>Expressions</h2></a>
+
+<p>There are three types of expressions: <i>literal expressions</i>, <i>eval expressions</i>
+and <i>composite expressions</i>. A literal expression is simply a string such
+as <code>Abc</code>. No quotation is necessary. An eval expression is anything
+enclosed between <code>${</code> and <code>}</code>. The syntax and semantics of 
+eval expressions is discussed in detail in the following sections. A composite
+expression is one that combines zero or more literal expressions with one or more eval
+expressions.</p>
+
+<p>The following are all examples of valid expressions:</p>
+
+<ul>
+  <li><code>Marry had a little lamb.</code></li>
+  <li><code>${ Name }</code></li>  
+  <li><code>${ Name } had a little ${ Animal }.</code></li>
+  <li><code>${ Name == null ? "[contact]" : Name }</code></li>
+  <li><code>${ ( Month == 'February' ? ( LeapYear ? 29 : 28 ) : 30 ) * EmployeeCount }</code></li>
+</ul>
+ 
+<a name="literals"><h2>Literals</h2></a>
+
+<p>There are literals for boolean, integer, floating point, string, and null in the expression
+language.<p>
+
+<ul>
+  <li>Boolean</li>
+  <ul>
+    <li><code>BooleanLiteral ::= 'true' | 'false'</code></li>
+  </ul>
+  <li>Integer</li>
+  <ul>
+    <li><code>IntegerLiteral ::= [‘0’-’9’]+</code></li>
+  </ul>
+  <li>Floating Point</li>
+  <ul>
+    <li><code>FloatingPointLiteral ::= ([‘0’-’9’])+ ‘.’ ([‘0’-’9’])* Exponent? | ‘.’ ([‘0’-’9’])+ Exponent? | ([‘0’-’9’])+ Exponent?</code></li>
+    <li><code>Exponent ::= [‘e’,’E’] ([‘+’,’-’])? ([‘0’-’9’])+</code></li>
+  </ul>
+  <li>String</li>
+  <ul>
+    <li><code>StringLiteral ::= '([^'\]|\'|\\)*' | "([^"\]|\"|\\)*"</code></li>
+    <li>With single and double quotes - <code>"</code> is escaped as <code>\"</code>, 
+      <code>'</code> is escaped as <code>\'</code>, and <code>\</code> is escaped as <code>\\</code>. 
+      Quotes only need to be escaped in a string value enclosed in the same type of quote.</li>
+  </ul>
+  <li>Null</li>
+  <ul>
+    <li><code>NullLiteral ::= 'null'</code></li>
+  </ul>
+</ul>
+
+<a name="arith"><h2>Arithmetic Operators</h2></a>
+
+<p>Arithmetic operators are provided to act on integer (<code>BigInteger</code> and 
+  <code>Long</code>) and floating point (<code>BigDecimal</code> and <code>Double</code>) 
+  values.</p>
+
+<ul>
+  <li><a href="#arith-addition">Addition</a></li>
+  <li><a href="#arith-subtraction">Subtraction</a></li>
+  <li><a href="#arith-multiplication">Multiplication</a></li>
+  <li><a href="#arith-division">Division</a></li>
+  <li><a href="#arith-remainder">Remainder (Modulo)</a></li>
+  <li><a href="#arith-unary-minus">Unary Minus</a></li>
+</ul>
+
+<p>The evaluation of arithmetic operators is described in the following sections. A and B
+are the evaluation of subexpressions.</p>
+
+<a name="arith-addition"><h3>Addition : A + B</h3></a>
+
+<ul>
+  <li>If A and B are <code>null</code>, return <code>(Long) 0</code>.</li>
+  <li>If A or B is a <code>BigDecimal</code>, coerce both to <code>BigDecimal</code> and return 
+    <code>A.add( B )</code>.</li>
+  <li>If A or B is a <code>Float</code>, <code>Double</code>, or <code>String</code> containing 
+    <code>.</code>, <code>e</code>, or <code>E</code>:</li>
+  <ul>
+    <li>If A or B is <code>BigInteger</code>, coerce both A and B to <code>BigDecimal</code> 
+      and apply operator.</li>
+    <li>Otherwise, coerce both A and B to <code>Double</code> and apply operator.</li>
+  </ul>
+  <li>If A or B is <code>BigInteger</code>, coerce both to <code>BigInteger</code> and return 
+    <code>A.add( B )</code>.</li>
+  <li>Otherwise coerce both A and B to <code>Long</code> and apply operator.</li>
+</ul>
+
+<a name="arith-subtraction"><h3>Subtraction : A - B</h3></a>
+
+<ul>
+  <li>If A and B are <code>null</code>, return <code>(Long) 0</code>.</li>
+  <li>If A or B is a <code>BigDecimal</code>, coerce both to <code>BigDecimal</code> and return 
+    <code>A.subtract( B )</code>.</li>
+  <li>If A or B is a <code>Float</code>, <code>Double</code>, or <code>String</code> containing 
+    <code>.</code>, <code>e</code>, or <code>E</code>:</li>
+  <ul>
+    <li>If A or B is <code>BigInteger</code>, coerce both A and B to <code>BigDecimal</code> 
+      and apply operator.</li>
+    <li>Otherwise, coerce both A and B to <code>Double</code> and apply operator.</li>
+  </ul>
+  <li>If A or B is <code>BigInteger</code>, coerce both to <code>BigInteger</code> and return 
+    <code>A.subtract( B )</code>.</li>
+  <li>Otherwise coerce both A and B to <code>Long</code> and apply operator.</li>
+</ul>
+
+<a name="arith-multiplication"><h3>Multiplication : A * B</h3></a>
+
+<ul>
+  <li>If A and B are <code>null</code>, return <code>(Long) 0</code>.</li>
+  <li>If A or B is a <code>BigDecimal</code>, coerce both to <code>BigDecimal</code> and return 
+    <code>A.multiply( B )</code>.</li>
+  <li>If A or B is a <code>Float</code>, <code>Double</code>, or <code>String</code> containing 
+    <code>.</code>, <code>e</code>, or <code>E</code>:</li>
+  <ul>
+    <li>If A or B is <code>BigInteger</code>, coerce both A and B to <code>BigDecimal</code> 
+      and apply operator.</li>
+    <li>Otherwise, coerce both A and B to <code>Double</code> and apply operator.</li>
+  </ul>
+  <li>If A or B is <code>BigInteger</code>, coerce both to <code>BigInteger</code> and return 
+    <code>A.multiply( B )</code>.</li>
+  <li>Otherwise coerce both A and B to <code>Long</code> and apply operator.</li>
+</ul>
+
+<a name="arith-division"><h3>Division : A { /, div } B</h3></a>
+
+<ul>
+  <li>If A and B are <code>null</code>, return <code>(Long) 0</code>.</li>
+  <li>If A or B is a <code>BigDecimal</code> or a <code>BigInteger</code>, coerce both to 
+    <code>BigDecimal</code> and return <code>A.divide( B, BigDecimal.ROUND_HALF_UP )</code>.</li>
+  <li>Otherwise, coerce both A and B to <code>Double</code> and apply operator.</li>
+</ul>
+
+<a name="arith-remainder"><h3>Remainder (Modulo) : A { %, mod } B</h3></a>
+
+<ul>
+  <li>If A and B are <code>null</code>, return <code>(Long) 0</code>.</li>
+  <li>If A or B is a <code>BigDecimal</code>, <code>Float</code>, <code>Double</code>, or 
+    <code>String</code> containing <code>.</code>, <code>e</code>, or <code>E</code>,
+    coerce both A and B to <code>Double</code> and apply operator.</li>
+  <li>If A or B is a <code>BigInteger</code>, coerce both to <code>BigInteger</code> and 
+    return <code>A.remainder( B )</code>.</li>
+  <li>Otherwise coerce both A and B to <code>Long</code> and apply operator.</li>
+</ul>
+
+<a name="arith-unary-minus"><h3>Unary Minus : -A</h3></a>
+
+<ul>
+  <li>If A is <code>null</code>, return <code>(Long) 0</code>.</li>
+  <li>If A is a <code>BigDecimal</code> or <code>BigInteger</code>, return <code>A.negate()</code>.</li>
+  <li>If A is a <code>String</code>:</li>
+  <ul>
+    <li>If A contains <code>.</code>, <code>e</code>, or <code>E</code>, coerce to a 
+      <code>Double</code> and apply operator.</li>
+    <li>Otherwise, coerce to a <code>Long</code> and apply operator.</li>
+  </ul>
+  <li>If A is <code>Byte</code>, <code>Short</code>, <code>Integer</code>, <code>Long</code>, 
+    <code>Float</code>, or <code>Double</code>, retain type and apply operator.</li>
+  <li>Otherwise, error.</li>
+</ul>
+
+<a name="rel"><h2>Relational Operators</h2></a>
+
+<p>Relational operators are provided to compare two values.</p>
+
+<ul>
+  <li><a href="#rel-equal">Equal</a></li>
+  <li><a href="#rel-not-equal">Not Equal</a></li>
+  <li><a href="#rel-less-than">Less Than</a></li>
+  <li><a href="#rel-less-than-or-equal">Less Than or Equal</a></li>
+  <li><a href="#rel-greater-than">Greater Than</a></li>
+  <li><a href="#rel-greater-than-or-equal">Greater Than or Equal</a></li>
+</ul>
+
+<p>The evaluation of relational operators is described in the following sections. A and B
+  are the evaluation of subexpressions.</p>
+
+<a name="rel-equal"><h3>Equal : A { ==, eq } B</h3></a>
+
+<ul>
+  <li>If A <code>==</code> B, return <code>true</code>.</li>
+  <li>If A is <code>null</code> or B is <code>null</code> return <code>false</code>.</li>
+  <li>If A or B is <code>BigDecimal</code>, coerce both A and B to <code>BigDecimal</code> 
+    and return <code>A.equals( B )</code>.</li> 
+  <li>If A or B is <code>Float</code> or <code>Double</code> coerce both A and B to 
+    <code>Double</code>, apply operator.</li>
+  <li>If A or B is <code>BigInteger</code>, coerce both A and B to <code>BigInteger</code> 
+    and return <code>A.equals( B )</code>.</li>
+  <li>If A or B is <code>Byte</code>, <code>Short</code>, <code>Character</code>, 
+    <code>Integer</code>, or <code>Long</code> coerce both A and B to <code>Long</code>, 
+    apply operator.</li>
+  <li>If A or B is <code>Boolean</code> coerce both A and B to <code>Boolean</code>, 
+    apply operator.</li>
+  <li>If A or B is an enum, coerce both A and B to enum, apply operator.</li>
+  <li>If A or B is <code>String</code> coerce both A and B to <code>String</code>, compare 
+    lexically.</li>
+  <li>Otherwise, return <code>A.equals( B )</code>.</li>
+</ul>
+  
+<a name="rel-not-equal"><h3>Not Equal : A { !=, ne } B</h3></a>
+
+<ul>
+  <li>If A <code>==</code> B, return <code>false</code>.</li>
+  <li>If A is <code>null</code> or B is <code>null</code> return <code>true</code>.</li>
+  <li>If A or B is <code>BigDecimal</code>, coerce both A and B to <code>BigDecimal</code> 
+    and return <code>! A.equals( B )</code>.</li> 
+  <li>If A or B is <code>Float</code> or <code>Double</code> coerce both A and B to 
+    <code>Double</code>, apply operator.</li>
+  <li>If A or B is <code>BigInteger</code>, coerce both A and B to <code>BigInteger</code> 
+    and return <code>! A.equals( B )</code>.</li>
+  <li>If A or B is <code>Byte</code>, <code>Short</code>, <code>Character</code>, 
+    <code>Integer</code>, or <code>Long</code> coerce both A and B to <code>Long</code>, 
+    apply operator.</li>
+  <li>If A or B is <code>Boolean</code> coerce both A and B to <code>Boolean</code>, 
+    apply operator.</li>
+  <li>If A or B is an enum, coerce both A and B to enum, apply operator.</li>
+  <li>If A or B is <code>String</code> coerce both A and B to <code>String</code>, compare 
+    lexically.</li>
+  <li>Otherwise, return <code>! A.equals( B )</code>.</li>
+</ul>
+  
+<a name="rel-less-than"><h3>Less Than : A { &lt;, lt } B</h3></a>
+
+<ul>
+  <li>If A is <code>null</code> or B is <code>null</code>, return <code>false</code>.</li>
+  <li>If A or B is <code>BigDecimal</code>, coerce both A and B to <code>BigDecimal</code> 
+    and use the return value of <code>A.compareTo( B )</code>.</li>
+  <li>If A or B is <code>Float</code> or <code>Double</code> coerce both A and B to 
+    <code>Double</code> apply operator.</li>
+  <li>If A or B is <code>BigInteger</code>, coerce both A and B to <code>BigInteger</code> 
+    and use the return value of <code>A.compareTo( B )</code>.</li>
+  <li>If A or B is <code>Byte</code>, <code>Short</code>, <code>Character</code>, 
+    <code>Integer</code>, or <code>Long</code> coerce both A and B to <code>Long</code> 
+    and apply operator.</li>
+  <li>If A or B is <code>String</code> coerce both A and B to <code>String</code>, compare 
+    lexically.</li>
+  <li>If A is <code>Comparable</code>, then use result of <code>A.compareTo( B )</code>.</li>
+  <li>If B is Comparable, then use result of <code>B.compareTo( A )</code>.</li>
+  <li>Otherwise, error.</li>
+</ul>
+
+<a name="rel-less-than-or-equal"><h3>Less Than or Equal : A { &lt;=, le } B</h3></a>
+
+<ul>
+  <li>If A <code>==</code> B, return <code>true</code>.</li>
+  <li>If A is <code>null</code> or B is <code>null</code>, return <code>false</code>.</li>
+  <li>If A or B is <code>BigDecimal</code>, coerce both A and B to <code>BigDecimal</code> 
+    and use the return value of <code>A.compareTo( B )</code>.</li>
+  <li>If A or B is <code>Float</code> or <code>Double</code> coerce both A and B to 
+    <code>Double</code> apply operator.</li>
+  <li>If A or B is <code>BigInteger</code>, coerce both A and B to <code>BigInteger</code> 
+    and use the return value of <code>A.compareTo( B )</code>.</li>
+  <li>If A or B is <code>Byte</code>, <code>Short</code>, <code>Character</code>, 
+    <code>Integer</code>, or <code>Long</code> coerce both A and B to <code>Long</code> 
+    and apply operator.</li>
+  <li>If A or B is <code>String</code> coerce both A and B to <code>String</code>, compare 
+    lexically.</li>
+  <li>If A is <code>Comparable</code>, then use result of <code>A.compareTo( B )</code>.</li>
+  <li>If B is Comparable, then use result of <code>B.compareTo( A )</code>.</li>
+  <li>Otherwise, error.</li>
+</ul>
+
+<a name="rel-greater-than"><h3>Greater Than : A { &gt;, gt } B</h3></a>
+
+<ul>
+  <li>If A is <code>null</code> or B is <code>null</code>, return <code>false</code>.</li>
+  <li>If A or B is <code>BigDecimal</code>, coerce both A and B to <code>BigDecimal</code> 
+    and use the return value of <code>A.compareTo( B )</code>.</li>
+  <li>If A or B is <code>Float</code> or <code>Double</code> coerce both A and B to 
+    <code>Double</code> apply operator.</li>
+  <li>If A or B is <code>BigInteger</code>, coerce both A and B to <code>BigInteger</code> 
+    and use the return value of <code>A.compareTo( B )</code>.</li>
+  <li>If A or B is <code>Byte</code>, <code>Short</code>, <code>Character</code>, 
+    <code>Integer</code>, or <code>Long</code> coerce both A and B to <code>Long</code> 
+    and apply operator.</li>
+  <li>If A or B is <code>String</code> coerce both A and B to <code>String</code>, compare 
+    lexically.</li>
+  <li>If A is <code>Comparable</code>, then use result of <code>A.compareTo( B )</code>.</li>
+  <li>If B is Comparable, then use result of <code>B.compareTo( A )</code>.</li>
+  <li>Otherwise, error.</li>
+</ul>
+
+<a name="rel-greater-than-or-equal"><h3>Greater Than or Equal : A { &gt;=, ge } B</h3></a>
+
+<ul>
+  <li>If A <code>==</code> B, return <code>true</code>.</li>
+  <li>If A is <code>null</code> or B is <code>null</code>, return <code>false</code>.</li>
+  <li>If A or B is <code>BigDecimal</code>, coerce both A and B to <code>BigDecimal</code> 
+    and use the return value of <code>A.compareTo( B )</code>.</li>
+  <li>If A or B is <code>Float</code> or <code>Double</code> coerce both A and B to 
+    <code>Double</code> apply operator.</li>
+  <li>If A or B is <code>BigInteger</code>, coerce both A and B to <code>BigInteger</code> 
+    and use the return value of <code>A.compareTo( B )</code>.</li>
+  <li>If A or B is <code>Byte</code>, <code>Short</code>, <code>Character</code>, 
+    <code>Integer</code>, or <code>Long</code> coerce both A and B to <code>Long</code> 
+    and apply operator.</li>
+  <li>If A or B is <code>String</code> coerce both A and B to <code>String</code>, compare 
+    lexically.</li>
+  <li>If A is <code>Comparable</code>, then use result of <code>A.compareTo( B )</code>.</li>
+  <li>If B is Comparable, then use result of <code>B.compareTo( A )</code>.</li>
+  <li>Otherwise, error.</li>
+</ul>
+
+<a name="logical"><h2>Logical Operators</h2></a>
+
+<p>Logical operators are provided to perform boolean logic.</p>
+
+<ul>
+  <li><a href="#logical-and">And</a></li>
+  <li><a href="#logical-or">Or</a></li>
+  <li><a href="#logical-not">Not</a></li>
+</ul>
+
+<p>The evaluation of logical operators is described in the following sections. A and B
+  are the evaluation of subexpressions.</p>
+
+<a name="logical-and"><h3>And : A { &amp;&amp;, and } B</h3></a>
+
+<ul>
+  <li>Coerce both A and B to <code>Boolean</code>, apply operator.</li>
+</ul>
+
+<a name="logical-or"><h3>Or : A { ||, or } B</h3></a>
+
+<ul>
+  <li>Coerce both A and B to <code>Boolean</code>, apply operator.</li>
+</ul>
+
+<a name="logical-not"><h3>Not : A { !, not } B</h3></a>
+
+<ul>
+  <li>Coerce A to <code>Boolean</code>, apply operator.</li>
+</ul>
+
+<a name="empty"><h2>Empty Operator : empty A</h2></a>
+
+<p>The empty operator is a prefix operator that can be used to determine if a value is
+  <code>null</code> or empty.</p>
+
+<ul>  
+  <li>If A is <code>null</code>, return <code>true</code>.</li>
+  <li>if A is the empty <code>String</code>, then return <code>true</code>.</li>
+  <li>if A is an empty array, then return <code>true</code>.</li>
+  <li>if A is an empty <code>Collection</code>, return <code>true</code>.</li>
+  <li>Otherwise, return <code>false</code>.</li>
+</ul>
+
+<a name="conditional"><h2>Conditional Operator : A ? B : C</h2></a>
+
+<p>Return B or C, depending on the result of the evaluation of A.</code>
+
+<ul>
+  <li>Coerce A to <code>Boolean</code>:</li>
+  <ul>
+    <li>If A is <code>true</code>, return B.</li>
+    <li>If A is <code>false</code>, return C.</li>
+  </ul>
+</ul>
+
+<a name="parentheses"><h2>Parentheses</h2></a>
+
+<p>Parentheses can be used to change precedence, as in: <code>${(a*(b+c))}</code>.</p>
+
+<a name="precedence"><h2>Operator Precedence</h2></a>
+
+<p>Highest to lowest, left to right.</p>
+
+<ul>
+  <li><code>[] .</code></li>
+  <li><code>()</code></li>
+  <li><code>- (unary) not ! empty</code></li>
+  <li><code>* / div % mod</code></li>
+  <li><code>+ - (binary)</code></li>
+  <li><code>&lt; &gt; &lt;= &gt;= lt gt le ge</code></li>
+  <li><code>== != eq ne</code></li>
+  <li><code>&amp;&amp; and</code></li>
+  <li><code>|| or</code></li>
+  <li><code>? :</code></li>
+</ul>
+
+<p>Qualified functions with a namespace prefix have precedence over the operators.
+  Thus the expression <code>${c?b:f()}</code> is illegal because <code>b:f()</code> 
+  is being parsed as a qualified function instead of part of a conditional expression. 
+  As usual, <code>()</code> can be used to make the precedence explicit, 
+  e.g <code>${c?b:(f())}</code>.</p>
+
+<a name="functions"><h2>Functions</h2></a>
+
+<p>The expression language has functions, whose names can optionally be qualified
+with a namespace.</p>
+
+<p>The full syntax of qualified n-ary function is as follows:</p>
+
+<p><code>[ns:]f([a<sub>1</sub>[,a<sub>2</sub>[,...[,a<sub>n</sub>]]]])</code></p>
+
+<p>Where <code>ns</code> is the namespace prefix, <code>f</code> is the name of the 
+function, and <code>a</code> is an argument.</p>
+
+<a name="enums"><h2>Enums</h2></a>
+
+<p>The expression language supports Java enumerations. Coercion rules for dealing
+  with enumerated types are included in the following section. Also, when referring
+  to values that are instances of an enumerated type from within an expression, use
+  the literal string value to cause coercion to happen via the below rules. For example,
+  Let’s say we have an enum called Suit that has members Heart, Diamond, Club, and
+  Spade. Furthermore, let’s say we have a reference in the expression, mySuit, that is a Spade.
+  If you want to test for equality with the Spade enum, you would say 
+  <code>${mySuit == 'Spade'}</code>. The type of the mySuit will trigger the invocation of
+  <code>Enum.valueOf( Suit.class, "Spade" )</code>.</p>
+
+<a name="conversion"><h2>Type Conversion</h2></a>
+
+<p>Every expression is evaluated in the context of an expected type. The result of the
+  expression evaluation may not match the expected type exactly, so the rules
+  described in the following sections are applied.</p>
+  
+<h3>Coerce A to String</h3>
+
+<ul>
+  <li>If A is <code>String</code>, return A.</li>
+  <li>If A is <code>null</code>, return <code>""</code>.</li>
+  <li>If A is <code>Enum</code>, return <code>A.name()</code>.</li>
+  <li>Otherwise, return <code>A.toString()</code>.</li>
+</ul>
+
+<h3>Coerce A to Number type N</h3>
+
+<ul>
+  <li>If A is <code>null</code> or <code>""</code>, return <code>0</code>.</li>
+  <li>If A is <code>Character</code>, convert A to <code>new Short( (short) a.charValue() )</code>, 
+    and apply the following rules.</li>
+  <li>If A is <code>Boolean</code>, then error.</li>
+  <li>If A is <code>Number</code> type N, return A.</li>
+  <li>If A is <code>Number</code>, coerce quietly to type N using the following algorithm:</li>
+  <ul>
+    <li>If N is <code>BigInteger</code>:</li>
+    <ul>
+      <li>If A is a <code>BigDecimal</code>, return <code>A.toBigInteger()</code>.</li>
+      <li>Otherwise, return <code>BigInteger.valueOf( A.longValue() )</code>.</li>
+    </ul>
+    <li>If N is <code>BigDecimal</code>:</li>
+    <ul>
+      <li>If A is a <code>BigInteger</code>, return <code>new BigDecimal( A )</code>.</li>
+      <li>Otherwise, return <code>new BigDecimal( A.doubleValue() )</code>.</li>
+    </ul>
+    <li>If N is <code>Byte</code>, return <code>new Byte( A.byteValue() )</code>.</li>
+    <li>If N is <code>Short</code>, return <code>new Short( A.shortValue() )</code>.</li>
+    <li>If N is <code>Integer</code>, return <code>new Integer( A.intValue() )</code>.</li>
+    <li>If N is <code>Long</code>, return <code>new Long( A.longValue() )</code>.</li>
+    <li>If N is <code>Float</code>, return <code>new Float( A.floatValue() )</code>.</li>
+    <li>If N is <code>Double</code>, return <code>new Double( A.doubleValue() )</code>.</li>
+    <li>Otherwise, error.</li>
+  </ul>
+  <li>If A is <code>String</code>, then:</li>
+  <ul>
+    <li>If N is <code>BigDecimal</code> then return <code>new BigDecimal( A )</code>.</li>
+    <li>If N is <code>BigInteger</code> then return <code>new BigInteger( A )</code>.</li>
+    <li>Otherwise, return <code>N.valueOf( A )</code>.</li>
+  </ul>
+  <li>Otherwise, error.</li>
+</ul>
+    
+<h3>Coerce A to Character</h3>
+
+<ul>
+  <li>If A is <code>null</code> or <code>""</code>, return <code>(char) 0</code>.</li>
+  <li>If A is <code>Character</code>, return A.</li>
+  <li>If A is <code>Number</code>, coerce quietly to type <code>Short</code>, then return 
+    a <code>Character</code> whose numeric value is equivalent to that of a <code>Short</code>.</li>
+  <li>If A is <code>String</code>, return <code>A.charAt( 0 )</code>.</li>
+  <li>Otherwise, error.</li>
+</ul>
+
+<h3>Coerce A to Boolean</h3>
+
+<ul>
+  <li>If A is <code>null</code> or <code>""</code>, return <code>false</code>.</li>
+  <li>If A is a <code>Boolean</code>, return A.</li>
+  <li>If A is a <code>String</code>, return <code>Boolean.valueOf( A )</code>.</li>
+  <li>Otherwise, error.</li>
+</ul>
+
+<h3>Coerce A to an Enum Type T</h3>
+
+<ul>
+  <li>If A is <code>null</code>, return <code>null</code>.</li>
+  <li>If A is assignable to T, return A.</li>
+  <li>If A is <code>""</code>, return <code>null</code>.</li>
+  <li>If A is a <code>String</code>, return <code>Enum.valueOf( T.getClass(), A )</code>.</li>
+  <li>Otherwise, error.</li>
+</ul>
+
+<h3>Coerce A to Any Other Type T</h3>
+
+<ul>
+  <li>If A is <code>null</code>, return <code>null</code>.</li>
+  <li>If A is assignable to T, return A.</li>
+  <li>If A is <code>""</code>, return <code>null</code>.</li>
+  <li>Otherwise, error.</li>
+</ul>
+
+<a name="concat"><h2>String Concatenation</h2></a>
+
+<p>The subject of string concatenation in an expression can be a source of confusion. In particular,
+expressions like <code>${ "A" + "B" }</code> cause an error during evaluation. That's
+because the <code>+</code> operator is exclusively <a href="#arith-addition">arithmetic 
+addition</a>. It is not overloaded to also mean string concatenation, like it is in 
+some other languages such as Java.</p>
+
+<p>String concatenation in an expression can be accomplished in one of 
+two ways:</p>
+
+<ul>
+  <li>Composite expressions: <code>On the year ${ Year % 100 } of ${ Year / 100 } century.</code></li>
+  <li>Using the included concat function: <code>${ OnlyShowYear ? Year : concat( Year, "-", Month, "-" Day ) }</code>
+</ul>
+
+<p>Using the <code>concat</code> function is particularly necessary in cases where
+the result of concatenation should feed into another function or operator.</p>
+
+<br/><br/>
+
+</body>
+
+</html>

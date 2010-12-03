@@ -12,7 +12,9 @@
 package org.eclipse.sapphire.modeling.el;
 
 /**
- * String concatenation function. 
+ * Concatenates two or more strings into a single string. Particularly useful in 
+ * contexts where composite expressions cannot be used, such as where the result of 
+ * concatenation needs to feed into another function or operator. 
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -41,9 +43,14 @@ public final class ConcatFunction
     @Override
     protected String evaluate()
     {
-        final String a = cast( operand( 0 ).value(), String.class );
-        final String b = cast( operand( 1 ).value(), String.class );
-        return ( a + b );
+        final StringBuilder buf = new StringBuilder();
+        
+        for( Function operand : operands() )
+        {
+            buf.append( cast( operand.value(), String.class ) );
+        }
+        
+        return buf.toString();
     }
 
 }

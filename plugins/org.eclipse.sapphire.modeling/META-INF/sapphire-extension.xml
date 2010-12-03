@@ -86,4 +86,19 @@
         <type>org.eclipse.sapphire.modeling.java.JavaPackageName</type>
         <impl>org.eclipse.sapphire.modeling.java.internal.JavaPackageNameSerializationService</impl>
     </value-serialization-service>
+    <function>
+        <name>Concat</name>
+        <impl>org.eclipse.sapphire.modeling.el.ConcatFunction</impl>
+        <description>Concatenates two or more strings into a single string. Particularly useful in contexts where composite expressions cannot be used, such as where the result of concatenation needs to feed into another function or operator.</description>
+    </function>
+    <function>
+        <name>FirstSegment</name>
+        <impl>org.eclipse.sapphire.modeling.el.FirstSegmentFunction</impl>
+        <description>Breaks a string into segments using the provided separators and returns the first segment. If no separators are found in the string, the entire string is returned. This function takes two string operands. The first is the string to tokenize. The second is a sequence of characters that individually should be treated as valid separators.</description>
+    </function>
+    <function>
+        <name>LastSegment</name>
+        <impl>org.eclipse.sapphire.modeling.el.LastSegmentFunction</impl>
+        <description>Breaks a string into segments using the provided separators and returns the last segment. If no separators are found in the string, the entire string is returned. This function takes two string operands. The first is the string to tokenize. The second is a sequence of characters that individually should be treated as valid separators.</description>
+    </function>
 </extension>

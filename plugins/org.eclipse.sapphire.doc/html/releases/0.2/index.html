@@ -9,11 +9,11 @@
 
 <h1>Enhancements in 0.2</h1>
 
-<p>Intro paragraph goes here...</p>
-
-<p>Table of Contents</p>
-
 <ol>
+  <li><a href="#common">Common</a></li>
+  <ol type="A">
+    <li><a href="#el">Expression Language</a></li>
+  </ol>
   <li><a href="#modeling">Modeling</a></li>
   <ol type="A">
     <li><a href="#transient">Transient Properties</a></li>
@@ -34,6 +34,34 @@
     <li><a href="#extensions-doc">Extensions Documentation</a></li>
   </ol>
 </ol>
+
+<h2><a name="common"><a name="el">Expression Language</a></a></h2>
+
+<p>An expression language can now be used to specify custom behavior without having to write
+a new Java class every time. Expressions can be used in many modeling annotations such as @Enablement 
+and in UI definitions. The number of contexts where expressions can be used will expand
+in future releases.</p>
+
+<p><b>Example:</b><p>
+
+<p>In this example, the enablement of a property is defined by an expression over two other 
+properties.</p>
+
+<pre class="source-code"><code>@Enablement( expr = "${ ! ControllingPropBoolean && ( ControllingPropEnum == 'YES' || ControllingPropEnum == 'MAYBE' ) }" )
+    
+ValueProperty PROP_SOME_PROP = new ValueProperty( TYPE, "SomeProp" );</code></pre>
+
+<p><b>Example:</b><p>
+
+<p>In this example snippet from a UI definition, a content outline node label is defined
+by an expression that allows alternative text to be used if the Name property is null.</p>
+
+<pre class="source-code"><code>&lt;node-template>
+  &lt;label>${ Name == null ? "[contact]" : Name }&lt;/label>
+  ...
+&lt;/node-template></code></pre>
+
+<p><a href="../../el/index.html">See Documentation</a></p>
 
 <h2><a name="modeling"><a name="transient">Transient Properties</a></a></h2>
 
@@ -64,8 +92,6 @@ TransientProperty PROP_CONTACT = new TransientProperty( TYPE, "Contact" );
 
 Transient&lt;IContact> getContact();
 void setContact( IContact value );</code></pre>
-
-<p><a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=328662">See Bugzilla</a></p>
 
 <h2><a name="derived">Derived Properties</a></h2>
 
@@ -107,8 +133,6 @@ Value&lt;String> getMessageBody();</code></pre>
     }
 }</code></pre>
 
-<p><a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=328664">See Bugzilla</a></p>
-
 <h2><a name="default-xml-binding">Default XML Binding</a></h2>
 
 <p>There are cases when it is convenient to be able to take a model or a part of a model and
@@ -129,8 +153,6 @@ resource is still created under the covers, but that's transparent to the develo
 resource.</p>
 
 <pre class="source-code"><code>final ISendContactOp op = ISendContactOp.TYPE.instantiate();</code></pre>
-
-<p><a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=329097">See Bugzilla</a></p>
 
 <h2><a name="ui"><a name="actions">Better Actions API</a></a></h2>
 
@@ -189,8 +211,6 @@ annotation to the property. The SWT presentation layer will detect this annotati
 property value in a browser control. Currently, there is no support for resolving external 
 resources (CSS, images, etc.) unless absolute URLs are used.</p> 
 
-<p><a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=328663">See Bugzilla</a></p>
-
 <h2><a name="vertical-radio-buttons">More Options for Vertical Radio Buttons</a></h2>
 
 <p>It is now possible to suppress the property label when editing an enum property with a 
@@ -215,8 +235,6 @@ radio buttons in an explanatory context, such as a group.</p>
     &lt;/property-editor>
   &lt;/content>
 &lt;/group></code></pre>
-
-<p><a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=330696">See Bugzilla</a></p>
 
 <p>Another useful new facility is attaching auxiliary text to individual enum items. This can
 be used to further explain the choices to the user.</p>
@@ -251,8 +269,6 @@ be used to further explain the choices to the user.</p>
     &lt;/property-editor>
   &lt;/content>
 &lt;/group></code></pre>
-
-<p><a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=330697">See Bugzilla</a></p>
 
 <h2><a name="sdk"><a name="extensions-editor">Extensions Editor</a></a></h2>
 

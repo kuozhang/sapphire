@@ -163,6 +163,21 @@ public final class ExpressionLanguageTests
         
         for( int i = 1; i <= 2; i++ )
         {
+            suite.addTest( new ExpressionLanguageTests( "concat" + String.valueOf( i ) ) );
+        }
+        
+        for( int i = 1; i <= 4; i++ )
+        {
+            suite.addTest( new ExpressionLanguageTests( "firstSegment" + String.valueOf( i ) ) );
+        }
+        
+        for( int i = 1; i <= 4; i++ )
+        {
+            suite.addTest( new ExpressionLanguageTests( "lastSegment" + String.valueOf( i ) ) );
+        }
+        
+        for( int i = 1; i <= 2; i++ )
+        {
             suite.addTest( new ExpressionLanguageTests( "properties" + String.valueOf( i ) ) );
         }
         
@@ -942,7 +957,7 @@ public final class ExpressionLanguageTests
     {
         test( "abc${3*5}ghi${3>5?6.2:7.3}", "abc15ghi7.3" );
     }
-    
+
     public void functions1()
     {
         final FunctionContext context = new FunctionContext()
@@ -997,6 +1012,56 @@ public final class ExpressionLanguageTests
     public void functions3()
     {
         test( "${ test:factorial( 15 + 5 ) }", new BigInteger( "2432902008176640000" ) );
+    }
+
+    public void concat1()
+    {
+        test( "${concat('a','b')}", "ab" );
+    }
+
+    public void concat2()
+    {
+        test( "${concat(2010,'-',12,'-',2)}", "2010-12-2" );
+    }
+
+    public void firstSegment1()
+    {
+        test( "${FirstSegment('abc.def.ghi','.')}", "abc" );
+    }
+
+    public void firstSegment2()
+    {
+        test( "${FirstSegment('abc/def\\\\ghi','\\\\/')}", "abc" );
+    }
+
+    public void firstSegment3()
+    {
+        test( "${FirstSegment('abc','.')}", "abc" );
+    }
+    
+    public void firstSegment4()
+    {
+        test( "${FirstSegment(null,'.')}", "" );
+    }
+    
+    public void lastSegment1()
+    {
+        test( "${LastSegment('abc.def.ghi','.')}", "ghi" );
+    }
+
+    public void lastSegment2()
+    {
+        test( "${LastSegment('abc/def\\\\ghi','\\\\/')}", "ghi" );
+    }
+
+    public void lastSegment3()
+    {
+        test( "${LastSegment('abc','.')}", "abc" );
+    }
+    
+    public void lastSegment4()
+    {
+        test( "${LastSegment(null,'.')}", "" );
     }
 
     private void properties( final String expr,

@@ -132,7 +132,7 @@ public final class SapphireModelingExtensionSystem
     {
         initialize();
         
-        final FunctionFactory factory = functionFactories.get( name );
+        final FunctionFactory factory = functionFactories.get( name.toLowerCase() );
         
         if( factory != null )
         {
@@ -209,7 +209,7 @@ public final class SapphireModelingExtensionSystem
                                         final String name = text( child( el, EL_NAME ) );
                                         final Class<? extends Function> impl = handle.loadClass( text( child( el, EL_IMPL ) ) );
                                         
-                                        functionFactories.put( name, new FunctionFactory( impl ) );
+                                        functionFactories.put( name.toLowerCase(), new FunctionFactory( impl ) );
                                     }
                                 }
                                 catch( InvalidExtensionException e ) {}

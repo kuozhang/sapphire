@@ -37,7 +37,7 @@
         <node-list>
           <property>ModelElementServices</property>
           <node-template>
-            <label>${ TypeClass == null ? "&lt;service&gt;" : TypeClass }</label>
+            <label>${ TypeClass == null ? "&lt;service&gt;" : LastSegment( TypeClass, '.' ) }</label>
             <section>
               <label>Model Element Service</label>
               <content>
@@ -69,7 +69,7 @@
         <node-list>
           <property>ModelPropertyServices</property>
           <node-template>
-            <label>${ TypeClass == null ? "&lt;service&gt;" : TypeClass }</label>
+            <label>${ TypeClass == null ? "&lt;service&gt;" : LastSegment( TypeClass, '.' ) }</label>
             <section>
               <label>Model Property Service</label>
               <content>
@@ -101,7 +101,7 @@
         <node-list>
           <property>ValueSerializationServices</property>
           <node-template>
-            <label>${ TypeClass == null ? "&lt;service&gt;" : TypeClass }</label>
+            <label>${ TypeClass == null ? "&lt;service&gt;" : LastSegment( TypeClass, '.' ) }</label>
             <section>
               <label>Value Serialization Service</label>
               <content>
