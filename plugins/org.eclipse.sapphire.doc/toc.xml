@@ -14,7 +14,11 @@
   </topic>
   <topic href="html/el/index.html" label="Expression Language">
   </topic>
-  <topic href="html/extensions/index.html" label="Extensions">
+  <topic label="Extension System">
+     <topic href="html/extensions/existing.html" label="Existing Extensions">
+     </topic>
+     <topic href="html/extensions/contributing.html" label="Contributing Extensions">
+     </topic>
   </topic>
   <topic href="html/releases/index.html" label="Releases">
     <topic href="html/releases/0.2/index.html" label="0.2">

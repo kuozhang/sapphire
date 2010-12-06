@@ -19,6 +19,7 @@
 <ul>
   <li><a href="#expressions">Expressions</a></li>
   <li><a href="#literals">Literals</a></li>
+  <li><a href="#child-prop">Child Property Operator</a></li>
   <li><a href="#arith">Arithmetic Operators</a></li>
   <li><a href="#rel">Relational Operators</a></li>
   <li><a href="#logical">Logical Operators</a></li>
@@ -83,6 +84,12 @@ language.<p>
     <li><code>NullLiteral ::= 'null'</code></li>
   </ul>
 </ul>
+
+<a name="child-prop"><h2>Child Property Operator : A.B and A["B"]</h2></a>
+
+<p>The expression language follows ECMAScript in unifying the treatment of the <code>.</code> 
+and <code>[]</code> operators. So <code>expr-a.identifier-b</code> is equivalent to 
+<code>expr-a["identifier-b"]</code>.</p>
 
 <a name="arith"><h2>Arithmetic Operators</h2></a>
 
@@ -420,7 +427,7 @@ are the evaluation of subexpressions.</p>
 
 <a name="functions"><h2>Functions</h2></a>
 
-<p>The expression language has functions, whose names can optionally be qualified
+<p>The expression language supports functions, whose names can be qualified
 with a namespace.</p>
 
 <p>The full syntax of qualified n-ary function is as follows:</p>
@@ -429,6 +436,13 @@ with a namespace.</p>
 
 <p>Where <code>ns</code> is the namespace prefix, <code>f</code> is the name of the 
 function, and <code>a</code> is an argument.</p>
+
+<p>The following functions are available for use:</p>
+
+##functions##
+
+<p>Custom functions can be contributed via <a href="../extensions/contributing.html">Sapphire 
+Extension System</a>.</p>
 
 <a name="enums"><h2>Enums</h2></a>
 

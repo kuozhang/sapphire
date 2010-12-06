@@ -16,11 +16,14 @@ import org.eclipse.help.IHelpContentProducer;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.UrlResourceStore;
+import org.eclipse.sapphire.modeling.extensibility.IFunctionDef;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem.BundleExtensionHandle;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
-import org.eclipse.sapphire.sdk.IExportSapphireExtensionSummaryOp;
+import org.eclipse.sapphire.sdk.IExtensionSummaryExportOp;
+import org.eclipse.sapphire.sdk.IExtensionSummarySectionColumnDef;
+import org.eclipse.sapphire.sdk.IExtensionSummarySectionDef;
 import org.eclipse.sapphire.sdk.ISapphireExtensionDef;
 import org.eclipse.sapphire.ui.IExportModelDocumentationOp;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
@@ -41,12 +44,32 @@ public class DynamicContentProducer implements IHelpContentProducer
         
         if( pluginID.equals( "org.eclipse.sapphire.doc" ) )
         {
-            if( href.equals( "html/extensions/index.html" ) )
+            if( href.equals( "html/extensions/existing.html" ) )
             {
-                final List<ISapphireExtensionDef> extensions = getExtensions();
-                final IExportSapphireExtensionSummaryOp op = IExportSapphireExtensionSummaryOp.TYPE.instantiate();
+                final IExtensionSummaryExportOp op = IExtensionSummaryExportOp.TYPE.instantiate();
                 op.setDocumentBodyTitle( "Sapphire Extensions" );
-                content = op.execute( extensions, new NullProgressMonitor() );
+                
+                content = op.execute( getExtensions(), new NullProgressMonitor() );
+            }
+            if( href.equals( "html/el/index.html" ) )
+            {
+                final IExtensionSummaryExportOp op = IExtensionSummaryExportOp.TYPE.instantiate();
+                op.setCreateFinishedDocument( false );
+                
+                final IExtensionSummarySectionDef section = op.getSections().addNewElement();
+                section.setExtensionType( ISapphireExtensionDef.PROP_FUNCTIONS.getName() );
+                section.setIncludeSectionHeader( false );
+                
+                final IExtensionSummarySectionColumnDef nameColumn = section.getColumns().addNewElement();
+                nameColumn.setName( IFunctionDef.PROP_NAME.getName() );
+                
+                final IExtensionSummarySectionColumnDef descColumn = section.getColumns().addNewElement();
+                descColumn.setName( IFunctionDef.PROP_DESCRIPTION.getName() );
+                
+                final String functions = op.execute( getExtensions(), new NullProgressMonitor() );
+
+                content = loadResource( "html/el/index.html" );
+                content = content.replace( "##functions##", functions );
             }
             else if( href.equals( "html/ui/actions/index.html" ) )
             {

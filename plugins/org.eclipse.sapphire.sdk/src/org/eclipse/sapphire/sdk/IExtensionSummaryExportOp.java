@@ -15,15 +15,18 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
+import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.sdk.internal.ExportSapphireExtensionSummaryOpMethods;
+import org.eclipse.sapphire.sdk.internal.ExtensionSummaryExportOpMethods;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -31,17 +34,30 @@ import org.eclipse.sapphire.sdk.internal.ExportSapphireExtensionSummaryOpMethods
 
 @GenerateImpl
 
-public interface IExportSapphireExtensionSummaryOp
+public interface IExtensionSummaryExportOp
 
     extends IModelElement
     
 {
-    ModelElementType TYPE = new ModelElementType( IExportSapphireExtensionSummaryOp.class );
+    ModelElementType TYPE = new ModelElementType( IExtensionSummaryExportOp.class );
+    
+    // *** CreateFinishedDocument ***
+    
+    @Type( base = Boolean.class )
+    @Label( standard = "create finished document" )
+    @DefaultValue( text = "true" )
+    
+    ValueProperty PROP_CREATE_FINISHED_DOCUMENT = new ValueProperty( TYPE, "CreateFinishedDocument" );
+    
+    Value<Boolean> getCreateFinishedDocument();
+    void setCreateFinishedDocument( String value );
+    void setCreateFinishedDocument( Boolean value );
     
     // *** DocumentTitle ***
     
     @Label( standard = "document title" )
     @DefaultValue( text = "Sapphire Extensions" )
+    @Enablement( expr = "${ CreateFinishedDocument }" )
     
     ValueProperty PROP_DOCUMENT_TITLE = new ValueProperty( TYPE, "DocumentTitle" );
     
@@ -51,6 +67,7 @@ public interface IExportSapphireExtensionSummaryOp
     // *** DocumentBodyTitle ***
     
     @Label( standard = "document body title" )
+    @Enablement( expr = "${ CreateFinishedDocument }" )
     
     ValueProperty PROP_DOCUMENT_BODY_TITLE = new ValueProperty( TYPE, "DocumentBodyTitle" );
     
@@ -62,6 +79,7 @@ public interface IExportSapphireExtensionSummaryOp
     @Type( base = Boolean.class )
     @Label( standard = "embed default style" )
     @DefaultValue( text = "true" )
+    @Enablement( expr = "${ CreateFinishedDocument }" )
     
     ValueProperty PROP_EMBED_DEFAULT_STYLE = new ValueProperty( TYPE, "EmbedDefaultStyle" );
     
@@ -69,9 +87,18 @@ public interface IExportSapphireExtensionSummaryOp
     void setEmbedDefaultStyle( String value );
     void setEmbedDefaultStyle( Boolean value );
     
+    // *** Sections ***
+    
+    @Type( base = IExtensionSummarySectionDef.class )
+    @Label( standard = "sections" )
+    
+    ListProperty PROP_SECTIONS = new ListProperty( TYPE, "Sections" );
+    
+    ModelElementList<IExtensionSummarySectionDef> getSections();
+
     // *** Method: execute ***
     
-    @DelegateImplementation( ExportSapphireExtensionSummaryOpMethods.class )
+    @DelegateImplementation( ExtensionSummaryExportOpMethods.class )
     
     String execute( List<ISapphireExtensionDef> extensions,
                     IProgressMonitor monitor );

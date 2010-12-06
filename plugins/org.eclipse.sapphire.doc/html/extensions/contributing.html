@@ -1,0 +1,137 @@
+<html>
+
+<head>
+  <title>Contributing Sapphire Extensions</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>Contributing Sapphire Extensions</h1>
+
+<p>Many aspects of Sapphire can be extended by third parties.</p>
+
+<ul>
+  <li><a href="#getting-started">Getting Started</a></li>
+  <li><a href="#functions">Functions</a></li>
+</ul>
+
+
+<a name="getting-started"><h2>Getting Started</h2></a>
+
+<p>Add the following to your plugin.xml file:</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;plugin></font>
+  &lt;extension point="org.eclipse.sapphire.modeling.extension"/>
+<font color="#888888">&lt;/plugin></font></code></pre>
+
+<p>The above will tell Sapphire to look in your plugin for extensions. The next step is to create sapphire-extension.xml 
+file in your plugin's META-INF folder. If your Eclipse includes Sapphire SDK, you should see the following editor. This
+editor will help you define extensions without dealing with XML details.</p>
+
+<img src="images/editor-1.png" style="margin-left: 20px;"/>
+
+<p>The editor also includes a summary view, which is handy to see all of the contributions at a glance.</p>
+
+<img src="images/editor-2.png" style="margin-left: 20px;"/>
+
+<p>The rest of this document will cover writing specific extensions.</p>
+
+<a name="functions"><h2>Functions</h2></a>
+
+<p>Custom functions can be contributed to Sapphire Expression Language. Functions are named using qualified
+form with a colon (":") separating namespace from local name. Contributed 
+functions should be qualified with a namespace corresponding to a company,
+an organization or a project. Functions without a namespace are reserved for
+Sapphire use. New functions may be added to Sapphire framework in future releases.
+The best way to avoid conflicts is to use a unique namespace.</p> 
+
+<p>Function names are not case sensitive.</p>
+
+<p>All function implementations must extend Function class.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">A simple function with one operand.</p>
+
+<pre class="source-code"><code>public class FactorialFunction extends Function
+{
+    private static final BigInteger ZERO = BigInteger.valueOf( 0 );
+    private static final BigInteger ONE = BigInteger.valueOf( 1 );
+    
+    @Override
+    protected Object evaluate()
+    {
+        final BigInteger x = cast( operand( 0 ).value(), BigInteger.class );
+        
+        if( x.intValue() == 0 )
+        {
+            return BigInteger.valueOf( 1 );
+        }
+        else
+        {
+            BigInteger res = x;
+            
+            for( BigInteger i = x.subtract( ONE ); i.compareTo( ZERO ) > 0; i = i.subtract( ONE ) )
+            {
+                res = res.multiply( i );
+            }
+            
+            return res;
+        }
+    }
+}</code></pre>
+
+<p>It is important to understand that functions operate on publish-subscribe model. That is,
+Sapphire will not re-evaluate the function every time its result is needed. It is responsibility
+of the function to know when its result could change and trigger re-evaluation, which in turn
+will notify parties listening on the result of the function.</p>
+
+<p>Most function implementations do not need to be concerned with this detail as the base
+class already listens on its operands and triggers re-evaluation. Only functions that bring
+an external source of data into the expression need to do something different.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">A function that counts projects in an Eclipse workspace. Note that
+it is a terrible implementation as it doesn't properly filter resource change events.</p>
+
+<pre class="source-code"><code>public class ProjectCountFunction extends Function
+{
+    private IResourceChangeListener listener;
+    
+    @Override
+    protected void init()
+    {
+        super.init();
+        
+        this.listener = new IResourceChangeListener()
+        {
+            public void resourceChanged( IResourceChangeEvent event )
+            {
+                refresh();
+            }
+        };
+        
+        ResourcesPlugin.getWorkspace().addResourceChangeListener( this.listener );
+    }
+
+    @Override
+    protected Object evaluate()
+    {
+        return ResourcesPlugin.getWorkspace().getRoot().getProjects().length;
+    }
+    
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        ResourcesPlugin.getWorkspace().removeResourceChangeListener( this.listener );
+    }
+}</code></pre>
+
+<br/><br/>
+
+</body>
+
+</html>
