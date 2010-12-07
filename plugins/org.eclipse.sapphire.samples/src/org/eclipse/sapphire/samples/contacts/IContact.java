@@ -124,7 +124,7 @@ public interface IContact
     
     ImpliedElementProperty PROP_ADDRESS = new ImpliedElementProperty( TYPE, "Address" );
 
-    ModelElementHandle<IAddress> getAddress();
+    IAddress getAddress();
 
     // *** Assistant ***
 

@@ -25,6 +25,7 @@ import java.util.TreeMap;
 import org.eclipse.sapphire.modeling.DerivedValueService;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelParticle;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListBindingImpl;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElement;
@@ -649,6 +650,7 @@ public final class GenerateImplProcessor
                                                  final InterfaceDeclaration interfaceDeclaration,
                                                  final PropertyFieldDeclaration propField )
     {
+        final boolean isImplied = isInstanceOf( propField.getType(), ImpliedElementProperty.class.getName() );
         final String getterMethodName = "get" + propField.propertyName;
         
         final String variableName = propField.propertyName.substring( 0, 1 ).toLowerCase() + propField.propertyName.substring( 1 );
@@ -671,7 +673,7 @@ public final class GenerateImplProcessor
         
         final FieldModel field = implClassModel.addField();
         field.setName( variableName );
-        field.setType( handleType );
+        field.setType( isImplied ? memberType : handleType );
         
         final MethodModel g = implClassModel.addMethod();
         g.setName( getterMethodName );
@@ -686,9 +688,9 @@ public final class GenerateImplProcessor
                    "        refresh( #2, true );\n" +
                    "    }\n" +
                    "    \n" +
-                   "    return this.#1;\n" +
+                   "    return this.#1#3;\n" +
                    "}", 
-                   variableName, propField.name );
+                   variableName, propField.name, ( isImplied ? "element()" : "" ) );
         
         final Body rb = prepareRefreshMethodBlock( implClassModel, propField );
         
