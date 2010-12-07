@@ -70,7 +70,7 @@ public final class SendContactOpContentProvider
                 buf.append( "</table></p>\n" );
             }
             
-            final IAddress address = contact.getAddress().element();
+            final IAddress address = contact.getAddress();
             
             if( address != null && address.getStreet().getContent() != null )
             {

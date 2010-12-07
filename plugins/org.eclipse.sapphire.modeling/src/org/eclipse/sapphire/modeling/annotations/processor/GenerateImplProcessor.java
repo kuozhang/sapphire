@@ -673,11 +673,11 @@ public final class GenerateImplProcessor
         
         final FieldModel field = implClassModel.addField();
         field.setName( variableName );
-        field.setType( isImplied ? memberType : handleType );
+        field.setType( handleType );
         
         final MethodModel g = implClassModel.addMethod();
         g.setName( getterMethodName );
-        g.setReturnType( handleType );
+        g.setReturnType( isImplied ? memberType : handleType );
         
         final Body gb = g.getBody();
         
@@ -690,7 +690,7 @@ public final class GenerateImplProcessor
                    "    \n" +
                    "    return this.#1#3;\n" +
                    "}", 
-                   variableName, propField.name, ( isImplied ? "element()" : "" ) );
+                   variableName, propField.name, ( isImplied ? ".element()" : "" ) );
         
         final Body rb = prepareRefreshMethodBlock( implClassModel, propField );
         
