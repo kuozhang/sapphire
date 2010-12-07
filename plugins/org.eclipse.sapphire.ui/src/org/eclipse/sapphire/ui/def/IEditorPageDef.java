@@ -89,24 +89,6 @@ public interface IEditorPageDef
     Value<String> getInitialSelectionPath();
     void setInitialSelectionPath( String initialSelectionPath );
     
-    // *** Documentation ***
-    
-    @Type( base = ISapphireDocumentationDef.class )
-    @XmlBinding( path = "documentation" )
-    
-    ElementProperty PROP_DOCUMENTATION_DEF = new ElementProperty( TYPE, "DocumentationDef" );
-    
-    ModelElementHandle<ISapphireDocumentationDef> getDocumentationDef();
-
-    // *** DocumentationRef ***
-    
-    @Type( base = ISapphireDocumentationRef.class )
-    @XmlBinding( path = "documentation-ref" )
-    
-    ElementProperty PROP_DOCUMENTATION_REF = new ElementProperty( TYPE, "DocumentationRef" );
-    
-    ModelElementHandle<ISapphireDocumentationRef> getDocumentationRef();
-
     // *** RootNode ***
 
     @Type( base = IMasterDetailsTreeNodeDef.class )
@@ -115,15 +97,5 @@ public interface IEditorPageDef
     ElementProperty PROP_ROOT_NODE = new ElementProperty( TYPE, "RootNode" );
 
     ModelElementHandle<IMasterDetailsTreeNodeDef> getRootNode();
-    
-    // *** OutlineMenuActionSetDef ***
-    
-    @Type( base = IActionSetDef.class )
-    @Label( standard = "outline menu actions" )
-    @XmlBinding( path = "outline-menu-actions" )
-    
-    ElementProperty PROP_OUTLINE_MENU_ACTION_SET_DEF = new ElementProperty( TYPE, "OutlineMenuActionSetDef" );
-    
-    ModelElementHandle<IActionSetDef> getOutlineMenuActionSetDef();
     
 }

@@ -10,6 +10,7 @@ import org.eclipse.sapphire.modeling.LayeredElementBindingImpl;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Resource;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 
 public final class StandardXmlElementBindingImpl
@@ -28,16 +29,16 @@ public final class StandardXmlElementBindingImpl
     {
         super.init( element, property, params );
         
-        final XmlElementBinding annotation = property.getAnnotation( XmlElementBinding.class );
+        final XmlElementBinding xmlElementBindingAnnotation = property.getAnnotation( XmlElementBinding.class );
         
-        if( annotation != null )
+        if( xmlElementBindingAnnotation != null )
         {
-            if( annotation.path().length() > 0 )
+            if( xmlElementBindingAnnotation.path().length() > 0 )
             {
-                this.path = new XmlPath( annotation.path(), ( (XmlResource) element.resource() ).getXmlNamespaceResolver() );
+                this.path = new XmlPath( xmlElementBindingAnnotation.path(), ( (XmlResource) element.resource() ).getXmlNamespaceResolver() );
             }
             
-            final XmlElementBinding.Mapping[] mappings = annotation.mappings();
+            final XmlElementBinding.Mapping[] mappings = xmlElementBindingAnnotation.mappings();
             
             this.xmlElementNames = new String[ mappings.length ];
             this.modelElementTypes = new ModelElementType[ mappings.length ];
@@ -52,16 +53,26 @@ public final class StandardXmlElementBindingImpl
         }
         else
         {
-            this.path = new XmlPath( property.getName(), ( (XmlResource) element.resource() ).getXmlNamespaceResolver() );
+            final XmlBinding xmlBindingAnnotation = property.getAnnotation( XmlBinding.class );
             
-            final List<ModelElementType> types = property.getAllPossibleTypes();
-            
-            this.modelElementTypes = types.toArray( new ModelElementType[ types.size() ] );
-            this.xmlElementNames = new String[ this.modelElementTypes.length ];
-            
-            for( int i = 0; i < this.modelElementTypes.length; i++ )
+            if( xmlBindingAnnotation != null && property.getAllPossibleTypes().size() == 1 )
             {
-                this.xmlElementNames[ i ] = this.modelElementTypes[ i ].getSimpleName().substring( 1 );
+                this.modelElementTypes = new ModelElementType[] { property.getType() };
+                this.xmlElementNames = new String[] { xmlBindingAnnotation.path() };
+            }
+            else
+            {
+                this.path = new XmlPath( property.getName(), ( (XmlResource) element.resource() ).getXmlNamespaceResolver() );
+                
+                final List<ModelElementType> types = property.getAllPossibleTypes();
+                
+                this.modelElementTypes = types.toArray( new ModelElementType[ types.size() ] );
+                this.xmlElementNames = new String[ this.modelElementTypes.length ];
+                
+                for( int i = 0; i < this.modelElementTypes.length; i++ )
+                {
+                    this.xmlElementNames[ i ] = this.modelElementTypes[ i ].getSimpleName().substring( 1 );
+                }
             }
         }
     }

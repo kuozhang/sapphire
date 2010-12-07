@@ -46,7 +46,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireComposite;
-import org.eclipse.sapphire.ui.SapphireElementPropertyComposite;
+import org.eclipse.sapphire.ui.SapphireWithDirective;
 import org.eclipse.sapphire.ui.SapphireEnumControlledPageBook;
 import org.eclipse.sapphire.ui.SapphireIfElseDirective;
 import org.eclipse.sapphire.ui.SapphirePartContainer;
@@ -161,9 +161,9 @@ public final class RestoreDefaultsActionHandler
                 collectProperties( child, result );
             }
         }
-        else if( part instanceof SapphireElementPropertyComposite )
+        else if( part instanceof SapphireWithDirective )
         {
-            result.add( new PropertyRef( part.getModelElement(), ( (SapphireElementPropertyComposite) part ).getConditionalProperty() ) );
+            result.add( new PropertyRef( part.getModelElement(), ( (SapphireWithDirective) part ).getProperty() ) );
         }
         else if( part instanceof SapphireEnumControlledPageBook )
         {

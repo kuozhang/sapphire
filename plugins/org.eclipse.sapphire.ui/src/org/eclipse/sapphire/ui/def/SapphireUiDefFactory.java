@@ -12,7 +12,6 @@
 package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.sapphire.modeling.BundleResourceStore;
-import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.SharedModelsCache;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
@@ -62,11 +61,6 @@ public final class SapphireUiDefFactory
         }
         
         return model;
-    }
-    
-    public static ISapphireUiDef create()
-    {
-        return load( new XmlResourceStore( new ByteArrayResourceStore() ), true  );
     }
     
     public static ISapphireCompositeDef getCompositeDef( final String path )

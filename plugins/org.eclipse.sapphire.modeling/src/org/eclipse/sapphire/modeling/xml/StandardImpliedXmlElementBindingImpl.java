@@ -8,7 +8,7 @@ import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 
-public final class StandardVirtualXmlElementBindingImpl
+public final class StandardImpliedXmlElementBindingImpl
 
     extends ElementBindingImpl
     

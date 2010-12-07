@@ -12,33 +12,17 @@
 package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
-import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateImpl
-
-public interface IActionGroupDef
+public interface ISapphireDocumentation
 
     extends IModelElement
     
 {
-    ModelElementType TYPE = new ModelElementType( IActionGroupDef.class );
-    
-    // *** ActionDefs ***
-    
-    @Type( base = IActionDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action", type = IActionDef.class ) )
-                             
-    ListProperty PROP_ACTION_DEFS = new ListProperty( TYPE, "ActionDefs" );
-    
-    ModelElementList<IActionDef> getActionDefs();
-    
+    ModelElementType TYPE = new ModelElementType( ISapphireDocumentation.class );
+
 }

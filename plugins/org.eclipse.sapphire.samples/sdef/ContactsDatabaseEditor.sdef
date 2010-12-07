@@ -59,12 +59,14 @@
               <content>
                 <with>
                   <property>Address</property>
-                  <content>
-                    <property-editor>Street</property-editor>
-                    <property-editor>City</property-editor>
-                    <property-editor>State</property-editor>
-                    <property-editor>ZipCode</property-editor>
-                  </content>
+                  <default-panel>
+                    <content>
+                      <property-editor>Street</property-editor>
+                      <property-editor>City</property-editor>
+                      <property-editor>State</property-editor>
+                      <property-editor>ZipCode</property-editor>
+                    </content>
+                  </default-panel>
                 </with>
               </content>
             </section>
@@ -119,10 +121,11 @@
               <label>Assistant</label>
               <section>
                 <content>
-                  <element-property-composite>
+                  <with>
                     <property>Assistant</property>
-                    <conditional>Delegate some tasks to an assistant</conditional>
-                    <default-panel>
+                    <label>delegate some tasks to an assistant</label>
+                    <panel>
+                      <key>IAssistant</key>
                       <content>
                         <property-editor>
                           <property>Name</property>
@@ -140,8 +143,8 @@
                           </hint>
                         </property-editor>
                       </content>
-                    </default-panel>
-                  </element-property-composite>
+                    </panel>
+                  </with>
                 </content>
               </section>
             </node>
@@ -156,6 +159,31 @@
                       <value>false</value>
                     </hint>
                   </property-editor>
+                </content>
+              </section>
+            </node>
+            <node>
+              <label>Primary Occupation</label>
+              <section>
+                <content>
+                  <with>
+                    <property>PrimaryOccupation</property>
+                    <panel>
+                      <key>IJobOccupation</key>
+                      <content>
+                        <property-editor>Employer</property-editor>
+                        <property-editor>Title</property-editor>
+                        <property-editor>Manager</property-editor>
+                      </content>
+                    </panel>
+                    <panel>
+                      <key>IStudentOccupation</key>
+                      <content>
+                        <property-editor>EducationalInstitution</property-editor>
+                        <property-editor>Program</property-editor>
+                      </content>
+                    </panel>
+                  </with>
                 </content>
               </section>
             </node>

@@ -9,27 +9,33 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling;
+package org.eclipse.sapphire.samples.contacts.internal;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class ElementProperty 
+public final class ManagerNameValidator
 
-    extends ModelProperty
+    extends ConnectionNameValidator
     
 {
-    public ElementProperty( final ModelElementType type,
-                            final String propertyName )
+    protected IStatus createErrorStatus()
     {
-        super( type, propertyName, null );
+        return createErrorStatus( Resources.cannotBeYourOwnManager );
     }
-        
-    public ElementProperty( final ModelElementType type,
-                            final ElementProperty baseProperty )
+    
+    private static final class Resources extends NLS
     {
-        super( type, baseProperty.getName(), baseProperty );
+        public static String cannotBeYourOwnManager;
+        
+        static
+        {
+            initializeMessages( ManagerNameValidator.class.getName(), Resources.class );
+        }
     }
     
 }

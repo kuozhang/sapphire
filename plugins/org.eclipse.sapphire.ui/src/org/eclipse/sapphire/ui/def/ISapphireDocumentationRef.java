@@ -7,11 +7,11 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - created common ISapphireDocumentation base type
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -29,7 +29,7 @@ import org.eclipse.sapphire.ui.def.internal.DocumentationRefMethods;
 
 public interface ISapphireDocumentationRef
 
-    extends IModelElement
+    extends ISapphireDocumentation
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireDocumentationRef.class );

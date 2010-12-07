@@ -41,7 +41,6 @@ import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeRef;
 import org.eclipse.sapphire.ui.def.ISapphireCustomPartDef;
 import org.eclipse.sapphire.ui.def.ISapphireDialogDef;
-import org.eclipse.sapphire.ui.def.ISapphireElementPropertyCompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphireGroupDef;
 import org.eclipse.sapphire.ui.def.ISapphireIfElseDirectiveDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
@@ -609,10 +608,6 @@ public abstract class SapphirePart
             {
                 part = new SapphireListControlledPageBook();
             }
-        }
-        else if( definition instanceof ISapphireElementPropertyCompositeDef )
-        {
-            part = new SapphireElementPropertyComposite();
         }
         else if( definition instanceof ISapphireDialogDef )
         {

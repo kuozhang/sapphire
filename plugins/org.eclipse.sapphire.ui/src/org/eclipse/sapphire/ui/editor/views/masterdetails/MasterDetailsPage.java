@@ -60,6 +60,7 @@ import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireSection;
 import org.eclipse.sapphire.ui.def.IEditorPageDef;
+import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
@@ -198,26 +199,27 @@ public final class MasterDetailsPage
     @Override
     public IContext getDocumentationContext()
     {
-        final ISapphireDocumentationDef def = this.definition.getDocumentationDef().element();
-        if ( def != null )
+        final ISapphireDocumentation doc = this.definition.getDocumentation().element();
+        
+        if( doc != null )
         {
-            IContext context = SapphireHelpSystem.getContext( def );
-            if ( context != null )
+            ISapphireDocumentationDef docdef = null;
+            
+            if( doc instanceof ISapphireDocumentationDef )
             {
-                return context;
+                docdef = (ISapphireDocumentationDef) doc;
+            }
+            else
+            {
+                docdef = ( (ISapphireDocumentationRef) doc ).resolve();
+            }
+            
+            if( docdef != null )
+            {
+                SapphireHelpSystem.getContext( docdef );
             }
         }
         
-        final ISapphireDocumentationRef documentationRef = this.definition.getDocumentationRef().element();
-        if ( documentationRef != null )
-        {
-            final ISapphireDocumentationDef documentationDef2 = documentationRef.resolve();
-            if ( documentationDef2 != null ) 
-            {
-                return SapphireHelpSystem.getContext( documentationDef2 );
-            }
-        }
-
         return null;
     }
 
@@ -258,23 +260,24 @@ public final class MasterDetailsPage
         this.mainSection = new RootSection();
         this.mainSection.createContent( managedForm );
         
-        final ISapphireDocumentationDef documentationDef = this.definition.getDocumentationDef().element();
+        final ISapphireDocumentation doc = this.definition.getDocumentation().element();
         
-        if ( documentationDef != null && documentationDef.getContent().getText() != null )
+        if( doc != null )
         {
-            SapphireHelpSystem.setHelp( managedForm.getForm().getBody(), documentationDef );
-        }
-        else
-        {
-            final ISapphireDocumentationRef documentationRef = this.definition.getDocumentationRef().element();
+            ISapphireDocumentationDef docdef = null;
             
-            if ( documentationRef != null  )
+            if( doc instanceof ISapphireDocumentationDef )
             {
-                final ISapphireDocumentationDef helpContentDef2 = documentationRef.resolve();
-                if ( helpContentDef2 != null ) 
-                {
-                    SapphireHelpSystem.setHelp( managedForm.getForm().getBody(), helpContentDef2 );
-                }
+                docdef = (ISapphireDocumentationDef) doc;
+            }
+            else
+            {
+                docdef = ( (ISapphireDocumentationRef) doc ).resolve();
+            }
+            
+            if( docdef != null )
+            {
+                SapphireHelpSystem.setHelp( managedForm.getForm().getBody(), docdef );
             }
         }
         

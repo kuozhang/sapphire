@@ -47,7 +47,6 @@ public interface ISapphirePartContainerDef
             ISapphireActionLinkDef.class,
             ISapphireCustomPartDef.class,
             ISapphireStaticTextFieldDef.class,
-            ISapphireElementPropertyCompositeDef.class,
             ISapphirePageBookExtDef.class,
             ISapphireTabGroupDef.class
         }
@@ -70,7 +69,6 @@ public interface ISapphirePartContainerDef
             @XmlListBinding.Mapping( element = "action-link", type = ISapphireActionLinkDef.class ),
             @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
             @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
-            @XmlListBinding.Mapping( element = "element-property-composite", type = ISapphireElementPropertyCompositeDef.class ),
             @XmlListBinding.Mapping( element = "switching-panel", type = ISapphirePageBookExtDef.class ),
             @XmlListBinding.Mapping( element = "tab-group", type = ISapphireTabGroupDef.class )
         }

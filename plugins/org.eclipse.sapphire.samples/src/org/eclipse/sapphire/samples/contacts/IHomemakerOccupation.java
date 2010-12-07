@@ -9,27 +9,24 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling;
+package org.eclipse.sapphire.samples.contacts;
+
+import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Label;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class ElementProperty 
+@GenerateImpl
+@Label( standard = "homemaker" )
 
-    extends ModelProperty
+public interface IHomemakerOccupation
+
+    extends IOccupation
     
 {
-    public ElementProperty( final ModelElementType type,
-                            final String propertyName )
-    {
-        super( type, propertyName, null );
-    }
-        
-    public ElementProperty( final ModelElementType type,
-                            final ElementProperty baseProperty )
-    {
-        super( type, baseProperty.getName(), baseProperty );
-    }
+    ModelElementType TYPE = new ModelElementType( IHomemakerOccupation.class );
     
 }

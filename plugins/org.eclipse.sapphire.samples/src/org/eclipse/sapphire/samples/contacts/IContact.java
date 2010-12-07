@@ -13,12 +13,11 @@ package org.eclipse.sapphire.samples.contacts;
 
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Transient;
-import org.eclipse.sapphire.modeling.TransientProperty;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
@@ -41,7 +40,6 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.samples.contacts.internal.ConnectionsListController;
 import org.eclipse.sapphire.samples.contacts.internal.ContactCategoryValuesProvider;
 import org.eclipse.sapphire.samples.contacts.internal.ContactMethods;
-import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -124,7 +122,7 @@ public interface IContact
     @Type( base = IAddress.class )
     @XmlBinding( path = "address" )
     
-    ElementProperty PROP_ADDRESS = new ElementProperty( TYPE, "Address" );
+    ImpliedElementProperty PROP_ADDRESS = new ImpliedElementProperty( TYPE, "Address" );
 
     ModelElementHandle<IAddress> getAddress();
 
@@ -149,13 +147,34 @@ public interface IContact
     
     ModelElementList<IConnection> getConnections();
     
-    // *** Composite ***
-
-    @Type( base = Composite.class )
-
-    TransientProperty PROP_COMPOSITE = new TransientProperty( TYPE, "Composite" );
-
-    Transient<Composite> getComposite();
-    void setComposite( Composite value );
+    // *** PrimaryOccupation ***
+    
+    @Type
+    ( 
+        base = IOccupation.class, 
+        possible = 
+        { 
+            IJobOccupation.class, 
+            IStudentOccupation.class, 
+            IHomemakerOccupation.class 
+        }
+    )
+    
+    @Label( standard = "primary occupation" )
+    
+    @XmlElementBinding
+    ( 
+        path = "primary-occupation",
+        mappings = 
+        {
+            @XmlElementBinding.Mapping( element = "job", type = IJobOccupation.class ),
+            @XmlElementBinding.Mapping( element = "student", type = IStudentOccupation.class ),
+            @XmlElementBinding.Mapping( element = "homemaker", type = IHomemakerOccupation.class )
+        }
+    )
+    
+    ElementProperty PROP_PRIMARY_OCCUPATION = new ElementProperty( TYPE, "PrimaryOccupation" );
+    
+    ModelElementHandle<IOccupation> getPrimaryOccupation();
     
 }

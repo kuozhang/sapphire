@@ -24,6 +24,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphirePageBookDef;
 import org.eclipse.sapphire.ui.def.ISapphirePageBookKeyMapping;
+import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -61,8 +62,19 @@ public abstract class SapphirePageBook
         }
         
         this.defaultPageDef = def.getDefaultPage().element();
+        
+        if( this.defaultPageDef == null )
+        {
+            this.defaultPageDef = initDefaultPageDef();
+        }
     }
     
+    protected ISapphireCompositeDef initDefaultPageDef()
+    {
+        final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
+        return root.getCompositeDefs().addNewElement();
+    }
+
     @Override
     public void render( final SapphireRenderingContext context )
     {
@@ -119,20 +131,23 @@ public abstract class SapphirePageBook
     {
         ISapphireCompositeDef pageDef = this.defaultPageDef;
         
-        for( Map.Entry<Object,ISapphireCompositeDef> entry : this.pageDefs.entrySet() )
+        if( pageKey != null )
         {
-            if( entry.getKey().equals( pageKey ) )
+            for( Map.Entry<Object,ISapphireCompositeDef> entry : this.pageDefs.entrySet() )
             {
-                pageDef = entry.getValue();
-                break;
+                if( entry.getKey().equals( pageKey ) )
+                {
+                    pageDef = entry.getValue();
+                    break;
+                }
             }
         }
         
         changePage( modelElementForPage, pageDef );
     }
 
-    protected final void changePage( final IModelElement modelElementForPage,
-                                     final ISapphireCompositeDef pageDef )
+    private void changePage( final IModelElement modelElementForPage,
+                             final ISapphireCompositeDef pageDef )
     {
         if( modelElementForPage == null )
         {

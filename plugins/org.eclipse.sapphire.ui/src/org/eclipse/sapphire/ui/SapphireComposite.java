@@ -21,6 +21,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
+import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
@@ -148,26 +149,26 @@ public class SapphireComposite
             composite.setLayoutData( gd );
         }
         
-        final ISapphireDocumentationDef documentationDef = this.definition.getDocumentationDef().element();
+        final ISapphireDocumentation doc = this.definition.getDocumentation().element();
         
-        if ( documentationDef != null && documentationDef.getContent().getText() != null )
+        if( doc != null )
         {
-            SapphireHelpSystem.setHelp( composite, documentationDef);
-        }
-        else 
-        {
-            final ISapphireDocumentationRef documentationRef = this.definition.getDocumentationRef().element();
+            ISapphireDocumentationDef docdef = null;
             
-            if ( documentationRef != null  )
+            if( doc instanceof ISapphireDocumentationDef )
             {
-                final ISapphireDocumentationDef documentationDef2 = documentationRef.resolve();
-                if ( documentationDef2 != null ) 
-                {
-                    SapphireHelpSystem.setHelp( composite, documentationDef2 );
-                }
+                docdef = (ISapphireDocumentationDef) doc;
+            }
+            else
+            {
+                docdef = ( (ISapphireDocumentationRef) doc ).resolve();
+            }
+            
+            if( docdef != null )
+            {
+                SapphireHelpSystem.setHelp( composite, docdef );
             }
         }
-        
 
         final SapphireRenderingContext innerContext = new SapphireRenderingContext( this, ctxt, composite );
         

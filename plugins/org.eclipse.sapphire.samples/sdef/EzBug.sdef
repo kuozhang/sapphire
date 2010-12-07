@@ -164,11 +164,13 @@
       <content>
         <with>
           <property>BugReport</property>
-          <content>
-            <composite-ref>
-              <id>bug.report</id>
-            </composite-ref>
-          </content>
+          <default-panel>
+            <content>
+              <composite-ref>
+                <id>bug.report</id>
+              </composite-ref>
+            </content>
+          </default-panel>
         </with>
       </content>
       <hint>

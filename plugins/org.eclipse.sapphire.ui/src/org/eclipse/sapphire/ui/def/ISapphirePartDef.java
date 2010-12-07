@@ -22,7 +22,7 @@ import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.internal.SapphirePartDefHintsListBindingImpl;
 import org.eclipse.sapphire.ui.def.internal.SapphirePartDefMethods;
@@ -46,21 +46,28 @@ public interface ISapphirePartDef
     
     // *** Documentation ***
     
-    @Type( base = ISapphireDocumentationDef.class )
-    @XmlBinding( path = "documentation" )
+    @Type
+    ( 
+        base = ISapphireDocumentation.class,
+        possible = 
+        {
+            ISapphireDocumentationDef.class, 
+            ISapphireDocumentationRef.class
+        }
+    )
     
-    ElementProperty PROP_DOCUMENTATION_DEF = new ElementProperty( TYPE, "DocumentationDef" );
+    @XmlElementBinding
+    (
+        mappings =
+        {
+            @XmlElementBinding.Mapping( element = "documentation", type = ISapphireDocumentationDef.class ),
+            @XmlElementBinding.Mapping( element = "documentation-ref", type = ISapphireDocumentationRef.class )
+        }
+    )
     
-    ModelElementHandle<ISapphireDocumentationDef> getDocumentationDef();
-
-    // *** DocumentationRef ***
+    ElementProperty PROP_DOCUMENTATION = new ElementProperty( TYPE, "Documentation" );
     
-    @Type( base = ISapphireDocumentationRef.class )
-    @XmlBinding( path = "documentation-ref" )
-    
-    ElementProperty PROP_DOCUMENTATION_REF = new ElementProperty( TYPE, "DocumentationRef" );
-    
-    ModelElementHandle<ISapphireDocumentationRef> getDocumentationRef();
+    ModelElementHandle<ISapphireDocumentation> getDocumentation();
 
     // *** Hints ***
     

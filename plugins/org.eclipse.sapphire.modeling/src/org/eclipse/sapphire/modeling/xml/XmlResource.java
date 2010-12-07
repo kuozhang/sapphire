@@ -3,6 +3,7 @@ package org.eclipse.sapphire.modeling.xml;
 import org.eclipse.sapphire.modeling.BindingImpl;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Resource;
@@ -11,8 +12,6 @@ import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -107,27 +106,13 @@ public abstract class XmlResource
                     binding = null;
                 }
             }
+            else if( property instanceof ImpliedElementProperty )
+            {
+                binding = new StandardImpliedXmlElementBindingImpl();
+            }
             else
             {
-                final XmlBinding xmlBindingAnnotation = property.getAnnotation( XmlBinding.class );
-                final XmlElementBinding xmlElementBindingAnnotation = property.getAnnotation( XmlElementBinding.class );
-                
-                if( xmlElementBindingAnnotation != null )
-                {
-                    if( xmlElementBindingAnnotation.mappings().length == 0 )
-                    {
-                        binding = new StandardVirtualXmlElementBindingImpl();
-                    }
-                }
-                else if( xmlBindingAnnotation != null )
-                {
-                    binding = new StandardVirtualXmlElementBindingImpl();
-                }
-                
-                if( binding == null )
-                {
-                    binding = new StandardXmlElementBindingImpl();
-                }
+                binding = new StandardXmlElementBindingImpl();
             }
         }
         else if( property instanceof ListProperty )

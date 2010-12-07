@@ -29,6 +29,7 @@ import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireWizardPageListener;
 import org.eclipse.sapphire.ui.SapphireWizardPagePart;
+import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
@@ -122,24 +123,25 @@ public class SapphireWizardPage
         };
         
         this.part.addListener( messageUpdateListener );
-
-        final ISapphireDocumentationDef documenetationDef = this.part.getDefinition().getDocumentationDef().element();
         
-        if ( documenetationDef != null && documenetationDef.getContent().getText() != null )
+        final ISapphireDocumentation doc = this.part.getDefinition().getDocumentation().element();
+        
+        if( doc != null )
         {
-            SapphireHelpSystem.setHelp( innerComposite, documenetationDef);
-        }
-        else 
-        {
-            final ISapphireDocumentationRef documenetationRef = this.part.getDefinition().getDocumentationRef().element();
+            ISapphireDocumentationDef docdef = null;
             
-            if ( documenetationRef != null  )
+            if( doc instanceof ISapphireDocumentationDef )
             {
-                final ISapphireDocumentationDef helpContentDef2 = documenetationRef.resolve();
-                if ( helpContentDef2 != null ) 
-                {
-                    SapphireHelpSystem.setHelp( innerComposite, helpContentDef2 );
-                }
+                docdef = (ISapphireDocumentationDef) doc;
+            }
+            else
+            {
+                docdef = ( (ISapphireDocumentationRef) doc ).resolve();
+            }
+            
+            if( docdef != null )
+            {
+                SapphireHelpSystem.setHelp( composite, docdef );
             }
         }
 

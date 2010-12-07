@@ -24,6 +24,7 @@ import java.util.Set;
 import org.eclipse.help.IContext;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
@@ -261,25 +262,27 @@ public final class SapphireSection
     @Override
     public IContext getDocumentationContext()
     {
-        final ISapphireDocumentationDef def = this.definition.getDocumentationDef().element();
-        if ( def != null )
+        final ISapphireDocumentation doc = this.definition.getDocumentation().element();
+        
+        if( doc != null )
         {
-            IContext context = SapphireHelpSystem.getContext( def );
-            if ( context != null )
+            ISapphireDocumentationDef docdef = null;
+            
+            if( doc instanceof ISapphireDocumentationDef )
             {
-                return context;
+                docdef = (ISapphireDocumentationDef) doc;
+            }
+            else
+            {
+                docdef = ( (ISapphireDocumentationRef) doc ).resolve();
+            }
+            
+            if( docdef != null )
+            {
+                SapphireHelpSystem.getContext( docdef );
             }
         }
-
-        final ISapphireDocumentationRef documentationRef = this.definition.getDocumentationRef().element();
-        if ( documentationRef != null )
-        {
-            final ISapphireDocumentationDef documentationDef2 = documentationRef.resolve();
-            if ( documentationDef2 != null ) 
-            {
-                return SapphireHelpSystem.getContext( documentationDef2 );
-            }
-        }
+        
         return null;
     }
 

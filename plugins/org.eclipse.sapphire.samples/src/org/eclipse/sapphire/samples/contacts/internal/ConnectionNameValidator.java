@@ -12,30 +12,34 @@
 package org.eclipse.sapphire.samples.contacts.internal;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
+import org.eclipse.sapphire.samples.contacts.IContact;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class AssistantNameValidator
+public abstract class ConnectionNameValidator
 
-    extends ConnectionNameValidator
+    extends ModelPropertyValidator<Value<String>>
     
 {
-    protected IStatus createErrorStatus()
+    @Override
+    public IStatus validate( final Value<String> value )
     {
-        return createErrorStatus( Resources.cannotBeYourOwnAssistant );
+        final String assistantName = value.getText();
+        final String contactName = value.nearest( IContact.class ).getName().getText();
+        
+        if( assistantName != null && contactName != null && assistantName.equals( contactName ) )
+        {
+            return createErrorStatus();
+        }
+        
+        return Status.OK_STATUS;
     }
     
-    private static final class Resources extends NLS
-    {
-        public static String cannotBeYourOwnAssistant;
-        
-        static
-        {
-            initializeMessages( AssistantNameValidator.class.getName(), Resources.class );
-        }
-    }
+    protected abstract IStatus createErrorStatus();
     
 }

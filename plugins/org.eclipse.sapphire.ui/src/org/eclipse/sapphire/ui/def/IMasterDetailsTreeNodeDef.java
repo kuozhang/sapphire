@@ -12,9 +12,7 @@
 package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
@@ -137,16 +135,6 @@ public interface IMasterDetailsTreeNodeDef
     
     ModelElementList<IMasterDetailsTreeNodeListEntry> getChildNodes();
 
-    // *** ActionSetDef ***
-    
-    @Type( base = IActionSetDef.class )
-    @Label( standard = "actions" )
-    @XmlBinding( path = "actions" )
-    
-    ElementProperty PROP_ACTION_SET_DEF = new ElementProperty( TYPE, "ActionSetDef" );
-    
-    ModelElementHandle<IActionSetDef> getActionSetDef();
-    
     // *** VisibleWhenConditionClass ***
     
     @Reference( target = Class.class )

@@ -15,21 +15,21 @@ package org.eclipse.sapphire.modeling;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class ElementProperty 
+public final class ImpliedElementProperty 
 
-    extends ModelProperty
+    extends ElementProperty
     
 {
-    public ElementProperty( final ModelElementType type,
-                            final String propertyName )
+    public ImpliedElementProperty( final ModelElementType type,
+                                   final String propertyName )
     {
-        super( type, propertyName, null );
+        super( type, propertyName );
     }
         
-    public ElementProperty( final ModelElementType type,
-                            final ElementProperty baseProperty )
+    public ImpliedElementProperty( final ModelElementType type,
+                                   final ImpliedElementProperty baseProperty )
     {
-        super( type, baseProperty.getName(), baseProperty );
+        super( type, baseProperty );
     }
     
 }

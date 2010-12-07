@@ -28,20 +28,31 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface ISapphireWithDirectiveDef
 
-    extends ISapphirePartContainerDef
+    extends ISapphirePageBookDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireWithDirectiveDef.class );
- 
+    
     // *** Property ***
     
     @Label( standard = "property" )
     @NonNullValue
     @XmlBinding( path = "property" )
     
-    ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" ); //$NON-NLS-1$
+    ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
     
     Value<String> getProperty();
-    void setProperty( String property );
+    void setProperty( String value );
+    
+    // *** Label ***
+    
+    @Label( standard = "label" )
+    @NonNullValue
+    @XmlBinding( path = "label" )
+    
+    ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
+    
+    Value<String> getLabel();
+    void setLabel( String value );
     
 }
