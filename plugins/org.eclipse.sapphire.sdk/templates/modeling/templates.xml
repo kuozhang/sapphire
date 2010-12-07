@@ -43,22 +43,21 @@ ${cursor}
     
 ElementProperty PROP_${field} = new ElementProperty( TYPE, "${name}" );
     
-${type} get${name}();
-${:import(org.eclipse.sapphire.modeling.ElementProperty,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type)}
+ModelElementHandle&lt;${type}&lt; get${name}();
+${:import(org.eclipse.sapphire.modeling.ElementProperty,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type,org.eclipse.sapphire.modeling.ModelElementHandle)}
 ${cursor}
   </template>
   
-  <template name="sf-element-removable" description="%ElementPropertyRemovable" id="sapphire.modeling.ElementPropertyRemovable" context="java-members" enabled="true">
+  <template name="sf-element-implied" description="%ImpliedElementProperty" id="sapphire.modeling.ImpliedElementProperty" context="java-members" enabled="true">
 // *** ${name} ***
 
 @Type( base = ${type}.class )
 @Label( standard = "${label}" )
     
-ElementProperty PROP_${field} = new ElementProperty( TYPE, "${name}" );
+ImpliedElementProperty PROP_${field} = new ImpliedElementProperty( TYPE, "${name}" );
     
 ${type} get${name}();
-${type} get${name}( boolean createIfNecessary );
-${:import(org.eclipse.sapphire.modeling.ElementProperty,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type)}
+${:import(org.eclipse.sapphire.modeling.ImpliedElementProperty,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type)}
 ${cursor}
   </template>
     

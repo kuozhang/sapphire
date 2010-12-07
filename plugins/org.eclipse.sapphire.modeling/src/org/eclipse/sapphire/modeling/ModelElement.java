@@ -170,6 +170,13 @@ public abstract class ModelElement
 
     @SuppressWarnings( "unchecked" )
     
+    public final <T extends IModelElement> T read( final ImpliedElementProperty property )
+    {
+        return (T) read( (ModelProperty) property );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    
     public final <T extends IModelElement> ModelElementList<T> read( final ListProperty property )
     {
         return (ModelElementList<T>) read( (ModelProperty) property );
@@ -381,7 +388,16 @@ public abstract class ModelElement
         {
             if( property instanceof ElementProperty )
             {
-                final IModelElement child = read( (ElementProperty) property ).element();
+                final IModelElement child;
+                
+                if( property instanceof ImpliedElementProperty )
+                {
+                    child = read( (ImpliedElementProperty) property );
+                }
+                else
+                {
+                    child = read( (ElementProperty) property ).element();
+                }
                 
                 if( child != null )
                 {
@@ -507,6 +523,10 @@ public abstract class ModelElement
                 else if( property instanceof ListProperty )
                 {
                     x = read( (ListProperty) property ).validate();
+                }
+                else if( property instanceof ImpliedElementProperty )
+                {
+                    x = read( (ImpliedElementProperty) property ).validate();
                 }
                 else if( property instanceof ElementProperty )
                 {
@@ -1070,7 +1090,16 @@ public abstract class ModelElement
         {
             if( this.property instanceof ElementProperty )
             {
-                final IModelElement element = read( (ElementProperty) this.property ).element();
+                final IModelElement element;
+                
+                if( this.property instanceof ImpliedElementProperty )
+                {
+                    element = read( (ImpliedElementProperty) this.property );
+                }
+                else
+                {
+                    element = read( (ElementProperty) this.property ).element();
+                }
                 
                 if( element != null )
                 {

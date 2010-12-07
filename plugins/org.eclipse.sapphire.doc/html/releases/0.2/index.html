@@ -18,6 +18,7 @@
   <ol type="A">
     <li><a href="#transient">Transient Properties</a></li>
     <li><a href="#derived">Derived Properties</a></li>
+    <li><a href="#element">Improved Element Properties</a></li>
     <li><a href="#default-xml-binding">Default XML Binding</a></li>
     <li><a href="#element-without-resource">Model Element Without Resource</a></li>
   </ol>
@@ -42,18 +43,18 @@ a new Java class every time. Expressions can be used in many modeling annotation
 and in UI definitions. The number of contexts where expressions can be used will expand
 in future releases.</p>
 
-<p><b>Example:</b><p>
+<p style="margin-left: 20px;"><b>Example</b><p>
 
-<p>In this example, the enablement of a property is defined by an expression over two other 
+<p style="margin-left: 20px;">In this example, the enablement of a property is defined by an expression over two other 
 properties.</p>
 
 <pre class="source-code"><code>@Enablement( expr = "${ ! ControllingPropBoolean && ( ControllingPropEnum == 'YES' || ControllingPropEnum == 'MAYBE' ) }" )
     
 ValueProperty PROP_SOME_PROP = new ValueProperty( TYPE, "SomeProp" );</code></pre>
 
-<p><b>Example:</b><p>
+<p style="margin-left: 20px;"><b>Example</b><p>
 
-<p>In this example snippet from a UI definition, a content outline node label is defined
+<p style="margin-left: 20px;">In this example snippet from a UI definition, a content outline node label is defined
 by an expression that allows alternative text to be used if the Name property is null.</p>
 
 <pre class="source-code"><code>&lt;node-template>
@@ -81,9 +82,9 @@ context.</p>
   <li>No support for higher-order semantic annotations, such as @DefaultValue, @PossibleValue, etc.</li>
 </ul>
 
-<p><b>Example:</b><p>
+<p style="margin-left: 20px;"><b>Example</b><p>
 
-<p>In this example from the contacts sample, a transient property is used to hold IContact object
+<p style="margin-left: 20px;">In this example from the contacts sample, a transient property is used to hold IContact object
 in ISendContactOp model element which is initialized by an editor action.</p>
 
 <pre class="source-code"><code>@Type( base = IContact.class )
@@ -106,9 +107,9 @@ value can change as inputs change.</p>
   <li>No support for annotations that only make sense for writable properties.</li>
 </ul>
 
-<p><b>Example:</b><p>
+<p style="margin-left: 20px;"><b>Example</b><p>
 
-<p>In this example from the contacts sample, a derived property holds message body with content
+<p style="margin-left: 20px;">In this example from the contacts sample, a derived property holds message body with content
 derived from contact object held by another property.</p> 
 
 <pre class="source-code"><code>@DerivedValue( service = SendContactOpContentProvider.class )
@@ -132,6 +133,152 @@ Value&lt;String> getMessageBody();</code></pre>
         return buf.toString();
     }
 }</code></pre>
+
+<h2><a name="element">Improved Element Properties</a></h2>
+
+<p>The capabilities of element properties have been revisited for this release. The most
+important improvement is ability to handle heterogeneous content. This means that the
+element property can hold multiple element types that derive from the same element type.
+This capability was already present for list properties and now it is available for
+element properties.</p>
+
+<p>The second major improvement is formalizing the distinction between explicit and implied
+element properties. In the case of an explicit element property, the contained element must
+be explicitly created and it can be deleted. For implied element properties, the contained
+element always exists. The implied element properties are most frequently used to organize
+elements with high number of properties. Since the element doesn't need to be created and
+cannot be deleted, there is no UI manifestation for implied properties. Contrast this with
+explicit element properties which typically require a UI control such a checkbox, a radio 
+buttons group or a combo to manage their state.</p>
+
+<p style="margin-left: 20px;"><b>Example</b><p>
+
+<p style="margin-left: 20px;">In this example from the <code>IContact</code> element in the contacts sample, the 
+<code>Address</code> property is an implied element property, the <code>Assistant</code> is 
+an explicit homogeneous element property and the <code>PrimaryOccupation</code> is an explicit
+heterogeneous element property.</p>
+
+<p style="margin-left: 20px;">Note the difference in the getter return type between explicit and implied element
+properties. Also notice the difference in property object type.</p>
+
+<p style="margin-left: 20px;">Heterogeneous properties must use the long form of XML binding specification
+(@XmlElementBinding), while homogeneous properties can use either the long or the 
+short form (@XmlBinding).</p> 
+
+<pre class="source-code"><code>// *** Address ***
+
+@Type( base = IAddress.class )
+@XmlBinding( path = "address" )
+    
+ImpliedElementProperty PROP_ADDRESS = new ImpliedElementProperty( TYPE, "Address" );
+
+IAddress getAddress();
+
+// *** Assistant ***
+
+@Type( base = IAssistant.class )
+@XmlBinding( path = "assistant" )
+    
+ElementProperty PROP_ASSISTANT = new ElementProperty( TYPE, "Assistant" );
+
+ModelElementHandle<IAssistant> getAssistant();
+
+// *** PrimaryOccupation ***
+    
+@Type
+( 
+    base = IOccupation.class, 
+    possible = 
+    { 
+        IJobOccupation.class, 
+        IStudentOccupation.class, 
+        IHomemakerOccupation.class 
+    }
+)
+    
+@Label( standard = "primary occupation" )
+    
+@XmlElementBinding
+( 
+    path = "primary-occupation",
+    mappings = 
+    {
+        @XmlElementBinding.Mapping( element = "job", type = IJobOccupation.class ),
+        @XmlElementBinding.Mapping( element = "student", type = IStudentOccupation.class ),
+        @XmlElementBinding.Mapping( element = "homemaker", type = IHomemakerOccupation.class )
+    }
+)
+    
+ElementProperty PROP_PRIMARY_OCCUPATION = new ElementProperty( TYPE, "PrimaryOccupation" );
+    
+ModelElementHandle<IOccupation> getPrimaryOccupation();</code></pre>
+
+<p>The UI definition side was improved accordingly. In past releases, "with" construct
+was used for dealing with implied element properties, while a separate "element-property-composite"
+construct was used for dealing explicit element properties. In this release, both are handled
+with the improved "with" construct.</p>
+
+<p style="margin-left: 20px;"><b>Example</b><p>
+
+<p style="margin-left: 20px;">These are the UI definition snippets from the contacts sample
+for properties shown in the first example. Note how only in the case of the implied
+<code>Address</code> property we can get away with using the <code>default-panel</code>
+short-hand. In other cases, there are at least two cases (the element is present and is not present), so it
+would not work to apply the same definition across the board.</p>
+
+<pre class="source-code"><code>&lt;with>
+  &lt;property>Address&lt;/property>
+  &lt;default-panel>
+    &lt;content>
+      &lt;property-editor>Street&lt;/property-editor>
+      &lt;property-editor>City&lt;/property-editor>
+      &lt;property-editor>State&lt;/property-editor>
+      &lt;property-editor>ZipCode&lt;/property-editor>
+    &lt;/content>
+  &lt;/default-panel>
+&lt;/with></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/element-1.png"/></p>
+
+<pre class="source-code"><code>&lt;with>
+  &lt;property>Assistant&lt;/property>
+  &lt;label>delegate some tasks to an assistant&lt;/label>
+  &lt;panel>
+    &lt;key>IAssistant&lt;/key>
+    &lt;content>
+      &lt;property-editor>Name&lt;/property-editor>
+      &lt;property-editor>Notes&lt;/property-editor>
+      &lt;property-editor>DelegatedTasks&lt;/property-editor>
+    &lt;/content>
+  &lt;/panel>
+&lt;/with></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/element-2.png"/></p>
+<p style="margin-left: 20px;"><img src="images/element-3.png"/></p>
+
+<pre class="source-code"><code>&lt;with>
+  &lt;property>PrimaryOccupation&lt;/property>
+  &lt;panel>
+    &lt;key>IJobOccupation&lt;/key>
+    &lt;content>
+      &lt;property-editor>Employer&lt;/property-editor>
+      &lt;property-editor>Title&lt;/property-editor>
+      &lt;property-editor>Manager&lt;/property-editor>
+    &lt;/content>
+  &lt;/panel>
+  &lt;panel>
+    &lt;key>IStudentOccupation&lt;/key>
+    &lt;content>
+      &lt;property-editor>EducationalInstitution&lt;/property-editor>
+      &lt;property-editor>Program&lt;/property-editor>
+    &lt;/content>
+  &lt;/panel>
+&lt;/with></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/element-4.png"/></p>
+<p style="margin-left: 20px;"><img src="images/element-5.png"/></p>
+
+<p><a href="migration.html#element">See Migration Guide</a></p>
 
 <h2><a name="default-xml-binding">Default XML Binding</a></h2>
 

@@ -297,12 +297,21 @@ public final class SapphireWithDirective
 
     private void updateCurrentPage( final boolean force )
     {
-        final IModelElement modelElement = getModelElement();
-        final IModelElement subModelElement = modelElement.read( this.property ).element();
+        final IModelElement element = getModelElement();
+        final IModelElement child;
         
-        if( force == true || this.modelElementForChildParts != subModelElement )
+        if( this.property instanceof ImpliedElementProperty )
         {
-            this.modelElementForChildParts = subModelElement;
+            child = element.read( (ImpliedElementProperty) this.property );
+        }
+        else
+        {
+            child = element.read( this.property ).element();
+        }
+        
+        if( force == true || this.modelElementForChildParts != child )
+        {
+            this.modelElementForChildParts = child;
 
             if( this.modelElementForChildParts != null )
             {
@@ -310,7 +319,7 @@ public final class SapphireWithDirective
             }
             else
             {
-                changePage( modelElement, null );
+                changePage( element, null );
             }
         }
     }

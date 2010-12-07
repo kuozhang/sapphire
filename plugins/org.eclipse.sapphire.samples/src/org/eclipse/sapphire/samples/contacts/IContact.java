@@ -130,7 +130,7 @@ public interface IContact
 
     @Type( base = IAssistant.class )
     @Label( standard = "assistant" )
-    @XmlElementBinding( mappings = @XmlElementBinding.Mapping( element = "assistant", type = IAssistant.class ) )
+    @XmlBinding( path = "assistant" )
     
     ElementProperty PROP_ASSISTANT = new ElementProperty( TYPE, "Assistant" );
 

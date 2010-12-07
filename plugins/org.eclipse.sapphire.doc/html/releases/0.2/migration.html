@@ -30,6 +30,7 @@ to 0.2 release. Only changes from the previous milestone are covered.</p>
 
 <ol>
   <li><a href="#annotations">Annotations</a></li>
+  <li><a href="#element">Element Properties</a></li>
   <li><a href="#editor-for-xml">SapphireEditorForXml</a></li>
   <li><a href="#condition">SapphireCondition</a></li>
   <li><a href="#browse-handlers">Browse Handlers</a></li>
@@ -175,6 +176,114 @@ public class CustomImpl extends ReferenceService
 {
     ...
 }</code></pre>
+    </td>
+  </tr>
+</table>
+
+<a name="element"><h2>Element Properties</h2></a>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Type( base = IAddress.class )</font>
+    
+ElementProperty <font color="#888888">PROP_ADDRESS = new </font>ElementProperty<font color="#888888">( TYPE, "Address" );</font>
+
+<font color="#888888">IAddress getAddress();</font>
+
+...
+
+@GenerateXmlBinding( elementPath = "address" )
+
+<font color="#888888">public interface IAddress extends </font>IModelElementForXml
+<font color="#888888">{
+    ...
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Type( base = IAddress.class )</font>
+@XmlBinding( path = "address" )
+    
+ImpliedElementProperty <font color="#888888">PROP_ADDRESS = new </font>ImpliedElementProperty<font color="#888888">( TYPE, "Address" );</font>
+
+<font color="#888888">IAddress getAddress();</font>
+
+...
+
+@GenerateImpl
+
+<font color="#888888">public interface IAddress extends </font>IModelElement
+<font color="#888888">{
+    ...
+}</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Type( base = IAssistant.class )
+@XmlBinding( path = "assistant" )
+    
+ElementProperty PROP_ASSISTANT = new ElementProperty( TYPE, "Assistant" );</font>
+
+IAssistant <font color="#888888">getAssistant();</font>
+IAssistant getAssistant( boolean createIfNecessary );</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Type( base = IAssistant.class )
+@XmlBinding( path = "assistant" )
+    
+ElementProperty PROP_ASSISTANT = new ElementProperty( TYPE, "Assistant" );</font>
+
+ModelElementHandle&lt;IAssistant> <font color="#888888">getAssistant();</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;with>
+  &lt;property>Address&lt;/property></font>
+  &lt;content>
+    ...
+  &lt;/content>
+<font color="#888888">&lt;/with></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;with>
+  &lt;property>Address&lt;/property></font>
+  &lt;default-panel>
+    &lt;content>
+      ...
+    &lt;/content>
+  &lt;/default-panel>
+<font color="#888888">&lt;/with></font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;element-property-composite>
+  <font color="#888888">&lt;property>Assistant&lt;/property></font>
+  &lt;conditional><font color="#888888">delegate some tasks to an assistant</font>&lt;/conditional>
+  &lt;default-panel>
+    <font color="#888888">&lt;content>
+      ...
+    &lt;/content></font>
+  &lt;/default-panel>
+&lt;/element-property-composite></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;with>
+  <font color="#888888">&lt;property>Assistant&lt;/property></font>
+  &lt;label><font color="#888888">delegate some tasks to an assistant</font>&lt;/label>
+  &lt;panel>
+    &lt;key>IAbc&lt;/key>
+    <font color="#888888">&lt;content>
+      ...
+    &lt;/content></font>
+  &lt;/panel>
+&lt;/with></code></pre>
     </td>
   </tr>
 </table>

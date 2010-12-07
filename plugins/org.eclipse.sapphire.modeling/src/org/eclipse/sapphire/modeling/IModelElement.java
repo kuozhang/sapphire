@@ -32,6 +32,8 @@ public interface IModelElement
     
     <T extends IModelElement> ModelElementHandle<T> read( ElementProperty property );
 
+    <T extends IModelElement> T read( ImpliedElementProperty property );
+    
     <T extends IModelElement> ModelElementList<T> read( ListProperty property );
 
     <T> Transient<T> read( TransientProperty property );
