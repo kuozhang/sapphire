@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui.xml;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.URI;
 import java.util.HashMap;
@@ -19,6 +20,10 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -139,6 +144,18 @@ public class XmlEditorResourceStore
     @Override
     public void save() throws ResourceStoreException
     {
+        final IEditorInput input = this.sourceEditor.getEditorInput();
+        
+        if( input instanceof FileEditorInput )
+        {
+            final IFile file = ( (FileEditorInput) input ).getFile();
+            
+            if( ! file.exists() )
+            {
+                return;
+            }
+        }
+
         validateSave();
         this.sourceEditor.doSave( new NullProgressMonitor() );
     }
@@ -146,7 +163,36 @@ public class XmlEditorResourceStore
     @Override
     public void validateEdit()
     {
-        validateSave();
+        final IEditorInput input = this.sourceEditor.getEditorInput();
+        
+        if( input instanceof FileEditorInput )
+        {
+            final IFile file = ( (FileEditorInput) input ).getFile();
+            
+            if( ! file.exists() )
+            {
+                final IStatus st = ResourcesPlugin.getWorkspace().validateEdit( new IFile[] { file }, IWorkspace.VALIDATE_PROMPT );
+                
+                if( st.getSeverity() == IStatus.ERROR )
+                {
+                    throw new ValidateEditException();
+                }
+                
+                try
+                {
+                    file.create( new ByteArrayInputStream( new byte[ 0 ] ), true, new NullProgressMonitor() );
+                }
+                catch( CoreException e )
+                {
+                    throw new ValidateEditException();
+                }
+            }
+        }
+        
+        if( this.sourceEditor.validateEditorInputState() == false )
+        {
+            throw new ValidateEditException();
+        }
     }
     
     @Override
