@@ -131,7 +131,7 @@
                           <property>Name</property>
                           <action-handler>
                             <action>Sapphire.Create</action>
-                            <impl>AssistantCreateActionHandler</impl>
+                            <impl>CreateContactActionHandler</impl>
                           </action-handler>
                         </property-editor>
                         <property-editor>Notes</property-editor>
@@ -173,7 +173,13 @@
                       <content>
                         <property-editor>Employer</property-editor>
                         <property-editor>Title</property-editor>
-                        <property-editor>Manager</property-editor>
+                        <property-editor>
+                          <property>Manager</property>
+                          <action-handler>
+                            <action>Sapphire.Create</action>
+                            <impl>CreateContactActionHandler</impl>
+                          </action-handler>
+                        </property-editor>
                       </content>
                     </panel>
                     <panel>

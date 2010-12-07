@@ -172,7 +172,7 @@ public final class SapphireWithDirective
                 radioButtonsGroup.setLayoutData( gdhindent( gdhspan( gdhfill(), 2 ), 10 ) );
                 context.adapt( radioButtonsGroup );
                 
-                final Button noneButton = radioButtonsGroup.addRadioButton( "None" );
+                final Button noneButton = radioButtonsGroup.addRadioButton( Resources.noneRadioButton );
                 final Map<ModelElementType,Button> typeToButton = new HashMap<ModelElementType,Button>();
                 final Map<Button,ModelElementType> buttonToType = new HashMap<Button,ModelElementType>();
                 
@@ -349,6 +349,7 @@ public final class SapphireWithDirective
     
     private static final class Resources extends NLS
     {
+        public static String noneRadioButton;
         public static String noAdditionalPropertiesMessage;
         
         static

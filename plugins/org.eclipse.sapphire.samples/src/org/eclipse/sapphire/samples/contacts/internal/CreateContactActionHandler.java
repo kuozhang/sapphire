@@ -11,13 +11,15 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
-import org.eclipse.sapphire.samples.contacts.IAssistant;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.samples.contacts.IContact;
 import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 
@@ -25,18 +27,21 @@ import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class AssistantCreateActionHandler
+public final class CreateContactActionHandler
 
     extends SapphireActionHandler
     
 {
     private ModelPropertyListener listener;
+    private ValueProperty property;
     
     @Override
     public void init( final SapphireAction action,
                       final ISapphireActionHandlerDef def )
     {
         super.init( action, def );
+        
+        this.property = (ValueProperty) ( (SapphirePropertyEditor) action.getPart() ).getProperty();
         
         this.listener = new ModelPropertyListener()
         {
@@ -47,19 +52,19 @@ public final class AssistantCreateActionHandler
             }
         };
         
-        final IAssistant assistant = (IAssistant) getModelElement();
+        final IModelElement element = getModelElement();
         
-        assistant.nearest( IContactsDatabase.class ).addListener( this.listener, "Contacts/Name" );
-        assistant.addListener( this.listener, IAssistant.PROP_NAME.getName() );
+        element.nearest( IContactsDatabase.class ).addListener( this.listener, "Contacts/Name" );
+        element.addListener( this.listener, this.property.getName() );
         
         refreshEnablementState();
     }
     
     private void refreshEnablementState()
     {
-        final IAssistant assistant = (IAssistant) getModelElement();
-        final String name = assistant.getName().getText();
-        final IContactsDatabase cdb = assistant.nearest( IContactsDatabase.class );
+        final IModelElement element = getModelElement();
+        final String name = element.read( this.property ).getText();
+        final IContactsDatabase cdb = element.nearest( IContactsDatabase.class );
         
         boolean enabled;
         
@@ -87,12 +92,12 @@ public final class AssistantCreateActionHandler
     @Override
     protected Object run( final SapphireRenderingContext context )
     {
-        final IAssistant assistant = (IAssistant) getModelElement();
-        final String name = assistant.getName().getText();
-        final IContactsDatabase cdb = assistant.nearest( IContactsDatabase.class );
+        final IModelElement element = getModelElement();
+        final String name = element.read( this.property ).getText();
+        final IContactsDatabase cdb = element.nearest( IContactsDatabase.class );
         
-        final IContact newAssistantContact = cdb.getContacts().addNewElement();
-        newAssistantContact.setName( name );
+        final IContact newContact = cdb.getContacts().addNewElement();
+        newContact.setName( name );
         
         return null;
     }
@@ -102,10 +107,10 @@ public final class AssistantCreateActionHandler
     {
         super.dispose();
         
-        final IAssistant assistant = (IAssistant) getModelElement();
+        final IModelElement element = getModelElement();
         
-        assistant.nearest( IContactsDatabase.class ).removeListener( this.listener, "Contacts/Name" );
-        assistant.removeListener( this.listener, IAssistant.PROP_NAME.getName() );
+        element.nearest( IContactsDatabase.class ).removeListener( this.listener, "Contacts/Name" );
+        element.removeListener( this.listener, this.property.getName() );
     }
     
 }
