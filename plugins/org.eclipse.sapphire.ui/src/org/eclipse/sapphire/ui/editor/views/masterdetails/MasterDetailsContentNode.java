@@ -20,8 +20,8 @@ import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -70,7 +70,7 @@ public final class MasterDetailsContentNode
     private MasterDetailsContentTree contentTree;
     private IMasterDetailsTreeNodeDef definition;
     private IModelElement modelElement;
-    private ElementProperty modelElementProperty;
+    private ImpliedElementProperty modelElementProperty;
     private ModelElementListener modelElementListener;
     private MasterDetailsContentNode parentNode;
     private Function labelFunction;
@@ -105,11 +105,11 @@ public final class MasterDetailsContentNode
         this.contentTree = getNearestPart( MasterDetailsPage.class ).getContentTree();
         this.definition = (IMasterDetailsTreeNodeDef) super.definition;
         
-        this.modelElementProperty = (ElementProperty) resolve( this.definition.getProperty().getContent() );
+        this.modelElementProperty = (ImpliedElementProperty) resolve( this.definition.getProperty().getContent() );
         
         if( this.modelElementProperty != null )
         {
-            this.modelElement = getModelElement().read( this.modelElementProperty ).element();
+            this.modelElement = getModelElement().read( this.modelElementProperty );
             
             this.modelElementListener = new ModelElementListener()
             {
