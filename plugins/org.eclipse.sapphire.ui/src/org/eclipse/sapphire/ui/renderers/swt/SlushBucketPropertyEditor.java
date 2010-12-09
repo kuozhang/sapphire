@@ -368,7 +368,7 @@ public final class SlushBucketPropertyEditor
         {
             final ModelProperty property = propertyEditorDefinition.getProperty();
             
-            if( property instanceof ListProperty && property.hasAnnotation( NoDuplicates.class ) )
+            if( property instanceof ListProperty )
             {
                 final ListProperty listProperty = (ListProperty) property;
                 
@@ -381,7 +381,9 @@ public final class SlushBucketPropertyEditor
                     {
                         final ModelProperty memberProperty = properties.get( 0 );
                         
-                        if( memberProperty instanceof ValueProperty && ( (ValueProperty) memberProperty ).hasAnnotation( PossibleValues.class ) )
+                        if( memberProperty instanceof ValueProperty &&
+                            memberProperty.hasAnnotation( NoDuplicates.class ) &&
+                            memberProperty.hasAnnotation( PossibleValues.class ) )
                         {
                             return true;
                         }

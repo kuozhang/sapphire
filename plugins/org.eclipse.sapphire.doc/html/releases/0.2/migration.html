@@ -31,6 +31,7 @@ to 0.2 release. Only changes from the previous milestone are covered.</p>
 <ol>
   <li><a href="#annotations">Annotations</a></li>
   <li><a href="#element">Element Properties</a></li>
+  <li><a href="#no-duplicates">NoDuplicates and UniqueValueValidator</a></li>
   <li><a href="#editor-for-xml">SapphireEditorForXml</a></li>
   <li><a href="#condition">SapphireCondition</a></li>
   <li><a href="#browse-handlers">Browse Handlers</a></li>
@@ -284,6 +285,68 @@ ModelElementHandle&lt;IAssistant> <font color="#888888">getAssistant();</font></
     &lt;/content></font>
   &lt;/panel>
 &lt;/with></code></pre>
+    </td>
+  </tr>
+</table>
+
+<a name="no-duplicates"><h2>NoDuplicates and UniqueValueValidator</h2></a>
+
+<p>The <code>@NoDuplicates</code> annotation is now applied to a value property (for elements
+contained in a list) rather than the list property. It can be used any place where 
+<code>UniqueValueValidator</code> class has previously been used.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@DependsOn( "*/Name" )
+@Validator( impl = UniqueValueValidator.class )
+    
+<font color="#888888">ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@NoDuplicates
+    
+<font color="#888888">ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Type( base = IConnection.class )</font>
+@NoDuplicates
+                             
+<font color="#888888">ListProperty PROP_CONNECTIONS = new ListProperty( TYPE, "Connections" );
+    
+ModelElementList&lt;IConnection> getConnections();
+
+...
+
+public interface IConnection extends IModelElement
+{</font>
+    @DependsOn( "*/Name" )
+    @Validator( impl = UniqueValueValidator.class )
+    
+    <font color="#888888">ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Type( base = IConnection.class )</font>
+                             
+<font color="#888888">ListProperty PROP_CONNECTIONS = new ListProperty( TYPE, "Connections" );
+    
+ModelElementList&lt;IConnection> getConnections();
+
+...
+
+public interface IConnection extends IModelElement
+{</font>
+    @NoDuplicates
+    
+    <font color="#888888">ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+}</font></code></pre>
     </td>
   </tr>
 </table>

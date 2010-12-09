@@ -17,7 +17,6 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
@@ -38,7 +37,6 @@ public interface IMultiSelectListGallery
     
     @Type( base = IMultiSelectListGalleryItem.class )
     @Label( standard = "list" )
-    @NoDuplicates
     @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "item", type = IMultiSelectListGalleryItem.class ) )
     
     ListProperty PROP_LIST = new ListProperty( TYPE, "List" );

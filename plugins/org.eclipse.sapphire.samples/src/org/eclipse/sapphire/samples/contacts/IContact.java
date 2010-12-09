@@ -22,7 +22,6 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
-import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
@@ -31,8 +30,6 @@ import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.annotations.Validator;
-import org.eclipse.sapphire.modeling.validators.UniqueValueValidator;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
@@ -59,8 +56,7 @@ public interface IContact
     
     @Label( standard = "name" )
     @NonNullValue
-    @DependsOn( "*/Name" )
-    @Validator( impl = UniqueValueValidator.class )
+    @NoDuplicates
     @XmlBinding( path = "@name" )
 
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
@@ -140,7 +136,6 @@ public interface IContact
     
     @Label( standard = "connections" )
     @Type( base = IConnection.class )
-    @NoDuplicates
     @CustomXmlListBinding( impl = ConnectionsListController.class )
                              
     ListProperty PROP_CONNECTIONS = new ListProperty( TYPE, "Connections" );

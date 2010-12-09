@@ -488,40 +488,45 @@ public abstract class ModelProperty
     {
         if( this.dependencies == null )
         {
-            final Set<String> dependenciesAsStrings = new HashSet<String>();
-            
-            final DependsOn dependsOnAnnotation = getAnnotation( DependsOn.class );
-            
-            if( dependsOnAnnotation != null )
-            {
-                for( String dependsOnPropertyRef : dependsOnAnnotation.value() )
-                {
-                    dependenciesAsStrings.add( dependsOnPropertyRef );
-                }
-            }
-            
-            final Set<ModelPath> dependencies = new HashSet<ModelPath>();
-            
-            for( String str : dependenciesAsStrings )
-            {
-                ModelPath path = null;
-                
-                try
-                {
-                    path = new ModelPath( str );
-                }
-                catch( ModelPath.MalformedPathException e )
-                {
-                    SapphireModelingFrameworkPlugin.log( e );
-                }
-                
-                dependencies.add( path );
-            }
-            
-            this.dependencies = Collections.unmodifiableSet( dependencies );
+            this.dependencies = Collections.unmodifiableSet( initDependencies() );
         }
         
         return this.dependencies;
+    }
+    
+    protected Set<ModelPath> initDependencies()
+    {
+        final Set<String> dependenciesAsStrings = new HashSet<String>();
+        
+        final DependsOn dependsOnAnnotation = getAnnotation( DependsOn.class );
+        
+        if( dependsOnAnnotation != null )
+        {
+            for( String dependsOnPropertyRef : dependsOnAnnotation.value() )
+            {
+                dependenciesAsStrings.add( dependsOnPropertyRef );
+            }
+        }
+        
+        final Set<ModelPath> dependencies = new HashSet<ModelPath>();
+        
+        for( String str : dependenciesAsStrings )
+        {
+            ModelPath path = null;
+            
+            try
+            {
+                path = new ModelPath( str );
+            }
+            catch( ModelPath.MalformedPathException e )
+            {
+                SapphireModelingFrameworkPlugin.log( e );
+            }
+            
+            dependencies.add( path );
+        }
+        
+        return dependencies;
     }
     
     @Override

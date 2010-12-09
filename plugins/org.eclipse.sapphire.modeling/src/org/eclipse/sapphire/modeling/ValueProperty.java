@@ -28,6 +28,7 @@ import org.eclipse.sapphire.modeling.annotations.AbsolutePath;
 import org.eclipse.sapphire.modeling.annotations.BasePathsProvider;
 import org.eclipse.sapphire.modeling.annotations.EclipseWorkspacePath;
 import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
+import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.Reference;
@@ -44,6 +45,7 @@ import org.eclipse.sapphire.modeling.validators.NumericRangeValidator;
 import org.eclipse.sapphire.modeling.validators.PossibleValuesValidator;
 import org.eclipse.sapphire.modeling.validators.ReferenceValueValidator;
 import org.eclipse.sapphire.modeling.validators.RelativePathValueValidator;
+import org.eclipse.sapphire.modeling.validators.UniqueValueValidator;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -163,6 +165,11 @@ public final class ValueProperty
             };
 
             validators.add( nullValueValidator );
+        }
+        
+        if( hasAnnotation( NoDuplicates.class ) )
+        {
+            validators.add( new UniqueValueValidator() );
         }
         
         if( hasAnnotation( Reference.class ) )
@@ -381,6 +388,19 @@ public final class ValueProperty
         }
         
         return result;
+    }
+    
+    @Override
+    protected Set<ModelPath> initDependencies()
+    {
+        final Set<ModelPath> dependencies = super.initDependencies();
+        
+        if( hasAnnotation( NoDuplicates.class ) )
+        {
+            dependencies.add( new ModelPath( "*/" + getName() ) );
+        }
+        
+        return dependencies;
     }
     
     private static final class Resources

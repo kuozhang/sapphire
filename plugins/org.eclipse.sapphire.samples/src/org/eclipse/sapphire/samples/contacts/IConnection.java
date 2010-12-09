@@ -15,14 +15,12 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
-import org.eclipse.sapphire.modeling.annotations.Validator;
-import org.eclipse.sapphire.modeling.validators.UniqueValueValidator;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -42,8 +40,7 @@ public interface IConnection
     
     @Label( standard = "name" )
     @NonNullValue
-    @DependsOn( "*/Name" )
-    @Validator( impl = UniqueValueValidator.class )
+    @NoDuplicates
     
     @PossibleValues
     ( 
