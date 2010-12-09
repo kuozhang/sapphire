@@ -22,7 +22,6 @@ import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 import org.eclipse.sapphire.ui.def.internal.PropertyEditorPropertyBinding;
 
 /**
@@ -30,7 +29,6 @@ import org.eclipse.sapphire.ui.def.internal.PropertyEditorPropertyBinding;
  */
 
 @Label( standard = "property editor" )
-@XmlRootBinding( elementName = "property-editor" )  // TODO: Remove when model can run without resource.
 @GenerateImpl
 
 public interface ISapphirePropertyEditorDef

@@ -20,7 +20,6 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -34,9 +33,6 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.xml.RootXmlResource;
-import org.eclipse.sapphire.modeling.xml.XmlResource;
-import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.ISapphirePropertyEditorDef;
@@ -293,11 +289,7 @@ public final class SapphirePropertyEditor
             
             if( def == null )
             {
-                // TODO: Remove XmlResource use when model can run without resource.
-                
-                final XmlResourceStore store = new XmlResourceStore( new ByteArrayResourceStore() );
-                final XmlResource resource = new RootXmlResource( store );
-                def = ISapphirePropertyEditorDef.TYPE.instantiate( resource );
+                def = ISapphirePropertyEditorDef.TYPE.instantiate();
                 def.setProperty( propertyName );
             }
             
