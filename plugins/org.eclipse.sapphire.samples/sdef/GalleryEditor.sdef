@@ -444,18 +444,6 @@
             <property-editor>Entities</property-editor>
           </content>
         </section>
-        <section>
-          <description>Alternate UI which uses the compact list</description>
-          <content>
-            <property-editor>
-              <property>Entities</property>
-              <hint>
-                <name>factory</name>
-                <value>CompactListPropertyEditorRenderer$Factory</value>
-              </hint>
-            </property-editor>
-          </content>
-        </section>
         <node>
           <label>Value Property Editor</label>
           <section>
