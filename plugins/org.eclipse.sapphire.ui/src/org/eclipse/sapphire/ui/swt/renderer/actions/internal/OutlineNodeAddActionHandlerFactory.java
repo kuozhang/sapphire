@@ -37,6 +37,8 @@ public final class OutlineNodeAddActionHandlerFactory
     extends SapphireActionHandlerFactory
     
 {
+    public static final String ID_BASE = "Sapphire.Add.";
+    
     @Override
     public List<SapphireActionHandler> create()
     {
@@ -72,6 +74,8 @@ public final class OutlineNodeAddActionHandlerFactory
         {
             this.listProperty = listProperty;
             this.type = type;
+            
+            setId( ID_BASE + type.getSimpleName() );
         }
 
         @Override
