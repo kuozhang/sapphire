@@ -27,16 +27,21 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -152,15 +157,53 @@ public class RadioButtonsGroup
             auxTextComposite.setLayout( glayout( 1, 16, 0, 0, 0 ) );
             
             final Label auxTextLabel = new Label( auxTextComposite, SWT.WRAP );
-            auxTextLabel.setLayoutData( gdwhint( gdhfill(), 100 ) );
+            final GridData gd = gdwhint( gdhfill(), 100 );
+            auxTextLabel.setLayoutData( gd );
             auxTextLabel.setForeground( getDisplay().getSystemColor( SWT.COLOR_DARK_GRAY ) );
             auxTextLabel.setText( auxText );
             
+            auxTextLabel.addControlListener(new ControlListener() {
+                public void controlMoved(ControlEvent e) {
+                }
+                public void controlResized(ControlEvent e) {
+                    if (auxTextLabel.getBounds().width != gd.widthHint + 20) {
+                    	if (auxTextLabel.getBounds().width == gd.widthHint) {
+                            gd.widthHint = 100; // reset widthHint to original size
+                    	} else {
+                            gd.widthHint = auxTextLabel.getBounds().width - 20;
+                    	}
+                        relayout(auxTextComposite);
+                    }
+                }
+            });
+
             this.auxTextControls.put( button, auxTextComposite );
         }
         
         return button;
     }
+    
+    private void relayout(final Composite composite) {
+        composite.getDisplay().asyncExec(new Runnable() {
+            public void run() {
+                if (composite.isDisposed())
+                    return;
+                Composite parent = composite;
+                while (parent != null) {
+                    if (parent instanceof SharedScrolledComposite) {
+                        parent.layout(true, true);
+                        ((SharedScrolledComposite)parent).reflow(true);
+                        return;
+                    } else if (parent instanceof Shell) {
+                        parent.layout(true, true);
+                        return;
+                    }
+                    parent = parent.getParent();
+                }
+            }
+        });
+    }
+
     
     public void removeRadioButton( final Button button )
     {

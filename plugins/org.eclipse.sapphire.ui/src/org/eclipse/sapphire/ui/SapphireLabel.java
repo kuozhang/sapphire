@@ -51,8 +51,12 @@ public final class SapphireLabel
             public void controlMoved(ControlEvent e) {
             }
             public void controlResized(ControlEvent e) {
-                if (l.getBounds().width != gd.widthHint) {
-                    gd.widthHint = l.getBounds().width - 20;
+                if (l.getBounds().width != gd.widthHint + 20) {
+                	if (l.getBounds().width == gd.widthHint) {
+                        gd.widthHint = 100; // reset widthHint to original size
+                	} else {
+                        gd.widthHint = l.getBounds().width - 20;
+                	}
                     relayout(context.getComposite());
                 }
             }
