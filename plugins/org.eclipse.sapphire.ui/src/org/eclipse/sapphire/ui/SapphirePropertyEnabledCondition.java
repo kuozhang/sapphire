@@ -32,10 +32,10 @@ public class SapphirePropertyEnabledCondition
     public void initCondition( final ISapphirePart part,
                                final String parameter )
     {
-        super.initCondition( part, parameter );
-        
         final IModelElement element = part.getModelElement();
         this.property = element.getModelElementType().getProperty( parameter );
+
+        super.initCondition( part, parameter );
     }
 
     @Override
