@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
+import org.eclipse.sapphire.ui.forms.widgets.SapphireFormText;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.SapphirePopup;
 import org.eclipse.swt.SWT;
@@ -31,7 +32,6 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -114,7 +114,7 @@ public class PropertyEditorAssistDialog
             
             for( PropertyEditorAssistContribution contribution : secdef.getContributions() )
             {
-                final FormText text = new FormText( composite, SWT.WRAP );
+                final SapphireFormText text = new SapphireFormText( composite, SWT.WRAP );
                 
                 td = new TableWrapData();
                 td.align = TableWrapData.FILL;

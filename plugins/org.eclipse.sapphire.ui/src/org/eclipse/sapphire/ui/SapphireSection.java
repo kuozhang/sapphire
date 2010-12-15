@@ -28,6 +28,7 @@ import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
+import org.eclipse.sapphire.ui.forms.widgets.SapphireFormText;
 import org.eclipse.sapphire.ui.swt.SapphireTextPopup;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
@@ -39,7 +40,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -58,7 +58,7 @@ public final class SapphireSection
     private SapphireCondition visibleWhenCondition;
     private Section section;
     private Function titleFunction;
-    private FormText descriptionFormText;
+    private SapphireFormText descriptionFormText;
     private Function descriptionFunction;
     private String descriptionExtendedContent;
     
@@ -122,7 +122,7 @@ public final class SapphireSection
         
         if( this.descriptionFunction != null )
         {
-            this.descriptionFormText = new FormText( outerComposite, SWT.NONE );
+            this.descriptionFormText = new SapphireFormText( outerComposite, SWT.NONE );
             this.descriptionFormText.setLayoutData( twdindent( twd(), 9 ) );
             context.adapt( this.descriptionFormText );
             

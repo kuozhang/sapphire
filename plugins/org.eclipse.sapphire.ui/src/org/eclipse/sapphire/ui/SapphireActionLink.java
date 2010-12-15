@@ -24,6 +24,7 @@ import java.util.Set;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart.Event;
 import org.eclipse.sapphire.ui.def.ISapphireActionLinkDef;
+import org.eclipse.sapphire.ui.forms.widgets.SapphireFormText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -32,7 +33,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.widgets.FormText;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -80,7 +80,7 @@ public final class SapphireActionLink
             imageLabel = null;
         }
         
-        final FormText text = new FormText( composite, SWT.NONE );
+        final SapphireFormText text = new SapphireFormText( composite, SWT.NONE );
         text.setLayoutData( gdvalign( gdhfill(), SWT.CENTER ) );
         context.adapt( text );
         

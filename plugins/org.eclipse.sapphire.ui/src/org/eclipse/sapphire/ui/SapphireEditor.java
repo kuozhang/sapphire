@@ -38,6 +38,7 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage;
+import org.eclipse.sapphire.ui.forms.widgets.SapphireFormText;
 import org.eclipse.sapphire.ui.internal.SapphireActionManager;
 import org.eclipse.sapphire.ui.internal.SapphireEditorContentOutline;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -49,7 +50,6 @@ import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.osgi.service.prefs.BackingStoreException;
@@ -317,7 +317,7 @@ public abstract class SapphireEditor
             page.setLayout( glayout( 1 ) );
             page.setBackground( getSite().getShell().getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
 
-            final FormText message = new FormText( page, SWT.NONE );
+            final SapphireFormText message = new SapphireFormText( page, SWT.NONE );
             message.setLayoutData( gd() );
             message.setBackground( getSite().getShell().getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
             message.setText( Resources.resourceNotAccessible, false, false );
