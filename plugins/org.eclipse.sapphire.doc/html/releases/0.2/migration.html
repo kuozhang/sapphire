@@ -37,6 +37,7 @@ to 0.2 release. Only changes from the previous milestone are covered.</p>
   <li><a href="#browse-handlers">Browse Handlers</a></li>
   <li><a href="#jump-handlers">Jump Handlers</a></li>
   <li><a href="#action-links">Action Links</a></li>
+  <li><a href="#dynamic-label">Dynamic Label</a></li>
   <li><a href="#misc">Miscellaneous</a></li>
 </ol>
 
@@ -763,7 +764,46 @@ changed to override SapphireModelCondition instead.</p>
 <font color="#888888">&lt;/content></font></code></pre>
     </td>
   </tr>
-</table>    
+</table>
+
+<a name="dynamic-label"><h2>Dynamic Label</h2></a>
+
+<p>With the new support for expressions, some old workarounds have been retired. One of these
+is the "dynamic-label" used for specifying label for the content outline. You must now use
+an expression to achieve the same affect.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;node-list>
+  &lt;node-template></font>
+    &lt;dynamic-label>
+      &lt;property>Name&lt;/property>
+      &lt;null-value-label>&amp;lt;contact&amp;gt;&lt;/null-value-label>
+    &lt;/dynamic-label>
+  <font color="#888888">&lt;/node-template>
+&lt;/node-list></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;node-list>
+  &lt;node-template></font>
+    &lt;label>${ Name == null ? "&amp;lt;contact&amp;gt;" : Name }&lt;/label>
+  <font color="#888888">&lt;/node-template>
+&lt;/node-list></font></code></pre>
+    </td>
+  </tr>
+</table>
+
+<p>The following Eclipse search/replace regular expressions can be use to perform this
+migration:</p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;&lt;dynamic-label>\s*&lt;property>(.*)&lt;/property>\s*&lt;null-value-label>(.*)&lt;/null-value-label>\s*&lt;/dynamic-label></nobr><br/>
+<nobr>Replace: &nbsp;&lt;label>\$\{ \1 == null \? \"\2\" \: \1 \}&lt;/label></code></p>
 
 <a name="misc"><h2>Miscellaneous</h2></a>
 
