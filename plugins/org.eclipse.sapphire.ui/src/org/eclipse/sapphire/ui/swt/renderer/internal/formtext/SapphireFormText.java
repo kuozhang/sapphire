@@ -10,7 +10,7 @@
  *     Martin Donnelly (m2a3@eircom.net) - patch (see Bugzilla #145997) 
  *     Ling Hao - Fix for Bug 284393
  *******************************************************************************/
-package org.eclipse.sapphire.ui.forms.widgets;
+package org.eclipse.sapphire.ui.swt.renderer.internal.formtext;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -18,18 +18,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.sapphire.ui.internal.forms.widgets.ControlSegment;
-import org.eclipse.sapphire.ui.internal.forms.widgets.FormFonts;
-import org.eclipse.sapphire.ui.internal.forms.widgets.FormTextModel;
-import org.eclipse.sapphire.ui.internal.forms.widgets.FormUtil;
-import org.eclipse.sapphire.ui.internal.forms.widgets.IFocusSelectable;
-import org.eclipse.sapphire.ui.internal.forms.widgets.IHyperlinkSegment;
-import org.eclipse.sapphire.ui.internal.forms.widgets.ImageSegment;
-import org.eclipse.sapphire.ui.internal.forms.widgets.Locator;
-import org.eclipse.sapphire.ui.internal.forms.widgets.Paragraph;
-import org.eclipse.sapphire.ui.internal.forms.widgets.ParagraphSegment;
-import org.eclipse.sapphire.ui.internal.forms.widgets.SelectionData;
-import org.eclipse.sapphire.ui.internal.forms.widgets.TextSegment;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.accessibility.ACC;

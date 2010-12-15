@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.sapphire.ui.internal.forms.widgets;
+package org.eclipse.sapphire.ui.swt.renderer.internal.formtext;
 import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.widgets.Caret;

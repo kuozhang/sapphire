@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.sapphire.ui.internal.forms.widgets;
+package org.eclipse.sapphire.ui.swt.renderer.internal.formtext;
 
 import java.util.Hashtable;
 

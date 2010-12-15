@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.sapphire.ui.forms.widgets;
+package org.eclipse.sapphire.ui.swt.renderer.internal.formtext;
 import org.eclipse.swt.widgets.Composite;
 /**
  * Classes that extend abstract class Layout and implement this interface can

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Chriss Gross (schtoo@schtoo.com) - fix for 61670
  *******************************************************************************/
-package org.eclipse.sapphire.ui.internal.forms.widgets;
+package org.eclipse.sapphire.ui.swt.renderer.internal.formtext;
 
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.graphics.GC;

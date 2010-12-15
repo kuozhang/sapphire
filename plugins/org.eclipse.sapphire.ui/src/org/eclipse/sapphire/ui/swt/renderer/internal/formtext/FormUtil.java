@@ -9,7 +9,9 @@
  *     IBM Corporation - initial API and implementation
  *     Chriss Gross (schtoo@schtoo.com) - fix for 61670
  *******************************************************************************/
-package org.eclipse.sapphire.ui.internal.forms.widgets;
+package org.eclipse.sapphire.ui.swt.renderer.internal.formtext;
+
+import com.ibm.icu.text.BreakIterator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -34,8 +36,6 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ILayoutExtension;
-
-import com.ibm.icu.text.BreakIterator;
 
 public class FormUtil {
 	public static final String PLUGIN_ID = "org.eclipse.ui.forms"; //$NON-NLS-1$

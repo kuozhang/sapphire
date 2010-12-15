@@ -38,5 +38,6 @@ Require-Bundle: org.eclipse.debug.ui,
  org.eclipse.ui.views,
  org.eclipse.jface.text,
  org.apache.ant
+Import-Package: com.ibm.icu.text
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

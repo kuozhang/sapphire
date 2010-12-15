@@ -9,8 +9,9 @@
  *     IBM Corporation - initial API and implementation
  *     Konstantin Komissarchik - Fix for  Bug 316997 
  *******************************************************************************/
-package org.eclipse.sapphire.ui.internal.forms.widgets;
+package org.eclipse.sapphire.ui.swt.renderer.internal.formtext;
 
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -22,8 +23,6 @@ import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-
-import com.ibm.icu.text.BreakIterator;
 
 /**
  * @version 1.0

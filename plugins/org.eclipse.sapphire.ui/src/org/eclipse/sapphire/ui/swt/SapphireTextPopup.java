@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui.swt;
 
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.sapphire.ui.forms.widgets.SapphireFormText;
+import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;

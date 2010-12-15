@@ -24,7 +24,7 @@ import java.util.Set;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart.Event;
 import org.eclipse.sapphire.ui.def.ISapphireActionLinkDef;
-import org.eclipse.sapphire.ui.forms.widgets.SapphireFormText;
+import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;

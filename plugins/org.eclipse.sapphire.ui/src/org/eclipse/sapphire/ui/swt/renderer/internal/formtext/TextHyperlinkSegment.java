@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Ling Hao - Fix for Bug 284393
  *******************************************************************************/
-package org.eclipse.sapphire.ui.internal.forms.widgets;
+package org.eclipse.sapphire.ui.swt.renderer.internal.formtext;
 
 import java.util.Hashtable;
 
