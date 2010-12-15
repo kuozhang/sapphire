@@ -12,13 +12,13 @@
 package org.eclipse.sapphire.ui.swt;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.sapphire.ui.forms.widgets.SapphireFormText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.forms.widgets.FormText;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -52,7 +52,7 @@ public class SapphireTextPopup extends SapphirePopup {
             layout.marginLeft = 10;
             parent.setLayout(layout);
             
-            FormText text = new FormText(parent, SWT.NO_FOCUS | SWT.WRAP);
+            SapphireFormText text = new SapphireFormText(parent, SWT.NO_FOCUS | SWT.WRAP);
             
             final StringBuffer buffer = new StringBuffer();
             buffer.append( "<form>" ); //$NON-NLS-1$
