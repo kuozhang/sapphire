@@ -1,11 +1,28 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.sapphire.stage3"
+      label="Sapphire Build Stage 3"
+      version="0.3.0.qualifier"
+      provider-name="Eclipse">
 
-<feature id="org.eclipse.sapphire.stage3" label="Sapphire Build Stage 3" provider-name="Eclipse" version="0.2.0.qualifier">
+   <includes
+         id="org.eclipse.sapphire"
+         version="0.0.0"/>
 
-  <includes id="org.eclipse.sapphire" version="0.0.0"/>
-  <includes id="org.eclipse.sapphire.sdk" version="0.0.0"/>
-  <includes id="org.eclipse.sapphire.samples" version="0.0.0"/>
-  <includes id="org.eclipse.sapphire.tests" version="0.0.0"/>
-  <includes id="org.eclipse.sapphire.source" version="0.0.0"/>
+   <includes
+         id="org.eclipse.sapphire.sdk"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.sapphire.samples"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.sapphire.tests"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.sapphire.source"
+         version="0.0.0"/>
 
 </feature>

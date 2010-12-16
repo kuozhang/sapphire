@@ -1,9 +1,29 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.sapphire.stage2"
+      label="Sapphire Build Stage 2"
+      version="0.3.0.qualifier"
+      provider-name="Eclipse">
 
-<feature id="org.eclipse.sapphire.stage2" label="Sapphire Build Stage 2" provider-name="Eclipse" version="0.2.0.qualifier">
+   <plugin
+         id="org.eclipse.sapphire.modeling"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
-  <plugin download-size="0" id="org.eclipse.sapphire.modeling" install-size="0" unpack="false" version="0.0.0"/>
-  <plugin download-size="0" id="org.eclipse.sapphire.modeling.extensibility" install-size="0" unpack="false" version="0.0.0"/>
-  <plugin download-size="0" id="org.eclipse.sapphire.ui" install-size="0" unpack="false" version="0.0.0"/>
+   <plugin
+         id="org.eclipse.sapphire.modeling.extensibility"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.sapphire.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
