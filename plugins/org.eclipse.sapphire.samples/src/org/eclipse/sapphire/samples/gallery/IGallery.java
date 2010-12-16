@@ -13,11 +13,14 @@ package org.eclipse.sapphire.samples.gallery;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
+import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 
 /**
@@ -115,6 +118,36 @@ public interface IGallery
     ImpliedElementProperty PROP_BROWSE_SUPPORT_GALLERY = new ImpliedElementProperty( TYPE, "BrowseSupportGallery" );
     
     IBrowseSupportGallery getBrowseSupportGallery();
+    
+    // *** HomogeneousList ***
+    
+    @Type( base = IListItem.class )
+    @Label( standard = "homogeneous list")
+    @XmlListBinding( path = "homogeneous-list", mappings = @XmlListBinding.Mapping( element = "item", type = IListItem.class ) )
+    
+    ListProperty PROP_HOMOGENEOUS_LIST = new ListProperty( TYPE, "HomogeneousList" );
+    
+    ModelElementList<IListItem> getHomogeneousList();
+    
+    // *** HeterogeneousList ***
+    
+    @Type( base = IListItem.class, possible = { IListItem.class, IListItemWithInteger.class, IListItemWithEnum.class } )
+    @Label( standard = "heterogeneous list" )
+    
+    @XmlListBinding
+    (
+        path = "heterogeneous-list", 
+        mappings = 
+        {
+            @XmlListBinding.Mapping( element = "item", type = IListItem.class ),
+            @XmlListBinding.Mapping( element = "item-with-integer", type = IListItemWithInteger.class ),
+            @XmlListBinding.Mapping( element = "item-with-enum", type = IListItemWithEnum.class )
+        }
+    )
+    
+    ListProperty PROP_HETEROGENEOUS_LIST = new ListProperty( TYPE, "HeterogeneousList" );
+    
+    ModelElementList<IListItem> getHeterogeneousList();
 
     // *** MultiSelectListGallery ***
     

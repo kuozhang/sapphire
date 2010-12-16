@@ -44,7 +44,7 @@ public final class HtmlPropertyEditorRenderer
     private Browser browser;
     
     public HtmlPropertyEditorRenderer( final SapphireRenderingContext context,
-                                        final SapphirePropertyEditor part )
+                                       final SapphirePropertyEditor part )
     {
         super( context, part );
     }

@@ -32,7 +32,7 @@
     </documentation>
     <root-node>
       <node>
-        <label>Simple Values</label>
+        <label>Values</label>
         <section>
           <description>In some situations, the description text for say a section gets a bit long. The approach we've adopted is to include the summary in the section and then add section level help content. ###brk###This adequate, but may not be as intuitive as say a "More details..." link at the end of the on-screen description text with that pops up a tooltip-style window with complete information.</description>
         </section>
@@ -289,6 +289,189 @@
         </node>
       </node>
       <node>
+        <label>Lists</label>
+        <node>
+          <label>Homogeneous</label>
+          <section>
+            <description>A list with one possible element type.</description>
+            <content>
+              <action-link>
+                <action-id>Sapphire.Add</action-id>
+                <label>Add a list item</label>
+              </action-link>
+            </content>
+          </section>
+          <section>
+            <label>List</label>
+            <content>
+              <property-editor>
+                <property>HomogeneousList</property>
+                <hint>
+                  <name>show.label</name>
+                  <value>false</value>
+                </hint>
+              </property-editor>
+            </content>
+          </section>
+          <node-list>
+            <property>HomogeneousList</property>
+            <node-template>
+              <label>${ StringValue == null ? "&lt;item&gt;" : StringValue }</label>
+              <section>
+                <label>List Item</label>
+                <content>
+                  <property-editor>StringValue</property-editor>
+                </content>
+              </section>
+            </node-template>
+          </node-list>
+        </node>
+        <node>
+          <label>Heterogeneous</label>
+          <section>
+            <description>A list with multiple possible element types.</description>
+            <content>
+              <action-link>
+                <action-id>Sapphire.Add</action-id>
+                <action-handler-id>Sapphire.Add.IListItem</action-handler-id>
+                <label>Add a basic list item</label>
+              </action-link>
+              <action-link>
+                <action-id>Sapphire.Add</action-id>
+                <action-handler-id>Sapphire.Add.IListItemWithInteger</action-handler-id>
+                <label>Add a list item with integer</label>
+              </action-link>
+              <action-link>
+                <action-id>Sapphire.Add</action-id>
+                <action-handler-id>Sapphire.Add.IListItemWithEnum</action-handler-id>
+                <label>Add a list item with enum</label>
+              </action-link>
+            </content>
+          </section>
+          <section>
+            <label>List</label>
+            <content>
+              <property-editor>
+                <property>HeterogeneousList</property>
+                <hint>
+                  <name>show.label</name>
+                  <value>false</value>
+                </hint>
+              </property-editor>
+              <separator>
+                <label>Details</label>
+              </separator>
+              <switching-panel>
+                <list-selection-controller>
+                  <property>HeterogeneousList</property>
+                </list-selection-controller>
+                <panel>
+                  <key>IListItemWithInteger</key>
+                  <content>
+                    <property-editor>StringValue</property-editor>
+                    <property-editor>IntegerValue</property-editor>
+                  </content>
+                </panel>
+                <panel>
+                  <key>IListItemWithEnum</key>
+                  <content>
+                    <property-editor>StringValue</property-editor>
+                    <property-editor>EnumValue</property-editor>
+                  </content>
+                </panel>
+                <panel>
+                  <key>IListItem</key>
+                  <content>
+                    <property-editor>StringValue</property-editor>
+                  </content>
+                </panel>
+                <default-panel>
+                  <content>
+                    <label>Select a list item above to view or edit additional parameters.</label>
+                  </content>
+                </default-panel>
+              </switching-panel>
+            </content>
+          </section>
+          <node-list>
+            <property>HeterogeneousList</property>
+            <node-template>
+              <model-element-type>IListItemWithInteger</model-element-type>
+              <label>${ StringValue == null ? "&lt;item-with-integer&gt;" : StringValue }</label>
+              <section>
+                <label>List Item With Integer</label>
+                <content>
+                  <property-editor>StringValue</property-editor>
+                  <property-editor>IntegerValue</property-editor>
+                </content>
+              </section>
+            </node-template>
+            <node-template>
+              <model-element-type>IListItemWithEnum</model-element-type>
+              <label>${ StringValue == null ? "&lt;item-with-enum&gt;" : StringValue }</label>
+              <section>
+                <label>List Item With Enum</label>
+                <content>
+                  <property-editor>StringValue</property-editor>
+                  <property-editor>EnumValue</property-editor>
+                </content>
+              </section>
+            </node-template>
+            <node-template>
+              <model-element-type>IListItem</model-element-type>
+              <label>${ StringValue == null ? "&lt;item&gt;" : StringValue }</label>
+              <section>
+                <label>List Item</label>
+                <content>
+                  <property-editor>StringValue</property-editor>
+                </content>
+              </section>
+            </node-template>
+          </node-list>
+        </node>
+        <node>
+          <label>Multi-Select</label>
+          <property>MultiSelectListGallery</property>
+          <section>
+            <content>
+              <label>
+                One common requirement is to allow the user to select zero or more items from a set of
+                possible values. This is modeled with a list property whose entry type has a single value
+                property. The value property must be decorated with one of the @PossibleValues annotations.
+                The list property must be decorated with @NoDuplicates annotation.
+              </label> 
+              <spacer/>
+              <label>
+                The slush bucket is the default property editor type. 
+              </label> 
+              <property-editor>
+                <property>List</property>
+                <hint>
+                  <name>show.label</name>
+                  <value>false</value>
+                </hint>
+              </property-editor>
+              <spacer/>
+              <label>
+                The checkbox list is an alternate property editor type that may work better in some cases. To use it,
+                specify CheckBoxListPropertyEditorRenderer$Factory for factory hint. The property editor is located in
+                the org.eclipse.sapphire.ui.renderers.swt package.</label> 
+              <property-editor>
+                <property>List</property>
+                <hint>
+                  <name>show.label</name>
+                  <value>false</value>
+                </hint>
+                <hint>
+                  <name>factory</name>
+                  <value>CheckBoxListPropertyEditorRenderer$Factory</value>
+                </hint>
+              </property-editor>
+            </content>
+          </section>
+        </node>
+      </node>
+      <node>
         <label>Enablement</label>
         <property>EnablementGallery</property>
         <section>
@@ -391,47 +574,6 @@
                   </param>
                 </action-handler>
               </child-property>
-            </property-editor>
-          </content>
-        </section>
-      </node>
-      <node>
-        <label>Multi-Select Lists</label>
-        <property>MultiSelectListGallery</property>
-        <section>
-          <content>
-            <label>
-              One common requirement is to allow the user to select zero or more items from a set of
-              possible values. This is modeled with a list property whose entry type has a single value
-              property. The value property must be decorated with one of the @PossibleValues annotations.
-              The list property must be decorated with @NoDuplicates annotation.
-            </label> 
-            <spacer/>
-            <label>
-              The slush bucket is the default property editor type. 
-            </label> 
-            <property-editor>
-              <property>List</property>
-              <hint>
-                <name>show.label</name>
-                <value>false</value>
-              </hint>
-            </property-editor>
-            <spacer/>
-            <label>
-              The checkbox list is an alternate property editor type that may work better in some cases. To use it,
-              specify CheckBoxListPropertyEditorRenderer$Factory for factory hint. The property editor is located in
-              the org.eclipse.sapphire.ui.renderers.swt package.</label> 
-            <property-editor>
-              <property>List</property>
-              <hint>
-                <name>show.label</name>
-                <value>false</value>
-              </hint>
-              <hint>
-                <name>factory</name>
-                <value>CheckBoxListPropertyEditorRenderer$Factory</value>
-              </hint>
             </property-editor>
           </content>
         </section>

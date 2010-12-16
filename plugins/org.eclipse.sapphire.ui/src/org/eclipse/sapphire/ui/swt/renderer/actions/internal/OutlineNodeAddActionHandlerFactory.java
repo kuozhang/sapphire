@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -76,6 +77,7 @@ public final class OutlineNodeAddActionHandlerFactory
             this.type = type;
             
             setId( ID_BASE + type.getSimpleName() );
+            setLabel( type.getLabel( true, CapitalizationType.NO_CAPS, false ) );
         }
 
         @Override

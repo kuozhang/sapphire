@@ -47,6 +47,7 @@ public final class SapphireActionLink
     {
         final ISapphireActionLinkDef def = (ISapphireActionLinkDef) this.definition;
         final String actionId = def.getActionId().getContent();
+        final String actionHandlerId = def.getActionHandlerId().getContent();
         final SapphireAction action = getAction( actionId );
         final String labelText = def.getLabel().getLocalizedText();
         final boolean showImage = def.getShowImage().getContent();
@@ -100,7 +101,23 @@ public final class SapphireActionLink
                     @Override
                     public void linkActivated( final HyperlinkEvent event )
                     {
-                        final SapphireActionHandler handler = action.getFirstActiveHandler();
+                        SapphireActionHandler handler = null;
+                        
+                        if( actionHandlerId == null )
+                        {
+                            handler = action.getFirstActiveHandler();
+                        }
+                        else
+                        {
+                            for( SapphireActionHandler h : action.getActiveHandlers() )
+                            {
+                                if( h.getId().equalsIgnoreCase( actionHandlerId ) )
+                                {
+                                    handler = h;
+                                    break;
+                                }
+                            }
+                        }
                         
                         if( handler != null )
                         {

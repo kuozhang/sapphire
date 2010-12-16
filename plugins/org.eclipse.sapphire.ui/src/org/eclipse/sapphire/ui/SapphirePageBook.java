@@ -15,7 +15,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
@@ -53,7 +53,7 @@ public abstract class SapphirePageBook
         
         final ISapphirePageBookDef def = (ISapphirePageBookDef) this.definition;
         
-        this.pageDefs = new HashMap<Object,ISapphireCompositeDef>();
+        this.pageDefs = new LinkedHashMap<Object,ISapphireCompositeDef>();
         
         for( ISapphirePageBookKeyMapping page : def.getPages() )
         {

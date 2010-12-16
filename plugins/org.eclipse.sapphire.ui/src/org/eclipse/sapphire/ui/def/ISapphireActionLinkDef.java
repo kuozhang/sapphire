@@ -17,6 +17,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
@@ -38,12 +39,13 @@ public interface ISapphireActionLinkDef
     // *** Label ***
     
     @Label( standard = "label" )
+    @NonNullValue
     @XmlBinding( path = "label" )
     
     ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
     
     Value<String> getLabel();
-    void setLabel( String label );
+    void setLabel( String value );
     
     // *** ShowImage ***
     
@@ -55,17 +57,28 @@ public interface ISapphireActionLinkDef
     ValueProperty PROP_SHOW_IMAGE = new ValueProperty( TYPE, "ShowImage" );
     
     Value<Boolean> getShowImage();
-    void setShowImage( String showImage );
-    void setShowImage( Boolean showImage );
+    void setShowImage( String value );
+    void setShowImage( Boolean value );
     
     // *** ActionId ***
     
     @Label( standard = "action id" )
+    @NonNullValue
     @XmlBinding( path = "action-id" )
     
     ValueProperty PROP_ACTION_ID = new ValueProperty( TYPE, "ActionId" );
     
     Value<String> getActionId();
-    void setActionId( String actionId );
+    void setActionId( String value );
     
+    // *** ActionHandlerId ***
+    
+    @Label( standard = "action handler id" )
+    @XmlBinding( path = "action-handler-id" )
+    
+    ValueProperty PROP_ACTION_HANDLER_ID = new ValueProperty( TYPE, "ActionHandlerId" );
+    
+    Value<String> getActionHandlerId();
+    void setActionHandlerId( String value );
+
 }

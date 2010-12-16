@@ -732,6 +732,34 @@ changed to override SapphireModelCondition instead.</p>
   </tr>
 </table>    
 
+<p>Defined by referencing existing action handler:</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;content></font>
+    &lt;action-link>
+        &lt;action-id>node:add:IListItemWithInteger&lt;/action-id>
+        &lt;label>Add a list item with integer&lt;/label>
+    &lt;/action-link>
+<font color="#888888">&lt;/content></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;content></font>
+    &lt;action-link>
+        &lt;action-id>Sapphire.Add&lt;/action-id>
+        &lt;action-handler-id>Sapphire.Add.IListItemWithInteger&lt;/action-handler-id>
+        &lt;label>Add a list item with integer&lt;/label>
+    &lt;/action-link>
+<font color="#888888">&lt;/content></font></code></pre>
+    </td>
+  </tr>
+</table>    
+
 <p>Defined with inline action implementation:</p>
 
 <table>
