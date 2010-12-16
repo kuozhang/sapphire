@@ -823,6 +823,7 @@
               </unzip>
             </then>
             <else>
+              <delete file="${.download}.tar" quiet="true"/>
               <gunzip src="${.download}" dest="${.download}.tar"/>
               <untar src="${.download}.tar" dest="@{dest}">
                 <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
