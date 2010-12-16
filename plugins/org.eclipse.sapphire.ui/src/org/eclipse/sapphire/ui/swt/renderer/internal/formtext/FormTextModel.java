@@ -23,7 +23,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.internal.win32.OS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.HyperlinkSettings;
 import org.w3c.dom.Document;
@@ -35,7 +34,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-@SuppressWarnings(value = { "unqualified-field-access", "unchecked", "rawtypes", "restriction" })
+@SuppressWarnings(value = { "unqualified-field-access", "unchecked", "rawtypes" })
 public class FormTextModel {
 	
 	/*
@@ -70,7 +69,7 @@ public class FormTextModel {
 	
 	private Color activeForeground;
 	
-	static final RGB LINK_FOREGROUND = new RGB (0, 51, 153);
+	private static final RGB LINK_FOREGROUND = new RGB (0, 102, 204);
 
 	public static final String BOLD_FONT_ID = "f.____bold"; //$NON-NLS-1$
 
@@ -579,9 +578,10 @@ public class FormTextModel {
 			Display display = SWTUtil.getStandardDisplay();
 			hyperlinkSettings = new HyperlinkSettings(display);
 
-			// Setting link foreground color copied from Link
-			if (!OS.IsWinCE && OS.WIN32_VERSION >= OS.VERSION (4, 10)) {
-				activeForeground = Color.win32_new (display, OS.GetSysColor (OS.COLOR_HOTLIGHT));
+			// Setting link foreground color for windows 7
+			final String osName = System.getProperty("os.name");  //$NON-NLS-1$
+			if (osName.toLowerCase().startsWith("windows 7")) {  //$NON-NLS-1$
+				activeForeground = new Color(display, LINK_FOREGROUND);
 				hyperlinkSettings.setForeground(activeForeground);
 			}
 		}
