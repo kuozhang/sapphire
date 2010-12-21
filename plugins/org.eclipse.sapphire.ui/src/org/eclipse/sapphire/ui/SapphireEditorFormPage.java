@@ -142,6 +142,10 @@ public abstract class SapphireEditorFormPage
                             {
                                 range.merge( domElement.getStartEndOffset(), domElement.getEndStartOffset() );
                             }
+                            else
+                            {
+                                range.merge( domNode.getStartOffset(), domNode.getEndOffset() );
+                            }
                         }
                         else if( domNode instanceof IDOMAttr )
                         {
