@@ -287,6 +287,42 @@
             </content>
           </section>
         </node>
+        <node>
+          <label>Custom</label>
+          <property>CustomValueGallery</property>
+          <section>
+            <content>
+              <label>
+                Sapphire can hold any object in a value property as long as a serialization service 
+                is provided (string encode and decode logic). It is recommended that the value object
+                is immutable.
+              </label>
+              <spacer/>
+              <label>
+                There are two ways to specify the serialization service. One approach is to use
+                @ValueSerilization annotation to attach the service to a specific property (Rectangle example).
+                Another approach is to use Sapphire extension system to attach the service globally for
+                a given object type (Circle example). 
+              </label>
+              <spacer/>
+              <property-editor>
+                <property>Rectangle</property>
+                <hint>
+                  <name>aux.text</name>
+                  <value>x, y, width, height</value>
+                </hint>
+              </property-editor>
+              <spacer/>
+              <property-editor>
+                <property>Circle</property>
+                <hint>
+                  <name>aux.text</name>
+                  <value>x, y, radius</value>
+                </hint>
+              </property-editor>
+            </content>
+          </section>
+        </node>
       </node>
       <node>
         <label>Lists</label>

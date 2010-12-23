@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling;
 
+import static org.eclipse.sapphire.modeling.localization.LocalizationUtil.transformCamelCaseToLabel;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.Validator;
 import org.eclipse.sapphire.modeling.annotations.Validators;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -255,28 +258,15 @@ public abstract class ModelProperty
     }
     
     @Override
-    public String getResource( final String key )
+    protected final String getDefaultLabel()
     {
-        String resource = this.modelElementType.getResource( key );
-        
-        if( resource == null && this.baseProperty != null )
-        {
-            resource = this.baseProperty.getResource( key );
-        }
-        
-        return resource;
-    }
-
-    @Override
-    protected String getLabelResourceKeyBase()
-    {
-        return this.propertyName;
+        return transformCamelCaseToLabel( this.propertyName );
     }
     
     @Override
-    protected String getDefaultLabel()
+    public final LocalizationService getLocalizationService()
     {
-        return transformCamelCaseToLabel( this.propertyName );
+        return this.modelElementType.getLocalizationService();
     }
 
     public ModelProperty refine( final ModelElementType type )

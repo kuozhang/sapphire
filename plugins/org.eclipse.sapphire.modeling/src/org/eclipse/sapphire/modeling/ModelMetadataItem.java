@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -53,11 +54,9 @@ public abstract class ModelMetadataItem
         return ( getAnnotation( type ) != null );
     }
     
-    public abstract String getResource( final String key );
-    
-    public String getLabel( final boolean longLabel,
-                            final CapitalizationType capitalizationType,
-                            final boolean includeMnemonic )
+    public final String getLabel( final boolean longLabel,
+                                  final CapitalizationType capitalizationType,
+                                  final boolean includeMnemonic )
     {
         String labelText = null;
 
@@ -65,18 +64,14 @@ public abstract class ModelMetadataItem
         
         if( labelAnnotation != null )
         {
-            final String labelResourceKeyBase = getLabelResourceKeyBase();
-            
             if( longLabel )
             {
-                final String labelResourceKey = labelResourceKeyBase + ".full";
-                labelText = getResource( labelResourceKey );
+                labelText = labelAnnotation.full().trim();
             }
             
-            if( labelText == null )
+            if( labelText == null || labelText.length() == 0 )
             {
-                final String labelResourceKey = labelResourceKeyBase + ".standard";
-                labelText = getResource( labelResourceKey );
+                labelText = labelAnnotation.standard().trim();
             }
         }
         
@@ -99,40 +94,14 @@ public abstract class ModelMetadataItem
         
         if( transformNeeded )
         {
-            labelText = LabelTransformer.transform( labelText, capitalizationType, includeMnemonic );
+            labelText = getLocalizationService().string( labelText, capitalizationType, includeMnemonic );
         }
         
         return labelText;
     }
     
-    protected abstract String getLabelResourceKeyBase();
-    
     protected abstract String getDefaultLabel();
     
-    protected final String transformCamelCaseToLabel( final String value )
-    {
-        final StringBuilder label = new StringBuilder();
-        
-        for( int i = 0, n = value.length(); i < n; i++ )
-        {
-            final char ch = value.charAt( i );
-            
-            if( Character.isUpperCase( ch ) )
-            {
-                if( label.length() > 0 )
-                {
-                    label.append( ' ' );
-                }
-                
-                label.append( Character.toLowerCase( ch ) );
-            }
-            else
-            {
-                label.append( ch );
-            }
-        }
-        
-        return label.toString();
-    }
+    public abstract LocalizationService getLocalizationService();
     
 }

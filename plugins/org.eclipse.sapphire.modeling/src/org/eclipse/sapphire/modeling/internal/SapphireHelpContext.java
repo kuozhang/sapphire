@@ -17,7 +17,6 @@ import org.eclipse.help.IHelpResource;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.LabelTransformer;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelMetadataItem;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -31,6 +30,7 @@ import org.eclipse.sapphire.modeling.annotations.DocumentationProviderImpl;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.util.internal.DocumentationUtil;
 import org.eclipse.sapphire.modeling.util.internal.SapphireCommonUtil;
 
@@ -128,7 +128,9 @@ public class SapphireHelpContext implements IContext, IContext2 {
             strategy = documentation.mergeStrategy();
         }
         
-        String res = property.getResource( key + ".documentation" );  //$NON-NLS-1$
+        final LocalizationService localization = property.getLocalizationService();
+        
+        String res = localization.string( documentation.content(), CapitalizationType.NO_CAPS, false );
         if (strategy == DocumentationMergeStrategy.PREPEND) {
             prependContent(res);
         } else {
@@ -141,8 +143,7 @@ public class SapphireHelpContext implements IContext, IContext2 {
         
         for( int i = 0, n = relatedTopicAnnotations.length; i < n; i++ ) {
             final Topic topic = relatedTopicAnnotations[ i ];
-            final String labelRes = property.getResource( key + ".topic." + topic.href() );  //$NON-NLS-1$
-            final String label = LabelTransformer.transform( labelRes, CapitalizationType.TITLE_STYLE, false );
+            final String label = localization.string( topic.label(), CapitalizationType.TITLE_STYLE, false );
             
             topics[i] = new IHelpResource() {
                 public String getHref() {

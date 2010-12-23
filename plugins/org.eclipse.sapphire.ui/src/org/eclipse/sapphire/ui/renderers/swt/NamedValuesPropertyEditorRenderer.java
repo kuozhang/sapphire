@@ -23,7 +23,6 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.LabelTransformer;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -76,7 +75,6 @@ public final class NamedValuesPropertyEditorRenderer
     {
         final SapphirePropertyEditor part = getPart();
         final ValueProperty property = (ValueProperty) part.getProperty();
-        final String propName = property.getName();
         
         this.rootComposite = new Composite( parent, SWT.NONE )
         {
@@ -116,8 +114,8 @@ public final class NamedValuesPropertyEditorRenderer
         {
             final NamedValue x = namedValueAnnotations[ i ];
             
-            String namedValueLabel = property.getResource( propName + ".namedValue." + x.value() );
-            namedValueLabel = LabelTransformer.transform( namedValueLabel, CapitalizationType.FIRST_WORD_ONLY, true );
+            final String namedValueLabel 
+                = property.getLocalizationService().string( x.label(), CapitalizationType.FIRST_WORD_ONLY, true );
             
             this.namedValues[ i ] = new NamedValueLocal( x.value(), namedValueLabel );
         }
@@ -159,9 +157,8 @@ public final class NamedValuesPropertyEditorRenderer
         radioButtonsComposite.setLayout( glayout( 2, 0, 0, 0, 0 ) );
         decorator.addEditorControl( radioButtonsComposite );
         
-        String arbitraryValueLabel = property.getResource( propName + ".arbitraryValue" );
-        arbitraryValueLabel = LabelTransformer.transform( arbitraryValueLabel, CapitalizationType.FIRST_WORD_ONLY, true );
-        arbitraryValueLabel = arbitraryValueLabel + ":";
+        final String arbitraryValueLabel 
+            = property.getLocalizationService().string( namedValuesAnnotation.arbitraryValueLabel(), CapitalizationType.FIRST_WORD_ONLY, true ) + ":";
     
         this.arbitraryValueRadioButton = createRadioButton( radioButtonsComposite, arbitraryValueLabel );
         this.arbitraryValueRadioButton.setLayoutData( gd() );

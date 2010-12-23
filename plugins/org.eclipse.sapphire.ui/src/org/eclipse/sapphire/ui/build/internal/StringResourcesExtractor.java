@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import org.eclipse.sapphire.modeling.localization.LocalizationUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -63,46 +64,37 @@ public final class StringResourcesExtractor
             return null;
         }
         
-        final Set<String> resources = new HashSet<String>();
+        final Set<String> strings = new HashSet<String>();
         
-        gatherStringResources( root, resources );
+        gather( root, strings );
         
-        if( resources.isEmpty() )
+        if( strings.isEmpty() )
         {
             return null;
         }
         
         // Build a lookup table with synthesized resource keys.
         
-        final Properties resourceLookupTable = new Properties();
+        final Properties resources = new Properties();
         
-        for( String str : resources )
+        for( String string : strings )
         {
-            final String key = generateResourceKey( str );
-            String keyAlt = key;
-            int counter = 0;
-            
-            while( resourceLookupTable.containsKey( keyAlt ) )
-            {
-                counter++;
-                keyAlt = key + String.valueOf( counter );
-            }
-            
-            resourceLookupTable.put( keyAlt, str );
+            final String digest = LocalizationUtil.createStringDigest( string );
+            resources.put( digest, string );
         }
         
         // Serialize the resources file content and return it to caller.
         
         final ByteArrayOutputStream resourcesFileContentBytes = new ByteArrayOutputStream();
-        resourceLookupTable.store( resourcesFileContentBytes, null );
+        resources.store( resourcesFileContentBytes, null );
 
         final String resourcesFileContent = new String( resourcesFileContentBytes.toByteArray() );
 
         return resourcesFileContent;
     }
 
-    private static void gatherStringResources( final Element element,
-                                               final Set<String> resources )
+    private static void gather( final Element element,
+                                final Set<String> strings )
     {
         if( LOCALIZABLE_ELEMENTS.contains( element.getLocalName() ) )
         {
@@ -114,45 +106,15 @@ public final class StringResourcesExtractor
                 
                 if( text.length() != 0 )
                 {
-                    resources.add( text );
+                    strings.add( text );
                 }
             }
         }
         
         for( Element child : elements( element ) )
         {
-            gatherStringResources( child, resources );
+            gather( child, strings );
         }
-    }
-    
-    private static String generateResourceKey( final String str)
-    {
-        final StringBuilder buf = new StringBuilder();
-        
-        if( str.length() > 20 )
-        {
-            buf.append( str.substring( 0, 20 ) );
-        }
-        else
-        {
-            buf.append( str );
-        }
-        
-        for( int i = 0, n = buf.length(); i < n; i++ )
-        {
-            final char ch = buf.charAt( i );
-            
-            if( ch >= 'a' && ch <= 'z' )
-            {
-                buf.setCharAt( i, Character.toUpperCase( ch ) );
-            }
-            else if( ! ( ch >= 'A' && ch <= 'Z' ) && ! ( ch >= '0' && ch <= '9' ) )
-            {
-                buf.setCharAt( i, '_' );
-            }
-        }
-        
-        return buf.toString();
     }
     
 }

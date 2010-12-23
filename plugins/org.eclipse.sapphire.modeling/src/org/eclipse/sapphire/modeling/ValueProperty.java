@@ -11,10 +11,8 @@
 
 package org.eclipse.sapphire.modeling;
 
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.URL;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -179,68 +177,7 @@ public final class ValueProperty
         
         final Class<?> type = getTypeClass();
         
-        if( Boolean.class.isAssignableFrom( type ) )
-        {
-            validators.add( new BasicValueValidator( "boolean" ) );
-        }
-        else if( Integer.class.isAssignableFrom( type ) )
-        {
-            validators.add( new BasicValueValidator( "integer" ) );
-        }
-        else if( Long.class.isAssignableFrom( type ) )
-        {
-            validators.add( new BasicValueValidator( "long integer" ) );
-        }
-        else if( Float.class.isAssignableFrom( type ) )
-        {
-            validators.add( new BasicValueValidator( "single precision floating point number" ) );
-        }
-        else if( Double.class.isAssignableFrom( type ) )
-        {
-            validators.add( new BasicValueValidator( "double precision floating point number" ) );
-        }
-        else if( BigInteger.class.isAssignableFrom( type ) )
-        {
-            validators.add( new BasicValueValidator( "integer" ) );
-        }
-        else if( BigDecimal.class.isAssignableFrom( type ) )
-        {
-            validators.add( new BasicValueValidator( "decimal" ) );
-        }
-        else if( Enum.class.isAssignableFrom( type ) )
-        {
-            EnumValueType enumValueType = null;
-            
-            for( Field field : type.getFields() )
-            {
-                if( field.getName().equals( "TYPE" ) ) //$NON-NLS-1$
-                {
-                    try
-                    {
-                        final Object fieldValue = field.get( null );
-                        
-                        if( fieldValue instanceof EnumValueType )
-                        {
-                            enumValueType = (EnumValueType) fieldValue;
-                            break;
-                        }
-                    }
-                    catch( IllegalAccessException e )
-                    {
-                        throw new RuntimeException( e );
-                    }
-                }
-            }
-            
-            if( enumValueType == null )
-            {
-                enumValueType = new EnumValueType( type );
-            }
-            
-            final String enumTypeLabel = enumValueType.getLabel( true, CapitalizationType.NO_CAPS, false );
-            validators.add( new BasicValueValidator( enumTypeLabel ) );
-        }
-        else if( JavaPackageName.class.isAssignableFrom( type ) )
+        if( JavaPackageName.class.isAssignableFrom( type ) )
         {
             validators.add( new QualifiedJavaIdentifierValueValidator() );
         }
@@ -264,9 +201,9 @@ public final class ValueProperty
                 validators.add( new EclipseWorkspacePathValueValidator( this ) );
             }
         }
-        else if( URL.class.isAssignableFrom( type ) )
+        else if( ! String.class.isAssignableFrom( type ) )
         {
-            validators.add( new BasicValueValidator( "URL" ) );
+            validators.add( new BasicValueValidator() );
         }
         
         if( PossibleValuesValidator.isNecessary( this ) )

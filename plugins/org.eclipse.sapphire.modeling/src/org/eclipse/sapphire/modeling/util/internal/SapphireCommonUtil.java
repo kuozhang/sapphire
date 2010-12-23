@@ -18,11 +18,11 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.DefaultValueService;
 import org.eclipse.sapphire.modeling.EnumValueType;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.LabelTransformer;
 import org.eclipse.sapphire.modeling.ValueKeyword;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NamedValues;
 import org.eclipse.sapphire.modeling.annotations.NamedValues.NamedValue;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -30,7 +30,8 @@ import org.eclipse.sapphire.modeling.annotations.NamedValues.NamedValue;
 
 public class SapphireCommonUtil {
     
-    public final static String getDefaultValueLabel(final IModelElement modelElement, final ValueProperty property) 
+    public final static String getDefaultValueLabel( final IModelElement modelElement, 
+                                                     final ValueProperty property ) 
     {
         String defaultValue = modelElement.service( property, DefaultValueService.class ).getDefaultValue();
         
@@ -51,26 +52,21 @@ public class SapphireCommonUtil {
             }
             else
             {
-                ValueKeyword keyword = property.getKeyword( defaultValue );
+                final ValueKeyword keyword = property.getKeyword( defaultValue );
                 
                 if( keyword != null )
                 {
                     defaultValue = keyword.toDisplayString();
                 }
-                else if ( property.hasAnnotation( NamedValues.class ) ) 
+                else if( property.hasAnnotation( NamedValues.class ) ) 
                 {
-                    final NamedValues namedValuesAnnotation = property.getAnnotation( NamedValues.class );
-                    final NamedValue[] namedValueAnnotations = namedValuesAnnotation.namedValues();
-                    final String propName = property.getName();
-
-                    for( int i = 0, n = namedValueAnnotations.length; i < n; i++ )
+                    final LocalizationService localization = property.getLocalizationService();
+                    
+                    for( NamedValue x : property.getAnnotation( NamedValues.class ).namedValues() )
                     {
-                        final NamedValue x = namedValueAnnotations[ i ];
-                        
-                        if ( defaultValue.equals(x.value()) ) 
+                        if( defaultValue.equals( x.value() ) ) 
                         {
-                            String namedValueLabel = property.getResource( propName + ".namedValue." + x.value() );
-                            namedValueLabel = LabelTransformer.transform( namedValueLabel, CapitalizationType.NO_CAPS, true );
+                            String namedValueLabel = localization.string( x.label(), CapitalizationType.NO_CAPS, false );
                             defaultValue = namedValueLabel + " (" + x.value() + ")";
                             break;
                         }
@@ -89,6 +85,7 @@ public class SapphireCommonUtil {
                 defaultValue = "\"" + defaultValue + "\"";
             }
         }
+        
         return defaultValue;
     }
 
