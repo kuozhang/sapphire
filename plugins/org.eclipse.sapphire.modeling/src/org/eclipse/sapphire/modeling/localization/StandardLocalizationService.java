@@ -26,27 +26,36 @@ public abstract class StandardLocalizationService
     extends LocalizationService
     
 {
-    private final Map<String,String> sourceLangToTranslation;
+    private final Locale locale;
+    private Map<String,String> sourceLangToTranslation;
     
     public StandardLocalizationService( final Locale locale )
     {
-        final Map<String,String> keyToSource = new HashMap<String,String>();
-        final Map<String,String> keyToTranslation = new HashMap<String,String>();
-        
-        load( Locale.ENGLISH, keyToSource );
-        load( locale, keyToTranslation );
-        
-        this.sourceLangToTranslation = new HashMap<String,String>();
-        
-        for( Map.Entry<String,String> entry : keyToSource.entrySet() )
+        this.locale = locale;
+    }
+    
+    protected final synchronized void init()
+    {
+        if( this.sourceLangToTranslation == null )
         {
-            final String key = entry.getKey();
-            final String source = entry.getValue();
-            final String translation = keyToTranslation.get( key );
+            final Map<String,String> keyToSource = new HashMap<String,String>();
+            final Map<String,String> keyToTranslation = new HashMap<String,String>();
             
-            if( translation != null )
+            load( Locale.ENGLISH, keyToSource );
+            load( locale, keyToTranslation );
+            
+            this.sourceLangToTranslation = new HashMap<String,String>();
+            
+            for( Map.Entry<String,String> entry : keyToSource.entrySet() )
             {
-                this.sourceLangToTranslation.put( source, translation );
+                final String key = entry.getKey();
+                final String source = entry.getValue();
+                final String translation = keyToTranslation.get( key );
+                
+                if( translation != null )
+                {
+                    this.sourceLangToTranslation.put( source, translation );
+                }
             }
         }
     }
@@ -58,6 +67,8 @@ public abstract class StandardLocalizationService
                           final CapitalizationType capitalizationType,
                           final boolean includeMnemonic )
     {
+        init();
+        
         String result = this.sourceLangToTranslation.get( sourceLangString );
         
         if( result == null )

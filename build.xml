@@ -152,8 +152,12 @@
             <zip-dirs source.dir="${build.dir}/repository/temp" dest.dir="${build.dir}/repository/plugins" suffix="jar"/>
 
             <delete dir="${build.dir}/repository/temp"/>
-
+            
             <!-- Stage 5 -->
+            
+            <build-samples-test-translation/>
+
+            <!-- Stage 6 -->
 
             <echo message="Packaging the repository..."/>
 
@@ -197,8 +201,124 @@
 
     </sequential>
   </macrodef>
+  
 
+  <macrodef name="build-samples-test-translation">
+    <sequential>
+    
+      <echo message="Generating samples test translation..."/>
+            
+      <property name=".work.area" value="${build.dir}/samples-translation"/>
+    
+      <delete dir="${.work.area}" quiet="true"/>
+      <mkdir dir="${.work.area}"/>
+    
+      <property-from-set property=".samples.plugin">
+        <fileset dir="${build.dir}/repository/plugins" includes="org.eclipse.sapphire.samples_*.jar"/>
+      </property-from-set>
+    
+      <mkdir dir="${.work.area}/english"/>
+    
+      <unzip src="${.samples.plugin}" dest="${.work.area}/english">
+        <patternset>
+          <include name="**/*.properties"/>
+          <exclude name="about.properties"/>
+          <exclude name="plugin.properties"/>
+        </patternset>
+      </unzip>
 
+      <unzip src="${.samples.plugin}" dest="${.work.area}">
+        <patternset>
+          <include name="META-INF/MANIFEST.MF"/>
+        </patternset>
+      </unzip>
+    
+      <loadfile property=".samples.manifest" srcfile="${.work.area}/META-INF/MANIFEST.MF"/>
+      <propertyregex property=".samples.version" input="${.samples.manifest}" regexp=".*Bundle-Version:\s*([0-9\.]*).*" select="\1"/>
+    
+      <mkdir dir="${.work.area}/reversed"/>
+    
+      <for param="file">
+        <path>
+          <fileset dir="${.work.area}/english"/>
+        </path>
+        <sequential>
+      
+          <pathconvert property=".output.file">
+            <path location="@{file}"/>
+            <map from="${.work.area}/english" to="${.work.area}/reversed"/>
+          </pathconvert>
+        
+          <dirname file="${.output.file}" property=".output.folder"/>
+          <mkdir dir="${.output.folder}"/>
+        
+          <propertyregex property=".output.file" override="true" input="${.output.file}" regexp="(.*)\.properties" select="\1_sf.properties"/>
+        
+          <loadproperties srcfile="@{file}" prefix="..."/>
+          <propertyselector property=".properties" match="\.\.\..*" select="\0"/>
+        
+          <for param="property" list="${.properties}">
+            <sequential>
+          
+              <propertyregex property=".key" input="@{property}" regexp="\.\.\.(.*)" select="\1"/> 
+              <propertycopy property=".value" override="true" from="@{property}"/>
+
+              <script language="javascript"> <![CDATA[
+                val = project.getProperty( ".value" );
+                project.setProperty( ".reversed", val.split('').reverse().join('') );
+              ]]> </script>
+            
+              <propertyfile file="${.output.file}">
+                <entry key="${.key}" value="${.reversed}"/>
+              </propertyfile>
+            
+              <var name="@{property}" unset="true"/>
+              <var name=".key" unset="true"/>
+              <var name=".value" unset="true"/>
+              <var name=".reversed" unset="true"/>
+            
+            </sequential>
+          </for>
+        
+          <var name=".output.file" unset="true"/>
+          <var name=".output.folder" unset="true"/>
+          <var name=".properties" unset="true"/>
+        
+        </sequential>
+      </for>
+    
+      <mkdir dir="${.work.area}/reversed/META-INF"/>
+    
+      <echo file="${.work.area}/reversed/META-INF/MANIFEST.MF">Manifest-Version: 1.0
+Bundle-Name: Sapphire Samples Test Localization
+Bundle-SymbolicName: org.eclipse.sapphire.samples.nl_sf;singleton=true
+Bundle-Version: ${.samples.version}
+Bundle-Vendor: Eclipse.org - Sapphire
+Fragment-Host: org.eclipse.sapphire.samples
+</echo>
+
+      <zip destfile="${build.dir}/repository/plugins/org.eclipse.sapphire.samples.nl_sf_${.samples.version}.jar" basedir="${.work.area}/reversed"/>
+      
+      <unzip src="${build.dir}/repository/features/org.eclipse.sapphire.samples_${.samples.version}.jar" dest="${.work.area}/feature"/>
+      
+      <replace 
+        file="${.work.area}/feature/feature.xml" 
+        token="&lt;!-- ##localization-fragment## --&gt;"
+        value="&lt;plugin download-size=&quot;0&quot; id=&quot;org.eclipse.sapphire.samples.nl_sf&quot; install-size=&quot;0&quot; unpack=&quot;false&quot; version=&quot;${.samples.version}&quot;/&gt;"/>
+      
+      <delete file="${build.dir}/repository/features/org.eclipse.sapphire.samples_${.samples.version}.jar"/>
+      <zip destfile="${build.dir}/repository/features/org.eclipse.sapphire.samples_${.samples.version}.jar" basedir="${.work.area}/feature"/>
+    
+      <delete dir="${.work.area}"/>
+      
+      <var name=".work.area" unset="true"/>
+      <var name=".samples.plugin" unset="true"/>
+      <var name=".samples.manifest" unset="true"/>
+      <var name=".samples.version" unset="true"/>
+    
+    </sequential>
+  </macrodef>
+  
 
   <!--
     *************************************************************************************************
