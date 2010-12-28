@@ -21,6 +21,7 @@ import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.Localizable;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
@@ -64,6 +65,7 @@ public interface ISapphireActionHandlerFactoryDef
     // *** Description ***
     
     @LongString
+    @Localizable
     @Label( standard = "description" )
     @XmlValueBinding( path = "description", collapseWhitespace = true )
     

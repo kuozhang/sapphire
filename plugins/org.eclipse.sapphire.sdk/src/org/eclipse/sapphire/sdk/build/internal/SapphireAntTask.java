@@ -9,15 +9,13 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.build.internal;
+package org.eclipse.sapphire.sdk.build.internal;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +27,7 @@ import org.apache.tools.ant.Task;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class StringResourcesExtractorAntTask
+public final class SapphireAntTask
 
 	extends Task
 	
@@ -66,21 +64,7 @@ public final class StringResourcesExtractorAntTask
         {
             try
             {
-            	final Reader reader = new FileReader( sourceFile );
-            	final String resourceFileContent;
-            	
-            	try
-            	{
-            		resourceFileContent = StringResourcesExtractor.extract( reader );
-            	}
-            	finally
-            	{
-            		try
-            		{
-            			reader.close();
-            		}
-            		catch( IOException e ) {}
-            	}
+            	final String resourceFileContent = StringResourcesExtractor.extract( sourceFile );
             	
             	if( resourceFileContent != null )
             	{
@@ -123,7 +107,7 @@ public final class StringResourcesExtractorAntTask
             {
                 gatherSourceFiles( child, files );
             }
-            else if( child.getName().toLowerCase().endsWith( ".sdef" ))
+            else if( StringResourcesExtractor.check( child ) )
             {
                 files.add( child );
             }

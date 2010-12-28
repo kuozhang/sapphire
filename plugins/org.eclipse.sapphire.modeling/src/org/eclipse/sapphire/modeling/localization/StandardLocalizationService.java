@@ -26,6 +26,8 @@ public abstract class StandardLocalizationService
     extends LocalizationService
     
 {
+    private static final Locale NULL_LOCALE = new Locale( "" );
+    
     private final Locale locale;
     private Map<String,String> sourceLangToTranslation;
     
@@ -41,8 +43,8 @@ public abstract class StandardLocalizationService
             final Map<String,String> keyToSource = new HashMap<String,String>();
             final Map<String,String> keyToTranslation = new HashMap<String,String>();
             
-            load( Locale.ENGLISH, keyToSource );
-            load( locale, keyToTranslation );
+            load( NULL_LOCALE, keyToSource );
+            load( this.locale, keyToTranslation );
             
             this.sourceLangToTranslation = new HashMap<String,String>();
             

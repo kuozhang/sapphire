@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.build.internal;
+package org.eclipse.sapphire.sdk.build.internal;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -31,7 +31,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -351,10 +350,10 @@ public class DomUtil
         final Node parent = x.getParentNode();
         final Document document = parent.getOwnerDocument();
         
-        final Node xBookmark = document.createTextNode( MiscUtil.EMPTY_STRING );
+        final Node xBookmark = document.createTextNode( "" );
         parent.insertBefore( xBookmark, x );
         
-        final Node yBookmark = document.createTextNode( MiscUtil.EMPTY_STRING );
+        final Node yBookmark = document.createTextNode( "" );
         parent.insertBefore( yBookmark, y );
         
         parent.removeChild( x );
@@ -410,7 +409,7 @@ public class DomUtil
                     public InputSource resolveEntity( final String publicID, 
                                                       final String systemID )
                     {
-                        return new InputSource( new StringReader( MiscUtil.EMPTY_STRING ) );
+                        return new InputSource( new StringReader( "" ) );
                     }
                 }
             );

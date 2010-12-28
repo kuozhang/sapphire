@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.debug.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.workbench,
  org.eclipse.help,
- org.eclipse.sapphire.ui
+ org.eclipse.sapphire.ui,
+ org.apache.ant
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.sapphire.sdk

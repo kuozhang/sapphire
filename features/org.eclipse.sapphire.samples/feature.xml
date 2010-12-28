@@ -19,6 +19,5 @@
   </requires>
 
   <plugin download-size="0" id="org.eclipse.sapphire.samples" install-size="0" unpack="false" version="0.0.0"/>
-  <!-- ##localization-fragment## -->
 
 </feature>

@@ -1,0 +1,8 @@
+<?xml version="1.0"?> 
+
+<antlib>
+
+  <taskdef name="sapphire"
+           classname="org.eclipse.sapphire.sdk.build.internal.SapphireAntTask"/>
+    
+</antlib> 

@@ -43,10 +43,10 @@
     </path>
 
     <taskdef 
-      resource="org/eclipse/sapphire/ui/build/antlib.xml"
+      resource="org/eclipse/sapphire/sdk/build/antlib.xml"
       classpathref="sapphire.classpath"/>
     
-    <sapphire.extract-string-resources src="sdef" dest=".resources/sdef"/>
+    <sapphire src="." dest=".resources"/>
     
   </target>
 

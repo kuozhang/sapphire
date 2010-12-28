@@ -19,6 +19,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.Localizable;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
@@ -62,6 +63,7 @@ public interface IFunctionDef
     
     @LongString
     @Label( standard = "description" )
+    @Localizable
     @XmlValueBinding( path = "description", collapseWhitespace = true )
     
     @Documentation( content = "Provides information about the value serialization service. The " +
