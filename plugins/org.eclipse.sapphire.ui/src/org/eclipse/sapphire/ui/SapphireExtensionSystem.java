@@ -19,7 +19,7 @@ import java.util.List;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.UrlResourceStore;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem.BundleExtensionHandle;
+import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem.ExtensionHandle;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
@@ -38,14 +38,14 @@ public final class SapphireExtensionSystem
     private static List<ISapphireActionDef> actions;
     private static List<ISapphireActionHandlerDef> actionHandlers;
     private static List<ISapphireActionHandlerFactoryDef> actionHandlerFactories;
-    
+
     public static synchronized List<ISapphireUiExtensionDef> getExtensions()
     {
         if( extensions == null )
         {
             final List<ISapphireUiExtensionDef> list = new ArrayList<ISapphireUiExtensionDef>();
-            
-            for( BundleExtensionHandle handle : SapphireModelingExtensionSystem.getBundleExtensionHandles() )
+
+            for( ExtensionHandle handle : SapphireModelingExtensionSystem.getExtensionHandles() )
             {
                 for( URL url : handle.findExtensionFiles() )
                 {
@@ -62,19 +62,19 @@ public final class SapphireExtensionSystem
                     }
                 }
             }
-            
+
             extensions = Collections.unmodifiableList( list );
         }
-        
+
         return extensions;
     }
-    
+
     public static synchronized List<ISapphireActionDef> getActions()
     {
         if( actions == null )
         {
             final List<ISapphireActionDef> list = new ArrayList<ISapphireActionDef>();
-            
+
             for( ISapphireUiExtensionDef extension : getExtensions() )
             {
                 for( ISapphireActionDef def : extension.getActions() )
@@ -83,10 +83,10 @@ public final class SapphireExtensionSystem
                     list.add( def );
                 }
             }
-            
+
             actions = Collections.unmodifiableList( list );
         }
-        
+
         return actions;
     }
 
@@ -95,7 +95,7 @@ public final class SapphireExtensionSystem
         if( actionHandlers == null )
         {
             final List<ISapphireActionHandlerDef> list = new ArrayList<ISapphireActionHandlerDef>();
-            
+
             for( ISapphireUiExtensionDef extension : getExtensions() )
             {
                 for( ISapphireActionHandlerDef def : extension.getActionHandlers() )
@@ -104,10 +104,10 @@ public final class SapphireExtensionSystem
                     list.add( def );
                 }
             }
-            
+
             actionHandlers = Collections.unmodifiableList( list );
         }
-        
+
         return actionHandlers;
     }
 
@@ -116,7 +116,7 @@ public final class SapphireExtensionSystem
         if( actionHandlerFactories == null )
         {
             final List<ISapphireActionHandlerFactoryDef> list = new ArrayList<ISapphireActionHandlerFactoryDef>();
-            
+
             for( ISapphireUiExtensionDef extension : getExtensions() )
             {
                 for( ISapphireActionHandlerFactoryDef def : extension.getActionHandlerFactories() )
@@ -125,10 +125,10 @@ public final class SapphireExtensionSystem
                     list.add( def );
                 }
             }
-            
+
             actionHandlerFactories = Collections.unmodifiableList( list );
         }
-        
+
         return actionHandlerFactories;
     }
 

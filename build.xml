@@ -75,7 +75,7 @@
             <delete dir="${build.dir}/repository" quiet="true"/>
             <mkdir dir="${build.dir}/repository"/>
 
-            <!-- Stage 1: This builds the modeling framework and the annotation processor. -->
+            <!-- Stage 1: Build the modeling framework and the annotation processor. -->
 
             <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage1" eclipse="${.target.platform}" root.dir="${root.dir}"/>
 
@@ -85,7 +85,7 @@
 
             <delete file="${build.dir}/org.eclipse.sapphire.stage1-${DSTAMP}.zip"/>
 
-            <!-- Stage 2: This builds the UI framework including the supporting ant tasks. -->
+            <!-- Stage 2: Build the SDK. -->
 
             <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage2" eclipse="${.target.platform}" root.dir="${root.dir}"/>
 

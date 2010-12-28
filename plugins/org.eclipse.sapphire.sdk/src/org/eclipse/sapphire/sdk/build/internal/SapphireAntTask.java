@@ -30,33 +30,34 @@ import org.apache.tools.ant.Task;
 public final class SapphireAntTask
 
 	extends Task
-	
+
 {
 	private File src = null;
 	private File dest = null;
-	
+
 	public void setSrc( final File src )
 	{
 		this.src = src;
 	}
-	
+
 	public void setDest( final File dest )
 	{
 		this.dest = dest;
 	}
-	
+
 	public void execute()
 	{
 		if( this.src == null )
 		{
 			throw new BuildException( "Attribute src not set!" );
 		}
-		
+
 		if( this.dest == null )
 		{
 			throw new BuildException( "Attribute dest not set!" );
 		}
-		
+
+try{
 		final Set<File> files = new HashSet<File>();
 		gatherSourceFiles( this.src, files );
 
@@ -65,16 +66,16 @@ public final class SapphireAntTask
             try
             {
             	final String resourceFileContent = StringResourcesExtractor.extract( sourceFile );
-            	
+
             	if( resourceFileContent != null )
             	{
 	                File resourceFile = new File( this.dest, getRelativePath( sourceFile.getParentFile(), this.src ) );
 	                resourceFile = new File( resourceFile, getNameWithoutExtension( sourceFile ) + ".properties" );
-	                
+
 	                resourceFile.getParentFile().mkdirs();
-	                
+
 	                final OutputStream out = new FileOutputStream( resourceFile );
-	                
+
 	                try
 	                {
 	                	final Writer writer = new OutputStreamWriter( out );
@@ -96,8 +97,14 @@ public final class SapphireAntTask
             	throw new BuildException( e );
             }
         }
+}
+catch( Exception e )
+{
+	e.printStackTrace();
+	throw new BuildException( e );
+}
 	}
-	
+
     private static void gatherSourceFiles( final File directory,
                                            final Set<File> files )
     {
@@ -113,34 +120,34 @@ public final class SapphireAntTask
             }
         }
     }
-    
+
     private static String getRelativePath( final File path,
                                            final File base )
     {
         final String[] splitPath
             = path.getAbsolutePath().split( "[/\\\\]" );
-        
+
         final String[] splitBase
             = base.getAbsolutePath().split( "[/\\\\]" );
-        
+
         int i;
-        
-        for( i = 0; i < splitPath.length && i < splitBase.length && 
-             splitPath[ i ].equals( splitBase[ i ] ); i++ ) {} 
-        
+
+        for( i = 0; i < splitPath.length && i < splitBase.length &&
+             splitPath[ i ].equals( splitBase[ i ] ); i++ ) {}
+
         if( i != splitBase.length )
         {
             throw new IllegalArgumentException( "path not beneath base" );
         }
-        
+
         final StringBuilder buf = new StringBuilder();
-        
+
         for( ; i < splitPath.length; i++ )
         {
             if( buf.length() > 0 ) buf.append( '/' );
             buf.append( splitPath[ i ] );
         }
-        
+
         return buf.toString();
     }
 
@@ -148,7 +155,7 @@ public final class SapphireAntTask
     {
         final String fname = f.getName();
         final int lastdot = fname.lastIndexOf( '.' );
-        
+
         if( lastdot == -1 )
         {
             return fname;
@@ -158,5 +165,5 @@ public final class SapphireAntTask
             return fname.substring( 0, lastdot );
         }
     }
-    
+
 }

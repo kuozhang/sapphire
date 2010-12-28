@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.UrlResourceStore;
 import org.eclipse.sapphire.modeling.extensibility.IFunctionDef;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem.BundleExtensionHandle;
+import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem.ExtensionHandle;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.sdk.IExtensionSummaryExportOp;
@@ -35,37 +35,37 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 public class DynamicContentProducer implements IHelpContentProducer
 {
     private List<ISapphireExtensionDef> extensions;
-    
+
     public InputStream getInputStream( final String pluginID,
                                        final String href,
                                        final Locale locale )
     {
         String content = null;
-        
+
         if( pluginID.equals( "org.eclipse.sapphire.doc" ) )
         {
             if( href.equals( "html/extensions/existing.html" ) )
             {
                 final IExtensionSummaryExportOp op = IExtensionSummaryExportOp.TYPE.instantiate();
                 op.setDocumentBodyTitle( "Sapphire Extensions" );
-                
+
                 content = op.execute( getExtensions(), new NullProgressMonitor() );
             }
             if( href.equals( "html/el/index.html" ) )
             {
                 final IExtensionSummaryExportOp op = IExtensionSummaryExportOp.TYPE.instantiate();
                 op.setCreateFinishedDocument( false );
-                
+
                 final IExtensionSummarySectionDef section = op.getSections().addNewElement();
                 section.setExtensionType( ISapphireExtensionDef.PROP_FUNCTIONS.getName() );
                 section.setIncludeSectionHeader( false );
-                
+
                 final IExtensionSummarySectionColumnDef nameColumn = section.getColumns().addNewElement();
                 nameColumn.setName( IFunctionDef.PROP_NAME.getName() );
-                
+
                 final IExtensionSummarySectionColumnDef descColumn = section.getColumns().addNewElement();
                 descColumn.setName( IFunctionDef.PROP_DESCRIPTION.getName() );
-                
+
                 final String functions = op.execute( getExtensions(), new NullProgressMonitor() );
 
                 content = loadResource( "html/el/index.html" );
@@ -74,21 +74,21 @@ public class DynamicContentProducer implements IHelpContentProducer
             else if( href.equals( "html/ui/actions/index.html" ) )
             {
                 content = loadResource( "html/ui/actions/index.html" );
-                
+
                 final String docAction = exportModelDocumentation( ISapphireActionDef.TYPE );
                 content = content.replace( "##action-details##", docAction );
-                
+
                 final String docActionHandler = exportModelDocumentation( ISapphireActionHandlerDef.TYPE );
                 content = content.replace( "##action-handler-details##", docActionHandler );
-                
+
                 final String docActionHandlerFactory = exportModelDocumentation( ISapphireActionHandlerFactoryDef.TYPE );
                 content = content.replace( "##action-handler-factory-details##", docActionHandlerFactory );
-                
+
                 final String docActionHandlerFilter = exportModelDocumentation( ISapphireActionHandlerFilterDef.TYPE );
                 content = content.replace( "##action-handler-filter-details##", docActionHandlerFilter );
             }
         }
-        
+
         if( content != null )
         {
             return new ByteArrayInputStream( content.getBytes() );
@@ -96,33 +96,33 @@ public class DynamicContentProducer implements IHelpContentProducer
 
         return null;
     }
-    
+
     private static String exportModelDocumentation( final ModelElementType type )
     {
         final IExportModelDocumentationOp op = IExportModelDocumentationOp.TYPE.instantiate();
         return op.execute( type, new NullProgressMonitor() );
     }
-    
+
     private static String loadResource( final String name )
     {
         final InputStream in = DynamicContentProducer.class.getClassLoader().getResourceAsStream( name );
-        
+
         if( in == null )
         {
             throw new IllegalArgumentException( name );
         }
-        
+
         try
         {
             final BufferedReader r = new BufferedReader( new InputStreamReader( in ) );
             final char[] chars = new char[ 1024 ];
             final StringBuilder buf = new StringBuilder();
-            
+
             for( int i = r.read( chars ); i != -1; i = r.read( chars ) )
             {
                 buf.append( chars, 0, i );
             }
-            
+
             return buf.toString();
         }
         catch( IOException e )
@@ -138,14 +138,14 @@ public class DynamicContentProducer implements IHelpContentProducer
             catch( IOException e ) {}
         }
     }
-    
+
     private synchronized List<ISapphireExtensionDef> getExtensions()
     {
         if( extensions == null )
         {
             final List<ISapphireExtensionDef> list = new ArrayList<ISapphireExtensionDef>();
-            
-            for( BundleExtensionHandle handle : SapphireModelingExtensionSystem.getBundleExtensionHandles() )
+
+            for( ExtensionHandle handle : SapphireModelingExtensionSystem.getExtensionHandles() )
             {
                 for( URL url : handle.findExtensionFiles() )
                 {
@@ -162,11 +162,11 @@ public class DynamicContentProducer implements IHelpContentProducer
                     }
                 }
             }
-            
+
             extensions = Collections.unmodifiableList( list );
         }
-        
+
         return extensions;
     }
-    
+
 }

@@ -23,8 +23,7 @@
       </classpath>
     </taskdef>
 
-    <mkdir dir=".apt_generated"/>
-    <delete dir=".apt_generated"/>
+    <delete dir=".apt_generated" quiet="true"/>
     <mkdir dir=".apt_generated"/>
 
     <path id="sapphire.classpath">
@@ -38,11 +37,25 @@
       factorypathref="sapphire.classpath"
       compile="false"/>
 
-    <taskdef 
-      resource="org/eclipse/sapphire/sdk/build/antlib.xml"
-      classpathref="sapphire.classpath"/>
+    <delete dir=".resources" quiet="true"/>
+    <mkdir dir=".resources"/>
+
+    <trycatch>
+      <try>
+      
+        <taskdef 
+          resource="org/eclipse/sapphire/sdk/build/antlib.xml"
+          classpathref="sapphire.classpath"/>
     
-    <sapphire src="." dest=".resources"/>
+        <sapphire src="." dest=".resources"/>
+        
+      </try>
+      <catch>
+
+        <echo message="Skipping Sapphire build as the builder is not available yet."/>
+
+      </catch>
+    </trycatch>
     
   </target>
 
