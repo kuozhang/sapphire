@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.annotations;
+package org.eclipse.sapphire.modeling.localization;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
