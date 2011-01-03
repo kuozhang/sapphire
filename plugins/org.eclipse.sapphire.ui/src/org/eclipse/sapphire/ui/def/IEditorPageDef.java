@@ -20,6 +20,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.Localizable;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -49,7 +50,8 @@ public interface IEditorPageDef
     // *** PageName ***
     
     @Label( standard = "page name" )
-    @DefaultValue( text = "Design" )
+    @DefaultValue( text = "design" )
+    @Localizable
     @XmlBinding( path = "page-name" )
     
     ValueProperty PROP_PAGE_NAME = new ValueProperty( TYPE, "PageName" );
@@ -60,7 +62,8 @@ public interface IEditorPageDef
     // *** PageHeaderText ***
     
     @Label( standard = "page header text" )
-    @DefaultValue( text = "Design View" )
+    @DefaultValue( text = "design view" )
+    @Localizable
     @XmlBinding( path = "page-header-text" )
     
     ValueProperty PROP_PAGE_HEADER_TEXT = new ValueProperty( TYPE, "PageHeaderText" );
@@ -71,7 +74,8 @@ public interface IEditorPageDef
     // *** OutlineHeaderText ***
     
     @Label( standard = "outline header text" )
-    @DefaultValue( text = "Outline" )
+    @DefaultValue( text = "outline" )
+    @Localizable
     @XmlBinding( path = "outline-header-text" )
     
     ValueProperty PROP_OUTLINE_HEADER_TEXT = new ValueProperty( TYPE, "OutlineHeaderText" );

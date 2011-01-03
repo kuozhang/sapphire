@@ -19,6 +19,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.Localizable;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -48,28 +49,30 @@ public interface ISapphireDocumentationDef
     Value<String> getId();
     void setId( String id );
 
-    // *** title ***
+    // *** Title ***
     
     @Label( standard = "title" )
+    @Localizable
     @XmlBinding( path = "title" )
     
-    ValueProperty PROP_TITLE = new ValueProperty( TYPE, "Title" ); //$NON-NLS-1$
+    ValueProperty PROP_TITLE = new ValueProperty( TYPE, "Title" );
     
     Value<String> getTitle();
     void setTitle( String title );
 
-    // *** content ***
+    // *** Content ***
     
     @Label( standard = "content" )
+    @Localizable
     @XmlBinding( path = "content" )
     @NonNullValue
 
-    ValueProperty PROP_CONTENT = new ValueProperty( TYPE, "Content" ); //$NON-NLS-1$
+    ValueProperty PROP_CONTENT = new ValueProperty( TYPE, "Content" );
     
     Value<String> getContent();
     void setContent( String content );
     
-    // *** related topics ***
+    // *** Related Topics ***
     
     @Type( base = ISapphireDocumentationTopicDef.class )
     @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "topic", type = ISapphireDocumentationTopicDef.class ) )

@@ -11,10 +11,6 @@
 
 package org.eclipse.sapphire.sdk.build.internal;
 
-import static org.eclipse.sapphire.sdk.build.internal.DomUtil.doc;
-import static org.eclipse.sapphire.sdk.build.internal.DomUtil.elements;
-import static org.eclipse.sapphire.sdk.build.internal.DomUtil.text;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.HashSet;
@@ -25,15 +21,16 @@ import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Localizable;
 import org.eclipse.sapphire.modeling.localization.LocalizationUtil;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.sdk.ISapphireExtensionDef;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -41,18 +38,6 @@ import org.w3c.dom.Element;
 
 public final class StringResourcesExtractor
 {
-    private static final Set<String> LOCALIZABLE_ELEMENTS = new HashSet<String>();
-    
-    static
-    {
-        LOCALIZABLE_ELEMENTS.add( "page-header-text" );
-        LOCALIZABLE_ELEMENTS.add( "initial-selection" );
-        LOCALIZABLE_ELEMENTS.add( "label" );
-        LOCALIZABLE_ELEMENTS.add( "conditional" );
-        LOCALIZABLE_ELEMENTS.add( "description" );
-        LOCALIZABLE_ELEMENTS.add( "null-value-label" );
-    }
-    
     public static boolean check( final File file )
     {
         final String fileName = file.getName();
@@ -77,37 +62,27 @@ public final class StringResourcesExtractor
         // Gather string resources from the input..
         
         final Set<String> strings = new HashSet<String>();
+        final ModelElementType type;
         
         if( file.getName().endsWith( ".sdef" ) )
         {
-            final Document doc = doc( file );
-            
-            if( doc == null )
-            {
-                return null;
-            }
-            
-            final Element root = doc.getDocumentElement();
-            
-            if( root == null )
-            {
-                return null;
-            }
-            
-            gather( root, strings );
+            type = ISapphireUiDef.TYPE;
         }
         else
         {
-            final IModelElement root = ISapphireExtensionDef.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( file ) ) );
+            type = ISapphireExtensionDef.TYPE;
             
-            try
-            {
-                gather( root, strings );
-            }
-            finally
-            {
-                root.dispose();
-            }
+        }
+        
+        final IModelElement root = type.instantiate( new RootXmlResource( new XmlResourceStore( file ) ) );
+        
+        try
+        {
+            gather( root, strings );
+        }
+        finally
+        {
+            root.dispose();
         }
         
         if( strings.isEmpty() )
@@ -135,30 +110,6 @@ public final class StringResourcesExtractor
         return resourcesFileContent;
     }
 
-    private static void gather( final Element element,
-                                final Set<String> strings )
-    {
-        if( LOCALIZABLE_ELEMENTS.contains( element.getLocalName() ) )
-        {
-            String text = text( element );
-            
-            if( text != null )
-            {
-                text = text.trim();
-                
-                if( text.length() != 0 )
-                {
-                    strings.add( text );
-                }
-            }
-        }
-        
-        for( Element child : elements( element ) )
-        {
-            gather( child, strings );
-        }
-    }
-    
     private static void gather( final IModelElement element,
                                 final Set<String> strings )
     {
@@ -173,6 +124,18 @@ public final class StringResourcesExtractor
                     if( value != null )
                     {
                         strings.add( value );
+                    }
+                    
+                    final DefaultValue defaultValueAnnotation = property.getAnnotation( DefaultValue.class );
+                    
+                    if( defaultValueAnnotation != null )
+                    {
+                        final String defaultValue = defaultValueAnnotation.text();
+                        
+                        if( defaultValue.length() > 0 )
+                        {
+                            strings.add( defaultValue );
+                        }
                     }
                 }
             }
