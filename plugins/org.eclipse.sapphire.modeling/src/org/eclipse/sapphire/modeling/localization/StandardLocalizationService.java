@@ -11,9 +11,12 @@
 
 package org.eclipse.sapphire.modeling.localization;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
 
@@ -40,11 +43,8 @@ public abstract class StandardLocalizationService
     {
         if( this.sourceLangToTranslation == null )
         {
-            final Map<String,String> keyToSource = new HashMap<String,String>();
-            final Map<String,String> keyToTranslation = new HashMap<String,String>();
-            
-            load( NULL_LOCALE, keyToSource );
-            load( this.locale, keyToTranslation );
+            final Map<String,String> keyToSource = load( NULL_LOCALE );
+            final Map<String,String> keyToTranslation = load( this.locale );
             
             this.sourceLangToTranslation = new HashMap<String,String>();
             
@@ -54,7 +54,7 @@ public abstract class StandardLocalizationService
                 final String source = entry.getValue();
                 final String translation = keyToTranslation.get( key );
                 
-                if( translation != null )
+                if( translation != null && ! source.equals( translation ) )
                 {
                     this.sourceLangToTranslation.put( source, translation );
                 }
@@ -62,10 +62,88 @@ public abstract class StandardLocalizationService
         }
     }
     
-    protected abstract void load( Locale locale, Map<String,String> hashToTranslation );
+    protected final Map<String,String> load( final Locale locale )
+    {
+        Locale l = locale;
+        
+        final Map<String,String> keyToTranslation = new HashMap<String,String>();
+        
+        if( load( l, keyToTranslation ) )
+        {
+            return keyToTranslation;
+        }
+        
+        final String variant = l.getVariant();
+        
+        if( variant != null && variant.length() > 0 )
+        {
+            l = new Locale( l.getLanguage(), l.getCountry() );
+            
+            if( load( l, keyToTranslation ) )
+            {
+                return keyToTranslation;
+            }
+        }
+        
+        final String country = l.getCountry();
+        
+        if( country != null && country.length() > 0 )
+        {
+            l = new Locale( l.getLanguage() );
+            
+            if( load( l, keyToTranslation ) )
+            {
+                return keyToTranslation;
+            }
+        }
+        
+        final String language = l.getLanguage();
+        
+        if( language != null && language.length() > 0 )
+        {
+            load( NULL_LOCALE, keyToTranslation );
+        }
+        
+        return keyToTranslation;
+    }
+    
+    protected abstract boolean load( Locale locale, Map<String,String> keyToText );
+    
+    protected static final boolean parse( final InputStream in,
+                                          final Map<String,String> keyToText )
+    {
+        final Properties props = new Properties();
+        
+        try
+        {
+            try
+            {
+                props.load( in );
+            }
+            finally
+            {
+                try
+                {
+                    in.close();
+                }
+                catch( IOException e ) {}
+            }
+        }
+        catch( IOException e )
+        {
+            return false;
+        }
+        
+        for( Map.Entry<Object,Object> entry : props.entrySet() )
+        {
+            keyToText.put( (String) entry.getKey(), (String) entry.getValue() );
+        }
+        
+        return true;
+    }
     
     @Override
-    public String string( final String sourceLangString,
+    public String text( final String sourceLangString,
                           final CapitalizationType capitalizationType,
                           final boolean includeMnemonic )
     {

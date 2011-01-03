@@ -66,7 +66,7 @@ public class SapphireCommonUtil {
                     {
                         if( defaultValue.equals( x.value() ) ) 
                         {
-                            String namedValueLabel = localization.string( x.label(), CapitalizationType.NO_CAPS, false );
+                            String namedValueLabel = localization.text( x.label(), CapitalizationType.NO_CAPS, false );
                             defaultValue = namedValueLabel + " (" + x.value() + ")";
                             break;
                         }

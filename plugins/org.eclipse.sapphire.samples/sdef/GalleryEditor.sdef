@@ -17,32 +17,32 @@
     <title>Help gallery</title>
     <content>content help for the help gallery</content>
     <topic>
-      <label>Eclipse Home</label>
+      <label>eclipse home</label>
       <href>http://www.eclipse.org</href>
     </topic>
   </documentation>
 
   <editor-page>
     <id>main</id>
-    <page-header-text>Sapphire Gallery</page-header-text>
-    <initial-selection>Simple Values</initial-selection>
+    <page-header-text>sapphire gallery</page-header-text>
+    <initial-selection>simple values</initial-selection>
     <documentation>
       <title>Sapphire Gallery</title>
       <content>content help for Sapphire Gallery</content>
     </documentation>
     <root-node>
       <node>
-        <label>Values</label>
+        <label>values</label>
         <section>
           <description>In some situations, the description text for say a section gets a bit long. The approach we've adopted is to include the summary in the section and then add section level help content. ###brk###This adequate, but may not be as intuitive as say a "More details..." link at the end of the on-screen description text with that pops up a tooltip-style window with complete information.</description>
         </section>
         <node>
-          <label>Numbers</label>
+          <label>numbers</label>
           <section>
             <description>abc</description>
           </section>
           <node>
-            <label>Integer</label>
+            <label>integer</label>
             <property>IntegerValueGallery</property>
             <section>
               <documentation-ref>
@@ -56,7 +56,7 @@
             </section>
           </node>
           <node>
-            <label>Long Integer</label>
+            <label>long integer</label>
             <property>LongIntegerValueGallery</property>
             <section>
               <content>
@@ -67,7 +67,7 @@
             </section>
           </node>
           <node>
-            <label>Big Integer</label>
+            <label>big integer</label>
             <property>BigIntegerValueGallery</property>
             <section>
               <content>
@@ -78,7 +78,7 @@
             </section>
           </node>
           <node>
-            <label>Single Precision Float</label>
+            <label>single precision float</label>
             <property>FloatValueGallery</property>
             <section>
               <content>
@@ -89,7 +89,7 @@
             </section>
           </node>
           <node>
-            <label>Double Precision Float</label>
+            <label>double precision float</label>
             <property>DoubleValueGallery</property>
             <section>
               <content>
@@ -100,7 +100,7 @@
             </section>
           </node>
           <node>
-            <label>Decimal</label>
+            <label>decimal</label>
             <property>BigDecimalValueGallery</property>
             <section>
               <content>
@@ -112,10 +112,10 @@
           </node>
         </node>
         <node>
-          <label>Enums</label>
+          <label>enums</label>
           <property>EnumValueGallery</property>
           <section>
-            <label>Enums</label>
+            <label>enums</label>
             <description>
               This page shows two enum value properties being edited in three different ways. The first property is
               a simple one relying on Enum.name() for serialization. The second one has customized serialization. Choice "yes"
@@ -124,7 +124,7 @@
             </description> 
           </section>
           <section>
-            <label>Combo Boxes</label>
+            <label>combo boxes</label>
             <content>
               <property-editor>
                 <property>Simple</property>
@@ -143,7 +143,7 @@
             </content>
           </section>
           <section>
-            <label>Radio Buttons (Horizontal Arrangement)</label>
+            <label>radio buttons (horizontal arrangement)</label>
             <content>
               <property-editor>
                 <property>Simple</property>
@@ -162,7 +162,7 @@
             </content>
           </section>
           <section>
-            <label>Radio Buttons (Vertical Arrangement)</label>
+            <label>radio buttons (vertical arrangement)</label>
             <content>
               <property-editor>
                 <property>Simple</property>
@@ -181,7 +181,7 @@
               </property-editor>
               <spacer/>
               <group>
-                <label>No Label (in Group)</label>
+                <label>no label (in group)</label>
                 <content>
                   <property-editor>
                     <property>CustomSerializedWithDefault</property>
@@ -198,7 +198,7 @@
               </group>
               <spacer/>
               <group>
-                <label>No Label (in Group with Aux Text)</label>
+                <label>no label (in group with aux text)</label>
                 <content>
                   <property-editor>
                     <property>CustomSerializedWithDefault</property>
@@ -229,7 +229,7 @@
           </section>
         </node>
         <node>
-          <label>Java Type Names</label>
+          <label>java type names</label>
           <property>JavaTypeNameValueGallery</property>
           <section>
             <content>
@@ -288,7 +288,7 @@
           </section>
         </node>
         <node>
-          <label>Custom</label>
+          <label>custom</label>
           <property>CustomValueGallery</property>
           <section>
             <content>
@@ -325,20 +325,20 @@
         </node>
       </node>
       <node>
-        <label>Lists</label>
+        <label>lists</label>
         <node>
-          <label>Homogeneous</label>
+          <label>homogeneous</label>
           <section>
             <description>A list with one possible element type.</description>
             <content>
               <action-link>
                 <action-id>Sapphire.Add</action-id>
-                <label>Add a list item</label>
+                <label>add a list item</label>
               </action-link>
             </content>
           </section>
           <section>
-            <label>List</label>
+            <label>list</label>
             <content>
               <property-editor>
                 <property>HomogeneousList</property>
@@ -354,7 +354,7 @@
             <node-template>
               <label>${ StringValue == null ? "&lt;item&gt;" : StringValue }</label>
               <section>
-                <label>List Item</label>
+                <label>list item</label>
                 <content>
                   <property-editor>StringValue</property-editor>
                 </content>
@@ -363,29 +363,29 @@
           </node-list>
         </node>
         <node>
-          <label>Heterogeneous</label>
+          <label>heterogeneous</label>
           <section>
             <description>A list with multiple possible element types.</description>
             <content>
               <action-link>
                 <action-id>Sapphire.Add</action-id>
                 <action-handler-id>Sapphire.Add.IListItem</action-handler-id>
-                <label>Add a basic list item</label>
+                <label>add a basic list item</label>
               </action-link>
               <action-link>
                 <action-id>Sapphire.Add</action-id>
                 <action-handler-id>Sapphire.Add.IListItemWithInteger</action-handler-id>
-                <label>Add a list item with integer</label>
+                <label>add a list item with integer</label>
               </action-link>
               <action-link>
                 <action-id>Sapphire.Add</action-id>
                 <action-handler-id>Sapphire.Add.IListItemWithEnum</action-handler-id>
-                <label>Add a list item with enum</label>
+                <label>add a list item with enum</label>
               </action-link>
             </content>
           </section>
           <section>
-            <label>List</label>
+            <label>list</label>
             <content>
               <property-editor>
                 <property>HeterogeneousList</property>
@@ -395,7 +395,7 @@
                 </hint>
               </property-editor>
               <separator>
-                <label>Details</label>
+                <label>details</label>
               </separator>
               <switching-panel>
                 <list-selection-controller>
@@ -435,7 +435,7 @@
               <model-element-type>IListItemWithInteger</model-element-type>
               <label>${ StringValue == null ? "&lt;item-with-integer&gt;" : StringValue }</label>
               <section>
-                <label>List Item With Integer</label>
+                <label>list item with integer</label>
                 <content>
                   <property-editor>StringValue</property-editor>
                   <property-editor>IntegerValue</property-editor>
@@ -446,7 +446,7 @@
               <model-element-type>IListItemWithEnum</model-element-type>
               <label>${ StringValue == null ? "&lt;item-with-enum&gt;" : StringValue }</label>
               <section>
-                <label>List Item With Enum</label>
+                <label>list item with enum</label>
                 <content>
                   <property-editor>StringValue</property-editor>
                   <property-editor>EnumValue</property-editor>
@@ -457,7 +457,7 @@
               <model-element-type>IListItem</model-element-type>
               <label>${ StringValue == null ? "&lt;item&gt;" : StringValue }</label>
               <section>
-                <label>List Item</label>
+                <label>list item</label>
                 <content>
                   <property-editor>StringValue</property-editor>
                 </content>
@@ -466,7 +466,7 @@
           </node-list>
         </node>
         <node>
-          <label>Multi-Select</label>
+          <label>multi-select</label>
           <property>MultiSelectListGallery</property>
           <section>
             <content>
@@ -508,10 +508,10 @@
         </node>
       </node>
       <node>
-        <label>Enablement</label>
+        <label>enablement</label>
         <property>EnablementGallery</property>
         <section>
-          <label>Controlling</label>
+          <label>controlling</label>
           <content>
             <label>
               In many situations, a property's enablement state is dependent on values of other
@@ -524,7 +524,7 @@
           </content>
         </section>
         <section>
-          <label>Dependent</label>
+          <label>dependent</label>
           <content>
             <label>Enabled if boolean controlling property is set true.</label>
             <spacer/>
@@ -546,7 +546,7 @@
         </section>
       </node>
       <node>
-        <label>Browse Support</label>
+        <label>browse support</label>
         <property>BrowseSupportGallery</property>
         <section>
           <content>
@@ -615,7 +615,7 @@
         </section>
       </node>
       <node>
-        <label>Actions</label>
+        <label>actions</label>
         <property>ValuePropertyActionsGallery</property>
         <section>
           <content>
@@ -623,7 +623,7 @@
           </content>
         </section>
         <node>
-          <label>Value Property Editor</label>
+          <label>value property editor</label>
           <section>
             <content>
               <label>
@@ -779,7 +779,7 @@
           </section>
         </node>
         <node>
-          <label>List Property Editor</label>
+          <label>list property editor</label>
           <section>
             <content>
               <label>
@@ -935,7 +935,7 @@
         </node>
       </node>
       <node>
-        <label>Help</label>
+        <label>help</label>
         <section>
           <description>Help gallery shows content help capabilities in Sapphire.</description>
           <documentation-ref>
@@ -943,7 +943,7 @@
           </documentation-ref>
         </section>
         <node>
-          <label>Help</label>
+          <label>help</label>
           <property>HelpGallery</property>
           <section>
             <description>Simple shows the help content annotation. Positive shows the help content provider annotation. Range constrained with default shows the auto-generated content help.</description>
@@ -960,13 +960,13 @@
           </section>
         </node>
         <node>
-          <label>Extended Help</label>
+          <label>extended help</label>
           <property>ExtendedHelpGallery</property>
           <section>
             <description>Content help for the ExtendedHelpGallery model element will be appended to all properties. Both Simple and Positive have options to augment, in which the parent's content help will be appended. </description>
             <documentation>
               <topic>
-                <label>Eclipse Home</label>
+                <label>eclipse home</label>
                 <href>http://www.eclipse.org</href>
               </topic>
             </documentation>

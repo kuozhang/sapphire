@@ -9,21 +9,21 @@
   
   <editor-page>
     <id>main</id>
-    <page-header-text>Contacts</page-header-text>
-    <initial-selection>Contacts</initial-selection>
+    <page-header-text>contacts</page-header-text>
+    <initial-selection>contacts</initial-selection>
     <documentation>
-      <title>Contacts Database Editor</title>
+      <title>contacts database editor</title>
       <content>This would be the help content for the overall contacts database editor.</content>
     </documentation>
     <root-node>
       <node>
-        <label>Contacts</label>
+        <label>contacts</label>
         <section>
           <description>Use this simple editor to organize your contacts.</description>
           <content>
             <action-link>
               <action-id>Sapphire.Add</action-id>
-              <label>Add a contact</label>
+              <label>add a contact</label>
             </action-link>
           </content>
         </section>
@@ -40,7 +40,7 @@
               <impl>SendContactActionHandler</impl>
             </action-handler>
             <section>
-              <label>Basic Info</label>
+              <label>basic info</label>
               <documentation>
                 <title>Basic Info</title>
                 <content>This would be the help content for the basic info section.</content>
@@ -51,7 +51,7 @@
               </content>
             </section>
             <section>
-              <label>Address</label>
+              <label>address</label>
               <documentation>
                 <title>Address</title>
                 <content>This would be the help content for the address section.</content>
@@ -71,7 +71,7 @@
               </content>
             </section>
             <section>
-              <label>Phone Numbers</label>
+              <label>phone numbers</label>
               <content>
                 <property-editor>
                   <property>PhoneNumbers</property>
@@ -96,7 +96,7 @@
               </content>
             </section>
             <node>
-              <label>Web Sites</label>
+              <label>web sites</label>
               <image>images/web.png</image>
               <section>
                 <content>
@@ -118,7 +118,7 @@
               </section>
             </node>
             <node>
-              <label>Assistant</label>
+              <label>assistant</label>
               <section>
                 <content>
                   <with>
@@ -149,7 +149,7 @@
               </section>
             </node>
             <node>
-              <label>Connections</label>
+              <label>connections</label>
               <section>
                 <content>
                   <property-editor>
@@ -163,7 +163,7 @@
               </section>
             </node>
             <node>
-              <label>Primary Occupation</label>
+              <label>primary occupation</label>
               <section>
                 <content>
                   <with>
@@ -201,10 +201,10 @@
   
   <wizard>
     <id>SendContactWizard</id>
-    <label>Send Contact</label>
+    <label>send contact</label>
     <page>
       <id>main.page</id>
-      <label>Send Contact</label>
+      <label>send contact</label>
       <description>Send contact information via e-mail.</description>
       <initial-focus>To</initial-focus>
       <content>

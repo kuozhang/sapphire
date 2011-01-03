@@ -115,7 +115,7 @@ public final class NamedValuesPropertyEditorRenderer
             final NamedValue x = namedValueAnnotations[ i ];
             
             final String namedValueLabel 
-                = property.getLocalizationService().string( x.label(), CapitalizationType.FIRST_WORD_ONLY, true );
+                = property.getLocalizationService().text( x.label(), CapitalizationType.FIRST_WORD_ONLY, true );
             
             this.namedValues[ i ] = new NamedValueLocal( x.value(), namedValueLabel );
         }
@@ -158,7 +158,7 @@ public final class NamedValuesPropertyEditorRenderer
         decorator.addEditorControl( radioButtonsComposite );
         
         final String arbitraryValueLabel 
-            = property.getLocalizationService().string( namedValuesAnnotation.arbitraryValueLabel(), CapitalizationType.FIRST_WORD_ONLY, true ) + ":";
+            = property.getLocalizationService().text( namedValuesAnnotation.arbitraryValueLabel(), CapitalizationType.FIRST_WORD_ONLY, true ) + ":";
     
         this.arbitraryValueRadioButton = createRadioButton( radioButtonsComposite, arbitraryValueLabel );
         this.arbitraryValueRadioButton.setLayoutData( gd() );

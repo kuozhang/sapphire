@@ -16,13 +16,11 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.StandardLocalizationService;
 import org.osgi.framework.Bundle;
@@ -58,13 +56,13 @@ public class BundleResourceStore
     }
     
     @Override
-    protected final LocalizationService initLocalizationService( final Locale locale )
+    protected LocalizationService initLocalizationService( final Locale locale )
     {
         return new StandardLocalizationService( locale )
         {
             @Override
-            protected void load( final Locale locale,
-                                 final Map<String,String> hashToTranslation )
+            protected boolean load( final Locale locale,
+                                    final Map<String,String> keyToText )
             {
                 final String bundleId = BundleResourceStore.this.bundleId;
                 final String path = BundleResourceStore.this.path;
@@ -86,15 +84,13 @@ public class BundleResourceStore
                     
                     if( resFileUrl != null )
                     {
-                        final Properties props = new Properties();
-                        
                         try
                         {
                             final InputStream stream = resFileUrl.openStream();
                             
                             try
                             {
-                                props.load( stream );
+                                return parse( stream, keyToText );
                             }
                             finally
                             {
@@ -107,15 +103,12 @@ public class BundleResourceStore
                         }
                         catch( IOException e )
                         {
-                            SapphireModelingFrameworkPlugin.log( e );
-                        }
-                        
-                        for( Map.Entry<Object,Object> entry : props.entrySet() )
-                        {
-                            hashToTranslation.put( (String) entry.getKey(), (String) entry.getValue() );
+                            return false;
                         }
                     }
                 }
+                
+                return false;
             }
         };
     }

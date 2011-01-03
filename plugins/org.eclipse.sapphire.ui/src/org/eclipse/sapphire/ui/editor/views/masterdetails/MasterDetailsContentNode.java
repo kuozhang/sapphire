@@ -20,6 +20,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -379,6 +380,11 @@ public final class MasterDetailsContentNode
         if( label == null )
         {
             label = "#null#";
+        }
+        else
+        {
+            label = label.trim();
+            label = this.definition.resource().getLocalizationService().text( label, CapitalizationType.TITLE_STYLE, false );
         }
         
         return label;

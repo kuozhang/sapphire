@@ -17,6 +17,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.ui.def.ISapphireSeparatorDef;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -41,7 +42,8 @@ public final class SapphireSeparator
         separatorComposite.setLayout( glayout( 1, 0, 5 ) );
         context.adapt( separatorComposite );
         
-        final String label = def.getLabel().getLocalizedText();
+        final String label
+            = def.resource().getLocalizationService().text( def.getLabel().getLocalizedText(), CapitalizationType.TITLE_STYLE, false );
         
         if( label != null )
         {

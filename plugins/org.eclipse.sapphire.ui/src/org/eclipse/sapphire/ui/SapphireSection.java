@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.eclipse.help.IContext;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
@@ -177,6 +178,7 @@ public final class SapphireSection
         else
         {
             title = title.trim();
+            title = this.definition.resource().getLocalizationService().text( title, CapitalizationType.TITLE_STYLE, false );
         }
         
         this.section.setText( title.trim() );

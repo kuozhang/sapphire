@@ -50,7 +50,7 @@ public abstract class SapphireActionSystemPart
         if( def != null )
         {
             this.id = def.getId().getContent();
-            this.label = def.getLabel().getContent();
+            this.label = def.getLabel().getLocalizedText();
             
             for( ISapphireActionImage image : def.getImages() )
             {

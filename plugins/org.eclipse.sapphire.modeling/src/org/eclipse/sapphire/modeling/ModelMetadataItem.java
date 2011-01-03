@@ -94,7 +94,7 @@ public abstract class ModelMetadataItem
         
         if( transformNeeded )
         {
-            labelText = getLocalizationService().string( labelText, capitalizationType, includeMnemonic );
+            labelText = getLocalizationService().text( labelText, capitalizationType, includeMnemonic );
         }
         
         return labelText;

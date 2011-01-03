@@ -117,7 +117,7 @@ public final class EnumValueType
             labelText = enumItem.name();
         }
 
-        labelText = getLocalizationService().string( labelText, capitalizationType, includeMnemonic );
+        labelText = getLocalizationService().text( labelText, capitalizationType, includeMnemonic );
         
         return labelText;
     }

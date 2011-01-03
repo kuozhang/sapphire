@@ -22,9 +22,9 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 
 public abstract class LocalizationService
 {
-    public abstract String string( String sourceLangString,
-                                   CapitalizationType capitalizationType,
-                                   boolean includeMnemonic );
+    public abstract String text( String sourceLangText,
+                                 CapitalizationType capitalizationType,
+                                 boolean includeMnemonic );
     
     public final String label( final Class<?> cl,
                                final CapitalizationType capitalizationType,
@@ -52,7 +52,7 @@ public abstract class LocalizationService
             sourceLangString = transformCamelCaseToLabel( className );
         }
         
-        return string( sourceLangString, capitalizationType, includeMnemonic );
+        return text( sourceLangString, capitalizationType, includeMnemonic );
     }
     
     protected String transform( final String string,

@@ -13,7 +13,6 @@ package org.eclipse.sapphire.modeling.localization;
 
 import java.util.Locale;
 
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -21,12 +20,6 @@ import java.util.Locale;
 public final class LocalizationSystem
 {
     public static LocalizationService service( final Class<?> cl )
-    {
-        return service( cl.getClassLoader(), cl.getName() );
-    }
-    
-    public static LocalizationService service( final ClassLoader classLoader,
-                                               final String resourceBundleName )
     {
         final Locale locale = Locale.getDefault();
         
@@ -36,7 +29,7 @@ public final class LocalizationSystem
         }
         else
         {
-            return new ResourceBundleLocalizationService( classLoader, resourceBundleName, locale );
+            return new ClassLocalizationService( cl, locale );
         }
     }
 

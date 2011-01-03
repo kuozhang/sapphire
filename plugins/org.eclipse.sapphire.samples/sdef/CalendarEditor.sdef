@@ -8,18 +8,18 @@
   
   <editor-page>
     <id>main</id>
-    <page-name>Calendar</page-name>
-    <page-header-text>Calendar</page-header-text>
-    <initial-selection>Events</initial-selection>
+    <page-name>calendar</page-name>
+    <page-header-text>calendar</page-header-text>
+    <initial-selection>events</initial-selection>
     <root-node>
       <node>
-        <label>Events</label>
+        <label>events</label>
         <section>
           <description>Use this simple editor to organize your calendar.</description>
           <content>
             <action-link>
               <action-id>Sapphire.Add</action-id>
-              <label>Add an event</label>
+              <label>add an event</label>
             </action-link>
           </content>
         </section>
@@ -28,7 +28,7 @@
           <node-template>
             <label>${ Subject == null ? "&lt;event&gt;" : Subject }</label>
             <node>
-              <label>Attachments</label>
+              <label>attachments</label>
               <section>
                 <content>
                   <property-editor>
@@ -42,7 +42,7 @@
               </section>
             </node>
             <section>
-              <label>Event</label>
+              <label>event</label>
               <content>
                 <property-editor>Subject</property-editor>
                 <property-editor>Location</property-editor>
@@ -52,7 +52,7 @@
               </content>
             </section>
             <section>
-              <label>Attendees</label>
+              <label>attendees</label>
               <content>
                 <property-editor>
                   <property>Attendees</property>
@@ -69,7 +69,7 @@
                   </child-property>
                 </property-editor>
                 <separator>
-                  <label>Details</label>
+                  <label>details</label>
                 </separator>
                 <switching-panel>
                   <list-selection-controller>
@@ -96,7 +96,7 @@
                       <spacer/>
                       <action-link>
                         <action-id>Sapphire.Sample.ShowContactDetails</action-id>
-                        <label>Show contact details</label>
+                        <label>show contact details</label>
                         <show-image/>
                         <action>
                           <id>sapphire.sample.ShowContactDetails</id>

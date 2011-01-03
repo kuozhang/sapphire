@@ -130,7 +130,7 @@ public class SapphireHelpContext implements IContext, IContext2 {
         
         final LocalizationService localization = property.getLocalizationService();
         
-        String res = localization.string( documentation.content(), CapitalizationType.NO_CAPS, false );
+        String res = localization.text( documentation.content(), CapitalizationType.NO_CAPS, false );
         if (strategy == DocumentationMergeStrategy.PREPEND) {
             prependContent(res);
         } else {
@@ -143,7 +143,7 @@ public class SapphireHelpContext implements IContext, IContext2 {
         
         for( int i = 0, n = relatedTopicAnnotations.length; i < n; i++ ) {
             final Topic topic = relatedTopicAnnotations[ i ];
-            final String label = localization.string( topic.label(), CapitalizationType.TITLE_STYLE, false );
+            final String label = localization.text( topic.label(), CapitalizationType.TITLE_STYLE, false );
             
             topics[i] = new IHelpResource() {
                 public String getHref() {

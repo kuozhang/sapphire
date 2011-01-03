@@ -23,7 +23,7 @@ public final class SourceLanguageLocalizationService
     
 {
     @Override
-    public String string( final String sourceLangString,
+    public String text( final String sourceLangString,
                           final CapitalizationType capitalizationType,
                           final boolean includeMnemonic )
     {
