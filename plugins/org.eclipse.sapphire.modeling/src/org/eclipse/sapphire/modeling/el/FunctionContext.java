@@ -12,11 +12,14 @@
 package org.eclipse.sapphire.modeling.el;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -42,6 +45,16 @@ public class FunctionContext
         }
         
         throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessage, name ) );
+    }
+    
+    public final LocalizationService getLocalizationService()
+    {
+        return getLocalizationService( Locale.getDefault() );
+    }
+
+    public LocalizationService getLocalizationService( final Locale locale )
+    {
+        return new SourceLanguageLocalizationService();
     }
     
     public final void addListener( final Listener listener )

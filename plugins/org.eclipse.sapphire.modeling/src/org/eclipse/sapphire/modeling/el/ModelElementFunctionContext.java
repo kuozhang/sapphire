@@ -11,11 +11,14 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import java.util.Locale;
+
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -72,6 +75,12 @@ public class ModelElementFunctionContext
         return super.property( name );
     }
 
+    @Override
+    public LocalizationService getLocalizationService( final Locale locale )
+    {
+        return this.element.resource().getLocalizationService( locale );
+    }
+    
     @Override
     public void dispose()
     {

@@ -23,17 +23,27 @@ public class FailSafeFunction
     extends Function
 
 {
-    public static FailSafeFunction create( final Function operand,
-                                           final Function expectedType )
+    public static Function create( final Function operand,
+                                   final Function expectedType )
     {
         final FailSafeFunction function = new FailSafeFunction();
         function.init( operand, expectedType );
         return function;
     }
 
-    public static FailSafeFunction create( final Function operand,
-                                           final Class<?> expectedType )
+    public static Function create( final Function operand,
+                                   final Class<?> expectedType )
     {
+        if( operand instanceof Literal )
+        {
+            final Object val = ( (Literal) operand ).value();
+            
+            if( val != null && val.getClass().equals( expectedType ) )
+            {
+                return operand;
+            }
+        }
+        
         return create( operand, Literal.create( expectedType ) );
     }
     

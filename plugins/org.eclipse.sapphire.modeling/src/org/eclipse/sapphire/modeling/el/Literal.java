@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import org.eclipse.sapphire.modeling.CapitalizationType;
+
 /**
  * A function that always evaluates to the same value. 
  * 
@@ -49,7 +51,14 @@ public final class Literal
             @Override
             protected Object evaluate()
             {
-                return Literal.this.value;
+                Object val = Literal.this.value;
+                
+                if( val instanceof String )
+                {
+                    val = context().getLocalizationService().text( (String) val, CapitalizationType.NO_CAPS, true );
+                }
+                
+                return val;
             }
         };
     }
