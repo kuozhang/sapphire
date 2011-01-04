@@ -14,16 +14,15 @@ package org.eclipse.sapphire.modeling;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.modeling.localization.StandardLocalizationService;
 import org.osgi.framework.Bundle;
 
 /**
@@ -57,62 +56,61 @@ public class BundleResourceStore
     }
     
     @Override
-    protected Map<String,String> loadLocalizedResources( final Locale locale )
+    protected LocalizationService initLocalizationService( final Locale locale )
     {
-        final int lastDot = this.path.lastIndexOf( '.' );
-        
-        if( lastDot != -1 )
+        return new StandardLocalizationService( locale )
         {
-            String resFilePath = this.path.substring( 0, lastDot );
-            final String localeString = locale.toString();
-            
-            if( localeString.length() > 0 )
+            @Override
+            protected boolean load( final Locale locale,
+                                    final Map<String,String> keyToText )
             {
-                resFilePath = resFilePath + "_" + localeString;
-            }
-            
-            resFilePath = resFilePath + ".properties";
-            
-            final URL resFileUrl = toUrl( this.bundleId, resFilePath, false );
-            
-            if( resFileUrl != null )
-            {
-                final Properties props = new Properties();
+                final String bundleId = BundleResourceStore.this.bundleId;
+                final String path = BundleResourceStore.this.path;
+                final int lastDot = path.lastIndexOf( '.' );
                 
-                try
+                if( lastDot != -1 )
                 {
-                    final InputStream stream = resFileUrl.openStream();
+                    String resFilePath = path.substring( 0, lastDot );
+                    final String localeString = locale.toString();
                     
-                    try
+                    if( localeString.length() > 0 )
                     {
-                        props.load( stream );
+                        resFilePath = resFilePath + "_" + localeString;
                     }
-                    finally
+                    
+                    resFilePath = resFilePath + ".properties";
+                    
+                    final URL resFileUrl = toUrl( bundleId, resFilePath, false );
+                    
+                    if( resFileUrl != null )
                     {
                         try
                         {
-                            stream.close();
+                            final InputStream stream = resFileUrl.openStream();
+                            
+                            try
+                            {
+                                return parse( stream, keyToText );
+                            }
+                            finally
+                            {
+                                try
+                                {
+                                    stream.close();
+                                }
+                                catch( IOException e ) {}
+                            }
                         }
-                        catch( IOException e ) {}
+                        catch( IOException e )
+                        {
+                            return false;
+                        }
                     }
                 }
-                catch( IOException e )
-                {
-                    SapphireModelingFrameworkPlugin.log( e );
-                }
                 
-                final Map<String,String> resources = new HashMap<String,String>();
-                
-                for( Map.Entry<Object,Object> entry : props.entrySet() )
-                {
-                    resources.put( (String) entry.getKey(), (String) entry.getValue() );
-                }
-                
-                return resources;
+                return false;
             }
-        }
-        
-        return null;
+        };
     }
 
     private static final URL toUrl( final String bundleId,
@@ -131,10 +129,7 @@ public class BundleResourceStore
         return url;
     }
     
-    private static final class Resources
-    
-        extends NLS
-    
+    private static final class Resources extends NLS
     {
         public static String couldNotFindBundleResource;
         
@@ -143,6 +138,5 @@ public class BundleResourceStore
             initializeMessages( BundleResourceStore.class.getName(), Resources.class );
         }
     }
-    
 
 }

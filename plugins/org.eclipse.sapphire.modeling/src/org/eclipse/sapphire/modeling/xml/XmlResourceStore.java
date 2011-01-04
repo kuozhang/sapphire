@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -37,6 +38,7 @@ import org.eclipse.sapphire.modeling.FileResourceStore;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ResourceStore;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -57,19 +59,19 @@ public class XmlResourceStore
 {
     private static final String UTF8_ENCODING = "UTF-8";
     
-    private final ByteArrayResourceStore baseModelStore;
+    private final ByteArrayResourceStore base;
     private Document document;
     
     public XmlResourceStore( final ByteArrayResourceStore baseModelStore )
     {
-        this.baseModelStore = baseModelStore;
+        this.base = baseModelStore;
         this.document = null;
         
-        if( this.baseModelStore != null )
+        if( this.base != null )
         {
             try
             {
-                byte[] contents = this.baseModelStore.getContents();
+                byte[] contents = this.base.getContents();
                 
                 if ( contents.length > 0 ) 
                 {
@@ -150,9 +152,9 @@ public class XmlResourceStore
     {
         A adapter = null;
         
-        if( this.baseModelStore != null )
+        if( this.base != null )
         {
-            adapter = this.baseModelStore.adapt( adapterType );
+            adapter = this.base.adapt( adapterType );
         }
         
         return adapter;
@@ -200,14 +202,14 @@ public class XmlResourceStore
                 
                 transformer.transform( source, result );
                 
-                this.baseModelStore.setContents( sw.toString().getBytes( UTF8_ENCODING ) );
+                this.base.setContents( sw.toString().getBytes( UTF8_ENCODING ) );
             }
             else
             {
-                this.baseModelStore.setContents( new byte[ 0 ] );
+                this.base.setContents( new byte[ 0 ] );
             }
             
-            this.baseModelStore.save();
+            this.base.save();
         }
         catch( Exception e )
         {
@@ -218,19 +220,19 @@ public class XmlResourceStore
     @Override
     public void validateEdit()
     {
-        this.baseModelStore.validateEdit();
+        this.base.validateEdit();
     }
     
     @Override
     public void validateSave()
     {
-        this.baseModelStore.validateSave();
+        this.base.validateSave();
     }
 
     @Override
     public boolean isOutOfDate()
     {
-        return this.baseModelStore.isOutOfDate();
+        return this.base.isOutOfDate();
     }
     
     @Override
@@ -238,7 +240,7 @@ public class XmlResourceStore
     {
         if( obj instanceof XmlResourceStore )
         {
-            return this.baseModelStore.equals( ( (XmlResourceStore) obj ).baseModelStore );
+            return this.base.equals( ( (XmlResourceStore) obj ).base );
         }
         
         return false;
@@ -247,7 +249,13 @@ public class XmlResourceStore
     @Override
     public int hashCode()
     {
-        return this.baseModelStore.hashCode();
+        return this.base.hashCode();
+    }
+    
+    @Override
+    protected LocalizationService initLocalizationService( final Locale locale )
+    {
+        return this.base.getLocalizationService( locale );
     }
 
     public void registerRootModelElement( final IModelElement rootModelElement )

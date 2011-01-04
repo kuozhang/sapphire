@@ -23,7 +23,8 @@ import java.util.Set;
 
 import org.eclipse.help.IContext;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
@@ -57,9 +58,9 @@ public final class SapphireSection
     private ISapphireSectionDef definition;
     private SapphireCondition visibleWhenCondition;
     private Section section;
-    private Function titleFunction;
+    private FunctionResult titleFunctionResult;
     private SapphireFormText descriptionFormText;
-    private Function descriptionFunction;
+    private FunctionResult descriptionFunctionResult;
     private String descriptionExtendedContent;
     
     @Override
@@ -90,9 +91,9 @@ public final class SapphireSection
         this.section = toolkit.createSection( context.getComposite(), Section.TITLE_BAR );
         this.section.setLayoutData( twd() );
         
-        this.titleFunction = initExpression
+        this.titleFunctionResult = initExpression
         ( 
-            this.definition.getLabel().getLocalizedText(), 
+            this.definition.getLabel(), 
             new Runnable()
             {
                 public void run()
@@ -108,9 +109,9 @@ public final class SapphireSection
         outerComposite.setLayout( twlayout( 1, 0, 0, 0, 0 ) );
         context.adapt( outerComposite );
         
-        this.descriptionFunction = initExpression
+        this.descriptionFunctionResult = initExpression
         ( 
-            this.definition.getDescription().getLocalizedText(), 
+            this.definition.getDescription(), 
             new Runnable()
             {
                 public void run()
@@ -120,7 +121,7 @@ public final class SapphireSection
             }
         );
         
-        if( this.descriptionFunction != null )
+        if( this.descriptionFunctionResult != null )
         {
             this.descriptionFormText = new SapphireFormText( outerComposite, SWT.NONE );
             this.descriptionFormText.setLayoutData( twdindent( twd(), 9 ) );
@@ -165,9 +166,9 @@ public final class SapphireSection
     {
         String title = null;
         
-        if( this.titleFunction != null )
+        if( this.titleFunctionResult != null )
         {
-            title = (String) this.titleFunction.value();
+            title = (String) this.titleFunctionResult.value();
         }
         
         if( title == null )
@@ -177,6 +178,7 @@ public final class SapphireSection
         else
         {
             title = title.trim();
+            title = this.definition.resource().getLocalizationService().text( title, CapitalizationType.TITLE_STYLE, false );
         }
         
         this.section.setText( title.trim() );
@@ -186,9 +188,9 @@ public final class SapphireSection
     {
         String description = null;
         
-        if( this.descriptionFunction != null )
+        if( this.descriptionFunctionResult != null )
         {
-            description = (String) this.descriptionFunction.value();
+            description = (String) this.descriptionFunctionResult.value();
         }
         
         if( description == null )

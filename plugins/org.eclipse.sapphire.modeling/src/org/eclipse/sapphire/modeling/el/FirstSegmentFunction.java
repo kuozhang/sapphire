@@ -29,14 +29,21 @@ public final class FirstSegmentFunction
 
 {
     @Override
-    protected String evaluate()
+    public FunctionResult evaluate( final FunctionContext context )
     {
-        final String str = cast( operand( 0 ).value(), String.class );
-        final String separators = cast( operand( 1 ).value(), String.class );
-        
-        final StringTokenizer tokenizer = new StringTokenizer( str, separators );
-        
-        return ( tokenizer.hasMoreTokens() ? tokenizer.nextToken() : str );
+        return new FunctionResult( this, context )
+        {
+            @Override
+            protected Object evaluate()
+            {
+                final String str = cast( operand( 0 ).value(), String.class );
+                final String separators = cast( operand( 1 ).value(), String.class );
+                
+                final StringTokenizer tokenizer = new StringTokenizer( str, separators );
+                
+                return ( tokenizer.hasMoreTokens() ? tokenizer.nextToken() : str );
+            }
+        };
     }
-
+    
 }

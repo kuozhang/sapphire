@@ -21,16 +21,8 @@
             </arguments>
         </buildCommand>
         <buildCommand>
-            <name>org.eclipse.sapphire.ui.builder</name>
+            <name>org.eclipse.sapphire.sdk.builder</name>
             <arguments>
-                <dictionary>
-                    <key>input</key>
-                    <value>sdef</value>
-                </dictionary>
-                <dictionary>
-                    <key>output</key>
-                    <value>.resources/sdef</value>
-                </dictionary>
             </arguments>
         </buildCommand>
     </buildSpec>

@@ -23,6 +23,8 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
@@ -62,13 +64,16 @@ public interface IMasterDetailsTreeNodeDef
     
     // *** Label ***
     
+    @Type( base = Function.class )
     @Label( standard = "label" )
+    @Localizable
     @XmlBinding( path = "label" )
     
     ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
     
-    Value<String> getLabel();
+    Value<Function> getLabel();
     void setLabel( String value );
+    void setLabel( Function value );
     
     // *** UseModelElementImage ***
     

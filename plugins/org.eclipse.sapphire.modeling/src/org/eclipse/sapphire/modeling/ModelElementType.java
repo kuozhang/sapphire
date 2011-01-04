@@ -11,22 +11,20 @@
 
 package org.eclipse.sapphire.modeling;
 
+import static org.eclipse.sapphire.modeling.localization.LocalizationUtil.transformCamelCaseToLabel;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 import java.util.TreeMap;
 
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.internal.MemoryResource;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.modeling.localization.LocalizationSystem;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -42,13 +40,13 @@ public final class ModelElementType
     private Constructor<?> implClassConstructor = null;
     private boolean implClassLoaded = false;
     private final List<ModelProperty> properties;
-    private Map<String,String> resources;
+    private final LocalizationService localizationService;
     
     public ModelElementType( final Class<?> modelElementClass )
     {
         this.modelElementClass = modelElementClass;
         this.properties = new ArrayList<ModelProperty>();
-        this.resources = null;
+        this.localizationService = LocalizationSystem.service( this.modelElementClass );
     }
     
     public static ModelElementType getModelElementType( final Class<?> modelElementClass )
@@ -252,40 +250,6 @@ public final class ModelElementType
     }
 
     @Override
-    public synchronized String getResource( final String key )
-    {
-        if( this.resources == null )
-        {
-            this.resources = new HashMap<String,String>();
-
-            try
-            {
-                final ResourceBundle resourceBundle 
-                    = ResourceBundle.getBundle( this.modelElementClass.getName(), Locale.getDefault(), 
-                                                this.modelElementClass.getClassLoader() );
-                
-                for( Enumeration<String> keys = resourceBundle.getKeys(); keys.hasMoreElements(); )
-                {
-                    final String k = keys.nextElement();
-                    this.resources.put( k, resourceBundle.getString( k ) );
-                }
-            }
-            catch( MissingResourceException e )
-            {
-                // Intentionally ignoring. It is acceptable for types to not have any resources.
-            }
-        }
-        
-        return this.resources.get( key );
-    }
-    
-    @Override
-    protected String getLabelResourceKeyBase()
-    {
-        return "$type$";
-    }
-    
-    @Override
     protected String getDefaultLabel()
     {
         String className = this.modelElementClass.getName();
@@ -303,6 +267,12 @@ public final class ModelElementType
         }
         
         return transformCamelCaseToLabel( className );
+    }
+    
+    @Override
+    public LocalizationService getLocalizationService()
+    {
+        return this.localizationService;
     }
 
     protected static abstract class ModelPropertyInitListener

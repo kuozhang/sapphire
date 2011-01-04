@@ -26,6 +26,7 @@ import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.extensibility.internal.ClassReferenceService;
 import org.eclipse.sapphire.modeling.java.JavaTypeConstraints;
 import org.eclipse.sapphire.modeling.java.JavaTypeKind;
+import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
@@ -47,6 +48,7 @@ public interface IModelElementServiceDef
     
     @LongString
     @Label( standard = "description" )
+    @Localizable
     @XmlValueBinding( path = "description", collapseWhitespace = true )
     
     @Documentation( content = "Provides information about the model element service. The " +

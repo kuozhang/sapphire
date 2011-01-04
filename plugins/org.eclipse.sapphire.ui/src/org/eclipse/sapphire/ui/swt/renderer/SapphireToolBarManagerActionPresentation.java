@@ -24,7 +24,7 @@ import org.eclipse.jface.action.SubContributionItem;
 import org.eclipse.jface.action.SubToolBarManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.LabelTransformer;
+import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;

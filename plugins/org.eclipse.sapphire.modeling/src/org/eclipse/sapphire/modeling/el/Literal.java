@@ -11,8 +11,10 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import org.eclipse.sapphire.modeling.CapitalizationType;
+
 /**
- * An function that always evaluates to the same value. 
+ * A function that always evaluates to the same value. 
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -29,17 +31,36 @@ public final class Literal
         this.value = value;
     }
     
-    public static Literal create( final FunctionContext context,
-                                  final Object obj )
+    public static Literal create( final Object obj )
     {
         final Literal literal = new Literal( obj );
-        literal.init( context );
+        literal.init();
         return literal;
     }
-
-    @Override
-    protected Object evaluate()
+    
+    public Object value()
     {
         return this.value;
     }
+
+    @Override
+    public FunctionResult evaluate( final FunctionContext context )
+    {
+        return new FunctionResult( this, context )
+        {
+            @Override
+            protected Object evaluate()
+            {
+                Object val = Literal.this.value;
+                
+                if( val instanceof String )
+                {
+                    val = context().getLocalizationService().text( (String) val, CapitalizationType.NO_CAPS, true );
+                }
+                
+                return val;
+            }
+        };
+    }
+    
 }

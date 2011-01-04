@@ -25,44 +25,49 @@ public final class DivideFunction
     extends Function
 
 {
-    public static DivideFunction create( final FunctionContext context,
-                                         final Function a,
+    public static DivideFunction create( final Function a,
                                          final Function b )
     {
         final DivideFunction function = new DivideFunction();
-        function.init( context, a, b );
+        function.init( a, b );
         return function;
     }
 
-    public static DivideFunction create( final FunctionContext context,
-                                         final Number a,
+    public static DivideFunction create( final Number a,
                                          final Number b )
     {
-        return create( context, Literal.create( context, a ), Literal.create( context, b ) );
+        return create( Literal.create( a ), Literal.create( b ) );
     }
-
+    
     @Override
-    protected Number evaluate()
+    public FunctionResult evaluate( final FunctionContext context )
     {
-        final Object a = operand( 0 ).value();
-        final Object b = operand( 1 ).value();
-        
-        if( a == null && b == null )
+        return new FunctionResult( this, context )
         {
-            return (long) 0;
-        }
-        else if( a instanceof BigDecimal || b instanceof BigDecimal || a instanceof BigInteger )
-        {
-            final BigDecimal x = cast( a, BigDecimal.class );
-            final BigDecimal y = cast( b, BigDecimal.class );
-            return x.divide( y, BigDecimal.ROUND_HALF_UP );
-        }
-        else
-        {
-            final Double x = cast( a, Double.class );
-            final Double y = cast( b, Double.class );
-            return x / y;
-        }
+            @Override
+            protected Object evaluate()
+            {
+                final Object a = operand( 0 ).value();
+                final Object b = operand( 1 ).value();
+                
+                if( a == null && b == null )
+                {
+                    return (long) 0;
+                }
+                else if( a instanceof BigDecimal || b instanceof BigDecimal || a instanceof BigInteger )
+                {
+                    final BigDecimal x = cast( a, BigDecimal.class );
+                    final BigDecimal y = cast( b, BigDecimal.class );
+                    return x.divide( y, BigDecimal.ROUND_HALF_UP );
+                }
+                else
+                {
+                    final Double x = cast( a, Double.class );
+                    final Double y = cast( b, Double.class );
+                    return x / y;
+                }
+            }
+        };
     }
 
 }

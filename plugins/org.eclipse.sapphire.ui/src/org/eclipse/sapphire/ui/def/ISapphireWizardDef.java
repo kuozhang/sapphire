@@ -22,6 +22,7 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
@@ -52,6 +53,7 @@ public interface ISapphireWizardDef
     // *** Label ***
     
     @Label( standard = "label" )
+    @Localizable
     @XmlBinding( path = "label" )
     
     ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
@@ -62,6 +64,7 @@ public interface ISapphireWizardDef
     // *** Description ***
     
     @Label( standard = "description" )
+    @Localizable
     @XmlBinding( path = "description" )
     
     ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );

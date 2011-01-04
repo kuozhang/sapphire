@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -34,24 +35,25 @@ public interface ISapphireDocumentationTopicDef
 {
     ModelElementType TYPE = new ModelElementType( ISapphireDocumentationTopicDef.class );
  
-    // *** label ***
+    // *** Label ***
     
     @Label( standard = "label" )
-    @XmlBinding( path = "label" )
     @NonNullValue
+    @Localizable
+    @XmlBinding( path = "label" )
 
-    ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" ); //$NON-NLS-1$
+    ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
     
     Value<String> getLabel();
     void setLabel( String label );
     
-    // *** href ***
+    // *** Href ***
     
     @Label( standard = "href" )
     @XmlBinding( path = "href" )
     @NonNullValue
     
-    ValueProperty PROP_HREF = new ValueProperty( TYPE, "Href" ); //$NON-NLS-1$
+    ValueProperty PROP_HREF = new ValueProperty( TYPE, "Href" );
     
     Value<String> getHref();
     void setHref( String href );

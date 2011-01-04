@@ -15,13 +15,16 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationService;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public abstract class ResourceStore
 {
-    private Map<Locale,Map<String,String>> localizedResources = null;
+    private final Map<Locale,LocalizationService> localizationServices = new HashMap<Locale,LocalizationService>();
     
     public <A> A adapt( final Class<A> adapterType )
     {
@@ -61,38 +64,34 @@ public abstract class ResourceStore
         return false;
     }
     
-    protected Map<String,String> loadLocalizedResources( final Locale locale )
+    public final LocalizationService getLocalizationService()
     {
-        return null;
+        return getLocalizationService( Locale.getDefault() );
     }
-    
-    public final Map<String,String> getLocalizedResources( final Locale locale )
+
+    public final LocalizationService getLocalizationService( final Locale locale )
     {
-        if( this.localizedResources == null )
+        synchronized( this.localizationServices )
         {
-            this.localizedResources = new HashMap<Locale,Map<String,String>>();
-        }
-    
-        if( ! this.localizedResources.containsKey( locale ) )
-        {
-            Map<String,String> localizedResources = loadLocalizedResources( locale );
+            LocalizationService service = this.localizationServices.get( locale );
             
-            if( localizedResources == null )
+            if( service == null )
             {
-                if( locale.getVariant().length() > 0 )
+                service = initLocalizationService( locale );
+                
+                if( service != null )
                 {
-                    localizedResources = getLocalizedResources( new Locale( locale.getLanguage(), locale.getCountry() ) );
-                }
-                else if( locale.getCountry().length() > 0 )
-                {
-                    localizedResources = getLocalizedResources( new Locale( locale.getLanguage() ) );
+                    this.localizationServices.put( locale, service );
                 }
             }
-            
-            this.localizedResources.put( locale, localizedResources );
-        }
         
-        return this.localizedResources.get( locale );
+            return service;
+        }
+    }
+    
+    protected LocalizationService initLocalizationService( final Locale locale )
+    {
+        return new SourceLanguageLocalizationService();
     }
     
 }

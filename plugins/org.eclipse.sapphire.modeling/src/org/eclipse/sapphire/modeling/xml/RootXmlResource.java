@@ -12,13 +12,13 @@
 package org.eclipse.sapphire.modeling.xml;
 
 import java.util.Locale;
-import java.util.Map;
 
 import org.eclipse.sapphire.modeling.CorruptedResourceException;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlRootBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 import org.w3c.dom.Document;
@@ -194,9 +194,9 @@ public class RootXmlResource
     }
     
     @Override
-    protected Map<String,String> loadLocalizedResources( final Locale locale )
+    protected LocalizationService initLocalizationService( final Locale locale )
     {
-        return this.store.getLocalizedResources( locale );
+        return this.store.getLocalizationService( locale );
     }
 
     private final void fixMalformedDescriptor()

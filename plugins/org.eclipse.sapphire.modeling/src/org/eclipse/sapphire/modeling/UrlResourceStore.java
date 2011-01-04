@@ -13,9 +13,15 @@ package org.eclipse.sapphire.modeling;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Locale;
+import java.util.Map;
+
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.modeling.localization.StandardLocalizationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -108,6 +114,69 @@ public class UrlResourceStore
     public int hashCode()
     {
         return ( this.uri != null ? this.uri.hashCode() : this.url.toString().hashCode() );
+    }
+
+    @Override
+    protected LocalizationService initLocalizationService( final Locale locale )
+    {
+        return new StandardLocalizationService( locale )
+        {
+            @Override
+            protected boolean load( final Locale locale,
+                                    final Map<String,String> keyToText )
+            {
+                final String origFileUrlString = UrlResourceStore.this.url.toString();
+                final int lastDot = origFileUrlString.lastIndexOf( '.' );
+                
+                if( lastDot != -1 )
+                {
+                    String resFileUrlString = origFileUrlString.substring( 0, lastDot );
+                    final String localeString = locale.toString();
+                    
+                    if( localeString.length() > 0 )
+                    {
+                        resFileUrlString = resFileUrlString + "_" + localeString;
+                    }
+                    
+                    resFileUrlString = resFileUrlString + ".properties";
+                    
+                    URL resFileUrl = null;
+                    
+                    try
+                    {
+                        resFileUrl = new URL( resFileUrlString );
+                    }
+                    catch( MalformedURLException e )
+                    {
+                        return false;
+                    }
+                    
+                    try
+                    {
+                        final InputStream stream = resFileUrl.openStream();
+                        
+                        try
+                        {
+                            return parse( stream, keyToText );
+                        }
+                        finally
+                        {
+                            try
+                            {
+                                stream.close();
+                            }
+                            catch( IOException e ) {}
+                        }
+                    }
+                    catch( IOException e )
+                    {
+                        return false;
+                    }
+                }
+                
+                return false;
+            }
+        };
     }
    
 }

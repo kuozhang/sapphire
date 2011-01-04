@@ -27,74 +27,80 @@ public final class GreaterThanFunction
     extends Function
 
 {
-    public static GreaterThanFunction create( final FunctionContext context,
-                                              final Function a,
+    public static GreaterThanFunction create( final Function a,
                                               final Function b )
     {
         final GreaterThanFunction function = new GreaterThanFunction();
-        function.init( context, a, b );
+        function.init( a, b );
         return function;
     }
-
-    @SuppressWarnings( { "unchecked", "rawtypes" } )
-    @Override
     
-    protected Boolean evaluate()
+    @Override
+    public FunctionResult evaluate( final FunctionContext context )
     {
-        final Object a = operand( 0 ).value();
-        final Object b = operand( 1 ).value();
-        
-        if( a == b )
+        return new FunctionResult( this, context )
         {
-            return false;
-        }
-        else if( a == null || b == null )
-        {
-            return false;
-        }
-        else if( a instanceof BigDecimal || b instanceof BigDecimal )
-        {
-            final BigDecimal x = cast( a, BigDecimal.class );
-            final BigDecimal y = cast( b, BigDecimal.class );
-            return ( x.compareTo( y ) > 0 );
-        }
-        else if( a instanceof Float || a instanceof Double || b instanceof Float || b instanceof Double )
-        {
-            final Double x = cast( a, Double.class );
-            final Double y = cast( b, Double.class );
-            return ( x > y );
-        }
-        else if( a instanceof BigInteger || b instanceof BigInteger )
-        {
-            final BigInteger x = cast( a, BigInteger.class );
-            final BigInteger y = cast( b, BigInteger.class );
-            return ( x.compareTo( y ) > 0 );
-        }
-        else if( a instanceof Byte || a instanceof Short || a instanceof Character || a instanceof Integer || a instanceof Long || 
-                 b instanceof Byte || b instanceof Short || b instanceof Character || b instanceof Integer || b instanceof Long )
-        {
-            final Long x = cast( a, Long.class );
-            final Long y = cast( b, Long.class );
-            return ( x > y );
-        }
-        else if( a instanceof String || b instanceof String )
-        {
-            final String x = cast( a, String.class );
-            final String y = cast( b, String.class );
-            return ( x.compareTo( y ) > 0 );
-        }
-        else if( a instanceof Comparable )
-        {
-            return ( ( (Comparable) a ).compareTo( b ) > 0 );
-        }
-        else if( b instanceof Comparable )
-        {
-            return ( ( (Comparable) b ).compareTo( a ) < 0 );
-        }
-        else
-        {
-            throw new FunctionException( NLS.bind( Resources.cannotApplyMessage, a.getClass().getName(), b.getClass().getName() ) );
-        }
+            @Override
+            @SuppressWarnings( { "unchecked", "rawtypes" } )
+            
+            protected Object evaluate()
+            {
+                final Object a = operand( 0 ).value();
+                final Object b = operand( 1 ).value();
+                
+                if( a == b )
+                {
+                    return false;
+                }
+                else if( a == null || b == null )
+                {
+                    return false;
+                }
+                else if( a instanceof BigDecimal || b instanceof BigDecimal )
+                {
+                    final BigDecimal x = cast( a, BigDecimal.class );
+                    final BigDecimal y = cast( b, BigDecimal.class );
+                    return ( x.compareTo( y ) > 0 );
+                }
+                else if( a instanceof Float || a instanceof Double || b instanceof Float || b instanceof Double )
+                {
+                    final Double x = cast( a, Double.class );
+                    final Double y = cast( b, Double.class );
+                    return ( x > y );
+                }
+                else if( a instanceof BigInteger || b instanceof BigInteger )
+                {
+                    final BigInteger x = cast( a, BigInteger.class );
+                    final BigInteger y = cast( b, BigInteger.class );
+                    return ( x.compareTo( y ) > 0 );
+                }
+                else if( a instanceof Byte || a instanceof Short || a instanceof Character || a instanceof Integer || a instanceof Long || 
+                         b instanceof Byte || b instanceof Short || b instanceof Character || b instanceof Integer || b instanceof Long )
+                {
+                    final Long x = cast( a, Long.class );
+                    final Long y = cast( b, Long.class );
+                    return ( x > y );
+                }
+                else if( a instanceof String || b instanceof String )
+                {
+                    final String x = cast( a, String.class );
+                    final String y = cast( b, String.class );
+                    return ( x.compareTo( y ) > 0 );
+                }
+                else if( a instanceof Comparable )
+                {
+                    return ( ( (Comparable) a ).compareTo( b ) > 0 );
+                }
+                else if( b instanceof Comparable )
+                {
+                    return ( ( (Comparable) b ).compareTo( a ) < 0 );
+                }
+                else
+                {
+                    throw new FunctionException( NLS.bind( Resources.cannotApplyMessage, a.getClass().getName(), b.getClass().getName() ) );
+                }
+            }
+        };
     }
     
     private static final class Resources extends NLS

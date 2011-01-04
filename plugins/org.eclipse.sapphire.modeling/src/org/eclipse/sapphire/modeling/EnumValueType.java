@@ -11,16 +11,15 @@
 
 package org.eclipse.sapphire.modeling;
 
+import static org.eclipse.sapphire.modeling.localization.LocalizationUtil.transformCamelCaseToLabel;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
 
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.modeling.localization.LocalizationSystem;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -32,12 +31,12 @@ public final class EnumValueType
     
 {
     private Class<?> enumClass;
-    private Map<String,String> resources;
+    private LocalizationService localizationService;
     
     public EnumValueType( final Class<?> enumClass )
     {
         this.enumClass = enumClass;
-        this.resources = null;
+        this.localizationService = LocalizationSystem.service( enumClass );
     }
     
     @Override
@@ -78,12 +77,6 @@ public final class EnumValueType
     }
     
     @Override
-    protected String getLabelResourceKeyBase()
-    {
-        return "$type$";
-    }
-    
-    @Override
     protected String getDefaultLabel()
     {
         String className = this.enumClass.getName();
@@ -110,48 +103,29 @@ public final class EnumValueType
         {
             if( longLabel )
             {
-                final String labelResourceKey = enumItem.name() + ".full";
-                labelText = getResource( labelResourceKey );
+                labelText = labelAnnotation.full().trim();
             }
             
-            if( labelText == null )
+            if( labelText == null || labelText.length() == 0 )
             {
-                final String labelResourceKey = enumItem.name() + ".standard";
-                labelText = getResource( labelResourceKey );
+                labelText = labelAnnotation.standard().trim();
             }
         }
         
-        if( labelText != null )
-        {
-            labelText = LabelTransformer.transform( labelText, capitalizationType, includeMnemonic );
-        }
-        else
+        if( labelText == null || labelText.length() == 0 )
         {
             labelText = enumItem.name();
         }
+
+        labelText = getLocalizationService().text( labelText, capitalizationType, includeMnemonic );
         
         return labelText;
     }
     
     @Override
-    public synchronized String getResource( final String key )
+    public LocalizationService getLocalizationService()
     {
-        if( this.resources == null )
-        {
-            final ResourceBundle resourceBundle 
-                = ResourceBundle.getBundle( this.enumClass.getName(), Locale.getDefault(), 
-                                            this.enumClass.getClassLoader() );
-            
-            this.resources = new HashMap<String,String>();
-            
-            for( Enumeration<String> keys = resourceBundle.getKeys(); keys.hasMoreElements(); )
-            {
-                final String k = keys.nextElement();
-                this.resources.put( k, resourceBundle.getString( k ) );
-            }
-        }
-        
-        return this.resources.get( key );
+        return this.localizationService;
     }
-    
+
 }

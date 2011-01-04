@@ -14,8 +14,10 @@ package org.eclipse.sapphire.modeling.validators;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
+import org.eclipse.sapphire.modeling.localization.LocalizationSystem;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -26,18 +28,19 @@ public class BasicValueValidator
     extends ModelPropertyValidator<Value<?>>
 
 {
-    private final String valueTypeName;
-    
-    public BasicValueValidator( final String valueTypeName )
-    {
-        this.valueTypeName = valueTypeName;
-    }
+    private String valueTypeName;
     
     @Override
     public IStatus validate( final Value<?> value )
     {
         if( value.isMalformed() )
         {
+            if( this.valueTypeName == null )
+            {
+                final Class<?> type = value.getProperty().getTypeClass();
+                this.valueTypeName = LocalizationSystem.service( type ).label( type, CapitalizationType.NO_CAPS, false );
+            }
+            
             final String msg = NLS.bind( Resources.cannotParseValueMessage, this.valueTypeName, value.getText() );
             return createErrorStatus( msg );
         }
@@ -47,10 +50,7 @@ public class BasicValueValidator
         }
     }
     
-    private static final class Resources
-    
-        extends NLS
-        
+    private static final class Resources extends NLS
     {
         public static String cannotParseValueMessage;
     

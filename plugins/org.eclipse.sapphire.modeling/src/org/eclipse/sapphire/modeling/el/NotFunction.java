@@ -22,19 +22,25 @@ public final class NotFunction
     extends Function
 
 {
-    public static NotFunction create( final FunctionContext context,
-                                      final Function operand )
+    public static NotFunction create( final Function operand )
     {
         final NotFunction function = new NotFunction();
-        function.init( context, operand );
+        function.init( operand );
         return function;
     }
 
     @Override
-    protected Boolean evaluate()
+    public FunctionResult evaluate( final FunctionContext context )
     {
-        final boolean a = cast( operand( 0 ).value(), Boolean.class );
-        return ( ! a );
+        return new FunctionResult( this, context )
+        {
+            @Override
+            protected Object evaluate()
+            {
+                final boolean a = cast( operand( 0 ).value(), Boolean.class );
+                return ( ! a );
+            }
+        };
     }
-
+    
 }

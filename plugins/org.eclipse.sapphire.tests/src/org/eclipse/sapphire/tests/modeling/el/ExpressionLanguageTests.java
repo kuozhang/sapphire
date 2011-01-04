@@ -21,6 +21,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 
@@ -194,7 +195,7 @@ public final class ExpressionLanguageTests
                        final Object expected,
                        final FunctionContext context )
     {
-        final Object actual = ExpressionLanguageParser.parse( context, expr ).value();
+        final Object actual = ExpressionLanguageParser.parse( expr ).evaluate( context ).value();
         assertEquals( expected, actual );
     }
 
@@ -964,7 +965,7 @@ public final class ExpressionLanguageTests
         {
             @Override
             public Function function( final String name,
-                                      final List<Function> arguments )
+                                      final List<Function> operands )
             {
                 Function function = null;
                 
@@ -973,9 +974,16 @@ public final class ExpressionLanguageTests
                     function = new Function()
                     {
                         @Override
-                        protected Object evaluate()
+                        public FunctionResult evaluate( final FunctionContext context )
                         {
-                            return cast( operand( 0 ).value(), BigInteger.class ).add( cast( operand( 1 ).value(), BigInteger.class ) );
+                            return new FunctionResult( this, context )
+                            {
+                                @Override
+                                protected Object evaluate()
+                                {
+                                    return cast( operand( 0 ).value(), BigInteger.class ).add( cast( operand( 1 ).value(), BigInteger.class ) );
+                                }
+                            };
                         }
                     };
                 }
@@ -984,20 +992,27 @@ public final class ExpressionLanguageTests
                     function = new Function()
                     {
                         @Override
-                        protected Object evaluate()
+                        public FunctionResult evaluate( final FunctionContext context )
                         {
-                            return cast( operand( 0 ).value(), BigInteger.class ).subtract( cast( operand( 1 ).value(), BigInteger.class ) );
+                            return new FunctionResult( this, context )
+                            {
+                                @Override
+                                protected Object evaluate()
+                                {
+                                    return cast( operand( 0 ).value(), BigInteger.class ).subtract( cast( operand( 1 ).value(), BigInteger.class ) );
+                                }
+                            };
                         }
                     };
                 }
                 
                 if( function != null )
                 {
-                    function.init( this, arguments.toArray( new Function[ arguments.size() ] ) );
+                    function.init( operands.toArray( new Function[ operands.size() ] ) );
                     return function;
                 }
                 
-                return super.function( name, arguments );
+                return super.function( name, operands );
             }
         };
         

@@ -18,7 +18,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.LabelTransformer;
+import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.def.ISapphireGroupDef;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;

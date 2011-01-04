@@ -109,10 +109,7 @@ public abstract class SapphireEditorForXml
         return super.getContentOutline( page );
     }
     
-    private static final class Resources 
-    
-        extends NLS
-        
+    private static final class Resources extends NLS
     {
         public static String sourcePageTitle;
     

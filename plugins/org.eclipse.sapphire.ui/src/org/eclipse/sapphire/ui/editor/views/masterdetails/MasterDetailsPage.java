@@ -50,6 +50,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
@@ -162,7 +163,15 @@ public final class MasterDetailsPage
             }
         }
         
-        setPartName( pageName == null ? this.definition.getPageName().getText() : pageName );
+        String partName = pageName;
+        
+        if( partName == null )
+        {
+            partName = this.definition.getPageName().getText();
+            partName = this.definition.resource().getLocalizationService().text( partName, CapitalizationType.TITLE_STYLE, false );
+        }
+        
+        setPartName( partName );
         
         // Content Outline
         
@@ -255,7 +264,10 @@ public final class MasterDetailsPage
         FormToolkit toolkit = managedForm.getToolkit();
         toolkit.decorateFormHeading(managedForm.getForm().getForm());
         
-        form.setText( this.definition.getPageHeaderText().getLocalizedText() );
+        final String pageHeaderText 
+            = this.definition.resource().getLocalizationService().text( this.definition.getPageHeaderText().getText(), CapitalizationType.TITLE_STYLE, false );
+        
+        form.setText( pageHeaderText );
         
         this.mainSection = new RootSection();
         this.mainSection.createContent( managedForm );
@@ -1056,7 +1068,10 @@ public final class MasterDetailsPage
             this.marginHeight = 10;
             setLayoutData( gdfill() );
             setLayout( glayout( 1, 0, 0 ) );
-            setText( MasterDetailsPage.this.definition.getOutlineHeaderText().getLocalizedText() );
+            
+            String outlineHeaderText = MasterDetailsPage.this.definition.getOutlineHeaderText().getText();
+            outlineHeaderText = MasterDetailsPage.this.definition.resource().getLocalizationService().text( outlineHeaderText, CapitalizationType.TITLE_STYLE, false );
+            setText( outlineHeaderText );
             
             final Composite client = toolkit.createComposite( this );
             client.setLayout( glayout( 1, 0, 0 ) );

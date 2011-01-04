@@ -28,6 +28,7 @@ import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.java.JavaTypeConstraints;
 import org.eclipse.sapphire.modeling.java.JavaTypeKind;
+import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
@@ -64,6 +65,7 @@ public interface ISapphireActionHandlerFactoryDef
     // *** Description ***
     
     @LongString
+    @Localizable
     @Label( standard = "description" )
     @XmlValueBinding( path = "description", collapseWhitespace = true )
     

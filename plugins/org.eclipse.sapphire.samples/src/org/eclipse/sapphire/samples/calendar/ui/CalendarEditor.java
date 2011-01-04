@@ -14,6 +14,7 @@ package org.eclipse.sapphire.samples.calendar.ui;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.samples.calendar.ICalendar;
@@ -95,7 +96,7 @@ public final class CalendarEditor
         addPage( 0, this.calendarDesignPage );
 
         path = new Path( "org.eclipse.sapphire.samples/sdef/ContactsDatabaseEditor.sdef/main" );
-        this.contactsDesignPage = new MasterDetailsPage( this, this.modelContacts, path, "Contacts" );
+        this.contactsDesignPage = new MasterDetailsPage( this, this.modelContacts, path, Resources.contactsPageName );
         addPage( 1, this.contactsDesignPage );
     }
 
@@ -127,6 +128,16 @@ public final class CalendarEditor
     public IContactsDatabase getContactsDatabase()
     {
         return this.modelContacts;
+    }
+    
+    private static final class Resources extends NLS
+    {
+        public static String contactsPageName;
+        
+        static
+        {
+            initializeMessages( CalendarEditor.class.getName(), Resources.class );
+        }
     }
     
 }

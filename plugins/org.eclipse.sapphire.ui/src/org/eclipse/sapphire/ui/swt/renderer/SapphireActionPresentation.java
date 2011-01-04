@@ -18,7 +18,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.LabelTransformer;
+import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFilter;

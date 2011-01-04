@@ -109,6 +109,15 @@ public interface IGallery
     
     IJavaTypeNameValueGallery getJavaTypeNameValueGallery();
     
+    // *** CustomValueGallery ***
+    
+    @Type( base = ICustomValueGallery.class )
+    @XmlBinding( path = "custom-value" )
+    
+    ImpliedElementProperty PROP_CUSTOM_VALUE_GALLERY = new ImpliedElementProperty( TYPE, "CustomValueGallery" );
+    
+    ICustomValueGallery getCustomValueGallery();
+    
     // *** BrowseSupportGallery ***
     
     @Type( base = IBrowseSupportGallery.class )

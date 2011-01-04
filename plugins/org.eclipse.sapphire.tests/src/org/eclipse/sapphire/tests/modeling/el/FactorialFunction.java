@@ -14,6 +14,8 @@ package org.eclipse.sapphire.tests.modeling.el;
 import java.math.BigInteger;
 
 import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -28,25 +30,32 @@ public final class FactorialFunction
     private static final BigInteger ONE = BigInteger.valueOf( 1 );
     
     @Override
-    protected Object evaluate()
+    public FunctionResult evaluate( final FunctionContext context )
     {
-        final BigInteger x = cast( operand( 0 ).value(), BigInteger.class );
-        
-        if( x.intValue() == 0 )
+        return new FunctionResult( this, context )
         {
-            return BigInteger.valueOf( 1 );
-        }
-        else
-        {
-            BigInteger res = x;
-            
-            for( BigInteger i = x.subtract( ONE ); i.compareTo( ZERO ) > 0; i = i.subtract( ONE ) )
+            @Override
+            protected Object evaluate()
             {
-                res = res.multiply( i );
+                final BigInteger x = cast( operand( 0 ).value(), BigInteger.class );
+                
+                if( x.intValue() == 0 )
+                {
+                    return BigInteger.valueOf( 1 );
+                }
+                else
+                {
+                    BigInteger res = x;
+                    
+                    for( BigInteger i = x.subtract( ONE ); i.compareTo( ZERO ) > 0; i = i.subtract( ONE ) )
+                    {
+                        res = res.multiply( i );
+                    }
+                    
+                    return res;
+                }
             }
-            
-            return res;
-        }
+        };
     }
     
 }

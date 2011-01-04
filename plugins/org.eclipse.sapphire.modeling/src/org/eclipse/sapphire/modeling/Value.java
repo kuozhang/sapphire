@@ -145,7 +145,7 @@ public class Value<T>
             
             if( resource != null )
             {
-                return resource.getLocalizedText( originalText, locale );
+                return resource.getLocalizationService( locale ).text( originalText, CapitalizationType.NO_CAPS, false );
             }
         }
         

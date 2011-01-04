@@ -39,7 +39,7 @@
         <indent>true</indent>
         <content>
           <separator>
-            <label>Details</label>
+            <label>details</label>
           </separator>
           <switching-panel>
             <list-selection-controller>
@@ -121,7 +121,7 @@
   
   <dialog>
     <id>dialog1</id>
-    <label>Create Bug Report (Sapphire Sample)</label>
+    <label>create bug report (sapphire sample)</label>
     <initial-focus>Title</initial-focus>
     <content>
       <composite-ref>
@@ -136,7 +136,7 @@
 
   <dialog>
     <id>dialog2</id>
-    <label>Create Bug Report (Sapphire Sample)</label>
+    <label>create bug report (sapphire sample)</label>
     <initial-focus>Title</initial-focus>
     <content>
       <composite-ref>
@@ -155,10 +155,10 @@
 
   <wizard>
     <id>wizard</id>
-    <label>Create Bug Report (Sapphire Sample)</label>
+    <label>create bug report (sapphire sample)</label>
     <page>
       <id>main.page</id>
-      <label>Create Bug Report</label>
+      <label>create bug report</label>
       <description>Create and submit a bug report.</description>
       <initial-focus>Title</initial-focus>
       <content>
@@ -182,17 +182,17 @@
   
   <editor-page>
     <id>editor.page</id>
-    <page-header-text>Bug Database (Sapphire Sample)</page-header-text>
-    <initial-selection>Bug Reports</initial-selection>
+    <page-header-text>bug database (sapphire sample)</page-header-text>
+    <initial-selection>bug reports</initial-selection>
     <root-node>
       <node>
-        <label>Bug Reports</label>
+        <label>bug reports</label>
         <section>
           <description>Use this editor to manage your bug database.</description>
           <content>
             <action-link>
               <action-id>Sapphire.Add</action-id>
-              <label>Add a bug report</label>
+              <label>add a bug report</label>
             </action-link>
           </content>
         </section>
@@ -201,7 +201,7 @@
           <node-template>
             <label>${ Title == null ? "&lt;bug&gt;" : Title }</label>
             <section>
-              <label>Bug Report</label>
+              <label>bug report</label>
               <content>
                 <composite-ref>
                   <id>bug.report</id>

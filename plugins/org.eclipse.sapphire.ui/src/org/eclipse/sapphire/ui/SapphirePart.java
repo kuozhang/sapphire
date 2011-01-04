@@ -30,11 +30,11 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
-import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.ui.def.ICompositeParam;
 import org.eclipse.sapphire.ui.def.ISapphireActionLinkDef;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
@@ -151,39 +151,33 @@ public abstract class SapphirePart
         // The default implement doesn't do anything.
     }
     
-    protected final Function initExpression( final String expression,
-                                             final Runnable refreshOp )
+    protected final FunctionResult initExpression( final Value<Function> function,
+                                                   final Runnable refreshOp )
     {
-        return initExpression( getModelElement(), expression, refreshOp );
+        return initExpression( getModelElement(), function, refreshOp );
     }
     
-    protected static final Function initExpression( final IModelElement contextModelElement,
-                                                    final String expression,
-                                                    final Runnable refreshOp )
+    protected final FunctionResult initExpression( final IModelElement contextModelElement,
+                                                   final Value<Function> function,
+                                                   final Runnable refreshOp )
     {
-        final FunctionContext context = new ModelElementFunctionContext( contextModelElement );
-        Function result = null;
+        Function f = null;
+        FunctionResult fr = null;
         
-        if( expression != null )
+        if( function != null )
         {
-            try
-            {
-                result = ExpressionLanguageParser.parse( context, expression );
-            }
-            catch( Exception e )
-            {
-                SapphireUiFrameworkPlugin.log( e );
-                result = null;
-            }
+            f = function.getContent();
         }
         
-        if( result != null )
+        if( f != null )
         {
-            result = FailSafeFunction.create( context, result, String.class );
             
-            result.addListener
+            f = FailSafeFunction.create( f, String.class );
+            fr = f.evaluate( new ModelElementFunctionContext( contextModelElement, this.definition.resource().getLocalizationService() ) );
+            
+            fr.addListener
             (
-                new Function.Listener()
+                new FunctionResult.Listener()
                 {
                     @Override
                     public void handleValueChanged()
@@ -202,7 +196,7 @@ public abstract class SapphirePart
             );
         }
         
-        return result;
+        return fr;
     }
 
     public abstract void render( final SapphireRenderingContext context );

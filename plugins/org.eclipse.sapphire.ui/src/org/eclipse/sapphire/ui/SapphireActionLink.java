@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart.Event;
 import org.eclipse.sapphire.ui.def.ISapphireActionLinkDef;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
@@ -49,7 +50,7 @@ public final class SapphireActionLink
         final String actionId = def.getActionId().getContent();
         final String actionHandlerId = def.getActionHandlerId().getContent();
         final SapphireAction action = getAction( actionId );
-        final String labelText = def.getLabel().getLocalizedText();
+        final String labelText = def.resource().getLocalizationService().text( def.getLabel().getText(), CapitalizationType.FIRST_WORD_ONLY, false );
         final boolean showImage = def.getShowImage().getContent();
 
         Image image = null;

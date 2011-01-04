@@ -18,10 +18,4 @@
 
   <extension point="org.eclipse.sapphire.modeling.extension"/>
 
-  <extension id="builder" name="%builderName" point="org.eclipse.core.resources.builders"> 
-    <builder hasNature="false"> 
-      <run class="org.eclipse.sapphire.ui.build.internal.StringResourcesExtractorBuilder"/> 
-    </builder> 
-  </extension> 
-  
 </plugin>

@@ -9,18 +9,14 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.build.internal;
+package org.eclipse.sapphire.sdk.build.internal;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -42,14 +38,14 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class StringResourcesExtractorBuilder
+public final class SapphireBuilder
 
     extends IncrementalProjectBuilder
     
 {
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings( "rawtypes" )
     
     protected IProject[] build( final int kind,
                                 final Map args,
@@ -63,31 +59,7 @@ public final class StringResourcesExtractorBuilder
         try
         {
             final IProject project = getProject();
-            final ICommand command = getCommand();
-            final Map<String,String> arguments = command.getArguments();
-            
-            final String input = arguments.get( "input" );
-            
-            if( input == null )
-            {
-                throw new IllegalStateException();
-            }
-            
-            final IFolder inputFolder = project.getFolder( input );
-            
-            if( ! inputFolder.exists() )
-            {
-                throw new IllegalStateException();
-            }
-            
-            final String output = arguments.get( "output" );
-            
-            if( output == null )
-            {
-                throw new IllegalStateException();
-            }
-            
-            final IFolder outputFolder = project.getFolder( output );
+            final IFolder outputFolder = project.getFolder( ".resources" );
             
             IResourceDelta delta = getDelta( project );
             
@@ -96,67 +68,59 @@ public final class StringResourcesExtractorBuilder
             
             if( delta == null )
             {
-                inputFolder.accept
+                project.accept
                 (
                     new IResourceVisitor()
                     {
                         public boolean visit( final IResource resource )
                         {
-                            if( resource.getType() == IResource.FOLDER )
+                            final int type = resource.getType();
+                            
+                            if( type == IResource.FOLDER || type == IResource.PROJECT )
                             {
                                 return true;
                             }
-                            else
+                            else if( StringResourcesExtractor.check( resource.getLocation().toFile() ) )
                             {
-                                if( resource.getFileExtension().toLowerCase().equals( "sdef" ) )
-                                {
-                                    inputFilesAddedOrModified.add( (IFile) resource );
-                                }
-                                
-                                return false;
+                                inputFilesAddedOrModified.add( (IFile) resource );
                             }
+                            
+                            return false;
                         }
                     }
                 );
             }
             else
             {
-                delta = delta.findMember( inputFolder.getProjectRelativePath() );
-                
-                if( delta != null )
-                {
-                    delta.accept
-                    (
-                        new IResourceDeltaVisitor()
+                delta.accept
+                (
+                    new IResourceDeltaVisitor()
+                    {
+                        public boolean visit( final IResourceDelta delta ) throws CoreException
                         {
-                            public boolean visit( final IResourceDelta delta ) throws CoreException
+                            final IResource resource = delta.getResource();
+                            final int type = resource.getType();
+                            
+                            if( type == IResource.FOLDER || type == IResource.PROJECT )
                             {
-                                final IResource resource = delta.getResource();
-                                
-                                if( resource.getType() == IResource.FOLDER )
+                                return true;
+                            }
+                            else if( StringResourcesExtractor.check( resource.getLocation().toFile() ) )
+                            {
+                                if( delta.getKind() == IResourceDelta.REMOVED )
                                 {
-                                    return true;
+                                    inputFilesRemoved.add( (IFile) resource );
                                 }
                                 else
                                 {
-                                    if( resource.getFileExtension().toLowerCase().equals( "sdef" ) )
-                                    {
-                                        if( delta.getKind() == IResourceDelta.REMOVED )
-                                        {
-                                            inputFilesRemoved.add( (IFile) resource );
-                                        }
-                                        else
-                                        {
-                                            inputFilesAddedOrModified.add( (IFile) resource );
-                                        }
-                                    }
-                                    
-                                    return false;
+                                    inputFilesAddedOrModified.add( (IFile) resource );
                                 }
                             }
+                            
+                            return false;
                         }
-                    );
-                }
+                    }
+                );
             }
             
             monitor.worked( 10 );
@@ -179,7 +143,7 @@ public final class StringResourcesExtractorBuilder
                 
                 for( IFile file : inputFilesRemoved )
                 {
-                    final IFile resourcesFile = getResourceFile( inputFolder, file, outputFolder );
+                    final IFile resourcesFile = getResourceFile( project, file, outputFolder );
                     
                     if( resourcesFile.exists() )
                     {
@@ -198,29 +162,15 @@ public final class StringResourcesExtractorBuilder
                 {
                     try
                     {
-                        final InputStream in = file.getContents();
-                        final String resourcesFileContent;
-                        
-                        try
-                        {
-                            final Reader r = new InputStreamReader( in );
-                            resourcesFileContent = StringResourcesExtractor.extract( r );
-                        }
-                        finally
-                        {
-                            try
-                            {
-                                in.close();
-                            }
-                            catch( IOException e ) {}
-                        }
+                        final String resourcesFileContent
+                            = StringResourcesExtractor.extract( file.getLocation().toFile() );
                         
                         if( resourcesFileContent != null )
                         {
                             final byte[] bytes = resourcesFileContent.getBytes();
                             final InputStream stream = new ByteArrayInputStream( bytes );
                             
-                            final IFile resourcesFile = getResourceFile( inputFolder, file, outputFolder );
+                            final IFile resourcesFile = getResourceFile( project, file, outputFolder );
                             
                             if( resourcesFile.exists() )
                             {
@@ -257,7 +207,7 @@ public final class StringResourcesExtractorBuilder
         }
     }
     
-    private static IFile getResourceFile( final IFolder inputFolder,
+    private static IFile getResourceFile( final IContainer inputFolder,
                                           final IFile inputFile,
                                           final IFolder outputFolder )
     {

@@ -9,15 +9,13 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.build.internal;
+package org.eclipse.sapphire.sdk.build.internal;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,36 +27,37 @@ import org.apache.tools.ant.Task;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class StringResourcesExtractorAntTask
+public final class SapphireAntTask
 
 	extends Task
-	
+
 {
 	private File src = null;
 	private File dest = null;
-	
+
 	public void setSrc( final File src )
 	{
 		this.src = src;
 	}
-	
+
 	public void setDest( final File dest )
 	{
 		this.dest = dest;
 	}
-	
+
 	public void execute()
 	{
 		if( this.src == null )
 		{
 			throw new BuildException( "Attribute src not set!" );
 		}
-		
+
 		if( this.dest == null )
 		{
 			throw new BuildException( "Attribute dest not set!" );
 		}
-		
+
+try{
 		final Set<File> files = new HashSet<File>();
 		gatherSourceFiles( this.src, files );
 
@@ -66,31 +65,17 @@ public final class StringResourcesExtractorAntTask
         {
             try
             {
-            	final Reader reader = new FileReader( sourceFile );
-            	final String resourceFileContent;
-            	
-            	try
-            	{
-            		resourceFileContent = StringResourcesExtractor.extract( reader );
-            	}
-            	finally
-            	{
-            		try
-            		{
-            			reader.close();
-            		}
-            		catch( IOException e ) {}
-            	}
-            	
+            	final String resourceFileContent = StringResourcesExtractor.extract( sourceFile );
+
             	if( resourceFileContent != null )
             	{
 	                File resourceFile = new File( this.dest, getRelativePath( sourceFile.getParentFile(), this.src ) );
 	                resourceFile = new File( resourceFile, getNameWithoutExtension( sourceFile ) + ".properties" );
-	                
+
 	                resourceFile.getParentFile().mkdirs();
-	                
+
 	                final OutputStream out = new FileOutputStream( resourceFile );
-	                
+
 	                try
 	                {
 	                	final Writer writer = new OutputStreamWriter( out );
@@ -112,8 +97,14 @@ public final class StringResourcesExtractorAntTask
             	throw new BuildException( e );
             }
         }
+}
+catch( Exception e )
+{
+	e.printStackTrace();
+	throw new BuildException( e );
+}
 	}
-	
+
     private static void gatherSourceFiles( final File directory,
                                            final Set<File> files )
     {
@@ -123,40 +114,40 @@ public final class StringResourcesExtractorAntTask
             {
                 gatherSourceFiles( child, files );
             }
-            else if( child.getName().toLowerCase().endsWith( ".sdef" ))
+            else if( StringResourcesExtractor.check( child ) )
             {
                 files.add( child );
             }
         }
     }
-    
+
     private static String getRelativePath( final File path,
                                            final File base )
     {
         final String[] splitPath
             = path.getAbsolutePath().split( "[/\\\\]" );
-        
+
         final String[] splitBase
             = base.getAbsolutePath().split( "[/\\\\]" );
-        
+
         int i;
-        
-        for( i = 0; i < splitPath.length && i < splitBase.length && 
-             splitPath[ i ].equals( splitBase[ i ] ); i++ ) {} 
-        
+
+        for( i = 0; i < splitPath.length && i < splitBase.length &&
+             splitPath[ i ].equals( splitBase[ i ] ); i++ ) {}
+
         if( i != splitBase.length )
         {
             throw new IllegalArgumentException( "path not beneath base" );
         }
-        
+
         final StringBuilder buf = new StringBuilder();
-        
+
         for( ; i < splitPath.length; i++ )
         {
             if( buf.length() > 0 ) buf.append( '/' );
             buf.append( splitPath[ i ] );
         }
-        
+
         return buf.toString();
     }
 
@@ -164,7 +155,7 @@ public final class StringResourcesExtractorAntTask
     {
         final String fname = f.getName();
         final int lastdot = fname.lastIndexOf( '.' );
-        
+
         if( lastdot == -1 )
         {
             return fname;
@@ -174,5 +165,5 @@ public final class StringResourcesExtractorAntTask
             return fname.substring( 0, lastdot );
         }
     }
-    
+
 }

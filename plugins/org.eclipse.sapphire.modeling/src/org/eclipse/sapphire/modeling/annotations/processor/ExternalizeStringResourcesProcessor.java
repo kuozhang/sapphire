@@ -24,6 +24,7 @@ import java.util.Set;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NamedValues;
+import org.eclipse.sapphire.modeling.localization.LocalizationUtil;
 
 import com.sun.mirror.apt.AnnotationProcessorEnvironment;
 import com.sun.mirror.apt.Filer.Location;
@@ -43,11 +44,10 @@ public final class ExternalizeStringResourcesProcessor
     {
         for( TypeDeclaration type : getAnnotatedTypes( env ) )
         {
-            final Properties resources = new Properties();
+            final Set<String> strings = new HashSet<String>();
 
-            addResources( resources, "$type$", type.getAnnotation( Label.class ) ); //$NON-NLS-1$
-
-            addHelpContentResources( resources, "$contentHelp$", type.getAnnotation( Documentation.class ) ); //$NON-NLS-1$
+            gather( strings, type.getAnnotation( Label.class ) );
+            gather( strings, type.getAnnotation( Documentation.class ) );
 
             for( FieldDeclaration field : type.getFields() )
             {
@@ -55,46 +55,26 @@ public final class ExternalizeStringResourcesProcessor
                 
                 if( fieldName != null )
                 {
-                    if( fieldName.startsWith( "PROP_" ) ) //$NON-NLS-1$
+                    gather( strings, field.getAnnotation( Label.class ) );
+                    
+                    if( fieldName.startsWith( "PROP_" ) )
                     {
-                        final String propName = getPropertyName( field );
-                        final Label labelAnnotation = field.getAnnotation( Label.class );
-                        
-                        if( labelAnnotation != null )
-                        {
-                            addResources( resources, propName, labelAnnotation );
-                        }
-                        
-                        final NamedValues namedValuesAnnotation = field.getAnnotation( NamedValues.class );
-                        
-                        if( namedValuesAnnotation != null )
-                        {
-                            resources.put( propName + ".arbitraryValue", //$NON-NLS-1$
-                                           namedValuesAnnotation.arbitraryValueLabel() );
-                            
-                            for( NamedValues.NamedValue val : namedValuesAnnotation.namedValues() )
-                            {
-                                resources.put( propName + ".namedValue." + val.value(), val.label() ); //$NON-NLS-1$
-                            }
-                        }
-                        
-                        addHelpContentResources( resources, propName, field.getAnnotation( Documentation.class ) );
-
-                    }
-                    else
-                    {
-                        final Label labelAnnotation = field.getAnnotation( Label.class );
-                        
-                        if( labelAnnotation != null )
-                        {
-                            addResources( resources, fieldName, labelAnnotation );
-                        }
+                        gather( strings, field.getAnnotation( Documentation.class ) );
+                        gather( strings, field.getAnnotation( NamedValues.class ) );
                     }
                 }
             }
             
-            if( ! resources.isEmpty() )
+            if( ! strings.isEmpty() )
             {
+                final Properties resources = new Properties();
+                
+                for( String string : strings )
+                {
+                    final String digest = LocalizationUtil.createStringDigest( string );
+                    resources.put( digest, string );
+                }
+                
                 final String pkg = type.getPackage().getQualifiedName();
                 final String relpath = type.getSimpleName() + ".properties"; //$NON-NLS-1$
                 
@@ -173,9 +153,8 @@ public final class ExternalizeStringResourcesProcessor
         return annotatedTypes;
     }
     
-    private static void addResources( final Properties resources,
-                                      final String entityName,
-                                      final Label labelAnnotation )
+    private static void gather( final Set<String> strings,
+                                final Label labelAnnotation )
     {
         if( labelAnnotation != null )
         {
@@ -183,57 +162,49 @@ public final class ExternalizeStringResourcesProcessor
             
             if( standardLabel.length() > 0 )
             {
-                resources.put( entityName + ".standard", standardLabel ); //$NON-NLS-1$
+                strings.add( standardLabel );
             }
             
             final String fullLabel = labelAnnotation.full();
             
             if( fullLabel.length() > 0 )
             {
-                resources.put( entityName + ".full", fullLabel ); //$NON-NLS-1$
+                strings.add( fullLabel );
             }
         }
     }
     
-    private static void addHelpContentResources( final Properties resources,
-                                                   final String entityName, 
-                                                 final Documentation documentationAnnotation ) 
+    private static void gather( final Set<String> strings,
+                                final Documentation documentationAnnotation ) 
     {
         if( documentationAnnotation != null )
         {
-            resources.put( entityName + ".documentation", documentationAnnotation.content() ); //$NON-NLS-1$
+            final String content = documentationAnnotation.content();
+            
+            if( content.length() > 0 )
+            {
+                strings.add( content );
+            }
 
             for( Documentation.Topic topic : documentationAnnotation.topics() )
             {
-                // TODO use topic.href()?
-                resources.put( entityName + ".topic." + topic.href(), topic.label() ); //$NON-NLS-1$
+                strings.add( topic.label() );
             }
         }
     }
-
-    private static final String getPropertyName( final FieldDeclaration propField )
+    
+    private static void gather( final Set<String> strings,
+                                final NamedValues namedValuesAnnotation )
     {
-        final String propFieldName = propField.getSimpleName();
-        
-        final StringBuilder buf = new StringBuilder();
-        boolean seenFirstSegment = false;
-        
-        for( String segment : propFieldName.split( "_" ) ) //$NON-NLS-1$
+        if( namedValuesAnnotation != null )
         {
-            if( seenFirstSegment )
+            strings.add( namedValuesAnnotation.arbitraryValueLabel() );
+            
+            for( NamedValues.NamedValue val : namedValuesAnnotation.namedValues() )
             {
-                buf.append( segment.charAt( 0 ) );
-                buf.append( segment.substring( 1 ).toLowerCase() );
-            }
-            else
-            {
-                // Skip the first segment that's always "PROP".
-                
-                seenFirstSegment = true;
+                strings.add( val.label() );
             }
         }
-        
-        return buf.toString();
     }
     
 }

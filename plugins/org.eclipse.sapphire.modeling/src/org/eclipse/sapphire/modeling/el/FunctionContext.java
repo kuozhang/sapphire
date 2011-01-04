@@ -17,6 +17,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -34,7 +36,7 @@ public class FunctionContext
     public Function function( final String name,
                               final List<Function> arguments )
     {
-        final Function function = SapphireModelingExtensionSystem.createFunction( name, this, arguments.toArray( new Function[ arguments.size() ] ) );
+        final Function function = SapphireModelingExtensionSystem.createFunction( name, arguments.toArray( new Function[ arguments.size() ] ) );
         
         if( function != null )
         {
@@ -42,6 +44,11 @@ public class FunctionContext
         }
         
         throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessage, name ) );
+    }
+    
+    public LocalizationService getLocalizationService()
+    {
+        return new SourceLanguageLocalizationService();
     }
     
     public final void addListener( final Listener listener )

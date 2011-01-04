@@ -27,7 +27,7 @@
     <delete dir=".apt_generated"/>
     <mkdir dir=".apt_generated"/>
 
-    <path id="sapphire.factorypath">
+    <path id="sapphire.classpath">
       <fileset dir="../../build/repository/plugins" includes="*.jar"/>
     </path>
 
@@ -35,18 +35,14 @@
       destdir=".apt_generated"
       preprocessdir=".apt_generated"
       classpathref="@dot.classpath"
-      factorypathref="sapphire.factorypath"
+      factorypathref="sapphire.classpath"
       compile="false"/>
 
-    <path id="sapphire.classpath">
-      <fileset dir="../../build/repository/plugins" includes="*.jar"/>
-    </path>
-
     <taskdef 
-      resource="org/eclipse/sapphire/ui/build/antlib.xml"
+      resource="org/eclipse/sapphire/sdk/build/antlib.xml"
       classpathref="sapphire.classpath"/>
     
-    <sapphire.extract-string-resources src="sdef" dest=".resources/sdef"/>
+    <sapphire src="." dest=".resources"/>
     
   </target>
 

@@ -9,21 +9,28 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.build.internal;
+package org.eclipse.sapphire.modeling.localization;
+
+import java.util.Locale;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class XmlParseException
-
-    extends RuntimeException
-    
+public final class LocalizationSystem
 {
-    private static final long serialVersionUID = 1L;
-
-    public XmlParseException( final Exception cause )
+    public static LocalizationService service( final Class<?> cl )
     {
-        super( cause );
+        final Locale locale = Locale.getDefault();
+        
+        if( locale.getLanguage().equals( Locale.ENGLISH.getLanguage() ) )
+        {
+            return new SourceLanguageLocalizationService();
+        }
+        else
+        {
+            return new ClassLocalizationService( cl, locale );
+        }
     }
+
 }

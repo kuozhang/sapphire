@@ -22,21 +22,27 @@ public final class OrFunction
     extends Function
 
 {
-    public static OrFunction create( final FunctionContext context,
-                                     final Function a,
+    public static OrFunction create( final Function a,
                                      final Function b )
     {
         final OrFunction function = new OrFunction();
-        function.init( context, a, b );
+        function.init( a, b );
         return function;
     }
 
     @Override
-    protected Boolean evaluate()
+    public FunctionResult evaluate( final FunctionContext context )
     {
-        final boolean a = cast( operand( 0 ).value(), Boolean.class );
-        final boolean b = cast( operand( 1 ).value(), Boolean.class );
-        return ( a || b );
+        return new FunctionResult( this, context )
+        {
+            @Override
+            protected Object evaluate()
+            {
+                final boolean a = cast( operand( 0 ).value(), Boolean.class );
+                final boolean b = cast( operand( 1 ).value(), Boolean.class );
+                return ( a || b );
+            }
+        };
     }
-
+    
 }

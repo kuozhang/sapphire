@@ -15,20 +15,20 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationService;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public abstract class Resource
 {
-    private static final Locale ROOT_LOCALE = new Locale( "" );
-
     private final Resource parent;
     private IModelElement element;
     private final Map<ModelProperty,BindingImpl> bindings = new HashMap<ModelProperty,BindingImpl>();
     private CorruptedResourceExceptionInterceptor corruptedResourceExceptionInterceptor;
-    private Map<String,String> defaultResourcesReverseLookup = null;
-    private Map<Locale,Map<String,String>> localizedResources = null;
+    private final Map<Locale,LocalizationService> localizationServices = new HashMap<Locale,LocalizationService>();
     
     public Resource( final Resource parent )
     {
@@ -149,90 +149,41 @@ public abstract class Resource
         return false;
     }
     
-    public final String getLocalizedText( final String text,
-                                          final Locale locale )
+    public final LocalizationService getLocalizationService()
     {
-        if( this.defaultResourcesReverseLookup == null )
+        return getLocalizationService( Locale.getDefault() );
+    }
+
+    public final LocalizationService getLocalizationService( final Locale locale )
+    {
+        synchronized( this.localizationServices )
         {
-            this.defaultResourcesReverseLookup = new HashMap<String,String>();
-        }
-        
-        String key = this.defaultResourcesReverseLookup.get( text );
-        
-        if( key == null )
-        {
-            final Map<String,String> defaultResources = getLocalizedResources( ROOT_LOCALE );
+            LocalizationService service = this.localizationServices.get( locale );
             
-            if( defaultResources != null )
+            if( service == null )
             {
-                for( Map.Entry<String,String> entry : defaultResources.entrySet() )
-                {
-                    if( text.equals( entry.getValue() ) )
-                    {
-                        key = entry.getKey();
-                        this.defaultResourcesReverseLookup.put( text, key );
-                    }
-                }
-            }
-        }
-        
-        if( key != null )
-        {
-            final Map<String,String> resourcesForLocale = getLocalizedResources( locale );
-            
-            if( resourcesForLocale != null )
-            {
-                final String localizedText = resourcesForLocale.get( key );
+                service = initLocalizationService( locale );
                 
-                if( localizedText != null )
+                if( service != null )
                 {
-                    return localizedText;
+                    this.localizationServices.put( locale, service );
                 }
             }
-        }
         
-        return text;
+            return service;
+        }
     }
     
-    protected Map<String,String> loadLocalizedResources( final Locale locale )
+    protected LocalizationService initLocalizationService( final Locale locale )
     {
         final Resource root = root();
         
         if( this != root )
         {
-            return root.loadLocalizedResources( locale );
+            return root.getLocalizationService( locale );
         }
         
-        return null;
-    }
-    
-    private Map<String,String> getLocalizedResources( final Locale locale )
-    {
-        if( this.localizedResources == null )
-        {
-            this.localizedResources = new HashMap<Locale,Map<String,String>>();
-        }
-    
-        if( ! this.localizedResources.containsKey( locale ) )
-        {
-            Map<String,String> localizedResources = loadLocalizedResources( locale );
-            
-            if( localizedResources == null )
-            {
-                if( locale.getVariant().length() > 0 )
-                {
-                    localizedResources = getLocalizedResources( new Locale( locale.getLanguage(), locale.getCountry() ) );
-                }
-                else if( locale.getCountry().length() > 0 )
-                {
-                    localizedResources = getLocalizedResources( new Locale( locale.getLanguage() ) );
-                }
-            }
-            
-            this.localizedResources.put( locale, localizedResources );
-        }
-        
-        return this.localizedResources.get( locale );
+        return new SourceLanguageLocalizationService();
     }
 
     public final void setCorruptedResourceExceptionInterceptor( final CorruptedResourceExceptionInterceptor interceptor )

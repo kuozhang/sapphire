@@ -24,60 +24,66 @@ public final class RootPropertyAccessFunction
     extends Function
 
 {
-    private FunctionContext.Listener listener;
-    
-    public static RootPropertyAccessFunction create( final FunctionContext context,
-                                                     final Function property )
+    public static RootPropertyAccessFunction create( final Function property )
     {
         final RootPropertyAccessFunction literal = new RootPropertyAccessFunction();
-        literal.init( context, property );
+        literal.init( property );
         return literal;
     }
     
-    public static RootPropertyAccessFunction create( final FunctionContext context,
-                                                     final String property )
+    public static RootPropertyAccessFunction create( final String property )
     {
-        return create( context, Literal.create( context, property ) );
+        return create( Literal.create( property ) );
     }
     
     @Override
-    protected void init()
+    public FunctionResult evaluate( final FunctionContext context )
     {
-        super.init();
-        
-        this.listener = new FunctionContext.Listener()
+        return new FunctionResult( this, context )
         {
+            private FunctionContext.Listener listener;
+            
             @Override
-            public void handlePropertyChanged( final String property )
+            protected void init()
             {
-                if( cast( operand( 0 ).value(), String.class ).equals( property ) )
+                super.init();
+                
+                this.listener = new FunctionContext.Listener()
                 {
-                    refresh();
-                }
+                    @Override
+                    public void handlePropertyChanged( final String property )
+                    {
+                        if( cast( operand( 0 ).value(), String.class ).equals( property ) )
+                        {
+                            refresh();
+                        }
+                    }
+                };
+                
+                context().addListener( this.listener );
             }
+
+            @Override
+            protected Object evaluate()
+            {
+                Object res = context().property( cast( operand( 0 ).value(), String.class ) );
+                
+                if( res instanceof ModelElementHandle<?> )
+                {
+                    res = ( (ModelElementHandle<?>) res ).element();
+                }
+                
+                return res;
+            }
+            
+            @Override
+            public void dispose()
+            {
+                super.dispose();
+                context().removeListener( this.listener );
+            }
+            
         };
-        
-        context().addListener( this.listener );
-    }
-
-    @Override
-    protected Object evaluate()
-    {
-        Object res = context().property( cast( operand( 0 ).value(), String.class ) );
-        
-        if( res instanceof ModelElementHandle<?> )
-        {
-            res = ( (ModelElementHandle<?>) res ).element();
-        }
-        
-        return res;
-    }
-
-    @Override
-    public void dispose()
-    {
-        super.dispose();
-        context().removeListener( this.listener );
     }
     
 }

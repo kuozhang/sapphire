@@ -16,7 +16,7 @@ import static org.eclipse.sapphire.modeling.util.internal.MiscUtil.equal;
 import java.util.List;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.LabelTransformer;
+import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;

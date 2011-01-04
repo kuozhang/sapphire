@@ -16,6 +16,8 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,11 +29,19 @@ public class ModelElementFunctionContext
     
 {
     private final IModelElement element;
+    private final LocalizationService localizationService;
     private final ModelPropertyListener listener;
     
     public ModelElementFunctionContext( final IModelElement element )
     {
+        this( element, new SourceLanguageLocalizationService() );
+    }
+    
+    public ModelElementFunctionContext( final IModelElement element,
+                                        final LocalizationService localizationService )
+    {
         this.element = element;
+        this.localizationService = localizationService;
         
         this.listener = new ModelPropertyListener()
         {
@@ -72,6 +82,12 @@ public class ModelElementFunctionContext
         return super.property( name );
     }
 
+    @Override
+    public LocalizationService getLocalizationService()
+    {
+        return this.localizationService;
+    }
+    
     @Override
     public void dispose()
     {
