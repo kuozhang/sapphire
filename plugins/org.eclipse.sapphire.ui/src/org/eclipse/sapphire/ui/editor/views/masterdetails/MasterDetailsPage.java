@@ -167,8 +167,7 @@ public final class MasterDetailsPage
         
         if( partName == null )
         {
-            partName = this.definition.getPageName().getText();
-            partName = this.definition.resource().getLocalizationService().text( partName, CapitalizationType.TITLE_STYLE, false );
+            partName = this.definition.getPageName().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
         }
         
         setPartName( partName );
@@ -264,10 +263,7 @@ public final class MasterDetailsPage
         FormToolkit toolkit = managedForm.getToolkit();
         toolkit.decorateFormHeading(managedForm.getForm().getForm());
         
-        final String pageHeaderText 
-            = this.definition.resource().getLocalizationService().text( this.definition.getPageHeaderText().getText(), CapitalizationType.TITLE_STYLE, false );
-        
-        form.setText( pageHeaderText );
+        form.setText( this.definition.getPageHeaderText().getLocalizedText( CapitalizationType.TITLE_STYLE, false ) );
         
         this.mainSection = new RootSection();
         this.mainSection.createContent( managedForm );
@@ -1069,9 +1065,7 @@ public final class MasterDetailsPage
             setLayoutData( gdfill() );
             setLayout( glayout( 1, 0, 0 ) );
             
-            String outlineHeaderText = MasterDetailsPage.this.definition.getOutlineHeaderText().getText();
-            outlineHeaderText = MasterDetailsPage.this.definition.resource().getLocalizationService().text( outlineHeaderText, CapitalizationType.TITLE_STYLE, false );
-            setText( outlineHeaderText );
+            setText( MasterDetailsPage.this.definition.getOutlineHeaderText().getLocalizedText( CapitalizationType.TITLE_STYLE, false ) );
             
             final Composite client = toolkit.createComposite( this );
             client.setLayout( glayout( 1, 0, 0 ) );

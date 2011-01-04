@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
 
 /**
@@ -41,12 +42,12 @@ public final class SapphireWizardPagePart
     
     public String getLabel()
     {
-        return this.def.getLabel().getContent();
+        return this.def.getLabel().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
     }
     
     public String getDescription()
     {
-        return this.def.getDescription().getContent();
+        return this.def.getDescription().getLocalizedText( CapitalizationType.NO_CAPS, false );
     }
     
     public ImageDescriptor getImageDescriptor()

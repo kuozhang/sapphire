@@ -34,7 +34,7 @@ public class ModelElementFunctionContext
     
     public ModelElementFunctionContext( final IModelElement element )
     {
-        this( element, new SourceLanguageLocalizationService() );
+        this( element, SourceLanguageLocalizationService.INSTANCE );
     }
     
     public ModelElementFunctionContext( final IModelElement element,

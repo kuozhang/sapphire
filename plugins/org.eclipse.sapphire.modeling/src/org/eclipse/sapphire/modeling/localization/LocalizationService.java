@@ -55,9 +55,9 @@ public abstract class LocalizationService
         return text( sourceLangString, capitalizationType, includeMnemonic );
     }
     
-    protected String transform( final String string,
-                                final CapitalizationType capitalizationType,
-                                final boolean includeMnemonic )
+    public String transform( final String string,
+                             final CapitalizationType capitalizationType,
+                             final boolean includeMnemonic )
     {
         final StringBuilder result = new StringBuilder( string );
         

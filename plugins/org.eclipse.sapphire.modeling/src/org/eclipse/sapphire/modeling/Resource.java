@@ -123,18 +123,22 @@ public abstract class Resource
     @SuppressWarnings( "unchecked" )
     public <A> A adapt( final Class<A> adapterType )
     {
-        A adapter = null;
+        A result = null;
         
         if( adapterType.isInstance( this ) )
         {
-            adapter = (A) this;
+            result = (A) this;
+        }
+        else if( adapterType == LocalizationService.class )
+        {
+            result = (A) getLocalizationService();
         }
         else if( this.parent != null )
         {
-            adapter = this.parent.adapt( adapterType );
+            result = this.parent.adapt( adapterType );
         }
         
-        return adapter;
+        return result;
     }
     
     public boolean isOutOfDate()
@@ -183,7 +187,7 @@ public abstract class Resource
             return root.getLocalizationService( locale );
         }
         
-        return new SourceLanguageLocalizationService();
+        return SourceLanguageLocalizationService.INSTANCE;
     }
 
     public final void setCorruptedResourceExceptionInterceptor( final CorruptedResourceExceptionInterceptor interceptor )

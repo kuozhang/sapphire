@@ -29,6 +29,7 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.SapphireMultiStatus;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.ProblemOverlayImageDescriptor;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
@@ -384,7 +385,7 @@ public final class MasterDetailsContentNode
         else
         {
             label = label.trim();
-            label = this.definition.resource().getLocalizationService().text( label, CapitalizationType.TITLE_STYLE, false );
+            label = this.definition.adapt( LocalizationService.class ).transform( label, CapitalizationType.TITLE_STYLE, false );
         }
         
         return label;

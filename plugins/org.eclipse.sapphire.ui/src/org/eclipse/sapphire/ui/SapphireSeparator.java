@@ -42,8 +42,7 @@ public final class SapphireSeparator
         separatorComposite.setLayout( glayout( 1, 0, 5 ) );
         context.adapt( separatorComposite );
         
-        final String label
-            = def.resource().getLocalizationService().text( def.getLabel().getLocalizedText(), CapitalizationType.TITLE_STYLE, false );
+        final String label = def.getLabel().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
         
         if( label != null )
         {

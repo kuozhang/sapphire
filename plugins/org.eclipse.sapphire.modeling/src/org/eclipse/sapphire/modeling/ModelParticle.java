@@ -11,6 +11,9 @@
 
 package org.eclipse.sapphire.modeling;
 
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationService;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -51,6 +54,7 @@ public abstract class ModelParticle
     }
     
     @SuppressWarnings( "unchecked" )
+    
     public final <T> T nearest( final Class<T> particleType )
     {
         if( particleType.isAssignableFrom( getClass() ) )
@@ -70,21 +74,28 @@ public abstract class ModelParticle
         }
     }
     
+    @SuppressWarnings( "unchecked" )
+    
     public <A> A adapt( final Class<A> adapterType )
     {
-        A adapter = null;
+        A result = null;
         
         if( this.resource != null )
         {
-            adapter = this.resource.adapt( adapterType );
+            result = this.resource.adapt( adapterType );
         }
 
-        if( adapter == null && this.parent != null )
+        if( result == null && this.parent != null )
         {
-            adapter = this.parent.adapt( adapterType );
+            result = this.parent.adapt( adapterType );
         }
         
-        return adapter;
+        if( result == null && adapterType == LocalizationService.class )
+        {
+            result = (A) SourceLanguageLocalizationService.INSTANCE;
+        }
+        
+        return result;
     }
 
 }

@@ -35,6 +35,7 @@ import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.def.ICompositeParam;
 import org.eclipse.sapphire.ui.def.ISapphireActionLinkDef;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
@@ -173,7 +174,7 @@ public abstract class SapphirePart
         {
             
             f = FailSafeFunction.create( f, String.class );
-            fr = f.evaluate( new ModelElementFunctionContext( contextModelElement, this.definition.resource().getLocalizationService() ) );
+            fr = f.evaluate( new ModelElementFunctionContext( contextModelElement, this.definition.adapt( LocalizationService.class ) ) );
             
             fr.addListener
             (

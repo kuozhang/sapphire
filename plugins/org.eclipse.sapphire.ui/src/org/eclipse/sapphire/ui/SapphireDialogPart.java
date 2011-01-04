@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui;
 
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.ui.def.ISapphireDialogDef;
 
 /**
@@ -40,7 +41,7 @@ public final class SapphireDialogPart
     
     public String getLabel()
     {
-        return this.def.getLabel().getContent();
+        return this.def.getLabel().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
     }
     
 }

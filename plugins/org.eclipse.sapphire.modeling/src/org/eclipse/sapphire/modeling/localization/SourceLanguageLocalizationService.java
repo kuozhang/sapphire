@@ -22,10 +22,18 @@ public final class SourceLanguageLocalizationService
     extends LocalizationService
     
 {
+    public static final SourceLanguageLocalizationService INSTANCE = new SourceLanguageLocalizationService();
+    
+    /**
+     * Do not instantiate. Use the provided global instance.
+     */
+    
+    private SourceLanguageLocalizationService() {}
+    
     @Override
     public String text( final String sourceLangString,
-                          final CapitalizationType capitalizationType,
-                          final boolean includeMnemonic )
+                        final CapitalizationType capitalizationType,
+                        final boolean includeMnemonic )
     {
         return transform( sourceLangString, capitalizationType, includeMnemonic );
     }

@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
 import org.eclipse.sapphire.ui.def.ISapphireWizardDef;
 import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
@@ -48,7 +49,7 @@ public class SapphireWizard<M extends IExecutableModelElement>
         this.modelElement = modelElement;
         this.definition = SapphireUiDefFactory.getWizardDef( wizardDefPath );
         
-        setWindowTitle( this.definition.getLabel().getContent() );
+        setWindowTitle( this.definition.getLabel().getLocalizedText( CapitalizationType.TITLE_STYLE, false ) );
         
         final ImageDescriptor imageDescriptor = this.definition.getImage().resolve();
         

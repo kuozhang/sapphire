@@ -26,9 +26,17 @@ public abstract class ResourceStore
 {
     private final Map<Locale,LocalizationService> localizationServices = new HashMap<Locale,LocalizationService>();
     
+    @SuppressWarnings( "unchecked" )
     public <A> A adapt( final Class<A> adapterType )
     {
-        return null;
+        A result = null;
+        
+        if( adapterType == LocalizationService.class )
+        {
+            result = (A) getLocalizationService();
+        }
+        
+        return result;
     }
 
     /**
@@ -91,7 +99,7 @@ public abstract class ResourceStore
     
     protected LocalizationService initLocalizationService( final Locale locale )
     {
-        return new SourceLanguageLocalizationService();
+        return SourceLanguageLocalizationService.INSTANCE;
     }
     
 }
