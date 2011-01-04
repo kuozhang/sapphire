@@ -39,7 +39,6 @@ public class FileBugReportHandler3
         final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow( event );
         
         final IFileBugReportOp op = IFileBugReportOp.TYPE.instantiate();
-        op.getBugReport().element( true );  // Force creation of the bug report.
         
         final SapphireWizard<IFileBugReportOp> wizard 
             = new SapphireWizard<IFileBugReportOp>( op, "org.eclipse.sapphire.samples/sdef/EzBug.sdef!wizard" );

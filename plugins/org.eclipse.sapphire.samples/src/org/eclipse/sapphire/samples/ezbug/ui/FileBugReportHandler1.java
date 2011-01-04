@@ -40,7 +40,7 @@ public class FileBugReportHandler1
         final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow( event );
         
         final IFileBugReportOp op = IFileBugReportOp.TYPE.instantiate();
-        final IBugReport report = op.getBugReport().element( true );
+        final IBugReport report = op.getBugReport();
         
         final SapphireDialog dialog 
             = new SapphireDialog( window.getShell(), report, "org.eclipse.sapphire.samples/sdef/EzBug.sdef!dialog1" );
