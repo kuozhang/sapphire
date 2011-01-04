@@ -157,9 +157,9 @@ public abstract class SapphirePart
         return initExpression( getModelElement(), function, refreshOp );
     }
     
-    protected static final FunctionResult initExpression( final IModelElement contextModelElement,
-                                                          final Value<Function> function,
-                                                          final Runnable refreshOp )
+    protected final FunctionResult initExpression( final IModelElement contextModelElement,
+                                                   final Value<Function> function,
+                                                   final Runnable refreshOp )
     {
         Function f = null;
         FunctionResult fr = null;
@@ -171,8 +171,9 @@ public abstract class SapphirePart
         
         if( f != null )
         {
+            
             f = FailSafeFunction.create( f, String.class );
-            fr = f.evaluate( new ModelElementFunctionContext( contextModelElement ) );
+            fr = f.evaluate( new ModelElementFunctionContext( contextModelElement, this.definition.resource().getLocalizationService() ) );
             
             fr.addListener
             (

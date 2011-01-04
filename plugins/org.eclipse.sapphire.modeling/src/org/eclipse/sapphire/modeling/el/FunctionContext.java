@@ -12,7 +12,6 @@
 package org.eclipse.sapphire.modeling.el;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.osgi.util.NLS;
@@ -47,12 +46,7 @@ public class FunctionContext
         throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessage, name ) );
     }
     
-    public final LocalizationService getLocalizationService()
-    {
-        return getLocalizationService( Locale.getDefault() );
-    }
-
-    public LocalizationService getLocalizationService( final Locale locale )
+    public LocalizationService getLocalizationService()
     {
         return new SourceLanguageLocalizationService();
     }
