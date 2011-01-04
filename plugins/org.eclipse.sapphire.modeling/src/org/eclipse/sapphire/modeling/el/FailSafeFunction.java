@@ -23,40 +23,45 @@ public class FailSafeFunction
     extends Function
 
 {
-    public static FailSafeFunction create( final FunctionContext context,
-                                           final Function operand,
+    public static FailSafeFunction create( final Function operand,
                                            final Function expectedType )
     {
         final FailSafeFunction function = new FailSafeFunction();
-        function.init( context, operand, expectedType );
+        function.init( operand, expectedType );
         return function;
     }
 
-    public static FailSafeFunction create( final FunctionContext context,
-                                           final Function operand,
+    public static FailSafeFunction create( final Function operand,
                                            final Class<?> expectedType )
     {
-        return create( context, operand, Literal.create( context, expectedType ) );
+        return create( operand, Literal.create( expectedType ) );
     }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
     
-    protected final Object evaluate()
+    @Override
+    public FunctionResult evaluate( final FunctionContext context )
     {
-        try
+        return new FunctionResult( this, context )
         {
-            return cast( operand( 0 ).value(), cast( operand( 1 ).value(), Class.class ) );
-        }
-        catch( FunctionException e )
-        {
-            return handleFunctionException( e );
-        }
+            @Override
+            @SuppressWarnings( "unchecked" )
+            
+            protected Object evaluate()
+            {
+                try
+                {
+                    return cast( operand( 0 ).value(), cast( operand( 1 ).value(), Class.class ) );
+                }
+                catch( FunctionException e )
+                {
+                    return handleFunctionException( e );
+                }
+            }
+        };
     }
     
     protected Object handleFunctionException( final FunctionException e )
     {
         return null;
     }
-    
+
 }

@@ -24,33 +24,38 @@ public final class ConcatFunction
     extends Function
 
 {
-    public static ConcatFunction create( final FunctionContext context,
-                                         final Function a,
+    public static ConcatFunction create( final Function a,
                                          final Function b )
     {
         final ConcatFunction function = new ConcatFunction();
-        function.init( context, a, b );
+        function.init( a, b );
         return function;
     }
 
-    public static ConcatFunction create( final FunctionContext context,
-                                         final String a,
+    public static ConcatFunction create( final String a,
                                          final String b )
     {
-        return create( context, Literal.create( context, a ), Literal.create( context, b ) );
+        return create( Literal.create( a ), Literal.create( b ) );
     }
 
     @Override
-    protected String evaluate()
+    public FunctionResult evaluate( final FunctionContext context )
     {
-        final StringBuilder buf = new StringBuilder();
-        
-        for( Function operand : operands() )
+        return new FunctionResult( this, context )
         {
-            buf.append( cast( operand.value(), String.class ) );
-        }
-        
-        return buf.toString();
+            @Override
+            protected Object evaluate()
+            {
+                final StringBuilder buf = new StringBuilder();
+                
+                for( FunctionResult operand : operands() )
+                {
+                    buf.append( cast( operand.value(), String.class ) );
+                }
+                
+                return buf.toString();
+            }
+        };
     }
 
 }

@@ -86,6 +86,10 @@
         <type>org.eclipse.sapphire.modeling.java.JavaPackageName</type>
         <impl>org.eclipse.sapphire.modeling.java.internal.JavaPackageNameSerializationService</impl>
     </value-serialization-service>
+    <value-serialization-service>
+        <type>org.eclipse.sapphire.modeling.el.Function</type>
+        <impl>org.eclipse.sapphire.modeling.el.internal.FunctionSerializationService</impl>
+    </value-serialization-service>
     <function>
         <name>Concat</name>
         <impl>org.eclipse.sapphire.modeling.el.ConcatFunction</impl>

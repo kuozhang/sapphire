@@ -18,6 +18,8 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
@@ -37,25 +39,29 @@ public interface ISapphireSectionDef
     
     // *** Label ***
     
+    @Type( base = Function.class )
     @Label( standard = "label" )
     @Localizable
     @XmlBinding( path = "label" )
     
     ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
     
-    Value<String> getLabel();
-    void setLabel( String label );
+    Value<Function> getLabel();
+    void setLabel( String value );
+    void setLabel( Function value );
     
     // *** Description ***
     
+    @Type( base = Function.class )
     @Label( standard = "description" )
     @Localizable
     @XmlValueBinding( path = "description", collapseWhitespace = true )
     
     ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );
     
-    Value<String> getDescription();
-    void setDescription( String description );
+    Value<Function> getDescription();
+    void setDescription( String value );
+    void setDescription( Function value );
     
     // *** VisibleWhenConditionClass ***
     

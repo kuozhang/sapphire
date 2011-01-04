@@ -11,29 +11,35 @@
 
 package org.eclipse.sapphire.modeling.el;
 
-import org.eclipse.sapphire.modeling.ModelElementHandle;
+import java.util.List;
 
 /**
- * An function that pulls a property from the context. 
- * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class RootPropertyAccessFunction
+public final class DeferredFunction
 
     extends Function
-
+    
 {
-    public static RootPropertyAccessFunction create( final Function property )
+    private final String name;
+    
+    public DeferredFunction( final String name )
     {
-        final RootPropertyAccessFunction literal = new RootPropertyAccessFunction();
-        literal.init( property );
-        return literal;
+        this.name = name;
     }
     
-    public static RootPropertyAccessFunction create( final String property )
+    public static DeferredFunction create( final String name,
+                                           final List<Function> operands )
     {
-        return create( Literal.create( property ) );
+        final DeferredFunction function = new DeferredFunction( name );
+        function.init( operands );
+        return function;
+    }
+
+    public String name()
+    {
+        return this.name;
     }
     
     @Override
@@ -41,48 +47,41 @@ public final class RootPropertyAccessFunction
     {
         return new FunctionResult( this, context )
         {
-            private FunctionContext.Listener listener;
+            private FunctionResult baseResult;
+            private FunctionResult.Listener listener;
             
             @Override
             protected void init()
             {
                 super.init();
                 
-                this.listener = new FunctionContext.Listener()
+                final Function function = context().function( name(), DeferredFunction.this.operands() );
+                this.baseResult = function.evaluate( context() );
+                
+                this.listener = new FunctionResult.Listener()
                 {
                     @Override
-                    public void handlePropertyChanged( final String property )
+                    public void handleValueChanged()
                     {
-                        if( cast( operand( 0 ).value(), String.class ).equals( property ) )
-                        {
-                            refresh();
-                        }
+                        refresh();
                     }
                 };
                 
-                context().addListener( this.listener );
+                this.baseResult.addListener( this.listener );
             }
 
             @Override
             protected Object evaluate()
             {
-                Object res = context().property( cast( operand( 0 ).value(), String.class ) );
-                
-                if( res instanceof ModelElementHandle<?> )
-                {
-                    res = ( (ModelElementHandle<?>) res ).element();
-                }
-                
-                return res;
+                return this.baseResult.value();
             }
-            
+
             @Override
             public void dispose()
             {
                 super.dispose();
-                context().removeListener( this.listener );
+                this.baseResult.removeListener( this.listener );
             }
-            
         };
     }
     

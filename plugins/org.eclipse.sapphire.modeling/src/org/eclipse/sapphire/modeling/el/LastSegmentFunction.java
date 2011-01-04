@@ -29,21 +29,28 @@ public final class LastSegmentFunction
 
 {
     @Override
-    protected String evaluate()
+    public FunctionResult evaluate( final FunctionContext context )
     {
-        final String str = cast( operand( 0 ).value(), String.class );
-        final String separators = cast( operand( 1 ).value(), String.class );
-        
-        final StringTokenizer tokenizer = new StringTokenizer( str, separators );
-        
-        String lastSegment = str;
-        
-        while( tokenizer.hasMoreTokens() )
+        return new FunctionResult( this, context )
         {
-            lastSegment = tokenizer.nextToken();
-        }
-        
-        return lastSegment;
+            @Override
+            protected Object evaluate()
+            {
+                final String str = cast( operand( 0 ).value(), String.class );
+                final String separators = cast( operand( 1 ).value(), String.class );
+                
+                final StringTokenizer tokenizer = new StringTokenizer( str, separators );
+                
+                String lastSegment = str;
+                
+                while( tokenizer.hasMoreTokens() )
+                {
+                    lastSegment = tokenizer.nextToken();
+                }
+                
+                return lastSegment;
+            }
+        };
     }
 
 }

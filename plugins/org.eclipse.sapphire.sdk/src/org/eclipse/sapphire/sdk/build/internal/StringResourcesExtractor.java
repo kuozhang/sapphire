@@ -25,6 +25,10 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.Literal;
+import org.eclipse.sapphire.modeling.el.PropertyAccessFunction;
+import org.eclipse.sapphire.modeling.el.RootPropertyAccessFunction;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.localization.LocalizationUtil;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
@@ -119,22 +123,34 @@ public final class StringResourcesExtractor
             {
                 if( property.hasAnnotation( Localizable.class ) )
                 {
-                    final String value = element.read( (ValueProperty) property ).getText( false );
-                    
-                    if( value != null )
+                    if( property.getTypeClass() == Function.class )
                     {
-                        strings.add( value );
-                    }
-                    
-                    final DefaultValue defaultValueAnnotation = property.getAnnotation( DefaultValue.class );
-                    
-                    if( defaultValueAnnotation != null )
-                    {
-                        final String defaultValue = defaultValueAnnotation.text();
+                        final Function function = (Function) element.read( (ValueProperty) property ).getContent( false );
                         
-                        if( defaultValue.length() > 0 )
+                        if( function != null )
                         {
-                            strings.add( defaultValue );
+                            gather( function, strings );
+                        }
+                    }
+                    else
+                    {
+                        final String value = element.read( (ValueProperty) property ).getText( false );
+                        
+                        if( value != null )
+                        {
+                            strings.add( value );
+                        }
+                        
+                        final DefaultValue defaultValueAnnotation = property.getAnnotation( DefaultValue.class );
+                        
+                        if( defaultValueAnnotation != null )
+                        {
+                            final String defaultValue = defaultValueAnnotation.text();
+                            
+                            if( defaultValue.length() > 0 )
+                            {
+                                strings.add( defaultValue );
+                            }
                         }
                     }
                 }
@@ -158,6 +174,31 @@ public final class StringResourcesExtractor
                 {
                     gather( child, strings );
                 }
+            }
+        }
+    }
+    
+    private static void gather( final Function function,
+                                final Set<String> strings )
+    {
+        if( function instanceof Literal )
+        {
+            Object value = ( (Literal) function ).value();
+            
+            if( value instanceof String )
+            {
+                strings.add( (String) value );
+            }
+        }
+        else if( function instanceof RootPropertyAccessFunction || function instanceof PropertyAccessFunction )
+        {
+            return;
+        }
+        else
+        {
+            for( Function operand : function.operands() )
+            {
+                gather( operand, strings );
             }
         }
     }

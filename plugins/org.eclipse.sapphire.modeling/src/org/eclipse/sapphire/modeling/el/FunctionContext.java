@@ -34,7 +34,7 @@ public class FunctionContext
     public Function function( final String name,
                               final List<Function> arguments )
     {
-        final Function function = SapphireModelingExtensionSystem.createFunction( name, this, arguments.toArray( new Function[ arguments.size() ] ) );
+        final Function function = SapphireModelingExtensionSystem.createFunction( name, arguments.toArray( new Function[ arguments.size() ] ) );
         
         if( function != null )
         {

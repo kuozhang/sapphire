@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.SapphireMultiStatus;
-import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.ProblemOverlayImageDescriptor;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
@@ -74,7 +74,7 @@ public final class MasterDetailsContentNode
     private ImpliedElementProperty modelElementProperty;
     private ModelElementListener modelElementListener;
     private MasterDetailsContentNode parentNode;
-    private Function labelFunction;
+    private FunctionResult labelFunctionResult;
     private Set<String> listProperties;
     private ImageDescriptor imageDescriptor;
     private ImageDescriptor imageDescriptorWithError;
@@ -128,10 +128,10 @@ public final class MasterDetailsContentNode
             this.modelElement = getModelElement();
         }
         
-        this.labelFunction = initExpression
+        this.labelFunctionResult = initExpression
         ( 
             this.modelElement, 
-            this.definition.getLabel().getLocalizedText(), 
+            this.definition.getLabel(), 
             new Runnable()
             {
                 public void run()
@@ -372,9 +372,9 @@ public final class MasterDetailsContentNode
     {
         String label = null;
         
-        if( this.labelFunction != null )
+        if( this.labelFunctionResult != null )
         {
-            label = (String) this.labelFunction.value();
+            label = (String) this.labelFunctionResult.value();
         }
         
         if( label == null )
@@ -709,9 +709,9 @@ public final class MasterDetailsContentNode
             condition.dispose();
         }
         
-        if( this.labelFunction != null )
+        if( this.labelFunctionResult != null )
         {
-            this.labelFunction.dispose();
+            this.labelFunctionResult.dispose();
         }
     }
 

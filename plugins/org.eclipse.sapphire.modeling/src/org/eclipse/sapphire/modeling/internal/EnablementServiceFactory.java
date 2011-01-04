@@ -22,6 +22,7 @@ import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 
@@ -79,10 +80,11 @@ public final class EnablementServiceFactory
             if( svc == null && annotation.expr().length() > 0 )
             {
                 Function f = null;
+                FunctionResult fr = null;
                 
                 try
                 {
-                    f = ExpressionLanguageParser.parse( new ModelElementFunctionContext( element ), annotation.expr() );
+                    f = ExpressionLanguageParser.parse( annotation.expr() );
                 }
                 catch( Exception e )
                 {
@@ -92,10 +94,11 @@ public final class EnablementServiceFactory
                 
                 if( f != null )
                 {
-                    f = FailSafeFunction.create( f.context(), f, Boolean.class );
+                    f = FailSafeFunction.create( f, Boolean.class );
+                    fr = f.evaluate( new ModelElementFunctionContext( element ) );
                 }
                 
-                svc = new FunctionBasedEnablementService( f );
+                svc = new FunctionBasedEnablementService( fr );
                 svc.init( element, property, new String[ 0 ] );
             }
             
@@ -157,11 +160,11 @@ public final class EnablementServiceFactory
     
     private static final class FunctionBasedEnablementService extends EnablementService
     {
-        private final Function function;
+        private final FunctionResult functionResult;
         
-        public FunctionBasedEnablementService( final Function function )
+        public FunctionBasedEnablementService( final FunctionResult functionResult )
         {
-            this.function = function;
+            this.functionResult = functionResult;
         }
         
         @Override
@@ -171,9 +174,9 @@ public final class EnablementServiceFactory
         {
             super.init( element, property, params );
             
-            this.function.addListener
+            this.functionResult.addListener
             (
-                new Function.Listener()
+                new FunctionResult.Listener()
                 {
                     @Override
                     public void handleValueChanged()
@@ -189,9 +192,9 @@ public final class EnablementServiceFactory
         {
             Boolean enabled = null;
             
-            if( this.function != null )
+            if( this.functionResult != null )
             {
-                enabled = (Boolean) this.function.value();
+                enabled = (Boolean) this.functionResult.value();
             }
             
             if( enabled == null )

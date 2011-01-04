@@ -36,7 +36,6 @@ import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
@@ -127,7 +126,6 @@ public final class SapphireModelingExtensionSystem
     }
 
     public static Function createFunction( final String name,
-                                           final FunctionContext context,
                                            final Function... operands )
     {
         initialize();
@@ -136,7 +134,7 @@ public final class SapphireModelingExtensionSystem
 
         if( factory != null )
         {
-            return factory.create( context, operands );
+            return factory.create( operands );
         }
 
         return null;
@@ -333,8 +331,8 @@ public final class SapphireModelingExtensionSystem
             this.classLoader = classLoader;
         }
 
-        @SuppressWarnings( "unchecked" )
         @Override
+        
         public List<URL> findExtensionFiles()
         {
             final List<URL> files = new ArrayList<URL>();
@@ -653,8 +651,7 @@ public final class SapphireModelingExtensionSystem
             this.functionClass = functionClass;
         }
 
-        public Function create( final FunctionContext context,
-                                final Function... operands )
+        public Function create( final Function... operands )
         {
             Function function = null;
 
@@ -663,7 +660,7 @@ public final class SapphireModelingExtensionSystem
                 try
                 {
                     function = this.functionClass.newInstance();
-                    function.init( context, operands );
+                    function.init( operands );
                 }
                 catch( Exception e )
                 {

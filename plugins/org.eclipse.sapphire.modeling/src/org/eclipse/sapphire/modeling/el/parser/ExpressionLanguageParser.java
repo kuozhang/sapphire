@@ -15,7 +15,6 @@ import java.io.Reader;
 import java.io.StringReader;
 
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionException;
 import org.eclipse.sapphire.modeling.el.parser.internal.ExpressionLanguageParserImpl;
 import org.eclipse.sapphire.modeling.el.parser.internal.TokenMgrError;
@@ -26,18 +25,14 @@ import org.eclipse.sapphire.modeling.el.parser.internal.TokenMgrError;
 
 public final class ExpressionLanguageParser
 {
-    public static Function parse( final FunctionContext context,
-                                  final String expression )
+    public static Function parse( final String expression )
     {
-        return parse( context, new StringReader( expression ) );
+        return parse( new StringReader( expression ) );
     }
     
-    public static Function parse( final FunctionContext context,
-                                  final Reader expression )
+    public static Function parse( final Reader expression )
     {
         final ExpressionLanguageParserImpl parser = new ExpressionLanguageParserImpl( expression );
-        
-        parser.setContext( context );
         
         try
         {

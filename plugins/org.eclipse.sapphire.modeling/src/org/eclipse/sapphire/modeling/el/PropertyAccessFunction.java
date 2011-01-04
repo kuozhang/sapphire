@@ -28,70 +28,79 @@ public final class PropertyAccessFunction
     extends Function
 
 {
-    private final ModelPropertyListener listener;
-    private IModelElement element;
-    private ModelProperty property;
-    
-    public PropertyAccessFunction()
-    {
-        this.listener = new ModelPropertyListener()
-        {
-            @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
-            {
-                refresh();
-            }
-        };
-    }
-    
-    public static PropertyAccessFunction create( final FunctionContext context,
-                                                 final Function element,
+    public static PropertyAccessFunction create( final Function element,
                                                  final Function property )
     {
         final PropertyAccessFunction literal = new PropertyAccessFunction();
-        literal.init( context, element, property );
+        literal.init( element, property );
         return literal;
     }
     
     @Override
-    protected Object evaluate()
+    public FunctionResult evaluate( final FunctionContext context )
     {
-        final IModelElement el = cast( operand( 0 ).value(), IModelElement.class );
-        final String pname = cast( operand( 1 ).value(), String.class );
-        final ModelProperty p = el.getModelElementType().getProperty( pname );
-        
-        if( this.element != el || this.property != p )
+        return new FunctionResult( this, context )
         {
-            if( this.element != null )
+            private ModelPropertyListener listener;
+            private IModelElement element;
+            private ModelProperty property;
+            
+            @Override
+            protected void init()
             {
-                this.element.removeListener( this.listener, this.property.getName() );
+                super.init();
+                
+                this.listener = new ModelPropertyListener()
+                {
+                    @Override
+                    public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                    {
+                        refresh();
+                    }
+                };
+            }
+
+            @Override
+            protected Object evaluate()
+            {
+                final IModelElement el = cast( operand( 0 ).value(), IModelElement.class );
+                final String pname = cast( operand( 1 ).value(), String.class );
+                final ModelProperty p = el.getModelElementType().getProperty( pname );
+                
+                if( this.element != el || this.property != p )
+                {
+                    if( this.element != null )
+                    {
+                        this.element.removeListener( this.listener, this.property.getName() );
+                    }
+                    
+                    this.element = el;
+                    this.property = p;
+                    
+                    this.element.addListener( this.listener, this.property.getName() );
+                }
+                
+                Object res = this.element.read( this.property );
+                
+                if( res instanceof ModelElementHandle<?> )
+                {
+                    res = ( (ModelElementHandle<?>) res ).element();
+                }
+                
+                return res;
             }
             
-            this.element = el;
-            this.property = p;
-            
-            this.element.addListener( this.listener, this.property.getName() );
-        }
-        
-        Object res = this.element.read( this.property );
-        
-        if( res instanceof ModelElementHandle<?> )
-        {
-            res = ( (ModelElementHandle<?>) res ).element();
-        }
-        
-        return res;
-    }
-
-    @Override
-    public void dispose()
-    {
-        super.dispose();
-        
-        if( this.element != null )
-        {
-            this.element.removeListener( this.listener, this.property.getName() );
-        }
+            @Override
+            public void dispose()
+            {
+                super.dispose();
+                
+                if( this.element != null )
+                {
+                    this.element.removeListener( this.listener, this.property.getName() );
+                }
+            }
+        };
     }
     
 }

@@ -26,43 +26,49 @@ public final class EmptyFunction
     extends Function
 
 {
-    public static EmptyFunction create( final FunctionContext context,
-                                        final Function operand )
+    public static EmptyFunction create( final Function operand )
     {
         final EmptyFunction function = new EmptyFunction();
-        function.init( context, operand );
+        function.init( operand );
         return function;
     }
-
+    
     @Override
-    protected Boolean evaluate()
+    public FunctionResult evaluate( final FunctionContext context )
     {
-        final Object a = operand( 0 ).value();
-        
-        if( a == null )
+        return new FunctionResult( this, context )
         {
-            return true;
-        }
-        else if( a instanceof String && ( (String) a ).length() == 0 )
-        {
-            return true;
-        }
-        else if( a instanceof Object[] && ( (Object[]) a ).length == 0 )
-        {
-            return true;
-        }
-        else if( a instanceof Collection && ( (Collection<?>) a ).isEmpty() )
-        {
-            return true;
-        }
-        else if( a instanceof Value<?> && ( (Value<?>) a ).getContent() == null )
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+            @Override
+            protected Object evaluate()
+            {
+                final Object a = operand( 0 ).value();
+                
+                if( a == null )
+                {
+                    return true;
+                }
+                else if( a instanceof String && ( (String) a ).length() == 0 )
+                {
+                    return true;
+                }
+                else if( a instanceof Object[] && ( (Object[]) a ).length == 0 )
+                {
+                    return true;
+                }
+                else if( a instanceof Collection && ( (Collection<?>) a ).isEmpty() )
+                {
+                    return true;
+                }
+                else if( a instanceof Value<?> && ( (Value<?>) a ).getContent() == null )
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        };
     }
 
 }

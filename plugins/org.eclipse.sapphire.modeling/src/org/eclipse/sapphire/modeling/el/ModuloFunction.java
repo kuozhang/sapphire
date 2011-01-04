@@ -27,51 +27,56 @@ public final class ModuloFunction
     extends Function
 
 {
-    public static ModuloFunction create( final FunctionContext context,
-                                         final Function a,
+    public static ModuloFunction create( final Function a,
                                          final Function b )
     {
         final ModuloFunction function = new ModuloFunction();
-        function.init( context, a, b );
+        function.init( a, b );
         return function;
     }
 
-    public static ModuloFunction create( final FunctionContext context,
-                                         final Number a,
+    public static ModuloFunction create( final Number a,
                                          final Number b )
     {
-        return create( context, Literal.create( context, a ), Literal.create( context, b ) );
+        return create( Literal.create( a ), Literal.create( b ) );
     }
-
+    
     @Override
-    protected Number evaluate()
+    public FunctionResult evaluate( final FunctionContext context )
     {
-        final Object a = operand( 0 ).value();
-        final Object b = operand( 1 ).value();
-        
-        if( a == null && b == null )
+        return new FunctionResult( this, context )
         {
-            return (long) 0;
-        }
-        else if( a instanceof BigDecimal || a instanceof Float || a instanceof Double || isDecimalString( a ) || 
-                 b instanceof BigDecimal || b instanceof Float || b instanceof Double || isDecimalString( b ) )
-        {
-            final Double x = cast( a, Double.class );
-            final Double y = cast( b, Double.class );
-            return x % y;
-        }
-        else if( a instanceof BigInteger || b instanceof BigInteger )
-        {
-            final BigInteger x = cast( a, BigInteger.class );
-            final BigInteger y = cast( b, BigInteger.class );
-            return x.remainder( y );
-        }
-        else
-        {
-            final Long x = cast( a, Long.class );
-            final Long y = cast( b, Long.class );
-            return x / y;
-        }
+            @Override
+            protected Object evaluate()
+            {
+                final Object a = operand( 0 ).value();
+                final Object b = operand( 1 ).value();
+                
+                if( a == null && b == null )
+                {
+                    return (long) 0;
+                }
+                else if( a instanceof BigDecimal || a instanceof Float || a instanceof Double || isDecimalString( a ) || 
+                         b instanceof BigDecimal || b instanceof Float || b instanceof Double || isDecimalString( b ) )
+                {
+                    final Double x = cast( a, Double.class );
+                    final Double y = cast( b, Double.class );
+                    return x % y;
+                }
+                else if( a instanceof BigInteger || b instanceof BigInteger )
+                {
+                    final BigInteger x = cast( a, BigInteger.class );
+                    final BigInteger y = cast( b, BigInteger.class );
+                    return x.remainder( y );
+                }
+                else
+                {
+                    final Long x = cast( a, Long.class );
+                    final Long y = cast( b, Long.class );
+                    return x / y;
+                }
+            }
+        };
     }
-
+    
 }

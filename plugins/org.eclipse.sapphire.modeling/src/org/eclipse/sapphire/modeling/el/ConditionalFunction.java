@@ -22,29 +22,35 @@ public final class ConditionalFunction
     extends Function
 
 {
-    public static ConditionalFunction create( final FunctionContext context,
-                                              final Function condition,
+    public static ConditionalFunction create( final Function condition,
                                               final Function positive,
                                               final Function negative )
     {
         final ConditionalFunction function = new ConditionalFunction();
-        function.init( context, condition, positive, negative );
+        function.init( condition, positive, negative );
         return function;
     }
 
     @Override
-    protected final Object evaluate()
+    public FunctionResult evaluate( final FunctionContext context )
     {
-        final Boolean conditionValue = cast( operand( 0 ).value(), Boolean.class );
-        
-        if( conditionValue == true )
+        return new FunctionResult( this, context )
         {
-            return operand( 1 ).value();
-        }
-        else
-        {
-            return operand( 2 ).value();
-        }
+            @Override
+            protected Object evaluate()
+            {
+                final Boolean conditionValue = cast( operand( 0 ).value(), Boolean.class );
+                
+                if( conditionValue == true )
+                {
+                    return operand( 1 ).value();
+                }
+                else
+                {
+                    return operand( 2 ).value();
+                }
+            }
+        };
     }
     
 }
