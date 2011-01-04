@@ -292,6 +292,7 @@
                 reversed = reversed.replace( /\}([0-9]+)\{/g, "{$1}" );                     // Fix template syntax.
                 reversed = reversed.replace( /\.\.\.(.*)/, "$1..." );                       // Tripple dots belong at the end.
                 reversed = reversed.replace( /([a-z])\x26([^\x26]|$)/gi, "\x26$1$2" );      // Maintain the same mnemonic chracter.
+                reversed = reversed.replace( />(.*)</, "<$1>" );                            // Common meta text brackets.
                 project.setProperty( ".reversed", reversed );
               ]]> </script>
 
