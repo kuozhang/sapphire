@@ -65,7 +65,7 @@ public final class SapphireModelingExtensionSystem
     private static List<ExtensionHandle> extensionHandles;
     private static List<ModelElementServiceFactory> modelElementServiceFactories;
     private static List<ModelPropertyServiceFactory> modelPropertyServiceFactories;
-    private static List<ValueSerializerFactory> valueSerializerFactories;
+    private static List<ValueSerializationServiceFactory> valueSerializerFactories;
     private static Map<String,FunctionFactory> functionFactories;
 
     public static List<ExtensionHandle> getExtensionHandles()
@@ -84,7 +84,12 @@ public final class SapphireModelingExtensionSystem
         {
             if( factory.applicable( element, service ) )
             {
-                return factory.create( element, service );
+                final ModelElementService instance = factory.create( element, service );
+                
+                if( instance != null )
+                {
+                    return instance;
+                }
             }
         }
 
@@ -101,7 +106,12 @@ public final class SapphireModelingExtensionSystem
         {
             if( factory.applicable( element, property, service ) )
             {
-                return factory.create( element, property, service );
+                final ModelPropertyService instance = factory.create( element, property, service );
+                
+                if( instance != null )
+                {
+                    return instance;
+                }
             }
         }
 
@@ -114,11 +124,16 @@ public final class SapphireModelingExtensionSystem
     {
         initialize();
 
-        for( ValueSerializerFactory factory : valueSerializerFactories )
+        for( ValueSerializationServiceFactory factory : valueSerializerFactories )
         {
             if( factory.applicable( type ) )
             {
-                return factory.create( element, property );
+                final ValueSerializationService instance = factory.create( element, property );
+                
+                if( instance != null )
+                {
+                    return instance;
+                }
             }
         }
 
@@ -147,7 +162,7 @@ public final class SapphireModelingExtensionSystem
             initialized = true;
             modelElementServiceFactories = new ArrayList<ModelElementServiceFactory>();
             modelPropertyServiceFactories = new ArrayList<ModelPropertyServiceFactory>();
-            valueSerializerFactories = new ArrayList<ValueSerializerFactory>();
+            valueSerializerFactories = new ArrayList<ValueSerializationServiceFactory>();
             functionFactories = new HashMap<String,FunctionFactory>();
 
             extensionHandles = new ArrayList<ExtensionHandle>();
@@ -193,7 +208,7 @@ public final class SapphireModelingExtensionSystem
                                         final Class<?> valueType = handle.loadClass( text( child( el, EL_TYPE ) ) );
                                         final Class<? extends ValueSerializationService> serializerClass = handle.loadClass( text( child( el, EL_IMPL ) ) );
 
-                                        valueSerializerFactories.add( new ValueSerializerFactory( valueType, serializerClass ) );
+                                        valueSerializerFactories.add( new ValueSerializationServiceFactory( valueType, serializerClass ) );
                                     }
                                     else if( elname.equals( EL_MODEL_ELEMENT_SERVICE ) )
                                     {
@@ -320,6 +335,7 @@ public final class SapphireModelingExtensionSystem
     {
         public abstract List<URL> findExtensionFiles();
         public abstract <T> Class<T> loadClass( String className );
+        public abstract URL resolveResource( String name );
     }
 
     public static final class ClassLoaderExtensionHandle extends ExtensionHandle
@@ -379,6 +395,12 @@ public final class SapphireModelingExtensionSystem
             }
 
             return (Class<T>) cl;
+        }
+
+        @Override
+        public URL resolveResource( final String name )
+        {
+            return this.classLoader.getResource( name );
         }
     }
 
@@ -443,9 +465,15 @@ public final class SapphireModelingExtensionSystem
 
             return (Class<T>) cl;
         }
+
+        @Override
+        public URL resolveResource( final String name )
+        {
+            return this.bundle.getResource( name );
+        }
     }
 
-    private static final class InvalidExtensionException extends RuntimeException
+    public static final class InvalidExtensionException extends RuntimeException
     {
         private static final long serialVersionUID = 1L;
     }
@@ -592,14 +620,14 @@ public final class SapphireModelingExtensionSystem
         }
     }
 
-    private static final class ValueSerializerFactory
+    private static final class ValueSerializationServiceFactory
     {
         private final Class<?> type;
         private final Class<? extends ValueSerializationService> serializerClass;
         private boolean serializerInstantiationFailed;
 
-        public ValueSerializerFactory( final Class<?> type,
-                                       final Class<? extends ValueSerializationService> serializerClass )
+        public ValueSerializationServiceFactory( final Class<?> type,
+                                                 final Class<? extends ValueSerializationService> serializerClass )
         {
             this.type = type;
             this.serializerClass = serializerClass;
@@ -618,7 +646,7 @@ public final class SapphireModelingExtensionSystem
         }
 
         public ValueSerializationService create( final IModelElement element,
-                                              final ValueProperty property )
+                                                 final ValueProperty property )
         {
             ValueSerializationService serializer = null;
 

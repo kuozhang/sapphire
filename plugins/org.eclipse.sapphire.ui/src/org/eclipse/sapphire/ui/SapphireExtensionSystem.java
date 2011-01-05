@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.modeling.ClassLoaderResourceResolver;
+import org.eclipse.sapphire.modeling.ClassResolver;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.UrlResourceStore;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
@@ -45,14 +47,58 @@ public final class SapphireExtensionSystem
         {
             final List<ISapphireUiExtensionDef> list = new ArrayList<ISapphireUiExtensionDef>();
 
-            for( ExtensionHandle handle : SapphireModelingExtensionSystem.getExtensionHandles() )
+            for( final ExtensionHandle handle : SapphireModelingExtensionSystem.getExtensionHandles() )
             {
+                final ClassResolver classResolver = new ClassResolver()
+                {
+                    @Override
+                    public Class<?> resolve( final String name )
+                    {
+                        try
+                        {
+                            return handle.loadClass( name );
+                        }
+                        catch( SapphireModelingExtensionSystem.InvalidExtensionException e )
+                        {
+                            return null;
+                        }
+                    }
+                };
+                
+                final ClassLoaderResourceResolver classLoaderResourceResolver = new ClassLoaderResourceResolver()
+                {
+                    @Override
+                    public URL resolve( final String name )
+                    {
+                        return handle.resolveResource( name );
+                    }
+                };
+                
                 for( URL url : handle.findExtensionFiles() )
                 {
                     try
                     {
-                        final XmlResourceStore store = new XmlResourceStore( new UrlResourceStore( url ) );
-                        final RootXmlResource resource = new RootXmlResource( store );
+                        final UrlResourceStore store = new UrlResourceStore( url )
+                        {
+                            @Override
+                            @SuppressWarnings("unchecked")
+                            public <A> A adapt( final Class<A> adapterType )
+                            {
+                                if( adapterType == ClassResolver.class )
+                                {
+                                    return (A) classResolver;
+                                }
+                                else if( adapterType == ClassLoaderResourceResolver.class )
+                                {
+                                    return (A) classLoaderResourceResolver;
+                                }
+                                
+                                return super.adapt( adapterType );
+                            }
+                        };
+                        
+                        final XmlResourceStore xmlResourceStore = new XmlResourceStore( store );
+                        final RootXmlResource resource = new RootXmlResource( xmlResourceStore );
                         final ISapphireUiExtensionDef extension = ISapphireUiExtensionDef.TYPE.instantiate( resource );
                         list.add( extension );
                     }

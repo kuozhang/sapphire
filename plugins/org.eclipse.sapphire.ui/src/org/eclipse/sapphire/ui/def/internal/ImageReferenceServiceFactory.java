@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.def.internal;
 import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.modeling.ClassLoaderResourceResolver;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
@@ -23,7 +24,6 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.ui.def.IImportDirective;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -57,7 +57,7 @@ public final class ImageReferenceServiceFactory
                                         final ModelProperty property,
                                         final Class<? extends ModelPropertyService> service )
     {
-        final ReferenceService svc;
+        ReferenceService svc = null;
         final IModelElement root = (IModelElement) element.root();
         
         if( root instanceof ISapphireUiDef )
@@ -87,26 +87,31 @@ public final class ImageReferenceServiceFactory
         }
         else
         {
-            svc = new ReferenceService()
+            final ClassLoaderResourceResolver classLoaderResourceResolver = element.adapt( ClassLoaderResourceResolver.class );
+            
+            if( classLoaderResourceResolver != null )
             {
-                @Override
-                public Object resolve( final String reference )
+                svc = new ReferenceService()
                 {
-                    ImageDescriptor img = null;
-                    
-                    if( reference != null )
+                    @Override
+                    public Object resolve( final String reference )
                     {
-                        final URL url = SapphireUiFrameworkPlugin.class.getClassLoader().getResource( reference );
+                        ImageDescriptor img = null;
                         
-                        if( url != null )
+                        if( reference != null )
                         {
-                            img = ImageDescriptor.createFromURL( url );
+                            final URL url = classLoaderResourceResolver.resolve( reference );
+                            
+                            if( url != null )
+                            {
+                                img = ImageDescriptor.createFromURL( url );
+                            }
                         }
+                        
+                        return img;
                     }
-                    
-                    return img;
-                }
-            };
+                };
+            }
         }
         
         return svc;

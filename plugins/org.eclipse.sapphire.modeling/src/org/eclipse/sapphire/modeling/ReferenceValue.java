@@ -31,29 +31,28 @@ public final class ReferenceValue<T>
         super( parent, property, value );
         
         this.service = parent.service( property, ReferenceService.class );
-        
-        if( this.service == null )
-        {
-            throw new IllegalArgumentException();
-        }
     }
     
     @SuppressWarnings( "unchecked" )
     
     public T resolve()
     {
-        final String ref = getText();
         T result = null;
         
-        if( ref != null )
+        if( this.service != null )
         {
-            try
+            final String ref = getText();
+            
+            if( ref != null )
             {
-                result = (T) this.service.resolve( ref );
-            }
-            catch( Exception e )
-            {
-                SapphireModelingFrameworkPlugin.log( e );
+                try
+                {
+                    result = (T) this.service.resolve( ref );
+                }
+                catch( Exception e )
+                {
+                    SapphireModelingFrameworkPlugin.log( e );
+                }
             }
         }
         

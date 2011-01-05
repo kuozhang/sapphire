@@ -9,10 +9,9 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.def.internal;
+package org.eclipse.sapphire.modeling.internal;
 
-import static org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin.PLUGIN_ID;
-
+import org.eclipse.sapphire.modeling.ClassResolver;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
@@ -20,8 +19,6 @@ import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ReferenceService;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.ui.def.IImportDirective;
-import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -55,35 +52,16 @@ public final class ClassReferenceServiceFactory
                                         final ModelProperty property,
                                         final Class<? extends ModelPropertyService> service )
     {
-        final IModelElement root = (IModelElement) element.root();
-        
-        if( root instanceof ISapphireUiDef )
+        final ClassResolver classResolver = element.adapt( ClassResolver.class );
+
+        if( classResolver != null )
         {
-            final ISapphireUiDef def = (ISapphireUiDef) root;
-            
             return new ReferenceService()
             {
                 @Override
                 public Object resolve( final String reference )
                 {
-                    Class<?> cl 
-                        = ImportDirectiveMethods.resolveClass( reference, PLUGIN_ID, PLUGIN_ID + ".actions",
-                                                               PLUGIN_ID + ".listeners", PLUGIN_ID + ".xml" );
-    
-                    if( cl == null )
-                    {
-                        for( IImportDirective directive : def.getImportDirectives() )
-                        {
-                            cl = directive.resolveClass( reference );
-                            
-                            if( cl != null )
-                            {
-                                break;
-                            }
-                        }
-                    }
-                    
-                    return cl;
+                    return classResolver.resolve( reference );
                 }
             };
         }
