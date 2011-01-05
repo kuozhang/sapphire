@@ -13,10 +13,9 @@ package org.eclipse.sapphire.samples.ezbug;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
@@ -46,9 +45,9 @@ public interface IFileBugReportOp
     @Label( standard = "bug report" )
     @XmlBinding( path = "bug" )
     
-    ElementProperty PROP_BUG_REPORT = new ElementProperty( TYPE, "BugReport" );
+    ImpliedElementProperty PROP_BUG_REPORT = new ImpliedElementProperty( TYPE, "BugReport" );
     
-    ModelElementHandle<IBugReport> getBugReport();
+    IBugReport getBugReport();
     
     // *** Method: execute ***
     

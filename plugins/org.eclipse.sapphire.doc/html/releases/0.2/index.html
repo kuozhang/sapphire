@@ -13,6 +13,7 @@
   <li><a href="#common">Common</a></li>
   <ol type="A">
     <li><a href="#el">Expression Language</a></li>
+    <li><a href="#localization">Localization</a></li>
   </ol>
   <li><a href="#modeling">Modeling</a></li>
   <ol type="A">
@@ -63,6 +64,21 @@ by an expression that allows alternative text to be used if the Name property is
 &lt;/node-template></code></pre>
 
 <p><a href="../../el/index.html">See Documentation</a></p>
+
+<h2><a name="localization">Localization</a></h2>
+
+<p>Localization support has been significantly improved. Without going too deep into API changes,
+there is a new @Localizable annotation that can be applied to fields of annotations or model properties.
+This annotation serves as a signal at build-time to the automatic externalizer. The improves 
+extensibility of the externalizer as the items to externalize are no longer hardcodded.</p>
+
+<p>The externalizer now use SHA-256 algorithm for generating resource file keys. This replaces two
+separate less effective approaches.</p>
+
+<p>The samples now include localization fragments for a non-existing language that can be used
+to test localizability. The fragments are generated during Sapphire build by reversing all externalized
+strings. To test localizability, install samples, launch Eclipse with "-nl re" switch and open
+any sample editor or dialog (such as the contacts database editor).</p>
 
 <h2><a name="modeling"><a name="transient">Transient Properties</a></a></h2>
 

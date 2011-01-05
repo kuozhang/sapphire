@@ -179,7 +179,7 @@ public final class SapphireSection
         else
         {
             title = title.trim();
-            title = this.definition.resource().getLocalizationService().text( title, CapitalizationType.TITLE_STYLE, false );
+            title = this.definition.adapt( LocalizationService.class ).transform( title, CapitalizationType.TITLE_STYLE, false );
         }
         
         this.section.setText( title.trim() );
