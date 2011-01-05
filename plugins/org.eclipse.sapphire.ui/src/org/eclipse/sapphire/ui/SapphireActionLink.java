@@ -50,7 +50,7 @@ public final class SapphireActionLink
         final String actionId = def.getActionId().getContent();
         final String actionHandlerId = def.getActionHandlerId().getContent();
         final SapphireAction action = getAction( actionId );
-        final String labelText = def.resource().getLocalizationService().text( def.getLabel().getText(), CapitalizationType.FIRST_WORD_ONLY, false );
+        final String labelText = def.getLabel().getLocalizedText( CapitalizationType.FIRST_WORD_ONLY, false );
         final boolean showImage = def.getShowImage().getContent();
 
         Image image = null;

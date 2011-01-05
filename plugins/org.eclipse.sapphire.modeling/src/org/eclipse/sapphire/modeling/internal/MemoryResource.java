@@ -6,6 +6,7 @@ import java.util.List;
 import org.eclipse.sapphire.modeling.BindingImpl;
 import org.eclipse.sapphire.modeling.ElementBindingImpl;
 import org.eclipse.sapphire.modeling.ElementProperty;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListBindingImpl;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -77,6 +78,25 @@ public final class MemoryResource
                 public void write( final String value )
                 {
                     this.value = value;
+                }
+            };
+        }
+        else if( property instanceof ImpliedElementProperty )
+        {
+            binding = new ElementBindingImpl()
+            {
+                private final MemoryResource element = new MemoryResource( property.getType(), MemoryResource.this );
+                
+                @Override
+                public ModelElementType type( final Resource resource )
+                {
+                    return ( (MemoryResource) resource ).type();
+                }
+                
+                @Override
+                public Resource read()
+                {
+                    return this.element;
                 }
             };
         }

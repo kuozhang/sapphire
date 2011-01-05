@@ -48,7 +48,7 @@ public class FunctionContext
     
     public LocalizationService getLocalizationService()
     {
-        return new SourceLanguageLocalizationService();
+        return SourceLanguageLocalizationService.INSTANCE;
     }
     
     public final void addListener( final Listener listener )

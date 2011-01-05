@@ -37,7 +37,7 @@ public final class FileBugReportView
         parent.setLayout( glayout( 1, 0, 0 ) );
         
         final IFileBugReportOp op = IFileBugReportOp.TYPE.instantiate();
-        final IBugReport report = op.getBugReport().element( true );
+        final IBugReport report = op.getBugReport();
         
         final SapphireControl control 
             = new SapphireControl( parent, report, "org.eclipse.sapphire.samples/sdef/EzBug.sdef!bug.report.form.style.scrolled" );

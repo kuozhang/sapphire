@@ -25,7 +25,7 @@ public final class LocalizationSystem
         
         if( locale.getLanguage().equals( Locale.ENGLISH.getLanguage() ) )
         {
-            return new SourceLanguageLocalizationService();
+            return SourceLanguageLocalizationService.INSTANCE;
         }
         else
         {

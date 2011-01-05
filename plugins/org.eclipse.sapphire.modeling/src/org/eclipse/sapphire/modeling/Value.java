@@ -11,11 +11,10 @@
 
 package org.eclipse.sapphire.modeling;
 
-import java.util.Locale;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
 
@@ -126,27 +125,29 @@ public class Value<T>
     
     public String getLocalizedText()
     {
-        return getLocalizedText( true, Locale.getDefault() );
+        return getLocalizedText( true );
     }
     
     public String getLocalizedText( final boolean useDefaultValue )
     {
-        return getLocalizedText( useDefaultValue, Locale.getDefault() );
+        return getLocalizedText( useDefaultValue, CapitalizationType.NO_CAPS, true );
+    }
+    
+    public String getLocalizedText( final CapitalizationType capitalizationType,
+                                    final boolean includeMnemonic )
+    {
+        return getLocalizedText( true, capitalizationType, includeMnemonic );
     }
     
     public String getLocalizedText( final boolean useDefaultValue,
-                                    final Locale locale )
+                                    final CapitalizationType capitalizationType,
+                                    final boolean includeMnemonic )
     {
-        final String originalText = getText( useDefaultValue );
+        final String sourceLangText = getText( useDefaultValue );
         
-        if( originalText != null )
+        if( sourceLangText != null )
         {
-            final Resource resource = resource();
-            
-            if( resource != null )
-            {
-                return resource.getLocalizationService( locale ).text( originalText, CapitalizationType.NO_CAPS, false );
-            }
+            return adapt( LocalizationService.class ).text( sourceLangText, capitalizationType, includeMnemonic );
         }
         
         return null;
