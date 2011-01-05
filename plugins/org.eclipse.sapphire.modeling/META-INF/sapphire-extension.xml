@@ -38,6 +38,10 @@
         <type>org.eclipse.sapphire.modeling.ReferenceService</type>
         <factory>org.eclipse.sapphire.modeling.internal.ReferenceServiceFactory</factory>
     </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ReferenceService</type>
+        <factory>org.eclipse.sapphire.modeling.internal.ClassReferenceServiceFactory</factory>
+    </model-property-service>
     <value-serialization-service>
         <type>java.lang.Enum</type>
         <impl>org.eclipse.sapphire.modeling.serialization.internal.EnumSerializationService</impl>
