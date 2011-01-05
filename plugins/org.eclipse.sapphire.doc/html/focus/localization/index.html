@@ -33,18 +33,19 @@ annotations (such as the @Label annotation) and you see them throughout the UI d
 Sapphire’s approach is to allow the developer to leave the strings in their original language at 
 point of use. The string resource files that will be translated are created at build time. The 
 build system takes the original string and applies a function to it to generate a key for the 
-string resources file. The same function is applied at runtime to derive the key to lookup the 
-translated string.</p> 
+string resources file. At runtime, the system loads the original string resources file along
+with the localized version and matches original strings to translations by using the 
+resource keys. Once matching is completed, the resource keys are discarded from memory.</p> 
 
 <p>The critical concept is that the developer does not take any explicit steps to enable 
 localization. It just happens under the covers.</p>
 
 <p>The nature of the function that is used to derive the string resources file key is not 
-particularly important as long as the resulting key is not overly long and is reasonably free 
-from collisions. The current implementation takes the original string, chops it off at 20 
-characters and replaces some characters that are illegal in a property file key with an 
-underscore. Decent approach for the first cut, but we will likely replace it with an md5 hash 
-in the first version of Sapphire to ship at Eclipse Foundation.</p>
+particularly important as long as the resulting key is not overly long, is free 
+from collisions and doesn't change if the string itself hasn't changed (important for
+re-using prior work of translators). The current implementation uses SHA-256 algorithm. It is
+important to note that the key is only computed at build-time, thus the performance of the
+key creation algorith is not particularly important.</p>
 
 <p>On top of the automatic externalization, Sapphire is architected to minimize the number of 
 strings that must be externalized in the first place. In particular, when the developer specifies 

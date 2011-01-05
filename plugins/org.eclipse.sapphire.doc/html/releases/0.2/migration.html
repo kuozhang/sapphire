@@ -38,6 +38,7 @@ to 0.2 release. Only changes from the previous milestone are covered.</p>
   <li><a href="#jump-handlers">Jump Handlers</a></li>
   <li><a href="#action-links">Action Links</a></li>
   <li><a href="#dynamic-label">Dynamic Label</a></li>
+  <li><a href="#project-metadata">Project Metadata</a></li>
   <li><a href="#misc">Miscellaneous</a></li>
 </ol>
 
@@ -832,6 +833,66 @@ migration:</p>
 <p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
 <nobr>Search: &nbsp;&nbsp;&lt;dynamic-label>\s*&lt;property>(.*)&lt;/property>\s*&lt;null-value-label>(.*)&lt;/null-value-label>\s*&lt;/dynamic-label></nobr><br/>
 <nobr>Replace: &nbsp;&lt;label>\$\{ \1 == null \? \"\2\" \: \1 \}&lt;/label></code></p>
+
+<a name="project-metadata"><h2>Project Metadata</h2></a>
+
+<p>In the .project file:</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;buildCommand>
+    &lt;name>org.eclipse.sapphire.ui.builder&lt;/name>
+    &lt;arguments>
+        &lt;dictionary>
+            &lt;key>input&lt;/key>
+            &lt;value>sdef&lt;/value>
+        &lt;/dictionary>
+        &lt;dictionary>
+            &lt;key>output&lt;/key>
+            &lt;value>.resources/sdef&lt;/value>
+        &lt;/dictionary>
+    &lt;/arguments>
+&lt;/buildCommand></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;buildCommand>
+    &lt;name>org.eclipse.sapphire.sdk.builder&lt;/name>
+    &lt;arguments>
+    &lt;/arguments>
+&lt;/buildCommand></code></pre>
+    </td>
+  </tr>
+</table>    
+
+<p>In the customBuildCallbacks.xml file:</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;taskdef 
+  resource="org/eclipse/sapphire/ui/build/antlib.xml"
+  classpathref="sapphire.classpath"/>
+    
+&lt;sapphire.extract-string-resources src="sdef" dest=".resources/sdef"/></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;taskdef 
+  resource="org/eclipse/sapphire/sdk/build/antlib.xml"
+  classpathref="sapphire.classpath"/>
+    
+&lt;sapphire src="." dest=".resources"/></code></pre>
+    </td>
+  </tr>
+</table>    
 
 <a name="misc"><h2>Miscellaneous</h2></a>
 
