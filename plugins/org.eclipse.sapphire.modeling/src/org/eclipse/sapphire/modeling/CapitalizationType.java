@@ -49,7 +49,7 @@ public enum CapitalizationType
         {
             final char ch = str.charAt( i );
             
-            if( ch == ' ' || ch == '-' || ch == '(' )
+            if( ch == ' ' || ch == '-' || ch == '(' || ch == '<' || ch == '[' || ch == '{' )
             {
                 isFirstWord = false;
                 isFirstLetterInWord = true;
