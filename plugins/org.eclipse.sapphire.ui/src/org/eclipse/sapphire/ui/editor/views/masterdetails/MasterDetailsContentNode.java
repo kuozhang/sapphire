@@ -87,6 +87,7 @@ public final class MasterDetailsContentNode
     private boolean expanded;
     private SapphireCondition visibleWhenCondition;
     private final List<SapphireCondition> allConditions = new ArrayList<SapphireCondition>();
+    private boolean transformLabelCase = true;
     
     @Override
     protected void init()
@@ -385,7 +386,9 @@ public final class MasterDetailsContentNode
         else
         {
             label = label.trim();
-            label = this.definition.adapt( LocalizationService.class ).transform( label, CapitalizationType.TITLE_STYLE, false );
+            
+            final CapitalizationType capType = ( this.transformLabelCase ? CapitalizationType.TITLE_STYLE : CapitalizationType.NO_CAPS );
+            label = this.definition.adapt( LocalizationService.class ).transform( label, capType, false );
         }
         
         return label;

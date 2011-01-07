@@ -40,7 +40,16 @@ public final class XmlAttribute
     
     public String getLocalName()
     {
-        return getDomNode().getLocalName();
+        final Attr attr = getDomNode();
+        
+        String name = attr.getLocalName();
+        
+        if( name == null || name.length() == 0 )
+        {
+            name = attr.getName();
+        }
+        
+        return name;
     }
     
     @Override

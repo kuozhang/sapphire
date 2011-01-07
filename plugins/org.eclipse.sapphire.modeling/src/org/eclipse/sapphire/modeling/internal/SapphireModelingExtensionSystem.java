@@ -172,15 +172,15 @@ public final class SapphireModelingExtensionSystem
 
             if( point == null )
             {
-                extensionHandles.add( new ClassLoaderExtensionHandle( SapphireModelingExtensionSystem.class.getClassLoader() ) );
-            }
+				extensionHandles.add( new ClassLoaderExtensionHandle( SapphireModelingExtensionSystem.class.getClassLoader() ) );
+		    }
             else
             {
                 for( IExtension extension : point.getExtensions() )
                 {
                     extensionHandles.add( new BundleExtensionHandle( extension.getContributor().getName() ) );
                 }
-            }
+		    }
 
             for( ExtensionHandle handle : extensionHandles )
             {
