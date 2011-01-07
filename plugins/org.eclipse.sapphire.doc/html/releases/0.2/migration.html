@@ -291,6 +291,16 @@ ModelElementHandle&lt;IAssistant> <font color="#888888">getAssistant();</font></
   </tr>
 </table>
 
+<p>The following Eclipse search/replace regular expressions can be use to perform the last migration
+migration in the table:</p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;(?s)&lt;element-property-composite>(.*?)&lt;conditional>(.*?)&lt;/conditional>(.*?)&lt;default-panel>(.*?)&lt;/default-panel>(.*?)&lt;/element-property-composite></nobr><br/>
+<nobr>Replace: &nbsp;&lt;with>\1&lt;label>\2&lt;/label>\3&lt;panel>&lt;key>?????&lt;/key>\4&lt;/panel>\5&lt;/with></code></p>
+
+<p>After applying the above search and replace, look for &lt;key>?????&lt/key> in your sdef files and specify
+the actual key. In this case, it would be the type name of the element held by the property.</p>
+
 <a name="no-duplicates"><h2>NoDuplicates and UniqueValueValidator</h2></a>
 
 <p>The <code>@NoDuplicates</code> annotation is now applied to a value property (for elements
