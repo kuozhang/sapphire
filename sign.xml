@@ -4,7 +4,7 @@
     <attribute name="Project"/>
     <attribute name="Job"/>
     <attribute name="File"/>
-    <attribute name="Output" default="@{File}"/>
+    <attribute name="Output"/>
     <sequential>
 
       <echo message="Signing @{File}..."/>
