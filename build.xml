@@ -11,7 +11,7 @@
   <import file="releng/ant-library/library.xml"/>
   
   <property name="Signing.Library" value="sign.xml"/>
-  <import file="${Signing.Library}"/>
+  <include file="${Signing.Library}"/>
 
 
   <target name="init" depends="init-library,init-jdk-15">
