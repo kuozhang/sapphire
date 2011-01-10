@@ -11,7 +11,7 @@
   <import file="releng/ant-library/library.xml"/>
   
   <property name="Signing.Library" value="sign.xml"/>
-  <include file="${Signing.Library}"/>
+  <import file="${Signing.Library}"/>
 
 
   <target name="init" depends="init-library,init-jdk-15">
@@ -202,7 +202,7 @@
                     <fileset dir="${build.dir}/repository/plugins" includes="*.jar"/>
                   </path>
                   <sequential>
-                    <sign project="sapphire" job="${sapphire.version.no.qualifier}" file="@{file}"/>
+                    <Sign Project="sapphire" Job="${sapphire.version.no.qualifier}" File="@{file}"/>
                   </sequential>
                 </for>
                 
