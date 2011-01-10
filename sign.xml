@@ -1,0 +1,45 @@
+<project name="sign">
+
+  <macrodef name="Sign">
+    <attribute name="Project"/>
+    <attribute name="Job"/>
+    <attribute name="File"/>
+    <attribute name="Output" default="@{File}"/>
+    <sequential>
+
+      <echo message="Signing @{File}..."/>
+          
+      <property name=".Sign.Work.Folder" value="/home/data/httpd/download-staging.priv/@{Project}/Signing/@{Job}"/>
+    
+      <delete dir="${.Sign.Work.Folder}" quiet="true"/>
+      <mkdir dir="${.Sign.Work.Folder}"/>
+      
+      <copy file="@{File}" tofile="${.Sign.Work.Folder}/input.zip"/>
+      
+      <exec dir="${.Sign.Work.Folder}" executable="/bin/bash" output="signing.txt">
+        <arg line="/usr/bin/sign ${.Sign.Work.Folder}/input.zip nomail ${.Sign.Work.Folder}/output.zip"/>
+      </exec>
+      
+      <waifor maxwait="10" maxwaitunit="minute" checkevery="1" checkeveryunit="second">
+        <available file="${.Sign.Work.Folder}/output.zip"/>
+      </waitfor>
+      
+      <if>
+        <not><available file="${.Sign.Work.Folder}/output.zip"/></not>
+        <then>
+          <fail message="Timed out waiting for signing service."/>
+        </then>
+      </if>
+      
+      <copy file="${.Sign.Work.Folder}/output.zip" tofile="@{Output}"/>
+      
+      <delete dir="${.Sign.Work.Folder}"/>
+      
+      <var name=".Sign.Work.Folder" unset="true"/>
+
+      <echo message="Signing completed. Result copied to @{File}."/>
+
+    </sequential>
+  </macrodef>
+
+</project>
