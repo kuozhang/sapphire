@@ -191,7 +191,7 @@
             <propertyregex property="sapphire.version.no.qualifier" input="${sapphire.version}" regexp="([0-9]*.[0-9]*.[0-9]*).[0-9]*" select="\1"/>
 
             <if>
-              <istrue value="${sign}">
+              <istrue value="${sign}"/>
               <then>
                
                 <echo message="Signing features and plugins..."/>

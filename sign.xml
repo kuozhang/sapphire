@@ -20,7 +20,7 @@
         <arg line="/usr/bin/sign ${.Sign.Work.Folder}/input.zip nomail ${.Sign.Work.Folder}/output.zip"/>
       </exec>
       
-      <waifor maxwait="10" maxwaitunit="minute" checkevery="1" checkeveryunit="second">
+      <waitfor maxwait="10" maxwaitunit="minute" checkevery="1" checkeveryunit="second">
         <available file="${.Sign.Work.Folder}/output.zip"/>
       </waitfor>
       
