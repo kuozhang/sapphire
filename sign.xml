@@ -26,7 +26,7 @@
         <arg line="/usr/bin/sign ${.Sign.Work.Folder}/${.Sign.FileName} nomail ${.Sign.Work.Folder}/output"/>
       </exec>
       
-      <waitfor maxwait="10" maxwaitunit="minute" checkevery="1" checkeveryunit="second">
+      <waitfor maxwait="10" maxwaitunit="minute">
         <available file="${.Sign.Work.Folder}/output/${.Sign.FileName}"/>
       </waitfor>
       
