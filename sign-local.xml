@@ -1,0 +1,15 @@
+<project name="sign">
+
+  <macrodef name="Sign">
+    <attribute name="Project"/>
+    <attribute name="Job"/>
+    <attribute name="File"/>
+    <attribute name="Output"/>
+    <sequential>
+    
+      <fail message="Signing not available."/>
+
+    </sequential>
+  </macrodef>
+
+</project>

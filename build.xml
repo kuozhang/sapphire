@@ -10,7 +10,7 @@
 
   <import file="releng/ant-library/library.xml"/>
   
-  <property name="Signing.Library" value="sign.xml"/>
+  <property name="Signing.Library" value="sign-local.xml"/>
   <import file="${Signing.Library}"/>
 
 
