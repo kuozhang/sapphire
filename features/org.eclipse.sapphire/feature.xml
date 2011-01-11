@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<feature id="org.eclipse.sapphire" label="%featureName" provider-name="%providerName" version="0.1.0.qualifier" plugin="org.eclipse.sapphire">
+<feature id="org.eclipse.sapphire" label="%featureName" provider-name="%providerName" version="0.1.1.qualifier" plugin="org.eclipse.sapphire">
 
   <description>
     %description
