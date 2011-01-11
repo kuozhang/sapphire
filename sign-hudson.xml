@@ -111,7 +111,7 @@ The following instructions are for Ant-based builds:
         <arg line="/usr/bin/sign ${.Sign.Work.Folder}/${.Sign.FileName} nomail ${.Sign.Work.Folder}/output"/>
       </exec>
       
-      <waitfor maxwait="20" maxwaitunit="minute" checkevery="1" checkeveryunit="second">
+      <waitfor maxwait="60" maxwaitunit="minute" checkevery="1" checkeveryunit="second">
         <available file="${.Sign.Work.Folder}/output/${.Sign.FileName}"/>
       </waitfor>
       
