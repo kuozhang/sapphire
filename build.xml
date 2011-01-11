@@ -1,3 +1,16 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2011 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
 <project name="sapphire" default="build">
 
 
@@ -9,6 +22,9 @@
 
 
   <import file="releng/ant-library/library.xml"/>
+
+  <property name="Signing.Library" value="sign-local.xml"/>
+  <import file="${Signing.Library}"/>
 
 
   <target name="init" depends="init-library,init-jdk-15">
@@ -176,15 +192,39 @@
               WorkArea="${build.dir}/test-translation"/>
 
             <!-- Stage 6 -->
-
-            <echo message="Packaging the repository..."/>
-
+            
             <property-from-set property=".sapphire.feature">
               <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire_*.jar"/>
             </property-from-set>
 
             <var name="sapphire.version" unset="true"/>
             <propertyregex property="sapphire.version" input="${.sapphire.feature}" regexp=".*_([0-9]*.[0-9]*.[0-9]*.[0-9]*).jar" select="\1"/>
+            
+            <var name="sapphire.version.no.qualifier" unset="true"/>
+            <propertyregex property="sapphire.version.no.qualifier" input="${sapphire.version}" regexp="([0-9]*.[0-9]*.[0-9]*).[0-9]*" select="\1"/>
+
+            <if>
+              <istrue value="${sign}"/>
+              <then>
+               
+                <echo message="Signing features and plugins..."/>
+                
+                <for param="file">
+                  <path>
+                    <fileset dir="${build.dir}/repository/features" includes="*.jar"/>
+                    <fileset dir="${build.dir}/repository/plugins" includes="*.jar"/>
+                  </path>
+                  <sequential>
+                    <Sign Project="sapphire" Job="${sapphire.version.no.qualifier}" File="@{file}" Output="@{file}"/>
+                  </sequential>
+                </for>
+                
+              </then>
+            </if>
+
+            <!-- Stage 7 -->
+
+            <echo message="Packaging the repository..."/>
 
             <copy file="${releng.dir}/site.xml" tofile="${build.dir}/repository/site.xml"/>
 
