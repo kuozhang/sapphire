@@ -8,6 +8,8 @@
     <sequential>
 
       <echo message="Signing @{File}..."/>
+      
+      <stopwatch name="signing"/>
           
       <property name=".Sign.Work.Folder" value="/home/data/httpd/download-staging.priv/@{Project}/signing/@{Job}"/>
     
@@ -38,6 +40,8 @@
       <var name=".Sign.Work.Folder" unset="true"/>
 
       <echo message="Signing completed. Result copied to @{File}."/>
+
+      <stopwatch name="signing" action="total"/>
 
     </sequential>
   </macrodef>
