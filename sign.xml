@@ -10,33 +10,38 @@
       <echo message="Signing @{File}..."/>
       
       <stopwatch name="signing"/>
-          
+      
+      <var name=".Sign.FileName" unset="true"/>
+      <var name=".Sign.Work.Folder" unset="true"/>
+
+      <basename property=".Sign.FileName" file="@{File}"/>
       <property name=".Sign.Work.Folder" value="/home/data/httpd/download-staging.priv/@{Project}/signing/@{Job}"/>
     
       <delete dir="${.Sign.Work.Folder}" quiet="true"/>
       <mkdir dir="${.Sign.Work.Folder}"/>
       
-      <copy file="@{File}" tofile="${.Sign.Work.Folder}/archive.zip"/>
+      <copy file="@{File}" tofile="${.Sign.Work.Folder}/${.Sign.FileName}"/>
       
       <exec dir="${.Sign.Work.Folder}" executable="/bin/bash" output="signing.txt">
-        <arg line="/usr/bin/sign ${.Sign.Work.Folder}/archive.zip nomail ${.Sign.Work.Folder}/output"/>
+        <arg line="/usr/bin/sign ${.Sign.Work.Folder}/${.Sign.FileName} nomail ${.Sign.Work.Folder}/output"/>
       </exec>
       
       <waitfor maxwait="10" maxwaitunit="minute" checkevery="1" checkeveryunit="second">
-        <available file="${.Sign.Work.Folder}/output/archive.zip"/>
+        <available file="${.Sign.Work.Folder}/output/${.Sign.FileName}"/>
       </waitfor>
       
       <if>
-        <not><available file="${.Sign.Work.Folder}/output/archive.zip"/></not>
+        <not><available file="${.Sign.Work.Folder}/output/${.Sign.FileName}"/></not>
         <then>
           <fail message="Timed out waiting for signing service."/>
         </then>
       </if>
       
-      <copy file="${.Sign.Work.Folder}/output/archive.zip" tofile="@{Output}"/>
+      <copy file="${.Sign.Work.Folder}/output/${.Sign.FileName}" tofile="@{Output}"/>
       
       <delete dir="${.Sign.Work.Folder}"/>
       
+      <var name=".Sign.FileName" unset="true"/>
       <var name=".Sign.Work.Folder" unset="true"/>
 
       <echo message="Signing completed. Result copied to @{File}."/>
