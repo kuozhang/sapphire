@@ -9,29 +9,29 @@
 
       <echo message="Signing @{File}..."/>
           
-      <property name=".Sign.Work.Folder" value="/home/data/httpd/download-staging.priv/@{Project}/Signing/@{Job}"/>
+      <property name=".Sign.Work.Folder" value="/home/data/httpd/download-staging.priv/@{Project}/signing/@{Job}"/>
     
       <delete dir="${.Sign.Work.Folder}" quiet="true"/>
       <mkdir dir="${.Sign.Work.Folder}"/>
       
-      <copy file="@{File}" tofile="${.Sign.Work.Folder}/input.zip"/>
+      <copy file="@{File}" tofile="${.Sign.Work.Folder}/archive.zip"/>
       
       <exec dir="${.Sign.Work.Folder}" executable="/bin/bash" output="signing.txt">
-        <arg line="/usr/bin/sign ${.Sign.Work.Folder}/input.zip nomail ${.Sign.Work.Folder}/output.zip"/>
+        <arg line="/usr/bin/sign ${.Sign.Work.Folder}/archive.zip nomail ${.Sign.Work.Folder}/output"/>
       </exec>
       
       <waitfor maxwait="10" maxwaitunit="minute" checkevery="1" checkeveryunit="second">
-        <available file="${.Sign.Work.Folder}/output.zip"/>
+        <available file="${.Sign.Work.Folder}/output/archive.zip"/>
       </waitfor>
       
       <if>
-        <not><available file="${.Sign.Work.Folder}/output.zip"/></not>
+        <not><available file="${.Sign.Work.Folder}/output/archive.zip"/></not>
         <then>
           <fail message="Timed out waiting for signing service."/>
         </then>
       </if>
       
-      <copy file="${.Sign.Work.Folder}/output.zip" tofile="@{Output}"/>
+      <copy file="${.Sign.Work.Folder}/output/archive.zip" tofile="@{Output}"/>
       
       <delete dir="${.Sign.Work.Folder}"/>
       
