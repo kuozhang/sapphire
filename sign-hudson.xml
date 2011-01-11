@@ -57,25 +57,7 @@ The following instructions are for Ant-based builds:
    Also don't forget to check a flag that tells you whether signing should be invoked.
    In most situations, signing should be treated as an optional operation.
    
-   Here is an snippet that signs all feature and plugin jars:
-   
-   <if>
-     <istrue value="${sign}"/>
-     <then>
-       <for param="file">
-         <path>
-           <fileset dir="${build.dir}/repository/features" includes="*.jar"/>
-           <fileset dir="${build.dir}/repository/plugins" includes="*.jar"/>
-         </path>
-         <sequential>
-           <Sign Project="${P}" Job="${J}" File="@{file}" Output="@{file}"/>
-         </sequential>
-       </for>
-     </then>
-   </if>
-   
-   Another approach is to invoke sign macro on a ZIP file containing all your features
-   and plugins. If the ZIP file is already a p2 repository, keep in mind that signing
+   If the ZIP file being signed is already a p2 repository, keep in mind that signing
    will break the checksums stored in p2 metadata. Either generate your p2 metadata
    after signing or invoke the following p2 task to update the checksums:
    
