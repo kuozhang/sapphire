@@ -32,7 +32,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
@@ -74,21 +73,16 @@ public abstract class SapphirePopup extends Window {
      */
     private final Point position;
 
-    public SapphirePopup(Display display) {
-        this(display, null);
+    public SapphirePopup(Shell shell, Point position) {
+        this(shell, position, SWT.NO_TRIM | SWT.ON_TOP | SWT.NO_FOCUS | SWT.TOOL);
     }
 
-    public SapphirePopup(Display display, Point position) {
-        this(display, position, SWT.NO_TRIM | SWT.ON_TOP | SWT.NO_FOCUS | SWT.TOOL);
-    }
-
-    public SapphirePopup(Display display, Point position, int style) {
-        super(new Shell(display));
+    public SapphirePopup(Shell shell, Point position, int style) {
+        super(shell);
+        
         setShellStyle(style);
-
         this.position = position;
-
-        this.colors = new FormColors(display);
+        this.colors = new FormColors(shell.getDisplay());
     }
 
     /**
@@ -239,6 +233,7 @@ public abstract class SapphirePopup extends Window {
         if (this.shell == null || this.shell.isDisposed()) {
             this.shell = null;
             create();
+            this.shell = getShell();
         }
 
         // limit the shell size to the display size
@@ -413,12 +408,23 @@ public abstract class SapphirePopup extends Window {
 
     @Override
     public boolean close() {
-        if (this.lastUsedRegion != null) {
+		// If already closed, there is nothing to do.
+		// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=127505
+		if (getShell() == null || getShell().isDisposed()) {
+			return true;
+		}
+
+		if (this.lastUsedRegion != null) {
             this.lastUsedRegion.dispose();
         }
         if (this.lastUsedBgImage != null && !this.lastUsedBgImage.isDisposed()) {
             this.lastUsedBgImage.dispose();
         }
+
+        if (this.parentDeactivateListener != null) {
+			getShell().getParent().removeListener(SWT.Deactivate, this.parentDeactivateListener);
+			this.parentDeactivateListener = null;
+		}
         return super.close();
     }
 
