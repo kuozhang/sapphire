@@ -250,7 +250,7 @@ public final class SapphireSection
                 position = new Point( location.x, location.y + bounds.height + 2 );
             }
             
-            final SapphireTextPopup popup = new SapphireTextPopup( this.descriptionFormText.getDisplay(), position );
+            final SapphireTextPopup popup = new SapphireTextPopup( this.descriptionFormText.getShell(), position );
             popup.setText( this.descriptionExtendedContent );
             popup.open();
         }

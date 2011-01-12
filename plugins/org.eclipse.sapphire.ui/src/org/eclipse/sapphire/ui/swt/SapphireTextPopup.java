@@ -18,7 +18,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -29,10 +29,10 @@ public class SapphireTextPopup extends SapphirePopup {
 
     private String text;
 
-    public SapphireTextPopup(Display display, Point position) {
-        super(display, position);
+    public SapphireTextPopup(Shell shell, Point position) {
+        super(shell, position);
     }
-    
+
     public String getText()
     {
         return this.text;

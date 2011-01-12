@@ -55,7 +55,7 @@ public class PropertyEditorAssistDialog
                                        final Point point,
                                        final PropertyEditorAssistContext context )
     {
-        super( shell.getDisplay(), point);
+        super( shell, point);
         
         this.toolkit = new FormToolkit( Display.getDefault() );
         this.context = context;
