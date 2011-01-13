@@ -475,6 +475,10 @@ changed to override SapphireModelCondition instead.</p>
   </tr>
 </table>
 
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;&lt;browse-handler>(\s*)&lt;class>(.*?)&lt;/class>(\s*)&lt;/browse-handler></nobr><br/>
+<nobr>Replace: &nbsp;&lt;action-handler>\1&lt;action>Sapphire.Browse&lt;/action>\1&lt;impl>\2&lt;/impl>\3&lt;/action-handler></code></p>
+
 <p>Browse handler definition in an extension:</p>
 
 <table>
@@ -554,9 +558,7 @@ changed to override SapphireModelCondition instead.</p>
   <tr>
     <td>
 <pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
-    &lt;jump-handler>
-        &lt;class>MyJumpHandler&lt;/class>
-    &lt;/jump-handler>
+    &lt;jump-handler>MyJumpHandler&lt;/jump-handler>
 <font color="#888888">&lt;/property-editor></font></code></pre>
     </td>
     <td>
@@ -568,7 +570,11 @@ changed to override SapphireModelCondition instead.</p>
 <font color="#888888">&lt;/property-editor></font></code></pre>
     </td>
   </tr>
-</table>    
+</table>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;([&nbsp;\t]*)&lt;jump-handler>(.*?)&lt;/jump-handler></nobr><br/>
+<nobr>Replace: &nbsp;\1&lt;action-handler>\n\1&nbsp;&nbsp;&lt;action>Sapphire.Jump&lt;/action>\n\1&nbsp;&nbsp;&lt;impl>\2&lt;/impl>\n\1&lt;/action-handler></code></p>
 
 <p>Jump handler definition in an extension:</p>
 
