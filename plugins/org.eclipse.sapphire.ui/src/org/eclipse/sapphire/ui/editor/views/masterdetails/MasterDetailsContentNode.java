@@ -316,6 +316,7 @@ public final class MasterDetailsContentNode
                         final MasterDetailsContentNode node = new MasterDetailsContentNode();
                         node.init( MasterDetailsContentNode.this, listEntryModelElement, listEntryNodeDef, MasterDetailsContentNode.this.params );
                         node.addListener( MasterDetailsContentNode.this.childPartListener );
+                        node.transformLabelCase = false;
                         
                         return node;
                     }
