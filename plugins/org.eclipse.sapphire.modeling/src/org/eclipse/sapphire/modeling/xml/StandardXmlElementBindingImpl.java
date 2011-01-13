@@ -57,10 +57,23 @@ public final class StandardXmlElementBindingImpl
             
             if( xmlBindingAnnotation != null && property.getAllPossibleTypes().size() == 1 )
             {
-                this.modelElementTypes = new ModelElementType[] { property.getType() };
-                this.xmlElementNames = new String[] { xmlBindingAnnotation.path() };
+                final String path = xmlBindingAnnotation.path();
+                final int slashIndex = path.lastIndexOf( '/' );
+                
+                if( slashIndex == -1 )
+                {
+                    this.xmlElementNames = new String[] { path };
+                    this.modelElementTypes = new ModelElementType[] { property.getType() };
+                }
+                else if( slashIndex > 0 && slashIndex < path.length() - 1 )
+                {
+                    this.path = new XmlPath( path.substring( 0, slashIndex ), ( (XmlResource) element.resource() ).getXmlNamespaceResolver() );
+                    this.xmlElementNames = new String[] { path.substring( slashIndex + 1 ) };
+                    this.modelElementTypes = new ModelElementType[] { property.getType() };
+                }
             }
-            else
+            
+            if( this.xmlElementNames == null )
             {
                 this.path = new XmlPath( property.getName(), ( (XmlResource) element.resource() ).getXmlNamespaceResolver() );
                 
