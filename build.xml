@@ -865,6 +865,15 @@ Fragment-Host: @{Bundle}
                     <then>
                       <var name=".content.valid" value="true"/>
                     </then>
+                    <else>
+                      <echo message="Checksums did not match. Expected ${.content.checksum}. Got ${.content.checksum.actual}."/>
+                      <if>
+                        <istrue value="${ignore.checksum.issues}"/>
+                        <then>
+                          <var name=".content.valid" value="true"/>
+                        </then>
+                      </if>
+                    </else>
                   </if>
                   
                   <var name=".content.checksum" unset="true"/>
