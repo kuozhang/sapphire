@@ -17,5 +17,33 @@
 <plugin>
 
   <extension point="org.eclipse.sapphire.modeling.extension"/>
-
+  
+   <extension point="org.eclipse.graphiti.ui.diagramTypes">
+      <diagramType
+            description="%sapphireDiagramTypeDescription"
+            id="org.eclipse.sapphire.ui.SapphireDiagramType"
+            name="%sapphireDiagramTypeName"
+            type="sapphireDiagram">
+      </diagramType>
+   </extension>
+   
+   <extension point="org.eclipse.graphiti.ui.diagramTypeProviders">
+      <diagramTypeProvider
+            class="org.eclipse.sapphire.ui.diagram.graphiti.providers.SapphireDiagramTypeProvider"
+            description="%sapphireDiagramTypeProviderDescription"
+            id="org.eclipse.sapphire.ui.sapphireDiagramTypeProvider"
+            name="%sapphireDiagramTypeProviderName">
+         <diagramType id="org.eclipse.sapphire.ui.SapphireDiagramType"/>
+         <imageProvider id="org.eclipse.sapphire.diagram.graphiti.SapphireDiagramImageProvider"/>
+      </diagramTypeProvider>
+   </extension>
+     
+   <extension
+         point="org.eclipse.graphiti.ui.imageProviders">
+      <imageProvider
+            class="org.eclipse.sapphire.ui.diagram.graphiti.providers.SapphireDiagramImageProvider"
+            id="org.eclipse.sapphire.diagram.graphiti.SapphireDiagramImageProvider">
+      </imageProvider>
+   </extension>
+     
 </plugin>

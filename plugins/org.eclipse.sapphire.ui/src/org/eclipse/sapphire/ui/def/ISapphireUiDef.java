@@ -7,7 +7,8 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
+ *    Ling Hao - [329114] rewrite context help binding feature
+ *    Shenxue Zhou - [330482] support diagram editing in Sapphire UI
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.def;
@@ -26,6 +27,7 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 import org.eclipse.sapphire.ui.def.internal.SapphireUiDefMethods;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramPageDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -128,6 +130,15 @@ public interface ISapphireUiDef
     ListProperty PROP_EDITOR_PAGE_DEFS = new ListProperty( TYPE, "EditorPageDefs" );
     
     ModelElementList<IEditorPageDef> getEditorPageDefs();
+    
+    // *** DiagramPageDefs ***
+    
+    @Type( base = IDiagramPageDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "diagram-page", type = IDiagramPageDef.class ) )
+    
+    ListProperty PROP_DIAGRAM_PAGE_DEFS = new ListProperty( TYPE, "DiagramPageDefs" );
+    
+    ModelElementList<IDiagramPageDef> getDiagramPageDefs();
     
     // *** DialogDefs ***
     

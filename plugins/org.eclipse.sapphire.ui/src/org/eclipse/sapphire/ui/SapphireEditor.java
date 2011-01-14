@@ -18,6 +18,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -285,6 +286,8 @@ public abstract class SapphireEditor
                 this.model = createModel();
                 adaptModel( this.model );
                 
+                createDiagramPages();
+                
                 createFormPages();
     
                 createFileChangeListener();
@@ -329,6 +332,12 @@ public abstract class SapphireEditor
     
     protected abstract void createSourcePages() throws PartInitException;
     protected abstract void createFormPages() throws PartInitException;
+    
+    // default impl does nothing, subclass may override it to add diagram pages
+    protected void createDiagramPages() throws PartInitException
+    {
+    	
+    }
     
     protected final void setPageId( final Object page,
                                     final String id )
@@ -496,7 +505,7 @@ public abstract class SapphireEditor
     }
 
     @Override
-    public final void dispose() 
+    public void dispose() 
     {
         super.dispose();
         
