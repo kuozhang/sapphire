@@ -412,7 +412,12 @@ Fragment-Host: @{Bundle}
           <var name=".file.content" unset="true"/>
           <loadfile property=".file.content" srcfile="@{file}"/>
           <if>
-            <not><contains string="${.file.content}" substring="copyright" casesensitive="false"/></not>
+            <not>
+              <and>
+                <contains string="${.file.content}" substring="copyright" casesensitive="false"/>
+                <contains string="${.file.content}" substring="(c)"/>
+              </and>
+            </not>
             <then>
               <var name=".file.relative" unset="true"/>
               <pathconvert property=".file.relative">
