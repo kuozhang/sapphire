@@ -96,6 +96,7 @@
             <echo message="Performing source code verification..."/>
             
             <VerifyCopyrightHeaders Source="${root.dir}"/>
+            <VerifyAuthorTags Source="${root.dir}"/>
 
             <!-- Stage 2: Build the modeling framework and the annotation processor. -->
 
@@ -403,9 +404,12 @@ Fragment-Host: @{Bundle}
             <include name="**/*.sdef"/>
             <include name="**/*.jj"/>
             <exclude name="**/.javacc/**"/>
+            <exclude name="**/.apt_generated/**"/>
+            <exclude name="*/build.xml"/>
           </fileset>
           <fileset dir="@{Source}/features">
             <include name="**/*.xml"/>
+            <exclude name="*/build.xml"/>
           </fileset>
         </path>
         <sequential>
@@ -441,6 +445,52 @@ Fragment-Host: @{Bundle}
       <var name=".file.content" unset="true"/>
       <var name=".file.relative" unset="true"/>
       <var name=".verify.copyright.failed" unset="true"/>
+    </sequential>
+  </macrodef>
+
+
+  <macrodef name="VerifyAuthorTags">
+    <attribute name="Source"/>
+    <sequential>
+      <var name=".verify.author.failed" unset="true"/>
+      <for param="file">
+        <path>
+          <fileset dir="@{Source}/plugins">
+            <include name="**/*.java"/>
+            <exclude name="**/.javacc/**"/>
+            <exclude name="**/.apt_generated/**"/>
+          </fileset>
+        </path>
+        <sequential>
+          <var name=".file.content" unset="true"/>
+          <loadfile property=".file.content" srcfile="@{file}"/>
+          <if>
+            <not>
+              <contains string="${.file.content}" substring="@author" casesensitive="false"/>
+            </not>
+            <then>
+              <var name=".file.relative" unset="true"/>
+              <pathconvert property=".file.relative">
+                <path location="@{file}"/>
+                <map from="@{Source}\" to=""/>
+                <map from="@{Source}/" to=""/>
+                <map from="@{Source}" to=""/>
+              </pathconvert>
+              <echo message="Missing @author tag: ${.file.relative}"/>
+              <var name=".verify.author.failed" value="true"/>
+            </then>
+          </if>
+        </sequential>
+      </for>
+      <if>
+        <istrue value="${.verify.author.failed}"/>
+        <then>
+          <fail message="Found one or more files with @author tag."/>
+        </then>
+      </if>
+      <var name=".file.content" unset="true"/>
+      <var name=".file.relative" unset="true"/>
+      <var name=".verify.author.failed" unset="true"/>
     </sequential>
   </macrodef>
 
