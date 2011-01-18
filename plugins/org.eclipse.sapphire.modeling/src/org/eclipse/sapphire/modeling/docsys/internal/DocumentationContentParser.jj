@@ -10,13 +10,13 @@
  ******************************************************************************/
 
 PARSER_BEGIN( DocumentationContentParser )
-    package org.eclipse.sapphire.modeling.docsys.internal;
+package org.eclipse.sapphire.modeling.docsys.internal;
     
-    import org.eclipse.sapphire.modeling.docsys.*;
+import org.eclipse.sapphire.modeling.docsys.*;
     
-    public class DocumentationContentParser
-    {
-    }
+public class DocumentationContentParser
+{
+}
 PARSER_END( DocumentationContentParser )
 
 TOKEN : { < BR : "[br/]" > }
