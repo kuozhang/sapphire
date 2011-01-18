@@ -414,7 +414,14 @@ Fragment-Host: @{Bundle}
           <if>
             <not><contains string="${.file.content}" substring="copyright" casesensitive="false"/></not>
             <then>
-              <echo message="Missing copyright: @{file}"/>
+              <var name=".file.relative" unset="true"/>
+              <pathconvert property=".file.relative">
+                <path location="@{file}"/>
+                <map from="@{Source}\" to=""/>
+                <map from="@{Source}/" to=""/>
+                <map from="@{Source}" to=""/>
+              </pathconvert>
+              <echo message="Missing copyright: ${.file.relative}"/>
               <var name=".verify.copyright.failed" value="true"/>
             </then>
           </if>
@@ -427,6 +434,7 @@ Fragment-Host: @{Bundle}
         </then>
       </if>
       <var name=".file.content" unset="true"/>
+      <var name=".file.relative" unset="true"/>
       <var name=".verify.copyright.failed" unset="true"/>
     </sequential>
   </macrodef>
