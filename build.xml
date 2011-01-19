@@ -91,7 +91,14 @@
             <delete dir="${build.dir}/repository" quiet="true"/>
             <mkdir dir="${build.dir}/repository"/>
 
-            <!-- Stage 1: This builds the modeling framework and the annotation processor. -->
+            <!-- Stage 1 -->
+
+            <echo message="Performing source code verification..."/>
+            
+            <VerifyCopyrightHeaders Source="${root.dir}"/>
+            <VerifyAuthorTags Source="${root.dir}"/>
+
+            <!-- Stage 2: This builds the modeling framework and the annotation processor. -->
 
             <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage1" eclipse="${.target.platform}" root.dir="${root.dir}"/>
 
@@ -101,7 +108,7 @@
 
             <delete file="${build.dir}/org.eclipse.sapphire.stage1-${DSTAMP}.zip"/>
 
-            <!-- Stage 2: This builds the UI framework including the supporting ant tasks. -->
+            <!-- Stage 3: This builds the UI framework including the supporting ant tasks. -->
 
             <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage2" eclipse="${.target.platform}" root.dir="${root.dir}"/>
 
@@ -113,7 +120,7 @@
 
             <delete file="${build.dir}/org.eclipse.sapphire.stage2-${DSTAMP}.zip"/>
 
-            <!-- Stage 3: Now build everything together. -->
+            <!-- Stage 4: Now build everything together. -->
 
             <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage3" eclipse="${.target.platform}" root.dir="${root.dir}"/>
 
@@ -131,7 +138,7 @@
               <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire.stage3_*.jar"/>
             </delete>
 
-            <!-- Stage 4 -->
+            <!-- Stage 5 -->
 
             <echo message="Setting Require-Bundle version constraints..."/>
 
@@ -169,7 +176,7 @@
 
             <delete dir="${build.dir}/repository/temp"/>
 
-            <!-- Stage 5 -->
+            <!-- Stage 6 -->
             
             <property-from-set property=".sapphire.feature">
               <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire_*.jar"/>
@@ -198,7 +205,7 @@
               </then>
             </if>
 
-            <!-- Stage 6 -->
+            <!-- Stage 7 -->
 
             <echo message="Packaging the repository..."/>
 
@@ -233,6 +240,109 @@
         </else>
       </if>
 
+    </sequential>
+  </macrodef>
+
+
+  <macrodef name="VerifyCopyrightHeaders">
+    <attribute name="Source"/>
+    <sequential>
+      <var name=".verify.copyright.failed" unset="true"/>
+      <for param="file">
+        <path>
+          <fileset dir="@{Source}/plugins">
+            <include name="**/*.java"/>
+            <include name="**/*.xml"/>
+            <include name="**/*.sdef"/>
+            <include name="**/*.jj"/>
+            <exclude name="**/.javacc/**"/>
+            <exclude name="**/.apt_generated/**"/>
+            <exclude name="*/build.xml"/>
+          </fileset>
+          <fileset dir="@{Source}/features">
+            <include name="**/*.xml"/>
+            <exclude name="*/build.xml"/>
+          </fileset>
+        </path>
+        <sequential>
+          <var name=".file.content" unset="true"/>
+          <loadfile property=".file.content" srcfile="@{file}"/>
+          <if>
+            <not>
+              <and>
+                <contains string="${.file.content}" substring="copyright" casesensitive="false"/>
+                <contains string="${.file.content}" substring="(c)"/>
+              </and>
+            </not>
+            <then>
+              <var name=".file.relative" unset="true"/>
+              <pathconvert property=".file.relative">
+                <path location="@{file}"/>
+                <map from="@{Source}\" to=""/>
+                <map from="@{Source}/" to=""/>
+                <map from="@{Source}" to=""/>
+              </pathconvert>
+              <echo message="Missing copyright: ${.file.relative}"/>
+              <var name=".verify.copyright.failed" value="true"/>
+            </then>
+          </if>
+        </sequential>
+      </for>
+      <if>
+        <istrue value="${.verify.copyright.failed}"/>
+        <then>
+          <fail message="Found one or more files with missing copyright."/>
+        </then>
+      </if>
+      <var name=".file.content" unset="true"/>
+      <var name=".file.relative" unset="true"/>
+      <var name=".verify.copyright.failed" unset="true"/>
+    </sequential>
+  </macrodef>
+
+
+  <macrodef name="VerifyAuthorTags">
+    <attribute name="Source"/>
+    <sequential>
+      <var name=".verify.author.failed" unset="true"/>
+      <for param="file">
+        <path>
+          <fileset dir="@{Source}/plugins">
+            <include name="**/*.java"/>
+            <exclude name="**/.javacc/**"/>
+            <exclude name="**/.apt_generated/**"/>
+          </fileset>
+        </path>
+        <sequential>
+          <var name=".file.content" unset="true"/>
+          <loadfile property=".file.content" srcfile="@{file}"/>
+          <if>
+            <not>
+              <contains string="${.file.content}" substring="@author" casesensitive="false"/>
+            </not>
+            <then>
+              <var name=".file.relative" unset="true"/>
+              <pathconvert property=".file.relative">
+                <path location="@{file}"/>
+                <map from="@{Source}\" to=""/>
+                <map from="@{Source}/" to=""/>
+                <map from="@{Source}" to=""/>
+              </pathconvert>
+              <echo message="Missing @author tag: ${.file.relative}"/>
+              <var name=".verify.author.failed" value="true"/>
+            </then>
+          </if>
+        </sequential>
+      </for>
+      <if>
+        <istrue value="${.verify.author.failed}"/>
+        <then>
+          <fail message="Found one or more files with @author tag."/>
+        </then>
+      </if>
+      <var name=".file.content" unset="true"/>
+      <var name=".file.relative" unset="true"/>
+      <var name=".verify.author.failed" unset="true"/>
     </sequential>
   </macrodef>
 
