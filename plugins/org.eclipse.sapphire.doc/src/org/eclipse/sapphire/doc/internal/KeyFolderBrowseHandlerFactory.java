@@ -22,6 +22,10 @@ import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFactoryDef;
 
+/**
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ */
+
 public class KeyFolderBrowseHandlerFactory extends SapphireActionHandlerFactory
 {
     private File folder;

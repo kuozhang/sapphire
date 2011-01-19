@@ -19,6 +19,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
+/**
+ * @author IBM Corporation
+ */
+
 @SuppressWarnings(value = { "unqualified-field-access", "rawtypes" })
 public class BulletParagraph extends Paragraph {
 	public static final int CIRCLE = 1;

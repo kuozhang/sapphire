@@ -161,6 +161,7 @@ import org.eclipse.ui.internal.forms.Messages;
  * @see FormToolkit
  * @see TableWrapLayout
  * @since 3.0
+ * @author IBM Corporation
  */
 @SuppressWarnings(value = { "unqualified-field-access", "unchecked", "rawtypes", "restriction" })
 public class SapphireFormText extends Canvas {

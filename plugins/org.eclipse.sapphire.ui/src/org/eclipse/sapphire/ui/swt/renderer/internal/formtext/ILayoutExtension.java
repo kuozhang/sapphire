@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Composite;
  * @see TableWrapLayout
  * @see ColumnLayout
  * @since 3.0
+ * @author IBM Combination
  */
 public interface ILayoutExtension {
 	/**

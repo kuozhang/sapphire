@@ -15,6 +15,10 @@ import org.eclipse.help.IHelpResource;
 import org.eclipse.sapphire.modeling.annotations.DocumentationData;
 import org.eclipse.sapphire.modeling.annotations.DocumentationProviderImpl;
 
+/**
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ */
+
 public class PositiveIntegerDocumentationProvider extends DocumentationProviderImpl {
 
     @Override

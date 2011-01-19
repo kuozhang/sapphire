@@ -19,6 +19,10 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
+/**
+ * @author IBM Corporation
+ */
+
 @SuppressWarnings(value = { "unqualified-field-access", "rawtypes" })
 public class ControlSegment extends ObjectSegment implements IFocusSelectable {
 	private boolean fill;

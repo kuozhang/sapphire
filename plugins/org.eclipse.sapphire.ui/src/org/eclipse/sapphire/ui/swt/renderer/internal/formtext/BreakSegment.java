@@ -19,6 +19,8 @@ import org.eclipse.swt.graphics.Rectangle;
 /**
  * This segment serves as break within a paragraph. It has no data -
  * just starts a new line and resets the locator.
+ * 
+ * @author IBM Corporation
  */
 
 @SuppressWarnings(value = { "rawtypes" })

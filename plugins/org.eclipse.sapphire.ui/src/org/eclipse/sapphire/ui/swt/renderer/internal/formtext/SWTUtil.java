@@ -20,7 +20,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 
 /**
- * Utility class to simplify access to some SWT resources. 
+ * Utility class to simplify access to some SWT resources.
+ * 
+ * @author IBM Corporation
  */
 public class SWTUtil {
 

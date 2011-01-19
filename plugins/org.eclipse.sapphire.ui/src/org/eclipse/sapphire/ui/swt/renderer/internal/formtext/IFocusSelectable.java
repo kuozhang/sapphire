@@ -14,6 +14,10 @@ import java.util.Hashtable;
 
 import org.eclipse.swt.graphics.Rectangle;
 
+/**
+ * @author IBM Corporation
+ */
+
 @SuppressWarnings(value = { "rawtypes" })
 public interface IFocusSelectable {
 	boolean isFocusSelectable(Hashtable resourceTable);

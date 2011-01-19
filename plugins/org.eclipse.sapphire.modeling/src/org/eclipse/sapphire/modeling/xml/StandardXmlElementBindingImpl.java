@@ -24,6 +24,10 @@ import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 
+/**
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ */
+
 public final class StandardXmlElementBindingImpl
 
     extends LayeredElementBindingImpl

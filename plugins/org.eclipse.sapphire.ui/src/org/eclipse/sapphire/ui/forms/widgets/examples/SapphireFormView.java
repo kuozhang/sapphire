@@ -37,6 +37,10 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.ViewPart;
 
+/**
+ * @author IBM Corporation
+ */
+
 public class SapphireFormView extends ViewPart {
 	private FormToolkit toolkit;
 	private ScrolledForm form;

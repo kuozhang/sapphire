@@ -14,6 +14,10 @@ package org.eclipse.sapphire.modeling;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
+/**
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ */
+
 public final class IdentityCache<K,V>
 {
     private Map<K,V> map = new IdentityHashMap<K,V>();
