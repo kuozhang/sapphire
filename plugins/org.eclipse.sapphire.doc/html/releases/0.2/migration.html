@@ -447,6 +447,10 @@ changed to override SapphireModelCondition instead.</p>
   </tr>
 </table>
 
+<p>It is important that any subclass of SapphireModelCondition that overrides initCondition() method,
+also calls the super implementation of this method. Failing to do that will prevent the condition from
+refreshing on dependent property changes.</p> 
+
 <a name="browse-handlers"><h2>Browse Handlers</h2></a>
 
 <p>Browse handler definition in the UI definition file:</p>
