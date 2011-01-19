@@ -67,6 +67,8 @@ import org.eclipse.swt.widgets.Widget;
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
+ * 
+ * @author IBM Corporation
  */
 
 // The code contained in this file has been copied from SWT/JFace to experiment
