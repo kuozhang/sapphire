@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.Display;
  * Class which can get the appropriate resource manager for a Display
  * In most applications there will be only one display but see
  * Bug 295981 for an example where this is not the case
+ * 
+ * @author IBM Corporation
  */
 
 @SuppressWarnings(value = { "unqualified-field-access", "unchecked", "rawtypes" })

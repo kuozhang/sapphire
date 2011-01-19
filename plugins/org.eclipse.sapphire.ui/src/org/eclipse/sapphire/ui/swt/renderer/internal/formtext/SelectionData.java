@@ -17,6 +17,10 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.Display;
 
+/**
+ * @author IBM Corporation
+ */
+
 @SuppressWarnings(value = { "unqualified-field-access", "unchecked", "rawtypes" })
 public class SelectionData {
 	public Display display;

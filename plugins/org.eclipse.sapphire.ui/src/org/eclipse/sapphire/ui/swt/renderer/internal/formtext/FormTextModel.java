@@ -34,6 +34,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+/**
+ * @author IBM Corporation
+ */
+
 @SuppressWarnings(value = { "unqualified-field-access", "unchecked", "rawtypes" })
 public class FormTextModel {
 	

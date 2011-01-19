@@ -15,6 +15,10 @@ import java.util.Hashtable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.*;
 
+/**
+ * @author IBM Corporation
+ */
+
 @SuppressWarnings(value = { "unqualified-field-access", "rawtypes" })
 public abstract class ObjectSegment extends ParagraphSegment {
 	public static final int TOP = 1;

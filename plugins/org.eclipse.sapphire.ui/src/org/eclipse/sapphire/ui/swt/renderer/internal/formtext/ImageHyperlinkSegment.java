@@ -14,6 +14,10 @@ import java.util.Hashtable;
 
 import org.eclipse.swt.graphics.*;
 
+/**
+ * @author IBM Corporation
+ */
+
 @SuppressWarnings(value = { "unqualified-field-access", "rawtypes" })
 public class ImageHyperlinkSegment extends ImageSegment implements
 		IHyperlinkSegment {

@@ -12,6 +12,10 @@ package org.eclipse.sapphire.ui.swt.renderer.internal.formtext;
 
 import java.util.ArrayList;
 
+/**
+ * @author IBM Corporation
+ */
+
 @SuppressWarnings(value = { "unqualified-field-access", "unchecked", "rawtypes" })
 public class Locator implements Cloneable { 
 	public int indent;

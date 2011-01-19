@@ -27,7 +27,6 @@ options
  ********************/
 
 PARSER_BEGIN( ExpressionLanguageParserImpl )
-
 package org.eclipse.sapphire.modeling.el.parser.internal;
 
 import java.util.*;

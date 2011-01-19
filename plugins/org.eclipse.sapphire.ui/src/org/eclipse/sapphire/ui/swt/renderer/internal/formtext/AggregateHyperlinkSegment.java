@@ -20,6 +20,8 @@ import org.eclipse.swt.graphics.Rectangle;
 /**
  * This segment contains a collection of images and links that all belong to one
  * logical hyperlink.
+ * 
+ * @author IBM Corporation
  */
 @SuppressWarnings(value = { "unqualified-field-access", "unchecked", "rawtypes" })
 public class AggregateHyperlinkSegment extends ParagraphSegment implements

@@ -14,6 +14,10 @@ package org.eclipse.sapphire.ui.swt.renderer.internal.formtext;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.graphics.GC;
 
+/**
+ * @author IBM Corporation
+ */
+
 public interface IHyperlinkSegment extends IFocusSelectable {
 	String getHref();
 	String getText();

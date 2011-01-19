@@ -37,6 +37,10 @@ import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ILayoutExtension;
 
+/**
+ * @author IBM Corporation
+ */
+
 public class FormUtil {
 	public static final String PLUGIN_ID = "org.eclipse.ui.forms"; //$NON-NLS-1$
 
