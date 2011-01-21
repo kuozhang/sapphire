@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [329102] excess scroll space in editor sections
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.renderer;
@@ -20,14 +21,20 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.sapphire.ui.renderers.swt.ColumnSortComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -159,6 +166,66 @@ public final class SwtUtil
                 public void handleEvent( final Event event ) 
                 {
                     event.detail &= ~SWT.FOCUSED;
+                }
+            }
+        );
+    }
+    
+    public static void reflowOnResize( final Control control )
+    {
+        final GridData gd = (GridData) control.getLayoutData();
+        final int originalWidthHint = gd.widthHint;
+        
+        Composite parent = control.getParent();
+        
+        while( parent != null && ! ( parent instanceof SharedScrolledComposite || parent instanceof Shell ) ) 
+        {
+            parent = parent.getParent();
+        }
+        
+        final Composite topLevelComposite = parent;
+        
+        control.addControlListener
+        (
+            new ControlAdapter() 
+            {
+                @Override
+                public void controlResized( final ControlEvent event ) 
+                {
+                    final Rectangle bounds = control.getBounds();
+                    
+                    if( bounds.width != gd.widthHint + 20 ) 
+                    {
+                        if( bounds.width == gd.widthHint ) 
+                        {
+                            gd.widthHint = originalWidthHint;
+                        }
+                        else
+                        {
+                            gd.widthHint = bounds.width - 20;
+                        }
+                        
+                        control.getDisplay().asyncExec
+                        (
+                            new Runnable() 
+                            {
+                                public void run() 
+                                {
+                                    if( topLevelComposite.isDisposed() )
+                                    {
+                                        return;
+                                    }
+                                    
+                                    topLevelComposite.layout( true, true );
+
+                                    if( topLevelComposite instanceof SharedScrolledComposite )
+                                    {
+                                        ( (SharedScrolledComposite) topLevelComposite ).reflow( true );
+                                    }
+                                }
+                            }
+                        );
+                    }
                 }
             }
         );

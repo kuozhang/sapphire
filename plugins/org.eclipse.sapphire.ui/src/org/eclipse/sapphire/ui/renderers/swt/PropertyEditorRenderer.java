@@ -24,6 +24,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
+import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.reflowOnResize;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -178,15 +179,17 @@ public abstract class PropertyEditorRenderer
             
             final int hindent = this.part.getLeftMarginHint() + 9;
             
-            this.auxTextControl = new Label( parent, SWT.NONE );
-            this.auxTextControl.setLayoutData( gdhindent( gdhspan( gdhfill(), this.spanBothColumns ? 2 : 1 ), hindent ) );
+            this.auxTextControl = new Label( parent, SWT.WRAP );
+            this.auxTextControl.setLayoutData( gdwhint( gdhindent( gdhspan( gdhfill(), this.spanBothColumns ? 2 : 1 ), hindent ), 10 ) );
             this.auxTextControl.setForeground( parent.getDisplay().getSystemColor( SWT.COLOR_DARK_GRAY ) );
+            
+            reflowOnResize( this.auxTextControl );
             
             addControl( this.auxTextControl );
 
             if( auxText != null )
             {
-                this.auxTextControl.setText( "(" + auxText + ")" );
+                this.auxTextControl.setText( auxText );
             }
         }
         
