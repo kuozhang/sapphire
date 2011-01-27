@@ -27,8 +27,6 @@
       <id>destinations</id>
       <tool-palette-label>Destination</tool-palette-label>
       <tool-palette-desc>Map Destination</tool-palette-desc>
-      <hint><name>width</name><value>70</value></hint>
-      <hint><name>height</name><value>85</value></hint>      
       <property>Destinations</property>
       <label>
         <content>${Name == null ? "&lt;Destination&gt;" : Name}</content>

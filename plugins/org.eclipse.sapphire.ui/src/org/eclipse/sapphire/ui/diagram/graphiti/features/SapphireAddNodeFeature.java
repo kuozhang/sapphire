@@ -15,8 +15,8 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
 import org.eclipse.graphiti.mm.algorithms.Image;
-import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
+import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
 import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.algorithms.styles.Orientation;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
@@ -28,6 +28,7 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.ColorConstant;
 import org.eclipse.graphiti.util.IColorConstant;
+import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramLabelDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
@@ -43,9 +44,11 @@ import org.eclipse.sapphire.ui.diagram.graphiti.providers.SapphireDiagramPropert
 
 public class SapphireAddNodeFeature extends AbstractAddShapeFeature 
 {
-    private static final IColorConstant CLASS_TEXT_FOREGROUND = new ColorConstant(51, 51, 153);
-    private static final IColorConstant CLASS_FOREGROUND = new ColorConstant(255, 102, 0);
-    private static final IColorConstant CLASS_BACKGROUND =  new ColorConstant(255, 204, 153);
+    private static final IColorConstant DEFAULT_TEXT_FOREGROUND = new ColorConstant(51, 51, 153);
+    private static final IColorConstant DEFAULT_NODE_FOREGROUND = new ColorConstant(51, 51, 153);
+    private static final int DEFAULT_NODE_WIDTH = 100;
+    private static final int DEFAULT_NODE_HEIGHT = 30;
+    private static final int DEFAULT_TEXT_HEIGHT = 20;
     private static int defaultX = 50;
     private static int defaultY = 50;
     private static int xInc = 100;
@@ -73,8 +76,8 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		
         // define a default size for the shape
         IDiagramNodeDef nodeDef = (IDiagramNodeDef)nodePart.getDefinition();
-        int width = nodeDef.getHint(ISapphirePartDef.HINT_WIDTH, -1);
-        int height = nodeDef.getHint(ISapphirePartDef.HINT_HEIGHT, -1);
+        int width = nodeDef.getHint(ISapphirePartDef.HINT_WIDTH, DEFAULT_NODE_WIDTH);
+        int height = nodeDef.getHint(ISapphirePartDef.HINT_HEIGHT, DEFAULT_NODE_HEIGHT);
         int x, y;
         if (context.getX() != -1)
         {
@@ -95,7 +98,6 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
         	defaultY += yInc;
         }
 
-        // CONTAINER SHAPE WITH RECTANGLE
         IPeCreateService peCreateService = Graphiti.getPeCreateService();
         ContainerShape containerShape =  peCreateService.createContainerShape(targetDiagram, true);
         IGaService gaService = Graphiti.getGaService();
@@ -105,26 +107,14 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
         if (nodePart.getImageId() == null)
         {
             // create and set graphics algorithm
-            Rectangle rectangle = gaService.createRectangle(containerShape);
-            rectangle.setForeground(manageColor(CLASS_FOREGROUND));
-            rectangle.setBackground(manageColor(CLASS_BACKGROUND));
-            rectangle.setLineWidth(2);
+            RoundedRectangle rectangle = gaService.createRoundedRectangle(containerShape, 8, 8);
+            rectangle.setForeground(manageColor(DEFAULT_NODE_FOREGROUND));
+            gaService.setRenderingStyle(rectangle, PredefinedColoredAreas.getBlueWhiteGlossAdaptions());
+            rectangle.setLineWidth(1);
             gaService.setLocationAndSize(rectangle, x, y, width, height);
  
             // create link and wire it
-            link(containerShape, nodePart);
-        		
-	        // SHAPE WITH LINE
-	        {
-	            // create shape for line
-	            Shape shape = peCreateService.createShape(containerShape, false);
-	 
-	            // create and set graphics algorithm
-	            Polyline polyline =
-	                gaService.createPolyline(shape, new int[] { 0, 20, width, 20 });
-	            polyline.setForeground(manageColor(CLASS_FOREGROUND));
-	            polyline.setLineWidth(2);
-	        }
+            link(containerShape, nodePart);        		
         }
         else
         {
@@ -159,7 +149,8 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
  
             // create and set text graphics algorithm
             Text text = gaService.createDefaultText(shape, nodePart.getLabel());
-            text.setForeground(manageColor(CLASS_TEXT_FOREGROUND));
+            text.setForeground(manageColor(DEFAULT_TEXT_FOREGROUND));
+            text.getFont().setBold(true);
             text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
             text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 
@@ -167,7 +158,8 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
             int labelX = labelDef.getHint("x", 0);
         	int labelY = labelDef.getHint("y", 0);            
             int labelWidth = labelDef.getHint(ISapphirePartDef.HINT_WIDTH, width);
-            int labelHeight = labelDef.getHint(ISapphirePartDef.HINT_HEIGHT, 15);
+            int labelHeight = labelDef.getHint(ISapphirePartDef.HINT_HEIGHT, 
+            		nodePart.getImageId() == null ? height : DEFAULT_TEXT_HEIGHT);
             
             gaService.setLocationAndSize(text, labelX, labelY, labelWidth, labelHeight);
  

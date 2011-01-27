@@ -26,6 +26,7 @@ import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
+import org.eclipse.graphiti.util.ColorConstant;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 
@@ -35,6 +36,8 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 
 public class SapphireAddConnectionFeature extends AbstractAddFeature 
 {
+	private static final IColorConstant DEFAULT_LINK_COLOR = new ColorConstant(51, 51, 153);
+	
 	public SapphireAddConnectionFeature(IFeatureProvider fp)
 	{
 		super(fp);
@@ -65,7 +68,7 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 
 		IGaService gaService = Graphiti.getGaService();
 		Polyline polyline = gaService.createPolyline(connection);
-		polyline.setForeground(manageColor(IColorConstant.BLACK));
+		polyline.setForeground(manageColor(DEFAULT_LINK_COLOR));
 		polyline.setLineWidth(1);
        
 		// create link and wire it
@@ -74,7 +77,7 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 		// add dynamic text decorator for the reference name
 		ConnectionDecorator textDecorator = peCreateService.createConnectionDecorator(connection, true, 0.5, true);
 		Text text = gaService.createDefaultText(textDecorator);
-		text.setForeground(manageColor(IColorConstant.BLACK));
+		text.setForeground(manageColor(DEFAULT_LINK_COLOR));
 		gaService.setLocation(text, 10, 0);		
 		
 		text.setValue(connectionPart.getLabel());
@@ -103,8 +106,7 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 	private Polygon createArrow(GraphicsAlgorithmContainer gaContainer) 
 	{
 		Polygon polygon = Graphiti.getGaCreateService().createPolygon(gaContainer, new int[] { -8, 4, 0, 0, -8, -4, -5, 0 });
-		polygon.setBackground(manageColor(IColorConstant.BLACK));
-		//polygon.setStyle(StyleUtil.getStyleForADFView(getDiagram()));
+		polygon.setBackground(manageColor(DEFAULT_LINK_COLOR));
 		polygon.setFilled(true);
 		return polygon;
 	}
