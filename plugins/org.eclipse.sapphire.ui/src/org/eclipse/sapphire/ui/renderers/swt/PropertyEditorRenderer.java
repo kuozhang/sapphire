@@ -334,7 +334,18 @@ public abstract class PropertyEditorRenderer
                     public void handleEvent( final Event event )
                     {
                         final int width = composite.getClientArea().width - sash.getBounds().width;
-                        final double ratio = ( (double) ( width - event.x ) ) / ( (double) width );
+                        double ratio = ( (double) ( width - event.x ) ) / ( (double) width );
+                        
+                        if( ratio < 0.2d )
+                        {
+                            ratio = 0.2d;
+                        }
+                        
+                        if( ratio > 0.8d )
+                        {
+                            ratio = 0.8d;
+                        }
+                        
                         relatedContentComposite.setData( RELATED_CONTENT_WIDTH, ratio );
                         refreshSashFormLayout( composite, mainPropertyEditorComposite, relatedContentComposite, sash );
                     }
