@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.samples.library.ui;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -20,8 +21,10 @@ import org.eclipse.sapphire.samples.library.ILibrary;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
 import org.eclipse.sapphire.ui.diagram.graphiti.editor.SapphireDiagramEditor;
+import org.eclipse.sapphire.ui.diagram.graphiti.editor.SapphireDiagramEditorFactory;
 import org.eclipse.sapphire.ui.diagram.graphiti.editor.SapphireDiagramEditorInput;
 import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage;
+import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.xml.XmlEditorResourceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
@@ -35,7 +38,7 @@ public class LibraryEditor extends SapphireEditor
 {
 	private ILibrary modelLibrary;
 	private StructuredTextEditor librarySourceEditor;
-	private SapphireDiagramEditorPart libraryDiagramPart;
+	private SapphireDiagramEditor libraryDiagramEditor;
 	private MasterDetailsPage libraryOverviewPage;
 	
     public LibraryEditor()
@@ -65,12 +68,22 @@ public class LibraryEditor extends SapphireEditor
 	protected void createDiagramPages() throws PartInitException
 	{
 		IPath path = new Path( "org.eclipse.sapphire.samples/sdef/LibraryEditor.sdef/diagram" );
-		this.libraryDiagramPart = new SapphireDiagramEditorPart(this, this.modelLibrary, path);
-		SapphireDiagramEditor diagramEditor = this.libraryDiagramPart.getDiagramEditor();
-		SapphireDiagramEditorInput diagramEditorInput = this.libraryDiagramPart.getDiagramEditorInput();
-		addPage(0, diagramEditor, diagramEditorInput);
-		setPageText( 0, "Diagram" );
-		setPageId(this.pages.get(0), "Diagram");
+		this.libraryDiagramEditor = new SapphireDiagramEditor(this.modelLibrary, path);
+		SapphireDiagramEditorInput diagramEditorInput = null;
+		try
+		{
+			diagramEditorInput = SapphireDiagramEditorFactory.createEditorInput(this.modelLibrary.adapt(IFile.class));
+		}
+		catch (Exception e)
+		{
+			SapphireUiFrameworkPlugin.log( e );
+		}
+		if (diagramEditorInput != null)
+		{
+			addPage(0, this.libraryDiagramEditor, diagramEditorInput);
+			setPageText( 0, "Diagram" );
+			setPageId(this.pages.get(0), "Diagram");
+		}
 	}
 	
 	@Override
@@ -92,17 +105,8 @@ public class LibraryEditor extends SapphireEditor
 	public void doSave( final IProgressMonitor monitor )
 	{
 		super.doSave(monitor);
-		SapphireDiagramEditor diagramEditor = this.libraryDiagramPart.getDiagramEditor();
-		diagramEditor.doSave(monitor);
+		
+		this.libraryDiagramEditor.doSave(monitor);
 	}
 	
-    @Override
-    public void dispose() 
-    {
-    	super.dispose();
-    	if (this.libraryDiagramPart != null)
-    	{
-    		this.libraryDiagramPart.dispose();
-    	}
-    }
 }

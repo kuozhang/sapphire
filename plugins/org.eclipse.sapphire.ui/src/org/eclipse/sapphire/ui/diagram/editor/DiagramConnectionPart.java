@@ -11,20 +11,8 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
-import org.eclipse.emf.transaction.RecordingCommand;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.graphiti.features.IAddFeature;
-import org.eclipse.graphiti.features.IFeatureProvider;
-import org.eclipse.graphiti.features.IRemoveFeature;
-import org.eclipse.graphiti.features.context.IRemoveContext;
-import org.eclipse.graphiti.features.context.impl.AddConnectionContext;
-import org.eclipse.graphiti.features.context.impl.RemoveContext;
-import org.eclipse.graphiti.features.context.impl.UpdateContext;
-import org.eclipse.graphiti.mm.pictograms.Connection;
-import org.eclipse.graphiti.mm.pictograms.ContainerShape;
-import org.eclipse.graphiti.mm.pictograms.Diagram;
-import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import java.util.Set;
+
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -35,6 +23,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointDef;
@@ -102,7 +91,7 @@ public class DiagramConnectionPart extends SapphirePart
         );
         
         this.endpoint1Def = this.localDefinition.getEndpoint1().element();        
-        this.endpoint1Model = processEndpoint(this.endpoint1Def);
+        this.endpoint1Model = resolveEndpoint(this.endpoint1Def);
         if (this.endpoint1Model != null)
         {
 	        this.endpoint1FunctionResult = initExpression
@@ -113,14 +102,13 @@ public class DiagramConnectionPart extends SapphirePart
 	        	{
 		            public void run()
 		            {
-		            	refreshEndpoint1();
 		            }
 	        	}
 	        );
         }
         
         this.endpoint2Def = this.localDefinition.getEndpoint2().element();
-        this.endpoint2Model = processEndpoint(this.endpoint2Def);
+        this.endpoint2Model = resolveEndpoint(this.endpoint2Def);
         if (this.endpoint2Model != null)
         {
 	        this.endpoint2FunctionResult = initExpression
@@ -131,7 +119,6 @@ public class DiagramConnectionPart extends SapphirePart
 	        	{
 		            public void run()
 		            {
-		            	refreshEndpoint2();
 		            }
 	        	}
 	        );
@@ -201,16 +188,7 @@ public class DiagramConnectionPart extends SapphirePart
     
     public void refreshLabel()
     {
-		final SapphireDiagramEditorPart diagramEditor = (SapphireDiagramEditorPart)getParentPart();
-		final IFeatureProvider fp = 
-						diagramEditor.getDiagramEditor().getDiagramTypeProvider().getFeatureProvider();
-		final PictogramElement pe = getConnection(fp, this);
-		if (pe != null)
-		{
-			UpdateContext context = new UpdateContext(pe);
-			fp.updateIfPossible(context);
-		}		
-    	
+    	notifyConnectionUpdate();
     }
     
     public String getInstanceId()
@@ -258,7 +236,7 @@ public class DiagramConnectionPart extends SapphirePart
         }
     }
     
-	public void refreshEndpoint1()
+	public void resetEndpoint1()
 	{
 		if (this.endpoint1FunctionResult != null)
 		{
@@ -268,7 +246,7 @@ public class DiagramConnectionPart extends SapphirePart
 		}		
 	}
 	
-	public void refreshEndpoint2()
+	public void resetEndpoint2()
 	{
 		if (this.endpoint2FunctionResult != null)
 		{
@@ -278,7 +256,7 @@ public class DiagramConnectionPart extends SapphirePart
 		}		
 	}
 
-	protected IModelElement processEndpoint(IDiagramConnectionEndpointDef endpointDef)
+	protected IModelElement resolveEndpoint(IDiagramConnectionEndpointDef endpointDef)
 	{
 		String propertyName = endpointDef.getProperty().getContent();
 		ModelProperty modelProperty = resolve(this.modelElement, propertyName);
@@ -340,17 +318,9 @@ public class DiagramConnectionPart extends SapphirePart
     	if (property.getName().equals(this.endpoint1Def.getProperty().getContent()) || 
     			property.getName().equals(this.endpoint2Def.getProperty().getContent()))
     	{
-        	SapphireDiagramEditorPart diagramEditor = (SapphireDiagramEditorPart)getParentPart();
-    		final IFeatureProvider fp = diagramEditor.getDiagramEditor().getDiagramTypeProvider().getFeatureProvider();
-    		final Diagram diagram = diagramEditor.getDiagramEditor().getDiagramTypeProvider().getDiagram();
-    		final TransactionalEditingDomain ted = TransactionUtil.getEditingDomain(diagram);
-
-    		removeDiagramConnection(fp, ted);
-    		
     		boolean sourceChange = property.getName().equals(this.endpoint1Def.getProperty().getContent()) ? true : false;
     		handleEndpointChange(sourceChange);
-			// add new connection to the diagram
-    		addNewConnectionIfPossible(fp, ted, diagramEditor);
+    		notifyConnectionEndpointUpdate();
     	}
     }    
     
@@ -358,7 +328,7 @@ public class DiagramConnectionPart extends SapphirePart
     {
 		if (sourceChange)
 		{
-			this.endpoint1Model = processEndpoint(this.endpoint1Def);
+			this.endpoint1Model = resolveEndpoint(this.endpoint1Def);
 			if (this.endpoint1FunctionResult != null)
 			{
 				this.endpoint1FunctionResult.dispose();
@@ -374,7 +344,6 @@ public class DiagramConnectionPart extends SapphirePart
 		        	{
 			            public void run()
 			            {
-			            	refreshEndpoint1();
 			            }
 		        	}
 		        );
@@ -382,7 +351,7 @@ public class DiagramConnectionPart extends SapphirePart
 		}
 		else
 		{
-			this.endpoint2Model = processEndpoint(this.endpoint2Def);
+			this.endpoint2Model = resolveEndpoint(this.endpoint2Def);
 			if (this.endpoint2FunctionResult != null)
 			{
 				this.endpoint2FunctionResult.dispose();
@@ -398,91 +367,36 @@ public class DiagramConnectionPart extends SapphirePart
 		        	{
 			            public void run()
 			            {
-			            	refreshEndpoint2();
 			            }
 		        	}
 		        );
 	        }			
 		}
     }
-    
-    protected void removeDiagramConnection(IFeatureProvider fp, TransactionalEditingDomain ted)
-    {
-		// remove the existing connection pe from the diagram
-		if (this.getEndpoint1() != null && this.getEndpoint2() != null)
-		{
-			PictogramElement pe = getConnection(fp, this);
-			if (pe != null)
-			{
-				final IRemoveContext rc = new RemoveContext(pe);
-				final IRemoveFeature removeFeature = fp.getRemoveFeature(rc);
-				if (removeFeature != null) 
-				{
-					ted.getCommandStack().execute(new RecordingCommand(ted) 
-					{
-						protected void doExecute() 
-						{			    					
-							removeFeature.remove(rc);
-						}
-					});
-				}
-			}
-		}    	
-    }
-    
-    protected void addNewConnectionIfPossible(IFeatureProvider fp, TransactionalEditingDomain ted,
-    						SapphireDiagramEditorPart diagramEditor)
-    {
-		// add new connection to the diagram
-		if (this.getEndpoint1() != null && this.getEndpoint2() != null)
-		{
-			DiagramNodePart srcNodePart = diagramEditor.getDiagramNodePart(this.getEndpoint1());
-			DiagramNodePart targetNodePart = diagramEditor.getDiagramNodePart(this.getEndpoint2());
-			ContainerShape srcNode = getContainerShape(fp, srcNodePart);
-			ContainerShape targetNode = getContainerShape(fp, targetNodePart);
-			final AddConnectionContext addContext = 
-					new AddConnectionContext(srcNode.getAnchors().get(0), targetNode.getAnchors().get(0));
-			addContext.setNewObject(this);
-			final IAddFeature addFeature = fp.getAddFeature(addContext);
-			if (addFeature != null) 
-			{
-				ted.getCommandStack().execute(new RecordingCommand(ted) 
-				{
-					protected void doExecute() 
-					{			    					
-						addFeature.add(addContext);
-					}
-				});
-			}			
-		}     	
-    }
-    
-	protected Connection getConnection(IFeatureProvider fp, Object bo)
+        
+	protected void notifyConnectionUpdate()
 	{
-		PictogramElement [] pictograms = fp.getAllPictogramElementsForBusinessObject(bo);
-		for (PictogramElement pictogram : pictograms)
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
 		{
-			if (pictogram instanceof Connection)
+			if (listener instanceof SapphireDiagramPartListener)
 			{
-				return (Connection)pictogram;
+				DiagramConnectionEvent cue = new DiagramConnectionEvent(this);
+				((SapphireDiagramPartListener)listener).handleConnectionUpdateEvent(cue);
 			}
 		}
-		return null;
-	}
-    
-	protected ContainerShape getContainerShape(IFeatureProvider fp, Object bo)
-	{
-		ContainerShape containerShape = null;
-		PictogramElement [] pictograms = fp.getAllPictogramElementsForBusinessObject(bo);
-		for (PictogramElement pictogram : pictograms)
-		{
-			if (pictogram instanceof ContainerShape)
-			{
-				containerShape = (ContainerShape)pictogram;
-				break;
-			}
-		}
-		return containerShape;
 	}
 	
+	protected void notifyConnectionEndpointUpdate()
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramConnectionEvent cue = new DiagramConnectionEvent(this);
+				((SapphireDiagramPartListener)listener).handleConnectionEndpointEvent(cue);
+			}
+		}
+	}
 }

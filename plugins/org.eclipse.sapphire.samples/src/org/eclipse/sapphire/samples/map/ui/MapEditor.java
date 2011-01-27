@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.samples.map.ui;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -20,8 +21,10 @@ import org.eclipse.sapphire.samples.map.IMap;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
 import org.eclipse.sapphire.ui.diagram.graphiti.editor.SapphireDiagramEditor;
+import org.eclipse.sapphire.ui.diagram.graphiti.editor.SapphireDiagramEditorFactory;
 import org.eclipse.sapphire.ui.diagram.graphiti.editor.SapphireDiagramEditorInput;
 import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage;
+import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.xml.XmlEditorResourceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
@@ -35,7 +38,7 @@ public class MapEditor extends SapphireEditor
 {
 	private IMap modelMap;
 	private StructuredTextEditor mapSourceEditor;
-	private SapphireDiagramEditorPart mapDiagramPart;
+	private SapphireDiagramEditor mapDiagram;
 	private MasterDetailsPage mapOverviewPage;
 	
     public MapEditor()
@@ -65,12 +68,23 @@ public class MapEditor extends SapphireEditor
 	protected void createDiagramPages() throws PartInitException
 	{
 		IPath path = new Path( "org.eclipse.sapphire.samples/sdef/MapEditor.sdef/diagram" );
-		this.mapDiagramPart = new SapphireDiagramEditorPart(this, this.modelMap, path);
-		SapphireDiagramEditor diagramEditor = this.mapDiagramPart.getDiagramEditor();
-		SapphireDiagramEditorInput diagramEditorInput = this.mapDiagramPart.getDiagramEditorInput();
-		addPage(0, diagramEditor, diagramEditorInput);
-		setPageText( 0, "Diagram" );
-		setPageId(this.pages.get(0), "Diagram");
+		this.mapDiagram = new SapphireDiagramEditor(this.modelMap, path);
+		SapphireDiagramEditorInput diagramEditorInput = null;
+		try
+		{
+			diagramEditorInput = SapphireDiagramEditorFactory.createEditorInput(this.modelMap.adapt(IFile.class));
+		}
+		catch (Exception e)
+		{
+			SapphireUiFrameworkPlugin.log( e );
+		}
+
+		if (diagramEditorInput != null)
+		{
+			addPage(0, mapDiagram, diagramEditorInput);
+			setPageText( 0, "Diagram" );
+			setPageId(this.pages.get(0), "Diagram");
+		}
 	}
 	
 	@Override
@@ -91,19 +105,8 @@ public class MapEditor extends SapphireEditor
 	@Override
 	public void doSave( final IProgressMonitor monitor )
 	{
-		super.doSave(monitor);
-		SapphireDiagramEditor diagramEditor = this.mapDiagramPart.getDiagramEditor();
-		diagramEditor.doSave(monitor);
+		super.doSave(monitor);		
+		this.mapDiagram.doSave(monitor);
 	}
-	
-    @Override
-    public void dispose() 
-    {
-    	super.dispose();
-    	if (this.mapDiagramPart != null)
-    	{
-    		this.mapDiagramPart.dispose();
-    	}
-    }
 	
 }

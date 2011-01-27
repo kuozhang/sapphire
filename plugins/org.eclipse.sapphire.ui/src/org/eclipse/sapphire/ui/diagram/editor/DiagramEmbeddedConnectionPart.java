@@ -11,16 +11,11 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.graphiti.features.IFeatureProvider;
-import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEmbeddedConnectionDef;
 
@@ -74,7 +69,7 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
         );        
 
         this.endpointDef = this.localDefinition.getEndpoint().element();
-        this.endpointModel = processEndpoint(this.endpointDef);
+        this.endpointModel = resolveEndpoint(this.endpointDef);
         if (this.endpointModel != null)
         {
 	        this.endpointFunctionResult = initExpression
@@ -85,7 +80,6 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
 	        	{
 		            public void run()
 		            {
-		            	refreshEndpoint2();
 		            }
 	        	}
 	        );
@@ -115,12 +109,12 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
     }
 
     @Override
-	public void refreshEndpoint1()
+	public void resetEndpoint1()
 	{
 	}
 	
     @Override
-	public void refreshEndpoint2()
+	public void resetEndpoint2()
 	{
 		if (this.endpointFunctionResult != null)
 		{
@@ -136,13 +130,6 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
     	return diagramPart.getDiagramNodePart(this.srcNodeModel);
     }
     
-	@Override
-	public void render(SapphireRenderingContext context) 
-	{
-		// TODO Auto-generated method stub
-
-	}
-
     @Override
     public void dispose()
     {
@@ -183,20 +170,14 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
     	final ModelProperty property = event.getProperty();
     	if (property.getName().equals(this.endpointDef.getProperty().getContent()))
     	{
-	    	SapphireDiagramEditorPart diagramEditor = (SapphireDiagramEditorPart)getParentPart();
-			final IFeatureProvider fp = diagramEditor.getDiagramEditor().getDiagramTypeProvider().getFeatureProvider();
-			final Diagram diagram = diagramEditor.getDiagramEditor().getDiagramTypeProvider().getDiagram();
-			final TransactionalEditingDomain ted = TransactionUtil.getEditingDomain(diagram);
-			
-			removeDiagramConnection(fp, ted);
 			handleEndpointChange();
-			addNewConnectionIfPossible(fp, ted, diagramEditor);
+			notifyConnectionEndpointUpdate();
     	}    			
     }    
     
     private void handleEndpointChange()
     {
-        this.endpointModel = processEndpoint(this.endpointDef);
+        this.endpointModel = resolveEndpoint(this.endpointDef);
         if (this.endpointFunctionResult != null)
         {
         	this.endpointFunctionResult.dispose();
@@ -212,7 +193,6 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
 	        	{
 		            public void run()
 		            {
-		            	refreshEndpoint2();
 		            }
 	        	}
 	        );

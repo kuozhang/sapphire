@@ -11,13 +11,13 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
-import org.eclipse.graphiti.features.IFeatureProvider;
-import org.eclipse.graphiti.features.context.impl.UpdateContext;
-import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import java.util.Set;
+
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 
@@ -148,12 +148,12 @@ public class DiagramNodePart extends SapphirePart
 	
 	public void refreshLabel()
 	{
-		updateNodePE();
+		notifyNodeUpdate();
 	}
 	
 	public void refreshImage()
 	{
-		updateNodePE();
+		notifyNodeUpdate();
 	}
 	
 	public boolean canEditLabel()
@@ -193,16 +193,17 @@ public class DiagramNodePart extends SapphirePart
         return null;		
 	}
 		
-	private void updateNodePE()
+	private void notifyNodeUpdate()
 	{
-		final SapphireDiagramEditorPart diagramEditor = (SapphireDiagramEditorPart)getParentPart();
-		final IFeatureProvider fp = 
-						diagramEditor.getDiagramEditor().getDiagramTypeProvider().getFeatureProvider();
-		final PictogramElement pe = getDiagramNodeTemplate().getContainerShape(fp, this);
-		if (pe != null)
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
 		{
-			UpdateContext context = new UpdateContext(pe);
-			fp.updateIfPossible(context);
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramNodeEvent nue = new DiagramNodeEvent(this);
+				((SapphireDiagramPartListener)listener).handleNodeUpdateEvent(nue);
+			}
 		}
 	}
+	
 }

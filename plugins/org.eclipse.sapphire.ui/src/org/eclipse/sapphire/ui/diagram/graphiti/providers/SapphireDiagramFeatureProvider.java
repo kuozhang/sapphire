@@ -48,6 +48,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramGeometryWrapper;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
+import org.eclipse.sapphire.ui.diagram.graphiti.editor.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.diagram.graphiti.features.SapphireAddBendpointFeature;
 import org.eclipse.sapphire.ui.diagram.graphiti.features.SapphireAddConnectionFeature;
 import org.eclipse.sapphire.ui.diagram.graphiti.features.SapphireAddNodeFeature;
@@ -71,28 +72,17 @@ import org.eclipse.sapphire.ui.diagram.graphiti.features.SapphireUpdateNodeFeatu
 
 public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider 
 {
-	private SapphireDiagramEditorPart diagramPart;
 	
 	public SapphireDiagramFeatureProvider(IDiagramTypeProvider dtp, IIndependenceSolver solver)
 	{
 		super(dtp);
 		this.setIndependenceSolver(solver);
 	}
-	
-	public void setDiagramPart(SapphireDiagramEditorPart diagramPart)
-	{
-		this.diagramPart = diagramPart;
 		
-	}
-	
-	public SapphireDiagramEditorPart getDiagramPart()
-	{
-		return this.diagramPart;
-	}
-	
 	public DiagramGeometryWrapper getDiagramGeometry()
 	{
-		return this.diagramPart.getDiagramGeometry();
+		SapphireDiagramEditor diagramEditor = getDiagramEditor();
+		return diagramEditor.getDiagramGeometry();
 	}
 	
 	@Override
@@ -114,7 +104,7 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 	@Override
 	public ICreateFeature[] getCreateFeatures() 
 	{
-		List<DiagramNodeTemplate> nodeTemplates = this.diagramPart.getNodeTemplates();
+		List<DiagramNodeTemplate> nodeTemplates = getDiagramPart().getNodeTemplates();
 		ICreateFeature[] features = new ICreateFeature[nodeTemplates.size()];
 		int i = 0;
 		for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
@@ -150,7 +140,7 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 	@Override
     public ICreateConnectionFeature[] getCreateConnectionFeatures() 
 	{
-		List<DiagramConnectionTemplate> connectionTemplates = this.diagramPart.getConnectionTemplates();
+		List<DiagramConnectionTemplate> connectionTemplates = getDiagramPart().getConnectionTemplates();
 		List<ICreateConnectionFeature> features = 
 			new ArrayList<ICreateConnectionFeature>(connectionTemplates.size());
 		for (DiagramConnectionTemplate connectionTemplate : connectionTemplates)
@@ -161,7 +151,7 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 		}
 		
 		// Add Embedded connection features
-		List<DiagramNodeTemplate> nodeTemplates = this.diagramPart.getNodeTemplates();
+		List<DiagramNodeTemplate> nodeTemplates = getDiagramPart().getNodeTemplates();
 		for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
 		{
 			DiagramConnectionTemplate connTemplate = nodeTemplate.getEmbeddedConnectionTemplate();
@@ -267,6 +257,18 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 		{
 			gw.removeConnectionBendpoints((DiagramConnectionPart)bo);
 		}
+	}
+	
+	private SapphireDiagramEditor getDiagramEditor()
+	{
+		SapphireDiagramEditor diagramEditor = (SapphireDiagramEditor)getDiagramTypeProvider().getDiagramEditor();
+		return diagramEditor;
+	}
+	
+	private SapphireDiagramEditorPart getDiagramPart()
+	{
+		SapphireDiagramEditor diagramEditor = getDiagramEditor();
+		return diagramEditor.getDiagramEditorPart();
 	}
 	    
 }

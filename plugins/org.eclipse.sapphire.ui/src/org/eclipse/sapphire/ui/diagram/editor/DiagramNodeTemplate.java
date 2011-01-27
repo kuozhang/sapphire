@@ -14,18 +14,9 @@ package org.eclipse.sapphire.ui.diagram.editor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.eclipse.emf.transaction.RecordingCommand;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.graphiti.features.IFeatureProvider;
-import org.eclipse.graphiti.features.IRemoveFeature;
-import org.eclipse.graphiti.features.context.IRemoveContext;
-import org.eclipse.graphiti.features.context.impl.AddContext;
-import org.eclipse.graphiti.features.context.impl.RemoveContext;
-import org.eclipse.graphiti.mm.pictograms.ContainerShape;
-import org.eclipse.graphiti.mm.pictograms.Diagram;
-import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -42,6 +33,19 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 
 public class DiagramNodeTemplate 
 {
+    public static abstract class Listener
+    {
+        public void handleNodeUpdate(final DiagramNodePart nodePart)
+        {
+        }       
+        public void handleNodeAdd(final DiagramNodePart nodePart)
+        {        	
+        }
+        public void handleNodeDelete(final DiagramNodePart nodePart)
+        {        	
+        }
+    }
+    
 	private SapphireDiagramEditorPart diagramEditor;
 	private IDiagramNodeDef definition;
 	private IModelElement modelElement;	
@@ -51,7 +55,8 @@ public class DiagramNodeTemplate
 	private String toolPaletteDesc;
 	private DiagramEmbeddedConnectionTemplate embeddedConnTemplate;
 	private ModelPropertyListener modelPropertyListener;
-	
+	private SapphireDiagramPartListener nodePartListener;
+	private final Set<Listener> listeners;	
 	private List<DiagramNodePart> diagramNodes;
 	    
     public DiagramNodeTemplate(final SapphireDiagramEditorPart diagramEditor, IDiagramNodeDef definition, IModelElement modelElement)
@@ -64,16 +69,23 @@ public class DiagramNodeTemplate
         this.toolPaletteDesc = this.definition.getToolPaletteDesc().getContent();
         
         this.diagramNodes = new ArrayList<DiagramNodePart>();
+        this.listeners = new CopyOnWriteArraySet<Listener>();
         
         this.propertyName = this.definition.getProperty().getContent();
         this.modelProperty = (ListProperty)resolve(this.modelElement, this.propertyName);
+        this.nodePartListener = new SapphireDiagramPartListener() 
+        {
+        	@Override
+        	 public void handleNodeUpdateEvent(final DiagramNodeEvent event)
+        	 {
+        		 notifyNodeUpdate((DiagramNodePart)event.getPart());
+        	 }        	
+		};
+		
     	ModelElementList<?> list = this.modelElement.read(this.modelProperty);
         for( IModelElement listEntryModelElement : list )
         {
-        	DiagramNodePart node = new DiagramNodePart(this);
-        	node.init(this.diagramEditor, listEntryModelElement, definition, 
-        			Collections.<String,String>emptyMap());
-        	this.diagramNodes.add(node);
+        	createNewNodePart(listEntryModelElement);
         }
         
         // handle embedded connections
@@ -125,7 +137,7 @@ public class DiagramNodeTemplate
     	IModelElement newElement = null;
 		ModelElementList<?> list = this.modelElement.read(this.modelProperty);
 		newElement = list.addNewElement();
-    	DiagramNodePart newNode = createNodePart(newElement);
+    	DiagramNodePart newNode = createNewNodePart(newElement);
     	return newNode;
     }
     
@@ -152,6 +164,16 @@ public class DiagramNodeTemplate
     public void removeModelLister()
     {
     	this.modelElement.removeListener(this.modelPropertyListener, this.propertyName);
+    }
+    
+    public void addTemplateListener( final Listener listener )
+    {
+        this.listeners.add( listener );
+    }
+    
+    public void removeTemplateListener( final Listener listener )
+    {
+        this.listeners.remove( listener );
     }
     
     private ModelProperty resolve(final IModelElement modelElement, 
@@ -185,10 +207,6 @@ public class DiagramNodeTemplate
     			oldList.add(nodePart.getLocalModelElement());
     		}
     		
-    		final IFeatureProvider fp = this.diagramEditor.getDiagramEditor().getDiagramTypeProvider().getFeatureProvider();
-    		final Diagram diagram = this.diagramEditor.getDiagramEditor().getDiagramTypeProvider().getDiagram();
-			final TransactionalEditingDomain ted = TransactionUtil.getEditingDomain(diagram);
-    		
 	    	if (newList.size() > oldList.size())
 	    	{
 	    		// new nodes are added outside of the diagram editor
@@ -203,11 +221,8 @@ public class DiagramNodeTemplate
 	    			DiagramNodePart nodePart = getNodePart(newNode);
 	    			if (nodePart == null)
 	    			{
-	    		    	nodePart = createNodePart(newNode);
-						AddContext ctx = new AddContext();
-						ctx.setNewObject(nodePart);
-						ctx.setTargetContainer(diagram);
-		    			fp.addIfPossible(ctx);
+	    		    	nodePart = createNewNodePart(newNode);
+	    		    	notifyNodeAdd(nodePart);
 	    			}
 	    		}
 	    	}
@@ -220,21 +235,9 @@ public class DiagramNodeTemplate
 	    			DiagramNodePart nodePart = getNodePart(deletedNode);
 	    			if (nodePart != null)
 	    			{
-	    				PictogramElement pe = getContainerShape(fp, nodePart);
-	    				final IRemoveContext rc = new RemoveContext(pe);
-	    				final IRemoveFeature removeFeature = fp.getRemoveFeature(rc);
-	    				if (removeFeature != null) 
-	    				{
-	    					ted.getCommandStack().execute(new RecordingCommand(ted) 
-	    					{
-	    						protected void doExecute() 
-	    						{			    					
-	    							removeFeature.remove(rc);
-	    						}
-	    					});
-	    					nodePart.dispose();
-	    					this.diagramNodes.remove(nodePart);
-	    				}	    				
+	    				notifyNodeDelete(nodePart);
+    					nodePart.dispose();
+    					this.diagramNodes.remove(nodePart);
 	    			}
 	    		}
 	    	}
@@ -254,34 +257,20 @@ public class DiagramNodeTemplate
     	return null;
     }
     
-    private DiagramNodePart createNodePart(IModelElement element)
+    private DiagramNodePart createNewNodePart(IModelElement element)
     {
     	DiagramNodePart newNode = new DiagramNodePart(this);
     	newNode.init(this.diagramEditor, element, this.definition, 
     			Collections.<String,String>emptyMap());
+    	newNode.addListener(this.nodePartListener);
+    	this.diagramNodes.add(newNode);
     	if (this.embeddedConnTemplate != null)
     	{
     		this.embeddedConnTemplate.addModelListener(element);
     	}
-    	this.diagramNodes.add(newNode);
     	return newNode;    	
     }
-    
-	public ContainerShape getContainerShape(IFeatureProvider fp, Object bo)
-	{
-		ContainerShape containerShape = null;
-		PictogramElement [] pictograms = fp.getAllPictogramElementsForBusinessObject(bo);
-		for (PictogramElement pictogram : pictograms)
-		{
-			if (pictogram instanceof ContainerShape)
-			{
-				containerShape = (ContainerShape)pictogram;
-				break;
-			}
-		}
-		return containerShape;
-	}
-	
+    	
 	void dispose()
 	{
 		removeModelLister();
@@ -298,4 +287,27 @@ public class DiagramNodeTemplate
 		}
 	}
     
+	private void notifyNodeUpdate(DiagramNodePart nodePart)
+	{
+		for( Listener listener : this.listeners )
+        {
+            listener.handleNodeUpdate(nodePart);
+        }		
+	}
+	
+	private void notifyNodeAdd(DiagramNodePart nodePart)
+	{
+		for( Listener listener : this.listeners )
+        {
+            listener.handleNodeAdd(nodePart);
+        }				
+	}
+	
+	private void notifyNodeDelete(DiagramNodePart nodePart)
+	{
+		for( Listener listener : this.listeners )
+        {
+            listener.handleNodeDelete(nodePart);
+        }				
+	}
 }

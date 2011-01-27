@@ -44,7 +44,6 @@ import org.osgi.framework.Bundle;
 
 public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider 
 {
-	private SapphireDiagramEditorPart diagramPart;
 	private SapphireDiagramFeatureProvider featureProvider;
 	private IToolBehaviorProvider[] toolBehaviorProviders;
 	
@@ -55,22 +54,10 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
 		setFeatureProvider(this.featureProvider);
 	}
 	
-	public void setDiagramPart(SapphireDiagramEditorPart diagramPart)
-	{
-		this.diagramPart = diagramPart;
-		this.featureProvider.setDiagramPart(diagramPart);		
-	}
-	
-	public SapphireDiagramEditorPart getDiagramPart()
-	{
-		return this.diagramPart;
-	}
-	
 	@Override
 	public void init(Diagram diagram, IDiagramEditor diagramEditor)
 	{
 		super.init(diagram, diagramEditor);
-		setDiagramPart(((SapphireDiagramEditor)diagramEditor).getDiagramEditorPart());
 		ExtensionManager extManager = (ExtensionManager)GraphitiUi.getExtensionManager();
 		IImageProvider imageProviders[] = extManager.getImageProviders();
 		SapphireDiagramImageProvider sapphireImageProvider = null;
@@ -84,7 +71,7 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
 		}
 		if (sapphireImageProvider != null)
 		{
-			List<DiagramNodeTemplate> nodeTemplates = this.diagramPart.getNodeTemplates();
+			List<DiagramNodeTemplate> nodeTemplates = getDiagramPart().getNodeTemplates();
 			for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
 			{
 				IDiagramNodeDef nodeDef = nodeTemplate.getDefinition();
@@ -160,4 +147,12 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
     	}
     	return null;
     }
+    
+	
+	private SapphireDiagramEditorPart getDiagramPart()
+	{
+		SapphireDiagramEditor diagramEditor = (SapphireDiagramEditor)getDiagramEditor();
+		return diagramEditor.getDiagramEditorPart();
+	}
+    
 }

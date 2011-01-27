@@ -14,11 +14,9 @@ package org.eclipse.sapphire.ui.diagram.editor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.graphiti.features.IFeatureProvider;
-import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -43,6 +41,22 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointDef;
 
 public class DiagramConnectionTemplate 
 {
+    public static abstract class Listener
+    {
+        public void handleConnectionUpdate(final DiagramConnectionPart connPart)
+        {
+        }  
+        public void handleConnectionEndpointUpdate(final DiagramConnectionPart connPart)
+        {        	
+        }
+        public void handleConnectionAdd(final DiagramConnectionPart connPart)
+        {        	
+        }
+        public void handleConnectionDelete(final DiagramConnectionPart connPart)
+        {        	
+        }
+    }
+	
 	protected SapphireDiagramEditorPart diagramEditor;
 	private IDiagramConnectionDef definition;
 	protected IModelElement modelElement;
@@ -51,6 +65,8 @@ public class DiagramConnectionTemplate
 	protected String toolPaletteLabel;
 	protected String toolPaletteDesc;
 	protected ModelPropertyListener modelPropertyListener;
+	protected SapphireDiagramPartListener connPartListener;
+	protected Set<Listener> listeners;
 	
 	private List<DiagramConnectionPart> diagramConnections;
 	
@@ -70,14 +86,28 @@ public class DiagramConnectionTemplate
         
         this.propertyName = this.definition.getProperty().getContent();
         this.modelProperty = (ListProperty)resolve(this.modelElement, this.propertyName);
+        
+        this.connPartListener = new SapphireDiagramPartListener() 
+        {
+        	@Override
+	       	 public void handleConnectionUpdateEvent(final DiagramConnectionEvent event)
+	       	 {
+	       		 notifyConnectionUpdate((DiagramConnectionPart)event.getPart());
+	       	 }  
+        	 @Override
+	       	 public void handleConnectionEndpointEvent(final DiagramConnectionEvent event)
+	       	 {
+	       		 notifyConnectionEndpointUpdate((DiagramConnectionPart)event.getPart());
+	       	 }        	
+        	
+		};
+		
+		this.listeners = new CopyOnWriteArraySet<Listener>();
         	
     	ModelElementList<?> list = this.modelElement.read(this.modelProperty);
         for( IModelElement listEntryModelElement : list )
         {
-        	DiagramConnectionPart connection = new DiagramConnectionPart(this);
-        	connection.init(this.diagramEditor, listEntryModelElement, definition, 
-        			Collections.<String,String>emptyMap());
-        	addConnectionPart(null, connection);
+        	createNewConnectionPart(listEntryModelElement, null);
         }
                 
         // Add model property listener
@@ -139,6 +169,16 @@ public class DiagramConnectionTemplate
     	this.modelElement.removeListener(this.modelPropertyListener, this.propertyName);
     }
     
+    public void addTemplateListener( final Listener listener )
+    {
+        this.listeners.add( listener );
+    }
+    
+    public void removeTemplateListener( final Listener listener )
+    {
+        this.listeners.remove( listener );
+    }
+    
     public SapphireDiagramEditorPart getDiagramEditor()
     {
     	return this.diagramEditor;
@@ -153,7 +193,8 @@ public class DiagramConnectionTemplate
     	IDiagramConnectionEndpointDef srcAnchorDef = this.definition.getEndpoint1().element();
     	String srcProperty = srcAnchorDef.getProperty().getContent();
     	Value<Function> srcFunc = srcAnchorDef.getValue();
-    	FunctionResult srcFuncResult = getNodeReferenceFunction(srcNode, srcFunc);
+    	FunctionResult srcFuncResult = getNodeReferenceFunction(srcNode, srcFunc, 
+    							this.definition.adapt( LocalizationService.class ));
     	if (srcFuncResult != null)
     	{
 	    	setModelProperty(newElement, srcProperty, srcFuncResult.value());
@@ -163,26 +204,25 @@ public class DiagramConnectionTemplate
     	IDiagramConnectionEndpointDef targetAnchorDef = this.definition.getEndpoint2().element();
     	String targetProperty = targetAnchorDef.getProperty().getContent();
     	Value<Function> targetFunc = targetAnchorDef.getValue();;
-    	FunctionResult targetFuncResult = getNodeReferenceFunction(targetNode, targetFunc);
+    	FunctionResult targetFuncResult = getNodeReferenceFunction(targetNode, targetFunc,
+    							this.definition.adapt( LocalizationService.class ));
     	if (targetFuncResult != null)
     	{
 	    	setModelProperty(newElement, targetProperty, targetFuncResult.value());
 	    	targetFuncResult.dispose();
     	}
     	
-    	DiagramConnectionPart newConn = new DiagramConnectionPart(this);
-    	newConn.init(this.diagramEditor, newElement, this.definition, 
-    			Collections.<String,String>emptyMap());
-    	addConnectionPart(null, newConn);
+    	DiagramConnectionPart newConn = createNewConnectionPart(newElement, null);
     	return newConn;
     }
     
-    public DiagramConnectionPart createNewDiagramConnection(IModelElement connElement, IModelElement srcNodeElement)
+    public DiagramConnectionPart createNewConnectionPart(IModelElement connElement, IModelElement srcNodeElement)
     {
     	DiagramConnectionPart connPart = new DiagramConnectionPart(this);
     	connPart.init(this.diagramEditor, connElement, this.definition, 
     			Collections.<String,String>emptyMap());
-    	addConnectionPart(null, connPart);
+    	connPart.addListener(this.connPartListener);
+    	addConnectionPart(srcNodeElement, connPart);
     	return connPart;
     }
     
@@ -223,7 +263,8 @@ public class DiagramConnectionTemplate
     }
     
     protected FunctionResult getNodeReferenceFunction(final DiagramNodePart nodePart,
-    											final Value<Function> function)
+    											final Value<Function> function,
+    											LocalizationService ls)
     {
         Function f = null;
         FunctionResult fr = null;
@@ -237,7 +278,7 @@ public class DiagramConnectionTemplate
         {
             
             f = FailSafeFunction.create( f, String.class );
-            fr = f.evaluate( new ModelElementFunctionContext( nodePart.getLocalModelElement(), this.definition.adapt( LocalizationService.class ) ) );
+            fr = f.evaluate( new ModelElementFunctionContext( nodePart.getLocalModelElement(), ls ));
         }
         return fr;
     }
@@ -256,19 +297,16 @@ public class DiagramConnectionTemplate
     		{
     			oldList.add(connPart.getLocalModelElement());
     		}
-    		
-    		final IFeatureProvider fp = this.diagramEditor.getDiagramEditor().getDiagramTypeProvider().getFeatureProvider();
-    		final Diagram diagram = this.diagramEditor.getDiagramEditor().getDiagramTypeProvider().getDiagram();
-			final TransactionalEditingDomain ted = TransactionUtil.getEditingDomain(diagram);
-    		
+    		    		
 	    	if (newList.size() > oldList.size())
 	    	{
 	    		// new connections are added
 	    		List<IModelElement> newConns = ListUtil.ListDiff(newList, oldList);
 	    		for (IModelElement newConn : newConns)
 	    		{	    			
-	            	DiagramConnectionPart connPart = createNewDiagramConnection(newConn, element);
-	            	connPart.addNewConnectionIfPossible(fp, ted, this.diagramEditor);
+	            	DiagramConnectionPart connPart = createNewConnectionPart(newConn, element);
+	            	//connPart.addNewConnectionIfPossible(fp, ted, this.diagramEditor);
+	            	notifyConnectionAdd(connPart);
 	    		}
 	    	}
 	    	else
@@ -280,7 +318,8 @@ public class DiagramConnectionTemplate
 	    			DiagramConnectionPart connPart = getConnectionPart(element, deletedConn);
 	    			if (connPart != null)
 	    			{
-	    				connPart.removeDiagramConnection(fp, ted);
+	    				//connPart.removeDiagramConnection(fp, ted);
+	    				notifyConnectionDelete(connPart);
 		    			connPart.dispose();
 		    			removeConnectionPart(element, connPart);
 	    			}
@@ -321,5 +360,36 @@ public class DiagramConnectionTemplate
     		connPart.dispose();
     	}
     }
-        
+    
+    protected void notifyConnectionUpdate(DiagramConnectionPart connPart)
+    {
+		for( Listener listener : this.listeners )
+        {
+            listener.handleConnectionUpdate(connPart);
+        }    	
+    }
+
+    protected void notifyConnectionEndpointUpdate(DiagramConnectionPart connPart)
+    {
+		for( Listener listener : this.listeners )
+        {
+            listener.handleConnectionEndpointUpdate(connPart);
+        }    	
+    }
+    
+    protected void notifyConnectionAdd(DiagramConnectionPart connPart)
+    {
+		for( Listener listener : this.listeners )
+        {
+            listener.handleConnectionAdd(connPart);
+        }    	
+    }
+
+    protected void notifyConnectionDelete(DiagramConnectionPart connPart)
+    {
+		for( Listener listener : this.listeners )
+        {
+            listener.handleConnectionDelete(connPart);
+        }    	
+    }
 }

@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.WorkspaceFileResourceStore;
@@ -26,6 +27,7 @@ import org.eclipse.sapphire.ui.diagram.geometry.IBendPoint;
 import org.eclipse.sapphire.ui.diagram.geometry.IDiagramConnectionGeometry;
 import org.eclipse.sapphire.ui.diagram.geometry.IDiagramGeometry;
 import org.eclipse.sapphire.ui.diagram.geometry.IDiagramNodeGeometry;
+import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -42,15 +44,25 @@ public class DiagramGeometryWrapper
 	private HashMap<DiagramNodePart, HashMap<DiagramConnectionPart, List<Point>>> embeddedConnectionBendpoints;
 	
 	public DiagramGeometryWrapper(IFile file, SapphireDiagramEditorPart diagramPart)
-		throws ResourceStoreException
 	{
+		if (file == null)
+		{
+			throw new IllegalArgumentException();
+		}
 		this.file = file;
 		this.diagramPart = diagramPart;
 		this.nodeGeometries = new HashMap<DiagramNodePart, Bounds>();
 		this.connectionBendpoints = new HashMap<DiagramConnectionPart, List<Point>>();
 		this.embeddedConnectionBendpoints = 
 					new HashMap<DiagramNodePart, HashMap<DiagramConnectionPart, List<Point>>>();
-		read();
+		try
+		{
+			read();
+		}
+		catch (Exception e)
+		{
+			SapphireUiFrameworkPlugin.log( e );
+		}
 	}
 	
 	public void addNode(DiagramNodePart nodePart, int x, int y, int w, int h)
@@ -159,8 +171,9 @@ public class DiagramGeometryWrapper
 		}		
 	}
 	
-	public void read() throws ResourceStoreException
+	public void read() throws ResourceStoreException, CoreException
 	{
+		this.file.refreshLocal(0, null);
 		final XmlResourceStore resourceStore = new XmlResourceStore( new WorkspaceFileResourceStore(this.file ));
 		this.geometryModel = IDiagramGeometry.TYPE.instantiate(new RootXmlResource( resourceStore ));
 

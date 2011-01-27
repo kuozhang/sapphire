@@ -96,11 +96,11 @@ public class SapphireDirectEditNodeFeature extends AbstractDirectEditingFeature
 							connectionPart.removeModelListener();
 							if (endpoint1.equals(nodeElement))
 							{
-								connectionPart.refreshEndpoint1();
+								connectionPart.resetEndpoint1();
 							}
 							else if (endpoint2.equals(nodeElement))
 							{
-								connectionPart.refreshEndpoint2();
+								connectionPart.resetEndpoint2();
 							}
 							connectionPart.addModelListener();
 						}
@@ -115,7 +115,7 @@ public class SapphireDirectEditNodeFeature extends AbstractDirectEditingFeature
 
 		// we know, that pe is the Shape of the Text, so its container is the
 		// main shape of the node
-		updatePictogramElement(((Shape)pe).getContainer());
+		//updatePictogramElement(((Shape)pe).getContainer());
 
 	}
 
