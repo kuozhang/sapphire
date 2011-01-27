@@ -46,12 +46,13 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireComposite;
-import org.eclipse.sapphire.ui.SapphireWithDirective;
 import org.eclipse.sapphire.ui.SapphireEnumControlledPageBook;
 import org.eclipse.sapphire.ui.SapphireIfElseDirective;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartContainer;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.SapphireWithDirective;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -179,9 +180,9 @@ public final class RestoreDefaultsActionHandler
             final SapphirePropertyEditor editor = (SapphirePropertyEditor) part;
             result.add( new PropertyRef( editor.getModelElement(), editor.getProperty() ) );
             
-            for( SapphirePropertyEditor aux : editor.getAuxPropertyEditors() )
+            for( SapphirePart related : editor.getRelatedContent() )
             {
-                collectProperties( aux, result );
+                collectProperties( related, result );
             }
         }
         else if( part instanceof SapphireIfElseDirective )

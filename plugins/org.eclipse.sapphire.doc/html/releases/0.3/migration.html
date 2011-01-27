@@ -1,0 +1,135 @@
+<html>
+
+<head>
+  <title>Migration Guide for Sapphire 0.3</title>
+  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+  <style type="text/css">
+    pre.source-code 
+    {
+      font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace; 
+      color: #000000;
+      background-color: #ffffff;
+      font-size: 12px;
+      border: 0px;
+      line-height: 14px;
+      padding: 5px;
+      margin-left: 0px;
+      margin-right: 0px;
+      overflow: auto
+    }
+</style></head>
+
+<body>
+
+<h1>Migration Guide for 0.3</h1>
+
+<p>This documents covers code changes that need to be made by Sapphire adopters as part of migrating 
+to 0.3 release. Only changes from the previous milestone are covered.</p>
+
+<p>Table of Contents</p>
+
+<ol>
+  <li><a href="#html">HTML Content Presentation</a></li>
+  <li><a href="#related-content">Related Content</a></li>
+</ol>
+
+<h2><a name="html">HTML Content Presentation</a></h2>
+
+<p>Support for presenting HTML content in Sapphire UI was introduced in the 0.2 release in
+the form of @HtmlContent annotation and a read-only property editor. This approach proved
+to be too inflexible and has been replaced with a dedicated HTML UI part that can display
+HTML content that's statically specified, drawn from the model or even fetched remotely.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@HtmlContent</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><i>remove</i></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;property-editor>
+  &lt;property>MessageBody&lt;/property>
+  &lt;hint>
+    &lt;name>show.label&lt;/name>
+    &lt;value>false&lt;/value>
+  &lt;/hint>
+&lt;/property-editor></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;html>
+  &lt;content>${ MessageBody }&lt;/content>
+  &lt;show-border/>
+&lt;/html></code></pre>
+    </td>
+  </tr>
+</table>
+
+<p><a href="index.html#html">See New Feature Documentation</a></p>
+
+<h2><a name="related-content">Related Content</a></h2>
+
+<p>The ability to augment a property editor with an auxiliary property editor has been generalized
+into a more powerful related content feature.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor>
+  &lt;property>MainProperty&lt;/property></font>
+  &lt;aux-property-editor>RelatedProperty&lt;/aux-property-editor>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor>
+  &lt;property>MainProperty&lt;/property></font>
+  &lt;related-content>
+    &lt;property-editor>RelatedProperty&lt;/property-editor>
+  &lt;/related-content>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor>
+  &lt;property>MainProperty&lt;/property></font>
+  &lt;aux-property-editor>RelatedProperty1&lt;/aux-property-editor>
+  &lt;aux-property-editor>RelatedProperty2&lt;/aux-property-editor>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor>
+  &lt;property>MainProperty&lt;/property></font>
+  &lt;related-content>
+    &lt;property-editor>
+      &lt;property>RelatedProperty1&lt;/property>
+      &lt;related-content>
+        &lt;property>RelatedProperty2&lt;/property>
+      &lt;/related-content>
+    &lt;/property-editor>
+  &lt;/related-content>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+  </tr>
+</table>
+ 
+
+
+<p><a href="index.html#related-content">See New Feature Documentation</a></p>
+
+<br/><br/>
+
+</body>
+
+</html>

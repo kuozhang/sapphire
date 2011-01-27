@@ -9,20 +9,26 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.annotations;
+package org.eclipse.sapphire.sdk.internal;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.eclipse.sapphire.ui.def.ISapphireUiDef;
+import org.eclipse.sapphire.ui.xml.SapphireEditorForXml;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Retention( RetentionPolicy.RUNTIME )
-@Target( { ElementType.FIELD } )
+public final class SapphireUiDefEditor
 
-public @interface HtmlContent
+    extends SapphireEditorForXml
+    
 {
+    public SapphireUiDefEditor()
+    {
+        super( "org.eclipse.sapphire.sdk" );
+        
+        setRootModelElementType( ISapphireUiDef.TYPE );
+        setEditorDefinitionPath( "org.eclipse.sapphire.sdk/sdef/SapphireUiDefEditor.sdef/main" );
+    }
+
 }

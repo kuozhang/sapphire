@@ -1,0 +1,89 @@
+<html>
+
+<head>
+  <title>Enhancements in Sapphire 0.3</title>
+  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>Enhancements in 0.3</h1>
+
+<ol>
+  <li><a href="#ui">UI</a></li>
+  <ol type="A">
+    <li><a href="#html">HTML Content Presentation</a></li>
+    <li><a href="#related-content">Related Content</a></li>
+  </ol>
+</ol>
+ 
+<h2><a name="html">HTML Content Presentation</a></h2>
+
+<p>It is hard to beat the simplicity and flexibility of HTML for presenting formatted
+text content. Now it is even easier to weave in a bit of HTML into a Sapphire UI. The new
+HTML part can display static HTML content embedded in an sdef file, content retrieved
+from a URL or content retrieved from the model.</p>
+
+<p>Frequently, it is easier to specify HTML content in the form of a fragment rather than a
+finished document. Sapphire will automatically turn a fragment into a legal document and apply
+default style that is designed to match the look of surrounding UI elements.</p>
+
+<pre class="source-code"><code>&lt;html>
+  &lt;fragment>true&lt;/fragment>
+  &lt;content>
+    Here is the list of ${ Name }'s favorite colors:&amp;lt;br/>&amp;lt;br/>
+    &amp;lt;ol>
+      &amp;lt;li>Red&amp;lt;/li>
+      &amp;lt;li>Orange&amp;lt;/li>
+      &amp;lt;li>Blue&amp;lt;/li>
+    &amp;lt;/ol>
+  &lt;/content>
+&lt;/html></code></pre>
+
+<p>Note how HTML tags have to be escaped in order to not be treated as part of the XML
+markup of the sdef file. Also note that you are able to use expressions in the body of the
+content to enhance the content with data from the model or external sources.</p>
+
+<h2><a name="related-content">Related Content</a></h2>
+
+<p>It is now possible to put related content to the right of a property
+editor.</p> 
+
+<p>The space for related content is carved out from the space reserved for
+the main property editor. As such, it is bound by the height of that property editor, but
+multiple parts can be added to related content as long as vertical space allows. This
+can happen if the main property editor is a table or a multi-line text box.</p>
+
+<p>Horizontal space between the main property editor and related content is divided by 
+an adjustable splitter. You get to set the initial width allocation for the related 
+content in the sdef file. The default is 40, which stands for 40% of available space.</p>  
+
+<p>Use related content to display two property editors on one line. This pattern is especially
+powerful when the relationship of two properties is such that a single label will suffice.</p>
+
+<p style="margin-left: 20px;"><img src="images/related-content-1.png"/></p>
+
+<p>Display more than two parts on one line by nesting related content inside related content. 
+Use sparingly.</p>
+
+<p style="margin-left: 20px;"><img src="images/related-content-2.png"/></p>
+
+<p>Related content isn't limited to property editors. Any part can be placed into related
+content. This is particularly useful when the main property editor spans more than one
+vertical line, such as a list property editor or a multi-line text box. In this example,
+related content is used to display explanatory text.</p>
+
+<p style="margin-left: 20px;"><img src="images/related-content-3.png"/></p>
+
+<p>Multiple parts can be placed into related content. They will be arranged vertically.</p>
+
+<p style="margin-left: 20px;"><img src="images/related-content-4.png"/></p>
+
+
+  
+
+<br/><br/>
+
+</body>
+
+</html>

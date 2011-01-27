@@ -19,6 +19,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -63,16 +64,17 @@ public interface ISapphireDocumentationDef
     // *** Content ***
     
     @Label( standard = "content" )
+    @NonNullValue
+    @LongString
     @Localizable
     @XmlBinding( path = "content" )
-    @NonNullValue
-
+ 
     ValueProperty PROP_CONTENT = new ValueProperty( TYPE, "Content" );
     
     Value<String> getContent();
     void setContent( String content );
     
-    // *** Related Topics ***
+    // *** Topics ***
     
     @Type( base = ISapphireDocumentationTopicDef.class )
     @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "topic", type = ISapphireDocumentationTopicDef.class ) )

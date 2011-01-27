@@ -11,6 +11,13 @@
 
 package org.eclipse.sapphire.modeling.util.internal;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
+import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -61,6 +68,64 @@ public class MiscUtil
         }
         
         throw new IllegalArgumentException();
+    }
+    
+    public static String readTextContent( final Reader reader ) 
+    
+        throws IOException
+        
+    {
+        final StringBuffer buf = new StringBuffer();
+        final char[] chars = new char[ 8 * 1024 ];
+        int count;
+
+        while( ( count = reader.read( chars, 0, chars.length ) ) > 0 ) 
+        {
+            buf.append( chars, 0, count );
+        }
+        
+        return buf.toString();
+    }
+    
+    public static String readTextContent( final InputStream in ) 
+    
+        throws IOException
+        
+    {
+        return readTextContent( new InputStreamReader( in ) );
+    }
+    
+    public static String readTextResource( final ClassLoader cl,
+                                           final String resourceFullPath )
+    {
+        final InputStream in = cl.getResourceAsStream( resourceFullPath );
+        
+        try
+        {
+            return readTextContent( in );
+        }
+        catch( IOException e )
+        {
+            SapphireModelingFrameworkPlugin.log( e );
+            return "";
+        }
+        finally
+        {
+            try
+            {
+                in.close();
+            }
+            catch( IOException e ) {}
+        }
+    }
+    
+    public static String readTextResource( final Class<?> c,
+                                           final String resourceLocalName )
+    {
+        final ClassLoader cl = c.getClassLoader();
+        final String resourcePath = c.getName().replace( '.', '/' ) + "." + resourceLocalName;
+        
+        return readTextResource( cl, resourcePath );
     }
     
 }

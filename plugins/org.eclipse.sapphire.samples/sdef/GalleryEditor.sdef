@@ -992,6 +992,151 @@
           </section>
         </node>
       </node>
+      <node>
+        <label>related content</label>
+        <property>RelatedContentGallery</property>
+        <section>
+          <content>
+            <label>
+              Use related content to display two property editors on one line. This pattern is especially powerful
+              when the relationship of two properties is such that a single label will suffice.
+            </label>
+            <spacer/>
+            <property-editor>
+              <property>Measurement</property>
+              <related-content>
+                <property-editor>
+                  <property>MeasurementUnits</property>
+                  <hint>
+                    <name>show.label</name>
+                    <value>false</value>
+                  </hint>
+                </property-editor>
+              </related-content>
+            </property-editor>
+            <spacer/>
+            <label>
+              Display more than two parts on one line by nesting related content inside related content. Use sparingly.
+            </label>
+            <spacer/>
+            <property-editor>
+              <property>Measurement</property>
+              <related-content>
+                <property-editor>
+                  <property>MeasurementUnits</property>
+                  <hint>
+                    <name>show.label</name>
+                    <value>false</value>
+                  </hint>
+                  <related-content-width>30</related-content-width>
+                  <related-content>
+                    <property-editor>MeasurementOfArea</property-editor>
+                  </related-content>
+                </property-editor>
+              </related-content>
+            </property-editor>
+            <spacer/>
+            <label>
+              Related content isn't limited to property editors. Any part can be placed into related content. This is
+              particularly useful when the main property editor spans more than one vertical line, such as a list
+              property editor or a multi-line text box. In this example, related content is used to display explanatory text.
+            </label>
+            <spacer/>
+            <property-editor>
+              <property>Description</property>
+              <hint>
+                <name>height</name>
+                <value>15</value>
+              </hint>
+              <related-content>
+                <html>
+                  <content>
+                    &lt;style>
+                    body, td
+                    {
+                       color: grey;
+                    }
+                    &lt;/style>
+                    Format content using syntax similar to HTML. The following tags are supported:&lt;br/>&lt;br/>
+                    
+                    &lt;table>
+                      &lt;tr>&lt;td>[b]...[/b]&lt;/td>&lt;td>bold text&lt;/td>&lt;/tr> 
+                      &lt;tr>&lt;td>[br/]&lt;/td>&lt;td>line break&lt;/td>&lt;/tr>
+                      &lt;tr>&lt;td>[pbr/]&lt;/td>&lt;td>paragraph break&lt;/td>&lt;/tr> 
+                      &lt;tr>&lt;td>[ol]...[/ol]&lt;/td>&lt;td>ordered list&lt;/td>&lt;/tr>
+                      &lt;tr>&lt;td>[ul]...[/ul]&lt;/td>&lt;td>unordered list&lt;/td>&lt;/tr>
+                      &lt;tr>&lt;td>[li]...[/li]&lt;/td>&lt;td>list item&lt;/td>&lt;/tr>
+                    &lt;/table>
+                  </content>
+                  <fragment/>
+                  <expand-vertically/>
+                </html>
+              </related-content>
+            </property-editor>
+            <spacer/>
+            <label>
+              Multiple parts can be placed into related content. They will be arranged vertically.
+            </label>
+            <spacer/>
+            <property-editor>
+              <property>Description</property>
+              <related-content>
+                <property-editor>Measurement</property-editor>
+                <property-editor>MeasurementUnits</property-editor>
+                <composite>
+                  <indent>true</indent>
+                  <content>
+                    <property-editor>MeasurementOfArea</property-editor>
+                  </content>
+                </composite>
+              </related-content>
+            </property-editor>
+          </content>
+        </section>
+      </node>
+      <node>
+        <label>HTML content</label>
+        <property>HtmlContentGallery</property>
+        <section>
+          <content>
+            <property-editor>City</property-editor>
+            <property-editor>State</property-editor>
+            <spacer/>
+            <html>
+              <content>
+                It is hard to beat the simplicity and flexibility of HTML for presenting formatted
+                text content. Weave in HTML into Sapphire UI with ease.&lt;br/>&lt;br/>
+                
+                Include content from model... ${ City }, ${ State}&lt;br/>&lt;br/>
+                
+                Use all HTML features like CSS and tables...&lt;br/>&lt;br/>
+                    
+                &lt;table>
+                  &lt;tr>&lt;td>Seattle&lt;/td>&lt;td>WA&lt;/td>&lt;/tr> 
+                  &lt;tr>&lt;td>New York&lt;/td>&lt;td>NY&lt;/td>&lt;/tr>
+                  &lt;tr>&lt;td>San Francisco&lt;/td>&lt;td>CA&lt;/td>&lt;/tr>
+                  &lt;tr>&lt;td>Portland&lt;/td>&lt;td>OR&lt;/td>&lt;/tr>
+                &lt;/table>
+              </content>
+              <fragment/>
+              <height>500</height>
+            </html>
+          </content>
+        </section>
+        <node>
+          <label>browser</label>
+          <section>
+            <content>
+              <property-editor>Url</property-editor>
+              <html>
+                <url>${ Url }</url>
+                <height>600</height>
+                <show-border/>
+              </html>
+            </content>
+          </section>
+        </node>
+      </node>
     </root-node>
   </editor-page>
   

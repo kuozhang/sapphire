@@ -48,7 +48,8 @@ public interface ISapphirePartContainerDef
             ISapphireCustomPartDef.class,
             ISapphireStaticTextFieldDef.class,
             ISapphirePageBookExtDef.class,
-            ISapphireTabGroupDef.class
+            ISapphireTabGroupDef.class,
+            ISapphireHtmlPanelDef.class
         }
     )
                       
@@ -70,11 +71,12 @@ public interface ISapphirePartContainerDef
             @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
             @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
             @XmlListBinding.Mapping( element = "switching-panel", type = ISapphirePageBookExtDef.class ),
-            @XmlListBinding.Mapping( element = "tab-group", type = ISapphireTabGroupDef.class )
+            @XmlListBinding.Mapping( element = "tab-group", type = ISapphireTabGroupDef.class ),
+            @XmlListBinding.Mapping( element = "html", type = ISapphireHtmlPanelDef.class )
         }
     )
                              
-    ListProperty PROP_CONTENT = new ListProperty( TYPE, "Content" ); //$NON-NLS-1$
+    ListProperty PROP_CONTENT = new ListProperty( TYPE, "Content" );
     
     ModelElementList<ISapphirePartDef> getContent();
     

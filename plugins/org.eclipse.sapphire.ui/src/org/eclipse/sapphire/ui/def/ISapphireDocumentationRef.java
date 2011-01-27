@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.internal.DocumentationRefMethods;
 
@@ -25,6 +26,7 @@ import org.eclipse.sapphire.ui.def.internal.DocumentationRefMethods;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
+@Label( standard = "documentation reference" )
 @GenerateImpl
 
 public interface ISapphireDocumentationRef
@@ -37,6 +39,7 @@ public interface ISapphireDocumentationRef
     // *** Id ***
     
     @Label( standard = "ID" )
+    @NonNullValue
     @XmlBinding( path = "id" )
     
     ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );

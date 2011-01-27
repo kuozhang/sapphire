@@ -1,0 +1,21 @@
+body
+{
+    margin: 0;
+    overflow: auto;
+}
+table
+{
+    border-width: 0px;
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+td
+{
+    margin: 0px;
+    padding-right: 10px;
+}
+body, td
+{
+    font-family: "Segoe UI", "sans-serif";
+    font-size: 9pt;
+}

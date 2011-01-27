@@ -23,7 +23,6 @@ import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.DerivedValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
-import org.eclipse.sapphire.modeling.annotations.HtmlContent;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
@@ -70,7 +69,6 @@ public interface ISendContactOp
     @Label( standard = "message body" )
     @DerivedValue( service = SendContactOpContentProvider.class )
     @DependsOn( "Contact" )
-    @HtmlContent
     
     ValueProperty PROP_MESSAGE_BODY = new ValueProperty( TYPE, "MessageBody" );
     

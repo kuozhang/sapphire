@@ -21,6 +21,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
@@ -43,6 +44,7 @@ import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireImageCache;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartEvent;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
@@ -60,7 +62,10 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Sash;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -68,6 +73,8 @@ import org.eclipse.swt.widgets.Label;
 
 public abstract class PropertyEditorRenderer
 {
+    private static final String RELATED_CONTENT_WIDTH = "sapphire.related.content.width";
+    
     protected final SapphireRenderingContext context;
     private final SapphirePropertyEditor part;
     protected PropertyEditorAssistDecorator decorator;
@@ -253,8 +260,8 @@ public abstract class PropertyEditorRenderer
     
     protected final Composite createMainComposite( final Composite parent )
     {
-        final List<SapphirePropertyEditor> auxPropertyEditors = this.part.getAuxPropertyEditors();
-        final int count = auxPropertyEditors.size();
+        final List<SapphirePart> relatedContentParts = this.part.getRelatedContent();
+        final int count = relatedContentParts.size();
         
         GridData gd;
         
@@ -286,24 +293,79 @@ public abstract class PropertyEditorRenderer
         }
         else
         {
-            composite.setLayout( glspacing( glayout( count + 1, 0, 0 ), 5 ) );
+            composite.setLayout( glspacing( glayout( 3, 0, 0 ), 0 ) );
             
-            final Composite mainPropertyEditorComposite = new Composite( composite, SWT.NONE );
-            mainPropertyEditorComposite.setLayoutData( gdvalign( gdfill(), SWT.CENTER ) );
-            this.context.adapt( mainPropertyEditorComposite );
+            final boolean vcenter
+                = ( this.part.isSingleLinePart() && relatedContentParts.size() == 1 && relatedContentParts.get( 0 ).isSingleLinePart() );
             
-            for( SapphirePropertyEditor auxPropertyEditor : auxPropertyEditors )
+            final Composite mainPropertyEditorOuterComposite = new Composite( composite, SWT.NONE );
+            mainPropertyEditorOuterComposite.setLayout( glayout( 1, 0, 4, 0, 0 ) );
+            mainPropertyEditorOuterComposite.setLayoutData( vcenter ? gdhfill() : gdfill() );
+
+            final Composite mainPropertyEditorComposite = new Composite( mainPropertyEditorOuterComposite, SWT.NONE );
+            mainPropertyEditorComposite.setLayoutData( vcenter ? gdvalign( gdhfill(), GridData.CENTER ) : gdfill() );
+            
+            final Sash sash = new Sash( composite, SWT.VERTICAL );
+            sash.setLayoutData( gdhhint( gdvfill(), 1 ) );
+            
+            final Composite relatedContentComposite = new Composite( composite, SWT.NONE );
+            relatedContentComposite.setLayoutData( vcenter ? gdvalign( gdhfill(), GridData.CENTER ) : gdfill() );
+            relatedContentComposite.setLayout( glayout( 2, 0, 0 ) );
+            
+            relatedContentComposite.setData( RELATED_CONTENT_WIDTH, ( (double) this.part.getRelatedContentWidth() ) / ( (double) 100 ) );
+            
+            composite.addListener
+            ( 
+                SWT.Resize,
+                new Listener()
+                {
+                    public void handleEvent( final Event event )
+                    {
+                        refreshSashFormLayout( composite, mainPropertyEditorComposite, relatedContentComposite, sash );
+                    }
+                }
+            );
+            
+            sash.addListener
+            (
+                SWT.Selection, 
+                new Listener()
+                {
+                    public void handleEvent( final Event event )
+                    {
+                        final int width = composite.getClientArea().width - sash.getBounds().width;
+                        final double ratio = ( (double) ( width - event.x ) ) / ( (double) width );
+                        relatedContentComposite.setData( RELATED_CONTENT_WIDTH, ratio );
+                        refreshSashFormLayout( composite, mainPropertyEditorComposite, relatedContentComposite, sash );
+                    }
+                }
+            );
+
+            this.context.adapt( composite );
+
+            for( SapphirePart relatedContentPart : relatedContentParts )
             {
-                final Composite auxPropertyEditorComposite = new Composite( composite, SWT.NONE );
-                auxPropertyEditorComposite.setLayoutData( gdvalign( gd(), SWT.CENTER ) );
-                auxPropertyEditorComposite.setLayout( glayout( 2, 0, 0 ) );
-                this.context.adapt( auxPropertyEditorComposite );
-                
-                auxPropertyEditor.render( new SapphireRenderingContext( auxPropertyEditor, this.context, auxPropertyEditorComposite ) );
+                relatedContentPart.render( new SapphireRenderingContext( relatedContentPart, this.context, relatedContentComposite ) );
             }
             
             return mainPropertyEditorComposite;
         }
+    }
+    
+    private static final void refreshSashFormLayout( final Composite rootComposite,
+                                                     final Composite mainPropertyEditorComposite,
+                                                     final Composite relatedContentComposite,
+                                                     final Sash sash )
+    {
+        final int rootCompositeWidth = rootComposite.getClientArea().width - sash.getBounds().width;
+        final double relatedContentCompositeWidthRatio = (Double) relatedContentComposite.getData( RELATED_CONTENT_WIDTH );
+        final int relatedContentCompositeWidth = (int) ( rootCompositeWidth * relatedContentCompositeWidthRatio );
+        final int mainPropertyEditorCompositeWidth = rootCompositeWidth - relatedContentCompositeWidth;
+        
+        ( (GridData) mainPropertyEditorComposite.getLayoutData() ).widthHint = mainPropertyEditorCompositeWidth;
+        ( (GridData) relatedContentComposite.getLayoutData() ).widthHint = relatedContentCompositeWidth;
+        
+        rootComposite.layout( true, true );
     }
     
     protected final PropertyEditorAssistDecorator createDecorator( final Composite parent )

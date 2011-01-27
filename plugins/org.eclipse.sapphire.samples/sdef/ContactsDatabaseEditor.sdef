@@ -223,17 +223,11 @@
       <initial-focus>To</initial-focus>
       <content>
         <property-editor>To</property-editor>
-        <property-editor>
-          <property>MessageBody</property>
-          <hint>
-            <name>show.label</name>
-            <value>false</value>
-          </hint>
-          <hint>
-            <name>expand.vertically</name>
-            <value>true</value>
-          </hint>
-        </property-editor>
+        <html>
+          <content>${ MessageBody }</content>
+          <show-border/>
+          <expand-vertically/>
+        </html>
       </content>
       <hint>
         <name>expand.vertically</name>

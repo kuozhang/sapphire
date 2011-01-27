@@ -16,11 +16,14 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.internal.PropertyEditorPropertyBinding;
 
@@ -59,13 +62,70 @@ public interface ISapphirePropertyEditorDef
     
     ModelElementList<ISapphirePropertyEditorDef> getChildProperties();
     
-    // *** AuxPropertyEditors ***
+    // *** RelatedContent ***
     
-    @Type( base = ISapphirePropertyEditorDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "aux-property-editor", type = ISapphirePropertyEditorDef.class ) )
+    @Type
+    ( 
+        base = ISapphirePartDef.class,
+        possible = 
+        { 
+            ISapphirePropertyEditorDef.class, 
+            ISapphireSeparatorDef.class,
+            ISapphireSpacerDef.class,
+            ISapphireLabelDef.class,
+            ISapphireGroupDef.class,
+            ISapphireWithDirectiveDef.class,
+            ISapphireIfElseDirectiveDef.class,
+            ISapphireCompositeDef.class,
+            ISapphireCompositeRef.class,
+            ISapphireActionLinkDef.class,
+            ISapphireCustomPartDef.class,
+            ISapphireStaticTextFieldDef.class,
+            ISapphirePageBookExtDef.class,
+            ISapphireTabGroupDef.class,
+            ISapphireHtmlPanelDef.class
+        }
+    )
+                      
+    @XmlListBinding
+    ( 
+        path = "related-content",
+        mappings =
+        {
+            @XmlListBinding.Mapping( element = "property-editor", type = ISapphirePropertyEditorDef.class ),
+            @XmlListBinding.Mapping( element = "separator", type = ISapphireSeparatorDef.class ),
+            @XmlListBinding.Mapping( element = "spacer", type = ISapphireSpacerDef.class ),
+            @XmlListBinding.Mapping( element = "label", type = ISapphireLabelDef.class ),
+            @XmlListBinding.Mapping( element = "group", type = ISapphireGroupDef.class ),
+            @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),
+            @XmlListBinding.Mapping( element = "if", type = ISapphireIfElseDirectiveDef.class ),
+            @XmlListBinding.Mapping( element = "composite", type = ISapphireCompositeDef.class ),
+            @XmlListBinding.Mapping( element = "composite-ref", type = ISapphireCompositeRef.class ),
+            @XmlListBinding.Mapping( element = "action-link", type = ISapphireActionLinkDef.class ),
+            @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
+            @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
+            @XmlListBinding.Mapping( element = "switching-panel", type = ISapphirePageBookExtDef.class ),
+            @XmlListBinding.Mapping( element = "tab-group", type = ISapphireTabGroupDef.class ),
+            @XmlListBinding.Mapping( element = "html", type = ISapphireHtmlPanelDef.class )
+        }
+    )
                              
-    ListProperty PROP_AUX_PROPERTY_EDITORS = new ListProperty( TYPE, "AuxPropertyEditors" );
+    ListProperty PROP_RELATED_CONTENT = new ListProperty( TYPE, "RelatedContent" );
     
-    ModelElementList<ISapphirePropertyEditorDef> getAuxPropertyEditors();
+    ModelElementList<ISapphirePartDef> getRelatedContent();
+    
+    // *** RelatedContentWidth ***
+    
+    @Type( base = Integer.class )
+    @Label( standard = "related content width" )
+    @DefaultValue( text = "40" )
+    @NumericRange( min = "20", max = "80" )
+    @XmlBinding( path = "related-content-width" )
+    
+    ValueProperty PROP_RELATED_CONTENT_WIDTH = new ValueProperty( TYPE, "RelatedContentWidth" );
+    
+    Value<Integer> getRelatedContentWidth();
+    void setRelatedContentWidth( String value );
+    void setRelatedContentWidth( Integer value );
     
 }

@@ -33,6 +33,7 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.ISapphirePropertyEditorDef;
@@ -42,7 +43,6 @@ import org.eclipse.sapphire.ui.renderers.swt.BooleanPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.DefaultListPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.DefaultValuePropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.EnumPropertyEditorRenderer;
-import org.eclipse.sapphire.ui.renderers.swt.HtmlPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.NamedValuesPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorRendererFactory;
@@ -95,7 +95,6 @@ public final class SapphirePropertyEditor
         FACTORIES.add( new BooleanPropertyEditorRenderer.Factory() );
         FACTORIES.add( new EnumPropertyEditorRenderer.Factory() );
         FACTORIES.add( new NamedValuesPropertyEditorRenderer.Factory() );
-        FACTORIES.add( new HtmlPropertyEditorRenderer.Factory() );
         FACTORIES.add( new DefaultValuePropertyEditorRenderer.Factory() );
         FACTORIES.add( new SlushBucketPropertyEditor.Factory() );
         FACTORIES.add( new DefaultListPropertyEditorRenderer.Factory() );
@@ -106,8 +105,8 @@ public final class SapphirePropertyEditor
     private List<ModelProperty> childPropertiesReadOnly;
     private Map<IModelElement,Map<ModelProperty,SapphirePropertyEditor>> childPropertyEditors;
     private Map<String,Object> hints;
-    private List<SapphirePropertyEditor> auxPropertyEditors;
-    private List<SapphirePropertyEditor> auxPropertyEditorsReadOnly;
+    private List<SapphirePart> relatedContentParts;
+    private List<SapphirePart> relatedContentPartsReadOnly;
     
     @Override
     protected void init()
@@ -222,12 +221,12 @@ public final class SapphirePropertyEditor
             this.hints.put( name, parsedValue );
         }
         
-        this.auxPropertyEditors = new ArrayList<SapphirePropertyEditor>();
-        this.auxPropertyEditorsReadOnly = Collections.unmodifiableList( this.auxPropertyEditors );
+        this.relatedContentParts = new ArrayList<SapphirePart>();
+        this.relatedContentPartsReadOnly = Collections.unmodifiableList( this.relatedContentParts );
         
-        for( ISapphirePropertyEditorDef auxPropertyEditorDef : propertyEditorPartDef.getAuxPropertyEditors() )
+        for( ISapphirePartDef relatedContentPartDef : propertyEditorPartDef.getRelatedContent() )
         {
-            this.auxPropertyEditors.add( (SapphirePropertyEditor) create( this, getModelElement(), auxPropertyEditorDef, this.params ) );
+            this.relatedContentParts.add( create( this, getModelElement(), relatedContentPartDef, this.params ) );
         }
     }
     
@@ -354,9 +353,23 @@ public final class SapphirePropertyEditor
         return leftMarginHint;
     }
     
-    public List<SapphirePropertyEditor> getAuxPropertyEditors()
+    public List<SapphirePart> getRelatedContent()
     {
-        return this.auxPropertyEditorsReadOnly;
+        return this.relatedContentPartsReadOnly;
+    }
+    
+    public int getRelatedContentWidth()
+    {
+        final Value<Integer> relatedContentWidth = ( (ISapphirePropertyEditorDef) getDefinition() ).getRelatedContentWidth();
+        
+        if( relatedContentWidth.validate().isOK() )
+        {
+            return relatedContentWidth.getContent();
+        }
+        else
+        {
+            return relatedContentWidth.getDefaultContent();
+        }
     }
 
     @Override
@@ -546,6 +559,17 @@ public final class SapphirePropertyEditor
     public Set<String> getActionContexts()
     {
         return Collections.singleton( getActionContext() );
+    }
+    
+    @Override
+    public boolean isSingleLinePart()
+    {
+        if( this.property instanceof ValueProperty && ! this.property.hasAnnotation( LongString.class ) )
+        {
+            return true;
+        }
+        
+        return false;
     }
 
     @Override

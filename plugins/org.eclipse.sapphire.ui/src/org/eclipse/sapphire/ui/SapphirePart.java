@@ -43,6 +43,7 @@ import org.eclipse.sapphire.ui.def.ISapphireCompositeRef;
 import org.eclipse.sapphire.ui.def.ISapphireCustomPartDef;
 import org.eclipse.sapphire.ui.def.ISapphireDialogDef;
 import org.eclipse.sapphire.ui.def.ISapphireGroupDef;
+import org.eclipse.sapphire.ui.def.ISapphireHtmlPanelDef;
 import org.eclipse.sapphire.ui.def.ISapphireIfElseDirectiveDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphirePageBookExtDef;
@@ -155,6 +156,12 @@ public abstract class SapphirePart
     protected final FunctionResult initExpression( final Value<Function> function,
                                                    final Runnable refreshOp )
     {
+        return initExpression( getModelElement(), function.getContent(), refreshOp );
+    }
+    
+    protected final FunctionResult initExpression( final Function function,
+                                                   final Runnable refreshOp )
+    {
         return initExpression( getModelElement(), function, refreshOp );
     }
     
@@ -162,17 +169,18 @@ public abstract class SapphirePart
                                                    final Value<Function> function,
                                                    final Runnable refreshOp )
     {
-        Function f = null;
+        return initExpression( contextModelElement, function.getContent(), refreshOp );
+    }
+    
+    protected final FunctionResult initExpression( final IModelElement contextModelElement,
+                                                   final Function function,
+                                                   final Runnable refreshOp )
+    {
+        Function f = function;
         FunctionResult fr = null;
-        
-        if( function != null )
-        {
-            f = function.getContent();
-        }
         
         if( f != null )
         {
-            
             f = FailSafeFunction.create( f, String.class );
             fr = f.evaluate( new ModelElementFunctionContext( contextModelElement, this.definition.adapt( LocalizationService.class ) ) );
             
@@ -511,6 +519,11 @@ public abstract class SapphirePart
         return null;
     }
     
+    public boolean isSingleLinePart()
+    {
+        return false;
+    }
+    
     public void dispose()
     {
         this.modelElement.removeListener( this.modelElementListener );
@@ -645,7 +658,11 @@ public abstract class SapphirePart
         }
         else if( definition instanceof ISapphireIfElseDirectiveDef )
         {
-            part  = new SapphireIfElseDirective();
+            part = new SapphireIfElseDirective();
+        }
+        else if( definition instanceof ISapphireHtmlPanelDef )
+        {
+            part = new SapphireHtmlPanel();
         }
         
         if( part == null )

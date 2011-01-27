@@ -36,6 +36,23 @@ public abstract class XmlValueBindingImpl
      * this binding is attached to. This XML element is the common starting point for
      * implementing the binding.
      * 
+     * <p>Equivalent to <code>element().adapt( XmlResource.class ).getXmlElement( false )</code>
+     * invocation.</p>
+     * 
+     * @return the XML element associated with the model element that this binding is
+     *   attached to or null 
+     */
+
+    protected final XmlElement xml()
+    {
+        return xml( false );
+    }
+    
+    /**
+     * Convenience method for accessing the XML element associated with the model element that
+     * this binding is attached to. This XML element is the common starting point for
+     * implementing the binding.
+     * 
      * <p>Equivalent to <code>element().adapt( XmlResource.class ).getXmlElement( createIfNecessary )</code>
      * invocation.</p>
      * 

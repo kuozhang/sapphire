@@ -86,7 +86,7 @@ public final class EnumPropertyEditorRenderer
 
             if( preferVerticalRadioButtonBinding )
             {
-                final Composite composite = new Composite( parent, SWT.NONE );
+                final Composite composite = createMainComposite( parent );
                 composite.setLayoutData( gdhspan( gdhfill(), hspan ) );
                 composite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
                 this.context.adapt( composite );
@@ -148,7 +148,7 @@ public final class EnumPropertyEditorRenderer
         }
         else
         {
-            final Composite composite = new Composite( parent, SWT.NULL );
+            final Composite composite = createMainComposite( parent );
             composite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
             this.context.adapt( composite );
             

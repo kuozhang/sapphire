@@ -38,6 +38,18 @@ public final class ConcatFunction
         return create( Literal.create( a ), Literal.create( b ) );
     }
 
+    public static ConcatFunction create( final Function a,
+                                         final String b )
+    {
+        return create( a, Literal.create( b ) );
+    }
+
+    public static ConcatFunction create( final String a,
+                                         final Function b )
+    {
+        return create( Literal.create( a ), b );
+    }
+
     @Override
     public FunctionResult evaluate( final FunctionContext context )
     {

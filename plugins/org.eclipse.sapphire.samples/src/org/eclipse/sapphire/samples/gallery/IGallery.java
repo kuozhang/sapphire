@@ -178,7 +178,7 @@ public interface IGallery
     
     IValuePropertyActionsGallery getValuePropertyActionsGallery();
 
-    // *** IHelpGallery ***
+    // *** HelpGallery ***
     
     @Type( base = IHelpGallery.class )
     @XmlBinding( path = "help" )
@@ -187,7 +187,7 @@ public interface IGallery
     
     IHelpGallery getHelpGallery();
 
-    // *** IExtendedHelpGallery ***
+    // *** ExtendedHelpGallery ***
     
     @Type( base = IExtendedHelpGallery.class )
     @XmlBinding( path = "extended-help" )
@@ -196,7 +196,7 @@ public interface IGallery
     
     IExtendedHelpGallery getExtendedHelpGallery();
 
-    // *** IEnablementGallery ***
+    // *** EnablementGallery ***
     
     @Type( base = IEnablementGallery.class )
     @XmlBinding( path = "enablement" )
@@ -204,5 +204,23 @@ public interface IGallery
     ImpliedElementProperty PROP_ENABLEMENT_GALLERY = new ImpliedElementProperty( TYPE, "EnablementGallery" );
     
     IEnablementGallery getEnablementGallery();
+    
+    // *** RelatedContentGallery ***
+    
+    @Type( base = IRelatedContentGallery.class )
+    @XmlBinding( path = "related-content" )
+
+    ImpliedElementProperty PROP_RELATED_CONTENT_GALLERY = new ImpliedElementProperty( TYPE, "RelatedContentGallery" );
+    
+    IRelatedContentGallery getRelatedContentGallery();
+    
+    // *** HtmlContentGallery ***
+    
+    @Type( base = IHtmlContentGallery.class )
+    @XmlBinding( path = "html-content" )
+
+    ImpliedElementProperty PROP_HTML_CONTENT_GALLERY = new ImpliedElementProperty( TYPE, "HtmlContentGallery" );
+    
+    IHtmlContentGallery getHtmlContentGallery();
     
 }
