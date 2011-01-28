@@ -9,18 +9,19 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.library;
+package org.eclipse.sapphire.samples.map;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
+import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.samples.library.internal.BookReferenceService;
+import org.eclipse.sapphire.samples.map.internal.DestinationReferenceService;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -28,20 +29,31 @@ import org.eclipse.sapphire.samples.library.internal.BookReferenceService;
 
 @GenerateImpl
 
-public interface IBookReference extends IModelElement 
+public interface IRailwayDestination extends IModelElement 
 {
-	ModelElementType TYPE = new ModelElementType( IBookReference.class );
+	ModelElementType TYPE = new ModelElementType( IRailwayDestination.class );
 	
-	// *** ReferencedBook ***
-	
-	@Reference( target = IBook.class, service = BookReferenceService.class )
-	@XmlBinding( path = "referenced-book")
+    // *** Distance ***
+    
+    @XmlBinding( path = "distance" )
+    @Label( standard = "distance" )
+    @NonNullValue
+
+    ValueProperty PROP_DISTANCE = new ValueProperty( TYPE, "Distance" );
+
+    Value<String> getDistance();
+    void setDistance( String distance );
+
+    // *** ToDestination ***
+    
+	@Reference( target = IDestination.class, service = DestinationReferenceService.class )
+	@XmlBinding( path = "to-destination")
 	@NonNullValue
-	@Label(standard = "referenced book")
+	@Label(standard = "to destination")
 
-	ValueProperty PROP_REFERENCED_BOOK = new ValueProperty( TYPE, "ReferencedBook" );
+	ValueProperty PROP_TO_DESTINATION = new ValueProperty( TYPE, "ToDestination" );
 
-    ReferenceValue<IBook> getReferencedBook();
-    void setReferencedBook( String name );
-	
+    ReferenceValue<IDestination> getToDestination();
+    void setToDestination( String name );
+    
 }

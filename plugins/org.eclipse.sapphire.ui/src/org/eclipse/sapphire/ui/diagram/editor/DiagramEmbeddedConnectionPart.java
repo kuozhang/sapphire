@@ -51,6 +51,7 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
             {
                 public void run()
                 {
+                	refreshLabel();
                 }
             }
         );

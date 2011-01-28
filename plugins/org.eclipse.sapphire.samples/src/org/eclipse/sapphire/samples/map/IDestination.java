@@ -12,13 +12,17 @@
 package org.eclipse.sapphire.samples.map;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -35,11 +39,21 @@ public interface IDestination extends IModelElement
     @XmlBinding( path = "name" )
     @Label( standard = "name" )
     @NonNullValue
-    //@DefaultValue( text = "Destination" )
 
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
 
     Value<String> getName();
     void setName( String name );
+    
+    // *** RailwayRoutes ***
+    
+    @Type( base = IRailwayDestination.class )
+    @XmlListBinding( path = "railway-destinations", 
+    		mappings = @XmlListBinding.Mapping( element = "railway-destination", type = IRailwayDestination.class ) )
+    
+    ListProperty PROP_RAILWAY_ROUTES = new ListProperty( TYPE, "RailwayRoutes" );
+    
+    ModelElementList<IRailwayDestination> getRailwayRoutes();
+    
 	
 }

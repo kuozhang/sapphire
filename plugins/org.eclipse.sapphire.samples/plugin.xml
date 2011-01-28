@@ -165,15 +165,7 @@
       id="org.eclipse.sapphire.samples.map.ui.MapEditor"
       name="Map Editor"/>
   </extension>
-  
-  <extension point="org.eclipse.ui.editors">
-    <editor
-      class="org.eclipse.sapphire.samples.library.ui.LibraryEditor"
-      default="true"
-      filenames="library.xml"
-      id="org.eclipse.sapphire.samples.library.ui.LibraryEditor"
-      name="Library Editor"/>
-  </extension>
+
 
   
 </plugin>

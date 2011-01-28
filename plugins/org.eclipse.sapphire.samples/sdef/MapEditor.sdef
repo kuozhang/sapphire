@@ -32,11 +32,30 @@
         <content>${Name == null ? "&lt;Destination&gt;" : Name}</content>
       </label>
       <instance-id>${Name}</instance-id>
+      <connection>
+        <id>railway_routes</id>
+        <tool-palette-label>Railway Route</tool-palette-label>
+        <tool-palette-desc>Railway Route</tool-palette-desc>
+        <hint><name>line-style</name><value>dash-dot</value></hint>
+        <hint><name>color</name><value>gray</value></hint>
+        <!-- <hint><name>color</name><value>#808080</value></hint> -->
+        <hint><name>width</name><value>2</value></hint>
+        <property>RailwayRoutes</property>
+        <label>
+          <content>${Distance == null ? "&lt;Distance&gt;" : Distance}</content>
+        </label>
+        <endpoint>
+          <property>ToDestination</property>
+          <value>${Name}</value>
+          <type>ARROW</type>
+        </endpoint>
+        <instance-id>${ToDestination}</instance-id>        
+      </connection>
     </node>
     <connection>
-      <id>connections</id>
-      <tool-palette-label>Route</tool-palette-label>
-      <tool-palette-desc>Map Route</tool-palette-desc>
+      <id>highway_routes</id>
+      <tool-palette-label>Highway Route</tool-palette-label>
+      <tool-palette-desc>Highway Route</tool-palette-desc>
       <property>Routes</property>
       <label>
         <content>${Distance == null ? "&lt;Distance&gt;" : Distance}</content>
@@ -66,13 +85,32 @@
           <description>Destinations in the map</description>
           <content>
             <property-editor>Destinations</property-editor>
+            <separator>
+              <label>Railway Routes</label>
+            </separator>
+            <switching-panel>
+              <list-selection-controller>
+                <property>Destinations</property>
+              </list-selection-controller>
+              <panel>
+                <key>IDestination</key>
+                <content>
+                  <property-editor>RailwayRoutes</property-editor>
+                </content>          
+              </panel>
+              <default-panel>
+                <content>
+                  <label>Select a destination above to configure additional properties.</label>
+                </content>
+              </default-panel>
+            </switching-panel>            
           </content>
         </section>
       </node>
       <node>
-        <label>Routes</label>
+        <label>Highway Routes</label>
         <section>
-          <description>Routes in the map</description>
+          <description>Highway Routes in the map</description>
           <content>
             <property-editor>Routes</property-editor>
           </content>
