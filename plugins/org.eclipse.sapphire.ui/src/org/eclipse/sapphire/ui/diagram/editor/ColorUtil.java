@@ -48,7 +48,7 @@ public class ColorUtil
 	
 	public static RGB parseColor(String colorParam)
 	{
-		if (colorParam == null || colorParam.isEmpty())
+		if (colorParam == null || colorParam.length() == 0)
 			throw new IllegalArgumentException();
 		
 		RGB rgb = null;

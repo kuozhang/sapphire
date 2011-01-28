@@ -20,6 +20,7 @@ import org.eclipse.graphiti.mm.GraphicsAlgorithmContainer;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.Text;
+import org.eclipse.graphiti.mm.algorithms.styles.LineStyle;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.ConnectionDecorator;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
@@ -28,7 +29,10 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.ColorConstant;
 import org.eclipse.graphiti.util.IColorConstant;
+import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.diagram.editor.ColorUtil;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.swt.graphics.RGB;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -59,6 +63,10 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 	{
 		IAddConnectionContext addConContext = (IAddConnectionContext) context;
 		DiagramConnectionPart connectionPart = (DiagramConnectionPart) context.getNewObject();
+		
+		ISapphirePartDef def = connectionPart.getDefinition();
+		IColorConstant linkColor = getLinkColor(def);
+		LineStyle linkStyle = getLinkStyle(def);
 
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		// CONNECTION WITH POLYLINE
@@ -68,8 +76,10 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 
 		IGaService gaService = Graphiti.getGaService();
 		Polyline polyline = gaService.createPolyline(connection);
-		polyline.setForeground(manageColor(DEFAULT_LINK_COLOR));
-		polyline.setLineWidth(1);
+		
+		polyline.setForeground(manageColor(linkColor));
+		polyline.setLineWidth(def.getHint("width", 1));
+		polyline.setLineStyle(linkStyle);
        
 		// create link and wire it
 		link(connection, connectionPart);
@@ -77,7 +87,7 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 		// add dynamic text decorator for the reference name
 		ConnectionDecorator textDecorator = peCreateService.createConnectionDecorator(connection, true, 0.5, true);
 		Text text = gaService.createDefaultText(textDecorator);
-		text.setForeground(manageColor(DEFAULT_LINK_COLOR));
+		text.setForeground(manageColor(linkColor));
 		gaService.setLocation(text, 10, 0);		
 		
 		text.setValue(connectionPart.getLabel());
@@ -85,7 +95,7 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 		// add static graphical decorators (composition and navigable)
 		ConnectionDecorator cd;
 		cd = peCreateService.createConnectionDecorator(connection, false, 1.0, true);
-		createArrow(cd);
+		createArrow(cd, linkColor);
 
         // provide information to support direct-editing directly 
 
@@ -103,12 +113,50 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 		return connection;
 	}
 
-	private Polygon createArrow(GraphicsAlgorithmContainer gaContainer) 
+	private Polygon createArrow(GraphicsAlgorithmContainer gaContainer, IColorConstant color) 
 	{
 		Polygon polygon = Graphiti.getGaCreateService().createPolygon(gaContainer, new int[] { -8, 4, 0, 0, -8, -4, -5, 0 });
-		polygon.setBackground(manageColor(DEFAULT_LINK_COLOR));
+		polygon.setBackground(manageColor(color));
 		polygon.setFilled(true);
 		return polygon;
 	}
+
+	private IColorConstant getLinkColor(ISapphirePartDef def)
+	{
+		IColorConstant linkColor = DEFAULT_LINK_COLOR;
+		if (def.getHint("color") != null)
+		{
+			RGB rgb = ColorUtil.parseColor(def.getHint("color"));
+			if (rgb != null)
+			{
+				linkColor = new ColorConstant(rgb.red, rgb.green, rgb.blue);
+			}
+		}
+		return linkColor;		
+	}
 	
+	private LineStyle getLinkStyle(ISapphirePartDef def)
+	{
+		LineStyle linkStyle = LineStyle.SOLID;
+		
+		if (def.getHint("line-style") != null)
+		{
+			org.eclipse.sapphire.ui.diagram.editor.LineStyle style = 
+				org.eclipse.sapphire.ui.diagram.editor.LineStyle.getLineStyle(def.getHint("line-style"));
+			if (style == org.eclipse.sapphire.ui.diagram.editor.LineStyle.DASH )
+			{
+				linkStyle = LineStyle.DASH;
+			}
+			else if (style == org.eclipse.sapphire.ui.diagram.editor.LineStyle.DOT)
+			{
+				linkStyle = LineStyle.DOT;
+			}
+			else if (style == org.eclipse.sapphire.ui.diagram.editor.LineStyle.DASH_DOT)
+			{
+				linkStyle = LineStyle.DASHDOT;
+			}
+			
+		}
+		return linkStyle;		
+	}
 }
