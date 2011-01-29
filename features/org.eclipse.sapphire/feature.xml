@@ -31,5 +31,6 @@
   <plugin download-size="0" id="org.eclipse.sapphire.modeling" install-size="0" unpack="false" version="0.0.0"/>
   <plugin download-size="0" id="org.eclipse.sapphire.modeling.extensibility" install-size="0" unpack="false" version="0.0.0"/>
   <plugin download-size="0" id="org.eclipse.sapphire.ui" install-size="0" unpack="false" version="0.0.0"/>
+  <plugin download-size="0" id="org.eclipse.sapphire.ui.swt.graphiti" install-size="0" unpack="false" version="0.0.0"/>
 
 </feature>

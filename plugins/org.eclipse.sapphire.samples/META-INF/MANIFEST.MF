@@ -13,11 +13,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.ui.views,
  org.eclipse.help,
- org.eclipse.emf.transaction,
  org.eclipse.ui.views.properties.tabbed,
- org.eclipse.gef,
- org.eclipse.graphiti,
- org.eclipse.graphiti.ui
+ org.eclipse.sapphire.ui.swt.graphiti
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %providerName
