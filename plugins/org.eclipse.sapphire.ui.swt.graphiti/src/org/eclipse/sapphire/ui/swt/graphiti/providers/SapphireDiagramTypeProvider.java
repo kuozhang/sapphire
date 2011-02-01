@@ -91,7 +91,8 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
 							sapphireImageProvider.setPluginId(bundleId);
 						}
 						
-						if (imageId != null && imagePath != null)
+						if (imageId != null && imagePath != null && 
+								sapphireImageProvider.getImageFilePath(imageId) == null)
 						{
 							sapphireImageProvider.registerImage(imageId, imagePath);
 						}						
