@@ -16,7 +16,7 @@
 
 <plugin>
 
-  <extension point="org.eclipse.ui.editors">
+  <!-- <extension point="org.eclipse.ui.editors">
     <editor
       class="org.eclipse.sapphire.sdk.internal.SapphireUiDefEditor"
       default="true"
@@ -33,7 +33,7 @@
       id="sdef"
       base-type="org.eclipse.core.runtime.xml">
     </content-type>
-  </extension>
+  </extension> -->
   
   <extension id="builder" name="%builderName" point="org.eclipse.core.resources.builders"> 
     <builder hasNature="false"> 
