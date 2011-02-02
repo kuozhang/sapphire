@@ -44,6 +44,16 @@ public abstract class ValueSerializationService
         return null;
     }
     
+    /**
+     * Decodes a string into a value object. Implementations should assume that the
+     * passed in string is not null and has been trimmed. If the string cannot be decoded
+     * into a value, this method should return null rather than throwing any form of
+     * exception.
+     * 
+     * @param value the string to decode
+     * @return the decoded value object or null if unable to decode
+     */
+    
     protected abstract Object decodeFromString( String value );
     
 }

@@ -36,9 +36,8 @@
         <id>railway_routes</id>
         <tool-palette-label>Railway Route</tool-palette-label>
         <tool-palette-desc>Railway Route</tool-palette-desc>
-        <hint><name>line-style</name><value>dash-dot</value></hint>
-        <hint><name>color</name><value>gray</value></hint>
-        <!-- <hint><name>color</name><value>#808080</value></hint> -->
+        <line-style>dash-dot</line-style>
+        <line-color>#808080</line-color>
         <hint><name>width</name><value>2</value></hint>
         <property>RailwayRoutes</property>
         <label>

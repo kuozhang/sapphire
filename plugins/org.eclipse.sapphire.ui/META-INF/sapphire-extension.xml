@@ -296,4 +296,8 @@
         <description>Creates an add action handler for every possible member element type for all lists whose members are shown as child nodes beneath the content outline node in question.</description>
         <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.OutlineNodeAddActionHandlerCondition</condition>
     </action-handler-factory>
+    <value-serialization-service>
+        <type>org.eclipse.sapphire.ui.Color</type>
+        <impl>org.eclipse.sapphire.ui.internal.ColorSerializationService</impl>
+    </value-serialization-service>
 </extension>

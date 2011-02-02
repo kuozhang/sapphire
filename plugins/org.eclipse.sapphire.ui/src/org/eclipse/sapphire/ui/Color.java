@@ -9,30 +9,38 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.editor;
+package org.eclipse.sapphire.ui;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public enum LineStyle 
+public class Color 
 {
-	SOLID,
-	DASH,
-	DOT,
-	DASH_DOT;
+	private final int red;
+	private final int green;
+	private final int blue;
 	
-	public static LineStyle getLineStyle(String name)
+	public Color(int r, int g, int b)
 	{
-		LineStyle style = null;
-		if (name.equalsIgnoreCase("solid"))
-			style = SOLID;
-		else if (name.equalsIgnoreCase("dash"))
-			style = DASH;
-		else if (name.equalsIgnoreCase("dot"))
-			style = DOT;
-		else if (name.equalsIgnoreCase("dash-dot"))
-			style = DASH_DOT;
-		return style;
+		this.red = r;
+		this.green = g;
+		this.blue = b;
 	}
+	
+	public int getRed()
+	{
+		return this.red;
+	}
+		
+	public int getGreen()
+	{
+		return this.green;
+	}
+	
+	public int getBlue()
+	{
+		return this.blue;
+	}
+	
 }

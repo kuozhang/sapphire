@@ -29,10 +29,10 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.ColorConstant;
 import org.eclipse.graphiti.util.IColorConstant;
+import org.eclipse.sapphire.ui.Color;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
-import org.eclipse.sapphire.ui.diagram.editor.ColorUtil;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.swt.graphics.RGB;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -124,39 +124,32 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 	private IColorConstant getLinkColor(ISapphirePartDef def)
 	{
 		IColorConstant linkColor = DEFAULT_LINK_COLOR;
-		if (def.getHint("color") != null)
+		Color color = ((IDiagramConnectionDef)def).getLineColor().getContent();
+		if (color != null)
 		{
-			RGB rgb = ColorUtil.parseColor(def.getHint("color"));
-			if (rgb != null)
-			{
-				linkColor = new ColorConstant(rgb.red, rgb.green, rgb.blue);
-			}
+			linkColor = new ColorConstant(color.getRed(), color.getGreen(), color.getBlue());
 		}
 		return linkColor;		
 	}
 	
 	private LineStyle getLinkStyle(ISapphirePartDef def)
-	{
+	{	
 		LineStyle linkStyle = LineStyle.SOLID;
-		
-		if (def.getHint("line-style") != null)
+		org.eclipse.sapphire.ui.LineStyle style = 
+					((IDiagramConnectionDef)def).getLineStyle().getContent();
+		if (style == org.eclipse.sapphire.ui.LineStyle.DASH )
 		{
-			org.eclipse.sapphire.ui.diagram.editor.LineStyle style = 
-				org.eclipse.sapphire.ui.diagram.editor.LineStyle.getLineStyle(def.getHint("line-style"));
-			if (style == org.eclipse.sapphire.ui.diagram.editor.LineStyle.DASH )
-			{
-				linkStyle = LineStyle.DASH;
-			}
-			else if (style == org.eclipse.sapphire.ui.diagram.editor.LineStyle.DOT)
-			{
-				linkStyle = LineStyle.DOT;
-			}
-			else if (style == org.eclipse.sapphire.ui.diagram.editor.LineStyle.DASH_DOT)
-			{
-				linkStyle = LineStyle.DASHDOT;
-			}
-			
+			linkStyle = LineStyle.DASH;
 		}
-		return linkStyle;		
+		else if (style == org.eclipse.sapphire.ui.LineStyle.DOT)
+		{
+			linkStyle = LineStyle.DOT;
+		}
+		else if (style == org.eclipse.sapphire.ui.LineStyle.DASH_DOT)
+		{
+			linkStyle = LineStyle.DASHDOT;
+		}
+		
+		return linkStyle;
 	}
 }
