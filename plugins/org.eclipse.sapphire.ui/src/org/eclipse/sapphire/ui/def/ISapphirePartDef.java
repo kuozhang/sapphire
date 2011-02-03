@@ -21,10 +21,8 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.ui.def.internal.SapphirePartDefHintsListBindingImpl;
 import org.eclipse.sapphire.ui.def.internal.SapphirePartDefMethods;
 
 /**
@@ -73,7 +71,7 @@ public interface ISapphirePartDef
     
     @Label( standard = "hints" )
     @Type( base = ISapphireHint.class )
-    @CustomXmlListBinding( impl = SapphirePartDefHintsListBindingImpl.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "hint", type = ISapphireHint.class ) )
     
     ListProperty PROP_HINTS = new ListProperty( TYPE, "Hints" );
     

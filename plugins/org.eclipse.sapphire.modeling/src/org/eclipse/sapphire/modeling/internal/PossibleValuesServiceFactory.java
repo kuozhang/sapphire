@@ -103,7 +103,15 @@ public final class PossibleValuesServiceFactory
                                          final int invalidValueSeverity,
                                          final boolean caseSensitive )
         {
-            this.invalidValueMessageTemplate = invalidValueMessageTemplate;
+            if( invalidValueMessageTemplate == null || invalidValueMessageTemplate.length() == 0 )
+            {
+                this.invalidValueMessageTemplate = null;
+            }
+            else
+            {
+                this.invalidValueMessageTemplate = invalidValueMessageTemplate;
+            }
+
             this.invalidValueSeverity = invalidValueSeverity;
             this.caseSensitive = caseSensitive;
         }
@@ -111,6 +119,11 @@ public final class PossibleValuesServiceFactory
         @Override
         public String getInvalidValueMessage( final String invalidValue )
         {
+            if( this.invalidValueMessageTemplate == null )
+            {
+                return super.getInvalidValueMessage( invalidValue );
+            }
+
             return NLS.bind( this.invalidValueMessageTemplate, invalidValue );
         }
 

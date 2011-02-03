@@ -267,6 +267,8 @@ public final class XmlElement
         {
             elementText = EMPTY_STRING;
         }
+        
+        final boolean isElementTextNonEmpty = ( elementText.length() > 0 );
          
         final Element domElement = getDomNode();
         final NodeList elementChildren = domElement.getChildNodes();
@@ -276,7 +278,7 @@ public final class XmlElement
         {
             final Node child = elementChildren.item( i );
             
-            if( text == null && child.getNodeType() == Node.TEXT_NODE )
+            if( text == null && child.getNodeType() == Node.TEXT_NODE && isElementTextNonEmpty )
             {
                 text = (Text) child;
             }
@@ -285,14 +287,17 @@ public final class XmlElement
                 domElement.removeChild( elementChildren.item( i ) );
             }
         }
-         
-        if( text != null )
+
+        if( isElementTextNonEmpty )
         {
-            text.setData( elementText );
-        }
-        else
-        {
-            domElement.appendChild( domElement.getOwnerDocument().createTextNode( elementText ) );
+            if( text != null )
+            {
+                text.setData( elementText );
+            }
+            else
+            {
+                domElement.appendChild( domElement.getOwnerDocument().createTextNode( elementText ) );
+            }
         }
     }
     
@@ -482,6 +487,10 @@ public final class XmlElement
         final Document document = domElement.getOwnerDocument();
         final NodeList nodes = domElement.getChildNodes();
         
+        // Notify listeners that an element is about to be added.
+        
+        notifyPreChildElementAddListeners();
+        
         // Find the insertion position.
         
         final XmlContentModel xmlContentModel = getContentModel();
@@ -538,6 +547,12 @@ public final class XmlElement
         {
             wrappedElement.format();
         }
+        
+        // Notify listeners that an element has been added.
+        
+        notifyPostChildElementAddListeners();
+        
+        // Return new element to caller.
         
         return wrappedElement;
     }
@@ -858,6 +873,13 @@ public final class XmlElement
         
         if( parentDomNode != null )
         {
+            final XmlElement parentXmlElement = getParent();
+            
+            if( parentXmlElement != null )
+            {
+                parentXmlElement.notifyPreChildElementRemoveListeners();
+            }
+            
             final Node previousSibling = domElement.getPreviousSibling();
             
             parentDomNode.removeChild( domElement );
@@ -866,6 +888,11 @@ public final class XmlElement
                 previousSibling.getNodeValue().trim().length() == 0 )
             {
                 parentDomNode.removeChild( previousSibling );
+            }
+            
+            if( parentXmlElement != null )
+            {
+                parentXmlElement.notifyPostChildElementRemoveListeners();
             }
         }
     }
@@ -1123,4 +1150,24 @@ public final class XmlElement
         }
     }
     
+    protected final void notifyPreChildElementAddListeners()
+    {
+        notifyListeners( new Event( EventType.PRE_CHILD_ELEMENT_ADD, this ) );
+    }
+
+    protected final void notifyPostChildElementAddListeners()
+    {
+        notifyListeners( new Event( EventType.POST_CHILD_ELEMENT_ADD, this ) );
+    }
+
+    protected final void notifyPreChildElementRemoveListeners()
+    {
+        notifyListeners( new Event( EventType.PRE_CHILD_ELEMENT_REMOVE, this ) );
+    }
+
+    protected final void notifyPostChildElementRemoveListeners()
+    {
+        notifyListeners( new Event( EventType.POST_CHILD_ELEMENT_REMOVE, this ) );
+    }
+
 }

@@ -19,6 +19,7 @@ import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.internal.DocumentationRefMethods;
 
@@ -40,6 +41,7 @@ public interface ISapphireDocumentationRef
     
     @Label( standard = "ID" )
     @NonNullValue
+    @PossibleValues( property = "/DocumentationDefs/Id" )
     @XmlBinding( path = "id" )
     
     ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );

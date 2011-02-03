@@ -17,6 +17,10 @@
     <bundle>org.eclipse.sapphire.ui</bundle>
     <package>org.eclipse.sapphire.ui.def</package>
   </import>
+
+  <import>
+    <bundle>org.eclipse.sapphire.sdk</bundle>
+  </import>
   
   <editor-page>
     <id>main</id>
@@ -49,6 +53,35 @@
         </node-list>
       </node>
       <node>
+        <label>Documentation</label>
+        <image>images/editors/sdef/documentation.gif</image>
+        <section>
+          <description>Define named documentation content. Reference the same documentation content from multiple parts.</description>
+          <content>
+            <action-link>
+              <action-id>Sapphire.Add</action-id>
+              <label>Add documentation content</label>
+            </action-link>
+          </content>
+        </section>
+        <node-list>
+          <property>DocumentationDefs</property>
+          <node-template>
+            <label>${ Id == null ? "&lt;documentation&gt;" : Id }</label>
+            <image>images/editors/sdef/documentation.gif</image>
+            <section>
+              <label>Documentation</label>
+              <content>
+                <property-editor>Id</property-editor>
+                <composite-ref>
+                  <id>documentation</id>
+                </composite-ref>
+              </content>
+            </section>
+          </node-template>
+        </node-list>
+      </node>
+      <node>
         <label>Composites</label>
         <section>
           <description>
@@ -67,6 +100,7 @@
           <node-template>
             <label>${ Id == null ? "&lt;composite&gt;" : Id }</label>
             <section>
+              <label>Composite</label>
               <content>
                 <property-editor>Id</property-editor>
               </content>
@@ -81,6 +115,7 @@
   <node>
     <id>documentation</id>
     <label>Documentation</label>
+    <image>images/editors/sdef/documentation.gif</image>
     <section>
       <content>
         <with>
@@ -88,39 +123,9 @@
           <panel>
             <key>ISapphireDocumentationDef</key>
             <content>
-              <property-editor>Title</property-editor>
-              <property-editor>
-                <property>Content</property>
-                <hint>
-                  <name>height</name>
-                  <value>15</value>
-                </hint>
-                <related-content>
-                  <html>
-                    <content>
-                      &lt;style>
-                      body, td
-                      {
-                         color: grey;
-                      }
-                      &lt;/style>
-                      Format content using syntax similar to HTML. The following tags are supported:&lt;br/>&lt;br/>
-                      
-                      &lt;table>
-                        &lt;tr>&lt;td>[b]...[/b]&lt;/td>&lt;td>bold text&lt;/td>&lt;/tr> 
-                        &lt;tr>&lt;td>[br/]&lt;/td>&lt;td>line break&lt;/td>&lt;/tr>
-                        &lt;tr>&lt;td>[pbr/]&lt;/td>&lt;td>paragraph break&lt;/td>&lt;/tr> 
-                        &lt;tr>&lt;td>[ol]...[/ol]&lt;/td>&lt;td>ordered list&lt;/td>&lt;/tr>
-                        &lt;tr>&lt;td>[ul]...[/ul]&lt;/td>&lt;td>unordered list&lt;/td>&lt;/tr>
-                        &lt;tr>&lt;td>[li]...[/li]&lt;/td>&lt;td>list item&lt;/td>&lt;/tr>
-                      &lt;/table>
-                    </content>
-                    <fragment/>
-                    <expand-vertically/>
-                  </html>
-                </related-content>
-              </property-editor>
-              <property-editor>Topics</property-editor>
+              <composite-ref>
+                <id>documentation</id>
+              </composite-ref>
             </content>
           </panel>
           <panel>
@@ -133,6 +138,45 @@
       </content>
     </section>
   </node>
+  
+  <composite>
+    <id>documentation</id>
+    <content>
+      <property-editor>Title</property-editor>
+      <property-editor>
+        <property>Content</property>
+        <hint>
+          <name>height</name>
+          <value>15</value>
+        </hint>
+        <related-content>
+          <html>
+            <content>
+              &lt;style>
+              body, td
+              {
+                 color: grey;
+              }
+              &lt;/style>
+              Format content using syntax similar to HTML. The following tags are supported:&lt;br/>&lt;br/>
+              
+              &lt;table>
+                &lt;tr>&lt;td>[b]...[/b]&lt;/td>&lt;td>bold text&lt;/td>&lt;/tr> 
+                &lt;tr>&lt;td>[br/]&lt;/td>&lt;td>line break&lt;/td>&lt;/tr>
+                &lt;tr>&lt;td>[pbr/]&lt;/td>&lt;td>paragraph break&lt;/td>&lt;/tr> 
+                &lt;tr>&lt;td>[ol]...[/ol]&lt;/td>&lt;td>ordered list&lt;/td>&lt;/tr>
+                &lt;tr>&lt;td>[ul]...[/ul]&lt;/td>&lt;td>unordered list&lt;/td>&lt;/tr>
+                &lt;tr>&lt;td>[li]...[/li]&lt;/td>&lt;td>list item&lt;/td>&lt;/tr>
+              &lt;/table>
+            </content>
+            <fragment/>
+            <expand-vertically/>
+          </html>
+        </related-content>
+      </property-editor>
+      <property-editor>Topics</property-editor>
+    </content>
+  </composite>
   
   <node-list>
     <id>compositeContentNodeList</id>

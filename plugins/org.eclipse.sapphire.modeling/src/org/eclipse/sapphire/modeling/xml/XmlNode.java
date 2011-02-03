@@ -22,6 +22,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.sapphire.modeling.ValidateEditException;
+import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.modeling.util.internal.DocumentationUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -37,6 +38,7 @@ public abstract class XmlNode
     private final XmlResourceStore store;
     private final XmlElement parent;
     private final Node domNode;
+    private List<Listener> listeners;
     
     public XmlNode( final XmlResourceStore store,
                     final XmlElement parent,
@@ -265,5 +267,102 @@ public abstract class XmlNode
     }
 
     public abstract void remove();
+    
+    public final void addListener( final Listener listener )
+    {
+        if( listener == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        final List<Listener> listeners = new ArrayList<Listener>();
+        
+        if( this.listeners != null )
+        {
+            listeners.addAll( this.listeners );
+        }
+        
+        listeners.add( listener );
+        this.listeners = listeners;
+    }
+    
+    public final void removeListener( final Listener listener )
+    {
+        if( this.listeners != null && this.listeners.contains( listener ) )
+        {
+            if( this.listeners.size() == 1 )
+            {
+                this.listeners = null;
+            }
+            else
+            {
+                final List<Listener> listeners = new ArrayList<Listener>();
+                
+                for( Listener x : this.listeners )
+                {
+                    if( ! x.equals( listener ) )
+                    {
+                        listeners.add( x );
+                    }
+                }
+                
+                this.listeners = listeners;
+            }
+        }
+    }
+    
+    protected final void notifyListeners( final Event event )
+    {
+        if( this.listeners != null )
+        {
+            for( Listener listener : this.listeners )
+            {
+                try
+                {
+                    listener.handle( event );
+                }
+                catch( Exception e )
+                {
+                    SapphireModelingFrameworkPlugin.log( e );
+                }
+            }
+        }
+    }
+    
+    public enum EventType
+    {
+        PRE_CHILD_ELEMENT_ADD,
+        POST_CHILD_ELEMENT_ADD,
+        PRE_CHILD_ELEMENT_REMOVE,
+        POST_CHILD_ELEMENT_REMOVE
+    }
+    
+    public static class Event
+    {
+        private final EventType type;
+        private final XmlNode node;
+        
+        public Event( final EventType type,
+                      final XmlNode node )
+        {
+            this.type = type;
+            this.node = node;
+        }
+        
+        public EventType getType()
+        {
+            return this.type;
+        }
+        
+        public XmlNode getNode()
+        {
+            return this.node;
+        }
+    }
+    
+    public static abstract class Listener
+    {
+        public abstract void handle( Event event );
+    }
     
 }
