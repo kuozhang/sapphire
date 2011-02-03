@@ -30,6 +30,8 @@ public final class PropertyEditorPropertyBinding
     private static final String EL_HINT = "hint"; //$NON-NLS-1$
     private static final String EL_PROPERTY = "property"; //$NON-NLS-1$
     
+    private XmlElement.Listener listener;
+    
     @Override
     public void init( final IModelElement element,
                       final ModelProperty property,
@@ -39,7 +41,7 @@ public final class PropertyEditorPropertyBinding
         
         final XmlElement root = xml();
         
-        final XmlElement.Listener listener = new XmlElement.Listener()
+        this.listener = new XmlElement.Listener()
         {
             @Override
             public void handle( final Event event )
@@ -86,7 +88,7 @@ public final class PropertyEditorPropertyBinding
             }
         };
         
-        root.addListener( listener );
+        root.addListener( this.listener );
     }
 
     @Override
@@ -126,6 +128,14 @@ public final class PropertyEditorPropertyBinding
         {
             el.setText( value );
         }
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        xml().removeListener( this.listener );
     }
 
 }

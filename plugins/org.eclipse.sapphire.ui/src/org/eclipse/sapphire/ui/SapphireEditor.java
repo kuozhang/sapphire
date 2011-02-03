@@ -18,7 +18,6 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -496,24 +495,19 @@ public abstract class SapphireEditor
         }
     }
 
-    private final void disposeFileChangeListener()
-    {
-        if( this.fileChangeListener != null )
-        {
-            ResourcesPlugin.getWorkspace().removeResourceChangeListener( this.fileChangeListener );
-        }
-    }
-
     @Override
     public void dispose() 
     {
         super.dispose();
         
+        if( this.fileChangeListener != null )
+        {
+            ResourcesPlugin.getWorkspace().removeResourceChangeListener( this.fileChangeListener );
+        }
+        
         this.imageCache.dispose();
-        
-        disposeFileChangeListener();
-        
         this.actionsManager.dispose();
+        this.model.dispose();
     }
     
     @Override

@@ -1000,6 +1000,39 @@ public abstract class ModelElement
                     }
                 }
             }
+            
+            for( ModelProperty property : this.type.getProperties() )
+            {
+                if( property instanceof ListProperty )
+                {
+                    for( IModelElement child : read( (ListProperty) property ) )
+                    {
+                        child.dispose();
+                    }
+                }
+                else if( property instanceof ImpliedElementProperty )
+                {
+                    read( (ImpliedElementProperty) property ).dispose();
+                }
+                else if( property instanceof ElementProperty )
+                {
+                    final IModelElement child = read( (ElementProperty) property ).element( false );
+                    
+                    if( child != null )
+                    {
+                        child.dispose();
+                    }
+                }
+            }
+            
+            try
+            {
+                resource().dispose();
+            }
+            catch( Exception e )
+            {
+                SapphireModelingFrameworkPlugin.log( e );
+            }
         }
     }
     

@@ -47,5 +47,10 @@ public abstract class BindingImpl
     {
         return this.property;
     }
+    
+    public void dispose()
+    {
+        // The default implementation doesn't do anything.
+    }
 
 }

@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationService;
 
@@ -203,6 +204,21 @@ public abstract class Resource
         }
         
         return false;
+    }
+    
+    public void dispose()
+    {
+        for( BindingImpl binding : this.bindings.values() )
+        {
+            try
+            {
+                binding.dispose();
+            }
+            catch( Exception e )
+            {
+                SapphireModelingFrameworkPlugin.log( e );
+            }
+        }
     }
 
 }
