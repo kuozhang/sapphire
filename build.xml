@@ -20,7 +20,8 @@
     *************************************************************************************************
   -->
 
-
+  <property environment="env"/>
+  
   <import file="releng/ant-library/library.xml"/>
   
   <property name="Signing.Library" value="sign-local.xml"/>
@@ -935,7 +936,22 @@ Fragment-Host: @{Bundle}
     <attribute name="property"/>
     <sequential>
     
-      <property name="downloads" value="${basedir}/downloads"/>   <!-- Override to share downloads. -->
+      <!-- Set "downloads" property or SAPPHIRE_DOWNLOADS environment variable to share downloads folder. -->
+         
+      <if>
+        <not><isset property="downloads"/></not>
+        <then>
+          <if>
+            <isset property="env.SAPPHIRE_DOWNLOADS"/>
+            <then>
+              <var name="downloads" value="${env.SAPPHIRE_DOWNLOADS}"/>
+            </then>
+            <else>
+              <var name="downloads" value="${basedir}/downloads"/>
+            </else>
+          </if>
+        </then>
+      </if>
       
       <mkdir dir="${downloads}"/>
       
