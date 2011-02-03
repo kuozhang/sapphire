@@ -954,7 +954,7 @@ Fragment-Host: @{Bundle}
       </if>
       
       <!-- Set "ignore.checksum.issues" property or SAPPHIRE_IGNORE_CHECKSUM_ISSUES environment variable to 
-           not fail build if eclipse.org downlod fails checksum verification. -->
+           not fail build if eclipse.org download fails checksum verification. -->
          
       <if>
         <not><isset property="ignore.checksum.issues"/></not>
