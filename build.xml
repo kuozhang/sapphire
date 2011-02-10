@@ -952,6 +952,24 @@ Fragment-Host: @{Bundle}
         </then>
       </if>
       
+      <!-- Set "ignore.checksum.issues" property or SAPPHIRE_IGNORE_CHECKSUM_ISSUES environment variable to 
+           not fail build if eclipse.org download fails checksum verification. -->
+         
+      <if>
+        <not><isset property="ignore.checksum.issues"/></not>
+        <then>
+          <if>
+            <isset property="env.SAPPHIRE_IGNORE_CHECKSUM_ISSUES"/>
+            <then>
+              <var name="ignore.checksum.issues" value="${env.SAPPHIRE_IGNORE_CHECKSUM_ISSUES}"/>
+            </then>
+            <else>
+              <var name="ignore.checksum.issues" value="false"/>
+            </else>
+          </if>
+        </then>
+      </if>
+      
       <mkdir dir="${downloads}"/>
       
       <echo message="Downloading from Eclipse... @{file}"/>
@@ -990,6 +1008,15 @@ Fragment-Host: @{Bundle}
                     <then>
                       <var name=".content.valid" value="true"/>
                     </then>
+                    <else>
+                      <echo message="Checksums did not match. Expected ${.content.checksum}. Got ${.content.checksum.actual}."/>
+                      <if>
+                        <istrue value="${ignore.checksum.issues}"/>
+                        <then>
+                          <var name=".content.valid" value="true"/>
+                        </then>
+                      </if>
+                    </else>
                   </if>
                   
                   <var name=".content.checksum" unset="true"/>
