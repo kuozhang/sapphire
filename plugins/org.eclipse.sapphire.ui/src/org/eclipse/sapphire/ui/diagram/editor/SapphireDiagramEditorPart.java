@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
@@ -42,8 +43,17 @@ public class SapphireDiagramEditorPart extends SapphirePart
     {
         super.init();
             
-		this.modelElement = getModelElement();
 		this.diagramPageDef = (IDiagramPageDef)super.definition;
+		ImpliedElementProperty modelElementProperty = (ImpliedElementProperty)resolve(this.diagramPageDef.getProperty().getContent());
+		if (modelElementProperty != null)
+		{
+			this.modelElement = getModelElement().read(modelElementProperty);
+		}
+        else
+        {
+            this.modelElement = getModelElement();
+        }
+		
         this.nodeTemplateListener = new NodeTemplateListener();
         this.connTemplateListener = new ConnectionTemplateListener();
         

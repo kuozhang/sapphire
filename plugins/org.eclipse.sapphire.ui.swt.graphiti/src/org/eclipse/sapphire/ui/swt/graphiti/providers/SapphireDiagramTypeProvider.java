@@ -130,16 +130,19 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
 	            final String bundleId = directive.getBundle().getText();
 	            Bundle bundle = Platform.getBundle(bundleId);
 	            URL url = BundleUtility.find(bundle, imagePath);
-				URL locatedURL = FileLocator.toFileURL(url);
-				if ("file".equalsIgnoreCase(locatedURL.getProtocol()))
-				{
-					String fullPath = new Path(locatedURL.getPath()).toOSString();
-					File f = new File(fullPath);
-					if (f.exists())
+	            if (url != null)
+	            {
+					URL locatedURL = FileLocator.toFileURL(url);
+					if ("file".equalsIgnoreCase(locatedURL.getProtocol()))
 					{
-						return bundleId;
+						String fullPath = new Path(locatedURL.getPath()).toOSString();
+						File f = new File(fullPath);
+						if (f.exists())
+						{
+							return bundleId;
+						}
 					}
-				}
+	            }
 	    	}
     	}
     	catch (IOException e)

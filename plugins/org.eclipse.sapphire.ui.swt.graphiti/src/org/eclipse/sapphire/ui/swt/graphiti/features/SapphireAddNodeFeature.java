@@ -149,8 +149,7 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
  
             // create and set text graphics algorithm
             Text text = gaService.createDefaultText(shape, nodePart.getLabel());
-            text.setForeground(manageColor(DEFAULT_TEXT_FOREGROUND));
-            text.getFont().setBold(true);
+            text.setForeground(manageColor(DEFAULT_TEXT_FOREGROUND));            
             text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
             text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 

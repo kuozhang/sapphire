@@ -68,6 +68,16 @@ public interface IDiagramPageDef
     
     Value<String> getPageHeaderText();
     void setPageHeaderText( String pageHeaderText );
+    
+    // *** Property ***
+    
+    @Label( standard = "property" )
+    @XmlBinding( path = "property" )
+    
+    ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
+    
+    Value<String> getProperty();
+    void setProperty( String property );
 	
 	// *** DiagramNodeDefs ***
     
