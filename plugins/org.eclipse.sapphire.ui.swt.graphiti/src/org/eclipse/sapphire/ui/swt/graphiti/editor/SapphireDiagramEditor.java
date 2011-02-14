@@ -180,6 +180,14 @@ public class SapphireDiagramEditor extends DiagramEditor
 		IFile npFile = diagramInput.getNodePositionFile();
 		this.diagramGeometry = new DiagramGeometryWrapper(npFile, getDiagramEditorPart());
 	}
+	
+	@Override
+	protected void initializeGraphicalViewer() 
+	{
+		super.initializeGraphicalViewer();
+		syncDiagramWithModel();
+		doSave(null);
+	}
 		
 	@Override
 	public void doSave(final IProgressMonitor monitor )

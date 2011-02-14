@@ -112,15 +112,7 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
         }
         return this.toolBehaviorProviders;
     }
-	
-    @Override
-    public void postInit() 
-    {    	
-    	SapphireDiagramEditor sapphireEditor = (SapphireDiagramEditor)getDiagramEditor();
-    	sapphireEditor.syncDiagramWithModel();
-    	sapphireEditor.doSave(null);
-    }
-    
+	    
     private String resolveImageBundle(ISapphireUiDef def, String imagePath)
     {
     	try
