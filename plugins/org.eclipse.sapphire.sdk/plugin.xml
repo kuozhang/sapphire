@@ -22,7 +22,8 @@
       default="true"
       filenames="*.sdef"
       id="org.eclipse.sapphire.sdk.internal.SapphireUiDefinitionEditor"
-      name="Sapphire UI Definition Editor"/>
+      name="Sapphire UI Definition Editor"
+      icon="images/sapphire-file.png"/>
   </extension>
   
   <extension point="org.eclipse.core.runtime.contentTypes">
@@ -55,7 +56,8 @@
       default="true"
       filenames="sapphire-extension.xml"
       id="org.eclipse.sapphire.sdk.internal.SapphireExtensionEditor"
-      name="%sapphireExtensionEditorName"/>
+      name="%sapphireExtensionEditorName"
+      icon="images/sapphire-file.png"/>
   </extension>
   
   <extension point="org.eclipse.ui.editors.templates">
