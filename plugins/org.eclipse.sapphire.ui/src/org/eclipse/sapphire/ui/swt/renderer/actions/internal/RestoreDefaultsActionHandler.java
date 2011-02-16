@@ -37,6 +37,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -46,12 +47,12 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireComposite;
-import org.eclipse.sapphire.ui.SapphireWithDirective;
 import org.eclipse.sapphire.ui.SapphireEnumControlledPageBook;
 import org.eclipse.sapphire.ui.SapphireIfElseDirective;
 import org.eclipse.sapphire.ui.SapphirePartContainer;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.SapphireWithDirective;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -163,7 +164,17 @@ public final class RestoreDefaultsActionHandler
         }
         else if( part instanceof SapphireWithDirective )
         {
-            result.add( new PropertyRef( part.getModelElement(), ( (SapphireWithDirective) part ).getProperty() ) );
+            final SapphireWithDirective w = ( (SapphireWithDirective) part );
+            final ElementProperty property = w.getProperty();
+            
+            if( property instanceof ImpliedElementProperty )
+            {
+                collectProperties( w.getCurrentPage(), result );
+            }
+            else
+            {
+                result.add( new PropertyRef( part.getModelElement(), property ) );
+            }
         }
         else if( part instanceof SapphireEnumControlledPageBook )
         {
