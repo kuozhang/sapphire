@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
+import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -34,6 +35,7 @@ public class DiagramNodePart extends SapphirePart
 	private FunctionResult idFunctionResult;
 	private FunctionResult imageFunctionResult;
 	private ValueProperty labelProperty;
+	private DiagramNodeDefaultActionPart defaultAction;
 	
 	public DiagramNodePart(DiagramNodeTemplate nodeTemplate)
 	{
@@ -87,6 +89,14 @@ public class DiagramNodePart extends SapphirePart
 	                }
 	            }
 	        );
+        }
+        
+        // Default action
+        if (this.definition.getDefaultAction().element() != null)
+        {
+        	this.defaultAction = new DiagramNodeDefaultActionPart();
+        	this.defaultAction.init(this, this.modelElement, 
+        			this.definition.getDefaultAction().element(), Collections.<String,String>emptyMap());
         }
     }
     
@@ -193,6 +203,11 @@ public class DiagramNodePart extends SapphirePart
         return null;		
 	}
 		
+	public DiagramNodeDefaultActionPart getDefaultActionPart()
+	{
+		return this.defaultAction;
+	}
+	
 	private void notifyNodeUpdate()
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();

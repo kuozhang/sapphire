@@ -12,9 +12,14 @@
 package org.eclipse.sapphire.ui.swt.graphiti.providers;
 
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
+import org.eclipse.graphiti.features.context.IDoubleClickContext;
+import org.eclipse.graphiti.features.custom.ICustomFeature;
+import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.tb.DefaultToolBehaviorProvider;
 import org.eclipse.graphiti.tb.IContextButtonPadData;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireDoubleClickNodeFeature;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -35,5 +40,29 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 	{
 		identifiers -= CONTEXT_BUTTON_REMOVE;
 		super.setGenericContextButtons(data, pe, identifiers);
+	}
+	
+	@Override
+	public ICustomFeature getDoubleClickFeature(IDoubleClickContext context) 
+	{
+		PictogramElement[] pes = context.getPictogramElements();
+		for (PictogramElement pe : pes)
+		{
+			if (pe instanceof ContainerShape)
+			{
+				Object bo = getFeatureProvider().getBusinessObjectForPictogramElement(pe);
+				if (bo instanceof DiagramNodePart)
+				{
+					DiagramNodePart nodePart = (DiagramNodePart)bo;
+					if (nodePart.getDefaultActionPart() != null)
+					{
+						SapphireDoubleClickNodeFeature dblClikFeature = 
+							new SapphireDoubleClickNodeFeature(getFeatureProvider(), nodePart.getDefaultActionPart());
+						return dblClikFeature;
+					}
+				}
+			}
+		}
+		return null;
 	}
 }

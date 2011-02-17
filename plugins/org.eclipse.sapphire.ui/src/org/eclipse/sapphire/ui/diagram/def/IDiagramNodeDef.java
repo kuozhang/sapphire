@@ -130,4 +130,13 @@ public interface IDiagramNodeDef
     
     ModelElementHandle<IDiagramEmbeddedConnectionDef> getEmbeddedConnections();
     
+    // *** DefaultAction ***
+    
+    @Type( base = IDiagramNodeDefaultActionDef.class )
+    @XmlBinding( path = "default-action" )
+    
+    ElementProperty PROP_DEFAULT_ACTION = new ElementProperty( TYPE, "DefaultAction" );
+    
+    ModelElementHandle<IDiagramNodeDefaultActionDef> getDefaultAction();
+    
 }
