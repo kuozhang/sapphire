@@ -282,7 +282,7 @@ public final class SapphireSection
             
             if( docdef != null )
             {
-                SapphireHelpSystem.getContext( docdef );
+                return SapphireHelpSystem.getContext( docdef );
             }
         }
         

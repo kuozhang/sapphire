@@ -67,7 +67,7 @@ public class SapphireHelpContext implements IContext, IContext2 {
             p = p.getBase();
         }
         
-        ModelElementType type = property.getModelElementType();
+        ModelElementType type = modelElement.getModelElementType();
         Documentation typeDocumentation = type.getAnnotation(Documentation.class);
         DocumentationProvider typeDocumentationProvider = type.getAnnotation(DocumentationProvider.class);
         if (typeDocumentation != null) {
