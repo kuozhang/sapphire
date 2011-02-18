@@ -86,6 +86,7 @@ public final class GenerateImplProcessor
     private static final String DATA_WRITE_VALUE_METHOD = "write.value.method";
     private static final String DATA_WRITE_TRANSIENT_METHOD = "write.transient.method";
     private static final String DATA_REFRESH_METHOD = "refresh.method";
+    private static final String DATA_ENABLED_METHOD = "enabled.method";
     private static final String DATA_HAS_CONTENTS = "has.contents";
     
     @Override
@@ -315,6 +316,17 @@ public final class GenerateImplProcessor
         };
         
         visitAllMethods( elInterface, methodsVisitor );
+        
+        final MethodModel mEnabled = getEnabledMethod( elImplClass, false );
+        
+        if( mEnabled != null )
+        {
+            elImplClass.removeMethod( mEnabled );
+            elImplClass.addMethod( mEnabled );
+
+            mEnabled.getBody().appendEmptyLine();
+            mEnabled.getBody().append( "return super.isPropertyEnabled( property );" );
+        }
         
         final MethodModel mRefresh = getRefreshMethod( elImplClass, false );
         
@@ -713,6 +725,10 @@ public final class GenerateImplProcessor
         // Contribute read method block.
         
         contributeReadMethodBlock( implClassModel, propField );
+        
+        // Contribute enabled method block.
+        
+        contributeEnabledMethodBlock( implClassModel, propField );
     }
     
     private void processListProperty( final ClassModel implClassModel,
@@ -1331,6 +1347,54 @@ public final class GenerateImplProcessor
         return rb;
     }
     
+    private static MethodModel getEnabledMethod( final ClassModel implClassModel,
+                                                 final boolean createIfNecessary )
+    {
+        MethodModel enabledMethod = (MethodModel) implClassModel.getData( DATA_ENABLED_METHOD );
+        
+        if( enabledMethod == null && createIfNecessary )
+        {
+            enabledMethod = implClassModel.addMethod( "isPropertyEnabled" );
+            enabledMethod.addParameter( new MethodParameterModel( "property", ModelProperty.class, true ) );
+            enabledMethod.setReturnType( TypeReference.BOOLEAN_TYPE );
+            enabledMethod.setData( DATA_HAS_CONTENTS, Boolean.FALSE );
+            implClassModel.setData( DATA_ENABLED_METHOD, enabledMethod );
+        }
+        
+        return enabledMethod;
+    }
+    
+    private static void contributeEnabledMethodBlock( final ClassModel implClassModel,
+                                                      final PropertyFieldDeclaration propField )
+    {
+        final MethodModel m = getEnabledMethod( implClassModel, true );
+        final Body rb = m.getBody();
+        final boolean hasPriorContent;
+        
+        if( m.getData( DATA_HAS_CONTENTS ) == Boolean.TRUE )
+        {
+            hasPriorContent = true;
+        }
+        else
+        {
+            hasPriorContent = false;
+            m.setData( DATA_HAS_CONTENTS, Boolean.TRUE );
+        }
+        
+        rb.append( "#1if( property == #2 )", ( hasPriorContent ? "else " : "" ), propField.name );
+        rb.openBlock();
+        
+        if( propField.isElementProperty() )
+        {
+            // TODO: This should not be re-computed here. Find a way to pass this around.
+            final String variableName = propField.propertyName.substring( 0, 1 ).toLowerCase() + propField.propertyName.substring( 1 );
+            
+            rb.append( "return #1.enabled();", variableName );
+        }
+
+        rb.closeBlock();
+    }
+    
     private static TypeReference toTypeReference( final TypeMirror typeMirror )
     {
         if( typeMirror instanceof VoidType )
@@ -1366,6 +1430,11 @@ public final class GenerateImplProcessor
         public String propertyName;
         public LinkedList<FieldDeclaration> declarations = new LinkedList<FieldDeclaration>();
         private String getterMethodName;
+        
+        public boolean isElementProperty()
+        {
+            return isInstanceOf( getType(), ElementProperty.class.getName() );        
+        }
         
         public TypeMirror getType()
         {

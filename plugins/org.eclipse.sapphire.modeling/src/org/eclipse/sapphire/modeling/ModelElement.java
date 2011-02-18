@@ -467,7 +467,7 @@ public abstract class ModelElement
         }
     }
     
-    public final boolean isPropertyEnabled( final ModelProperty property )
+    public boolean isPropertyEnabled( final ModelProperty property )
     {
         synchronized( root() )
         {
