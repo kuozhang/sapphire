@@ -16,12 +16,17 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.MustExist;
+import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.java.JavaTypeConstraints;
+import org.eclipse.sapphire.modeling.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -138,5 +143,18 @@ public interface IDiagramNodeDef
     ElementProperty PROP_DEFAULT_ACTION = new ElementProperty( TYPE, "DefaultAction" );
     
     ModelElementHandle<IDiagramNodeDefaultActionDef> getDefaultAction();
+    
+    // *** DropTargetService ***
+    
+    @Label( standard = "drop target service" )    
+    @Reference( target = Class.class )
+    @JavaTypeConstraints( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.ui.diagram.DiagramDropTargetService" )
+    @MustExist
+    @XmlBinding( path = "drop-target-service" )
+    
+    ValueProperty PROP_DROP_TARGET_SERVICE = new ValueProperty( TYPE, "DropTargetService" );
+    
+    ReferenceValue<Class<?>> getDropTargetService();
+    void setDropTargetService( String value );
     
 }

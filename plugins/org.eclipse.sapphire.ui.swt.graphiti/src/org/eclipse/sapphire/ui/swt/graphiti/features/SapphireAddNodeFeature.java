@@ -30,11 +30,13 @@ import org.eclipse.graphiti.util.ColorConstant;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.diagram.DiagramDropTargetService;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramLabelDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeImageDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramGeometryWrapper;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProvider;
 import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramPropertyKeys;
 
@@ -53,10 +55,12 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
     private static int defaultY = 50;
     private static int xInc = 100;
     private static int yInc = 0;
+    private DiagramNodeTemplate nodeTemplate;
 	
-	public SapphireAddNodeFeature(IFeatureProvider fp)
+	public SapphireAddNodeFeature(IFeatureProvider fp, DiagramNodeTemplate nodeTemplate)
 	{
 		super(fp);
+		this.nodeTemplate = nodeTemplate;
 	}
 	
 	public boolean canAdd(IAddContext context) 
@@ -66,12 +70,30 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		{
 			return true;
 		}
+		else 
+		{
+			DiagramDropTargetService dropService = nodeTemplate.getDropTargetService();
+			if (dropService != null && dropService.accept(newObj))
+			{
+				return true;
+			}
+		}
 		return false;
 	}
 
 	public PictogramElement add(IAddContext context)
 	{
-		DiagramNodePart nodePart = (DiagramNodePart)context.getNewObject();
+		Object newObj = context.getNewObject();
+		DiagramNodePart nodePart = null;
+		if (newObj instanceof DiagramNodePart)
+		{
+			nodePart = (DiagramNodePart)context.getNewObject();
+		}
+		else 
+		{
+			DiagramDropTargetService dropService = nodeTemplate.getDropTargetService();
+			nodePart = (DiagramNodePart)dropService.createModel(this.nodeTemplate, newObj);
+		}
 		final Diagram targetDiagram = (Diagram) context.getTargetContainer();
 		
         // define a default size for the shape

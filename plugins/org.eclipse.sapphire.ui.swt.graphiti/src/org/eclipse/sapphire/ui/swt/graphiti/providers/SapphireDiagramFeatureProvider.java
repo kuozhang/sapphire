@@ -42,6 +42,7 @@ import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
+import org.eclipse.sapphire.ui.diagram.DiagramDropTargetService;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramGeometryWrapper;
@@ -91,13 +92,24 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 		Object obj = context.getNewObject();
 		if (obj instanceof DiagramNodePart)
 		{
-			return new SapphireAddNodeFeature(this);
+			return new SapphireAddNodeFeature(this, ((DiagramNodePart)obj).getDiagramNodeTemplate());
 		}
 		else if (obj instanceof DiagramConnectionPart)
 		{
 			return new SapphireAddConnectionFeature(this);
 		}
-		
+		else
+		{
+			List<DiagramNodeTemplate> nodeTemplates = getDiagramPart().getNodeTemplates();
+			for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
+			{
+				DiagramDropTargetService dropService = nodeTemplate.getDropTargetService();
+				if (dropService != null && dropService.accept(obj))
+				{
+					return new SapphireAddNodeFeature(this, nodeTemplate);					
+				}
+			}	
+		}
 		return super.getAddFeature(context);
 	}
 	

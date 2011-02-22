@@ -24,6 +24,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.ui.diagram.DiagramDropTargetService;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEmbeddedConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 
@@ -58,6 +59,7 @@ public class DiagramNodeTemplate
 	private SapphireDiagramPartListener nodePartListener;
 	private final Set<Listener> listeners;	
 	private List<DiagramNodePart> diagramNodes;
+	private DiagramDropTargetService dropService;
 	    
     public DiagramNodeTemplate(final SapphireDiagramEditorPart diagramEditor, IDiagramNodeDef definition, IModelElement modelElement)
     {
@@ -87,7 +89,14 @@ public class DiagramNodeTemplate
         {
         	createNewNodePart(listEntryModelElement);
         }
-        
+
+        // handle drop target service
+        final Class<?> serviceClass = this.definition.getDropTargetService().resolve();
+        if (serviceClass != null)
+        {
+        	this.dropService = DiagramDropTargetService.create(serviceClass);
+        }
+
         // handle embedded connections
         if (this.definition.getEmbeddedConnections().element() != null)
         {
@@ -175,6 +184,11 @@ public class DiagramNodeTemplate
     {
         this.listeners.remove( listener );
     }
+    
+	public DiagramDropTargetService getDropTargetService()
+	{
+		return this.dropService;
+	}
     
     private ModelProperty resolve(final IModelElement modelElement, 
     		String propertyName)
