@@ -58,15 +58,11 @@ import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITableColorProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.OwnerDrawLabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -171,7 +167,6 @@ public class DefaultListPropertyEditorRenderer
                                       final boolean ignoreLeftMarginHint )
     {
         final SapphirePropertyEditor part = getPart();
-        final IModelElement element = part.getModelElement();
         final ListProperty property = (ListProperty) part.getProperty();
         final boolean isReadOnly = ( property.isReadOnly() || part.getRenderingHint( HINT_READ_ONLY, false ) );
 
@@ -248,34 +243,19 @@ public class DefaultListPropertyEditorRenderer
             }
         }
         
-        final boolean singleColumnTable = ( columnProperties.size() == 1 );
-        final boolean renderAsList = ( singleColumnTable && ! showHeader && ! columnProperties.get( 0 ).isOfType( Boolean.class ) );
+        // Setting the whint in the following code is a hacky workaround for the problem
+        // tracked by the following JFace bug:
+        //
+        // https://bugs.eclipse.org/bugs/show_bug.cgi?id=215997
+        //
         
-        final Composite tableParentComposite;
-        final TableColumnLayout tableColumnLayout;
-        
-        if( renderAsList )
-        {
-            tableParentComposite = innerComposite;
-            tableColumnLayout = null;
-        }
-        else
-        {
-            // Setting the whint in the following code is a hacky workaround for the problem
-            // tracked by the following JFace bug:
-            //
-            // https://bugs.eclipse.org/bugs/show_bug.cgi?id=215997
-            //
-            
-            tableParentComposite = new Composite( innerComposite, SWT.NULL );
-            tableParentComposite.setLayoutData( gdwhint( gdfill(), 1 ) );
-            tableColumnLayout = new TableColumnLayout();
-            tableParentComposite.setLayout( tableColumnLayout );
-        }
+        final Composite tableParentComposite = new Composite( innerComposite, SWT.NULL );
+        tableParentComposite.setLayoutData( gdwhint( gdfill(), 1 ) );
+        final TableColumnLayout tableColumnLayout = new TableColumnLayout();
+        tableParentComposite.setLayout( tableColumnLayout );
         
         this.tableViewer = new TableViewer( tableParentComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
         this.table = this.tableViewer.getTable();
-        this.table.setLayoutData( renderAsList ? gdwhint( gdfill(), 200 ) : null );
         this.table.setData( SapphirePropertyEditor.DATA_ASSIST_DECORATOR, this.decorator );
         this.context.adapt( this.table );
         this.decorator.addEditorControl( this.table );
@@ -356,6 +336,7 @@ public class DefaultListPropertyEditorRenderer
                 {
                     DefaultListPropertyEditorRenderer.this.tableViewer.refresh();
                     DefaultListPropertyEditorRenderer.this.table.notifyListeners( SWT.Selection, null );
+                    tableParentComposite.layout();
                 }
                 finally
                 {
@@ -385,186 +366,114 @@ public class DefaultListPropertyEditorRenderer
         
         this.table.setData( DATA_BINDING, this.binding );
         
-        if( renderAsList )
+        boolean showImages = true;
+        
+        for( ModelElementType modelElementType : property.getAllPossibleTypes() )
         {
-            // Treat single column tables differently. For a single column table, we want
-            // a list-like behavior. The header is to be hidden and the column is to use
-            // as much width as it needs (growing automatically). There should also not
-            // be a vertical column separator at the end of the column (only an issue on
-            // some operating systems, such as Vista). 
-            
-            // To achieve this, we have to create a table with no columns. This triggers
-            // a special mode in SWT. Not having a column object forces the use of older 
-            // TableViewer API for managing label providers and cell modification. 
-            // Unfortunate and ugly, but true.
-            
-            final ValueProperty memberProperty = columnProperties.get( 0 );
-            final ColumnHandler columnHandler = createColumnHandler( this.columnHandlers, memberProperty, true );
-            
-            final ITableLabelProvider labelProvider = new TableLabelProvider( (ColumnLabelProvider) columnHandler.getLabelProvider() );
-            this.tableViewer.setLabelProvider( labelProvider );
-            
-            if( ! memberProperty.isReadOnly() )
+            if( modelElementType.getAnnotation( org.eclipse.sapphire.modeling.annotations.Image.class ) == null )
             {
-                final AbstractColumnEditingSupport editingSupport = columnHandler.getEditingSupport(); 
-                
-                this.tableViewer.setColumnProperties( new String[] { "a" } );
-                
-                final ICellModifier cellModifier = new ICellModifier()
-                {
-                    public boolean canModify( final Object element,
-                                              final String property )
-                    {
-                        return editingSupport.canEdit( element );
-                    }
-    
-                    public Object getValue( final Object element,
-                                            final String property )
-                    {
-                        return editingSupport.getValue( element );
-                    }
-    
-                    public void modify( final Object element,
-                                        final String property,
-                                        final Object value )
-                    {
-                        final TableItem tableItem = (TableItem) element;
-                        editingSupport.setValue( tableItem.getData(), value );
-                    }
-                };
-                
-                this.tableViewer.setCellModifier( cellModifier );
-            
-                this.tableViewer.addSelectionChangedListener
-                (
-                    new ISelectionChangedListener()
-                    {
-                        public void selectionChanged( final SelectionChangedEvent event )
-                        {
-                            final IStructuredSelection ssel = (IStructuredSelection) DefaultListPropertyEditorRenderer.this.tableViewer.getSelection();
-                            final Object sel = ssel.getFirstElement();
-                            
-                            if( sel != null )
-                            {
-                                final CellEditor cellEditor = editingSupport.getCellEditor( sel );
-                                DefaultListPropertyEditorRenderer.this.tableViewer.setCellEditors( new CellEditor[] { cellEditor } );
-                            }
-                        }
-                    }
-                );
+                showImages = false;
+                break;
             }
         }
-        else
+        
+        final String columnWidthsHint = part.getRenderingHint( HINT_COLUMN_WIDTHS, "" );
+        final StringTokenizer columnWidthsHintTokenizer = new StringTokenizer( columnWidthsHint, "," );
+        
+        for( final ValueProperty memberProperty : columnProperties )
         {
-            boolean showImages = true;
+            final TableViewerColumn col2 = new TableViewerColumn( this.tableViewer, SWT.NONE );
+            col2.getColumn().setText( memberProperty.getLabel( false, CapitalizationType.TITLE_STYLE, false ) );
             
-            for( ModelElementType modelElementType : property.getAllPossibleTypes() )
+            ColumnWeightData columnWeightData = null;
+            
+            if( columnWidthsHintTokenizer.hasMoreTokens() )
             {
-                if( modelElementType.getAnnotation( org.eclipse.sapphire.modeling.annotations.Image.class ) == null )
+                final String columnWidthHint = columnWidthsHintTokenizer.nextToken();
+                final String[] columnWidthHintSplit = columnWidthHint.split( ":" );
+                
+                if( columnWidthHintSplit.length == 1 || columnWidthHintSplit.length == 2 )
                 {
-                    showImages = false;
-                    break;
+                    try
+                    {
+                        final int minColumnWidth = Integer.parseInt( columnWidthHintSplit[ 0 ].trim() );
+                        final int columnWeight;
+                        
+                        if( columnWidthHintSplit.length == 2 )
+                        {
+                            columnWeight = Integer.parseInt( columnWidthHintSplit[ 1 ].trim() );
+                        }
+                        else
+                        {
+                            columnWeight = 0;
+                        }
+                        
+                        columnWeightData = new ColumnWeightData( columnWeight, minColumnWidth, true );
+                    }
+                    catch( NumberFormatException e ) {}
                 }
             }
             
-            final String columnWidthsHint = part.getRenderingHint( HINT_COLUMN_WIDTHS, "" );
-            final StringTokenizer columnWidthsHintTokenizer = new StringTokenizer( columnWidthsHint, "," );
-            
-            for( final ValueProperty memberProperty : columnProperties )
+            if( columnWeightData == null )
             {
-                final TableViewerColumn col2 = new TableViewerColumn( this.tableViewer, SWT.NONE );
-                col2.getColumn().setText( memberProperty.getLabel( false, CapitalizationType.TITLE_STYLE, false ) );
-                
-                ColumnWeightData columnWeightData = null;
-                
-                if( columnWidthsHintTokenizer.hasMoreTokens() )
+                columnWeightData = new ColumnWeightData( 1, 100, true );
+            }
+            
+            tableColumnLayout.setColumnData( col2.getColumn(), columnWeightData );
+            
+            final ColumnHandler columnHandler = createColumnHandler( this.columnHandlers, memberProperty, showImages );
+            
+            showImages = false; // Only the first column should ever show the image.
+            
+            col2.setLabelProvider( columnHandler.getLabelProvider() );
+            col2.setEditingSupport( columnHandler.getEditingSupport() );
+            
+            final TableColumn tableColumn = col2.getColumn();
+            
+            tableColumn.addSelectionListener
+            (
+                new SelectionAdapter()
                 {
-                    final String columnWidthHint = columnWidthsHintTokenizer.nextToken();
-                    final String[] columnWidthHintSplit = columnWidthHint.split( ":" );
-                    
-                    if( columnWidthHintSplit.length == 1 || columnWidthHintSplit.length == 2 )
+                    @Override
+                    public void widgetSelected( final SelectionEvent event )
                     {
-                        try
+                        final TableColumn currentSortColumn = DefaultListPropertyEditorRenderer.this.table.getSortColumn();
+                        
+                        if( currentSortColumn != tableColumn )
                         {
-                            final int minColumnWidth = Integer.parseInt( columnWidthHintSplit[ 0 ].trim() );
-                            final int columnWeight;
-                            
-                            if( columnWidthHintSplit.length == 2 )
-                            {
-                                columnWeight = Integer.parseInt( columnWidthHintSplit[ 1 ].trim() );
-                            }
-                            else
-                            {
-                                columnWeight = 0;
-                            }
-                            
-                            columnWeightData = new ColumnWeightData( columnWeight, minColumnWidth, true );
+                            DefaultListPropertyEditorRenderer.this.table.setSortColumn( tableColumn );
+                            DefaultListPropertyEditorRenderer.this.table.setSortDirection( SWT.DOWN );
+                            DefaultListPropertyEditorRenderer.this.tableViewer.setComparator( new TableSorter( columnHandler, SWT.DOWN ) );
                         }
-                        catch( NumberFormatException e ) {}
-                    }
-                }
-                
-                if( columnWeightData == null )
-                {
-                    columnWeightData = new ColumnWeightData( 1, 100, true );
-                }
-                
-                tableColumnLayout.setColumnData( col2.getColumn(), columnWeightData );
-                
-                final ColumnHandler columnHandler = createColumnHandler( this.columnHandlers, memberProperty, showImages );
-                
-                showImages = false; // Only the first column should ever show the image.
-                
-                col2.setLabelProvider( columnHandler.getLabelProvider() );
-                col2.setEditingSupport( columnHandler.getEditingSupport() );
-                
-                final TableColumn tableColumn = col2.getColumn();
-                
-                tableColumn.addSelectionListener
-                (
-                    new SelectionAdapter()
-                    {
-                        @Override
-                        public void widgetSelected( final SelectionEvent event )
+                        else
                         {
-                            final TableColumn currentSortColumn = DefaultListPropertyEditorRenderer.this.table.getSortColumn();
+                            final int currentSortDirection = DefaultListPropertyEditorRenderer.this.table.getSortDirection();
                             
-                            if( currentSortColumn != tableColumn )
+                            if( currentSortDirection == SWT.DOWN )
                             {
-                                DefaultListPropertyEditorRenderer.this.table.setSortColumn( tableColumn );
-                                DefaultListPropertyEditorRenderer.this.table.setSortDirection( SWT.DOWN );
-                                DefaultListPropertyEditorRenderer.this.tableViewer.setComparator( new TableSorter( columnHandler, SWT.DOWN ) );
+                                DefaultListPropertyEditorRenderer.this.table.setSortDirection( SWT.UP );
+                                DefaultListPropertyEditorRenderer.this.tableViewer.setComparator( new TableSorter( columnHandler, SWT.UP ) );
                             }
                             else
                             {
-                                final int currentSortDirection = DefaultListPropertyEditorRenderer.this.table.getSortDirection();
-                                
-                                if( currentSortDirection == SWT.DOWN )
-                                {
-                                    DefaultListPropertyEditorRenderer.this.table.setSortDirection( SWT.UP );
-                                    DefaultListPropertyEditorRenderer.this.tableViewer.setComparator( new TableSorter( columnHandler, SWT.UP ) );
-                                }
-                                else
-                                {
-                                    DefaultListPropertyEditorRenderer.this.table.setSortColumn( null );
-                                    DefaultListPropertyEditorRenderer.this.tableViewer.setComparator( null );
-                                }
+                                DefaultListPropertyEditorRenderer.this.table.setSortColumn( null );
+                                DefaultListPropertyEditorRenderer.this.tableViewer.setComparator( null );
                             }
-                            
-                            for( SapphireAction action : actions.getActions() )
+                        }
+                        
+                        for( SapphireAction action : actions.getActions() )
+                        {
+                            for( SapphireActionHandler handler : action.getActiveHandlers() )
                             {
-                                for( SapphireActionHandler handler : action.getActiveHandlers() )
+                                if( handler instanceof AbstractActionHandler )
                                 {
-                                    if( handler instanceof AbstractActionHandler )
-                                    {
-                                        ( (AbstractActionHandler) handler ).refreshEnablement();
-                                    }
+                                    ( (AbstractActionHandler) handler ).refreshEnablement();
                                 }
                             }
                         }
                     }
-                );
-            }
+                }
+            );
         }
         
         final IStructuredContentProvider contentProvider = new IStructuredContentProvider()
@@ -887,8 +796,7 @@ public class DefaultListPropertyEditorRenderer
     protected void handlePropertyChangedEvent()
     {
         super.handlePropertyChangedEvent();
-        
-        DefaultListPropertyEditorRenderer.this.refreshOperation.run();
+        this.refreshOperation.run();
     }
     
     @Override
@@ -1012,61 +920,6 @@ public class DefaultListPropertyEditorRenderer
                                               final SapphirePropertyEditor part )
         {
             return new DefaultListPropertyEditorRenderer( context, part );
-        }
-    }
-
-    private static final class TableLabelProvider
-    
-        implements ITableLabelProvider, ITableColorProvider
-        
-    {
-        private ColumnLabelProvider columnLabelProvider;
-        
-        public TableLabelProvider( final ColumnLabelProvider columnLabelProvider )
-        {
-            this.columnLabelProvider = columnLabelProvider;
-        
-        }
-        public String getColumnText( final Object element,
-                                     final int columnIndex )
-        {
-            return this.columnLabelProvider.getText( element );
-        }
-
-        public Image getColumnImage( final Object element,
-                                     final int columnIndex )
-        {
-            return this.columnLabelProvider.getImage( element );
-        }
-
-        public Color getForeground( final Object element,
-                                    final int columnIndex )
-        {
-            return this.columnLabelProvider.getForeground( element );
-        }
-
-        public Color getBackground( final Object element,
-                                    final int columnIndex )
-        {
-            return this.columnLabelProvider.getBackground( element );
-        }
-
-        public boolean isLabelProperty( final Object element,
-                                        final String property )
-        {
-            return true;
-        }
-
-        public void addListener( final ILabelProviderListener listener )
-        {
-        }
-
-        public void removeListener( final ILabelProviderListener listener )
-        {
-        }
-        
-        public void dispose()
-        {
         }
     }
 
