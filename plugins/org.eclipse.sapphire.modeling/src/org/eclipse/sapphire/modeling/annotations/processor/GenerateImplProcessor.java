@@ -1389,7 +1389,13 @@ public final class GenerateImplProcessor
             // TODO: This should not be re-computed here. Find a way to pass this around.
             final String variableName = propField.propertyName.substring( 0, 1 ).toLowerCase() + propField.propertyName.substring( 1 );
             
-            rb.append( "return #1.enabled();", variableName );
+            rb.append( "if( this.#2 == null )\n" +
+                       "{\n" +
+                       "    refresh( #1, true );\n" +
+                       "}\n" +
+                       "\n" +
+                       "return this.#2.enabled();", 
+                       propField.name, variableName );
         }
 
         rb.closeBlock();
