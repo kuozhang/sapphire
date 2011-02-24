@@ -77,39 +77,45 @@ public final class OutlineNodeDeleteActionHandler
             {
                 final int indexOfRemovedNode = siblings.indexOf( node );
                 
-                if( lowestIndexOfRemovedNode == -1 )
+                if( indexOfRemovedNode != -1 )
                 {
-                    lowestIndexOfRemovedNode = indexOfRemovedNode;
-                }
-                else
-                {
-                    lowestIndexOfRemovedNode = min( lowestIndexOfRemovedNode, indexOfRemovedNode );
-                }
-            }
-            
-            int indexOfNewSelection = -1;
-            
-            if( lowestIndexOfRemovedNode == 0 )
-            {
-                for( int i = 0; i < size; i++ )
-                {
-                    final MasterDetailsContentNode node = siblings.get( i );
-                    
-                    if( ! nodes.contains( node ) )
+                    if( lowestIndexOfRemovedNode == -1 )
                     {
-                        indexOfNewSelection = i;
-                        break;
+                        lowestIndexOfRemovedNode = indexOfRemovedNode;
+                    }
+                    else
+                    {
+                        lowestIndexOfRemovedNode = min( lowestIndexOfRemovedNode, indexOfRemovedNode );
                     }
                 }
             }
-            else
+            
+            if( lowestIndexOfRemovedNode != -1 )
             {
-                indexOfNewSelection = lowestIndexOfRemovedNode - 1;
-            }
-
-            if( indexOfNewSelection != -1 )
-            {
-                newSelection = siblings.get( indexOfNewSelection );
+                int indexOfNewSelection = -1;
+                
+                if( lowestIndexOfRemovedNode == 0 )
+                {
+                    for( int i = 0; i < size; i++ )
+                    {
+                        final MasterDetailsContentNode node = siblings.get( i );
+                        
+                        if( ! nodes.contains( node ) )
+                        {
+                            indexOfNewSelection = i;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    indexOfNewSelection = lowestIndexOfRemovedNode - 1;
+                }
+    
+                if( indexOfNewSelection != -1 )
+                {
+                    newSelection = siblings.get( indexOfNewSelection );
+                }
             }
         }
         
