@@ -90,7 +90,7 @@ public class DiagramNodePart extends SapphirePart
 	            }
 	        );
         }
-        
+                
         // Default action
         if (this.definition.getDefaultAction().element() != null)
         {
@@ -166,6 +166,11 @@ public class DiagramNodePart extends SapphirePart
 		notifyNodeUpdate();
 	}
 	
+	public void refreshDecorator()
+	{
+		notifyNodeUpdate();
+	}
+
 	public boolean canEditLabel()
 	{
 		return this.labelProperty != null;
@@ -202,7 +207,25 @@ public class DiagramNodePart extends SapphirePart
         }
         return null;		
 	}
-		
+			
+	public int getValidationDecoratorX()
+	{
+		if (this.definition.getValidationDecorator().element() != null)
+		{
+			return this.definition.getValidationDecorator().element().getHint("x", 0);
+		}
+		return 0;
+	}
+	
+	public int getValidationDecoratorY()
+	{
+		if (this.definition.getValidationDecorator().element() != null)
+		{
+			return this.definition.getValidationDecorator().element().getHint("y", 0);
+		}
+		return 0;
+	}
+
 	public DiagramNodeDefaultActionPart getDefaultActionPart()
 	{
 		return this.defaultAction;

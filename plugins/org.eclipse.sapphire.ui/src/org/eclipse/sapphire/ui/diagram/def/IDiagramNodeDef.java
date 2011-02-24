@@ -113,6 +113,15 @@ public interface IDiagramNodeDef
     
     ModelElementHandle<IDiagramLabelDef> getLabel();
     	    
+    // *** ValidationDecorator ***
+    
+    @Type( base = IDiagramDecoratorDef.class )
+    @XmlBinding( path = "validation-decorator" )
+
+    ElementProperty PROP_VALIDATION_DECORATOR = new ElementProperty( TYPE, "ValidationDecorator" );
+    
+    ModelElementHandle<IDiagramDecoratorDef> getValidationDecorator();
+
     // *** InstanceId ***
     
     @Type( base = Function.class )
