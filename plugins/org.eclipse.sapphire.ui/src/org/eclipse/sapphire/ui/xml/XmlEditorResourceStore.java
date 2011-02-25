@@ -14,8 +14,11 @@ package org.eclipse.sapphire.ui.xml;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -37,7 +40,6 @@ import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
-import org.eclipse.sapphire.ui.DelayedTasksExecutor.Task;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.ide.FileStoreEditorInput;
@@ -66,7 +68,7 @@ public class XmlEditorResourceStore
 {
     private StructuredTextEditor sourceEditor;
     private IModelElement rootModelElement;
-    private final Map<Node,IModelElement> nodeToModelElementMap;
+    private final Map<Node,List<IModelElement>> nodeToModelElementsMap;
     private final Scrubber scrubber;
     private final ModelElementListener modelElementDisposeListener;
     
@@ -77,7 +79,7 @@ public class XmlEditorResourceStore
         
         this.sourceEditor = sourceEditor;
         this.rootModelElement = null;
-        this.nodeToModelElementMap = new HashMap<Node,IModelElement>();
+        this.nodeToModelElementsMap = new HashMap<Node,List<IModelElement>>();
         this.scrubber = new Scrubber();
         this.scrubber.start();
         
@@ -265,12 +267,20 @@ public class XmlEditorResourceStore
 
     @Override
     public void registerModelElement( final Node xmlNode,
-                                      final IModelElement modelElement )
+                                      final IModelElement element )
     {
-        synchronized( this.nodeToModelElementMap )
+        synchronized( this.nodeToModelElementsMap )
         {
-            this.nodeToModelElementMap.put( xmlNode, modelElement );
-            modelElement.addListener( this.modelElementDisposeListener );
+            List<IModelElement> elements = this.nodeToModelElementsMap.get( xmlNode );
+            
+            if( elements == null )
+            {
+                elements = new ArrayList<IModelElement>( 1 );
+                this.nodeToModelElementsMap.put( xmlNode, elements );
+            }
+            
+            elements.add( element );
+            element.addListener( this.modelElementDisposeListener );
         }
     }
     
@@ -284,51 +294,56 @@ public class XmlEditorResourceStore
             
             if( xmlElement != null )
             {
-                synchronized( this.nodeToModelElementMap )
+                synchronized( this.nodeToModelElementsMap )
                 {
                     final Node xmlNode = xmlElement.getDomNode();
-                    final IModelElement registeredModelElement = this.nodeToModelElementMap.get( xmlNode );
+                    final List<IModelElement> elements = this.nodeToModelElementsMap.get( xmlNode );
                     
-                    if( registeredModelElement == element )
+                    if( elements != null )
                     {
-                        this.nodeToModelElementMap.remove( xmlNode );
+                        elements.remove( element );
+                        
+                        if( elements.isEmpty() )
+                        {
+                            this.nodeToModelElementsMap.remove( xmlNode );
+                        }
                     }
                 }
             }
         }
     }
 
-    protected IModelElement getModelElement( final Node xmlNode )
+    protected List<IModelElement> getModelElements( final Node xmlNode )
     {
-        synchronized( this.nodeToModelElementMap )
+        synchronized( this.nodeToModelElementsMap )
         {
             Node node = xmlNode;
-            IModelElement modelElement = this.nodeToModelElementMap.get( node );
+            List<IModelElement> elements = this.nodeToModelElementsMap.get( node );
             
-            while( modelElement == null && node != null && ! ( node instanceof Document ) )
+            while( elements == null && node != null && ! ( node instanceof Document ) )
             {
                 node = node.getParentNode();
-                modelElement = this.nodeToModelElementMap.get( node );
+                elements = this.nodeToModelElementsMap.get( node );
             }
             
-            if( modelElement == null )
+            if( elements == null )
             {
-                modelElement = this.rootModelElement;
+                elements = Collections.singletonList( this.rootModelElement );
             }
             
-            return modelElement;
+            return elements;
         }
     }
     
     protected void handleXmlNodeChange( final Node xmlNode )
     {
-        handleXmlNodeChange( xmlNode, getModelElement( xmlNode ) );
+        handleXmlNodeChange( xmlNode, getModelElements( xmlNode ) );
     }
     
     protected void handleXmlNodeChange( final Node xmlNode,
-                                        final IModelElement nearestMatchModelElement )
+                                        final List<IModelElement> nearestMatchModelElements )
     {
-        DelayedTasksExecutor.schedule( new RefreshElementTask( nearestMatchModelElement ) );
+        DelayedTasksExecutor.schedule( new RefreshElementTask( nearestMatchModelElements ) );
     }
     
     private static void addAdapter( final IDOMNode node,
@@ -349,11 +364,11 @@ public class XmlEditorResourceStore
         extends DelayedTasksExecutor.Task
         
     {
-        private final IModelElement element;
+        private final List<IModelElement> elements;
         
-        public RefreshElementTask( final IModelElement element )
+        public RefreshElementTask( final List<IModelElement> elements )
         {
-            this.element = element;
+            this.elements = elements;
         }
         
         @Override
@@ -361,7 +376,7 @@ public class XmlEditorResourceStore
         {
             if( obj != null && obj instanceof RefreshElementTask )
             {
-                return ( this.element == ( (RefreshElementTask) obj ).element );
+                return ( this.elements.equals( ( (RefreshElementTask) obj ).elements ) );
             }
             
             return false;
@@ -370,29 +385,15 @@ public class XmlEditorResourceStore
         @Override
         public int hashCode()
         {
-            return this.element.hashCode();
+            return this.elements.hashCode();
         }
         
-        @Override
-        public boolean subsumes( final Task task )
-        {
-            boolean result = super.subsumes( task );
-            
-            if( result == false )
-            {
-                if( task instanceof RefreshPropertyTask && 
-                    this.element == ( (RefreshPropertyTask) task ).element )
-                {
-                    return true;
-                }
-            }
-            
-            return result;
-        }
-
         public void run()
         {
-            this.element.refresh( false, true );
+            for( final IModelElement element : this.elements )
+            {
+                element.refresh( false, true );
+            }
         }
     }
 
@@ -444,7 +445,7 @@ public class XmlEditorResourceStore
         
         public void run()
         {
-            final Map<Node,IModelElement> nodeToModelElementMap = XmlEditorResourceStore.this.nodeToModelElementMap;
+            final Map<Node,List<IModelElement>> nodeToModelElementsMap = XmlEditorResourceStore.this.nodeToModelElementsMap;
             
             while( true )
             {
@@ -462,12 +463,12 @@ public class XmlEditorResourceStore
                     }
                 }
                 
-                synchronized( nodeToModelElementMap )
+                synchronized( nodeToModelElementsMap )
                 {
-                    for( Iterator<Map.Entry<Node,IModelElement>> itr = nodeToModelElementMap.entrySet().iterator();
+                    for( Iterator<Map.Entry<Node,List<IModelElement>>> itr = nodeToModelElementsMap.entrySet().iterator();
                          itr.hasNext(); )
                     {
-                        final Map.Entry<Node,IModelElement> entry = itr.next();
+                        final Map.Entry<Node,List<IModelElement>> entry = itr.next();
                         
                         if( entry.getKey().getParentNode() == null )
                         {
