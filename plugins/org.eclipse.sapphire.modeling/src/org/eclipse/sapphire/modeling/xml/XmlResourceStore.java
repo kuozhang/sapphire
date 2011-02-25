@@ -40,6 +40,7 @@ import org.eclipse.sapphire.modeling.ResourceStore;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.w3c.dom.Document;
+import org.w3c.dom.DocumentType;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
@@ -199,6 +200,12 @@ public class XmlResourceStore
                 final TransformerFactory factory = TransformerFactory.newInstance();
                 final Transformer transformer = factory.newTransformer();
                 transformer.setOutputProperty( OutputKeys.OMIT_XML_DECLARATION, "yes" );
+                
+                final DocumentType doctype = this.document.getDoctype();
+                if (doctype != null) {
+					transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
+					transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
+                }
                 
                 transformer.transform( source, result );
                 
