@@ -10,6 +10,10 @@
 <h1>Enhancements in 0.3</h1>
 
 <ol>
+  <li><a href="#modeling">Modeling</a></li>
+  <ol type="A">
+    <li><a href="#folding">Folding XML Element Binding</a></li>
+  </ol>
   <li><a href="#ui">UI</a></li>
   <ol type="A">
     <li><a href="#html">HTML Content Presentation</a></li>
@@ -17,6 +21,33 @@
   </ol>
 </ol>
  
+<h2><a name="modeling"><a name="folding">Folding XML Element Binding</a></a></h2>
+
+<p>In certain cases, while a given XML element can have a number of child
+elements, one of the child elements occurs by itself with high frequency. In
+these cases, it useful to reduce the verbosity of XML by folding the child
+element into the parent.</p>
+
+<p>Using the folding binding, it is possible to have the same value property
+bind to "xyz" string in both of the following examples. If a child element
+is added, first form will automatically transform into the second. Similarly,
+if all child element except the folding one are removed, the second form
+will automatically transform into the first.</p>
+
+<pre class="source-code"><code>&lt;root>xyz&lt;/root></code></pre>
+
+<pre class="source-code"><code>&lt;root>
+  &lt;a>xyz&lt;/a>
+  ...
+&lt;/root></code></pre>
+
+<p>To use this feature, specify XML binding as follows:</p>
+
+<pre class="source-code"><code>@CustomXmlValueBinding( impl = FoldingXmlValueBindingImpl.class, params = "a" )</code></pre>
+
+<p>Set params attribute to the name of the folding element. Take care not to
+apply this binding to more than one child element in a given parent.</p>
+
 <h2><a name="html">HTML Content Presentation</a></h2>
 
 <p>It is hard to beat the simplicity and flexibility of HTML for presenting formatted
