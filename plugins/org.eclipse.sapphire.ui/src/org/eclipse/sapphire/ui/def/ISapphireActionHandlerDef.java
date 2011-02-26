@@ -20,6 +20,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
@@ -36,6 +37,7 @@ import org.eclipse.sapphire.ui.def.internal.SapphireActionHandlerDefMethods;
  */
 
 @Label( standard = "action handler" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/action.gif" )
 @GenerateImpl
 
 public interface ISapphireActionHandlerDef

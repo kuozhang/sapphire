@@ -1,0 +1,175 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2011 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *        Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<definition>
+
+    <import>
+        <bundle>org.eclipse.sapphire.ui</bundle>
+    </import>
+    
+    <import>
+        <bundle>org.eclipse.sapphire.sdk</bundle>
+        <package>org.eclipse.sapphire.sdk.internal</package>
+    </import>
+    
+    <node>
+        <id>ActionsNode</id>
+        <label>actions</label>
+        <image>images/objects/action.gif</image>
+        <section>
+            <description>${ Params.Extension ? "Define actions that should be available globally in the system." : "Define actions." }</description>
+            <content>
+                <action-link>
+                    <action-id>Sapphire.Add</action-id>
+                    <label>Add an action</label>
+                </action-link>
+            </content>
+        </section>
+        <node-list>
+            <property>Actions</property>
+            <node-template>
+                <label>${ Id == null ? "&lt;action&gt;" : Id }</label>
+                <use-model-element-image/>
+                <section>
+                    <label>action</label>
+                    <content>
+                        <property-editor>Id</property-editor>
+                        <property-editor>Label</property-editor>
+                        <property-editor>KeyBinding</property-editor>
+                        <property-editor>Type</property-editor>
+                        <property-editor>Images</property-editor>
+                        <property-editor>
+                            <property>Description</property>
+                            <hint>
+                                <name>height</name>
+                                <value>5</value>
+                            </hint>
+                        </property-editor>
+                    </content>
+                </section>
+                <section>
+                    <label>applicability</label>
+                    <content>
+                        <property-editor>ConditionClass</property-editor>
+                        <property-editor>Contexts</property-editor>
+                    </content>
+                </section>
+                <section>
+                    <label>location</label>
+                    <content>
+                        <property-editor>Group</property-editor>
+                        <property-editor>LocationHints</property-editor>
+                    </content>
+                </section>
+            </node-template>
+        </node-list>
+    </node>
+            
+    <node>
+        <id>ActionHandlersNode</id>
+        <label>${ Params.Extension ? "action handlers" : "handlers" }</label>
+        <image>images/objects/action.gif</image>
+        <section>
+            <description>${ Params.Extension ? "Define action handlers that should be available globally in the system." : "Define action handlers." }</description>
+            <content>
+                <action-link>
+                    <action-id>Sapphire.Add</action-id>
+                    <label>Add an action handler</label>
+                </action-link>
+            </content>
+        </section>
+        <node-list>
+            <property>ActionHandlers</property>
+            <node-template>
+                <label>${ Id == null ? "&lt;action-handler&gt;" : Id }</label>
+                <use-model-element-image/>
+                <section>
+                    <label>action handler</label>
+                    <content>
+                        <property-editor>Action</property-editor>
+                        <property-editor>Id</property-editor>
+                        <property-editor>Label</property-editor>
+                        <property-editor>Images</property-editor>
+                        <property-editor>
+                            <property>Description</property>
+                            <hint>
+                                <name>height</name>
+                                <value>5</value>
+                            </hint>
+                        </property-editor>
+                        <property-editor>ImplClass</property-editor>
+                        <property-editor>Params</property-editor>
+                    </content>
+                </section>
+                <section>
+                    <label>applicability</label>
+                    <content>
+                        <property-editor>ConditionClass</property-editor>
+                        <property-editor>Contexts</property-editor>
+                    </content>
+                </section>
+                <section>
+                    <label>location</label>
+                    <content>
+                        <property-editor>LocationHints</property-editor>
+                    </content>
+                </section>
+            </node-template>
+        </node-list>
+    </node>
+            
+    <node>
+        <id>ActionHandlerFactoriesNode</id>
+        <label>${ Params.Extension ? "action handler factories" : "handler factories" }</label>
+        <image>images/objects/action.gif</image>
+        <section>
+            <description>${ Params.Extension ? "Define action handler factories that should be available globally in the system." : "Define action handler factories." }</description>
+            <content>
+                <action-link>
+                    <action-id>Sapphire.Add</action-id>
+                    <label>Add an action handler factory</label>
+                </action-link>
+            </content>
+        </section>
+        <node-list>
+            <property>ActionHandlerFactories</property>
+            <node-template>
+                <label>${ Action == null ? "&lt;action-handler-factory&gt;" : Action }</label>
+                <use-model-element-image/>
+                <section>
+                    <label>action handler factory</label>
+                    <content>
+                        <property-editor>Action</property-editor>
+                        <property-editor>
+                            <property>Description</property>
+                            <hint>
+                                <name>height</name>
+                                <value>5</value>
+                            </hint>
+                        </property-editor>
+                        <property-editor>ImplClass</property-editor>
+                        <property-editor>Params</property-editor>
+                    </content>
+                </section>
+                <section>
+                    <label>applicability</label>
+                    <content>
+                        <property-editor>ConditionClass</property-editor>
+                        <property-editor>Contexts</property-editor>
+                    </content>
+                </section>
+            </node-template>
+        </node-list>
+    </node>
+    
+</definition>

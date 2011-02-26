@@ -57,22 +57,6 @@ public interface ISapphireUiDef
     @DelegateImplementation( SapphireUiDefMethods.class )
     
     List<ISapphireUiDef> getImportedDefinitions();
-
-    // *** CompositeDefs ***
-    
-    @Type( base = ISapphireCompositeDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "composite", type = ISapphireCompositeDef.class ) )
-                             
-    ListProperty PROP_COMPOSITE_DEFS = new ListProperty( TYPE, "CompositeDefs" );
-    
-    ModelElementList<ISapphireCompositeDef> getCompositeDefs();
-    
-    // *** Method : getCompositeDef ***
-    
-    @DelegateImplementation( SapphireUiDefMethods.class )
-    
-    ISapphireCompositeDef getCompositeDef( String id,
-                                           boolean searchImportedDefinitions );
     
     // *** DocumentationDefs ***
     
@@ -88,89 +72,78 @@ public interface ISapphireUiDef
     @DelegateImplementation( SapphireUiDefMethods.class )
     
     ISapphireDocumentationDef getDocumentationDef( String id,
-                                               boolean searchImportedDefinitions );
+                                                   boolean searchImportedDefinitions );
 
-    // *** MasterDetailsTreeNodeDefs ***
+    // *** PartDefs ***
     
-    @Type( base = IMasterDetailsTreeNodeDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "node", type = IMasterDetailsTreeNodeDef.class ) )
+    @Type
+    ( 
+        base = ISapphirePartDef.class,
+        possible = 
+        { 
+            ISapphirePropertyEditorDef.class, 
+            ISapphireSeparatorDef.class,
+            ISapphireSpacerDef.class,
+            ISapphireLabelDef.class,
+            ISapphireGroupDef.class,
+            ISapphireWithDirectiveDef.class,
+            ISapphireIfElseDirectiveDef.class,
+            ISapphireCompositeDef.class,
+            ISapphireActionLinkDef.class,
+            ISapphireCustomPartDef.class,
+            ISapphireStaticTextFieldDef.class,
+            ISapphirePageBookExtDef.class,
+            ISapphireTabGroupDef.class,
+            ISapphireHtmlPanelDef.class,
+            IFormDef.class,
+            IMasterDetailsTreeNodeDef.class,
+            IMasterDetailsTreeNodeFactoryDef.class,
+            IEditorPageDef.class,
+            IDiagramPageDef.class,
+            ISapphireDialogDef.class,
+            ISapphireWizardDef.class
+        }
+    )
+                      
+    @XmlListBinding
+    ( 
+        mappings =
+        {
+            @XmlListBinding.Mapping( element = "property-editor", type = ISapphirePropertyEditorDef.class ),
+            @XmlListBinding.Mapping( element = "separator", type = ISapphireSeparatorDef.class ),
+            @XmlListBinding.Mapping( element = "spacer", type = ISapphireSpacerDef.class ),
+            @XmlListBinding.Mapping( element = "label", type = ISapphireLabelDef.class ),
+            @XmlListBinding.Mapping( element = "group", type = ISapphireGroupDef.class ),
+            @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),
+            @XmlListBinding.Mapping( element = "if", type = ISapphireIfElseDirectiveDef.class ),
+            @XmlListBinding.Mapping( element = "composite", type = ISapphireCompositeDef.class ),
+            @XmlListBinding.Mapping( element = "action-link", type = ISapphireActionLinkDef.class ),
+            @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
+            @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
+            @XmlListBinding.Mapping( element = "switching-panel", type = ISapphirePageBookExtDef.class ),
+            @XmlListBinding.Mapping( element = "tab-group", type = ISapphireTabGroupDef.class ),
+            @XmlListBinding.Mapping( element = "html", type = ISapphireHtmlPanelDef.class ),
+            @XmlListBinding.Mapping( element = "form", type = IFormDef.class ),
+            @XmlListBinding.Mapping( element = "node", type = IMasterDetailsTreeNodeDef.class ),
+            @XmlListBinding.Mapping( element = "node-list", type = IMasterDetailsTreeNodeFactoryDef.class ),
+            @XmlListBinding.Mapping( element = "editor-page", type = IEditorPageDef.class ),
+            @XmlListBinding.Mapping( element = "diagram-page", type = IDiagramPageDef.class ),
+            @XmlListBinding.Mapping( element = "dialog", type = ISapphireDialogDef.class ),
+            @XmlListBinding.Mapping( element = "wizard", type = ISapphireWizardDef.class )
+        }
+    )
+                             
+    ListProperty PROP_PART_DEFS = new ListProperty( TYPE, "PartDefs" );
     
-    ListProperty PROP_MASTER_DETAILS_TREE_NODE_DEFS = new ListProperty( TYPE, "MasterDetailsTreeNodeDefs" );
+    ModelElementList<ISapphirePartDef> getPartDefs();
     
-    ModelElementList<IMasterDetailsTreeNodeDef> getMasterDetailsTreeNodeDefs();
-    
-    // *** Method : getMasterDetailsTreeNodeDef ***
-    
-    @DelegateImplementation( SapphireUiDefMethods.class )
-    
-    IMasterDetailsTreeNodeDef getMasterDetailsTreeNodeDef( String id,
-                                                           boolean searchImportedDefinitions );
-    
-    // *** MasterDetailsTreeNodeFactoryDefs ***
-    
-    @Type( base = IMasterDetailsTreeNodeFactoryDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "node-list", type = IMasterDetailsTreeNodeFactoryDef.class ) )
-    
-    ListProperty PROP_MASTER_DETAILS_TREE_NODE_FACTORY_DEFS = new ListProperty( TYPE, "MasterDetailsTreeNodeFactoryDefs" );
-    
-    ModelElementList<IMasterDetailsTreeNodeFactoryDef> getMasterDetailsTreeNodeFactoryDefs();
-    
-    // *** Method : getMasterDetailsTreeNodeFactoryDef ***
-    
-    @DelegateImplementation( SapphireUiDefMethods.class )
-    
-    IMasterDetailsTreeNodeFactoryDef getMasterDetailsTreeNodeFactoryDef( String id,
-                                                                         boolean searchImportedDefinitions );
-    
-    // *** EditorPageDefs ***
-    
-    @Type( base = IEditorPageDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "editor-page", type = IEditorPageDef.class ) )
-    
-    ListProperty PROP_EDITOR_PAGE_DEFS = new ListProperty( TYPE, "EditorPageDefs" );
-    
-    ModelElementList<IEditorPageDef> getEditorPageDefs();
-    
-    // *** DiagramPageDefs ***
-    
-    @Type( base = IDiagramPageDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "diagram-page", type = IDiagramPageDef.class ) )
-    
-    ListProperty PROP_DIAGRAM_PAGE_DEFS = new ListProperty( TYPE, "DiagramPageDefs" );
-    
-    ModelElementList<IDiagramPageDef> getDiagramPageDefs();
-    
-    // *** DialogDefs ***
-    
-    @Type( base = ISapphireDialogDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "dialog", type = ISapphireDialogDef.class ) )
-    
-    ListProperty PROP_DIALOG_DEFS = new ListProperty( TYPE, "DialogDefs" );
-    
-    ModelElementList<ISapphireDialogDef> getDialogDefs();
-    
-    // *** Method : getDialogDef ***
-    
-    @DelegateImplementation( SapphireUiDefMethods.class )
-    
-    ISapphireDialogDef getDialogDef( String id,
-                                     boolean searchImportedDefinitions );
-    
-    // *** WizardDefs ***
-    
-    @Type( base = ISapphireWizardDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "wizard", type = ISapphireWizardDef.class ) )
-    
-    ListProperty PROP_WIZARD_DEFS = new ListProperty( TYPE, "WizardDefs" );
-    
-    ModelElementList<ISapphireWizardDef> getWizardDefs();
-    
-    // *** Method : getWizardDef ***
+    // *** Method : getPartDef ***
     
     @DelegateImplementation( SapphireUiDefMethods.class )
     
-    ISapphireWizardDef getWizardDef( String id,
-                                     boolean searchImportedDefinitions );
+    ISapphirePartDef getPartDef( String id,
+                                 boolean searchImportedDefinitions,
+                                 Class<?> expectedType );
     
     // *** Method : resolveClass ***
     

@@ -76,7 +76,7 @@ public final class SapphireWithDirective
     protected ISapphireCompositeDef initDefaultPageDef()
     {
         final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
-        final ISapphireCompositeDef composite = root.getCompositeDefs().addNewElement();
+        final ISapphireCompositeDef composite = (ISapphireCompositeDef) root.getPartDefs().addNewElement( ISapphireCompositeDef.TYPE );
         final ISapphireLabelDef label = (ISapphireLabelDef) composite.getContent().addNewElement( ISapphireLabelDef.TYPE );
         label.setText( Resources.noAdditionalPropertiesMessage );
         

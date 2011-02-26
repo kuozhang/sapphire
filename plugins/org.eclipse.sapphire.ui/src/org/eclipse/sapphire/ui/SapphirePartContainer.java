@@ -19,14 +19,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.SapphireMultiStatus;
-import org.eclipse.sapphire.ui.def.ISapphirePartContainerDef;
+import org.eclipse.sapphire.ui.def.IFormDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphirePartContainer
+public class SapphirePartContainer
 
     extends SapphirePart
     
@@ -56,7 +56,7 @@ public abstract class SapphirePartContainer
                 }
             };
     
-            final ISapphirePartContainerDef def = (ISapphirePartContainerDef) this.definition;
+            final IFormDef def = (IFormDef) this.definition;
             
             for( ISapphirePartDef childPartDef : def.getContent() )
             {

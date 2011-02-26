@@ -33,7 +33,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface ISapphireIfElseDirectiveDef
 
-    extends ISapphirePartDef
+    extends IFormPartDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireIfElseDirectiveDef.class );
@@ -74,7 +74,6 @@ public interface ISapphireIfElseDirectiveDef
             ISapphireWithDirectiveDef.class,
             ISapphireIfElseDirectiveDef.class,
             ISapphireCompositeDef.class,
-            ISapphireCompositeRef.class,
             ISapphireActionLinkDef.class,
             ISapphireCustomPartDef.class,
             ISapphireStaticTextFieldDef.class,
@@ -97,7 +96,6 @@ public interface ISapphireIfElseDirectiveDef
             @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),
             @XmlListBinding.Mapping( element = "if", type = ISapphireIfElseDirectiveDef.class ),
             @XmlListBinding.Mapping( element = "composite", type = ISapphireCompositeDef.class ),
-            @XmlListBinding.Mapping( element = "composite-ref", type = ISapphireCompositeRef.class ),
             @XmlListBinding.Mapping( element = "action-link", type = ISapphireActionLinkDef.class ),
             @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
             @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
@@ -126,7 +124,6 @@ public interface ISapphireIfElseDirectiveDef
             ISapphireWithDirectiveDef.class,
             ISapphireIfElseDirectiveDef.class,
             ISapphireCompositeDef.class,
-            ISapphireCompositeRef.class,
             ISapphireActionLinkDef.class,
             ISapphireCustomPartDef.class,
             ISapphireStaticTextFieldDef.class,
@@ -149,7 +146,6 @@ public interface ISapphireIfElseDirectiveDef
             @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),
             @XmlListBinding.Mapping( element = "if", type = ISapphireIfElseDirectiveDef.class ),
             @XmlListBinding.Mapping( element = "composite", type = ISapphireCompositeDef.class ),
-            @XmlListBinding.Mapping( element = "composite-ref", type = ISapphireCompositeRef.class ),
             @XmlListBinding.Mapping( element = "action-link", type = ISapphireActionLinkDef.class ),
             @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
             @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),

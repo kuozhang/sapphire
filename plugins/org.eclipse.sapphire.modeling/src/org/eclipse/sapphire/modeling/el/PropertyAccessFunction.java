@@ -11,6 +11,9 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import java.util.Map;
+
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -63,31 +66,61 @@ public final class PropertyAccessFunction
             @Override
             protected Object evaluate()
             {
-                final IModelElement el = cast( operand( 0 ).value(), IModelElement.class );
+                final Object object = operand( 0 ).value();
                 final String pname = cast( operand( 1 ).value(), String.class );
-                final ModelProperty p = el.getModelElementType().getProperty( pname );
                 
-                if( this.element != el || this.property != p )
+                if( object == null )
                 {
-                    if( this.element != null )
+                    throw new FunctionException( Resources.cannotReadPropertiesFromNull );
+                }
+                else
+                {
+                    if( object instanceof IModelElement )
                     {
-                        this.element.removeListener( this.listener, this.property.getName() );
+                        final IModelElement el = (IModelElement) object;
+                        final ModelProperty p = el.getModelElementType().getProperty( pname );
+                        
+                        if( this.element != el || this.property != p )
+                        {
+                            if( this.element != null )
+                            {
+                                this.element.removeListener( this.listener, this.property.getName() );
+                            }
+                            
+                            this.element = el;
+                            this.property = p;
+                            
+                            this.element.addListener( this.listener, this.property.getName() );
+                        }
+                        
+                        Object res = this.element.read( this.property );
+                        
+                        if( res instanceof ModelElementHandle<?> )
+                        {
+                            res = ( (ModelElementHandle<?>) res ).element();
+                        }
+                        
+                        return res;
                     }
-                    
-                    this.element = el;
-                    this.property = p;
-                    
-                    this.element.addListener( this.listener, this.property.getName() );
+                    else if( object instanceof Map )
+                    {
+                        for( final Map.Entry<?,?> entry : ( (Map<?,?>) object ).entrySet() )
+                        {
+                            final String key = (String) entry.getKey();
+                            
+                            if( key.equalsIgnoreCase( pname ) )
+                            {
+                                return entry.getValue();
+                            }
+                        }
+                        
+                        throw new FunctionException( NLS.bind( Resources.undefinedPropertyMessage, pname ) );
+                    }
+                    else
+                    {
+                        throw new FunctionException( NLS.bind( Resources.cannotReadProperties, object.getClass().getName() ) );
+                    }
                 }
-                
-                Object res = this.element.read( this.property );
-                
-                if( res instanceof ModelElementHandle<?> )
-                {
-                    res = ( (ModelElementHandle<?>) res ).element();
-                }
-                
-                return res;
             }
             
             @Override
@@ -101,6 +134,18 @@ public final class PropertyAccessFunction
                 }
             }
         };
+    }
+    
+    private static final class Resources extends NLS
+    {
+        public static String undefinedPropertyMessage;
+        public static String cannotReadProperties;
+        public static String cannotReadPropertiesFromNull;
+        
+        static
+        {
+            initializeMessages( PropertyAccessFunction.class.getName(), Resources.class );
+        }
     }
     
 }

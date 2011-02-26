@@ -74,7 +74,7 @@ public final class SapphireUiDefFactory
                                                          final String compositeId )
     {
         final ISapphireUiDef def = SapphireUiDefFactory.load( bundleId, defFilePath );
-        return def.getCompositeDef( compositeId, true );
+        return (ISapphireCompositeDef) def.getPartDef( compositeId, true, ISapphireCompositeDef.class );
     }
     
     public static ISapphireDialogDef getDialogDef( final String path )
@@ -88,7 +88,7 @@ public final class SapphireUiDefFactory
                                                    final String wizardId )
     {
         final ISapphireUiDef def = SapphireUiDefFactory.load( bundleId, defFilePath );
-        return def.getDialogDef( wizardId, true );
+        return (ISapphireDialogDef) def.getPartDef( wizardId, true, ISapphireDialogDef.class );
     }
     
     public static ISapphireWizardDef getWizardDef( final String path )
@@ -102,7 +102,7 @@ public final class SapphireUiDefFactory
                                                    final String wizardId )
     {
         final ISapphireUiDef def = SapphireUiDefFactory.load( bundleId, defFilePath );
-        return def.getWizardDef( wizardId, true );
+        return (ISapphireWizardDef) def.getPartDef( wizardId, true, ISapphireWizardDef.class );
     }
     
     private static String[] parseDefPath( final String path )

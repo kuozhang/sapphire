@@ -72,7 +72,7 @@ public abstract class SapphirePageBook
     protected ISapphireCompositeDef initDefaultPageDef()
     {
         final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
-        return root.getCompositeDefs().addNewElement();
+        return (ISapphireCompositeDef) root.getPartDefs().addNewElement( ISapphireCompositeDef.TYPE );
     }
 
     @Override

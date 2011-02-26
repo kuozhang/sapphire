@@ -11,20 +11,24 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
-import org.eclipse.sapphire.ui.def.ISapphireCompositeRef;
+import org.eclipse.sapphire.modeling.ReferenceService;
+import org.eclipse.sapphire.ui.def.IFormPartDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class CompositeRefMethods
+public final class FormPartIncludeReferenceService
+
+    extends ReferenceService
+    
 {
-    public static ISapphireCompositeDef resolve( final ISapphireCompositeRef ref )
+    @Override
+    public Object resolve( final String reference )
     {
-        final ISapphireUiDef rootdef = ref.nearest( ISapphireUiDef.class );
-        return rootdef.getCompositeDef( ref.getId().getText(), true );
+        final ISapphireUiDef rootdef = element().nearest( ISapphireUiDef.class );
+        return rootdef.getPartDef( reference, true, IFormPartDef.class );
     }
     
 }

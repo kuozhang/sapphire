@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface ISapphireTabGroupDef
 
-    extends ISapphirePartDef
+    extends IFormPartDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireTabGroupDef.class );

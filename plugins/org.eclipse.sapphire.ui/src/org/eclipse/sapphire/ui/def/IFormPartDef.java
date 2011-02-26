@@ -9,22 +9,22 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.def.internal;
+package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeDef;
-import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeRef;
-import org.eclipse.sapphire.ui.def.ISapphireUiDef;
+import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MasterDetailsTreeNodeRefMethods
+@GenerateImpl
+
+public interface IFormPartDef
+
+    extends ISapphirePartDef
+    
 {
-    public static IMasterDetailsTreeNodeDef resolve( final IMasterDetailsTreeNodeRef ref )
-    {
-        final ISapphireUiDef rootdef = ref.nearest( ISapphireUiDef.class );
-        return (IMasterDetailsTreeNodeDef) rootdef.getPartDef( ref.getPart().getText(), true, IMasterDetailsTreeNodeDef.class );
-    }
+    ModelElementType TYPE = new ModelElementType( IFormPartDef.class );
     
 }

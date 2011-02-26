@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 
 /**
@@ -20,7 +19,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 
 public interface IMasterDetailsTreeNodeListEntry
 
-    extends IModelElement
+    extends ISapphirePartDef
     
 {
     ModelElementType TYPE = new ModelElementType( IMasterDetailsTreeNodeListEntry.class );

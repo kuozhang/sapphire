@@ -37,20 +37,10 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 public interface IMasterDetailsTreeNodeDef
 
-    extends IMasterDetailsTreeNodeListEntry, ISapphirePartDef
+    extends IMasterDetailsTreeNodeListEntry
     
 {
     ModelElementType TYPE = new ModelElementType( IMasterDetailsTreeNodeDef.class );
-    
-    // *** Id ***
-    
-    @Label( standard = "ID" )
-    @XmlBinding( path = "id" )
-    
-    ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
-    
-    Value<String> getId();
-    void setId( String id );
     
     // *** Property ***
     

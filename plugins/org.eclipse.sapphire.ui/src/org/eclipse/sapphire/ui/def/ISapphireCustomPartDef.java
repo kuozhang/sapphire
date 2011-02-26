@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface ISapphireCustomPartDef
 
-    extends ISapphirePartDef
+    extends IFormPartDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireCustomPartDef.class );

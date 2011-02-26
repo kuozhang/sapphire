@@ -16,6 +16,7 @@
   <import>
     <bundle>org.eclipse.sapphire.sdk</bundle>
     <package>org.eclipse.sapphire.sdk.internal</package>
+    <definition>sdef/SapphireEditorCommon.sdef</definition>
   </import>
 
   <editor-page>
@@ -24,7 +25,7 @@
     <initial-selection>Model Element Services</initial-selection>
     <root-node>
       <node>
-        <label>Model Element Services</label>
+        <label>model element services</label>
         <section>
           <description>Define services for model elements.</description>
           <content>
@@ -39,7 +40,7 @@
           <node-template>
             <label>${ TypeClass == null ? "&lt;service&gt;" : LastSegment( TypeClass, '.' ) }</label>
             <section>
-              <label>Model Element Service</label>
+              <label>model element service</label>
               <content>
                 <property-editor>TypeClass</property-editor>
                 <property-editor>FactoryClass</property-editor>
@@ -56,7 +57,7 @@
         </node-list>
       </node>
       <node>
-        <label>Model Property Services</label>
+        <label>model property services</label>
         <section>
           <description>Define services for model properties.</description>
           <content>
@@ -71,7 +72,7 @@
           <node-template>
             <label>${ TypeClass == null ? "&lt;service&gt;" : LastSegment( TypeClass, '.' ) }</label>
             <section>
-              <label>Model Property Service</label>
+              <label>model property service</label>
               <content>
                 <property-editor>TypeClass</property-editor>
                 <property-editor>FactoryClass</property-editor>
@@ -88,7 +89,7 @@
         </node-list>
       </node>
       <node>
-        <label>Value Serialization Services</label>
+        <label>value serialization services</label>
         <section>
           <description>Define value serialization services.</description>
           <content>
@@ -103,7 +104,7 @@
           <node-template>
             <label>${ TypeClass == null ? "&lt;service&gt;" : LastSegment( TypeClass, '.' ) }</label>
             <section>
-              <label>Value Serialization Service</label>
+              <label>value serialization service</label>
               <content>
                 <property-editor>TypeClass</property-editor>
                 <property-editor>ImplClass</property-editor>
@@ -120,7 +121,7 @@
         </node-list>
       </node>
       <node>
-        <label>Functions</label>
+        <label>functions</label>
         <section>
           <description>Define expression language functions.</description>
           <content>
@@ -135,7 +136,7 @@
           <node-template>
             <label>${ Name == null ? "&lt;function&gt;" : Name }</label>
             <section>
-              <label>Function</label>
+              <label>function</label>
               <content>
                 <property-editor>Name</property-editor>
                 <property-editor>ImplClass</property-editor>
@@ -151,144 +152,27 @@
           </node-template>
         </node-list>
       </node>
-      <node>
-        <label>Actions</label>
-        <section>
-          <description>Define actions that should be available globally in the system.</description>
-          <content>
-            <action-link>
-              <action-id>Sapphire.Add</action-id>
-              <label>Add an action</label>
-            </action-link>
-          </content>
-        </section>
-        <node-list>
-          <property>Actions</property>
-          <node-template>
-            <label>${ Id == null ? "&lt;action&gt;" : Id }</label>
-            <section>
-              <label>Action</label>
-              <content>
-                <property-editor>Id</property-editor>
-                <property-editor>Label</property-editor>
-                <property-editor>KeyBinding</property-editor>
-                <property-editor>Type</property-editor>
-                <property-editor>Images</property-editor>
-                <property-editor>
-                  <property>Description</property>
-                  <hint>
-                    <name>height</name>
-                    <value>5</value>
-                  </hint>
-                </property-editor>
-              </content>
-            </section>
-            <section>
-              <label>Applicability</label>
-              <content>
-                <property-editor>ConditionClass</property-editor>
-                <property-editor>Contexts</property-editor>
-              </content>
-            </section>
-            <section>
-              <label>Location</label>
-              <content>
-                <property-editor>Group</property-editor>
-                <property-editor>LocationHints</property-editor>
-              </content>
-            </section>
-          </node-template>
-        </node-list>
-      </node>
-      <node>
-        <label>Action Handlers</label>
-        <section>
-          <description>Define action handlers that should be available globally in the system.</description>
-          <content>
-            <action-link>
-              <action-id>Sapphire.Add</action-id>
-              <label>Add an action handler</label>
-            </action-link>
-          </content>
-        </section>
-        <node-list>
-          <property>ActionHandlers</property>
-          <node-template>
-            <label>${ Id == null ? "&lt;action-handler&gt;" : Id }</label>
-            <section>
-              <label>Action Handler</label>
-              <content>
-                <property-editor>Action</property-editor>
-                <property-editor>Id</property-editor>
-                <property-editor>Label</property-editor>
-                <property-editor>Images</property-editor>
-                <property-editor>
-                  <property>Description</property>
-                  <hint>
-                    <name>height</name>
-                    <value>5</value>
-                  </hint>
-                </property-editor>
-                <property-editor>ImplClass</property-editor>
-                <property-editor>Params</property-editor>
-              </content>
-            </section>
-            <section>
-              <label>Applicability</label>
-              <content>
-                <property-editor>ConditionClass</property-editor>
-                <property-editor>Contexts</property-editor>
-              </content>
-            </section>
-            <section>
-              <label>Location</label>
-              <content>
-                <property-editor>LocationHints</property-editor>
-              </content>
-            </section>
-          </node-template>
-        </node-list>
-      </node>
-      <node>
-        <label>Action Handler Factories</label>
-        <section>
-          <description>Define action handler factories that should be available globally in the system.</description>
-          <content>
-            <action-link>
-              <action-id>Sapphire.Add</action-id>
-              <label>Add an action handler factory</label>
-            </action-link>
-          </content>
-        </section>
-        <node-list>
-          <property>ActionHandlerFactories</property>
-          <node-template>
-            <label>${ Action == null ? "&lt;action-handler-factory&gt;" : Action }</label>
-            <section>
-              <label>Action Handler Factory</label>
-              <content>
-                <property-editor>Action</property-editor>
-                <property-editor>
-                  <property>Description</property>
-                  <hint>
-                    <name>height</name>
-                    <value>5</value>
-                  </hint>
-                </property-editor>
-                <property-editor>ImplClass</property-editor>
-                <property-editor>Params</property-editor>
-              </content>
-            </section>
-            <section>
-              <label>Applicability</label>
-              <content>
-                <property-editor>ConditionClass</property-editor>
-                <property-editor>Contexts</property-editor>
-              </content>
-            </section>
-          </node-template>
-        </node-list>
-      </node>
+      <node-ref>
+        <part>ActionsNode</part>
+        <param>
+          <name>Extension</name>
+          <value>true</value>
+        </param>
+      </node-ref>
+      <node-ref>
+        <part>ActionHandlersNode</part>
+        <param>
+          <name>Extension</name>
+          <value>true</value>
+        </param>
+      </node-ref>
+      <node-ref>
+        <part>ActionHandlerFactoriesNode</part>
+        <param>
+          <name>Extension</name>
+          <value>true</value>
+        </param>
+      </node-ref>
     </root-node>
   </editor-page>
   

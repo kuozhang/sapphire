@@ -33,13 +33,13 @@ import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
-import org.eclipse.sapphire.ui.def.ICompositeParam;
+import org.eclipse.sapphire.ui.def.IFormPartInclude;
 import org.eclipse.sapphire.ui.def.ISapphireActionLinkDef;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
-import org.eclipse.sapphire.ui.def.ISapphireCompositeRef;
 import org.eclipse.sapphire.ui.def.ISapphireCustomPartDef;
 import org.eclipse.sapphire.ui.def.ISapphireDialogDef;
 import org.eclipse.sapphire.ui.def.ISapphireGroupDef;
@@ -47,6 +47,7 @@ import org.eclipse.sapphire.ui.def.ISapphireHtmlPanelDef;
 import org.eclipse.sapphire.ui.def.ISapphireIfElseDirectiveDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphirePageBookExtDef;
+import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartListenerDef;
 import org.eclipse.sapphire.ui.def.ISapphirePropertyEditorDef;
@@ -182,7 +183,22 @@ public abstract class SapphirePart
         if( f != null )
         {
             f = FailSafeFunction.create( f, String.class );
-            fr = f.evaluate( new ModelElementFunctionContext( contextModelElement, this.definition.adapt( LocalizationService.class ) ) );
+
+            final FunctionContext context = new ModelElementFunctionContext( contextModelElement, this.definition.adapt( LocalizationService.class ) )
+            {
+                @Override
+                public Object property( final String name )
+                {
+                    if( name.equalsIgnoreCase( "params" ) )
+                    {
+                        return SapphirePart.this.params;
+                    }
+
+                    return super.property( name );
+                }
+            };
+            
+            fr = f.evaluate( context );
             
             fr.addListener
             (
@@ -423,15 +439,16 @@ public abstract class SapphirePart
     public final ModelProperty resolve( final IModelElement modelElement,
                                         String propertyName )
     {
+        return resolve( modelElement, propertyName, this.params );
+    }
+    
+    public static final ModelProperty resolve( final IModelElement modelElement,
+                                               String propertyName,
+                                               final Map<String,String> params )
+    {
         if( propertyName != null )
         {
-            propertyName = propertyName.trim();
-            
-            if( propertyName.startsWith( "@{" ) && propertyName.endsWith( "}" ) )
-            {
-                propertyName = propertyName.substring( 2, propertyName.length() - 1 );
-                propertyName = this.params.get( propertyName );
-            }
+            propertyName = substituteParams( propertyName.trim(), params );
             
             final ModelElementType type = modelElement.getModelElementType();
             final ModelProperty property = type.getProperty( propertyName );
@@ -445,6 +462,32 @@ public abstract class SapphirePart
         }
         
         return null;
+    }
+    
+    public final String substituteParams( final String str )
+    {
+        return substituteParams( str, this.params );
+    }
+    
+    public static final String substituteParams( final String str,
+                                                 final Map<String,String> params )
+    {
+        String result = str;
+        
+        if( str != null && str.contains( "@{" ) )
+        {
+            for( final Map.Entry<String,String> param : params.entrySet() )
+            {
+                final StringBuilder token = new StringBuilder();
+                token.append( "@{" );
+                token.append( param.getKey() );
+                token.append( '}' );
+                
+                result = result.replace( token, param.getValue() );
+            }
+        }
+        
+        return result;
     }
     
     /**
@@ -629,16 +672,16 @@ public abstract class SapphirePart
         {
             part = new SapphireComposite();
         }
-        else if( definition instanceof ISapphireCompositeRef )
+        else if( definition instanceof IFormPartInclude )
         {
-            final ISapphireCompositeRef compositeRef = (ISapphireCompositeRef) definition;
-            def = compositeRef.resolve();
+            final IFormPartInclude inc = (IFormPartInclude) definition;
+            def = inc.getPart().resolve();
             
             if( def != null )
             {
                 partParams = new HashMap<String,String>( params );
                 
-                for( ICompositeParam param : compositeRef.getParams() )
+                for( ISapphireParam param : inc.getParams() )
                 {
                     final String paramName = param.getName().getText();
                     final String paramValue = param.getValue().getText();
@@ -649,7 +692,7 @@ public abstract class SapphirePart
                     }
                 }
                 
-                part = new SapphireComposite();
+                part = new SapphirePartContainer();
             }
         }
         else if( definition instanceof ISapphireTabGroupDef )

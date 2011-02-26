@@ -29,7 +29,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 public interface ISapphireLabelDef
 
-    extends ISapphirePartDef
+    extends IFormPartDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireLabelDef.class );

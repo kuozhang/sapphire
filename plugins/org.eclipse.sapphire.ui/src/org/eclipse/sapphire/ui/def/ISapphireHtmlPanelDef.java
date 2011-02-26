@@ -37,7 +37,7 @@ import org.eclipse.sapphire.ui.def.internal.SapphireHtmlPanelDefSourceBinding;
 
 public interface ISapphireHtmlPanelDef
 
-    extends ISapphirePartDef
+    extends IFormPartDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireHtmlPanelDef.class );

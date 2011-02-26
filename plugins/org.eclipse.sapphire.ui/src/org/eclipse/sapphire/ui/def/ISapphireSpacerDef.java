@@ -30,7 +30,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface ISapphireSpacerDef
 
-    extends ISapphirePartDef
+    extends IFormPartDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireSpacerDef.class );

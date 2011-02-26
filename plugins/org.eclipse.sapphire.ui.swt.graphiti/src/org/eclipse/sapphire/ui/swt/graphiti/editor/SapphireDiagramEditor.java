@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [335539] Create editor for sdef files
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.graphiti.editor;
@@ -83,14 +84,7 @@ public class SapphireDiagramEditor extends DiagramEditor
         
         final ISapphireUiDef def = SapphireUiDefFactory.load( bundleId, relPath );
         
-        for( IDiagramPageDef pg : def.getDiagramPageDefs() )
-        {
-            if( pageId.equals( pg.getId().getText() ) )
-            {
-                this.diagramPageDef = pg;
-                break;
-            }
-        }                
+        this.diagramPageDef = (IDiagramPageDef) def.getPartDef( pageId, true, IDiagramPageDef.class );
 		
 		this.diagramPart = new SapphireDiagramEditorPart();
 		this.diagramPart.init(null, rootModelElement, this.diagramPageDef, Collections.<String,String>emptyMap());

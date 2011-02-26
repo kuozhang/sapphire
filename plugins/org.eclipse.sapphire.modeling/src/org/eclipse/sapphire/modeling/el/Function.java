@@ -93,7 +93,6 @@ public abstract class Function
     }
     
     public abstract FunctionResult evaluate( FunctionContext context );
-
     
     private static final class Resources extends NLS
     {

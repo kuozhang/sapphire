@@ -18,9 +18,12 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.internal.SapphirePartDefMethods;
@@ -41,6 +44,16 @@ public interface ISapphirePartDef
     String HINT_WIDTH = "width";
     String HINT_HEIGHT = "height";
     String HINT_PREFER_FORM_STYLE = "prefer.form.style";
+    
+    // *** Id ***
+    
+    @Label( standard = "ID" )
+    @XmlBinding( path = "id" )
+    
+    ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
+    
+    Value<String> getId();
+    void setId( String value );
     
     // *** Documentation ***
     

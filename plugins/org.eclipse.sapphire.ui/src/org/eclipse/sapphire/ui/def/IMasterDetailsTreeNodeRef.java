@@ -11,13 +11,18 @@
 
 package org.eclipse.sapphire.ui.def;
 
+import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.xml.FoldingXmlValueBindingImpl;
+import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.internal.MasterDetailsTreeNodeRefMethods;
 
 /**
@@ -33,16 +38,26 @@ public interface IMasterDetailsTreeNodeRef
 {
     ModelElementType TYPE = new ModelElementType( IMasterDetailsTreeNodeRef.class );
     
-    // *** Id ***
+    // *** Part ***
     
-    @Label( standard = "ID" )
-    @XmlBinding( path = "" )
+    @Label( standard = "part" )
+    @CustomXmlValueBinding( impl = FoldingXmlValueBindingImpl.class, params = "part" )
     
-    ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
+    ValueProperty PROP_PART = new ValueProperty( TYPE, "Part" );
     
-    Value<String> getId();
-    void setId( String id );
+    Value<String> getPart();
+    void setPart( String value );
+
+    // *** Params ***
     
+    @Label( standard = "params" )
+    @Type( base = ISapphireParam.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "param", type = ISapphireParam.class ) )
+    
+    ListProperty PROP_PARAMS = new ListProperty( TYPE, "Params" );
+    
+    ModelElementList<ISapphireParam> getParams();
+
     // *** Method : resolve ***
     
     @DelegateImplementation( MasterDetailsTreeNodeRefMethods.class )

@@ -13,13 +13,16 @@ package org.eclipse.sapphire.ui.editor.views.masterdetails;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
@@ -46,6 +49,7 @@ import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeFactoryEntry;
 import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeFactoryRef;
 import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeListEntry;
 import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeRef;
+import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
 import org.eclipse.sapphire.ui.editor.views.masterdetails.internal.ListPropertyNodeFactory;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -230,7 +234,7 @@ public final class MasterDetailsContentNode
         for( ISapphireSectionDef secdef : this.definition.getSections() )
         {
             final SapphireSection section = new SapphireSection();
-            section.init( this, this.modelElement, secdef, Collections.<String,String>emptyMap() );
+            section.init( this, this.modelElement, secdef, this.params );
             section.addListener( this.childPartListener );
             
             this.sections.add( section );
@@ -242,6 +246,8 @@ public final class MasterDetailsContentNode
         
         for( IMasterDetailsTreeNodeListEntry entry : this.definition.getChildNodes() )
         {
+            final Map<String,String> params = new HashMap<String,String>( this.params );
+
             if( entry instanceof IMasterDetailsTreeNodeDef || entry instanceof IMasterDetailsTreeNodeRef )
             {
                 final IMasterDetailsTreeNodeDef def;
@@ -252,11 +258,29 @@ public final class MasterDetailsContentNode
                 }
                 else
                 {
-                    def = ( (IMasterDetailsTreeNodeRef) entry ).resolve();
+                    final IMasterDetailsTreeNodeRef ref = (IMasterDetailsTreeNodeRef) entry;
+                    def = ref.resolve();
+                    
+                    if( def == null )
+                    {
+                        final String msg = NLS.bind( Resources.couldNotResolveNode, ref.getPart() );
+                        throw new RuntimeException( msg );
+                    }
+
+                    for( ISapphireParam param : ref.getParams() )
+                    {
+                        final String paramName = param.getName().getText();
+                        final String paramValue = param.getValue().getText();
+                        
+                        if( paramName != null && paramValue != null )
+                        {
+                            params.put( paramName, paramValue );
+                        }
+                    }
                 }
                 
                 final MasterDetailsContentNode node = new MasterDetailsContentNode();
-                node.init( this, this.modelElement, def, this.params );
+                node.init( this, this.modelElement, def, params );
                 node.addListener( this.childPartListener );
                 
                 this.rawChildren.add( node );
@@ -271,10 +295,22 @@ public final class MasterDetailsContentNode
                 }
                 else
                 {
-                    def = ( (IMasterDetailsTreeNodeFactoryRef) entry ).resolve();
+                    final IMasterDetailsTreeNodeFactoryRef ref = (IMasterDetailsTreeNodeFactoryRef) entry;
+                    def = ref.resolve();
+                    
+                    for( ISapphireParam param : ref.getParams() )
+                    {
+                        final String paramName = param.getName().getText();
+                        final String paramValue = param.getValue().getText();
+                        
+                        if( paramName != null && paramValue != null )
+                        {
+                            params.put( paramName, paramValue );
+                        }
+                    }
                 }
                 
-                final ListProperty listProperty = (ListProperty) resolve( getLocalModelElement(), def.getListProperty().getContent() );
+                final ListProperty listProperty = (ListProperty) resolve( getLocalModelElement(), def.getListProperty().getContent(), params );
                 
                 SapphireCondition factoryVisibleWhenCondition = null;
                 
@@ -314,7 +350,7 @@ public final class MasterDetailsContentNode
                         }
                         
                         final MasterDetailsContentNode node = new MasterDetailsContentNode();
-                        node.init( MasterDetailsContentNode.this, listEntryModelElement, listEntryNodeDef, MasterDetailsContentNode.this.params );
+                        node.init( MasterDetailsContentNode.this, listEntryModelElement, listEntryNodeDef, params );
                         node.addListener( MasterDetailsContentNode.this.childPartListener );
                         node.transformLabelCase = false;
                         
@@ -724,6 +760,16 @@ public final class MasterDetailsContentNode
     public void render( final SapphireRenderingContext context )
     {
         throw new UnsupportedOperationException();
+    }
+    
+    private static final class Resources extends NLS
+    {
+        public static String couldNotResolveNode;
+        
+        static
+        {
+            initializeMessages( MasterDetailsContentNode.class.getName(), Resources.class );
+        }
     }
     
 }

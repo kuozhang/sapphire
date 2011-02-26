@@ -9,27 +9,23 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.def.internal;
+package org.eclipse.sapphire.modeling.xml;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlNode.Event;
 import org.eclipse.sapphire.modeling.xml.XmlNode.EventType;
-import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PropertyEditorPropertyBinding
+public final class FoldingXmlValueBindingImpl
 
     extends XmlValueBindingImpl
 
 {
-    private static final String EL_HINT = "hint"; //$NON-NLS-1$
-    private static final String EL_PROPERTY = "property"; //$NON-NLS-1$
-    
+    private String elementName;
     private XmlElement.Listener listener;
     
     @Override
@@ -41,6 +37,9 @@ public final class PropertyEditorPropertyBinding
         
         final XmlElement root = xml();
         
+        this.elementName = params[ 0 ];
+        final String finalElementName = this.elementName;
+        
         this.listener = new XmlElement.Listener()
         {
             @Override
@@ -50,7 +49,7 @@ public final class PropertyEditorPropertyBinding
                 
                 if( type == EventType.PRE_CHILD_ELEMENT_ADD )
                 {
-                    XmlElement propElement = root.getChildElement( EL_PROPERTY, false );
+                    XmlElement propElement = root.getChildElement( finalElementName, false );
                     
                     if( propElement == null )
                     {
@@ -59,7 +58,7 @@ public final class PropertyEditorPropertyBinding
                         if( propName.length() > 0 )
                         {
                             root.setText( null );
-                            propElement = root.getChildElement( EL_PROPERTY, true );
+                            propElement = root.getChildElement( finalElementName, true );
                             propElement.setText( propName );
                         }
                     }
@@ -70,7 +69,7 @@ public final class PropertyEditorPropertyBinding
                     
                     if( childElementsCount == 1 )
                     {
-                        final XmlElement propElement = root.getChildElement( EL_PROPERTY, false );
+                        final XmlElement propElement = root.getChildElement( finalElementName, false );
                         
                         if( propElement != null )
                         {
@@ -99,7 +98,7 @@ public final class PropertyEditorPropertyBinding
         
         if( el != null )
         {
-            final XmlElement propElement = el.getChildElement( EL_PROPERTY, false );
+            final XmlElement propElement = el.getChildElement( this.elementName, false );
             
             if( propElement != null )
             {
@@ -118,11 +117,20 @@ public final class PropertyEditorPropertyBinding
     public void write( final String value )
     {
         final XmlElement el = xml( true );
+        boolean foundChildContent = false;
         
-        if( el.getChildElement( EL_PROPERTY, false ) != null ||
-            el.getChildElement( EL_HINT, false ) != null )
+        for( final XmlElement child : el.getChildElements() )
         {
-            el.setChildNodeText( EL_PROPERTY, value, true );
+            if( ! child.getLocalName().equals( this.elementName ) )
+            {
+                foundChildContent = true;
+                break;
+            }
+        }
+        
+        if( foundChildContent )
+        {
+            el.setChildNodeText( this.elementName, value, true );
         }
         else
         {
@@ -134,7 +142,6 @@ public final class PropertyEditorPropertyBinding
     public void dispose()
     {
         super.dispose();
-        
         xml().removeListener( this.listener );
     }
 

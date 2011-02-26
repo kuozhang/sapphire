@@ -29,7 +29,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface ISapphireGroupDef
 
-    extends ISapphireCompositeDef
+    extends IFormPartDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireGroupDef.class );

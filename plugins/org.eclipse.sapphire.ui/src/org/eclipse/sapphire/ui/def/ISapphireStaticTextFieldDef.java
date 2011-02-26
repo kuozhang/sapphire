@@ -29,7 +29,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface ISapphireStaticTextFieldDef
 
-    extends ISapphirePartDef
+    extends IFormPartDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireStaticTextFieldDef.class );

@@ -9,22 +9,24 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.def.internal;
+package org.eclipse.sapphire.sdk.internal;
 
-import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeDef;
-import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeRef;
+import org.eclipse.sapphire.ui.SapphireCondition;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MasterDetailsTreeNodeRefMethods
+public final class NamedPartCondition
+
+    extends SapphireCondition
+    
 {
-    public static IMasterDetailsTreeNodeDef resolve( final IMasterDetailsTreeNodeRef ref )
+    @Override
+    protected boolean evaluate()
     {
-        final ISapphireUiDef rootdef = ref.nearest( ISapphireUiDef.class );
-        return (IMasterDetailsTreeNodeDef) rootdef.getPartDef( ref.getPart().getText(), true, IMasterDetailsTreeNodeDef.class );
+        return ( getPart().getModelElement().parent().parent() instanceof ISapphireUiDef );
     }
     
 }

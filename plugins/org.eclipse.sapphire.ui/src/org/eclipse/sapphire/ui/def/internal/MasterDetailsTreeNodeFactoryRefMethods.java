@@ -24,7 +24,7 @@ public final class MasterDetailsTreeNodeFactoryRefMethods
     public static IMasterDetailsTreeNodeFactoryDef resolve( final IMasterDetailsTreeNodeFactoryRef ref )
     {
         final ISapphireUiDef rootdef = ref.nearest( ISapphireUiDef.class );
-        return rootdef.getMasterDetailsTreeNodeFactoryDef( ref.getId().getText(), true );
+        return (IMasterDetailsTreeNodeFactoryDef) rootdef.getPartDef( ref.getPart().getText(), true, IMasterDetailsTreeNodeFactoryDef.class );
     }
     
 }

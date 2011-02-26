@@ -37,16 +37,6 @@ public interface IMasterDetailsTreeNodeFactoryDef
 {
     ModelElementType TYPE = new ModelElementType( IMasterDetailsTreeNodeFactoryDef.class );
     
-    // *** Id ***
-    
-    @Label( standard = "ID" )
-    @XmlBinding( path = "id" )
-    
-    ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
-    
-    Value<String> getId();
-    void setId( String id );
-    
     // *** ListProperty ***
     
     @Label( standard = "list property" )

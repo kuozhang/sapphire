@@ -154,14 +154,7 @@ public final class MasterDetailsPage
         
         final ISapphireUiDef def = SapphireUiDefFactory.load( bundleId, relPath );
         
-        for( IEditorPageDef pg : def.getEditorPageDefs() )
-        {
-            if( pageId.equals( pg.getId().getText() ) )
-            {
-                this.definition = pg;
-                break;
-            }
-        }
+        this.definition = (IEditorPageDef) def.getPartDef( pageId, true, IEditorPageDef.class );
         
         String partName = pageName;
         

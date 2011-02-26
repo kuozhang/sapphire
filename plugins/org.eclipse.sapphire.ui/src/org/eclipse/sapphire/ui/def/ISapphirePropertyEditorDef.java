@@ -18,25 +18,27 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.xml.FoldingXmlValueBindingImpl;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.ui.def.internal.PropertyEditorPropertyBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Label( standard = "property editor" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/property-editor.gif" )
 @GenerateImpl
 
 public interface ISapphirePropertyEditorDef
 
-    extends ISapphirePartDef
+    extends IFormPartDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphirePropertyEditorDef.class );
@@ -45,7 +47,7 @@ public interface ISapphirePropertyEditorDef
     
     @Label( standard = "property" )
     @NonNullValue
-    @CustomXmlValueBinding( impl = PropertyEditorPropertyBinding.class )
+    @CustomXmlValueBinding( impl = FoldingXmlValueBindingImpl.class, params = "property" )
     
     ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
     
@@ -77,7 +79,6 @@ public interface ISapphirePropertyEditorDef
             ISapphireWithDirectiveDef.class,
             ISapphireIfElseDirectiveDef.class,
             ISapphireCompositeDef.class,
-            ISapphireCompositeRef.class,
             ISapphireActionLinkDef.class,
             ISapphireCustomPartDef.class,
             ISapphireStaticTextFieldDef.class,
@@ -100,7 +101,6 @@ public interface ISapphirePropertyEditorDef
             @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),
             @XmlListBinding.Mapping( element = "if", type = ISapphireIfElseDirectiveDef.class ),
             @XmlListBinding.Mapping( element = "composite", type = ISapphireCompositeDef.class ),
-            @XmlListBinding.Mapping( element = "composite-ref", type = ISapphireCompositeRef.class ),
             @XmlListBinding.Mapping( element = "action-link", type = ISapphireActionLinkDef.class ),
             @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
             @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),

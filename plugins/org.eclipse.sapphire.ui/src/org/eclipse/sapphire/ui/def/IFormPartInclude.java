@@ -14,53 +14,55 @@ package org.eclipse.sapphire.ui.def;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.ui.def.internal.CompositeRefMethods;
+import org.eclipse.sapphire.ui.def.internal.FormPartIncludeReferenceService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
+@Label( standard = "include" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/include.gif" )
 @GenerateImpl
 
-public interface ISapphireCompositeRef
+public interface IFormPartInclude
 
-    extends ISapphirePartDef
+    extends IFormPartDef
     
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireCompositeRef.class );
+    ModelElementType TYPE = new ModelElementType( IFormPartInclude.class );
     
-    // *** Id ***
+    // *** Part ***
+
+    @Reference( target = IFormPartDef.class, service = FormPartIncludeReferenceService.class )
+    @Label( standard = "part" )
+    @PossibleValues( property = "/PartDefs/Id")
+    @NonNullValue
+    @XmlBinding( path = "part" )
     
-    @Label( standard = "ID" )
-    @XmlBinding( path = "id" )
+    ValueProperty PROP_PART = new ValueProperty( TYPE, "Part" );
     
-    ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
-    
-    Value<String> getId();
-    void setId( String id );
+    ReferenceValue<IFormPartDef> getPart();
+    void setPart( String part );
     
     // *** Params ***
     
     @Label( standard = "params" )
-    @Type( base = ICompositeParam.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "param", type = ICompositeParam.class ) )
+    @Type( base = ISapphireParam.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "param", type = ISapphireParam.class ) )
     
     ListProperty PROP_PARAMS = new ListProperty( TYPE, "Params" );
     
-    ModelElementList<ICompositeParam> getParams();
-    
-    // *** Method : resolve ***
-    
-    @DelegateImplementation( CompositeRefMethods.class )
-    
-    ISapphireCompositeDef resolve();
+    ModelElementList<ISapphireParam> getParams();
 
 }
