@@ -202,9 +202,16 @@ public class XmlResourceStore
                 transformer.setOutputProperty( OutputKeys.OMIT_XML_DECLARATION, "yes" );
                 
                 final DocumentType doctype = this.document.getDoctype();
-                if (doctype != null) {
-					transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
-					transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
+                if (doctype != null) 
+                {
+                	if (doctype.getPublicId() != null) 
+                	{
+                		transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
+                	}
+                	if (doctype.getSystemId() != null) 
+                	{
+                		transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
+                	}
                 }
                 
                 transformer.transform( source, result );
