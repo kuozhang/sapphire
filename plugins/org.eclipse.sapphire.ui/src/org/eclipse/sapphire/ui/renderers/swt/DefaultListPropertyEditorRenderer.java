@@ -1740,7 +1740,11 @@ public class DefaultListPropertyEditorRenderer
         @Override
         protected final Object run( final SapphireRenderingContext context )
         {
-            getList().moveUp( getSelectedElement() );
+            final IModelElement element = getSelectedElement();
+
+            getList().moveUp( element );
+            DefaultListPropertyEditorRenderer.this.tableViewer.reveal( element );
+            
             return null;
         }
     }
@@ -1769,7 +1773,11 @@ public class DefaultListPropertyEditorRenderer
         @Override
         protected final Object run( final SapphireRenderingContext context )
         {
-            getList().moveDown( getSelectedElement() );
+            final IModelElement element = getSelectedElement();
+
+            getList().moveDown( element );
+            DefaultListPropertyEditorRenderer.this.tableViewer.reveal( element );
+            
             return null;
         }
     }
