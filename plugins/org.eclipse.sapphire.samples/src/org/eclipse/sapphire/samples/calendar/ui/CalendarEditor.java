@@ -15,11 +15,13 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.samples.calendar.ICalendar;
 import org.eclipse.sapphire.samples.calendar.integrated.internal.CalendarResource;
 import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
+import org.eclipse.sapphire.ui.CorruptedResourceExceptionInterceptorImpl;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage;
 import org.eclipse.sapphire.ui.xml.XmlEditorResourceStore;
@@ -83,6 +85,16 @@ public final class CalendarEditor
         this.modelCalendarIntegrated = org.eclipse.sapphire.samples.calendar.integrated.ICalendar.TYPE.instantiate( new CalendarResource( this.modelCalendar, this.modelContacts ) );
         
         return this.modelCalendarIntegrated;
+    }
+    
+    @Override
+    protected void adaptModel( final IModelElement model )
+    {
+        final CorruptedResourceExceptionInterceptor interceptor 
+            = new CorruptedResourceExceptionInterceptorImpl( getEditorSite().getShell() );
+        
+        this.modelCalendar.resource().setCorruptedResourceExceptionInterceptor( interceptor );
+        this.modelContacts.resource().setCorruptedResourceExceptionInterceptor( interceptor );
     }
     
     @Override

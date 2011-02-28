@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -28,6 +29,7 @@ import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsContentNode;
 import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsContentTree;
 import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage;
+import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -115,17 +117,39 @@ public final class OutlineNodeAddActionHandlerFactory
             final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
             final IModelElement element = node.getLocalModelElement();
             final ModelElementList<?> list = element.read( this.listProperty );
-            final IModelElement newModelElement = list.addNewElement( this.type );
             
-            node.getContentTree().notifyOfNodeStructureChange( node );
+            IModelElement newModelElement = null;
             
-            for( MasterDetailsContentNode n : node.getChildNodes() )
+            try
             {
-                if( n.getModelElement() == newModelElement )
+                newModelElement = list.addNewElement( this.type );
+            }
+            catch( Exception e )
+            {
+                // Log this exception unless the cause is EditFailedException. These exception
+                // are the result of the user declining a particular action that is necessary
+                // before the edit can happen (such as making a file writable).
+                
+                final EditFailedException editFailedException = EditFailedException.findAsCause( e );
+                
+                if( editFailedException == null )
                 {
-                    n.select();
-                    getPart().getNearestPart( MasterDetailsPage.class ).setFocusOnDetails();
-                    break;
+                    SapphireUiFrameworkPlugin.log( e );
+                }
+            }
+
+            if( newModelElement != null )
+            {
+                node.getContentTree().notifyOfNodeStructureChange( node );
+                
+                for( MasterDetailsContentNode n : node.getChildNodes() )
+                {
+                    if( n.getModelElement() == newModelElement )
+                    {
+                        n.select();
+                        getPart().getNearestPart( MasterDetailsPage.class ).setFocusOnDetails();
+                        break;
+                    }
                 }
             }
             
