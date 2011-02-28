@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.modeling.xml.schema;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,7 +56,8 @@ public final class XmlDocumentSchema
     private final Map<String,XmlContentModel> contentModels;
     private final Map<String,XmlElementDefinition> topLevelElements;
     
-    public XmlDocumentSchema( final String schemaLocation, final String baseLocation )
+    public XmlDocumentSchema( final String schemaLocation, 
+                              final String baseLocation )
     {
         this.schemaLocation = schemaLocation;
         this.importedNamespaces = new HashMap<String,String>();
@@ -148,7 +150,8 @@ public final class XmlDocumentSchema
         return new QName( this.namespace, contentModelName );
     }
 
-    private void parseSchema( final String schemaLocation, final String baseLocation )
+    private void parseSchema( final String schemaLocation, 
+                              final String baseLocation )
     {
         final URIResolver idResolver = URIResolverPlugin.createResolver();
 
@@ -175,7 +178,7 @@ public final class XmlDocumentSchema
             return;
         }
         
-        final Element root = parse( resolvedSchemaLocation );
+        final Element root = parse( resolvedSchemaLocation, baseLocation );
         
         if( root != null )
         {
@@ -548,7 +551,8 @@ public final class XmlDocumentSchema
         }
     }
     
-    private static Element parse( final String schemaLocation )
+    private static Element parse( final String schemaLocation,
+                                  final String baseLocation )
     {
         final DocumentBuilder docbuilder;
         
@@ -582,7 +586,17 @@ public final class XmlDocumentSchema
 
         try
         {
-            final URL schemaLocationUrl = new URL( schemaLocation );
+            final URL schemaLocationUrl;
+            
+            if( ! schemaLocation.contains( "://" ) && baseLocation != null )
+            {
+                schemaLocationUrl = ( new File( baseLocation, schemaLocation ) ).toURI().toURL();
+            }
+            else
+            {
+                schemaLocationUrl = new URL( schemaLocation );
+            }
+            
             InputStream in = null;
             
             try

@@ -159,24 +159,21 @@ public final class XmlElement
             if( parent == null )
             {
                 String schemaLocation = getSchemaLocation();
-                
-                // Try to find baseLocation and systemId of the DTD 
-                
                 String baseLocation = null;
                 
+                final File file = getResourceStore().adapt( File.class );
+                
+                if( file != null )
+                {
+                    baseLocation = file.getAbsolutePath();
+                }
+                        
                 if( schemaLocation == null )
                 {
                     final DocumentType type = getDomNode().getOwnerDocument().getDoctype();
                     
                     if( type != null )
                     {
-                        final File file = getResourceStore().adapt( File.class );
-                        
-                        if( file != null )
-                        {
-                            baseLocation = file.getAbsolutePath();
-                        }
-                        
                         schemaLocation = type.getSystemId();
                     }
                 }
