@@ -186,7 +186,7 @@ public class XmlEditorResourceStore
                 }
                 catch( CoreException e )
                 {
-                    throw new ValidateEditException();
+                    throw new ValidateEditException( e );
                 }
             }
         }
