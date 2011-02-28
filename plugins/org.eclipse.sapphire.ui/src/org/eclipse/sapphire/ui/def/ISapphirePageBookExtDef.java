@@ -31,7 +31,7 @@ import org.eclipse.sapphire.ui.def.internal.PageBookPartDefControlPropertyBindin
 
 public interface ISapphirePageBookExtDef
 
-    extends IFormPartDef
+    extends IFormPartDef, ISapphirePageBookDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphirePageBookExtDef.class );

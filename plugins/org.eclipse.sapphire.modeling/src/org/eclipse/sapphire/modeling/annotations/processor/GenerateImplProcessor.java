@@ -17,9 +17,11 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.eclipse.sapphire.modeling.DerivedValueService;
@@ -1065,10 +1067,23 @@ public final class GenerateImplProcessor
     private static void visitAllMethods( final InterfaceDeclaration interfaceDeclaration,
                                          final Visitor<MethodDeclaration> visitor )
     {
+        visitAllMethods( interfaceDeclaration, visitor, new HashSet<InterfaceDeclaration>() );
+    }
+    
+    private static void visitAllMethods( final InterfaceDeclaration interfaceDeclaration,
+                                         final Visitor<MethodDeclaration> visitor,
+                                         final Set<InterfaceDeclaration> visited )
+    {
+        visited.add( interfaceDeclaration );
+        
         for( InterfaceType superInterface : interfaceDeclaration.getSuperinterfaces() )
         {
             final InterfaceDeclaration superInterfaceDeclaration = superInterface.getDeclaration();
-            visitAllMethods( superInterfaceDeclaration, visitor );
+            
+            if( ! visited.contains( superInterfaceDeclaration ) )
+            {
+                visitAllMethods( superInterfaceDeclaration, visitor, visited );
+            }
         }
         
         for( MethodDeclaration method : interfaceDeclaration.getMethods() )
@@ -1080,10 +1095,23 @@ public final class GenerateImplProcessor
     private static void visitAllFields( final InterfaceDeclaration interfaceDeclaration,
                                         final Visitor<FieldDeclaration> visitor )
     {
+        visitAllFields( interfaceDeclaration, visitor, new HashSet<InterfaceDeclaration>() );
+    }
+    
+    private static void visitAllFields( final InterfaceDeclaration interfaceDeclaration,
+                                        final Visitor<FieldDeclaration> visitor,
+                                        final Set<InterfaceDeclaration> visited )
+    {
+        visited.add( interfaceDeclaration );
+        
         for( InterfaceType superInterface : interfaceDeclaration.getSuperinterfaces() )
         {
             final InterfaceDeclaration superInterfaceDeclaration = superInterface.getDeclaration();
-            visitAllFields( superInterfaceDeclaration, visitor );
+            
+            if( ! visited.contains( superInterfaceDeclaration ) )
+            {
+                visitAllFields( superInterfaceDeclaration, visitor, visited );
+            }
         }
         
         for( FieldDeclaration field : interfaceDeclaration.getFields() )
