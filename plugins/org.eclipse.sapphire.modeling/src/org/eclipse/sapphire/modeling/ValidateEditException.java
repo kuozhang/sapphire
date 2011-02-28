@@ -22,4 +22,13 @@ public class ValidateEditException
 {
     private static final long serialVersionUID = 1L;
     
+    public ValidateEditException()
+    {
+    }
+    
+    public ValidateEditException( final Exception cause )
+    {
+        initCause( cause );
+    }
+    
 }
