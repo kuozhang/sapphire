@@ -218,41 +218,63 @@ public final class XmlDocumentSchema
             prefixToNamespaceMap.put( "", this.namespace );
         }
         
-        for( Element importElement : elements( root, "import" ) )
+        for( Element el : elements( root ) )
         {
-            final String importedNamespace = importElement.getAttribute( "namespace" );
-            final String importedSchemaLocation = importElement.getAttribute( "schemaLocation" );
+            final String elname = el.getLocalName();
             
-            if( ! this.importedNamespaces.containsKey( importedNamespace ) )
+            if( elname.equals( "import" ) )
             {
-                this.importedNamespaces.put( importedNamespace, importedSchemaLocation );
+                final String importedNamespace = el.getAttribute( "namespace" );
+                final String importedSchemaLocation = el.getAttribute( "schemaLocation" );
+                
+                if( ! this.importedNamespaces.containsKey( importedNamespace ) )
+                {
+                    this.importedNamespaces.put( importedNamespace, importedSchemaLocation );
+                }
+            }
+            else if( elname.equals( "import" ) || elname.equals( "redefine" ) )
+            {
+                String includedSchemaLocation = el.getAttribute( "schemaLocation" ).trim();
+                
+                if( ! includedSchemaLocation.startsWith( "http://" ) )
+                {
+                    final int lastSlash = this.schemaLocation.lastIndexOf( '/' );
+                    final String baseUrl;
+                    
+                    if( lastSlash == -1 )
+                    {
+                        baseUrl = this.schemaLocation;
+                    }
+                    else
+                    {
+                        baseUrl = this.schemaLocation.substring( 0, lastSlash );
+                    }
+                    
+                    includedSchemaLocation = baseUrl + "/" + includedSchemaLocation;
+                }
+                
+                parseSchema( includedSchemaLocation, baseLocation );
+                
+                if( elname.equals( "redefine" ) )
+                {
+                    for( Element child : elements( el ) )
+                    {
+                        if( child.getLocalName().equals( "complexType" ) )
+                        {
+                            final String name = child.getAttribute( "name" );
+                            XmlContentModel contentModel = parseContentModel( prefixToNamespaceMap, child );
+                            
+                            if( contentModel != null )
+                            {
+                                contentModel = optimize( inlineContentModelReference( contentModel, name ) );
+                                this.contentModels.put( name, contentModel );
+                            }
+                        }
+                    }
+                }
             }
         }
-
-        for( Element includeElement : elements( root, "include" ) )
-        {
-            String includedSchemaLocation = includeElement.getAttribute( "schemaLocation" ).trim();
             
-            if( ! includedSchemaLocation.startsWith( "http://" ) )
-            {
-                final int lastSlash = this.schemaLocation.lastIndexOf( '/' );
-                final String baseUrl;
-                
-                if( lastSlash == -1 )
-                {
-                    baseUrl = this.schemaLocation;
-                }
-                else
-                {
-                    baseUrl = this.schemaLocation.substring( 0, lastSlash );
-                }
-                
-                includedSchemaLocation = baseUrl + "/" + includedSchemaLocation;
-            }
-            
-            parseSchema( includedSchemaLocation, baseLocation );
-        }
-        
         for( Element el : elements( root ) )
         {
             final String elname = el.getLocalName();
@@ -264,7 +286,7 @@ public final class XmlDocumentSchema
                 
                 if( contentModel != null )
                 {
-                    this.contentModels.put( name, contentModel );
+                    this.contentModels.put( name, optimize( contentModel ) );
                 }
             }
             else if( elname.equals( "element" ) )
@@ -499,7 +521,7 @@ public final class XmlDocumentSchema
                 }
                 else
                 {
-                    this.contentModels.put( contentTypeName.getLocalPart(), contentModel );
+                    this.contentModels.put( contentTypeName.getLocalPart(), optimize( contentModel ) );
                 }
             }
             else
@@ -672,6 +694,126 @@ public final class XmlDocumentSchema
         }
     }
     
+    private XmlContentModel inlineContentModelReference( final XmlContentModel contentModel,
+                                                         final String contentModelName )
+    {
+        if( contentModel instanceof XmlContentModelReference )
+        {
+            final XmlContentModelReference ref = (XmlContentModelReference) contentModel;
+            final QName name = ref.getContentModelName();
+            
+            if( name.getNamespaceURI().equals( this.namespace ) && name.getLocalPart().equals( contentModelName ) )
+            {
+                return ref.getContentModel();
+            }
+        }
+        else if( contentModel instanceof XmlGroupContentModel )
+        {
+            final XmlGroupContentModel groupContentModel = (XmlGroupContentModel) contentModel;
+            final List<XmlContentModel> nestedContent = new ArrayList<XmlContentModel>( groupContentModel.getNestedContent() );
+            boolean changed = false;
+            
+            for( int i = 0, n = nestedContent.size(); i < n; i++ )
+            {
+                final XmlContentModel in = nestedContent.get( i );
+                final XmlContentModel out = inlineContentModelReference( in, contentModelName );
+                
+                if( in != out )
+                {
+                    nestedContent.set( i, out );
+                    changed = true;
+                }
+            }
+            
+            if( changed )
+            {
+                if( groupContentModel instanceof XmlSequenceGroup )
+                {
+                    return new XmlSequenceGroup( groupContentModel.getSchema(), groupContentModel.getMinOccur(), groupContentModel.getMaxOccur(), nestedContent );
+                }
+                else
+                {
+                    return new XmlChoiceGroup( groupContentModel.getSchema(), groupContentModel.getMinOccur(), groupContentModel.getMaxOccur(), nestedContent );
+                }
+            }
+        }
+
+        return contentModel;
+    }
+    
+    private XmlContentModel optimize( final XmlContentModel contentModel )
+    {
+        if( contentModel instanceof XmlSequenceGroup )
+        {
+            final XmlSequenceGroup sequenceContentModel = (XmlSequenceGroup) contentModel;
+            final List<XmlContentModel> nestedContent = new ArrayList<XmlContentModel>();
+            boolean optimized = false;
+            
+            for( XmlContentModel child : sequenceContentModel.getNestedContent() )
+            {
+                boolean handled = false;
+                
+                if( child instanceof XmlSequenceGroup )
+                {
+                    final XmlSequenceGroup cs = (XmlSequenceGroup) child;
+                    
+                    if( cs.getMinOccur() == 1 && cs.getMaxOccur() == 1 )
+                    {
+                        for( XmlContentModel nested : cs.getNestedContent() )
+                        {
+                            nestedContent.add( optimize( nested ) );
+                        }
+
+                        handled = true;
+                        optimized = true;
+                    }
+                }
+                
+                if( ! handled )
+                {
+                    final XmlContentModel optimizedChild = optimize( child );
+                    
+                    if( optimizedChild != child )
+                    {
+                        optimized = true;
+                    }
+                    
+                    nestedContent.add( optimizedChild );
+                }
+            }
+            
+            if( optimized )
+            {
+                return new XmlSequenceGroup( sequenceContentModel.getSchema(), sequenceContentModel.getMinOccur(), sequenceContentModel.getMaxOccur(), nestedContent );
+            }
+        }
+        else if( contentModel instanceof XmlChoiceGroup )
+        {
+            final XmlChoiceGroup choiceContentModel = (XmlChoiceGroup) contentModel;
+            final List<XmlContentModel> nestedContent = new ArrayList<XmlContentModel>();
+            boolean optimized = false;
+            
+            for( XmlContentModel child : choiceContentModel.getNestedContent() )
+            {
+                final XmlContentModel optimizedChild = optimize( child );
+                
+                if( optimizedChild != child )
+                {
+                    optimized = true;
+                }
+                
+                nestedContent.add( optimizedChild );
+            }
+            
+            if( optimized )
+            {
+                return new XmlChoiceGroup( choiceContentModel.getSchema(), choiceContentModel.getMinOccur(), choiceContentModel.getMaxOccur(), nestedContent );
+            }
+        }
+        
+        return contentModel;
+    }
+    
     private static Element element( final Element el,
                                     final String name )
     {
@@ -694,12 +836,6 @@ public final class XmlDocumentSchema
     private static Iterable<Element> elements( final Element el )
     {
         return new ElementsIterator( el.getChildNodes() );
-    }
-    
-    private static Iterable<Element> elements( final Element el,
-                                               final String name )
-    {
-        return new ElementsIterator( el.getChildNodes(), name );
     }
     
     public static final class ElementsIterator

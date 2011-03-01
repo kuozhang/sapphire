@@ -24,6 +24,7 @@ import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
+import org.eclipse.sapphire.tests.modeling.xml.xsd.t0001.TestXmlXsd0001;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -50,6 +51,7 @@ public final class XmlBindingTests
         suite.addTest( new XmlBindingTests( "testValueProperties3" ) );
         suite.addTest( new XmlBindingTests( "testDefaultBindingWrite" ) );
         suite.addTest( new XmlBindingTests( "testDefaultBindingRead" ) );
+        suite.addTest( TestXmlXsd0001.suite() );
         
         return suite;
     }

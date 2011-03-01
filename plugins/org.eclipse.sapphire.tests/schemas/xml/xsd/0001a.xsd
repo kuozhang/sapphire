@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema
+    xmlns="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="http://www.eclipse.org/sapphire/tests/xml/xsd/0001"
+    elementFormDefault="qualified">
+    
+    <redefine schemaLocation="http://www.eclipse.org/sapphire/tests/xml/xsd/0001/b">
+        <complexType name="RedefineTestType">
+            <complexContent>
+                <extension base="RedefineTestType">
+                    <sequence>
+                        <element name="ddd" type="string"/>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </redefine>
+    
+    <element name="root" type="RedefineTestType"/>
+    
+</schema>
