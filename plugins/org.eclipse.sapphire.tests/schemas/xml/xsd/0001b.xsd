@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema
+    xmlns="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="http://www.eclipse.org/sapphire/tests/xml/xsd/0001"
+    elementFormDefault="qualified">
+
+    <complexType name="RedefineTestType">
+    	<sequence>
+    		<element name="aaa" type="string"/>
+    		<element name="bbb" type="string"/>
+    		<element name="ccc" type="string"/>
+    	</sequence>
+    </complexType>
+    
+</schema>

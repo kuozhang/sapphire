@@ -23,6 +23,21 @@
         systemId="http://www.eclipse.org/sapphire/tests/xml-binding/1.0"
         uri="schemas/XmlBindingTest.xsd"/>
     </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/xsd/0001"
+        uri="schemas/xml/xsd/0001a.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/xsd/0001/a"
+        uri="schemas/xml/xsd/0001a.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/xsd/0001/b"
+        uri="schemas/xml/xsd/0001b.xsd"/>
+    </catalogContribution>
   </extension>
 
 </plugin>
