@@ -26,10 +26,11 @@ public final class XmlDocumentSchemasCache
 
     public static XmlDocumentSchema getSchema( final String schemaLocation )
     {
-        return getSchema(schemaLocation, null);
+        return getSchema( schemaLocation, null );
     }
 
-    public static XmlDocumentSchema getSchema( final String schemaLocation, final String baseLocation )
+    public static XmlDocumentSchema getSchema( final String schemaLocation, 
+                                               final String baseLocation )
     {
         XmlDocumentSchema schema = null;
         
@@ -48,12 +49,15 @@ public final class XmlDocumentSchemasCache
             }
         }
         
-        schema = new XmlDocumentSchema( schemaLocation, baseLocation );
-        
-        synchronized( XmlDocumentSchemasCache.class )
+        if( schema == null )
         {
-            final SoftReference<XmlDocumentSchema> ref = new SoftReference<XmlDocumentSchema>( schema );
-            cache.put( schemaLocation, ref );
+            schema = new XmlDocumentSchema( schemaLocation, baseLocation );
+            
+            synchronized( XmlDocumentSchemasCache.class )
+            {
+                final SoftReference<XmlDocumentSchema> ref = new SoftReference<XmlDocumentSchema>( schema );
+                cache.put( schemaLocation, ref );
+            }
         }
         
         return schema;

@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -608,15 +609,18 @@ public final class XmlDocumentSchema
 
         try
         {
-            final URL schemaLocationUrl;
+            URL schemaLocationUrl = null;
             
-            if( ! schemaLocation.contains( "://" ) && baseLocation != null )
-            {
-                schemaLocationUrl = ( new File( baseLocation, schemaLocation ) ).toURI().toURL();
-            }
-            else
+            try
             {
                 schemaLocationUrl = new URL( schemaLocation );
+            }
+            catch( MalformedURLException e )
+            {
+                if( baseLocation != null )
+                {
+                    schemaLocationUrl = ( new File( new File( baseLocation ).getParentFile(), schemaLocation ) ).toURI().toURL();
+                }
             }
             
             InputStream in = null;
