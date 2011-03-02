@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Ling Hao - Bug 338605 - Regression - "include" element missing in schema parsing
+ *    Ling Hao - [338605] The include directive not handled in XML Schema parsing (regression)
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml.schema;
