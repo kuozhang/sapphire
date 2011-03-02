@@ -745,7 +745,9 @@ Fragment-Host: @{Bundle}
   -->
 
   <target name="hudson-build" depends="clean,build,build-alt-configurations,run-tests">
-
+    
+    <echo file="${build.dir}/version.txt">${sapphire.version}</echo>
+    
   </target>
 
 
