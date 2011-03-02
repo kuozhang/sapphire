@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [338605] The include directive not handled in XML Schema parsing (regression)
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml.schema;
@@ -233,7 +234,7 @@ public final class XmlDocumentSchema
                     this.importedNamespaces.put( importedNamespace, importedSchemaLocation );
                 }
             }
-            else if( elname.equals( "import" ) || elname.equals( "redefine" ) )
+            else if( elname.equals( "include" ) || elname.equals( "redefine" ) )
             {
                 String includedSchemaLocation = el.getAttribute( "schemaLocation" ).trim();
                 
@@ -453,7 +454,8 @@ public final class XmlDocumentSchema
         else if( elname.equals( "any" ) || 
                  elname.equals( "annotation" ) ||
                  elname.equals( "simpleContent" ) ||
-                 elname.equals( "attribute" ) )
+                 elname.equals( "attribute" ) ||
+                 elname.equals( "anyAttribute" ) )
         {
             return null;
         }
