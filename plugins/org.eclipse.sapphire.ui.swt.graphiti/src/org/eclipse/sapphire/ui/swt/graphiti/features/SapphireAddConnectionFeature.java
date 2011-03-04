@@ -29,9 +29,11 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.ColorConstant;
 import org.eclipse.graphiti.util.IColorConstant;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.Color;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramPageDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 
 /**
@@ -64,9 +66,10 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 		IAddConnectionContext addConContext = (IAddConnectionContext) context;
 		DiagramConnectionPart connectionPart = (DiagramConnectionPart) context.getNewObject();
 		
-		ISapphirePartDef def = connectionPart.getDefinition();
-		IColorConstant linkColor = getLinkColor(def);
-		LineStyle linkStyle = getLinkStyle(def);
+		IDiagramConnectionBindingDef connBinding = (IDiagramConnectionBindingDef)connectionPart.getDefinition();
+		IDiagramConnectionDef connDef = getDiagramConnectionDef(connBinding);
+		IColorConstant linkColor = getLinkColor(connDef);
+		LineStyle linkStyle = getLinkStyle(connDef);
 
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		// CONNECTION WITH POLYLINE
@@ -78,7 +81,7 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 		Polyline polyline = gaService.createPolyline(connection);
 		
 		polyline.setForeground(manageColor(linkColor));
-		polyline.setLineWidth(def.getHint("width", 1));
+		polyline.setLineWidth(connDef != null ? connDef.getHint("width", 1) : 1);
 		polyline.setLineStyle(linkStyle);
        
 		// create link and wire it
@@ -121,35 +124,53 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 		return polygon;
 	}
 
-	private IColorConstant getLinkColor(ISapphirePartDef def)
+	private IColorConstant getLinkColor(IDiagramConnectionDef def)
 	{
 		IColorConstant linkColor = DEFAULT_LINK_COLOR;
-		Color color = ((IDiagramConnectionDef)def).getLineColor().getContent();
-		if (color != null)
+		if (def != null)
 		{
-			linkColor = new ColorConstant(color.getRed(), color.getGreen(), color.getBlue());
+			Color color = def.getLineColor().getContent();
+			if (color != null)
+			{
+				linkColor = new ColorConstant(color.getRed(), color.getGreen(), color.getBlue());
+			}
 		}
 		return linkColor;		
 	}
 	
-	private LineStyle getLinkStyle(ISapphirePartDef def)
+	private LineStyle getLinkStyle(IDiagramConnectionDef def)
 	{	
 		LineStyle linkStyle = LineStyle.SOLID;
-		org.eclipse.sapphire.ui.LineStyle style = 
-					((IDiagramConnectionDef)def).getLineStyle().getContent();
-		if (style == org.eclipse.sapphire.ui.LineStyle.DASH )
+		if (def != null)
 		{
-			linkStyle = LineStyle.DASH;
-		}
-		else if (style == org.eclipse.sapphire.ui.LineStyle.DOT)
-		{
-			linkStyle = LineStyle.DOT;
-		}
-		else if (style == org.eclipse.sapphire.ui.LineStyle.DASH_DOT)
-		{
-			linkStyle = LineStyle.DASHDOT;
-		}
-		
+			org.eclipse.sapphire.ui.LineStyle style = def.getLineStyle().getContent();
+			if (style == org.eclipse.sapphire.ui.LineStyle.DASH )
+			{
+				linkStyle = LineStyle.DASH;
+			}
+			else if (style == org.eclipse.sapphire.ui.LineStyle.DOT)
+			{
+				linkStyle = LineStyle.DOT;
+			}
+			else if (style == org.eclipse.sapphire.ui.LineStyle.DASH_DOT)
+			{
+				linkStyle = LineStyle.DASHDOT;
+			}
+		}			
 		return linkStyle;
+	}
+	
+	private IDiagramConnectionDef getDiagramConnectionDef(IDiagramConnectionBindingDef connBindingDef)
+	{
+		IDiagramPageDef pageDef = connBindingDef.nearest(IDiagramPageDef.class);
+		ModelElementList<IDiagramConnectionDef> connDefs = pageDef.getDiagramConnectionDefs();
+		for (IDiagramConnectionDef connDef : connDefs)
+		{
+			if (connDef.getId().getContent().equalsIgnoreCase(connBindingDef.getId().getContent()))
+			{
+				return connDef;
+			}
+		}
+		return null;
 	}
 }

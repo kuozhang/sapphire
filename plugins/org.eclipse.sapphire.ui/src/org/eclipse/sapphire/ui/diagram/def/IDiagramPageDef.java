@@ -97,4 +97,12 @@ public interface IDiagramPageDef
     
     ModelElementList<IDiagramConnectionDef> getDiagramConnectionDefs();
 	
+	// *** DiagramConnectionBindingDefs ***
+    
+    @Type( base = IDiagramConnectionBindingDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "connection-binding", type = IDiagramConnectionBindingDef.class ) )
+                             
+    ListProperty PROP_DIAGRAM_CONNECTION_BINDING_DEFS = new ListProperty( TYPE, "DiagramConnectionBindingDefs" );
+    
+    ModelElementList<IDiagramConnectionBindingDef> getDiagramConnectionBindingDefs();
 }

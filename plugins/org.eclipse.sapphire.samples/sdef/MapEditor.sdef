@@ -23,6 +23,31 @@
     <id>diagram</id>
     <page-name>Diagram</page-name>
     <page-header-text>Diagram</page-header-text>
+    <connection>
+      <id>railway_routes</id>
+      <tool-palette-label>Railway Route</tool-palette-label>
+      <tool-palette-desc>Railway Route</tool-palette-desc>
+      <line-style>dash-dot</line-style>
+      <line-color>#808080</line-color>
+      <hint><name>width</name><value>2</value></hint>
+      <endpoint1>
+        <type>NONE</type>
+      </endpoint1>      
+      <endpoint2>
+        <type>ARROW</type>
+      </endpoint2>      
+    </connection>
+    <connection>
+      <id>highway_routes</id>
+      <tool-palette-label>Highway Route</tool-palette-label>
+      <tool-palette-desc>Highway Route</tool-palette-desc>
+      <endpoint1>
+        <type>NONE</type>
+      </endpoint1>      
+      <endpoint2>
+        <type>ARROW</type>
+      </endpoint2>    
+    </connection>
     <node>
       <id>destinations</id>
       <tool-palette-label>Destination</tool-palette-label>
@@ -32,29 +57,21 @@
         <content>${Name == null ? "&lt;Destination&gt;" : Name}</content>
       </label>
       <instance-id>${Name}</instance-id>
-      <connection>
+      <connection-binding>
         <id>railway_routes</id>
-        <tool-palette-label>Railway Route</tool-palette-label>
-        <tool-palette-desc>Railway Route</tool-palette-desc>
-        <line-style>dash-dot</line-style>
-        <line-color>#808080</line-color>
-        <hint><name>width</name><value>2</value></hint>
         <property>RailwayRoutes</property>
         <label>
           <content>${Distance == null ? "&lt;Distance&gt;" : Distance}</content>
         </label>
-        <endpoint>
+        <endpoint2>
           <property>ToDestination</property>
           <value>${Name}</value>
-          <type>ARROW</type>
-        </endpoint>
+        </endpoint2>
         <instance-id>${ToDestination}</instance-id>        
-      </connection>
+      </connection-binding>
     </node>
-    <connection>
+    <connection-binding>
       <id>highway_routes</id>
-      <tool-palette-label>Highway Route</tool-palette-label>
-      <tool-palette-desc>Highway Route</tool-palette-desc>
       <property>Routes</property>
       <label>
         <content>${Distance == null ? "&lt;Distance&gt;" : Distance}</content>
@@ -62,15 +79,13 @@
       <endpoint1>
         <property>FromDestination</property>
         <value>${Name}</value>
-        <type>NONE</type>
       </endpoint1>
       <endpoint2>
         <property>ToDestination</property>
         <value>${Name}</value>
-        <type>ARROW</type>
       </endpoint2>
       <instance-id>${FromDestination}-${ToDestination}</instance-id>
-    </connection>
+    </connection-binding>
   </diagram-page>
   
   <editor-page>
@@ -118,4 +133,3 @@
     </root-node>
   </editor-page>
 </definition>
-    

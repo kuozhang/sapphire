@@ -137,12 +137,12 @@ public interface IDiagramNodeDef
         
     // *** EmbeddedConnections ***
     
-    @Type( base = IDiagramEmbeddedConnectionDef.class )
-    @XmlBinding( path = "connection" )
+    @Type( base = IDiagramConnectionBindingDef.class )
+    @XmlBinding( path = "connection-binding" )
 
     ElementProperty PROP_EMBEDDED_CONNECTIONS = new ElementProperty( TYPE, "EmbeddedConnections" );
     
-    ModelElementHandle<IDiagramEmbeddedConnectionDef> getEmbeddedConnections();
+    ModelElementHandle<IDiagramConnectionBindingDef> getEmbeddedConnections();
     
     // *** DefaultAction ***
     

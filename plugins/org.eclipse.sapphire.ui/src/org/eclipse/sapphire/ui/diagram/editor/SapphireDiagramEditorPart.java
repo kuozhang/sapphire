@@ -21,6 +21,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramPageDef;
@@ -33,6 +34,7 @@ public class SapphireDiagramEditorPart extends SapphirePart
 {
     private IModelElement modelElement;
     private IDiagramPageDef diagramPageDef = null;
+    private List<IDiagramConnectionDef> connectionDefs;
     private List<DiagramNodeTemplate> nodeTemplates;
     private List<DiagramConnectionTemplate> connectionTemplates;
     private NodeTemplateListener nodeTemplateListener;
@@ -71,10 +73,12 @@ public class SapphireDiagramEditorPart extends SapphirePart
         		nodeTemplate.getEmbeddedConnectionTemplate().addTemplateListener(this.connTemplateListener);
         	}
         }
-                
+        
+        this.connectionDefs = this.diagramPageDef.getDiagramConnectionDefs();
+        
         this.connectionTemplates = new ArrayList<DiagramConnectionTemplate>();
-        ModelElementList<IDiagramConnectionDef> connectionDefs = this.diagramPageDef.getDiagramConnectionDefs();
-        for (IDiagramConnectionDef connectionDef : connectionDefs)
+        ModelElementList<IDiagramConnectionBindingDef> connectionDefs = this.diagramPageDef.getDiagramConnectionBindingDefs();
+        for (IDiagramConnectionBindingDef connectionDef : connectionDefs)
         {
         	DiagramConnectionTemplate connectionTemplate = new DiagramConnectionTemplate(this, connectionDef, this.modelElement);
         	this.connectionTemplates.add(connectionTemplate);
@@ -86,6 +90,31 @@ public class SapphireDiagramEditorPart extends SapphirePart
 	public List<DiagramNodeTemplate> getNodeTemplates()
 	{
 		return this.nodeTemplates;
+	}
+	
+	public List<IDiagramConnectionDef> getDiagramConnectionDefs()
+	{
+		return this.connectionDefs;
+	}
+	
+	public IDiagramConnectionDef getDiagramConnectionDef(String connId)
+	{
+		if (connId == null)
+		{
+			throw new IllegalArgumentException();
+		}
+		
+		IDiagramConnectionDef connDef = null;
+		for (IDiagramConnectionDef def : this.connectionDefs)
+		{
+			String id = def.getId().getContent();
+			if (id != null && id.equalsIgnoreCase(connId))
+			{
+				connDef = def;
+				break;
+			}
+		}
+		return connDef;
 	}
 	
 	public List<DiagramConnectionTemplate> getConnectionTemplates()

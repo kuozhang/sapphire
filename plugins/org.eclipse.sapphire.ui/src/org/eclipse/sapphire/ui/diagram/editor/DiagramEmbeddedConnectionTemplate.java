@@ -34,8 +34,8 @@ import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramEmbeddedConnectionDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -44,14 +44,13 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramEmbeddedConnectionDef;
 public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
 {
 	private DiagramNodeTemplate nodeTemplate;
-	private IDiagramEmbeddedConnectionDef definition;
 	private Map<IModelElement, List<DiagramConnectionPart>> diagramConnectionMap;
 	private ModelElementListener modelElementListener;
 	private ModelElementList<IModelElement> srcNodeList;
 		
     public DiagramEmbeddedConnectionTemplate(final SapphireDiagramEditorPart diagramEditor,
     										final DiagramNodeTemplate nodeTemplate, 
-    										IDiagramEmbeddedConnectionDef definition, 
+    										IDiagramConnectionBindingDef definition, 
     										IModelElement modelElement)
     {
     	this.diagramEditor = diagramEditor;
@@ -59,9 +58,6 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     	this.modelElement = modelElement;
     	this.definition = definition;
     	
-        this.toolPaletteLabel = this.definition.getToolPaletteLabel().getContent();
-        this.toolPaletteDesc = this.definition.getToolPaletteDesc().getContent();
-        
         this.diagramConnectionMap = new HashMap<IModelElement, List<DiagramConnectionPart>>();
         
         ListProperty nodeProperty = (ListProperty)this.nodeTemplate.getModelProperty();
@@ -139,7 +135,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     	ModelProperty connProp = resolve(srcNodeModel, this.propertyName);    	
         ModelElementType connType = connProp.getType();
         ModelProperty endpointProp = 
-        	connType.getProperty(this.definition.getEndpoint().element().getProperty().getContent());
+        	connType.getProperty(this.definition.getEndpoint2().element().getProperty().getContent());
         if (endpointProp.getType() == null && endpointProp.hasAnnotation(Reference.class))
         {
         	return endpointProp.getAnnotation(Reference.class).target().isAssignableFrom(targetType.getModelElementClass());
@@ -192,7 +188,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     		ModelElementList<?> list = srcNodeModel.read(listProperty);
     		newEndpoint = list.addNewElement();    		
     	}
-    	IDiagramConnectionEndpointDef endpointDef = this.definition.getEndpoint().element();
+    	IDiagramConnectionEndpointBindingDef endpointDef = this.definition.getEndpoint2().element();
     	String endpointProperty = endpointDef.getProperty().getContent();
     	Value<Function> endpointFunc = endpointDef.getValue();
     	FunctionResult endpointFuncResult = getNodeReferenceFunction(targetNode, endpointFunc, 

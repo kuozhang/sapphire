@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui.swt.graphiti.features;
 
+import java.util.List;
+
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateConnectionContext;
 import org.eclipse.graphiti.features.context.impl.AddConnectionContext;
@@ -18,11 +20,12 @@ import org.eclipse.graphiti.features.impl.AbstractCreateConnectionFeature;
 import org.eclipse.graphiti.mm.pictograms.Anchor;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -30,12 +33,14 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 
 public class SapphireCreateConnectionFeature extends AbstractCreateConnectionFeature 
 {
-	private DiagramConnectionTemplate connectionTemplate;
+	private SapphireDiagramEditorPart diagramPart;
+	private IDiagramConnectionDef connDef;
 	
-	public SapphireCreateConnectionFeature(IFeatureProvider fp, DiagramConnectionTemplate connectionTemplate)
+	public SapphireCreateConnectionFeature(IFeatureProvider fp, SapphireDiagramEditorPart diagramPart, IDiagramConnectionDef connDef)
 	{
-		super(fp, connectionTemplate.getToolPaletteLabel(), connectionTemplate.getToolPaletteDesc());
-		this.connectionTemplate = connectionTemplate;		
+		super(fp, connDef.getToolPaletteLabel().getContent(), connDef.getToolPaletteDesc().getContent());
+		this.diagramPart = diagramPart;
+		this.connDef = connDef;		
 	}
 	
 	public boolean canCreate(ICreateConnectionContext context) 
@@ -47,8 +52,12 @@ public class SapphireCreateConnectionFeature extends AbstractCreateConnectionFea
 		if (source instanceof DiagramNodePart && 
 				target instanceof DiagramNodePart && source != target) 
 		{
-			return this.connectionTemplate.canCreateNewConnection((DiagramNodePart)source, 
-					(DiagramNodePart)target);
+			DiagramConnectionTemplate connectionTemplate = getConnectionTemplate((DiagramNodePart)source);
+			if (connectionTemplate != null)
+			{
+				return connectionTemplate.canCreateNewConnection((DiagramNodePart)source, 
+						(DiagramNodePart)target);
+			}
 		}
 		return false;
 	}
@@ -65,25 +74,26 @@ public class SapphireCreateConnectionFeature extends AbstractCreateConnectionFea
 		{
 			DiagramNodePart sourceNode = (DiagramNodePart)source;
 			DiagramNodePart targetNode = (DiagramNodePart)target;
+			DiagramConnectionTemplate connectionTemplate = getConnectionTemplate(sourceNode);
 			// create new business object
-			if (this.connectionTemplate instanceof DiagramEmbeddedConnectionTemplate)
+			if (connectionTemplate instanceof DiagramEmbeddedConnectionTemplate)
 			{
-				((DiagramEmbeddedConnectionTemplate)this.connectionTemplate).removeModelListener(sourceNode.getLocalModelElement());
+				((DiagramEmbeddedConnectionTemplate)connectionTemplate).removeModelListener(sourceNode.getLocalModelElement());
 			}
 			else
 			{
-				this.connectionTemplate.removeModelListener();
+				connectionTemplate.removeModelListener();
 			}
 			DiagramConnectionPart connectionPart = 
-				this.connectionTemplate.createNewDiagramConnection(sourceNode, targetNode);
+				connectionTemplate.createNewDiagramConnection(sourceNode, targetNode);
 
-			if (this.connectionTemplate instanceof DiagramEmbeddedConnectionTemplate)
+			if (connectionTemplate instanceof DiagramEmbeddedConnectionTemplate)
 			{
-				((DiagramEmbeddedConnectionTemplate)this.connectionTemplate).addModelListener(sourceNode.getLocalModelElement());
+				((DiagramEmbeddedConnectionTemplate)connectionTemplate).addModelListener(sourceNode.getLocalModelElement());
 			}
 			else
 			{
-				this.connectionTemplate.addModelListener();
+				connectionTemplate.addModelListener();
 			}
 			
 			// add connection for business object
@@ -124,4 +134,24 @@ public class SapphireCreateConnectionFeature extends AbstractCreateConnectionFea
 		return null;
 	}
 	
+	private DiagramConnectionTemplate getConnectionTemplate(DiagramNodePart srcNode)
+	{
+		DiagramEmbeddedConnectionTemplate embeddedConn = srcNode.getDiagramNodeTemplate().getEmbeddedConnectionTemplate();
+		if (embeddedConn != null && 
+				embeddedConn.getConnectionId().equalsIgnoreCase(this.connDef.getId().getContent()))
+		{
+			return embeddedConn;
+		}
+		
+		// check top level connections
+		List<DiagramConnectionTemplate> connTemplates = this.diagramPart.getConnectionTemplates();
+		for (DiagramConnectionTemplate connTemplate : connTemplates)
+		{
+			if (connTemplate.getConnectionId().equalsIgnoreCase(this.connDef.getId().getContent()))
+			{
+				return connTemplate;
+			}
+		}
+		return null;
+	}
 }

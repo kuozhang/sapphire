@@ -20,7 +20,6 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.Color;
@@ -50,16 +49,6 @@ public interface IDiagramConnectionDef
     Value<String> getId();
     void setId( String id );
     
-    // *** Property ***
-    
-    @Label( standard = "property" )
-    @XmlBinding( path = "property" )
-    
-    ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
-    
-    Value<String> getProperty();
-    void setProperty( String property );
-    
     // *** ToolPaletteLabel ***
     
     @Label( standard = "tool palette label" )
@@ -80,15 +69,6 @@ public interface IDiagramConnectionDef
     Value<String> getToolPaletteDesc();
     void setToolPaletteDesc( String paletteDesc );    
         
-    // *** Label ***
-    
-    @Type( base = IDiagramLabelDef.class )
-    @XmlBinding( path = "label" )
-    
-    ElementProperty PROP_LABEL = new ElementProperty( TYPE, "Label" );
-    
-    ModelElementHandle<IDiagramLabelDef> getLabel();
-
     // *** Endpoint1 ***
     
     @Type( base = IDiagramConnectionEndpointDef.class )
@@ -106,20 +86,7 @@ public interface IDiagramConnectionDef
     ElementProperty PROP_ENDPOINT_2 = new ElementProperty( TYPE, "Endpoint2" );
     
     ModelElementHandle<IDiagramConnectionEndpointDef> getEndpoint2();
-    
-    // *** InstanceId ***
-    
-    @Type( base = Function.class )
-    @Label( standard = "instance id" )
-    @Localizable
-    @XmlBinding( path = "instance-id" )
-    
-    ValueProperty PROP_INSTANCE_ID = new ValueProperty( TYPE, "InstanceId" );
-    
-    Value<Function> getInstanceId();
-    void setInstanceId( String value );
-    void setInstanceId( Function value );
-    
+        
     // *** LineStyle ***
     
     @Type( base = LineStyle.class )

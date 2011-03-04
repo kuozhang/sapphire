@@ -25,8 +25,8 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -35,10 +35,10 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointDef;
 public class DiagramConnectionPart extends SapphirePart 
 {
 	protected DiagramConnectionTemplate connectionTemplate;
-	private IDiagramConnectionDef localDefinition;
+	private IDiagramConnectionBindingDef localDefinition;
 	protected IModelElement modelElement;
-	private IDiagramConnectionEndpointDef endpoint1Def;
-	private IDiagramConnectionEndpointDef endpoint2Def;
+	private IDiagramConnectionEndpointBindingDef endpoint1Def;
+	private IDiagramConnectionEndpointBindingDef endpoint2Def;
 	private IModelElement endpoint1Model;
 	private IModelElement endpoint2Model;
 	protected FunctionResult labelFunctionResult;
@@ -60,7 +60,7 @@ public class DiagramConnectionPart extends SapphirePart
     {
         super.init();
         
-        this.localDefinition = (IDiagramConnectionDef)super.definition;
+        this.localDefinition = (IDiagramConnectionBindingDef)super.definition;
         this.modelElement = getModelElement();
         this.labelFunctionResult = initExpression
         ( 
@@ -256,7 +256,7 @@ public class DiagramConnectionPart extends SapphirePart
 		}		
 	}
 
-	protected IModelElement resolveEndpoint(IDiagramConnectionEndpointDef endpointDef)
+	protected IModelElement resolveEndpoint(IDiagramConnectionEndpointBindingDef endpointDef)
 	{
 		String propertyName = endpointDef.getProperty().getContent();
 		ModelProperty modelProperty = resolve(this.modelElement, propertyName);

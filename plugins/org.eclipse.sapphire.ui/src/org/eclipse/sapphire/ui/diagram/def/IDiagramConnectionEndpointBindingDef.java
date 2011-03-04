@@ -15,7 +15,10 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
@@ -25,23 +28,35 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 @GenerateImpl
 
-public interface IDiagramConnectionEndpointDef 
+public interface IDiagramConnectionEndpointBindingDef 
 
 	extends ISapphirePartDef 
 	
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramConnectionEndpointDef.class );
-	
-	// *** Type ***
-	
-	@Type( base = ConnectionEndpointType.class )
-	@XmlBinding( path = "type" )
-	
-	ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
-	
-	Value<ConnectionEndpointType> getType();
-	void setType( String value );
-	void setType( ConnectionEndpointType value );
+	ModelElementType TYPE = new ModelElementType( IDiagramConnectionEndpointBindingDef.class );
+
+    // *** Property ***
     
+    @Label( standard = "property" )
+    @XmlBinding( path = "property" )
+    
+    ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
+    
+    Value<String> getProperty();
+    void setProperty( String property );
+    
+    // *** Value ***
+
+    @Type( base = Function.class )
+    @Label( standard = "value" )
+    @Localizable
+    @XmlBinding( path = "value" )
+    
+    ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
+    
+    Value<Function> getValue();
+    void setValue( String value );
+    void setValue( Function value );
+        
 	
 }

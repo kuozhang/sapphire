@@ -16,8 +16,8 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramEmbeddedConnectionDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -25,11 +25,11 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramEmbeddedConnectionDef;
 
 public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart 
 {
-	private IDiagramEmbeddedConnectionDef localDefinition;
+	private IDiagramConnectionBindingDef localDefinition;
 	private IModelElement srcNodeModel;
 	private IModelElement endpointModel;
 	private FunctionResult endpointFunctionResult;
-	private IDiagramConnectionEndpointDef endpointDef;
+	private IDiagramConnectionEndpointBindingDef endpointDef;
 	
 	public DiagramEmbeddedConnectionPart(DiagramEmbeddedConnectionTemplate connTemplate,
 			IModelElement srcNodeModel)
@@ -41,7 +41,7 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
     @Override
     protected void init()
     {        
-        this.localDefinition = (IDiagramEmbeddedConnectionDef)super.definition;
+        this.localDefinition = (IDiagramConnectionBindingDef)super.definition;
         this.modelElement = super.getModelElement();
         this.labelFunctionResult = initExpression
         ( 
@@ -69,7 +69,7 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
             }
         );        
 
-        this.endpointDef = this.localDefinition.getEndpoint().element();
+        this.endpointDef = this.localDefinition.getEndpoint2().element();
         this.endpointModel = resolveEndpoint(this.endpointDef);
         if (this.endpointModel != null)
         {

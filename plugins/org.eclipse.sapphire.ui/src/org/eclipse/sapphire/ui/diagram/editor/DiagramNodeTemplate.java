@@ -25,7 +25,7 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.ui.diagram.DiagramDropTargetService;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramEmbeddedConnectionDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 
 /**
@@ -100,7 +100,7 @@ public class DiagramNodeTemplate
         // handle embedded connections
         if (this.definition.getEmbeddedConnections().element() != null)
         {
-        	IDiagramEmbeddedConnectionDef embeddedConnDef = 
+        	IDiagramConnectionBindingDef embeddedConnDef = 
         				this.definition.getEmbeddedConnections().element();
         	this.embeddedConnTemplate = new DiagramEmbeddedConnectionTemplate(
         									this.diagramEditor,

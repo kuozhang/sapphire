@@ -43,8 +43,8 @@ import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
 import org.eclipse.sapphire.ui.diagram.DiagramDropTargetService;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramGeometryWrapper;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
@@ -152,28 +152,17 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 	@Override
     public ICreateConnectionFeature[] getCreateConnectionFeatures() 
 	{
-		List<DiagramConnectionTemplate> connectionTemplates = getDiagramPart().getConnectionTemplates();
+		SapphireDiagramEditorPart diagramPart = getDiagramPart();
+		List<IDiagramConnectionDef> connectionDefs = diagramPart.getDiagramConnectionDefs();
 		List<ICreateConnectionFeature> features = 
-			new ArrayList<ICreateConnectionFeature>(connectionTemplates.size());
-		for (DiagramConnectionTemplate connectionTemplate : connectionTemplates)
+			new ArrayList<ICreateConnectionFeature>(connectionDefs.size());
+		for (IDiagramConnectionDef connectionDef : connectionDefs)
 		{
 			SapphireCreateConnectionFeature createConnectionFeature = 
-				new SapphireCreateConnectionFeature(this, connectionTemplate);
+				new SapphireCreateConnectionFeature(this, diagramPart, connectionDef);
 			features.add(createConnectionFeature);
 		}
 		
-		// Add Embedded connection features
-		List<DiagramNodeTemplate> nodeTemplates = getDiagramPart().getNodeTemplates();
-		for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
-		{
-			DiagramConnectionTemplate connTemplate = nodeTemplate.getEmbeddedConnectionTemplate();
-			if (connTemplate != null)
-			{
-				SapphireCreateConnectionFeature createConnectionFeature = 
-					new SapphireCreateConnectionFeature(this, connTemplate);
-				features.add(createConnectionFeature);
-			}
-		}		
 		return features.toArray(new ICreateConnectionFeature[0]);
 	}
 	

@@ -32,8 +32,8 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -58,12 +58,10 @@ public class DiagramConnectionTemplate
     }
 	
 	protected SapphireDiagramEditorPart diagramEditor;
-	private IDiagramConnectionDef definition;
+	protected IDiagramConnectionBindingDef definition;
 	protected IModelElement modelElement;
 	protected String propertyName;
 	private ListProperty modelProperty;
-	protected String toolPaletteLabel;
-	protected String toolPaletteDesc;
 	protected ModelPropertyListener modelPropertyListener;
 	protected SapphireDiagramPartListener connPartListener;
 	protected Set<Listener> listeners;
@@ -73,15 +71,12 @@ public class DiagramConnectionTemplate
 	public DiagramConnectionTemplate() {}
 	
     public DiagramConnectionTemplate(final SapphireDiagramEditorPart diagramEditor, 
-    		IDiagramConnectionDef definition, IModelElement modelElement)
+    		IDiagramConnectionBindingDef definition, IModelElement modelElement)
     {
     	this.diagramEditor = diagramEditor;
     	this.modelElement = modelElement;
     	this.definition = definition;
     	
-        this.toolPaletteLabel = this.definition.getToolPaletteLabel().getContent();
-        this.toolPaletteDesc = this.definition.getToolPaletteDesc().getContent();
-        
         this.diagramConnections = new ArrayList<DiagramConnectionPart>();
         
         this.propertyName = this.definition.getProperty().getContent();
@@ -122,21 +117,16 @@ public class DiagramConnectionTemplate
         addModelListener();        
     }
     
+    public String getConnectionId()
+    {
+    	return this.definition.getId().getContent();
+    }
+    
     public List<DiagramConnectionPart> getDiagramConnections(IModelElement srcNodeModel)
     {
     	return this.diagramConnections;
     }
-    
-    public String getToolPaletteLabel()
-    {
-    	return this.toolPaletteLabel;
-    }
-    
-    public String getToolPaletteDesc()
-    {
-    	return this.toolPaletteDesc;
-    }
-    
+        
     public boolean canCreateNewConnection(DiagramNodePart srcNode, DiagramNodePart targetNode)
     {
     	boolean canCreate = false;
@@ -190,7 +180,7 @@ public class DiagramConnectionTemplate
 		ModelElementList<?> list = this.modelElement.read(this.modelProperty);
 		IModelElement newElement = list.addNewElement();
 		
-    	IDiagramConnectionEndpointDef srcAnchorDef = this.definition.getEndpoint1().element();
+    	IDiagramConnectionEndpointBindingDef srcAnchorDef = this.definition.getEndpoint1().element();
     	String srcProperty = srcAnchorDef.getProperty().getContent();
     	Value<Function> srcFunc = srcAnchorDef.getValue();
     	FunctionResult srcFuncResult = getNodeReferenceFunction(srcNode, srcFunc, 
@@ -201,7 +191,7 @@ public class DiagramConnectionTemplate
 	    	srcFuncResult.dispose();
     	}
     	
-    	IDiagramConnectionEndpointDef targetAnchorDef = this.definition.getEndpoint2().element();
+    	IDiagramConnectionEndpointBindingDef targetAnchorDef = this.definition.getEndpoint2().element();
     	String targetProperty = targetAnchorDef.getProperty().getContent();
     	Value<Function> targetFunc = targetAnchorDef.getValue();;
     	FunctionResult targetFuncResult = getNodeReferenceFunction(targetNode, targetFunc,
