@@ -932,9 +932,8 @@ Fragment-Host: @{Bundle}
   </macrodef>
 
 
-  <macrodef name="download-from-eclipse">
+  <macrodef name="init-download-from-eclipse">
     <attribute name="file"/>
-    <attribute name="property"/>
     <sequential>
     
       <!-- Set "downloads" property or SAPPHIRE_DOWNLOADS environment variable to share downloads folder. -->
@@ -971,12 +970,40 @@ Fragment-Host: @{Bundle}
           </if>
         </then>
       </if>
+
+      <!-- Determine if the URL references to a file that has been archived. We need to alter the download
+           URL due to the following bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=338966 -->
+           
+      <var name=".file" unset="true"/>
+      <propertyregex property=".file" input="@{file}" regexp="@(.*)" select="\1"/>
+      
+      <if>
+        <isset property=".file"/>
+        <then>
+          <var name=".archived" value="true"/>
+        </then>
+        <else>
+          <var name=".file" value="@{file}"/>
+          <var name=".archived" value="false"/>
+        </else>
+      </if>
+      
+    </sequential>
+  </macrodef>
+
+
+  <macrodef name="download-from-eclipse">
+    <attribute name="file"/>
+    <attribute name="property"/>
+    <sequential>
+    
+      <init-download-from-eclipse file="@{file}"/>
       
       <mkdir dir="${downloads}"/>
       
-      <echo message="Downloading from Eclipse... @{file}"/>
+      <echo message="Downloading from Eclipse... ${.file}"/>
 
-      <echo message="@{file}" file="${downloads}/url-checksum.txt"/>
+      <echo message="${.file}" file="${downloads}/url-checksum.txt"/>
       <checksum file="${downloads}/url-checksum.txt" property=".url.checksum"/>
       <delete file="${downloads}/url-checksum.txt"/>
       
@@ -996,7 +1023,7 @@ Fragment-Host: @{Bundle}
                 
                   <!-- Download the expected checksum. -->
                   
-                  <get src="http://www.eclipse.org/downloads/sums.php?file=@{file}&amp;type=md5" dest="${downloads}/content-checksum.txt"/>
+                  <get src="http://www.eclipse.org/downloads/sums.php?file=${.file}&amp;type=md5" dest="${downloads}/content-checksum.txt"/>
                   <loadfile srcfile="${downloads}/content-checksum.txt" property=".content.checksum"/>
                   <delete file="${downloads}/content-checksum.txt"/>
                   <propertyregex property=".content.checksum" override="true" input="${.content.checksum}" regexp="([^ ]*).*" select="\1"/>
@@ -1004,7 +1031,7 @@ Fragment-Host: @{Bundle}
                   <!-- Verify the local file againsted the expected checksum. -->
                   
                   <checksum file="${downloads}/${.url.checksum}" property=".content.checksum.actual"/>
-                  
+                      
                   <if>
                     <equals arg1="${.content.checksum}" arg2="${.content.checksum.actual}"/>
                     <then>
@@ -1030,7 +1057,15 @@ Fragment-Host: @{Bundle}
               <if>
                 <not><istrue value="${.content.valid}"/></not>
                 <then>
-                  <get src="http://www.eclipse.org/downloads/download.php?file=@{file}&amp;r=1" dest="${downloads}/${.url.checksum}"/>
+                  <if>
+                    <istrue value="${.archived}"/>
+                    <then>
+                      <get src="http://www.eclipse.org/downloads/download.php?file=${.file}" dest="${downloads}/${.url.checksum}"/>
+                    </then>
+                    <else>
+                      <get src="http://www.eclipse.org/downloads/download.php?file=${.file}&amp;r=1" dest="${downloads}/${.url.checksum}"/>
+                    </else>
+                  </if>
                 </then>
               </if>
               
@@ -1045,14 +1080,39 @@ Fragment-Host: @{Bundle}
           <var name="@{property}" value="${downloads}/${.url.checksum}"/>
           <var name=".url.checksum" unset="true"/>
           <var name=".content.valid" unset="true"/>
+          <var name=".file" unset="true"/>
+          <var name=".archived" unset="true"/>
         </then>
         <else>
-          <fail message="Failed to download @{file} from Eclipse Foundation."/>
+          <fail message="Failed to download ${.file} from Eclipse Foundation."/>
         </else>
       </if>
       
     </sequential>
   </macrodef>
+  
+  
+  <macrodef name="wipe-download-from-eclipse">
+    <attribute name="file"/>
+    <sequential>
+    
+      <init-download-from-eclipse file="@{file}"/>
+      
+      <echo message="@{file}" file="${downloads}/url-checksum.txt"/>
+      <checksum file="${downloads}/url-checksum.txt" property=".url.checksum"/>
+      <delete file="${downloads}/url-checksum.txt"/>
+      
+      <delete file="${downloads}/${.url.checksum}"/>
+      
+    </sequential>
+  </macrodef>
+
+
+  <target name="wipe-download-from-eclipse" depends="init">
+  
+    <wipe-download-from-eclipse file="${file}"/>
+
+  </target>
   
   
   <macrodef name="with-download-from-eclipse">
