@@ -29,6 +29,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.help.IContext;
 import org.eclipse.osgi.util.NLS;
@@ -172,7 +173,7 @@ public abstract class SapphireEditor
         throws BackingStoreException
         
     {
-        final InstanceScope scope = new InstanceScope();
+        final IScopeContext scope = InstanceScope.INSTANCE;
         final Preferences prefs = scope.getNode( this.pluginId );
         final String editorId = getClass().getName();
         
@@ -276,6 +277,8 @@ public abstract class SapphireEditor
     {
         final IFile file = getFile();
         
+        String error = null;
+        
         if( file.isAccessible() )
         {
             try 
@@ -283,37 +286,66 @@ public abstract class SapphireEditor
                 createSourcePages();
                 
                 this.model = createModel();
-                adaptModel( this.model );
-                
-                createDiagramPages();
-                
-                createFormPages();
-    
-                createFileChangeListener();
             }
             catch( PartInitException e ) 
             {
                 SapphireUiFrameworkPlugin.log( e );
             }
-            
-            final String lastActivePage = getLastActivePage();
-            int page = 0;
-            
-            if( lastActivePage != null )
+                
+            if( this.model == null )
             {
-                int count = getPageCount();
-                for (int i = 0; i < count; i++) {
-                    String title = getPageText(i);
-                    if (lastActivePage.equals(title)) {
-                        page = i;
-                        break;
-                    }
+                error = NLS.bind( Resources.failedToCreateModel, getClass().getName() );
+                
+                for( int i = 0, n = getPageCount(); i < n; i++ )
+                {
+                    removePage( i );
                 }
             }
-            
-            setActivePage( page );
+            else
+            {
+                try
+                {
+                    adaptModel( this.model );
+                    
+                    createDiagramPages();
+                    
+                    createFormPages();
+        
+                    createFileChangeListener();
+                }
+                catch( PartInitException e ) 
+                {
+                    SapphireUiFrameworkPlugin.log( e );
+                }
+                
+                final String lastActivePage = getLastActivePage();
+                int page = 0;
+                
+                if( lastActivePage != null )
+                {
+                    int count = getPageCount();
+                    
+                    for( int i = 0; i < count; i++ ) 
+                    {
+                        final String title = getPageText( i );
+                        
+                        if( lastActivePage.equals( title ) ) 
+                        {
+                            page = i;
+                            break;
+                        }
+                    }
+                }
+                
+                setActivePage( page );
+            }
         }
         else
+        {
+            error = Resources.resourceNotAccessible;
+        }
+        
+        if( error != null )
         {
             final Composite page = new Composite( getContainer(), SWT.NONE );
             page.setLayout( glayout( 1 ) );
@@ -322,7 +354,7 @@ public abstract class SapphireEditor
             final SapphireFormText message = new SapphireFormText( page, SWT.NONE );
             message.setLayoutData( gd() );
             message.setBackground( getSite().getShell().getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-            message.setText( Resources.resourceNotAccessible, false, false );
+            message.setText( error, false, false );
             
             addPage( page );
             setPageText( 0, Resources.errorPageTitle );
@@ -507,7 +539,11 @@ public abstract class SapphireEditor
         
         this.imageCache.dispose();
         this.actionsManager.dispose();
-        this.model.dispose();
+        
+        if( this.model != null )
+        {
+            this.model.dispose();
+        }
     }
     
     @Override
@@ -628,6 +664,7 @@ public abstract class SapphireEditor
     private static final class Resources extends NLS
     {
         public static String resourceNotAccessible;
+        public static String failedToCreateModel;
         public static String errorPageTitle;
         
         static
