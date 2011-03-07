@@ -13,44 +13,44 @@
 
 <definition>
 
-  <import>
-    <bundle>org.eclipse.sapphire.ui</bundle>
-    <package>org.eclipse.sapphire.ui.renderers.swt</package>
-  </import>
+    <import>
+        <bundle>org.eclipse.sapphire.ui</bundle>
+        <package>org.eclipse.sapphire.ui.renderers.swt</package>
+    </import>
 
-  <composite>
-    <id>basic-folder-and-filename-block</id>
-    <content>
-      <property-editor>
-        <property>Folder</property>
+    <composite>
+        <id>basic-folder-and-filename-block</id>
+        <content>
+            <property-editor>
+                <property>Folder</property>
+                <hint>
+                    <name>factory</name>
+                    <value>EclipseWorkspacePathPropertyEditorRenderer$Factory</value>
+                </hint>
+                <hint>
+                    <name>show.label.above</name>
+                    <value>true</value>
+                </hint>
+                <hint>
+                    <name>expand.vertically</name>
+                    <value>true</value>
+                </hint>
+            </property-editor>
+            <property-editor>FileName</property-editor>
+            <property-editor>OverwriteExistingFile</property-editor>
+        </content>
         <hint>
-          <name>factory</name>
-          <value>EclipseWorkspacePathPropertyEditorRenderer$Factory</value>
+            <name>expand.vertically</name>
+            <value>true</value>
         </hint>
         <hint>
-          <name>show.label.above</name>
-          <value>true</value>
+            <name>width</name>
+            <value>400</value>
         </hint>
         <hint>
-          <name>expand.vertically</name>
-          <value>true</value>
+            <name>height</name>
+            <value>300</value>
         </hint>
-      </property-editor>
-      <property-editor>FileName</property-editor>
-      <property-editor>OverwriteExistingFile</property-editor>
-    </content>
-    <hint>
-      <name>expand.vertically</name>
-      <value>true</value>
-    </hint>
-    <hint>
-      <name>width</name>
-      <value>400</value>
-    </hint>
-    <hint>
-      <name>height</name>
-      <value>300</value>
-    </hint>
-  </composite>
-  
+    </composite>
+    
 </definition>

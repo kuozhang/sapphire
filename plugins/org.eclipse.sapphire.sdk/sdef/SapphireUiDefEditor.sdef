@@ -13,385 +13,412 @@
 
 <definition>
 
-  <import>
-    <bundle>org.eclipse.sapphire.ui</bundle>
-    <package>org.eclipse.sapphire.ui.def</package>
-  </import>
+    <import>
+        <bundle>org.eclipse.sapphire.ui</bundle>
+        <package>org.eclipse.sapphire.ui.def</package>
+    </import>
 
-  <import>
-    <bundle>org.eclipse.sapphire.sdk</bundle>
-    <package>org.eclipse.sapphire.sdk.internal</package>
-    <definition>sdef/SapphireEditorCommon.sdef</definition>
-  </import>
-  
-  <editor-page>
-    <id>main</id>
-    <page-header-text>Sapphire UI Definition</page-header-text>
-    <root-node>
-      <node>
-        <label>imports</label>
-        <section>
-          <description>Import packages and definitions from bundles.</description>
-          <content>
-            <action-link>
-              <action-id>Sapphire.Add</action-id>
-              <label>Add an import</label>
-            </action-link>
-          </content>
-        </section>
-        <node-list>
-          <property>ImportDirectives</property>
-          <node-template>
-            <label>${ Bundle == null ? "&lt;import&gt;" : Bundle }</label>
-            <section>
-              <label>import</label>
-              <content>
-                <property-editor>Bundle</property-editor>
-                <property-editor>Packages</property-editor>
-                <property-editor>Definitions</property-editor>
-              </content>
-            </section>
-          </node-template>
-        </node-list>
-      </node>
-      <node>
+    <import>
+        <bundle>org.eclipse.sapphire.sdk</bundle>
+        <package>org.eclipse.sapphire.sdk.internal</package>
+        <definition>sdef/SapphireEditorCommon.sdef</definition>
+    </import>
+    
+    <editor-page>
+        <id>main</id>
+        <page-header-text>Sapphire UI Definition</page-header-text>
+        <root-node>
+            <node>
+                <label>imports</label>
+                <section>
+                    <description>Import packages and definitions from bundles.</description>
+                    <content>
+                        <action-link>
+                            <action-id>Sapphire.Add</action-id>
+                            <label>Add an import</label>
+                        </action-link>
+                    </content>
+                </section>
+                <node-list>
+                    <property>ImportDirectives</property>
+                    <node-template>
+                        <label>${ Bundle == null ? "&lt;import&gt;" : Bundle }</label>
+                        <section>
+                            <label>import</label>
+                            <content>
+                                <property-editor>Bundle</property-editor>
+                                <property-editor>Packages</property-editor>
+                                <property-editor>Definitions</property-editor>
+                            </content>
+                        </section>
+                    </node-template>
+                </node-list>
+            </node>
+            <node>
+                <label>documentation</label>
+                <image>images/editors/sdef/documentation.gif</image>
+                <section>
+                    <description>Define named documentation content. Reference the same documentation content from multiple parts.</description>
+                    <content>
+                        <action-link>
+                            <action-id>Sapphire.Add</action-id>
+                            <label>Add documentation content</label>
+                        </action-link>
+                    </content>
+                </section>
+                <node-list>
+                    <property>DocumentationDefs</property>
+                    <node-template>
+                        <label>${ Id == null ? "&lt;documentation&gt;" : Id }</label>
+                        <image>images/editors/sdef/documentation.gif</image>
+                        <section>
+                            <label>documentation</label>
+                            <content>
+                                <property-editor>Id</property-editor>
+                                <include><part>DocumentationForm</part></include>
+                            </content>
+                        </section>
+                    </node-template>
+                </node-list>
+            </node>
+            <node>
+                <label>parts</label>
+                <section>
+                    <description>
+                        Define parts.
+                    </description>
+                    <content>
+                        <action-link>
+                            <action-id>Sapphire.Add</action-id>
+                            <label>Add a part</label>
+                        </action-link>
+                    </content>
+                </section>
+                <node-list-ref>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>PartDefs</value>
+                    </param>
+                </node-list-ref>
+            </node>
+        </root-node>
+    </editor-page>
+    
+    <node>
+        <id>DocumentationNode</id>
         <label>documentation</label>
         <image>images/editors/sdef/documentation.gif</image>
         <section>
-          <description>Define named documentation content. Reference the same documentation content from multiple parts.</description>
-          <content>
-            <action-link>
-              <action-id>Sapphire.Add</action-id>
-              <label>Add documentation content</label>
-            </action-link>
-          </content>
+            <content>
+                <with>
+                    <property>Documentation</property>
+                    <panel>
+                        <key>ISapphireDocumentationDef</key>
+                        <content>
+                            <include><part>DocumentationForm</part></include>
+                        </content>
+                    </panel>
+                    <panel>
+                        <key>ISapphireDocumentationRef</key>
+                        <content>
+                            <property-editor>Id</property-editor>
+                        </content>
+                    </panel>
+                </with>
+            </content>
         </section>
-        <node-list>
-          <property>DocumentationDefs</property>
-          <node-template>
-            <label>${ Id == null ? "&lt;documentation&gt;" : Id }</label>
-            <image>images/editors/sdef/documentation.gif</image>
+    </node>
+    
+    <form>
+        <id>DocumentationForm</id>
+        <content>
+            <property-editor>Title</property-editor>
+            <property-editor>
+                <property>Content</property>
+                <hint>
+                    <name>height</name>
+                    <value>15</value>
+                </hint>
+                <related-content>
+                    <html>
+                        <content>
+                            &lt;style>
+                            body, td
+                            {
+                                 color: grey;
+                            }
+                            &lt;/style>
+                            Format content using syntax similar to HTML. The following tags are supported:&lt;br/>&lt;br/>
+                            
+                            &lt;table>
+                                &lt;tr>&lt;td>[b]...[/b]&lt;/td>&lt;td>bold text&lt;/td>&lt;/tr> 
+                                &lt;tr>&lt;td>[br/]&lt;/td>&lt;td>line break&lt;/td>&lt;/tr>
+                                &lt;tr>&lt;td>[pbr/]&lt;/td>&lt;td>paragraph break&lt;/td>&lt;/tr> 
+                                &lt;tr>&lt;td>[ol]...[/ol]&lt;/td>&lt;td>ordered list&lt;/td>&lt;/tr>
+                                &lt;tr>&lt;td>[ul]...[/ul]&lt;/td>&lt;td>unordered list&lt;/td>&lt;/tr>
+                                &lt;tr>&lt;td>[li]...[/li]&lt;/td>&lt;td>list item&lt;/td>&lt;/tr>
+                            &lt;/table>
+                        </content>
+                        <fragment/>
+                        <expand-vertically/>
+                    </html>
+                </related-content>
+            </property-editor>
+            <property-editor>Topics</property-editor>
+        </content>
+    </form>
+    
+    <node>
+        <id>ActionsOverallNode</id>
+        <label>actions and handlers</label>
+        <image>images/objects/action.gif</image>
+        <node-ref>
+            <part>ActionsNode</part>
+            <param>
+                <name>Extension</name>
+                <value>false</value>
+            </param>
+        </node-ref>
+        <node-ref>
+            <part>ActionHandlersNode</part>
+            <param>
+                <name>Extension</name>
+                <value>false</value>
+            </param>
+        </node-ref>
+        <node-ref>
+            <part>ActionHandlerFactoriesNode</part>
+            <param>
+                <name>Extension</name>
+                <value>false</value>
+            </param>
+        </node-ref>
+        <node>
+            <label>handler filters</label>
+            <image>images/objects/action.gif</image>
             <section>
-              <label>documentation</label>
-              <content>
-                <property-editor>Id</property-editor>
-                <include><part>DocumentationForm</part></include>
-              </content>
+                <description>Define action handler filters.</description>
+                <content>
+                    <action-link>
+                        <action-id>Sapphire.Add</action-id>
+                        <label>Add an action handler filter</label>
+                    </action-link>
+                </content>
             </section>
-          </node-template>
-        </node-list>
-      </node>
-      <node>
-        <label>parts</label>
-        <section>
-          <description>
-            Define parts.
-          </description>
-          <content>
-            <action-link>
-              <action-id>Sapphire.Add</action-id>
-              <label>Add a part</label>
-            </action-link>
-          </content>
-        </section>
-        <node-list-ref>
-          <part>PartsNodeList</part>
-          <param>
-            <name>Property</name>
-            <value>PartDefs</value>
-          </param>
-        </node-list-ref>
-      </node>
-    </root-node>
-  </editor-page>
-  
-  <node>
-    <id>DocumentationNode</id>
-    <label>documentation</label>
-    <image>images/editors/sdef/documentation.gif</image>
-    <section>
-      <content>
-        <with>
-          <property>Documentation</property>
-          <panel>
-            <key>ISapphireDocumentationDef</key>
-            <content>
-              <include><part>DocumentationForm</part></include>
-            </content>
-          </panel>
-          <panel>
-            <key>ISapphireDocumentationRef</key>
-            <content>
-              <property-editor>Id</property-editor>
-            </content>
-          </panel>
-        </with>
-      </content>
-    </section>
-  </node>
-  
-  <form>
-    <id>DocumentationForm</id>
-    <content>
-      <property-editor>Title</property-editor>
-      <property-editor>
-        <property>Content</property>
-        <hint>
-          <name>height</name>
-          <value>15</value>
-        </hint>
-        <related-content>
-          <html>
-            <content>
-              &lt;style>
-              body, td
-              {
-                 color: grey;
-              }
-              &lt;/style>
-              Format content using syntax similar to HTML. The following tags are supported:&lt;br/>&lt;br/>
-              
-              &lt;table>
-                &lt;tr>&lt;td>[b]...[/b]&lt;/td>&lt;td>bold text&lt;/td>&lt;/tr> 
-                &lt;tr>&lt;td>[br/]&lt;/td>&lt;td>line break&lt;/td>&lt;/tr>
-                &lt;tr>&lt;td>[pbr/]&lt;/td>&lt;td>paragraph break&lt;/td>&lt;/tr> 
-                &lt;tr>&lt;td>[ol]...[/ol]&lt;/td>&lt;td>ordered list&lt;/td>&lt;/tr>
-                &lt;tr>&lt;td>[ul]...[/ul]&lt;/td>&lt;td>unordered list&lt;/td>&lt;/tr>
-                &lt;tr>&lt;td>[li]...[/li]&lt;/td>&lt;td>list item&lt;/td>&lt;/tr>
-              &lt;/table>
-            </content>
-            <fragment/>
-            <expand-vertically/>
-          </html>
-        </related-content>
-      </property-editor>
-      <property-editor>Topics</property-editor>
-    </content>
-  </form>
-  
-  <node>
-    <id>ActionsOverallNode</id>
-    <label>actions and handlers</label>
-    <image>images/objects/action.gif</image>
-    <node-ref>
-      <part>ActionsNode</part>
-      <param>
-        <name>Extension</name>
-        <value>false</value>
-      </param>
-    </node-ref>
-    <node-ref>
-      <part>ActionHandlersNode</part>
-      <param>
-        <name>Extension</name>
-        <value>false</value>
-      </param>
-    </node-ref>
-    <node-ref>
-      <part>ActionHandlerFactoriesNode</part>
-      <param>
-        <name>Extension</name>
-        <value>false</value>
-      </param>
-    </node-ref>
-  </node>
+            <node-list>
+                <property>ActionHandlerFilters</property>
+                <node-template>
+                    <label>${ ImplClass == null ? "&lt;action-handler-filter&gt;" : LastSegment( ImplClass, "." ) }</label>
+                    <use-model-element-image/>
+                    <section>
+                        <label>action handler filter</label>
+                        <content>
+                            <property-editor>ImplClass</property-editor>
+                            <property-editor>Contexts</property-editor>
+                        </content>
+                    </section>
+                </node-template>
+            </node-list>
+        </node>
+    </node>
 
-  <node-list>
-    <id>PartsNodeList</id>
-    <property>@{Property}</property>
-    
-    <node-template>
-      <model-element-type>ISapphirePropertyEditorDef</model-element-type>
-      <label>${ Id == null ? ( Property == null ? "" : Property ) : Id }</label>
-      <use-model-element-image/>
-      <section>
-        <label>property editor</label>
-        <content>
-          <if>
-            <condition>
-              <class>NamedPartCondition</class>
-            </condition>
-            <then>
-              <property-editor>Id</property-editor>
-            </then>
-          </if>
-          <property-editor>Property</property-editor>
-          <property-editor>Hints</property-editor>
-          <property-editor>Listeners</property-editor>
-        </content>
-      </section>
-      <node>
-        <label>child properties</label>
-        <image>images/objects/content.png</image>
-        <section>
-          <content>
-            <label>
-              Child properties can be optionally used to specify additional information about regarding contained properties when
-              the main property editor points to a list property. This can be used, for instance, to specify a subset of properties
-              that should be shown or to modify actions available on those properties. 
-            </label>
-          </content>
-        </section>
-        <node-list-ref>
-          <part>PartsNodeList</part>
-          <param>
-            <name>Property</name>
-            <value>ChildProperties</value>
-          </param>
-        </node-list-ref>
-      </node>
-      <node>
-        <label>related content</label>
-        <image>images/objects/content.png</image>
-        <section>
-          <content>
-            <label>
-              Related content appears to the right of the main property editor. This facility can be used, for example,
-              to display units property next to the amount property or to display explanatory text next to a property requiring complex
-              text input.
-            </label>
-            <spacer/>
-            <property-editor>RelatedContentWidth</property-editor>
-          </content>
-        </section>
-        <node-list-ref>
-          <part>PartsNodeList</part>
-          <param>
-            <name>Property</name>
-            <value>RelatedContent</value>
-          </param>
-        </node-list-ref>
-      </node>
-      <node-ref>ActionsOverallNode</node-ref>
-      <node-ref>DocumentationNode</node-ref>
-    </node-template>
-    
-    <node-template>
-      <model-element-type>ISapphireLabelDef</model-element-type>
-      <label>label</label>
-      <section>
-        <content>
-          <property-editor>Text</property-editor>
-        </content>
-      </section>
-      <node-ref>DocumentationNode</node-ref>
-    </node-template>
-    <node-template>
-      <model-element-type>ISapphireSeparatorDef</model-element-type>
-      <label>separator</label>
-      <section>
-        <content>
-          <property-editor>Label</property-editor>
-        </content>
-      </section>
-      <node-ref>DocumentationNode</node-ref>
-    </node-template>
-    <node-template>
-      <model-element-type>ISapphireSpacerDef</model-element-type>
-      <label>spacer</label>
-      <section>
-        <content>
-          <property-editor>Size</property-editor>
-        </content>
-      </section>
-      <node-ref>DocumentationNode</node-ref>
-    </node-template>
-    <node-template>
-      <model-element-type>ISapphireCompositeDef</model-element-type>
-      <label>composite</label>
-      <use-model-element-image/>
-      <section>
-        <content>
-          <property-editor>Id</property-editor>
-        </content>
-      </section>
-      <node>
-        <label>content</label>
-        <image>images/objects/content.png</image>
-        <node-list-ref>
-          <part>PartsNodeList</part>
-          <param>
-            <name>Property</name>
-            <value>Content</value>
-          </param>
-        </node-list-ref>
-      </node>
-      <node-ref>DocumentationNode</node-ref>
-    </node-template>
-    <node-template>
-      <model-element-type>IFormDef</model-element-type>
-      <label>form</label>
-      <use-model-element-image/>
-      <section>
-        <content>
-          <property-editor>Id</property-editor>
-        </content>
-      </section>
-      <node>
-        <label>content</label>
-        <image>images/objects/content.png</image>
-        <node-list-ref>
-          <part>PartsNodeList</part>
-          <param>
-            <name>Property</name>
-            <value>Content</value>
-          </param>
-        </node-list-ref>
-      </node>
-      <node-ref>DocumentationNode</node-ref>
-    </node-template>
-    <node-template>
-      <model-element-type>IFormPartInclude</model-element-type>
-      <label>include ${ Part == null ? "" : Part }</label>
-      <use-model-element-image/>
-      <section>
-        <label>include</label>
-        <content>
-          <property-editor>Part</property-editor>
-          <property-editor>Params</property-editor>
-        </content>
-      </section>
-    </node-template>
-    <node-template>
-      <model-element-type>ISapphireGroupDef</model-element-type>
-      <label>group</label>
-      <section>
-        <content>
-          <property-editor>Label</property-editor>
-        </content>
-      </section>
-      <node-ref>DocumentationNode</node-ref>
-      <node>
-        <label>content</label>
-        <node-list-ref>
-          <part>PartsNodeList</part>
-          <param>
-            <name>Property</name>
-            <value>Content</value>
-          </param>
-        </node-list-ref>
-      </node>
-    </node-template>
-    <node-template>
-      <model-element-type>ISapphireWithDirectiveDef</model-element-type>
-      <label>with</label>
-      <section>
-        <content>
-          <property-editor>Property</property-editor>
-        </content>
-      </section>
-      <node-ref>DocumentationNode</node-ref>
-      <node>
-        <label>content</label>
-        <node-list-ref>
-          <part>PartsNodeList</part>
-          <param>
-            <name>Property</name>
-            <value>Content</value>
-          </param>
-        </node-list-ref>
-      </node>
-    </node-template>
-  </node-list>  
+    <node-list>
+        <id>PartsNodeList</id>
+        <property>@{Property}</property>
+        
+        <node-template>
+            <model-element-type>ISapphirePropertyEditorDef</model-element-type>
+            <label>${ Id == null ? ( Property == null ? "&lt;property-editor&gt;" : Property ) : Id }</label>
+            <use-model-element-image/>
+            <section>
+                <label>property editor</label>
+                <content>
+                    <if>
+                        <condition>
+                            <class>NamedPartCondition</class>
+                        </condition>
+                        <then>
+                            <property-editor>Id</property-editor>
+                        </then>
+                    </if>
+                    <property-editor>Property</property-editor>
+                    <property-editor>Hints</property-editor>
+                    <property-editor>Listeners</property-editor>
+                </content>
+            </section>
+            <node>
+                <label>child properties</label>
+                <image>images/objects/content.png</image>
+                <section>
+                    <content>
+                        <label>
+                            Child properties can be optionally used to specify additional information about regarding contained properties when
+                            the main property editor points to a list property. This can be used, for instance, to specify a subset of properties
+                            that should be shown or to modify actions available on those properties. 
+                        </label>
+                    </content>
+                </section>
+                <node-list-ref>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>ChildProperties</value>
+                    </param>
+                </node-list-ref>
+            </node>
+            <node>
+                <label>related content</label>
+                <image>images/objects/content.png</image>
+                <section>
+                    <content>
+                        <label>
+                            Related content appears to the right of the main property editor. This facility can be used, for example,
+                            to display units property next to the amount property or to display explanatory text next to a property requiring complex
+                            text input.
+                        </label>
+                        <spacer/>
+                        <property-editor>RelatedContentWidth</property-editor>
+                    </content>
+                </section>
+                <node-list-ref>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>RelatedContent</value>
+                    </param>
+                </node-list-ref>
+            </node>
+            <node-ref>ActionsOverallNode</node-ref>
+            <node-ref>DocumentationNode</node-ref>
+        </node-template>
+        
+        <node-template>
+            <model-element-type>ISapphireLabelDef</model-element-type>
+            <label>label</label>
+            <section>
+                <content>
+                    <property-editor>Text</property-editor>
+                </content>
+            </section>
+            <node-ref>DocumentationNode</node-ref>
+        </node-template>
+        <node-template>
+            <model-element-type>ISapphireSeparatorDef</model-element-type>
+            <label>separator</label>
+            <section>
+                <content>
+                    <property-editor>Label</property-editor>
+                </content>
+            </section>
+            <node-ref>DocumentationNode</node-ref>
+        </node-template>
+        <node-template>
+            <model-element-type>ISapphireSpacerDef</model-element-type>
+            <label>spacer</label>
+            <section>
+                <content>
+                    <property-editor>Size</property-editor>
+                </content>
+            </section>
+            <node-ref>DocumentationNode</node-ref>
+        </node-template>
+        <node-template>
+            <model-element-type>ISapphireCompositeDef</model-element-type>
+            <label>composite</label>
+            <use-model-element-image/>
+            <section>
+                <content>
+                    <property-editor>Id</property-editor>
+                </content>
+            </section>
+            <node>
+                <label>content</label>
+                <image>images/objects/content.png</image>
+                <node-list-ref>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>Content</value>
+                    </param>
+                </node-list-ref>
+            </node>
+            <node-ref>DocumentationNode</node-ref>
+        </node-template>
+        <node-template>
+            <model-element-type>IFormDef</model-element-type>
+            <label>form</label>
+            <use-model-element-image/>
+            <section>
+                <content>
+                    <property-editor>Id</property-editor>
+                </content>
+            </section>
+            <node>
+                <label>content</label>
+                <image>images/objects/content.png</image>
+                <node-list-ref>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>Content</value>
+                    </param>
+                </node-list-ref>
+            </node>
+            <node-ref>DocumentationNode</node-ref>
+        </node-template>
+        <node-template>
+            <model-element-type>IFormPartInclude</model-element-type>
+            <label>include ${ Part == null ? "" : Part }</label>
+            <use-model-element-image/>
+            <section>
+                <label>include</label>
+                <content>
+                    <property-editor>Part</property-editor>
+                    <property-editor>Params</property-editor>
+                </content>
+            </section>
+        </node-template>
+        <node-template>
+            <model-element-type>ISapphireGroupDef</model-element-type>
+            <label>group</label>
+            <section>
+                <content>
+                    <property-editor>Label</property-editor>
+                </content>
+            </section>
+            <node-ref>DocumentationNode</node-ref>
+            <node>
+                <label>content</label>
+                <node-list-ref>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>Content</value>
+                    </param>
+                </node-list-ref>
+            </node>
+        </node-template>
+        <node-template>
+            <model-element-type>ISapphireWithDirectiveDef</model-element-type>
+            <label>with</label>
+            <section>
+                <content>
+                    <property-editor>Property</property-editor>
+                </content>
+            </section>
+            <node-ref>DocumentationNode</node-ref>
+            <node>
+                <label>content</label>
+                <node-list-ref>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>Content</value>
+                    </param>
+                </node-list-ref>
+            </node>
+        </node-template>
+    </node-list>
 
 </definition>
