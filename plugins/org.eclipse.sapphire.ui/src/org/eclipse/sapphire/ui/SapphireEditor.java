@@ -173,7 +173,14 @@ public abstract class SapphireEditor
         throws BackingStoreException
         
     {
-        final IScopeContext scope = InstanceScope.INSTANCE;
+        /*
+         * Replace "new InstanceScope()" with "InstanceScope.INSTANCE" once Sapphire no longer needs to
+         * support Eclipse 3.6.x releases.
+         */
+        
+        @SuppressWarnings( "deprecation" )
+        final IScopeContext scope = new InstanceScope();
+        
         final Preferences prefs = scope.getNode( this.pluginId );
         final String editorId = getClass().getName();
         
