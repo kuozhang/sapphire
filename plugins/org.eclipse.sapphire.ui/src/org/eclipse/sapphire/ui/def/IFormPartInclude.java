@@ -23,7 +23,8 @@ import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.FoldingXmlValueBindingImpl;
+import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.internal.FormPartIncludeReferenceService;
 
@@ -48,7 +49,7 @@ public interface IFormPartInclude
     @Label( standard = "part" )
     @PossibleValues( property = "/PartDefs/Id")
     @NonNullValue
-    @XmlBinding( path = "part" )
+    @CustomXmlValueBinding( impl = FoldingXmlValueBindingImpl.class, params = "part" )
     
     ValueProperty PROP_PART = new ValueProperty( TYPE, "Part" );
     

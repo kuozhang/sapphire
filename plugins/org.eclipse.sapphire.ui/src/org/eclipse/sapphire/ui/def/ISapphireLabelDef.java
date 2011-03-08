@@ -15,7 +15,9 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
@@ -25,6 +27,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
  */
 
 @Label( standard = "label" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/label.gif" )
 @GenerateImpl
 
 public interface ISapphireLabelDef
@@ -38,6 +41,7 @@ public interface ISapphireLabelDef
     
     @Label( standard = "text" )
     @NonNullValue
+    @LongString
     @Localizable
     @XmlValueBinding( path = "", collapseWhitespace = true )
     

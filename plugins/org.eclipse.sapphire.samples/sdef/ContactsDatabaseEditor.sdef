@@ -13,227 +13,227 @@
 
 <definition>
 
-  <import>
-    <bundle>org.eclipse.sapphire.samples</bundle>
-    <package>org.eclipse.sapphire.samples.contacts</package>
-    <package>org.eclipse.sapphire.samples.contacts.internal</package>
-    <package>org.eclipse.sapphire.samples.contacts.ui.internal</package>
-  </import>
-  
-  <editor-page>
-    <id>main</id>
-    <page-header-text>contacts</page-header-text>
-    <initial-selection>contacts</initial-selection>
-    <documentation>
-      <title>contacts database editor</title>
-      <content>This would be the help content for the overall contacts database editor.</content>
-    </documentation>
-    <root-node>
-      <node>
-        <label>contacts</label>
-        <section>
-          <description>Use this simple editor to organize your contacts.</description>
-          <content>
-            <action-link>
-              <action-id>Sapphire.Add</action-id>
-              <label>add a contact</label>
-            </action-link>
-          </content>
-        </section>
-        <node-list>
-          <property>Contacts</property>
-          <node-template>
-            <label>${ Name == null ? "&lt;contact&gt;" : Name }</label>
-            <action>
-              <id>SendContact</id>
-              <label>send contact...</label>
-            </action>
-            <action-handler>
-              <action>SendContact</action>
-              <impl>SendContactActionHandler</impl>
-            </action-handler>
-            <section>
-              <label>basic info</label>
-              <documentation>
-                <title>Basic Info</title>
-                <content>This would be the help content for the basic info section.</content>
-              </documentation>
-              <content>
-                <property-editor>Name</property-editor>
-                <property-editor>Category</property-editor>
-                <property-editor>EMail</property-editor>
-              </content>
-            </section>
-            <section>
-              <label>address</label>
-              <documentation>
-                <title>Address</title>
-                <content>This would be the help content for the address section.</content>
-              </documentation>
-              <content>
-                <with>
-                  <property>Address</property>
-                  <default-panel>
+    <import>
+        <bundle>org.eclipse.sapphire.samples</bundle>
+        <package>org.eclipse.sapphire.samples.contacts</package>
+        <package>org.eclipse.sapphire.samples.contacts.internal</package>
+        <package>org.eclipse.sapphire.samples.contacts.ui.internal</package>
+    </import>
+    
+    <editor-page>
+        <id>main</id>
+        <page-header-text>contacts</page-header-text>
+        <initial-selection>contacts</initial-selection>
+        <documentation>
+            <title>contacts database editor</title>
+            <content>This would be the help content for the overall contacts database editor.</content>
+        </documentation>
+        <root-node>
+            <node>
+                <label>contacts</label>
+                <section>
+                    <description>Use this simple editor to organize your contacts.</description>
                     <content>
-                      <property-editor>Street</property-editor>
-                      <property-editor>City</property-editor>
-                      <property-editor>State</property-editor>
-                      <property-editor>ZipCode</property-editor>
+                        <action-link>
+                            <action-id>Sapphire.Add</action-id>
+                            <label>add a contact</label>
+                        </action-link>
                     </content>
-                  </default-panel>
-                </with>
-              </content>
-            </section>
-            <section>
-              <label>phone numbers</label>
-              <content>
-                <property-editor>
-                  <property>PhoneNumbers</property>
-                  <child-property>
-                    <property>Type</property>
-                  </child-property>
-                  <child-property>
-                    <property>AreaCode</property>
-                  </child-property>
-                  <child-property>
-                    <property>LocalNumber</property>
-                  </child-property>
-                  <hint>
-                    <name>show.label</name>
-                    <value>false</value>
-                  </hint>
-                  <hint>
-                    <name>column.widths</name>
-                    <value>100,100,100:1</value>
-                  </hint>
-                </property-editor>
-              </content>
-            </section>
-            <node>
-              <label>web sites</label>
-              <image>images/web.png</image>
-              <section>
-                <content>
-                  <property-editor>
-                    <property>WebSites</property>
-                    <child-property>
-                      <property>Url</property>
-                      <action-handler>
-                        <action>Sapphire.Browse</action>
-                        <impl>WebSiteUrlBrowseHandler</impl>
-                      </action-handler>
-                    </child-property>
-                    <hint>
-                      <name>show.label</name>
-                      <value>false</value>
-                    </hint>
-                  </property-editor>
-                </content>
-              </section>
+                </section>
+                <node-list>
+                    <property>Contacts</property>
+                    <node-template>
+                        <label>${ Name == null ? "&lt;contact&gt;" : Name }</label>
+                        <action>
+                            <id>SendContact</id>
+                            <label>send contact...</label>
+                        </action>
+                        <action-handler>
+                            <action>SendContact</action>
+                            <impl>SendContactActionHandler</impl>
+                        </action-handler>
+                        <section>
+                            <label>basic info</label>
+                            <documentation>
+                                <title>Basic Info</title>
+                                <content>This would be the help content for the basic info section.</content>
+                            </documentation>
+                            <content>
+                                <property-editor>Name</property-editor>
+                                <property-editor>Category</property-editor>
+                                <property-editor>EMail</property-editor>
+                            </content>
+                        </section>
+                        <section>
+                            <label>address</label>
+                            <documentation>
+                                <title>Address</title>
+                                <content>This would be the help content for the address section.</content>
+                            </documentation>
+                            <content>
+                                <with>
+                                    <property>Address</property>
+                                    <default-panel>
+                                        <content>
+                                            <property-editor>Street</property-editor>
+                                            <property-editor>City</property-editor>
+                                            <property-editor>State</property-editor>
+                                            <property-editor>ZipCode</property-editor>
+                                        </content>
+                                    </default-panel>
+                                </with>
+                            </content>
+                        </section>
+                        <section>
+                            <label>phone numbers</label>
+                            <content>
+                                <property-editor>
+                                    <property>PhoneNumbers</property>
+                                    <child-property>
+                                        <property>Type</property>
+                                    </child-property>
+                                    <child-property>
+                                        <property>AreaCode</property>
+                                    </child-property>
+                                    <child-property>
+                                        <property>LocalNumber</property>
+                                    </child-property>
+                                    <hint>
+                                        <name>show.label</name>
+                                        <value>false</value>
+                                    </hint>
+                                    <hint>
+                                        <name>column.widths</name>
+                                        <value>100,100,100:1</value>
+                                    </hint>
+                                </property-editor>
+                            </content>
+                        </section>
+                        <node>
+                            <label>web sites</label>
+                            <image>images/web.png</image>
+                            <section>
+                                <content>
+                                    <property-editor>
+                                        <property>WebSites</property>
+                                        <child-property>
+                                            <property>Url</property>
+                                            <action-handler>
+                                                <action>Sapphire.Browse</action>
+                                                <impl>WebSiteUrlBrowseHandler</impl>
+                                            </action-handler>
+                                        </child-property>
+                                        <hint>
+                                            <name>show.label</name>
+                                            <value>false</value>
+                                        </hint>
+                                    </property-editor>
+                                </content>
+                            </section>
+                        </node>
+                        <node>
+                            <label>assistant</label>
+                            <section>
+                                <content>
+                                    <with>
+                                        <property>Assistant</property>
+                                        <label>delegate some tasks to an assistant</label>
+                                        <panel>
+                                            <key>IAssistant</key>
+                                            <content>
+                                                <property-editor>
+                                                    <property>Name</property>
+                                                    <action-handler>
+                                                        <action>Sapphire.Create</action>
+                                                        <impl>CreateContactActionHandler</impl>
+                                                    </action-handler>
+                                                </property-editor>
+                                                <property-editor>Notes</property-editor>
+                                                <property-editor>
+                                                    <property>DelegatedTasks</property>
+                                                    <hint>
+                                                        <name>show.header</name>
+                                                        <value>false</value>
+                                                    </hint>
+                                                </property-editor>
+                                            </content>
+                                        </panel>
+                                    </with>
+                                </content>
+                            </section>
+                        </node>
+                        <node>
+                            <label>connections</label>
+                            <section>
+                                <content>
+                                    <property-editor>
+                                        <property>Connections</property>
+                                        <hint>
+                                            <name>show.label</name>
+                                            <value>false</value>
+                                        </hint>
+                                    </property-editor>
+                                </content>
+                            </section>
+                        </node>
+                        <node>
+                            <label>primary occupation</label>
+                            <section>
+                                <content>
+                                    <with>
+                                        <property>PrimaryOccupation</property>
+                                        <panel>
+                                            <key>IJobOccupation</key>
+                                            <content>
+                                                <property-editor>Employer</property-editor>
+                                                <property-editor>Title</property-editor>
+                                                <property-editor>
+                                                    <property>Manager</property>
+                                                    <action-handler>
+                                                        <action>Sapphire.Create</action>
+                                                        <impl>CreateContactActionHandler</impl>
+                                                    </action-handler>
+                                                </property-editor>
+                                            </content>
+                                        </panel>
+                                        <panel>
+                                            <key>IStudentOccupation</key>
+                                            <content>
+                                                <property-editor>EducationalInstitution</property-editor>
+                                                <property-editor>Program</property-editor>
+                                            </content>
+                                        </panel>
+                                    </with>
+                                </content>
+                            </section>
+                        </node>
+                    </node-template>
+                </node-list>
             </node>
-            <node>
-              <label>assistant</label>
-              <section>
-                <content>
-                  <with>
-                    <property>Assistant</property>
-                    <label>delegate some tasks to an assistant</label>
-                    <panel>
-                      <key>IAssistant</key>
-                      <content>
-                        <property-editor>
-                          <property>Name</property>
-                          <action-handler>
-                            <action>Sapphire.Create</action>
-                            <impl>CreateContactActionHandler</impl>
-                          </action-handler>
-                        </property-editor>
-                        <property-editor>Notes</property-editor>
-                        <property-editor>
-                          <property>DelegatedTasks</property>
-                          <hint>
-                            <name>show.header</name>
-                            <value>false</value>
-                          </hint>
-                        </property-editor>
-                      </content>
-                    </panel>
-                  </with>
-                </content>
-              </section>
-            </node>
-            <node>
-              <label>connections</label>
-              <section>
-                <content>
-                  <property-editor>
-                    <property>Connections</property>
-                    <hint>
-                      <name>show.label</name>
-                      <value>false</value>
-                    </hint>
-                  </property-editor>
-                </content>
-              </section>
-            </node>
-            <node>
-              <label>primary occupation</label>
-              <section>
-                <content>
-                  <with>
-                    <property>PrimaryOccupation</property>
-                    <panel>
-                      <key>IJobOccupation</key>
-                      <content>
-                        <property-editor>Employer</property-editor>
-                        <property-editor>Title</property-editor>
-                        <property-editor>
-                          <property>Manager</property>
-                          <action-handler>
-                            <action>Sapphire.Create</action>
-                            <impl>CreateContactActionHandler</impl>
-                          </action-handler>
-                        </property-editor>
-                      </content>
-                    </panel>
-                    <panel>
-                      <key>IStudentOccupation</key>
-                      <content>
-                        <property-editor>EducationalInstitution</property-editor>
-                        <property-editor>Program</property-editor>
-                      </content>
-                    </panel>
-                  </with>
-                </content>
-              </section>
-            </node>
-          </node-template>
-        </node-list>
-      </node>
-    </root-node>
-  </editor-page>
-  
-  <wizard>
-    <id>SendContactWizard</id>
-    <label>send contact</label>
-    <page>
-      <id>main.page</id>
-      <label>send contact</label>
-      <description>Send contact information via e-mail.</description>
-      <initial-focus>To</initial-focus>
-      <content>
-        <property-editor>To</property-editor>
-        <html>
-          <content>${ MessageBody }</content>
-          <show-border/>
-          <expand-vertically/>
-        </html>
-      </content>
-      <hint>
-        <name>expand.vertically</name>
-        <value>true</value>
-      </hint>
-    </page>
-  </wizard>
-  
+        </root-node>
+    </editor-page>
+    
+    <wizard>
+        <id>SendContactWizard</id>
+        <label>send contact</label>
+        <page>
+            <id>main.page</id>
+            <label>send contact</label>
+            <description>Send contact information via e-mail.</description>
+            <initial-focus>To</initial-focus>
+            <content>
+                <property-editor>To</property-editor>
+                <html>
+                    <content>${ MessageBody }</content>
+                    <show-border/>
+                    <expand-vertically/>
+                </html>
+            </content>
+            <hint>
+                <name>expand.vertically</name>
+                <value>true</value>
+            </hint>
+        </page>
+    </wizard>
+    
 </definition>

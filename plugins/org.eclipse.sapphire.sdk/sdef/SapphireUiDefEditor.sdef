@@ -75,7 +75,7 @@
                             <label>documentation</label>
                             <content>
                                 <property-editor>Id</property-editor>
-                                <include><part>DocumentationForm</part></include>
+                                <include>DocumentationForm</include>
                             </content>
                         </section>
                     </node-template>
@@ -116,7 +116,7 @@
                     <panel>
                         <key>ISapphireDocumentationDef</key>
                         <content>
-                            <include><part>DocumentationForm</part></include>
+                            <include>DocumentationForm</include>
                         </content>
                     </panel>
                     <panel>
@@ -222,6 +222,20 @@
             </node-list>
         </node>
     </node>
+    
+    <form>
+        <id>PartId</id>
+        <content>
+            <if>
+                <condition>
+                    <class>NamedPartCondition</class>
+                </condition>
+                <then>
+                    <property-editor>Id</property-editor>
+                </then>
+            </if>
+        </content>
+    </form>
 
     <node-list>
         <id>PartsNodeList</id>
@@ -234,14 +248,7 @@
             <section>
                 <label>property editor</label>
                 <content>
-                    <if>
-                        <condition>
-                            <class>NamedPartCondition</class>
-                        </condition>
-                        <then>
-                            <property-editor>Id</property-editor>
-                        </then>
-                    </if>
+                    <include>PartId</include>
                     <property-editor>Property</property-editor>
                     <property-editor>Hints</property-editor>
                     <property-editor>Listeners</property-editor>
@@ -294,35 +301,41 @@
         </node-template>
         
         <node-template>
-            <model-element-type>ISapphireLabelDef</model-element-type>
-            <label>label</label>
-            <section>
-                <content>
-                    <property-editor>Text</property-editor>
-                </content>
-            </section>
-            <node-ref>DocumentationNode</node-ref>
-        </node-template>
-        <node-template>
             <model-element-type>ISapphireSeparatorDef</model-element-type>
             <label>separator</label>
+            <use-model-element-image/>
             <section>
                 <content>
+                    <include>PartId</include>
                     <property-editor>Label</property-editor>
                 </content>
             </section>
-            <node-ref>DocumentationNode</node-ref>
         </node-template>
+
         <node-template>
             <model-element-type>ISapphireSpacerDef</model-element-type>
             <label>spacer</label>
+            <use-model-element-image/>
             <section>
                 <content>
+                    <include>PartId</include>
                     <property-editor>Size</property-editor>
                 </content>
             </section>
-            <node-ref>DocumentationNode</node-ref>
         </node-template>
+
+        <node-template>
+            <model-element-type>ISapphireLabelDef</model-element-type>
+            <label>label</label>
+            <use-model-element-image/>
+            <section>
+                <content>
+                    <include>PartId</include>
+                    <property-editor>Text</property-editor>
+                </content>
+            </section>
+        </node-template>
+        
         <node-template>
             <model-element-type>ISapphireCompositeDef</model-element-type>
             <label>composite</label>
@@ -345,6 +358,70 @@
             </node>
             <node-ref>DocumentationNode</node-ref>
         </node-template>
+        
+        <node-template>
+            <model-element-type>ISapphireActionLinkDef</model-element-type>
+            <label>action link</label>
+            <use-model-element-image/>
+            <section>
+                <content>
+                    <property-editor>Label</property-editor>
+                    <composite>
+                        <indent>true</indent>
+                        <content>
+                            <property-editor>ShowImage</property-editor>
+                        </content>
+                    </composite>
+                    <property-editor>ActionId</property-editor>
+                    <property-editor>ActionHandlerId</property-editor>
+                </content>
+            </section>
+        </node-template>
+        
+        <node-template>
+            <model-element-type>ISapphireHtmlPanelDef</model-element-type>
+            <label>html panel</label>
+            <use-model-element-image/>
+            <section>
+                <content>
+                    <property-editor>ContentSourceType</property-editor>
+                    <separator/>
+                    <switching-panel>
+                        <enum-controller>
+                            <property>ContentSourceType</property>
+                        </enum-controller>
+                        <panel>
+                            <key>HtmlContentSourceType.EMBEDDED</key>
+                            <content>
+                                <property-editor>Content</property-editor>
+                                <composite>
+                                    <indent>true</indent>
+                                    <content>
+                                        <property-editor>Fragment</property-editor>
+                                    </content>
+                                </composite>
+                            </content>
+                        </panel>
+                        <panel>
+                            <key>HtmlContentSourceType.REMOTE</key>
+                            <content>
+                                <property-editor>ContentUrl</property-editor>
+                            </content>
+                        </panel>
+                    </switching-panel>
+                </content>
+            </section>
+            <section>
+                <label>presentation</label>
+                <content>
+                    <property-editor>ExpandVertically</property-editor>
+                    <property-editor>ShowBorder</property-editor>
+                    <spacer/>
+                    <property-editor>Height</property-editor>
+                </content>
+            </section>
+        </node-template>
+
         <node-template>
             <model-element-type>IFormDef</model-element-type>
             <label>form</label>

@@ -7,129 +7,130 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *   Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************
 -->
 
 <definition>
 
-  <import>
-    <bundle>org.eclipse.sapphire.samples</bundle>
-    <package>org.eclipse.sapphire.samples.map</package>
-    <package>org.eclipse.sapphire.samples.map.ui</package>
-  </import>
-  
-  <diagram-page>
-    <id>diagram</id>
-    <page-name>Diagram</page-name>
-    <page-header-text>Diagram</page-header-text>
-    <connection>
-      <id>railway_routes</id>
-      <tool-palette-label>Railway Route</tool-palette-label>
-      <tool-palette-desc>Railway Route</tool-palette-desc>
-      <line-style>dash-dot</line-style>
-      <line-color>#808080</line-color>
-      <hint><name>width</name><value>2</value></hint>
-      <endpoint1>
-        <type>NONE</type>
-      </endpoint1>      
-      <endpoint2>
-        <type>ARROW</type>
-      </endpoint2>      
-    </connection>
-    <connection>
-      <id>highway_routes</id>
-      <tool-palette-label>Highway Route</tool-palette-label>
-      <tool-palette-desc>Highway Route</tool-palette-desc>
-      <endpoint1>
-        <type>NONE</type>
-      </endpoint1>      
-      <endpoint2>
-        <type>ARROW</type>
-      </endpoint2>    
-    </connection>
-    <node>
-      <id>destinations</id>
-      <tool-palette-label>Destination</tool-palette-label>
-      <tool-palette-desc>Map Destination</tool-palette-desc>
-      <property>Destinations</property>
-      <label>
-        <content>${Name == null ? "&lt;Destination&gt;" : Name}</content>
-      </label>
-      <instance-id>${Name}</instance-id>
-      <connection-binding>
-        <id>railway_routes</id>
-        <property>RailwayRoutes</property>
-        <label>
-          <content>${Distance == null ? "&lt;Distance&gt;" : Distance}</content>
-        </label>
-        <endpoint2>
-          <property>ToDestination</property>
-          <value>${Name}</value>
-        </endpoint2>
-        <instance-id>${ToDestination}</instance-id>        
-      </connection-binding>
-    </node>
-    <connection-binding>
-      <id>highway_routes</id>
-      <property>Routes</property>
-      <label>
-        <content>${Distance == null ? "&lt;Distance&gt;" : Distance}</content>
-      </label>
-      <endpoint1>
-        <property>FromDestination</property>
-        <value>${Name}</value>
-      </endpoint1>
-      <endpoint2>
-        <property>ToDestination</property>
-        <value>${Name}</value>
-      </endpoint2>
-      <instance-id>${FromDestination}-${ToDestination}</instance-id>
-    </connection-binding>
-  </diagram-page>
-  
-  <editor-page>
-    <id>overview</id>
-    <page-name>Overview</page-name>
-    <page-header-text>Overview</page-header-text>
-    <root-node>
-      <node>
-        <label>Destinations</label>
-        <section>
-          <description>Destinations in the map</description>
-          <content>
-            <property-editor>Destinations</property-editor>
-            <separator>
-              <label>Railway Routes</label>
-            </separator>
-            <switching-panel>
-              <list-selection-controller>
-                <property>Destinations</property>
-              </list-selection-controller>
-              <panel>
-                <key>IDestination</key>
-                <content>
-                  <property-editor>RailwayRoutes</property-editor>
-                </content>          
-              </panel>
-              <default-panel>
-                <content>
-                  <label>Select a destination above to configure additional properties.</label>
-                </content>
-              </default-panel>
-            </switching-panel>            
-          </content>
-        </section>
-      </node>
-      <node>
-        <label>Highway Routes</label>
-        <section>
-          <description>Highway Routes in the map</description>
-          <content>
-            <property-editor>Routes</property-editor>
-          </content>
-        </section>
-      </node>
-    </root-node>
-  </editor-page>
+    <import>
+        <bundle>org.eclipse.sapphire.samples</bundle>
+        <package>org.eclipse.sapphire.samples.map</package>
+        <package>org.eclipse.sapphire.samples.map.ui</package>
+    </import>
+    
+    <diagram-page>
+        <id>diagram</id>
+        <page-name>Diagram</page-name>
+        <page-header-text>Diagram</page-header-text>
+        <connection>
+            <id>railway_routes</id>
+            <tool-palette-label>Railway Route</tool-palette-label>
+            <tool-palette-desc>Railway Route</tool-palette-desc>
+            <line-style>dash-dot</line-style>
+            <line-color>#808080</line-color>
+            <hint><name>width</name><value>2</value></hint>
+            <endpoint1>
+                <type>NONE</type>
+            </endpoint1>            
+            <endpoint2>
+                <type>ARROW</type>
+            </endpoint2>            
+        </connection>
+        <connection>
+            <id>highway_routes</id>
+            <tool-palette-label>Highway Route</tool-palette-label>
+            <tool-palette-desc>Highway Route</tool-palette-desc>
+            <endpoint1>
+                <type>NONE</type>
+            </endpoint1>            
+            <endpoint2>
+                <type>ARROW</type>
+            </endpoint2>        
+        </connection>
+        <node>
+            <id>destinations</id>
+            <tool-palette-label>Destination</tool-palette-label>
+            <tool-palette-desc>Map Destination</tool-palette-desc>
+            <property>Destinations</property>
+            <label>
+                <content>${Name == null ? "&lt;Destination&gt;" : Name}</content>
+            </label>
+            <instance-id>${Name}</instance-id>
+            <connection-binding>
+                <id>railway_routes</id>
+                <property>RailwayRoutes</property>
+                <label>
+                    <content>${Distance == null ? "&lt;Distance&gt;" : Distance}</content>
+                </label>
+                <endpoint2>
+                    <property>ToDestination</property>
+                    <value>${Name}</value>
+                </endpoint2>
+                <instance-id>${ToDestination}</instance-id>                
+            </connection-binding>
+        </node>
+        <connection-binding>
+            <id>highway_routes</id>
+            <property>Routes</property>
+            <label>
+                <content>${Distance == null ? "&lt;Distance&gt;" : Distance}</content>
+            </label>
+            <endpoint1>
+                <property>FromDestination</property>
+                <value>${Name}</value>
+            </endpoint1>
+            <endpoint2>
+                <property>ToDestination</property>
+                <value>${Name}</value>
+            </endpoint2>
+            <instance-id>${FromDestination}-${ToDestination}</instance-id>
+        </connection-binding>
+    </diagram-page>
+    
+    <editor-page>
+        <id>overview</id>
+        <page-name>Overview</page-name>
+        <page-header-text>Overview</page-header-text>
+        <root-node>
+            <node>
+                <label>Destinations</label>
+                <section>
+                    <description>Destinations in the map</description>
+                    <content>
+                        <property-editor>Destinations</property-editor>
+                        <separator>
+                            <label>Railway Routes</label>
+                        </separator>
+                        <switching-panel>
+                            <list-selection-controller>
+                                <property>Destinations</property>
+                            </list-selection-controller>
+                            <panel>
+                                <key>IDestination</key>
+                                <content>
+                                    <property-editor>RailwayRoutes</property-editor>
+                                </content>                    
+                            </panel>
+                            <default-panel>
+                                <content>
+                                    <label>Select a destination above to configure additional properties.</label>
+                                </content>
+                            </default-panel>
+                        </switching-panel>                        
+                    </content>
+                </section>
+            </node>
+            <node>
+                <label>Highway Routes</label>
+                <section>
+                    <description>Highway Routes in the map</description>
+                    <content>
+                        <property-editor>Routes</property-editor>
+                    </content>
+                </section>
+            </node>
+        </root-node>
+    </editor-page>
+
 </definition>
