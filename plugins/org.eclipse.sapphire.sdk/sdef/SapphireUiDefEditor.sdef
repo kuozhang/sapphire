@@ -380,11 +380,17 @@
         
         <node-template>
             <model-element-type>ISapphireHtmlPanelDef</model-element-type>
-            <label>html panel</label>
+            <label>HTML panel</label>
             <use-model-element-image/>
             <section>
                 <content>
-                    <property-editor>ContentSourceType</property-editor>
+                    <property-editor>
+                        <property>ContentSourceType</property>
+                        <hint>
+                            <name>show.label</name>
+                            <value>false</value>
+                        </hint>
+                    </property-editor>
                     <separator/>
                     <switching-panel>
                         <enum-controller>
@@ -393,13 +399,14 @@
                         <panel>
                             <key>HtmlContentSourceType.EMBEDDED</key>
                             <content>
-                                <property-editor>Content</property-editor>
-                                <composite>
-                                    <indent>true</indent>
-                                    <content>
-                                        <property-editor>Fragment</property-editor>
-                                    </content>
-                                </composite>
+                                <property-editor>
+                                    <property>Content</property>
+                                    <hint>
+                                        <name>show.label</name>
+                                        <value>false</value>
+                                    </hint>
+                                </property-editor>
+                                <property-editor>Fragment</property-editor>
                             </content>
                         </panel>
                         <panel>

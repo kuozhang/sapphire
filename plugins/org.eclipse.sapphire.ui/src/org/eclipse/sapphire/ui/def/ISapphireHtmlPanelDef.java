@@ -62,7 +62,7 @@ public interface ISapphireHtmlPanelDef
     @Type( base = Function.class )
     @Label( standard = "content URL" )
     @NonNullValue
-    @Enablement( expr = "${ ContentSourceType == 'remote' }" )
+    @Enablement( expr = "${ ContentSourceType == 'REMOTE' }" )
     @XmlValueBinding( path = "url", removeNodeOnSetIfNull = false )
     
     ValueProperty PROP_CONTENT_URL = new ValueProperty( TYPE, "ContentUrl" );
@@ -76,7 +76,7 @@ public interface ISapphireHtmlPanelDef
     @Type( base = Function.class )
     @Label( standard = "content" )
     @NonNullValue
-    @Enablement( expr = "${ ContentSourceType == 'embedded' }" )
+    @Enablement( expr = "${ ContentSourceType == 'EMBEDDED' }" )
     @LongString
     @Localizable
     @XmlValueBinding( path = "content", collapseWhitespace = true, removeNodeOnSetIfNull = false )
@@ -92,7 +92,7 @@ public interface ISapphireHtmlPanelDef
     @Type( base = Boolean.class )
     @Label( standard = "fragment" )
     @DefaultValue( text = "false" )
-    @Enablement( expr = "${ ContentSourceType == 'embedded' }" )
+    @Enablement( expr = "${ ContentSourceType == 'EMBEDDED' }" )
     @XmlValueBinding( path = "fragment", mapExistanceToValue = "true" )
     
     ValueProperty PROP_FRAGMENT = new ValueProperty( TYPE, "Fragment" );
