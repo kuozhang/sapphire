@@ -61,9 +61,9 @@ public abstract class SapphirePageBook
             this.pageDefs.put( key, page );
         }
         
-        this.defaultPageDef = def.getDefaultPage().element();
+        this.defaultPageDef = def.getDefaultPage();
         
-        if( this.defaultPageDef == null )
+        if( this.defaultPageDef.getContent().isEmpty() )
         {
             this.defaultPageDef = initDefaultPageDef();
         }

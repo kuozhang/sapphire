@@ -237,6 +237,23 @@
         </content>
     </form>
 
+    <form>
+        <id>CompositePresentation</id>
+        <content>
+            <property-editor>MarginWidth</property-editor>
+            <property-editor>MarginHeight</property-editor>
+            <spacer/>
+            <property-editor>MarginLeft</property-editor>
+            <property-editor>MarginRight</property-editor>
+            <property-editor>MarginTop</property-editor>
+            <property-editor>MarginBottom</property-editor>
+            <spacer/>
+            <property-editor>Indent</property-editor>
+            <property-editor>ScrollVertically</property-editor>
+            <property-editor>ScrollHorizontally</property-editor>
+        </content>
+    </form>
+    
     <node-list>
         <id>PartsNodeList</id>
         <property>@{Property}</property>
@@ -256,7 +273,6 @@
             </section>
             <node>
                 <label>child properties</label>
-                <image>images/objects/content.png</image>
                 <section>
                     <content>
                         <label>
@@ -276,7 +292,6 @@
             </node>
             <node>
                 <label>related content</label>
-                <image>images/objects/content.png</image>
                 <section>
                     <content>
                         <label>
@@ -347,7 +362,6 @@
             </section>
             <node>
                 <label>content</label>
-                <image>images/objects/content.png</image>
                 <node-list-ref>
                     <part>PartsNodeList</part>
                     <param>
@@ -428,6 +442,112 @@
                 </content>
             </section>
         </node-template>
+        
+        <node-template>
+            <model-element-type>ISapphireIfElseDirectiveDef</model-element-type>
+            <label>if</label>
+            <use-model-element-image/>
+            <section>
+                <label>If</label>
+                <content>
+                    <property-editor>ConditionClass</property-editor>
+                    <property-editor>ConditionParameter</property-editor>
+                </content>
+            </section>
+            <node>
+                <label>then</label>
+                <section>
+                    <content>
+                        <label>The content to show if the condition evaluates to true.</label>
+                    </content>
+                </section>
+                <node-list-ref>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>ThenContent</value>
+                    </param>
+                </node-list-ref>
+            </node>
+            <node>
+                <label>else</label>
+                <section>
+                    <content>
+                        <label>The content to show if the condition evaluates to false.</label>
+                    </content>
+                </section>
+                <node-list-ref>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>ElseContent</value>
+                    </param>
+                </node-list-ref>
+            </node>
+        </node-template>
+
+        <node-template>
+            <model-element-type>ISapphireWithDirectiveDef</model-element-type>
+            <label>with</label>
+            <use-model-element-image/>
+            <section>
+                <content>
+                    <property-editor>Property</property-editor>
+                    <property-editor>Label</property-editor>
+                </content>
+            </section>
+            <node-list>
+                <property>Pages</property>
+                <node-template>
+                    <label>case: ${ Key == null ? "" : Key }</label>
+                    <section>
+                        <label>Case</label>
+                        <content>
+                            <property-editor>Key</property-editor>
+                        </content>
+                    </section>
+                    <section>
+                        <label>presentation</label>
+                        <content>
+                            <include>CompositePresentation</include>
+                        </content>
+                    </section>
+                    <node-list-ref>
+                        <part>PartsNodeList</part>
+                        <param>
+                            <name>Property</name>
+                            <value>Content</value>
+                        </param>
+                    </node-list-ref>
+                </node-template>
+            </node-list>
+            <node>
+                <label>default</label>
+                <property>DefaultPage</property>
+                <section>
+                    <label>default content</label>
+                    <content>
+                        <label>The content to show if none of the explicit cases match.</label>
+                    </content>
+                </section>
+                <section>
+                    <label>presentation</label>
+                    <content>
+                        <include>CompositePresentation</include>
+                    </content>
+                </section>
+                <node-list-ref>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>Content</value>
+                    </param>
+                </node-list-ref>
+            </node>
+        </node-template>
+
+
+        
 
         <node-template>
             <model-element-type>IFormDef</model-element-type>
@@ -440,7 +560,6 @@
             </section>
             <node>
                 <label>content</label>
-                <image>images/objects/content.png</image>
                 <node-list-ref>
                     <part>PartsNodeList</part>
                     <param>
@@ -469,26 +588,6 @@
             <section>
                 <content>
                     <property-editor>Label</property-editor>
-                </content>
-            </section>
-            <node-ref>DocumentationNode</node-ref>
-            <node>
-                <label>content</label>
-                <node-list-ref>
-                    <part>PartsNodeList</part>
-                    <param>
-                        <name>Property</name>
-                        <value>Content</value>
-                    </param>
-                </node-list-ref>
-            </node>
-        </node-template>
-        <node-template>
-            <model-element-type>ISapphireWithDirectiveDef</model-element-type>
-            <label>with</label>
-            <section>
-                <content>
-                    <property-editor>Property</property-editor>
                 </content>
             </section>
             <node-ref>DocumentationNode</node-ref>

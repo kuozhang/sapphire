@@ -11,9 +11,8 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -50,8 +49,8 @@ public interface ISapphirePageBookDef
     @Label( standard = "default page" )
     @XmlBinding( path = "default-panel" )
     
-    ElementProperty PROP_DEFAULT_PAGE = new ElementProperty( TYPE, "DefaultPage" );
+    ImpliedElementProperty PROP_DEFAULT_PAGE = new ImpliedElementProperty( TYPE, "DefaultPage" );
     
-    ModelElementHandle<ISapphireCompositeDef> getDefaultPage();
+    ISapphireCompositeDef getDefaultPage();
 
 }

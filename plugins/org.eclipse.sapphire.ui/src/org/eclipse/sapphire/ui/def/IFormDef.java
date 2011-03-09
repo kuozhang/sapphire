@@ -25,7 +25,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  */
 
 @Label( standard = "form" )
-@Image( small = "org.eclipse.sapphire.ui/images/objects/content.png" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/form.png" )
 @GenerateImpl
 
 public interface IFormDef

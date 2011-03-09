@@ -48,7 +48,7 @@ public interface ISapphireHtmlPanelDef
     
     @Type( base = HtmlContentSourceType.class )
     @Label( standard = "content source type" )
-    @DefaultValue( text = "embedded" )
+    @DefaultValue( text = "EMBEDDED" )
     @CustomXmlValueBinding( impl = SapphireHtmlPanelDefSourceBinding.class )
     
     ValueProperty PROP_CONTENT_SOURCE_TYPE = new ValueProperty( TYPE, "ContentSourceType" );
@@ -79,7 +79,7 @@ public interface ISapphireHtmlPanelDef
     @Enablement( expr = "${ ContentSourceType == 'EMBEDDED' }" )
     @LongString
     @Localizable
-    @XmlValueBinding( path = "content", collapseWhitespace = true, removeNodeOnSetIfNull = false )
+    @XmlValueBinding( path = "content", removeNodeOnSetIfNull = false )
     
     ValueProperty PROP_CONTENT = new ValueProperty( TYPE, "Content" );
     
