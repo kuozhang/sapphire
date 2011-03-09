@@ -44,6 +44,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.ui.editor.DiagramEditor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramPageDef;
@@ -52,7 +53,6 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramGeometryWrapper;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramGeometryWrapper.Bounds;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
@@ -296,16 +296,6 @@ public class SapphireDiagramEditor extends DiagramEditor
 				ft.add(ctx);						
 			}
 			
-			// add embedded connections
-			DiagramEmbeddedConnectionTemplate embeddedConnTemplate = 
-				nodeTemplate.getEmbeddedConnectionTemplate();
-			if (embeddedConnTemplate != null)
-			{
-				for (DiagramConnectionPart connPart : embeddedConnTemplate.getDiagramConnections(null))
-				{
-					addConnection(connPart, diagramGeometry);
-				}
-			}
 		}		
 	}
 	
@@ -320,7 +310,21 @@ public class SapphireDiagramEditor extends DiagramEditor
 			{
 				addConnection(connPart, diagramGeometry);
 			}
-		}		
+		}
+		
+		// Add embedded connections. This needs to be done after all the nodes have been added.
+		for (DiagramNodeTemplate nodeTemplate : this.diagramPart.getNodeTemplates())
+		{
+			DiagramEmbeddedConnectionTemplate embeddedConnTemplate = 
+				nodeTemplate.getEmbeddedConnectionTemplate();
+			if (embeddedConnTemplate != null)
+			{
+				for (DiagramConnectionPart connPart : embeddedConnTemplate.getDiagramConnections(null))
+				{
+					addConnection(connPart, diagramGeometry);
+				}
+			}
+		}
 	}
 	
 	private ContainerShape getContainerShape(Object bo)
@@ -378,11 +382,11 @@ public class SapphireDiagramEditor extends DiagramEditor
 						diagramGeometry.getConnectionBendpoints(connPart) != null)
 				{
 					FreeFormConnection freeConn = (FreeFormConnection)conn;
-					List<org.eclipse.sapphire.ui.diagram.editor.DiagramGeometryWrapper.Point> bps = 
+					List<org.eclipse.sapphire.ui.Point> bps = 
 						diagramGeometry.getConnectionBendpoints(connPart);
 					List<Point> bendpoints = freeConn.getBendpoints();
 					int index = 0;
-					for (org.eclipse.sapphire.ui.diagram.editor.DiagramGeometryWrapper.Point pt : bps)
+					for (org.eclipse.sapphire.ui.Point pt : bps)
 					{
 						Point newPoint = Graphiti.getGaService().createPoint(pt.getX(), pt.getY());										
 						bendpoints.add(index++, newPoint);										

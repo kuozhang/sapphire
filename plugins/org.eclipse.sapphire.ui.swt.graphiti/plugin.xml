@@ -33,6 +33,7 @@
             name="%sapphireDiagramTypeProviderName">
          <diagramType id="org.eclipse.sapphire.ui.SapphireDiagramType"/>
          <imageProvider id="org.eclipse.sapphire.diagram.graphiti.SapphireDiagramImageProvider"/>
+         <imageProvider id="org.eclipse.sapphire.diagram.graphiti.ErrorIndicatorImageProvider"/>
       </diagramTypeProvider>
    </extension>
      
@@ -41,6 +42,13 @@
       <imageProvider
             class="org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramImageProvider"
             id="org.eclipse.sapphire.diagram.graphiti.SapphireDiagramImageProvider">
+      </imageProvider>
+   </extension>
+   <extension
+         point="org.eclipse.graphiti.ui.imageProviders">
+      <imageProvider
+            class="org.eclipse.sapphire.ui.swt.graphiti.providers.ErrorIndicatorImageProvider"
+            id="org.eclipse.sapphire.diagram.graphiti.ErrorIndicatorImageProvider">
       </imageProvider>
    </extension>
      

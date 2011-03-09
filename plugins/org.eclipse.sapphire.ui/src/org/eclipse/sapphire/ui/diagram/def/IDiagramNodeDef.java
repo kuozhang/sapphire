@@ -19,6 +19,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
@@ -40,7 +41,7 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 public interface IDiagramNodeDef 
 
-	extends ISapphirePartDef
+	extends ISapphirePartDef, IDiagramDimension
 	
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramNodeDef.class );
@@ -74,6 +75,43 @@ public interface IDiagramNodeDef
     
     Value<String> getToolPaletteDesc();
     void setToolPaletteDesc( String paletteDesc );
+    
+    // *** resizable ***
+    
+    @Type( base = Boolean.class )
+    @Label( standard = "resizable" )
+    @XmlBinding( path = "resizable" )
+    @DefaultValue( text = "false" )
+    
+    ValueProperty PROP_RESIZABLE = new ValueProperty( TYPE, "Resizable" );
+    
+    Value<Boolean> isResizable();
+    void setResizable( String value );
+    void setResizable( Boolean value );
+    
+    // *** HorizontalSpacing ***
+	
+    @Type( base = Integer.class )
+    @Label( standard = "horizontal spacing" )
+    @XmlBinding( path = "horizontal-spacing" )
+    
+    ValueProperty PROP_HORIZONTAL_SPACING = new ValueProperty( TYPE, "HorizontalSpacing" );
+    
+    Value<Integer> getHorizontalSpacing();
+    void setHorizontalSpacing( String value );
+    void setHorizontalSpacing( Integer value );
+    
+    // *** VerticalSpacing ***
+	
+    @Type( base = Integer.class )
+    @Label( standard = "vertical spacing" )
+    @XmlBinding( path = "vertical-spacing" )
+    
+    ValueProperty PROP_VERTICAL_SPACING = new ValueProperty( TYPE, "VerticalSpacing" );
+    
+    Value<Integer> getVerticalSpacing();
+    void setVerticalSpacing( String value );
+    void setVerticalSpacing( Integer value );
 
     // *** Property ***
     
@@ -116,7 +154,7 @@ public interface IDiagramNodeDef
     // *** ValidationDecorator ***
     
     @Type( base = IDiagramDecoratorDef.class )
-    @XmlBinding( path = "validation-decorator" )
+    @XmlBinding( path = "validation-error-indicator" )
 
     ElementProperty PROP_VALIDATION_DECORATOR = new ElementProperty( TYPE, "ValidationDecorator" );
     

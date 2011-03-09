@@ -17,6 +17,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -27,7 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface IDiagramImageChoice 
 
-	extends IModelElement
+	extends IDiagramDimension 
 	
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramImageChoice.class );
@@ -51,5 +52,5 @@ public interface IDiagramImageChoice
     
     Value<String> getImagePath();
     void setImagePath( String path );
-	
+    
 }

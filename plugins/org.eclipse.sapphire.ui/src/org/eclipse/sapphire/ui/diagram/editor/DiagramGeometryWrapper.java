@@ -23,6 +23,8 @@ import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.WorkspaceFileResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
+import org.eclipse.sapphire.ui.Bounds;
+import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.geometry.IBendPoint;
 import org.eclipse.sapphire.ui.diagram.geometry.IDiagramConnectionGeometry;
 import org.eclipse.sapphire.ui.diagram.geometry.IDiagramGeometry;
@@ -359,80 +361,12 @@ public class DiagramGeometryWrapper
 				for (Point pt : bps)
 				{
 					IBendPoint pt2 = conn.getConnectionBendpoints().addNewElement();
-					pt2.setX(pt.x);
-					pt2.setY(pt.y);
+					pt2.setX(pt.getX());
+					pt2.setY(pt.getY());
 				}
 			}
 		}
 		
 	}
 	
-	// -------------------------------------------------------------------
-	// Inner classes
-	// -------------------------------------------------------------------
-	
-	public static class Point
-	{
-		private int x;
-		private int y;
-		
-		public Point(int x, int y)
-		{
-			this.x = x;
-			this.y = y;
-		}
-		
-		public int getX() 
-		{ 
-			return this.x; 
-		}
-		
-		public void setX(int x) 
-		{
-			this.x = x;
-		}
-		
-		public int getY()
-		{
-			return this.y;
-		}
-		
-		public void setY(int y)
-		{
-			this.y = y;
-		}
-	}
-	
-	public static final class Bounds extends Point
-	{
-		private int width;
-		private int height;
-		
-		public Bounds(int x, int y, int width, int height)
-		{
-			super(x, y);
-			this.width = width;
-			this.height = height;
-		}
-		
-		public int getWidth()
-		{
-			return this.width;
-		}
-		
-		public void setWidth(int w)
-		{
-			this.width = w;
-		}
-		
-		public int getHeight()
-		{
-			return this.height;
-		}
-		
-		public void setHeight(int h)
-		{
-			this.height = h;
-		}
-	}
 }

@@ -29,11 +29,13 @@ import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.ColorConstant;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
+import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.diagram.DiagramDropTargetService;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramLabelDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeImageDef;
+import org.eclipse.sapphire.ui.diagram.def.ImagePlacement;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramGeometryWrapper;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
@@ -98,8 +100,11 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		
         // define a default size for the shape
         IDiagramNodeDef nodeDef = (IDiagramNodeDef)nodePart.getDefinition();
-        int width = nodeDef.getHint(ISapphirePartDef.HINT_WIDTH, DEFAULT_NODE_WIDTH);
-        int height = nodeDef.getHint(ISapphirePartDef.HINT_HEIGHT, DEFAULT_NODE_HEIGHT);
+        int nodew = getNodeWidth(nodePart);
+        int nodeh = getNodeHeight(nodePart);
+        int width = nodew > 0 ? nodew : DEFAULT_NODE_WIDTH;
+        int height = nodeh > 0 ? nodeh : DEFAULT_NODE_HEIGHT;
+        
         int x, y;
         if (context.getX() != -1)
         {
@@ -140,7 +145,6 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
         }
         else
         {
-        	IDiagramNodeImageDef imageDef = nodeDef.getImage().element();
         	Rectangle rectangle = gaService.createRectangle(containerShape);
         	rectangle.setFilled(false);
         	rectangle.setLineVisible(false);
@@ -153,14 +157,13 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
             	Shape shape = peCreateService.createShape(containerShape, false);
             	String imageId = nodePart.getImageId();
             	Image image = gaService.createImage(shape, imageId);
-            	int imageX = imageDef.getHint("x", 0);
-            	int imageY = imageDef.getHint("y", 0);
-                int imageWidth = imageDef.getHint(ISapphirePartDef.HINT_WIDTH, width);
-                int imageHeight = imageDef.getHint(ISapphirePartDef.HINT_HEIGHT, -1);
+            	
+            	Point imageLocation = getImageLocation(nodePart);
         		Graphiti.getPeService().setPropertyValue(containerShape, 
         				SapphireDiagramPropertyKeys.NODE_IMAGE_ID, imageId);
 
-    	        gaService.setLocationAndSize(image, imageX, imageY, imageWidth, imageHeight);
+    	        gaService.setLocationAndSize(image, imageLocation.getX(), imageLocation.getY(),
+    	        		nodePart.getImageWidth(), nodePart.getImageHeight());
             }        	
         }
 
@@ -175,14 +178,14 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
             text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
             text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 
-            IDiagramLabelDef labelDef = nodeDef.getLabel().element();
-            int labelX = labelDef.getHint("x", 0);
-        	int labelY = labelDef.getHint("y", 0);            
-            int labelWidth = labelDef.getHint(ISapphirePartDef.HINT_WIDTH, width);
-            int labelHeight = labelDef.getHint(ISapphirePartDef.HINT_HEIGHT, 
-            		nodePart.getImageId() == null ? height : DEFAULT_TEXT_HEIGHT);
+            Point labelLocation = getLabelLocation(nodePart);
+            int labelWidth = nodePart.getLabelWidth();
+            int labelHeight = nodePart.getLabelHeight();
+            int lwidth = labelWidth > 0 ? labelWidth : width;
+            int lheight = labelHeight > 0 ? labelHeight : (nodePart.getImageId() == null ? height : DEFAULT_TEXT_HEIGHT);
             
-            gaService.setLocationAndSize(text, labelX, labelY, labelWidth, labelHeight);
+            gaService.setLocationAndSize(text, labelLocation.getX(), labelLocation.getY(), 
+            		lwidth, lheight);
  
             // create link and wire it
             link(shape, nodePart);            
@@ -199,4 +202,108 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		return containerShape;
 	}
 
+	private int getNodeWidth(DiagramNodePart nodePart)
+	{
+		if (nodePart.getNodeWidth() > 0)
+		{
+			return nodePart.getNodeWidth();
+		}
+		
+		int width = 0;
+		int labelWidth = nodePart.getLabelWidth();
+		if (nodePart.getImageId() != null)
+		{
+			int imageWidth = nodePart.getImageWidth();
+			
+			ImagePlacement imagePlacement = nodePart.getImagePlacement();
+			if (imagePlacement == ImagePlacement.TOP || imagePlacement == ImagePlacement.BOTTOM)
+			{
+				width = Math.max(labelWidth, imageWidth);
+			}
+			else if (imagePlacement == ImagePlacement.LEFT || imagePlacement == ImagePlacement.RIGHT)
+			{
+				int horizaontalSpacing = nodePart.getHorizontalSpacing();
+				width = labelWidth + imageWidth + horizaontalSpacing;
+			}
+		}
+		else 
+		{
+			width = labelWidth;
+		}
+		return width;
+	}
+
+	private int getNodeHeight(DiagramNodePart nodePart)
+	{
+		if (nodePart.getNodeHeight() > 0)
+		{
+			return nodePart.getNodeHeight();
+		}
+		int height = 0;
+		int labelHeight = nodePart.getLabelHeight();
+		if (nodePart.getImageId() != null)
+		{
+			int imageHeight = nodePart.getImageHeight();
+			
+			ImagePlacement imagePlacement = nodePart.getImagePlacement();
+			if (imagePlacement == ImagePlacement.TOP || imagePlacement == ImagePlacement.BOTTOM)
+			{
+				int verticalSpacing = nodePart.getVerticalSpacing();
+				height = labelHeight + imageHeight + verticalSpacing;
+			}
+			else if (imagePlacement == ImagePlacement.LEFT || imagePlacement == ImagePlacement.RIGHT)
+			{
+				height = Math.max(labelHeight, imageHeight);
+			}
+		}
+		else 
+		{
+			height = labelHeight;
+		}
+		return height;
+	}
+	
+	private Point getImageLocation(DiagramNodePart nodePart)
+	{
+		ImagePlacement imagePlacement = nodePart.getImagePlacement();
+		if (imagePlacement == ImagePlacement.TOP || imagePlacement == ImagePlacement.LEFT)
+		{
+			return new Point(0, 0);
+		}
+		else if (imagePlacement == ImagePlacement.BOTTOM)
+		{
+			int labelHeight = nodePart.getLabelHeight();
+			int horizontalSpacing = nodePart.getHorizontalSpacing();
+			return new Point(labelHeight + horizontalSpacing, 0);
+		}
+		else if (imagePlacement == ImagePlacement.RIGHT )
+		{
+			int labelWidth = nodePart.getLabelWidth();
+			int verticalSpacing = nodePart.getVerticalSpacing();
+			return new Point(labelWidth + verticalSpacing, 0);			
+		}
+		return new Point(0, 0);
+	}
+	
+	private Point getLabelLocation(DiagramNodePart nodePart)
+	{
+		ImagePlacement imagePlacement = nodePart.getImagePlacement();
+		if (imagePlacement == ImagePlacement.TOP)
+		{
+			int imageHeight = nodePart.getImageHeight();
+			int verticalSpacing = nodePart.getVerticalSpacing();			
+			return new Point(0, imageHeight + verticalSpacing);
+		}
+		else if (imagePlacement == ImagePlacement.BOTTOM || imagePlacement == ImagePlacement.RIGHT)
+		{
+			return new Point(0, 0);
+		}
+		else if (imagePlacement == ImagePlacement.LEFT )
+		{
+			int imageWidth = nodePart.getImageWidth();
+			int horizontalSpacing = nodePart.getHorizontalSpacing();
+			return new Point(imageWidth + horizontalSpacing, 0);			
+		}
+		return new Point(0, 0);
+	}
 }

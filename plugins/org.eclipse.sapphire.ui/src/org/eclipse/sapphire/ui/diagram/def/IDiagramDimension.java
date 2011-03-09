@@ -11,16 +11,14 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -28,24 +26,35 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 @GenerateImpl
 
-public interface IDiagramLabelDef 
+public interface IDiagramDimension
 
-	extends ISapphirePartDef, IDiagramDimension
+	extends IModelElement
 	
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramLabelDef.class );
+	ModelElementType TYPE = new ModelElementType( IDiagramDimension.class );
 	
-    // *** Content ***
+    // *** Width ***
+	
+    @Type( base = Integer.class )
+    @Label( standard = "width" )
+    @XmlBinding( path = "width" )
     
-    @Type( base = Function.class )
-    @Label( standard = "content" )
-    @Localizable
-    @XmlBinding( path = "content" )
+    ValueProperty PROP_WIDTH = new ValueProperty( TYPE, "Width" );
     
-    ValueProperty PROP_CONTENT = new ValueProperty( TYPE, "Content" );
+    Value<Integer> getWidth();
+    void setWidth( String width );
+    void setWidth( Integer width );
+
+    // *** Height ***
+	
+    @Type( base = Integer.class )
+    @Label( standard = "height" )
+    @XmlBinding( path = "height" )
     
-    Value<Function> getContent();
-    void setContent( String value );
-    void setContent( Function value );
+    ValueProperty PROP_HEIGHT = new ValueProperty( TYPE, "Height" );
     
+    Value<Integer> getHeight();
+    void setHeight( String width );
+    void setHeight( Integer width );
+	
 }
