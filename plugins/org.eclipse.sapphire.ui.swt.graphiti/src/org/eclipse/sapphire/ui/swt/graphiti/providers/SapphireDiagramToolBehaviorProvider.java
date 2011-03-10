@@ -19,9 +19,11 @@ import org.eclipse.graphiti.features.context.IDoubleClickContext;
 import org.eclipse.graphiti.features.custom.ICustomFeature;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Image;
+import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
+import org.eclipse.graphiti.platform.IPlatformImageConstants;
 import org.eclipse.graphiti.tb.DefaultToolBehaviorProvider;
 import org.eclipse.graphiti.tb.IContextButtonPadData;
 import org.eclipse.graphiti.tb.IDecorator;
@@ -31,6 +33,7 @@ import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.def.Alignment;
 import org.eclipse.sapphire.ui.diagram.def.DecoratorPlacement;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramDecoratorDef;
+import org.eclipse.sapphire.ui.diagram.def.ProblemIndicatorSize;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireDoubleClickNodeFeature;
 
@@ -40,8 +43,10 @@ import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireDoubleClickNodeFeat
 
 public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProvider 
 {
-	private static final int ERROR_DECORATOR_WIDTH = 7;
-	private static final int ERROR_DECORATOR_HEIGHT = 8;
+	private static final int SMALL_ERROR_DECORATOR_WIDTH = 7;
+	private static final int SMALL_ERROR_DECORATOR_HEIGHT = 8;
+	private static final int LARGE_ERROR_DECORATOR_WIDTH = 16;
+	private static final int LARGE_ERROR_DECORATOR_HEIGHT = 16;
 	
 	public SapphireDiagramToolBehaviorProvider(IDiagramTypeProvider dtp) 
 	{
@@ -90,7 +95,8 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 		if (bo instanceof DiagramNodePart)
 		{
 			DiagramNodePart nodePart = (DiagramNodePart)bo;
-			if (nodePart.showErrorIndicator())
+			IDiagramDecoratorDef decoratorDef = nodePart.getErrorIndicatorDef();
+			if (decoratorDef.isShowDecorator().getContent())
 			{
 				IModelElement model = nodePart.getModelElement();
 				IStatus status = model.validate();
@@ -99,11 +105,25 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 				{
 					if (status.getSeverity() == IStatus.WARNING)
 					{
-						imageRenderingDecorator = new ImageDecorator(ErrorIndicatorImageProvider.IMG_WARNING_DECORATOR);
+						if (decoratorDef.getSize().getContent() == ProblemIndicatorSize.SMALL)
+						{
+							imageRenderingDecorator = new ImageDecorator(ErrorIndicatorImageProvider.IMG_WARNING_DECORATOR);
+						}
+						else
+						{
+							imageRenderingDecorator = new ImageDecorator(IPlatformImageConstants.IMG_ECLIPSE_WARNING);
+						}
 					}
 					else if (status.getSeverity() == IStatus.ERROR)
 					{
-						imageRenderingDecorator = new ImageDecorator(ErrorIndicatorImageProvider.IMG_ERROR_DECORATOR);
+						if (decoratorDef.getSize().getContent() == ProblemIndicatorSize.SMALL)
+						{
+							imageRenderingDecorator = new ImageDecorator(ErrorIndicatorImageProvider.IMG_ERROR_DECORATOR);
+						}
+						else
+						{
+							imageRenderingDecorator = new ImageDecorator(IPlatformImageConstants.IMG_ECLIPSE_ERROR);
+						}
 					}
 				}
 				if (imageRenderingDecorator != null)
@@ -122,67 +142,90 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 	private Point getErrorIndicatorPosition(DiagramNodePart nodePart, PictogramElement pe)
 	{
 		IDiagramDecoratorDef decoratorDef = nodePart.getErrorIndicatorDef();
-		if (decoratorDef != null)
+		GraphicsAlgorithm referencedGA = null;
+		Text text = null;
+		ContainerShape containerShape = (ContainerShape)pe;
+		EList<Shape> children = containerShape.getChildren();
+		for (Shape child : children)
 		{
-			DecoratorPlacement decoratorPlace = decoratorDef.getDecoratorPlacement().getContent();
-			if (decoratorPlace == DecoratorPlacement.IMAGE)
+			GraphicsAlgorithm ga = child.getGraphicsAlgorithm();
+			if (ga instanceof Image)
 			{
-				ContainerShape containerShape = (ContainerShape)pe;
-				EList<Shape> children = containerShape.getChildren();
-				for (Shape child : children)
+				if (decoratorDef.getDecoratorPlacement().getContent() == DecoratorPlacement.IMAGE)
 				{
-					GraphicsAlgorithm ga = child.getGraphicsAlgorithm();
-					if (ga instanceof Image)
-					{
-						Image image = (Image)ga;
-						Alignment horizontalAlign = decoratorDef.getHorizontalAlign().getContent();						
-						int offsetX = 0;
-						if (horizontalAlign == Alignment.RIGHT)
-						{
-							offsetX = image.getWidth() - ERROR_DECORATOR_WIDTH;
-							if (decoratorDef.getRightMargin().getContent() != null)
-							{
-								offsetX -= decoratorDef.getRightMargin().getContent();
-							}
-						}
-						else if (horizontalAlign == Alignment.LEFT)
-						{
-							if (decoratorDef.getLeftMargin().getContent() != null)
-							{
-								offsetX += decoratorDef.getLeftMargin().getContent();
-							}
-						}
-						else if (horizontalAlign == Alignment.CENTER)
-						{
-							offsetX = (image.getWidth() - ERROR_DECORATOR_WIDTH) >> 1;
-						}
-						
-						Alignment verticalAlign = decoratorDef.getVerticalAlign().getContent();
-						int offsetY = 0;
-						if (verticalAlign == Alignment.BOTTOM)
-						{
-							offsetY = image.getHeight() - ERROR_DECORATOR_HEIGHT;
-							if (decoratorDef.getBottomMargin().getContent() != null)
-							{
-								offsetY -= decoratorDef.getBottomMargin().getContent();
-							}
-						}
-						else if (verticalAlign == Alignment.TOP)
-						{
-							if (decoratorDef.getTopMargin().getContent() != null)
-							{
-								offsetY += decoratorDef.getTopMargin().getContent();
-							}							
-						}
-						else if (verticalAlign == Alignment.CENTER)
-						{
-							offsetY = (image.getHeight() - ERROR_DECORATOR_HEIGHT) / 2;
-						}
-						
-						return new Point(offsetX, offsetY);
-					}
+					referencedGA = ga;
+					break;
+				}				
+			}
+			else if (ga instanceof Text)
+			{
+				if (decoratorDef.getDecoratorPlacement().getContent() == DecoratorPlacement.LABEL)
+				{
+					referencedGA = ga;
+					break;
+				}
+				if (text == null)
+				{
+					text = (Text)ga;
 				}
 			}
+		}		
+		if (referencedGA == null)
+		{
+			referencedGA = text;
+		}
+		
+		if (referencedGA != null)
+		{
+			int indicatorWidth = decoratorDef.getSize().getContent() == ProblemIndicatorSize.LARGE ? LARGE_ERROR_DECORATOR_WIDTH : SMALL_ERROR_DECORATOR_WIDTH;
+			int indicatorHeight = decoratorDef.getSize().getContent() == ProblemIndicatorSize.LARGE ? LARGE_ERROR_DECORATOR_HEIGHT : SMALL_ERROR_DECORATOR_HEIGHT;
+
+			Alignment horizontalAlign = decoratorDef.getHorizontalAlign().getContent();						
+			int offsetX = 0;
+			int offsetY = 0;
+			if (horizontalAlign == Alignment.RIGHT)
+			{
+				offsetX = referencedGA.getWidth() - indicatorWidth;
+				if (decoratorDef.getRightMargin().getContent() != null)
+				{
+					offsetX -= decoratorDef.getRightMargin().getContent();
+				}
+			}
+			else if (horizontalAlign == Alignment.LEFT)
+			{
+				if (decoratorDef.getLeftMargin().getContent() != null)
+				{
+					offsetX += decoratorDef.getLeftMargin().getContent();
+				}
+			}
+			else if (horizontalAlign == Alignment.CENTER)
+			{
+				offsetX = (referencedGA.getWidth() - indicatorWidth) >> 1;
+			}
+			
+			Alignment verticalAlign = decoratorDef.getVerticalAlign().getContent();
+			
+			if (verticalAlign == Alignment.BOTTOM)
+			{
+				offsetY = referencedGA.getHeight() - indicatorHeight;
+				if (decoratorDef.getBottomMargin().getContent() != null)
+				{
+					offsetY -= decoratorDef.getBottomMargin().getContent();
+				}
+			}
+			else if (verticalAlign == Alignment.TOP)
+			{
+				if (decoratorDef.getTopMargin().getContent() != null)
+				{
+					offsetY += decoratorDef.getTopMargin().getContent();
+				}							
+			}
+			else if (verticalAlign == Alignment.CENTER)
+			{
+				offsetY = (referencedGA.getHeight() - indicatorHeight) / 2;
+			}
+			
+			return new Point(offsetX, offsetY);
 		}
 		return new Point(0, 0);
 	}

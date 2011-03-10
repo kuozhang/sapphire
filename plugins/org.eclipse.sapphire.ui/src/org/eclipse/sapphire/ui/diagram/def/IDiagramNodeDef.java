@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.diagram.def;
 
 import org.eclipse.sapphire.modeling.ElementProperty;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -94,6 +95,7 @@ public interface IDiagramNodeDef
     @Type( base = Integer.class )
     @Label( standard = "horizontal spacing" )
     @XmlBinding( path = "horizontal-spacing" )
+    @DefaultValue( text = "0" )
     
     ValueProperty PROP_HORIZONTAL_SPACING = new ValueProperty( TYPE, "HorizontalSpacing" );
     
@@ -106,6 +108,7 @@ public interface IDiagramNodeDef
     @Type( base = Integer.class )
     @Label( standard = "vertical spacing" )
     @XmlBinding( path = "vertical-spacing" )
+    @DefaultValue( text = "0" )
     
     ValueProperty PROP_VERTICAL_SPACING = new ValueProperty( TYPE, "VerticalSpacing" );
     
@@ -154,11 +157,11 @@ public interface IDiagramNodeDef
     // *** ValidationDecorator ***
     
     @Type( base = IDiagramDecoratorDef.class )
-    @XmlBinding( path = "validation-error-indicator" )
+    @XmlBinding( path = "problem-indicator" )
 
-    ElementProperty PROP_VALIDATION_DECORATOR = new ElementProperty( TYPE, "ValidationDecorator" );
+    ImpliedElementProperty PROP_VALIDATION_DECORATOR = new ImpliedElementProperty( TYPE, "ValidationDecorator" );
     
-    ModelElementHandle<IDiagramDecoratorDef> getValidationDecorator();
+    IDiagramDecoratorDef getValidationDecorator();
 
     // *** InstanceId ***
     

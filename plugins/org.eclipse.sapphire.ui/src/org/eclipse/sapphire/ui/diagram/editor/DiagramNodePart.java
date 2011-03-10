@@ -21,7 +21,6 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.def.DecoratorPlacement;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
@@ -310,20 +309,9 @@ public class DiagramNodePart extends SapphirePart
 		return 0;
 	}
 	
-	public boolean showErrorIndicator()
-	{
-		if (this.definition.getValidationDecorator().element() != null)
-		{
-			IDiagramDecoratorDef decorator = this.definition.getValidationDecorator().element();
-			Boolean b = decorator.isShowDecorator().getContent();
-			return b != null? b : false;
-		}
-		return false;
-	}
-
 	public IDiagramDecoratorDef getErrorIndicatorDef()
 	{
-		return this.definition.getValidationDecorator().element();
+		return this.definition.getValidationDecorator();
 	}
 	
 	public DiagramNodeDefaultActionPart getDefaultActionPart()

@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.diagram.def;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -37,6 +38,7 @@ public interface IDiagramDecoratorDef
 	
     @Type( base = Boolean.class )
     @XmlBinding( path = "show-decorator" )
+    @DefaultValue( text = "true" )
     
     ValueProperty PROP_SHOW_DECORATOR = new ValueProperty(TYPE, "ShowDecorator");
     
@@ -49,6 +51,7 @@ public interface IDiagramDecoratorDef
     @Type( base = DecoratorPlacement.class )
     @Label( standard = "decorator placement")
     @XmlBinding( path = "decorator-placement" )
+    @DefaultValue( text = "image" )
     
     ValueProperty PROP_DECORATOR_PLACEMENT = new ValueProperty( TYPE, "DecoratorPlacement" );
     
@@ -61,6 +64,7 @@ public interface IDiagramDecoratorDef
     @Type( base = Alignment.class )
     @Label( standard = "horizontal alignment")
     @XmlBinding( path = "horizontal-align" )
+    @DefaultValue( text = "left" )
     
     ValueProperty PROP_HORIZONTAL_ALIGN = new ValueProperty( TYPE, "HorizontalAlign" );
     
@@ -73,6 +77,7 @@ public interface IDiagramDecoratorDef
     @Type( base = Alignment.class )
     @Label( standard = "vertical alignment")
     @XmlBinding( path = "vertical-align" )
+    @DefaultValue( text = "bottom" )
     
     ValueProperty PROP_VERTICAL_ALIGN = new ValueProperty( TYPE, "VerticalAlign" );
     
@@ -85,6 +90,7 @@ public interface IDiagramDecoratorDef
     @Type( base = Integer.class )
     @Label( standard = "top margin" )
     @XmlBinding( path = "top-margin" )
+    @DefaultValue( text = "0" )
     
     ValueProperty PROP_TOP_MARGIN = new ValueProperty( TYPE, "TopMargin" );
     
@@ -97,6 +103,7 @@ public interface IDiagramDecoratorDef
     @Type( base = Integer.class )
     @Label( standard = "bottom margin" )
     @XmlBinding( path = "bottom-margin" )
+    @DefaultValue( text = "0" )
     
     ValueProperty PROP_BOTTOM_MARGIN = new ValueProperty( TYPE, "BottomMargin" );
     
@@ -109,6 +116,7 @@ public interface IDiagramDecoratorDef
     @Type( base = Integer.class )
     @Label( standard = "left margin" )
     @XmlBinding( path = "left-margin" )
+    @DefaultValue( text = "0" )
     
     ValueProperty PROP_LEFT_MARGIN = new ValueProperty( TYPE, "LeftMargin" );
     
@@ -121,6 +129,7 @@ public interface IDiagramDecoratorDef
     @Type( base = Integer.class )
     @Label( standard = "right margin" )
     @XmlBinding( path = "right-margin" )
+    @DefaultValue( text = "0" )
     
     ValueProperty PROP_RIGHT_MARGIN = new ValueProperty( TYPE, "RightMargin" );
     
@@ -128,5 +137,18 @@ public interface IDiagramDecoratorDef
     void setRightMargin( String width );
     void setRightMargin( Integer width );
         
+    // *** Size ***
+    
+    @Type( base = ProblemIndicatorSize.class )
+    @Label( standard = "size")
+    @XmlBinding( path = "size" )
+    @DefaultValue( text = "large" )
+    
+    ValueProperty PROP_SIZE = new ValueProperty( TYPE, "Size" );
+    
+    Value<ProblemIndicatorSize> getSize();
+    void setSize( String value );
+    void setSize( ProblemIndicatorSize value ) ;
+    
     
 }
