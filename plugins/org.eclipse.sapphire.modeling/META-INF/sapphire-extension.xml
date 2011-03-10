@@ -109,4 +109,14 @@
         <impl>org.eclipse.sapphire.modeling.el.LastSegmentFunction</impl>
         <description>Breaks a string into segments using the provided separators and returns the last segment. If no separators are found in the string, the entire string is returned. This function takes two string operands. The first is the string to tokenize. The second is a sequence of characters that individually should be treated as valid separators.</description>
     </function>
+    <function>
+        <name>Parent</name>
+        <impl>org.eclipse.sapphire.modeling.el.ParentElementFunction</impl>
+        <description>Returns the parent of the current model element.</description>
+    </function>
+    <function>
+        <name>Root</name>
+        <impl>org.eclipse.sapphire.modeling.el.RootElementFunction</impl>
+        <description>Returns the root of the model.</description>
+    </function>
 </extension>

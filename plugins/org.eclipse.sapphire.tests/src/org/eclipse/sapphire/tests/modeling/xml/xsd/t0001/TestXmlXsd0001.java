@@ -50,7 +50,7 @@ public final class TestXmlXsd0001
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "TestXmlXsd001" );
+        suite.setName( "TestXmlXsd0001" );
 
         suite.addTest( new TestXmlXsd0001( "testSchemaParsing" ) );
         suite.addTest( new TestXmlXsd0001( "testInsertOrder" ) );

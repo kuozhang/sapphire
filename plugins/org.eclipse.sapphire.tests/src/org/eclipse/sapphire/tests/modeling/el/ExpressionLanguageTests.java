@@ -24,6 +24,7 @@ import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
+import org.eclipse.sapphire.tests.modeling.el.t0001.TestExpr0001;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -181,6 +182,8 @@ public final class ExpressionLanguageTests
         {
             suite.addTest( new ExpressionLanguageTests( "properties" + String.valueOf( i ) ) );
         }
+        
+        suite.addTest( TestExpr0001.suite() );
         
         return suite;
     }

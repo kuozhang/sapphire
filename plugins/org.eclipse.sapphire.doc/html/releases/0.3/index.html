@@ -10,6 +10,10 @@
 <h1>Enhancements in 0.3</h1>
 
 <ol>
+  <li><a href="#common">Common</a></li>
+  <ol type="A">
+    <li><a href="#parent-root">Parent and Root Expression Language Functions</a></li>
+  </ol>
   <li><a href="#modeling">Modeling</a></li>
   <ol type="A">
     <li><a href="#folding">Folding XML Element Binding</a></li>
@@ -21,6 +25,19 @@
   </ol>
 </ol>
  
+<h2><a name="common"><a name="parent-root">Parent and Root Expression Language Functions</a></a></h2>
+
+<p>The expression language in the 0.2 release supports navigating down the model hierarchy
+using Foo.Bar.Xyz syntax, but in certain cases it is useful to navigate up the model hierarchy. To
+support these scenarios, Parent and Root functions have been added.</p>
+
+<p style="margin-left: 20px;"><b>Examples</b><p>
+
+<pre class="source-code"><code>${ Parent().Name == "John" }
+${ Parent().Parent().Name == "John" }
+${ Root().Name == "John" }
+</code></pre>
+
 <h2><a name="modeling"><a name="folding">Folding XML Element Binding</a></a></h2>
 
 <p>In certain cases, while a given XML element can have a number of child

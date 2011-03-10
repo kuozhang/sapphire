@@ -510,19 +510,34 @@ Function Value() :
 }
 {
     (
-        res = Literal() |
-        <LPAREN> res = Expression() <RPAREN> |
-        LOOKAHEAD( QualifiedName() <LPAREN> ) res = FunctionInvocation() |
-        str = Identifier() { res = RootPropertyAccessFunction.create( str ); }
+        res = Literal()
+    |
+        <LPAREN> res = Expression() <RPAREN>
+    |
+        LOOKAHEAD( QualifiedName() <LPAREN> ) res = FunctionInvocation( null ) 
+    |
+        str = Identifier() 
+        {
+            res = RootPropertyAccessFunction.create( str );
+        }
     )
     (
         (
-            <DOT> str = Identifier() { f = Literal.create( str ); } |
+            <DOT>
+            (
+                LOOKAHEAD( QualifiedName() <LPAREN> ) res = FunctionInvocation( res )
+            |
+                str = Identifier() 
+                {
+                    res = PropertyAccessFunction.create( res, Literal.create( str ) );
+                }
+            ) 
+        |
             <LBRACKET> f = Expression() <RBRACKET>
+            {
+                res = PropertyAccessFunction.create( res, f );
+            }
         )
-        {
-            res = PropertyAccessFunction.create( res, f );
-        }
     )*
     {
         return res;
@@ -530,11 +545,17 @@ Function Value() :
 }
 
 
-Function FunctionInvocation() :
+Function FunctionInvocation( Function context ) :
 {
     String name;
-    List<Function> operands = new ArrayList<Function>();
     Function f;
+    
+    List<Function> operands = new ArrayList<Function>();
+    
+    if( context != null )
+    {
+        operands.add( context );
+    }
 }
 {
     (
