@@ -31,6 +31,7 @@ to 0.3 release. Only changes from the previous milestone are covered.</p>
 <ol>
   <li><a href="#html">HTML Content Presentation</a></li>
   <li><a href="#related-content">Related Content</a></li>
+  <li><a href="#composite-ref">Composite Reference</a></li>
 </ol>
 
 <h2><a name="html">HTML Content Presentation</a></h2>
@@ -123,10 +124,38 @@ into a more powerful related content feature.</p>
     </td>
   </tr>
 </table>
- 
-
 
 <p><a href="index.html#related-content">See New Feature Documentation</a></p>
+
+<h2><a name="composite-ref">Composite Reference</a></h2>
+
+<p>The composite-ref construct has been replaced with a more flexible include construct which allows
+any form part to be included.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;composite-ref>
+  &lt;id>bug.report</id>
+&lt;/composite-ref></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;include>bug.report&lt;/include></code></pre>
+    </td>
+  </tr>
+</table>
+
+<p>The following Eclipse search/replace regular expressions can be used to perform this
+migration:</p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;(?s)&lt;composite-ref>.*?&lt;id>(.*?)&lt;/id>.*?&lt;/composite-ref></nobr><br/>
+<nobr>Replace: &nbsp;&lt;include>\1&lt;/include></nobr></p>
+
 
 <br/><br/>
 

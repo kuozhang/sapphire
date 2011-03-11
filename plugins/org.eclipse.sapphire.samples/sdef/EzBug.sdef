@@ -100,9 +100,7 @@
     <composite>
         <id>bug.report.form.style</id>
         <content>
-            <composite-ref>
-                <id>bug.report</id>
-            </composite-ref>
+            <include>bug.report</include>
         </content>
         <hint>
             <name>expand.vertically</name>
@@ -117,9 +115,7 @@
     <composite>
         <id>bug.report.form.style.scrolled</id>
         <content>
-            <composite-ref>
-                <id>bug.report.form.style</id>
-            </composite-ref>
+            <include>bug.report.form.style</include>
         </content>
         <scroll-vertically>true</scroll-vertically>
         <hint>
@@ -137,9 +133,7 @@
         <label>create bug report (sapphire sample)</label>
         <initial-focus>Title</initial-focus>
         <content>
-            <composite-ref>
-                <id>bug.report</id>
-            </composite-ref>
+            <include>bug.report</include>
         </content>
         <hint>
             <name>expand.vertically</name>
@@ -152,9 +146,7 @@
         <label>create bug report (sapphire sample)</label>
         <initial-focus>Title</initial-focus>
         <content>
-            <composite-ref>
-                <id>bug.report</id>
-            </composite-ref>
+            <include>bug.report</include>
         </content>
         <hint>
             <name>expand.vertically</name>
@@ -179,9 +171,7 @@
                     <property>BugReport</property>
                     <default-panel>
                         <content>
-                            <composite-ref>
-                                <id>bug.report</id>
-                            </composite-ref>
+                            <include>bug.report</include>
                         </content>
                     </default-panel>
                 </with>
@@ -216,9 +206,7 @@
                         <section>
                             <label>bug report</label>
                             <content>
-                                <composite-ref>
-                                    <id>bug.report</id>
-                                </composite-ref>
+                                <include>bug.report</include>
                             </content>
                         </section>
                     </node-template>

@@ -291,12 +291,12 @@ ModelElementHandle&lt;IAssistant> <font color="#888888">getAssistant();</font></
   </tr>
 </table>
 
-<p>The following Eclipse search/replace regular expressions can be use to perform the last migration
+<p>The following Eclipse search/replace regular expressions can be used to perform the last migration
 migration in the table:</p>
 
 <p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
 <nobr>Search: &nbsp;&nbsp;(?s)&lt;element-property-composite>(.*?)&lt;conditional>(.*?)&lt;/conditional>(.*?)&lt;default-panel>(.*?)&lt;/default-panel>(.*?)&lt;/element-property-composite></nobr><br/>
-<nobr>Replace: &nbsp;&lt;with>\1&lt;label>\2&lt;/label>\3&lt;panel>&lt;key>?????&lt;/key>\4&lt;/panel>\5&lt;/with></code></p>
+<nobr>Replace: &nbsp;&lt;with>\1&lt;label>\2&lt;/label>\3&lt;panel>&lt;key>?????&lt;/key>\4&lt;/panel>\5&lt;/with></nobr></p>
 
 <p>After applying the above search and replace, look for &lt;key>?????&lt/key> in your sdef files and specify
 the actual key. In this case, it would be the type name of the element held by the property.</p>
@@ -481,7 +481,7 @@ refreshing on dependent property changes.</p>
 
 <p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
 <nobr>Search: &nbsp;&nbsp;&lt;browse-handler>(\s*)&lt;class>(.*?)&lt;/class>(\s*)&lt;/browse-handler></nobr><br/>
-<nobr>Replace: &nbsp;&lt;action-handler>\1&lt;action>Sapphire.Browse&lt;/action>\1&lt;impl>\2&lt;/impl>\3&lt;/action-handler></code></p>
+<nobr>Replace: &nbsp;&lt;action-handler>\1&lt;action>Sapphire.Browse&lt;/action>\1&lt;impl>\2&lt;/impl>\3&lt;/action-handler></nobr></p>
 
 <p>Browse handler definition in an extension:</p>
 
@@ -578,7 +578,7 @@ refreshing on dependent property changes.</p>
 
 <p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
 <nobr>Search: &nbsp;&nbsp;([&nbsp;\t]*)&lt;jump-handler>(.*?)&lt;/jump-handler></nobr><br/>
-<nobr>Replace: &nbsp;\1&lt;action-handler>\n\1&nbsp;&nbsp;&lt;action>Sapphire.Jump&lt;/action>\n\1&nbsp;&nbsp;&lt;impl>\2&lt;/impl>\n\1&lt;/action-handler></code></p>
+<nobr>Replace: &nbsp;\1&lt;action-handler>\n\1&nbsp;&nbsp;&lt;action>Sapphire.Jump&lt;/action>\n\1&nbsp;&nbsp;&lt;impl>\2&lt;/impl>\n\1&lt;/action-handler></nobr></p>
 
 <p>Jump handler definition in an extension:</p>
 
@@ -847,12 +847,12 @@ an expression to achieve the same affect.</p>
   </tr>
 </table>
 
-<p>The following Eclipse search/replace regular expressions can be use to perform this
+<p>The following Eclipse search/replace regular expressions can be used to perform this
 migration:</p>
 
 <p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
 <nobr>Search: &nbsp;&nbsp;&lt;dynamic-label>\s*&lt;property>(.*)&lt;/property>\s*&lt;null-value-label>(.*)&lt;/null-value-label>\s*&lt;/dynamic-label></nobr><br/>
-<nobr>Replace: &nbsp;&lt;label>\$\{ \1 == null \? \"\2\" \: \1 \}&lt;/label></code></p>
+<nobr>Replace: &nbsp;&lt;label>\$\{ \1 == null \? \"\2\" \: \1 \}&lt;/label></nobr></p>
 
 <a name="project-metadata"><h2>Project Metadata</h2></a>
 
