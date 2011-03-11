@@ -25,7 +25,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  */
 
 @Label( standard = "form" )
-@Image( small = "org.eclipse.sapphire.ui/images/objects/form.png" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/part.gif" )
 @GenerateImpl
 
 public interface IFormDef
@@ -39,7 +39,7 @@ public interface IFormDef
     
     @Type
     ( 
-        base = ISapphirePartDef.class,
+        base = IFormPartDef.class,
         possible = 
         { 
             ISapphirePropertyEditorDef.class, 
@@ -56,7 +56,8 @@ public interface IFormDef
             ISapphirePageBookExtDef.class,
             ISapphireTabGroupDef.class,
             ISapphireHtmlPanelDef.class,
-            IFormPartInclude.class
+            IFormPartInclude.class,
+            IFormDef.class
         }
     )
                       
@@ -79,12 +80,13 @@ public interface IFormDef
             @XmlListBinding.Mapping( element = "switching-panel", type = ISapphirePageBookExtDef.class ),
             @XmlListBinding.Mapping( element = "tab-group", type = ISapphireTabGroupDef.class ),
             @XmlListBinding.Mapping( element = "html", type = ISapphireHtmlPanelDef.class ),
-            @XmlListBinding.Mapping( element = "include", type = IFormPartInclude.class )
+            @XmlListBinding.Mapping( element = "include", type = IFormPartInclude.class ),
+            @XmlListBinding.Mapping( element = "form", type = IFormDef.class )
         }
     )
                              
     ListProperty PROP_CONTENT = new ListProperty( TYPE, "Content" );
     
-    ModelElementList<ISapphirePartDef> getContent();
+    ModelElementList<IFormPartDef> getContent();
     
 }

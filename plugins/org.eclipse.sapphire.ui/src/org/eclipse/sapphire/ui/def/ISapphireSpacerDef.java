@@ -27,7 +27,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @Label( standard = "spacer" )
-@Image( small = "org.eclipse.sapphire.ui/images/objects/spacer.gif" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/part.gif" )
 @GenerateImpl
 
 public interface ISapphireSpacerDef

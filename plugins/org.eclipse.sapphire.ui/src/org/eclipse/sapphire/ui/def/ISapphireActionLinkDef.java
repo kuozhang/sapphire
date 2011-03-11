@@ -29,7 +29,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
  */
 
 @Label( standard = "action link" )
-@Image( small = "org.eclipse.sapphire.ui/images/objects/action-link.gif" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/part.gif" )
 @GenerateImpl
 
 public interface ISapphireActionLinkDef

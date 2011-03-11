@@ -172,7 +172,6 @@
     <node>
         <id>ActionsOverallNode</id>
         <label>actions and handlers</label>
-        <image>images/objects/action.gif</image>
         <node-ref>
             <part>ActionsNode</part>
             <param>
@@ -196,7 +195,6 @@
         </node-ref>
         <node>
             <label>handler filters</label>
-            <image>images/objects/action.gif</image>
             <section>
                 <description>Define action handler filters.</description>
                 <content>
@@ -260,7 +258,7 @@
         
         <node-template>
             <model-element-type>ISapphirePropertyEditorDef</model-element-type>
-            <label>${ Id == null ? ( Property == null ? "&lt;property-editor&gt;" : Property ) : Id }</label>
+            <label>${ Id == null ? ( Property == null ? "Property Editor" : Property ) : Id }</label>
             <use-model-element-image/>
             <section>
                 <label>property editor</label>
@@ -317,7 +315,7 @@
         
         <node-template>
             <model-element-type>ISapphireSeparatorDef</model-element-type>
-            <label>separator</label>
+            <label>Separator</label>
             <use-model-element-image/>
             <section>
                 <content>
@@ -329,7 +327,7 @@
 
         <node-template>
             <model-element-type>ISapphireSpacerDef</model-element-type>
-            <label>spacer</label>
+            <label>Spacer</label>
             <use-model-element-image/>
             <section>
                 <content>
@@ -341,7 +339,7 @@
 
         <node-template>
             <model-element-type>ISapphireLabelDef</model-element-type>
-            <label>label</label>
+            <label>Label</label>
             <use-model-element-image/>
             <section>
                 <content>
@@ -352,30 +350,8 @@
         </node-template>
         
         <node-template>
-            <model-element-type>ISapphireCompositeDef</model-element-type>
-            <label>composite</label>
-            <use-model-element-image/>
-            <section>
-                <content>
-                    <property-editor>Id</property-editor>
-                </content>
-            </section>
-            <node>
-                <label>content</label>
-                <node-list-ref>
-                    <part>PartsNodeList</part>
-                    <param>
-                        <name>Property</name>
-                        <value>Content</value>
-                    </param>
-                </node-list-ref>
-            </node>
-            <node-ref>DocumentationNode</node-ref>
-        </node-template>
-        
-        <node-template>
             <model-element-type>ISapphireActionLinkDef</model-element-type>
-            <label>action link</label>
+            <label>Action Link</label>
             <use-model-element-image/>
             <section>
                 <content>
@@ -394,7 +370,7 @@
         
         <node-template>
             <model-element-type>ISapphireHtmlPanelDef</model-element-type>
-            <label>HTML panel</label>
+            <label>HTML Panel</label>
             <use-model-element-image/>
             <section>
                 <content>
@@ -445,7 +421,7 @@
         
         <node-template>
             <model-element-type>ISapphireIfElseDirectiveDef</model-element-type>
-            <label>if</label>
+            <label>If</label>
             <use-model-element-image/>
             <section>
                 <label>If</label>
@@ -488,7 +464,7 @@
 
         <node-template>
             <model-element-type>ISapphireWithDirectiveDef</model-element-type>
-            <label>with</label>
+            <label>With</label>
             <use-model-element-image/>
             <section>
                 <content>
@@ -499,7 +475,7 @@
             <node-list>
                 <property>Pages</property>
                 <node-template>
-                    <label>case: ${ Key == null ? "" : Key }</label>
+                    <label>Case: ${ Key == null ? "" : Key }</label>
                     <section>
                         <label>Case</label>
                         <content>
@@ -546,16 +522,19 @@
             </node>
         </node-template>
 
-
-        
-
         <node-template>
-            <model-element-type>IFormDef</model-element-type>
-            <label>form</label>
+            <model-element-type>ISapphireGroupDef</model-element-type>
+            <label>Group</label>
             <use-model-element-image/>
             <section>
                 <content>
-                    <property-editor>Id</property-editor>
+                    <property-editor>Label</property-editor>
+                </content>
+            </section>
+            <section>
+                <label>presentation</label>
+                <content>
+                    <include>CompositePresentation</include>
                 </content>
             </section>
             <node>
@@ -570,9 +549,54 @@
             </node>
             <node-ref>DocumentationNode</node-ref>
         </node-template>
+        
+        <node-template>
+            <model-element-type>ISapphireCompositeDef</model-element-type>
+            <label>Composite</label>
+            <use-model-element-image/>
+            <section>
+                <content>
+                    <include>PartId</include>
+                </content>
+            </section>
+            <node>
+                <label>content</label>
+                <node-list-ref>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>Content</value>
+                    </param>
+                </node-list-ref>
+            </node>
+            <node-ref>DocumentationNode</node-ref>
+        </node-template>
+
+        <node-template>
+            <model-element-type>IFormDef</model-element-type>
+            <label>Form</label>
+            <use-model-element-image/>
+            <section>
+                <content>
+                    <include>PartId</include>
+                </content>
+            </section>
+            <node>
+                <label>content</label>
+                <node-list-ref>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>Content</value>
+                    </param>
+                </node-list-ref>
+            </node>
+            <node-ref>DocumentationNode</node-ref>
+        </node-template>
+        
         <node-template>
             <model-element-type>IFormPartInclude</model-element-type>
-            <label>include ${ Part == null ? "" : Part }</label>
+            <label>Include ${ Part == null ? "" : Part }</label>
             <use-model-element-image/>
             <section>
                 <label>include</label>
@@ -582,17 +606,57 @@
                 </content>
             </section>
         </node-template>
+        
         <node-template>
-            <model-element-type>ISapphireGroupDef</model-element-type>
-            <label>group</label>
+            <model-element-type>ISapphirePageBookExtDef</model-element-type>
+            <label>Page Book</label>
+            <use-model-element-image/>
             <section>
                 <content>
-                    <property-editor>Label</property-editor>
+                    <property-editor>ControlMethod</property-editor>
+                    <property-editor>ControlProperty</property-editor>
                 </content>
             </section>
-            <node-ref>DocumentationNode</node-ref>
+            <node-list>
+                <property>Pages</property>
+                <node-template>
+                    <label>Case: ${ Key == null ? "" : Key }</label>
+                    <section>
+                        <label>Case</label>
+                        <content>
+                            <property-editor>Key</property-editor>
+                        </content>
+                    </section>
+                    <section>
+                        <label>presentation</label>
+                        <content>
+                            <include>CompositePresentation</include>
+                        </content>
+                    </section>
+                    <node-list-ref>
+                        <part>PartsNodeList</part>
+                        <param>
+                            <name>Property</name>
+                            <value>Content</value>
+                        </param>
+                    </node-list-ref>
+                </node-template>
+            </node-list>
             <node>
-                <label>content</label>
+                <label>default</label>
+                <property>DefaultPage</property>
+                <section>
+                    <label>default content</label>
+                    <content>
+                        <label>The content to show if none of the explicit cases match.</label>
+                    </content>
+                </section>
+                <section>
+                    <label>presentation</label>
+                    <content>
+                        <include>CompositePresentation</include>
+                    </content>
+                </section>
                 <node-list-ref>
                     <part>PartsNodeList</part>
                     <param>
@@ -602,6 +666,32 @@
                 </node-list-ref>
             </node>
         </node-template>
+
+        <node-template>
+            <model-element-type>ISapphireStaticTextFieldDef</model-element-type>
+            <label>Static Text Field</label>
+            <use-model-element-image/>
+            <section>
+                <content>
+                    <property-editor>Label</property-editor>
+                    <property-editor>Text</property-editor>
+                </content>
+            </section>
+            <node-ref>DocumentationNode</node-ref>
+        </node-template>
+        
+        <node-template>
+            <model-element-type>ISapphireCustomPartDef</model-element-type>
+            <label>Custom Part</label>
+            <use-model-element-image/>
+            <section>
+                <content>
+                    <property-editor>ImplClass</property-editor>
+                </content>
+            </section>
+            <node-ref>DocumentationNode</node-ref>
+        </node-template>
+        
     </node-list>
 
 </definition>

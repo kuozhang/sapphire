@@ -27,7 +27,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
  */
 
 @Label( standard = "label" )
-@Image( small = "org.eclipse.sapphire.ui/images/objects/label.gif" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/part.gif" )
 @GenerateImpl
 
 public interface ISapphireLabelDef

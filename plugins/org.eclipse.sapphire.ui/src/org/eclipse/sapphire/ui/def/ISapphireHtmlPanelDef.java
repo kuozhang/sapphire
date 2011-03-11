@@ -34,7 +34,7 @@ import org.eclipse.sapphire.ui.def.internal.SapphireHtmlPanelDefSourceBinding;
  */
 
 @Label( standard = "HTML panel" )
-@Image( small = "org.eclipse.sapphire.ui/images/objects/html-panel.gif" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/part.gif" )
 @GenerateImpl
 
 public interface ISapphireHtmlPanelDef

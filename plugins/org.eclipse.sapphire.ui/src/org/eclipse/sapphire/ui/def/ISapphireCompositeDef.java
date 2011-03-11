@@ -30,7 +30,7 @@ import org.eclipse.sapphire.ui.def.internal.CompositeMarginWidthHeightDefaultVal
  */
 
 @Label( standard = "composite" )
-@Image( small = "org.eclipse.sapphire.ui/images/objects/composite.png" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/part.gif" )
 @GenerateImpl
 
 public interface ISapphireCompositeDef

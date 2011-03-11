@@ -33,7 +33,7 @@ import org.eclipse.sapphire.ui.def.internal.FormPartIncludeReferenceService;
  */
 
 @Label( standard = "include" )
-@Image( small = "org.eclipse.sapphire.ui/images/objects/include.gif" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/part.gif" )
 @GenerateImpl
 
 public interface IFormPartInclude
