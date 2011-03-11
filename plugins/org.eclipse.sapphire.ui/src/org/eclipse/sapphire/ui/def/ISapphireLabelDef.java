@@ -19,6 +19,8 @@ import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
@@ -39,6 +41,7 @@ public interface ISapphireLabelDef
  
     // *** Text ***
     
+    @Type( base = Function.class )
     @Label( standard = "text" )
     @NonNullValue
     @LongString
@@ -47,6 +50,7 @@ public interface ISapphireLabelDef
     
     ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
     
-    Value<String> getText();
+    Value<Function> getText();
     void setText( String text );
+    void setText( Function text );
 }

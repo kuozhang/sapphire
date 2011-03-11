@@ -32,8 +32,9 @@
             <node>
                 <label>contacts</label>
                 <section>
-                    <description>Use this simple editor to organize your contacts.</description>
                     <content>
+                        <label>Use this simple editor to organize your contacts.</label>
+                        <spacer/>
                         <action-link>
                             <action-id>Sapphire.Add</action-id>
                             <label>add a contact</label>
@@ -219,9 +220,10 @@
         <page>
             <id>main.page</id>
             <label>send contact</label>
-            <description>Send contact information via e-mail.</description>
             <initial-focus>To</initial-focus>
             <content>
+            	<label>Send contact information via e-mail.</label>
+            	<spacer/>
                 <property-editor>To</property-editor>
                 <html>
                     <content>${ MessageBody }</content>

@@ -32,6 +32,7 @@ to 0.3 release. Only changes from the previous milestone are covered.</p>
   <li><a href="#html">HTML Content Presentation</a></li>
   <li><a href="#related-content">Related Content</a></li>
   <li><a href="#composite-ref">Composite Reference</a></li>
+  <li><a href="#remove-section-description">Remove Section Description</a></li>
 </ol>
 
 <h2><a name="html">HTML Content Presentation</a></h2>
@@ -156,6 +157,32 @@ migration:</p>
 <nobr>Search: &nbsp;&nbsp;(?s)&lt;composite-ref>.*?&lt;id>(.*?)&lt;/id>.*?&lt;/composite-ref></nobr><br/>
 <nobr>Replace: &nbsp;&lt;include>\1&lt;/include></nobr></p>
 
+
+<h2><a name="remove-section-description">Remove Section Description</a></h2>
+
+<p>The description construct under section has been removed. Use label and spacer to achieve the same result.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;section>
+  &lt;description>description&lt;/description></id>
+&lt;/section></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;section>
+  &lt;content>
+    &lt;label>description&lt;/label>
+    &lt;spacer/>
+  &lt;/content>
+&lt;/section></code></pre>
+    </td>
+  </tr>
+</table>
 
 <br/><br/>
 

@@ -47,12 +47,18 @@
             <node>
                 <label>values</label>
                 <section>
-                    <description>In some situations, the description text for say a section gets a bit long. The approach we've adopted is to include the summary in the section and then add section level help content. ###brk###This adequate, but may not be as intuitive as say a "More details..." link at the end of the on-screen description text with that pops up a tooltip-style window with complete information.</description>
+                  <content>
+                    <label>
+                      In some situations, the description text for say a section gets a bit long. The approach we've adopted is to include the summary in the section and then add section level help content.###brk###This adequate, but may not be as intuitive as say a "More details..." link at the end of the on-screen description text with that pops up a tooltip-style window with complete information.
+                    </label>
+                  </content>
                 </section>
                 <node>
                     <label>numbers</label>
                     <section>
-                        <description>abc</description>
+                      <content>
+                        <label>Numbers</label>
+                      </content>
                     </section>
                     <node>
                         <label>integer</label>
@@ -129,12 +135,14 @@
                     <property>EnumValueGallery</property>
                     <section>
                         <label>enums</label>
-                        <description>
+                        <content>
+                          <label>
                             This page shows two enum value properties being edited in three different ways. The first property is
                             a simple one relying on Enum.name() for serialization. The second one has customized serialization. Choice "yes"
                             can also be expressed as "true" or "1". Choice "maybe" can also be expressed as "0". Choice "no" can also be
                             expressed as "false" or "-1". Choice "no" use case-sensitive matching, while the other two do not.
-                        </description> 
+                          </label>
+                        </content>
                     </section>
                     <section>
                         <label>combo boxes</label>
@@ -342,8 +350,9 @@
                 <node>
                     <label>homogeneous</label>
                     <section>
-                        <description>A list with one possible element type.</description>
                         <content>
+                            <label>A list with one possible element type.</label>
+                            <spacer/>
                             <action-link>
                                 <action-id>Sapphire.Add</action-id>
                                 <label>add a list item</label>
@@ -378,8 +387,9 @@
                 <node>
                     <label>heterogeneous</label>
                     <section>
-                        <description>A list with multiple possible element types.</description>
                         <content>
+	                        <label>A list with multiple possible element types.</label>
+                            <spacer/>
                             <action-link>
                                 <action-id>Sapphire.Add</action-id>
                                 <action-handler-id>Sapphire.Add.IListItem</action-handler-id>
@@ -950,21 +960,24 @@
             <node>
                 <label>help</label>
                 <section>
-                    <description>Help gallery shows content help capabilities in Sapphire.</description>
                     <documentation-ref>
                         <id>documentation-id</id>
                     </documentation-ref>
+                    <content>
+                      <label>Help gallery shows content help capabilities in Sapphire.</label>
+                    </content>
                 </section>
                 <node>
                     <label>help</label>
                     <property>HelpGallery</property>
                     <section>
-                        <description>Simple shows the help content annotation. Positive shows the help content provider annotation. Range constrained with default shows the auto-generated content help.</description>
                         <documentation>
                             <title>Help</title>
                             <content>Simple shows the help content annotation.[pbr/]Positive shows the help content provider annotation.[pbr/]Range constrained with default shows the auto-generated content help.</content>
                         </documentation>
                         <content>
+                            <label>Simple shows the help content annotation. Positive shows the help content provider annotation. Range constrained with default shows the auto-generated content help.</label>
+                            <spacer/>
                             <property-editor>Simple</property-editor>
                             <property-editor>Positive</property-editor>
                             <property-editor>RangeConstrainedWithDefault</property-editor>
@@ -976,7 +989,6 @@
                     <label>extended help</label>
                     <property>ExtendedHelpGallery</property>
                     <section>
-                        <description>Content help for the ExtendedHelpGallery model element will be appended to all properties. Both Simple and Positive have options to augment, in which the parent's content help will be appended. </description>
                         <documentation>
                             <topic>
                                 <label>eclipse home</label>
@@ -984,6 +996,8 @@
                             </topic>
                         </documentation>
                         <content>
+                        	<label>Content help for the ExtendedHelpGallery model element will be appended to all properties. Both Simple and Positive have options to augment, in which the parent's content help will be appended. </label>
+                            <spacer/>
                             <property-editor>Simple</property-editor>
                             <property-editor>Positive</property-editor>
                             <property-editor>RangeConstrainedWithDefault</property-editor>
