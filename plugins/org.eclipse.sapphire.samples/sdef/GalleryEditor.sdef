@@ -981,6 +981,7 @@
                             <property-editor>Simple</property-editor>
                             <property-editor>Positive</property-editor>
                             <property-editor>RangeConstrainedWithDefault</property-editor>
+                            <property-editor>Code</property-editor>
                             <property-editor>SimpleChoice</property-editor>
                         </content>
                     </section>

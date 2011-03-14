@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.modeling.util.internal;
 
 import org.eclipse.sapphire.modeling.docsys.BoldPart;
+import org.eclipse.sapphire.modeling.docsys.CodePart;
 import org.eclipse.sapphire.modeling.docsys.DocumentationContent;
 import org.eclipse.sapphire.modeling.docsys.DocumentationPart;
 import org.eclipse.sapphire.modeling.docsys.LineBreakPart;
@@ -30,7 +31,7 @@ public class DocumentationUtil {
 
     public final static String NEW_LINE = "\r\n"; //$NON-NLS-1$
     public final static String NEW_LINE_2 = "\r\n\r\n"; //$NON-NLS-1$
-
+    
     public final static String collapseString(final String str) {
         String text = str.trim();
         
@@ -70,18 +71,18 @@ public class DocumentationUtil {
         if (str == null)
             return str;
         
-        String text = collapseString(str);
-        DocumentationContent content = DocumentationContent.parse(text);
+        DocumentationContent content = DocumentationContent.parse(str);
 
         final StringBuilder buf = new StringBuilder();
-        format( buf, content, -1 );
+        format( buf, content, -1, true );
         return buf.toString();
 
     }
     
-    private static void format(final StringBuilder buf,    final DocumentationPart part, int index) {
+    private static boolean format(final StringBuilder buf, final DocumentationPart part, int index, boolean collapseSpaces) {
         if (part instanceof TextPart) {
-            buf.append(((TextPart) part).getText());
+        	final String str = ((TextPart) part).getText();
+            buf.append(collapseSpaces ? collapseString(str) : str);
         } else if (part instanceof LineBreakPart) {
             buf.append(NEW_LINE);
         } else if (part instanceof ParagraphBreakPart) {
@@ -92,24 +93,20 @@ public class DocumentationUtil {
             int childIndex = 0;
             for (ListItem item : ((ListPart) part).getItems()) {
                 childIndex++;
-                format(buf, item, childIndex);
+                collapseSpaces = format(buf, item, childIndex, collapseSpaces);
             }
-
-            //buf.append(NEW_LINE);
         } else if (part instanceof UnorderedListPart) {
             buf.append(NEW_LINE_2);
 
             for (ListItem item : ((ListPart) part).getItems()) {
-                format(buf, item, -1);
+            	collapseSpaces = format(buf, item, -1, collapseSpaces);
             }
-
-            //buf.append(NEW_LINE);
         } else if (part instanceof ListItem) {
             buf.append(index == -1 ? "*" : index);
             buf.append("  ");
 
             for (DocumentationPart child : ((ListItem) part).getChildren()) {
-                format(buf, child, -1);
+            	collapseSpaces = format(buf, child, -1, collapseSpaces);
             }
 
             buf.append(NEW_LINE);
@@ -120,11 +117,19 @@ public class DocumentationUtil {
             } else {
                 buf.append("</@#$b>");
             }
+        } else if (part instanceof CodePart) {
+        	CodePart codePart = (CodePart)part;
+            if (codePart.isOpen()) {
+            	collapseSpaces = false;
+            } else {
+            	collapseSpaces = true;
+            }
         } else if (part instanceof DocumentationContent) {
             for (DocumentationPart child : ((DocumentationContent) part).getChildren()) {
-                format(buf, child, -1);
+            	collapseSpaces = format(buf, child, -1, collapseSpaces);
             }
         }
+        return collapseSpaces;
     }
     
 }

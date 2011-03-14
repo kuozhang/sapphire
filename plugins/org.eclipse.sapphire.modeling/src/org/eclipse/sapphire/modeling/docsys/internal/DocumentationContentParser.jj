@@ -29,6 +29,8 @@ TOKEN : { < OL_OPEN : "[ol]" > }
 TOKEN : { < OL_CLOSE : "[/ol]" > }
 TOKEN : { < BOLD_OPEN : "[b]" > }
 TOKEN : { < BOLD_CLOSE : "[/b]" > }
+TOKEN : { < CODE_OPEN : "[code]" > }
+TOKEN : { < CODE_CLOSE : "[/code]" > }
 TOKEN : { < CHARACTER : ~[] > }
 
 DocumentationContent Start() :
@@ -75,6 +77,16 @@ DocumentationPart Part() :
         <BOLD_CLOSE>
         {
             part = new BoldPart( false );
+        }
+    |
+        <CODE_OPEN>
+        {
+            part = new CodePart( true );
+        }
+    |
+        <CODE_CLOSE>
+        {
+            part = new CodePart( false );
         }
     |
         <UL_OPEN>

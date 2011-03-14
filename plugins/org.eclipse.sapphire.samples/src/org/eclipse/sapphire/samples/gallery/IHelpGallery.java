@@ -91,12 +91,41 @@ public interface IHelpGallery
     void setRangeConstrainedWithDefault( String val );
     void setRangeConstrainedWithDefault( Integer val );
  
+    // *** Code ***
+    
+    @Label( standard = "code" )
+    @XmlBinding( path = "code" )
+    @Documentation( content = "Content help containing code tag which preserves the spaces." +
+    		"[br/]" +
+    		"[code]" +
+			"[br/]<actions>" +
+			"[br/]    <action-group>" +
+			"[br/]        <action>" +
+			"[br/]            <class>MyAction1</class>" +
+			"[br/]        </action>" +
+			"[br/]        <action>" +
+			"[br/]            <class>MyAction2</class>" +
+			"[br/]        </action>" +
+			"[br/]    </action-group>" +
+			"[br/]</actions>" +
+    		"[/code]" )
+
+    ValueProperty PROP_CODE = new ValueProperty( TYPE, "Code" );
+
+    Value<String> getCode();
+    void setCode( String code );
+
     // *** SimpleChoice ***
 
     @Type( base = ThreeChoiceAnswer.class )
     @Label( standard = "simple choice" )
     @XmlBinding( path = "simple-choice" )
-    @Documentation( content = " Content help for simple choice [ul][li]yes[/li][li]maybe[/li][li]no[/li][/ul]" )
+    @Documentation( content = " Content help for simple choice " +
+    			"[ul]" +
+    			"[li]yes[/li]" +
+    			"[li]maybe[/li]" +
+    			"[li]no[/li]" +
+    			"[/ul]" )
 
     ValueProperty PROP_SIMPLE_CHOICE = new ValueProperty( TYPE, "SimpleChoice" );
 
