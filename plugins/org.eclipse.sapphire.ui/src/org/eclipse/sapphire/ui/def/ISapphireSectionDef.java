@@ -22,7 +22,6 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -49,19 +48,6 @@ public interface ISapphireSectionDef
     Value<Function> getLabel();
     void setLabel( String value );
     void setLabel( Function value );
-    
-    // *** Description ***
-    
-    @Type( base = Function.class )
-    @Label( standard = "description" )
-    @Localizable
-    @XmlValueBinding( path = "description", collapseWhitespace = true )
-    
-    ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );
-    
-    Value<Function> getDescription();
-    void setDescription( String value );
-    void setDescription( Function value );
     
     // *** VisibleWhenConditionClass ***
     

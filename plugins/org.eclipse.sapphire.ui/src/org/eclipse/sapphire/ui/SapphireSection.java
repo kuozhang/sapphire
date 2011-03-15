@@ -14,7 +14,6 @@
 package org.eclipse.sapphire.ui;
 
 import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twd;
-import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twdindent;
 import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twlayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
@@ -22,7 +21,6 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.help.IContext;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -30,18 +28,12 @@ import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
-import org.eclipse.sapphire.ui.swt.SapphireTextPopup;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
-import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -54,15 +46,10 @@ public final class SapphireSection
     extends SapphireComposite
     
 {
-    private final static String BREAK_TOKEN = "###brk###";
-    
     private ISapphireSectionDef definition;
     private SapphireCondition visibleWhenCondition;
     private Section section;
     private FunctionResult titleFunctionResult;
-    private SapphireFormText descriptionFormText;
-    private FunctionResult descriptionFunctionResult;
-    private String descriptionExtendedContent;
     
     @Override
     protected void init()
@@ -85,8 +72,6 @@ public final class SapphireSection
     @Override
     protected Composite createOuterComposite( final SapphireRenderingContext context )
     {
-        final String description = this.definition.getDescription().getLocalizedText();
-        
         final FormToolkit toolkit = new FormToolkit( context.getDisplay() );
         
         this.section = toolkit.createSection( context.getComposite(), Section.TITLE_BAR );
@@ -110,41 +95,8 @@ public final class SapphireSection
         outerComposite.setLayout( twlayout( 1, 0, 0, 0, 0 ) );
         context.adapt( outerComposite );
         
-        this.descriptionFunctionResult = initExpression
-        ( 
-            this.definition.getDescription(), 
-            new Runnable()
-            {
-                public void run()
-                {
-                    refreshDescription();
-                }
-            }
-        );
-        
-        if( this.descriptionFunctionResult != null )
-        {
-            this.descriptionFormText = new SapphireFormText( outerComposite, SWT.NONE );
-            this.descriptionFormText.setLayoutData( twdindent( twd(), 9 ) );
-            context.adapt( this.descriptionFormText );
-            
-            this.descriptionFormText.addHyperlinkListener
-            (
-                new HyperlinkAdapter()
-                {
-                    @Override
-                    public void linkActivated( final HyperlinkEvent event )
-                    {
-                        activateExtendedDescriptionContentPopup();
-                    }
-                }
-            );
-
-            refreshDescription();
-        }
-        
         final Composite innerComposite = new Composite( outerComposite, SWT.NONE );
-        innerComposite.setLayout( glayout( 2, 0, 0, ( description != null ? 8 : 0 ), 0 ) );
+        innerComposite.setLayout( glayout( 2, 0, 0, 0, 0 ) );
         innerComposite.setLayoutData( twd() );
         context.adapt( innerComposite );
         
@@ -183,77 +135,6 @@ public final class SapphireSection
         }
         
         this.section.setText( title.trim() );
-    }
-
-    private void refreshDescription()
-    {
-        String description = null;
-        
-        if( this.descriptionFunctionResult != null )
-        {
-            description = (String) this.descriptionFunctionResult.value();
-        }
-        
-        if( description == null )
-        {
-            description = "#null#";
-        }
-        else
-        {
-            description = description.trim();
-        }
-    
-        final int index = description.indexOf( BREAK_TOKEN );
-        
-        final StringBuilder buf = new StringBuilder();
-        buf.append( "<form><p vspace=\"false\">");
-    
-        if( index > 0 ) 
-        {
-            final String displayDescription = description.substring( 0, index );
-    
-            buf.append( displayDescription );
-            buf.append( "<a href=\"action\" nowrap=\"true\">");
-            buf.append( Resources.moreDetails );
-            buf.append( "</a>" );
-            
-            this.descriptionExtendedContent 
-                = displayDescription + description.substring( index + BREAK_TOKEN.length(), description.length() );
-        }  
-        else 
-        {
-            buf.append( description );
-            this.descriptionExtendedContent = null;
-        }
-        
-        buf.append( "</p></form>" );
-        this.descriptionFormText.setText( buf.toString(), true, false );
-    }
-
-    private void activateExtendedDescriptionContentPopup()
-    {
-        if( this.descriptionExtendedContent != null )
-        {
-            final Point cursor = this.descriptionFormText.getDisplay().getCursorLocation();
-            final Rectangle bounds = this.descriptionFormText.getBounds();
-            final Point location = this.descriptionFormText.toDisplay( new Point( bounds.x, bounds.y ) );
-            final Rectangle displayBounds = new Rectangle( location.x, location.y, bounds.width, bounds.height );
-            
-            Point position;
-            
-            if( displayBounds.contains( cursor ) ) 
-            {
-                position = cursor;
-            } 
-            else 
-            {
-                position = new Point( location.x, location.y + bounds.height + 2 );
-            }
-            
-            final SapphireTextPopup popup = new SapphireTextPopup( this.descriptionFormText.getShell(), position );
-            popup.setText( this.descriptionExtendedContent );
-            popup.open();
-        }
     }
 
     @Override
@@ -312,19 +193,6 @@ public final class SapphireSection
         if( this.visibleWhenCondition != null )
         {
             this.visibleWhenCondition.dispose();
-        }
-    }
-
-    private static final class Resources
-    
-        extends NLS
-    
-    {
-        public static String moreDetails;
-        
-        static
-        {
-            initializeMessages( SapphireSection.class.getName(), Resources.class );
         }
     }
 
