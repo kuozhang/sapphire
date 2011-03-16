@@ -98,15 +98,15 @@ public interface IHelpGallery
     @Documentation( content = "Content help containing code tag which preserves the spaces." +
     		"[pbr/]" +
     		"[code]" +
-			"<actions>\r\n" +
-			"    <action-group>\r\n" +
-			"        <action>\r\n" +
-			"            <class>MyAction1</class>\r\n" +
-			"        </action>\r\n" +
-			"        <action>\r\n" +
-			"            <class>MyAction2</class>\r\n" +
-			"        </action>\r\n" +
-			"    </action-group>\r\n" +
+			"<actions>\n" +
+			"    <action-group>\n" +
+			"        <action>\n" +
+			"            <class>MyAction1</class>\n" +
+			"        </action>\n" +
+			"        <action>\n" +
+			"            <class>MyAction2</class>\n" +
+			"        </action>\n" +
+			"    </action-group>\n" +
 			"</actions>" +
     		"[/code]" )
 
