@@ -38,7 +38,7 @@ public interface IHelpGallery
     extends IModelElement
 
 {
-    ModelElementType TYPE = new ModelElementType( IHelpGallery.class );
+	ModelElementType TYPE = new ModelElementType( IHelpGallery.class );
 
     // *** Simple ***
 
@@ -96,18 +96,18 @@ public interface IHelpGallery
     @Label( standard = "code" )
     @XmlBinding( path = "code" )
     @Documentation( content = "Content help containing code tag which preserves the spaces." +
-    		"[br/]" +
+    		"[pbr/]" +
     		"[code]" +
-			"[br/]<actions>" +
-			"[br/]    <action-group>" +
-			"[br/]        <action>" +
-			"[br/]            <class>MyAction1</class>" +
-			"[br/]        </action>" +
-			"[br/]        <action>" +
-			"[br/]            <class>MyAction2</class>" +
-			"[br/]        </action>" +
-			"[br/]    </action-group>" +
-			"[br/]</actions>" +
+			"<actions>\r\n" +
+			"    <action-group>\r\n" +
+			"        <action>\r\n" +
+			"            <class>MyAction1</class>\r\n" +
+			"        </action>\r\n" +
+			"        <action>\r\n" +
+			"            <class>MyAction2</class>\r\n" +
+			"        </action>\r\n" +
+			"    </action-group>\r\n" +
+			"</actions>" +
     		"[/code]" )
 
     ValueProperty PROP_CODE = new ValueProperty( TYPE, "Code" );
