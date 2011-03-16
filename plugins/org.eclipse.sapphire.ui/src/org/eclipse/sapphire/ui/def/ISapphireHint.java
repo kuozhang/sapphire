@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui.def;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
@@ -70,7 +71,8 @@ public interface ISapphireHint
             "suppress.assist.contributors",
             ISapphirePartDef.HINT_WIDTH
         },
-        invalidValueMessage = "\"{0}\" is not a valid hint."
+        invalidValueMessage = "\"{0}\" is not a valid hint.",
+        invalidValueSeverity = IStatus.OK
     )
     
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );

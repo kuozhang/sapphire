@@ -274,7 +274,7 @@
                 <section>
                     <content>
                         <label>
-                            Child properties can be optionally used to specify additional information about regarding contained properties when
+                            Child properties can be optionally used to specify additional information regarding contained properties when
                             the main property editor points to a list property. This can be used, for instance, to specify a subset of properties
                             that should be shown or to modify actions available on those properties. 
                         </label>
@@ -463,6 +463,88 @@
         </node-template>
 
         <node-template>
+            <model-element-type>ISapphireWizardDef</model-element-type>
+            <label>${ Id == null ? ( Label == null ? "Wizard" : Label ) : Id }</label>
+            <use-model-element-image/>
+            <section>
+                <label>Wizard</label>
+                <content>
+                    <include>PartId</include>
+                    <property-editor>Label</property-editor>
+                    <property-editor>Description</property-editor>
+                    <property-editor>Image</property-editor>
+                </content>
+            </section>
+            <node-list>
+                <property>PageDefs</property>
+                <node-template>
+                    <model-element-type>ISapphireWizardPageDef</model-element-type>
+                    <label>${ Label == null ? "&lt;page&gt;" : Label }</label>
+                    <section>
+                        <label>Wizard Page</label>
+                        <content>
+                            <property-editor>Label</property-editor>
+                            <property-editor>Description</property-editor>
+                            <property-editor>Image</property-editor>
+                            <property-editor>InitialFocus</property-editor>
+                            <property-editor>Hints</property-editor>                    
+                        </content>
+                    </section>
+                    <section>
+                        <label>presentation</label>
+                        <content>
+                            <include>CompositePresentation</include>
+                        </content>
+                    </section>
+                    <node>
+                        <label>content</label>
+                        <node-list-ref>
+                            <part>PartsNodeList</part>
+                            <param>
+                                <name>Property</name>
+                                <value>Content</value>
+                            </param>
+                        </node-list-ref>
+                    </node>
+                    <node-ref>DocumentationNode</node-ref>
+                </node-template>
+            </node-list>
+            <node-ref>DocumentationNode</node-ref>
+        </node-template>
+        
+        <node-template>
+            <model-element-type>ISapphireDialogDef</model-element-type>
+            <label>${ Id == null ? ( Label == null ? "Dialog" : Label ) : Id }</label>
+            <use-model-element-image/>
+            <section>
+                <label>Dialog</label>
+                <content>
+                    <include>PartId</include>
+                    <property-editor>Label</property-editor>
+                    <property-editor>InitialFocus</property-editor>
+                    <property-editor>Hints</property-editor>                    
+                </content>
+            </section>
+            <section>
+                <label>presentation</label>
+                <content>
+                    <include>CompositePresentation</include>
+                </content>
+            </section>
+            <node>
+                <label>content</label>
+                <node-list-ref>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>Content</value>
+                    </param>
+                </node-list-ref>
+            </node>
+            <node-ref>DocumentationNode</node-ref>
+        </node-template>
+        
+        <node-template>
             <model-element-type>ISapphireGroupDef</model-element-type>
             <label>Group</label>
             <use-model-element-image/>
@@ -492,11 +574,18 @@
         
         <node-template>
             <model-element-type>ISapphireCompositeDef</model-element-type>
-            <label>Composite</label>
+            <label>${ Id == null ? "Composite" : Id }</label>
             <use-model-element-image/>
             <section>
+                <label>composite</label>
                 <content>
                     <include>PartId</include>
+                </content>
+            </section>
+            <section>
+                <label>presentation</label>
+                <content>
+                    <include>CompositePresentation</include>
                 </content>
             </section>
             <node>
@@ -726,6 +815,201 @@
                     <property-editor>ImplClass</property-editor>
                 </content>
             </section>
+            <node-ref>DocumentationNode</node-ref>
+        </node-template>
+        
+        <node-template>
+            <model-element-type>IMasterDetailsTreeNodeDef</model-element-type>
+            <label>${ Id == null ? ( Label == null ? "Content Outline Node" : Label ) : Id }</label>
+            <use-model-element-image/>
+            <section>
+                <label>Content Outline Node</label>
+                <content>
+                    <include>PartId</include>
+                    <property-editor>Label</property-editor>
+                    <property-editor>ImagePath</property-editor>
+                    <composite>
+                        <indent>true</indent>
+                        <content>
+                            <property-editor>UseModelElementImage</property-editor>
+                        </content>
+                    </composite>
+                    <property-editor>Property</property-editor>
+                    <property-editor>VisibleWhenConditionClass</property-editor>
+                    <property-editor>VisibleWhenConditionParameter</property-editor>
+                </content>
+            </section>
+            <node-list>
+                <property>Sections</property>
+                <node-template>
+                    <model-element-type>IMasterDetailsPageSectionDef</model-element-type>
+                    <label>${ Label == null ? "&lt;section&gt;" : Label }</label>
+                    <use-model-element-image/>
+                    <section>
+                        <label>Section</label>
+                        <content>
+                            <property-editor>Label</property-editor>
+                            <property-editor>VisibleWhenConditionClass</property-editor>
+                            <property-editor>VisibleWhenConditionParameter</property-editor>
+                        </content>
+                    </section>
+                    <section>
+                        <label>presentation</label>
+                        <content>
+                            <include>CompositePresentation</include>
+                        </content>
+                    </section>
+                    <node>
+                        <label>content</label>
+                        <node-list-ref>
+                            <part>PartsNodeList</part>
+                            <param>
+                                <name>Property</name>
+                                <value>Content</value>
+                            </param>
+                        </node-list-ref>
+                    </node>
+                    <node-ref>DocumentationNode</node-ref>
+                </node-template>
+            </node-list>
+            <node-list-ref>
+                <part>PartsNodeList</part>
+                <param>
+                    <name>Property</name>
+                    <value>ChildNodes</value>
+                </param>
+            </node-list-ref>
+            <node-ref>DocumentationNode</node-ref>
+        </node-template>
+
+        <node-template>
+            <model-element-type>IMasterDetailsTreeNodeRef</model-element-type>
+            <label>${ Part == null ? "Content Outline Node Reference" : Part }</label>
+            <use-model-element-image/>
+            <section>
+                <label>Content Outline Node Reference</label>
+                <content>
+                    <property-editor>Part</property-editor>
+                    <property-editor>Params</property-editor>
+                </content>
+            </section>
+        </node-template>
+        
+        <node-template>
+            <model-element-type>IMasterDetailsTreeNodeFactoryDef</model-element-type>
+            <label>${ Id == null ? ( ListProperty == null ? "Content Outline Node List" : ListProperty ) : Id }</label>
+            <use-model-element-image/>
+            <section>
+                <label>Content Outline Node</label>
+                <content>
+                    <include>PartId</include>
+                    <property-editor>ListProperty</property-editor>
+                    <property-editor>VisibleWhenConditionClass</property-editor>
+                    <property-editor>VisibleWhenConditionParameter</property-editor>
+                </content>
+            </section>
+            <node-list>
+                <property>TypeSpecificDefinitions</property>
+                <node-template>
+                    <model-element-type>IMasterDetailsTreeNodeFactoryEntry</model-element-type>
+                    <label>${ Type == null ? "Default Case" : Type }</label>
+                    <section>
+                        <label>Case</label>
+                        <content>
+                            <property-editor>Type</property-editor>
+                            <property-editor>Label</property-editor>
+                            <property-editor>ImagePath</property-editor>
+                            <composite>
+                                <indent>true</indent>
+                                <content>
+                                    <property-editor>UseModelElementImage</property-editor>
+                                </content>
+                            </composite>
+                        </content>
+                    </section>
+                    <node-list>
+                        <property>Sections</property>
+                        <node-template>
+                            <model-element-type>IMasterDetailsPageSectionDef</model-element-type>
+                            <label>${ Label == null ? "&lt;section&gt;" : Label }</label>
+                            <use-model-element-image/>
+                            <section>
+                                <label>Section</label>
+                                <content>
+                                    <property-editor>Label</property-editor>
+                                    <property-editor>VisibleWhenConditionClass</property-editor>
+                                    <property-editor>VisibleWhenConditionParameter</property-editor>
+                                </content>
+                            </section>
+                            <section>
+                                <label>presentation</label>
+                                <content>
+                                    <include>CompositePresentation</include>
+                                </content>
+                            </section>
+                            <node>
+                                <label>content</label>
+                                <node-list-ref>
+                                    <part>PartsNodeList</part>
+                                    <param>
+                                        <name>Property</name>
+                                        <value>Content</value>
+                                    </param>
+                                </node-list-ref>
+                            </node>
+                            <node-ref>DocumentationNode</node-ref>
+                        </node-template>
+                    </node-list>
+                    <node-list-ref>
+                        <part>PartsNodeList</part>
+                        <param>
+                            <name>Property</name>
+                            <value>ChildNodes</value>
+                        </param>
+                    </node-list-ref>
+                    <node-ref>DocumentationNode</node-ref>
+                </node-template>
+            </node-list>
+        </node-template>
+
+        <node-template>
+            <model-element-type>IMasterDetailsTreeNodeFactoryRef</model-element-type>
+            <label>${ Part == null ? "Content Outline Node List Reference" : Part }</label>
+            <use-model-element-image/>
+            <section>
+                <label>content outline node list reference</label>
+                <content>
+                    <property-editor>Part</property-editor>
+                    <property-editor>Params</property-editor>
+                </content>
+            </section>
+        </node-template>
+        
+        <node-template>
+            <model-element-type>IEditorPageDef</model-element-type>
+            <label>${ Id == null ? "Form Editor Page" : Id }</label>
+            <use-model-element-image/>
+            <section>
+                <label>form editor page</label>
+                <content>
+                    <include>PartId</include>
+                    <property-editor>PageName</property-editor>
+                    <property-editor>PageHeaderText</property-editor>
+                    <property-editor>OutlineHeaderText</property-editor>
+                    <property-editor>InitialSelectionPath</property-editor>
+                </content>
+            </section>
+            <node>
+                <label>root node</label>
+                <property>RootNode</property>
+                <node-list-ref>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>ChildNodes</value>
+                    </param>
+                </node-list-ref>
+            </node>
             <node-ref>DocumentationNode</node-ref>
         </node-template>
         

@@ -20,7 +20,6 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -64,7 +63,6 @@ public interface ISapphireDocumentationDef
     // *** Content ***
     
     @Label( standard = "content" )
-    @NonNullValue
     @LongString
     @Localizable
     @XmlBinding( path = "content" )

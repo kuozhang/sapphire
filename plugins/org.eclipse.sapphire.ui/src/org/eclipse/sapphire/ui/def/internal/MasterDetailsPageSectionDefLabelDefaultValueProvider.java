@@ -27,7 +27,7 @@ public final class MasterDetailsPageSectionDefLabelDefaultValueProvider
     public String getDefaultValue()
     {
         final IMasterDetailsTreeNodeDef node = (IMasterDetailsTreeNodeDef) element().parent().parent();
-        return node.getLabel().getLocalizedText();
+        return node.getLabel().getText();
     }
     
 }

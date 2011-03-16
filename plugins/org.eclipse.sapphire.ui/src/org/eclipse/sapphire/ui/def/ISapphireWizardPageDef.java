@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -50,6 +51,7 @@ public interface ISapphireWizardPageDef
     // *** Description ***
     
     @Label( standard = "description" )
+    @LongString
     @Localizable
     @XmlBinding( path = "description" )
     

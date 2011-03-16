@@ -20,6 +20,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -33,6 +34,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
+@Label( standard = "content outline node" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/part.gif" )
 @GenerateImpl
 
 public interface IMasterDetailsTreeNodeDef
@@ -70,7 +73,7 @@ public interface IMasterDetailsTreeNodeDef
     @Type( base = Boolean.class )
     @Label( standard = "use model element image" )
     @DefaultValue( text = "false" )
-    @XmlValueBinding( path = "use-model-element-image", mapExistanceToValue = "true;false" )
+    @XmlValueBinding( path = "use-model-element-image", mapExistanceToValue = "true" )
     
     ValueProperty PROP_USE_MODEL_ELEMENT_IMAGE = new ValueProperty( TYPE, "UseModelElementImage" );
     

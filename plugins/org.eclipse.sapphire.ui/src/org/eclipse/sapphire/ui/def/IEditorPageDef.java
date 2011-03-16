@@ -12,13 +12,13 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -28,6 +28,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
+@Label( standard = "form editor page" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/part.gif" )
 @GenerateImpl
 
 public interface IEditorPageDef
@@ -36,16 +38,6 @@ public interface IEditorPageDef
     
 {
     ModelElementType TYPE = new ModelElementType( IEditorPageDef.class );
-    
-    // *** Id ***
-    
-    @Label( standard = "ID" )
-    @XmlBinding( path = "id" )
-    
-    ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
-    
-    Value<String> getId();
-    void setId( String id );
     
     // *** PageName ***
     
@@ -98,8 +90,8 @@ public interface IEditorPageDef
     @Type( base = IMasterDetailsTreeNodeDef.class )
     @XmlBinding( path = "root-node" )
     
-    ElementProperty PROP_ROOT_NODE = new ElementProperty( TYPE, "RootNode" );
+    ImpliedElementProperty PROP_ROOT_NODE = new ImpliedElementProperty( TYPE, "RootNode" );
 
-    ModelElementHandle<IMasterDetailsTreeNodeDef> getRootNode();
+    IMasterDetailsTreeNodeDef getRootNode();
     
 }
