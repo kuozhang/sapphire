@@ -94,6 +94,7 @@ public class SapphireDirectEditNodeFeature extends AbstractDirectEditingFeature
 						if (endpoint1.equals(nodeElement) || endpoint2.equals(nodeElement))
 						{
 							connectionPart.removeModelListener();
+							connectionPart.getDiagramConnectionTemplate().removeModelListener();
 							if (endpoint1.equals(nodeElement))
 							{
 								connectionPart.resetEndpoint1();
@@ -103,6 +104,7 @@ public class SapphireDirectEditNodeFeature extends AbstractDirectEditingFeature
 								connectionPart.resetEndpoint2();
 							}
 							connectionPart.addModelListener();
+							connectionPart.getDiagramConnectionTemplate().addModelListener();
 						}
 					}
 				}

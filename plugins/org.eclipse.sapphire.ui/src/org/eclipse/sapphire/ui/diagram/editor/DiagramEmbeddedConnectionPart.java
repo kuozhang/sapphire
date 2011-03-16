@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
@@ -28,14 +29,16 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
 	private IDiagramConnectionBindingDef localDefinition;
 	private IModelElement srcNodeModel;
 	private IModelElement endpointModel;
+	private ModelPath endpointPath;
 	private FunctionResult endpointFunctionResult;
 	private IDiagramConnectionEndpointBindingDef endpointDef;
 	
 	public DiagramEmbeddedConnectionPart(DiagramEmbeddedConnectionTemplate connTemplate,
-			IModelElement srcNodeModel)
+			IModelElement srcNodeModel, ModelPath endpointPath)
 	{
 		this.connectionTemplate = connTemplate;
 		this.srcNodeModel = srcNodeModel;
+		this.endpointPath = endpointPath;
 	}
 	
     @Override
@@ -70,7 +73,7 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
         );        
 
         this.endpointDef = this.localDefinition.getEndpoint2().element();
-        this.endpointModel = resolveEndpoint(this.endpointDef);
+        this.endpointModel = resolveEndpoint(this.modelElement, this.endpointPath);
         if (this.endpointModel != null)
         {
 	        this.endpointFunctionResult = initExpression
@@ -178,7 +181,7 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
     
     private void handleEndpointChange()
     {
-        this.endpointModel = resolveEndpoint(this.endpointDef);
+        this.endpointModel = resolveEndpoint(this.modelElement, this.endpointPath);
         if (this.endpointFunctionResult != null)
         {
         	this.endpointFunctionResult.dispose();

@@ -188,12 +188,7 @@ public class DiagramNodePart extends SapphirePart
         {
             id = (String) this.idFunctionResult.value();
         }
-        
-        if( id == null )
-        {
-            id = "#null#";
-        }
-        
+                
         return id;		
 	}
 	

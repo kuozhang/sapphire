@@ -14,13 +14,17 @@ package org.eclipse.sapphire.ui.diagram.editor;
 import java.util.Set;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.IModelParticle;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
@@ -37,22 +41,28 @@ public class DiagramConnectionPart extends SapphirePart
 	protected DiagramConnectionTemplate connectionTemplate;
 	private IDiagramConnectionBindingDef localDefinition;
 	protected IModelElement modelElement;
+	protected ModelPath endpoint1Path;
+	protected ModelPath endpoint2Path;
 	private IDiagramConnectionEndpointBindingDef endpoint1Def;
 	private IDiagramConnectionEndpointBindingDef endpoint2Def;
-	private IModelElement endpoint1Model;
-	private IModelElement endpoint2Model;
+	private IModelElement srcNodeModel;
+	private IModelElement targetNodeModel;
+	private FunctionResult endpoint1FunctionResult;
+	private FunctionResult endpoint2FunctionResult;
+	private ModelProperty endpoint1Property;
+	private ModelProperty endpoint2Property;
 	protected FunctionResult labelFunctionResult;
 	protected ValueProperty labelProperty;
 	protected FunctionResult idFunctionResult;
-	private FunctionResult endpoint1FunctionResult;
-	private FunctionResult endpoint2FunctionResult;
 	protected ModelPropertyListener modelPropertyListener;
 	
 	public DiagramConnectionPart() {}
 	
-	public DiagramConnectionPart(DiagramConnectionTemplate connectionTemplate)
-	{
+	public DiagramConnectionPart(DiagramConnectionTemplate connectionTemplate, ModelPath endpoint1Path, ModelPath endpoint2Path)
+	{		
 		this.connectionTemplate = connectionTemplate;
+		this.endpoint1Path = endpoint1Path;
+		this.endpoint2Path = endpoint2Path;
 	}
 	
     @Override
@@ -91,12 +101,12 @@ public class DiagramConnectionPart extends SapphirePart
         );
         
         this.endpoint1Def = this.localDefinition.getEndpoint1().element();        
-        this.endpoint1Model = resolveEndpoint(this.endpoint1Def);
-        if (this.endpoint1Model != null)
+        this.srcNodeModel = resolveEndpoint(this.modelElement, this.endpoint1Path);
+        if (this.srcNodeModel != null)
         {
 	        this.endpoint1FunctionResult = initExpression
 	        (
-	        	this.endpoint1Model, 
+	        	this.srcNodeModel, 
 	        	this.endpoint1Def.getValue(), 
 	            new Runnable()
 	        	{
@@ -108,12 +118,12 @@ public class DiagramConnectionPart extends SapphirePart
         }
         
         this.endpoint2Def = this.localDefinition.getEndpoint2().element();
-        this.endpoint2Model = resolveEndpoint(this.endpoint2Def);
-        if (this.endpoint2Model != null)
+        this.targetNodeModel = resolveEndpoint(this.modelElement, this.endpoint2Path);
+        if (this.targetNodeModel != null)
         {
 	        this.endpoint2FunctionResult = initExpression
 	        (
-	        	this.endpoint2Model, 
+	        	this.targetNodeModel, 
 	        	this.endpoint2Def.getValue(), 
 	            new Runnable()
 	        	{
@@ -123,6 +133,9 @@ public class DiagramConnectionPart extends SapphirePart
 	        	}
 	        );
         }        
+        
+        this.endpoint1Property = ModelUtil.resolve(this.modelElement, this.endpoint1Path);
+        this.endpoint2Property = ModelUtil.resolve(this.modelElement, this.endpoint2Path);
         
         // Add model property listener
         this.modelPropertyListener = new ModelPropertyListener()
@@ -148,12 +161,12 @@ public class DiagramConnectionPart extends SapphirePart
     
     public IModelElement getEndpoint1()
     {
-    	return this.endpoint1Model;
+    	return this.srcNodeModel;
     }
     
     public IModelElement getEndpoint2()
     {
-    	return this.endpoint2Model;
+    	return this.targetNodeModel;
     }
 
     public boolean canEditLabel()
@@ -241,8 +254,7 @@ public class DiagramConnectionPart extends SapphirePart
 		if (this.endpoint1FunctionResult != null)
 		{
 			Object value = this.endpoint1FunctionResult.value();
-			String property = this.endpoint1Def.getProperty().getContent();
-			setModelProperty(this.modelElement, property, value);
+			setModelProperty(this.modelElement, this.endpoint1Path, value);
 		}		
 	}
 	
@@ -251,28 +263,54 @@ public class DiagramConnectionPart extends SapphirePart
 		if (this.endpoint2FunctionResult != null)
 		{
 			Object value = this.endpoint2FunctionResult.value();
-			String property = this.endpoint2Def.getProperty().getContent();
-			setModelProperty(this.modelElement, property, value);
+			setModelProperty(this.modelElement, this.endpoint2Path, value);
 		}		
 	}
 
-	protected IModelElement resolveEndpoint(IDiagramConnectionEndpointBindingDef endpointDef)
+	protected IModelElement resolveEndpoint(IModelElement modelElement, ModelPath endpointPath)
 	{
-		String propertyName = endpointDef.getProperty().getContent();
-		ModelProperty modelProperty = resolve(this.modelElement, propertyName);
-        if (!(modelProperty instanceof ValueProperty))
-        {
-        	throw new RuntimeException( "Property " + propertyName + " not a ValueProperty");
-        }
-        ValueProperty property = (ValueProperty)modelProperty;
-		Value<?> valObj = this.modelElement.read(property);
-		if (!(valObj instanceof ReferenceValue))
+		if (endpointPath.length() == 1)
 		{
-			throw new RuntimeException( "Property " + propertyName + " value not a reference");
+			String propertyName = ((ModelPath.PropertySegment)endpointPath.head()).getPropertyName();
+			ModelProperty modelProperty = resolve(modelElement, propertyName);
+	        if (!(modelProperty instanceof ValueProperty))
+	        {
+	        	throw new RuntimeException( "Property " + propertyName + " not a ValueProperty");
+	        }
+	        ValueProperty property = (ValueProperty)modelProperty;
+			Value<?> valObj = modelElement.read(property);
+			if (!(valObj instanceof ReferenceValue))
+			{
+				throw new RuntimeException( "Property " + propertyName + " value not a reference");
+			}
+			ReferenceValue<?> refVal = (ReferenceValue<?>)valObj;
+			Object targetObj = refVal.resolve();
+			return (IModelElement)targetObj;
 		}
-		ReferenceValue<?> refVal = (ReferenceValue<?>)valObj;
-		Object targetObj = refVal.resolve();
-		return (IModelElement)targetObj;
+		else
+		{
+			ModelPath.Segment head = endpointPath.head();
+			if( head instanceof ParentElementSegment )
+            {
+                IModelParticle parent = modelElement.parent();                
+                if( parent == null )
+                {
+                    throw new RuntimeException("Invalid model path: " + endpointPath);
+                }
+                else
+                {
+                    if( parent instanceof ModelElementList<?> )
+                    {
+                        parent = parent.parent();
+                    }
+                }
+                return resolveEndpoint((IModelElement)parent, endpointPath.tail());                
+            }
+			else
+			{
+				throw new RuntimeException("Invalid model path: " + endpointPath);
+			}
+		}
 	}
 	
     protected void setModelProperty(final IModelElement modelElement, 
@@ -295,30 +333,47 @@ public class DiagramConnectionPart extends SapphirePart
 		}    	
 	}
 	
+    protected void setModelProperty(IModelElement modelElement, ModelPath propertyPath, Object value)
+    {
+    	if (propertyPath.length() == 1)
+    	{
+    		String propertyName = ((ModelPath.PropertySegment)propertyPath.head()).getPropertyName();
+    		setModelProperty(modelElement, propertyName, value);
+    	}
+    	else
+    	{
+    		if (propertyPath.head() instanceof ModelPath.ParentElementSegment)
+    		{
+    			IModelParticle parent = modelElement.parent();
+    			if (parent instanceof ModelElementList<?>)
+    			{
+    				parent = parent.parent();
+    			}
+    			setModelProperty((IModelElement)parent, propertyPath.tail(), value);
+    		}
+    	}
+    }
+    
     public void addModelListener()
     {
-    	this.modelElement.addListener(this.modelPropertyListener, 
-    								this.endpoint1Def.getProperty().getContent());
-    	this.modelElement.addListener(this.modelPropertyListener, 
-									this.endpoint2Def.getProperty().getContent());
+    	this.modelElement.addListener(this.modelPropertyListener, this.endpoint1Path);
+    	this.modelElement.addListener(this.modelPropertyListener, this.endpoint2Path);
     }
     
     public void removeModelListener()
     {
-    	this.modelElement.removeListener(this.modelPropertyListener, 
-    								this.endpoint1Def.getProperty().getContent());
-    	this.modelElement.removeListener(this.modelPropertyListener, 
-									this.endpoint2Def.getProperty().getContent());
+    	this.modelElement.removeListener(this.modelPropertyListener, this.endpoint1Path);
+    	this.modelElement.removeListener(this.modelPropertyListener, this.endpoint2Path);
     }
     
     protected void handleModelPropertyChange(final ModelPropertyChangeEvent event)
     {
     	final ModelProperty property = event.getProperty();
     	    	
-    	if (property.getName().equals(this.endpoint1Def.getProperty().getContent()) || 
-    			property.getName().equals(this.endpoint2Def.getProperty().getContent()))
+    	if (property.getName().equals(this.endpoint1Property.getName()) || 
+    			property.getName().equals(this.endpoint2Property.getName()))
     	{
-    		boolean sourceChange = property.getName().equals(this.endpoint1Def.getProperty().getContent()) ? true : false;
+    		boolean sourceChange = property.getName().equals(this.endpoint1Property.getName()) ? true : false;
     		handleEndpointChange(sourceChange);
     		notifyConnectionEndpointUpdate();
     	}
@@ -328,17 +383,17 @@ public class DiagramConnectionPart extends SapphirePart
     {
 		if (sourceChange)
 		{
-			this.endpoint1Model = resolveEndpoint(this.endpoint1Def);
+			this.srcNodeModel = resolveEndpoint(this.modelElement, this.endpoint1Path);
 			if (this.endpoint1FunctionResult != null)
 			{
 				this.endpoint1FunctionResult.dispose();
 				this.endpoint1FunctionResult = null;
 			}
-	        if (this.endpoint1Model != null)
+	        if (this.srcNodeModel != null)
 	        {
 		        this.endpoint1FunctionResult = initExpression
 		        (
-		        	this.endpoint1Model, 
+		        	this.srcNodeModel, 
 		        	this.endpoint1Def.getValue(), 
 		            new Runnable()
 		        	{
@@ -351,17 +406,17 @@ public class DiagramConnectionPart extends SapphirePart
 		}
 		else
 		{
-			this.endpoint2Model = resolveEndpoint(this.endpoint2Def);
+			this.targetNodeModel = resolveEndpoint(this.modelElement, this.endpoint2Path);
 			if (this.endpoint2FunctionResult != null)
 			{
 				this.endpoint2FunctionResult.dispose();
 				this.endpoint2FunctionResult = null;
 			}
-	        if (this.endpoint2Model != null)
+	        if (this.targetNodeModel != null)
 	        {
 		        this.endpoint2FunctionResult = initExpression
 		        (
-		        	this.endpoint2Model, 
+		        	this.targetNodeModel, 
 		        	this.endpoint2Def.getValue(), 
 		            new Runnable()
 		        	{

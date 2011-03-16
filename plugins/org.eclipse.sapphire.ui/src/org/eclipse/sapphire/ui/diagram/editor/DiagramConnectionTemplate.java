@@ -13,6 +13,8 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -21,9 +23,11 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
@@ -62,9 +66,17 @@ public class DiagramConnectionTemplate
 	protected IModelElement modelElement;
 	protected String propertyName;
 	private ListProperty modelProperty;
+	protected ListProperty connListProperty;
 	protected ModelPropertyListener modelPropertyListener;
 	protected SapphireDiagramPartListener connPartListener;
-	protected Set<Listener> listeners;
+	protected Set<Listener> templateListeners;
+	// The model path specified in the sdef file
+	private ModelPath originalEndpoint2Path;
+	// The converted model path for the endpoints. The path is based on the connection element
+	private ModelPath endpoint1Path;
+	private ModelPath endpoint2Path;
+	private ModelProperty endpoint1Property;
+	private ModelProperty endpoint2Property;
 	
 	private List<DiagramConnectionPart> diagramConnections;
 	
@@ -80,7 +92,7 @@ public class DiagramConnectionTemplate
         this.diagramConnections = new ArrayList<DiagramConnectionPart>();
         
         this.propertyName = this.definition.getProperty().getContent();
-        this.modelProperty = (ListProperty)resolve(this.modelElement, this.propertyName);
+        this.modelProperty = (ListProperty)ModelUtil.resolve(this.modelElement, this.propertyName);
         
         this.connPartListener = new SapphireDiagramPartListener() 
         {
@@ -97,12 +109,63 @@ public class DiagramConnectionTemplate
         	
 		};
 		
-		this.listeners = new CopyOnWriteArraySet<Listener>();
-        	
+		this.templateListeners = new CopyOnWriteArraySet<Listener>();
+        	    	
+    	String endpt1PropStr = this.definition.getEndpoint1().element().getProperty().getContent();
+    	String endpt2PropStr = this.definition.getEndpoint2().element().getProperty().getContent();
+    	this.originalEndpoint2Path = new ModelPath(endpt2PropStr);
+    	
+        ModelElementType type = this.modelProperty.getType();
+        this.endpoint1Property = type.getProperty(endpt1PropStr);
+        this.endpoint2Property = ModelUtil.resolve(type, this.originalEndpoint2Path);
+                
+        if (getConnectionType() == ConnectionType.OneToOne)
+        {
+    		this.endpoint1Path = new ModelPath(endpt1PropStr);
+    		this.endpoint2Path = new ModelPath(endpt2PropStr);
+    		this.connListProperty = this.modelProperty;
+        }
+        else 
+        {
+			ModelPath.PropertySegment head = (ModelPath.PropertySegment)this.originalEndpoint2Path.head();
+			ModelProperty prop = type.getProperty(head.getPropertyName());
+			if (prop instanceof ListProperty)
+			{
+				this.endpoint1Path = new ModelPath("../" + endpt1PropStr);
+				this.endpoint2Path = this.originalEndpoint2Path.tail();
+				this.connListProperty = (ListProperty)prop;
+			}
+			else 
+			{
+				throw new RuntimeException("Invaid Model Path:" + this.originalEndpoint2Path);
+			}
+        }
+        
+        // initialize the connection parts
     	ModelElementList<?> list = this.modelElement.read(this.modelProperty);
         for( IModelElement listEntryModelElement : list )
         {
-        	createNewConnectionPart(listEntryModelElement, null);
+        	// check the type of connection: 1x1 connection versus 1xn connection        	
+        	if (getConnectionType() == ConnectionType.OneToOne)
+        	{    
+        		// The connection model element specifies a 1x1 connection
+        		createNewConnectionPart(listEntryModelElement, null);
+        	}
+        	else
+        	{
+    			ModelPath.PropertySegment head = (ModelPath.PropertySegment)this.originalEndpoint2Path.head();
+    			ModelProperty connProp = ModelUtil.resolve(listEntryModelElement, head.getPropertyName());
+    			if (!(connProp instanceof ListProperty))
+    			{
+    				throw new RuntimeException("Expecting " + connProp.getName() + " to be a list property");
+    			}
+				// the connection is of type 1xn
+				ModelElementList<?> connList = listEntryModelElement.read((ListProperty)connProp);        				
+				for (IModelElement connElement : connList)
+				{
+					createNewConnectionPart(connElement, null);
+				}
+        	}
         }
                 
         // Add model property listener
@@ -122,51 +185,112 @@ public class DiagramConnectionTemplate
     	return this.definition.getId().getContent();
     }
     
-    public List<DiagramConnectionPart> getDiagramConnections(IModelElement srcNodeModel)
+    public List<DiagramConnectionPart> getDiagramConnections(IModelElement connListParent)
     {
-    	return this.diagramConnections;
+    	if (connListParent == null || getConnectionType() == ConnectionType.OneToOne)
+    	{
+    		return this.diagramConnections;
+    	}
+    	else
+    	{
+    		List<DiagramConnectionPart> connList = new ArrayList<DiagramConnectionPart>();
+    		for (DiagramConnectionPart connPart : this.diagramConnections)
+    		{
+    			IModelElement connModel = connPart.getLocalModelElement();
+    			if (connModel.parent().parent() == connListParent)
+    			{
+    				connList.add(connPart);
+    			}
+    		}
+    		return connList;
+    	}
     }
         
+    public IModelElement getConnectionParentElement(IModelElement srcNodeModel)
+    {
+    	if (getConnectionType() == ConnectionType.OneToMany)
+    	{
+        	ModelElementList<?> list = this.modelElement.read(this.modelProperty);
+            for( IModelElement listEntryModelElement : list )
+            {
+				Object valObj = listEntryModelElement.read(this.endpoint1Property);
+				if (valObj instanceof ReferenceValue)
+				{
+					ReferenceValue<?> reference = (ReferenceValue<?>)valObj;
+					IModelElement model = (IModelElement)reference.resolve();
+					if (srcNodeModel == model)
+					{
+						return listEntryModelElement;
+					}
+				}
+            }
+    	}
+    	return null;
+    }
+    
     public boolean canCreateNewConnection(DiagramNodePart srcNode, DiagramNodePart targetNode)
     {
     	boolean canCreate = false;
-    	ModelElementType srcType = srcNode.getModelElement().getModelElementType();
-    	ModelElementType targetType = targetNode.getModelElement().getModelElementType();
-    	
-        ModelElementType type = this.modelProperty.getType();
-        ModelProperty prop1 = type.getProperty(this.definition.getEndpoint1().element().getProperty().getContent());
-        if (prop1.getType() == null && prop1.hasAnnotation(Reference.class))
-        {
-        	canCreate = prop1.getAnnotation(Reference.class).target().isAssignableFrom(srcType.getModelElementClass());
-        	if (!canCreate)
-        		return false;
-        }
-        ModelProperty prop2 = type.getProperty(this.definition.getEndpoint2().element().getProperty().getContent());
-        if (prop2.getType() == null && prop2.hasAnnotation(Reference.class))
-        {
-        	canCreate = prop2.getAnnotation(Reference.class).target().isAssignableFrom(targetType.getModelElementClass());
-        }
+    	// We need to be able to identify the source and target node by their instance id
+    	// before we allow creation of connections between them
+    	if (srcNode.getInstanceId() != null && srcNode.getInstanceId().length() > 0
+    			&& targetNode.getInstanceId() != null && targetNode.getInstanceId().length() > 0)
+    	{
+	    	ModelElementType srcType = srcNode.getModelElement().getModelElementType();
+	    	ModelElementType targetType = targetNode.getModelElement().getModelElementType();
+	    	
+	        if (this.endpoint1Property.getType() == null && this.endpoint1Property.hasAnnotation(Reference.class))
+	        {
+	        	canCreate = this.endpoint1Property.getAnnotation(Reference.class).target().isAssignableFrom(srcType.getModelElementClass());
+	        	if (!canCreate)
+	        		return false;
+	        }
+	        if (this.endpoint2Property.getType() == null && this.endpoint2Property.hasAnnotation(Reference.class))
+	        {
+	        	canCreate = this.endpoint2Property.getAnnotation(Reference.class).target().isAssignableFrom(targetType.getModelElementClass());
+	        }
+    	}
     	return canCreate;
     }
     
     public void addModelListener()
     {
     	this.modelElement.addListener(this.modelPropertyListener, this.propertyName);
+    	if (getConnectionType() == ConnectionType.OneToMany)
+    	{
+    		// it's a 1xn connection type; need to listen to each connection list property
+    		ModelElementList<?> list = this.modelElement.read(this.modelProperty);
+    		ModelPath.PropertySegment head = (ModelPath.PropertySegment)this.originalEndpoint2Path.head();
+    		for( IModelElement listEntryModelElement : list )
+    		{    			
+    			listEntryModelElement.addListener(this.modelPropertyListener, head.getPropertyName());    			
+    		}
+    	}
     }
     
     public void removeModelListener()
     {
     	this.modelElement.removeListener(this.modelPropertyListener, this.propertyName);
+    	if (getConnectionType() == ConnectionType.OneToMany)
+    	{
+    		// it's a 1xn connection type; need to listen to each connection list property
+    		ModelElementList<?> list = this.modelElement.read(this.modelProperty);
+    		for( IModelElement listEntryModelElement : list )
+    		{
+    			ModelPath.PropertySegment head = (ModelPath.PropertySegment)this.originalEndpoint2Path.head();
+    			listEntryModelElement.removeListener(this.modelPropertyListener, head.getPropertyName());    			
+    		}
+    	}
     }
     
     public void addTemplateListener( final Listener listener )
     {
-        this.listeners.add( listener );
+        this.templateListeners.add( listener );
     }
     
     public void removeTemplateListener( final Listener listener )
     {
-        this.listeners.remove( listener );
+        this.templateListeners.remove( listener );
     }
     
     public SapphireDiagramEditorPart getDiagramEditor()
@@ -174,12 +298,23 @@ public class DiagramConnectionTemplate
     	return this.diagramEditor;
     }
     
+    public ConnectionType getConnectionType()
+    {
+    	if (this.originalEndpoint2Path.length() > 1)
+    	{
+    		return ConnectionType.OneToMany;
+    	}
+    	else
+    	{
+    		return ConnectionType.OneToOne;
+    	}
+    }
+        
     public DiagramConnectionPart createNewDiagramConnection(DiagramNodePart srcNode, 
     														DiagramNodePart targetNode)
-    {
-		ModelElementList<?> list = this.modelElement.read(this.modelProperty);
-		IModelElement newElement = list.addNewElement();
-		
+    {    	
+    	// Get the serialized value of endpoint1
+    	String endpoint1Value = null;
     	IDiagramConnectionEndpointBindingDef srcAnchorDef = this.definition.getEndpoint1().element();
     	String srcProperty = srcAnchorDef.getProperty().getContent();
     	Value<Function> srcFunc = srcAnchorDef.getValue();
@@ -187,51 +322,89 @@ public class DiagramConnectionTemplate
     							this.definition.adapt( LocalizationService.class ));
     	if (srcFuncResult != null)
     	{
-	    	setModelProperty(newElement, srcProperty, srcFuncResult.value());
-	    	srcFuncResult.dispose();
+    		endpoint1Value = (String)srcFuncResult.value();
+    		srcFuncResult.dispose();    		
     	}
     	
+    	// get the serialized value of endpoint2
+    	String endpoint2Value = null;
     	IDiagramConnectionEndpointBindingDef targetAnchorDef = this.definition.getEndpoint2().element();
-    	String targetProperty = targetAnchorDef.getProperty().getContent();
     	Value<Function> targetFunc = targetAnchorDef.getValue();;
     	FunctionResult targetFuncResult = getNodeReferenceFunction(targetNode, targetFunc,
     							this.definition.adapt( LocalizationService.class ));
+    	
     	if (targetFuncResult != null)
     	{
-	    	setModelProperty(newElement, targetProperty, targetFuncResult.value());
-	    	targetFuncResult.dispose();
+    		endpoint2Value = (String)targetFuncResult.value();
+    		targetFuncResult.dispose();
     	}
     	
-    	DiagramConnectionPart newConn = createNewConnectionPart(newElement, null);
-    	return newConn;
+    	if (endpoint1Value != null && endpoint2Value != null)
+    	{
+    		if (getConnectionType() == ConnectionType.OneToOne)
+    		{
+    			ModelElementList<?> list = this.modelElement.read(this.modelProperty);
+    			IModelElement newElement = list.addNewElement();
+    			setModelProperty(newElement, ((ModelPath.PropertySegment)this.endpoint1Path.head()).getPropertyName(), endpoint1Value);
+    			setModelProperty(newElement, ((ModelPath.PropertySegment)this.endpoint2Path.head()).getPropertyName(), endpoint2Value);
+    	    	DiagramConnectionPart newConn = createNewConnectionPart(newElement, null);
+    	    	return newConn;    			
+    		}
+    		else
+    		{
+    			ModelElementList<?> list = this.modelElement.read(this.modelProperty);
+    			IModelElement srcElement = null;
+    			for (IModelElement element : list)
+    			{
+    				Object valObj = element.read(this.endpoint1Property);
+    				String val = null;
+    				if (valObj instanceof ReferenceValue)
+    				{
+    					val = (String)(((ReferenceValue)valObj).getContent());
+    				}
+    				else
+    				{
+    					val = (String)element.read(this.endpoint1Property);
+    				}
+    				if (val.equals(endpoint1Value))
+    				{
+    					srcElement = element;
+    					break;
+    				}
+    			}
+    			if (srcElement == null)
+    			{
+    				srcElement = list.addNewElement();
+    				setModelProperty(srcElement, srcProperty, endpoint1Value);
+    			}
+    			
+    			ModelPath.PropertySegment head = (ModelPath.PropertySegment)this.originalEndpoint2Path.head();
+    			ModelProperty connProp = ModelUtil.resolve(srcElement, head.getPropertyName());
+    			if (!(connProp instanceof ListProperty))
+    			{
+    				throw new RuntimeException("Expecting " + connProp.getName() + " to be a list property");
+    			}
+				// the connection is of type 1xn
+    			ModelElementList<?> connList = srcElement.read((ListProperty)connProp);
+    			IModelElement newElement = connList.addNewElement();
+    			setModelProperty(newElement, ((ModelPath.PropertySegment)this.endpoint2Path.head()).getPropertyName(), endpoint2Value);
+    	    	DiagramConnectionPart newConn = createNewConnectionPart(newElement, null);
+				return newConn;
+    		}
+    	} 
+    	return null;
     }
     
     public DiagramConnectionPart createNewConnectionPart(IModelElement connElement, IModelElement srcNodeElement)
     {
-    	DiagramConnectionPart connPart = new DiagramConnectionPart(this);
+    	DiagramConnectionPart connPart = new DiagramConnectionPart(this, this.endpoint1Path, this.endpoint2Path);
     	connPart.init(this.diagramEditor, connElement, this.definition, 
     			Collections.<String,String>emptyMap());
     	connPart.addListener(this.connPartListener);
     	addConnectionPart(srcNodeElement, connPart);
     	return connPart;
     }
-    
-    protected ModelProperty resolve(final IModelElement modelElement, 
-    		String propertyName)
-    {
-    	if (propertyName != null)
-    	{
-	        final ModelElementType type = modelElement.getModelElementType();
-	        final ModelProperty property = type.getProperty( propertyName );
-	        if( property == null )
-	        {
-	            throw new RuntimeException( "Could not find property " + propertyName + " in " + type.getQualifiedName() );
-	        }
-	        return property;
-    	}    
-        return null;
-    }
-
+        
     protected void setModelProperty(final IModelElement modelElement, 
     								String propertyName, Object value)
     {
@@ -276,45 +449,95 @@ public class DiagramConnectionTemplate
     protected void handleModelPropertyChange(final ModelPropertyChangeEvent event)
     {
     	final IModelElement element = event.getModelElement();
-    	final ModelProperty property = event.getProperty();
-    	ModelElementList<?> newList = (ModelElementList<?>)element.read(property);
+    	final ListProperty property = (ListProperty)event.getProperty();
+    	ModelElementList<?> newList = element.read(property);
     	
-    	if (newList.size() != getDiagramConnections(element).size())
+    	if (property == this.connListProperty)
     	{
+	    	if (newList.size() != getDiagramConnections(element).size())
+	    	{
+	    		List<DiagramConnectionPart> connParts = getDiagramConnections(element);
+	    		List<IModelElement> oldList = new ArrayList<IModelElement>(connParts.size());
+	    		for (DiagramConnectionPart connPart : connParts)
+	    		{
+	    			oldList.add(connPart.getLocalModelElement());
+	    		}
+	    		    		
+		    	if (newList.size() > oldList.size())
+		    	{
+		    		// new connections are added
+		    		List<IModelElement> newConns = ListUtil.ListDiff(newList, oldList);
+		    		for (IModelElement newConn : newConns)
+		    		{	    			
+		            	DiagramConnectionPart connPart = createNewConnectionPart(newConn, element);
+		            	notifyConnectionAdd(connPart);
+		    		}
+		    	}
+		    	else
+		    	{
+		    		// connections are deleted
+		    		List<IModelElement> deletedConns = ListUtil.ListDiff(newList, oldList);
+		    		for (IModelElement deletedConn : deletedConns)
+		    		{
+		    			DiagramConnectionPart connPart = getConnectionPart(element, deletedConn);
+		    			if (connPart != null)
+		    			{
+		    				notifyConnectionDelete(connPart);
+			    			connPart.dispose();
+			    			removeConnectionPart(element, connPart);
+		    			}
+		    		}
+		    	}
+	    	}
+    	}
+    	else if (property == this.modelProperty)
+    	{
+    		// 1xn type connection
     		List<DiagramConnectionPart> connParts = getDiagramConnections(element);
-    		List<IModelElement> oldList = new ArrayList<IModelElement>(connParts.size());
+    		List<IModelElement> oldList = new ArrayList<IModelElement>();
+    		Set<IModelElement> oldConnParents = new HashSet<IModelElement>(); 
     		for (DiagramConnectionPart connPart : connParts)
     		{
-    			oldList.add(connPart.getLocalModelElement());
+    			IModelElement connElement = connPart.getLocalModelElement();    			
+    			IModelElement connParentElement = (IModelElement)connElement.parent().parent();
+    			if (!(oldConnParents.contains(connParentElement)))
+    			{
+    				oldConnParents.add(connParentElement);
+    			}    			
     		}
-    		    		
-	    	if (newList.size() > oldList.size())
-	    	{
-	    		// new connections are added
-	    		List<IModelElement> newConns = ListUtil.ListDiff(newList, oldList);
-	    		for (IModelElement newConn : newConns)
-	    		{	    			
-	            	DiagramConnectionPart connPart = createNewConnectionPart(newConn, element);
-	            	//connPart.addNewConnectionIfPossible(fp, ted, this.diagramEditor);
-	            	notifyConnectionAdd(connPart);
-	    		}
-	    	}
-	    	else
-	    	{
-	    		// connections are deleted
-	    		List<IModelElement> deletedConns = ListUtil.ListDiff(newList, oldList);
-	    		for (IModelElement deletedConn : deletedConns)
-	    		{
-	    			DiagramConnectionPart connPart = getConnectionPart(element, deletedConn);
-	    			if (connPart != null)
-	    			{
-	    				//connPart.removeDiagramConnection(fp, ted);
+    		Iterator <IModelElement> it = oldConnParents.iterator();
+    		while(it.hasNext())
+    		{
+    			oldList.add(it.next());
+    		}
+    		if (newList.size() > oldList.size())
+    		{
+    			// new connection parents are added and we need to listen on their connection list property
+    			List<IModelElement> newConnParents = ListUtil.ListDiff(newList, oldList);
+    			ModelPath.PropertySegment head = (ModelPath.PropertySegment)this.originalEndpoint2Path.head();
+    			for (IModelElement newConnParent : newConnParents)
+    			{
+    				newConnParent.addListener(this.modelPropertyListener, head.getPropertyName());
+    			}
+    		}
+    		else if (newList.size() < oldList.size())
+    		{
+    			// connection parents are deleted and we need to dispose any connections associated with them
+    			List<IModelElement> deletedConnParents = ListUtil.ListDiff(newList, oldList);
+    			List<DiagramConnectionPart> connPartsCopy = new ArrayList<DiagramConnectionPart>(connParts.size());
+    			connPartsCopy.addAll(connParts);
+    			for (DiagramConnectionPart connPart : connPartsCopy)
+    			{
+        			IModelElement connElement = connPart.getLocalModelElement();    			
+        			IModelElement connParentElement = (IModelElement)connElement.parent().parent();
+        			if (deletedConnParents.contains(connParentElement))
+        			{
 	    				notifyConnectionDelete(connPart);
 		    			connPart.dispose();
-		    			removeConnectionPart(element, connPart);
-	    			}
-	    		}
-	    	}
+		    			removeConnectionPart(element, connPart);        				
+        			}
+    			}
+    		}
     	}
     }
     
@@ -353,7 +576,7 @@ public class DiagramConnectionTemplate
     
     protected void notifyConnectionUpdate(DiagramConnectionPart connPart)
     {
-		for( Listener listener : this.listeners )
+		for( Listener listener : this.templateListeners )
         {
             listener.handleConnectionUpdate(connPart);
         }    	
@@ -361,7 +584,7 @@ public class DiagramConnectionTemplate
 
     protected void notifyConnectionEndpointUpdate(DiagramConnectionPart connPart)
     {
-		for( Listener listener : this.listeners )
+		for( Listener listener : this.templateListeners )
         {
             listener.handleConnectionEndpointUpdate(connPart);
         }    	
@@ -369,7 +592,7 @@ public class DiagramConnectionTemplate
     
     protected void notifyConnectionAdd(DiagramConnectionPart connPart)
     {
-		for( Listener listener : this.listeners )
+		for( Listener listener : this.templateListeners )
         {
             listener.handleConnectionAdd(connPart);
         }    	
@@ -377,9 +600,19 @@ public class DiagramConnectionTemplate
 
     protected void notifyConnectionDelete(DiagramConnectionPart connPart)
     {
-		for( Listener listener : this.listeners )
+		for( Listener listener : this.templateListeners )
         {
             listener.handleConnectionDelete(connPart);
         }    	
+    }
+    
+    // ******************************************************************
+    // Inner classes
+    //*******************************************************************
+    
+    public static enum ConnectionType
+    {
+    	OneToOne,
+    	OneToMany
     }
 }

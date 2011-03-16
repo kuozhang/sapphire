@@ -45,8 +45,6 @@ public class SapphireCreateConnectionFeature extends AbstractCreateConnectionFea
 	
 	public boolean canCreate(ICreateConnectionContext context) 
 	{
-		// return true if both anchors belong to an IModelElement
-		// and those model elements are not identical
 		SapphirePart source = getEndpoint(context.getSourceAnchor());
 		SapphirePart target = getEndpoint(context.getTargetAnchor());
 		if (source instanceof DiagramNodePart && 

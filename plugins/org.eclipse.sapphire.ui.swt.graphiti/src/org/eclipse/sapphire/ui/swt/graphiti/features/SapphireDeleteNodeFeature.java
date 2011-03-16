@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.swt.graphiti.features;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IDeleteContext;
@@ -24,7 +25,9 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.ui.features.DefaultDeleteFeature;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -94,9 +97,27 @@ public class SapphireDeleteNodeFeature extends DefaultDeleteFeature
 		if (bo instanceof DiagramNodePart)
 		{
 			DiagramNodePart nodePart = (DiagramNodePart)bo;
-			IModelElement element = nodePart.getLocalModelElement();
-			ModelElementList<?> list = (ModelElementList<?>) element.parent();
-			list.remove(element);			
+			IModelElement nodeModel = nodePart.getLocalModelElement();
+			
+			// Check top level connections to see whether we need to remove the connection parent element
+			SapphireDiagramEditorPart editorPart = nodePart.getDiagramNodeTemplate().getDiagramEditorPart();
+			List<DiagramConnectionTemplate> connTemplates = editorPart.getConnectionTemplates();
+			for (DiagramConnectionTemplate connTemplate : connTemplates)
+			{
+				if (connTemplate.getConnectionType() == DiagramConnectionTemplate.ConnectionType.OneToMany)
+				{
+					IModelElement connParentElement = connTemplate.getConnectionParentElement(nodeModel);
+					if (connParentElement != null)
+					{
+						ModelElementList<?> connParentList = (ModelElementList<?>)connParentElement.parent();
+						connParentList.remove(connParentElement);
+					}
+				}
+			}
+			
+			ModelElementList<?> list = (ModelElementList<?>) nodeModel.parent();
+			list.remove(nodeModel);
+			
 		}
 	}
 	

@@ -301,6 +301,11 @@ public class DiagramNodeTemplate
 		}
 	}
     
+	public SapphireDiagramEditorPart getDiagramEditorPart()
+	{
+		return this.diagramEditor;
+	}
+	
 	private void notifyNodeUpdate(DiagramNodePart nodePart)
 	{
 		for( Listener listener : this.listeners )
