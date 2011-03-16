@@ -141,17 +141,37 @@ any form part to be included.</p>
   <tr>
     <td>
 <pre class="source-code"><code>&lt;composite-ref>
-  &lt;id>bug.report</id>
+  &lt;id>bug.report&lt;/id>
 &lt;/composite-ref></code></pre>
     </td>
     <td>
 <pre class="source-code"><code>&lt;include>bug.report&lt;/include></code></pre>
     </td>
   </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;composite-ref>
+  &lt;id>bug.report&lt;/id>
+  &lt;param>
+    &lt;name>SomeParam&lt;/name>
+    &lt;value>SomeValue&lt;/value>
+  &lt;/param>
+&lt;/composite-ref></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;include>
+  &lt;part>bug.report&lt;/part>
+  &lt;param>
+    &lt;name>SomeParam&lt;/name>
+    &lt;value>SomeValue&lt;/value>
+  &lt;/param>
+&lt;/include></code></pre>
+    </td>
+  </tr>
 </table>
 
 <p>The following Eclipse search/replace regular expressions can be used to perform this
-migration:</p>
+migration (only works when there are no params):</p>
 
 <p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
 <nobr>Search: &nbsp;&nbsp;(?s)&lt;composite-ref>.*?&lt;id>(.*?)&lt;/id>.*?&lt;/composite-ref></nobr><br/>
