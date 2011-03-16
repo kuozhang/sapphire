@@ -18,6 +18,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
@@ -31,9 +33,9 @@ public abstract class FunctionResult
     private final Function function;
     private final FunctionContext context;
     private final List<FunctionResult> operands;
-    private final List<FunctionResult> operandsReadOnly;
     private final List<Listener> listeners;
     private Object value;
+    private IStatus status;
     
     public FunctionResult( final Function function,
                            final FunctionContext context )
@@ -41,30 +43,7 @@ public abstract class FunctionResult
         this.function = function;
         this.context = context;
         this.listeners = new CopyOnWriteArrayList<Listener>();
-        
-        final List<Function> operands = function.operands();
-        
-        if( operands.size() == 0 )
-        {
-            this.operands = Collections.emptyList();
-            this.operandsReadOnly = this.operands;
-        }
-        else if( operands.size() == 1 )
-        {
-            this.operands = Collections.singletonList( operands.get( 0 ).evaluate( this.context ) );
-            this.operandsReadOnly = this.operands;
-        }
-        else
-        {
-            this.operands = new ArrayList<FunctionResult>();
-            
-            for( Function operand : operands )
-            {
-                this.operands.add( operand.evaluate( this.context ) );
-            }
-            
-            this.operandsReadOnly = Collections.unmodifiableList( this.operands );
-        }
+        this.operands = Collections.unmodifiableList( initOperands() );
 
         if( ! this.operands.isEmpty() )
         {
@@ -86,6 +65,31 @@ public abstract class FunctionResult
         init();
         refresh();
     }
+    
+    protected List<FunctionResult> initOperands()
+    {
+        final List<Function> operands = function().operands();
+        
+        if( operands.size() == 0 )
+        {
+            return Collections.emptyList();
+        }
+        else if( operands.size() == 1 )
+        {
+            return Collections.singletonList( operands.get( 0 ).evaluate( this.context ) );
+        }
+        else
+        {
+            final List<FunctionResult> result = new ArrayList<FunctionResult>();
+            
+            for( Function operand : operands )
+            {
+                result.add( operand.evaluate( this.context ) );
+            }
+            
+            return result;
+        }
+    }
 
     protected void init()
     {
@@ -103,7 +107,7 @@ public abstract class FunctionResult
     
     public final List<FunctionResult> operands()
     {
-        return this.operandsReadOnly;
+        return this.operands;
     }
     
     public final FunctionResult operand( final int position )
@@ -118,30 +122,63 @@ public abstract class FunctionResult
         }
     }
     
-    protected abstract Object evaluate();
+    protected abstract Object evaluate() throws FunctionException;
     
-    public final Object value()
+    /**
+     * Returns the value computed by the function. 
+     * 
+     * @return the value computed by the function
+     * @throws FunctionException if function evaluation failed with an error; to avoid exception, check
+     *   status first
+     */
+    
+    public final Object value() 
+    
+        throws FunctionException
+        
     {
+        if( this.status.getSeverity() == IStatus.ERROR )
+        {
+            throw new FunctionException( this.status );
+        }
+        
         return this.value;
+    }
+    
+    /**
+     * Returns the status of function execution. This will show if function executed without any issues or if it
+     * encountered an error condition.
+     * 
+     * @return the status of function execution
+     */
+    
+    public final IStatus status()
+    {
+        return this.status;
     }
 
     protected final void refresh()
     {
-        final Object newValue;
+        Object newValue = null;
+        IStatus newStatus = Status.OK_STATUS;
         
         try
         {
             newValue = evaluate();
         }
+        catch( FunctionException e )
+        {
+            newStatus = e.status();
+        }
         catch( Exception e )
         {
-            SapphireModelingFrameworkPlugin.log( e );
-            return;
+            newStatus = FunctionException.createErrorStatus( e );
         }
         
-        if( ! equal( this.value, newValue ) )
+        if( ! equal( this.value, newValue ) || ! equal( this.status, newStatus ))
         {
             this.value = newValue;
+            this.status = newStatus;
             notifyListeners();
         }
     }

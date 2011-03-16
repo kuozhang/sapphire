@@ -15,6 +15,7 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -24,6 +25,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  */
 
 @Label( standard = "tab group" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/part.gif" )
 @GenerateImpl
 
 public interface ISapphireTabGroupDef
@@ -36,11 +38,11 @@ public interface ISapphireTabGroupDef
     // *** Tabs ***
     
     @Label( standard = "tabs" )
-    @Type( base = ISapphireTabGroupItemDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "tab", type = ISapphireTabGroupItemDef.class ) )
+    @Type( base = ISapphireTabDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "tab", type = ISapphireTabDef.class ) )
     
     ListProperty PROP_TABS = new ListProperty( TYPE, "Tabs" );
     
-    ModelElementList<ISapphireTabGroupItemDef> getTabs();
+    ModelElementList<ISapphireTabDef> getTabs();
 
 }

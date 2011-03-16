@@ -518,7 +518,7 @@ Function Value() :
     |
         str = Identifier() 
         {
-            res = RootPropertyAccessFunction.create( str );
+            res = PropertyAccessFunction.create( str );
         }
     )
     (

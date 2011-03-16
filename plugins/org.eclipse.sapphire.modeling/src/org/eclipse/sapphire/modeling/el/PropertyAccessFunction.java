@@ -11,17 +11,10 @@
 
 package org.eclipse.sapphire.modeling.el;
 
-import java.util.Map;
-
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
 
 /**
- * An function that pulls a property from an element. 
+ * An function that reads a property from the context or a child element. 
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -39,24 +32,43 @@ public final class PropertyAccessFunction
         return literal;
     }
     
+    public static PropertyAccessFunction create( final Function element,
+                                                 final String property )
+    {
+        return create( element, Literal.create( property ) );
+    }
+    
+    public static PropertyAccessFunction create( final Function property )
+    {
+        final PropertyAccessFunction literal = new PropertyAccessFunction();
+        literal.init( property );
+        return literal;
+    }
+    
+    public static PropertyAccessFunction create( final String property )
+    {
+        return create( Literal.create( property ) );
+    }
+    
     @Override
     public FunctionResult evaluate( final FunctionContext context )
     {
         return new FunctionResult( this, context )
         {
-            private ModelPropertyListener listener;
-            private IModelElement element;
-            private ModelProperty property;
+            private Object lastElement;
+            private String lastPropertyName;
+            private FunctionResult lastPropertyValueResult;
+            private FunctionResult.Listener lastPropertyValueListener;
             
             @Override
             protected void init()
             {
                 super.init();
                 
-                this.listener = new ModelPropertyListener()
+                this.lastPropertyValueListener = new FunctionResult.Listener()
                 {
                     @Override
-                    public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                    public void handleValueChanged()
                     {
                         refresh();
                     }
@@ -66,61 +78,40 @@ public final class PropertyAccessFunction
             @Override
             protected Object evaluate()
             {
-                final Object object = operand( 0 ).value();
-                final String pname = cast( operand( 1 ).value(), String.class );
+                final Object element;
+                final String property;
                 
-                if( object == null )
+                if( operands().size() == 1 )
                 {
-                    throw new FunctionException( Resources.cannotReadPropertiesFromNull );
+                    element = context;
+                    property = cast( operand( 0 ).value(), String.class );
                 }
                 else
                 {
-                    if( object instanceof IModelElement )
+                    element = operand( 0 ).value();
+                    property = cast( operand( 1 ).value(), String.class );
+                }
+                
+                if( this.lastPropertyValueResult != null )
+                {
+                    if( this.lastElement != element || ! MiscUtil.equal( this.lastPropertyName, property ) )
                     {
-                        final IModelElement el = (IModelElement) object;
-                        final ModelProperty p = el.getModelElementType().getProperty( pname );
-                        
-                        if( this.element != el || this.property != p )
-                        {
-                            if( this.element != null )
-                            {
-                                this.element.removeListener( this.listener, this.property.getName() );
-                            }
-                            
-                            this.element = el;
-                            this.property = p;
-                            
-                            this.element.addListener( this.listener, this.property.getName() );
-                        }
-                        
-                        Object res = this.element.read( this.property );
-                        
-                        if( res instanceof ModelElementHandle<?> )
-                        {
-                            res = ( (ModelElementHandle<?>) res ).element();
-                        }
-                        
-                        return res;
-                    }
-                    else if( object instanceof Map )
-                    {
-                        for( final Map.Entry<?,?> entry : ( (Map<?,?>) object ).entrySet() )
-                        {
-                            final String key = (String) entry.getKey();
-                            
-                            if( key.equalsIgnoreCase( pname ) )
-                            {
-                                return entry.getValue();
-                            }
-                        }
-                        
-                        throw new FunctionException( NLS.bind( Resources.undefinedPropertyMessage, pname ) );
-                    }
-                    else
-                    {
-                        throw new FunctionException( NLS.bind( Resources.cannotReadProperties, object.getClass().getName() ) );
+                        this.lastElement = null;
+                        this.lastPropertyName = null;
+                        this.lastPropertyValueResult.dispose();
+                        this.lastPropertyValueResult = null;
                     }
                 }
+                
+                if( property != null && this.lastPropertyName == null )
+                {
+                    this.lastElement = element;
+                    this.lastPropertyName = property;
+                    this.lastPropertyValueResult = context().property( element, property );
+                    this.lastPropertyValueResult.addListener( this.lastPropertyValueListener );
+                }
+                
+                return ( this.lastPropertyValueResult == null ? null : this.lastPropertyValueResult.evaluate() );
             }
             
             @Override
@@ -128,24 +119,12 @@ public final class PropertyAccessFunction
             {
                 super.dispose();
                 
-                if( this.element != null )
+                if( this.lastPropertyValueResult != null )
                 {
-                    this.element.removeListener( this.listener, this.property.getName() );
+                    this.lastPropertyValueResult.dispose();
                 }
             }
         };
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String undefinedPropertyMessage;
-        public static String cannotReadProperties;
-        public static String cannotReadPropertiesFromNull;
-        
-        static
-        {
-            initializeMessages( PropertyAccessFunction.class.getName(), Resources.class );
-        }
     }
     
 }

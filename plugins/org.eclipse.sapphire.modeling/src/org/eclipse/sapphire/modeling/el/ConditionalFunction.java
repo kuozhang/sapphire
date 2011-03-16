@@ -11,6 +11,11 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
+
 /**
  * Function that returns one of two alternatives depending on a condition. 
  * 
@@ -30,25 +35,69 @@ public final class ConditionalFunction
         function.init( condition, positive, negative );
         return function;
     }
-
+    
     @Override
     public FunctionResult evaluate( final FunctionContext context )
     {
         return new FunctionResult( this, context )
         {
+            private Boolean lastConditionValue;
+            private FunctionResult lastActiveBranch;
+            private FunctionResult.Listener listener;
+            
+            @Override
+            protected void init()
+            {
+                super.init();
+                
+                this.listener = new Listener()
+                {
+                    @Override
+                    public void handleValueChanged()
+                    {
+                        refresh();
+                    }
+                };
+            }
+
+            @Override
+            protected List<FunctionResult> initOperands()
+            {
+                // Only initialize the condition operand as the other two operands should only be evaluated based
+                // on condition's value.
+                
+                return Collections.singletonList( function().operands().get( 0 ).evaluate( context ) );
+            }
+
             @Override
             protected Object evaluate()
             {
                 final Boolean conditionValue = cast( operand( 0 ).value(), Boolean.class );
                 
-                if( conditionValue == true )
+                if( this.lastActiveBranch != null && ! MiscUtil.equal( this.lastConditionValue, conditionValue ) )
                 {
-                    return operand( 1 ).value();
+                    this.lastConditionValue = null;
+                    this.lastActiveBranch.dispose();
+                    this.lastActiveBranch = null;
                 }
-                else
+                
+                if( this.lastActiveBranch == null )
                 {
-                    return operand( 2 ).value();
+                    this.lastConditionValue = conditionValue;
+                    
+                    if( conditionValue == true )
+                    {
+                        this.lastActiveBranch = function().operand( 1 ).evaluate( context );
+                    }
+                    else
+                    {
+                        this.lastActiveBranch = function().operand( 2 ).evaluate( context );
+                    }
+                    
+                    this.lastActiveBranch.addListener( this.listener );
                 }
+
+                return this.lastActiveBranch.value();
             }
         };
     }

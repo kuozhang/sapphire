@@ -25,7 +25,6 @@
     <node>
         <id>ActionsNode</id>
         <label>actions</label>
-        <image>images/objects/action.gif</image>
         <section>
             <description>${ Params.Extension ? "Define actions that should be available globally in the system." : "Define actions." }</description>
             <content>
@@ -39,7 +38,6 @@
             <property>Actions</property>
             <node-template>
                 <label>${ Id == null ? "&lt;action&gt;" : Id }</label>
-                <use-model-element-image/>
                 <section>
                     <label>action</label>
                     <content>
@@ -78,7 +76,6 @@
     <node>
         <id>ActionHandlersNode</id>
         <label>${ Params.Extension ? "action handlers" : "handlers" }</label>
-        <image>images/objects/action.gif</image>
         <section>
             <description>${ Params.Extension ? "Define action handlers that should be available globally in the system." : "Define action handlers." }</description>
             <content>
@@ -92,7 +89,6 @@
             <property>ActionHandlers</property>
             <node-template>
                 <label>${ Id == null ? "&lt;action-handler&gt;" : Id }</label>
-                <use-model-element-image/>
                 <section>
                     <label>action handler</label>
                     <content>
@@ -131,7 +127,6 @@
     <node>
         <id>ActionHandlerFactoriesNode</id>
         <label>${ Params.Extension ? "action handler factories" : "handler factories" }</label>
-        <image>images/objects/action.gif</image>
         <section>
             <description>${ Params.Extension ? "Define action handler factories that should be available globally in the system." : "Define action handler factories." }</description>
             <content>
@@ -145,7 +140,6 @@
             <property>ActionHandlerFactories</property>
             <node-template>
                 <label>${ Action == null ? "&lt;action-handler-factory&gt;" : Action }</label>
-                <use-model-element-image/>
                 <section>
                     <label>action handler factory</label>
                     <content>

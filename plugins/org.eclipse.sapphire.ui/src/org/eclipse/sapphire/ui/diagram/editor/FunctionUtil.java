@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.modeling.el.RootPropertyAccessFunction;
+import org.eclipse.sapphire.modeling.el.PropertyAccessFunction;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -28,7 +28,7 @@ public class FunctionUtil
 {
     public static ValueProperty getFunctionProperty(IModelElement modelElement, FunctionResult functionResult)
     {
-    	if (functionResult.function() instanceof RootPropertyAccessFunction)
+    	if (functionResult.function() instanceof PropertyAccessFunction)
     	{
     		if (functionResult.operand(0).value() instanceof String)
     		{

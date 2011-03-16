@@ -463,66 +463,6 @@
         </node-template>
 
         <node-template>
-            <model-element-type>ISapphireWithDirectiveDef</model-element-type>
-            <label>With</label>
-            <use-model-element-image/>
-            <section>
-                <content>
-                    <property-editor>Property</property-editor>
-                    <property-editor>Label</property-editor>
-                </content>
-            </section>
-            <node-list>
-                <property>Pages</property>
-                <node-template>
-                    <label>Case: ${ Key == null ? "" : Key }</label>
-                    <section>
-                        <label>Case</label>
-                        <content>
-                            <property-editor>Key</property-editor>
-                        </content>
-                    </section>
-                    <section>
-                        <label>presentation</label>
-                        <content>
-                            <include>CompositePresentation</include>
-                        </content>
-                    </section>
-                    <node-list-ref>
-                        <part>PartsNodeList</part>
-                        <param>
-                            <name>Property</name>
-                            <value>Content</value>
-                        </param>
-                    </node-list-ref>
-                </node-template>
-            </node-list>
-            <node>
-                <label>default</label>
-                <property>DefaultPage</property>
-                <section>
-                    <label>default content</label>
-                    <content>
-                        <label>The content to show if none of the explicit cases match.</label>
-                    </content>
-                </section>
-                <section>
-                    <label>presentation</label>
-                    <content>
-                        <include>CompositePresentation</include>
-                    </content>
-                </section>
-                <node-list-ref>
-                    <part>PartsNodeList</part>
-                    <param>
-                        <name>Property</name>
-                        <value>Content</value>
-                    </param>
-                </node-list-ref>
-            </node>
-        </node-template>
-
-        <node-template>
             <model-element-type>ISapphireGroupDef</model-element-type>
             <label>Group</label>
             <use-model-element-image/>
@@ -608,19 +548,19 @@
         </node-template>
         
         <node-template>
-            <model-element-type>ISapphirePageBookExtDef</model-element-type>
-            <label>Page Book</label>
+            <model-element-type>ISapphireWithDirectiveDef</model-element-type>
+            <label>With</label>
             <use-model-element-image/>
             <section>
                 <content>
-                    <property-editor>ControlMethod</property-editor>
-                    <property-editor>ControlProperty</property-editor>
+                    <property-editor>Property</property-editor>
+                    <property-editor>Label</property-editor>
                 </content>
             </section>
             <node-list>
                 <property>Pages</property>
                 <node-template>
-                    <label>Case: ${ Key == null ? "" : Key }</label>
+                    <label>${ Key == null ? "&lt;case&gt;" : Key }</label>
                     <section>
                         <label>Case</label>
                         <content>
@@ -665,6 +605,103 @@
                     </param>
                 </node-list-ref>
             </node>
+        </node-template>
+
+        <node-template>
+            <model-element-type>ISapphirePageBookExtDef</model-element-type>
+            <label>Page Book</label>
+            <use-model-element-image/>
+            <section>
+                <content>
+                    <property-editor>ControlMethod</property-editor>
+                    <property-editor>ControlProperty</property-editor>
+                </content>
+            </section>
+            <node-list>
+                <property>Pages</property>
+                <node-template>
+                    <label>${ Key == null ? "&lt;case&gt;" : Key }</label>
+                    <section>
+                        <label>Case</label>
+                        <content>
+                            <property-editor>Key</property-editor>
+                        </content>
+                    </section>
+                    <section>
+                        <label>presentation</label>
+                        <content>
+                            <include>CompositePresentation</include>
+                        </content>
+                    </section>
+                    <node-list-ref>
+                        <part>PartsNodeList</part>
+                        <param>
+                            <name>Property</name>
+                            <value>Content</value>
+                        </param>
+                    </node-list-ref>
+                </node-template>
+            </node-list>
+            <node>
+                <label>default</label>
+                <property>DefaultPage</property>
+                <section>
+                    <label>default content</label>
+                    <content>
+                        <label>The content to show if none of the explicit cases match.</label>
+                    </content>
+                </section>
+                <section>
+                    <label>presentation</label>
+                    <content>
+                        <include>CompositePresentation</include>
+                    </content>
+                </section>
+                <node-list-ref>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>Content</value>
+                    </param>
+                </node-list-ref>
+            </node>
+        </node-template>
+
+        <node-template>
+            <model-element-type>ISapphireTabGroupDef</model-element-type>
+            <label>Tab Group</label>
+            <use-model-element-image/>
+            <section>
+                <content>
+                    <label>Present content organized into multipe tabbed panels.</label>
+                </content>
+            </section>
+            <node-list>
+                <property>Tabs</property>
+                <node-template>
+                    <label>${ Label == null ? "&lt;tab&gt;" : Label }</label>
+                    <section>
+                        <label>Tab</label>
+                        <content>
+                            <property-editor>Label</property-editor>
+                            <property-editor>ImagePath</property-editor>
+                        </content>
+                    </section>
+                    <section>
+                        <label>presentation</label>
+                        <content>
+                            <include>CompositePresentation</include>
+                        </content>
+                    </section>
+                    <node-list-ref>
+                        <part>PartsNodeList</part>
+                        <param>
+                            <name>Property</name>
+                            <value>Content</value>
+                        </param>
+                    </node-list-ref>
+                </node-template>
+            </node-list>
         </node-template>
 
         <node-template>

@@ -19,6 +19,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -49,14 +50,16 @@ public interface ISapphireActionSystemPartDef
     
     // *** Label ***
     
+    @Type( base = Function.class )
     @Localizable
     @Label( standard = "label" )
     @XmlBinding( path = "label" )
     
     ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
     
-    Value<String> getLabel();
+    Value<Function> getLabel();
     void setLabel( String value );
+    void setLabel( Function value );
     
     // *** Images ***
     

@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.modeling.el;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
@@ -30,7 +31,6 @@ public class ModelElementFunctionContext
 {
     private final IModelElement element;
     private final LocalizationService localizationService;
-    private final ModelPropertyListener listener;
     
     public ModelElementFunctionContext( final IModelElement element )
     {
@@ -42,25 +42,6 @@ public class ModelElementFunctionContext
     {
         this.element = element;
         this.localizationService = localizationService;
-        
-        this.listener = new ModelPropertyListener()
-        {
-            @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
-            {
-                if( event != null )
-                {
-                    final ModelProperty property = event.getProperty();
-                    
-                    if( property != null )
-                    {
-                        notifyListeners( property.getName() );
-                    }
-                }
-            }
-        };
-        
-        this.element.addListener( this.listener, "*" );
     }
     
     public final IModelElement element()
@@ -69,30 +50,79 @@ public class ModelElementFunctionContext
     }
     
     @Override
-    public Object property( final String name )
+    public FunctionResult property( final Object element,
+                                    final String name )
     {
-        final ModelElementType type = this.element.getModelElementType();
-        final ModelProperty property = type.getProperty( name );
-        
-        if( property != null )
+        if( element == this || element instanceof IModelElement )
         {
-            return this.element.read( property );
+            final IModelElement el = ( element == this ? element() : (IModelElement) element );
+            final ModelElementType type = el.getModelElementType();
+            final ModelProperty property = type.getProperty( name );
+            
+            if( property != null )
+            {
+                final Function f = new Function()
+                {
+                    @Override
+                    public FunctionResult evaluate( final FunctionContext context )
+                    {
+                        return new FunctionResult( this, context )
+                        {
+                            private ModelPropertyListener listener;
+                            
+                            @Override
+                            protected void init()
+                            {
+                                super.init();
+                                
+                                this.listener = new ModelPropertyListener()
+                                {
+                                    @Override
+                                    public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                                    {
+                                        refresh();
+                                    }
+                                };
+                                
+                                el.addListener( this.listener, property.getName() );
+                            }
+            
+                            @Override
+                            protected Object evaluate()
+                            {
+                                Object res = el.read( property );
+                                
+                                if( res instanceof ModelElementHandle<?> )
+                                {
+                                    res = ( (ModelElementHandle<?>) res ).element();
+                                }
+                                
+                                return res;
+                            }
+                            
+                            @Override
+                            public void dispose()
+                            {
+                                super.dispose();
+                                el.removeListener( this.listener, property.getName() );
+                            }
+                        };
+                    }
+                };
+                
+                f.init();
+                
+                return f.evaluate( this );
+            }
         }
         
-        return super.property( name );
+        return super.property( element, name );
     }
 
     @Override
     public LocalizationService getLocalizationService()
     {
         return this.localizationService;
-    }
-    
-    @Override
-    public void dispose()
-    {
-        super.dispose();
-        this.element.removeListener( this.listener, "*" );
     }
     
 }

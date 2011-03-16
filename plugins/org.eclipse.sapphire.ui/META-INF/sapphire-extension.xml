@@ -26,7 +26,7 @@
         <id>Sapphire.Add</id>
         <context>Sapphire.ListPropertyEditor</context>
         <context>Sapphire.EditorPage.Outline.Node</context>
-        <label>add</label>
+        <label>${ Handlers.Size == 1 ? Concat( &quot;add &quot;, Handlers[ 0 ].Label ) : &quot;add&quot; }</label>
         <image>images/actions/add.png</image>
         <group>Sapphire.AddDeleteGroup</group>
         <key-binding>SHIFT+CONTROL+ALT+n</key-binding>

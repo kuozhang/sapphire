@@ -27,15 +27,15 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "tab group item" )
+@Label( standard = "tab" )
 @GenerateImpl
 
-public interface ISapphireTabGroupItemDef
+public interface ISapphireTabDef
 
     extends ISapphireCompositeDef
     
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireTabGroupItemDef.class );
+    ModelElementType TYPE = new ModelElementType( ISapphireTabDef.class );
     
     // *** Label ***
     

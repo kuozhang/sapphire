@@ -23,7 +23,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "page book" )
+@Label( standard = "page" )
 @GenerateImpl
 
 public interface ISapphirePageBookKeyMapping

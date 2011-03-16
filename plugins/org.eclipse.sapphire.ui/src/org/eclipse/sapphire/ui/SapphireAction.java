@@ -16,6 +16,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
 import org.eclipse.sapphire.ui.def.SapphireKeySequence;
@@ -101,6 +105,76 @@ public final class SapphireAction
         setEnabled( false );
     }
     
+    @Override
+    protected FunctionContext initFunctionContext()
+    {
+        return new FunctionContext()
+        {
+            @Override
+            public FunctionResult property( final Object element,
+                                            final String name )
+            {
+                if( element == this && name.equalsIgnoreCase( "handlers" ) )
+                {
+                    final Function f = new Function()
+                    {
+                        @Override
+                        public FunctionResult evaluate( final FunctionContext context )
+                        {
+                            return new FunctionResult( this, context )
+                            {
+                                private SapphireAction.Listener listener;
+                                
+                                @Override
+                                protected void init()
+                                {
+                                    super.init();
+                                    
+                                    this.listener = new SapphireAction.Listener()
+                                    {
+                                        @Override
+                                        public void handleEvent( final Event event )
+                                        {
+                                            if( event.getType().equals( EVENT_HANDLERS_CHANGED ) )
+                                            {
+                                                refresh();
+                                            }
+                                        }
+                                    };
+                                    
+                                    SapphireAction.this.addListener( this.listener );
+                                }
+
+                                @Override
+                                protected Object evaluate()
+                                {
+                                    return getActiveHandlers();
+                                }
+
+                                @Override
+                                public void dispose()
+                                {
+                                    super.dispose();
+                                    SapphireAction.this.removeListener( this.listener );
+                                }
+                            };
+                        }
+                    };
+                    
+                    f.init();
+                    
+                    return f.evaluate( this );
+                }
+                else if( element instanceof SapphireActionHandler && name.equalsIgnoreCase( "label" ) )
+                {
+                    return Literal.create( ( (SapphireActionHandler) element ).getLabel() ).evaluate( this );
+                }
+                
+                return super.property( element, name );
+            }
+        };
+    }
+
     public SapphireActionGroup getActionSet()
     {
         return this.parent;

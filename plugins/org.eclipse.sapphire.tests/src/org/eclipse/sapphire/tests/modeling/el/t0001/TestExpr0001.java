@@ -12,22 +12,20 @@
 package org.eclipse.sapphire.tests.modeling.el.t0001;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
-import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
+import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 /**
+ * Tests Parent and Root functions.
+ * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public final class TestExpr0001
 
-    extends TestCase
+    extends TestExpr
     
 {
     private TestExpr0001( final String name )
@@ -55,14 +53,14 @@ public final class TestExpr0001
         final ITestExpr0001ModelElement r_e_l = r_e.getList().addNewElement();
         final ITestExpr0001ModelElement r_l_e = r_l.getElement().element( true );
 
-        test( "${ Parent() }", r, r_e );
-        test( "${ Parent() }", r, r_l );
+        testForExpectedValue( r_e, "${ Parent() }", r );
+        testForExpectedValue( r_l, "${ Parent() }", r );
         
-        test( "${ Parent() }", r_e, r_e_l );
-        test( "${ Parent() }", r_l, r_l_e );
+        testForExpectedValue( r_e_l, "${ Parent() }", r_e );
+        testForExpectedValue( r_l_e, "${ Parent() }", r_l );
 
-        test( "${ Parent().Parent() }", r, r_e_l );
-        test( "${ Parent().Parent() }", r, r_l_e );
+        testForExpectedValue( r_e_l, "${ Parent().Parent() }", r );
+        testForExpectedValue( r_l_e, "${ Parent().Parent() }", r );
     }
 
     public void testRootFunction()
@@ -73,35 +71,17 @@ public final class TestExpr0001
         final ITestExpr0001ModelElement r_e_l = r_e.getList().addNewElement();
         final ITestExpr0001ModelElement r_l_e = r_l.getElement().element( true );
 
-        test( "${ Root() }", r, r_e );
-        test( "${ Root() }", r, r_l );
+        testForExpectedValue( r_e, "${ Root() }", r );
+        testForExpectedValue( r_l, "${ Root() }", r );
         
-        test( "${ Root() }", r, r_e_l );
-        test( "${ Root() }", r, r_l_e );
+        testForExpectedValue( r_e_l, "${ Root() }", r );
+        testForExpectedValue( r_l_e, "${ Root() }", r );
 
-        test( "${ Parent().Root() }", r, r_e_l );
-        test( "${ Parent().Root() }", r, r_l_e );
+        testForExpectedValue( r_e_l, "${ Parent().Root() }", r );
+        testForExpectedValue( r_l_e, "${ Parent().Root() }", r );
 
-        test( "${ Root().Root() }", r, r_e_l );
-        test( "${ Root().Root() }", r, r_l_e );
-    }
-    
-    private void test( final String expr,
-                       final Object expected,
-                       final IModelElement element )
-    {
-        final ModelElementFunctionContext context = new ModelElementFunctionContext( element );
-        final FunctionResult result = ExpressionLanguageParser.parse( expr ).evaluate( context );
-        
-        try
-        {
-            assertSame( expected, result.value() );
-        }
-        finally
-        {
-            result.dispose();
-            context.dispose();
-        }
+        testForExpectedValue( r_e_l, "${ Root().Root() }", r );
+        testForExpectedValue( r_l_e, "${ Root().Root() }", r );
     }
     
 }

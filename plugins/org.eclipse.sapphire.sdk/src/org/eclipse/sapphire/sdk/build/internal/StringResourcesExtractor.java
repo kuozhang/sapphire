@@ -28,7 +28,6 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.PropertyAccessFunction;
-import org.eclipse.sapphire.modeling.el.RootPropertyAccessFunction;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.localization.LocalizationUtil;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
@@ -190,7 +189,7 @@ public final class StringResourcesExtractor
                 strings.add( (String) value );
             }
         }
-        else if( function instanceof RootPropertyAccessFunction || function instanceof PropertyAccessFunction )
+        else if( function instanceof PropertyAccessFunction )
         {
             return;
         }

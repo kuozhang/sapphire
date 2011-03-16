@@ -12,7 +12,7 @@
 <ol>
   <li><a href="#common">Common</a></li>
   <ol type="A">
-    <li><a href="#parent-root">Parent and Root Expression Language Functions</a></li>
+    <li><a href="#el">Expression Language Improvements</a></li>
   </ol>
   <li><a href="#modeling">Modeling</a></li>
   <ol type="A">
@@ -22,12 +22,36 @@
   <ol type="A">
     <li><a href="#html">HTML Content Presentation</a></li>
     <li><a href="#related-content">Related Content</a></li>
+    <li><a href="#action-label-el">Expressions in Action Labels</a></li>
   </ol>
 </ol>
  
-<h2><a name="common"><a name="parent-root">Parent and Root Expression Language Functions</a></a></h2>
+<h2><a name="common"><a name="el">Expression Language Improvements</a></a></h2>
 
-<p>The expression language in the 0.2 release supports navigating down the model hierarchy
+<p>Index into any list using array notation.</p>
+
+<p style="margin-left: 20px;"><b>Example</b><p>
+
+<pre class="source-code"><code>${ Contacts[ 0 ].Name }</code></pre>
+
+<p>Retrieve the size of any collection using Size property.</p>
+
+<p style="margin-left: 20px;"><b>Example</b><p>
+
+<pre class="source-code"><code>${ Contacts.Size }</code></pre>
+
+<p>Take advantage of actual conditional evaluation of the conditional operator. In the 0.2 release,
+the conditional operator would always evaluate both alternatives, which made it impossible to use
+it in cases where evaluating the unused alternative results in an error.</p>
+
+<p style="margin-left: 20px;"><b>Example</b><p>
+
+<p style="margin-left: 20px;">In this example, evaluating the true alternative when the size of the contacts list is zero would
+produce an error.</p>
+
+<pre class="source-code"><code>${ Contacts.Size == 1 ? Contacts[ 0 ].Name : "multiple contacts" }</code></pre>
+
+<p>The expression language in the 0.2 release supported navigating down the model hierarchy
 using Foo.Bar.Xyz syntax, but in certain cases it is useful to navigate up the model hierarchy. To
 support these scenarios, Parent and Root functions have been added.</p>
 
@@ -127,8 +151,17 @@ related content is used to display explanatory text.</p>
 
 <p style="margin-left: 20px;"><img src="images/related-content-4.png"/></p>
 
+<h2><a name="action-label-el">Expressions in Action Labels</a></h2>
 
-  
+<p>Labels for actions and action handlers can now be specified using expressions. This is currently
+mostly useful for action labels, where you can reference active handlers while composing the label.</p>
+
+<p style="margin-left: 20px;"><b>Example</b><p>
+
+<p style="margin-left: 20px;">This following is the actual label definition for the Sapphire.Add action. It is designed to include
+handler label in the action label when there is only one handler.</p>
+
+<pre class="source-code"><code>${ Handlers.Size == 1 ? Concat( "add ", Handlers[ 0 ].Label ) : "add" }</code></pre>
 
 <br/><br/>
 

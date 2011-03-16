@@ -16,6 +16,10 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.ui.def.ISapphireActionImage;
 import org.eclipse.sapphire.ui.def.ISapphireActionLocationHint;
 import org.eclipse.sapphire.ui.def.ISapphireActionLocationHintAfter;
@@ -36,8 +40,9 @@ public abstract class SapphireActionSystemPart
     public static final String EVENT_ENABLEMENT_STATE_CHANGED = "enablement";
     public static final String EVENT_CHECKED_STATE_CHANGED = "checked";
     
+    private final FunctionContext functionContext;
     private String id;
-    private String label;
+    private FunctionResult labelFunctionResult;
     private final List<ImageDescriptor> images = new CopyOnWriteArrayList<ImageDescriptor>();
     private final List<SapphireActionLocationHint> locationHints = new CopyOnWriteArrayList<SapphireActionLocationHint>();
     private final List<SapphireActionLocationHint> locationHintsReadOnly = Collections.unmodifiableList( this.locationHints );
@@ -45,12 +50,35 @@ public abstract class SapphireActionSystemPart
     private boolean checked;
     private final List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
     
+    public SapphireActionSystemPart()
+    {
+        this.functionContext = initFunctionContext();
+    }
+    
     protected final void init( final ISapphireActionSystemPartDef def )
     {
         if( def != null )
         {
             this.id = def.getId().getContent();
-            this.label = def.getLabel().getLocalizedText();
+            
+            final Function labelFunction = def.getLabel().getContent();
+            
+            if( labelFunction != null )
+            {
+                this.labelFunctionResult = labelFunction.evaluate( this.functionContext );
+                
+                this.labelFunctionResult.addListener
+                (
+                    new FunctionResult.Listener()
+                    {
+                        @Override
+                        public void handleValueChanged()
+                        {
+                            notifyListeners( new Event( EVENT_LABEL_CHANGED ) );
+                        }
+                    }
+                );
+            }
             
             for( ISapphireActionImage image : def.getImages() )
             {
@@ -91,6 +119,11 @@ public abstract class SapphireActionSystemPart
         this.enabled = true;
     }
     
+    protected FunctionContext initFunctionContext()
+    {
+        return new FunctionContext();
+    }
+    
     public final String getId()
     {
         synchronized( this )
@@ -113,7 +146,7 @@ public abstract class SapphireActionSystemPart
     {
         synchronized( this )
         {
-            return this.label;
+            return ( this.labelFunctionResult == null ? null : (String) this.labelFunctionResult.value() );
         }
     }
     
@@ -121,7 +154,7 @@ public abstract class SapphireActionSystemPart
     {
         synchronized( this )
         {
-            this.label = label;
+            this.labelFunctionResult = Literal.create( label ).evaluate( this.functionContext );
         }
         
         notifyListeners( new Event( EVENT_LABEL_CHANGED ) );

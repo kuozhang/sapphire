@@ -24,7 +24,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.SapphireMultiStatus;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.ISapphireTabGroupDef;
-import org.eclipse.sapphire.ui.def.ISapphireTabGroupItemDef;
+import org.eclipse.sapphire.ui.def.ISapphireTabDef;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -49,7 +49,7 @@ public class SapphireTabGroup
 
         this.tabParts = new ArrayList<SapphirePart>();
         
-        for( ISapphireTabGroupItemDef tabDef : ( (ISapphireTabGroupDef) this.definition ).getTabs() )
+        for( ISapphireTabDef tabDef : ( (ISapphireTabGroupDef) this.definition ).getTabs() )
         {
             final SapphirePart tabPart = create( this, getModelElement(), tabDef, null );
             this.tabParts.add( tabPart );
@@ -85,7 +85,7 @@ public class SapphireTabGroup
             tabControl.setLayout( glayout( 2, 0, 0 ) );
 
             final TabItem tab = new TabItem( tabGroup, SWT.NONE );
-            tab.setText( ( (ISapphireTabGroupItemDef) tabPart.getDefinition() ).getLabel().getLocalizedText() );
+            tab.setText( ( (ISapphireTabDef) tabPart.getDefinition() ).getLabel().getLocalizedText() );
             tab.setControl( tabControl );
             
             final SapphirePartListener tabPartListener = new SapphirePartListener()
@@ -111,7 +111,7 @@ public class SapphireTabGroup
     {
         final int severity = newValidationState.getSeverity();
         
-        ImageDescriptor imageDescriptor = ( (ISapphireTabGroupItemDef) tabPart.getDefinition() ).getImagePath().resolve();
+        ImageDescriptor imageDescriptor = ( (ISapphireTabDef) tabPart.getDefinition() ).getImagePath().resolve();
         
         if( imageDescriptor == null )
         {

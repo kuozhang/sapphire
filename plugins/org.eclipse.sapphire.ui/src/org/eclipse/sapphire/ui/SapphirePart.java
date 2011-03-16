@@ -35,6 +35,7 @@ import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.def.IFormPartInclude;
@@ -187,14 +188,15 @@ public abstract class SapphirePart
             final FunctionContext context = new ModelElementFunctionContext( contextModelElement, this.definition.adapt( LocalizationService.class ) )
             {
                 @Override
-                public Object property( final String name )
+                public FunctionResult property( final Object element,
+                                                final String name )
                 {
                     if( name.equalsIgnoreCase( "params" ) )
                     {
-                        return SapphirePart.this.params;
+                        return Literal.create( SapphirePart.this.params ).evaluate( this );
                     }
 
-                    return super.property( name );
+                    return super.property( element, name );
                 }
             };
             
