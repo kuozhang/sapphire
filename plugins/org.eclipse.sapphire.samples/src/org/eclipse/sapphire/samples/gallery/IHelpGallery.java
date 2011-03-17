@@ -48,7 +48,9 @@ public interface IHelpGallery
     
     @Documentation
     ( 
-        content = "Content help for simple integer. Option to [b]show in bold[/b].",
+        content = "Content help for simple integer. Option to [b]show in bold.[/b]" +
+        		"[br/]" +
+        		" Please note text in [b]  bold tag  [/b]   are trimmed.",
         mergeStrategy=DocumentationMergeStrategy.APPEND,
         topics = 
         {

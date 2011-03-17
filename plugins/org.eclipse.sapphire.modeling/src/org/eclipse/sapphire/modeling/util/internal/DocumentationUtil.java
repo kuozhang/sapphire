@@ -29,8 +29,11 @@ import org.eclipse.sapphire.modeling.docsys.UnorderedListPart;
 
 public class DocumentationUtil {
 
-    public final static String NEW_LINE = "\r\n"; //$NON-NLS-1$
-    public final static String NEW_LINE_2 = "\r\n\r\n"; //$NON-NLS-1$
+    public final static String NEW_LINE = System.getProperty("line.separator");
+    public final static String NEW_LINE_2 = NEW_LINE + NEW_LINE;
+    
+    private final static String BOLD_BEGIN = "<@#$b>"; 
+    private final static String BOLD_END = "</@#$b>"; 
     
     public final static String collapseString(final String str) {
         String text = str.trim();
@@ -71,65 +74,95 @@ public class DocumentationUtil {
         if (str == null)
             return str;
         
-        DocumentationContent content = DocumentationContent.parse(str);
+        DocumentationContent content = DocumentationContent.parse(str.trim());
 
         final StringBuilder buf = new StringBuilder();
-        format( buf, content, -1, true );
+        FormatFlags flags = new FormatFlags();
+        format( buf, content, -1, flags );
         return buf.toString();
 
     }
     
-    private static boolean format(final StringBuilder buf, final DocumentationPart part, int index, boolean collapseSpaces) {
+    private static boolean startsWithSpaces(final String text) {
+        final char ch = text.charAt( 0 );
+        return Character.isWhitespace( ch );
+    }
+    
+    private static boolean endsWithSpaces(final String text) {
+        final char ch = text.charAt( text.length() - 1 );
+        return Character.isWhitespace( ch );
+    }
+
+    private static void format(final StringBuilder buf, final DocumentationPart part, int index, FormatFlags flags) {
+    	boolean collapseSpaces = flags.collapseSpaces;
         if (part instanceof TextPart) {
         	final String str = ((TextPart) part).getText();
+        	final boolean endsWithSpace = endsWithSpaces(str);
+        	final boolean startsWithSpace = startsWithSpaces(str);
+        	if (startsWithSpace && buf.toString().endsWith(BOLD_END)) {
+        		buf.append(' ');
+        	}
             buf.append(collapseSpaces ? collapseString(str) : str);
+            flags.endsInSpace = endsWithSpace;
         } else if (part instanceof LineBreakPart) {
             buf.append(NEW_LINE);
+            flags.endsInSpace = false;
         } else if (part instanceof ParagraphBreakPart) {
             buf.append(NEW_LINE_2);
+            flags.endsInSpace = false;
         } else if (part instanceof OrderedListPart) {
             buf.append(NEW_LINE_2);
 
             int childIndex = 0;
             for (ListItem item : ((ListPart) part).getItems()) {
                 childIndex++;
-                collapseSpaces = format(buf, item, childIndex, collapseSpaces);
+                format(buf, item, childIndex, flags);
             }
         } else if (part instanceof UnorderedListPart) {
             buf.append(NEW_LINE_2);
 
             for (ListItem item : ((ListPart) part).getItems()) {
-            	collapseSpaces = format(buf, item, -1, collapseSpaces);
+            	format(buf, item, -1, flags);
             }
         } else if (part instanceof ListItem) {
             buf.append(index == -1 ? "*" : index);
             buf.append("  ");
 
             for (DocumentationPart child : ((ListItem) part).getChildren()) {
-            	collapseSpaces = format(buf, child, -1, collapseSpaces);
+            	format(buf, child, -1, flags);
             }
 
             buf.append(NEW_LINE);
+            flags.endsInSpace = false;
         } else if (part instanceof BoldPart) {
             BoldPart boldPart = (BoldPart)part;
             if (boldPart.isOpen()) {
-                buf.append("<@#$b>");
+            	if (flags.endsInSpace) {
+            		buf.append(' ');
+            	}
+                buf.append(BOLD_BEGIN);
             } else {
-                buf.append("</@#$b>");
+                buf.append(BOLD_END);
             }
         } else if (part instanceof CodePart) {
         	CodePart codePart = (CodePart)part;
             if (codePart.isOpen()) {
-            	collapseSpaces = false;
+            	flags.collapseSpaces = false;
             } else {
-            	collapseSpaces = true;
+            	flags.collapseSpaces = true;
             }
         } else if (part instanceof DocumentationContent) {
             for (DocumentationPart child : ((DocumentationContent) part).getChildren()) {
-            	collapseSpaces = format(buf, child, -1, collapseSpaces);
+            	format(buf, child, -1, flags);
             }
         }
-        return collapseSpaces;
     }
     
+    private static class FormatFlags {
+    	boolean collapseSpaces = true;
+    	boolean endsInSpace = false;
+    	
+    	FormatFlags() {
+    	}
+    }
 }
