@@ -371,6 +371,18 @@
                             </property-editor>
                         </content>
                     </section>
+                    <section>
+                        <label>compact presentation</label>
+                        <content>
+                            <property-editor>
+                                <property>HomogeneousList</property>
+                                <hint>
+                                    <name>factory</name>
+                                    <value>CompactListPropertyEditorRenderer$Factory</value>
+                                </hint>
+                            </property-editor>
+                        </content>
+                    </section>
                     <node-list>
                         <property>HomogeneousList</property>
                         <node-template>
