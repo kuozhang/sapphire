@@ -85,6 +85,19 @@ public interface IDiagramConnectionDef
     
     IDiagramConnectionEndpointDef getEndpoint2();
         
+    // *** LineWidth ***
+	
+    @Type( base = Integer.class )
+    @Label( standard = "line width" )
+    @XmlBinding( path = "line-width" )
+    @DefaultValue( text = "1" )
+    
+    ValueProperty PROP_LINE_WIDTH = new ValueProperty( TYPE, "LineWidth" );
+    
+    Value<Integer> getLineWidth();
+    void setLineWidth( String width );
+    void setLineWidth( Integer width );
+    
     // *** LineStyle ***
     
     @Type( base = LineStyle.class )

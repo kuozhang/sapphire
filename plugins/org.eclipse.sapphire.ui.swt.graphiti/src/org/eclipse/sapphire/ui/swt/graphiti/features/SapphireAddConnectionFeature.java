@@ -81,7 +81,7 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 		Polyline polyline = gaService.createPolyline(connection);
 		
 		polyline.setForeground(manageColor(linkColor));
-		polyline.setLineWidth(connDef != null ? connDef.getHint("width", 1) : 1);
+		polyline.setLineWidth(connDef.getLineWidth().getContent());
 		polyline.setLineStyle(linkStyle);
        
 		// create link and wire it
