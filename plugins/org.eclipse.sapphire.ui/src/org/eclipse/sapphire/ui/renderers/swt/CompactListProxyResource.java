@@ -18,6 +18,10 @@ import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ValueBindingImpl;
 import org.eclipse.sapphire.modeling.ValueProperty;
 
+/**
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ */
+
 public class CompactListProxyResource extends Resource {
 	
 	private IModelElement proxyElement;
