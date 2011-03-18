@@ -26,7 +26,7 @@
             <tool-palette-label>Railway Route</tool-palette-label>
             <line-style>dash-dot</line-style>
             <line-color>#808080</line-color>
-            <hint><name>width</name><value>2</value></hint>
+            <line-width>2</line-width>
             <endpoint2>
                 <type>arrow</type>
             </endpoint2>            

@@ -1066,6 +1066,8 @@
                                             <content>
                                                 <property-editor>Id</property-editor>
                                                 <property-editor>Placement</property-editor>
+                                                <property-editor>Width</property-editor>
+                                                <property-editor>Height</property-editor>                                               
                                                 <property-editor>
                                                     <property>PossibleImages</property>
                                                     <child-property>ImageId</child-property>
@@ -1091,8 +1093,6 @@
                                                                 <content>
                                                                     <property-editor>ImageId</property-editor>
                                                                     <property-editor>ImagePath</property-editor>
-                                                                    <property-editor>Width</property-editor>
-                                                                    <property-editor>Height</property-editor>
                                                                 </content>
                                                             </panel>
                                                         </switching-panel>
@@ -1249,6 +1249,7 @@
                                 <property-editor>ToolPaletteDesc</property-editor>
                                 <property-editor>LineStyle</property-editor>
                                 <property-editor>LineColor</property-editor>
+                                <property-editor>LineWidth</property-editor>
                             </content>
                         </section>
                         <section>
