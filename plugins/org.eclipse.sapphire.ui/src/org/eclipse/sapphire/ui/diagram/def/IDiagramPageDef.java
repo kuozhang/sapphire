@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -28,6 +29,8 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
+@Label( standard = "diagram editor page" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/part.gif" )
 @GenerateImpl
 
 public interface IDiagramPageDef 
@@ -37,20 +40,10 @@ public interface IDiagramPageDef
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramPageDef.class);
 	
-    // *** Id ***
-    
-    @Label( standard = "ID" )
-    @XmlBinding( path = "id" )
-    
-    ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
-    
-    Value<String> getId();
-    void setId( String id );
-    
     // *** PageName ***
     
     @Label( standard = "page name" )
-    @DefaultValue( text = "Diagram" )
+    @DefaultValue( text = "diagram" )
     @XmlBinding( path = "page-name" )
     
     ValueProperty PROP_PAGE_NAME = new ValueProperty( TYPE, "PageName" );
@@ -61,7 +54,7 @@ public interface IDiagramPageDef
     // *** PageHeaderText ***
     
     @Label( standard = "page header text" )
-    @DefaultValue( text = "Diagram View" )
+    @DefaultValue( text = "diagram view" )
     @XmlBinding( path = "page-header-text" )
     
     ValueProperty PROP_PAGE_HEADER_TEXT = new ValueProperty( TYPE, "PageHeaderText" );

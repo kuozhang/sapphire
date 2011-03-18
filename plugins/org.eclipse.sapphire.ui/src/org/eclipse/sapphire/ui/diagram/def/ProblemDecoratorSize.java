@@ -18,31 +18,16 @@ import org.eclipse.sapphire.modeling.annotations.Label;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public enum Alignment 
-
+public enum ProblemDecoratorSize 
 {
-	@Label( standard = "left" )
-	@EnumSerialization( primary = "left" )
+	@Label( standard = "large" )
+	@EnumSerialization( primary = "large" )
 	
-	LEFT,
+	LARGE,
 	
-	@Label( standard = "right" )
-	@EnumSerialization( primary = "right" )
+	@Label( standard = "small" )
+	@EnumSerialization( primary = "small" )
 	
-	RIGHT,
-	
-	@Label( standard = "top" )
-	@EnumSerialization( primary = "top" )
-	
-	TOP,
-	
-	@Label( standard = "bottom" )
-	@EnumSerialization( primary = "bottom" )
-	
-	BOTTOM,
-	
-	@Label( standard = "center" )
-	@EnumSerialization( primary = "center" )
-	
-	CENTER;
+	SMALL;
+
 }

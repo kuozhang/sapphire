@@ -11,16 +11,16 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -30,7 +30,7 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 public interface IDiagramConnectionEndpointBindingDef 
 
-	extends ISapphirePartDef 
+	extends IModelElement 
 	
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramConnectionEndpointBindingDef.class );
@@ -38,6 +38,7 @@ public interface IDiagramConnectionEndpointBindingDef
     // *** Property ***
     
     @Label( standard = "property" )
+    @NonNullValue
     @XmlBinding( path = "property" )
     
     ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
@@ -49,7 +50,7 @@ public interface IDiagramConnectionEndpointBindingDef
 
     @Type( base = Function.class )
     @Label( standard = "value" )
-    @Localizable
+    @NonNullValue
     @XmlBinding( path = "value" )
     
     ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );

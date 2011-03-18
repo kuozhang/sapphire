@@ -360,7 +360,7 @@ public class DiagramConnectionTemplate
     				String val = null;
     				if (valObj instanceof ReferenceValue)
     				{
-    					val = (String)(((ReferenceValue)valObj).getContent());
+    					val = (((ReferenceValue<?>)valObj).getContent());
     				}
     				else
     				{

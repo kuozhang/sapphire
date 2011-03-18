@@ -17,10 +17,11 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
@@ -28,6 +29,8 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
+@Label( standard = "diagram connection binding" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/part.gif" )
 @GenerateImpl
 
 public interface IDiagramConnectionBindingDef 
@@ -37,25 +40,29 @@ public interface IDiagramConnectionBindingDef
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramConnectionBindingDef.class );
 	
-    // *** Id ***
-    
-    @Label( standard = "ID" )
-    @XmlBinding( path = "id" )
-    
-    ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
-    
-    Value<String> getId();
-    void setId( String id );
-
     // *** Property ***
     
     @Label( standard = "property" )
+    @NonNullValue
     @XmlBinding( path = "property" )
     
     ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
     
     Value<String> getProperty();
     void setProperty( String property );
+    
+    // *** InstanceId ***
+    
+    @Type( base = Function.class )
+    @Label( standard = "instance ID" )
+    @NonNullValue
+    @XmlBinding( path = "instance-id" )
+    
+    ValueProperty PROP_INSTANCE_ID = new ValueProperty( TYPE, "InstanceId" );
+    
+    Value<Function> getInstanceId();
+    void setInstanceId( String value );
+    void setInstanceId( Function value );
     
     // *** Label ***
     
@@ -83,19 +90,5 @@ public interface IDiagramConnectionBindingDef
     ElementProperty PROP_ENDPOINT_2 = new ElementProperty( TYPE, "Endpoint2" );
     
     ModelElementHandle<IDiagramConnectionEndpointBindingDef> getEndpoint2();
-    
-    // *** InstanceId ***
-    
-    @Type( base = Function.class )
-    @Label( standard = "instance id" )
-    @Localizable
-    @XmlBinding( path = "instance-id" )
-    
-    ValueProperty PROP_INSTANCE_ID = new ValueProperty( TYPE, "InstanceId" );
-    
-    Value<Function> getInstanceId();
-    void setInstanceId( String value );
-    void setInstanceId( Function value );
 
-    
 }

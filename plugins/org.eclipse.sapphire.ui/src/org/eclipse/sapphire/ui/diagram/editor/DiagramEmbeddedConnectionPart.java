@@ -49,7 +49,7 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
         this.labelFunctionResult = initExpression
         ( 
         	this.modelElement,
-        	this.localDefinition.getLabel().element().getContent(), 
+        	this.localDefinition.getLabel().element().getText(), 
             new Runnable()
             {
                 public void run()

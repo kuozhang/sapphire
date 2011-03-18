@@ -9,7 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.def;
+package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.sapphire.modeling.annotations.EnumSerialization;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -18,16 +18,22 @@ import org.eclipse.sapphire.modeling.annotations.Label;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public enum ProblemIndicatorSize 
-{
-	@Label( standard = "large" )
-	@EnumSerialization( primary = "large" )
-	
-	LARGE,
-	
-	@Label( standard = "small" )
-	@EnumSerialization( primary = "small" )
-	
-	SMALL;
+public enum HorizontalAlignment 
 
+{
+	@Label( standard = "left" )
+	@EnumSerialization( primary = "left" )
+	
+	LEFT,
+	
+    @Label( standard = "center" )
+    @EnumSerialization( primary = "center" )
+    
+    CENTER,
+    
+	@Label( standard = "right" )
+	@EnumSerialization( primary = "right" )
+	
+	RIGHT
+	
 }

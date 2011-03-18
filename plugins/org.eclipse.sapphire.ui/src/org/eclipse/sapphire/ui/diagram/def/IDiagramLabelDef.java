@@ -16,11 +16,12 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.modeling.xml.FoldingXmlValueBindingImpl;
+import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -30,22 +31,23 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 public interface IDiagramLabelDef 
 
-	extends ISapphirePartDef, IDiagramDimension
+	extends IDiagramDimension
 	
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramLabelDef.class );
 	
-    // *** Content ***
+    // *** Text ***
     
     @Type( base = Function.class )
-    @Label( standard = "content" )
+    @Label( standard = "text" )
     @Localizable
-    @XmlBinding( path = "content" )
+    @NonNullValue
+    @CustomXmlValueBinding( impl = FoldingXmlValueBindingImpl.class, params = "text" )
     
-    ValueProperty PROP_CONTENT = new ValueProperty( TYPE, "Content" );
+    ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
     
-    Value<Function> getContent();
-    void setContent( String value );
-    void setContent( Function value );
+    Value<Function> getText();
+    void setText( String value );
+    void setText( Function value );
     
 }

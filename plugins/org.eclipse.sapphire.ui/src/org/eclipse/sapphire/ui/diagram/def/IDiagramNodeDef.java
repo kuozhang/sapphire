@@ -22,8 +22,11 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
+import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -38,6 +41,8 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
+@Label( standard = "diagram node" )
+@Image( small = "org.eclipse.sapphire.ui/images/objects/part.gif" )
 @GenerateImpl
 
 public interface IDiagramNodeDef 
@@ -47,19 +52,24 @@ public interface IDiagramNodeDef
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramNodeDef.class );
 	
-    // *** Id ***
+    // *** InstanceId ***
     
-    @Label( standard = "ID" )
-    @XmlBinding( path = "id" )
+    @Type( base = Function.class )
+    @Label( standard = "instance ID" )
+    @NonNullValue
+    @XmlBinding( path = "instance-id" )
     
-    ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
+    ValueProperty PROP_INSTANCE_ID = new ValueProperty( TYPE, "InstanceId" );
     
-    Value<String> getId();
-    void setId( String id );
-    
+    Value<Function> getInstanceId();
+    void setInstanceId( String value );
+    void setInstanceId( Function value );
+        
     // *** ToolPaletteLabel ***
     
     @Label( standard = "tool palette label" )
+    @NonNullValue
+    @Localizable
     @XmlBinding( path = "tool-palette-label" )
     
     ValueProperty PROP_TOOL_PALETTE_LABEL = new ValueProperty( TYPE, "ToolPaletteLabel" );
@@ -70,6 +80,8 @@ public interface IDiagramNodeDef
     // *** ToolPaletteDesc ***
     
     @Label( standard = "tool palette description" )
+    @LongString
+    @Localizable
     @XmlBinding( path = "tool-palette-desc" )
     
     ValueProperty PROP_TOOL_PALETTE_DESC = new ValueProperty( TYPE, "ToolPaletteDesc" );
@@ -77,7 +89,17 @@ public interface IDiagramNodeDef
     Value<String> getToolPaletteDesc();
     void setToolPaletteDesc( String paletteDesc );
     
-    // *** resizable ***
+    // *** Property ***
+    
+    @Label( standard = "property" )
+    @XmlBinding( path = "property" )
+    
+    ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
+    
+    Value<String> getProperty();
+    void setProperty( String property );
+    
+    // *** Resizable ***
     
     @Type( base = Boolean.class )
     @Label( standard = "resizable" )
@@ -116,26 +138,6 @@ public interface IDiagramNodeDef
     void setVerticalSpacing( String value );
     void setVerticalSpacing( Integer value );
 
-    // *** Property ***
-    
-    @Label( standard = "property" )
-    @XmlBinding( path = "property" )
-    
-    ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
-    
-    Value<String> getProperty();
-    void setProperty( String property );
-    
-	// *** PossibleImages ***
-    
-    @Type( base = IDiagramImageChoice.class )
-    @XmlListBinding( path = "possibleImages",
-    				mappings = @XmlListBinding.Mapping( element = "imageChoice", type = IDiagramImageChoice.class ) )
-                             
-    ListProperty PROP_POSSIBLE_IMAGES = new ListProperty( TYPE, "PossibleImages" );
-    
-    ModelElementList<IDiagramImageChoice> getPossibleImages();
-    
     // *** Image ***
     
     @Type( base = IDiagramNodeImageDef.class )
@@ -154,36 +156,23 @@ public interface IDiagramNodeDef
     
     ModelElementHandle<IDiagramLabelDef> getLabel();
     	    
-    // *** ValidationDecorator ***
+    // *** ProblemDecorator ***
     
-    @Type( base = IDiagramDecoratorDef.class )
-    @XmlBinding( path = "problem-indicator" )
+    @Type( base = IDiagramNodeProblemDecoratorDef.class )
+    @XmlBinding( path = "problem-decorator" )
 
-    ImpliedElementProperty PROP_VALIDATION_DECORATOR = new ImpliedElementProperty( TYPE, "ValidationDecorator" );
+    ImpliedElementProperty PROP_PROBLEM_DECORATOR = new ImpliedElementProperty( TYPE, "ProblemDecorator" );
     
-    IDiagramDecoratorDef getValidationDecorator();
+    IDiagramNodeProblemDecoratorDef getProblemDecorator();
 
-    // *** InstanceId ***
-    
-    @Type( base = Function.class )
-    @Label( standard = "instance id" )
-    @Localizable
-    @XmlBinding( path = "instance-id" )
-    
-    ValueProperty PROP_INSTANCE_ID = new ValueProperty( TYPE, "InstanceId" );
-    
-    Value<Function> getInstanceId();
-    void setInstanceId( String value );
-    void setInstanceId( Function value );
-        
     // *** EmbeddedConnections ***
     
     @Type( base = IDiagramConnectionBindingDef.class )
-    @XmlBinding( path = "connection-binding" )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "connection-binding", type = IDiagramConnectionBindingDef.class ) )
 
-    ElementProperty PROP_EMBEDDED_CONNECTIONS = new ElementProperty( TYPE, "EmbeddedConnections" );
+    ListProperty PROP_EMBEDDED_CONNECTIONS = new ListProperty( TYPE, "EmbeddedConnections" );
     
-    ModelElementHandle<IDiagramConnectionBindingDef> getEmbeddedConnections();
+    ModelElementList<IDiagramConnectionBindingDef> getEmbeddedConnections();
     
     // *** DefaultAction ***
     

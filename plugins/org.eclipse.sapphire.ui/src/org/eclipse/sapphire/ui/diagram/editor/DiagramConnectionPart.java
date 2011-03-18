@@ -18,13 +18,13 @@ import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
+import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
@@ -75,7 +75,7 @@ public class DiagramConnectionPart extends SapphirePart
         this.labelFunctionResult = initExpression
         ( 
         	this.modelElement,
-        	this.localDefinition.getLabel().element().getContent(), 
+        	this.localDefinition.getLabel().element().getText(), 
             new Runnable()
             {
                 public void run()

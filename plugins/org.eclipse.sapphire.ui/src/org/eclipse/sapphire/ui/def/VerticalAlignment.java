@@ -9,7 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.def;
+package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.sapphire.modeling.annotations.EnumSerialization;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -18,26 +18,22 @@ import org.eclipse.sapphire.modeling.annotations.Label;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public enum ConnectionEndpointType 
+public enum VerticalAlignment 
+
 {
-    @Label( standard = "none" )
-    @EnumSerialization( primary = "none" )
-    
-	NONE,
+	@Label( standard = "top" )
+	@EnumSerialization( primary = "top" )
 	
-    @Label( standard = "arrow" )
-    @EnumSerialization( primary = "arrow" )
-    
-	ARROW,
+	TOP,
 	
-    @Label( standard = "circle" )
-    @EnumSerialization( primary = "circle" )
+    @Label( standard = "center" )
+    @EnumSerialization( primary = "center" )
     
-	CIRCLE,
+    CENTER,
+    
+	@Label( standard = "bottom" )
+	@EnumSerialization( primary = "bottom" )
 	
-    @Label( standard = "ellipse" )
-    @EnumSerialization( primary = "ellipse" )
-    
-	ELLIPSE
-    
+	BOTTOM
+	
 }

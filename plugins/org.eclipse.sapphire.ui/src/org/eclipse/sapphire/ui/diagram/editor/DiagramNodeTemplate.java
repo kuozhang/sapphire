@@ -98,10 +98,10 @@ public class DiagramNodeTemplate
         }
 
         // handle embedded connections
-        if (this.definition.getEmbeddedConnections().element() != null)
+        if (!this.definition.getEmbeddedConnections().isEmpty())
         {
         	IDiagramConnectionBindingDef embeddedConnDef = 
-        				this.definition.getEmbeddedConnections().element();
+        				this.definition.getEmbeddedConnections().get( 0 );
         	this.embeddedConnTemplate = new DiagramEmbeddedConnectionTemplate(
         									this.diagramEditor,
         									this, 

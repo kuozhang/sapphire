@@ -16,6 +16,7 @@
     <import>
         <bundle>org.eclipse.sapphire.ui</bundle>
         <package>org.eclipse.sapphire.ui.def</package>
+        <package>org.eclipse.sapphire.ui.diagram.def</package>
     </import>
 
     <import>
@@ -603,12 +604,13 @@
 
         <node-template>
             <model-element-type>IFormDef</model-element-type>
-            <label>Form</label>
+            <label>${ Id == null ? &quot;Form&quot; : Id }</label>
             <use-model-element-image/>
             <section>
                 <content>
                     <include>PartId</include>
                 </content>
+                <label>form</label>
             </section>
             <node>
                 <label>content</label>
@@ -1011,6 +1013,341 @@
                 </node-list-ref>
             </node>
             <node-ref>DocumentationNode</node-ref>
+        </node-template>
+        
+        <node-template>
+            <model-element-type>IDiagramPageDef</model-element-type>
+            <label>${ Id == null ? &quot;Diagram Editor Page&quot; : Id }</label>
+            <section>
+                <label>diagram editor page</label>
+                <content>
+                    <include>PartId</include>
+                    <property-editor>PageName</property-editor>
+                    <property-editor>PageHeaderText</property-editor>
+                    <property-editor>Property</property-editor>
+                </content>
+            </section>
+            <use-model-element-image></use-model-element-image>
+            <node>
+                <label>nodes</label>
+                <node-list>
+                    <property>DiagramNodeDefs</property>
+                    <node-template>
+                        <section>
+                            <label>diagram node</label>
+                            <content>
+                                <property-editor>InstanceId</property-editor>
+                                <property-editor>ToolPaletteLabel</property-editor>
+                                <property-editor>ToolPaletteDesc</property-editor>
+                                <property-editor>Property</property-editor>
+                                <spacer></spacer>
+                                <property-editor>Width</property-editor>
+                                <property-editor>Height</property-editor>
+                                <composite>
+                                    <indent>true</indent>
+                                    <content>
+                                        <property-editor>Resizable</property-editor>
+                                    </content>
+                                </composite>
+                                <spacer></spacer>
+                                <property-editor>HorizontalSpacing</property-editor>
+                                <property-editor>VerticalSpacing</property-editor>
+                            </content>
+                        </section>
+                        <label>${ ToolPaletteLabel == null ? &quot;&lt;node&gt;&quot; : ToolPaletteLabel }</label>
+                        <node>
+                            <label>image</label>
+                            <section>
+                                <content>
+                                    <with>
+                                        <property>Image</property>
+                                        <panel>
+                                            <key>IDiagramNodeImageDef</key>
+                                            <content>
+                                                <property-editor>Id</property-editor>
+                                                <property-editor>Placement</property-editor>
+                                                <property-editor>
+                                                    <property>PossibleImages</property>
+                                                    <child-property>ImageId</child-property>
+                                                    <child-property>ImagePath</child-property>
+                                                </property-editor>
+                                                <composite>
+                                                    <indent>true</indent>
+                                                    <content>
+                                                        <separator>
+                                                            <label>Details</label>
+                                                        </separator>
+                                                        <switching-panel>
+                                                            <list-selection-controller>
+                                                                <property>PossibleImages</property>
+                                                            </list-selection-controller>
+                                                            <default-panel>
+                                                                <content>
+                                                                    <label>Select above to edit.</label>
+                                                                </content>
+                                                            </default-panel>
+                                                            <panel>
+                                                                <key>IDiagramImageChoice</key>
+                                                                <content>
+                                                                    <property-editor>ImageId</property-editor>
+                                                                    <property-editor>ImagePath</property-editor>
+                                                                    <property-editor>Width</property-editor>
+                                                                    <property-editor>Height</property-editor>
+                                                                </content>
+                                                            </panel>
+                                                        </switching-panel>
+                                                    </content>
+                                                </composite>
+                                            </content>
+                                        </panel>
+                                        <label>show node image</label>
+                                    </with>
+                                </content>
+                            </section>
+                        </node>
+                        <use-model-element-image></use-model-element-image>
+                        <node>
+                            <label>label</label>
+                            <section>
+                                <content>
+                                    <with>
+                                        <property>Label</property>
+                                        <label>show node label</label>
+                                        <panel>
+                                            <key>IDiagramLabelDef</key>
+                                            <content>
+                                                <property-editor>Text</property-editor>
+                                                <property-editor>Width</property-editor>
+                                                <property-editor>Height</property-editor>
+                                            </content>
+                                        </panel>
+                                    </with>
+                                </content>
+                            </section>
+                        </node>
+                        <node>
+                            <label>problems decorator</label>
+                            <property>ProblemDecorator</property>
+                            <section>
+                                <content>
+                                    <property-editor>ShowDecorator</property-editor>
+                                    <separator></separator>
+                                    <property-editor>
+                                        <property>DecoratorPlacement</property>
+                                        <hint>
+                                            <name>prefer.combo</name>
+                                            <value>true</value>
+                                        </hint>
+                                    </property-editor>
+                                    <property-editor>
+                                        <property>Size</property>
+                                        <hint>
+                                            <name>prefer.combo</name>
+                                            <value>true</value>
+                                        </hint>
+                                    </property-editor>
+                                    <spacer></spacer>
+                                    <property-editor>
+                                        <property>HorizontalAlignment</property>
+                                        <hint>
+                                            <name>prefer.combo</name>
+                                            <value>true</value>
+                                        </hint>
+                                    </property-editor>
+                                    <property-editor>
+                                        <property>VerticalAlignment</property>
+                                        <hint>
+                                            <name>prefer.combo</name>
+                                            <value>true</value>
+                                        </hint>
+                                    </property-editor>
+                                    <spacer></spacer>
+                                    <property-editor>HorizontalMargin</property-editor>
+                                    <property-editor>VerticalMargin</property-editor>
+                                </content>
+                            </section>
+                        </node>
+                        <node>
+                            <label>embedded connection bindings</label>
+                            <node-list>
+                                <property>EmbeddedConnections</property>
+                                <node-template>
+                                    <section>
+                                        <label>connection binding</label>
+                                        <content>
+                                            <property-editor>Property</property-editor>
+                                            <property-editor>InstanceId</property-editor>
+                                        </content>
+                                    </section>
+                                    <section>
+                                        <content>
+                                            <with>
+                                                <property>Label</property>
+                                                <label>show connection label</label>
+                                                <panel>
+                                                    <key>IDiagramLabelDef</key>
+                                                    <content>
+                                                        <property-editor>Text</property-editor>
+                                                        <property-editor>Width</property-editor>
+                                                        <property-editor>Height</property-editor>
+                                                    </content>
+                                                </panel>
+                                            </with>
+                                        </content>
+                                        <label>label</label>
+                                    </section>
+                                    <label>${ Property == null ? &quot;&lt;connection-binding&gt;&quot; : Property }</label>
+                                    <section>
+                                        <label>endpoint 1</label>
+                                        <content>
+                                            <with>
+                                                <property>Endpoint1</property>
+                                                <label>Define endpoint.</label>
+                                                <panel>
+                                                    <key>IDiagramConnectionEndpointBindingDef</key>
+                                                    <content>
+                                                        <property-editor>Property</property-editor>
+                                                        <property-editor>Value</property-editor>
+                                                    </content>
+                                                </panel>
+                                            </with>
+                                        </content>
+                                    </section>
+                                    <section>
+                                        <label>endpoint 2</label>
+                                        <content>
+                                            <with>
+                                                <property>Endpoint2</property>
+                                                <label>Define endpoint.</label>
+                                                <panel>
+                                                    <key>IDiagramConnectionEndpointBindingDef</key>
+                                                    <content>
+                                                        <property-editor>Property</property-editor>
+                                                        <property-editor>Value</property-editor>
+                                                    </content>
+                                                </panel>
+                                            </with>
+                                        </content>
+                                    </section>
+                                    <use-model-element-image></use-model-element-image>
+                                </node-template>
+                            </node-list>
+                        </node>
+                        <node-ref>ActionsOverallNode</node-ref>
+                    </node-template>
+                </node-list>
+            </node>
+            <node>
+                <label>connections</label>
+                <node-list>
+                    <property>DiagramConnectionDefs</property>
+                    <node-template>
+                        <section>
+                            <label>connection</label>
+                            <content>
+                                <property-editor>ToolPaletteLabel</property-editor>
+                                <property-editor>ToolPaletteDesc</property-editor>
+                                <property-editor>LineStyle</property-editor>
+                                <property-editor>LineColor</property-editor>
+                            </content>
+                        </section>
+                        <section>
+                            <label>endpoint 1</label>
+                            <content>
+                                <with>
+                                    <property>Endpoint1</property>
+                                    <default-panel>
+                                        <content>
+                                            <property-editor>Type</property-editor>
+                                        </content>
+                                    </default-panel>
+                                </with>
+                            </content>
+                        </section>
+                        <section>
+                            <label>endpoint 2</label>
+                            <content>
+                                <with>
+                                    <property>Endpoint2</property>
+                                    <default-panel>
+                                        <content>
+                                            <property-editor>Type</property-editor>
+                                        </content>
+                                    </default-panel>
+                                </with>
+                            </content>
+                        </section>
+                        <label>${ ToolPaletteLabel == null ? &quot;&lt;connection&gt;&quot; : ToolPaletteLabel }</label>
+                        <use-model-element-image></use-model-element-image>
+                    </node-template>
+                </node-list>
+            </node>
+            <node>
+                <label>connection bindings</label>
+                <node-list>
+                    <property>DiagramConnectionBindingDefs</property>
+                    <node-template>
+                        <section>
+                            <label>connection binding</label>
+                            <content>
+                                <property-editor>Property</property-editor>
+                                <property-editor>InstanceId</property-editor>
+                            </content>
+                        </section>
+                        <section>
+                            <content>
+                                <with>
+                                    <property>Label</property>
+                                    <label>show connection label</label>
+                                    <panel>
+                                        <key>IDiagramLabelDef</key>
+                                        <content>
+                                            <property-editor>Text</property-editor>
+                                            <property-editor>Width</property-editor>
+                                            <property-editor>Height</property-editor>
+                                        </content>
+                                    </panel>
+                                </with>
+                            </content>
+                            <label>label</label>
+                        </section>
+                        <label>${ Property == null ? &quot;&lt;connection-binding&gt;&quot; : Property }</label>
+                        <section>
+                            <label>endpoint 1</label>
+                            <content>
+                                <with>
+                                    <property>Endpoint1</property>
+                                    <label>Define endpoint.</label>
+                                    <panel>
+                                        <key>IDiagramConnectionEndpointBindingDef</key>
+                                        <content>
+                                            <property-editor>Property</property-editor>
+                                            <property-editor>Value</property-editor>
+                                        </content>
+                                    </panel>
+                                </with>
+                            </content>
+                        </section>
+                        <section>
+                            <label>endpoint 2</label>
+                            <content>
+                                <with>
+                                    <property>Endpoint2</property>
+                                    <label>Define endpoint.</label>
+                                    <panel>
+                                        <key>IDiagramConnectionEndpointBindingDef</key>
+                                        <content>
+                                            <property-editor>Property</property-editor>
+                                            <property-editor>Value</property-editor>
+                                        </content>
+                                    </panel>
+                                </with>
+                            </content>
+                        </section>
+                        <use-model-element-image></use-model-element-image>
+                    </node-template>
+                </node-list>
+            </node>
         </node-template>
         
     </node-list>

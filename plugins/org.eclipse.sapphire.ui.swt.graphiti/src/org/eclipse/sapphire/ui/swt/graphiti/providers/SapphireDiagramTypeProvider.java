@@ -31,6 +31,7 @@ import org.eclipse.sapphire.ui.def.IImportDirective;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeImageDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -74,10 +75,12 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
 			List<DiagramNodeTemplate> nodeTemplates = getDiagramPart().getNodeTemplates();
 			for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
 			{
-				IDiagramNodeDef nodeDef = nodeTemplate.getDefinition();
-				if (nodeDef.getImage().element() != null)
+				final IDiagramNodeDef nodeDef = nodeTemplate.getDefinition();
+				final IDiagramNodeImageDef imageDef = nodeDef.getImage().element();
+				
+				if (imageDef != null)
 				{
-					ModelElementList<IDiagramImageChoice> images = nodeDef.getPossibleImages();
+					ModelElementList<IDiagramImageChoice> images = imageDef.getPossibleImages();
 					for (IDiagramImageChoice imageChoice : images)
 					{
 						ISapphireUiDef uiDef = imageChoice.nearest(ISapphireUiDef.class);

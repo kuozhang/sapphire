@@ -11,13 +11,12 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -35,7 +34,8 @@ public interface IDiagramImageChoice
 	
     // *** ImageId ***
     
-    @Label( standard = "image id" )
+    @Label( standard = "image ID" )
+    @NonNullValue
     @XmlBinding( path = "id" )
     
     ValueProperty PROP_IMAGE_ID = new ValueProperty( TYPE, "ImageId" );
@@ -46,6 +46,7 @@ public interface IDiagramImageChoice
     // *** ImagePath ***
     
     @Label( standard = "image path" )
+    @NonNullValue
     @XmlBinding( path = "path" )
     
     ValueProperty PROP_IMAGE_PATH = new ValueProperty( TYPE, "ImagePath" );

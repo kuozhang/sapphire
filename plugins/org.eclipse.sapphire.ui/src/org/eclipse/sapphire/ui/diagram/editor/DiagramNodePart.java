@@ -21,9 +21,9 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeProblemDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.ImagePlacement;
 
 /**
@@ -56,7 +56,7 @@ public class DiagramNodePart extends SapphirePart
         this.labelFunctionResult = initExpression
         ( 
         	this.modelElement,
-            this.definition.getLabel().element().getContent(), 
+            this.definition.getLabel().element().getText(), 
             new Runnable()
             {
                 public void run()
@@ -84,7 +84,7 @@ public class DiagramNodePart extends SapphirePart
 	        this.imageFunctionResult = initExpression
 	        ( 
 	        	this.modelElement,
-	            this.definition.getImage().element().getValue(), 
+	            this.definition.getImage().element().getId(), 
 	            new Runnable()
 	            {
 	                public void run()
@@ -247,7 +247,7 @@ public class DiagramNodePart extends SapphirePart
 	{
 		if (this.definition.getImage().element() != null)
 		{
-			return this.definition.getImage().element().getImagePlacement().getContent();
+			return this.definition.getImage().element().getPlacement().getContent();
 		}
 		return null;
 	}
@@ -257,7 +257,7 @@ public class DiagramNodePart extends SapphirePart
 		String imageId = getImageId();
 		if (imageId != null)
 		{
-			ModelElementList<IDiagramImageChoice> imageChoices = this.definition.getPossibleImages();
+			ModelElementList<IDiagramImageChoice> imageChoices = this.definition.getImage().element().getPossibleImages();
 			for (IDiagramImageChoice imageChoice : imageChoices)
 			{
 				if (imageChoice.getImageId().getContent().equals(imageId))
@@ -274,7 +274,7 @@ public class DiagramNodePart extends SapphirePart
 		String imageId = getImageId();
 		if (imageId != null)
 		{
-			ModelElementList<IDiagramImageChoice> imageChoices = this.definition.getPossibleImages();
+			ModelElementList<IDiagramImageChoice> imageChoices = this.definition.getImage().element().getPossibleImages();
 			for (IDiagramImageChoice imageChoice : imageChoices)
 			{
 				if (imageChoice.getImageId().getContent().equals(imageId))
@@ -304,9 +304,9 @@ public class DiagramNodePart extends SapphirePart
 		return 0;
 	}
 	
-	public IDiagramDecoratorDef getErrorIndicatorDef()
+	public IDiagramNodeProblemDecoratorDef getErrorIndicatorDef()
 	{
-		return this.definition.getValidationDecorator();
+		return this.definition.getProblemDecorator();
 	}
 	
 	public DiagramNodeDefaultActionPart getDefaultActionPart()

@@ -11,13 +11,14 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -27,7 +28,7 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 public interface IDiagramConnectionEndpointDef 
 
-	extends ISapphirePartDef 
+	extends IModelElement 
 	
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramConnectionEndpointDef.class );
@@ -35,6 +36,7 @@ public interface IDiagramConnectionEndpointDef
 	// *** Type ***
 	
 	@Type( base = ConnectionEndpointType.class )
+	@DefaultValue( text = "none" )
 	@XmlBinding( path = "type" )
 	
 	ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
@@ -42,6 +44,5 @@ public interface IDiagramConnectionEndpointDef
 	Value<ConnectionEndpointType> getType();
 	void setType( String value );
 	void setType( ConnectionEndpointType value );
-    
 	
 }

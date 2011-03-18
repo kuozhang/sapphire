@@ -11,18 +11,22 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.LineStyle;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -32,36 +36,46 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 public interface IDiagramNodeImageDef 
 
-	extends ISapphirePartDef 
+	extends IModelElement 
 
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramNodeImageDef.class );
 
-	// *** Value ***
+	// *** Id ***
 
     @Type( base = Function.class )
-    @Label( standard = "value" )
-    @Localizable
-    @XmlBinding( path = "value" )
+    @Label( standard = "ID" )
+    @NonNullValue
+    @XmlBinding( path = "id" )
     
-    ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
+    ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
     
-    Value<Function> getValue();
-    void setValue( String value );
-    void setValue( Function value );
+    Value<Function> getId();
+    void setId( String value );
+    void setId( Function value );
     
-    // *** ImagePlacement ***
+    // *** Placement ***
     
     @Type( base = ImagePlacement.class )
-    @Label( standard = "image placement")
+    @Label( standard = "placement")
     @Localizable
-    @XmlBinding( path = "image-placement" )
+    @XmlBinding( path = "placement" )
     @DefaultValue( text = "top" )
     
-    ValueProperty PROP_IMAGE_PLACEMENT = new ValueProperty( TYPE, "ImagePlacement" );
+    ValueProperty PROP_PLACEMENT = new ValueProperty( TYPE, "Placement" );
     
-    Value<ImagePlacement> getImagePlacement();
-    void setImagePlacement( String value );
-    void setImagePlacement( ImagePlacement value ) ;
+    Value<ImagePlacement> getPlacement();
+    void setPlacement( String value );
+    void setPlacement( ImagePlacement value );
+    
+    // *** PossibleImages ***
+    
+    @Type( base = IDiagramImageChoice.class )
+    @CountConstraint( min = 1 )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "possible", type = IDiagramImageChoice.class ) )
+                             
+    ListProperty PROP_POSSIBLE_IMAGES = new ListProperty( TYPE, "PossibleImages" );
+    
+    ModelElementList<IDiagramImageChoice> getPossibleImages();
     		
 }

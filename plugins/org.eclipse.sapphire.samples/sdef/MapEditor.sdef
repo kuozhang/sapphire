@@ -21,31 +21,21 @@
     
     <diagram-page>
         <id>diagram</id>
-        <page-name>Diagram</page-name>
-        <page-header-text>Diagram</page-header-text>
         <connection>
             <id>railway_routes</id>
             <tool-palette-label>Railway Route</tool-palette-label>
-            <tool-palette-desc>Railway Route</tool-palette-desc>
             <line-style>dash-dot</line-style>
             <line-color>#808080</line-color>
             <hint><name>width</name><value>2</value></hint>
-            <endpoint1>
-                <type>NONE</type>
-            </endpoint1>            
             <endpoint2>
-                <type>ARROW</type>
+                <type>arrow</type>
             </endpoint2>            
         </connection>
         <connection>
             <id>highway_routes</id>
             <tool-palette-label>Highway Route</tool-palette-label>
-            <tool-palette-desc>Highway Route</tool-palette-desc>
-            <endpoint1>
-                <type>NONE</type>
-            </endpoint1>            
             <endpoint2>
-                <type>ARROW</type>
+                <type>arrow</type>
             </endpoint2>        
         </connection>
         <node>
@@ -53,16 +43,12 @@
             <tool-palette-label>Destination</tool-palette-label>
             <tool-palette-desc>Map Destination</tool-palette-desc>
             <property>Destinations</property>
-            <label>
-                <content>${Name == null ? "&lt;Destination&gt;" : Name}</content>
-            </label>
+            <label>${Name == null ? &quot;&lt;destination&gt;&quot; : Name}</label>
             <instance-id>${Name}</instance-id>
             <connection-binding>
                 <id>railway_routes</id>
                 <property>RailwayRoutes</property>
-                <label>
-                    <content>${Distance == null ? "&lt;Distance&gt;" : Distance}</content>
-                </label>
+                <label>${Distance == null ? &quot;&lt;distance&gt;&quot; : Distance}</label>
                 <endpoint2>
                     <property>ToDestination</property>
                     <value>${Name}</value>
@@ -73,9 +59,7 @@
         <connection-binding>
             <id>highway_routes</id>
             <property>Routes</property>
-            <label>
-                <content>${Distance == null ? "&lt;Distance&gt;" : Distance}</content>
-            </label>
+            <label>${Distance == null ? &quot;&lt;distance&gt;&quot; : Distance}</label>
             <endpoint1>
                 <property>FromDestination</property>
                 <value>${Name}</value>
