@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -27,7 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface IDiagramImageChoice 
 
-	extends IDiagramDimension 
+	extends IModelElement 
 	
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramImageChoice.class );

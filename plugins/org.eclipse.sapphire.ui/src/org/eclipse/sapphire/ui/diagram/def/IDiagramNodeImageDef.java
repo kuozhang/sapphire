@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -36,7 +35,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface IDiagramNodeImageDef 
 
-	extends IModelElement 
+	extends IDiagramDimension 
 
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramNodeImageDef.class );

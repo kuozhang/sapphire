@@ -26,6 +26,7 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
+import org.eclipse.graphiti.ui.services.GraphitiUi;
 import org.eclipse.graphiti.util.ColorConstant;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
@@ -163,7 +164,7 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
         				SapphireDiagramPropertyKeys.NODE_IMAGE_ID, imageId);
 
     	        gaService.setLocationAndSize(image, imageLocation.getX(), imageLocation.getY(),
-    	        		nodePart.getImageWidth(), nodePart.getImageHeight());
+    	        		getImageWidth(nodePart), getImageHeight(nodePart));
             }        	
         }
 
@@ -211,10 +212,11 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		
 		int width = 0;
 		int labelWidth = nodePart.getLabelWidth();
-		if (nodePart.getImageId() != null)
+		String imageId = nodePart.getImageId();
+		if (imageId != null)
 		{
-			int imageWidth = nodePart.getImageWidth();
-			
+			int imageWidth = getImageWidth(nodePart);
+
 			ImagePlacement imagePlacement = nodePart.getImagePlacement();
 			if (imagePlacement == ImagePlacement.TOP || imagePlacement == ImagePlacement.BOTTOM)
 			{
@@ -241,9 +243,10 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		}
 		int height = 0;
 		int labelHeight = nodePart.getLabelHeight();
-		if (nodePart.getImageId() != null)
+		String imageId = nodePart.getImageId();
+		if (imageId != null)
 		{
-			int imageHeight = nodePart.getImageHeight();
+			int imageHeight = getImageHeight(nodePart);
 			
 			ImagePlacement imagePlacement = nodePart.getImagePlacement();
 			if (imagePlacement == ImagePlacement.TOP || imagePlacement == ImagePlacement.BOTTOM)
@@ -290,7 +293,7 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		ImagePlacement imagePlacement = nodePart.getImagePlacement();
 		if (imagePlacement == ImagePlacement.TOP)
 		{
-			int imageHeight = nodePart.getImageHeight();
+			int imageHeight = getImageHeight(nodePart);
 			int verticalSpacing = nodePart.getVerticalSpacing();			
 			return new Point(0, imageHeight + verticalSpacing);
 		}
@@ -300,10 +303,42 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		}
 		else if (imagePlacement == ImagePlacement.LEFT )
 		{
-			int imageWidth = nodePart.getImageWidth();
+			int imageWidth = getImageWidth(nodePart);
 			int horizontalSpacing = nodePart.getHorizontalSpacing();
 			return new Point(imageWidth + horizontalSpacing, 0);			
 		}
 		return new Point(0, 0);
+	}
+	
+	private int getImageWidth(DiagramNodePart nodePart)
+	{
+		String imageId = nodePart.getImageId();
+		if (imageId != null)
+		{
+			int imageWidth = nodePart.getImageWidth();
+			if (imageWidth == 0)
+			{
+				org.eclipse.swt.graphics.Image image = GraphitiUi.getImageService().getImageForId(imageId);
+				imageWidth = image.getImageData().width;				
+			}
+			return imageWidth;
+		}
+		return 0;
+	}
+
+	private int getImageHeight(DiagramNodePart nodePart)
+	{
+		String imageId = nodePart.getImageId();
+		if (imageId != null)
+		{
+			int imageHeight = nodePart.getImageHeight();
+			if (imageHeight == 0)
+			{
+				org.eclipse.swt.graphics.Image image = GraphitiUi.getImageService().getImageForId(imageId);
+				imageHeight = image.getImageData().height;				
+			}
+			return imageHeight;
+		}
+		return 0;
 	}
 }

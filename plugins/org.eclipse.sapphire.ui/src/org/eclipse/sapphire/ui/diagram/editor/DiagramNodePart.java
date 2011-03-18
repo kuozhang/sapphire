@@ -15,13 +15,11 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeProblemDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.ImagePlacement;
@@ -254,16 +252,11 @@ public class DiagramNodePart extends SapphirePart
 	
 	public int getImageWidth()
 	{
-		String imageId = getImageId();
-		if (imageId != null)
+		if (this.definition.getImage().element() != null)
 		{
-			ModelElementList<IDiagramImageChoice> imageChoices = this.definition.getImage().element().getPossibleImages();
-			for (IDiagramImageChoice imageChoice : imageChoices)
+			if (this.definition.getImage().element().getWidth().getContent() != null)
 			{
-				if (imageChoice.getImageId().getContent().equals(imageId))
-				{
-					return imageChoice.getWidth().getContent();
-				}
+				this.definition.getImage().element().getWidth().getContent();
 			}
 		}
 		return 0;
@@ -271,16 +264,11 @@ public class DiagramNodePart extends SapphirePart
 	
 	public int getImageHeight()
 	{
-		String imageId = getImageId();
-		if (imageId != null)
+		if (this.definition.getImage().element() != null)
 		{
-			ModelElementList<IDiagramImageChoice> imageChoices = this.definition.getImage().element().getPossibleImages();
-			for (IDiagramImageChoice imageChoice : imageChoices)
+			if (this.definition.getImage().element().getHeight().getContent() != null)
 			{
-				if (imageChoice.getImageId().getContent().equals(imageId))
-				{
-					return imageChoice.getHeight().getContent();
-				}
+				this.definition.getImage().element().getHeight().getContent();
 			}
 		}
 		return 0;
