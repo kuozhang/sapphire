@@ -970,6 +970,15 @@ Fragment-Host: @{Bundle}
           </if>
         </then>
       </if>
+      
+      <!-- Lookup the set of downloads with known checksum issues that should be ignored. -->
+      
+      <if>
+        <not><isset property="ignore.checksum.issues.list"/></not>
+        <then>
+          <loadfile srcfile="${basedir}/releng/ignore-checksum-issues.txt" property="ignore.checksum.issues.list"/>
+        </then>
+      </if>
 
     </sequential>
   </macrodef>
@@ -1023,7 +1032,10 @@ Fragment-Host: @{Bundle}
                     <else>
                       <echo message="Checksums did not match. Expected ${.content.checksum}. Got ${.content.checksum.actual}."/>
                       <if>
-                        <istrue value="${ignore.checksum.issues}"/>
+                        <or>
+                          <istrue value="${ignore.checksum.issues}"/>
+                          <contains string="${ignore.checksum.issues.list}" substring="@{file}"/>
+                        </or>
                         <then>
                           <var name=".content.valid" value="true"/>
                         </then>
