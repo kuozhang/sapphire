@@ -49,15 +49,13 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
 	private ModelElementListener modelElementListener;
 	private ModelPath endpointPath;
 		
-    public DiagramEmbeddedConnectionTemplate(final SapphireDiagramEditorPart diagramEditor,
-    										final DiagramNodeTemplate nodeTemplate, 
-    										IDiagramConnectionBindingDef definition, 
-    										IModelElement modelElement)
+	@Override
+    public void init()
     {
-    	this.diagramEditor = diagramEditor;
-    	this.nodeTemplate = nodeTemplate;
-    	this.modelElement = modelElement;
-    	this.definition = definition;
+		this.nodeTemplate = (DiagramNodeTemplate)getParentPart();
+    	this.diagramEditor = this.nodeTemplate.getDiagramEditorPart();
+    	this.modelElement = getModelElement();
+    	this.definition = (IDiagramConnectionBindingDef)super.getDefinition();
     	
         this.diagramConnectionMap = new HashMap<IModelElement, List<DiagramConnectionPart>>();
         
@@ -219,9 +217,8 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     public DiagramConnectionPart createNewConnectionPart(IModelElement connElement, IModelElement srcNodeElement)
     {
 		DiagramEmbeddedConnectionPart connPart = 
-			new DiagramEmbeddedConnectionPart(this, srcNodeElement, this.endpointPath);
-		connPart.init(this.diagramEditor, connElement, this.definition, 
-				Collections.<String,String>emptyMap());
+			new DiagramEmbeddedConnectionPart(srcNodeElement, this.endpointPath);
+		connPart.init(this, connElement, this.definition, Collections.<String,String>emptyMap());
 		connPart.addListener(this.connPartListener);
 		addConnectionPart(srcNodeElement, connPart);
     	return connPart;

@@ -166,6 +166,16 @@
         <image>images/actions/restore-defaults.png</image>
         <description>Restores properties in a section to their default values. For value properties, it means setting the property to null. For list properties, it means clearing the list.</description>
     </action>
+    <action>
+        <id>Sapphire.Diagram.Drop</id>
+        <context>Sapphire.Diagram</context>
+        <label>diagram drop action</label>
+    </action>    
+    <action>
+        <id>Sapphire.Diagram.Node.Default</id>
+        <context>Sapphire.Diagram.Node</context>
+        <label>node default action</label>
+    </action>
     <action-handler>
         <action>Sapphire.Browse</action>
         <impl>org.eclipse.sapphire.ui.swt.renderer.actions.AbsoluteFilePathBrowseActionHandler</impl>

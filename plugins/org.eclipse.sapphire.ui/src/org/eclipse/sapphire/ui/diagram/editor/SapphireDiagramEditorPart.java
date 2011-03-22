@@ -12,12 +12,14 @@
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -64,7 +66,8 @@ public class SapphireDiagramEditorPart extends SapphirePart
         
         for (IDiagramNodeDef nodeDef : nodeDefs)
         {
-        	DiagramNodeTemplate nodeTemplate = new DiagramNodeTemplate(this, nodeDef, this.modelElement);
+        	DiagramNodeTemplate nodeTemplate = new DiagramNodeTemplate();
+        	nodeTemplate.init(this, this.modelElement, nodeDef, Collections.<String,String>emptyMap());
         	this.nodeTemplates.add(nodeTemplate);
         	nodeTemplate.addTemplateListener(this.nodeTemplateListener);
         	
@@ -80,10 +83,11 @@ public class SapphireDiagramEditorPart extends SapphirePart
         ModelElementList<IDiagramConnectionBindingDef> connectionDefs = this.diagramPageDef.getDiagramConnectionBindingDefs();
         for (IDiagramConnectionBindingDef connectionDef : connectionDefs)
         {
-        	DiagramConnectionTemplate connectionTemplate = new DiagramConnectionTemplate(this, connectionDef, this.modelElement);
+        	DiagramConnectionTemplate connectionTemplate = new DiagramConnectionTemplate();
+        	connectionTemplate.init(this, this.modelElement, connectionDef, Collections.<String,String>emptyMap());
         	this.connectionTemplates.add(connectionTemplate);
         	connectionTemplate.addTemplateListener(this.connTemplateListener);
-        }       
+        }
         
 	}
 
@@ -128,6 +132,12 @@ public class SapphireDiagramEditorPart extends SapphirePart
 		throw new UnsupportedOperationException();
 	}
 	
+    @Override
+    public Set<String> getActionContexts()
+    {
+        return Collections.singleton( SapphireActionSystem.CONTEXT_DIAGRAM );
+    }
+		
 	public DiagramNodePart getDiagramNodePart(IModelElement nodeElement)
 	{
 		if (nodeElement == null)

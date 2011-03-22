@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -24,7 +25,11 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
-import org.eclipse.sapphire.ui.diagram.DiagramDropTargetService;
+import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionSystem;
+import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.diagram.SapphireDiagramDropActionHandler;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 
@@ -32,7 +37,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class DiagramNodeTemplate 
+public class DiagramNodeTemplate extends SapphirePart
 {
     public static abstract class Listener
     {
@@ -57,15 +62,17 @@ public class DiagramNodeTemplate
 	private DiagramEmbeddedConnectionTemplate embeddedConnTemplate;
 	private ModelPropertyListener modelPropertyListener;
 	private SapphireDiagramPartListener nodePartListener;
-	private final Set<Listener> listeners;	
+	private Set<Listener> listeners;	
 	private List<DiagramNodePart> diagramNodes;
-	private DiagramDropTargetService dropService;
+	private SapphireAction dropAction;
+	private SapphireDiagramDropActionHandler dropActionHandler;
 	    
-    public DiagramNodeTemplate(final SapphireDiagramEditorPart diagramEditor, IDiagramNodeDef definition, IModelElement modelElement)
+	@Override
+    public void init()
     {
-    	this.diagramEditor = diagramEditor;
-    	this.modelElement = modelElement;
-    	this.definition = definition;
+    	this.diagramEditor = (SapphireDiagramEditorPart)getParentPart();
+    	this.modelElement = getModelElement();
+    	this.definition = (IDiagramNodeDef)super.definition;
     	
         this.toolPaletteLabel = this.definition.getToolPaletteLabel().getContent();
         this.toolPaletteDesc = this.definition.getToolPaletteDesc().getContent();
@@ -90,23 +97,17 @@ public class DiagramNodeTemplate
         	createNewNodePart(listEntryModelElement);
         }
 
-        // handle drop target service
-        final Class<?> serviceClass = this.definition.getDropTargetService().resolve();
-        if (serviceClass != null)
-        {
-        	this.dropService = DiagramDropTargetService.create(serviceClass);
-        }
+        // handle drop action
+        this.dropAction = getAction("Sapphire.Diagram.Drop");
+        this.dropActionHandler = (SapphireDiagramDropActionHandler)this.dropAction.getFirstActiveHandler();
 
         // handle embedded connections
         if (!this.definition.getEmbeddedConnections().isEmpty())
         {
         	IDiagramConnectionBindingDef embeddedConnDef = 
         				this.definition.getEmbeddedConnections().get( 0 );
-        	this.embeddedConnTemplate = new DiagramEmbeddedConnectionTemplate(
-        									this.diagramEditor,
-        									this, 
-        									embeddedConnDef, 
-        									this.modelElement);
+        	this.embeddedConnTemplate = new DiagramEmbeddedConnectionTemplate();
+        	this.embeddedConnTemplate.init(this, this.modelElement, embeddedConnDef, Collections.<String,String>emptyMap());
         }
         
         // Add model property listener
@@ -139,6 +140,15 @@ public class DiagramNodeTemplate
     public String getToolPaletteDesc()
     {
     	return this.toolPaletteDesc;
+    }
+    
+    @Override
+    public Set<String> getActionContexts()
+    {
+        Set<String> ret = new HashSet<String>();
+        ret.add(SapphireActionSystem.CONTEXT_DIAGRAM_NODE);
+        ret.add(SapphireActionSystem.CONTEXT_DIAGRAM);
+        return ret;
     }
     
     public DiagramNodePart createNewDiagramNode()
@@ -185,27 +195,16 @@ public class DiagramNodeTemplate
         this.listeners.remove( listener );
     }
     
-	public DiagramDropTargetService getDropTargetService()
+	public SapphireDiagramDropActionHandler getDropActionHandler()
 	{
-		return this.dropService;
+		return this.dropActionHandler;
 	}
-    
-    private ModelProperty resolve(final IModelElement modelElement, 
-    		String propertyName)
-    {
-    	if (propertyName != null)
-    	{
-	        final ModelElementType type = modelElement.getModelElementType();
-	        final ModelProperty property = type.getProperty( propertyName );
-	        
-	        if( property == null )
-	        {
-	            throw new RuntimeException( "Could not find property " + propertyName + " in " + type.getQualifiedName() );
-	        }
-	        return property;
-    	}    
-        return null;
-    }
+	
+	@Override
+	public void render(SapphireRenderingContext context)
+	{
+		throw new UnsupportedOperationException();
+	}	
     
     private void handleModelPropertyChange(final ModelPropertyChangeEvent event)
     {
@@ -271,10 +270,10 @@ public class DiagramNodeTemplate
     	return null;
     }
     
-    private DiagramNodePart createNewNodePart(IModelElement element)
+    public DiagramNodePart createNewNodePart(IModelElement element)
     {
-    	DiagramNodePart newNode = new DiagramNodePart(this);
-    	newNode.init(this.diagramEditor, element, this.definition, 
+    	DiagramNodePart newNode = new DiagramNodePart();
+    	newNode.init(this, element, this.definition, 
     			Collections.<String,String>emptyMap());
     	newNode.addListener(this.nodePartListener);
     	this.diagramNodes.add(newNode);
@@ -284,8 +283,9 @@ public class DiagramNodeTemplate
     	}
     	return newNode;    	
     }
-    	
-	void dispose()
+    
+    @Override
+	public void dispose()
 	{
 		removeModelLister();
 		

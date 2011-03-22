@@ -14,7 +14,9 @@ package org.eclipse.sapphire.ui.swt.graphiti.providers;
 import java.util.HashMap;
 
 import org.eclipse.graphiti.features.impl.IIndependenceSolver;
+import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -25,11 +27,13 @@ public class SapphireDiagramSolver implements IIndependenceSolver
 	private HashMap<String, SapphirePart> keyToBOMap;
 	private HashMap<SapphirePart, String> bOToKeyMap;
 	private int counter = 0;
+	private HashMap<SapphirePart, DiagramRenderingContext> partContextMap;
 
 	public SapphireDiagramSolver()
 	{
 		this.keyToBOMap = new HashMap<String, SapphirePart>();
-		this.bOToKeyMap = new HashMap<SapphirePart, String>();		
+		this.bOToKeyMap = new HashMap<SapphirePart, String>();
+		this.partContextMap = new HashMap<SapphirePart, DiagramRenderingContext>();
 	}
 	
 	public String getKeyForBusinessObject(Object bo) 
@@ -59,6 +63,11 @@ public class SapphireDiagramSolver implements IIndependenceSolver
 
 	public boolean removeBO(Object bo)
 	{
+		if (this.partContextMap.containsKey(bo))
+		{
+			this.partContextMap.remove(bo);
+		}
+		
 		if (this.bOToKeyMap.containsKey(bo))
 		{
 			String key = this.bOToKeyMap.get(bo);
@@ -66,6 +75,17 @@ public class SapphireDiagramSolver implements IIndependenceSolver
 			this.keyToBOMap.remove(key);
 			return true;
 		}
+		
 		return false;
+	}
+	
+	public void addRendingContext(SapphirePart part, DiagramRenderingContext ctx)
+	{
+		this.partContextMap.put(part, ctx);
+	}
+	
+	public DiagramRenderingContext getRenderingContext(SapphirePart part)
+	{
+		return this.partContextMap.get(part);
 	}
 }

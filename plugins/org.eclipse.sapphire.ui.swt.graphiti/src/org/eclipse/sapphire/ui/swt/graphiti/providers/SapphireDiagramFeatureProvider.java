@@ -40,15 +40,19 @@ import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.features.impl.IIndependenceSolver;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
+import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
-import org.eclipse.sapphire.ui.diagram.DiagramDropTargetService;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.diagram.SapphireDiagramDropActionHandler;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramGeometryWrapper;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
+import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireAddBendpointFeature;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireAddConnectionFeature;
@@ -98,15 +102,15 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 		{
 			return new SapphireAddConnectionFeature(this);
 		}
-		else
+		else if (context.getTargetContainer() instanceof Diagram)
 		{
 			List<DiagramNodeTemplate> nodeTemplates = getDiagramPart().getNodeTemplates();
 			for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
 			{
-				DiagramDropTargetService dropService = nodeTemplate.getDropTargetService();
-				if (dropService != null && dropService.accept(obj))
+				SapphireDiagramDropActionHandler dropHandler = nodeTemplate.getDropActionHandler();
+				if (dropHandler != null && dropHandler.canExecute(obj))
 				{
-					return new SapphireAddNodeFeature(this, nodeTemplate);					
+					return new SapphireAddNodeFeature(this, nodeTemplate);
 				}
 			}	
 		}
@@ -258,6 +262,16 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 		{
 			gw.removeConnectionBendpoints((DiagramConnectionPart)bo);
 		}
+	}
+	
+	public void addRenderingContext(SapphirePart part, DiagramRenderingContext ctx)
+	{
+		((SapphireDiagramSolver)this.getIndependenceSolver()).addRendingContext(part, ctx);
+	}
+	
+	public DiagramRenderingContext getRenderingContext(SapphirePart part)
+	{
+		return ((SapphireDiagramSolver)this.getIndependenceSolver()).getRenderingContext(part);
 	}
 	
 	private SapphireDiagramEditor getDiagramEditor()

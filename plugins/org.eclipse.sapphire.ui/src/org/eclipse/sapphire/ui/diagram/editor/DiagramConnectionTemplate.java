@@ -36,6 +36,8 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 
@@ -43,7 +45,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class DiagramConnectionTemplate 
+public class DiagramConnectionTemplate extends SapphirePart
 {
     public static abstract class Listener
     {
@@ -80,14 +82,12 @@ public class DiagramConnectionTemplate
 	
 	private List<DiagramConnectionPart> diagramConnections;
 	
-	public DiagramConnectionTemplate() {}
-	
-    public DiagramConnectionTemplate(final SapphireDiagramEditorPart diagramEditor, 
-    		IDiagramConnectionBindingDef definition, IModelElement modelElement)
+	@Override
+    public void init()
     {
-    	this.diagramEditor = diagramEditor;
-    	this.modelElement = modelElement;
-    	this.definition = definition;
+    	this.diagramEditor = (SapphireDiagramEditorPart)getParentPart();
+    	this.modelElement = getModelElement();
+    	this.definition = (IDiagramConnectionBindingDef)super.definition;;
     	
         this.diagramConnections = new ArrayList<DiagramConnectionPart>();
         
@@ -397,8 +397,8 @@ public class DiagramConnectionTemplate
     
     public DiagramConnectionPart createNewConnectionPart(IModelElement connElement, IModelElement srcNodeElement)
     {
-    	DiagramConnectionPart connPart = new DiagramConnectionPart(this, this.endpoint1Path, this.endpoint2Path);
-    	connPart.init(this.diagramEditor, connElement, this.definition, 
+    	DiagramConnectionPart connPart = new DiagramConnectionPart(this.endpoint1Path, this.endpoint2Path);
+    	connPart.init(this, connElement, this.definition, 
     			Collections.<String,String>emptyMap());
     	connPart.addListener(this.connPartListener);
     	addConnectionPart(srcNodeElement, connPart);
@@ -573,6 +573,12 @@ public class DiagramConnectionTemplate
     		connPart.dispose();
     	}
     }
+    
+	@Override
+	public void render(SapphireRenderingContext context)
+	{
+		throw new UnsupportedOperationException();
+	}	
     
     protected void notifyConnectionUpdate(DiagramConnectionPart connPart)
     {

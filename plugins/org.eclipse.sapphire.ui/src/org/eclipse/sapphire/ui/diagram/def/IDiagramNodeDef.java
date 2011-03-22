@@ -173,27 +173,5 @@ public interface IDiagramNodeDef
     ListProperty PROP_EMBEDDED_CONNECTIONS = new ListProperty( TYPE, "EmbeddedConnections" );
     
     ModelElementList<IDiagramConnectionBindingDef> getEmbeddedConnections();
-    
-    // *** DefaultAction ***
-    
-    @Type( base = IDiagramNodeDefaultActionDef.class )
-    @XmlBinding( path = "default-action" )
-    
-    ElementProperty PROP_DEFAULT_ACTION = new ElementProperty( TYPE, "DefaultAction" );
-    
-    ModelElementHandle<IDiagramNodeDefaultActionDef> getDefaultAction();
-    
-    // *** DropTargetService ***
-    
-    @Label( standard = "drop target service" )    
-    @Reference( target = Class.class )
-    @JavaTypeConstraints( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.ui.diagram.DiagramDropTargetService" )
-    @MustExist
-    @XmlBinding( path = "drop-target-service" )
-    
-    ValueProperty PROP_DROP_TARGET_SERVICE = new ValueProperty( TYPE, "DropTargetService" );
-    
-    ReferenceValue<Class<?>> getDropTargetService();
-    void setDropTargetService( String value );
-    
+            
 }

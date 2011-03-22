@@ -15,7 +15,9 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICustomContext;
 import org.eclipse.graphiti.features.custom.AbstractCustomFeature;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeDefaultActionPart;
+import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProvider;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -23,43 +25,37 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeDefaultActionPart;
 
 public class SapphireDoubleClickNodeFeature extends AbstractCustomFeature 
 {
-	private DiagramNodeDefaultActionPart defaultActionPart;
+	private DiagramNodePart diagramNodePart;
 	
-	public SapphireDoubleClickNodeFeature(IFeatureProvider fp, DiagramNodeDefaultActionPart actionPart)
+	public SapphireDoubleClickNodeFeature(IFeatureProvider fp, DiagramNodePart diagramNodePart)
 	{
 		super(fp);
-		this.defaultActionPart = actionPart;
+		this.diagramNodePart = diagramNodePart;
 	}
 	
 	@Override
 	public String getName() 
 	{
-		return this.defaultActionPart.getLabel();
+		return this.diagramNodePart.getDefaultAction().getLabel();
 	}
 
 	@Override
 	public String getDescription() 
-	{
-		return this.defaultActionPart.getDescription();
+	{		
+		return this.diagramNodePart.getDefaultAction().getLabel();
 	}	
 	
 	@Override
 	public boolean canExecute(ICustomContext context) 
 	{
-		if (this.defaultActionPart.getActionHandler() != null)
-		{
-			return true;
-		}
-		return false;
+		SapphireDiagramActionHandler handler = (SapphireDiagramActionHandler)this.diagramNodePart.getDefaultActionHandler();
+		return handler.canExecute(this.diagramNodePart);
 	}
 	
 	public void execute(ICustomContext context) 
 	{
-		if (this.defaultActionPart.getActionHandler() != null)
-		{
-			SapphireRenderingContext renderingCtx = new SapphireRenderingContext(defaultActionPart, null);
-			this.defaultActionPart.getActionHandler().execute(renderingCtx);
-		}
+		SapphireRenderingContext renderingCtx = ((SapphireDiagramFeatureProvider)this.getFeatureProvider()).getRenderingContext(this.diagramNodePart);
+		this.diagramNodePart.getDefaultActionHandler().execute(renderingCtx);
 	}
 		
 }

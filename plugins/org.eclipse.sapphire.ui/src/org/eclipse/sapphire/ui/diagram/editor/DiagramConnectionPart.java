@@ -55,12 +55,11 @@ public class DiagramConnectionPart extends SapphirePart
 	protected ValueProperty labelProperty;
 	protected FunctionResult idFunctionResult;
 	protected ModelPropertyListener modelPropertyListener;
-	
+		
 	public DiagramConnectionPart() {}
 	
-	public DiagramConnectionPart(DiagramConnectionTemplate connectionTemplate, ModelPath endpoint1Path, ModelPath endpoint2Path)
-	{		
-		this.connectionTemplate = connectionTemplate;
+	public DiagramConnectionPart(ModelPath endpoint1Path, ModelPath endpoint2Path)
+	{				
 		this.endpoint1Path = endpoint1Path;
 		this.endpoint2Path = endpoint2Path;
 	}
@@ -68,7 +67,7 @@ public class DiagramConnectionPart extends SapphirePart
     @Override
     protected void init()
     {
-        super.init();
+    	this.connectionTemplate = (DiagramConnectionTemplate)getParentPart();
         
         this.localDefinition = (IDiagramConnectionBindingDef)super.definition;
         this.modelElement = getModelElement();

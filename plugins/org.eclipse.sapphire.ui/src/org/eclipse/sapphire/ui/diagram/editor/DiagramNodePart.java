@@ -17,6 +17,9 @@ import java.util.Set;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -37,18 +40,14 @@ public class DiagramNodePart extends SapphirePart
 	private FunctionResult idFunctionResult;
 	private FunctionResult imageFunctionResult;
 	private ValueProperty labelProperty;
-	private DiagramNodeDefaultActionPart defaultAction;
-	
-	public DiagramNodePart(DiagramNodeTemplate nodeTemplate)
-	{
-		this.nodeTemplate = nodeTemplate;
-	}
-	
+	private SapphireAction defaultAction;
+	private SapphireActionHandler defaultActionHandler;
+		
     @Override
     protected void init()
     {
         super.init();
-        
+        this.nodeTemplate = (DiagramNodeTemplate)getParentPart();
         this.definition = (IDiagramNodeDef)super.definition;
         this.modelElement = getModelElement();
         this.labelFunctionResult = initExpression
@@ -92,14 +91,11 @@ public class DiagramNodePart extends SapphirePart
 	            }
 	        );
         }
-                
-        // Default action
-        if (this.definition.getDefaultAction().element() != null)
-        {
-        	this.defaultAction = new DiagramNodeDefaultActionPart();
-        	this.defaultAction.init(this, this.modelElement, 
-        			this.definition.getDefaultAction().element(), Collections.<String,String>emptyMap());
-        }
+        
+        // Default Action handler
+        this.defaultAction = getAction("Sapphire.Diagram.Node.Default");
+        this.defaultActionHandler = this.defaultAction.getFirstActiveHandler();
+        
     }
     
     public DiagramNodeTemplate getDiagramNodeTemplate()
@@ -118,6 +114,22 @@ public class DiagramNodePart extends SapphirePart
 		throw new UnsupportedOperationException();
 	}
 
+    @Override
+    public Set<String> getActionContexts()
+    {
+        return Collections.singleton( SapphireActionSystem.CONTEXT_DIAGRAM_NODE );
+    }
+	
+    public SapphireAction getDefaultAction()
+    {
+    	return this.defaultAction;
+    }
+    
+	public SapphireActionHandler getDefaultActionHandler()
+	{		
+		return this.defaultActionHandler;
+	}
+	
 	@Override
 	public void dispose()
 	{
@@ -296,12 +308,7 @@ public class DiagramNodePart extends SapphirePart
 	{
 		return this.definition.getProblemDecorator();
 	}
-	
-	public DiagramNodeDefaultActionPart getDefaultActionPart()
-	{
-		return this.defaultAction;
-	}
-	
+		
 	private void notifyNodeUpdate()
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();

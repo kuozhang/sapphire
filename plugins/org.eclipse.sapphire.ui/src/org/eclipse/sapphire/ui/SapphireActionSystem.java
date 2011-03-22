@@ -28,7 +28,8 @@ public final class SapphireActionSystem
     public static final String CONTEXT_LIST_PROPERTY_EDITOR = PREFIX + "ListPropertyEditor";
     public static final String CONTEXT_SECTION = PREFIX + "Section";
     public static final String CONTEXT_VALUE_PROPERTY_EDITOR = PREFIX + "ValuePropertyEditor";
-    public static final String CONTEXT_DIAGRAM_NODE = PREFIX + "DiagramNode";
+    public static final String CONTEXT_DIAGRAM = PREFIX + "Diagram";
+    public static final String CONTEXT_DIAGRAM_NODE = PREFIX + "Diagram.Node";
     
     public static final String ACTION_ADD = PREFIX + "Add";
     public static final String ACTION_ASSIST = PREFIX + "Assist";

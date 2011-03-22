@@ -33,17 +33,16 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
 	private FunctionResult endpointFunctionResult;
 	private IDiagramConnectionEndpointBindingDef endpointDef;
 	
-	public DiagramEmbeddedConnectionPart(DiagramEmbeddedConnectionTemplate connTemplate,
-			IModelElement srcNodeModel, ModelPath endpointPath)
+	public DiagramEmbeddedConnectionPart(IModelElement srcNodeModel, ModelPath endpointPath)
 	{
-		this.connectionTemplate = connTemplate;
 		this.srcNodeModel = srcNodeModel;
 		this.endpointPath = endpointPath;
 	}
 	
     @Override
     protected void init()
-    {        
+    {   
+    	this.connectionTemplate = (DiagramConnectionTemplate)getParentPart();
         this.localDefinition = (IDiagramConnectionBindingDef)super.definition;
         this.modelElement = super.getModelElement();
         this.labelFunctionResult = initExpression
@@ -130,7 +129,7 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
         
     public DiagramNodePart getSourceNodePart()
     {
-    	SapphireDiagramEditorPart diagramPart = (SapphireDiagramEditorPart)getParentPart();
+    	SapphireDiagramEditorPart diagramPart = (SapphireDiagramEditorPart)getParentPart().getParentPart().getParentPart();
     	return diagramPart.getDiagramNodePart(this.srcNodeModel);
     }
     

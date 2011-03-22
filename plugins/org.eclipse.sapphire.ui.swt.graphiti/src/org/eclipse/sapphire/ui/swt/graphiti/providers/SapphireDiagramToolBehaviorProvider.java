@@ -76,10 +76,10 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 				if (bo instanceof DiagramNodePart)
 				{
 					DiagramNodePart nodePart = (DiagramNodePart)bo;
-					if (nodePart.getDefaultActionPart() != null)
+					if (nodePart.getDefaultActionHandler() != null)
 					{
 						SapphireDoubleClickNodeFeature dblClikFeature = 
-							new SapphireDoubleClickNodeFeature(getFeatureProvider(), nodePart.getDefaultActionPart());
+							new SapphireDoubleClickNodeFeature(getFeatureProvider(), nodePart);
 						return dblClikFeature;
 					}
 				}

@@ -30,16 +30,15 @@ import org.eclipse.graphiti.ui.services.GraphitiUi;
 import org.eclipse.graphiti.util.ColorConstant;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.Point;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
-import org.eclipse.sapphire.ui.diagram.DiagramDropTargetService;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramLabelDef;
+import org.eclipse.sapphire.ui.diagram.SapphireDiagramDropActionHandler;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeImageDef;
 import org.eclipse.sapphire.ui.diagram.def.ImagePlacement;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramGeometryWrapper;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
+import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProvider;
 import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramPropertyKeys;
 
@@ -73,10 +72,10 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		{
 			return true;
 		}
-		else 
+		else if (context.getTargetContainer() instanceof Diagram)
 		{
-			DiagramDropTargetService dropService = nodeTemplate.getDropTargetService();
-			if (dropService != null && dropService.accept(newObj))
+			SapphireDiagramDropActionHandler dropHandler = this.nodeTemplate.getDropActionHandler();
+			if (dropHandler != null && dropHandler.canExecute(newObj))
 			{
 				return true;
 			}
@@ -94,8 +93,11 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		}
 		else 
 		{
-			DiagramDropTargetService dropService = nodeTemplate.getDropTargetService();
-			nodePart = (DiagramNodePart)dropService.createModel(this.nodeTemplate, newObj);
+			SapphireDiagramDropActionHandler dropHandler = this.nodeTemplate.getDropActionHandler();
+			this.nodeTemplate.removeModelLister();
+			IModelElement element = dropHandler.newModelElement(newObj);
+			nodePart = this.nodeTemplate.createNewNodePart(element);
+			this.nodeTemplate.addModelListener();			
 		}
 		final Diagram targetDiagram = (Diagram) context.getTargetContainer();
 		
@@ -200,6 +202,10 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
         	((SapphireDiagramFeatureProvider)getFeatureProvider()).getDiagramGeometry();
         diagramGeometry.addNode(nodePart, x, y, width, height);
         
+        // Create a rendering context for the node
+        DiagramRenderingContext renderingCtx = new DiagramRenderingContext(nodePart, containerShape);
+        SapphireDiagramFeatureProvider sfp = (SapphireDiagramFeatureProvider)getFeatureProvider();
+        sfp.addRenderingContext(nodePart, renderingCtx);
 		return containerShape;
 	}
 
