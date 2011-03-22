@@ -17,6 +17,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -37,6 +38,7 @@ public interface IDiagramDimension
 	
     @Type( base = Integer.class )
     @Label( standard = "width" )
+    @NumericRange( min = "1" )
     @XmlBinding( path = "width" )
     
     ValueProperty PROP_WIDTH = new ValueProperty( TYPE, "Width" );
@@ -49,6 +51,7 @@ public interface IDiagramDimension
 	
     @Type( base = Integer.class )
     @Label( standard = "height" )
+    @NumericRange( min = "1" )
     @XmlBinding( path = "height" )
     
     ValueProperty PROP_HEIGHT = new ValueProperty( TYPE, "Height" );

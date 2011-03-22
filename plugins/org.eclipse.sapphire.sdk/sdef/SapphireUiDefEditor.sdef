@@ -1073,31 +1073,6 @@
                                                     <child-property>ImageId</child-property>
                                                     <child-property>ImagePath</child-property>
                                                 </property-editor>
-                                                <composite>
-                                                    <indent>true</indent>
-                                                    <content>
-                                                        <separator>
-                                                            <label>Details</label>
-                                                        </separator>
-                                                        <switching-panel>
-                                                            <list-selection-controller>
-                                                                <property>PossibleImages</property>
-                                                            </list-selection-controller>
-                                                            <default-panel>
-                                                                <content>
-                                                                    <label>Select above to edit.</label>
-                                                                </content>
-                                                            </default-panel>
-                                                            <panel>
-                                                                <key>IDiagramImageChoice</key>
-                                                                <content>
-                                                                    <property-editor>ImageId</property-editor>
-                                                                    <property-editor>ImagePath</property-editor>
-                                                                </content>
-                                                            </panel>
-                                                        </switching-panel>
-                                                    </content>
-                                                </composite>
                                             </content>
                                         </panel>
                                         <label>show node image</label>
