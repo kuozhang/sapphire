@@ -114,7 +114,7 @@ public final class EnumValueType
         
         if( labelText == null || labelText.length() == 0 )
         {
-            labelText = enumItem.name();
+            labelText = enumItem.name().toLowerCase().replace( '_', ' ' );
         }
 
         labelText = getLocalizationService().text( labelText, capitalizationType, includeMnemonic );
