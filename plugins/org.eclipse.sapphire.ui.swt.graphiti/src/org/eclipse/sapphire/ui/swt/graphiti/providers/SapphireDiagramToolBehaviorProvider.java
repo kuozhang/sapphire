@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.swt.graphiti.providers;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IDoubleClickContext;
@@ -138,6 +139,22 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 			}
 		}
 		return super.getDecorators(pe);
+	}
+	
+	@Override
+	public String getToolTip(GraphicsAlgorithm ga) 
+	{
+		PictogramElement pe = ga.getPictogramElement();
+		Object bo = getFeatureProvider().getBusinessObjectForPictogramElement(pe);
+		if (bo instanceof DiagramNodePart) 
+		{
+			String name = ((DiagramNodePart) bo).getLabel();
+			if (name != null && !name.isEmpty()) 
+			{
+				return name;
+			}
+		}
+		return super.getToolTip(ga);
 	}
 	
 	private Point getErrorIndicatorPosition(DiagramNodePart nodePart, PictogramElement pe)

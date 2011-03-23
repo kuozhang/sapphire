@@ -35,6 +35,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeImageDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
 import org.eclipse.ui.internal.util.BundleUtility;
 import org.osgi.framework.Bundle;
@@ -59,6 +60,11 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
 	public void init(Diagram diagram, IDiagramEditor diagramEditor)
 	{
 		super.init(diagram, diagramEditor);
+		
+		SapphireDiagramEditorPart editorPart = ((SapphireDiagramEditor)diagramEditor).getDiagramEditorPart();
+		DiagramRenderingContext renderingCtx = new DiagramRenderingContext(editorPart, diagram);
+		this.featureProvider.addRenderingContext(editorPart, renderingCtx);
+		
 		ExtensionManager extManager = (ExtensionManager)GraphitiUi.getExtensionManager();
 		IImageProvider imageProviders[] = extManager.getImageProviders();
 		SapphireDiagramImageProvider sapphireImageProvider = null;
