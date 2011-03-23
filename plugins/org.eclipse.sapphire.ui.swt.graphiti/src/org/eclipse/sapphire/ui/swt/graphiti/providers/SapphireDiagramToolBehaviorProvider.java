@@ -149,7 +149,7 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 		if (bo instanceof DiagramNodePart) 
 		{
 			String name = ((DiagramNodePart) bo).getLabel();
-			if (name != null && !name.isEmpty()) 
+			if (name != null && name.length() > 0) 
 			{
 				return name;
 			}
