@@ -16,7 +16,7 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddConnectionContext;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.impl.AbstractAddFeature;
-import org.eclipse.graphiti.mm.GraphicsAlgorithmContainer;
+import org.eclipse.graphiti.mm.algorithms.Ellipse;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.Text;
@@ -31,8 +31,10 @@ import org.eclipse.graphiti.util.ColorConstant;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.Color;
+import org.eclipse.sapphire.ui.diagram.def.ConnectionEndpointType;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramPageDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 
@@ -96,9 +98,8 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 		text.setValue(connectionPart.getLabel());
 
 		// add static graphical decorators (composition and navigable)
-		ConnectionDecorator cd;
-		cd = peCreateService.createConnectionDecorator(connection, false, 1.0, true);
-		createArrow(cd, linkColor);
+		createEndpointDecorator(connection, connDef.getEndpoint1(), linkColor, true);
+		createEndpointDecorator(connection, connDef.getEndpoint2(), linkColor, false);
 
         // provide information to support direct-editing directly 
 
@@ -116,14 +117,44 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 		return connection;
 	}
 
-	private Polygon createArrow(GraphicsAlgorithmContainer gaContainer, IColorConstant color) 
+	private ConnectionDecorator createEndpointDecorator(Connection connection, IDiagramConnectionEndpointDef endpointDef, 
+						IColorConstant color, boolean begin)
 	{
-		Polygon polygon = Graphiti.getGaCreateService().createPolygon(gaContainer, new int[] { -8, 4, 0, 0, -8, -4, -5, 0 });
-		polygon.setBackground(manageColor(color));
-		polygon.setFilled(true);
-		return polygon;
+		IPeCreateService peCreateService = Graphiti.getPeCreateService();
+		ConnectionDecorator cd = null;
+		if (begin)
+		{
+			cd = peCreateService.createConnectionDecorator(connection, false, 0, true);
+		}
+		else
+		{
+			cd = peCreateService.createConnectionDecorator(connection, false, 1.0, true);
+		}
+		if (endpointDef.getType().getContent() == ConnectionEndpointType.ARROW)
+		{						
+			Polygon polygon = Graphiti.getGaCreateService().createPolygon(cd, new int[] { -8, 5, 0, 0, -8, -5 });
+			polygon.setBackground(manageColor(color));
+			polygon.setFilled(true);
+		}
+		else if (endpointDef.getType().getContent() == ConnectionEndpointType.CIRCLE)
+		{
+			Ellipse ellipse = Graphiti.getGaCreateService().createEllipse(cd);
+			ellipse.setHeight(8);
+			ellipse.setWidth(8);
+			ellipse.setBackground(manageColor(color));
+			ellipse.setFilled(true);			
+		}
+		else if (endpointDef.getType().getContent() == ConnectionEndpointType.ELLIPSE)
+		{
+			Ellipse ellipse = Graphiti.getGaCreateService().createEllipse(cd);
+			ellipse.setHeight(6);
+			ellipse.setWidth(10);
+			ellipse.setBackground(manageColor(color));
+			ellipse.setFilled(true);			
+		}
+		return cd;
 	}
-
+	
 	private IColorConstant getLinkColor(IDiagramConnectionDef def)
 	{
 		IColorConstant linkColor = DEFAULT_LINK_COLOR;
