@@ -35,7 +35,7 @@ public class ErrorIndicatorImageProvider extends AbstractImageProvider
 	protected void addAvailableImages() 
 	{
 		// register the path for each image identifier
-		addImageFilePath(IMG_ERROR_DECORATOR, "icons/error.gif"); //$NON-NLS-1$
+		addImageFilePath(IMG_ERROR_DECORATOR, "icons/error-indicator.png"); //$NON-NLS-1$
 		addImageFilePath(IMG_WARNING_DECORATOR, "icons/warning.png"); //$NON-NLS-1$
 	}
 
