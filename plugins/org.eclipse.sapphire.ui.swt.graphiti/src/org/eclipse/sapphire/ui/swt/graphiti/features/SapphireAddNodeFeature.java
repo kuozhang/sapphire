@@ -161,12 +161,14 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
             	String imageId = nodePart.getImageId();
             	Image image = gaService.createImage(shape, imageId);
             	
-            	Point imageLocation = getImageLocation(nodePart);
+            	int imageWidth = getImageWidth(nodePart);
+            	int imageHeight = getImageHeight(nodePart);
+            	Point imageLocation = getImageLocation(nodePart, width, height, imageWidth, imageHeight);
         		Graphiti.getPeService().setPropertyValue(containerShape, 
         				SapphireDiagramPropertyKeys.NODE_IMAGE_ID, imageId);
 
     	        gaService.setLocationAndSize(image, imageLocation.getX(), imageLocation.getY(),
-    	        		getImageWidth(nodePart), getImageHeight(nodePart));
+    	        		imageWidth, imageHeight);
             }        	
         }
 
@@ -272,24 +274,31 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		return height;
 	}
 	
-	private Point getImageLocation(DiagramNodePart nodePart)
+	private Point getImageLocation(DiagramNodePart nodePart, int nodeWidth, int nodeHeight, 
+						int imageWidth, int imageHeight)
 	{
 		ImagePlacement imagePlacement = nodePart.getImagePlacement();
-		if (imagePlacement == ImagePlacement.TOP || imagePlacement == ImagePlacement.LEFT)
+		if (imagePlacement == ImagePlacement.LEFT)
 		{
 			return new Point(0, 0);
+		}
+		else if (imagePlacement == ImagePlacement.TOP)
+		{
+			int offsetX = (nodeWidth - imageWidth) >> 1;
+			return new Point(offsetX, 0);
 		}
 		else if (imagePlacement == ImagePlacement.BOTTOM)
 		{
 			int labelHeight = nodePart.getLabelHeight();
-			int horizontalSpacing = nodePart.getHorizontalSpacing();
-			return new Point(labelHeight + horizontalSpacing, 0);
+			int verticalSpacing = nodePart.getVerticalSpacing();
+			int offsetX = (nodeWidth - imageWidth) >> 1;
+			return new Point(offsetX, labelHeight + verticalSpacing);
 		}
 		else if (imagePlacement == ImagePlacement.RIGHT )
 		{
 			int labelWidth = nodePart.getLabelWidth();
-			int verticalSpacing = nodePart.getVerticalSpacing();
-			return new Point(labelWidth + verticalSpacing, 0);			
+			int horizontalSpacing = nodePart.getHorizontalSpacing();
+			return new Point(labelWidth + horizontalSpacing, 0);			
 		}
 		return new Point(0, 0);
 	}
