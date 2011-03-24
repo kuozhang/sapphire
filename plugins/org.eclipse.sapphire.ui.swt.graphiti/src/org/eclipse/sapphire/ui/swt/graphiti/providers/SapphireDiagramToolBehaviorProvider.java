@@ -13,7 +13,6 @@ package org.eclipse.sapphire.ui.swt.graphiti.providers;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IDoubleClickContext;
@@ -231,7 +230,7 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 				offsetY = (referencedGA.getHeight() - indicatorHeight) / 2;
 			}
 			
-			return new Point(offsetX, offsetY);
+			return new Point(offsetX + referencedGA.getX(), offsetY + referencedGA.getY());
 		}
 		return new Point(0, 0);
 	}
