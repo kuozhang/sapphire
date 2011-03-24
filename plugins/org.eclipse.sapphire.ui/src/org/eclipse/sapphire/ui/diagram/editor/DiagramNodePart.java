@@ -15,6 +15,8 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -42,6 +44,7 @@ public class DiagramNodePart extends SapphirePart
 	private ValueProperty labelProperty;
 	private SapphireAction defaultAction;
 	private SapphireActionHandler defaultActionHandler;
+	private ModelPropertyListener modelPropertyListener;
 		
     @Override
     protected void init()
@@ -96,6 +99,17 @@ public class DiagramNodePart extends SapphirePart
         this.defaultAction = getAction("Sapphire.Diagram.Node.Default");
         this.defaultActionHandler = this.defaultAction.getFirstActiveHandler();
         
+        // Add model property listener. It listens to all the properties so that the
+        // validation status change would trigger node update
+        this.modelPropertyListener =  new ModelPropertyListener()
+        {
+            @Override
+            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            {
+            	notifyNodeUpdate();
+            }
+        };
+        this.modelElement.addListener(this.modelPropertyListener, "*");
     }
     
     public DiagramNodeTemplate getDiagramNodeTemplate()
@@ -143,6 +157,7 @@ public class DiagramNodePart extends SapphirePart
 		{
 			this.idFunctionResult.dispose();
 		}
+		this.modelElement.removeListener(this.modelPropertyListener, "*");
 	}
 	
 	public String getLabel()

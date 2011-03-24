@@ -103,7 +103,7 @@ public class SapphireUpdateNodeFeature extends AbstractUpdateFeature
 			businessName = nodePart.getLabel();
 			newImageId = nodePart.getImageId();
 		}
-
+		boolean updated = false;
 		// Set name in pictogram model
 		if (pictogramElement instanceof ContainerShape) 
 		{
@@ -114,7 +114,7 @@ public class SapphireUpdateNodeFeature extends AbstractUpdateFeature
 				{
 					Text text = (Text) shape.getGraphicsAlgorithm();
 					text.setValue(businessName);
-					return true;
+					updated = true;
 				}
 				else if (shape.getGraphicsAlgorithm() instanceof Image) 
 				{
@@ -131,14 +131,14 @@ public class SapphireUpdateNodeFeature extends AbstractUpdateFeature
 			    		Graphiti.getPeService().setPropertyValue(cs, 
 			    				SapphireDiagramPropertyKeys.NODE_IMAGE_ID, newImageId);
 	
-						return true;
+						updated = true;
 					}
 				}
 				
 			}
 		}
 
-		return false;
+		return updated;
 	}
 
 }

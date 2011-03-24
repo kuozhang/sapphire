@@ -59,6 +59,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
@@ -406,6 +407,16 @@ public class SapphireDiagramEditor extends DiagramEditor
 		{
 			UpdateContext context = new UpdateContext(pe);
 			fp.updateIfPossible(context);
+			
+			// When the validation status changes for a node, we'd need to refresh the
+			// diagram to update the problem indicator for the node.
+			Display.getCurrent().asyncExec(new Runnable()
+			{
+				public void run() 
+				{
+					refresh();
+				}				
+			});
 		}		
 	}
 	
