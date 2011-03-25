@@ -544,8 +544,8 @@ Fragment-Host: @{Bundle}
     <delete dir="${build.dir}/packages" quiet="true"/>
     <mkdir dir="${build.dir}/packages"/>
 
-    <zip destfile="${build.dir}/packages/sapphire-repository-${sapphire.version}.zip">
-      <fileset dir="${build.dir}/repository"/>
+    <zip destfile="${build.dir}/packages/sapphire-repository-${sapphire.version}.zip" filesonly="true">
+      <fileset dir="${build.dir}/repository" excludes=".artifactlock/**/*"/>
     </zip>
 
     <zip destfile="${build.dir}/packages/sapphire-samples-${sapphire.version}.zip">
