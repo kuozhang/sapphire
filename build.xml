@@ -1002,37 +1002,49 @@ Fragment-Host: @{Bundle}
               <if>
                 <available file="${downloads}/${.url.checksum}"/>
                 <then>
-                
-                  <!-- Download the expected checksum. -->
-                  
-                  <get src="http://www.eclipse.org/downloads/sums.php?file=@{file}&amp;type=md5" dest="${downloads}/content-checksum.txt"/>
-                  <loadfile srcfile="${downloads}/content-checksum.txt" property=".content.checksum"/>
-                  <delete file="${downloads}/content-checksum.txt"/>
-                  <propertyregex property=".content.checksum" override="true" input="${.content.checksum}" regexp="([^ ]*).*" select="\1"/>
-                  
-                  <!-- Verify the local file againsted the expected checksum. -->
-                  
-                  <checksum file="${downloads}/${.url.checksum}" property=".content.checksum.actual"/>
-                      
+
                   <if>
-                    <equals arg1="${.content.checksum}" arg2="${.content.checksum.actual}"/>
+                    <istrue value="${offline}"/>
                     <then>
+
                       <var name=".content.valid" value="true"/>
+
                     </then>
                     <else>
-                      <echo message="Checksums did not match. Expected ${.content.checksum}. Got ${.content.checksum.actual}."/>
+                
+                      <!-- Download the expected checksum. -->
+                  
+                      <get src="http://www.eclipse.org/downloads/sums.php?file=@{file}&amp;type=md5" dest="${downloads}/content-checksum.txt"/>
+                      <loadfile srcfile="${downloads}/content-checksum.txt" property=".content.checksum"/>
+                      <delete file="${downloads}/content-checksum.txt"/>
+                      <propertyregex property=".content.checksum" override="true" input="${.content.checksum}" regexp="([^ ]*).*" select="\1"/>
+                  
+                      <!-- Verify the local file againsted the expected checksum. -->
+                  
+                      <checksum file="${downloads}/${.url.checksum}" property=".content.checksum.actual"/>
+                      
                       <if>
-                        <istrue value="${ignore.checksum.issues}"/>
+                        <equals arg1="${.content.checksum}" arg2="${.content.checksum.actual}"/>
                         <then>
                           <var name=".content.valid" value="true"/>
                         </then>
+                        <else>
+                          <echo message="Checksums did not match. Expected ${.content.checksum}. Got ${.content.checksum.actual}."/>
+                          <if>
+                            <istrue value="${ignore.checksum.issues}"/>
+                            <then>
+                              <var name=".content.valid" value="true"/>
+                            </then>
+                          </if>
+                        </else>
                       </if>
+                  
+                      <var name=".content.checksum" unset="true"/>
+                      <var name=".content.checksum.actual" unset="true"/>
+                  
                     </else>
                   </if>
-                  
-                  <var name=".content.checksum" unset="true"/>
-                  <var name=".content.checksum.actual" unset="true"/>
-                  
+
                 </then>
               </if>
 

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- 
  ******************************************************************************
  * Copyright (c) 2011 Oracle
@@ -12,26 +11,41 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************
 -->
+<feature
+      id="org.eclipse.sapphire.sdk"
+      label="%featureName"
+      version="0.2.2.qualifier"
+      provider-name="%providerName"
+      plugin="org.eclipse.sapphire.sdk">
 
-<feature id="org.eclipse.sapphire.sdk" label="%featureName" provider-name="%providerName" version="0.2.1.qualifier" plugin="org.eclipse.sapphire.sdk">
+   <description>
+      %description
+   </description>
 
-  <description>
-    %description
-  </description>
+   <copyright>
+      %copyright
+   </copyright>
 
-  <copyright>
-    %copyright
-  </copyright>
+   <license url="%licenseURL">
+      %license
+   </license>
 
-  <license url="%licenseURL">
-    %license
-  </license>
+   <requires>
+      <import feature="org.eclipse.sapphire" version="0.2.1"/>
+   </requires>
 
-  <requires>
-    <import feature="org.eclipse.sapphire" version="0.2.1"/>
-  </requires>
+   <plugin
+         id="org.eclipse.sapphire.doc"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
-  <plugin download-size="0" id="org.eclipse.sapphire.doc" install-size="0" unpack="false" version="0.0.0"/>
-  <plugin download-size="0" id="org.eclipse.sapphire.sdk" install-size="0" unpack="false" version="0.0.0"/>
+   <plugin
+         id="org.eclipse.sapphire.sdk"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

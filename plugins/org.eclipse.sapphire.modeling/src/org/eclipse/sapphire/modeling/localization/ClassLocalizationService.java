@@ -53,18 +53,23 @@ public final class ClassLocalizationService
         
         final InputStream stream = this.cl.getClassLoader().getResourceAsStream( resPath );
         
-        try
-        {
-            return parse( stream, keyToText );
-        }
-        finally
+        if( stream != null )
         {
             try
             {
-                stream.close();
+                return parse( stream, keyToText );
             }
-            catch( IOException e ) {}
+            finally
+            {
+                try
+                {
+                    stream.close();
+                }
+                catch( IOException e ) {}
+            }
         }
+        
+        return false;
     }
 
 }
