@@ -23,6 +23,7 @@ import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.algorithms.styles.LineStyle;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.ConnectionDecorator;
+import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
@@ -91,7 +92,8 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 
 		// add dynamic text decorator for the reference name
 		ConnectionDecorator textDecorator = peCreateService.createConnectionDecorator(connection, true, 0.5, true);
-		Text text = gaService.createDefaultText(textDecorator);
+		Diagram diagram = (Diagram)context.getTargetContainer();
+		Text text = gaService.createDefaultText(diagram, textDecorator);
 		text.setForeground(manageColor(linkColor));
 		gaService.setLocation(text, 10, 0);		
 		

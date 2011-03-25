@@ -178,7 +178,9 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
             Shape shape = peCreateService.createShape(containerShape, false);
  
             // create and set text graphics algorithm
-            Text text = gaService.createDefaultText(shape, nodePart.getLabel());
+            Diagram diagram = (Diagram)context.getTargetContainer();
+            Text text = gaService.createDefaultText(diagram, shape);
+            text.setValue(nodePart.getLabel());
             text.setForeground(manageColor(DEFAULT_TEXT_FOREGROUND));            
             text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
             text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
