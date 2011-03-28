@@ -58,7 +58,7 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
     private static int xInc = 100;
     private static int yInc = 0;
     private DiagramNodeTemplate nodeTemplate;
-	
+    
 	public SapphireAddNodeFeature(IFeatureProvider fp, DiagramNodeTemplate nodeTemplate)
 	{
 		super(fp);
@@ -179,8 +179,9 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
  
             // create and set text graphics algorithm
             Diagram diagram = (Diagram)context.getTargetContainer();
-            Text text = gaService.createDefaultText(diagram, shape);
-            text.setValue(nodePart.getLabel());
+            
+            Text text = TextUtil.createDefaultText(diagram, shape, nodePart.getLabel());
+            //Text text = gaService.createDefaultText(diagram, shape, nodePart.getLabel());
             text.setForeground(manageColor(DEFAULT_TEXT_FOREGROUND));            
             text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
             text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);

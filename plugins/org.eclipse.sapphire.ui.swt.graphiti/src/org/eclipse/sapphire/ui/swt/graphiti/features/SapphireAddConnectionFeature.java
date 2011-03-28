@@ -93,12 +93,12 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 		// add dynamic text decorator for the reference name
 		ConnectionDecorator textDecorator = peCreateService.createConnectionDecorator(connection, true, 0.5, true);
 		Diagram diagram = (Diagram)context.getTargetContainer();
-		Text text = gaService.createDefaultText(diagram, textDecorator);
+		//Text text = gaService.createDefaultText(diagram, textDecorator, connectionPart.getLabel());
+        Text text = TextUtil.createDefaultText(diagram, textDecorator, connectionPart.getLabel());
+
 		text.setForeground(manageColor(linkColor));
 		gaService.setLocation(text, 10, 0);		
 		
-		text.setValue(connectionPart.getLabel());
-
 		// add static graphical decorators (composition and navigable)
 		createEndpointDecorator(connection, connDef.getEndpoint1(), linkColor, true);
 		createEndpointDecorator(connection, connDef.getEndpoint2(), linkColor, false);
