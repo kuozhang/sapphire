@@ -1143,6 +1143,48 @@
                             </section>
                         </node>
                         <node>
+                            <label>image decorators</label>                            
+                            <node-list>
+                                <property>ImageDecorators</property>
+                                <node-template>
+                                    <label>${ ImageId == null ? &quot;&lt;image-ID&gt;&quot; : ImageId }</label>
+                                    <section>
+                                        <label>node image decorator</label>
+                                        <content>
+                                            <property-editor>ImageId</property-editor>
+                                            <property-editor>ShowDecorator</property-editor>
+                                            <separator></separator>
+                                            <property-editor>
+                                                <property>DecoratorPlacement</property>
+                                                <hint>
+                                                    <name>prefer.combo</name>
+                                                    <value>true</value>
+                                                </hint>
+                                            </property-editor>
+                                            <spacer></spacer>
+                                            <property-editor>
+                                                <property>HorizontalAlignment</property>
+                                                <hint>
+                                                    <name>prefer.combo</name>
+                                                    <value>true</value>
+                                                </hint>
+                                            </property-editor>
+                                            <property-editor>
+                                                <property>VerticalAlignment</property>
+                                                <hint>
+                                                    <name>prefer.combo</name>
+                                                    <value>true</value>
+                                                </hint>
+                                            </property-editor>
+                                            <spacer></spacer>
+                                            <property-editor>HorizontalMargin</property-editor>
+                                            <property-editor>VerticalMargin</property-editor>
+                                        </content>
+                                    </section>
+                                </node-template>
+                            </node-list>
+                        </node>
+                        <node>
                             <label>embedded connection bindings</label>
                             <node-list>
                                 <property>EmbeddedConnections</property>
@@ -1321,6 +1363,22 @@
                             </content>
                         </section>
                         <use-model-element-image></use-model-element-image>
+                    </node-template>
+                </node-list>
+            </node>
+            <node>
+                <label>image decorators</label>
+                <node-list>
+                    <property>DiagramImageDecorators</property>
+                    <node-template>
+                        <label>${ ImageId == null ? &quot;&lt;image-ID&gt;&quot; : ImageId }</label>
+                        <section>
+                            <label>diagram image decorator</label>
+                            <content>
+                                <property-editor>ImageId</property-editor>
+                                <property-editor>ImagePath</property-editor>
+                            </content>
+                        </section>
                     </node-template>
                 </node-list>
             </node>
