@@ -4,11 +4,12 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.sapphire.tests;singleton:=true
 Bundle-Version: 0.3.0.qualifier
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.sapphire.modeling,
+ org.eclipse.sapphire.modeling.xml,
+ org.eclipse.sapphire.ui,
+ org.eclipse.core.runtime,
  org.eclipse.core.resources,
- org.junit,
- org.eclipse.sapphire.modeling,
- org.eclipse.sapphire.ui
+ org.junit
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %providerName
