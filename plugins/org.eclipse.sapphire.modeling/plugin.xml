@@ -24,14 +24,4 @@
     </factories>
   </extension>
 
-  <extension point="org.eclipse.core.expressions.propertyTesters">
-    <propertyTester
-      id="org.eclipse.sapphire.modeling.internal.ModelPropertyPropertyTester"
-      class="org.eclipse.sapphire.modeling.internal.ModelPropertyPropertyTester"
-      namespace="sapphire.modeling.property"
-      properties="type"
-      type="org.eclipse.sapphire.modeling.ModelProperty">
-    </propertyTester>
-  </extension>
-  
 </plugin>

@@ -413,7 +413,6 @@ public final class SapphireModelingExtensionSystem
             this.bundle = Platform.getBundle( bundleId );
         }
 
-        @SuppressWarnings( "unchecked" )
         @Override
         public List<URL> findExtensionFiles()
         {
