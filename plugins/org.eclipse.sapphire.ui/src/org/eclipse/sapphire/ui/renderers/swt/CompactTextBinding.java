@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.ToolBar;
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
-public final class CompactTextBinding implements ModifyListener {
+final class CompactTextBinding implements ModifyListener {
 	
 	private final CompactListPropertyEditorRenderer compactListPropertyEditorRenderer;
 	private Text text;
@@ -53,24 +53,18 @@ public final class CompactTextBinding implements ModifyListener {
 	}
 	
 	public void refreshModelElement(IModelElement element) {
-		refreshModelElement(element, true);
-	}
-	
-	private void refreshModelElement(IModelElement element, boolean writeText) {
-		this.resource.setModelElement(element);
+		setModelElement(element);
     	String value = element != null ? element.read(this.resource.getValueProperty()).getText() : null;
     	value = value == null ? "" : value;
-		if (writeText && !CompactListPropertyEditorRenderer.equals(value, this.text.getText())) {
+		if (!CompactListPropertyEditorRenderer.equals(value, this.text.getText())) {
 			this.text.setText(value);
     	}
 	}
 	
-//	public void setModelElement(IModelElement element) {
-//		this.element = element;
-//		
-//		this.resource.setElement(element);
-//	}
-//	
+	public void setModelElement(IModelElement element) {
+		this.resource.setModelElement(element);
+	}
+	
 	public IModelElement getModelElement() {
 		return this.resource.getModelElement();
 	}
@@ -108,41 +102,31 @@ public final class CompactTextBinding implements ModifyListener {
 		this.decorator = decorator;
 	}
 	
-//	public boolean hasModelElement() {
-//		return this.resource.getModelElement() != null;
-//	}
-
 	public void modifyText(ModifyEvent e) {
         if( ! this.text.isDisposed() && ( this.text.getStyle() & SWT.READ_ONLY ) == 0 ) 
         {
         	IModelElement element = this.resource.getModelElement();
         	final String value = this.text.getText();
-        	if (value.length() == 0 && e.getSource().equals(this.text)) {
-        		if (element != null) {
-                	this.modifying = true;
-
-                	System.out.println("TODO remove " + value);
-                	this.compactListPropertyEditorRenderer.getList().remove(element);
-        			refreshModelElement(null, false);
-    	            
-        			this.modifying = false;
-        		}
-        	} else if (element != null || value.length() > 0) {
+        	if (value.length() == 0 && e.getSource().equals(this.text) && element == null) {
+        		// do nothing..
+        	} else {
             	this.modifying = true;
         		
             	boolean createNew = false;
         		if (element == null) {
-        			// TODO new element may not be the last one
+        			// new element may not be the last one - insert empty strings 
+        			this.compactListPropertyEditorRenderer.insertEmpty(this);
+        			
         			final IModelElement newElement = this.compactListPropertyEditorRenderer.getList().addNewElement();
-        			refreshModelElement(newElement, false);
+        			setModelElement(newElement);
         			createNew = true;
         		}
         		this.resource.write(value);
-	            if (createNew) {
-	            	this.text.setSelection(value.length(), value.length());
-	            }
+                if (createNew) {
+                	this.text.setSelection(value.length(), value.length());
+                }
 
-	            this.modifying = false;
+                this.modifying = false;
         	}
         }
 	}

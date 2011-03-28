@@ -14,24 +14,29 @@ package org.eclipse.sapphire.ui.renderers.swt;
 import org.eclipse.sapphire.modeling.BindingImpl;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.Resource;
-import org.eclipse.sapphire.modeling.ValueBindingImpl;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.xml.XmlElement;
+import org.eclipse.sapphire.modeling.xml.XmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class CompactListProxyResource extends Resource {
+class CompactListProxyResource extends XmlResource {
 	
 	private IModelElement proxyElement;
 	private IModelElement actualElement;
     private ValueProperty actualProperty;
+
+    private CompactListPropertyEditorRenderer renderer;
     
     private String value;
 
-	public CompactListProxyResource() {
-		super(null);
+	public CompactListProxyResource(CompactListPropertyEditorRenderer renderer) {
+		super((XmlResource)renderer.getPart().getModelElement().resource());
+		
+		this.renderer = renderer;
 	}
 
 	public void init(IModelElement proxyElement, ValueProperty actualProperty) {
@@ -73,8 +78,16 @@ public class CompactListProxyResource extends Resource {
 	public IModelElement getProxyElement() {
 		return this.proxyElement;
 	}
+	
+	private IModelElement getActualElement(boolean create) {
+		if (create && this.actualElement == null) {
+			final IModelElement element = this.renderer.getList().addNewElement();
+			setModelElement(element);
+		}
+		return this.actualElement;
+	}
 
-	private class ProxyBinding extends ValueBindingImpl {
+	private class ProxyBinding extends XmlValueBindingImpl {
 
 		@Override
 		public String read() {
@@ -85,12 +98,19 @@ public class CompactListProxyResource extends Resource {
 		public void write(String value) {
 			CompactListProxyResource.this.value = value;
 			
-			final IModelElement element = CompactListProxyResource.this.actualElement;
-			final ValueProperty property = CompactListProxyResource.this.actualProperty;
-			if (element != null) {
-				element.write(property, value);
-			}
+			final IModelElement element = getActualElement(true/*create*/);
+			final ValueProperty property = getValueProperty();
+			element.write(property, value);
 		}
+	}
+
+	@Override
+	public XmlElement getXmlElement(boolean createIfNecessary) {
+		final IModelElement element = getActualElement(true/*create*/);
+		if (element != null) {
+			return ((XmlResource)element.resource()).getXmlElement();
+		}
+		return null;
 	}
 
 }

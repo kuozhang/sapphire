@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Shell;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PropertyEditorAssistDecorator
+public class PropertyEditorAssistDecorator
 {
     private static final List<PropertyEditorAssistContributor> SYSTEM_CONTRIBUTORS
         = new ArrayList<PropertyEditorAssistContributor>();
@@ -75,8 +75,8 @@ public final class PropertyEditorAssistDecorator
     private final ModelProperty property;
     private final Collection<String> contributorsToSuppress;
     private final Collection<Class<?>> additionalContributors;
-    private PropertyEditorAssistContext assistContext;
-    private IStatus problem;
+    protected PropertyEditorAssistContext assistContext;
+    protected IStatus problem;
     private boolean mouseOverEditorControl;
     private EditorControlMouseTrackListener mouseTrackListener;
     
@@ -175,7 +175,7 @@ public final class PropertyEditorAssistDecorator
         if( this.assistContext != null && ! this.assistContext.isEmpty() )
         {
             final Rectangle bounds = this.control.getBounds();
-            Point position = this.control.toDisplay( new Point( bounds.x, bounds.y ) );
+            Point position = this.control.getParent().toDisplay( new Point( bounds.x, bounds.y ) );
             position = new Point( position.x + bounds.width + 4, position.y + 2 );
             
             final PropertyEditorAssistDialog dialog 
@@ -283,7 +283,7 @@ public final class PropertyEditorAssistDecorator
         refreshImageAndCursor();
     }
     
-    private void refreshImageAndCursor()
+    protected void refreshImageAndCursor()
     {
         if( this.control.isDisposed() ) 
         {
