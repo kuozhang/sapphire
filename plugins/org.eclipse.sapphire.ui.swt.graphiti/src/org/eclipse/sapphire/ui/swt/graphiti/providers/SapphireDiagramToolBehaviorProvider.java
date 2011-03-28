@@ -11,6 +11,9 @@
 
 package org.eclipse.sapphire.ui.swt.graphiti.providers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
@@ -28,11 +31,14 @@ import org.eclipse.graphiti.tb.DefaultToolBehaviorProvider;
 import org.eclipse.graphiti.tb.IContextButtonPadData;
 import org.eclipse.graphiti.tb.IDecorator;
 import org.eclipse.graphiti.tb.ImageDecorator;
+import org.eclipse.graphiti.ui.services.GraphitiUi;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.def.VerticalAlignment;
 import org.eclipse.sapphire.ui.diagram.def.DecoratorPlacement;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramDecoratorDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramImageDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeProblemDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.ProblemDecoratorSize;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -95,47 +101,20 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 		Object bo = featureProvider.getBusinessObjectForPictogramElement(pe);
 		if (bo instanceof DiagramNodePart)
 		{
+			List<IDecorator> decoratorList = new ArrayList<IDecorator>();			
 			DiagramNodePart nodePart = (DiagramNodePart)bo;
-			IDiagramNodeProblemDecoratorDef decoratorDef = nodePart.getErrorIndicatorDef();
-			if (decoratorDef.isShowDecorator().getContent())
+			
+			if (nodePart.showProblemDecorator())
 			{
-				IModelElement model = nodePart.getModelElement();
-				IStatus status = model.validate();
-				ImageDecorator imageRenderingDecorator = null;
-				if (status.getSeverity() != IStatus.OK)
-				{
-					if (status.getSeverity() == IStatus.WARNING)
-					{
-						if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL)
-						{
-							imageRenderingDecorator = new ImageDecorator(ErrorIndicatorImageProvider.IMG_WARNING_DECORATOR);
-						}
-						else
-						{
-							imageRenderingDecorator = new ImageDecorator(IPlatformImageConstants.IMG_ECLIPSE_WARNING);
-						}
-					}
-					else if (status.getSeverity() == IStatus.ERROR)
-					{
-						if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL)
-						{
-							imageRenderingDecorator = new ImageDecorator(ErrorIndicatorImageProvider.IMG_ERROR_DECORATOR);
-						}
-						else
-						{
-							imageRenderingDecorator = new ImageDecorator(IPlatformImageConstants.IMG_ECLIPSE_ERROR);
-						}
-					}
-				}
-				if (imageRenderingDecorator != null)
-				{
-					Point pt = getErrorIndicatorPosition(nodePart, pe);
-					imageRenderingDecorator.setX(pt.getX());
-					imageRenderingDecorator.setY(pt.getY());
-					imageRenderingDecorator.setMessage(status.getMessage());
-					return new IDecorator[] { imageRenderingDecorator };
-				}
+				addNodeProblemDecorator(pe, nodePart, decoratorList);
 			}
+			
+			List<IDiagramImageDecoratorDef> imageDecorators = nodePart.getImageDecorators();
+			for (IDiagramImageDecoratorDef imageDecorator : imageDecorators)
+			{
+				addNodeImageDecorator(pe, imageDecorator, decoratorList);
+			}
+			return decoratorList.toArray(new IDecorator[0]);
 		}
 		return super.getDecorators(pe);
 	}
@@ -156,9 +135,69 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 		return super.getToolTip(ga);
 	}
 	
-	private Point getErrorIndicatorPosition(DiagramNodePart nodePart, PictogramElement pe)
+	private void addNodeProblemDecorator(PictogramElement pe, DiagramNodePart nodePart, List<IDecorator> decoratorList)
 	{
+		IModelElement model = nodePart.getModelElement();
 		IDiagramNodeProblemDecoratorDef decoratorDef = nodePart.getErrorIndicatorDef();
+		IStatus status = model.validate();
+		ImageDecorator imageRenderingDecorator = null;
+		if (status.getSeverity() != IStatus.OK)
+		{
+			if (status.getSeverity() == IStatus.WARNING)
+			{
+				if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL)
+				{
+					imageRenderingDecorator = new ImageDecorator(ErrorIndicatorImageProvider.IMG_WARNING_DECORATOR);
+				}
+				else
+				{
+					imageRenderingDecorator = new ImageDecorator(IPlatformImageConstants.IMG_ECLIPSE_WARNING);
+				}
+			}
+			else if (status.getSeverity() == IStatus.ERROR)
+			{
+				if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL)
+				{
+					imageRenderingDecorator = new ImageDecorator(ErrorIndicatorImageProvider.IMG_ERROR_DECORATOR);
+				}
+				else
+				{
+					imageRenderingDecorator = new ImageDecorator(IPlatformImageConstants.IMG_ECLIPSE_ERROR);
+				}
+			}
+		}
+		if (imageRenderingDecorator != null)
+		{
+			int indicatorWidth = decoratorDef.getSize().getContent() == ProblemDecoratorSize.LARGE ? LARGE_ERROR_DECORATOR_WIDTH : SMALL_ERROR_DECORATOR_WIDTH;
+			int indicatorHeight = decoratorDef.getSize().getContent() == ProblemDecoratorSize.LARGE ? LARGE_ERROR_DECORATOR_HEIGHT : SMALL_ERROR_DECORATOR_HEIGHT;
+			
+			Point pt = getDecoratorPosition(pe, decoratorDef, indicatorWidth, indicatorHeight);
+			imageRenderingDecorator.setX(pt.getX());
+			imageRenderingDecorator.setY(pt.getY());
+			imageRenderingDecorator.setMessage(status.getMessage());
+			decoratorList.add(imageRenderingDecorator);
+		}		
+	}
+	
+	private void addNodeImageDecorator(PictogramElement pe, IDiagramImageDecoratorDef imageDecoratorDef,
+								List<IDecorator> decoratorList)
+	{
+		String imageId = imageDecoratorDef.getImageId().getContent();
+		if (imageId != null)
+		{
+			ImageDecorator imageRenderingDecorator = new ImageDecorator(imageId);
+			org.eclipse.swt.graphics.Image image = GraphitiUi.getImageService().getImageForId(imageId);
+			int imageWidth = image.getImageData().width;
+			int imageHeight = image.getImageData().height;
+			Point pt = getDecoratorPosition(pe, imageDecoratorDef, imageWidth, imageHeight);
+			imageRenderingDecorator.setX(pt.getX());
+			imageRenderingDecorator.setY(pt.getY());
+			decoratorList.add(imageRenderingDecorator);
+		}
+	}
+	
+	private Point getDecoratorPosition(PictogramElement pe, IDiagramDecoratorDef decoratorDef, int decoratorWidth, int decoratorHeight)
+	{
 		GraphicsAlgorithm referencedGA = null;
 		Text text = null;
 		ContainerShape containerShape = (ContainerShape)pe;
@@ -194,15 +233,12 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 		
 		if (referencedGA != null)
 		{
-			int indicatorWidth = decoratorDef.getSize().getContent() == ProblemDecoratorSize.LARGE ? LARGE_ERROR_DECORATOR_WIDTH : SMALL_ERROR_DECORATOR_WIDTH;
-			int indicatorHeight = decoratorDef.getSize().getContent() == ProblemDecoratorSize.LARGE ? LARGE_ERROR_DECORATOR_HEIGHT : SMALL_ERROR_DECORATOR_HEIGHT;
-
 			HorizontalAlignment horizontalAlign = decoratorDef.getHorizontalAlignment().getContent();						
 			int offsetX = 0;
 			int offsetY = 0;
 			if (horizontalAlign == HorizontalAlignment.RIGHT)
 			{
-				offsetX = referencedGA.getWidth() - indicatorWidth;
+				offsetX = referencedGA.getWidth() - decoratorWidth;
 			    offsetX -= decoratorDef.getHorizontalMargin().getContent();
 			}
 			else if (horizontalAlign == HorizontalAlignment.LEFT)
@@ -211,14 +247,14 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 			}
 			else if (horizontalAlign == HorizontalAlignment.CENTER)
 			{
-				offsetX = (referencedGA.getWidth() - indicatorWidth) >> 1;
+				offsetX = (referencedGA.getWidth() - decoratorWidth) >> 1;
 			}
 			
 			VerticalAlignment verticalAlign = decoratorDef.getVerticalAlignment().getContent();
 			
 			if (verticalAlign == VerticalAlignment.BOTTOM)
 			{
-				offsetY = referencedGA.getHeight() - indicatorHeight;
+				offsetY = referencedGA.getHeight() - decoratorHeight;
 				offsetY -= decoratorDef.getVerticalMargin().getContent();
 			}
 			else if (verticalAlign == VerticalAlignment.TOP)
@@ -227,7 +263,7 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 			}
 			else if (verticalAlign == VerticalAlignment.CENTER)
 			{
-				offsetY = (referencedGA.getHeight() - indicatorHeight) / 2;
+				offsetY = (referencedGA.getHeight() - decoratorHeight) / 2;
 			}
 			
 			return new Point(offsetX + referencedGA.getX(), offsetY + referencedGA.getY());

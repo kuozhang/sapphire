@@ -78,7 +78,17 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
 		}
 		if (sapphireImageProvider != null)
 		{
-			List<DiagramNodeTemplate> nodeTemplates = getDiagramPart().getNodeTemplates();
+			SapphireDiagramEditorPart diagramPart = getDiagramPart();
+			List<IDiagramImageChoice> diagramImages = diagramPart.getImageDecorators();
+			
+			// Add diagram page images
+			for (IDiagramImageChoice imageChoice : diagramImages)
+			{
+				registerImage(sapphireImageProvider, imageChoice);
+			}
+			
+			// Add node images
+			List<DiagramNodeTemplate> nodeTemplates = diagramPart.getNodeTemplates();
 			for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
 			{
 				final IDiagramNodeDef nodeDef = nodeTemplate.getDefinition();
@@ -89,22 +99,7 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
 					ModelElementList<IDiagramImageChoice> images = imageDef.getPossibleImages();
 					for (IDiagramImageChoice imageChoice : images)
 					{
-						ISapphireUiDef uiDef = imageChoice.nearest(ISapphireUiDef.class);
-						String imageId = imageChoice.getImageId().getContent();
-						String imagePath = imageChoice.getImagePath().getContent();
-						String bundleId = resolveImageBundle(uiDef, imagePath);
-						// Graphiti's image provider doesn't support images from different plugins.
-						// See http://www.eclipse.org/forums/index.php?t=tree&th=201973&start=0&S=3813ad4d99f2ac8bd56a0072ffa6ebd9
-						if (bundleId != null)
-						{
-							sapphireImageProvider.setPluginId(bundleId);
-						}
-						
-						if (imageId != null && imagePath != null && 
-								sapphireImageProvider.getImageFilePath(imageId) == null)
-						{
-							sapphireImageProvider.registerImage(imageId, imagePath);
-						}						
+						registerImage(sapphireImageProvider, imageChoice);
 					}
 				}
 			}
@@ -122,6 +117,26 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
         return this.toolBehaviorProviders;
     }
 	    
+    private void registerImage(SapphireDiagramImageProvider sapphireImageProvider, IDiagramImageChoice imageChoice)
+    {
+		ISapphireUiDef uiDef = imageChoice.nearest(ISapphireUiDef.class);
+		String imageId = imageChoice.getImageId().getContent();
+		String imagePath = imageChoice.getImagePath().getContent();
+		String bundleId = resolveImageBundle(uiDef, imagePath);
+		// Graphiti's image provider doesn't support images from different plugins.
+		// See http://www.eclipse.org/forums/index.php?t=tree&th=201973&start=0&S=3813ad4d99f2ac8bd56a0072ffa6ebd9
+		if (bundleId != null)
+		{
+			sapphireImageProvider.setPluginId(bundleId);
+		}
+		
+		if (imageId != null && imagePath != null && 
+				sapphireImageProvider.getImageFilePath(imageId) == null)
+		{
+			sapphireImageProvider.registerImage(imageId, imagePath);
+		}						    	
+    }
+    
     private String resolveImageBundle(ISapphireUiDef def, String imagePath)
     {
     	try

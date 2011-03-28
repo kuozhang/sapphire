@@ -17,7 +17,6 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
@@ -25,13 +24,9 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
-import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
-import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.java.JavaTypeConstraints;
-import org.eclipse.sapphire.modeling.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -164,6 +159,16 @@ public interface IDiagramNodeDef
     ImpliedElementProperty PROP_PROBLEM_DECORATOR = new ImpliedElementProperty( TYPE, "ProblemDecorator" );
     
     IDiagramNodeProblemDecoratorDef getProblemDecorator();
+    
+	// *** ImageDecorators ***
+    
+    @Type( base = IDiagramImageDecoratorDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "image-decorator", type = IDiagramImageDecoratorDef.class ) )
+                             
+    ListProperty PROP_IMAGE_DECORATORS = new ListProperty( TYPE, "ImageDecorators" );
+    
+    ModelElementList<IDiagramImageDecoratorDef> getImageDecorators();
+    
 
     // *** EmbeddedConnections ***
     

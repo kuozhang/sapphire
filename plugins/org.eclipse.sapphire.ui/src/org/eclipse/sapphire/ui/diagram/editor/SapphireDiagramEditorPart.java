@@ -25,6 +25,7 @@ import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramPageDef;
 
@@ -91,6 +92,11 @@ public class SapphireDiagramEditorPart extends SapphirePart
         
 	}
 
+    public List<IDiagramImageChoice> getImageDecorators()
+    {
+    	return this.diagramPageDef.getDiagramImageDecorators();
+    }
+    
 	public List<DiagramNodeTemplate> getNodeTemplates()
 	{
 		return this.nodeTemplates;

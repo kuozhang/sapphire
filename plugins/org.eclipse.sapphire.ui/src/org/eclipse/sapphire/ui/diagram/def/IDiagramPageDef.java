@@ -98,4 +98,14 @@ public interface IDiagramPageDef
     ListProperty PROP_DIAGRAM_CONNECTION_BINDING_DEFS = new ListProperty( TYPE, "DiagramConnectionBindingDefs" );
     
     ModelElementList<IDiagramConnectionBindingDef> getDiagramConnectionBindingDefs();
+    
+	// *** DiagramImageDecorators ***
+    
+    @Type( base = IDiagramImageChoice.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "image-decorator", type = IDiagramImageChoice.class ) )
+                             
+    ListProperty PROP_DIAGRAM_IMAGE_DECORATORS = new ListProperty( TYPE, "DiagramImageDecorators" );
+    
+    ModelElementList<IDiagramImageChoice> getDiagramImageDecorators();
+    
 }

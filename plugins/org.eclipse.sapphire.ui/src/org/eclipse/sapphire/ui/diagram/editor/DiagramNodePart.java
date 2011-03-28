@@ -11,10 +11,13 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -25,6 +28,7 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramImageDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeProblemDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.ImagePlacement;
@@ -41,6 +45,8 @@ public class DiagramNodePart extends SapphirePart
 	private FunctionResult labelFunctionResult;
 	private FunctionResult idFunctionResult;
 	private FunctionResult imageFunctionResult;
+	private FunctionResult problemDecoratorFunctionResult;
+	private List<FunctionResult> imageDecoratorFunctionResults;
 	private ValueProperty labelProperty;
 	private SapphireAction defaultAction;
 	private SapphireActionHandler defaultActionHandler;
@@ -95,6 +101,39 @@ public class DiagramNodePart extends SapphirePart
 	        );
         }
         
+        this.problemDecoratorFunctionResult = initExpression
+        ( 
+        	this.modelElement,
+            this.definition.getProblemDecorator().getShowDecorator(), 
+            new Runnable()
+            {
+                public void run()
+                {
+                }
+            }
+        );
+        
+        // Image decorator functions
+        
+        ModelElementList<IDiagramImageDecoratorDef> imageDecorators = this.definition.getImageDecorators();
+        this.imageDecoratorFunctionResults = new ArrayList<FunctionResult>();
+        for (IDiagramImageDecoratorDef imageDecorator : imageDecorators)
+        {
+        	FunctionResult imageResult = initExpression
+            ( 
+            	this.modelElement,
+                imageDecorator.getShowDecorator(), 
+                new Runnable()
+                {
+                    public void run()
+                    {
+                    	refreshDecorator();
+                    }
+                }
+            );
+            this.imageDecoratorFunctionResults.add(imageResult);
+        }
+        
         // Default Action handler
         this.defaultAction = getAction("Sapphire.Diagram.Node.Default");
         this.defaultActionHandler = this.defaultAction.getFirstActiveHandler();
@@ -121,7 +160,44 @@ public class DiagramNodePart extends SapphirePart
     {
         return this.modelElement;
     }    
+       
+    public boolean showProblemDecorator()
+    {
+        String show = null;
         
+        if( this.problemDecoratorFunctionResult!= null )
+        {
+            show = (String) this.problemDecoratorFunctionResult.value();
+        }
+        
+        if( show != null && show.equals("false"))
+        {
+            return false;
+        }
+        
+        return true;    	
+    }
+    
+    public List<IDiagramImageDecoratorDef> getImageDecorators()
+    {
+    	List<IDiagramImageDecoratorDef> imageDecorators = new ArrayList<IDiagramImageDecoratorDef>();
+    	ModelElementList<IDiagramImageDecoratorDef> defs = this.definition.getImageDecorators();
+    	for (int i = 0; i < this.imageDecoratorFunctionResults.size(); i++)
+    	{
+    		FunctionResult result = this.imageDecoratorFunctionResults.get(i);
+    		IDiagramImageDecoratorDef def = defs.get(i);
+    		if (result != null)
+    		{
+    			String show = (String)result.value();
+    			if (show != null && show.equals("true"))
+    			{
+    				imageDecorators.add(def);
+    			}
+    		}
+    	}
+    	return imageDecorators;
+    }
+    
 	@Override
 	public void render(SapphireRenderingContext context)
 	{
@@ -157,6 +233,12 @@ public class DiagramNodePart extends SapphirePart
 		{
 			this.idFunctionResult.dispose();
 		}
+		
+		if (this.problemDecoratorFunctionResult != null)
+		{
+			this.problemDecoratorFunctionResult.dispose();
+		}
+		
 		this.modelElement.removeListener(this.modelPropertyListener, "*");
 	}
 	

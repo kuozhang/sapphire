@@ -14,11 +14,9 @@ package org.eclipse.sapphire.ui.diagram.def;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -27,31 +25,22 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface IDiagramNodeProblemDecoratorDef 
+public interface IDiagramImageDecoratorDef 
 	
 	extends IDiagramDecoratorDef 
 
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramNodeProblemDecoratorDef.class );
-    
-	// *** ShowDecorator ***
+	ModelElementType TYPE = new ModelElementType( IDiagramImageDecoratorDef.class );
 	
-	@DefaultValue( text = "true" )
+    // *** ImageId ***
+    
+    @Label( standard = "image ID" )
+    @NonNullValue
+    @XmlBinding( path = "id" )
+    
+    ValueProperty PROP_IMAGE_ID = new ValueProperty( TYPE, "ImageId" );
+    
+    Value<String> getImageId();
+    void setImageId( String Id );
 	
-    ValueProperty PROP_SHOW_DECORATOR = new ValueProperty(TYPE, IDiagramDecoratorDef.PROP_SHOW_DECORATOR);
-	
-    // *** Size ***
-    
-    @Type( base = ProblemDecoratorSize.class )
-    @Label( standard = "size")
-    @DefaultValue( text = "large" )
-    @Enablement( expr = "${ ShowDecorator }" )
-    @XmlBinding( path = "size" )
-    
-    ValueProperty PROP_SIZE = new ValueProperty( TYPE, "Size" );
-    
-    Value<ProblemDecoratorSize> getSize();
-    void setSize( String value );
-    void setSize( ProblemDecoratorSize value ) ;
-    
 }
