@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.util.internal;
+package org.eclipse.sapphire.modeling.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -126,6 +126,42 @@ public class MiscUtil
         final String resourcePath = c.getName().replace( '.', '/' ) + "." + resourceLocalName;
         
         return readTextResource( cl, resourcePath );
+    }
+    
+    public final static String collapseWhitespace( final String str ) 
+    {
+        String text = str.trim();
+        
+        final StringBuilder buf = new StringBuilder();
+        boolean skipNextWhitespace = true;
+        
+        for( int i = 0, n = text.length(); i < n; i++ )
+        {
+            final char ch = text.charAt( i );
+            
+            if( Character.isWhitespace( ch ) )
+            {
+                if( ! skipNextWhitespace )
+                {
+                    buf.append( ' ' );
+                    skipNextWhitespace = true;
+                }
+            }
+            else
+            {
+                buf.append( ch );
+                skipNextWhitespace = false;
+            }
+        }
+        
+        final int length = buf.length();
+        
+        if( length > 0 && buf.charAt( length - 1 ) == ' ' )
+        {
+            buf.deleteCharAt( length - 1 );
+        }
+        
+        return buf.toString();
     }
     
 }

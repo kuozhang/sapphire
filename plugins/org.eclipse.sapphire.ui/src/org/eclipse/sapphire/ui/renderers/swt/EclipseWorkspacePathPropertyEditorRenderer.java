@@ -41,7 +41,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileExtensions;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
-import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
+import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;

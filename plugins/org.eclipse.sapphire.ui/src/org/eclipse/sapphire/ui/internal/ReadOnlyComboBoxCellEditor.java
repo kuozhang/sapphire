@@ -19,7 +19,7 @@ import java.util.EventListener;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
+import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.accessibility.ACC;

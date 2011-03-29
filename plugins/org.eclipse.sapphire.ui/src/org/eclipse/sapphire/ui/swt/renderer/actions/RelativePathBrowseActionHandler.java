@@ -46,7 +46,7 @@ import org.eclipse.sapphire.modeling.annotations.BasePathsProviderImpl;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileExtensions;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
-import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
+import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
 import org.eclipse.sapphire.ui.SapphireImageCache;

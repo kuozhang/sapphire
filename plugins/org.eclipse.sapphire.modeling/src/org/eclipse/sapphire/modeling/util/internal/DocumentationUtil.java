@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling.util.internal;
 
+import static org.eclipse.sapphire.modeling.util.MiscUtil.collapseWhitespace;
+
 import org.eclipse.sapphire.modeling.docsys.BoldPart;
 import org.eclipse.sapphire.modeling.docsys.CodePart;
 import org.eclipse.sapphire.modeling.docsys.DocumentationContent;
@@ -34,41 +36,6 @@ public class DocumentationUtil {
     
     private final static String BOLD_BEGIN = "<@#$b>"; 
     private final static String BOLD_END = "</@#$b>"; 
-    
-    public final static String collapseString(final String str) {
-        String text = str.trim();
-        
-        final StringBuilder buf = new StringBuilder();
-        boolean skipNextWhitespace = true;
-        
-        for( int i = 0, n = text.length(); i < n; i++ )
-        {
-            final char ch = text.charAt( i );
-            
-            if( Character.isWhitespace( ch ) )
-            {
-                if( ! skipNextWhitespace )
-                {
-                    buf.append( ' ' );
-                    skipNextWhitespace = true;
-                }
-            }
-            else
-            {
-                buf.append( ch );
-                skipNextWhitespace = false;
-            }
-        }
-        
-        final int length = buf.length();
-        
-        if( length > 0 && buf.charAt( length - 1 ) == ' ' )
-        {
-            buf.deleteCharAt( length - 1 );
-        }
-        
-        return buf.toString();
-    }
     
     public final static String decodeDocumentationTags(final String str) {
         if (str == null)
@@ -102,7 +69,7 @@ public class DocumentationUtil {
         	if (startsWithSpace && buf.toString().endsWith(BOLD_END)) {
         		buf.append(' ');
         	}
-            buf.append(collapseSpaces ? collapseString(str) : str);
+            buf.append(collapseSpaces ? collapseWhitespace(str) : str);
             flags.endsInSpace = endsWithSpace;
         } else if (part instanceof LineBreakPart) {
             buf.append(NEW_LINE);

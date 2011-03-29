@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
+import static org.eclipse.sapphire.modeling.util.MiscUtil.collapseWhitespace;
+
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.sapphire.modeling.ValidateEditException;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
-import org.eclipse.sapphire.modeling.util.internal.DocumentationUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -115,7 +116,7 @@ public abstract class XmlNode
         
         if( removeExtraWhitespace )
         {
-            return DocumentationUtil.collapseString(text);
+            return collapseWhitespace( text );
         }
         
         return text;

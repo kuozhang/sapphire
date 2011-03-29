@@ -14,7 +14,7 @@ package org.eclipse.sapphire.modeling;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
-import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
+import org.eclipse.sapphire.modeling.util.MiscUtil;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
-import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
+import org.eclipse.sapphire.modeling.util.MiscUtil;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

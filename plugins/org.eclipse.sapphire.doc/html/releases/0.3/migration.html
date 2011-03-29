@@ -29,11 +29,36 @@ to 0.3 release. Only changes from the previous milestone are covered.</p>
 <p>Table of Contents</p>
 
 <ol>
+  <li><a href="#modularity">Modularity Changes</a></li>
   <li><a href="#html">HTML Content Presentation</a></li>
   <li><a href="#related-content">Related Content</a></li>
   <li><a href="#composite-ref">Composite Reference</a></li>
   <li><a href="#section-description">Section Description</a></li>
 </ol>
+
+<h2><a name="modularity">Modularity Changes</a></h2>
+
+<p>The contents of some bundles have changes and several new bundles have been created. These changes
+may require adopters to modify Requite-Bundle declarations.</p>
+
+<table>
+  <tr>
+    <th>Packages</th>
+    <th>Old Bundle</th>
+    <th>New Bundle</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>org.eclipse.sapphire.modeling.xml<br/>org.eclipse.sapphire.modeling.xml.annotations<br/>org.eclipse.sapphire.modeling.xml.schema</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>org.eclipse.sapphire.modeling</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>org.eclipse.sapphire.modeling.xml</code></pre>
+    </td>
+  </tr>
+</table>
 
 <h2><a name="html">HTML Content Presentation</a></h2>
 

@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.swt.renderer;
 
-import static org.eclipse.sapphire.modeling.util.internal.MiscUtil.equal;
+import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 
 import java.util.List;
 

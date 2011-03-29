@@ -16,7 +16,7 @@ import org.eclipse.sapphire.modeling.EnumValueType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
-import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
+import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.swt.events.SelectionAdapter;

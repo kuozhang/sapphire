@@ -13,7 +13,7 @@ package org.eclipse.sapphire.ui.internal.binding;
 
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
+import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;

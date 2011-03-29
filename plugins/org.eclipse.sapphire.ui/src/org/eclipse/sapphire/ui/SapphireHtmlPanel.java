@@ -12,7 +12,7 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.modeling.util.internal.MiscUtil.readTextResource;
+import static org.eclipse.sapphire.modeling.util.MiscUtil.readTextResource;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;

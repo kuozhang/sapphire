@@ -14,7 +14,7 @@ package org.eclipse.sapphire.modeling.el;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
+import org.eclipse.sapphire.modeling.util.MiscUtil;
 
 /**
  * Function that returns one of two alternatives depending on a condition. 

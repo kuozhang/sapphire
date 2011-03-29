@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.modeling.el;
 
-import org.eclipse.sapphire.modeling.util.internal.MiscUtil;
+import org.eclipse.sapphire.modeling.util.MiscUtil;
 
 /**
  * An function that reads a property from the context or a child element. 

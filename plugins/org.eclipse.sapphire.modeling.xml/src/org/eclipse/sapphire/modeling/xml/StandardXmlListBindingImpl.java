@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
-import static org.eclipse.sapphire.modeling.util.internal.MiscUtil.contains;
-import static org.eclipse.sapphire.modeling.util.internal.MiscUtil.indexOf;
+import static org.eclipse.sapphire.modeling.util.MiscUtil.contains;
+import static org.eclipse.sapphire.modeling.util.MiscUtil.indexOf;
 
 import java.util.ArrayList;
 import java.util.Collections;
