@@ -202,7 +202,7 @@
             <!-- Stage 7 -->
             
             <property-from-set property=".sapphire.feature">
-              <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire_*.jar"/>
+              <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire.modeling_*.jar"/>
             </property-from-set>
 
             <var name="sapphire.version" unset="true"/>
@@ -254,7 +254,7 @@
           <!-- Determine the version of Sapphire in repository. -->
 
           <property-from-set property=".sapphire.feature">
-            <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire_*.jar"/>
+            <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire.modeling_*.jar"/>
           </property-from-set>
 
           <var name="sapphire.version" unset="true"/>

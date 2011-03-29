@@ -13,27 +13,27 @@
  ******************************************************************************
 -->
 
-<feature id="org.eclipse.sapphire.source" label="%featureName" provider-name="%providerName" version="0.3.0.qualifier">
+<feature id="org.eclipse.sapphire.source" version="0.3.0.qualifier" label="%featureName" provider-name="%providerName">
 
-  <description>
-    %description
-  </description>
+    <description>
+        %description
+    </description>
 
-  <copyright>
-    %copyright
-  </copyright>
+    <copyright>
+        %copyright
+    </copyright>
 
-  <license url="%licenseURL">
-    %license
-  </license>
+    <license url="%licenseURL">
+        %license
+    </license>
 
-  <plugin download-size="0" id="org.eclipse.sapphire.source" install-size="0" unpack="false" version="0.0.0"/>
-  <plugin download-size="0" id="org.eclipse.sapphire.modeling.source" install-size="0" unpack="false" version="0.0.0"/>
-  <plugin download-size="0" id="org.eclipse.sapphire.modeling.extensibility.source" install-size="0" unpack="false" version="0.0.0"/>
-  <plugin download-size="0" id="org.eclipse.sapphire.samples.source" install-size="0" unpack="false" version="0.0.0"/>
-  <plugin download-size="0" id="org.eclipse.sapphire.sdk.source" install-size="0" unpack="false" version="0.0.0"/>
-  <plugin download-size="0" id="org.eclipse.sapphire.tests.source" install-size="0" unpack="false" version="0.0.0"/>
-  <plugin download-size="0" id="org.eclipse.sapphire.ui.source" install-size="0" unpack="false" version="0.0.0"/>
-  <plugin download-size="0" id="org.eclipse.sapphire.ui.swt.graphiti.source" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.modeling.source" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.modeling.extensibility.source" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.modeling.xml.source" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.samples.source" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.sdk.source" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.tests.source" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.ui.source" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.ui.swt.graphiti.source" install-size="0" unpack="false" version="0.0.0"/>
 
 </feature>

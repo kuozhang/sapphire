@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.eclipse.sapphire_##version##.jar" id="org.eclipse.sapphire" version="##version##">
+   <feature url="features/org.eclipse.sapphire.modeling_##version##.jar" id="org.eclipse.sapphire.modeling" version="##version##">
+      <category name="org.eclipse.sapphire"/>
+   </feature>
+   <feature url="features/org.eclipse.sapphire.modeling.xml_##version##.jar" id="org.eclipse.sapphire.modeling.xml" version="##version##">
+      <category name="org.eclipse.sapphire"/>
+   </feature>
+   <feature url="features/org.eclipse.sapphire.ui_##version##.jar" id="org.eclipse.sapphire.ui" version="##version##">
       <category name="org.eclipse.sapphire"/>
    </feature>
    <feature url="features/org.eclipse.sapphire.sdk_##version##.jar" id="org.eclipse.sapphire.sdk" version="##version##">
@@ -17,7 +23,7 @@
    </feature>
    <category-def name="org.eclipse.sapphire" label="Sapphire">
       <description>
-         Sapphire is a framework for improving UI development. It raises UI development to a higher level of abstraction by defining UI in terms of property editors instead of individual controls.
+         Sapphire is a user interface development framework that improves productivity. Instead of focusing on individual widgets, layouts and data binding, the developers focus on modeling the semantics of the data and declaring the general intent of how the data it to be presented.
       </description>
    </category-def>
 </site>

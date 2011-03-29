@@ -13,12 +13,26 @@
  ******************************************************************************
 -->
 
-<feature id="org.eclipse.sapphire.stage2" version="0.3.0.qualifier" label="Sapphire Build Stage 2" provider-name="Eclipse.org - Sapphire">
+<feature id="org.eclipse.sapphire.ui" version="0.3.0.qualifier" label="%featureName" provider-name="%providerName">
 
-    <plugin download-size="0" id="org.eclipse.sapphire.modeling" install-size="0" unpack="false" version="0.0.0"/>
-    <plugin download-size="0" id="org.eclipse.sapphire.modeling.extensibility" install-size="0" unpack="false" version="0.0.0"/>
-    <plugin download-size="0" id="org.eclipse.sapphire.modeling.xml" install-size="0" unpack="false" version="0.0.0"/>
+    <description>
+        %description
+    </description>
+
+    <copyright>
+        %copyright
+    </copyright>
+
+    <license url="%licenseURL">
+        %license
+    </license>
+
+    <requires>
+        <import feature="org.eclipse.sapphire.modeling" version="0.3.0"/>
+        <import feature="org.eclipse.sapphire.modeling.xml" version="0.3.0"/>
+    </requires>
+
     <plugin download-size="0" id="org.eclipse.sapphire.ui" install-size="0" unpack="false" version="0.0.0"/>
-    <plugin download-size="0" id="org.eclipse.sapphire.sdk" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.ui.swt.graphiti" install-size="0" unpack="false" version="0.0.0"/>
 
 </feature>

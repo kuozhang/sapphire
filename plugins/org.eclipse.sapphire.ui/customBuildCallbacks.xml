@@ -103,7 +103,7 @@
            preprocessdir="@{preprocessdir}"
            classpath="apt-classpath.jar"
            factorypathref="safe.apt.factorypath"
-           compile="@{compile}"/>
+           compile="@{compile}" failonerror="false"/>
 
       <delete file="apt-classpath.jar"/>
       <delete file="apt-factorypath.jar"/>

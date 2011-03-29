@@ -13,12 +13,14 @@
  ******************************************************************************
 -->
 
-<feature id="org.eclipse.sapphire.stage3" label="Sapphire Build Stage 3" provider-name="Eclipse" version="0.3.0.qualifier">
+<feature id="org.eclipse.sapphire.stage3" version="0.3.0.qualifier" label="Sapphire Build Stage 3" provider-name="Eclipse.org - Sapphire">
 
-  <includes id="org.eclipse.sapphire" version="0.0.0"/>
-  <includes id="org.eclipse.sapphire.sdk" version="0.0.0"/>
-  <includes id="org.eclipse.sapphire.samples" version="0.0.0"/>
-  <includes id="org.eclipse.sapphire.tests" version="0.0.0"/>
-  <includes id="org.eclipse.sapphire.source" version="0.0.0"/>
+    <includes id="org.eclipse.sapphire.modeling" version="0.0.0"/>
+    <includes id="org.eclipse.sapphire.modeling.xml" version="0.0.0"/>
+    <includes id="org.eclipse.sapphire.ui" version="0.0.0"/>
+    <includes id="org.eclipse.sapphire.sdk" version="0.0.0"/>
+    <includes id="org.eclipse.sapphire.samples" version="0.0.0"/>
+    <includes id="org.eclipse.sapphire.tests" version="0.0.0"/>
+    <includes id="org.eclipse.sapphire.source" version="0.0.0"/>
 
 </feature>
