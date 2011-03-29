@@ -646,6 +646,13 @@
                                 </action-handler>
                             </child-property>
                         </property-editor>
+                        <property-editor>
+                            <property>List</property>
+                            <hint>
+                                <name>factory</name>
+                                <value>CompactListPropertyEditorRenderer$Factory</value>
+                            </hint>
+                        </property-editor>
                     </content>
                 </section>
             </node>
