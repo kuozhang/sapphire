@@ -19,14 +19,14 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class XmlContentModelReference extends XmlContentModel
+public final class XmlContentModelReference extends XmlContentModel
 {
     private QName contentModelName;
     
-    public XmlContentModelReference( final XmlDocumentSchema schema,
-                                     final QName contentModelName,
-                                     final int minOccur,
-                                     final int maxOccur )
+    protected XmlContentModelReference( final XmlDocumentSchema schema,
+                                        final QName contentModelName,
+                                        final int minOccur,
+                                        final int maxOccur )
     {
         super( schema, minOccur, maxOccur );
 
@@ -149,6 +149,32 @@ public class XmlContentModelReference extends XmlContentModel
 
         buf.append( indent );
         buf.append( '}' );
+    }
+    
+    public static final class Factory extends XmlContentModel.Factory
+    {
+        private QName contentModelName;
+        
+        public QName getContentModelName()
+        {
+            return this.contentModelName;
+        }
+
+        public void setContentModelName( final QName contentModelName )
+        {
+            this.contentModelName = contentModelName;
+        }
+        
+        public void setContentModelName( final String contentModelName )
+        {
+            this.contentModelName = new QName( contentModelName );
+        }
+
+        @Override
+        public XmlContentModel create( final XmlDocumentSchema schema )
+        {
+            return new XmlContentModelReference( schema, this.contentModelName, this.minOccur, this.maxOccur );
+        }
     }
     
 }

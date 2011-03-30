@@ -25,9 +25,9 @@ public abstract class XmlContentModel
     protected final int minOccur;
     protected final int maxOccur;
     
-    public XmlContentModel( final XmlDocumentSchema schema,
-                            final int minOccur,
-                            final int maxOccur )
+    protected XmlContentModel( final XmlDocumentSchema schema,
+                               final int minOccur,
+                               final int maxOccur )
     {
         this.schema = schema;
         this.minOccur = minOccur;
@@ -125,6 +125,34 @@ public abstract class XmlContentModel
     protected static class Position
     {
         public int listIndex = 0;
+    }
+    
+    public static abstract class Factory
+    {
+        protected int minOccur = 1;
+        protected int maxOccur = 1;
+        
+        public final int getMinOccur()
+        {
+            return this.minOccur;
+        }
+        
+        public final void setMinOccur( final int minOccur )
+        {
+            this.minOccur = minOccur;
+        }
+        
+        public final int getMaxOccur()
+        {
+            return this.maxOccur;
+        }
+        
+        public final void setMaxOccur( final int maxOccur )
+        {
+            this.maxOccur = maxOccur;
+        }
+        
+        public abstract XmlContentModel create( final XmlDocumentSchema schema );
     }
     
 }

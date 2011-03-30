@@ -1,0 +1,3 @@
+<!ELEMENT student ( %name;, institution ) >
+<!ELEMENT worker ( %name;, company ) >
+<!ENTITY % name "( ( first-name, middle-name, last-name ) | ( full-name ) )" >

@@ -11,14 +11,9 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.xsd.t0001;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
@@ -29,6 +24,7 @@ import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchemasCache;
 import org.eclipse.sapphire.modeling.xml.schema.XmlElementDefinition;
 import org.eclipse.sapphire.modeling.xml.schema.XmlSequenceGroup;
+import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
  * Tests handling of XML Schema redefine directive.
@@ -38,7 +34,7 @@ import org.eclipse.sapphire.modeling.xml.schema.XmlSequenceGroup;
 
 public final class TestXmlXsd0001
 
-    extends TestCase
+    extends SapphireTestCase
     
 {
     private TestXmlXsd0001( final String name )
@@ -88,54 +84,6 @@ public final class TestXmlXsd0001
         final String result = new String( resourceStore.getContents(), "UTF-8" );
         
         assertEqualsIgnoreNewLineDiffs( loadResource( "0001.txt" ), result );
-    }
-    
-    private InputStream loadResourceAsStream( final String name )
-    {
-        final InputStream in = getClass().getResourceAsStream( name );
-        
-        if( in == null )
-        {
-            throw new IllegalArgumentException( name );
-        }
-        
-        return in;
-    }
-    
-    private String loadResource( final String name )
-    
-        throws Exception
-        
-    {
-        final InputStream in = loadResourceAsStream( name );
-        
-        try
-        {
-            final BufferedReader r = new BufferedReader( new InputStreamReader( in ) );
-            final char[] chars = new char[ 1024 ];
-            final StringBuilder buf = new StringBuilder();
-            
-            for( int i = r.read( chars ); i != -1; i = r.read( chars ) )
-            {
-                buf.append( chars, 0, i );
-            }
-            
-            return buf.toString();
-        }
-        finally
-        {
-            try
-            {
-                in.close();
-            }
-            catch( IOException e ) {}
-        }
-    }
-    
-    private static void assertEqualsIgnoreNewLineDiffs( final String expected, 
-                                                        final String actual ) 
-    {
-        assertEquals( expected.replace( "\r", "" ), actual.replace( "\r", "" ) );
     }
     
 }

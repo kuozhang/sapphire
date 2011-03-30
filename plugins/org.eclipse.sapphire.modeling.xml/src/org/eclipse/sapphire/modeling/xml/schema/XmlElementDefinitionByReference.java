@@ -17,15 +17,15 @@ import javax.xml.namespace.QName;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class XmlElementDefinitionByReference extends XmlElementDefinition
+public final class XmlElementDefinitionByReference extends XmlElementDefinition
 {
     private QName contentModelName = null;
     private boolean contentModelResolved = false;
     
-    public XmlElementDefinitionByReference( final XmlDocumentSchema schema,
-                                            final QName elementName,
-                                            final int minOccur,
-                                            final int maxOccur )
+    private XmlElementDefinitionByReference( final XmlDocumentSchema schema,
+                                             final QName elementName,
+                                             final int minOccur,
+                                             final int maxOccur )
     {
         super( schema, elementName, null, minOccur, maxOccur );
     }
@@ -45,8 +45,18 @@ public class XmlElementDefinitionByReference extends XmlElementDefinition
             QName contentModelName = null;
             
             final QName ref = getName();
-            final String refSchemaLocation = getSchema().getSchemaLocation( ref.getNamespaceURI() );
-            final XmlDocumentSchema refSchema = XmlDocumentSchemasCache.getSchema( refSchemaLocation );
+            final String namespace = ref.getNamespaceURI();
+            final XmlDocumentSchema refSchema;
+            
+            if( namespace == null || namespace.length() == 0 )
+            {
+                refSchema = getSchema();
+            }
+            else
+            {
+                final String refSchemaLocation = getSchema().getSchemaLocation( namespace );
+                refSchema = XmlDocumentSchemasCache.getSchema( refSchemaLocation );
+            }
             
             if( refSchema != null )
             {
@@ -69,6 +79,33 @@ public class XmlElementDefinitionByReference extends XmlElementDefinition
         }
         
         return this.contentModelName;
+    }
+    
+    public static final class Factory extends XmlElementDefinition.Factory
+    {
+        @Override
+        public QName getContentModelName()
+        {
+            throw new UnsupportedOperationException();
+        }
+        
+        @Override
+        public void setContentModelName( final QName contentModelName )
+        {
+            throw new UnsupportedOperationException();
+        }
+        
+        @Override
+        public void setContentModelName( final String contentModelName )
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public XmlContentModel create( final XmlDocumentSchema schema )
+        {
+            return new XmlElementDefinitionByReference( schema, this.elementName, this.minOccur, this.maxOccur );
+        }
     }
     
 }

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.sapphire.ui.swt.renderer.internal.formtext;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.ColumnLayout;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
 /**
  * Classes that extend abstract class Layout and implement this interface can
  * take part in layout computation of the TableWrapLayout manager. This layout

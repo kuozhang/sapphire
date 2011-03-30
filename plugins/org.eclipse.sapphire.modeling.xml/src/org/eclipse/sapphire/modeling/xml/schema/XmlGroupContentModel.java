@@ -26,27 +26,14 @@ public abstract class XmlGroupContentModel extends XmlContentModel
     private final List<XmlContentModel> nestedContent = new ArrayList<XmlContentModel>();
     private final List<XmlContentModel> nestedContentReadOnly = Collections.unmodifiableList( this.nestedContent );
     
-    public XmlGroupContentModel( final XmlDocumentSchema schema,
-                                 final int minOccur,
-                                 final int maxOccur,
-                                 final List<XmlContentModel> list )
+    protected XmlGroupContentModel( final XmlDocumentSchema schema,
+                                    final int minOccur,
+                                    final int maxOccur,
+                                    final List<XmlContentModel> list )
     {
         super( schema, minOccur, maxOccur );
         
         this.nestedContent.addAll( list );
-    }
-
-    public XmlGroupContentModel( final XmlDocumentSchema schema,
-                                 final int minOccur,
-                                 final int maxOccur,
-                                 final XmlContentModel... list )
-    {
-        super( schema, minOccur, maxOccur );
-        
-        for( XmlContentModel cm : list )
-        {
-            this.nestedContent.add( cm );
-        }
     }
     
     public List<XmlContentModel> getNestedContent()
@@ -68,6 +55,29 @@ public abstract class XmlGroupContentModel extends XmlContentModel
         }
         
         return null;
+    }
+    
+    public static abstract class Factory extends XmlContentModel.Factory
+    {
+        protected final List<XmlContentModel.Factory> nestedContent = new ArrayList<XmlContentModel.Factory>();
+        
+        public final List<XmlContentModel.Factory> getNestedContent()
+        {
+            return Collections.unmodifiableList( this.nestedContent );
+        }
+        
+        public final void addNestedContent( final XmlContentModel.Factory child )
+        {
+            if( child != null )
+            {
+                this.nestedContent.add( child );
+            }
+        }
+        
+        public final boolean hasNestedContent()
+        {
+            return ! this.nestedContent.isEmpty();
+        }
     }
     
 }

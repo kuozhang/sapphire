@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.modeling.xml.schema;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -22,24 +23,16 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class XmlChoiceGroup extends XmlGroupContentModel
+public final class XmlChoiceGroup extends XmlGroupContentModel
 {
-    public XmlChoiceGroup( final XmlDocumentSchema schema,
-                           final int minOccur,
-                           final int maxOccur,
-                           final List<XmlContentModel> list )
+    XmlChoiceGroup( final XmlDocumentSchema schema,
+                    final int minOccur,
+                    final int maxOccur,
+                    final List<XmlContentModel> list )
     {
         super( schema, minOccur, maxOccur, list );
     }
     
-    public XmlChoiceGroup( final XmlDocumentSchema schema,
-                           final int minOccur,
-                           final int maxOccur,
-                           final XmlContentModel... list )
-    {
-        super( schema, minOccur, maxOccur, list );
-    }
-
     @Override
     protected InsertionPosition findInsertionPosition( final NodeList nodeList,
                                                        final int nodeListLength,
@@ -138,6 +131,22 @@ public class XmlChoiceGroup extends XmlGroupContentModel
         
         buf.append( indent );
         buf.append( '}' );
+    }
+    
+    public static final class Factory extends XmlGroupContentModel.Factory
+    {
+        @Override
+        public XmlContentModel create( final XmlDocumentSchema schema )
+        {
+            final List<XmlContentModel> nestedContent = new ArrayList<XmlContentModel>();
+            
+            for( XmlContentModel.Factory f : this.nestedContent )
+            {
+                nestedContent.add( f.create( schema ) );
+            }
+            
+            return new XmlChoiceGroup( schema, this.minOccur, this.maxOccur, nestedContent );
+        }
     }
     
 }

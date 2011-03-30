@@ -13,7 +13,9 @@ package org.eclipse.sapphire.ui.swt.renderer.internal.formtext;
 
 import java.util.Hashtable;
 
-import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.forms.HyperlinkSettings;
 
 /**

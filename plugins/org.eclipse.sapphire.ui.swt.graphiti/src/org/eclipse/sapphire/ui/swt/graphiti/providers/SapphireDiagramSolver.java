@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.swt.graphiti.providers;
 import java.util.HashMap;
 
 import org.eclipse.graphiti.features.impl.IIndependenceSolver;
-import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
 

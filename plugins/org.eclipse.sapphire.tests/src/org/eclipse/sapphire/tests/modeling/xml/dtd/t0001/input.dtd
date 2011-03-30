@@ -1,0 +1,13 @@
+<!ELEMENT people ( person )* >
+<!ELEMENT person ( name, birthdate?, gender?, socialsecuritynumber? ) >
+<!ELEMENT name ( #PCDATA) >
+<!ELEMENT birthdate ( #PCDATA ) >
+<!ELEMENT gender ( #PCDATA ) >
+<!ELEMENT socialsecuritynumber ( #PCDATA ) >
+
+<!ATTLIST person 
+    id       ID              #REQUIRED
+    hidden   CDATA           #IMPLIED
+    include  CDATA           #FIXED "true"
+    print    ( yes | no )    "yes"
+>

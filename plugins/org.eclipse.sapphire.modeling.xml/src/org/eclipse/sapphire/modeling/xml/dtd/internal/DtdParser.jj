@@ -1,0 +1,324 @@
+/******************************************************************************
+ * Copyright (c) 2011 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************/
+
+
+/***********
+ * OPTIONS *
+ ***********/
+
+options 
+{
+    JAVA_UNICODE_ESCAPE = false;
+    UNICODE_INPUT = true;
+    STATIC = false;
+}
+
+
+/********************
+ * PARSER JAVA CODE *
+ ********************/
+
+PARSER_BEGIN( DtdParserImpl )
+
+package org.eclipse.sapphire.modeling.xml.dtd.internal;
+
+import java.util.*;
+import org.eclipse.sapphire.modeling.xml.schema.*;
+
+@SuppressWarnings( "all" )
+public class DtdParserImpl
+{
+    public final XmlDocumentSchema.Factory schema = new XmlDocumentSchema.Factory();
+    public final Map<String,String> entities = new HashMap<String,String>();
+}
+
+PARSER_END( DtdParserImpl )
+
+
+/**********
+ * TOKENS *
+ **********/
+
+TOKEN :
+{
+    < #NAME_START_CHAR : 
+        [
+            ":",
+            "_",
+            "A"       - "Z",
+            "a"       - "z",
+            "\u00C0"  - "\u00D6",
+            "\u00D8"  - "\u00F6",
+            "\u00F8"  - "\u02FF",
+            "\u0370"  - "\u037D",
+            "\u037F"  - "\u1FFF",
+            "\u200C"  - "\u200D",
+            "\u2070"  - "\u218F",
+            "\u2C00"  - "\u2FEF",
+            "\u3001"  - "\uD7FF",
+            "\uF900"  - "\uFDCF",
+            "\uFDF0"  - "\uFFFD"
+        ]
+    >
+|
+    < #NAME_CHAR : 
+        (
+            <NAME_START_CHAR>
+        |
+            [
+                "-",
+                ".",
+                "0" - "9",
+                "\u00B7",
+                "\u0300" - "\u036F",
+                "\u203F" - "\u2040"
+            ]
+        )
+    >
+|
+    < FIXED : "#FIXED" >
+|
+    < IMPLIED : "#IMPLIED" >
+|
+    < PCDATA : "#PCDATA" >
+|
+    < REQUIRED : "#REQUIRED" >
+|
+    < CDATA : "CDATA" >
+|
+    < ANY : "ANY" >
+|
+    < EMPTY : "EMPTY" >
+|
+    < ID : "ID" >
+|
+    < IDREF : "IDREF" >
+|
+    < IDREFS : "IDREFS" >
+|
+    < ENTITY : "ENTITY" >
+|
+    < ENTITIES : "ENTITIES" >
+|
+    < NMTOKEN : "NMTOKEN" >
+|
+    < NMTOKENS : "NMTOKENS" >
+|
+    < NOTATION : "NOTATION" >
+|
+    < NAME : <NAME_START_CHAR> ( <NAME_CHAR> )* >
+|
+    < ENTITY_REF : ( "%" <NAME> ";" ) >
+|
+    < QUOTEDSTR : ( "'" ( ~[ "'" ] )* "'" ) | (  "\"" ( ~[ "\"" ] )* "\"" ) >
+}
+
+SKIP :
+{
+    < ( " " | "\t" | "\n" | "\r" )+ >
+|
+    < "<!--" ( ~[ "-" ] | ( "-" ~[ "-" ] ) )* "-->"    >
+|
+    < "<?" ( ~[ ">" ] )* ">" >
+}
+
+
+/***********
+ * GRAMMAR *
+ ***********/
+
+void Start() :
+{
+}
+{
+    ( ElementDefinition() | AttributeListDefinition() | EntityDefinition() )* <EOF>
+}
+
+void ElementDefinition() :
+{
+    Token n;
+    XmlContentModel.Factory c;
+}
+{
+    "<!ELEMENT" 
+    n = <NAME> 
+    (
+        <EMPTY> 
+    |
+        <ANY>
+    |
+        c = ContentModel()
+        {
+            if( c != null )
+            {
+                this.schema.addContentModel( n.image, c );
+            
+                final XmlElementDefinition.Factory f = new XmlElementDefinition.Factory();
+                f.setName( n.image );
+                f.setContentModelName( n.image );
+            
+                this.schema.addTopLevelElement( f );
+            }
+        }
+    )
+    ">"
+}
+
+XmlContentModel.Factory ContentModel() :
+{
+    Token n;
+    XmlContentModel.Factory c;
+    XmlContentModel.Factory d;
+    XmlGroupContentModel.Factory g = null;
+}
+{
+    (
+        n = <NAME>
+        {{
+            final XmlElementDefinitionByReference.Factory f = new XmlElementDefinitionByReference.Factory();
+            f.setName( n.image );
+            c = f;
+        }}
+    |
+        <PCDATA>
+        {
+            c = null;
+        }
+    |
+        <ENTITY_REF>
+        {
+            c = null;
+        }
+    |
+        "(" 
+        c = ContentModel()
+        (
+            (
+                "|" 
+                d = ContentModel()
+                {
+                    if( g == null )
+                    {
+                        g = new XmlChoiceGroup.Factory();
+                        g.addNestedContent( c );
+                        c = g;
+                    }
+                    
+                    g.addNestedContent( d );
+                }
+            )+ 
+        |
+            (
+                ","
+                d = ContentModel()
+                {{
+                    if( g == null )
+                    {
+                        g = new XmlSequenceGroup.Factory();
+                        g.addNestedContent( c );
+                        c = g;
+                    }
+                    
+                    g.addNestedContent( d );
+                }}
+            )+
+        )?
+        ")"
+    )
+    (
+        "*"
+        {
+            if( c != null )
+            {
+                c.setMinOccur( 0 );
+                c.setMaxOccur( -1 );
+            }
+        }
+    |
+        "+"
+        {
+            if( c != null )
+            {
+                c.setMinOccur( 1 );
+                c.setMaxOccur( -1 );
+            }
+        }
+    |
+        "?"
+        {
+            if( c != null )
+            {
+                c.setMinOccur( 0 );
+                c.setMaxOccur( 1 );
+            }
+        }
+    )?
+    {
+        return c;
+    }
+}
+
+void AttributeListDefinition() :
+{
+}
+{
+    "<!ATTLIST" 
+    <NAME> 
+    (
+        <NAME>
+        (
+            <CDATA> 
+        |
+            <ID>
+        |
+            <IDREF>
+        |
+            <IDREFS>
+        |
+            <ENTITY>
+        |
+            <ENTITIES>
+        |
+            <NMTOKEN>
+        |
+            <NMTOKENS>
+        |
+            <NOTATION> "(" <NAME> ( "|" <NAME> )* ")" 
+        |
+            "(" <NAME> ( "|" <NAME> )* ")"
+        )
+        (
+            <REQUIRED> | <IMPLIED> | ( [ <FIXED> ] <QUOTEDSTR> )
+        )
+    )*
+    ">"
+}
+
+void EntityDefinition() :
+{
+    Token n, v;
+}
+{
+    "<!ENTITY"
+    "%" 
+    n = <NAME>
+    v = <QUOTEDSTR>
+    ">"
+    {
+        final int length = v.image.length();
+        
+        if( length > 2 )
+        {
+            final String value = v.image.substring( 1, length - 1 );
+            this.entities.put( n.image, value );
+        }
+    }
+}

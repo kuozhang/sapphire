@@ -1,0 +1,37 @@
+element [1:1]
+{
+    name = person
+    type = person
+}
+
+element [1:1]
+{
+    name = people
+    type = people
+}
+
+person = sequence [1:1]
+{
+    element [1:1]
+    {
+        name = name
+    }
+    element [0:1]
+    {
+        name = birthdate
+    }
+    element [0:1]
+    {
+        name = gender
+    }
+    element [0:1]
+    {
+        name = socialsecuritynumber
+    }
+}
+
+people = element [0:-1]
+{
+    name = person
+    type = person
+}

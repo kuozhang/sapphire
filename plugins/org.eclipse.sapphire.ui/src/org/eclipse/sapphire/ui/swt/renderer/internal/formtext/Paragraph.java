@@ -10,13 +10,16 @@
  *******************************************************************************/
 package org.eclipse.sapphire.ui.swt.renderer.internal.formtext;
 
-import java.io.*;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.forms.HyperlinkSettings;
 
 /**

@@ -93,7 +93,7 @@ public final class FindInsertionPositionTests
                 element( "A", 0, -1 ),
                 element( "B", 0, -1 ),
                 element( "C", 0, -1 )
-            );
+            ).create( null );
         
         final String start = "<root></root>";
         final String expected = "<root><A/></root>";
@@ -111,7 +111,7 @@ public final class FindInsertionPositionTests
                 element( "A", 0, -1 ),
                 element( "B", 0, -1 ),
                 element( "C", 0, -1 )
-            );
+            ).create( null );
         
         final String start = "<root></root>";
         final String expected = "<root><B/></root>";
@@ -129,7 +129,7 @@ public final class FindInsertionPositionTests
                 element( "A", 0, -1 ),
                 element( "B", 0, -1 ),
                 element( "C", 0, -1 )
-            );
+            ).create( null );
         
         final String start = "<root><A/><A/><B/><B/><C/><C/></root>";
         final String expected = "<root><A/><A/><A/><B/><B/><C/><C/></root>";
@@ -147,7 +147,7 @@ public final class FindInsertionPositionTests
                 element( "A", 0, -1 ),
                 element( "B", 0, -1 ),
                 element( "C", 0, -1 )
-            );
+            ).create( null );
         
         final String start = "<root><A/><A/><B/><B/><C/><C/></root>";
         final String expected = "<root><A/><A/><B/><B/><B/><C/><C/></root>";
@@ -165,7 +165,7 @@ public final class FindInsertionPositionTests
                 element( "A", 0, -1 ),
                 element( "B", 0, -1 ),
                 element( "C", 0, -1 )
-            );
+            ).create( null );
         
         final String start = "<root><A/><A/><B/><B/><C/><C/></root>";
         final String expected = "<root><A/><A/><B/><B/><C/><C/><C/></root>";
@@ -183,7 +183,7 @@ public final class FindInsertionPositionTests
                 element( "A", 1, 1 ),
                 element( "B", 1, 1 ),
                 element( "C", 1, 1 )
-            );
+            ).create( null );
         
         final String start = "<root><A/><A/><B/><A/><C/><B/></root>";
         final String expected = "<root><A/><A/><B/><A/><C/><B/><A/></root>";
@@ -201,7 +201,7 @@ public final class FindInsertionPositionTests
                 element( "A", 1, 1 ),
                 element( "B", 1, 1 ),
                 element( "C", 1, 1 )
-            );
+            ).create( null );
         
         final String start = "<root><A/><A/><B/><A/><C/><B/></root>";
         final String expected = "<root><A/><A/><B/><A/><C/><B/><B/></root>";
@@ -219,7 +219,7 @@ public final class FindInsertionPositionTests
                 element( "A", 1, 1 ),
                 element( "B", 1, 1 ),
                 element( "C", 1, 1 )
-            );
+            ).create( null );
         
         final String start = "<root><A/><A/><B/><A/><C/><B/></root>";
         final String expected = "<root><A/><A/><B/><A/><C/><B/><C/></root>";
@@ -243,7 +243,7 @@ public final class FindInsertionPositionTests
                     element( "D", 0, -1 )
                 ),
                 element( "E", 1, 1 )
-            );
+            ).create( null );
         
         final String start =
             
@@ -293,7 +293,7 @@ public final class FindInsertionPositionTests
                     element( "D", 0, -1 )
                 ),
                 element( "E", 1, 1 )
-            );
+            ).create( null );
         
         final String start =
             
@@ -343,7 +343,7 @@ public final class FindInsertionPositionTests
                     element( "D", 0, -1 )
                 ),
                 element( "E", 1, 1 )
-            );
+            ).create( null );
         
         final String start =
             
@@ -395,7 +395,7 @@ public final class FindInsertionPositionTests
                     element( "D", 0, -1 )
                 ),
                 element( "E", 1, 1 )
-            );
+            ).create( null );
         
         final String start =
             
@@ -446,7 +446,7 @@ public final class FindInsertionPositionTests
                     element( "B", 0, -1 ),
                     element( "E", 1, 1 )
                 )
-            );
+            ).create( null );
         
         // AC -> ACB
         
@@ -473,7 +473,7 @@ public final class FindInsertionPositionTests
                     element( "B", 0, -1 ),
                     element( "E", 1, 1 )
                 )
-            );
+            ).create( null );
         
         // ACDBBE  -> ABCDBBE
         
@@ -500,7 +500,7 @@ public final class FindInsertionPositionTests
                     element( "B", 0, -1 ),
                     element( "E", 1, 1 )
                 )
-            );
+            ).create( null );
         
         // ABCDBBE -> ABCDBBBE
         
@@ -538,7 +538,7 @@ public final class FindInsertionPositionTests
                         element( "E", 1, 1 )
                     )
                 )
-            );
+            ).create( null );
         
         // ABDC -> AXBDC
         
@@ -576,7 +576,7 @@ public final class FindInsertionPositionTests
                         element( "E", 1, 1 )
                     )
                 )
-            );
+            ).create( null );
         
         // AXBDC -> AXBDXC
         
@@ -614,7 +614,7 @@ public final class FindInsertionPositionTests
                         element( "E", 1, 1 )
                     )
                 )
-            );
+            ).create( null );
         
         // AXBDE -> AXBXDE
         
@@ -663,25 +663,51 @@ public final class FindInsertionPositionTests
         }
     }
     
-    private static XmlChoiceGroup choice( final int minOccur,
-                                          final int maxOccur,
-                                          final XmlContentModel... list )
+    private static XmlChoiceGroup.Factory choice( final int minOccur,
+                                                  final int maxOccur,
+                                                  final XmlContentModel.Factory... list )
     {
-        return new XmlChoiceGroup( null, minOccur, maxOccur, list );
+        final XmlChoiceGroup.Factory factory = new XmlChoiceGroup.Factory();
+        
+        factory.setMinOccur( minOccur );
+        factory.setMaxOccur( maxOccur );
+        
+        for( XmlContentModel.Factory child : list )
+        {
+            factory.addNestedContent( child );
+        }
+        
+        return factory;
     }
 
-    private static XmlSequenceGroup sequence( final int minOccur,
-                                              final int maxOccur,
-                                              final XmlContentModel... list )
+    private static XmlSequenceGroup.Factory sequence( final int minOccur,
+                                                      final int maxOccur,
+                                                      final XmlContentModel.Factory... list )
     {
-        return new XmlSequenceGroup( null, minOccur, maxOccur, list );
+        final XmlSequenceGroup.Factory factory = new XmlSequenceGroup.Factory();
+        
+        factory.setMinOccur( minOccur );
+        factory.setMaxOccur( maxOccur );
+        
+        for( XmlContentModel.Factory child : list )
+        {
+            factory.addNestedContent( child );
+        }
+        
+        return factory;
     }
     
-    private static XmlElementDefinition element( final String name,
-                                                 final int minOccur,
-                                                 final int maxOccur )
+    private static XmlElementDefinition.Factory element( final String name,
+                                                         final int minOccur,
+                                                         final int maxOccur )
     {
-        return new XmlElementDefinition( null, new QName( name ), null, minOccur, maxOccur );
+        final XmlElementDefinition.Factory factory = new XmlElementDefinition.Factory();
+        
+        factory.setName( name );
+        factory.setMinOccur( minOccur );
+        factory.setMaxOccur( maxOccur );
+        
+        return factory;
     }
     
     private static Element parse( final String content )

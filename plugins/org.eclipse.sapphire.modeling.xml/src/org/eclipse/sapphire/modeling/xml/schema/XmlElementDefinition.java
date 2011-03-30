@@ -25,11 +25,11 @@ public class XmlElementDefinition extends XmlContentModel
     private QName elementName;
     private QName contentModelName;
     
-    public XmlElementDefinition( final XmlDocumentSchema schema,
-                                 final QName elementName,
-                                 final QName contentModelName,
-                                 final int minOccur,
-                                 final int maxOccur )
+    protected XmlElementDefinition( final XmlDocumentSchema schema,
+                                    final QName elementName,
+                                    final QName contentModelName,
+                                    final int minOccur,
+                                    final int maxOccur )
     {
         super( schema, minOccur, maxOccur );
 
@@ -172,6 +172,48 @@ public class XmlElementDefinition extends XmlContentModel
 
         buf.append( indent );
         buf.append( '}' );
+    }
+    
+    public static class Factory extends XmlContentModel.Factory
+    {
+        protected QName elementName;
+        private QName contentModelName;
+        
+        public final QName getName()
+        {
+            return this.elementName;
+        }
+
+        public final void setName( final QName elementName )
+        {
+            this.elementName = elementName;
+        }
+        
+        public final void setName( final String elementName )
+        {
+            this.elementName = new QName( elementName );
+        }
+        
+        public QName getContentModelName()
+        {
+            return this.contentModelName;
+        }
+        
+        public void setContentModelName( final QName contentModelName )
+        {
+            this.contentModelName = contentModelName;
+        }
+        
+        public void setContentModelName( final String contentModelName )
+        {
+            this.contentModelName = new QName( contentModelName );
+        }
+
+        @Override
+        public XmlContentModel create( final XmlDocumentSchema schema )
+        {
+            return new XmlElementDefinition( schema, this.elementName, this.contentModelName, this.minOccur, this.maxOccur );
+        }
     }
     
 }

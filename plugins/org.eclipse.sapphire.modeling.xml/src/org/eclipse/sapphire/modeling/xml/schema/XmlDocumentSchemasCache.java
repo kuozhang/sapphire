@@ -15,6 +15,8 @@ import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.sapphire.modeling.xml.dtd.DtdParser;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -51,7 +53,14 @@ public final class XmlDocumentSchemasCache
         
         if( schema == null )
         {
-            schema = new XmlDocumentSchema( schemaLocation, baseLocation );
+            if( schemaLocation.endsWith( "dtd" ) )
+            {
+                schema = DtdParser.parseFromUrl( schemaLocation, baseLocation );
+            }
+            else
+            {
+                schema = XmlDocumentSchemaParser.parseFromUrl( schemaLocation, baseLocation );
+            }
             
             synchronized( XmlDocumentSchemasCache.class )
             {

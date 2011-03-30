@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.sapphire.ui.swt.renderer.internal.formtext;
 
-import com.ibm.icu.text.BreakIterator;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.MouseEvent;
@@ -36,6 +34,8 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ILayoutExtension;
+
+import com.ibm.icu.text.BreakIterator;
 
 /**
  * @author IBM Corporation
