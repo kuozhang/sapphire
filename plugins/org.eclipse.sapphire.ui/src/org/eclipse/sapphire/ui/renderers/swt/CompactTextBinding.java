@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.renderers.swt;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -30,6 +31,7 @@ final class CompactTextBinding implements ModifyListener {
 	private ToolBar toolbar;
 	private CompactListPropertyEditorRenderer.DeleteActionHandler deleteActionHandler;
 	private PropertyEditorAssistDecorator decorator;
+	private SapphireKeyboardActionPresentation actionPresentationKeyboard;
 	private boolean modifying = false;
 	
 	public CompactTextBinding(CompactListPropertyEditorRenderer compactListPropertyEditorRenderer, Text text, CompactListProxyResource resource) {
@@ -42,6 +44,7 @@ final class CompactTextBinding implements ModifyListener {
 	
 	public void removeListener() {
 		this.text.removeModifyListener(this);
+		this.actionPresentationKeyboard.dispose();
 	}
 	
 	public Text getText() {
@@ -83,6 +86,16 @@ final class CompactTextBinding implements ModifyListener {
 
 	public void setToolbar(ToolBar toolbar) {
 		this.toolbar = toolbar;
+	}
+
+	public SapphireKeyboardActionPresentation getActionPresentationKeyboard() {
+		return this.actionPresentationKeyboard;
+	}
+
+	public void setActionPresentationKeyboard(SapphireKeyboardActionPresentation actionPresentationKeyboard) {
+		this.actionPresentationKeyboard = actionPresentationKeyboard;
+		this.actionPresentationKeyboard.attach(this.text);
+		this.actionPresentationKeyboard.render();
 	}
 
 	public CompactListPropertyEditorRenderer.DeleteActionHandler getDeleteActionHandler() {

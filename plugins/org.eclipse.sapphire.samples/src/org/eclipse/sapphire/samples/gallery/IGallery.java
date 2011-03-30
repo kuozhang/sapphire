@@ -16,6 +16,10 @@ import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -138,6 +142,30 @@ public interface IGallery
     
     ModelElementList<IListItem> getHomogeneousList();
     
+    // *** HomogeneousList of java types ***
+
+    @Type( base = Boolean.class )
+    @Label( standard = "show list of java types" )
+    @DefaultValue( text = "true" )
+    @XmlBinding( path = "show-another" )
+    
+    ValueProperty PROP_SHOW_ANOTHER = new ValueProperty( TYPE, "ShowAnother" );
+    
+    Value<Boolean> getShowAnother();
+    void setShowAnother( String value );
+    void setShowAnother( Boolean value );
+
+    // *** Another HomogeneousList ***
+    
+    @Type( base = IListItemWithJavaType.class )
+    @Label( standard = "homogeneous list of java types")
+    @Enablement( expr = "${ ShowAnother }" )
+    @XmlListBinding( path = "another-list", mappings = @XmlListBinding.Mapping( element = "another", type = IListItemWithJavaType.class ) )
+    
+    ListProperty PROP_ANOTHER_LIST = new ListProperty( TYPE, "AnotherList" );
+    
+    ModelElementList<IListItemWithJavaType> getAnotherList();
+
     // *** HeterogeneousList ***
     
     @Type( base = IListItem.class, possible = { IListItem.class, IListItemWithInteger.class, IListItemWithEnum.class } )
