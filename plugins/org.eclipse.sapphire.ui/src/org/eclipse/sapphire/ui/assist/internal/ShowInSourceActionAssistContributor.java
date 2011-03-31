@@ -18,14 +18,13 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.ui.SapphireEditorFormPage;
+import org.eclipse.sapphire.ui.SourceEditorService;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -45,22 +44,14 @@ public final class ShowInSourceActionAssistContributor
     @Override
     public void contribute( final PropertyEditorAssistContext context )
     {
-        final SapphireEditorFormPage page = context.getPropertyEditor().getNearestPart( SapphireEditorFormPage.class );
-        
-        if( page == null )
-        {
-            return;
-        }
-        
-        final ITextEditor sourceView = page.getSourceView();
-        
-        if( sourceView == null )
-        {
-            return;
-        }
-        
         final IModelElement element = context.getModelElement();
         final ModelProperty prop = context.getProperty();
+        final SourceEditorService sourceEditorService = element.adapt( SourceEditorService.class );
+        
+        if( sourceEditorService == null )
+        {
+            return;
+        }
         
         boolean contribute = false;
         
@@ -98,7 +89,7 @@ public final class ShowInSourceActionAssistContributor
                 @Override
                 public void linkActivated( final HyperlinkEvent event )
                 {
-                    page.showInSourceView( element, prop );
+                    sourceEditorService.show( element, prop );
                 }
             }
         );

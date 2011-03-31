@@ -24,7 +24,7 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditorFactory;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditorInput;
-import org.eclipse.sapphire.ui.xml.XmlEditorResourceStore;
+import org.eclipse.sapphire.ui.swt.xml.editor.XmlEditorResourceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;

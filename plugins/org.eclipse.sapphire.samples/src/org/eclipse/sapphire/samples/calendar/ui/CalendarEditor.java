@@ -24,7 +24,7 @@ import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
 import org.eclipse.sapphire.ui.CorruptedResourceExceptionInterceptorImpl;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage;
-import org.eclipse.sapphire.ui.xml.XmlEditorResourceStore;
+import org.eclipse.sapphire.ui.swt.xml.editor.XmlEditorResourceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;

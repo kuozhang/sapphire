@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.sdk.extensibility.IExtensionSummaryExportOp;
 import org.eclipse.sapphire.sdk.extensibility.ISapphireExtensionDef;
-import org.eclipse.sapphire.ui.xml.SapphireEditorForXml;
+import org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.ui.PartInitException;

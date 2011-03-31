@@ -22,8 +22,7 @@ Export-Package: org.eclipse.sapphire.ui,
  org.eclipse.sapphire.ui.swt,
  org.eclipse.sapphire.ui.swt.renderer,
  org.eclipse.sapphire.ui.swt.renderer.actions,
- org.eclipse.sapphire.ui.util,
- org.eclipse.sapphire.ui.xml
+ org.eclipse.sapphire.ui.util
 Require-Bundle: org.eclipse.sapphire.modeling,
  org.eclipse.sapphire.modeling.xml,
  org.eclipse.core.runtime,
@@ -33,15 +32,12 @@ Require-Bundle: org.eclipse.sapphire.modeling,
  org.eclipse.ui.ide,
  org.eclipse.jface,
  org.eclipse.swt,
- org.eclipse.wst.sse.core,
- org.eclipse.wst.sse.ui,
- org.eclipse.wst.xml.ui,
- org.eclipse.wst.xml.core,
  org.eclipse.jdt.core,
  org.eclipse.ui.workbench,
  org.eclipse.help,
  org.eclipse.ui.views,
- org.eclipse.jface.text
+ org.eclipse.jface.text,
+ org.eclipse.ui.editors
 Import-Package: com.ibm.icu.text
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

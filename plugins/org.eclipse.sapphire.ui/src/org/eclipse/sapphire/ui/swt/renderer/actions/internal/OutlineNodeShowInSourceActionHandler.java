@@ -18,8 +18,8 @@ import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireEditorFormPage;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.SourceEditorService;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsContentNode;
 
@@ -74,9 +74,9 @@ public final class OutlineNodeShowInSourceActionHandler
     protected Object run( final SapphireRenderingContext context )
     {
         final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
-        final SapphireEditorFormPage page = getPart().getNearestPart( SapphireEditorFormPage.class );
+        final IModelElement element = node.getLocalModelElement();
         
-        page.showInSourceView( node.getLocalModelElement(), null );
+        element.adapt( SourceEditorService.class ).show( element, null );
         
         return null;
     }

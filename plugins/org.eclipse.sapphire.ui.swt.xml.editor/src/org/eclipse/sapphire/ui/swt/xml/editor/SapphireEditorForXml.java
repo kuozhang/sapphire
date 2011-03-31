@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.xml;
+package org.eclipse.sapphire.ui.swt.xml.editor;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.osgi.util.NLS;

@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.samples.contacts.ui;
 
 import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
-import org.eclipse.sapphire.ui.xml.SapphireEditorForXml;
+import org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

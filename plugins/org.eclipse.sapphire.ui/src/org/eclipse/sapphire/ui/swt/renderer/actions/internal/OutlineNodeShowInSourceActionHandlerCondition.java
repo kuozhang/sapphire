@@ -11,8 +11,9 @@
 
 package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.SapphireCondition;
-import org.eclipse.sapphire.ui.SapphireEditorFormPage;
+import org.eclipse.sapphire.ui.SourceEditorService;
 import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsContentNode;
 
 /**
@@ -28,9 +29,9 @@ public final class OutlineNodeShowInSourceActionHandlerCondition
     protected boolean evaluate()
     {
         final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
-        final SapphireEditorFormPage page = node.getNearestPart( SapphireEditorFormPage.class );
+        final IModelElement element = node.getLocalModelElement();
         
-        if( page.getSourceView() != null )
+        if( element.adapt( SourceEditorService.class ) != null )
         {
             final MasterDetailsContentNode parent = node.getParentNode();
             

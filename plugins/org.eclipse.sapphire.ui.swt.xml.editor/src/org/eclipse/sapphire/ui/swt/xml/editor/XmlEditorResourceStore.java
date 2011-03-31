@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.xml;
+package org.eclipse.sapphire.ui.swt.xml.editor;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -28,19 +28,27 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.IModelParticle;
+import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementDisposedEvent;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.ValidateEditException;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
+import org.eclipse.sapphire.modeling.xml.XmlNode;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
+import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
 import org.eclipse.sapphire.ui.SapphireEditor;
+import org.eclipse.sapphire.ui.SourceEditorService;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
@@ -49,6 +57,8 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.provisional.IDOMSourceEditingTextTools;
 import org.w3c.dom.Document;
@@ -66,22 +76,26 @@ public class XmlEditorResourceStore
     extends XmlResourceStore
     
 {
+    private SapphireEditor sapphireEditor;
     private StructuredTextEditor sourceEditor;
     private IModelElement rootModelElement;
     private final Map<Node,List<IModelElement>> nodeToModelElementsMap;
     private final Scrubber scrubber;
     private final ModelElementListener modelElementDisposeListener;
+    private final XmlSourceEditorService sourceEditorService;
     
     public XmlEditorResourceStore( final SapphireEditor sapphireEditor,
                                    final StructuredTextEditor sourceEditor )
     {
         super( (ByteArrayResourceStore) null );
         
+        this.sapphireEditor = sapphireEditor;
         this.sourceEditor = sourceEditor;
         this.rootModelElement = null;
         this.nodeToModelElementsMap = new HashMap<Node,List<IModelElement>>();
         this.scrubber = new Scrubber();
         this.scrubber.start();
+        this.sourceEditorService = new XmlSourceEditorService();
         
         this.modelElementDisposeListener = new ModelElementListener()
         {
@@ -132,7 +146,12 @@ public class XmlEditorResourceStore
         setDomDocument( document );
     }
     
-    public StructuredTextEditor getXmlEditor()
+    public final SapphireEditor getEditor()
+    {
+        return this.sapphireEditor;
+    }
+    
+    public final StructuredTextEditor getXmlEditor()
     {
         return this.sourceEditor;
     }
@@ -216,6 +235,10 @@ public class XmlEditorResourceStore
         if( adapterType == ITextEditor.class )
         {
             result = (A) getXmlEditor();
+        }
+        else if( adapterType == SourceEditorService.class )
+        {
+            result = (A) this.sourceEditorService;
         }
         else if( adapterType == File.class )
         {
@@ -492,6 +515,155 @@ public class XmlEditorResourceStore
         public synchronized void dispose()
         {
             this.stopRequested = true;
+        }
+    }
+    
+    private final class XmlSourceEditorService extends SourceEditorService
+    {
+        @Override
+        public void show( final IModelElement element,
+                          final ModelProperty property )
+        {
+            final ITextEditor sourceView = getXmlEditor();
+            final Range range = new Range();
+            
+            if( property != null )
+            {
+                final List<XmlNode> xmlNodes = getXmlNodes( element, property );
+                
+                if( ! xmlNodes.isEmpty() )
+                {
+                    if( property instanceof ValueProperty )
+                    {
+                        final IDOMNode domNode = (IDOMNode) xmlNodes.get( 0 ).getDomNode();
+                        
+                        if( domNode instanceof IDOMElement )
+                        {
+                            final IDOMElement domElement = (IDOMElement) domNode;
+                            
+                            if( domElement.hasEndTag() )
+                            {
+                                range.merge( domElement.getStartEndOffset(), domElement.getEndStartOffset() );
+                            }
+                            else
+                            {
+                                range.merge( domNode.getStartOffset(), domNode.getEndOffset() );
+                            }
+                        }
+                        else if( domNode instanceof IDOMAttr )
+                        {
+                            final IDOMAttr domAttr = (IDOMAttr) domNode;
+                            final int start = domAttr.getValueRegionStartOffset();
+                            range.merge( start + 1, start + domAttr.getValueRegionText().length() - 1 );
+                        }
+                        else
+                        {
+                            range.merge( domNode.getStartOffset(), domNode.getEndOffset() );
+                        }
+                    }
+                    else
+                    {
+                        for( XmlNode xmlNode : xmlNodes )
+                        {
+                            final IDOMNode domNode = (IDOMNode) xmlNode.getDomNode();
+                            range.merge( domNode.getStartOffset(), domNode.getEndOffset() );
+                        }
+                    }
+                }
+            }
+            
+            if( ! range.initialized() )
+            {
+                IModelElement modElement = element;
+                Resource resource = modElement.resource();
+                XmlElement xmlElement = null;
+                
+                if( resource != null )
+                {
+                    xmlElement = ( (XmlResource) resource ).getXmlElement();
+                }
+                
+                while( xmlElement == null && modElement != null )
+                {
+                    final IModelParticle parent = modElement.parent();
+                    
+                    if( parent instanceof ModelElementList )
+                    {
+                        modElement = (IModelElement) parent.parent();
+                    }
+                    else
+                    {
+                        modElement = (IModelElement) parent;
+                    }
+                    
+                    if( modElement != null )
+                    {
+                        resource = modElement.resource();
+                        
+                        if( resource != null )
+                        {
+                            xmlElement = ( (XmlResource) resource ).getXmlElement();
+                        }
+                    }
+                }
+                    
+                if( xmlElement != null )
+                {
+                    final IDOMNode domNode = (IDOMNode) xmlElement.getDomNode();
+                    range.merge( domNode.getStartOffset(), domNode.getEndOffset() );
+                }
+            }
+            
+            final TextSelection textSelection
+                = ( range.initialized() ? new TextSelection( range.start(), range.end() - range.start() ) : null );
+
+            sourceView.getSelectionProvider().setSelection( textSelection );
+            
+            getEditor().showPage( sourceView );
+        }
+        
+        private List<XmlNode> getXmlNodes( final IModelElement modelElement,
+                                           final ModelProperty property )
+        {
+            if( property instanceof ListProperty )
+            {
+                final ModelElementList<?> list = modelElement.read( (ListProperty) property );
+                final List<XmlNode> xmlNodes = new ArrayList<XmlNode>();
+                
+                for( IModelElement element : list )
+                {
+                    final Resource resource = element.resource();
+                    
+                    if( resource instanceof XmlResource )
+                    {
+                        final XmlNode xmlNode = ( (XmlResource) resource ).getXmlElement();
+                        
+                        if( xmlNode != null )
+                        {
+                            xmlNodes.add( xmlNode );
+                        }
+                    }
+                }
+                
+                return xmlNodes;
+            }
+            else
+            {
+                final Resource resource = modelElement.resource();
+                
+                if( resource instanceof XmlResource )
+                {
+                    final XmlResource r = (XmlResource) resource;
+                    final XmlNode xmlNode = ( (XmlValueBindingImpl) r.binding( (ValueProperty ) property ) ).getXmlNode();
+                    
+                    if( xmlNode != null )
+                    {
+                        return Collections.singletonList( xmlNode );
+                    }
+                }
+                
+                return Collections.emptyList();
+            }
         }
     }
     
