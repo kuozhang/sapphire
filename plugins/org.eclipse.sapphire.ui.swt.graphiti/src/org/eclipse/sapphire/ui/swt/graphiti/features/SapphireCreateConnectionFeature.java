@@ -21,6 +21,7 @@ import org.eclipse.graphiti.mm.pictograms.Anchor;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
@@ -115,7 +116,18 @@ public class SapphireCreateConnectionFeature extends AbstractCreateConnectionFea
 		}
 		return false;
 	}
-
+	
+	@Override
+	public String getCreateImageId() 
+	{
+		IDiagramImageChoice imageChoice = this.connDef.getToolPaletteImage().element();
+		if (imageChoice != null)
+		{
+			return imageChoice.getImageId().getContent();
+		}
+		return null;
+	}
+	
 	/**
 	 * Returns the SapphirePart belonging to the anchor, or null if not available.
 	 */

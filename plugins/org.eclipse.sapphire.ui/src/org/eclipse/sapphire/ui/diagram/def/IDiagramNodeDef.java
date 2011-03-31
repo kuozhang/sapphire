@@ -84,6 +84,15 @@ public interface IDiagramNodeDef
     Value<String> getToolPaletteDesc();
     void setToolPaletteDesc( String paletteDesc );
     
+    // *** ToolPaletteImage ***
+
+    @Type( base = IDiagramImageChoice.class )
+    @XmlBinding( path = "tool-palette-image" )
+
+    ElementProperty PROP_TOOL_PALETTE_IMAGE = new ElementProperty( TYPE, "ToolPaletteImage" );
+    
+    ModelElementHandle<IDiagramImageChoice> getToolPaletteImage();
+        
     // *** Property ***
     
     @Label( standard = "property" )

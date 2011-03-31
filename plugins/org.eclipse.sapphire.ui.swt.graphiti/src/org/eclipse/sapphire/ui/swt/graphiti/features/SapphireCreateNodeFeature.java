@@ -15,8 +15,10 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
+import org.eclipse.sapphire.ui.swt.graphiti.providers.ErrorIndicatorImageProvider;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -48,5 +50,16 @@ public class SapphireCreateNodeFeature extends AbstractCreateFeature
 		
 		addGraphicalRepresentation(context, nodePart);
 		return new Object[] { nodePart };
+	}
+	
+	@Override
+	public String getCreateImageId()
+	{
+		IDiagramImageChoice image = this.nodeTemplate.getToolPaletteImage();
+		if (image != null)
+		{
+			return image.getImageId().getContent();
+		}
+		return super.getCreateImageId();
 	}
 }

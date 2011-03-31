@@ -31,6 +31,7 @@ import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramDropActionHandler;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 
 /**
@@ -140,6 +141,11 @@ public class DiagramNodeTemplate extends SapphirePart
     public String getToolPaletteDesc()
     {
     	return this.toolPaletteDesc;
+    }
+    
+    public IDiagramImageChoice getToolPaletteImage()
+    {
+    	return this.definition.getToolPaletteImage().element();
     }
     
     @Override

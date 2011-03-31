@@ -29,6 +29,7 @@ import org.eclipse.graphiti.ui.services.GraphitiUi;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.def.IImportDirective;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeImageDef;
@@ -101,6 +102,24 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
 					{
 						registerImage(sapphireImageProvider, imageChoice);
 					}
+				}
+				
+				// register node tool palette image
+				IDiagramImageChoice toolImage = nodeTemplate.getToolPaletteImage();
+				if (toolImage != null)
+				{
+					registerImage(sapphireImageProvider, toolImage);
+				}
+			}
+			
+			// Add connection tool palette images
+			List<IDiagramConnectionDef> connDefs = diagramPart.getDiagramConnectionDefs();
+			for (IDiagramConnectionDef connDef : connDefs)
+			{
+				IDiagramImageChoice image = connDef.getToolPaletteImage().element();
+				if (image != null)
+				{
+					registerImage(sapphireImageProvider, image);
 				}
 			}
 		}

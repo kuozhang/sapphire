@@ -11,7 +11,9 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
+import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -67,6 +69,15 @@ public interface IDiagramConnectionDef
     Value<String> getToolPaletteDesc();
     void setToolPaletteDesc( String paletteDesc );    
         
+    // *** ToolPaletteImage ***
+
+    @Type( base = IDiagramImageChoice.class )
+    @XmlBinding( path = "tool-palette-image" )
+
+    ElementProperty PROP_TOOL_PALETTE_IMAGE = new ElementProperty( TYPE, "ToolPaletteImage" );
+    
+    ModelElementHandle<IDiagramImageChoice> getToolPaletteImage();
+    
     // *** Endpoint1 ***
     
     @Type( base = IDiagramConnectionEndpointDef.class )
