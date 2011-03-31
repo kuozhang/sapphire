@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.extensibility;
+package org.eclipse.sapphire.sdk.extensibility;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -23,26 +23,26 @@ import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.extensibility.internal.ClassReferenceService;
 import org.eclipse.sapphire.modeling.java.JavaTypeConstraints;
 import org.eclipse.sapphire.modeling.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
+import org.eclipse.sapphire.sdk.extensibility.internal.ClassReferenceService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "model property service" )
+@Label( standard = "model element service" )
 @GenerateImpl
 
-public interface IModelPropertyServiceDef
+public interface IModelElementServiceDef
 
     extends IModelElement
     
 {
-    ModelElementType TYPE = new ModelElementType( IModelPropertyServiceDef.class );
+    ModelElementType TYPE = new ModelElementType( IModelElementServiceDef.class );
     
     // *** Description ***
     
@@ -51,7 +51,7 @@ public interface IModelPropertyServiceDef
     @Localizable
     @XmlValueBinding( path = "description", collapseWhitespace = true )
     
-    @Documentation( content = "Provides information about the model property service. The " +
+    @Documentation( content = "Provides information about the model element service. The " +
                               "description should be in the form of properly capitalized and punctuated sentences." )
     
     ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );
@@ -64,11 +64,11 @@ public interface IModelPropertyServiceDef
     @Reference( target = Class.class, service = ClassReferenceService.class )
     @Label( standard = "service type class" )
     @NonNullValue
-    @JavaTypeConstraints( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS, JavaTypeKind.INTERFACE }, type = "org.eclipse.sapphire.modeling.ModelPropertyService" )
+    @JavaTypeConstraints( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS, JavaTypeKind.INTERFACE }, type = "org.eclipse.sapphire.modeling.ModelElementService" )
     @MustExist
     @XmlBinding( path = "type" )
     
-    @Documentation( content = "The type of service that the factory can create. Must extend ModelPropertyService." )
+    @Documentation( content = "The type of service that the factory can create. Must extend ModelElementService." )
 
     ValueProperty PROP_TYPE_CLASS = new ValueProperty( TYPE, "TypeClass" );
     
@@ -80,11 +80,11 @@ public interface IModelPropertyServiceDef
     @Reference( target = Class.class, service = ClassReferenceService.class )
     @Label( standard = "service factory class" )
     @NonNullValue
-    @JavaTypeConstraints( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.modeling.ModelPropertyServiceFactory" )
+    @JavaTypeConstraints( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.modeling.ModelElementServiceFactory" )
     @MustExist
     @XmlBinding( path = "factory" )
     
-    @Documentation( content = "The factory that can create a service of the specified type. Must extend ModelPropertyServiceFactory." )
+    @Documentation( content = "The factory that can create a service of the specified type. Must extend ModelElementServiceFactory." )
 
     ValueProperty PROP_FACTORY_CLASS = new ValueProperty( TYPE, "FactoryClass" );
     

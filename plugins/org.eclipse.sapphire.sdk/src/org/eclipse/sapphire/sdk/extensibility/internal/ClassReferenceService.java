@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.extensibility.internal;
+package org.eclipse.sapphire.sdk.extensibility.internal;
 
 import org.eclipse.sapphire.modeling.ReferenceService;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;

@@ -6,7 +6,6 @@ Bundle-Version: 0.3.0.qualifier
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.sapphire.modeling,
- org.eclipse.sapphire.modeling.extensibility,
  org.eclipse.sapphire.modeling.xml,
  org.eclipse.sapphire.ui,
  org.eclipse.debug.ui,
@@ -25,4 +24,4 @@ Require-Bundle: org.eclipse.sapphire.modeling,
  org.apache.ant
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.eclipse.sapphire.sdk
+Export-Package: org.eclipse.sapphire.sdk.extensibility

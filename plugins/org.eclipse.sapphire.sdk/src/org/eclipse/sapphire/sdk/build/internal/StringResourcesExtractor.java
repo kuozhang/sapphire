@@ -32,7 +32,7 @@ import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.localization.LocalizationUtil;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
-import org.eclipse.sapphire.sdk.ISapphireExtensionDef;
+import org.eclipse.sapphire.sdk.extensibility.ISapphireExtensionDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
 /**

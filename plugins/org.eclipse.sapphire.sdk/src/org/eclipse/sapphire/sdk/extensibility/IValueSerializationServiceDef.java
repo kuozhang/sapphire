@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.extensibility;
+package org.eclipse.sapphire.sdk.extensibility;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -23,26 +23,26 @@ import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.extensibility.internal.ClassReferenceService;
 import org.eclipse.sapphire.modeling.java.JavaTypeConstraints;
 import org.eclipse.sapphire.modeling.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
+import org.eclipse.sapphire.sdk.extensibility.internal.ClassReferenceService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "model element service" )
+@Label( standard = "value serialization service" )
 @GenerateImpl
 
-public interface IModelElementServiceDef
+public interface IValueSerializationServiceDef
 
     extends IModelElement
     
 {
-    ModelElementType TYPE = new ModelElementType( IModelElementServiceDef.class );
+    ModelElementType TYPE = new ModelElementType( IValueSerializationServiceDef.class );
     
     // *** Description ***
     
@@ -51,7 +51,7 @@ public interface IModelElementServiceDef
     @Localizable
     @XmlValueBinding( path = "description", collapseWhitespace = true )
     
-    @Documentation( content = "Provides information about the model element service. The " +
+    @Documentation( content = "Provides information about the value serialization service. The " +
                               "description should be in the form of properly capitalized and punctuated sentences." )
     
     ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );
@@ -62,33 +62,33 @@ public interface IModelElementServiceDef
     // *** TypeClass ***
     
     @Reference( target = Class.class, service = ClassReferenceService.class )
-    @Label( standard = "service type class" )
+    @Label( standard = "type class" )
     @NonNullValue
-    @JavaTypeConstraints( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS, JavaTypeKind.INTERFACE }, type = "org.eclipse.sapphire.modeling.ModelElementService" )
+    @JavaTypeConstraints( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS, JavaTypeKind.INTERFACE } )
     @MustExist
     @XmlBinding( path = "type" )
     
-    @Documentation( content = "The type of service that the factory can create. Must extend ModelElementService." )
+    @Documentation( content = "The type that the value serialization service can handler." )
 
     ValueProperty PROP_TYPE_CLASS = new ValueProperty( TYPE, "TypeClass" );
     
     ReferenceValue<Class<?>> getTypeClass();
     void setTypeClass( String value );
     
-    // *** FactoryClass ***
+    // *** ImplClass ***
     
     @Reference( target = Class.class, service = ClassReferenceService.class )
-    @Label( standard = "service factory class" )
+    @Label( standard = "implementation class" )
     @NonNullValue
-    @JavaTypeConstraints( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.modeling.ModelElementServiceFactory" )
+    @JavaTypeConstraints( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.modeling.serialization.ValueSerializationService" )
     @MustExist
-    @XmlBinding( path = "factory" )
+    @XmlBinding( path = "impl" )
     
-    @Documentation( content = "The factory that can create a service of the specified type. Must extend ModelElementServiceFactory." )
+    @Documentation( content = "The value serialization service implementation. Must extend ValueSerializationService." )
 
-    ValueProperty PROP_FACTORY_CLASS = new ValueProperty( TYPE, "FactoryClass" );
+    ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );
     
-    ReferenceValue<Class<?>> getFactoryClass();
-    void setFactoryClass( String value );
+    ReferenceValue<Class<?>> getImplClass();
+    void setImplClass( String value );
     
 }

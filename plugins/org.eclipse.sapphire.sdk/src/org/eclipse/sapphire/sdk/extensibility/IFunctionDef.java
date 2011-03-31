@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.extensibility;
+package org.eclipse.sapphire.sdk.extensibility;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -23,26 +23,41 @@ import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.extensibility.internal.ClassReferenceService;
 import org.eclipse.sapphire.modeling.java.JavaTypeConstraints;
 import org.eclipse.sapphire.modeling.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
+import org.eclipse.sapphire.sdk.extensibility.internal.ClassReferenceService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "value serialization service" )
+@Label( standard = "function" )
 @GenerateImpl
 
-public interface IValueSerializationServiceDef
+public interface IFunctionDef
 
     extends IModelElement
     
 {
-    ModelElementType TYPE = new ModelElementType( IValueSerializationServiceDef.class );
+    ModelElementType TYPE = new ModelElementType( IFunctionDef.class );
+    
+    // *** Name ***
+    
+    @Label( standard = "name" )
+    @NonNullValue
+    @XmlBinding( path = "name" )
+    
+    @Documentation( content = "The name by which function will be referenced in the expression language. Functions " +
+                              "can be placed in a namespace by using \"[namespace]:[name]\" syntax. Hierarchical " +
+                              "namespaces are also alowed. Each segment in the function name must follow Java identifier rules." )
+    
+    ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+    
+    Value<String> getName();
+    void setName( String value );
     
     // *** Description ***
     
@@ -59,32 +74,16 @@ public interface IValueSerializationServiceDef
     Value<String> getDescription();
     void setDescription( String value );
     
-    // *** TypeClass ***
-    
-    @Reference( target = Class.class, service = ClassReferenceService.class )
-    @Label( standard = "type class" )
-    @NonNullValue
-    @JavaTypeConstraints( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS, JavaTypeKind.INTERFACE } )
-    @MustExist
-    @XmlBinding( path = "type" )
-    
-    @Documentation( content = "The type that the value serialization service can handler." )
-
-    ValueProperty PROP_TYPE_CLASS = new ValueProperty( TYPE, "TypeClass" );
-    
-    ReferenceValue<Class<?>> getTypeClass();
-    void setTypeClass( String value );
-    
     // *** ImplClass ***
     
     @Reference( target = Class.class, service = ClassReferenceService.class )
     @Label( standard = "implementation class" )
     @NonNullValue
-    @JavaTypeConstraints( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.modeling.serialization.ValueSerializationService" )
+    @JavaTypeConstraints( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.modeling.el.Function" )
     @MustExist
     @XmlBinding( path = "impl" )
     
-    @Documentation( content = "The value serialization service implementation. Must extend ValueSerializationService." )
+    @Documentation( content = "The function implementation. Must extend Function." )
 
     ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );
     
