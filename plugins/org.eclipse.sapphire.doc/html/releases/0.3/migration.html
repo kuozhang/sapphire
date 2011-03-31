@@ -39,23 +39,41 @@ to 0.3 release. Only changes from the previous milestone are covered.</p>
 <h2><a name="modularity">Modularity Changes</a></h2>
 
 <p>The contents of some bundles have changes and several new bundles have been created. These changes
-may require adopters to modify Requite-Bundle declarations.</p>
+may require adopters to modify Requite-Bundle declarations and import statements.</p>
 
 <table>
   <tr>
-    <th>Packages</th>
     <th>Old Bundle</th>
+    <th>Old Package</th>
     <th>New Bundle</th>
+    <th>New Package</th>
   </tr>
   <tr>
-    <td>
-<pre class="source-code"><code>org.eclipse.sapphire.modeling.xml<br/>org.eclipse.sapphire.modeling.xml.annotations<br/>org.eclipse.sapphire.modeling.xml.schema</code></pre>
-    </td>
     <td>
 <pre class="source-code"><code>org.eclipse.sapphire.modeling</code></pre>
     </td>
     <td>
+<pre class="source-code"><code>org.eclipse.sapphire.modeling.xml<br/>org.eclipse.sapphire.modeling.xml.annotations<br/>org.eclipse.sapphire.modeling.xml.schema</code></pre>
+    </td>
+    <td>
 <pre class="source-code"><code>org.eclipse.sapphire.modeling.xml</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>unchanged</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>org.eclipse.sapphire.ui</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>org.eclipse.sapphire.ui.xml</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>org.eclipse.sapphire.ui.swt.xml.editor</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>org.eclipse.sapphire.ui.swt.xml.editor</code></pre>
     </td>
   </tr>
 </table>
