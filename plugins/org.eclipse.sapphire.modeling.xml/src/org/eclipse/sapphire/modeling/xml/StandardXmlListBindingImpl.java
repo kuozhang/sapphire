@@ -11,12 +11,16 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
-import static org.eclipse.sapphire.modeling.util.MiscUtil.contains;
 import static org.eclipse.sapphire.modeling.util.MiscUtil.indexOf;
+import static org.eclipse.sapphire.modeling.xml.XmlUtil.contains;
+import static org.eclipse.sapphire.modeling.xml.XmlUtil.createQualifiedName;
+import static org.eclipse.sapphire.modeling.xml.XmlUtil.equal;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.xml.namespace.QName;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LayeredListBindingImpl;
@@ -35,7 +39,7 @@ public class StandardXmlListBindingImpl
 
 {
     protected XmlPath path;
-    protected String[] xmlElementNames;
+    protected QName[] xmlElementNames;
     protected ModelElementType[] modelElementTypes;
 
     @Override
@@ -52,24 +56,25 @@ public class StandardXmlListBindingImpl
                                         final String[] params )
     {
         final XmlListBinding annotation = property.getAnnotation( XmlListBinding.class );
+        final XmlNamespaceResolver xmlNamespaceResolver = ( (XmlResource) element.resource() ).getXmlNamespaceResolver();
         
         if( annotation != null )
         {
             if( annotation.path().length() > 0 )
             {
-                this.path = new XmlPath( annotation.path(), ( (XmlResource) element.resource() ).getXmlNamespaceResolver() );
+                this.path = new XmlPath( annotation.path(), xmlNamespaceResolver );
             }
             
             final XmlListBinding.Mapping[] mappings = annotation.mappings();
             
-            this.xmlElementNames = new String[ mappings.length ];
+            this.xmlElementNames = new QName[ mappings.length ];
             this.modelElementTypes = new ModelElementType[ mappings.length ];
             
             for( int i = 0; i < mappings.length; i++ )
             {
                 final XmlListBinding.Mapping mapping = mappings[ i ];
                 
-                this.xmlElementNames[ i ] = mapping.element();
+                this.xmlElementNames[ i ] = createQualifiedName( mapping.element(), xmlNamespaceResolver );
                 this.modelElementTypes[ i ] = ModelElementType.getModelElementType( mapping.type() );
             }
         }
@@ -80,11 +85,11 @@ public class StandardXmlListBindingImpl
             final List<ModelElementType> types = property.getAllPossibleTypes();
             
             this.modelElementTypes = types.toArray( new ModelElementType[ types.size() ] );
-            this.xmlElementNames = new String[ this.modelElementTypes.length ];
+            this.xmlElementNames = new QName[ this.modelElementTypes.length ];
             
             for( int i = 0; i < this.modelElementTypes.length; i++ )
             {
-                this.xmlElementNames[ i ] = this.modelElementTypes[ i ].getSimpleName().substring( 1 );
+                this.xmlElementNames[ i ] = createQualifiedName( this.modelElementTypes[ i ].getSimpleName().substring( 1 ), xmlNamespaceResolver );
             }
         }
     }
@@ -93,11 +98,12 @@ public class StandardXmlListBindingImpl
     public ModelElementType type( final Resource resource )
     {
         final XmlElement xmlElement = ( (XmlResource) resource ).getXmlElement();
-        final String xmlElementName = xmlElement.getDomNode().getLocalName();
+        final QName xmlElementName = createQualifiedName( xmlElement.getDomNode() );
+        final String xmlElementNamespace = xmlElementName.getNamespaceURI();
         
         for( int i = 0; i < this.xmlElementNames.length; i++ )
         {
-            if( this.xmlElementNames[ i ].equals( xmlElementName ) )
+            if( equal( this.xmlElementNames[ i ], xmlElementName, xmlElementNamespace ) )
             {
                 return this.modelElementTypes[ i ];
             }
@@ -121,9 +127,9 @@ public class StandardXmlListBindingImpl
             
             for( XmlElement element : parent.getChildElements() )
             {
-                final String xmlElementName = element.getDomNode().getLocalName();
+                final QName xmlElementName = createQualifiedName( element.getDomNode() );
                 
-                if( contains( this.xmlElementNames, xmlElementName ) )
+                if( contains( this.xmlElementNames, xmlElementName, xmlElementName.getNamespaceURI() ) )
                 {
                     list.add( element );
                 }
@@ -136,8 +142,15 @@ public class StandardXmlListBindingImpl
     @Override
     protected Object addUnderlyingObject( final ModelElementType type )
     {
-        final String xmlElementName = this.xmlElementNames[ indexOf( this.modelElementTypes, type ) ];
-        return getXmlElement( true ).addChildElement( xmlElementName );
+        final XmlElement parent = getXmlElement( true );
+        QName xmlElementName = this.xmlElementNames[ indexOf( this.modelElementTypes, type ) ];
+        
+        if( xmlElementName.getNamespaceURI().equals( "" ) )
+        {
+            xmlElementName = new QName( parent.getNamespace(), xmlElementName.getLocalPart() );
+        }
+        
+        return parent.addChildElement( xmlElementName );
     }
 
     @Override

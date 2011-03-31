@@ -17,6 +17,8 @@ import static org.eclipse.sapphire.modeling.xml.RootElementController.XSI_SCHEMA
 
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchemasCache;
 import org.w3c.dom.Attr;
@@ -155,6 +157,70 @@ public final class XmlUtil
         }
         
         return buf.toString();
+    }
+    
+    public static QName createQualifiedName( final String name,
+                                             final XmlNamespaceResolver xmlNamespaceResolver )
+    {
+        final QName qname;
+        
+        if( xmlNamespaceResolver == null )
+        {
+            qname = new QName( null, name, "" );
+        }
+        else
+        {
+            qname = xmlNamespaceResolver.createQualifiedName( name );
+        }
+        
+        return qname;
+    }
+    
+    public static QName createQualifiedName( final Node node )
+    {
+        final String namespace = node.getNamespaceURI();
+        final String localName = node.getLocalName();
+        return new QName( namespace, localName );
+    }
+    
+    public static boolean equal( final QName a,
+                                 final QName b,
+                                 final String defaultNamespace )
+    {
+        if( a.getLocalPart().equals( b.getLocalPart() ) )
+        {
+            String nsa = a.getNamespaceURI();
+            String nsb = b.getNamespaceURI();
+            
+            if( nsa == null || nsa.length() == 0 )
+            {
+                nsa = defaultNamespace;
+            }
+            
+            if( nsb == null || nsb.length() == 0 )
+            {
+                nsb = defaultNamespace;
+            }
+            
+            return nsa.equals( nsb );
+        }
+        
+        return false;
+    }
+    
+    public static boolean contains( final QName[] qnames,
+                                    final QName qname,
+                                    final String defaultNamespace )
+    {
+        for( QName a : qnames )
+        {
+            if( equal( a, qname, defaultNamespace ) )
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
 }

@@ -160,7 +160,13 @@ public final class StandardXmlElementBindingImpl
     @Override
     protected Object createUnderlyingObject( final ModelElementType type )
     {
-        final XmlElement parent = ( (XmlResource) element().resource() ).getXmlElement( true );
+        XmlElement parent = ( (XmlResource) element().resource() ).getXmlElement( true );
+        
+        if( this.path != null )
+        {
+            parent = (XmlElement) parent.getChildNode( this.path, true );
+        }
+        
         QName xmlElementName = this.xmlElementNames[ indexOf( this.modelElementTypes, type ) ];
         
         if( xmlElementName.getNamespaceURI().equals( "" ) )

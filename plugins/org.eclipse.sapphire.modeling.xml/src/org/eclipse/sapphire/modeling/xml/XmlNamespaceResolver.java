@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
+import javax.xml.namespace.QName;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -18,4 +20,31 @@ package org.eclipse.sapphire.modeling.xml;
 public abstract class XmlNamespaceResolver
 {
     public abstract String resolve( final String prefix );
+    
+    public final QName createQualifiedName( final String name )
+    {
+        String prefix = "";
+        String localName = null;
+        final int colon = name.indexOf( ':' );
+        
+        if( colon == -1 )
+        {
+            localName = name;
+        }
+        else
+        {
+            prefix = name.substring( 0, colon );
+            localName = name.substring( colon + 1 );
+        }
+        
+        String namespace = null;
+        
+        if( prefix.length() > 0 )
+        {
+            namespace = resolve( prefix );
+        }
+        
+        return new QName( namespace, localName, prefix );
+    }
+    
 }

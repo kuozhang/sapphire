@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
+import static org.eclipse.sapphire.modeling.xml.XmlUtil.createQualifiedName;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,53 +39,30 @@ public final class XmlPath
     }
     
     public XmlPath( final String path,
-                    final XmlNamespaceResolver namespaceResolver )
+                    final XmlNamespaceResolver xmlNamespaceResolver )
     {
-        for( String part : path.split( "/" ) ) //$NON-NLS-1$
+        for( String part : path.split( "/" ) )
         {
             if( part.length() == 0 )
             {
                 continue;
             }
             
-            String prefix = ""; //$NON-NLS-1$
-            String localName = null;
             boolean isAttribute = false;
             boolean isComment = false;
             
-            if( part.startsWith( "@" ) ) //$NON-NLS-1$
+            if( part.startsWith( "@" ) )
             {
-                localName = part.substring( 1 );
+                part = part.substring( 1 );
                 isAttribute = true;
             }
-            else if( part.startsWith( "%" ) ) //$NON-NLS-1$
+            else if( part.startsWith( "%" ) )
             {
-                localName = part.substring( 1 );
+                part = part.substring( 1 );
                 isComment = true;
             }
-            else
-            {
-                final int colon = part.indexOf( ':' );
-                
-                if( colon == -1 )
-                {
-                    localName = part;
-                }
-                else
-                {
-                    prefix = part.substring( 0, colon );
-                    localName = part.substring( colon + 1 );
-                }
-            }
             
-            String namespace = null;
-            
-            if( prefix.length() > 0 && namespaceResolver != null )
-            {
-                namespace = namespaceResolver.resolve( prefix );
-            }
-            
-            this.segments.add( new Segment( new QName( namespace, localName, prefix ), isAttribute, isComment ) );
+            this.segments.add( new Segment( createQualifiedName( part, xmlNamespaceResolver ), isAttribute, isComment ) );
         }
     }
     
