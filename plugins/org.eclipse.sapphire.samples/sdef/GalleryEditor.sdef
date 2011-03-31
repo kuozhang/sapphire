@@ -665,6 +665,33 @@
                                 <name>factory</name>
                                 <value>CompactListPropertyEditorRenderer$Factory</value>
                             </hint>
+                            <child-property>
+                                <property>MultiOptionPath</property>
+                                <action-handler>
+                                    <action>Sapphire.Browse</action>
+                                    <impl>AbsoluteFilePathBrowseActionHandler</impl>
+                                    <param>
+                                        <name>extensions</name>
+                                        <value>jar,zip</value>
+                                    </param>
+                                </action-handler>
+                                <action-handler>
+                                    <action>Sapphire.Browse</action>
+                                    <impl>AbsoluteFolderPathBrowseActionHandler</impl>
+                                </action-handler>
+                                <action-handler>
+                                    <action>Sapphire.Browse</action>
+                                    <impl>EclipseWorkspacePathBrowseActionHandler</impl>
+                                    <param>
+                                        <name>extensions</name>
+                                        <value>jar,zip</value>
+                                    </param>
+                                    <param>
+                                        <name>leading-slash</name>
+                                        <value>true</value>
+                                    </param>
+                                </action-handler>
+                            </child-property>
                         </property-editor>
                     </content>
                 </section>
