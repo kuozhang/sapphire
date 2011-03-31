@@ -288,6 +288,7 @@ public class CompactListPropertyEditorRenderer
         final SapphireActionGroup parentActions = new SapphireActionGroup(getPart(), getPart().getActionContext());
 
         final SapphireAction deleteAction = parentActions.getAction( ACTION_DELETE );
+        deleteAction.setGroup(null);
         final DeleteActionHandler deleteActionHandler = new DeleteActionHandler(binding);
         deleteActionHandler.init( deleteAction, null );
         deleteAction.addHandler( deleteActionHandler );
