@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -40,7 +42,7 @@ public final class LocationHintsBinding
                                         final ModelProperty property,
                                         final String[] params )
     {
-        this.xmlElementNames = new String[] { EL_LOCATION };
+        this.xmlElementNames = new QName[] { new QName( EL_LOCATION ) };
     }
     
     @Override
