@@ -786,8 +786,16 @@ public abstract class ModelElement
                         
                         if( property instanceof ElementProperty )
                         {
-                            final IModelElement element = read( (ElementProperty) property ).element();
-                            
+                        	IModelElement element = null;
+                            if( property instanceof ImpliedElementProperty )
+                            {
+                                element = read( (ImpliedElementProperty) property );
+                            }
+                            else
+                            {
+                                element = read( (ElementProperty) property ).element();
+                            }
+                        	                                                    
                             if( element != null )
                             {
                                 element.removeListener( listener, path );
