@@ -17,6 +17,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.tests.modeling.xml.binding.t0001.TestXmlBinding0001;
 import org.eclipse.sapphire.tests.modeling.xml.binding.t0002.TestXmlBinding0002;
+import org.eclipse.sapphire.tests.modeling.xml.binding.t0003.TestXmlBinding0003;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -40,6 +41,7 @@ public final class SuiteXmlBinding
 
         suite.addTest( TestXmlBinding0001.suite() );
         suite.addTest( TestXmlBinding0002.suite() );
+        suite.addTest( TestXmlBinding0003.suite() );
         
         return suite;
     }

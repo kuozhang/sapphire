@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<a xmlns="http://www.eclipse.org/sapphire/tests/xml/binding/0003/z" xmlns:u="http://www.eclipse.org/sapphire/tests/xml/binding/0003/u" xmlns:v="http://www.eclipse.org/sapphire/tests/xml/binding/0003/v" xmlns:w="http://www.eclipse.org/sapphire/tests/xml/binding/0003/w" xmlns:x="http://www.eclipse.org/sapphire/tests/xml/binding/0003/x" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.eclipse.org/sapphire/tests/xml/binding/0003/y">
+    <aa>aa</aa>
+    <y:ab>
+        <y:aba>aba</y:aba>
+    </y:ab>
+    <x:ac>
+        <x:aca>aca</x:aca>
+        <w:acb>acb</w:acb>
+        <w:acc-list>
+            <w:acc>
+                <v:acca>acca</v:acca>
+            </w:acc>
+        </w:acc-list>
+        <w:acd-list>
+            <w:acd>
+                <u:acda>acda</u:acda>
+            </w:acd>
+        </w:acd-list>
+    </x:ac>
+</a>
