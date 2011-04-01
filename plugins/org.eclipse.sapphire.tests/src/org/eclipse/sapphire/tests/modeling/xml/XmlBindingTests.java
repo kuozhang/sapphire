@@ -24,9 +24,9 @@ import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
-import org.eclipse.sapphire.tests.modeling.xml.dtd.t0001.TestXmlDtd0001;
-import org.eclipse.sapphire.tests.modeling.xml.dtd.t0002.TestXmlDtd0002;
-import org.eclipse.sapphire.tests.modeling.xml.xsd.t0001.TestXmlXsd0001;
+import org.eclipse.sapphire.tests.modeling.xml.binding.SuiteXmlBinding;
+import org.eclipse.sapphire.tests.modeling.xml.dtd.SuiteXmlDtd;
+import org.eclipse.sapphire.tests.modeling.xml.xsd.SuiteXmlXsd;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -46,16 +46,16 @@ public final class XmlBindingTests
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "XmlBindingTests" );
+        suite.setName( "Xml" );
 
         suite.addTest( new XmlBindingTests( "testValueProperties1" ) );
         suite.addTest( new XmlBindingTests( "testValueProperties2" ) );
         suite.addTest( new XmlBindingTests( "testValueProperties3" ) );
         suite.addTest( new XmlBindingTests( "testDefaultBindingWrite" ) );
         suite.addTest( new XmlBindingTests( "testDefaultBindingRead" ) );
-        suite.addTest( TestXmlDtd0001.suite() );
-        suite.addTest( TestXmlDtd0002.suite() );
-        suite.addTest( TestXmlXsd0001.suite() );
+        suite.addTest( SuiteXmlBinding.suite() );
+        suite.addTest( SuiteXmlDtd.suite() );
+        suite.addTest( SuiteXmlXsd.suite() );
         
         return suite;
     }

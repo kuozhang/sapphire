@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LayeredListBindingImpl;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -58,7 +59,21 @@ public class StandardXmlListBindingImpl
         final XmlListBinding annotation = property.getAnnotation( XmlListBinding.class );
         final XmlNamespaceResolver xmlNamespaceResolver = ( (XmlResource) element.resource() ).getXmlNamespaceResolver();
         
-        if( annotation != null )
+        if( annotation == null )
+        {
+            this.path = new XmlPath( property.getName(), ( (XmlResource) element.resource() ).getXmlNamespaceResolver() );
+            
+            final List<ModelElementType> types = property.getAllPossibleTypes();
+            
+            this.modelElementTypes = types.toArray( new ModelElementType[ types.size() ] );
+            this.xmlElementNames = new QName[ this.modelElementTypes.length ];
+            
+            for( int i = 0; i < this.modelElementTypes.length; i++ )
+            {
+                this.xmlElementNames[ i ] = createQualifiedName( this.modelElementTypes[ i ].getSimpleName().substring( 1 ), xmlNamespaceResolver );
+            }
+        }
+        else
         {
             if( annotation.path().length() > 0 )
             {
@@ -74,22 +89,16 @@ public class StandardXmlListBindingImpl
             {
                 final XmlListBinding.Mapping mapping = mappings[ i ];
                 
-                this.xmlElementNames[ i ] = createQualifiedName( mapping.element(), xmlNamespaceResolver );
+                final String mappingElementName = mapping.element().trim();
+                
+                if( mappingElementName.length() == 0 )
+                {
+                    final String message = NLS.bind( Resources.mustSpecifyElementNameMsg, element.getModelElementType().getSimpleName(), property.getName() );
+                    throw new IllegalArgumentException( message );
+                }
+                
+                this.xmlElementNames[ i ] = createQualifiedName( mappingElementName, xmlNamespaceResolver );
                 this.modelElementTypes[ i ] = ModelElementType.getModelElementType( mapping.type() );
-            }
-        }
-        else
-        {
-            this.path = new XmlPath( property.getName(), ( (XmlResource) element.resource() ).getXmlNamespaceResolver() );
-            
-            final List<ModelElementType> types = property.getAllPossibleTypes();
-            
-            this.modelElementTypes = types.toArray( new ModelElementType[ types.size() ] );
-            this.xmlElementNames = new QName[ this.modelElementTypes.length ];
-            
-            for( int i = 0; i < this.modelElementTypes.length; i++ )
-            {
-                this.xmlElementNames[ i ] = createQualifiedName( this.modelElementTypes[ i ].getSimpleName().substring( 1 ), xmlNamespaceResolver );
             }
         }
     }
@@ -212,6 +221,16 @@ public class StandardXmlListBindingImpl
     {
         final XmlResource resource = (XmlResource) element().resource();
         return resource.getXmlElement( createIfNecessary );
+    }
+    
+    private static final class Resources extends NLS
+    {
+        public static String mustSpecifyElementNameMsg; 
+        
+        static
+        {
+            initializeMessages( StandardXmlListBindingImpl.class.getName(), Resources.class );
+        }
     }
     
 }

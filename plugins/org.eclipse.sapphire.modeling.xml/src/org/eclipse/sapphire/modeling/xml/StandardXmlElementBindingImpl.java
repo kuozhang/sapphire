@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LayeredElementBindingImpl;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -51,27 +52,7 @@ public final class StandardXmlElementBindingImpl
         final XmlElementBinding xmlElementBindingAnnotation = property.getAnnotation( XmlElementBinding.class );
         final XmlNamespaceResolver xmlNamespaceResolver = ( (XmlResource) element.resource() ).getXmlNamespaceResolver();
         
-        if( xmlElementBindingAnnotation != null )
-        {
-            if( xmlElementBindingAnnotation.path().length() > 0 )
-            {
-                this.path = new XmlPath( xmlElementBindingAnnotation.path(), xmlNamespaceResolver );
-            }
-            
-            final XmlElementBinding.Mapping[] mappings = xmlElementBindingAnnotation.mappings();
-            
-            this.xmlElementNames = new QName[ mappings.length ];
-            this.modelElementTypes = new ModelElementType[ mappings.length ];
-            
-            for( int i = 0; i < mappings.length; i++ )
-            {
-                final XmlElementBinding.Mapping mapping = mappings[ i ];
-                
-                this.xmlElementNames[ i ] = createQualifiedName( mapping.element(), xmlNamespaceResolver );
-                this.modelElementTypes[ i ] = ModelElementType.getModelElementType( mapping.type() );
-            }
-        }
-        else
+        if( xmlElementBindingAnnotation == null )
         {
             final XmlBinding xmlBindingAnnotation = property.getAnnotation( XmlBinding.class );
             
@@ -106,6 +87,34 @@ public final class StandardXmlElementBindingImpl
                 {
                     this.xmlElementNames[ i ] = createQualifiedName( this.modelElementTypes[ i ].getSimpleName().substring( 1 ), xmlNamespaceResolver );
                 }
+            }
+        }
+        else
+        {
+            if( xmlElementBindingAnnotation.path().length() > 0 )
+            {
+                this.path = new XmlPath( xmlElementBindingAnnotation.path(), xmlNamespaceResolver );
+            }
+            
+            final XmlElementBinding.Mapping[] mappings = xmlElementBindingAnnotation.mappings();
+            
+            this.xmlElementNames = new QName[ mappings.length ];
+            this.modelElementTypes = new ModelElementType[ mappings.length ];
+            
+            for( int i = 0; i < mappings.length; i++ )
+            {
+                final XmlElementBinding.Mapping mapping = mappings[ i ];
+                
+                final String mappingElementName = mapping.element().trim();
+                
+                if( mappingElementName.length() == 0 )
+                {
+                    final String message = NLS.bind( Resources.mustSpecifyElementNameMsg, element.getModelElementType().getSimpleName(), property.getName() );
+                    throw new IllegalArgumentException( message );
+                }
+                
+                this.xmlElementNames[ i ] = createQualifiedName( mappingElementName, xmlNamespaceResolver );
+                this.modelElementTypes[ i ] = ModelElementType.getModelElementType( mapping.type() );
             }
         }
     }
@@ -217,6 +226,16 @@ public final class StandardXmlElementBindingImpl
     public boolean removable()
     {
         return true;
+    }
+    
+    private static final class Resources extends NLS
+    {
+        public static String mustSpecifyElementNameMsg; 
+        
+        static
+        {
+            initializeMessages( StandardXmlElementBindingImpl.class.getName(), Resources.class );
+        }
     }
     
 }

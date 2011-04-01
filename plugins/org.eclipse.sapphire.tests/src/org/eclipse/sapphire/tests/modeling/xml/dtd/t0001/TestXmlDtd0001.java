@@ -38,7 +38,7 @@ public final class TestXmlDtd0001
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "TestXmlDtd0001" );
+        suite.setName( "XmlDtd0001" );
 
         suite.addTest( new TestXmlDtd0001( "test" ) );
         

@@ -9,27 +9,24 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.xml.dtd.t0002;
+package org.eclipse.sapphire.tests.modeling.xml.xsd;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.modeling.xml.dtd.DtdParser;
-import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
-import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.eclipse.sapphire.tests.modeling.xml.xsd.t0001.TestXmlXsd0001;
 
 /**
- * Tests entity resolution during DTD parsing.
- * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestXmlDtd0002
+public final class SuiteXmlXsd
 
-    extends SapphireTestCase
+    extends TestCase
     
 {
-    private TestXmlDtd0002( final String name )
+    private SuiteXmlXsd( final String name )
     {
         super( name );
     }
@@ -38,17 +35,11 @@ public final class TestXmlDtd0002
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "XmlDtd0002" );
+        suite.setName( "XmlXsd" );
 
-        suite.addTest( new TestXmlDtd0002( "test" ) );
+        suite.addTest( TestXmlXsd0001.suite() );
         
         return suite;
     }
     
-    public void test() throws Exception
-    {
-        final XmlDocumentSchema schema = DtdParser.parseFromString( loadResource( "input.dtd" ) );
-        assertEqualsIgnoreNewLineDiffs( loadResource( "output.txt" ), schema.toString() );
-    }
-
 }
