@@ -470,7 +470,15 @@ public class DiagramConnectionTemplate extends SapphirePart
 		    		for (IModelElement newConn : newConns)
 		    		{	    			
 		            	DiagramConnectionPart connPart = createNewConnectionPart(newConn, element);
-		            	notifyConnectionAdd(connPart);
+		            	if (connPart.getEndpoint1() != null && connPart.getEndpoint2() != null)
+		            	{
+		            		notifyConnectionAdd(connPart);
+		            	}
+		            	else
+		            	{
+			    			connPart.dispose();
+			    			removeConnectionPart(element, connPart);
+		            	}
 		    		}
 		    	}
 		    	else

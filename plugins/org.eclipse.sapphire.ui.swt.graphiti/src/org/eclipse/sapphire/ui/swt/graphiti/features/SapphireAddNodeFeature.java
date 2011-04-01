@@ -39,6 +39,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramGeometryWrapper;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
+import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProvider;
 import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramPropertyKeys;
 
@@ -53,10 +54,6 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
     private static final int DEFAULT_NODE_WIDTH = 100;
     private static final int DEFAULT_NODE_HEIGHT = 30;
     private static final int DEFAULT_TEXT_HEIGHT = 20;
-    private static int defaultX = 50;
-    private static int defaultY = 50;
-    private static int xInc = 100;
-    private static int yInc = 0;
     private DiagramNodeTemplate nodeTemplate;
     
 	public SapphireAddNodeFeature(IFeatureProvider fp, DiagramNodeTemplate nodeTemplate)
@@ -109,23 +106,17 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
         int height = nodeh > 0 ? nodeh : DEFAULT_NODE_HEIGHT;
         
         int x, y;
-        if (context.getX() != -1)
+        if (context.getX() != -1 && context.getY() != -1)
         {
         	x = context.getX();
-        }
-        else
-        {
-        	x = defaultX;
-        	defaultX += xInc;
-        }
-        if (context.getY() != -1)
-        {
         	y = context.getY();
         }
         else
         {
-        	y = defaultY;
-        	defaultY += yInc;
+        	SapphireDiagramEditor diagramEditor = (SapphireDiagramEditor)getFeatureProvider().getDiagramTypeProvider().getDiagramEditor();
+        	Point np = diagramEditor.getDefaultNodePosition();
+        	x = np.getX();
+        	y = np.getY();
         }
 
         IPeCreateService peCreateService = Graphiti.getPeCreateService();

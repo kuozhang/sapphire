@@ -246,6 +246,7 @@ public class DiagramConnectionPart extends SapphirePart
         {
         	this.endpoint2FunctionResult.dispose();
         }
+        removeModelListener();
     }
     
 	public void resetEndpoint1()

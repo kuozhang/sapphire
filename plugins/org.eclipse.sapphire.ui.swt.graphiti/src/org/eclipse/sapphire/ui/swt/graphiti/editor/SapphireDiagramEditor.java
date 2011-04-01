@@ -76,6 +76,10 @@ public class SapphireDiagramEditor extends DiagramEditor
 	private DiagramGeometryWrapper diagramGeometry;
 	private IDiagramPageDef diagramPageDef;
 	private SapphireDiagramPartListener diagramPartListener;
+    private int defaultX = 50;
+    private int defaultY = 50;
+    private static int xInc = 100;
+    private static int yInc = 0;
 	
 	public SapphireDiagramEditor(final IModelElement rootModelElement, final IPath pageDefinitionLocation)
 	{
@@ -203,6 +207,15 @@ public class SapphireDiagramEditor extends DiagramEditor
 	{
 		super.dispose();
 		this.diagramPart.dispose();
+	}
+	
+	public org.eclipse.sapphire.ui.Point getDefaultNodePosition()
+	{
+		int x = defaultX;
+		int y = defaultY;
+		defaultX += xInc;
+		defaultY += yInc;
+		return new org.eclipse.sapphire.ui.Point(x, y);
 	}
 	
 	public DiagramGeometryWrapper getDiagramGeometry()
