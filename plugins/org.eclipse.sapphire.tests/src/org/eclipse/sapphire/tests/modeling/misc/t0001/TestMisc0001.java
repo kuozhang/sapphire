@@ -9,27 +9,25 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling;
+package org.eclipse.sapphire.tests.modeling.misc.t0001;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.tests.modeling.el.ExpressionLanguageTests;
-import org.eclipse.sapphire.tests.modeling.misc.SuiteMisc;
-import org.eclipse.sapphire.tests.modeling.serialization.SerializationTests;
-import org.eclipse.sapphire.tests.modeling.xml.XmlBindingTests;
+import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
+ * Tests reporting of failure to instantiate model element.
+ * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireModelingFrameworkTests
+public final class TestMisc0001
 
-    extends TestCase
+    extends SapphireTestCase
     
 {
-    private SapphireModelingFrameworkTests( final String name )
+    private TestMisc0001( final String name )
     {
         super( name );
     }
@@ -38,16 +36,24 @@ public final class SapphireModelingFrameworkTests
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "SapphireModelingFrameworkTests" );
-        
-        suite.addTest( FindInsertionPositionTests.suite() );
-        suite.addTest( XmlBindingTests.suite() );
-        suite.addTest( SerializationTests.suite() );
-        suite.addTest( TopologicalSorterTests.suite() );
-        suite.addTest( ExpressionLanguageTests.suite() );
-        suite.addTest( SuiteMisc.suite() );
+        suite.setName( "Misc0001" );
+
+        suite.addTest( new TestMisc0001( "test" ) );
         
         return suite;
     }
     
+    public void test() throws Exception
+    {
+        try
+        {
+            ITestMisc0001.TYPE.instantiate();
+            fail( "Did not catch the expected exception." );
+        }
+        catch( Exception e )
+        {
+            assertEquals( e.getMessage(), "ITestMisc0001 : Could not instantiate implementation class." );
+        }
+    }
+
 }

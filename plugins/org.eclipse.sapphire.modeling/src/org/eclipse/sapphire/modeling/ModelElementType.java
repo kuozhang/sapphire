@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.internal.MemoryResource;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
@@ -176,13 +177,13 @@ public final class ModelElementType
             }
             catch( Exception e )
             {
-                // Is this right or should it propagate? 
-                
-                SapphireModelingFrameworkPlugin.log( e );
+                final String msg = NLS.bind( Resources.cannotInstantiate, getSimpleName() );
+                throw new RuntimeException( msg, e );
             }
         }
         
-        return null;
+        final String msg = NLS.bind( Resources.cannotInstantiate, getSimpleName() );
+        throw new RuntimeException( msg );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -280,4 +281,14 @@ public final class ModelElementType
         public abstract void propertyInitialized( final ModelProperty property );
     }
 
+    private static final class Resources extends NLS
+    {
+        public static String cannotInstantiate; 
+        
+        static
+        {
+            initializeMessages( ModelElementType.class.getName(), Resources.class );
+        }
+    }
+    
 }
