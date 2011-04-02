@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -39,81 +40,89 @@ public final class StandardXmlValueBindingImpl
     {
         super.init( element, property, params );
         
-        final XmlNamespaceResolver xmlNamespaceResolver = resource().getXmlNamespaceResolver();
-        
-        final XmlBinding genericBindingAnnotation = property.getAnnotation( XmlBinding.class );
-        
-        if( genericBindingAnnotation != null )
+        try
         {
-            this.path = new XmlPath( genericBindingAnnotation.path(), xmlNamespaceResolver );
-            this.removeNodeOnSetIfNull = true;
-        }
-        else
-        {
-            final XmlValueBinding bindingAnnotation = property.getAnnotation( XmlValueBinding.class );
+            final XmlNamespaceResolver xmlNamespaceResolver = resource().getXmlNamespaceResolver();
             
-            if( bindingAnnotation != null )
+            final XmlBinding genericBindingAnnotation = property.getAnnotation( XmlBinding.class );
+            
+            if( genericBindingAnnotation != null )
             {
-                this.path = new XmlPath( bindingAnnotation.path(), xmlNamespaceResolver );
-                this.collapseWhitespace = bindingAnnotation.collapseWhitespace();
-                this.removeNodeOnSetIfNull = bindingAnnotation.removeNodeOnSetIfNull();
-                
-                if( bindingAnnotation.mapExistanceToValue().length() > 0 )
-                {
-                    this.treatExistanceAsValue = true;
-                    
-                    final String directive = bindingAnnotation.mapExistanceToValue();
-                    StringBuilder buf = new StringBuilder();
-                    boolean escapeNextChar = false;
-                    int separatorCount = 0;
-                    
-                    for( int i = 0, n = directive.length(); i < n; i++ )
-                    {
-                        final char ch = directive.charAt( i );
-                        
-                        if( escapeNextChar )
-                        {
-                            buf.append( ch );
-                            escapeNextChar = false;
-                        }
-                        else if( ch == '\\' )
-                        {
-                            escapeNextChar = true;
-                        }
-                        else if( ch == ';' )
-                        {
-                            separatorCount++;
-                            
-                            this.valueWhenPresent = buf.toString();
-                            buf = new StringBuilder();
-                        }
-                        else
-                        {
-                            buf.append( ch );
-                        }
-                    }
-                    
-                    if( separatorCount == 0 )
-                    {
-                        this.valueWhenPresent = buf.toString();
-                        
-                        // todo: report an error
-                    }
-                    else
-                    {
-                        this.valueWhenNotPresent = buf.toString();
-                        
-                        if( separatorCount > 1 )
-                        {
-                            // todo: report an error;
-                        }
-                    }
-                }
+                this.path = new XmlPath( genericBindingAnnotation.path(), xmlNamespaceResolver );
+                this.removeNodeOnSetIfNull = true;
             }
             else
             {
-                this.path = new XmlPath( property.getName(), xmlNamespaceResolver );
+                final XmlValueBinding bindingAnnotation = property.getAnnotation( XmlValueBinding.class );
+                
+                if( bindingAnnotation != null )
+                {
+                    this.path = new XmlPath( bindingAnnotation.path(), xmlNamespaceResolver );
+                    this.collapseWhitespace = bindingAnnotation.collapseWhitespace();
+                    this.removeNodeOnSetIfNull = bindingAnnotation.removeNodeOnSetIfNull();
+                    
+                    if( bindingAnnotation.mapExistanceToValue().length() > 0 )
+                    {
+                        this.treatExistanceAsValue = true;
+                        
+                        final String directive = bindingAnnotation.mapExistanceToValue();
+                        StringBuilder buf = new StringBuilder();
+                        boolean escapeNextChar = false;
+                        int separatorCount = 0;
+                        
+                        for( int i = 0, n = directive.length(); i < n; i++ )
+                        {
+                            final char ch = directive.charAt( i );
+                            
+                            if( escapeNextChar )
+                            {
+                                buf.append( ch );
+                                escapeNextChar = false;
+                            }
+                            else if( ch == '\\' )
+                            {
+                                escapeNextChar = true;
+                            }
+                            else if( ch == ';' )
+                            {
+                                separatorCount++;
+                                
+                                this.valueWhenPresent = buf.toString();
+                                buf = new StringBuilder();
+                            }
+                            else
+                            {
+                                buf.append( ch );
+                            }
+                        }
+                        
+                        if( separatorCount == 0 )
+                        {
+                            this.valueWhenPresent = buf.toString();
+                            
+                            // todo: report an error
+                        }
+                        else
+                        {
+                            this.valueWhenNotPresent = buf.toString();
+                            
+                            if( separatorCount > 1 )
+                            {
+                                // todo: report an error;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    this.path = new XmlPath( property.getName(), xmlNamespaceResolver );
+                }
             }
+        }
+        catch( Exception e )
+        {
+            final String msg = NLS.bind( Resources.failure, new String[] { element.getModelElementType().getSimpleName(), property.getName(), e.getMessage() } );
+            throw new RuntimeException( msg, e );
         }
     }
 
@@ -186,6 +195,16 @@ public final class StandardXmlValueBindingImpl
         }
         
         return null;
+    }
+    
+    private static final class Resources extends NLS
+    {
+        public static String failure; 
+        
+        static
+        {
+            initializeMessages( StandardXmlValueBindingImpl.class.getName(), Resources.class );
+        }
     }
     
 }

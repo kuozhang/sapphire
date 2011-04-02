@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.xml.binding.t0001;
+package org.eclipse.sapphire.tests.modeling.xml.binding.t0005;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -19,17 +19,17 @@ import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
- * Tests detection and reporting of missing element name in @XmlElementBinding.Mapping annotation.
+ * Tests reporting of unresolvable namespace usage in element property binding.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestXmlBinding0001
+public final class TestXmlBinding0005
 
     extends SapphireTestCase
     
 {
-    private TestXmlBinding0001( final String name )
+    private TestXmlBinding0005( final String name )
     {
         super( name );
     }
@@ -38,17 +38,18 @@ public final class TestXmlBinding0001
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "XmlBinding0001" );
+        suite.setName( "XmlBinding0005" );
 
-        suite.addTest( new TestXmlBinding0001( "test" ) );
+        suite.addTest( new TestXmlBinding0005( "testInMapping" ) );
+        suite.addTest( new TestXmlBinding0005( "testInPath" ) );
         
         return suite;
     }
     
-    public void test() throws Exception
+    public void testInMapping() throws Exception
     {
         final XmlResourceStore xmlResourceStore = new XmlResourceStore();
-        final ITestXmlBinding0001ModelElement element = ITestXmlBinding0001ModelElement.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
+        final ITestXmlBinding0005A element = ITestXmlBinding0005A.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         
         try
         {
@@ -57,7 +58,23 @@ public final class TestXmlBinding0001
         }
         catch( Exception e )
         {
-            assertEquals( e.getMessage(), "ITestXmlBinding0001ModelElement.TestProperty : Element name must be specified in @XmlElementBinding.Mapping annotation." );
+            assertEquals( e.getMessage(), "ITestXmlBinding0005A.TestProperty : Could not resolve namespace for foo:abc node name." );
+        }
+    }
+
+    public void testInPath() throws Exception
+    {
+        final XmlResourceStore xmlResourceStore = new XmlResourceStore();
+        final ITestXmlBinding0005B element = ITestXmlBinding0005B.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
+        
+        try
+        {
+            element.getTestProperty().element( true );
+            fail( "Did not catch the expected exception." );
+        }
+        catch( Exception e )
+        {
+            assertEquals( e.getMessage(), "ITestXmlBinding0005B.TestProperty : Could not resolve namespace for foo:abc node name." );
         }
     }
 

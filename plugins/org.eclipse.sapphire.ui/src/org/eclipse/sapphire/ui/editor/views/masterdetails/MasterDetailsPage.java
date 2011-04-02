@@ -18,11 +18,15 @@ import static org.eclipse.sapphire.ui.SapphireActionSystem.CONTEXT_EDITOR_PAGE_O
 import static org.eclipse.sapphire.ui.SapphireActionSystem.CONTEXT_EDITOR_PAGE_OUTLINE_HEADER;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.CONTEXT_EDITOR_PAGE_OUTLINE_NODE;
 import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twlayout;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,12 +77,14 @@ import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireMenuActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarManagerActionPresentation;
+import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.sapphire.ui.util.internal.MutableReference;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
@@ -96,6 +102,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.forms.DetailsPart;
@@ -106,6 +114,9 @@ import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.MasterDetailsBlock;
 import org.eclipse.ui.forms.SectionPart;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -252,40 +263,108 @@ public final class MasterDetailsPage
     
     protected void createFormContent( final IManagedForm managedForm ) 
     {
-        ScrolledForm form = managedForm.getForm();
-        FormToolkit toolkit = managedForm.getToolkit();
-        toolkit.decorateFormHeading(managedForm.getForm().getForm());
+        final ScrolledForm form = managedForm.getForm();
         
-        form.setText( this.definition.getPageHeaderText().getLocalizedText( CapitalizationType.TITLE_STYLE, false ) );
-        
-        this.mainSection = new RootSection();
-        this.mainSection.createContent( managedForm );
-        
-        final ISapphireDocumentation doc = this.definition.getDocumentation().element();
-        
-        if( doc != null )
+        try
         {
-            ISapphireDocumentationDef docdef = null;
+            FormToolkit toolkit = managedForm.getToolkit();
+            toolkit.decorateFormHeading(managedForm.getForm().getForm());
             
-            if( doc instanceof ISapphireDocumentationDef )
+            form.setText( this.definition.getPageHeaderText().getLocalizedText( CapitalizationType.TITLE_STYLE, false ) );
+            
+            this.mainSection = new RootSection();
+            this.mainSection.createContent( managedForm );
+            
+            final ISapphireDocumentation doc = this.definition.getDocumentation().element();
+            
+            if( doc != null )
             {
-                docdef = (ISapphireDocumentationDef) doc;
-            }
-            else
-            {
-                docdef = ( (ISapphireDocumentationRef) doc ).resolve();
+                ISapphireDocumentationDef docdef = null;
+                
+                if( doc instanceof ISapphireDocumentationDef )
+                {
+                    docdef = (ISapphireDocumentationDef) doc;
+                }
+                else
+                {
+                    docdef = ( (ISapphireDocumentationRef) doc ).resolve();
+                }
+                
+                if( docdef != null )
+                {
+                    SapphireHelpSystem.setHelp( managedForm.getForm().getBody(), docdef );
+                }
             }
             
-            if( docdef != null )
+            final SapphireActionGroup actions = getActions( CONTEXT_EDITOR_PAGE );
+            final SapphireToolBarManagerActionPresentation actionPresentation = new SapphireToolBarManagerActionPresentation( this, getSite().getShell(), actions );
+            actionPresentation.setToolBarManager( form.getToolBarManager() );
+            actionPresentation.render();
+        }
+        catch( final Exception e )
+        {
+            if( this.mainSection != null )
             {
-                SapphireHelpSystem.setHelp( managedForm.getForm().getBody(), docdef );
+                this.mainSection.dispose();
+                this.mainSection = null;
+                
+                final Composite body = (Composite) ( (Form) form.getChildren()[ 0 ] ).getChildren()[ 1 ];
+                
+                for( Control control : body.getChildren() )
+                {
+                    control.dispose();
+                }
+                
+                final Color bgcolor = body.getDisplay().getSystemColor( SWT.COLOR_WHITE );
+                
+                final Composite composite = new Composite( body, SWT.NONE );
+                composite.setLayoutData( gdfill() );
+                composite.setLayout( glayout( 1, 5, 5, 10, 5 ) );
+                composite.setBackground( bgcolor );
+                
+                final Composite msgAndShowStackTraceLinkComposite = new Composite( composite, SWT.NONE );
+                msgAndShowStackTraceLinkComposite.setLayoutData( gdhfill() );
+                msgAndShowStackTraceLinkComposite.setLayout( glayout( 2, 0, 0 ) );
+                msgAndShowStackTraceLinkComposite.setBackground( bgcolor );
+                
+                final SapphireFormText text = new SapphireFormText( msgAndShowStackTraceLinkComposite, SWT.NONE );
+                text.setLayoutData( gdhfill() );
+                text.setText( "<form><li style=\"image\" value=\"error\">" + e.getMessage() + "</li></form>", true, false );
+                text.setImage( "error", PlatformUI.getWorkbench().getSharedImages().getImage( ISharedImages.IMG_OBJS_ERROR_TSK ) );
+                text.setBackground( bgcolor );
+
+                final SapphireFormText showStackTraceLink = new SapphireFormText( msgAndShowStackTraceLinkComposite, SWT.NONE );
+                showStackTraceLink.setLayoutData( gd() );
+                showStackTraceLink.setText( "<form><p><a href=\"show-stack\">Show stack trace...</a></p></form>", true, false );
+                showStackTraceLink.setBackground( bgcolor );
+                
+                showStackTraceLink.addHyperlinkListener
+                (
+                    new HyperlinkAdapter()
+                    {
+                        @Override
+                        public void linkActivated( final HyperlinkEvent event )
+                        {
+                            showStackTraceLink.setVisible( false );
+                            
+                            final Label separator = new Label( composite, SWT.SEPARATOR | SWT.HORIZONTAL );
+                            separator.setLayoutData( gdhfill() );
+                            separator.setBackground( bgcolor );
+                            
+                            final Text stack = new Text( composite, SWT.MULTI | SWT.READ_ONLY | SWT.BORDER | SWT.V_SCROLL );
+                            stack.setLayoutData( gdfill() );
+                            stack.setBackground( bgcolor );
+                            
+                            final StringWriter w = new StringWriter();
+                            e.printStackTrace( new PrintWriter( w ) );
+                            stack.setText( w.getBuffer().toString() );
+                            
+                            body.layout( true, true );
+                        }
+                    }
+                );
             }
         }
-        
-        final SapphireActionGroup actions = getActions( CONTEXT_EDITOR_PAGE );
-        final SapphireToolBarManagerActionPresentation actionPresentation = new SapphireToolBarManagerActionPresentation( this, getSite().getShell(), actions );
-        actionPresentation.setToolBarManager( form.getToolBarManager() );
-        actionPresentation.render();
     }
     
     public IContentOutlinePage getContentOutlinePage()
@@ -367,8 +446,11 @@ public final class MasterDetailsPage
         {
             setDetailsMaximized( false );
         }
-        
-        this.mainSection.masterSection.tree.setFocus();
+
+        if( this.mainSection != null )
+        {
+            this.mainSection.masterSection.tree.setFocus();
+        }
     }
     
     public void setFocusOnDetails()

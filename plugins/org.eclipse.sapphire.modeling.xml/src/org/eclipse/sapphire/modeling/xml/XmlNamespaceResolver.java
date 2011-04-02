@@ -13,6 +13,8 @@ package org.eclipse.sapphire.modeling.xml;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.osgi.util.NLS;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -42,9 +44,25 @@ public abstract class XmlNamespaceResolver
         if( prefix.length() > 0 )
         {
             namespace = resolve( prefix );
+            
+            if( namespace == null || namespace.length() == 0 )
+            {
+                final String msg = NLS.bind( Resources.couldNotResolveNamespace, name );
+                throw new IllegalArgumentException( msg );
+            }
         }
         
         return new QName( namespace, localName, prefix );
+    }
+    
+    private static final class Resources extends NLS
+    {
+        public static String couldNotResolveNamespace; 
+        
+        static
+        {
+            initializeMessages( XmlNamespaceResolver.class.getName(), Resources.class );
+        }
     }
     
 }

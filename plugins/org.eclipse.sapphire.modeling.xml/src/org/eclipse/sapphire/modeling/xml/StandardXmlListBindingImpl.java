@@ -49,7 +49,16 @@ public class StandardXmlListBindingImpl
                       final String[] params )
     {
         super.init( element, property, params );
-        initBindingMetadata( element, property, params );
+        
+        try
+        {
+            initBindingMetadata( element, property, params );
+        }
+        catch( Exception e )
+        {
+            final String msg = NLS.bind( Resources.failure, new String[] { element.getModelElementType().getSimpleName(), property.getName(), e.getMessage() } );
+            throw new RuntimeException( msg, e );
+        }
     }
     
     protected void initBindingMetadata( final IModelElement element,
@@ -93,8 +102,7 @@ public class StandardXmlListBindingImpl
                 
                 if( mappingElementName.length() == 0 )
                 {
-                    final String message = NLS.bind( Resources.mustSpecifyElementNameMsg, element.getModelElementType().getSimpleName(), property.getName() );
-                    throw new IllegalArgumentException( message );
+                    throw new RuntimeException( Resources.mustSpecifyElementNameMsg );
                 }
                 
                 this.xmlElementNames[ i ] = createQualifiedName( mappingElementName, xmlNamespaceResolver );
@@ -225,6 +233,7 @@ public class StandardXmlListBindingImpl
     
     private static final class Resources extends NLS
     {
+        public static String failure;
         public static String mustSpecifyElementNameMsg; 
         
         static

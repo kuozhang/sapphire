@@ -49,73 +49,80 @@ public final class StandardXmlElementBindingImpl
     {
         super.init( element, property, params );
         
-        final XmlElementBinding xmlElementBindingAnnotation = property.getAnnotation( XmlElementBinding.class );
-        final XmlNamespaceResolver xmlNamespaceResolver = ( (XmlResource) element.resource() ).getXmlNamespaceResolver();
-        
-        if( xmlElementBindingAnnotation == null )
+        try
         {
-            final XmlBinding xmlBindingAnnotation = property.getAnnotation( XmlBinding.class );
+            final XmlElementBinding xmlElementBindingAnnotation = property.getAnnotation( XmlElementBinding.class );
+            final XmlNamespaceResolver xmlNamespaceResolver = ( (XmlResource) element.resource() ).getXmlNamespaceResolver();
             
-            if( xmlBindingAnnotation != null && property.getAllPossibleTypes().size() == 1 )
+            if( xmlElementBindingAnnotation == null )
             {
-                final String path = xmlBindingAnnotation.path();
-                final int slashIndex = path.lastIndexOf( '/' );
+                final XmlBinding xmlBindingAnnotation = property.getAnnotation( XmlBinding.class );
                 
-                if( slashIndex == -1 )
+                if( xmlBindingAnnotation != null && property.getAllPossibleTypes().size() == 1 )
                 {
-                    this.xmlElementNames = new QName[] { createQualifiedName( path, xmlNamespaceResolver ) };
-                    this.modelElementTypes = new ModelElementType[] { property.getType() };
+                    final String path = xmlBindingAnnotation.path();
+                    final int slashIndex = path.lastIndexOf( '/' );
+                    
+                    if( slashIndex == -1 )
+                    {
+                        this.xmlElementNames = new QName[] { createQualifiedName( path, xmlNamespaceResolver ) };
+                        this.modelElementTypes = new ModelElementType[] { property.getType() };
+                    }
+                    else if( slashIndex > 0 && slashIndex < path.length() - 1 )
+                    {
+                        this.path = new XmlPath( path.substring( 0, slashIndex ), xmlNamespaceResolver );
+                        this.xmlElementNames = new QName[] { createQualifiedName( path.substring( slashIndex + 1 ), xmlNamespaceResolver ) };
+                        this.modelElementTypes = new ModelElementType[] { property.getType() };
+                    }
                 }
-                else if( slashIndex > 0 && slashIndex < path.length() - 1 )
+                
+                if( this.xmlElementNames == null )
                 {
-                    this.path = new XmlPath( path.substring( 0, slashIndex ), xmlNamespaceResolver );
-                    this.xmlElementNames = new QName[] { createQualifiedName( path.substring( slashIndex + 1 ), xmlNamespaceResolver ) };
-                    this.modelElementTypes = new ModelElementType[] { property.getType() };
+                    this.path = new XmlPath( property.getName(), ( (XmlResource) element.resource() ).getXmlNamespaceResolver() );
+                    
+                    final List<ModelElementType> types = property.getAllPossibleTypes();
+                    
+                    this.modelElementTypes = types.toArray( new ModelElementType[ types.size() ] );
+                    this.xmlElementNames = new QName[ this.modelElementTypes.length ];
+                    
+                    for( int i = 0; i < this.modelElementTypes.length; i++ )
+                    {
+                        this.xmlElementNames[ i ] = createQualifiedName( this.modelElementTypes[ i ].getSimpleName().substring( 1 ), xmlNamespaceResolver );
+                    }
                 }
             }
-            
-            if( this.xmlElementNames == null )
+            else
             {
-                this.path = new XmlPath( property.getName(), ( (XmlResource) element.resource() ).getXmlNamespaceResolver() );
-                
-                final List<ModelElementType> types = property.getAllPossibleTypes();
-                
-                this.modelElementTypes = types.toArray( new ModelElementType[ types.size() ] );
-                this.xmlElementNames = new QName[ this.modelElementTypes.length ];
-                
-                for( int i = 0; i < this.modelElementTypes.length; i++ )
+                if( xmlElementBindingAnnotation.path().length() > 0 )
                 {
-                    this.xmlElementNames[ i ] = createQualifiedName( this.modelElementTypes[ i ].getSimpleName().substring( 1 ), xmlNamespaceResolver );
+                    this.path = new XmlPath( xmlElementBindingAnnotation.path(), xmlNamespaceResolver );
+                }
+                
+                final XmlElementBinding.Mapping[] mappings = xmlElementBindingAnnotation.mappings();
+                
+                this.xmlElementNames = new QName[ mappings.length ];
+                this.modelElementTypes = new ModelElementType[ mappings.length ];
+                
+                for( int i = 0; i < mappings.length; i++ )
+                {
+                    final XmlElementBinding.Mapping mapping = mappings[ i ];
+                    
+                    final String mappingElementName = mapping.element().trim();
+                    
+                    if( mappingElementName.length() == 0 )
+                    {
+                        throw new RuntimeException( Resources.mustSpecifyElementNameMsg );
+                    }
+                    
+                    this.xmlElementNames[ i ] = createQualifiedName( mappingElementName, xmlNamespaceResolver );
+                    this.modelElementTypes[ i ] = ModelElementType.getModelElementType( mapping.type() );
                 }
             }
         }
-        else
+        catch( Exception e )
         {
-            if( xmlElementBindingAnnotation.path().length() > 0 )
-            {
-                this.path = new XmlPath( xmlElementBindingAnnotation.path(), xmlNamespaceResolver );
-            }
-            
-            final XmlElementBinding.Mapping[] mappings = xmlElementBindingAnnotation.mappings();
-            
-            this.xmlElementNames = new QName[ mappings.length ];
-            this.modelElementTypes = new ModelElementType[ mappings.length ];
-            
-            for( int i = 0; i < mappings.length; i++ )
-            {
-                final XmlElementBinding.Mapping mapping = mappings[ i ];
-                
-                final String mappingElementName = mapping.element().trim();
-                
-                if( mappingElementName.length() == 0 )
-                {
-                    final String message = NLS.bind( Resources.mustSpecifyElementNameMsg, element.getModelElementType().getSimpleName(), property.getName() );
-                    throw new IllegalArgumentException( message );
-                }
-                
-                this.xmlElementNames[ i ] = createQualifiedName( mappingElementName, xmlNamespaceResolver );
-                this.modelElementTypes[ i ] = ModelElementType.getModelElementType( mapping.type() );
-            }
+            final String msg = NLS.bind( Resources.failure, new String[] { element.getModelElementType().getSimpleName(), property.getName(), e.getMessage() } );
+            throw new RuntimeException( msg, e );
         }
     }
     
@@ -230,6 +237,7 @@ public final class StandardXmlElementBindingImpl
     
     private static final class Resources extends NLS
     {
+        public static String failure;
         public static String mustSpecifyElementNameMsg; 
         
         static
