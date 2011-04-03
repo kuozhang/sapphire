@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<y:root xmlns:y="http://www.eclipse.org/sapphire/tests/xml/binding/0007/x" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y1="http://www.eclipse.org/sapphire/tests/xml/binding/0007/y">
+    <y1:child>abc</y1:child>
+</y:root>

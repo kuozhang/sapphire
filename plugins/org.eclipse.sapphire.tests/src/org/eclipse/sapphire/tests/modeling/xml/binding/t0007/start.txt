@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<y:root xmlns:y="http://www.eclipse.org/sapphire/tests/xml/binding/0007/x" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+</y:root>

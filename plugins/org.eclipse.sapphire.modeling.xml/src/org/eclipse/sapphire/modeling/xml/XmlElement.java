@@ -14,6 +14,7 @@ package org.eclipse.sapphire.modeling.xml;
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.EMPTY_STRING;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -575,6 +576,8 @@ public final class XmlElement
             }
             else
             {
+                final Map<String,String> namespaces = new HashMap<String,String>();
+                
                 Element el = domElement;
                 boolean found = false;
                 
@@ -588,22 +591,28 @@ public final class XmlElement
                         final String attrName = attr.getName();
                         final String attrValue = attr.getValue();
                         
-                        if( attrName.equals( "xmlns" ) ) //$NON-NLS-1$
+                        if( attrName.equals( "xmlns" ) )
                         {
                             if( attrValue.equals( namespace ) )
                             {
                                 found = true;
                                 break;
                             }
+                            
+                            namespaces.put( "", attrValue );
                         }
-                        else if( attrName.startsWith( "xmlns:" ) ) //$NON-NLS-1$
+                        else if( attrName.startsWith( "xmlns:" ) )
                         {
+                            final String p = attrName.substring( 6 );
+                                    
                             if( attrValue.equals( namespace ) )
                             {
-                                prefix = attrName.substring( 6 );
+                                prefix = p;
                                 found = true;
                                 break;
                             }
+                            
+                            namespaces.put( p, attrValue );
                         }
                     }
                     
@@ -623,11 +632,16 @@ public final class XmlElement
                 {
                     prefix = defaultPrefix;
                     
-                    final String xmlnsAttrName = "xmlns:" + defaultPrefix; //$NON-NLS-1$
+                    for( int i = 1; namespaces.containsKey( prefix ); i++ )
+                    {
+                        prefix = defaultPrefix + String.valueOf( i );
+                    }
+                    
+                    final String xmlnsAttrName = "xmlns:" + prefix;
                     final Element root = domElement.getOwnerDocument().getDocumentElement();
                     root.setAttribute( xmlnsAttrName, namespace );
                     
-                    if( ! namespace.equals( "http://www.w3.org/2001/XMLSchema-instance" ) ) //$NON-NLS-1$
+                    if( ! namespace.equals( "http://www.w3.org/2001/XMLSchema-instance" ) )
                     {
                         final XmlContentModel xmlContentModel = getContentModel();
                         String schemaLocation = null;

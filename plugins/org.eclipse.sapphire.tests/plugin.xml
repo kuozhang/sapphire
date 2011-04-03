@@ -68,6 +68,16 @@
         systemId="http://www.eclipse.org/sapphire/tests/xml/binding/0003/z"
         uri="schemas/xml/binding/0003z.xsd"/>
     </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/binding/0007/x"
+        uri="schemas/xml/binding/0007x.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/binding/0007/y"
+        uri="schemas/xml/binding/0007y.xsd"/>
+    </catalogContribution>
   </extension>
 
 </plugin>
