@@ -48,7 +48,7 @@ public final class TestXmlBinding0007
     
     public void test() throws Exception
     {
-        final ByteArrayResourceStore byteArrayResourceStore = new ByteArrayResourceStore( loadResourceAsStream( "start.txt" ) );
+        final ByteArrayResourceStore byteArrayResourceStore = new ByteArrayResourceStore( loadResourceAsStream( "initial.txt" ) );
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( byteArrayResourceStore );
 
         final ITestXmlBinding0007 root = ITestXmlBinding0007.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
