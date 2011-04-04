@@ -454,9 +454,9 @@ public class DiagramConnectionTemplate extends SapphirePart
     	
     	if (property == this.connListProperty)
     	{
-	    	if (newList.size() != getDiagramConnections(element).size())
-	    	{
-	    		List<DiagramConnectionPart> connParts = getDiagramConnections(element);
+    		List<DiagramConnectionPart> connParts = getDiagramConnections(element);
+	    	if (newList.size() != connParts.size())
+	    	{	    		
 	    		List<IModelElement> oldList = new ArrayList<IModelElement>(connParts.size());
 	    		for (DiagramConnectionPart connPart : connParts)
 	    		{
@@ -500,8 +500,8 @@ public class DiagramConnectionTemplate extends SapphirePart
     	}
     	else if (property == this.modelProperty)
     	{
-    		// 1xn type connection
-    		List<DiagramConnectionPart> connParts = getDiagramConnections(element);
+    		// 1xn type connection and we are dealing with events on connection list parent
+    		List<DiagramConnectionPart> connParts = getDiagramConnections(null);
     		List<IModelElement> oldList = new ArrayList<IModelElement>();
     		Set<IModelElement> oldConnParents = new HashSet<IModelElement>(); 
     		for (DiagramConnectionPart connPart : connParts)
