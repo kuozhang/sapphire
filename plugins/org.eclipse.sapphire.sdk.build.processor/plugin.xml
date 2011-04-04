@@ -15,7 +15,10 @@
 
 <plugin>
 
-  <extension-point id="extension" name="Extension"/>
-  <extension point="org.eclipse.sapphire.modeling.extension"/>
+  <extension point="org.eclipse.jdt.apt.core.annotationProcessorFactory">
+    <factories enableDefault="true">
+      <factory class="org.eclipse.sapphire.sdk.build.processor.internal.APFactory"/>
+    </factories>
+  </extension>
 
 </plugin>
