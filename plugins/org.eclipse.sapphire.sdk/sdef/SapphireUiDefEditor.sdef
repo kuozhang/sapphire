@@ -1192,6 +1192,7 @@
                                     <section>
                                         <label>connection binding</label>
                                         <content>
+                                            <property-editor>Id</property-editor>
                                             <property-editor>Property</property-editor>
                                             <property-editor>InstanceId</property-editor>
                                         </content>
@@ -1262,6 +1263,7 @@
                         <section>
                             <label>connection</label>
                             <content>
+                                <property-editor>Id</property-editor>
                                 <property-editor>ToolPaletteLabel</property-editor>
                                 <property-editor>ToolPaletteDesc</property-editor>
                                 <property-editor>LineStyle</property-editor>
@@ -1308,6 +1310,7 @@
                         <section>
                             <label>connection binding</label>
                             <content>
+                                <property-editor>Id</property-editor>
                                 <property-editor>Property</property-editor>
                                 <property-editor>InstanceId</property-editor>
                             </content>

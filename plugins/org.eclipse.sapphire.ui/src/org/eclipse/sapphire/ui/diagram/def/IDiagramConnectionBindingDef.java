@@ -40,6 +40,12 @@ public interface IDiagramConnectionBindingDef
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramConnectionBindingDef.class );
 	
+    // *** Id ***
+    
+    @NonNullValue
+    
+    ValueProperty PROP_ID = new ValueProperty( TYPE, ISapphirePartDef.PROP_ID );
+
     // *** Property ***
     
     @Label( standard = "property" )

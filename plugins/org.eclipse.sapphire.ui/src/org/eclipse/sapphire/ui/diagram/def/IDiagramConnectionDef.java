@@ -45,6 +45,12 @@ public interface IDiagramConnectionDef
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramConnectionDef.class );
 	
+    // *** Id ***
+    
+    @NonNullValue
+    
+    ValueProperty PROP_ID = new ValueProperty( TYPE, ISapphirePartDef.PROP_ID );
+
     // *** ToolPaletteLabel ***
     
     @Label( standard = "tool palette label" )
