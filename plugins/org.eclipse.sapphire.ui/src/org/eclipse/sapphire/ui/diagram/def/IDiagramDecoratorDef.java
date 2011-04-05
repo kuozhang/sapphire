@@ -38,17 +38,6 @@ public interface IDiagramDecoratorDef
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramDecoratorDef.class );
 	
-	// *** ShowDecorator ***
-	
-    @Type( base = Function.class )
-    @XmlBinding( path = "show-decorator" )
-    
-    ValueProperty PROP_SHOW_DECORATOR = new ValueProperty(TYPE, "ShowDecorator");
-    
-    Value<Function> getShowDecorator();
-    void setShowDecorator( String value );
-    void setShowDecorator( Function value );
-    
     // *** DecoratorPlacement ***
     
     @Type( base = DecoratorPlacement.class )

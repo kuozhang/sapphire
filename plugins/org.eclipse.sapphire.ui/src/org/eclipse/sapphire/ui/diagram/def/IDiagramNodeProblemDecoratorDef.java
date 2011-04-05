@@ -36,9 +36,15 @@ public interface IDiagramNodeProblemDecoratorDef
     
 	// *** ShowDecorator ***
 	
-	@DefaultValue( text = "true" )
-	
-    ValueProperty PROP_SHOW_DECORATOR = new ValueProperty(TYPE, IDiagramDecoratorDef.PROP_SHOW_DECORATOR);
+    @Type( base = Boolean.class )
+    @XmlBinding( path = "show-decorator" )
+    @DefaultValue( text = "true" )
+    
+    ValueProperty PROP_SHOW_DECORATOR = new ValueProperty(TYPE, "ShowDecorator");
+    
+    Value<Boolean> isShowDecorator();
+    void setShowDecorator( String value );
+    void setShowDecorator( Boolean value );
 	
     // *** Size ***
     

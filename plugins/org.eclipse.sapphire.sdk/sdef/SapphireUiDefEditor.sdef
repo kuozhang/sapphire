@@ -1152,7 +1152,7 @@
                                         <label>node image decorator</label>
                                         <content>
                                             <property-editor>ImageId</property-editor>
-                                            <property-editor>ShowDecorator</property-editor>
+                                            <property-editor>VisibleWhen</property-editor>
                                             <separator></separator>
                                             <property-editor>
                                                 <property>DecoratorPlacement</property>

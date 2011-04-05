@@ -45,7 +45,6 @@ public class DiagramNodePart extends SapphirePart
 	private FunctionResult labelFunctionResult;
 	private FunctionResult idFunctionResult;
 	private FunctionResult imageFunctionResult;
-	private FunctionResult problemDecoratorFunctionResult;
 	private List<FunctionResult> imageDecoratorFunctionResults;
 	private ValueProperty labelProperty;
 	private SapphireAction defaultAction;
@@ -100,19 +99,7 @@ public class DiagramNodePart extends SapphirePart
 	            }
 	        );
         }
-        
-        this.problemDecoratorFunctionResult = initExpression
-        ( 
-        	this.modelElement,
-            this.definition.getProblemDecorator().getShowDecorator(), 
-            new Runnable()
-            {
-                public void run()
-                {
-                }
-            }
-        );
-        
+                
         // Image decorator functions
         
         ModelElementList<IDiagramImageDecoratorDef> imageDecorators = this.definition.getImageDecorators();
@@ -122,7 +109,7 @@ public class DiagramNodePart extends SapphirePart
         	FunctionResult imageResult = initExpression
             ( 
             	this.modelElement,
-                imageDecorator.getShowDecorator(), 
+                imageDecorator.getVisibleWhen(), 
                 new Runnable()
                 {
                     public void run()
@@ -160,24 +147,7 @@ public class DiagramNodePart extends SapphirePart
     {
         return this.modelElement;
     }    
-       
-    public boolean showProblemDecorator()
-    {
-        String show = null;
-        
-        if( this.problemDecoratorFunctionResult!= null )
-        {
-            show = (String) this.problemDecoratorFunctionResult.value();
-        }
-        
-        if( show != null && show.equals("false"))
-        {
-            return false;
-        }
-        
-        return true;    	
-    }
-    
+           
     public List<IDiagramImageDecoratorDef> getImageDecorators()
     {
     	List<IDiagramImageDecoratorDef> imageDecorators = new ArrayList<IDiagramImageDecoratorDef>();
@@ -233,12 +203,7 @@ public class DiagramNodePart extends SapphirePart
 		{
 			this.idFunctionResult.dispose();
 		}
-		
-		if (this.problemDecoratorFunctionResult != null)
-		{
-			this.problemDecoratorFunctionResult.dispose();
-		}
-		
+				
 		this.modelElement.removeListener(this.modelPropertyListener, "*");
 	}
 	
@@ -401,7 +366,7 @@ public class DiagramNodePart extends SapphirePart
 		return 0;
 	}
 	
-	public IDiagramNodeProblemDecoratorDef getErrorIndicatorDef()
+	public IDiagramNodeProblemDecoratorDef getProblemIndicatorDef()
 	{
 		return this.definition.getProblemDecorator();
 	}

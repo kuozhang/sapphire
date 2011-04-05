@@ -17,6 +17,8 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -42,5 +44,19 @@ public interface IDiagramImageDecoratorDef
     
     Value<String> getImageId();
     void setImageId( String Id );
+    
+	// *** VisibleWhen ***
+	
+    @Type( base = Function.class )
+    @XmlBinding( path = "visible-when" )
+    @Label( standard = "visible when" )
+    
+    ValueProperty PROP_VISIBLE_WHEN = new ValueProperty(TYPE, "VisibleWhen");
+    
+    Value<Function> getVisibleWhen();
+    void setVisibleWhen( String value );
+    void setVisibleWhen( Function value );
+    
+    
 	
 }

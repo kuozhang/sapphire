@@ -20,16 +20,13 @@ import org.eclipse.graphiti.dt.IDiagramTypeProvider;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IDoubleClickContext;
 import org.eclipse.graphiti.features.custom.ICustomFeature;
-import org.eclipse.graphiti.mm.algorithms.AlgorithmsFactory;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Image;
-import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.platform.IPlatformImageConstants;
-import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.tb.DefaultToolBehaviorProvider;
 import org.eclipse.graphiti.tb.IContextButtonPadData;
 import org.eclipse.graphiti.tb.IDecorator;
@@ -107,7 +104,7 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 			List<IDecorator> decoratorList = new ArrayList<IDecorator>();			
 			DiagramNodePart nodePart = (DiagramNodePart)bo;
 			
-			if (nodePart.showProblemDecorator())
+			if (nodePart.getProblemIndicatorDef().isShowDecorator().getContent())
 			{
 				addNodeProblemDecorator(pe, nodePart, decoratorList);
 			}
@@ -141,7 +138,7 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 	private void addNodeProblemDecorator(PictogramElement pe, DiagramNodePart nodePart, List<IDecorator> decoratorList)
 	{
 		IModelElement model = nodePart.getModelElement();
-		IDiagramNodeProblemDecoratorDef decoratorDef = nodePart.getErrorIndicatorDef();
+		IDiagramNodeProblemDecoratorDef decoratorDef = nodePart.getProblemIndicatorDef();
 		IStatus status = model.validate();
 		ImageDecorator imageRenderingDecorator = null;
 		if (status.getSeverity() != IStatus.OK)
