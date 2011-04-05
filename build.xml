@@ -1051,7 +1051,7 @@ Fragment-Host: @{Bundle}
               <if>
                 <not><istrue value="${.content.valid}"/></not>
                 <then>
-                  <get src="http://www.eclipse.org/downloads/download.php?file=@{file}&amp;r=1" dest="${downloads}/${.url.checksum}"/>
+                  <get src="http://www.eclipse.org/downloads/download.php?file=@{file}&amp;r=1&amp;protocol=http" dest="${downloads}/${.url.checksum}"/>
                 </then>
               </if>
               
