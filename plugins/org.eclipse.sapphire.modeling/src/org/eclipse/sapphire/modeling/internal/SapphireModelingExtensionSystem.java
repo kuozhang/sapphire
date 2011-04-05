@@ -424,13 +424,16 @@ public final class SapphireModelingExtensionSystem
                 {
                     final Enumeration<URL> urls = this.bundle.getResources( "META-INF/sapphire-extension.xml" );
 
-                    while( urls.hasMoreElements() )
+                    if( urls != null )
                     {
-                        final URL url = urls.nextElement();
-
-                        if( url != null )
+                        while( urls.hasMoreElements() )
                         {
-                            files.add( url );
+                            final URL url = urls.nextElement();
+    
+                            if( url != null )
+                            {
+                                files.add( url );
+                            }
                         }
                     }
                 }
