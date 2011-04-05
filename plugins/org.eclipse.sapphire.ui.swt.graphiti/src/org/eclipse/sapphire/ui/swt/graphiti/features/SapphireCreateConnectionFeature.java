@@ -37,9 +37,10 @@ public class SapphireCreateConnectionFeature extends AbstractCreateConnectionFea
 	private SapphireDiagramEditorPart diagramPart;
 	private IDiagramConnectionDef connDef;
 	
-	public SapphireCreateConnectionFeature(IFeatureProvider fp, SapphireDiagramEditorPart diagramPart, IDiagramConnectionDef connDef)
+	public SapphireCreateConnectionFeature(IFeatureProvider fp, SapphireDiagramEditorPart diagramPart, 
+					IDiagramConnectionDef connDef, String tpLabel, String tpDesc)
 	{
-		super(fp, connDef.getToolPaletteLabel().getContent(), connDef.getToolPaletteDesc().getContent());
+		super(fp, tpLabel, tpDesc);
 		this.diagramPart = diagramPart;
 		this.connDef = connDef;		
 	}

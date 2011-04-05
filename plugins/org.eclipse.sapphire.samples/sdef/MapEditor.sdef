@@ -25,7 +25,7 @@
         <id>diagram</id>
         <connection>
             <id>railway_routes</id>
-            <tool-palette-label>Railway Route</tool-palette-label>
+            <tool-palette-label>railway route</tool-palette-label>
             <line-style>dash-dot</line-style>
             <line-color>#808080</line-color>
             <line-width>2</line-width>
@@ -35,15 +35,15 @@
         </connection>
         <connection>
             <id>highway_routes</id>
-            <tool-palette-label>Highway Route</tool-palette-label>
+            <tool-palette-label>highway route</tool-palette-label>
             <endpoint2>
                 <type>arrow</type>
             </endpoint2>        
         </connection>
         <node>
             <id>destinations</id>
-            <tool-palette-label>Destination</tool-palette-label>
-            <tool-palette-desc>Map Destination</tool-palette-desc>
+            <tool-palette-label>destination</tool-palette-label>
+            <tool-palette-desc>map destination</tool-palette-desc>
             <property>Destinations</property>
             <label>${Name == null ? &quot;&lt;destination&gt;&quot; : Name}</label>
             <instance-id>${Name}</instance-id>

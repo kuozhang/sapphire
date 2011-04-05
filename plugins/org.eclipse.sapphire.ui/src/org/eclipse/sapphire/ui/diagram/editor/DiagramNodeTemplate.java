@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -25,6 +26,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -75,8 +77,18 @@ public class DiagramNodeTemplate extends SapphirePart
     	this.modelElement = getModelElement();
     	this.definition = (IDiagramNodeDef)super.definition;
     	
-        this.toolPaletteLabel = this.definition.getToolPaletteLabel().getContent();
-        this.toolPaletteDesc = this.definition.getToolPaletteDesc().getContent();
+    	if (this.definition.getToolPaletteLabel().getContent() != null)
+    	{
+        	ValueProperty tpLabelProperty = IDiagramNodeDef.PROP_TOOL_PALETTE_LABEL;
+	        this.toolPaletteLabel = tpLabelProperty.getLocalizationService().text(
+							this.definition.getToolPaletteLabel().getContent(), CapitalizationType.TITLE_STYLE, false);
+    	}        
+        if (this.definition.getToolPaletteDesc().getContent() != null)
+        {
+            ValueProperty tpDescProperty = IDiagramNodeDef.PROP_TOOL_PALETTE_LABEL;
+	        this.toolPaletteDesc = tpDescProperty.getLocalizationService().text(
+	        				this.definition.getToolPaletteDesc().getContent(), CapitalizationType.TITLE_STYLE, false);
+        }
         
         this.diagramNodes = new ArrayList<DiagramNodePart>();
         this.listeners = new CopyOnWriteArraySet<Listener>();

@@ -43,6 +43,7 @@ import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramDropActionHandler;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
@@ -160,9 +161,22 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 		List<ICreateConnectionFeature> features = 
 			new ArrayList<ICreateConnectionFeature>(connectionDefs.size());
 		for (IDiagramConnectionDef connectionDef : connectionDefs)
-		{
+		{	
+			String tpLabel = connectionDef.getToolPaletteLabel().getContent();
+			if (tpLabel != null)
+			{
+				tpLabel = IDiagramConnectionDef.PROP_TOOL_PALETTE_LABEL.getLocalizationService().text(
+								tpLabel, CapitalizationType.TITLE_STYLE, false);
+			}
+			String tpDesc = connectionDef.getToolPaletteDesc().getContent();
+			if (tpDesc != null)
+			{
+				tpDesc = IDiagramConnectionDef.PROP_TOOL_PALETTE_DESC.getLocalizationService().text(
+								tpDesc, CapitalizationType.TITLE_STYLE, false);
+			}
+			
 			SapphireCreateConnectionFeature createConnectionFeature = 
-				new SapphireCreateConnectionFeature(this, diagramPart, connectionDef);
+				new SapphireCreateConnectionFeature(this, diagramPart, connectionDef, tpLabel, tpDesc);
 			features.add(createConnectionFeature);
 		}
 		
