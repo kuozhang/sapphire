@@ -18,9 +18,7 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramLabelDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -28,7 +26,6 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramLabelDef;
 
 public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart 
 {
-	private IDiagramConnectionBindingDef localDefinition;
 	private IModelElement srcNodeModel;
 	private IModelElement endpointModel;
 	private ModelPath endpointPath;
@@ -44,42 +41,7 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
     @Override
     protected void init()
     {   
-    	this.connectionTemplate = (DiagramConnectionTemplate)getParentPart();
-        this.localDefinition = (IDiagramConnectionBindingDef)super.definition;
-        this.modelElement = super.getModelElement();
-        
-        final IDiagramLabelDef labelDef = this.localDefinition.getLabel().element();
-        
-        if( labelDef != null )
-        {
-            this.labelFunctionResult = initExpression
-            ( 
-            	this.modelElement,
-            	labelDef.getText(), 
-                new Runnable()
-                {
-                    public void run()
-                    {
-                    	refreshLabel();
-                    }
-                }
-            );
-            
-            this.labelProperty = FunctionUtil.getFunctionProperty(this.modelElement, this.labelFunctionResult);
-        }
-        
-        this.idFunctionResult = initExpression
-        ( 
-        	this.modelElement,
-            this.localDefinition.getInstanceId(), 
-            new Runnable()
-            {
-                public void run()
-                {
-                }
-            }
-        );        
-
+    	initLabelId();
         this.endpointDef = this.localDefinition.getEndpoint2().element();
         this.endpointModel = resolveEndpoint(this.modelElement, this.endpointPath);
         if (this.endpointModel != null)

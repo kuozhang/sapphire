@@ -32,6 +32,7 @@ import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramLabelDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -40,7 +41,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 public class DiagramConnectionPart extends SapphirePart 
 {
 	protected DiagramConnectionTemplate connectionTemplate;
-	private IDiagramConnectionBindingDef localDefinition;
+	protected IDiagramConnectionBindingDef localDefinition;
 	protected IModelElement modelElement;
 	protected ModelPath endpoint1Path;
 	protected ModelPath endpoint2Path;
@@ -65,28 +66,32 @@ public class DiagramConnectionPart extends SapphirePart
 		this.endpoint2Path = endpoint2Path;
 	}
 	
-    @Override
-    protected void init()
-    {
+	protected void initLabelId()
+	{
     	this.connectionTemplate = (DiagramConnectionTemplate)getParentPart();
         
         this.localDefinition = (IDiagramConnectionBindingDef)super.definition;
         this.modelElement = getModelElement();
-        this.labelFunctionResult = initExpression
-        ( 
-        	this.modelElement,
-        	this.localDefinition.getLabel().element().getText(), 
-            new Runnable()
-            {
-                public void run()
-                {
-                	refreshLabel();
-                }
-            }
-        );
         
-        this.labelProperty = FunctionUtil.getFunctionProperty(this.modelElement, 
-        		this.labelFunctionResult);
+        final IDiagramLabelDef labelDef = this.localDefinition.getLabel().element();
+        if (labelDef != null)
+        {
+	        this.labelFunctionResult = initExpression
+	        ( 
+	        	this.modelElement,
+	        	labelDef.getText(), 
+	            new Runnable()
+	            {
+	                public void run()
+	                {
+	                	refreshLabel();
+	                }
+	            }
+	        );
+        
+	        this.labelProperty = FunctionUtil.getFunctionProperty(this.modelElement, 
+	        		this.labelFunctionResult);
+        }
         
         this.idFunctionResult = initExpression
         ( 
@@ -98,8 +103,14 @@ public class DiagramConnectionPart extends SapphirePart
                 {
                 }
             }
-        );
-        
+        );        		
+	}
+	
+    @Override
+    protected void init()
+    {
+    	initLabelId();
+    	
         this.endpoint1Def = this.localDefinition.getEndpoint1().element();        
         this.srcNodeModel = resolveEndpoint(this.modelElement, this.endpoint1Path);
         if (this.srcNodeModel != null)
