@@ -1,0 +1,70 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2011 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<definition>
+    <import>
+        <bundle>org.eclipse.sapphire.samples</bundle>
+        <package>org.eclipse.sapphire.samples.architecture</package>
+    </import>
+    <diagram-page>
+        <id>DiagramPage</id>
+        <node>
+            <instance-id>${ Name }</instance-id>
+            <tool-palette-label>component</tool-palette-label>
+            <property>Components</property>
+            <label>${ Name == null ? &quot;&lt;component&gt;&quot; : Name }</label>
+            <connection-binding>
+                <id>Dependency</id>
+                <property>Dependencies</property>
+                <instance-id>${ Name }</instance-id>
+                <endpoint2>
+                    <property>Name</property>
+                    <value>${ Name }</value>
+                </endpoint2>
+            </connection-binding>
+        </node>
+        <page-header-text>architecture</page-header-text>
+        <connection>
+            <id>Dependency</id>
+            <tool-palette-label>dependency</tool-palette-label>
+            <endpoint2>
+                <type>arrow</type>
+            </endpoint2>
+        </connection>
+    </diagram-page>
+    <editor-page>
+        <id>DetailsPage</id>
+        <page-name>details</page-name>
+        <page-header-text>architecture</page-header-text>
+        <root-node>
+            <node>
+                <label>components</label>
+                <node-list>
+                    <property>Components</property>
+                    <node-template>
+                        <model-element-type>IComponent</model-element-type>
+                        <label>${ Name == null ? &quot;&amp;lt;component&amp;gt;&quot; : Name }</label>
+                        <section>
+                            <label>component</label>
+                            <content>
+                                <property-editor>Name</property-editor>
+                                <property-editor>Dependencies</property-editor>
+                            </content>
+                        </section>
+                    </node-template>
+                </node-list>
+            </node>
+        </root-node>
+    </editor-page>
+</definition>

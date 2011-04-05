@@ -166,6 +166,14 @@
       name="Map Editor"/>
   </extension>
 
+  <extension point="org.eclipse.ui.editors">
+    <editor
+      class="org.eclipse.sapphire.samples.architecture.ui.ArchitectureEditor"
+      default="true"
+      filenames="architecture.xml"
+      id="org.eclipse.sapphire.samples.architecture.ui.ArchitectureEditor"
+      name="Architecture Editor"/>
+  </extension>
 
   
 </plugin>
