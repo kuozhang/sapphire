@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [341856] NPE when a diagram connection doesn't define a label
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -180,11 +181,6 @@ public class DiagramConnectionPart extends SapphirePart
         if( this.labelFunctionResult != null )
         {
             label = (String) this.labelFunctionResult.value();
-        }
-        
-        if( label == null )
-        {
-            label = "#null#";
         }
         
         return label;

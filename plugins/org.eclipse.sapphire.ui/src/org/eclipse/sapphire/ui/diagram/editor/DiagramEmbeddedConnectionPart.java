@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [341856] NPE when a diagram connection doesn't define a label
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -19,6 +20,7 @@ import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramLabelDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -45,19 +47,26 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
     	this.connectionTemplate = (DiagramConnectionTemplate)getParentPart();
         this.localDefinition = (IDiagramConnectionBindingDef)super.definition;
         this.modelElement = super.getModelElement();
-        this.labelFunctionResult = initExpression
-        ( 
-        	this.modelElement,
-        	this.localDefinition.getLabel().element().getText(), 
-            new Runnable()
-            {
-                public void run()
+        
+        final IDiagramLabelDef labelDef = this.localDefinition.getLabel().element();
+        
+        if( labelDef != null )
+        {
+            this.labelFunctionResult = initExpression
+            ( 
+            	this.modelElement,
+            	labelDef.getText(), 
+                new Runnable()
                 {
-                	refreshLabel();
+                    public void run()
+                    {
+                    	refreshLabel();
+                    }
                 }
-            }
-        );
-        this.labelProperty = FunctionUtil.getFunctionProperty(this.modelElement, this.labelFunctionResult);
+            );
+            
+            this.labelProperty = FunctionUtil.getFunctionProperty(this.modelElement, this.labelFunctionResult);
+        }
         
         this.idFunctionResult = initExpression
         ( 
