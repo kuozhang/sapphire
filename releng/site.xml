@@ -9,6 +9,9 @@
    <feature url="features/org.eclipse.sapphire.ui_##version##.jar" id="org.eclipse.sapphire.ui" version="##version##">
       <category name="org.eclipse.sapphire"/>
    </feature>
+   <feature url="features/org.eclipse.sapphire.ui.swt.graphiti_##version##.jar" id="org.eclipse.sapphire.ui.swt.graphiti" version="##version##">
+      <category name="org.eclipse.sapphire"/>
+   </feature>
    <feature url="features/org.eclipse.sapphire.ui.swt.xml.editor_##version##.jar" id="org.eclipse.sapphire.ui.swt.xml.editor" version="##version##">
       <category name="org.eclipse.sapphire"/>
    </feature>
