@@ -97,6 +97,7 @@ public interface IDiagramNodeDef
     
     @Label( standard = "property" )
     @XmlBinding( path = "property" )
+    @NonNullValue
     
     ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
     
