@@ -44,7 +44,7 @@ public interface IComponentDependency
 
 	ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
 
-    ReferenceValue<IComponent> getName();
+    ReferenceValue<String,IComponent> getName();
     void setName( String value );
     
 }

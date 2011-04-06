@@ -53,7 +53,7 @@ public interface IRailwayDestination extends IModelElement
 
 	ValueProperty PROP_TO_DESTINATION = new ValueProperty( TYPE, "ToDestination" );
 
-    ReferenceValue<IDestination> getToDestination();
+    ReferenceValue<String,IDestination> getToDestination();
     void setToDestination( String name );
     
 }

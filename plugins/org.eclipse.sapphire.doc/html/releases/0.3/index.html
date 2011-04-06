@@ -16,6 +16,7 @@
   </ol>
   <li><a href="#modeling">Modeling</a></li>
   <ol type="A">
+    <li><a href="#ref">ReferenceValue Improvements</a></li>
     <li><a href="#folding">Folding XML Element Binding</a></li>
   </ol>
   <li><a href="#ui">UI</a></li>
@@ -62,7 +63,39 @@ ${ Parent().Parent().Name == "John" }
 ${ Root().Name == "John" }
 </code></pre>
 
-<h2><a name="modeling"><a name="folding">Folding XML Element Binding</a></a></h2>
+<h2><a name="modeling"><a name="ref">ReferenceValue Improvements</a></a></h2>
+
+<p>In the past releases, the reference value properties were assumed to always use string as the reference
+type. The developer could only specify the reference target type. In this release, you can use a type other
+than a string for the reference.</p>
+
+<p style="margin-left: 20px;"><b>Example</b><p>
+
+<p style="margin-left: 20px;">Use string as reference type, similar to what was possible in past releases.<p>
+
+<pre class="source-code"><code>@Reference( target = JavaType.class )
+    
+ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );
+    
+ReferenceValue&lt;String,JavaType> getImplClass();
+void setImplClass( String value );
+</code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b><p>
+
+<p style="margin-left: 20px;">Use a non-string type as reference type.<p>
+
+<pre class="source-code"><code>@Type( base = JavaTypeName.class )
+@Reference( target = JavaType.class )
+    
+ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );
+    
+ReferenceValue&lt;JavaTypeName,JavaType> getImplClass();
+void setImplClass( String value );
+void setImplClass( JavaTypeName value );
+</code></pre>
+
+<h2><a name="folding">Folding XML Element Binding</a></h2>
 
 <p>In certain cases, while a given XML element can have a number of child
 elements, one of the child elements occurs by itself with high frequency. In

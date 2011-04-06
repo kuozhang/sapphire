@@ -30,6 +30,7 @@ to 0.3 release. Only changes from the previous milestone are covered.</p>
 
 <ol>
   <li><a href="#modularity">Modularity Changes</a></li>
+  <li><a href="#ref">ReferenceValue Changes</a></li>
   <li><a href="#html">HTML Content Presentation</a></li>
   <li><a href="#related-content">Related Content</a></li>
   <li><a href="#composite-ref">Composite Reference</a></li>
@@ -74,6 +75,27 @@ may require adopters to modify Requite-Bundle declarations and import statements
     </td>
     <td>
 <pre class="source-code"><code>org.eclipse.sapphire.ui.swt.xml.editor</code></pre>
+    </td>
+  </tr>
+</table>
+
+<h2><a name="ref">ReferenceValue Changes</a></h2>
+
+<p>The ReferenceValue class now takes two type parameters instead of one. The first is the 
+type of the reference. This used to be assumed to always be a string. The second is the type 
+of what the reference resolves to.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>ReferenceValue&lt;ImageDescriptor> getImage();</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>ReferenceValue&lt;String,ImageDescriptor> getImage();</code></pre>
     </td>
   </tr>
 </table>

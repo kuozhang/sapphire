@@ -53,7 +53,7 @@ public interface IFormPartInclude
     
     ValueProperty PROP_PART = new ValueProperty( TYPE, "Part" );
     
-    ReferenceValue<IFormPartDef> getPart();
+    ReferenceValue<String,IFormPartDef> getPart();
     void setPart( String part );
     
     // *** Params ***

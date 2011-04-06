@@ -74,7 +74,7 @@ public interface ISapphireWizardDef
     
     ValueProperty PROP_IMAGE = new ValueProperty( TYPE, "Image" );
     
-    ReferenceValue<ImageDescriptor> getImage();
+    ReferenceValue<String,ImageDescriptor> getImage();
     void setImage( String image );
     
     // *** PageDefs ***

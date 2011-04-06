@@ -43,7 +43,7 @@ public interface IMasterDetailsTreeNodeFactoryEntry
     
     ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
     
-    ReferenceValue<Class<?>> getType();
+    ReferenceValue<String,Class<?>> getType();
     void setType( String type );
 
 }

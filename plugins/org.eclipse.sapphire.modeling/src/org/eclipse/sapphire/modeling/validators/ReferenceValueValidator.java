@@ -25,11 +25,11 @@ import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
 
 public final class ReferenceValueValidator
 
-    extends ModelPropertyValidator<ReferenceValue<?>>
+    extends ModelPropertyValidator<ReferenceValue<?,?>>
     
 {
     @Override
-    public IStatus validate( final ReferenceValue<?> value )
+    public IStatus validate( final ReferenceValue<?,?> value )
     {
         if( value.resolve() == null && value.getText() != null )
         {

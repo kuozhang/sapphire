@@ -413,6 +413,24 @@ public final class GenerateImplProcessor
         TypeReference baseType = null; 
         TypeReference wrapperType = null;        
         
+        final Type typeAnnotation = propField.getAnnotation( Type.class );
+        
+        if( typeAnnotation == null )
+        {
+            baseType = new TypeReference( String.class );
+        }
+        else
+        {
+            try
+            {
+                typeAnnotation.base();
+            }
+            catch( MirroredTypeException e )
+            {
+                baseType = toTypeReference( e.getTypeMirror() );
+            }
+        }
+        
         final Reference referenceAnnotation = propField.getAnnotation( Reference.class );
         
         if( referenceAnnotation != null )
@@ -446,29 +464,11 @@ public final class GenerateImplProcessor
                     targetType = targetType.parameterize( params );
                 }
                 
-                wrapperType = new TypeReference( ReferenceValue.class ).parameterize( targetType );
+                wrapperType = new TypeReference( ReferenceValue.class ).parameterize( baseType, targetType );
             }
         }
         else
         {
-            final Type typeAnnotation = propField.getAnnotation( Type.class );
-            
-            if( typeAnnotation == null )
-            {
-                baseType = new TypeReference( String.class );
-            }
-            else
-            {
-                try
-                {
-                    typeAnnotation.base();
-                }
-                catch( MirroredTypeException e )
-                {
-                    baseType = toTypeReference( e.getTypeMirror() );
-                }
-            }
-            
             wrapperType = ( new TypeReference( Value.class ) ).parameterize( baseType );
         }
         

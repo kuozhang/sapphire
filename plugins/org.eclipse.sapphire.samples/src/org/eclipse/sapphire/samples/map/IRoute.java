@@ -42,7 +42,7 @@ public interface IRoute extends IModelElement
 
 	ValueProperty PROP_FROM_DESTINATION = new ValueProperty( TYPE, "FromDestination" );
 
-    ReferenceValue<IDestination> getFromDestination();
+    ReferenceValue<String,IDestination> getFromDestination();
     void setFromDestination( String name );
 	
 	// *** ToDestination ***
@@ -54,7 +54,7 @@ public interface IRoute extends IModelElement
 
 	ValueProperty PROP_TO_DESTINATION = new ValueProperty( TYPE, "ToDestination" );
 
-    ReferenceValue<IDestination> getToDestination();
+    ReferenceValue<String,IDestination> getToDestination();
     void setToDestination( String name );
     
     // *** Distance ***

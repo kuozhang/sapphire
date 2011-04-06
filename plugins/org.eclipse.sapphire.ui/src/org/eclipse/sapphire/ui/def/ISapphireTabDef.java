@@ -57,7 +57,7 @@ public interface ISapphireTabDef
     
     ValueProperty PROP_IMAGE_PATH = new ValueProperty( TYPE, "ImagePath" );
     
-    ReferenceValue<ImageDescriptor> getImagePath();
+    ReferenceValue<String,ImageDescriptor> getImagePath();
     void setImagePath( String imagePath );
     
 }

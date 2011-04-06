@@ -48,7 +48,7 @@ public interface ISapphireIfElseDirectiveDef
     
     ValueProperty PROP_CONDITION_CLASS = new ValueProperty( TYPE, "ConditionClass" );
     
-    ReferenceValue<Class<?>> getConditionClass();
+    ReferenceValue<String,Class<?>> getConditionClass();
     void setConditionClass( String conditionClass );
     
     // *** ConditionParameter ***

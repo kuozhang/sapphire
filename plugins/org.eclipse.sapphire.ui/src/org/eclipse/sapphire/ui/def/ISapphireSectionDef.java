@@ -60,7 +60,7 @@ public interface ISapphireSectionDef
     
     ValueProperty PROP_VISIBLE_WHEN_CONDITION_CLASS = new ValueProperty( TYPE, "VisibleWhenConditionClass" );
     
-    ReferenceValue<Class<?>> getVisibleWhenConditionClass();
+    ReferenceValue<String,Class<?>> getVisibleWhenConditionClass();
     void setVisibleWhenConditionClass( String visibleWhenConditionClass );
     
     // *** VisibleWhenConditionParameter ***

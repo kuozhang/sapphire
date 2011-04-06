@@ -72,7 +72,7 @@ public interface IModelElementServiceDef
 
     ValueProperty PROP_TYPE_CLASS = new ValueProperty( TYPE, "TypeClass" );
     
-    ReferenceValue<Class<?>> getTypeClass();
+    ReferenceValue<String,Class<?>> getTypeClass();
     void setTypeClass( String value );
     
     // *** FactoryClass ***
@@ -88,7 +88,7 @@ public interface IModelElementServiceDef
 
     ValueProperty PROP_FACTORY_CLASS = new ValueProperty( TYPE, "FactoryClass" );
     
-    ReferenceValue<Class<?>> getFactoryClass();
+    ReferenceValue<String,Class<?>> getFactoryClass();
     void setFactoryClass( String value );
     
 }

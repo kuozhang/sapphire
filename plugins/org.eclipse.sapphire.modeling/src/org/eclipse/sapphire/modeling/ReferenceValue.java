@@ -17,9 +17,9 @@ import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ReferenceValue<T>
+public final class ReferenceValue<R,T>
 
-    extends Value<String>
+    extends Value<R>
     
 {
     private final ReferenceService service;

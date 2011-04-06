@@ -216,7 +216,7 @@ public class DiagramConnectionTemplate extends SapphirePart
 				Object valObj = listEntryModelElement.read(this.endpoint1Property);
 				if (valObj instanceof ReferenceValue)
 				{
-					ReferenceValue<?> reference = (ReferenceValue<?>)valObj;
+					ReferenceValue<?,?> reference = (ReferenceValue<?,?>)valObj;
 					IModelElement model = (IModelElement)reference.resolve();
 					if (srcNodeModel == model)
 					{
@@ -360,7 +360,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     				String val = null;
     				if (valObj instanceof ReferenceValue)
     				{
-    					val = (((ReferenceValue<?>)valObj).getContent());
+    					val = (((ReferenceValue<?,?>)valObj).getText());
     				}
     				else
     				{

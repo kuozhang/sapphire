@@ -290,7 +290,7 @@ public class DiagramConnectionPart extends SapphirePart
 			{
 				throw new RuntimeException( "Property " + propertyName + " value not a reference");
 			}
-			ReferenceValue<?> refVal = (ReferenceValue<?>)valObj;
+			ReferenceValue<?,?> refVal = (ReferenceValue<?,?>)valObj;
 			Object targetObj = refVal.resolve();
 			return (IModelElement)targetObj;
 		}

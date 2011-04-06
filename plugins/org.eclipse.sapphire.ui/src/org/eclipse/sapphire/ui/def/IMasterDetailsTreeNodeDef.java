@@ -89,7 +89,7 @@ public interface IMasterDetailsTreeNodeDef
     
     ValueProperty PROP_IMAGE_PATH = new ValueProperty( TYPE, "ImagePath" );
     
-    ReferenceValue<ImageDescriptor> getImagePath();
+    ReferenceValue<String,ImageDescriptor> getImagePath();
     void setImagePath( String imagePath );
     
     // *** Sections ***
@@ -141,7 +141,7 @@ public interface IMasterDetailsTreeNodeDef
     
     ValueProperty PROP_VISIBLE_WHEN_CONDITION_CLASS = new ValueProperty( TYPE, "VisibleWhenConditionClass" );
     
-    ReferenceValue<Class<?>> getVisibleWhenConditionClass();
+    ReferenceValue<String,Class<?>> getVisibleWhenConditionClass();
     void setVisibleWhenConditionClass( String visibleWhenConditionClass );
     
     // *** VisibleWhenConditionParameter ***

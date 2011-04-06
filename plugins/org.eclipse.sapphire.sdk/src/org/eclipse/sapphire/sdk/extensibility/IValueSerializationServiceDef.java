@@ -72,7 +72,7 @@ public interface IValueSerializationServiceDef
 
     ValueProperty PROP_TYPE_CLASS = new ValueProperty( TYPE, "TypeClass" );
     
-    ReferenceValue<Class<?>> getTypeClass();
+    ReferenceValue<String,Class<?>> getTypeClass();
     void setTypeClass( String value );
     
     // *** ImplClass ***
@@ -88,7 +88,7 @@ public interface IValueSerializationServiceDef
 
     ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );
     
-    ReferenceValue<Class<?>> getImplClass();
+    ReferenceValue<String,Class<?>> getImplClass();
     void setImplClass( String value );
     
 }

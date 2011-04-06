@@ -55,7 +55,7 @@ public interface ISapphireActionImage
     
     ValueProperty PROP_IMAGE = new ValueProperty( TYPE, "Image" );
     
-    ReferenceValue<ImageDescriptor> getImage();
+    ReferenceValue<String,ImageDescriptor> getImage();
     void setImage( String value );
     
 }

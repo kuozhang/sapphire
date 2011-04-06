@@ -42,7 +42,7 @@ public interface ISapphirePartListenerDef
     
     ValueProperty PROP_LISTENER_CLASS = new ValueProperty( TYPE, "ListenerClass" );
     
-    ReferenceValue<Class<?>> getListenerClass();
+    ReferenceValue<String,Class<?>> getListenerClass();
     void setListenerClass( String listenerClass );
 
 }

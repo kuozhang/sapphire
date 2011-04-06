@@ -47,7 +47,7 @@ public interface ISapphireActionHandlerFilterDef
 
     ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );
     
-    ReferenceValue<Class<?>> getImplClass();
+    ReferenceValue<String,Class<?>> getImplClass();
     void setImplClass( String implClass );
     
     // *** Contexts ***
