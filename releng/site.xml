@@ -15,6 +15,12 @@
    <feature url="features/org.eclipse.sapphire.ui.swt.xml.editor_##version##.jar" id="org.eclipse.sapphire.ui.swt.xml.editor" version="##version##">
       <category name="org.eclipse.sapphire"/>
    </feature>
+   <feature url="features/org.eclipse.sapphire.java_##version##.jar" id="org.eclipse.sapphire.java" version="##version##">
+      <category name="org.eclipse.sapphire"/>
+   </feature>
+   <feature url="features/org.eclipse.sapphire.java.jdt_##version##.jar" id="org.eclipse.sapphire.java.jdt" version="##version##">
+      <category name="org.eclipse.sapphire"/>
+   </feature>
    <feature url="features/org.eclipse.sapphire.sdk_##version##.jar" id="org.eclipse.sapphire.sdk" version="##version##">
       <category name="org.eclipse.sapphire"/>
    </feature>

@@ -591,7 +591,7 @@ Fragment-Host: @{Bundle}
       <arg line="-data ${tests.working.dir}/workspace"/>
       <arg line="formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,${tests.working.dir}/test-results.xml"/>
       <arg line="-testPluginName org.eclipse.sapphire.tests"/>
-      <arg line="-className org.eclipse.sapphire.tests.modeling.SapphireModelingFrameworkTests"/>
+      <arg line="-className org.eclipse.sapphire.tests.SapphireTestSuite"/>
       <arg line="-consolelog -debug"/>
     </eclipse>
 

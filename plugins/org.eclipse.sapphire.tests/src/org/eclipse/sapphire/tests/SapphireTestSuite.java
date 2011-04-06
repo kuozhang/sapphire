@@ -9,27 +9,25 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling;
+package org.eclipse.sapphire.tests;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.tests.modeling.el.ExpressionLanguageTests;
-import org.eclipse.sapphire.tests.modeling.misc.MiscTestSuite;
-import org.eclipse.sapphire.tests.modeling.serialization.SerializationTests;
-import org.eclipse.sapphire.tests.modeling.xml.XmlBindingTests;
+import org.eclipse.sapphire.tests.java.JavaTestSuite;
+import org.eclipse.sapphire.tests.modeling.SapphireModelingFrameworkTests;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireModelingFrameworkTests
+public final class SapphireTestSuite
 
     extends TestCase
     
 {
-    private SapphireModelingFrameworkTests( final String name )
+    private SapphireTestSuite( final String name )
     {
         super( name );
     }
@@ -38,14 +36,10 @@ public final class SapphireModelingFrameworkTests
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "Modeling" );
+        suite.setName( "Sapphire" );
         
-        suite.addTest( FindInsertionPositionTests.suite() );
-        suite.addTest( XmlBindingTests.suite() );
-        suite.addTest( SerializationTests.suite() );
-        suite.addTest( TopologicalSorterTests.suite() );
-        suite.addTest( ExpressionLanguageTests.suite() );
-        suite.addTest( MiscTestSuite.suite() );
+        suite.addTest( SapphireModelingFrameworkTests.suite() );
+        suite.addTest( JavaTestSuite.suite() );
         
         return suite;
     }
