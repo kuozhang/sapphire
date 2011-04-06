@@ -40,11 +40,16 @@ public interface IDiagramConnectionBindingDef
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramConnectionBindingDef.class );
 	
-    // *** Id ***
-    
+	// *** ConnectionId ***
+	
+    @Label( standard = "connection ID" )
+    @XmlBinding( path = "connection-id" )
     @NonNullValue
     
-    ValueProperty PROP_ID = new ValueProperty( TYPE, ISapphirePartDef.PROP_ID );
+    ValueProperty PROP_CONNECTION_ID = new ValueProperty( TYPE, "ConnectionId" );
+    
+    Value<String> getConnectionId();
+    void setConnectionId( String value );
 
     // *** Property ***
     

@@ -199,7 +199,7 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 		ModelElementList<IDiagramConnectionDef> connDefs = pageDef.getDiagramConnectionDefs();
 		for (IDiagramConnectionDef connDef : connDefs)
 		{
-			if (connDef.getId().getContent().equalsIgnoreCase(connBindingDef.getId().getContent()))
+			if (connDef.getId().getContent().equalsIgnoreCase(connBindingDef.getConnectionId().getContent()))
 			{
 				return connDef;
 			}

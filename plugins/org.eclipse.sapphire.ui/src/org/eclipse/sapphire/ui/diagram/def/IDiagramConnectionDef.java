@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.diagram.def;
 
 import org.eclipse.sapphire.modeling.ElementProperty;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -28,7 +29,6 @@ import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.Color;
 import org.eclipse.sapphire.ui.LineStyle;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -40,16 +40,21 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 public interface IDiagramConnectionDef 
 	
-	extends ISapphirePartDef 
+	extends IModelElement 
 	
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramConnectionDef.class );
 	
     // *** Id ***
     
+    @Label( standard = "ID" )
+    @XmlBinding( path = "id" )
     @NonNullValue
     
-    ValueProperty PROP_ID = new ValueProperty( TYPE, ISapphirePartDef.PROP_ID );
+    ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
+    
+    Value<String> getId();
+    void setId( String value );
 
     // *** ToolPaletteLabel ***
     

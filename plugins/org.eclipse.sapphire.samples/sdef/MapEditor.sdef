@@ -20,6 +20,10 @@
         <package>org.eclipse.sapphire.samples.map</package>
         <package>org.eclipse.sapphire.samples.map.ui</package>
     </import>
+    <import>
+        <bundle>org.eclipse.sapphire.ui</bundle>
+        <package>org.eclipse.sapphire.ui.diagram.actions</package>
+    </import>
     
     <diagram-page>
         <id>diagram</id>
@@ -57,9 +61,13 @@
                 </endpoint2>
                 <instance-id>${ToDestination}</instance-id>                
             </connection-binding>
+		    <action-handler>
+        		<action>Sapphire.Diagram.Node.Default</action>          
+        		<impl>DiagramShowInSourceActionHandler</impl>
+      		</action-handler>            
         </node>
         <connection-binding>
-            <id>highway_routes</id>
+            <connection-id>highway_routes</connection-id>
             <property>Routes</property>
             <label>${Distance == null ? &quot;&lt;distance&gt;&quot; : Distance}</label>
             <endpoint1>

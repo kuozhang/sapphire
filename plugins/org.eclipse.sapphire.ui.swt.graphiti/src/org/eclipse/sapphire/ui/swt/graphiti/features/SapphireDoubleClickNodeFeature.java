@@ -58,4 +58,11 @@ public class SapphireDoubleClickNodeFeature extends AbstractCustomFeature
 		this.diagramNodePart.getDefaultActionHandler().execute(renderingCtx);
 	}
 		
+	@Override
+	public boolean hasDoneChanges() 
+	{
+		SapphireDiagramActionHandler handler = (SapphireDiagramActionHandler)this.diagramNodePart.getDefaultActionHandler();
+		return handler.hasDoneModelChanges();
+	}
+	
 }

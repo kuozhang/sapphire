@@ -182,7 +182,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     
     public String getConnectionId()
     {
-    	return this.definition.getId().getContent();
+    	return this.definition.getConnectionId().getContent();
     }
     
     public List<DiagramConnectionPart> getDiagramConnections(IModelElement connListParent)

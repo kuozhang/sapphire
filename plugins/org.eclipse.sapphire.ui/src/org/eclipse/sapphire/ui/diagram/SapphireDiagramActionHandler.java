@@ -20,4 +20,10 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 public abstract class SapphireDiagramActionHandler extends SapphireActionHandler 
 {
 	public abstract boolean canExecute(Object obj);
+	
+	public boolean hasDoneModelChanges() 
+	{
+		return true;
+	}
+	
 }
