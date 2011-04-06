@@ -20,19 +20,22 @@
     <component>
         <name>XML Support</name>
         <dependency>
-            <name>Modeling</name>
+            <name>WTP URI Resolver</name>
         </dependency>
         <dependency>
-            <name>WTP URI Resolver</name>
+            <name>Modeling</name>
         </dependency>
     </component>
     <component>
         <name>UI</name>
         <dependency>
-            <name>XML Support</name>
+            <name>Modeling</name>
         </dependency>
         <dependency>
-            <name>Modeling</name>
+            <name>Java Support</name>
+        </dependency>
+        <dependency>
+            <name>XML Support</name>
         </dependency>
     </component>
     <component>
@@ -41,10 +44,10 @@
             <name>UI</name>
         </dependency>
         <dependency>
-            <name>XML Support</name>
+            <name>WTP XML Editor</name>
         </dependency>
         <dependency>
-            <name>WTP XML Editor</name>
+            <name>XML Support</name>
         </dependency>
     </component>
     <component>
@@ -65,10 +68,10 @@
     <component>
         <name>Graphiti</name>
         <dependency>
-            <name>GEF</name>
+            <name>EMF</name>
         </dependency>
         <dependency>
-            <name>EMF</name>
+            <name>GEF</name>
         </dependency>
     </component>
     <component>
@@ -80,6 +83,9 @@
     <component>
         <name>SDK</name>
         <dependency>
+            <name>JDT Support</name>
+        </dependency>
+        <dependency>
             <name>XML Editor Support</name>
         </dependency>
     </component>
@@ -88,11 +94,38 @@
         <dependency>
             <name>XML Editor Support</name>
         </dependency>
+        <dependency>
+            <name>JDT Support</name>
+        </dependency>
+        <dependency>
+            <name>Graphiti Renderer</name>
+        </dependency>
     </component>
     <component>
         <name>Tests</name>
         <dependency>
-            <name>XML Support</name>
+            <name>JDT Support</name>
         </dependency>
+    </component>
+    <component>
+        <name>JDT Support</name>
+        <dependency>
+            <name>Java Support</name>
+        </dependency>
+        <dependency>
+            <name>JDT</name>
+        </dependency>
+        <dependency>
+            <name>UI</name>
+        </dependency>
+    </component>
+    <component>
+        <name>Java Support</name>
+        <dependency>
+            <name>Modeling</name>
+        </dependency>
+    </component>
+    <component>
+        <name>JDT</name>
     </component>
 </architecture>

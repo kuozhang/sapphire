@@ -1,89 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <diagram-geometry>
     <node>
-        <id>Graphiti Renderer</id>
-        <gemometry height="30" width="100" x="151" y="251"/>
-    </node>
-    <node>
-        <id>Tests</id>
-        <gemometry height="30" width="100" x="751" y="152"/>
-        <connection>
-            <id>XML Support</id>
-            <bendpoint x="599" y="166"/>
-        </connection>
-    </node>
-    <node>
-        <id>WTP XML Editor</id>
-        <gemometry height="30" width="100" x="151" y="152"/>
-    </node>
-    <node>
         <id>GEF</id>
-        <gemometry height="30" width="100" x="52" y="451"/>
+        <gemometry height="30" width="100" x="50" y="501"/>
     </node>
     <node>
-        <id>UI</id>
-        <gemometry height="30" width="100" x="352" y="251"/>
+        <id>Java Support</id>
+        <gemometry height="30" width="100" x="347" y="452"/>
         <connection>
             <id>Modeling</id>
-            <bendpoint x="401" y="366"/>
+            <bendpoint x="397" y="566"/>
         </connection>
     </node>
     <node>
-        <id>XML Support</id>
-        <gemometry height="30" width="100" x="550" y="251"/>
+        <id>Graphiti Renderer</id>
+        <gemometry height="30" width="100" x="149" y="353"/>
+    </node>
+    <node>
+        <id>JDT Support</id>
+        <gemometry height="30" width="100" x="347" y="253"/>
         <connection>
-            <id>Modeling</id>
-            <bendpoint x="599" y="366"/>
+            <id>UI</id>
+            <bendpoint x="496" y="268"/>
         </connection>
-    </node>
-    <node>
-        <id>XML Editor Support</id>
-        <gemometry height="30" width="100" x="352" y="152"/>
         <connection>
-            <id>XML Support</id>
-            <bendpoint x="599" y="166"/>
+            <id>JDT</id>
+            <bendpoint x="298" y="270"/>
         </connection>
-    </node>
-    <node>
-        <id>EMF</id>
-        <gemometry height="30" width="100" x="250" y="451"/>
     </node>
     <node>
         <id>Modeling</id>
-        <gemometry height="30" width="100" x="451" y="351"/>
+        <gemometry height="30" width="100" x="446" y="551"/>
     </node>
     <node>
-        <id>SDK</id>
-        <gemometry height="30" width="100" x="250" y="51"/>
-        <connection>
-            <id>XML Editor Support</id>
-            <bendpoint x="300" y="121"/>
-            <bendpoint x="401" y="121"/>
-        </connection>
+        <id>WTP XML Editor</id>
+        <gemometry height="30" width="100" x="644" y="304"/>
     </node>
     <node>
-        <id>Samples</id>
-        <gemometry height="30" width="100" x="451" y="51"/>
+        <id>UI</id>
+        <gemometry height="30" width="100" x="446" y="353"/>
         <connection>
-            <id>XML Editor Support</id>
-            <bendpoint x="500" y="121"/>
-            <bendpoint x="402" y="121"/>
-        </connection>
-    </node>
-    <node>
-        <id>Graphiti</id>
-        <gemometry height="30" width="100" x="151" y="351"/>
-        <connection>
-            <id>GEF</id>
-            <bendpoint x="102" y="366"/>
+            <id>XML Support</id>
+            <bendpoint x="496" y="466"/>
         </connection>
         <connection>
-            <id>EMF</id>
-            <bendpoint x="299" y="366"/>
+            <id>Java Support</id>
+            <bendpoint x="496" y="467"/>
         </connection>
     </node>
     <node>
         <id>WTP URI Resolver</id>
-        <gemometry height="30" width="100" x="751" y="251"/>
+        <gemometry height="30" width="100" x="648" y="501"/>
+    </node>
+    <node>
+        <id>XML Editor Support</id>
+        <gemometry height="30" width="100" x="545" y="253"/>
+        <connection>
+            <id>WTP XML Editor</id>
+            <bendpoint x="694" y="268"/>
+        </connection>
+        <connection>
+            <id>UI</id>
+            <bendpoint x="496" y="268"/>
+        </connection>
+    </node>
+    <node>
+        <id>SDK</id>
+        <gemometry height="30" width="100" x="446" y="100"/>
+        <connection>
+            <id>JDT Support</id>
+            <bendpoint x="299" y="114"/>
+            <bendpoint x="299" y="222"/>
+            <bendpoint x="396" y="222"/>
+        </connection>
+        <connection>
+            <id>XML Editor Support</id>
+            <bendpoint x="699" y="114"/>
+            <bendpoint x="699" y="223"/>
+            <bendpoint x="595" y="223"/>
+        </connection>
+    </node>
+    <node>
+        <id>JDT</id>
+        <gemometry height="30" width="100" x="248" y="304"/>
+    </node>
+    <node>
+        <id>XML Support</id>
+        <gemometry height="30" width="100" x="545" y="452"/>
+        <connection>
+            <id>Modeling</id>
+            <bendpoint x="595" y="566"/>
+        </connection>
+        <connection>
+            <id>WTP URI Resolver</id>
+            <bendpoint x="698" y="467"/>
+        </connection>
+    </node>
+    <node>
+        <id>Tests</id>
+        <gemometry height="30" width="100" x="347" y="150"/>
+    </node>
+    <node>
+        <id>Graphiti</id>
+        <gemometry height="30" width="100" x="149" y="453"/>
+        <connection>
+            <id>GEF</id>
+            <bendpoint x="100" y="468"/>
+        </connection>
+        <connection>
+            <id>EMF</id>
+            <bendpoint x="298" y="468"/>
+        </connection>
+    </node>
+    <node>
+        <id>Samples</id>
+        <gemometry height="30" width="100" x="545" y="150"/>
+        <connection>
+            <id>Graphiti Renderer</id>
+            <bendpoint x="595" y="57"/>
+            <bendpoint x="199" y="57"/>
+        </connection>
+        <connection>
+            <id>JDT Support</id>
+            <bendpoint x="595" y="200"/>
+            <bendpoint x="397" y="200"/>
+        </connection>
+    </node>
+    <node>
+        <id>EMF</id>
+        <gemometry height="30" width="100" x="248" y="501"/>
     </node>
 </diagram-geometry>
