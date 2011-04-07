@@ -11,41 +11,35 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import org.eclipse.sapphire.modeling.DefaultValueService;
+import java.util.SortedSet;
+
+import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.ISapphirePropertyEditorDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireHintValueDefaultValueProvider
+public final class SapphireHintValuePossibleValuesService
 
-    extends DefaultValueService
+    extends PossibleValuesService
     
 {
     @Override
-    public String getDefaultValue()
+    protected void fillPossibleValues( final SortedSet<String> values )
     {
-        final ISapphireHint hint = (ISapphireHint) element();
-        return getDefaultValue( hint.getName().getText() );
-    }
-    
-    public static String getDefaultValue( final String hint )
-    {
+        final String hint = ( (ISapphireHint) element() ).getName().getText();
+        
         if( hint != null )
         {
-            if( hint.equals( ISapphirePartDef.HINT_HIDE_IF_DISABLED ) )
+            if( hint.equals( ISapphirePropertyEditorDef.HINT_CHECKBOX_LAYOUT ) )
             {
-                return String.valueOf( Boolean.FALSE );
-            }
-            else if( hint.equals( ISapphirePartDef.HINT_EXPAND_VERTICALLY ) )
-            {
-                return String.valueOf( Boolean.FALSE );
+                values.add( ISapphirePropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_LEADING_LABEL );
+                values.add( ISapphirePropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL );
+                values.add( ISapphirePropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL_INDENTED );
             }
         }
-        
-        return null;
     }
     
 }

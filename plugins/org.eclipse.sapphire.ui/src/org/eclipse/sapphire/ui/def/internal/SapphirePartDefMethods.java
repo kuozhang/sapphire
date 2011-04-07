@@ -36,7 +36,7 @@ public final class SapphirePartDefMethods
         
         if( hintValue == null )
         {
-            hintValue = SapphireHintValueDefaultValueProvider.getDefaultValue( hintName );
+            hintValue = SapphireHintValueDefaultValueService.getDefaultValue( hintName );
         }
         
         return hintValue;

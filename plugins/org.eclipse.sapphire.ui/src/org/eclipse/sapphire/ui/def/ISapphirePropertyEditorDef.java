@@ -43,6 +43,11 @@ public interface ISapphirePropertyEditorDef
 {
     ModelElementType TYPE = new ModelElementType( ISapphirePropertyEditorDef.class );
     
+    String HINT_CHECKBOX_LAYOUT = "checkbox.layout";
+    String HINT_VALUE_CHECKBOX_LAYOUT_LEADING_LABEL = "leading.label";
+    String HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL = "trailing.label";
+    String HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL_INDENTED = "trailing.label.idented";
+    
     // *** Property ***
     
     @Label( standard = "property" )

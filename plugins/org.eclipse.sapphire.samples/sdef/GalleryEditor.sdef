@@ -133,6 +133,54 @@
                     </node>
                 </node>
                 <node>
+                    <label>booleans</label>
+                    <section>
+                        <content>
+                            <label>Boolean properties are rendered using a checkbox widget. Different layout styles are available for better presentation in various circumstances. Use &quot;checkbox.layout&quot; hint.</label>
+                            <spacer></spacer>
+                            <separator>
+                                <label>hint value: &quot;trailing.label&quot; (default)</label>
+                            </separator>
+                            <label>By default, the checkbox label is on the right side and the checkbox is aligned on the first column.</label>
+                            <spacer></spacer>
+                            <property-editor>BooleanProperty</property-editor>
+                            <property-editor>StringProperty</property-editor>
+                            <property-editor>StringProperty</property-editor>
+                            <spacer></spacer>
+                            <separator>
+                                <label>hint value: &quot;trailing.label.indented&quot;</label>
+                            </separator>
+                            <label>A hint can be used to align the checkbox on the second column. This is called indenting.</label>
+                            <spacer></spacer>
+                            <property-editor>StringProperty</property-editor>
+                            <property-editor>StringProperty</property-editor>
+                            <property-editor>
+                                <property>BooleanProperty</property>
+                                <hint>
+                                    <name>checkbox.layout</name>
+                                    <value>trailing.label.idented</value>
+                                </hint>
+                            </property-editor>
+                            <spacer></spacer>
+                            <separator>
+                                <label>hint value: &quot;leading.label&quot;</label>
+                            </separator>
+                            <label>In some circumstances, it may be more appropriate to use a leading label. This is particularly useful in cases where the checkbox is surrounded by many property editors using the leading label presentation.</label>
+                            <spacer></spacer>
+                            <property-editor>StringProperty</property-editor>
+                            <property-editor>
+                                <property>BooleanProperty</property>
+                                <hint>
+                                    <name>checkbox.layout</name>
+                                    <value>leading.label</value>
+                                </hint>
+                            </property-editor>
+                            <property-editor>StringProperty</property-editor>
+                        </content>
+                    </section>
+                    <property>BooleanValueGallery</property>
+                </node>
+                <node>
                     <label>enums</label>
                     <property>EnumValueGallery</property>
                     <section>
@@ -194,7 +242,7 @@
                                     <value>true</value>
                                 </hint>
                             </property-editor>
-                            <spacer/>
+                            <spacer />
                             <property-editor>
                                 <property>CustomSerializedWithDefault</property>
                                 <hint>
@@ -202,7 +250,7 @@
                                     <value>true</value>
                                 </hint>
                             </property-editor>
-                            <spacer/>
+                            <spacer />
                             <group>
                                 <label>no label (in group)</label>
                                 <content>
@@ -219,7 +267,7 @@
                                     </property-editor>
                                 </content>
                             </group>
-                            <spacer/>
+                            <spacer />
                             <group>
                                 <label>no label (in group with aux text)</label>
                                 <content>
@@ -257,55 +305,55 @@
                     <section>
                         <content>
                             <label>Takes a name of any Java type (class, interface, annotation or enum). The Java type doesn't need to exist.</label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>OptionalAnyType</property-editor>
-                            <spacer/>
+                            <spacer />
                             <label>Takes a name of a class, which must exist.</label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>RequiredClass1</property-editor>
-                            <spacer/>
+                            <spacer />
                             <label>Takes a name of a class, which must exist and must implement java.util.List interface.</label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>RequiredClass2</property-editor>
-                            <spacer/>
+                            <spacer />
                             <label>Takes a name of a class, which must exist and must extend java.util.AbstractList class.</label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>RequiredClass3</property-editor>
-                            <spacer/>
+                            <spacer />
                             <label>Takes a name of a class, which must exist and must extend java.util.AbstractList class while also implementing java.lang.Cloneable interface.</label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>RequiredClass4</property-editor>
-                            <spacer/>
+                            <spacer />
                             <label>Takes a name of a class, which must exist, must be non-abstract and must extend java.util.AbstractList class.</label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>RequiredClass5</property-editor>
-                            <spacer/>
+                            <spacer />
                             <label>Takes a name of an interface, which must exist.</label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>RequiredInterface1</property-editor>
-                            <spacer/>
+                            <spacer />
                             <label>Takes a name of an interface, which must exist and must extend java.util.Set interface.</label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>RequiredInterface2</property-editor>
-                            <spacer/>
+                            <spacer />
                             <label>Takes a name of an interface, which must exist and must extend java.util.Set interface while also extending java.lang.Cloneable interfaces.</label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>RequiredInterface3</property-editor>
-                            <spacer/>
+                            <spacer />
                             <label>Takes a name of an annotation, which must exist.</label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>RequiredAnnotation1</property-editor>
-                            <spacer/>
+                            <spacer />
                             <label>Takes a name of an enum, which must exist.</label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>RequiredEnum1</property-editor>
-                            <spacer/>
+                            <spacer />
                             <label>Takes a name of a class or an interface, which must exist.</label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>RequiredMixedType1</property-editor>
-                            <spacer/>
+                            <spacer />
                             <label>Takes a name of a class, an interface or an enum, which must exist.</label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>RequiredMixedType2</property-editor>
                         </content>
                     </section>
@@ -320,14 +368,14 @@
                                 is provided (string encode and decode logic). It is recommended that the value object
                                 is immutable.
                             </label>
-                            <spacer/>
+                            <spacer />
                             <label>
                                 There are two ways to specify the serialization service. One approach is to use
                                 @ValueSerilization annotation to attach the service to a specific property (Rectangle example).
                                 Another approach is to use Sapphire extension system to attach the service globally for
                                 a given object type (Circle example). 
                             </label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>
                                 <property>Rectangle</property>
                                 <hint>
@@ -335,7 +383,7 @@
                                     <value>x, y, width, height</value>
                                 </hint>
                             </property-editor>
-                            <spacer/>
+                            <spacer />
                             <property-editor>
                                 <property>Circle</property>
                                 <hint>

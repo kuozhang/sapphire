@@ -95,6 +95,15 @@ public interface IGallery
     
     IBigDecimalValueGallery getBigDecimalValueGallery();
     
+    // *** BooleanValueGallery ***
+
+    @Type( base = IBooleanValueGallery.class )
+    @XmlBinding( path = "boolean" )
+    
+    ImpliedElementProperty PROP_BOOLEAN_VALUE_GALLERY = new ImpliedElementProperty( TYPE, "BooleanValueGallery" );
+    
+    IBooleanValueGallery getBooleanValueGallery();
+    
     // *** EnumValueGallery ***
 
     @Type( base = IEnumValueGallery.class )

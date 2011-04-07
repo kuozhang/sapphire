@@ -24,6 +24,7 @@
     <li><a href="#html">HTML Content Presentation</a></li>
     <li><a href="#related-content">Related Content</a></li>
     <li><a href="#action-label-el">Expressions in Action Labels</a></li>
+    <li><a href="#checkbox-layouts">Checkbox Layouts</a></li>
   </ol>
 </ol>
  
@@ -195,6 +196,14 @@ mostly useful for action labels, where you can reference active handlers while c
 handler label in the action label when there is only one handler.</p>
 
 <pre class="source-code"><code>${ Handlers.Size == 1 ? Concat( "add ", Handlers[ 0 ].Label ) : "add" }</code></pre>
+
+<h2><a name="checkbox-layouts">Checkbox Layouts</a></h2>
+
+<p>More control over the presentation of the boolean property is possible with the new "checkbox.layout"
+property editor hint. The various values for this hint are explained in this screen capture from
+the gallery sample:</p>
+
+<p style="margin-left: 20px;"><img src="images/checkbox.png"/></p>
 
 <br/><br/>
 

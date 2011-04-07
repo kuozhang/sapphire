@@ -17,12 +17,14 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.internal.SapphireHintValueDefaultValueProvider;
+import org.eclipse.sapphire.ui.def.internal.SapphireHintValueDefaultValueService;
+import org.eclipse.sapphire.ui.def.internal.SapphireHintValuePossibleValuesService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -53,6 +55,7 @@ public interface ISapphireHint
             "aux.text.provider",
             "border",
             "browse.only",
+            ISapphirePropertyEditorDef.HINT_CHECKBOX_LAYOUT,
             "column.widths",
             ISapphirePartDef.HINT_EXPAND_VERTICALLY,
             "factory",
@@ -85,7 +88,9 @@ public interface ISapphireHint
     @Label( standard = "value" )
     @NonNullValue
     @XmlBinding( path = "value" )
-    @DefaultValue( service = SapphireHintValueDefaultValueProvider.class )
+    @DependsOn( value = "Name" )
+    @DefaultValue( service = SapphireHintValueDefaultValueService.class )
+    @PossibleValues( service = SapphireHintValuePossibleValuesService.class )
     
     ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
     

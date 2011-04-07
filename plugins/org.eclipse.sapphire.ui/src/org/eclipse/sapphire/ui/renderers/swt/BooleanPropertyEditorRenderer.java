@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.renderers.swt;
 
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
@@ -24,11 +25,15 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
+import org.eclipse.sapphire.ui.def.ISapphirePropertyEditorDef;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.accessibility.AccessibleAdapter;
+import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -53,6 +58,30 @@ public final class BooleanPropertyEditorRenderer
         final SapphirePropertyEditor part = getPart();
         final ValueProperty property = (ValueProperty) part.getProperty();
         
+        final CheckboxLayout checkboxLayout;
+        final String checkboxLayoutHint = part.getDefinition().getHint( ISapphirePropertyEditorDef.HINT_CHECKBOX_LAYOUT );
+        
+        if( checkboxLayoutHint == null )
+        {
+            checkboxLayout = CheckboxLayout.TRAILING_LABEL;
+        }
+        else if( checkboxLayoutHint.equalsIgnoreCase( ISapphirePropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_LEADING_LABEL ) )
+        {
+            checkboxLayout = CheckboxLayout.LEADING_LABEL;
+        }
+        else if( checkboxLayoutHint.equalsIgnoreCase( ISapphirePropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL ) )
+        {
+            checkboxLayout = CheckboxLayout.TRAILING_LABEL;
+        }
+        else if( checkboxLayoutHint.equalsIgnoreCase( ISapphirePropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL_INDENTED ) )
+        {
+            checkboxLayout = CheckboxLayout.TRAILING_LABEL_INDENTED;
+        }
+        else
+        {
+            checkboxLayout = CheckboxLayout.TRAILING_LABEL;
+        }
+        
         String label = property.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, true );
         
         if( property.hasAnnotation( Deprecated.class ) )
@@ -60,7 +89,26 @@ public final class BooleanPropertyEditorRenderer
             label = label + " " + Resources.deprecatedLabelText;
         }
         
-        setSpanBothColumns( true );
+        if( checkboxLayout == CheckboxLayout.LEADING_LABEL )
+        {
+            final Label lbl = new Label( parent, SWT.NONE );
+            lbl.setLayoutData( gdhindent( gd(), part.getLeftMarginHint() + 9 ) );
+            lbl.setText( label + ":" );
+        }
+        else if( checkboxLayout == CheckboxLayout.TRAILING_LABEL )
+        {
+            setSpanBothColumns( true );
+        }
+        else if( checkboxLayout == CheckboxLayout.TRAILING_LABEL_INDENTED )
+        {
+            final Label lbl = new Label( parent, SWT.NONE );
+            lbl.setLayoutData( gd() );
+            lbl.setText( "" );
+        }
+        else
+        {
+            throw new IllegalStateException();
+        }
         
         final Composite composite = createMainComposite( parent );
         composite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
@@ -70,8 +118,24 @@ public final class BooleanPropertyEditorRenderer
         
         this.checkbox = new Button( composite, SWT.CHECK );
         this.checkbox.setLayoutData( gd() );
-        this.checkbox.setText( label );
         this.context.adapt( this.checkbox );
+        
+        if( checkboxLayout != CheckboxLayout.LEADING_LABEL )
+        {
+            this.checkbox.setText( label );
+        }
+        
+        this.checkbox.getAccessible().addAccessibleListener
+        (
+            new AccessibleAdapter()
+            {
+                @Override
+                public void getName( final AccessibleEvent event )
+                {
+                    event.result = property.getLabel( true, CapitalizationType.NO_CAPS, true );
+                }
+            }
+        );
         
         this.checkbox.addSelectionListener
         (
@@ -147,6 +211,13 @@ public final class BooleanPropertyEditorRenderer
         {
             return new BooleanPropertyEditorRenderer( context, part );
         }
+    }
+    
+    private enum CheckboxLayout
+    {
+        LEADING_LABEL,
+        TRAILING_LABEL,
+        TRAILING_LABEL_INDENTED
     }
 
     private static final class Resources
