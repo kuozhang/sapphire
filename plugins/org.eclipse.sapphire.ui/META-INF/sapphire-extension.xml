@@ -17,10 +17,12 @@
     <model-property-service>
         <type>org.eclipse.sapphire.modeling.ReferenceService</type>
         <factory>org.eclipse.sapphire.ui.def.internal.ClassReferenceServiceFactory</factory>
+        <id>Sapphire.SdefClassReferenceService</id>
     </model-property-service>
     <model-property-service>
         <type>org.eclipse.sapphire.modeling.ReferenceService</type>
         <factory>org.eclipse.sapphire.ui.def.internal.ImageReferenceServiceFactory</factory>
+        <id>Sapphire.SdefImageReferenceService</id>
     </model-property-service>
     <action>
         <id>Sapphire.Add</id>

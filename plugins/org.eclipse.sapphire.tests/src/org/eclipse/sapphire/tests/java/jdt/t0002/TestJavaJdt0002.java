@@ -16,11 +16,11 @@ import junit.framework.TestSuite;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.java.jdt.internal.JdtJavaTypeService;
+import org.eclipse.sapphire.java.jdt.internal.JdtJavaTypeReferenceService;
 import org.eclipse.sapphire.tests.java.jdt.JavaJdtTestCase;
 
 /**
- * Tests correctness of type hierarchy reporting of JdtJavaTypeService.
+ * Tests correctness of type hierarchy reporting of JdtJavaTypeReferenceService.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -57,9 +57,9 @@ public final class TestJavaJdt0002
         writeJavaSourceFile( "foo.bar", "TestInterfaceB", "public interface TestInterfaceB {}" );
         writeJavaSourceFile( "foo.bar", "TestInterfaceC", "public interface TestInterfaceC {}" );
         
-        final JdtJavaTypeService service = new JdtJavaTypeService( project );
+        final JdtJavaTypeReferenceService service = new JdtJavaTypeReferenceService( project );
         
-        final JavaType type = service.find( "foo.bar.TestClassA" );
+        final JavaType type = service.resolve( "foo.bar.TestClassA" );
         
         assertNotNull( type );
 

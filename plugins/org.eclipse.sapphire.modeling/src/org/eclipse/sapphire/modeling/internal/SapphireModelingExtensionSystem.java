@@ -16,10 +16,14 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -37,6 +41,7 @@ import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
+import org.eclipse.sapphire.modeling.util.DependencySorter;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -60,11 +65,13 @@ public final class SapphireModelingExtensionSystem
     private static final String EL_TYPE = "type";
     private static final String EL_FACTORY = "factory";
     private static final String EL_IMPL = "impl";
+    private static final String EL_ID = "id";
+    private static final String EL_OVERRIDES = "overrides";
 
     private static boolean initialized = false;
     private static List<ExtensionHandle> extensionHandles;
-    private static List<ModelElementServiceFactory> modelElementServiceFactories;
-    private static List<ModelPropertyServiceFactory> modelPropertyServiceFactories;
+    private static List<ModelElementServiceFactoryProxy> modelElementServiceFactories;
+    private static List<ModelPropertyServiceFactoryProxy> modelPropertyServiceFactories;
     private static List<ValueSerializationServiceFactory> valueSerializerFactories;
     private static Map<String,FunctionFactory> functionFactories;
 
@@ -79,20 +86,50 @@ public final class SapphireModelingExtensionSystem
                                                                  final Class<? extends ModelElementService> service )
     {
         initialize();
+        
+        final Collection<ModelElementServiceFactoryProxy> applicable = new ArrayList<ModelElementServiceFactoryProxy>();
 
-        for( ModelElementServiceFactory factory : modelElementServiceFactories )
+        for( ModelElementServiceFactoryProxy factory : modelElementServiceFactories )
         {
             if( factory.applicable( element, service ) )
             {
-                final ModelElementService instance = factory.create( element, service );
+                applicable.add( factory );
+            }
+        }
+        
+        final int count = applicable.size();
+        
+        if( count == 1 )
+        {
+            return applicable.iterator().next().create( element, service );
+        }
+        else if( count > 1 )
+        {
+            final DependencySorter<String,ModelElementServiceFactoryProxy> sorter = new DependencySorter<String,ModelElementServiceFactoryProxy>();
+            
+            for( ModelElementServiceFactoryProxy factory : applicable )
+            {
+                sorter.add( factory.id(), factory );
                 
-                if( instance != null )
+                for( String override : factory.overrides() )
                 {
-                    return instance;
+                    sorter.dependency( factory, override );
+                }
+            }
+            
+            final List<ModelElementServiceFactoryProxy> sorted = sorter.sort();
+            
+            for( int i = sorted.size() - 1; i >= 0; i-- )
+            {
+                final ModelElementService svc = sorted.get( i ).create( element, service );
+                
+                if( svc != null )
+                {
+                    return svc;
                 }
             }
         }
-
+        
         return null;
     }
 
@@ -102,19 +139,49 @@ public final class SapphireModelingExtensionSystem
     {
         initialize();
 
-        for( ModelPropertyServiceFactory factory : modelPropertyServiceFactories )
+        final Collection<ModelPropertyServiceFactoryProxy> applicable = new ArrayList<ModelPropertyServiceFactoryProxy>();
+
+        for( ModelPropertyServiceFactoryProxy factory : modelPropertyServiceFactories )
         {
             if( factory.applicable( element, property, service ) )
             {
-                final ModelPropertyService instance = factory.create( element, property, service );
+                applicable.add( factory );
+            }
+        }
+        
+        final int count = applicable.size();
+        
+        if( count == 1 )
+        {
+            return applicable.iterator().next().create( element, property, service );
+        }
+        else if( count > 1 )
+        {
+            final DependencySorter<String,ModelPropertyServiceFactoryProxy> sorter = new DependencySorter<String,ModelPropertyServiceFactoryProxy>();
+            
+            for( ModelPropertyServiceFactoryProxy factory : applicable )
+            {
+                sorter.add( factory.id(), factory );
                 
-                if( instance != null )
+                for( String override : factory.overrides() )
                 {
-                    return instance;
+                    sorter.dependency( factory, override );
+                }
+            }
+            
+            final List<ModelPropertyServiceFactoryProxy> sorted = sorter.sort();
+            
+            for( int i = sorted.size() - 1; i >= 0; i-- )
+            {
+                final ModelPropertyService svc = sorted.get( i ).create( element, property, service );
+                
+                if( svc != null )
+                {
+                    return svc;
                 }
             }
         }
-
+        
         return null;
     }
 
@@ -160,8 +227,8 @@ public final class SapphireModelingExtensionSystem
         if( ! initialized )
         {
             initialized = true;
-            modelElementServiceFactories = new ArrayList<ModelElementServiceFactory>();
-            modelPropertyServiceFactories = new ArrayList<ModelPropertyServiceFactory>();
+            modelElementServiceFactories = new ArrayList<ModelElementServiceFactoryProxy>();
+            modelPropertyServiceFactories = new ArrayList<ModelPropertyServiceFactoryProxy>();
             valueSerializerFactories = new ArrayList<ValueSerializationServiceFactory>();
             functionFactories = new HashMap<String,FunctionFactory>();
 
@@ -212,17 +279,21 @@ public final class SapphireModelingExtensionSystem
                                     }
                                     else if( elname.equals( EL_MODEL_ELEMENT_SERVICE ) )
                                     {
+                                        final String id = text( child( el, EL_ID ) );
                                         final Class<? extends ModelElementService> serviceType = handle.loadClass( text( child( el, EL_TYPE ) ) );
                                         final Class<? extends ModelElementServiceFactory> serviceFactory = handle.loadClass( text( child( el, EL_FACTORY ) ) );
+                                        final Set<String> overrides = parseOverrides( el );
 
-                                        modelElementServiceFactories.add( new ModelElementServiceFactoryProxy( serviceType, serviceFactory ) );
+                                        modelElementServiceFactories.add( new ModelElementServiceFactoryProxy( id, serviceType, serviceFactory, overrides ) );
                                     }
                                     else if( elname.equals( EL_MODEL_PROPERTY_SERVICE ) )
                                     {
+                                        final String id = text( child( el, EL_ID ) );
                                         final Class<? extends ModelPropertyService> serviceType = handle.loadClass( text( child( el, EL_TYPE ) ) );
                                         final Class<? extends ModelPropertyServiceFactory> serviceFactory = handle.loadClass( text( child( el, EL_FACTORY ) ) );
+                                        final Set<String> overrides = parseOverrides( el );
 
-                                        modelPropertyServiceFactories.add( new ModelPropertyServiceFactoryProxy( serviceType, serviceFactory ) );
+                                        modelPropertyServiceFactories.add( new ModelPropertyServiceFactoryProxy( id, serviceType, serviceFactory, overrides ) );
                                     }
                                     else if( elname.equals( EL_FUNCTION ) )
                                     {
@@ -239,6 +310,39 @@ public final class SapphireModelingExtensionSystem
                 }
             }
         }
+    }
+    
+    private static Set<String> parseOverrides( final Element root )
+    {
+        Set<String> overrides = null;
+        final NodeList nodes = root.getChildNodes();
+
+        for( int i = 0, n = nodes.getLength(); i < n; i++ )
+        {
+            final Node node = nodes.item( i );
+
+            if( node instanceof Element && node.getLocalName().equals( EL_OVERRIDES ) )
+            {
+                final String text = text( (Element) node );
+                
+                if( text.length() > 0 )
+                {
+                    if( overrides == null )
+                    {
+                        overrides = new HashSet<String>();
+                    }
+                    
+                    overrides.add( text );
+                }
+            }
+        }
+        
+        if( overrides == null )
+        {
+            overrides = Collections.emptySet();
+        }
+        
+        return overrides;
     }
 
     private static Element parse( final URL url )
@@ -485,16 +589,27 @@ public final class SapphireModelingExtensionSystem
         extends ModelElementServiceFactory
 
     {
+        private final String id;
         private final Class<? extends ModelElementService> type;
         private final Class<? extends ModelElementServiceFactory> factoryClass;
+        private final Set<String> overrides;
         private ModelElementServiceFactory factoryInstance;
         private boolean factoryInstantiationFailed;
 
-        public ModelElementServiceFactoryProxy( final Class<? extends ModelElementService> type,
-                                                final Class<? extends ModelElementServiceFactory> factoryClass )
+        public ModelElementServiceFactoryProxy( final String id,
+                                                final Class<? extends ModelElementService> type,
+                                                final Class<? extends ModelElementServiceFactory> factoryClass,
+                                                final Set<String> overrides )
         {
+            this.id = id;
             this.type = type;
             this.factoryClass = factoryClass;
+            this.overrides = overrides;
+        }
+        
+        public String id()
+        {
+            return this.id;
         }
 
         @Override
@@ -505,7 +620,7 @@ public final class SapphireModelingExtensionSystem
 
             if( service.isAssignableFrom( this.type ) )
             {
-                final ModelElementServiceFactory factory = getFactory();
+                final ModelElementServiceFactory factory = factory();
 
                 if( factory != null )
                 {
@@ -515,13 +630,18 @@ public final class SapphireModelingExtensionSystem
 
             return result;
         }
+        
+        public Set<String> overrides()
+        {
+            return this.overrides;
+        }
 
         @Override
         public ModelElementService create( final IModelElement element,
                                            final Class<? extends ModelElementService> service )
         {
             ModelElementService result = null;
-            final ModelElementServiceFactory factory = getFactory();
+            final ModelElementServiceFactory factory = factory();
 
             if( factory != null )
             {
@@ -531,7 +651,7 @@ public final class SapphireModelingExtensionSystem
             return result;
         }
 
-        private synchronized ModelElementServiceFactory getFactory()
+        private synchronized ModelElementServiceFactory factory()
         {
             if( this.factoryInstance == null && ! this.factoryInstantiationFailed )
             {
@@ -555,16 +675,27 @@ public final class SapphireModelingExtensionSystem
         extends ModelPropertyServiceFactory
 
     {
+        private final String id;
         private final Class<? extends ModelPropertyService> type;
         private final Class<? extends ModelPropertyServiceFactory> factoryClass;
+        private final Set<String> overrides;
         private ModelPropertyServiceFactory factoryInstance;
         private boolean factoryInstantiationFailed;
 
-        public ModelPropertyServiceFactoryProxy( final Class<? extends ModelPropertyService> type,
-                                                 final Class<? extends ModelPropertyServiceFactory> factoryClass )
+        public ModelPropertyServiceFactoryProxy( final String id,
+                                                 final Class<? extends ModelPropertyService> type,
+                                                 final Class<? extends ModelPropertyServiceFactory> factoryClass,
+                                                 final Set<String> overrides )
         {
+            this.id = id;
             this.type = type;
             this.factoryClass = factoryClass;
+            this.overrides = overrides;
+        }
+        
+        public String id()
+        {
+            return this.id;
         }
 
         @Override
@@ -576,7 +707,7 @@ public final class SapphireModelingExtensionSystem
 
             if( service.isAssignableFrom( this.type ) )
             {
-                final ModelPropertyServiceFactory factory = getFactory();
+                final ModelPropertyServiceFactory factory = factory();
 
                 if( factory != null )
                 {
@@ -587,13 +718,18 @@ public final class SapphireModelingExtensionSystem
             return result;
         }
 
+        public Set<String> overrides()
+        {
+            return this.overrides;
+        }
+
         @Override
         public ModelPropertyService create( final IModelElement element,
                                             final ModelProperty property,
                                             final Class<? extends ModelPropertyService> service )
         {
             ModelPropertyService result = null;
-            final ModelPropertyServiceFactory factory = getFactory();
+            final ModelPropertyServiceFactory factory = factory();
 
             if( factory != null )
             {
@@ -603,7 +739,7 @@ public final class SapphireModelingExtensionSystem
             return result;
         }
 
-        private synchronized ModelPropertyServiceFactory getFactory()
+        private synchronized ModelPropertyServiceFactory factory()
         {
             if( this.factoryInstance == null && ! this.factoryInstantiationFailed )
             {

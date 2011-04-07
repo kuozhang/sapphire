@@ -9,39 +9,39 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.misc;
+package org.eclipse.sapphire.modeling.util;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
-import org.eclipse.sapphire.tests.modeling.misc.t0001.TestMisc0001;
-import org.eclipse.sapphire.tests.modeling.misc.t0002.TestMisc0002;
+import java.util.AbstractSet;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
 
 /**
+ * Identity hash set implementation based on IdentityHashMap.
+ * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MiscTestSuite
-
-    extends TestCase
-    
+public final class IdentityHashSet<T> extends AbstractSet<T>
 {
-    private MiscTestSuite( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "Misc" );
+    private final IdentityHashMap<T,Object> map = new IdentityHashMap<T,Object>();
 
-        suite.addTest( TestMisc0001.suite() );
-        suite.addTest( TestMisc0002.suite() );
-        
-        return suite;
+    @Override
+    public boolean add( final T item )
+    {
+        this.map.put( item, null );
+        return true;
+    }
+
+    @Override
+    public Iterator<T> iterator()
+    {
+        return this.map.keySet().iterator();
+    }
+
+    @Override
+    public int size()
+    {
+        return this.map.size();
     }
     
 }

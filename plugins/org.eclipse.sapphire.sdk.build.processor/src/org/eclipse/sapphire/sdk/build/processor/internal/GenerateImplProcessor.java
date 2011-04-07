@@ -435,8 +435,6 @@ public final class GenerateImplProcessor
         
         if( referenceAnnotation != null )
         {
-            baseType = new TypeReference( String.class );
-            
             try
             {
                 referenceAnnotation.target();

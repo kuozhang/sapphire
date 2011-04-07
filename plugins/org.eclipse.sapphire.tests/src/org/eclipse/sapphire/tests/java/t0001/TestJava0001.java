@@ -16,11 +16,11 @@ import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeKind;
-import org.eclipse.sapphire.java.internal.ClassLoaderJavaTypeService;
+import org.eclipse.sapphire.java.internal.ClassLoaderJavaTypeReferenceService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
- * Tests correctness of Java type kind determination of ClassLoaderJavaTypeService.
+ * Tests correctness of Java type kind determination of ClassLoaderJavaTypeReferenceService.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -54,8 +54,8 @@ public final class TestJava0001
     
     public void testIsClass()
     {
-        final ClassLoaderJavaTypeService service = new ClassLoaderJavaTypeService( TestJava0001.class.getClassLoader() );
-        final JavaType type = service.find( PACKAGE_NAME + ".TestClass" );
+        final ClassLoaderJavaTypeReferenceService service = new ClassLoaderJavaTypeReferenceService( TestJava0001.class.getClassLoader() );
+        final JavaType type = service.resolve( PACKAGE_NAME + ".TestClass" );
         
         assertNotNull( type );
         assertEquals( JavaTypeKind.CLASS, type.getKind() );
@@ -63,8 +63,8 @@ public final class TestJava0001
 
     public void testIsAbstractClass()
     {
-        final ClassLoaderJavaTypeService service = new ClassLoaderJavaTypeService( TestJava0001.class.getClassLoader() );
-        final JavaType type = service.find( PACKAGE_NAME + ".TestAbstractClass" );
+        final ClassLoaderJavaTypeReferenceService service = new ClassLoaderJavaTypeReferenceService( TestJava0001.class.getClassLoader() );
+        final JavaType type = service.resolve( PACKAGE_NAME + ".TestAbstractClass" );
         
         assertNotNull( type );
         assertEquals( JavaTypeKind.ABSTRACT_CLASS, type.getKind() );
@@ -72,8 +72,8 @@ public final class TestJava0001
 
     public void testIsInterface()
     {
-        final ClassLoaderJavaTypeService service = new ClassLoaderJavaTypeService( TestJava0001.class.getClassLoader() );
-        final JavaType type = service.find( PACKAGE_NAME + ".TestInterface" );
+        final ClassLoaderJavaTypeReferenceService service = new ClassLoaderJavaTypeReferenceService( TestJava0001.class.getClassLoader() );
+        final JavaType type = service.resolve( PACKAGE_NAME + ".TestInterface" );
         
         assertNotNull( type );
         assertEquals( JavaTypeKind.INTERFACE, type.getKind() );
@@ -81,8 +81,8 @@ public final class TestJava0001
     
     public void testIsAnnotation()
     {
-        final ClassLoaderJavaTypeService service = new ClassLoaderJavaTypeService( TestJava0001.class.getClassLoader() );
-        final JavaType type = service.find( PACKAGE_NAME + ".TestAnnotation" );
+        final ClassLoaderJavaTypeReferenceService service = new ClassLoaderJavaTypeReferenceService( TestJava0001.class.getClassLoader() );
+        final JavaType type = service.resolve( PACKAGE_NAME + ".TestAnnotation" );
         
         assertNotNull( type );
         assertEquals( JavaTypeKind.ANNOTATION, type.getKind() );
@@ -90,8 +90,8 @@ public final class TestJava0001
     
     public void testIsEnum()
     {
-        final ClassLoaderJavaTypeService service = new ClassLoaderJavaTypeService( TestJava0001.class.getClassLoader() );
-        final JavaType type = service.find( PACKAGE_NAME + ".TestEnum" );
+        final ClassLoaderJavaTypeReferenceService service = new ClassLoaderJavaTypeReferenceService( TestJava0001.class.getClassLoader() );
+        final JavaType type = service.resolve( PACKAGE_NAME + ".TestEnum" );
         
         assertNotNull( type );
         assertEquals( JavaTypeKind.ENUM, type.getKind() );

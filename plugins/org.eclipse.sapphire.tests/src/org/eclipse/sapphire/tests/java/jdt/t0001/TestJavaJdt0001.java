@@ -17,11 +17,11 @@ import junit.framework.TestSuite;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeKind;
-import org.eclipse.sapphire.java.jdt.internal.JdtJavaTypeService;
+import org.eclipse.sapphire.java.jdt.internal.JdtJavaTypeReferenceService;
 import org.eclipse.sapphire.tests.java.jdt.JavaJdtTestCase;
 
 /**
- * Tests correctness of Java type kind determination of JdtJavaTypeService.
+ * Tests correctness of Java type kind determination of JdtJavaTypeReferenceService.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -57,8 +57,8 @@ public final class TestJavaJdt0001
         
         writeJavaSourceFile( "foo.bar", "TestClass", "public class TestClass {}" );
         
-        final JdtJavaTypeService service = new JdtJavaTypeService( project );
-        final JavaType type = service.find( "foo.bar.TestClass" );
+        final JdtJavaTypeReferenceService service = new JdtJavaTypeReferenceService( project );
+        final JavaType type = service.resolve( "foo.bar.TestClass" );
         
         assertNotNull( type );
         assertEquals( JavaTypeKind.CLASS, type.getKind() );
@@ -70,8 +70,8 @@ public final class TestJavaJdt0001
         
         writeJavaSourceFile( "foo.bar", "TestAbstractClass", "public abstract class TestAbstractClass {}" );
         
-        final JdtJavaTypeService service = new JdtJavaTypeService( project );
-        final JavaType type = service.find( "foo.bar.TestAbstractClass" );
+        final JdtJavaTypeReferenceService service = new JdtJavaTypeReferenceService( project );
+        final JavaType type = service.resolve( "foo.bar.TestAbstractClass" );
         
         assertNotNull( type );
         assertEquals( JavaTypeKind.ABSTRACT_CLASS, type.getKind() );
@@ -83,8 +83,8 @@ public final class TestJavaJdt0001
         
         writeJavaSourceFile( "foo.bar", "TestInterface", "public interface TestInterface {}" );
         
-        final JdtJavaTypeService service = new JdtJavaTypeService( project );
-        final JavaType type = service.find( "foo.bar.TestInterface" );
+        final JdtJavaTypeReferenceService service = new JdtJavaTypeReferenceService( project );
+        final JavaType type = service.resolve( "foo.bar.TestInterface" );
         
         assertNotNull( type );
         assertEquals( JavaTypeKind.INTERFACE, type.getKind() );
@@ -96,8 +96,8 @@ public final class TestJavaJdt0001
         
         writeJavaSourceFile( "foo.bar", "TestAnnotation", "public @interface TestAnnotation {}" );
         
-        final JdtJavaTypeService service = new JdtJavaTypeService( project );
-        final JavaType type = service.find( "foo.bar.TestAnnotation" );
+        final JdtJavaTypeReferenceService service = new JdtJavaTypeReferenceService( project );
+        final JavaType type = service.resolve( "foo.bar.TestAnnotation" );
         
         assertNotNull( type );
         assertEquals( JavaTypeKind.ANNOTATION, type.getKind() );
@@ -109,8 +109,8 @@ public final class TestJavaJdt0001
         
         writeJavaSourceFile( "foo.bar", "TestEnum", "public enum TestEnum { A, B, C }" );
         
-        final JdtJavaTypeService service = new JdtJavaTypeService( project );
-        final JavaType type = service.find( "foo.bar.TestEnum" );
+        final JdtJavaTypeReferenceService service = new JdtJavaTypeReferenceService( project );
+        final JavaType type = service.resolve( "foo.bar.TestEnum" );
         
         assertNotNull( type );
         assertEquals( JavaTypeKind.ENUM, type.getKind() );

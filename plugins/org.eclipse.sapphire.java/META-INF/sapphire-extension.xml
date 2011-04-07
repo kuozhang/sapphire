@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2011 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <model-property-service>
+        <description>Resolves Java types visible to the class loader that contains a given model element type interface.</description>
+        <type>org.eclipse.sapphire.modeling.ReferenceService</type>
+        <factory>org.eclipse.sapphire.java.internal.ClassLoaderJavaTypeReferenceService$Factory</factory>
+        <id>Sapphire.Java.TypeReferenceService</id>
+    </model-property-service>
+    <value-serialization-service>
+        <type>org.eclipse.sapphire.java.JavaTypeName</type>
+        <impl>org.eclipse.sapphire.java.internal.JavaTypeNameSerializationService</impl>
+    </value-serialization-service>
+    <value-serialization-service>
+        <type>org.eclipse.sapphire.java.JavaPackageName</type>
+        <impl>org.eclipse.sapphire.java.internal.JavaPackageNameSerializationService</impl>
+    </value-serialization-service>
+</extension>

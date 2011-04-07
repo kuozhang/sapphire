@@ -42,6 +42,7 @@
                         <section>
                             <label>model element service</label>
                             <content>
+                                <property-editor>Id</property-editor>
                                 <property-editor>TypeClass</property-editor>
                                 <property-editor>FactoryClass</property-editor>
                                 <property-editor>
@@ -51,6 +52,7 @@
                                         <value>5</value>
                                     </hint>
                                 </property-editor>
+                                <property-editor>Overrides</property-editor>
                             </content>
                         </section>
                     </node-template>
@@ -74,6 +76,7 @@
                         <section>
                             <label>model property service</label>
                             <content>
+                                <property-editor>Id</property-editor>
                                 <property-editor>TypeClass</property-editor>
                                 <property-editor>FactoryClass</property-editor>
                                 <property-editor>
@@ -83,6 +86,7 @@
                                         <value>5</value>
                                     </hint>
                                 </property-editor>
+                                <property-editor>Overrides</property-editor>
                             </content>
                         </section>
                     </node-template>

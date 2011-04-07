@@ -15,26 +15,31 @@ import java.lang.reflect.Modifier;
 
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeKind;
-import org.eclipse.sapphire.java.JavaTypeService;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.ModelPropertyService;
+import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
+import org.eclipse.sapphire.modeling.ReferenceService;
+import org.eclipse.sapphire.modeling.annotations.Reference;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ClassLoaderJavaTypeService
+public final class ClassLoaderJavaTypeReferenceService
 
-    extends JavaTypeService
+    extends ReferenceService
     
 {
     private final ClassLoader classLoader;
     
-    public ClassLoaderJavaTypeService( final ClassLoader classLoader )
+    public ClassLoaderJavaTypeReferenceService( final ClassLoader classLoader )
     {
         this.classLoader = classLoader;
     }
 
     @Override
-    public JavaType find( final String name )
+    public JavaType resolve( final String name )
     {
         try
         {
@@ -68,12 +73,12 @@ public final class ClassLoaderJavaTypeService
             
             if( superClass != null )
             {
-                factory.setSuperClass( find( superClass.getName() ) );
+                factory.setSuperClass( resolve( superClass.getName() ) );
             }
             
             for( Class<?> superInterface : cl.getInterfaces() )
             {
-                factory.addSuperInterface( find( superInterface.getName() ) );
+                factory.addSuperInterface( resolve( superInterface.getName() ) );
             }
             
             return factory.create();
@@ -84,6 +89,27 @@ public final class ClassLoaderJavaTypeService
         }
 
         return null;
+    }
+    
+    public static final class Factory extends ModelPropertyServiceFactory
+    {
+        @Override
+        public boolean applicable( final IModelElement element,
+                                   final ModelProperty property,
+                                   final Class<? extends ModelPropertyService> service )
+        {
+            final Reference referenceAnnotation = property.getAnnotation( Reference.class );
+            return ( referenceAnnotation != null && referenceAnnotation.target() == JavaType.class );
+        }
+
+        @Override
+        public ModelPropertyService create( final IModelElement element,
+                                            final ModelProperty property,
+                                            final Class<? extends ModelPropertyService> service )
+        {
+            final ClassLoader classLoader = element.getModelElementType().getModelElementClass().getClassLoader();
+            return new ClassLoaderJavaTypeReferenceService( classLoader );
+        }
     }
     
 }

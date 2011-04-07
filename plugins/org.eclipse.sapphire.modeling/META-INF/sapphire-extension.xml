@@ -17,30 +17,37 @@
     <model-property-service>
         <type>org.eclipse.sapphire.modeling.EnablementService</type>
         <factory>org.eclipse.sapphire.modeling.internal.EnablementServiceFactory</factory>
+        <id>Sapphire.EnablementService</id>
     </model-property-service>
     <model-property-service>
         <type>org.eclipse.sapphire.modeling.serialization.ValueSerializationService</type>
         <factory>org.eclipse.sapphire.modeling.serialization.internal.ValueSerializationServiceFactory</factory>
+        <id>Sapphire.ValueSerializationService</id>
     </model-property-service>
     <model-property-service>
         <type>org.eclipse.sapphire.modeling.DefaultValueService</type>
         <factory>org.eclipse.sapphire.modeling.internal.DefaultValueServiceFactory</factory>
+        <id>Sapphire.DefaultValueService</id>
     </model-property-service>
     <model-property-service>
         <type>org.eclipse.sapphire.modeling.DerivedValueService</type>
         <factory>org.eclipse.sapphire.modeling.internal.DerivedValueServiceFactory</factory>
+        <id>Sapphire.DerivedValueService</id>
     </model-property-service>
     <model-property-service>
         <type>org.eclipse.sapphire.modeling.PossibleValuesService</type>
         <factory>org.eclipse.sapphire.modeling.internal.PossibleValuesServiceFactory</factory>
+        <id>Sapphire.PossibleValuesService</id>
     </model-property-service>
     <model-property-service>
         <type>org.eclipse.sapphire.modeling.ReferenceService</type>
         <factory>org.eclipse.sapphire.modeling.internal.ReferenceServiceFactory</factory>
+        <id>Sapphire.ReferenceService</id>
     </model-property-service>
     <model-property-service>
         <type>org.eclipse.sapphire.modeling.ReferenceService</type>
         <factory>org.eclipse.sapphire.modeling.internal.ClassReferenceServiceFactory</factory>
+        <id>Sapphire.ClassReferenceService</id>
     </model-property-service>
     <value-serialization-service>
         <type>java.lang.Enum</type>

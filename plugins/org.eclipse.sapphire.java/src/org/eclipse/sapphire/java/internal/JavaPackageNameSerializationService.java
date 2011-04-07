@@ -9,14 +9,24 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.java;
+package org.eclipse.sapphire.java.internal;
+
+import org.eclipse.sapphire.modeling.java.JavaPackageName;
+import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class JavaTypeService
+public final class JavaPackageNameSerializationService
+
+    extends ValueSerializationService
+    
 {
-    public abstract JavaType find( String name );
+    @Override
+    protected JavaPackageName decodeFromString( final String value )
+    {
+        return new JavaPackageName( value );
+    }
     
 }
