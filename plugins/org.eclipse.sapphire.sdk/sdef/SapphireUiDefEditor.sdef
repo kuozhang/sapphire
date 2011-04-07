@@ -1192,7 +1192,7 @@
                                     <section>
                                         <label>connection binding</label>
                                         <content>
-                                            <property-editor>Id</property-editor>
+                                            <property-editor>ConnectionId</property-editor>
                                             <property-editor>Property</property-editor>
                                             <property-editor>InstanceId</property-editor>
                                         </content>
@@ -1310,7 +1310,7 @@
                         <section>
                             <label>connection binding</label>
                             <content>
-                                <property-editor>Id</property-editor>
+                                <property-editor>ConnectionId</property-editor>
                                 <property-editor>Property</property-editor>
                                 <property-editor>InstanceId</property-editor>
                             </content>
