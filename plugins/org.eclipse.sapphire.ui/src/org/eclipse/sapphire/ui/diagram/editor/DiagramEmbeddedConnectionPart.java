@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 
 /**
@@ -32,8 +33,9 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
 	private FunctionResult endpointFunctionResult;
 	private IDiagramConnectionEndpointBindingDef endpointDef;
 	
-	public DiagramEmbeddedConnectionPart(IModelElement srcNodeModel, ModelPath endpointPath)
+	public DiagramEmbeddedConnectionPart(IDiagramConnectionBindingDef connBindingDef, IModelElement srcNodeModel, ModelPath endpointPath)
 	{
+		this.bindingDef = connBindingDef;
 		this.srcNodeModel = srcNodeModel;
 		this.endpointPath = endpointPath;
 	}
@@ -42,7 +44,7 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
     protected void init()
     {   
     	initLabelId();
-        this.endpointDef = this.localDefinition.getEndpoint2().element();
+        this.endpointDef = this.bindingDef.getEndpoint2().element();
         this.endpointModel = resolveEndpoint(this.modelElement, this.endpointPath);
         if (this.endpointModel != null)
         {

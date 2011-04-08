@@ -33,6 +33,7 @@ import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramDropActionHandler;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 
@@ -119,8 +120,9 @@ public class DiagramNodeTemplate extends SapphirePart
         {
         	IDiagramConnectionBindingDef embeddedConnDef = 
         				this.definition.getEmbeddedConnections().get( 0 );
-        	this.embeddedConnTemplate = new DiagramEmbeddedConnectionTemplate();
-        	this.embeddedConnTemplate.init(this, this.modelElement, embeddedConnDef, Collections.<String,String>emptyMap());
+        	this.embeddedConnTemplate = new DiagramEmbeddedConnectionTemplate(embeddedConnDef);
+        	IDiagramConnectionDef connDef = this.diagramEditor.getDiagramConnectionDef(embeddedConnDef.getConnectionId().getContent());
+        	this.embeddedConnTemplate.init(this, this.modelElement, connDef, Collections.<String,String>emptyMap());
         }
         
         // Add model property listener

@@ -30,13 +30,10 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.ColorConstant;
 import org.eclipse.graphiti.util.IColorConstant;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.Color;
 import org.eclipse.sapphire.ui.diagram.def.ConnectionEndpointType;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramPageDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 
 /**
@@ -69,8 +66,7 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 		IAddConnectionContext addConContext = (IAddConnectionContext) context;
 		DiagramConnectionPart connectionPart = (DiagramConnectionPart) context.getNewObject();
 		
-		IDiagramConnectionBindingDef connBinding = (IDiagramConnectionBindingDef)connectionPart.getDefinition();
-		IDiagramConnectionDef connDef = getDiagramConnectionDef(connBinding);
+		IDiagramConnectionDef connDef = connectionPart.getConnectionDef();
 		IColorConstant linkColor = getLinkColor(connDef);
 		LineStyle linkStyle = getLinkStyle(connDef);
 
@@ -193,17 +189,4 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 		return linkStyle;
 	}
 	
-	private IDiagramConnectionDef getDiagramConnectionDef(IDiagramConnectionBindingDef connBindingDef)
-	{
-		IDiagramPageDef pageDef = connBindingDef.nearest(IDiagramPageDef.class);
-		ModelElementList<IDiagramConnectionDef> connDefs = pageDef.getDiagramConnectionDefs();
-		for (IDiagramConnectionDef connDef : connDefs)
-		{
-			if (connDef.getId().getContent().equalsIgnoreCase(connBindingDef.getConnectionId().getContent()))
-			{
-				return connDef;
-			}
-		}
-		return null;
-	}
 }

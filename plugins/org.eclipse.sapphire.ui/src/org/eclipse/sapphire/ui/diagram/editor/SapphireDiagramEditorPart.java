@@ -64,6 +64,7 @@ public class SapphireDiagramEditorPart extends SapphirePart
         
         this.nodeTemplates = new ArrayList<DiagramNodeTemplate>();
         ModelElementList<IDiagramNodeDef> nodeDefs = this.diagramPageDef.getDiagramNodeDefs();
+        this.connectionDefs = this.diagramPageDef.getDiagramConnectionDefs();
         
         for (IDiagramNodeDef nodeDef : nodeDefs)
         {
@@ -77,15 +78,14 @@ public class SapphireDiagramEditorPart extends SapphirePart
         		nodeTemplate.getEmbeddedConnectionTemplate().addTemplateListener(this.connTemplateListener);
         	}
         }
-        
-        this.connectionDefs = this.diagramPageDef.getDiagramConnectionDefs();
-        
+                
         this.connectionTemplates = new ArrayList<DiagramConnectionTemplate>();
-        ModelElementList<IDiagramConnectionBindingDef> connectionDefs = this.diagramPageDef.getDiagramConnectionBindingDefs();
-        for (IDiagramConnectionBindingDef connectionDef : connectionDefs)
+        ModelElementList<IDiagramConnectionBindingDef> connectionBindings = this.diagramPageDef.getDiagramConnectionBindingDefs();
+        for (IDiagramConnectionBindingDef connBinding : connectionBindings)
         {
-        	DiagramConnectionTemplate connectionTemplate = new DiagramConnectionTemplate();
-        	connectionTemplate.init(this, this.modelElement, connectionDef, Collections.<String,String>emptyMap());
+        	IDiagramConnectionDef connDef = getDiagramConnectionDef(connBinding.getConnectionId().getContent());
+        	DiagramConnectionTemplate connectionTemplate = new DiagramConnectionTemplate(connBinding);
+        	connectionTemplate.init(this, this.modelElement, connDef, Collections.<String,String>emptyMap());
         	this.connectionTemplates.add(connectionTemplate);
         	connectionTemplate.addTemplateListener(this.connTemplateListener);
         }

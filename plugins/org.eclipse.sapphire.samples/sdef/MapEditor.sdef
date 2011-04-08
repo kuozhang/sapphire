@@ -52,7 +52,7 @@
             <label>${Name == null ? &quot;&lt;destination&gt;&quot; : Name}</label>
             <instance-id>${Name}</instance-id>
             <connection-binding>
-                <id>railway_routes</id>
+                <connection-id>railway_routes</connection-id>
                 <property>RailwayRoutes</property>
                 <label>${Distance == null ? &quot;&lt;distance&gt;&quot; : Distance}</label>
                 <endpoint2>

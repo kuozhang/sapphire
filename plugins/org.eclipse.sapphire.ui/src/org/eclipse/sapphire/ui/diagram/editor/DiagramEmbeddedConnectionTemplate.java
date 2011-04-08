@@ -36,6 +36,7 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 
 /**
@@ -49,18 +50,23 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
 	private ModelElementListener modelElementListener;
 	private ModelPath endpointPath;
 		
+	public DiagramEmbeddedConnectionTemplate(IDiagramConnectionBindingDef connBindingDef)
+	{
+		super(connBindingDef);
+	}
+	
 	@Override
     public void init()
     {
 		this.nodeTemplate = (DiagramNodeTemplate)getParentPart();
     	this.diagramEditor = this.nodeTemplate.getDiagramEditorPart();
     	this.modelElement = getModelElement();
-    	this.definition = (IDiagramConnectionBindingDef)super.getDefinition();
+    	this.definition = (IDiagramConnectionDef)super.getDefinition();
     	
         this.diagramConnectionMap = new HashMap<IModelElement, List<DiagramConnectionPart>>();
         
         ListProperty nodeProperty = (ListProperty)this.nodeTemplate.getModelProperty();
-        this.propertyName = this.definition.getProperty().getContent();
+        this.propertyName = this.bindingDef.getProperty().getContent();
         this.connListProperty = (ListProperty)nodeProperty.getType().getProperty(this.propertyName);
         
         this.connPartListener = new SapphireDiagramPartListener() 
@@ -98,7 +104,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         	}
 		};
 		
-    	String endpointPropStr = this.definition.getEndpoint2().element().getProperty().getContent();
+    	String endpointPropStr = this.bindingDef.getEndpoint2().element().getProperty().getContent();
     	this.endpointPath = new ModelPath(endpointPropStr);
     	
     	ModelElementList<IModelElement> srcNodeList = this.modelElement.read(nodeProperty);
@@ -143,7 +149,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
 	    	ModelProperty connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);    	
 	        ModelElementType connType = connProp.getType();
 	        ModelProperty endpointProp = 
-	        	connType.getProperty(this.definition.getEndpoint2().element().getProperty().getContent());
+	        	connType.getProperty(this.bindingDef.getEndpoint2().element().getProperty().getContent());
 	        if (endpointProp.getType() == null && endpointProp.hasAnnotation(Reference.class))
 	        {
 	        	return endpointProp.getAnnotation(Reference.class).target().isAssignableFrom(targetType.getModelElementClass());
@@ -197,11 +203,11 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     		ModelElementList<?> list = srcNodeModel.read(listProperty);
     		newEndpoint = list.addNewElement();    		
     	}
-    	IDiagramConnectionEndpointBindingDef endpointDef = this.definition.getEndpoint2().element();
+    	IDiagramConnectionEndpointBindingDef endpointDef = this.bindingDef.getEndpoint2().element();
     	String endpointProperty = endpointDef.getProperty().getContent();
     	Value<Function> endpointFunc = endpointDef.getValue();
     	FunctionResult endpointFuncResult = getNodeReferenceFunction(targetNode, endpointFunc, 
-    								this.definition.adapt( LocalizationService.class ));
+    								this.bindingDef.adapt( LocalizationService.class ));
     	if (endpointFuncResult != null)
     	{
 	    	setModelProperty(newEndpoint, endpointProperty, endpointFuncResult.value());
@@ -217,7 +223,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     public DiagramConnectionPart createNewConnectionPart(IModelElement connElement, IModelElement srcNodeElement)
     {
 		DiagramEmbeddedConnectionPart connPart = 
-			new DiagramEmbeddedConnectionPart(srcNodeElement, this.endpointPath);
+			new DiagramEmbeddedConnectionPart(this.bindingDef, srcNodeElement, this.endpointPath);
 		connPart.init(this, connElement, this.definition, Collections.<String,String>emptyMap());
 		connPart.addListener(this.connPartListener);
 		addConnectionPart(srcNodeElement, connPart);

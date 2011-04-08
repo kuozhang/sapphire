@@ -39,6 +39,7 @@ import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 
 /**
@@ -64,7 +65,8 @@ public class DiagramConnectionTemplate extends SapphirePart
     }
 	
 	protected SapphireDiagramEditorPart diagramEditor;
-	protected IDiagramConnectionBindingDef definition;
+	protected IDiagramConnectionDef definition;
+	protected IDiagramConnectionBindingDef bindingDef;
 	protected IModelElement modelElement;
 	protected String propertyName;
 	private ListProperty modelProperty;
@@ -82,16 +84,21 @@ public class DiagramConnectionTemplate extends SapphirePart
 	
 	private List<DiagramConnectionPart> diagramConnections;
 	
+	public DiagramConnectionTemplate(IDiagramConnectionBindingDef bindingDef)
+	{
+		this.bindingDef = bindingDef;
+	}
+	
 	@Override
     public void init()
     {
     	this.diagramEditor = (SapphireDiagramEditorPart)getParentPart();
     	this.modelElement = getModelElement();
-    	this.definition = (IDiagramConnectionBindingDef)super.definition;;
+    	this.definition = (IDiagramConnectionDef)super.definition;;
     	
         this.diagramConnections = new ArrayList<DiagramConnectionPart>();
         
-        this.propertyName = this.definition.getProperty().getContent();
+        this.propertyName = this.bindingDef.getProperty().getContent();
         this.modelProperty = (ListProperty)ModelUtil.resolve(this.modelElement, this.propertyName);
         
         this.connPartListener = new SapphireDiagramPartListener() 
@@ -111,8 +118,8 @@ public class DiagramConnectionTemplate extends SapphirePart
 		
 		this.templateListeners = new CopyOnWriteArraySet<Listener>();
         	    	
-    	String endpt1PropStr = this.definition.getEndpoint1().element().getProperty().getContent();
-    	String endpt2PropStr = this.definition.getEndpoint2().element().getProperty().getContent();
+    	String endpt1PropStr = this.bindingDef.getEndpoint1().element().getProperty().getContent();
+    	String endpt2PropStr = this.bindingDef.getEndpoint2().element().getProperty().getContent();
     	this.originalEndpoint2Path = new ModelPath(endpt2PropStr);
     	
         ModelElementType type = this.modelProperty.getType();
@@ -182,7 +189,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     
     public String getConnectionId()
     {
-    	return this.definition.getConnectionId().getContent();
+    	return this.bindingDef.getConnectionId().getContent();
     }
     
     public List<DiagramConnectionPart> getDiagramConnections(IModelElement connListParent)
@@ -315,11 +322,11 @@ public class DiagramConnectionTemplate extends SapphirePart
     {    	
     	// Get the serialized value of endpoint1
     	String endpoint1Value = null;
-    	IDiagramConnectionEndpointBindingDef srcAnchorDef = this.definition.getEndpoint1().element();
+    	IDiagramConnectionEndpointBindingDef srcAnchorDef = this.bindingDef.getEndpoint1().element();
     	String srcProperty = srcAnchorDef.getProperty().getContent();
     	Value<Function> srcFunc = srcAnchorDef.getValue();
     	FunctionResult srcFuncResult = getNodeReferenceFunction(srcNode, srcFunc, 
-    							this.definition.adapt( LocalizationService.class ));
+    							this.bindingDef.adapt( LocalizationService.class ));
     	if (srcFuncResult != null)
     	{
     		endpoint1Value = (String)srcFuncResult.value();
@@ -328,10 +335,10 @@ public class DiagramConnectionTemplate extends SapphirePart
     	
     	// get the serialized value of endpoint2
     	String endpoint2Value = null;
-    	IDiagramConnectionEndpointBindingDef targetAnchorDef = this.definition.getEndpoint2().element();
+    	IDiagramConnectionEndpointBindingDef targetAnchorDef = this.bindingDef.getEndpoint2().element();
     	Value<Function> targetFunc = targetAnchorDef.getValue();;
     	FunctionResult targetFuncResult = getNodeReferenceFunction(targetNode, targetFunc,
-    							this.definition.adapt( LocalizationService.class ));
+    							this.bindingDef.adapt( LocalizationService.class ));
     	
     	if (targetFuncResult != null)
     	{
@@ -397,7 +404,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     
     public DiagramConnectionPart createNewConnectionPart(IModelElement connElement, IModelElement srcNodeElement)
     {
-    	DiagramConnectionPart connPart = new DiagramConnectionPart(this.endpoint1Path, this.endpoint2Path);
+    	DiagramConnectionPart connPart = new DiagramConnectionPart(this.bindingDef, this.endpoint1Path, this.endpoint2Path);
     	connPart.init(this, connElement, this.definition, 
     			Collections.<String,String>emptyMap());
     	connPart.addListener(this.connPartListener);
