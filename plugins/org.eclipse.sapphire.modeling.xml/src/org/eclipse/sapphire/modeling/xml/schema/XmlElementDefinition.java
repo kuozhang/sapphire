@@ -60,7 +60,7 @@ public class XmlElementDefinition extends XmlContentModel
             final String namespace = contentModelName.getNamespaceURI();
             final String localName = contentModelName.getLocalPart();
             
-            if( namespace.equals( this.schema.getNamespace() ) )
+            if( namespace == null || namespace.length() == 0 || namespace.equals( this.schema.getNamespace() ) )
             {
                 return this.schema.getContentModel( localName );
             }

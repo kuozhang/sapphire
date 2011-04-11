@@ -17,6 +17,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.tests.modeling.xml.dtd.t0001.TestXmlDtd0001;
 import org.eclipse.sapphire.tests.modeling.xml.dtd.t0002.TestXmlDtd0002;
+import org.eclipse.sapphire.tests.modeling.xml.dtd.t0003.TestXmlDtd0003;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -40,6 +41,7 @@ public final class XmlDtdTestSuite
 
         suite.addTest( TestXmlDtd0001.suite() );
         suite.addTest( TestXmlDtd0002.suite() );
+        suite.addTest( TestXmlDtd0003.suite() );
         
         return suite;
     }

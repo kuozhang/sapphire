@@ -55,7 +55,7 @@ public final class XmlDocumentSchemasCache
         {
             if( schemaLocation.endsWith( "dtd" ) )
             {
-                schema = DtdParser.parseFromUrl( schemaLocation, baseLocation );
+                schema = DtdParser.parseFromUrl( baseLocation, schemaLocation );
             }
             else
             {

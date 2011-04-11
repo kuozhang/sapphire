@@ -18,6 +18,7 @@ import java.util.Map;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchemasCache;
 import org.w3c.dom.Document;
+import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 
 /**
@@ -68,6 +69,12 @@ public class StandardRootElementController
         if( rinfo.namespace == null )
         {
             root = document.createElementNS( null, rinfo.elementName );
+            
+            if( rinfo.schemaLocation != null && rinfo.schemaLocation.toLowerCase().endsWith( ".dtd" ) )
+            {
+                final DocumentType doctype = document.getImplementation().createDocumentType( rinfo.elementName, null, rinfo.schemaLocation );
+                document.insertBefore( doctype, root );
+            }
         }
         else
         {

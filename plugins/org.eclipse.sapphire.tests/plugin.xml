@@ -78,6 +78,11 @@
         systemId="http://www.eclipse.org/sapphire/tests/xml/binding/0007/y"
         uri="schemas/xml/binding/0007y.xsd"/>
     </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="TestXmlDtd0003.dtd"
+        uri="schemas/xml/dtd/0003.dtd"/>
+    </catalogContribution>
   </extension>
 
 </plugin>
