@@ -12,8 +12,7 @@
 package org.eclipse.sapphire.modeling;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
+import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 
 /**
@@ -27,7 +26,7 @@ public class Transient<T>
 {
     private final TransientProperty property;
     private final T content;
-    private IStatus valres;
+    private SapphireMultiStatus valres;
 
     public Transient( final IModelElement parent,
                       final TransientProperty property,
@@ -45,21 +44,22 @@ public class Transient<T>
         initValidation();
     }
     
-    @SuppressWarnings( "unchecked" )
-    
     private void initValidation()
     {
         if( this.valres == null )
         {
-            final ModelPropertyValidator<Transient<?>> validator = (ModelPropertyValidator<Transient<?>>) this.property.getValidator();
+            this.valres = new SapphireMultiStatus();
             
-            if( validator == null )
+            for( ModelPropertyValidationService<?> svc : parent().services( this.property, ModelPropertyValidationService.class ) )
             {
-                this.valres = Status.OK_STATUS;
-            }
-            else
-            {
-                this.valres = validator.validate( this );
+                try
+                {
+                    this.valres.merge( svc.validate() );
+                }
+                catch( Exception e )
+                {
+                    SapphireModelingFrameworkPlugin.log( e );
+                }
             }
         }
     }

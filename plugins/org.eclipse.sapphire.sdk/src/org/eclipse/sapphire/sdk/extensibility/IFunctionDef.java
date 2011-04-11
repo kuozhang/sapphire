@@ -11,6 +11,10 @@
 
 package org.eclipse.sapphire.sdk.extensibility;
 
+import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.java.JavaTypeConstraint;
+import org.eclipse.sapphire.java.JavaTypeKind;
+import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
@@ -23,12 +27,10 @@ import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.java.JavaTypeConstraints;
-import org.eclipse.sapphire.modeling.java.JavaTypeKind;
+import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
-import org.eclipse.sapphire.sdk.extensibility.internal.ClassReferenceService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -76,10 +78,11 @@ public interface IFunctionDef
     
     // *** ImplClass ***
     
-    @Reference( target = Class.class, service = ClassReferenceService.class )
+    @Type( base = JavaTypeName.class )
+    @Reference( target = JavaType.class )
     @Label( standard = "implementation class" )
     @NonNullValue
-    @JavaTypeConstraints( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.modeling.el.Function" )
+    @JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.modeling.el.Function" )
     @MustExist
     @XmlBinding( path = "impl" )
     
@@ -87,7 +90,8 @@ public interface IFunctionDef
 
     ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );
     
-    ReferenceValue<String,Class<?>> getImplClass();
+    ReferenceValue<JavaTypeName,JavaType> getImplClass();
     void setImplClass( String value );
+    void setImplClass( JavaTypeName value );
     
 }

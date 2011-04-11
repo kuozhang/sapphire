@@ -9,5 +9,6 @@ Export-Package: org.eclipse.sapphire.java,
  org.eclipse.sapphire.java.internal;x-friends:="org.eclipse.sapphire.tests"
 Bundle-Vendor: %providerName
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.sapphire.modeling
+Require-Bundle: org.eclipse.sapphire.modeling,
+ org.eclipse.core.runtime
 

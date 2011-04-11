@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
@@ -335,12 +336,22 @@ public final class MasterDetailsContentNode
                         
                         for( IMasterDetailsTreeNodeFactoryEntry entry : def.getTypeSpecificDefinitions() )
                         {
-                            final Class<?> type = entry.getType().resolve();
+                            final JavaType type = entry.getType().resolve();
                             
-                            if( type == null || type.isAssignableFrom( listEntryModelElement.getClass() ) )
+                            if( type == null )
                             {
                                 listEntryNodeDef = entry;
                                 break;
+                            }
+                            else
+                            {
+                                final Class<?> cl = type.artifact();
+
+                                if( cl == null || cl.isAssignableFrom( listEntryModelElement.getClass() ) )
+                                {
+                                    listEntryNodeDef = entry;
+                                    break;
+                                }
                             }
                         }
                         

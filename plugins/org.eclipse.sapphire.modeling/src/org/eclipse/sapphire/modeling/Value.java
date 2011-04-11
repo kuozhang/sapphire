@@ -12,8 +12,7 @@
 package org.eclipse.sapphire.modeling;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
+import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
@@ -30,7 +29,7 @@ public class Value<T>
     private final ValueProperty property;
     private final String raw;
     private final T parsed;
-    private IStatus valres;
+    private SapphireMultiStatus valres;
     private boolean defaultValueInitialized;
     private String defaultText;
     private T defaultContent;
@@ -64,21 +63,22 @@ public class Value<T>
         initDefaultValue();
     }
     
-    @SuppressWarnings( "unchecked" )
-    
     private void initValidation()
     {
         if( this.valres == null )
         {
-            final ModelPropertyValidator<Value<?>> validator = (ModelPropertyValidator<Value<?>>) this.property.getValidator();
+            this.valres = new SapphireMultiStatus();
             
-            if( validator == null )
+            for( ModelPropertyValidationService<?> svc : parent().services( this.property, ModelPropertyValidationService.class ) )
             {
-                this.valres = Status.OK_STATUS;
-            }
-            else
-            {
-                this.valres = validator.validate( this );
+                try
+                {
+                    this.valres.merge( svc.validate() );
+                }
+                catch( Exception e )
+                {
+                    SapphireModelingFrameworkPlugin.log( e );
+                }
             }
         }
     }

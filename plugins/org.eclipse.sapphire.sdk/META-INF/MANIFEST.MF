@@ -7,6 +7,8 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.sapphire.modeling,
  org.eclipse.sapphire.modeling.xml,
+ org.eclipse.sapphire.java,
+ org.eclipse.sapphire.java.jdt,
  org.eclipse.sapphire.ui.swt.xml.editor,
  org.eclipse.sapphire.ui,
  org.eclipse.debug.ui,

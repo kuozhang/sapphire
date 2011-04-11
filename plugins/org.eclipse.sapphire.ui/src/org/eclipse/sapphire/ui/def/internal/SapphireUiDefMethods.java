@@ -12,8 +12,6 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import static org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin.PLUGIN_ID;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -131,24 +129,17 @@ public final class SapphireUiDefMethods
     public static Class<?> resolveClass( final ISapphireUiDef def,
                                          final String className )
     {
-        Class<?> cl 
-            = ImportDirectiveMethods.resolveClass( className, PLUGIN_ID, PLUGIN_ID + ".actions",
-                                                   PLUGIN_ID + ".listeners", PLUGIN_ID + ".xml" );
-
-        if( cl == null )
+        for( IImportDirective directive : def.getImportDirectives() )
         {
-            for( IImportDirective directive : def.getImportDirectives() )
+            final Class<?> cl = directive.resolveClass( className );
+            
+            if( cl != null )
             {
-                cl = directive.resolveClass( className );
-                
-                if( cl != null )
-                {
-                    break;
-                }
+                return cl;
             }
         }
         
-        return cl;
+        return null;
     }
     
     public static ModelProperty resolveProperty( final ISapphireUiDef def,
@@ -161,7 +152,7 @@ public final class SapphireUiDefMethods
             final int dot = qualifiedPropertyName.indexOf( '.' );
             final String className = qualifiedPropertyName.substring( 0, dot );
             final String propertyName = qualifiedPropertyName.substring( dot + 1 );
-            final Class<?> cl = def.resolveClass( className );
+            final Class<?> cl = resolveClass( def, className );
             
             if( cl == null )
             {

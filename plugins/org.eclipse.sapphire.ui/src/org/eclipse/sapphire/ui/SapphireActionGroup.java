@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.ui.def.ISapphireActionContext;
 import org.eclipse.sapphire.ui.def.ISapphireActionContextsHostDef;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
@@ -193,13 +194,18 @@ public final class SapphireActionGroup
             {
                 try
                 {
-                    final Class<?> implClass = def.getImplClass().resolve();
+                    final JavaType implType = def.getImplClass().resolve();
                     
-                    if( implClass != null )
+                    if( implType != null )
                     {
-                        final SapphireActionHandler handler = (SapphireActionHandler) implClass.newInstance();
-                        handler.init( action, def );
-                        action.addHandler( handler );
+                        final Class<?> implClass = implType.artifact();
+                        
+                        if( implClass != null )
+                        {
+                            final SapphireActionHandler handler = (SapphireActionHandler) implClass.newInstance();
+                            handler.init( action, def );
+                            action.addHandler( handler );
+                        }
                     }
                 }
                 catch( Exception e )
@@ -220,17 +226,22 @@ public final class SapphireActionGroup
             {
                 try
                 {
-                    final Class<?> implClass = def.getImplClass().resolve();
+                    final JavaType implType = def.getImplClass().resolve();
                     
-                    if( implClass != null )
+                    if( implType != null )
                     {
-                        final SapphireActionHandlerFactory factory = (SapphireActionHandlerFactory) implClass.newInstance();
-                        factory.init( action, def );
+                        final Class<?> implClass = implType.artifact();
                         
-                        for( SapphireActionHandler handler : factory.create() )
+                        if( implClass != null )
                         {
-                            handler.init( action, null );
-                            action.addHandler( handler );
+                            final SapphireActionHandlerFactory factory = (SapphireActionHandlerFactory) implClass.newInstance();
+                            factory.init( action, def );
+                            
+                            for( SapphireActionHandler handler : factory.create() )
+                            {
+                                handler.init( action, null );
+                                action.addHandler( handler );
+                            }
                         }
                     }
                 }
@@ -270,21 +281,26 @@ public final class SapphireActionGroup
     {
         try
         {
-            final Class<?> conditionClass = def.getConditionClass().resolve();
+            final JavaType conditionType = def.getConditionClass().resolve();
             
-            if( conditionClass != null )
+            if( conditionType != null )
             {
-                final SapphireCondition condition = SapphireCondition.create( this.part, conditionClass, null );
+                final Class<?> conditionClass = conditionType.artifact();
                 
-                if( condition != null )
+                if( conditionClass != null )
                 {
-                    try
+                    final SapphireCondition condition = SapphireCondition.create( this.part, conditionClass, null );
+                    
+                    if( condition != null )
                     {
-                        return condition.getConditionState();
-                    }
-                    finally
-                    {
-                        condition.dispose();
+                        try
+                        {
+                            return condition.getConditionState();
+                        }
+                        finally
+                        {
+                            condition.dispose();
+                        }
                     }
                 }
             }

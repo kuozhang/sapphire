@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.def.internal;
 
 import java.util.SortedSet;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.ISapphirePropertyEditorDef;
@@ -40,6 +41,12 @@ public final class SapphireHintValuePossibleValuesService
                 values.add( ISapphirePropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL_INDENTED );
             }
         }
+    }
+    
+    @Override
+    public int getInvalidValueSeverity( final String invalidValue )
+    {
+        return IStatus.OK;
     }
     
 }

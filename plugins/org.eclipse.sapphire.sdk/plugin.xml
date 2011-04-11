@@ -16,6 +16,8 @@
 
 <plugin>
 
+  <extension point="org.eclipse.sapphire.modeling.extension"/>
+
   <extension point="org.eclipse.ui.editors">
     <editor
       class="org.eclipse.sapphire.sdk.internal.SapphireUiDefEditor"

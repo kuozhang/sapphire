@@ -25,6 +25,7 @@ Export-Package: org.eclipse.sapphire.ui,
  org.eclipse.sapphire.ui.util
 Require-Bundle: org.eclipse.sapphire.modeling,
  org.eclipse.sapphire.modeling.xml,
+ org.eclipse.sapphire.java,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.swt,

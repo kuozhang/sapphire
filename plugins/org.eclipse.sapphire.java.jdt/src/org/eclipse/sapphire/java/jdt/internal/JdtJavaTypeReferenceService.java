@@ -13,19 +13,17 @@ package org.eclipse.sapphire.java.jdt.internal;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.java.JavaTypeKind;
+import org.eclipse.sapphire.java.JavaTypeReferenceService;
+import org.eclipse.sapphire.java.jdt.JdtJavaType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
-import org.eclipse.sapphire.modeling.ReferenceService;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
@@ -35,7 +33,7 @@ import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 public final class JdtJavaTypeReferenceService
 
-    extends ReferenceService
+    extends JavaTypeReferenceService
     
 {
     private final IJavaProject project;
@@ -64,61 +62,8 @@ public final class JdtJavaTypeReferenceService
             
             if( type != null && type.exists() && ! type.isAnonymous() )
             {
-                return toJavaType( type );
+                return new JdtJavaType( type );
             }
-        }
-        catch( JavaModelException e )
-        {
-            SapphireModelingFrameworkPlugin.log( e );
-        }
-        
-        return null;
-    }
-    
-    private JavaType toJavaType( final IType type )
-    {
-        try
-        {
-            final JavaType.Factory factory = new JavaType.Factory();
-            
-            factory.setName( type.getFullyQualifiedName() );
-            
-            if( type.isAnnotation() )
-            {
-                factory.setKind( JavaTypeKind.ANNOTATION );
-            }
-            else if( type.isEnum() )
-            {
-                factory.setKind( JavaTypeKind.ENUM );
-            }
-            else if( type.isInterface() )
-            {
-                factory.setKind( JavaTypeKind.INTERFACE );
-            }
-            else if( Flags.isAbstract( type.getFlags() ) )
-            {
-                factory.setKind( JavaTypeKind.ABSTRACT_CLASS );
-            }
-            else
-            {
-                factory.setKind( JavaTypeKind.CLASS );
-            }
-            
-            final ITypeHierarchy typeHierarchy = type.newSupertypeHierarchy( null );
-            
-            final IType superClassType = typeHierarchy.getSuperclass( type );
-            
-            if( superClassType != null )
-            {
-                factory.setSuperClass( toJavaType( superClassType ) );
-            }
-            
-            for( IType superInterface : typeHierarchy.getSuperInterfaces( type ) )
-            {
-                factory.addSuperInterface( toJavaType( superInterface ) );
-            }
-            
-            return factory.create();
         }
         catch( JavaModelException e )
         {

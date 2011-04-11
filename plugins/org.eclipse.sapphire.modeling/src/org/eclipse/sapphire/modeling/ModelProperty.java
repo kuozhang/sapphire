@@ -24,14 +24,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
-import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
 import org.eclipse.sapphire.modeling.annotations.PropertyListeners;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.annotations.Validator;
-import org.eclipse.sapphire.modeling.annotations.Validators;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 
@@ -58,8 +54,6 @@ public abstract class ModelProperty
     private final List<ModelElementType> allPossibleTypesReadOnly;
     
     private final Map<Class<? extends Annotation>,Annotation> annotations;
-    private ModelPropertyValidator<?> validator;
-    private boolean isValidatorInitialized;
     private Set<ModelPropertyListener> listeners;
     private Set<ModelPropertyListener> listenersReadOnly;
     private Set<ModelPath> dependencies;
@@ -279,102 +273,6 @@ public abstract class ModelProperty
         return refine( ModelElementType.getModelElementType( modelElement.getClass() ) );
     }
 
-    public synchronized final ModelPropertyValidator<?> getValidator()
-    {
-        if( ! this.isValidatorInitialized )
-        {
-            final List<ModelPropertyValidator<? extends Object>> validators = createValidators();
-        
-            if( validators.isEmpty() )
-            {
-                this.validator = null;
-            }
-            else if( validators.size() == 1 )
-            {
-                this.validator = validators.get( 0 );
-            }
-            else
-            {
-                final ModelPropertyValidator<Object> unionValidator = new ModelPropertyValidator<Object>()
-                {
-                    @Override
-                    @SuppressWarnings( "unchecked" )
-                    
-                    public IStatus validate( final Object value )
-                    {
-                        final SapphireMultiStatus multiStatus = new SapphireMultiStatus();
-                        
-                        for( ModelPropertyValidator<? extends Object> validator : validators )
-                        {
-                            multiStatus.add( ( (ModelPropertyValidator<Object>) validator).validate( value ) );
-                        }
-                        
-                        return multiStatus;
-                    }
-                };
-                
-                this.validator = unionValidator;
-            }
-            
-            this.isValidatorInitialized = true;
-        }
-        
-        return this.validator;
-    }
-    
-    protected List<ModelPropertyValidator<? extends Object>> createValidators()
-    {
-        final List<ModelPropertyValidator<? extends Object>> validators = new ArrayList<ModelPropertyValidator<? extends Object>>();
-        createValidators( validators, this );
-        return validators;
-    }
-    
-    private static void createValidators( final List<ModelPropertyValidator<? extends Object>> validators,
-                                          final ModelProperty property )
-    {
-        final Validator validatorAnnotation = property.getAnnotation( Validator.class, true );
-        
-        if( validatorAnnotation != null )
-        {
-            createValidator( validators, validatorAnnotation );
-        }
-        
-        final Validators validatorsAnnotation = property.getAnnotation( Validators.class, true );
-        
-        if( validatorsAnnotation != null )
-        {
-            for( Validator x : validatorsAnnotation.value() )
-            {
-                createValidator( validators, x );
-            }
-        }
-
-        final ModelProperty baseProperty = property.getBase();
-        
-        if( baseProperty != null )
-        {
-            createValidators( validators, baseProperty );
-        }
-    }
-    
-    private static void createValidator( final List<ModelPropertyValidator<? extends Object>> validators,
-                                         final Validator validatorAnnotation )
-    {
-        final Class<? extends ModelPropertyValidator<?>> validatorClass = validatorAnnotation.impl();
-        final ModelPropertyValidator<?> validator;
-        
-        try
-        {
-            validator = validatorClass.newInstance();
-            validator.init( validatorAnnotation.params() );
-            validators.add( validator );
-        }
-        catch( Exception e )
-        {
-            SapphireModelingFrameworkPlugin.log( e );
-        }
-    }
-    
     public boolean isReadOnly()
     {
         return hasAnnotation( ReadOnly.class );

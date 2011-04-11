@@ -11,15 +11,15 @@
 
 package org.eclipse.sapphire.java.internal;
 
-import java.lang.reflect.Modifier;
-
+import org.eclipse.sapphire.java.ClassBasedJavaType;
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.java.JavaTypeKind;
+import org.eclipse.sapphire.java.JavaTypeName;
+import org.eclipse.sapphire.java.JavaTypeReferenceService;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
-import org.eclipse.sapphire.modeling.ReferenceService;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 
 /**
@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.annotations.Reference;
 
 public final class ClassLoaderJavaTypeReferenceService
 
-    extends ReferenceService
+    extends JavaTypeReferenceService
     
 {
     private final ClassLoader classLoader;
@@ -37,51 +37,13 @@ public final class ClassLoaderJavaTypeReferenceService
     {
         this.classLoader = classLoader;
     }
-
+    
     @Override
     public JavaType resolve( final String name )
     {
         try
         {
-            final Class<?> cl = this.classLoader.loadClass( name );
-            final JavaType.Factory factory = new JavaType.Factory();
-            
-            factory.setName( cl.getName() );
-            
-            if( cl.isAnnotation() )
-            {
-                factory.setKind( JavaTypeKind.ANNOTATION );
-            }
-            else if( cl.isEnum() )
-            {
-                factory.setKind( JavaTypeKind.ENUM );
-            }
-            else if( cl.isInterface() )
-            {
-                factory.setKind( JavaTypeKind.INTERFACE );
-            }
-            else if( Modifier.isAbstract( cl.getModifiers() ) )
-            {
-                factory.setKind( JavaTypeKind.ABSTRACT_CLASS );
-            }
-            else
-            {
-                factory.setKind( JavaTypeKind.CLASS );
-            }
-            
-            final Class<?> superClass = cl.getSuperclass();
-            
-            if( superClass != null )
-            {
-                factory.setSuperClass( resolve( superClass.getName() ) );
-            }
-            
-            for( Class<?> superInterface : cl.getInterfaces() )
-            {
-                factory.addSuperInterface( resolve( superInterface.getName() ) );
-            }
-            
-            return factory.create();
+            return new ClassBasedJavaType( this.classLoader.loadClass( name ) );
         }
         catch( ClassNotFoundException e )
         {
@@ -98,8 +60,17 @@ public final class ClassLoaderJavaTypeReferenceService
                                    final ModelProperty property,
                                    final Class<? extends ModelPropertyService> service )
         {
-            final Reference referenceAnnotation = property.getAnnotation( Reference.class );
-            return ( referenceAnnotation != null && referenceAnnotation.target() == JavaType.class );
+            if( property instanceof ValueProperty && property.getTypeClass() == JavaTypeName.class )
+            {
+                final Reference referenceAnnotation = property.getAnnotation( Reference.class );
+                
+                if( referenceAnnotation != null && referenceAnnotation.target() == JavaType.class )
+                {
+                    return true;
+                }
+            }
+            
+            return false;
         }
 
         @Override
@@ -111,5 +82,5 @@ public final class ClassLoaderJavaTypeReferenceService
             return new ClassLoaderJavaTypeReferenceService( classLoader );
         }
     }
-    
+
 }

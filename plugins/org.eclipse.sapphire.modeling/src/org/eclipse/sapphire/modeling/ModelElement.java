@@ -11,9 +11,12 @@
 
 package org.eclipse.sapphire.modeling;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
@@ -27,7 +30,11 @@ import org.eclipse.sapphire.modeling.ModelPath.AllSiblingsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ModelRootSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.ModelPath.TypeFilterSegment;
+import org.eclipse.sapphire.modeling.annotations.Service;
+import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
+import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem.ModelElementServiceFactoryProxy;
+import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem.ModelPropertyServiceFactoryProxy;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 /**
@@ -46,8 +53,8 @@ public abstract class ModelElement
     private Set<ModelElementListener> listeners;
     private Map<ModelProperty,Set<ModelPropertyListener>> propertyListeners;
     private final Map<ModelProperty,Boolean> enablementStatuses;
-    private final Map<Class<? extends ModelElementService>,ModelElementService> elementServices;
-    private final Map<PropertyServiceKey,ModelPropertyService> propertyServices;
+    private final Map<Class<? extends ModelElementService>,Collection<ModelElementService>> elementServices;
+    private final Map<ModelProperty,Map<Class<? extends ModelPropertyService>,Collection<ModelPropertyService>>> propertyServices;
     
     public ModelElement( final ModelElementType type,
                          final IModelParticle parent,
@@ -62,8 +69,8 @@ public abstract class ModelElement
         this.listeners = null;
         this.propertyListeners = null;
         this.enablementStatuses = new HashMap<ModelProperty,Boolean>();
-        this.elementServices = new HashMap<Class<? extends ModelElementService>,ModelElementService>();
-        this.propertyServices = new HashMap<PropertyServiceKey,ModelPropertyService>();
+        this.elementServices = new HashMap<Class<? extends ModelElementService>,Collection<ModelElementService>>();
+        this.propertyServices = new HashMap<ModelProperty,Map<Class<? extends ModelPropertyService>,Collection<ModelPropertyService>>>();
         
         resource.init( this );
         
@@ -420,53 +427,286 @@ public abstract class ModelElement
         // The default implementation does not do anything.
     }
     
+    public final <S extends ModelElementService> S service( final Class<S> serviceType )
+    {
+        final List<S> services = services( serviceType );
+        return ( services.isEmpty() ? null : services.get( 0 ) );
+    }
+
     @SuppressWarnings( "unchecked" )
     
-    public final <S extends ModelElementService> S service( final Class<S> serviceType )
+    public final <S extends ModelElementService> List<S> services( final Class<S> serviceType )
     {
         synchronized( root() )
         {
-            ModelElementService service = this.elementServices.get( serviceType );
+            Collection<ModelElementService> services = this.elementServices.get( serviceType );
             
-            if( service == null )
+            if( services == null )
             {
-                service = SapphireModelingExtensionSystem.createModelElementService( this, serviceType );
+                // Find all applicable service factories declared via the extension system.
                 
-                if( service != null )
+                final Map<String,ModelElementServiceFactoryProxy> applicable = new HashMap<String,ModelElementServiceFactoryProxy>();
+
+                for( ModelElementServiceFactoryProxy factory : SapphireModelingExtensionSystem.getModelElementServices() )
                 {
-                    service.init( this );
-                    this.elementServices.put( serviceType, service );
+                    if( factory.applicable( this, serviceType ) )
+                    {
+                        applicable.put( factory.id(), factory );
+                    }
                 }
+                
+                // Remove those that are overridden by another applicable service. Note that a cycle will 
+                // cause all services in the cycle to be removed.
+                
+                for( ModelElementServiceFactoryProxy factory : new ArrayList<ModelElementServiceFactoryProxy>( applicable.values() ) )
+                {
+                    for( String overriddenServiceId : factory.overrides() )
+                    {
+                        applicable.remove( overriddenServiceId );
+                    }
+                }
+                
+                // Process local service definitions.
+                
+                final List<ModelElementService> list = new ArrayList<ModelElementService>();
+                final List<Service> serviceAnnotations = new ArrayList<Service>();
+                
+                final Service serviceAnnotation = this.type.getAnnotation( Service.class );
+                
+                if( serviceAnnotation != null )
+                {
+                    serviceAnnotations.add( serviceAnnotation );
+                }
+                
+                final Services servicesAnnotation = this.type.getAnnotation( Services.class );
+                
+                if( servicesAnnotation != null )
+                {
+                    for( Service svc : servicesAnnotation.value() )
+                    {
+                        serviceAnnotations.add( svc );
+                    }
+                }
+                
+                for( Service svc : serviceAnnotations )
+                {
+                    final Class<? extends ModelService> cl = svc.impl();
+                    
+                    if( serviceType.isAssignableFrom( cl ) )
+                    {
+                        ModelElementService instance = null;
+                        
+                        try
+                        {
+                            instance = (ModelElementService) cl.newInstance();
+                            instance.init( this, svc.params() );
+                        }
+                        catch( Exception e )
+                        {
+                            SapphireModelingFrameworkPlugin.log( e );
+                        }
+                        
+                        if( instance != null )
+                        {
+                            for( String overriddenServiceId : svc.overrides() )
+                            {
+                                applicable.remove( overriddenServiceId );
+                            }
+                            
+                            list.add( instance );
+                        }
+                    }
+                }
+                
+                // Instantiate global services that haven't been overridden.
+                
+                for( ModelElementServiceFactoryProxy factory : applicable.values() )
+                {
+                    try
+                    {
+                        final ModelElementService service = factory.create( this, serviceType );
+                        
+                        if( service != null )
+                        {
+                            service.init( this, new String[ 0 ] );
+                            list.add( service );
+                        }
+                    }
+                    catch( Exception e )
+                    {
+                        SapphireModelingFrameworkPlugin.log( e );
+                    }
+                }
+                
+                // Store the list of services for future use.
+                
+                final int count = list.size();
+                
+                if( count == 0 )
+                {
+                    services = Collections.emptyList();
+                }
+                else if( count == 1 )
+                {
+                    services = Collections.singletonList( list.get( 0 ) );
+                }
+                else
+                {
+                    services = Collections.unmodifiableList( list );
+                }
+                
+                this.elementServices.put( serviceType, services );
             }
             
-            return (S) service;
+            return (List<S>) services;
         }
     }
-    
-    @SuppressWarnings( "unchecked" )
-    
+
     public final <S extends ModelPropertyService> S service( final ModelProperty property,
                                                              final Class<S> serviceType )
     {
-        synchronized( root() )
-        {
-            final PropertyServiceKey key = new PropertyServiceKey( property, serviceType );
-            ModelPropertyService service = this.propertyServices.get( key );
-            
-            if( service == null )
-            {
-                service = SapphireModelingExtensionSystem.createModelPropertyService( this, property, serviceType );
-                
-                if( service != null )
-                {
-                    this.propertyServices.put( key, service );
-                }
-            }
-            
-            return (S) service;
-        }
+        final List<S> services = services( property, serviceType );
+        return ( services.isEmpty() ? null : services.get( 0 ) );
     }
     
+    @SuppressWarnings( "unchecked" )
+    
+    public final <S extends ModelPropertyService> List<S> services( final ModelProperty property,
+                                                                    final Class<S> serviceType )
+    {
+        synchronized( root() )
+        {
+            Map<Class<? extends ModelPropertyService>,Collection<ModelPropertyService>> typeToServicesMap = this.propertyServices.get( property );
+            
+            if( typeToServicesMap == null )
+            {
+                typeToServicesMap = new HashMap<Class<? extends ModelPropertyService>,Collection<ModelPropertyService>>();
+                this.propertyServices.put( property, typeToServicesMap );
+            }
+            
+            Collection<ModelPropertyService> services = typeToServicesMap.get( serviceType );
+            
+            if( services == null )
+            {
+                // Find all applicable service factories declared via the extension system.
+                
+                final Map<String,ModelPropertyServiceFactoryProxy> applicable = new HashMap<String,ModelPropertyServiceFactoryProxy>();
+
+                for( ModelPropertyServiceFactoryProxy factory : SapphireModelingExtensionSystem.getModelPropertyServices() )
+                {
+                    if( factory.applicable( this, property, serviceType ) )
+                    {
+                        applicable.put( factory.id(), factory );
+                    }
+                }
+                
+                // Remove those that are overridden by another applicable service. Note that a cycle will 
+                // cause all services in the cycle to be removed.
+                
+                for( ModelPropertyServiceFactoryProxy factory : new ArrayList<ModelPropertyServiceFactoryProxy>( applicable.values() ) )
+                {
+                    for( String overriddenServiceId : factory.overrides() )
+                    {
+                        applicable.remove( overriddenServiceId );
+                    }
+                }
+                
+                // Process local service definitions.
+                
+                final List<ModelPropertyService> list = new ArrayList<ModelPropertyService>();
+                final List<Service> serviceAnnotations = new ArrayList<Service>();
+                
+                final Service serviceAnnotation = this.type.getAnnotation( Service.class );
+                
+                if( serviceAnnotation != null )
+                {
+                    serviceAnnotations.add( serviceAnnotation );
+                }
+                
+                final Services servicesAnnotation = this.type.getAnnotation( Services.class );
+                
+                if( servicesAnnotation != null )
+                {
+                    for( Service svc : servicesAnnotation.value() )
+                    {
+                        serviceAnnotations.add( svc );
+                    }
+                }
+                
+                for( Service svc : serviceAnnotations )
+                {
+                    final Class<? extends ModelService> cl = svc.impl();
+                    
+                    if( serviceType.isAssignableFrom( cl ) )
+                    {
+                        ModelPropertyService instance = null;
+                        
+                        try
+                        {
+                            instance = (ModelPropertyService) cl.newInstance();
+                            instance.init( this, property, svc.params() );
+                        }
+                        catch( Exception e )
+                        {
+                            SapphireModelingFrameworkPlugin.log( e );
+                        }
+                        
+                        if( instance != null )
+                        {
+                            for( String overriddenServiceId : svc.overrides() )
+                            {
+                                applicable.remove( overriddenServiceId );
+                            }
+                            
+                            list.add( instance );
+                        }
+                    }
+                }
+                
+                // Instantiate global services that haven't been overridden.
+                
+                for( ModelPropertyServiceFactoryProxy factory : applicable.values() )
+                {
+                    try
+                    {
+                        final ModelPropertyService service = factory.create( this, property, serviceType );
+                        
+                        if( service != null )
+                        {
+                            service.init( this, property, new String[ 0 ] );
+                            list.add( service );
+                        }
+                    }
+                    catch( Exception e )
+                    {
+                        SapphireModelingFrameworkPlugin.log( e );
+                    }
+                }
+                
+                // Store the list of services for future use.
+                
+                final int count = list.size();
+                
+                if( count == 0 )
+                {
+                    services = Collections.emptyList();
+                }
+                else if( count == 1 )
+                {
+                    services = Collections.singletonList( list.get( 0 ) );
+                }
+                else
+                {
+                    services = Collections.unmodifiableList( list );
+                }
+                
+                typeToServicesMap.put( serviceType, services );
+            }
+            
+            return (List<S>) services;
+        }
+    }
+
     public boolean isPropertyEnabled( final ModelProperty property )
     {
         synchronized( root() )
@@ -1169,37 +1409,6 @@ public abstract class ModelElement
         }
     }
     
-    private static final class PropertyServiceKey
-    {
-        private final ModelProperty property;
-        private final Class<? extends ModelPropertyService> serviceType;
-        
-        public PropertyServiceKey( final ModelProperty property,
-                                   final Class<? extends ModelPropertyService> serviceType )
-        {
-            this.property = property;
-            this.serviceType = serviceType;
-        }
-
-        @Override
-        public boolean equals( final Object obj )
-        {
-            if( obj instanceof PropertyServiceKey )
-            {
-                final PropertyServiceKey key = (PropertyServiceKey) obj;
-                return ( this.property.equals( key.property ) && this.serviceType.equals( key.serviceType ) );
-            }
-            
-            return false;
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return this.property.hashCode() ^ this.serviceType.hashCode();
-        }
-    }
-     
     private static final class Resources
     
         extends NLS

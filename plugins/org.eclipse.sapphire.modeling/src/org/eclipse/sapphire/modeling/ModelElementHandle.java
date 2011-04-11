@@ -14,7 +14,7 @@ package org.eclipse.sapphire.modeling;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
+import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -237,8 +237,6 @@ public final class ModelElementHandle<T extends IModelElement>
         return ( oldEnabledState != null && ! oldEnabledState.equals( newEnabledState ) );
     }
     
-    @SuppressWarnings( "unchecked" )
-    
     private boolean refreshValidationState()
     {
         final IStatus oldValidationState = this.validationState;
@@ -246,11 +244,16 @@ public final class ModelElementHandle<T extends IModelElement>
         
         if( enabled() )
         {
-            final ModelPropertyValidator<T> validator = (ModelPropertyValidator<T>) this.property.getValidator();
-            
-            if( validator != null )
+            for( ModelPropertyValidationService<?> svc : parent().services( this.property, ModelPropertyValidationService.class ) )
             {
-                newValidationState.merge( validator.validate( this.element ) );
+                try
+                {
+                    newValidationState.merge( svc.validate() );
+                }
+                catch( Exception e )
+                {
+                    SapphireModelingFrameworkPlugin.log( e );
+                }
             }
             
             if( this.element != null )

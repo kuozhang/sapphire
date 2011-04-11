@@ -18,9 +18,9 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
-import org.eclipse.sapphire.modeling.annotations.Validator;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.samples.contacts.internal.ManagerNameValidator;
+import org.eclipse.sapphire.samples.contacts.internal.ManagerNameValidationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -61,7 +61,7 @@ public interface IJobOccupation
     // *** Manager ***
     
     @Label( standard = "manager" )
-    @Validator( impl = ManagerNameValidator.class )
+    @Service( impl = ManagerNameValidationService.class )
     @XmlBinding( path = "manager" )
 
     @PossibleValues

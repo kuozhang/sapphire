@@ -409,7 +409,7 @@ public final class ExtensionSummaryExportOpMethods
                         
                         if( res == 0 )
                         {
-                            res = comp( x.getImplClass().getContent(), y.getImplClass().getContent() );
+                            res = comp( x.getImplClass().getText(), y.getImplClass().getText() );
                         }
                         
                         return res;
@@ -427,12 +427,6 @@ public final class ExtensionSummaryExportOpMethods
             return columns;
         }
     }
-    
-    
-    
-    
-    
-    
     
     private static abstract class SectionWriter
     {

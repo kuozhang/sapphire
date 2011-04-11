@@ -18,7 +18,7 @@
         <description>Resolves Java types visible to the Java project that the model is loaded from.</description>
         <type>org.eclipse.sapphire.modeling.ReferenceService</type>
         <factory>org.eclipse.sapphire.java.jdt.internal.JdtJavaTypeReferenceService$Factory</factory>
-        <id>Sapphire.Java.Jdt.TypeReferenceService</id>
+        <id>Sapphire.Java.JDT.TypeReferenceService</id>
         <overrides>Sapphire.Java.TypeReferenceService</overrides>
     </model-property-service>
 </extension>

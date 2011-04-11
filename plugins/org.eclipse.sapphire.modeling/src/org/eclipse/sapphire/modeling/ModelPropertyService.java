@@ -15,7 +15,7 @@ package org.eclipse.sapphire.modeling;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ModelPropertyService
+public abstract class ModelPropertyService extends ModelService
 {
     private IModelElement element;
     private ModelProperty property;

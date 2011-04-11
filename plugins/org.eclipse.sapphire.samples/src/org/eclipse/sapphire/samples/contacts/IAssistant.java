@@ -23,11 +23,11 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.annotations.Validator;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.samples.contacts.internal.AssistantNameValidator;
+import org.eclipse.sapphire.samples.contacts.internal.AssistantNameValidationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -48,7 +48,7 @@ public interface IAssistant
     @XmlBinding( path = "name" )
     @Label( standard = "name" )
     @NonNullValue
-    @Validator( impl = AssistantNameValidator.class )
+    @Service( impl = AssistantNameValidationService.class )
 
     @PossibleValues
     ( 

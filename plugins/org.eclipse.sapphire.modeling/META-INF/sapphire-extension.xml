@@ -45,9 +45,54 @@
         <id>Sapphire.ReferenceService</id>
     </model-property-service>
     <model-property-service>
-        <type>org.eclipse.sapphire.modeling.ReferenceService</type>
-        <factory>org.eclipse.sapphire.modeling.internal.ClassReferenceServiceFactory</factory>
-        <id>Sapphire.ClassReferenceService</id>
+        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
+        <factory>org.eclipse.sapphire.modeling.validation.internal.CountConstraintValidationService$Factory</factory>
+        <id>Sapphire.CountConstraintValidationService</id>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
+        <factory>org.eclipse.sapphire.modeling.validation.internal.NonNullValueValidationService$Factory</factory>
+        <id>Sapphire.NonNullValueValidationService</id>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
+        <factory>org.eclipse.sapphire.modeling.validation.internal.UniqueValueValidationService$Factory</factory>
+        <id>Sapphire.UniqueValueValidationService</id>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
+        <factory>org.eclipse.sapphire.modeling.validation.internal.ReferenceValidationService$Factory</factory>
+        <id>Sapphire.ReferenceValidationService</id>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
+        <factory>org.eclipse.sapphire.modeling.validation.internal.AbsolutePathValidationService$Factory</factory>
+        <id>Sapphire.AbsolutePathValidationService</id>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
+        <factory>org.eclipse.sapphire.modeling.validation.internal.RelativePathValidationService$Factory</factory>
+        <id>Sapphire.RelativePathValidationService</id>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
+        <factory>org.eclipse.sapphire.modeling.validation.internal.EclipseWorkspacePathValidationService$Factory</factory>
+        <id>Sapphire.EclipseWorkspacePathValidationService</id>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
+        <factory>org.eclipse.sapphire.modeling.validation.internal.MalformedValueValidationService$Factory</factory>
+        <id>Sapphire.MalformedValueValidationService</id>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
+        <factory>org.eclipse.sapphire.modeling.validation.internal.PossibleValuesValidationService$Factory</factory>
+        <id>Sapphire.PossibleValuesValidationService</id>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
+        <factory>org.eclipse.sapphire.modeling.validation.internal.NumericRangeValidationService$Factory</factory>
+        <id>Sapphire.NumericRangeValidationService</id>
     </model-property-service>
     <value-serialization-service>
         <type>java.lang.Enum</type>
@@ -88,14 +133,6 @@
     <value-serialization-service>
         <type>org.eclipse.core.runtime.IPath</type>
         <impl>org.eclipse.sapphire.modeling.serialization.internal.PathSerializationService</impl>
-    </value-serialization-service>
-    <value-serialization-service>
-        <type>org.eclipse.sapphire.modeling.java.JavaTypeName</type>
-        <impl>org.eclipse.sapphire.modeling.java.internal.JavaTypeNameSerializationService</impl>
-    </value-serialization-service>
-    <value-serialization-service>
-        <type>org.eclipse.sapphire.modeling.java.JavaPackageName</type>
-        <impl>org.eclipse.sapphire.modeling.java.internal.JavaPackageNameSerializationService</impl>
     </value-serialization-service>
     <value-serialization-service>
         <type>org.eclipse.sapphire.modeling.el.Function</type>

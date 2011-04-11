@@ -30,4 +30,5 @@ public @interface Reference
     Class<?> target();
     Class<? extends ReferenceService> service() default ReferenceService.class;
     String[] params() default {};
+    boolean mustResolve() default true;
 }

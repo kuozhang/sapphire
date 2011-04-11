@@ -19,11 +19,11 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.java.JavaTypeConstraint;
+import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.java.JavaTypeConstraints;
-import org.eclipse.sapphire.modeling.java.JavaTypeKind;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -91,11 +91,11 @@ public final class JavaTypeBrowseActionHandler
         }
         else
         {
-            final JavaTypeConstraints javaTypeConstraintsAnnotation = getProperty().getAnnotation( JavaTypeConstraints.class );
+            final JavaTypeConstraint javaTypeConstraintAnnotation = getProperty().getAnnotation( JavaTypeConstraint.class );
             
-            if( javaTypeConstraintsAnnotation != null )
+            if( javaTypeConstraintAnnotation != null )
             {
-                for( JavaTypeKind kind : javaTypeConstraintsAnnotation.kind() )
+                for( JavaTypeKind kind : javaTypeConstraintAnnotation.kind() )
                 {
                     kinds.add( kind );
                 }

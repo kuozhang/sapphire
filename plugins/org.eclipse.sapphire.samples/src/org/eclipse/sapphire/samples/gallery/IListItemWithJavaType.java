@@ -11,14 +11,16 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
+import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -38,12 +40,13 @@ public interface IListItemWithJavaType
     // *** StringValue ***
     
     @Type( base = JavaTypeName.class )
+    @Reference( target = JavaType.class )
     @Label( standard = "java type" )
     @XmlBinding( path = "java-type" )
     
     ValueProperty PROP_JAVA_TYPE = new ValueProperty( TYPE, "JavaType" );
     
-    Value<JavaTypeName> getJavaType();
+    ReferenceValue<JavaTypeName,JavaType> getJavaType();
     void setJavaType( String value );
     void setJavaType( JavaTypeName value );
 

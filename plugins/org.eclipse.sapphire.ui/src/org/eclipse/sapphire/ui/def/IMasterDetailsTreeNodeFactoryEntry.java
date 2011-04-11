@@ -11,13 +11,19 @@
 
 package org.eclipse.sapphire.ui.def;
 
+import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.java.JavaTypeConstraint;
+import org.eclipse.sapphire.java.JavaTypeKind;
+import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -37,13 +43,17 @@ public interface IMasterDetailsTreeNodeFactoryEntry
     
     // *** Type ***
     
-    @Reference( target = Class.class )
+    @Type( base = JavaTypeName.class )
+    @Reference( target = JavaType.class )
     @Label( standard = "model element type" )
+    @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE, type = "org.eclipse.sapphire.modeling.IModelElement" )
+    @MustExist
     @XmlBinding( path = "model-element-type" )
     
     ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
     
-    ReferenceValue<String,Class<?>> getType();
-    void setType( String type );
+    ReferenceValue<JavaTypeName,JavaType> getType();
+    void setType( String value );
+    void setType( JavaTypeName value );
 
 }

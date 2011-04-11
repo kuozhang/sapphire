@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.modeling;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.SortedSet;
 
 /**
@@ -130,8 +131,10 @@ public interface IModelElement
      */
     
     <S extends ModelElementService> S service( Class<S> serviceType );
+    <S extends ModelElementService> List<S> services( Class<S> serviceType );
     
     <S extends ModelPropertyService> S service( ModelProperty property, Class<S> serviceType );
+    <S extends ModelPropertyService> List<S> services( ModelProperty property, Class<S> serviceType );
     
     boolean isPropertyEnabled( ModelProperty property );
     

@@ -16,13 +16,10 @@
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
     <model-property-service>
         <type>org.eclipse.sapphire.modeling.ReferenceService</type>
-        <factory>org.eclipse.sapphire.ui.def.internal.ClassReferenceServiceFactory</factory>
-        <id>Sapphire.SdefClassReferenceService</id>
-    </model-property-service>
-    <model-property-service>
-        <type>org.eclipse.sapphire.modeling.ReferenceService</type>
-        <factory>org.eclipse.sapphire.ui.def.internal.ImageReferenceServiceFactory</factory>
-        <id>Sapphire.SdefImageReferenceService</id>
+        <factory>org.eclipse.sapphire.ui.def.internal.JavaTypeReferenceServiceForSdef$Factory</factory>
+        <id>Sapphire.UI.Definition.Java.TypeReferenceService</id>
+        <overrides>Sapphire.Java.TypeReferenceService</overrides>
+        <overrides>Sapphire.Java.JDT.TypeReferenceService</overrides>
     </model-property-service>
     <action>
         <id>Sapphire.Add</id>
@@ -308,6 +305,11 @@
         <description>Creates an add action handler for every possible member element type for all lists whose members are shown as child nodes beneath the content outline node in question.</description>
         <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.OutlineNodeAddActionHandlerCondition</condition>
     </action-handler-factory>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ReferenceService</type>
+        <factory>org.eclipse.sapphire.ui.def.internal.ImageReferenceServiceFactory</factory>
+        <id>Sapphire.UI.Definition.ImageReferenceService</id>
+    </model-property-service>
     <value-serialization-service>
         <type>org.eclipse.sapphire.ui.Color</type>
         <impl>org.eclipse.sapphire.ui.internal.ColorSerializationService</impl>

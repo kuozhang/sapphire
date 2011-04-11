@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 
+import org.eclipse.sapphire.java.JavaTypeConstraint;
+import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.java.JavaTypeConstraints;
-import org.eclipse.sapphire.modeling.java.JavaTypeName;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
 
@@ -33,7 +33,7 @@ public final class JavaTypeBrowseActionHandlerCondition
         final ModelProperty property = part.getProperty();
         
         if( property instanceof ValueProperty && 
-            ( property.isOfType( JavaTypeName.class ) || property.hasAnnotation( JavaTypeConstraints.class ) ) )
+            ( property.isOfType( JavaTypeName.class ) || property.hasAnnotation( JavaTypeConstraint.class ) ) )
         {
             return true;
         }

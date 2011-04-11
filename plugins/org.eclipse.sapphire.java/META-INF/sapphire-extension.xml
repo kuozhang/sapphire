@@ -20,6 +20,11 @@
         <factory>org.eclipse.sapphire.java.internal.ClassLoaderJavaTypeReferenceService$Factory</factory>
         <id>Sapphire.Java.TypeReferenceService</id>
     </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
+        <factory>org.eclipse.sapphire.java.internal.JavaTypeValidationService$Factory</factory>
+        <id>Sapphire.Java.TypeValidationService</id>
+    </model-property-service>
     <value-serialization-service>
         <type>org.eclipse.sapphire.java.JavaTypeName</type>
         <impl>org.eclipse.sapphire.java.internal.JavaTypeNameSerializationService</impl>

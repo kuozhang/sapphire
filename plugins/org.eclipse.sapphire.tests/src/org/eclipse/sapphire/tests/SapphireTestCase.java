@@ -18,6 +18,9 @@ import java.io.InputStreamReader;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.sapphire.modeling.Value;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -32,7 +35,7 @@ public abstract class SapphireTestCase
         super( name );
     }
     
-    protected InputStream loadResourceAsStream( final String name )
+    protected final InputStream loadResourceAsStream( final String name )
     {
         final InputStream in = getClass().getResourceAsStream( name );
         
@@ -44,7 +47,7 @@ public abstract class SapphireTestCase
         return in;
     }
     
-    protected String loadResource( final String name )
+    protected final String loadResource( final String name )
     
         throws Exception
         
@@ -74,10 +77,24 @@ public abstract class SapphireTestCase
         }
     }
     
-    protected static void assertEqualsIgnoreNewLineDiffs( final String expected, 
-                                                          final String actual ) 
+    protected static final void assertEqualsIgnoreNewLineDiffs( final String expected, 
+                                                                final String actual ) 
     {
         assertEquals( expected.trim().replace( "\r", "" ), actual.trim().replace( "\r", "" ) );
+    }
+    
+    protected static final void assertValidationOk( final Value<?> value )
+    {
+        assertEquals( IStatus.OK, value.validate().getSeverity() );
+    }
+    
+    protected static final void assertValidationError( final Value<?> value,
+                                                       final String expectedMessage )
+    {
+        final IStatus st = value.validate();
+        
+        assertEquals( IStatus.ERROR, st.getSeverity() );
+        assertEquals( expectedMessage, st.getMessage() );
     }
     
 }

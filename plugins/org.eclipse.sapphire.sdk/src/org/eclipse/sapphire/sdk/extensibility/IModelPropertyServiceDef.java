@@ -11,6 +11,10 @@
 
 package org.eclipse.sapphire.sdk.extensibility;
 
+import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.java.JavaTypeConstraint;
+import org.eclipse.sapphire.java.JavaTypeKind;
+import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -26,13 +30,10 @@ import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.java.JavaTypeConstraints;
-import org.eclipse.sapphire.modeling.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
-import org.eclipse.sapphire.sdk.extensibility.internal.ClassReferenceService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -78,10 +79,11 @@ public interface IModelPropertyServiceDef
     
     // *** TypeClass ***
     
-    @Reference( target = Class.class, service = ClassReferenceService.class )
+    @Type( base = JavaTypeName.class )
+    @Reference( target = JavaType.class )
     @Label( standard = "service type class" )
     @NonNullValue
-    @JavaTypeConstraints( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS, JavaTypeKind.INTERFACE }, type = "org.eclipse.sapphire.modeling.ModelPropertyService" )
+    @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS, JavaTypeKind.INTERFACE }, type = "org.eclipse.sapphire.modeling.ModelPropertyService" )
     @MustExist
     @XmlBinding( path = "type" )
     
@@ -89,15 +91,17 @@ public interface IModelPropertyServiceDef
 
     ValueProperty PROP_TYPE_CLASS = new ValueProperty( TYPE, "TypeClass" );
     
-    ReferenceValue<String,Class<?>> getTypeClass();
+    ReferenceValue<JavaTypeName,JavaType> getTypeClass();
     void setTypeClass( String value );
+    void setTypeClass( JavaTypeName value );
     
     // *** FactoryClass ***
     
-    @Reference( target = Class.class, service = ClassReferenceService.class )
+    @Type( base = JavaTypeName.class )
+    @Reference( target = JavaType.class )
     @Label( standard = "service factory class" )
     @NonNullValue
-    @JavaTypeConstraints( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.modeling.ModelPropertyServiceFactory" )
+    @JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.modeling.ModelPropertyServiceFactory" )
     @MustExist
     @XmlBinding( path = "factory" )
     
@@ -105,8 +109,9 @@ public interface IModelPropertyServiceDef
 
     ValueProperty PROP_FACTORY_CLASS = new ValueProperty( TYPE, "FactoryClass" );
     
-    ReferenceValue<String,Class<?>> getFactoryClass();
+    ReferenceValue<JavaTypeName,JavaType> getFactoryClass();
     void setFactoryClass( String value );
+    void setFactoryClass( JavaTypeName value );
     
     // *** Overrides ***
     

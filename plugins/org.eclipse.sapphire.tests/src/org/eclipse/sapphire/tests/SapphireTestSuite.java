@@ -17,6 +17,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.tests.java.JavaTestSuite;
 import org.eclipse.sapphire.tests.modeling.SapphireModelingFrameworkTests;
+import org.eclipse.sapphire.tests.ui.UiTestSuite;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -40,6 +41,7 @@ public final class SapphireTestSuite
         
         suite.addTest( SapphireModelingFrameworkTests.suite() );
         suite.addTest( JavaTestSuite.suite() );
+        suite.addTest( UiTestSuite.suite() );
         
         return suite;
     }

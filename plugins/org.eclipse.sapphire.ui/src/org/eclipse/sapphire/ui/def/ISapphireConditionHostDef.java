@@ -11,6 +11,10 @@
 
 package org.eclipse.sapphire.ui.def;
 
+import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.java.JavaTypeConstraint;
+import org.eclipse.sapphire.java.JavaTypeKind;
+import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
@@ -18,8 +22,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.java.JavaTypeConstraints;
-import org.eclipse.sapphire.modeling.java.JavaTypeKind;
+import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -35,15 +38,17 @@ public interface ISapphireConditionHostDef
     
     // *** ConditionClass ***
     
-    @Reference( target = Class.class )
+    @Type( base = JavaTypeName.class )
+    @Reference( target = JavaType.class )
     @Label( standard = "condition class" )
-    @JavaTypeConstraints( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.ui.SapphireCondition" )
+    @JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.ui.SapphireCondition" )
     @MustExist
     @XmlBinding( path = "condition" )
     
     ValueProperty PROP_CONDITION_CLASS = new ValueProperty( TYPE, "ConditionClass" );
     
-    ReferenceValue<String,Class<?>> getConditionClass();
+    ReferenceValue<JavaTypeName,JavaType> getConditionClass();
     void setConditionClass( String value );
+    void setConditionClass( JavaTypeName value );
     
 }

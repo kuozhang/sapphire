@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.sapphire.modeling.annotations.ModelPropertyValidator;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 @SuppressWarnings( "unchecked" )
@@ -202,11 +201,16 @@ public final class ModelElementList<T extends IModelElement>
     {
         final SapphireMultiStatus st = new SapphireMultiStatus();
         
-        final ModelPropertyValidator<?> validator = this.property.getValidator();
-        
-        if( validator != null )
+        for( ModelPropertyValidationService<?> svc : parent().services( this.property, ModelPropertyValidationService.class ) )
         {
-            st.add( ( (ModelPropertyValidator<Object>) validator ).validate( this ) );
+            try
+            {
+                st.merge( svc.validate() );
+            }
+            catch( Exception e )
+            {
+                SapphireModelingFrameworkPlugin.log( e );
+            }
         }
         
         for( T item : this )
@@ -255,6 +259,18 @@ public final class ModelElementList<T extends IModelElement>
         }
         
         return newElement;
+    }
+    
+    public <C extends IModelElement> C addNewElement( final Class<C> cl )
+    {
+        final ModelElementType type = ModelElementType.getModelElementType( cl );
+        
+        if( type == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return (C) addNewElement( type );
     }
     
     public void moveUp( final T modelElement )

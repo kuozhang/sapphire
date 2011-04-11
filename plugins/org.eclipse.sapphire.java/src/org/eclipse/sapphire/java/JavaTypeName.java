@@ -15,19 +15,11 @@ package org.eclipse.sapphire.java;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class JavaTypeName
+public final class JavaTypeName extends JavaQualifiedName
 {
-    private final String identifier;
-    
-    public JavaTypeName( final String identifier )
+    public JavaTypeName( final String name )
     {
-        this.identifier = identifier;
-    }
-    
-    @Override
-    public String toString()
-    {
-        return this.identifier;
+        super( name );
     }
     
 }

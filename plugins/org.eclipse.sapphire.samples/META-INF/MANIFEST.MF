@@ -6,6 +6,7 @@ Bundle-Version: 0.3.0.qualifier
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.sapphire.modeling,
  org.eclipse.sapphire.modeling.xml,
+ org.eclipse.sapphire.java,
  org.eclipse.sapphire.ui,
  org.eclipse.sapphire.ui.swt.graphiti,
  org.eclipse.sapphire.ui.swt.xml.editor,

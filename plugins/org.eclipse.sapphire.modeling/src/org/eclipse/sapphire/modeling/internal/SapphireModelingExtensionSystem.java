@@ -16,7 +16,6 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -41,7 +40,6 @@ import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
-import org.eclipse.sapphire.modeling.util.DependencySorter;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -82,107 +80,16 @@ public final class SapphireModelingExtensionSystem
         return extensionHandles;
     }
 
-    public static ModelElementService createModelElementService( final IModelElement element,
-                                                                 final Class<? extends ModelElementService> service )
+    public static List<ModelElementServiceFactoryProxy> getModelElementServices()
     {
         initialize();
-        
-        final Collection<ModelElementServiceFactoryProxy> applicable = new ArrayList<ModelElementServiceFactoryProxy>();
-
-        for( ModelElementServiceFactoryProxy factory : modelElementServiceFactories )
-        {
-            if( factory.applicable( element, service ) )
-            {
-                applicable.add( factory );
-            }
-        }
-        
-        final int count = applicable.size();
-        
-        if( count == 1 )
-        {
-            return applicable.iterator().next().create( element, service );
-        }
-        else if( count > 1 )
-        {
-            final DependencySorter<String,ModelElementServiceFactoryProxy> sorter = new DependencySorter<String,ModelElementServiceFactoryProxy>();
-            
-            for( ModelElementServiceFactoryProxy factory : applicable )
-            {
-                sorter.add( factory.id(), factory );
-                
-                for( String override : factory.overrides() )
-                {
-                    sorter.dependency( factory, override );
-                }
-            }
-            
-            final List<ModelElementServiceFactoryProxy> sorted = sorter.sort();
-            
-            for( int i = sorted.size() - 1; i >= 0; i-- )
-            {
-                final ModelElementService svc = sorted.get( i ).create( element, service );
-                
-                if( svc != null )
-                {
-                    return svc;
-                }
-            }
-        }
-        
-        return null;
+        return modelElementServiceFactories;
     }
 
-    public static ModelPropertyService createModelPropertyService( final IModelElement element,
-                                                                   final ModelProperty property,
-                                                                   final Class<? extends ModelPropertyService> service )
+    public static List<ModelPropertyServiceFactoryProxy> getModelPropertyServices()
     {
         initialize();
-
-        final Collection<ModelPropertyServiceFactoryProxy> applicable = new ArrayList<ModelPropertyServiceFactoryProxy>();
-
-        for( ModelPropertyServiceFactoryProxy factory : modelPropertyServiceFactories )
-        {
-            if( factory.applicable( element, property, service ) )
-            {
-                applicable.add( factory );
-            }
-        }
-        
-        final int count = applicable.size();
-        
-        if( count == 1 )
-        {
-            return applicable.iterator().next().create( element, property, service );
-        }
-        else if( count > 1 )
-        {
-            final DependencySorter<String,ModelPropertyServiceFactoryProxy> sorter = new DependencySorter<String,ModelPropertyServiceFactoryProxy>();
-            
-            for( ModelPropertyServiceFactoryProxy factory : applicable )
-            {
-                sorter.add( factory.id(), factory );
-                
-                for( String override : factory.overrides() )
-                {
-                    sorter.dependency( factory, override );
-                }
-            }
-            
-            final List<ModelPropertyServiceFactoryProxy> sorted = sorter.sort();
-            
-            for( int i = sorted.size() - 1; i >= 0; i-- )
-            {
-                final ModelPropertyService svc = sorted.get( i ).create( element, property, service );
-                
-                if( svc != null )
-                {
-                    return svc;
-                }
-            }
-        }
-        
-        return null;
+        return modelPropertyServiceFactories;
     }
 
     public static ValueSerializationService createValueSerializer( final IModelElement element,
@@ -584,7 +491,7 @@ public final class SapphireModelingExtensionSystem
         private static final long serialVersionUID = 1L;
     }
 
-    private static final class ModelElementServiceFactoryProxy
+    public static final class ModelElementServiceFactoryProxy
 
         extends ModelElementServiceFactory
 
@@ -670,7 +577,7 @@ public final class SapphireModelingExtensionSystem
         }
     }
 
-    private static final class ModelPropertyServiceFactoryProxy
+    public static final class ModelPropertyServiceFactoryProxy
 
         extends ModelPropertyServiceFactory
 

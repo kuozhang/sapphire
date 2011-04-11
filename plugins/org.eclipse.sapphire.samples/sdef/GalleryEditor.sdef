@@ -332,11 +332,11 @@
                             <spacer />
                             <property-editor>RequiredInterface1</property-editor>
                             <spacer />
-                            <label>Takes a name of an interface, which must exist and must extend java.util.Set interface.</label>
+                            <label>Takes a name of an interface, which must exist and must extend java.util.List interface.</label>
                             <spacer />
                             <property-editor>RequiredInterface2</property-editor>
                             <spacer />
-                            <label>Takes a name of an interface, which must exist and must extend java.util.Set interface while also extending java.lang.Cloneable interfaces.</label>
+                            <label>Takes a name of an interface, which must exist and must extend java.util.List interface while also extending java.lang.Cloneable interfaces.</label>
                             <spacer />
                             <property-editor>RequiredInterface3</property-editor>
                             <spacer />

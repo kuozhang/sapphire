@@ -11,16 +11,13 @@ Export-Package: org.eclipse.sapphire.modeling,
  org.eclipse.sapphire.modeling.el,
  org.eclipse.sapphire.modeling.el.parser,
  org.eclipse.sapphire.modeling.internal,
- org.eclipse.sapphire.modeling.java,
  org.eclipse.sapphire.modeling.localization,
  org.eclipse.sapphire.modeling.serialization,
  org.eclipse.sapphire.modeling.util,
- org.eclipse.sapphire.modeling.util.internal;x-friends:="org.eclipse.sapphire.ui",
- org.eclipse.sapphire.modeling.validators
+ org.eclipse.sapphire.modeling.util.internal;x-friends:="org.eclipse.sapphire.ui"
 Bundle-Vendor: %providerName
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
- org.eclipse.jdt.core,
  org.eclipse.help
 

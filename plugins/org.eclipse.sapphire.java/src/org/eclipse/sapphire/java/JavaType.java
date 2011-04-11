@@ -11,83 +11,37 @@
 
 package org.eclipse.sapphire.java;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class JavaType
+public abstract class JavaType
 {
-    private final String name;
-    private final JavaTypeKind kind;
-    private JavaType superClass;
-    private final Set<JavaType> superInterfaces;
+    public abstract String name();
     
-    private JavaType( final String name,
-                      final JavaTypeKind kind,
-                      final JavaType superClass,
-                      final Set<JavaType> superInterfaces )
-    {
-        if( name == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        this.name = name;
-        
-        if( kind == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        this.kind = kind;
-        
-        if( superClass != null && superClass.getKind() != JavaTypeKind.CLASS && superClass.getKind() != JavaTypeKind.ABSTRACT_CLASS )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        this.superClass = superClass;
-        
-        for( JavaType t : superInterfaces )
-        {
-            if( t != null )
-            {
-                if( t.getKind() != JavaTypeKind.INTERFACE )
-                {
-                    throw new IllegalArgumentException();
-                }
-            }
-        }
-        
-        this.superInterfaces = superInterfaces;
-    }
+    public abstract JavaTypeKind kind();
     
-    public String getName()
-    {
-        return this.name;
-    }
+    public abstract JavaType base();
     
-    public JavaTypeKind getKind()
-    {
-        return this.kind;
-    }
+    public abstract Set<JavaType> interfaces();
     
-    public boolean isOfType( final String type )
+    public abstract Class<?> artifact();
+    
+    public final boolean isOfType( final String type )
     {
         if( type == null )
         {
             throw new IllegalArgumentException();
         }
         
-        if( this.name.equals( type ) )
+        if( name().equals( type ) )
         {
             return true;
         }
         
-        for( JavaType t : this.superInterfaces )
+        for( JavaType t : interfaces() )
         {
             if( t.isOfType( type ) )
             {
@@ -95,49 +49,14 @@ public final class JavaType
             }
         }
         
-        if( this.superClass != null && this.superClass.isOfType( type ) )
+        final JavaType base = base();
+        
+        if( base != null && base.isOfType( type ) )
         {
             return true;
         }
         
         return false;
-    }
-    
-    public static final class Factory
-    {
-        private String name;
-        private JavaTypeKind kind;
-        private JavaType superClass;
-        private final Set<JavaType> superInterfaces = new HashSet<JavaType>();
-        
-        public void setName( final String name )
-        {
-            this.name = name;
-        }
-        
-        public void setKind( final JavaTypeKind kind )
-        {
-            this.kind = kind;
-        }
-        
-        public void setSuperClass( final JavaType t )
-        {
-            this.superClass = t;
-        }
-        
-        public void addSuperInterface( final JavaType t )
-        {
-            if( t != null )
-            {
-                this.superInterfaces.add( t );
-            }
-        }
-        
-        public JavaType create()
-        {
-            return new JavaType( this.name, this.kind, this.superClass, this.superInterfaces );
-        }
-        
     }
     
 }

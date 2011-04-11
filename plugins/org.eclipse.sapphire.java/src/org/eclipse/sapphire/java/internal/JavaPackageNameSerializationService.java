@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.java.internal;
 
-import org.eclipse.sapphire.modeling.java.JavaPackageName;
+import org.eclipse.sapphire.java.JavaPackageName;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 
 /**
@@ -26,7 +26,14 @@ public final class JavaPackageNameSerializationService
     @Override
     protected JavaPackageName decodeFromString( final String value )
     {
-        return new JavaPackageName( value );
+        try
+        {
+            return new JavaPackageName( value );
+        }
+        catch( IllegalArgumentException e )
+        {
+            return null;
+        }
     }
     
 }

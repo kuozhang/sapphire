@@ -18,11 +18,12 @@ package org.eclipse.sapphire.modeling;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ModelElementService
+public abstract class ModelElementService extends ModelService
 {
     private IModelElement element;
     
-    public void init( final IModelElement element )
+    public void init( final IModelElement element,
+                      final String[] params )
     {
         this.element = element;
     }

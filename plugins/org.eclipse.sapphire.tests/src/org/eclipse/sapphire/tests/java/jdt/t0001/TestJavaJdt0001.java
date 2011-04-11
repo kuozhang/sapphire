@@ -61,7 +61,7 @@ public final class TestJavaJdt0001
         final JavaType type = service.resolve( "foo.bar.TestClass" );
         
         assertNotNull( type );
-        assertEquals( JavaTypeKind.CLASS, type.getKind() );
+        assertEquals( JavaTypeKind.CLASS, type.kind() );
     }
 
     public void testIsAbstractClass() throws Exception
@@ -74,7 +74,7 @@ public final class TestJavaJdt0001
         final JavaType type = service.resolve( "foo.bar.TestAbstractClass" );
         
         assertNotNull( type );
-        assertEquals( JavaTypeKind.ABSTRACT_CLASS, type.getKind() );
+        assertEquals( JavaTypeKind.ABSTRACT_CLASS, type.kind() );
     }
 
     public void testIsInterface() throws Exception
@@ -87,7 +87,7 @@ public final class TestJavaJdt0001
         final JavaType type = service.resolve( "foo.bar.TestInterface" );
         
         assertNotNull( type );
-        assertEquals( JavaTypeKind.INTERFACE, type.getKind() );
+        assertEquals( JavaTypeKind.INTERFACE, type.kind() );
     }
     
     public void testIsAnnotation() throws Exception
@@ -100,7 +100,7 @@ public final class TestJavaJdt0001
         final JavaType type = service.resolve( "foo.bar.TestAnnotation" );
         
         assertNotNull( type );
-        assertEquals( JavaTypeKind.ANNOTATION, type.getKind() );
+        assertEquals( JavaTypeKind.ANNOTATION, type.kind() );
     }
     
     public void testIsEnum() throws Exception
@@ -113,7 +113,7 @@ public final class TestJavaJdt0001
         final JavaType type = service.resolve( "foo.bar.TestEnum" );
         
         assertNotNull( type );
-        assertEquals( JavaTypeKind.ENUM, type.getKind() );
+        assertEquals( JavaTypeKind.ENUM, type.kind() );
     }
 
 }
