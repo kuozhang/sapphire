@@ -26,7 +26,7 @@
             <property>Components</property>
             <label>${ Name == null ? &quot;&lt;component&gt;&quot; : Name }</label>
             <connection-binding>
-                <id>Dependency</id>
+                <connection-id>Dependency</connection-id>
                 <property>Dependencies</property>
                 <instance-id>${ Name }</instance-id>
                 <endpoint2>
