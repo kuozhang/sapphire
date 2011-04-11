@@ -17,6 +17,8 @@
 
     <plugin download-size="0" id="org.eclipse.sapphire.modeling" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.modeling.xml" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.java" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.java.jdt" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.ui" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.ui.swt.xml.editor" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.sdk" install-size="0" unpack="false" version="0.0.0"/>
