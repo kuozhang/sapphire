@@ -616,14 +616,14 @@ public abstract class ModelElement
                 final List<ModelPropertyService> list = new ArrayList<ModelPropertyService>();
                 final List<Service> serviceAnnotations = new ArrayList<Service>();
                 
-                final Service serviceAnnotation = this.type.getAnnotation( Service.class );
+                final Service serviceAnnotation = property.getAnnotation( Service.class );
                 
                 if( serviceAnnotation != null )
                 {
                     serviceAnnotations.add( serviceAnnotation );
                 }
                 
-                final Services servicesAnnotation = this.type.getAnnotation( Services.class );
+                final Services servicesAnnotation = property.getAnnotation( Services.class );
                 
                 if( servicesAnnotation != null )
                 {

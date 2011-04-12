@@ -31,6 +31,7 @@ to 0.3 release. Only changes from the previous milestone are covered.</p>
 <ol>
   <li><a href="#modularity">Modularity Changes</a></li>
   <li><a href="#ref">ReferenceValue Changes</a></li>
+  <li><a href="#validators-as-services">Validators as Services</a></li>
   <li><a href="#html">HTML Content Presentation</a></li>
   <li><a href="#related-content">Related Content</a></li>
   <li><a href="#composite-ref">Composite Reference</a></li>
@@ -99,6 +100,71 @@ of what the reference resolves to.</p>
     </td>
   </tr>
 </table>
+
+<h2><a name="validators-as-services">Validators as Services</a></h2>
+
+<p>Validators are now model element services. They can be registered globaly via the extension
+system or at the level of an individual property using the @Service annotation.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@Validator( service = MyValidator.class )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@Service( impl = MyValidationService.class )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@Validators
+(
+    @Validator( service = MyValidator1.class ),
+    @Validator( service = MyValidator2.class )
+)</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@Services
+(
+    @Service( impl = MyValidationService1.class ),
+    @Service( impl = MyValidationService2.class )
+)</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>public class CustomValidator extends ModelPropertyValidator&lt;Value&lt;?>>
+{
+    public IStatus validate( Value&lt;?> value )
+    {
+        ...
+    }
+
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>public class CustomValidationService extends ModelPropertyValidationService&lt;Value&lt;?>>
+{
+    public IStatus validate()
+    {
+        final Value&lt;?> value = target();
+
+        ...
+    }
+}</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+
+
+
+
 
 <h2><a name="html">HTML Content Presentation</a></h2>
 
