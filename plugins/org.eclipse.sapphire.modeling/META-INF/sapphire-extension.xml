@@ -56,7 +56,7 @@
     </model-property-service>
     <model-property-service>
         <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
-        <factory>org.eclipse.sapphire.modeling.validation.internal.UniqueValueValidationService$Factory</factory>
+        <factory>org.eclipse.sapphire.modeling.validation.internal.UniqueValueValidationServiceFactory</factory>
         <id>Sapphire.UniqueValueValidationService</id>
     </model-property-service>
     <model-property-service>

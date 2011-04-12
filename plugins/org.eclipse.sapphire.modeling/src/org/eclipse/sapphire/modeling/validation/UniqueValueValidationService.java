@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.validation.internal;
+package org.eclipse.sapphire.modeling.validation;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -18,27 +18,23 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class UniqueValueValidationService
+public class UniqueValueValidationService<T>
 
-    extends ModelPropertyValidationService<Value<?>>
+    extends ModelPropertyValidationService<Value<T>>
     
 {
     @Override
     public IStatus validate()
     {
-        final Value<?> value = target();
+        final Value<T> value = target();
         
         if( isUniqueValue( value ) == false )
         {
@@ -52,7 +48,7 @@ public final class UniqueValueValidationService
         return Status.OK_STATUS;
     }
     
-    private boolean isUniqueValue( final Value<?> value )
+    protected boolean isUniqueValue( final Value<T> value )
     {
         final String str = value.getText();
         
@@ -82,25 +78,6 @@ public final class UniqueValueValidationService
         }
         
         return true;
-    }
-    
-    public static final class Factory extends ModelPropertyServiceFactory
-    {
-        @Override
-        public boolean applicable( final IModelElement element,
-                                   final ModelProperty property,
-                                   final Class<? extends ModelPropertyService> service )
-        {
-            return ( property instanceof ValueProperty && property.hasAnnotation( NoDuplicates.class ) );
-        }
-
-        @Override
-        public ModelPropertyService create( final IModelElement element,
-                                            final ModelProperty property,
-                                            final Class<? extends ModelPropertyService> service )
-        {
-            return new UniqueValueValidationService();
-        }
     }
     
     private static final class Resources extends NLS
