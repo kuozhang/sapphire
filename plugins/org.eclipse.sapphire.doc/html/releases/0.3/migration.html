@@ -66,6 +66,19 @@ may require adopters to modify Requite-Bundle declarations and import statements
 <pre class="source-code"><code>unchanged</code></pre>
     </td>
   </tr>
+    <td>
+<pre class="source-code"><code>org.eclipse.sapphire.modeling</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>org.eclipse.sapphire.modeling.java</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>org.eclipse.sapphire.java</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>org.eclipse.sapphire.java</code></pre>
+    </td>
+  </tr>
   <tr>
     <td>
 <pre class="source-code"><code>org.eclipse.sapphire.ui</code></pre>
@@ -161,8 +174,8 @@ system or at the level of an individual property using the @Service annotation.<
     <td>
 <pre class="source-code"><code>@Validators
 (
-    @Validator( service = MyValidator1.class ),
-    @Validator( service = MyValidator2.class )
+    @Validator( impl = MyValidator1.class ),
+    @Validator( impl = MyValidator2.class )
 )</code></pre>
     </td>
     <td>
@@ -177,16 +190,29 @@ system or at the level of an individual property using the @Service annotation.<
     <td>
 <pre class="source-code"><code>public class CustomValidator extends ModelPropertyValidator&lt;Value&lt;?>>
 {
+    @Override
+    public void init( String[] params )
+    {
+        ...
+    }
+    
     public IStatus validate( Value&lt;?> value )
     {
         ...
     }
-
 }</code></pre>
     </td>
     <td>
 <pre class="source-code"><code>public class CustomValidationService extends ModelPropertyValidationService&lt;Value&lt;?>>
 {
+    @Override
+    public void init( IModelElement element,
+                      ModelProperty property,
+                      String[] params )
+    {
+        ...
+    }
+    
     public IStatus validate()
     {
         final Value&lt;?> value = target();
@@ -196,11 +222,35 @@ system or at the level of an individual property using the @Service annotation.<
 }</code></pre>
     </td>
   </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@Validator( impl = UniqueValueValidator.class )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@NoDuplicates</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>public class CustomValidator extends UniqueValueValidator
+{
+    ...
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>public class CustomValidationService extends UniqueValueValidationService
+{
+    ...
+}</code></pre>
+    </td>
+  </tr>
 </table>
 
 <h2><a name="java">Java Support</a></h2>
 
-<p>Support for writing models that reference Java types has been improved.</p>
+<p>Support for writing models that reference Java types has been improved. All properties that that hold
+Java type names should now be modeled as a reference from JavaTypeName to JavaType in order to receive validation
+and content assist support.</p>
 
 <table>
   <tr>
@@ -209,10 +259,29 @@ system or at the level of an individual property using the @Service annotation.<
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code>@JavaTypeConstraints( ... )</code></pre>
+<pre class="source-code"><code><font color="#888888">@Type( base = JavaTypeName.class )</font>
+@JavaTypeConstraint<u>s</u>( ... )
+<font color="#888888">@MustExist
+    
+ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );</font>
+    
+Value&lt;JavaTypeName> <font color="#888888">getImplClass();
+void setImplClass( String value );
+void setImplClass( JavaTypeName value );</font>
+</code></pre>
     </td>
     <td>
-<pre class="source-code"><code>@JavaTypeConstraint( ... )</code></pre>
+<pre class="source-code"><code><font color="#888888">@Type( base = JavaTypeName.class )</font>
+@Reference( target = JavaType.class )
+@JavaTypeConstraint( ... )
+<font color="#888888">@MustExist
+    
+ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );</font>
+    
+ReferenceValue&lt;JavaTypeName,JavaType> <font color="#888888">getImplClass();
+void setImplClass( String value );
+void setImplClass( JavaTypeName value );</font>
+</code></pre>
     </td>
   </tr>
 </table>
