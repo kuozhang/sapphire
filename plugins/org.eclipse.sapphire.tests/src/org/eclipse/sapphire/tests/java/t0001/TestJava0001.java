@@ -16,11 +16,11 @@ import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeKind;
-import org.eclipse.sapphire.java.internal.ClassLoaderJavaTypeReferenceService;
+import org.eclipse.sapphire.java.internal.StandardJavaTypeReferenceService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
- * Tests correctness of Java type kind determination of ClassLoaderJavaTypeReferenceService.
+ * Tests correctness of Java type kind determination of StandardJavaTypeReferenceService.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -54,7 +54,7 @@ public final class TestJava0001
     
     public void testIsClass()
     {
-        final ClassLoaderJavaTypeReferenceService service = new ClassLoaderJavaTypeReferenceService( TestJava0001.class.getClassLoader() );
+        final StandardJavaTypeReferenceService service = new StandardJavaTypeReferenceService( TestJava0001.class.getClassLoader() );
         final JavaType type = service.resolve( PACKAGE_NAME + ".TestClass" );
         
         assertNotNull( type );
@@ -63,7 +63,7 @@ public final class TestJava0001
 
     public void testIsAbstractClass()
     {
-        final ClassLoaderJavaTypeReferenceService service = new ClassLoaderJavaTypeReferenceService( TestJava0001.class.getClassLoader() );
+        final StandardJavaTypeReferenceService service = new StandardJavaTypeReferenceService( TestJava0001.class.getClassLoader() );
         final JavaType type = service.resolve( PACKAGE_NAME + ".TestAbstractClass" );
         
         assertNotNull( type );
@@ -72,7 +72,7 @@ public final class TestJava0001
 
     public void testIsInterface()
     {
-        final ClassLoaderJavaTypeReferenceService service = new ClassLoaderJavaTypeReferenceService( TestJava0001.class.getClassLoader() );
+        final StandardJavaTypeReferenceService service = new StandardJavaTypeReferenceService( TestJava0001.class.getClassLoader() );
         final JavaType type = service.resolve( PACKAGE_NAME + ".TestInterface" );
         
         assertNotNull( type );
@@ -81,7 +81,7 @@ public final class TestJava0001
     
     public void testIsAnnotation()
     {
-        final ClassLoaderJavaTypeReferenceService service = new ClassLoaderJavaTypeReferenceService( TestJava0001.class.getClassLoader() );
+        final StandardJavaTypeReferenceService service = new StandardJavaTypeReferenceService( TestJava0001.class.getClassLoader() );
         final JavaType type = service.resolve( PACKAGE_NAME + ".TestAnnotation" );
         
         assertNotNull( type );
@@ -90,7 +90,7 @@ public final class TestJava0001
     
     public void testIsEnum()
     {
-        final ClassLoaderJavaTypeReferenceService service = new ClassLoaderJavaTypeReferenceService( TestJava0001.class.getClassLoader() );
+        final StandardJavaTypeReferenceService service = new StandardJavaTypeReferenceService( TestJava0001.class.getClassLoader() );
         final JavaType type = service.resolve( PACKAGE_NAME + ".TestEnum" );
         
         assertNotNull( type );

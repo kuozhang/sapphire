@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.ClassLoaderResourceResolver;
-import org.eclipse.sapphire.modeling.ClassResolver;
+import org.eclipse.sapphire.java.ClassLocator;
+import org.eclipse.sapphire.modeling.ResourceLocator;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.UrlResourceStore;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
@@ -49,10 +49,10 @@ public final class SapphireExtensionSystem
 
             for( final ExtensionHandle handle : SapphireModelingExtensionSystem.getExtensionHandles() )
             {
-                final ClassResolver classResolver = new ClassResolver()
+                final ClassLocator classLocator = new ClassLocator()
                 {
                     @Override
-                    public Class<?> resolve( final String name )
+                    public Class<?> find( final String name )
                     {
                         try
                         {
@@ -65,10 +65,10 @@ public final class SapphireExtensionSystem
                     }
                 };
                 
-                final ClassLoaderResourceResolver classLoaderResourceResolver = new ClassLoaderResourceResolver()
+                final ResourceLocator resourceLocator = new ResourceLocator()
                 {
                     @Override
-                    public URL resolve( final String name )
+                    public URL find( final String name )
                     {
                         return handle.resolveResource( name );
                     }
@@ -81,16 +81,17 @@ public final class SapphireExtensionSystem
                         final UrlResourceStore store = new UrlResourceStore( url )
                         {
                             @Override
-                            @SuppressWarnings("unchecked")
+                            @SuppressWarnings( "unchecked" )
+                            
                             public <A> A adapt( final Class<A> adapterType )
                             {
-                                if( adapterType == ClassResolver.class )
+                                if( adapterType == ClassLocator.class )
                                 {
-                                    return (A) classResolver;
+                                    return (A) classLocator;
                                 }
-                                else if( adapterType == ClassLoaderResourceResolver.class )
+                                else if( adapterType == ResourceLocator.class )
                                 {
-                                    return (A) classLoaderResourceResolver;
+                                    return (A) resourceLocator;
                                 }
                                 
                                 return super.adapt( adapterType );

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2011 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <action-handler>
+        <action>Sapphire.Browse</action>
+        <impl>org.eclipse.sapphire.java.jdt.ui.internal.JavaTypeBrowseActionHandler</impl>
+        <id>Sapphire.Browse.Java.Type</id>
+        <description>Opens a browse dialog listing applicable Java types. Activates if the property is a reference value property from JavaTypeName to JavaType.</description>
+        <condition>org.eclipse.sapphire.java.jdt.ui.internal.JavaTypeBrowseActionHandlerCondition</condition>
+    </action-handler>
+    <action-handler>
+        <action>Sapphire.Jump</action>
+        <impl>org.eclipse.sapphire.java.jdt.ui.internal.JavaTypeJumpActionHandler</impl>
+        <id>Sapphire.Jump.Java.Type</id>
+        <description>Opens the specified Java type using Eclipse Java Editor. Activates if the property is a reference value property from JavaTypeName to JavaType.</description>
+        <condition>org.eclipse.sapphire.java.jdt.ui.internal.JavaTypeJumpActionHandlerCondition</condition>
+    </action-handler>
+</extension>

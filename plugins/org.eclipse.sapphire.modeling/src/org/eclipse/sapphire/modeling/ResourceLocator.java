@@ -11,11 +11,13 @@
 
 package org.eclipse.sapphire.modeling;
 
+import java.net.URL;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ClassResolver
+public abstract class ResourceLocator
 {
-    public abstract Class<?> resolve( String name );
+    public abstract URL find( String name );
 }

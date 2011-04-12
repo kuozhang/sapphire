@@ -44,12 +44,13 @@ public final class TestJavaJdt0003
         
         suite.setName( "JavaJdt0003" );
 
-        suite.addTest( new TestJavaJdt0003( "test" ) );
+        suite.addTest( new TestJavaJdt0003( "testTopLevel" ) );
+        suite.addTest( new TestJavaJdt0003( "testInner" ) );
         
         return suite;
     }
     
-    public void test() throws Exception
+    public void testTopLevel() throws Exception
     {
         final IJavaProject project = getJavaProject();
         writeJavaSourceFile( "foo.bar", "TestClass", "public class TestClass {}" );
@@ -57,6 +58,20 @@ public final class TestJavaJdt0003
         final IFile file = project.getProject().getFile( "foobar.xml" );
         final ITestElement element = ITestElement.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( new WorkspaceFileResourceStore( file ) ) ) );
         element.setSomeClass( "foo.bar.TestClass" );
+        
+        final JavaType type = element.getSomeClass().resolve();
+
+        assertNotNull( type );
+    }
+
+    public void testInner() throws Exception
+    {
+        final IJavaProject project = getJavaProject();
+        writeJavaSourceFile( "foo.bar", "TestClass", "public class TestClass { public static class Inner {} }" );
+        
+        final IFile file = project.getProject().getFile( "foobar.xml" );
+        final ITestElement element = ITestElement.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( new WorkspaceFileResourceStore( file ) ) ) );
+        element.setSomeClass( "foo.bar.TestClass$Inner" );
         
         final JavaType type = element.getSomeClass().resolve();
 

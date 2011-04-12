@@ -17,5 +17,7 @@ package org.eclipse.sapphire.tests.java.t0003;
 
 public class TestClass
 {
-    
+    public static class Inner
+    {
+    }
 }

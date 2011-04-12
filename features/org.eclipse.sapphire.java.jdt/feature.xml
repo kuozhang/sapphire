@@ -34,5 +34,6 @@
     </requires>
 
     <plugin id="org.eclipse.sapphire.java.jdt" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+    <plugin id="org.eclipse.sapphire.java.jdt.ui" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
 
 </feature>

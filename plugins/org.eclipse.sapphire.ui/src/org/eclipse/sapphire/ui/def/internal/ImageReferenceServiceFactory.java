@@ -14,12 +14,12 @@ package org.eclipse.sapphire.ui.def.internal;
 import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.sapphire.modeling.ClassLoaderResourceResolver;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ReferenceService;
+import org.eclipse.sapphire.modeling.ResourceLocator;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.ui.def.IImportDirective;
@@ -87,9 +87,9 @@ public final class ImageReferenceServiceFactory
         }
         else
         {
-            final ClassLoaderResourceResolver classLoaderResourceResolver = element.adapt( ClassLoaderResourceResolver.class );
+            final ResourceLocator resourceLocator = element.adapt( ResourceLocator.class );
             
-            if( classLoaderResourceResolver != null )
+            if( resourceLocator != null )
             {
                 svc = new ReferenceService()
                 {
@@ -100,7 +100,7 @@ public final class ImageReferenceServiceFactory
                         
                         if( reference != null )
                         {
-                            final URL url = classLoaderResourceResolver.resolve( reference );
+                            final URL url = resourceLocator.find( reference );
                             
                             if( url != null )
                             {

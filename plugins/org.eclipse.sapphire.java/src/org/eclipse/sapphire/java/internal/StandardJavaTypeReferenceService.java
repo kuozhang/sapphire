@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.java.internal;
 
 import org.eclipse.sapphire.java.ClassBasedJavaType;
+import org.eclipse.sapphire.java.ClassLocator;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
@@ -26,30 +27,52 @@ import org.eclipse.sapphire.modeling.annotations.Reference;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ClassLoaderJavaTypeReferenceService
+public final class StandardJavaTypeReferenceService
 
     extends JavaTypeReferenceService
     
 {
-    private final ClassLoader classLoader;
+    private final ClassLocator classLocator;
     
-    public ClassLoaderJavaTypeReferenceService( final ClassLoader classLoader )
+    public StandardJavaTypeReferenceService( final ClassLocator classLocator )
     {
-        this.classLoader = classLoader;
+        this.classLocator = classLocator;
+    }
+    
+    public StandardJavaTypeReferenceService( final ClassLoader classLoader )
+    {
+        this
+        (
+            new ClassLocator()
+            {
+                @Override
+                public Class<?> find( final String name )
+                {
+                    try
+                    {
+                        return classLoader.loadClass( name );
+                    }
+                    catch( ClassNotFoundException e )
+                    {
+                        // Intentionally converting exception to null result.
+                    }
+
+                    return null;
+                }
+            }
+        );
     }
     
     @Override
     public JavaType resolve( final String name )
     {
-        try
+        final Class<?> cl = this.classLocator.find( name );
+        
+        if( cl != null )
         {
-            return new ClassBasedJavaType( this.classLoader.loadClass( name ) );
+            return new ClassBasedJavaType( cl );
         }
-        catch( ClassNotFoundException e )
-        {
-            // Intentionally converting exception to null result.
-        }
-
+        
         return null;
     }
     
@@ -78,8 +101,17 @@ public final class ClassLoaderJavaTypeReferenceService
                                             final ModelProperty property,
                                             final Class<? extends ModelPropertyService> service )
         {
-            final ClassLoader classLoader = element.getModelElementType().getModelElementClass().getClassLoader();
-            return new ClassLoaderJavaTypeReferenceService( classLoader );
+            final ClassLocator classLocator = element.adapt( ClassLocator.class );
+            
+            if( classLocator != null )
+            {
+                return new StandardJavaTypeReferenceService( classLocator );
+            }
+            else
+            {
+                final ClassLoader classLoader = element.getModelElementType().getModelElementClass().getClassLoader();
+                return new StandardJavaTypeReferenceService( classLoader );
+            }
         }
     }
 

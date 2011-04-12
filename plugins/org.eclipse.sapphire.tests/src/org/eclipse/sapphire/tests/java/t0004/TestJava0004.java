@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
- * Tests JavaTypeValidationService in context of ClassLoaderJavaTypeReferenceService.
+ * Tests JavaTypeValidationService in context of StandardJavaTypeReferenceService.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */

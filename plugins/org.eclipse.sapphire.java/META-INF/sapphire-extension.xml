@@ -17,7 +17,7 @@
     <model-property-service>
         <description>Resolves Java types visible to the class loader that contains a given model element type interface.</description>
         <type>org.eclipse.sapphire.modeling.ReferenceService</type>
-        <factory>org.eclipse.sapphire.java.internal.ClassLoaderJavaTypeReferenceService$Factory</factory>
+        <factory>org.eclipse.sapphire.java.internal.StandardJavaTypeReferenceService$Factory</factory>
         <id>Sapphire.Java.TypeReferenceService</id>
     </model-property-service>
     <model-property-service>

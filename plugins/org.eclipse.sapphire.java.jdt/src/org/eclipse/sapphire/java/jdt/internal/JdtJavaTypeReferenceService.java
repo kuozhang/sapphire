@@ -58,7 +58,8 @@ public final class JdtJavaTypeReferenceService
         
         try
         {
-            final IType type = this.project.findType( name );
+            final String n = name.replace( '$', '.' );
+            final IType type = this.project.findType( n );
             
             if( type != null && type.exists() && ! type.isAnonymous() )
             {

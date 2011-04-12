@@ -18,10 +18,10 @@
     <includes id="org.eclipse.sapphire.modeling" version="0.0.0"/>
     <includes id="org.eclipse.sapphire.modeling.xml" version="0.0.0"/>
     <includes id="org.eclipse.sapphire.java" version="0.0.0"/>
-    <includes id="org.eclipse.sapphire.java.jdt" version="0.0.0"/>
     <includes id="org.eclipse.sapphire.ui" version="0.0.0"/>
     <includes id="org.eclipse.sapphire.ui.swt.graphiti" version="0.0.0"/>
     <includes id="org.eclipse.sapphire.ui.swt.xml.editor" version="0.0.0"/>
+    <includes id="org.eclipse.sapphire.java.jdt" version="0.0.0"/>
     <includes id="org.eclipse.sapphire.sdk" version="0.0.0"/>
     <includes id="org.eclipse.sapphire.samples" version="0.0.0"/>
     <includes id="org.eclipse.sapphire.tests" version="0.0.0"/>

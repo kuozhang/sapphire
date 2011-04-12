@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.renderer.actions;
+package org.eclipse.sapphire.java.jdt.ui.internal;
 
 import java.util.EnumSet;
 

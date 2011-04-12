@@ -61,6 +61,8 @@ public final class SdkJavaTypeReferenceServiceForSdef
             return null;
         }
         
+        final String n = name.replace( '$', '.' );
+        
         // We are cheating here and are completely ignoring bundle in the import directive. All packages
         // are resolved in the context of the project that sdef file is located in.
         
@@ -74,7 +76,7 @@ public final class SdkJavaTypeReferenceServiceForSdef
                     
                     if( packageName != null )
                     {
-                        final IType type = this.project.findType( packageName, name );
+                        final IType type = this.project.findType( packageName, n );
 
                         if( type != null && type.exists() && ! type.isAnonymous() )
                         {

@@ -9,15 +9,13 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling;
-
-import java.net.URL;
+package org.eclipse.sapphire.java;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ClassLoaderResourceResolver
+public abstract class ClassLocator
 {
-    public abstract URL resolve( String name );
+    public abstract Class<?> find( String name );
 }

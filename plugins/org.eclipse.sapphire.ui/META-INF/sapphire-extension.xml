@@ -191,13 +191,6 @@
     </action-handler>
     <action-handler>
         <action>Sapphire.Browse</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.JavaTypeBrowseActionHandler</impl>
-        <id>Sapphire.Browse.Java.Type</id>
-        <description>Opens a browse dialog listing applicable Java types. Activates if the property is a value property and is of type JavaTypeName or has @JavaTypeConstraints annotation.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.JavaTypeBrowseActionHandlerCondition</condition>
-    </action-handler>
-    <action-handler>
-        <action>Sapphire.Browse</action>
         <impl>org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler</impl>
         <id>Sapphire.Browse.Path.Relative</id>
         <description>Opens a browse dialog for a relative path to a file or a folder. Activates if the property is a value property and has @BasePathsProvider annotation.</description>
@@ -223,13 +216,6 @@
         <id>Sapphire.Help</id>
         <description>Shows the documentation associated with a given UI part using Eclipse context help view.</description>
         <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.HelpActionHandlerCondition</condition>
-    </action-handler>
-    <action-handler>
-        <action>Sapphire.Jump</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.JavaTypeJumpActionHandler</impl>
-        <id>Sapphire.Jump.Java.Type</id>
-        <description>Opens the specified Java type using Eclipse Java Editor. Activates if the property is a value property and is of type JavaTypeName or has @JavaTypeConstraints annotation.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.JavaTypeJumpActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Jump</action>

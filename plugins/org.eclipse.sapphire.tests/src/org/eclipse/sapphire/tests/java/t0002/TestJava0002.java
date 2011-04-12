@@ -15,11 +15,11 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.java.internal.ClassLoaderJavaTypeReferenceService;
+import org.eclipse.sapphire.java.internal.StandardJavaTypeReferenceService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
- * Tests correctness of type hierarchy reporting of ClassLoaderJavaTypeReferenceService.
+ * Tests correctness of type hierarchy reporting of StandardJavaTypeReferenceService.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -49,7 +49,7 @@ public final class TestJava0002
     
     public void test()
     {
-        final ClassLoaderJavaTypeReferenceService service = new ClassLoaderJavaTypeReferenceService( TestJava0002.class.getClassLoader() );
+        final StandardJavaTypeReferenceService service = new StandardJavaTypeReferenceService( TestJava0002.class.getClassLoader() );
         final JavaType type = service.resolve( PACKAGE_NAME + ".TestClassA" );
         
         assertNotNull( type );
