@@ -14,7 +14,8 @@ Export-Package: org.eclipse.sapphire.modeling,
  org.eclipse.sapphire.modeling.localization,
  org.eclipse.sapphire.modeling.serialization,
  org.eclipse.sapphire.modeling.util,
- org.eclipse.sapphire.modeling.util.internal;x-friends:="org.eclipse.sapphire.ui"
+ org.eclipse.sapphire.modeling.util.internal;x-friends:="org.eclipse.sapphire.ui",
+ org.eclipse.sapphire.modeling.validation
 Bundle-Vendor: %providerName
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.core.runtime,

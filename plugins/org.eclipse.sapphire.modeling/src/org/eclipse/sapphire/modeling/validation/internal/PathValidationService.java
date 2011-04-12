@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.modeling.validation.internal;
 
-import static org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin.PLUGIN_ID;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -21,11 +19,11 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
 import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.ValidFileExtensions;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
+import org.eclipse.sapphire.modeling.validation.PathValidation;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -70,88 +68,7 @@ public abstract class PathValidationService
         
         if( fileName != null )
         {
-            return validateExtensions( fileName, this.validFileExtensions );
-        }
-        
-        return Status.OK_STATUS;
-    }
-    
-    public static final IStatus validateExtensions( final String fileName,
-                                                    final ValueProperty property )
-    {
-        final ValidFileExtensions validFileExtensionsAnnotation = property.getAnnotation( ValidFileExtensions.class );
-        
-        if( validFileExtensionsAnnotation != null )
-        {
-            return validateExtensions( fileName, validFileExtensionsAnnotation.value() );
-        }
-        
-        return Status.OK_STATUS;
-    }
-    
-    public static final IStatus validateExtensions( final String fileName,
-                                                    final String[] validFileExtensions )
-    {
-        if( validFileExtensions != null && validFileExtensions.length > 0 )
-        {
-            final String trimmedFileName = fileName.trim();
-            final int lastdot = trimmedFileName.lastIndexOf( '.' );
-            final String extension;
-            
-            if( lastdot == -1 )
-            {
-                extension = "";
-            }
-            else
-            {
-                extension = trimmedFileName.substring( lastdot + 1 );
-            }
-            
-            boolean match = false;
-            
-            if( extension != null && extension.length() != 0 )
-            {
-                for( String ext : validFileExtensions )
-                {
-                    if( extension.equalsIgnoreCase( ext ) )
-                    {
-                        match = true;
-                        break;
-                    }
-                }
-            }
-            
-            if( ! match )
-            {
-                final String message;
-                
-                if( validFileExtensions.length == 1 )
-                {
-                    message = NLS.bind( Resources.invalidFileExtensionOne, trimmedFileName, validFileExtensions[ 0 ] );
-                }
-                else if( validFileExtensions.length == 2 )
-                {
-                    message = NLS.bind( Resources.invalidFileExtensionOne, new String[] { trimmedFileName, validFileExtensions[ 0 ], validFileExtensions[ 1 ] } );
-                }
-                else
-                {
-                    final StringBuilder buf = new StringBuilder();
-                    
-                    for( String ext : validFileExtensions )
-                    {
-                        if( buf.length() != 0 )
-                        {
-                            buf.append( ", " );
-                        }
-                        
-                        buf.append( ext );
-                    }
-                    
-                    message = NLS.bind( Resources.invalidFileExtensionMultiple, trimmedFileName, buf.toString() ); 
-                }
-                
-                return new Status( Status.ERROR, PLUGIN_ID, message );
-            }
+            return PathValidation.validateExtensions( fileName, this.validFileExtensions );
         }
         
         return Status.OK_STATUS;
@@ -164,9 +81,6 @@ public abstract class PathValidationService
         public static String resourceMustExist;
         public static String pathIsNotFile;
         public static String pathIsNotFolder;
-        public static String invalidFileExtensionOne;
-        public static String invalidFileExtensionTwo;
-        public static String invalidFileExtensionMultiple;
         
         static
         {
