@@ -31,7 +31,9 @@ to 0.3 release. Only changes from the previous milestone are covered.</p>
 <ol>
   <li><a href="#modularity">Modularity Changes</a></li>
   <li><a href="#ref">ReferenceValue Changes</a></li>
-  <li><a href="#validators-as-services">Validators as Services</a></li>
+  <li><a href="#services">Services</a></li>
+  <li><a href="#validation">Validation</a></li>
+  <li><a href="#java">Java Support</a></li>
   <li><a href="#html">HTML Content Presentation</a></li>
   <li><a href="#related-content">Related Content</a></li>
   <li><a href="#composite-ref">Composite Reference</a></li>
@@ -101,7 +103,43 @@ of what the reference resolves to.</p>
   </tr>
 </table>
 
-<h2><a name="validators-as-services">Validators as Services</a></h2>
+<h2><a name="services">Services</a></h2>
+
+<p>A few changes have been made to the services API.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>public class MyService extends ModelElementService
+{
+    public void init( final IModelElement element )
+    {
+        super.init( element );
+
+        ...
+    }
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>public class MyService extends ModelElementService
+{
+    public void init( final IModelElement element,
+                      final String[] params )
+    {
+        super.init( element, params );
+
+        ...
+    }
+}</code></pre>
+    </td>
+  </tr>
+</table>
+
+<h2><a name="validation">Validation</a></h2>
 
 <p>Validators are now model element services. They can be registered globaly via the extension
 system or at the level of an individual property using the @Service annotation.</p>
@@ -160,11 +198,24 @@ system or at the level of an individual property using the @Service annotation.<
   </tr>
 </table>
 
+<h2><a name="java">Java Support</a></h2>
 
+<p>Support for writing models that reference Java types has been improved.</p>
 
-
-
-
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@JavaTypeConstraints( ... )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@JavaTypeConstraint( ... )</code></pre>
+    </td>
+  </tr>
+</table>
 
 <h2><a name="html">HTML Content Presentation</a></h2>
 
