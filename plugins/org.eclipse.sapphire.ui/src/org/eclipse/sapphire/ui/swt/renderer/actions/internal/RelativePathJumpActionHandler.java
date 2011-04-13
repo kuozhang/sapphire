@@ -104,7 +104,7 @@ public final class RelativePathJumpActionHandler
                     final IWorkbenchPage page = window.getActivePage();
                     IEditorDescriptor editorDescriptor = null;
                     
-                    try 
+                    try
                     {
                         editorDescriptor = IDE.getEditorDescriptor( file.getName() );
                     }

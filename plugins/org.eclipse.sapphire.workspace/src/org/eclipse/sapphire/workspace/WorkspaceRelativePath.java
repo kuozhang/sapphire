@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.annotations;
+package org.eclipse.sapphire.workspace;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -21,8 +21,8 @@ import java.lang.annotation.Target;
  */
 
 @Retention( RetentionPolicy.RUNTIME )
-@Target( { ElementType.FIELD } )
+@Target( ElementType.FIELD )
 
-public @interface EclipseWorkspacePath
+public @interface WorkspaceRelativePath
 {
 }

@@ -9,19 +9,19 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
+package org.eclipse.sapphire.workspace.ui.internal;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.annotations.EclipseWorkspacePath;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
+import org.eclipse.sapphire.workspace.WorkspaceRelativePath;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EclipseWorkspacePathBrowseActionHandlerCondition 
+public final class WorkspaceRelativePathBrowseActionHandlerCondition 
 
     extends SapphirePropertyEditorCondition
     
@@ -31,7 +31,7 @@ public final class EclipseWorkspacePathBrowseActionHandlerCondition
     {
         final ModelProperty property = part.getProperty();
         
-        if( property.isOfType( IPath.class ) && property.hasAnnotation( EclipseWorkspacePath.class ) )
+        if( property.isOfType( IPath.class ) && property.hasAnnotation( WorkspaceRelativePath.class ) )
         {
             return true;
         }

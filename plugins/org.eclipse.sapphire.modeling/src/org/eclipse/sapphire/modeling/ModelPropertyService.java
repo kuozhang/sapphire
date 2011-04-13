@@ -17,20 +17,14 @@ package org.eclipse.sapphire.modeling;
 
 public abstract class ModelPropertyService extends ModelService
 {
-    private IModelElement element;
     private ModelProperty property;
     
     public void init( final IModelElement element,
                       final ModelProperty property,
                       final String[] params )
     {
-        this.element = element;
+        super.init( element );
         this.property = property;
-    }
-    
-    public final IModelElement element()
-    {
-        return this.element;
     }
     
     public final ModelProperty property()

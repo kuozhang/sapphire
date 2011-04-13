@@ -16,7 +16,7 @@ import org.eclipse.graphiti.features.context.IMoveBendpointContext;
 import org.eclipse.graphiti.features.impl.DefaultMoveBendpointFeature;
 import org.eclipse.graphiti.mm.pictograms.FreeFormConnection;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramGeometryWrapper;
+import org.eclipse.sapphire.ui.swt.graphiti.editor.DiagramGeometryWrapper;
 import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProvider;
 
 /**

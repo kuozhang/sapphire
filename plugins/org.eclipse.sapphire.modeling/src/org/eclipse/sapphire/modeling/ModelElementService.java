@@ -20,17 +20,10 @@ package org.eclipse.sapphire.modeling;
 
 public abstract class ModelElementService extends ModelService
 {
-    private IModelElement element;
-    
     public void init( final IModelElement element,
                       final String[] params )
     {
-        this.element = element;
-    }
-    
-    public final IModelElement element()
-    {
-        return this.element;
+        super.init( element );
     }
     
 }

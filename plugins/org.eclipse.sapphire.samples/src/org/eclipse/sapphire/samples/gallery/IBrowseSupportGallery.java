@@ -20,7 +20,6 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.AbsolutePath;
 import org.eclipse.sapphire.modeling.annotations.BasePathsProvider;
-import org.eclipse.sapphire.modeling.annotations.EclipseWorkspacePath;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -31,6 +30,8 @@ import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.samples.gallery.ui.CustomBasePathsProvider;
+import org.eclipse.sapphire.workspace.ProjectRelativePath;
+import org.eclipse.sapphire.workspace.WorkspaceRelativePath;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -92,19 +93,33 @@ public interface IBrowseSupportGallery
     void setRelativeFilePath( String value );
     void setRelativeFilePath( IPath value );
     
-    // *** EclipseWorkspaceFilePath ***
+    // *** WorkspaceRelativePath ***
     
     @Type( base = IPath.class )
-    @Label( standard = "eclipse workspace file path" )
-    @EclipseWorkspacePath
+    @Label( standard = "workspace relative path" )
+    @WorkspaceRelativePath
     @MustExist
-    @XmlBinding( path = "eclipse-workspace-file-path" )
+    @XmlBinding( path = "workspace-relative-path" )
     
-    ValueProperty PROP_ECLIPSE_WORKSPACE_FILE_PATH = new ValueProperty( TYPE, "EclipseWorkspaceFilePath" );
+    ValueProperty PROP_WORKSPACE_RELATIVE_PATH = new ValueProperty( TYPE, "WorkspaceRelativePath" );
     
-    Value<IPath> getEclipseWorkspaceFilePath();
-    void setEclipseWorkspaceFilePath( String value );
-    void setEclipseWorkspaceFilePath( IPath value );
+    Value<IPath> getWorkspaceRelativePath();
+    void setWorkspaceRelativePath( String value );
+    void setWorkspaceRelativePath( IPath value );
+    
+    // *** ProjectRelativePath ***
+    
+    @Type( base = IPath.class )
+    @Label( standard = "project relative path" )
+    @ProjectRelativePath
+    @MustExist
+    @XmlBinding( path = "project-relative-path" )
+    
+    ValueProperty PROP_PROJECT_RELATIVE_PATH = new ValueProperty( TYPE, "ProjectRelativePath" );
+    
+    Value<IPath> getProjectRelativePath();
+    void setProjectRelativePath( String value );
+    void setProjectRelativePath( IPath value );
     
     // *** MultiOptionPath ***
     

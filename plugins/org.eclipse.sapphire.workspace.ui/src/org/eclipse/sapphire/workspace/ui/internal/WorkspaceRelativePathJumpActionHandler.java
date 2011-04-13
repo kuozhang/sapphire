@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
+package org.eclipse.sapphire.workspace.ui.internal;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -28,18 +28,11 @@ import org.eclipse.ui.ide.IDE;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EclipseWorkspacePathJumpActionHandler 
+public final class WorkspaceRelativePathJumpActionHandler 
 
     extends SapphireJumpActionHandler
     
 {
-    public static final String ID = "Sapphire.Jump.Relative";
-    
-    public EclipseWorkspacePathJumpActionHandler()
-    {
-        setId( ID );
-    }
-    
     @Override
     protected void refreshEnablementState()
     {

@@ -9,16 +9,17 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.renderer.actions;
+package org.eclipse.sapphire.workspace.ui;
 
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
+import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE.SharedImages;
 
@@ -26,7 +27,7 @@ import org.eclipse.ui.ide.IDE.SharedImages;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class EclipseWorkspacePathBrowseActionHandler 
+public final class ProjectRelativePathBrowseActionHandler 
 
     extends RelativePathBrowseActionHandler
     
@@ -44,7 +45,16 @@ public class EclipseWorkspacePathBrowseActionHandler
     @Override
     protected List<IPath> getBasePaths()
     {
-        return Collections.singletonList( ResourcesPlugin.getWorkspace().getRoot().getLocation() );
+        final IProject project = getPart().getModelElement().adapt( IProject.class );
+        
+        if( project == null )
+        {
+            return Collections.emptyList();
+        }
+        else
+        {
+            return Collections.singletonList( project.getLocation() );
+        }
     }
     
     private static final class Resources extends NLS 
@@ -53,7 +63,7 @@ public class EclipseWorkspacePathBrowseActionHandler
 
         static 
         {
-            initializeMessages( EclipseWorkspacePathBrowseActionHandler.class.getName(), Resources.class );
+            initializeMessages( ProjectRelativePathBrowseActionHandler.class.getName(), Resources.class );
         }
     }
 

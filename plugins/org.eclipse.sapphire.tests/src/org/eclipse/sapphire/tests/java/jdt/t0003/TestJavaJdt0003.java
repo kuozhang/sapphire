@@ -17,10 +17,10 @@ import junit.framework.TestSuite;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.modeling.WorkspaceFileResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.java.jdt.JavaJdtTestCase;
+import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
 
 /**
  * Tests resolution of Java type references in the model via JdtJavaTypeReferenceService.

@@ -198,13 +198,6 @@
     </action-handler>
     <action-handler>
         <action>Sapphire.Browse</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.EclipseWorkspacePathBrowseActionHandler</impl>
-        <id>Sapphire.Browse.Path.Relative</id>
-        <description>Opens a browse dialog for a relative path to a file or a folder in the current Eclipse Workspace. Activates if the property is a value property and has @EclipseWorkspacePath annotation.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.EclipseWorkspacePathBrowseActionHandlerCondition</condition>
-    </action-handler>
-    <action-handler>
-        <action>Sapphire.Browse</action>
         <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.PossibleValuesProviderBrowseActionHandler</impl>
         <id>Sapphire.Browse.Possible</id>
         <description>Opens a browse dialog listing possible values for the property. Activates if the property is a value property and has either @PossibleValuesProvider, @PossibleValues or @PossibleValuesFromModel annotation.</description>
@@ -223,13 +216,6 @@
         <id>Sapphire.Jump.Path.Relative</id>
         <description>Opens the file specified by a relative path using the associated Eclipse editor. Activates if the property is a value property and has @BasePathsProvider annotation.</description>
         <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.RelativePathJumpActionHandlerCondition</condition>
-    </action-handler>
-    <action-handler>
-        <action>Sapphire.Jump</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.EclipseWorkspacePathJumpActionHandler</impl>
-        <id>Sapphire.Jump.Path.Relative</id>
-        <description>Opens the file specified by a relative path using the associated Eclipse editor. Activates if the property is a value property and has @EclipseWorkspacePath annotation.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.EclipseWorkspacePathJumpActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Jump</action>

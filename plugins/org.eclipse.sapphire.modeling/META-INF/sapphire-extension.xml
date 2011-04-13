@@ -76,11 +76,6 @@
     </model-property-service>
     <model-property-service>
         <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
-        <factory>org.eclipse.sapphire.modeling.validation.internal.EclipseWorkspacePathValidationService$Factory</factory>
-        <id>Sapphire.EclipseWorkspacePathValidationService</id>
-    </model-property-service>
-    <model-property-service>
-        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
         <factory>org.eclipse.sapphire.modeling.validation.internal.MalformedValueValidationService$Factory</factory>
         <id>Sapphire.MalformedValueValidationService</id>
     </model-property-service>

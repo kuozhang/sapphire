@@ -52,7 +52,6 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramGeometryWrapper;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;

@@ -11,6 +11,7 @@ Export-Package: org.eclipse.sapphire.ui.swt.graphiti,
  org.eclipse.sapphire.ui.swt.graphiti.providers
 Require-Bundle: org.eclipse.sapphire.modeling,
  org.eclipse.sapphire.modeling.xml,
+ org.eclipse.sapphire.workspace,
  org.eclipse.gef;visibility:=reexport,
  org.eclipse.graphiti;visibility:=reexport,
  org.eclipse.graphiti.ui;visibility:=reexport,

@@ -15,9 +15,9 @@ import java.io.File;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
-import org.eclipse.sapphire.modeling.WorkspaceFileResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
+import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

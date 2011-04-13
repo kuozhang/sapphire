@@ -651,7 +651,8 @@
                         <property-editor>AbsoluteFilePath</property-editor>
                         <property-editor>AbsoluteFolderPath</property-editor>
                         <property-editor>RelativeFilePath</property-editor>
-                        <property-editor>EclipseWorkspaceFilePath</property-editor>
+                        <property-editor>WorkspaceRelativePath</property-editor>
+                        <property-editor>ProjectRelativePath</property-editor>
                         <property-editor>
                             <property>MultiOptionPath</property>
                             <action-handler>
@@ -668,7 +669,7 @@
                             </action-handler>
                             <action-handler>
                                 <action>Sapphire.Browse</action>
-                                <impl>EclipseWorkspacePathBrowseActionHandler</impl>
+                                <impl>WorkspaceRelativePathBrowseActionHandler</impl>
                                 <param>
                                     <name>extensions</name>
                                     <value>jar,zip</value>
@@ -697,7 +698,7 @@
                                 </action-handler>
                                 <action-handler>
                                     <action>Sapphire.Browse</action>
-                                    <impl>EclipseWorkspacePathBrowseActionHandler</impl>
+                                    <impl>WorkspaceRelativePathBrowseActionHandler</impl>
                                     <param>
                                         <name>extensions</name>
                                         <value>jar,zip</value>
@@ -731,7 +732,7 @@
                                 </action-handler>
                                 <action-handler>
                                     <action>Sapphire.Browse</action>
-                                    <impl>EclipseWorkspacePathBrowseActionHandler</impl>
+                                    <impl>WorkspaceRelativePathBrowseActionHandler</impl>
                                     <param>
                                         <name>extensions</name>
                                         <value>jar,zip</value>
@@ -1263,5 +1264,9 @@
             </node>
         </root-node>
     </editor-page>
+    <import>
+        <bundle>org.eclipse.sapphire.workspace.ui</bundle>
+        <package>org.eclipse.sapphire.workspace.ui</package>
+    </import>
     
 </definition>

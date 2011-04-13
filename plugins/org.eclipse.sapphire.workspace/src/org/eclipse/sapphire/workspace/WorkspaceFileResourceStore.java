@@ -9,19 +9,23 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling;
+package org.eclipse.sapphire.workspace;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.sapphire.modeling.util.internal.FileUtil;
+import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
+import org.eclipse.sapphire.modeling.ResourceStoreException;
+import org.eclipse.sapphire.modeling.ValidateEditException;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -102,7 +106,7 @@ public class WorkspaceFileResourceStore
             {
                 if( content.length > 0 )
                 {
-                    FileUtil.mkdirs( this.file.getParent().getLocation().toFile() );
+                    create( this.file.getParent() );
                     this.file.create( stream, true, null );
                 }
             }
@@ -174,6 +178,17 @@ public class WorkspaceFileResourceStore
         }
         
         return result;
+    }
+    
+    public static void create( final IContainer container ) throws CoreException
+    {
+        if( ! container.exists() )
+        {
+            create( container.getParent() );
+            
+            final IFolder iFolder = (IFolder) container;
+            iFolder.create( true, true, null );
+        }
     }
 
 }

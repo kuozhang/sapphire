@@ -9,7 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.editor;
+package org.eclipse.sapphire.ui.swt.graphiti.editor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,16 +20,23 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
-import org.eclipse.sapphire.modeling.WorkspaceFileResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.Point;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
 import org.eclipse.sapphire.ui.diagram.geometry.IBendPoint;
 import org.eclipse.sapphire.ui.diagram.geometry.IDiagramConnectionGeometry;
 import org.eclipse.sapphire.ui.diagram.geometry.IDiagramGeometry;
 import org.eclipse.sapphire.ui.diagram.geometry.IDiagramNodeGeometry;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>

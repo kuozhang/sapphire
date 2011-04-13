@@ -16,12 +16,12 @@ import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.sapphire.modeling.WorkspaceFileResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.java.jdt.JavaJdtTestHelper;
 import org.eclipse.sapphire.tests.java.t0004.ITestElement;
 import org.eclipse.sapphire.tests.java.t0004.TestJava0004;
+import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
 
 /**
  * Tests JavaTypeValidationService in context of JdtJavaTypeReferenceService.

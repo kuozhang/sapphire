@@ -13,13 +13,6 @@ package org.eclipse.sapphire.modeling.util.internal;
 
 import java.io.File;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
@@ -30,43 +23,11 @@ import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 public final class FileUtil
 {
-    public static IFile getWorkspaceFile( final File f )
-    {
-        final IWorkspace ws = ResourcesPlugin.getWorkspace();
-        final IWorkspaceRoot wsroot = ws.getRoot();
-        
-        final IFile[] wsFiles = wsroot.findFilesForLocationURI( f.toURI() );
-        
-        if( wsFiles.length > 0 )
-        {
-            return wsFiles[ 0 ];
-        }
-        
-        return null;
-    }
-
-    public static IContainer getWorkspaceContainer( final File f )
-    {
-        final IWorkspace ws = ResourcesPlugin.getWorkspace();
-        final IWorkspaceRoot wsroot = ws.getRoot();
-        
-        final IContainer[] wsContainers = wsroot.findContainersForLocationURI( f.toURI() );
-        
-        if( wsContainers.length > 0 )
-        {
-            return wsContainers[ 0 ];
-        }
-        
-        return null;
-    }
-    
     public static void mkdirs( final File f )
     
         throws CoreException
         
     {
-        final IContainer wsContainer = getWorkspaceContainer( f );
-        
         if( f.exists() )
         {
             if( f.isFile() )
@@ -77,39 +38,20 @@ public final class FileUtil
                 
                 throw new CoreException( SapphireModelingFrameworkPlugin.createErrorStatus( msg ) );
             }
-            else
-            {
-                // Make sure that the the folder is in the workspace.
-                
-                if( wsContainer != null )
-                {
-                    wsContainer.refreshLocal( IResource.DEPTH_ZERO, null );
-                }
-            }
         }
         else
         {
             mkdirs( f.getParentFile() );
             
-            if( wsContainer != null )
+            final boolean isSuccessful = f.mkdir();
+            
+            if( ! isSuccessful )
             {
-                // Should be a folder...
+                final String msg
+                    = NLS.bind( Resources.failedToCreateDirectory, 
+                                f.getAbsolutePath() );
                 
-                final IFolder iFolder = (IFolder) wsContainer;
-                iFolder.create( true, true, null );
-            }
-            else
-            {
-                final boolean isSuccessful = f.mkdir();
-                
-                if( ! isSuccessful )
-                {
-                    final String msg
-                        = NLS.bind( Resources.failedToCreateDirectory, 
-                                    f.getAbsolutePath() );
-                    
-                    throw new CoreException( SapphireModelingFrameworkPlugin.createErrorStatus( msg ) );
-                }
+                throw new CoreException( SapphireModelingFrameworkPlugin.createErrorStatus( msg ) );
             }
         }
     }

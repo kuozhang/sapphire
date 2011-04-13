@@ -17,4 +17,26 @@ package org.eclipse.sapphire.modeling;
 
 public abstract class ModelService
 {
+    private IModelElement element;
+    
+    protected final void init( final IModelElement element )
+    {
+        this.element = element;
+    }
+    
+    public final IModelElement element()
+    {
+        return this.element;
+    }
+    
+    public final <T> T nearest( final Class<T> particleType )
+    {
+        return this.element.nearest( particleType );
+    }
+
+    public final <A> A adapt( final Class<A> adapterType )
+    {
+        return this.element.adapt( adapterType );
+    }
+    
 }

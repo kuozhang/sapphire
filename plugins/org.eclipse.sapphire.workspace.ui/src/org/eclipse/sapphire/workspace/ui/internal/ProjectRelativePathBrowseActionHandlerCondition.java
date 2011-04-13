@@ -9,36 +9,36 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.def.internal;
-
-import java.util.Collections;
-import java.util.List;
+package org.eclipse.sapphire.workspace.ui.internal;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.annotations.BasePathsProviderImpl;
+import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
+import org.eclipse.sapphire.workspace.ProjectRelativePath;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class ProjectRootBasePathsProvider
+public final class ProjectRelativePathBrowseActionHandlerCondition 
 
-    extends BasePathsProviderImpl
+    extends SapphirePropertyEditorCondition
     
 {
     @Override
-    public List<IPath> getBasePaths( final IModelElement element )
+    protected boolean evaluate( final SapphirePropertyEditor part )
     {
-        final IProject project = element.adapt( IProject.class );
+        final ModelProperty property = part.getProperty();
         
-        if( project != null )
+        if( property.isOfType( IPath.class ) && property.hasAnnotation( ProjectRelativePath.class ) &&
+            part.getModelElement().adapt( IProject.class ) != null )
         {
-            return Collections.singletonList( project.getLocation() );
+            return true;
         }
         
-        return Collections.emptyList();
+        return false;
     }
-    
+
 }

@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.validation.internal;
+package org.eclipse.sapphire.workspace.internal;
 
 import static org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin.PLUGIN_ID;
 
@@ -24,14 +24,15 @@ import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.EclipseWorkspacePath;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
+import org.eclipse.sapphire.modeling.validation.PathValidationService;
+import org.eclipse.sapphire.workspace.WorkspaceRelativePath;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EclipseWorkspacePathValidationService
+public final class WorkspaceRelativePathValidationService
 
     extends PathValidationService
     
@@ -102,7 +103,7 @@ public final class EclipseWorkspacePathValidationService
                                    final ModelProperty property,
                                    final Class<? extends ModelPropertyService> service )
         {
-            return ( property instanceof ValueProperty && property.hasAnnotation( EclipseWorkspacePath.class ) && IPath.class.isAssignableFrom( property.getTypeClass() ) );
+            return ( property instanceof ValueProperty && property.hasAnnotation( WorkspaceRelativePath.class ) && IPath.class.isAssignableFrom( property.getTypeClass() ) );
         }
 
         @Override
@@ -110,7 +111,7 @@ public final class EclipseWorkspacePathValidationService
                                             final ModelProperty property,
                                             final Class<? extends ModelPropertyService> service )
         {
-            return new EclipseWorkspacePathValidationService();
+            return new WorkspaceRelativePathValidationService();
         }
     }
     
