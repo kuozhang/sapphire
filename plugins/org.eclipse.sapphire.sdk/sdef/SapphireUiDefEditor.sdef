@@ -1040,6 +1040,7 @@
                                 <property-editor>ToolPaletteLabel</property-editor>
                                 <property-editor>ToolPaletteDesc</property-editor>
                                 <property-editor>Property</property-editor>
+                                <property-editor>ElementType</property-editor>
                                 <spacer></spacer>
                                 <property-editor>Width</property-editor>
                                 <property-editor>Height</property-editor>

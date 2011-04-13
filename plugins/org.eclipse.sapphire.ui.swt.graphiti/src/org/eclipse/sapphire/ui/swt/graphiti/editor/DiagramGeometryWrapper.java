@@ -25,11 +25,9 @@ import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
+import org.eclipse.sapphire.ui.diagram.editor.IdUtil;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
 import org.eclipse.sapphire.ui.diagram.geometry.IBendPoint;
 import org.eclipse.sapphire.ui.diagram.geometry.IDiagramConnectionGeometry;
@@ -190,7 +188,7 @@ public class DiagramGeometryWrapper
 		for (IDiagramNodeGeometry node : nodes)
 		{
 			String id = node.getNodeId().getContent();
-			DiagramNodePart nodePart = getNodePart(id);
+			DiagramNodePart nodePart = IdUtil.getNodePart(this.diagramPart, id);
 			if (nodePart != null)
 			{
 				int x = node.getX().getContent() != null ? node.getX().getContent() : -1;
@@ -203,7 +201,7 @@ public class DiagramGeometryWrapper
 				for (IDiagramConnectionGeometry connBend : connList)
 				{
 					String connId = connBend.getConnectionId().getContent();
-					DiagramConnectionPart connPart = getConnectionPart(nodePart, connId);
+					DiagramConnectionPart connPart = IdUtil.getConnectionPart(nodePart, connId);
 					if (connPart != null)
 					{
 						ModelElementList<IBendPoint> bps = connBend.getConnectionBendpoints();
@@ -222,7 +220,7 @@ public class DiagramGeometryWrapper
 		for (IDiagramConnectionGeometry connBend : connList)
 		{
 			String connId = connBend.getConnectionId().getContent();
-			DiagramConnectionPart connPart = getConnectionPart(connId);
+			DiagramConnectionPart connPart = IdUtil.getConnectionPart(this.diagramPart, connId);
 			if (connPart != null)
 			{
 				ModelElementList<IBendPoint> bps = connBend.getConnectionBendpoints();
@@ -243,7 +241,7 @@ public class DiagramGeometryWrapper
 		{
 			DiagramNodePart nodePart = it.next();
 			Bounds bounds = this.nodeGeometries.get(nodePart);
-			String id = nodePart.getInstanceId();
+			String id = IdUtil.computeNodeId(nodePart);
 			
 			if (bounds != null && id != null)
 			{
@@ -270,58 +268,6 @@ public class DiagramGeometryWrapper
 		addConnectionBenpointsToModel(this.connectionBendpoints, 
 				this.geometryModel.getDiagramConnectionGeometries());
 		this.geometryModel.resource().save();
-	}
-
-	private DiagramNodePart getNodePart(String nodeId)
-	{
-		for (DiagramNodeTemplate nodeTemplate : this.diagramPart.getNodeTemplates())
-		{
-			for (DiagramNodePart nodePart : nodeTemplate.getDiagramNodes())
-			{
-				String nodeId2 = nodePart.getInstanceId();
-				if (nodeId != null && nodeId2 != null && nodeId.equals(nodeId2))
-				{
-					return nodePart;
-				}
-			}
-		}
-		return null;
-	}
-	
-	private DiagramConnectionPart getConnectionPart(String connId)
-	{
-		for (DiagramConnectionTemplate connTemplate : this.diagramPart.getConnectionTemplates())
-		{
-			for (DiagramConnectionPart connPart : connTemplate.getDiagramConnections(null))
-			{
-				String connId2 = connPart.getInstanceId();
-				if (connId != null && connId2 != null && connId.equals(connId2))
-				{
-					return connPart;
-				}
-			}
-		}
-		return null;
-	}
-
-	private DiagramConnectionPart getConnectionPart(DiagramNodePart nodePart, String connId)
-	{
-		DiagramNodeTemplate nodeTemplate = nodePart.getDiagramNodeTemplate();
-		DiagramEmbeddedConnectionTemplate connTemplate = 
-			nodeTemplate.getEmbeddedConnectionTemplate();
-		if (connTemplate != null)
-		{
-			List<DiagramConnectionPart> connParts = connTemplate.getDiagramConnections(nodePart.getLocalModelElement());
-			for (DiagramConnectionPart connPart : connParts)
-			{
-				String connId2 = connPart.getInstanceId();
-				if (connId != null && connId2 != null && connId.equals(connId2))
-				{
-					return connPart;
-				}				
-			}
-		}
-		return null;
 	}
 
 	private HashMap<DiagramConnectionPart, List<Point>> getConnectionBenpointsMap(DiagramConnectionPart connPart, boolean create)
@@ -359,7 +305,7 @@ public class DiagramGeometryWrapper
 		{
 			DiagramConnectionPart connPart = connIt.next();
 			List<Point> bps = connBendpointsMap.get(connPart);
-			String id = connPart.getInstanceId();
+			String id = IdUtil.computeConnectionId(connPart);
 			
 			if (bps != null && id != null)
 			{
@@ -372,8 +318,7 @@ public class DiagramGeometryWrapper
 					pt2.setY(pt.getY());
 				}
 			}
-		}
-		
+		}		
 	}
-	
+		
 }
