@@ -18,6 +18,7 @@
   <ol type="A">
     <li><a href="#ref">ReferenceValue Improvements</a></li>
     <li><a href="#folding">Folding XML Element Binding</a></li>
+    <li><a href="#project-relative">Project Relative Paths</a></li>
   </ol>
   <li><a href="#ui">UI</a></li>
   <ol type="A">
@@ -122,6 +123,40 @@ will automatically transform into the first.</p>
 
 <p>Set params attribute to the name of the folding element. Take care not to
 apply this binding to more than one child element in a given parent.</p>
+
+<h2><a name="project-relative">Project Relative Paths</a></h2>
+
+<p>Similar to the existing @WorkspaceRelativePath annotation, you can now use 
+@ProjectRelativePath annotation on IPath value properties in order to gain validation,
+browse dialog and jump action (ctrl+click on path to open file). For this feature to work, the
+model must be based on a resource contained in a project.</p>
+
+<p style="margin-left: 20px;"><b>Example</b><p>
+
+<pre class="source-code"><code>// *** WorkspaceRelativePath ***
+    
+@Type( base = IPath.class )
+@WorkspaceRelativePath
+@MustExist
+    
+ValueProperty PROP_WORKSPACE_RELATIVE_PATH = new ValueProperty( TYPE, "WorkspaceRelativePath" );
+    
+Value&lt;IPath> getWorkspaceRelativePath();
+void setWorkspaceRelativePath( String value );
+void setWorkspaceRelativePath( IPath value );
+    
+// *** ProjectRelativePath ***
+    
+@Type( base = IPath.class )
+@ProjectRelativePath
+@MustExist
+    
+ValueProperty PROP_PROJECT_RELATIVE_PATH = new ValueProperty( TYPE, "ProjectRelativePath" );
+    
+Value&lt;IPath> getProjectRelativePath();
+void setProjectRelativePath( String value );
+void setProjectRelativePath( IPath value );</code></pre>
+
 
 <h2><a name="html">HTML Content Presentation</a></h2>
 
