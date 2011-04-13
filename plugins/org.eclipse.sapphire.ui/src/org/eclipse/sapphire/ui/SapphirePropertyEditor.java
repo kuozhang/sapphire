@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Greg Amerson - [342656] read.only rendering hint is not parsed as Boolean 
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -168,7 +169,8 @@ public final class SapphirePropertyEditor
                 name.equals( HINT_PREFER_COMBO ) ||
                 name.equals( HINT_PREFER_RADIO_BUTTONS ) ||
                 name.equals( HINT_PREFER_VERTICAL_RADIO_BUTTONS ) ||
-                name.equals( HINT_EXPAND_VERTICALLY ) )
+                name.equals( HINT_EXPAND_VERTICALLY ) || 
+                name.equals( HINT_READ_ONLY ) )
             {
                 parsedValue = Boolean.parseBoolean( valueString );
             }
