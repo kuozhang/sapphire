@@ -47,19 +47,27 @@ public interface IDiagramConnectionDef
 	
     // *** Id ***
     
-    @Label( standard = "ID" )
-    @XmlBinding( path = "id" )
     @NonNullValue
     
-    ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
+    ValueProperty PROP_ID = new ValueProperty( TYPE, ISapphirePartDef.PROP_ID );
     
-    Value<String> getId();
-    void setId( String value );
+    
+    // *** ImplicitConnection ***
+    
+    @Type( base = Boolean.class )
+    @Label( standard = "Implicit Connection" )
+    @XmlBinding( path = "implicit-connection" )
+    @DefaultValue( text = "false" )
+
+    ValueProperty PROP_IMPLICIT_CONNECTION = new ValueProperty( TYPE, "ImplicitConnection" );
+    
+    Value<Boolean> isImplicitConnection();
+    void setImplicitConnection( String value );
+    void setImplicitConnection( Boolean value );
 
     // *** ToolPaletteLabel ***
     
     @Label( standard = "tool palette label" )
-    @NonNullValue
     @Localizable
     @XmlBinding( path = "tool-palette-label" )
     

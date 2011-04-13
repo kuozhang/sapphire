@@ -55,8 +55,6 @@ public interface IDiagramImageDecoratorDef
     
     Value<Function> getVisibleWhen();
     void setVisibleWhen( String value );
-    void setVisibleWhen( Function value );
-    
-    
+    void setVisibleWhen( Function value );        
 	
 }

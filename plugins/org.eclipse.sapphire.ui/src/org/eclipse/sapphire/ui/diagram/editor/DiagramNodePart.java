@@ -252,6 +252,11 @@ public class DiagramNodePart extends SapphirePart
 		return this.labelProperty != null;
 	}
 	
+	public String getNodeTypeId()
+	{
+		return this.definition.getId().getContent();
+	}
+	
 	public String getInstanceId()
 	{
         String id = null;

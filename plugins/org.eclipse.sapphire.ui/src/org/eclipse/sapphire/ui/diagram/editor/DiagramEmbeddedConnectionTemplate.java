@@ -35,9 +35,9 @@ import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -50,7 +50,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
 	private ModelElementListener modelElementListener;
 	private ModelPath endpointPath;
 		
-	public DiagramEmbeddedConnectionTemplate(IDiagramConnectionBindingDef connBindingDef)
+	public DiagramEmbeddedConnectionTemplate(IDiagramExplicitConnectionBindingDef connBindingDef)
 	{
 		super(connBindingDef);
 	}
@@ -127,34 +127,28 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     @Override
     public boolean canCreateNewConnection(DiagramNodePart srcNode, DiagramNodePart targetNode)
     {    
-    	// We need to be able to identify the source and target node by their instance id
-    	// before we allow creation of connections between them
-    	if (srcNode.getInstanceId() != null && srcNode.getInstanceId().length() > 0
-    			&& targetNode.getInstanceId() != null && targetNode.getInstanceId().length() > 0)
+    	IModelElement srcNodeModel = srcNode.getLocalModelElement();
+    	
+    	// check the source node type
+    	ModelElementType srcNodeType = srcNodeModel.getModelElementType();
+    	ModelElementType desiredsrcNodeType = this.nodeTemplate.getNodeType();
+    	
+    	if (!srcNodeType.equals(desiredsrcNodeType))
     	{
-	    	IModelElement srcNodeModel = srcNode.getLocalModelElement();
-	    	
-	    	// check the source node type
-	    	ModelElementType srcNodeType = srcNodeModel.getModelElementType();
-	    	ModelElementType desiredsrcNodeType = this.nodeTemplate.getNodeType();
-	    	
-	    	if (!srcNodeType.equals(desiredsrcNodeType))
-	    	{
-	    		return false;
-	    	}
-	    	
-	    	// check the target node type
-	    	ModelElementType targetType = targetNode.getLocalModelElement().getModelElementType();
-	    	
-	    	ModelProperty connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);    	
-	        ModelElementType connType = connProp.getType();
-	        ModelProperty endpointProp = 
-	        	connType.getProperty(this.bindingDef.getEndpoint2().element().getProperty().getContent());
-	        if (endpointProp.getType() == null && endpointProp.hasAnnotation(Reference.class))
-	        {
-	        	return endpointProp.getAnnotation(Reference.class).target().isAssignableFrom(targetType.getModelElementClass());
-	        }
+    		return false;
     	}
+    	
+    	// check the target node type
+    	ModelElementType targetType = targetNode.getLocalModelElement().getModelElementType();
+    	
+    	ModelProperty connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);    	
+        ModelElementType connType = connProp.getType();
+        ModelProperty endpointProp = 
+        	connType.getProperty(this.bindingDef.getEndpoint2().element().getProperty().getContent());
+        if (endpointProp.getType() == null && endpointProp.hasAnnotation(Reference.class))
+        {
+        	return endpointProp.getAnnotation(Reference.class).target().isAssignableFrom(targetType.getModelElementClass());
+        }
     	return false;
     }
         
@@ -208,13 +202,20 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     	Value<Function> endpointFunc = endpointDef.getValue();
     	FunctionResult endpointFuncResult = getNodeReferenceFunction(targetNode, endpointFunc, 
     								this.bindingDef.adapt( LocalizationService.class ));
+    	
+    	DiagramConnectionPart connPart = null;
     	if (endpointFuncResult != null)
     	{
-	    	setModelProperty(newEndpoint, endpointProperty, endpointFuncResult.value());
-	    	endpointFuncResult.dispose();
+    		String endpointVal = (String)endpointFuncResult.value();
+    		endpointFuncResult.dispose();
+    		    		
+    		if (endpointVal == null || endpointVal.length() == 0)
+    		{
+    			endpointVal = IdUtil.computeNodeId(targetNode);
+    		}
+	    	setModelProperty(newEndpoint, endpointProperty, endpointVal);	 
+	    	connPart = createNewConnectionPart(newEndpoint, srcNodeModel);
     	}
-    	
-		DiagramConnectionPart connPart = createNewConnectionPart(newEndpoint, srcNodeModel);
     	
     	return connPart;
     }
@@ -229,7 +230,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
 		addConnectionPart(srcNodeElement, connPart);
     	return connPart;
     }
-    
+        
     public void addModelListener(IModelElement srcNodeModel)
     {
     	srcNodeModel.addListener(this.modelPropertyListener, this.propertyName);

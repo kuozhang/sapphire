@@ -18,8 +18,8 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -33,7 +33,7 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
 	private FunctionResult endpointFunctionResult;
 	private IDiagramConnectionEndpointBindingDef endpointDef;
 	
-	public DiagramEmbeddedConnectionPart(IDiagramConnectionBindingDef connBindingDef, IModelElement srcNodeModel, ModelPath endpointPath)
+	public DiagramEmbeddedConnectionPart(IDiagramExplicitConnectionBindingDef connBindingDef, IModelElement srcNodeModel, ModelPath endpointPath)
 	{
 		this.bindingDef = connBindingDef;
 		this.srcNodeModel = srcNodeModel;

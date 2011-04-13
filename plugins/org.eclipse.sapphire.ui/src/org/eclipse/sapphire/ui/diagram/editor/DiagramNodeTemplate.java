@@ -32,8 +32,8 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramDropActionHandler;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 
@@ -61,6 +61,7 @@ public class DiagramNodeTemplate extends SapphirePart
 	private IModelElement modelElement;	
 	private String propertyName;
 	private ListProperty modelProperty;
+	private Class<?> modelElementType;
 	private String toolPaletteLabel;
 	private String toolPaletteDesc;
 	private DiagramEmbeddedConnectionTemplate embeddedConnTemplate;
@@ -96,6 +97,8 @@ public class DiagramNodeTemplate extends SapphirePart
         
         this.propertyName = this.definition.getProperty().getContent();
         this.modelProperty = (ListProperty)resolve(this.modelElement, this.propertyName);
+        this.modelElementType = this.definition.getElementType().resolve();
+        
         this.nodePartListener = new SapphireDiagramPartListener() 
         {
         	@Override
@@ -108,23 +111,16 @@ public class DiagramNodeTemplate extends SapphirePart
     	ModelElementList<?> list = this.modelElement.read(this.modelProperty);
         for( IModelElement listEntryModelElement : list )
         {
-        	createNewNodePart(listEntryModelElement);
+        	if (this.modelElementType == null || this.modelElementType.isAssignableFrom( listEntryModelElement.getClass()))
+        	{
+        		createNewNodePart(listEntryModelElement);
+        	}
         }
 
         // handle drop action
         this.dropAction = getAction("Sapphire.Diagram.Drop");
         this.dropActionHandler = (SapphireDiagramDropActionHandler)this.dropAction.getFirstActiveHandler();
 
-        // handle embedded connections
-        if (!this.definition.getEmbeddedConnections().isEmpty())
-        {
-        	IDiagramConnectionBindingDef embeddedConnDef = 
-        				this.definition.getEmbeddedConnections().get( 0 );
-        	this.embeddedConnTemplate = new DiagramEmbeddedConnectionTemplate(embeddedConnDef);
-        	IDiagramConnectionDef connDef = this.diagramEditor.getDiagramConnectionDef(embeddedConnDef.getConnectionId().getContent());
-        	this.embeddedConnTemplate.init(this, this.modelElement, connDef, Collections.<String,String>emptyMap());
-        }
-        
         // Add model property listener
         this.modelPropertyListener = new ModelPropertyListener()
         {
@@ -137,6 +133,23 @@ public class DiagramNodeTemplate extends SapphirePart
         addModelListener();        
     }
     
+	/*
+	 * We need to initialize all the node parts before we can initialize embedded connections.
+	 * Connections between "anonymous" nodes are represented using node index based mechanisms.
+	 */
+	public void initEmbeddedConnections()
+	{
+        // handle embedded connections
+        if (!this.definition.getEmbeddedConnections().isEmpty())
+        {
+        	IDiagramExplicitConnectionBindingDef embeddedConnDef = 
+        				this.definition.getEmbeddedConnections().get( 0 );
+        	this.embeddedConnTemplate = new DiagramEmbeddedConnectionTemplate(embeddedConnDef);
+        	IDiagramConnectionDef connDef = this.diagramEditor.getDiagramConnectionDef(embeddedConnDef.getConnectionId().getContent());
+        	this.embeddedConnTemplate.init(this, this.modelElement, connDef, Collections.<String,String>emptyMap());
+        }
+	}
+	
     public IDiagramNodeDef getDefinition()
     {
     	return this.definition;
@@ -160,6 +173,11 @@ public class DiagramNodeTemplate extends SapphirePart
     public IDiagramImageChoice getToolPaletteImage()
     {
     	return this.definition.getToolPaletteImage().element();
+    }
+    
+    public String getNodeTypeId()
+    {
+    	return this.definition.getId().getContent();
     }
     
     @Override
@@ -230,7 +248,19 @@ public class DiagramNodeTemplate extends SapphirePart
     {
     	final IModelElement element = event.getModelElement();
     	final ModelProperty property = event.getProperty();
-    	ModelElementList<?> newList = (ModelElementList<?>)element.read(property);
+    	ModelElementList<?> tempList = (ModelElementList<?>)element.read(property);
+    	
+    	// filter the list property with specified element type
+    	List<IModelElement> newList = new ArrayList<IModelElement>();
+		newList = new ArrayList<IModelElement>();    	
+    	for (IModelElement ele : tempList)
+    	{
+    		if (this.modelElementType == null || this.modelElementType.isAssignableFrom(ele.getClass()))
+    		{
+    			newList.add(ele);
+    		}
+    	}
+	
     	if (newList.size() != getDiagramNodes().size())
     	{
     		List<DiagramNodePart> nodeParts = getDiagramNodes();

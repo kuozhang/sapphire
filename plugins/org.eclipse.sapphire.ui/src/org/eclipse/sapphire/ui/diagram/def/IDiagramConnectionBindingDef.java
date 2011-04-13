@@ -17,8 +17,6 @@ import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
-import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -28,10 +26,6 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
-
-@Label( standard = "diagram connection binding" )
-@Image( small = "org.eclipse.sapphire.ui/images/objects/part.gif" )
-@GenerateImpl
 
 public interface IDiagramConnectionBindingDef 
 
@@ -83,23 +77,5 @@ public interface IDiagramConnectionBindingDef
     ElementProperty PROP_LABEL = new ElementProperty( TYPE, "Label" );
     
     ModelElementHandle<IDiagramLabelDef> getLabel();
-
-    // *** Endpoint1 ***
-    
-    @Type( base = IDiagramConnectionEndpointBindingDef.class )
-    @XmlBinding( path = "endpoint1" )
-
-    ElementProperty PROP_ENDPOINT_1 = new ElementProperty( TYPE, "Endpoint1" );
-    
-    ModelElementHandle<IDiagramConnectionEndpointBindingDef> getEndpoint1();
-
-    // *** Endpoint2 ***
-    
-    @Type( base = IDiagramConnectionEndpointBindingDef.class )
-    @XmlBinding( path = "endpoint2" )
-
-    ElementProperty PROP_ENDPOINT_2 = new ElementProperty( TYPE, "Endpoint2" );
-    
-    ModelElementHandle<IDiagramConnectionEndpointBindingDef> getEndpoint2();
 
 }

@@ -30,9 +30,9 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramLabelDef;
 
 /**
@@ -42,7 +42,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramLabelDef;
 public class DiagramConnectionPart extends SapphirePart 
 {
 	protected DiagramConnectionTemplate connectionTemplate;
-	protected IDiagramConnectionBindingDef bindingDef;
+	protected IDiagramExplicitConnectionBindingDef bindingDef;
 	protected IDiagramConnectionDef definition;
 	protected IModelElement modelElement;
 	protected ModelPath endpoint1Path;
@@ -62,7 +62,7 @@ public class DiagramConnectionPart extends SapphirePart
 		
 	public DiagramConnectionPart() {}
 	
-	public DiagramConnectionPart(IDiagramConnectionBindingDef bindingDef, ModelPath endpoint1Path, ModelPath endpoint2Path)
+	public DiagramConnectionPart(IDiagramExplicitConnectionBindingDef bindingDef, ModelPath endpoint1Path, ModelPath endpoint2Path)
 	{				
 		this.bindingDef = bindingDef;
 		this.endpoint1Path = endpoint1Path;
@@ -218,6 +218,11 @@ public class DiagramConnectionPart extends SapphirePart
     	notifyConnectionUpdate();
     }
     
+    public String getConnectionTypeId()
+    {
+    	return this.definition.getId().getContent();
+    }
+    
     public String getInstanceId()
 	{
         String id = null;
@@ -300,6 +305,15 @@ public class DiagramConnectionPart extends SapphirePart
 			}
 			ReferenceValue<?,?> refVal = (ReferenceValue<?,?>)valObj;
 			Object targetObj = refVal.resolve();
+			if (targetObj == null)
+			{
+				if (refVal.getText() != null)
+				{
+					SapphireDiagramEditorPart diagramEditorPart = this.getDiagramConnectionTemplate().getDiagramEditor();
+					DiagramNodePart targetNode = IdUtil.getNodePart(diagramEditorPart, refVal.getText());
+					targetObj = targetNode.getLocalModelElement();
+				}
+			}
 			return (IModelElement)targetObj;
 		}
 		else

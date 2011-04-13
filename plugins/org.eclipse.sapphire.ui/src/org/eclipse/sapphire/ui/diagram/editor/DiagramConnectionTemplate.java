@@ -38,9 +38,9 @@ import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -66,7 +66,7 @@ public class DiagramConnectionTemplate extends SapphirePart
 	
 	protected SapphireDiagramEditorPart diagramEditor;
 	protected IDiagramConnectionDef definition;
-	protected IDiagramConnectionBindingDef bindingDef;
+	protected IDiagramExplicitConnectionBindingDef bindingDef;
 	protected IModelElement modelElement;
 	protected String propertyName;
 	private ListProperty modelProperty;
@@ -84,7 +84,9 @@ public class DiagramConnectionTemplate extends SapphirePart
 	
 	private List<DiagramConnectionPart> diagramConnections;
 	
-	public DiagramConnectionTemplate(IDiagramConnectionBindingDef bindingDef)
+	public DiagramConnectionTemplate() {}
+	
+	public DiagramConnectionTemplate(IDiagramExplicitConnectionBindingDef bindingDef)
 	{
 		this.bindingDef = bindingDef;
 	}
@@ -192,6 +194,11 @@ public class DiagramConnectionTemplate extends SapphirePart
     	return this.bindingDef.getConnectionId().getContent();
     }
     
+    public String getConnectionTypeId()
+    {
+    	return this.definition.getId().getContent();
+    }
+    
     public List<DiagramConnectionPart> getDiagramConnections(IModelElement connListParent)
     {
     	if (connListParent == null || getConnectionType() == ConnectionType.OneToOne)
@@ -225,6 +232,18 @@ public class DiagramConnectionTemplate extends SapphirePart
 				{
 					ReferenceValue<?,?> reference = (ReferenceValue<?,?>)valObj;
 					IModelElement model = (IModelElement)reference.resolve();
+					if (model == null)
+					{
+						if (reference.getText() != null)
+						{
+							SapphireDiagramEditorPart diagramEditorPart = getDiagramEditor();
+							DiagramNodePart targetNode = IdUtil.getNodePart(diagramEditorPart, reference.getText());
+							if (targetNode != null)
+							{
+								model = targetNode.getLocalModelElement();
+							}
+						}						
+					}
 					if (srcNodeModel == model)
 					{
 						return listEntryModelElement;
@@ -238,25 +257,19 @@ public class DiagramConnectionTemplate extends SapphirePart
     public boolean canCreateNewConnection(DiagramNodePart srcNode, DiagramNodePart targetNode)
     {
     	boolean canCreate = false;
-    	// We need to be able to identify the source and target node by their instance id
-    	// before we allow creation of connections between them
-    	if (srcNode.getInstanceId() != null && srcNode.getInstanceId().length() > 0
-    			&& targetNode.getInstanceId() != null && targetNode.getInstanceId().length() > 0)
-    	{
-	    	ModelElementType srcType = srcNode.getModelElement().getModelElementType();
-	    	ModelElementType targetType = targetNode.getModelElement().getModelElementType();
-	    	
-	        if (this.endpoint1Property.getType() == null && this.endpoint1Property.hasAnnotation(Reference.class))
-	        {
-	        	canCreate = this.endpoint1Property.getAnnotation(Reference.class).target().isAssignableFrom(srcType.getModelElementClass());
-	        	if (!canCreate)
-	        		return false;
-	        }
-	        if (this.endpoint2Property.getType() == null && this.endpoint2Property.hasAnnotation(Reference.class))
-	        {
-	        	canCreate = this.endpoint2Property.getAnnotation(Reference.class).target().isAssignableFrom(targetType.getModelElementClass());
-	        }
-    	}
+    	ModelElementType srcType = srcNode.getModelElement().getModelElementType();
+    	ModelElementType targetType = targetNode.getModelElement().getModelElementType();
+    	
+        if (this.endpoint1Property.getType() == null && this.endpoint1Property.hasAnnotation(Reference.class))
+        {
+        	canCreate = this.endpoint1Property.getAnnotation(Reference.class).target().isAssignableFrom(srcType.getModelElementClass());
+        	if (!canCreate)
+        		return false;
+        }
+        if (this.endpoint2Property.getType() == null && this.endpoint2Property.hasAnnotation(Reference.class))
+        {
+        	canCreate = this.endpoint2Property.getAnnotation(Reference.class).target().isAssignableFrom(targetType.getModelElementClass());
+        }
     	return canCreate;
     }
     
@@ -332,6 +345,10 @@ public class DiagramConnectionTemplate extends SapphirePart
     		endpoint1Value = (String)srcFuncResult.value();
     		srcFuncResult.dispose();    		
     	}
+		if (endpoint1Value == null || endpoint1Value.length() == 0)
+		{
+			endpoint1Value = IdUtil.computeNodeId(srcNode);
+		}
     	
     	// get the serialized value of endpoint2
     	String endpoint2Value = null;
@@ -345,6 +362,10 @@ public class DiagramConnectionTemplate extends SapphirePart
     		endpoint2Value = (String)targetFuncResult.value();
     		targetFuncResult.dispose();
     	}
+		if (endpoint2Value == null || endpoint2Value.length() == 0)
+		{
+			endpoint2Value = IdUtil.computeNodeId(targetNode);
+		}
     	
     	if (endpoint1Value != null && endpoint2Value != null)
     	{

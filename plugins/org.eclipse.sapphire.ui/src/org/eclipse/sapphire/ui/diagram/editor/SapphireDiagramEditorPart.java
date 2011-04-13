@@ -25,6 +25,7 @@ import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramPageDef;
@@ -73,15 +74,23 @@ public class SapphireDiagramEditorPart extends SapphirePart
         	this.nodeTemplates.add(nodeTemplate);
         	nodeTemplate.addTemplateListener(this.nodeTemplateListener);
         	
+        }
+        
+        // Need to initialize the embedded connections after all the diagram node parts are created
+        // For connections between "anonymous" nodes, we'd represent connections using node index based
+        // mechanism.
+        for (DiagramNodeTemplate nodeTemplate : this.nodeTemplates)
+        {
+        	nodeTemplate.initEmbeddedConnections();
         	if (nodeTemplate.getEmbeddedConnectionTemplate() != null)
         	{
         		nodeTemplate.getEmbeddedConnectionTemplate().addTemplateListener(this.connTemplateListener);
         	}
         }
-                
+        
         this.connectionTemplates = new ArrayList<DiagramConnectionTemplate>();
-        ModelElementList<IDiagramConnectionBindingDef> connectionBindings = this.diagramPageDef.getDiagramConnectionBindingDefs();
-        for (IDiagramConnectionBindingDef connBinding : connectionBindings)
+        ModelElementList<IDiagramExplicitConnectionBindingDef> connectionBindings = this.diagramPageDef.getDiagramConnectionBindingDefs();
+        for (IDiagramExplicitConnectionBindingDef connBinding : connectionBindings)
         {
         	IDiagramConnectionDef connDef = getDiagramConnectionDef(connBinding.getConnectionId().getContent());
         	DiagramConnectionTemplate connectionTemplate = new DiagramConnectionTemplate(connBinding);

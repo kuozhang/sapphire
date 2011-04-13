@@ -17,6 +17,7 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
@@ -25,6 +26,7 @@ import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -46,6 +48,12 @@ public interface IDiagramNodeDef
 	
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramNodeDef.class );
+	
+    // *** Id ***
+    
+    @NonNullValue
+    
+    ValueProperty PROP_ID = new ValueProperty( TYPE, ISapphirePartDef.PROP_ID );
 	
     // *** InstanceId ***
     
@@ -103,6 +111,17 @@ public interface IDiagramNodeDef
     
     Value<String> getProperty();
     void setProperty( String property );
+    
+    // *** ElementType ***
+    
+    @Reference( target = Class.class )
+    @Label( standard = "model element type" )
+    @XmlBinding( path = "model-element-type" )
+    
+    ValueProperty PROP_ELEMENT_TYPE = new ValueProperty( TYPE, "ElementType" );
+    
+    ReferenceValue<String,Class<?>> getElementType();
+    void setElementType( String type );
     
     // *** Resizable ***
     
@@ -179,14 +198,13 @@ public interface IDiagramNodeDef
     
     ModelElementList<IDiagramImageDecoratorDef> getImageDecorators();
     
-
     // *** EmbeddedConnections ***
     
-    @Type( base = IDiagramConnectionBindingDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "connection-binding", type = IDiagramConnectionBindingDef.class ) )
+    @Type( base = IDiagramExplicitConnectionBindingDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "connection-binding", type = IDiagramExplicitConnectionBindingDef.class ) )
 
     ListProperty PROP_EMBEDDED_CONNECTIONS = new ListProperty( TYPE, "EmbeddedConnections" );
     
-    ModelElementList<IDiagramConnectionBindingDef> getEmbeddedConnections();
+    ModelElementList<IDiagramExplicitConnectionBindingDef> getEmbeddedConnections();
             
 }
