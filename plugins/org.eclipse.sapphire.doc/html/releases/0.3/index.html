@@ -127,9 +127,10 @@ apply this binding to more than one child element in a given parent.</p>
 <h2><a name="project-relative">Project Relative Paths</a></h2>
 
 <p>Similar to the existing @WorkspaceRelativePath annotation, you can now use 
-@ProjectRelativePath annotation on IPath value properties in order to gain validation,
-browse dialog and jump action (ctrl+click on path to open file). For this feature to work, the
-model must be based on a resource contained in a project.</p>
+@ProjectRelativePath annotation to support paths relative to the
+root of the context project. Use this annotation in conjunction with @MustExist, @ValidFileSystemResourceType
+and @ValidFileExtensions annotations to gain validation, browse dialog and jump action (ctrl+click on path 
+to open file). For this feature to work, the model must be based on a resource contained in a project.</p>
 
 <p style="margin-left: 20px;"><b>Example</b><p>
 

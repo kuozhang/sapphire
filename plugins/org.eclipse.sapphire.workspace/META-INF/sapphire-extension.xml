@@ -21,7 +21,7 @@
     </model-property-service>
     <model-property-service>
         <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
-        <factory>org.eclipse.sapphire.workspace.internal.ProjectPathValidationService$Factory</factory>
+        <factory>org.eclipse.sapphire.workspace.internal.ProjectRelativePathValidationService$Factory</factory>
         <id>Sapphire.ProjectRelativePathValidationService</id>
     </model-property-service>
 </extension>

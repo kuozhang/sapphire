@@ -33,7 +33,7 @@ import org.eclipse.sapphire.workspace.ProjectRelativePath;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ProjectPathValidationService
+public final class ProjectRelativePathValidationService
 
     extends PathValidationService
     
@@ -125,7 +125,7 @@ public final class ProjectPathValidationService
                                             final ModelProperty property,
                                             final Class<? extends ModelPropertyService> service )
         {
-            return new ProjectPathValidationService();
+            return new ProjectRelativePathValidationService();
         }
     }
     
@@ -136,7 +136,7 @@ public final class ProjectPathValidationService
         
         static
         {
-            initializeMessages( ProjectPathValidationService.class.getName(), LocalResources.class );
+            initializeMessages( ProjectRelativePathValidationService.class.getName(), LocalResources.class );
         }
     }
     
