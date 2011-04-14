@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.editor.views.masterdetails;
 
-import static org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage.PREFS_CONTENT_TREE_STATE;
+import static org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage.PREFS_CONTENT_OUTLINE;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -384,9 +384,9 @@ public final class MasterDetailsContentTree
             
             Preferences prefs = this.page.getInstancePreferences( false );
             
-            if( prefs != null && prefs.nodeExists( PREFS_CONTENT_TREE_STATE ) )
+            if( prefs != null && prefs.nodeExists( PREFS_CONTENT_OUTLINE ) )
             {
-                prefs = prefs.node( PREFS_CONTENT_TREE_STATE );
+                prefs = prefs.node( PREFS_CONTENT_OUTLINE );
                 
                 for( MasterDetailsContentNode node : this.root.getChildNodes() )
                 {
@@ -467,7 +467,7 @@ public final class MasterDetailsContentTree
     {
         try
         {
-            final Preferences prefs = this.page.getInstancePreferences( true ).node( PREFS_CONTENT_TREE_STATE );
+            final Preferences prefs = this.page.getInstancePreferences( true ).node( PREFS_CONTENT_OUTLINE );
             
             for( String nodeLabel : prefs.childrenNames() )
             {

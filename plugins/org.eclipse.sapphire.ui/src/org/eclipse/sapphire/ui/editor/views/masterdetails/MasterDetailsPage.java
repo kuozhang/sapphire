@@ -102,7 +102,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
@@ -137,13 +139,15 @@ public final class MasterDetailsPage
     extends SapphireEditorFormPage
     
 {
-    static final String PREFS_CONTENT_TREE_STATE = "ContentTreeState"; //$NON-NLS-1$
-    private static final String PREFS_VISIBLE = "Visible"; //$NON-NLS-1$
+    static final String PREFS_CONTENT_OUTLINE = "ContentTreeState";
+    private static final String PREFS_VISIBLE = "Visible";
+    private static final String PREFS_RATIO = "Ratio";
     
     private IEditorPageDef definition;
     private final MasterDetailsContentTree contentTree;
     private RootSection mainSection;
     private ContentOutline contentOutlinePage;
+    private IPartListener2 partListener;
     
     public MasterDetailsPage( final SapphireEditor editor,
                               final IModelElement rootModelElement,
@@ -365,6 +369,47 @@ public final class MasterDetailsPage
                 );
             }
         }
+        
+        this.partListener = new IPartListener2()
+        {
+            public void partActivated( final IWorkbenchPartReference partRef )
+            {
+            }
+
+            public void partBroughtToTop( final IWorkbenchPartReference partRef )
+            {
+            }
+
+            public void partClosed( final IWorkbenchPartReference partRef )
+            {
+                if( ! isDetailsMaximized() )
+                {
+                    setOutlineRatioCookie( MasterDetailsPage.this.mainSection.getOutlineRatio() );
+                }
+            }
+
+            public void partDeactivated( final IWorkbenchPartReference partRef )
+            {
+            }
+
+            public void partOpened( final IWorkbenchPartReference partRef )
+            {
+            }
+
+            public void partHidden( final IWorkbenchPartReference partRef )
+            {
+            }
+
+            public void partVisible( final IWorkbenchPartReference partRef )
+            {
+            }
+
+            public void partInputChanged( final IWorkbenchPartReference partRef )
+            {
+            }
+        };
+        
+        getSite().getPage().addPartListener( this.partListener );
     }
     
     public IContentOutlinePage getContentOutlinePage()
@@ -383,12 +428,12 @@ public final class MasterDetailsPage
         {
             Preferences prefs = getInstancePreferences( false );
             
-            if( prefs != null && prefs.nodeExists( PREFS_CONTENT_TREE_STATE ) )
+            if( prefs != null && prefs.nodeExists( PREFS_CONTENT_OUTLINE ) )
             {
-                prefs = prefs.node( PREFS_CONTENT_TREE_STATE );
-                final boolean contentTreeVisible = prefs.getBoolean( PREFS_VISIBLE, true );
+                prefs = prefs.node( PREFS_CONTENT_OUTLINE );
+                final boolean contentOutlineVisible = prefs.getBoolean( PREFS_VISIBLE, true );
                 
-                if( ! contentTreeVisible )
+                if( ! contentOutlineVisible )
                 {
                     return true;
                 }
@@ -408,8 +453,60 @@ public final class MasterDetailsPage
         
         try
         {
-            final Preferences prefs = getInstancePreferences( true ).node( PREFS_CONTENT_TREE_STATE );
+            final Preferences prefs = getInstancePreferences( true ).node( PREFS_CONTENT_OUTLINE );
             prefs.putBoolean( PREFS_VISIBLE, ! maximized );
+            prefs.flush();
+        }
+        catch( BackingStoreException e )
+        {
+            SapphireUiFrameworkPlugin.log( e );
+        }
+    }
+    
+    public double getOutlineRatio()
+    {
+        double contentOutlineRatio = 0.3d;
+        
+        try
+        {
+            Preferences prefs = getInstancePreferences( false );
+            
+            if( prefs != null && prefs.nodeExists( PREFS_CONTENT_OUTLINE ) )
+            {
+                prefs = prefs.node( PREFS_CONTENT_OUTLINE );
+                contentOutlineRatio = prefs.getDouble( PREFS_RATIO, 0.3d );
+            }
+        }
+        catch( BackingStoreException e )
+        {
+            SapphireUiFrameworkPlugin.log( e );
+        }
+        
+        if( contentOutlineRatio < 0 || contentOutlineRatio > 1 )
+        {
+            contentOutlineRatio = 0.3d;
+        }
+        
+        return contentOutlineRatio;
+    }
+    
+    public void setOutlineRatio( final Double ratio )
+    {
+        if( ratio < 0 || ratio > 1 )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        this.mainSection.setOutlineRatio( ratio );
+        setOutlineRatioCookie( ratio );
+    }
+    
+    private void setOutlineRatioCookie( final Double ratio )
+    {
+        try
+        {
+            final Preferences prefs = getInstancePreferences( true ).node( PREFS_CONTENT_OUTLINE );
+            prefs.putDouble( PREFS_RATIO, ratio );
             prefs.flush();
         }
         catch( BackingStoreException e )
@@ -779,6 +876,11 @@ public final class MasterDetailsPage
         {
             this.mainSection.dispose();
         }
+        
+        if( this.partListener != null )
+        {
+            getSite().getPage().removePartListener( this.partListener );
+        }
     }
     
     private static final class ContentOutlineFilteredTree
@@ -1028,14 +1130,15 @@ public final class MasterDetailsPage
         }
 
         @Override
-        public void createContent(IManagedForm managedForm) 
+        public void createContent( final IManagedForm managedForm ) 
         {
             super.createContent( managedForm );
-            this.sashForm.setWeights( new int[] { 3, 7 } );
+            
+            setOutlineRatio( MasterDetailsPage.this.getOutlineRatio() );
             
             try
             {
-                final Field field = this.detailsPart.getClass().getDeclaredField( "pageBook" ); //$NON-NLS-1$
+                final Field field = this.detailsPart.getClass().getDeclaredField( "pageBook" );
                 field.setAccessible( true );
                 this.detailsSectionControl = (Control) field.get( this.detailsPart );
             }
@@ -1080,6 +1183,27 @@ public final class MasterDetailsPage
         public void setDetailsMaximized( final boolean maximized )
         {
             this.sashForm.setMaximizedControl( maximized ? this.detailsSectionControl : null );
+        }
+        
+        public double getOutlineRatio()
+        {
+            final Control[] children = this.sashForm.getChildren();
+            
+            final int outline = children[ 0 ].getSize().x;
+            final int details = children[ 1 ].getSize().x;
+            final int total = outline + details;
+            final double ratio = ( (double) outline ) / ( (double) total );
+            
+            return ratio;
+        }
+        
+        public void setOutlineRatio( final double ratio )
+        {
+            final int total = Integer.MAX_VALUE;
+            final int outline = (int) ( total * ratio );
+            final int details = total - outline;
+            
+            this.sashForm.setWeights( new int[] { outline, details } );
         }
         
         public void dispose()
