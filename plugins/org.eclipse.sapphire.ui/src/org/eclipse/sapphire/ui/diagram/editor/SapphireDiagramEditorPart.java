@@ -152,7 +152,12 @@ public class SapphireDiagramEditorPart extends SapphirePart
     {
         return Collections.singleton( SapphireActionSystem.CONTEXT_DIAGRAM );
     }
-		
+	
+    public void handleSelectionEvent(SapphirePart sapphirePart)
+    {
+    	System.out.println("SELECION CHANGED");
+    }
+    
 	public DiagramNodePart getDiagramNodePart(IModelElement nodeElement)
 	{
 		if (nodeElement == null)
