@@ -52,6 +52,7 @@ public final class XmlDocumentSchemaParser
                                                   final String baseLocation )
     {
         final XmlDocumentSchema.Factory schema = new XmlDocumentSchema.Factory();
+        schema.setSchemaLocation( schemaLocation );
         parse( schema, schemaLocation, baseLocation );
         return schema.create();
     }
@@ -60,8 +61,6 @@ public final class XmlDocumentSchemaParser
                                final String schemaLocation,
                                final String baseLocation )
     {
-        schema.setSchemaLocation( schemaLocation );
-        
         final Element root = parseSchemaToDom( schemaLocation, baseLocation );
         
         if( root != null )
