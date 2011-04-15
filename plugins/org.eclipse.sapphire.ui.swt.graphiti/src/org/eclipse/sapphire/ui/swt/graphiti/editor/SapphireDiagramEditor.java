@@ -12,6 +12,7 @@
 
 package org.eclipse.sapphire.ui.swt.graphiti.editor;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -19,11 +20,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.gef.EditPart;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.IRemoveFeature;
@@ -43,8 +47,11 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.ui.editor.DiagramEditor;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.Bounds;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramPageDef;
@@ -58,6 +65,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProvider;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -147,28 +155,134 @@ public class SapphireDiagramEditor extends DiagramEditor
 	}
 	
 	@Override
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) 
-	{
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		// If not the active editor, ignore selection changed.
 		boolean editorIsActive = getSite().getPage().isPartVisible(this);
-		if (editorIsActive)
-		{
-			super.selectionChanged(part, selection);
-		}
-		else 
-		{
+		if (!editorIsActive) {
 			// Check if we are a page of the active multipage editor
 			IEditorPart activeEditor = getSite().getPage().getActiveEditor();
-			if (getSite().getPage().isPartVisible(activeEditor) && 
-					activeEditor instanceof MultiPageEditorPart)
-			{
-				MultiPageEditorPart me = (MultiPageEditorPart)activeEditor;
-				if (me.getActivePage() == 0)
-				{
-					updateActions(getSelectionActions());
+			if (activeEditor != null) {
+				// Check if the top level editor if it is active
+				editorIsActive = getSite().getPage().isPartVisible(activeEditor);
+				if (activeEditor instanceof MultiPageEditorPart) {
+					int activePage = ((MultiPageEditorPart) activeEditor).getActivePage();
+					if (activePage != 0) {
+						// Editor is active but the diagram sub editor is not
+						// its active page
+						editorIsActive = false;
+					}
 				}
 			}
 		}
+		if (editorIsActive) {
+
+			// long start = System.nanoTime();
+			// this is where we should check the selection source (part)
+			// * for CNF view the link flag must be obeyed
+			// this would however require a dependency to
+			// org.eclipse.ui.navigator
+//			if (part instanceof CommonNavigator) {
+//				if (!((CommonNavigator) part).isLinkingEnabled()) {
+//					return;
+//				}
+//			}
+			// useful selection ??
+			if (selection instanceof IStructuredSelection) {
+				IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+				List<PictogramElement> peList = new ArrayList<PictogramElement>();
+				// Collect all Pictogram Elements for all selected domain
+				// objects into one list
+				for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
+					Object object = iterator.next();
+					if (object instanceof EObject) {
+						// Find the Pictogram Elements for the given domain
+						// object via the standard link service
+						List<PictogramElement> referencingPes = Graphiti.getLinkService().getPictogramElements(
+								getDiagramTypeProvider().getDiagram(), (EObject) object);
+						if (referencingPes.size() > 0) {
+							peList.addAll(referencingPes);
+						}
+					} else {
+						// For non-EMF domain objects use the registered
+						// notification service for finding
+						PictogramElement[] relatedPictogramElements = getDiagramTypeProvider().getNotificationService()
+								.calculateRelatedPictogramElements(new Object[] { object });
+						for (int i = 0; i < relatedPictogramElements.length; i++) {
+							peList.add(relatedPictogramElements[i]);
+						}
+					}
+				}
+
+				// Do the selection in the diagram (in case there is something
+				// to select)
+				PictogramElement[] pes = null;
+				if (peList.size() > 0) {
+					pes = peList.toArray(new PictogramElement[peList.size()]);
+				}
+				if (pes != null && pes.length > 0) {
+					selectPictogramElements(pes);
+				}
+
+			}
+			updateActions(getSelectionActions());
+			
+			// Bug 339360 - MultiPage Editor's selectionProvider does not notify PropertySheet (edit) 
+			// bypass the selection provider
+			if (selection instanceof StructuredSelection) {
+				StructuredSelection structuredSelection = (StructuredSelection) selection;
+				Object firstElement = structuredSelection.getFirstElement();
+				EditPart editPart = null;
+				if (firstElement instanceof EditPart) {
+					editPart = (EditPart) firstElement;
+				} else if (firstElement instanceof IAdaptable) {
+					editPart = (EditPart) ((IAdaptable) firstElement).getAdapter(EditPart.class);
+				}
+				if (editPart != null && editPart.getModel() instanceof PictogramElement) {
+					
+					PictogramElement pe = (PictogramElement) editPart.getModel();
+					if (pe instanceof Diagram)
+					{
+						getDiagramEditorPart().handleSelectionEvent(getDiagramEditorPart());
+					}
+					else {
+						SapphireDiagramFeatureProvider sfp = (SapphireDiagramFeatureProvider)getDiagramTypeProvider().getFeatureProvider();
+						Object bo = sfp.getBusinessObjectForPictogramElement(pe);
+						
+						if (bo instanceof SapphirePart) {
+							getDiagramEditorPart().handleSelectionEvent((SapphirePart)bo);
+						}
+					}						
+				}
+				
+			}
+			
+		}
+		
 	}
+	
+//	@Override
+//	public void selectionChanged(IWorkbenchPart part, ISelection selection) 
+//	{
+//		boolean editorIsActive = getSite().getPage().isPartVisible(this);
+//		if (editorIsActive)
+//		{
+//			super.selectionChanged(part, selection);
+//		}
+//		else 
+//		{
+//			// Check if we are a page of the active multipage editor
+//			IEditorPart activeEditor = getSite().getPage().getActiveEditor();
+//			if (getSite().getPage().isPartVisible(activeEditor) && 
+//					activeEditor instanceof MultiPageEditorPart)
+//			{
+//				MultiPageEditorPart me = (MultiPageEditorPart)activeEditor;
+//				if (me.getActivePage() == 0)
+//				{
+//					updateActions(getSelectionActions());
+//				}
+//			}
+//		}
+//	}
 	
 	@Override
 	protected void setInput(IEditorInput input) 
