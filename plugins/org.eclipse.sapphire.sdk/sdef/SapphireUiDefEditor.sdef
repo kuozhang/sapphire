@@ -1039,6 +1039,18 @@
                                 <property-editor>InstanceId</property-editor>
                                 <property-editor>ToolPaletteLabel</property-editor>
                                 <property-editor>ToolPaletteDesc</property-editor>
+                                <with>
+                                    <property>ToolPaletteImage</property>
+                                    <label>Add Tool Palette Image</label>
+                                    <panel>
+                                        <key>IDiagramImageChoice</key>
+                                        <content>
+                                            <property-editor>ImageId</property-editor>
+                                            <property-editor>ImagePath</property-editor>
+                                        </content>
+                                    </panel>
+                                </with>
+                                <separator></separator>
                                 <property-editor>Property</property-editor>
                                 <property-editor>ElementType</property-editor>
                                 <spacer></spacer>
