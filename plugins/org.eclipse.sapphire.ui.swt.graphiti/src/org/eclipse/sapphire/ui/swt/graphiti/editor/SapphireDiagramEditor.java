@@ -60,6 +60,8 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
@@ -451,6 +453,15 @@ public class SapphireDiagramEditor extends DiagramEditor
 				{
 					addConnection(connPart, diagramGeometry);
 				}
+			}
+		}
+		
+		// Add Implicit connections
+		for (DiagramImplicitConnectionTemplate implicitConnTemplate : this.diagramPart.getImplicitConnectionTemplates())
+		{
+			for (DiagramImplicitConnectionPart implicitConn : implicitConnTemplate.getImplicitConnections())
+			{
+				addConnection(implicitConn, diagramGeometry);
 			}
 		}
 	}

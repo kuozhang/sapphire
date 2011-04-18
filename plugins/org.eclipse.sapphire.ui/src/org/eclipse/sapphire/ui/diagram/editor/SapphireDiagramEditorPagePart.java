@@ -33,6 +33,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramImplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 
 /**
@@ -46,10 +47,12 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     private List<IDiagramConnectionDef> connectionDefs;
     private List<DiagramNodeTemplate> nodeTemplates;
     private List<DiagramConnectionTemplate> connectionTemplates;
+    private List<DiagramImplicitConnectionTemplate> implicitConnectionTemplates;
     private NodeTemplateListener nodeTemplateListener;
     private ConnectionTemplateListener connTemplateListener;
     private PropertiesViewContributionManager propertiesViewContributionManager;
     private SapphirePart selection;
+    private ImplicitConnectionTemplateListener implicitConnTemplateListener;
 	    
     @Override
     protected void init()
@@ -69,6 +72,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 		
         this.nodeTemplateListener = new NodeTemplateListener();
         this.connTemplateListener = new ConnectionTemplateListener();
+        this.implicitConnTemplateListener = new ImplicitConnectionTemplateListener();
         
         this.nodeTemplates = new ArrayList<DiagramNodeTemplate>();
         ModelElementList<IDiagramNodeDef> nodeDefs = this.diagramPageDef.getDiagramNodeDefs();
@@ -94,7 +98,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         		nodeTemplate.getEmbeddedConnectionTemplate().addTemplateListener(this.connTemplateListener);
         	}
         }
-        
+                
         this.connectionTemplates = new ArrayList<DiagramConnectionTemplate>();
         ModelElementList<IDiagramExplicitConnectionBindingDef> connectionBindings = this.diagramPageDef.getDiagramConnectionBindingDefs();
         for (IDiagramExplicitConnectionBindingDef connBinding : connectionBindings)
@@ -104,6 +108,18 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         	connectionTemplate.init(this, this.modelElement, connDef, Collections.<String,String>emptyMap());
         	this.connectionTemplates.add(connectionTemplate);
         	connectionTemplate.addTemplateListener(this.connTemplateListener);
+        }
+        
+        // initialize implicit connections
+        this.implicitConnectionTemplates = new ArrayList<DiagramImplicitConnectionTemplate>();
+        ModelElementList<IDiagramImplicitConnectionBindingDef> implicitConnBindings = this.diagramPageDef.getImplicitConnectionBindingDefs();
+        for (IDiagramImplicitConnectionBindingDef implicitConnBinding : implicitConnBindings)
+        {
+        	IDiagramConnectionDef connDef = getDiagramConnectionDef(implicitConnBinding.getConnectionId().getContent());
+        	DiagramImplicitConnectionTemplate connectionTemplate = new DiagramImplicitConnectionTemplate(implicitConnBinding);
+        	connectionTemplate.init(this, this.modelElement, connDef, Collections.<String,String>emptyMap());
+        	this.implicitConnectionTemplates.add(connectionTemplate);
+        	connectionTemplate.addTemplateListener(this.implicitConnTemplateListener);
         }
         
         this.selection = this;
@@ -167,6 +183,11 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 		return this.connectionTemplates;
 	}
 			
+	public List<DiagramImplicitConnectionTemplate> getImplicitConnectionTemplates()
+	{
+		return this.implicitConnectionTemplates;
+	}
+	
 	@Override
 	public void render(SapphireRenderingContext context)
 	{
@@ -228,15 +249,12 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 		List<DiagramNodeTemplate> nodeTemplates = this.getNodeTemplates();
 		for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
 		{
-			if (nodeTemplate.getNodeType().equals(nodeElement.getModelElementType()))
+			List<DiagramNodePart> nodeParts = nodeTemplate.getDiagramNodes();
+			for (DiagramNodePart nodePart : nodeParts)
 			{
-				List<DiagramNodePart> nodeParts = nodeTemplate.getDiagramNodes();
-				for (DiagramNodePart nodePart : nodeParts)
+				if (nodePart.getLocalModelElement().equals(nodeElement))
 				{
-					if (nodePart.getLocalModelElement().equals(nodeElement))
-					{
-						return nodePart;
-					}
+					return nodePart;
 				}
 			}
 		}
@@ -400,4 +418,22 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         }
 		
 	}
+	
+	private class ImplicitConnectionTemplateListener extends DiagramImplicitConnectionTemplate.Listener
+	{
+
+        @Override
+        public void handleConnectionAdd(final DiagramImplicitConnectionPart connPart)
+        {
+        	notifyConnectionAdd(connPart);
+        }
+
+        @Override
+        public void handleConnectionDelete(final DiagramImplicitConnectionPart connPart)
+        {
+        	notifyConnectionDelete(connPart);
+        }
+		
+	}
+	
 }

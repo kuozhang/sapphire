@@ -78,6 +78,15 @@ public interface IDiagramEditorPageDef
     
     ModelElementList<IDiagramExplicitConnectionBindingDef> getDiagramConnectionBindingDefs();
     
+	// *** ImplicitConnectionBindingDefs ***
+    
+    @Type( base = IDiagramImplicitConnectionBindingDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "implicit-connection-binding", type = IDiagramImplicitConnectionBindingDef.class ) )
+                             
+    ListProperty PROP_IMPLICIT_CONNECTION_BINDING_DEFS = new ListProperty( TYPE, "ImplicitConnectionBindingDefs" );
+    
+    ModelElementList<IDiagramImplicitConnectionBindingDef> getImplicitConnectionBindingDefs();
+    
 	// *** DiagramImageDecorators ***
     
     @Type( base = IDiagramImageChoice.class )

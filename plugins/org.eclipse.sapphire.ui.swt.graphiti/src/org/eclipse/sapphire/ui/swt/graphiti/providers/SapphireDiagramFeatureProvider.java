@@ -42,6 +42,7 @@ import org.eclipse.graphiti.features.impl.IIndependenceSolver;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
+import org.eclipse.graphiti.mm.pictograms.FreeFormConnection;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
 import org.eclipse.sapphire.modeling.CapitalizationType;
@@ -49,6 +50,7 @@ import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramDropActionHandler;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
@@ -139,7 +141,12 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 		PictogramElement pe = context.getPictogramElement();
 		if (pe instanceof Connection)
 		{
-			return new SapphireDeleteConnectionFeature(this);
+			// should not delete implicit connections
+			Object bo = getBusinessObjectForPictogramElement(pe);
+			if (!(bo instanceof DiagramImplicitConnectionPart))
+			{
+				return new SapphireDeleteConnectionFeature(this);
+			}
 		}
 		else if (pe instanceof ContainerShape)
 		{
@@ -163,6 +170,10 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 			new ArrayList<ICreateConnectionFeature>(connectionDefs.size());
 		for (IDiagramConnectionDef connectionDef : connectionDefs)
 		{	
+			if (connectionDef.isImplicitConnection().getContent())
+			{
+				break;
+			}
 			String tpLabel = connectionDef.getToolPaletteLabel().getContent();
 			if (tpLabel != null)
 			{
@@ -226,15 +237,29 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 	@Override
 	public IAddBendpointFeature getAddBendpointFeature(IAddBendpointContext context) 
 	{
-		IAddBendpointFeature ret = new SapphireAddBendpointFeature(this);
-		return ret;
+		// don't allow any edits to the implicit connection
+		FreeFormConnection freeFormConnection = context.getConnection();
+		Object bo = getBusinessObjectForPictogramElement(freeFormConnection);
+		if (!(bo instanceof DiagramImplicitConnectionPart))
+		{
+			IAddBendpointFeature ret = new SapphireAddBendpointFeature(this);
+			return ret;
+		}
+		return null;
 	}
 	
 	@Override
 	public IRemoveBendpointFeature getRemoveBendpointFeature(IRemoveBendpointContext context) 
 	{
-		IRemoveBendpointFeature ret = new SapphireRemoveBendpointFeature(this);
-		return ret;
+		// don't allow any edits to the implicit connection
+		FreeFormConnection freeFormConnection = context.getConnection();
+		Object bo = getBusinessObjectForPictogramElement(freeFormConnection);
+		if (!(bo instanceof DiagramImplicitConnectionPart))
+		{
+			IRemoveBendpointFeature ret = new SapphireRemoveBendpointFeature(this);
+			return ret;
+		}
+		return null;
 	}
 
 	@Override

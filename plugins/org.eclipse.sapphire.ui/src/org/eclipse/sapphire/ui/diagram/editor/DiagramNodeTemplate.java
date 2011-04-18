@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -62,7 +63,7 @@ public class DiagramNodeTemplate extends SapphirePart
 	private IModelElement modelElement;	
 	private String propertyName;
 	private ListProperty modelProperty;
-	private Class<?> modelElementType;
+	private JavaType modelElementType;
 	private String toolPaletteLabel;
 	private String toolPaletteDesc;
 	private DiagramEmbeddedConnectionTemplate embeddedConnTemplate;
@@ -112,9 +113,17 @@ public class DiagramNodeTemplate extends SapphirePart
     	ModelElementList<?> list = this.modelElement.read(this.modelProperty);
         for( IModelElement listEntryModelElement : list )
         {
-        	if (this.modelElementType == null || this.modelElementType.isAssignableFrom( listEntryModelElement.getClass()))
+        	if (this.modelElementType == null)
         	{
         		createNewNodePart(listEntryModelElement);
+        	}
+        	else 
+        	{
+        		final Class<?> cl = this.modelElementType.artifact();
+        		if( cl == null || cl.isAssignableFrom( listEntryModelElement.getClass() ) )
+        		{
+        			createNewNodePart(listEntryModelElement);
+        		}
         	}
         }
 
@@ -194,7 +203,22 @@ public class DiagramNodeTemplate extends SapphirePart
     {
     	IModelElement newElement = null;
 		ModelElementList<?> list = this.modelElement.read(this.modelProperty);
-		newElement = list.addNewElement();
+		if (this.modelElementType == null)
+		{
+			newElement = list.addNewElement();
+		}
+		else
+		{
+			final Class cl = this.modelElementType.artifact();
+			if (cl != null)
+			{
+				newElement = list.addNewElement(cl);
+			}
+			else
+			{
+				newElement = list.addNewElement();
+			}
+		}
     	DiagramNodePart newNode = createNewNodePart(newElement);
     	return newNode;
     }
@@ -256,9 +280,17 @@ public class DiagramNodeTemplate extends SapphirePart
 		newList = new ArrayList<IModelElement>();    	
     	for (IModelElement ele : tempList)
     	{
-    		if (this.modelElementType == null || this.modelElementType.isAssignableFrom(ele.getClass()))
+    		if (this.modelElementType == null)
     		{
     			newList.add(ele);
+    		}
+    		else
+    		{
+        		final Class<?> cl = this.modelElementType.artifact();
+        		if( cl == null || cl.isAssignableFrom( ele.getClass()))
+        		{
+        			newList.add(ele);
+        		}
     		}
     	}
 	

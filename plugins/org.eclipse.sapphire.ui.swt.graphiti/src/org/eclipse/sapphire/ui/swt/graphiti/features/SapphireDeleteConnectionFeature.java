@@ -18,6 +18,7 @@ import org.eclipse.graphiti.ui.features.DefaultDeleteFeature;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -63,9 +64,12 @@ public class SapphireDeleteConnectionFeature extends DefaultDeleteFeature
 		if (bo instanceof DiagramConnectionPart) 
 		{
 			final DiagramConnectionPart connPart = (DiagramConnectionPart)bo;
-			final IModelElement element = connPart.getLocalModelElement();
-			final ModelElementList<?> list = (ModelElementList<?>) element.parent();
-			list.remove(element);						
+			if (!(connPart instanceof DiagramImplicitConnectionPart))
+			{
+				final IModelElement element = connPart.getLocalModelElement();
+				final ModelElementList<?> list = (ModelElementList<?>) element.parent();
+				list.remove(element);
+			}
 		}
 	}
 	

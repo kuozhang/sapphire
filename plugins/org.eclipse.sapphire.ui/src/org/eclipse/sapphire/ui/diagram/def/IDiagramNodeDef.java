@@ -12,6 +12,10 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
+import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.java.JavaTypeConstraint;
+import org.eclipse.sapphire.java.JavaTypeKind;
+import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -26,6 +30,7 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
+import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -113,17 +118,21 @@ public interface IDiagramNodeDef
     
     Value<String> getProperty();
     void setProperty( String property );
-    
+        
     // *** ElementType ***
     
-    @Reference( target = Class.class )
+    @Type( base = JavaTypeName.class )
+    @Reference( target = JavaType.class )
     @Label( standard = "model element type" )
+    @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE, type = "org.eclipse.sapphire.modeling.IModelElement" )
+    @MustExist
     @XmlBinding( path = "model-element-type" )
     
     ValueProperty PROP_ELEMENT_TYPE = new ValueProperty( TYPE, "ElementType" );
     
-    ReferenceValue<String,Class<?>> getElementType();
-    void setElementType( String type );
+    ReferenceValue<JavaTypeName,JavaType> getElementType();
+    void setElementType( String value );
+    void setElementType( JavaTypeName value );
     
     // *** Resizable ***
     
