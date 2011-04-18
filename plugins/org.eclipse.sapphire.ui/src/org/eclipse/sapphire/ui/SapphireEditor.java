@@ -12,9 +12,11 @@
 
 package org.eclipse.sapphire.ui;
 
+import static org.eclipse.sapphire.modeling.util.MiscUtil.createStringDigest;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
+import java.io.File;
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,10 +40,11 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
 import org.eclipse.sapphire.ui.internal.SapphireActionManager;
 import org.eclipse.sapphire.ui.internal.SapphireEditorContentOutline;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.SapphirePropertySheetPage;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -53,6 +56,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
@@ -76,14 +80,18 @@ public abstract class SapphireEditor
     private IResourceChangeListener fileChangeListener;
     private final SapphireImageCache imageCache;
     private final Map<String,Object> pagesById;
+    private final Map<Object,SapphireEditorPagePart> partByPage;
     private SapphireEditorContentOutline outline;
     private final SapphireActionManager actionsManager;
+    private SapphirePropertySheetPage propertiesViewPage;
+    private SapphirePartListener propertiesViewContributionChangeListener;
     
     public SapphireEditor( final String pluginId )
     {
         this.pluginId = pluginId;
         this.imageCache = new SapphireImageCache();
         this.pagesById = new HashMap<String,Object>();
+        this.partByPage = new HashMap<Object,SapphireEditorPagePart>();
         this.outline = null;
         this.actionsManager = new SapphireActionManager( this, getActionContexts() );
     }
@@ -190,6 +198,49 @@ public abstract class SapphireEditor
         }
         
         return null;
+    }
+
+    public final File getDefaultStateStorageFile( final Object page )
+    {
+        final StringBuilder key = new StringBuilder();
+        
+        final IEditorInput editorInput = getEditorInput();
+        
+        key.append( editorInput.getClass().getName() );
+        key.append( '#' );
+        
+        if( editorInput instanceof IURIEditorInput )
+        {
+            final URI uri = ( (IURIEditorInput) editorInput ).getURI();
+            
+            if( uri != null )
+            {
+                key.append( ( (IURIEditorInput) editorInput ).getURI().toString() );
+            }
+            else
+            {
+                key.append( "%$**invalid**$%" );
+            }
+            
+            key.append( '#' );
+        }
+        
+        for( Map.Entry<String,Object> entry : this.pagesById.entrySet() )
+        {
+            if( entry.getValue() == page )
+            {
+                key.append( entry.getKey() );
+                break;
+            }
+        }
+        
+        final String digest = createStringDigest( key.toString() );
+        
+        File file = ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
+        file = new File( file, ".metadata/.plugins/org.eclipse.sapphire.ui/state" );
+        file = new File( file, digest );
+        
+        return file;
     }
 
     public final String getLastActivePage()
@@ -378,9 +429,15 @@ public abstract class SapphireEditor
     }
     
     protected final void setPageId( final Object page,
-                                    final String id )
+                                    final String id,
+                                    final SapphireEditorPagePart editorPagePart )
     {
         this.pagesById.put( id, page );
+        
+        if( editorPagePart != null )
+        {
+            this.partByPage.put( page, editorPagePart );
+        }
     }
     
     public final Object getPage()
@@ -463,6 +520,8 @@ public abstract class SapphireEditor
         {
             this.outline.refresh();
         }
+        
+        refreshPropertiesViewContribution();
         
         final Object page = this.pages.get( pageIndex );
         
@@ -556,9 +615,9 @@ public abstract class SapphireEditor
     @Override
     @SuppressWarnings( "rawtypes" )
     
-    public Object getAdapter( final Class adapter ) 
+    public Object getAdapter( final Class type ) 
     {
-        if( adapter == IContentOutlinePage.class )
+        if( type == IContentOutlinePage.class )
         {
             if( this.outline == null || this.outline.isDisposed() )
             {
@@ -567,9 +626,60 @@ public abstract class SapphireEditor
             
             return this.outline;
         }
-        else
+        else if( type == IPropertySheetPage.class )
         {
-            return super.getAdapter( adapter );
+            if( this.propertiesViewPage == null )
+            {
+                this.propertiesViewPage = new SapphirePropertySheetPage();
+                
+                this.propertiesViewContributionChangeListener = new SapphirePartListener()
+                {
+                    @Override
+                    public void handleEvent( final SapphirePartEvent event )
+                    {
+                        if( event instanceof SapphireEditorPagePart.PropertiesViewContributionChangedEvent )
+                        {
+                            final SapphireEditorPagePart.PropertiesViewContributionChangedEvent evt
+                                = (SapphireEditorPagePart.PropertiesViewContributionChangedEvent) event;
+                            
+                            SapphireEditor.this.propertiesViewPage.setPart( evt.getPropertiesViewContribution() );
+                        }
+                    }
+                };
+                
+                refreshPropertiesViewContribution();
+            }
+            
+            return this.propertiesViewPage;
+        }
+
+        return super.getAdapter( type );
+    }
+    
+    private void refreshPropertiesViewContribution()
+    {
+        if( this.propertiesViewPage != null )
+        {
+            for( SapphireEditorPagePart editorPagePart : this.partByPage.values() )
+            {
+                editorPagePart.removeListener( this.propertiesViewContributionChangeListener );
+            }
+            
+            final Object page = getPage();
+            final SapphireEditorPagePart editorPagePart = this.partByPage.get( page );
+            final PropertiesViewContributionPart contribution;
+            
+            if( editorPagePart != null )
+            {
+                editorPagePart.addListener( this.propertiesViewContributionChangeListener );
+                contribution = editorPagePart.getPropertiesViewContribution();
+            }
+            else
+            {
+                contribution = null;
+            }
+            
+            this.propertiesViewPage.setPart( contribution );
         }
     }
     
@@ -582,9 +692,9 @@ public abstract class SapphireEditor
     
     public IContentOutlinePage getContentOutline( final Object page )
     {
-        if( page instanceof MasterDetailsPage )
+        if( page instanceof MasterDetailsEditorPage )
         {
-            final MasterDetailsPage mdpage = (MasterDetailsPage) page;
+            final MasterDetailsEditorPage mdpage = (MasterDetailsEditorPage) page;
             return mdpage.getContentOutlinePage();
         }
         
@@ -601,7 +711,7 @@ public abstract class SapphireEditor
     }
     
     @SuppressWarnings( "unchecked" )
-    public <T> T getNearestPart( final Class<T> partType )
+    public <T> T nearest( final Class<T> partType )
     {
         if( partType.isAssignableFrom( getClass() ) )
         {

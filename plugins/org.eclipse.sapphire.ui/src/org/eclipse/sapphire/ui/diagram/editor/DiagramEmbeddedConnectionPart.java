@@ -8,6 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [341856] NPE when a diagram connection doesn't define a label
+ *    Konstantin Komissarchik - [342897] Integrate with properties view
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -102,7 +103,7 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
         
     public DiagramNodePart getSourceNodePart()
     {
-    	SapphireDiagramEditorPart diagramPart = (SapphireDiagramEditorPart)getParentPart().getParentPart().getParentPart();
+    	SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)getParentPart().getParentPart().getParentPart();
     	return diagramPart.getDiagramNodePart(this.srcNodeModel);
     }
     

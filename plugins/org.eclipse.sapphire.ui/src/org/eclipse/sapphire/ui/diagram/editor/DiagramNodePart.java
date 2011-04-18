@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [342897] Integrate with properties view
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -22,6 +23,9 @@ import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
+import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
+import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
@@ -37,7 +41,11 @@ import org.eclipse.sapphire.ui.diagram.def.ImagePlacement;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class DiagramNodePart extends SapphirePart 
+public class DiagramNodePart 
+
+    extends SapphirePart
+    implements IPropertiesViewContributorPart
+    
 {
 	private DiagramNodeTemplate nodeTemplate;
 	private IDiagramNodeDef definition;
@@ -50,6 +58,7 @@ public class DiagramNodePart extends SapphirePart
 	private SapphireAction defaultAction;
 	private SapphireActionHandler defaultActionHandler;
 	private ModelPropertyListener modelPropertyListener;
+	private PropertiesViewContributionManager propertiesViewContributionManager; 
 		
     @Override
     protected void init()
@@ -389,4 +398,14 @@ public class DiagramNodePart extends SapphirePart
 		}
 	}
 	
+    public PropertiesViewContributionPart getPropertiesViewContribution()
+    {
+        if( this.propertiesViewContributionManager == null )
+        {
+            this.propertiesViewContributionManager = new PropertiesViewContributionManager( this, getLocalModelElement() );
+        }
+        
+        return this.propertiesViewContributionManager.getPropertiesViewContribution();
+    }
+    
 }

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [342897] Integrate with properties view
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.graphiti.features;
@@ -18,7 +19,6 @@ import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
-import org.eclipse.sapphire.ui.swt.graphiti.providers.ErrorIndicatorImageProvider;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [342897] Integrate with properties view
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.graphiti.features;
@@ -27,7 +28,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -100,7 +101,7 @@ public class SapphireDeleteNodeFeature extends DefaultDeleteFeature
 			IModelElement nodeModel = nodePart.getLocalModelElement();
 			
 			// Check top level connections to see whether we need to remove the connection parent element
-			SapphireDiagramEditorPart editorPart = nodePart.getDiagramNodeTemplate().getDiagramEditorPart();
+			SapphireDiagramEditorPagePart editorPart = nodePart.getDiagramNodeTemplate().getDiagramEditorPart();
 			List<DiagramConnectionTemplate> connTemplates = editorPart.getConnectionTemplates();
 			for (DiagramConnectionTemplate connTemplate : connTemplates)
 			{

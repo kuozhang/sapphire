@@ -26,7 +26,7 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 public interface ISapphirePart
 {
     ISapphirePart getParentPart();
-    <T> T getNearestPart( final Class<T> partType );
+    <T> T nearest( final Class<T> partType );
     IModelElement getModelElement();
     IStatus getValidationState();
     IContext getDocumentationContext();

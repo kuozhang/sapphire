@@ -19,7 +19,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.samples.map.IMap;
 import org.eclipse.sapphire.ui.SapphireEditor;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditorFactory;
@@ -38,7 +38,7 @@ public class MapEditor extends SapphireEditor
 	private IMap modelMap;
 	private StructuredTextEditor mapSourceEditor;
 	private SapphireDiagramEditor mapDiagram;
-	private MasterDetailsPage mapOverviewPage;
+	private MasterDetailsEditorPage mapOverviewPage;
 	
     public MapEditor()
     {
@@ -82,7 +82,7 @@ public class MapEditor extends SapphireEditor
 		{
 			addPage(0, mapDiagram, diagramEditorInput);
 			setPageText( 0, "Diagram" );
-			setPageId(this.pages.get(0), "Diagram");
+			setPageId(this.pages.get(0), "Diagram", this.mapDiagram.getPart());
 		}
 	}
 	
@@ -90,10 +90,10 @@ public class MapEditor extends SapphireEditor
 	protected void createFormPages() throws PartInitException 
 	{
 		IPath path = new Path( "org.eclipse.sapphire.samples/sdef/MapEditor.sdef/overview" );
-		this.mapOverviewPage = new MasterDetailsPage(this, this.modelMap, path);
+		this.mapOverviewPage = new MasterDetailsEditorPage(this, this.modelMap, path);
         addPage(1, this.mapOverviewPage);
         setPageText(1, "Overview");
-        setPageId(this.pages.get(1), "Overview");		
+        setPageId(this.pages.get(1), "Overview", this.mapOverviewPage.getPart());		
 	}
 
 	public IMap getMap()

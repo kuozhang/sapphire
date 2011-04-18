@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [342897] Integrate with properties view
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.graphiti.providers;
@@ -34,7 +35,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeImageDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
@@ -62,7 +63,7 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
 	{
 		super.init(diagram, diagramEditor);
 		
-		SapphireDiagramEditorPart editorPart = ((SapphireDiagramEditor)diagramEditor).getDiagramEditorPart();
+		SapphireDiagramEditorPagePart editorPart = ((SapphireDiagramEditor)diagramEditor).getPart();
 		DiagramRenderingContext renderingCtx = new DiagramRenderingContext(editorPart, diagram);
 		this.featureProvider.addRenderingContext(editorPart, renderingCtx);
 		
@@ -79,7 +80,7 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
 		}
 		if (sapphireImageProvider != null)
 		{
-			SapphireDiagramEditorPart diagramPart = getDiagramPart();
+			SapphireDiagramEditorPagePart diagramPart = getDiagramPart();
 			List<IDiagramImageChoice> diagramImages = diagramPart.getImageDecorators();
 			
 			// Add diagram page images
@@ -188,10 +189,10 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
     }
     
 	
-	private SapphireDiagramEditorPart getDiagramPart()
+	private SapphireDiagramEditorPagePart getDiagramPart()
 	{
 		SapphireDiagramEditor diagramEditor = (SapphireDiagramEditor)getDiagramEditor();
-		return diagramEditor.getDiagramEditorPart();
+		return diagramEditor.getPart();
 	}
     
 }

@@ -81,7 +81,6 @@ public class SapphireTabGroup
         for( final SapphirePart tabPart : this.tabParts )
         {
             final Composite tabControl = new Composite( tabGroup, SWT.NONE );
-            //tabControl.setLayout( glayout( 2, 5, 10, 10, 10 ) );
             tabControl.setLayout( glayout( 2, 0, 0 ) );
 
             final TabItem tab = new TabItem( tabGroup, SWT.NONE );

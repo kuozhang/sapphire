@@ -18,9 +18,9 @@ import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.samples.contacts.IContact;
 import org.eclipse.sapphire.ui.SapphireJumpActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsContentNode;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsContentTree;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentOutline;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -48,7 +48,7 @@ public final class ContactDetailsJumpHandler
     @Override
     protected Object run( final SapphireRenderingContext context )
     {
-        final CalendarEditor editor = context.getPart().getNearestPart( CalendarEditor.class );
+        final CalendarEditor editor = context.getPart().nearest( CalendarEditor.class );
         jump( editor, getModelElement() );
         return null;
     }
@@ -74,8 +74,8 @@ public final class ContactDetailsJumpHandler
             
             if( contact != null )
             {
-                final MasterDetailsPage contactsFormPage = (MasterDetailsPage) editor.getPage( "Contacts" );
-                final MasterDetailsContentTree content = contactsFormPage.getContentTree();
+                final MasterDetailsEditorPage contactsFormPage = (MasterDetailsEditorPage) editor.getPage( "Contacts" );
+                final MasterDetailsContentOutline content = contactsFormPage.getContentTree();
                 final MasterDetailsContentNode contactNode = findContactNode( content.getRoot(), contact );
                 
                 if( contactNode != null )

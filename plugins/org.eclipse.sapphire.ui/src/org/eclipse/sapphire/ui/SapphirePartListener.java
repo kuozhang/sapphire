@@ -19,6 +19,11 @@ import org.eclipse.core.runtime.IStatus;
 
 public abstract class SapphirePartListener
 {
+    public void handleEvent( final SapphirePartEvent event )
+    {
+        // The default implementation doesn't do anything.
+    }
+    
     public void handleValidateStateChange( final IStatus oldValidateState,
                                            final IStatus newValidationState )
     {

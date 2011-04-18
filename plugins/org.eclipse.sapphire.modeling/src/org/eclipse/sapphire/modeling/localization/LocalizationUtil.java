@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.modeling.localization;
 
-import java.security.MessageDigest;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -45,36 +44,6 @@ public final class LocalizationUtil
         }
         
         return label.toString();
-    }
-    
-    public static final String createStringDigest( final String str )
-    {
-        try
-        {
-            final MessageDigest md = MessageDigest.getInstance( "SHA-256" );
-            final byte[] input = str.getBytes( "UTF-8" );
-            final byte[] digest = md.digest( input );
-            
-            final StringBuilder buf = new StringBuilder();
-            
-            for( int i = 0; i < digest.length; i++ )
-            {
-                String hex = Integer.toHexString( 0xFF & digest[ i ] );
-                
-                if( hex.length() == 1 )
-                {
-                    buf.append( '0' );
-                }
-                
-                buf.append( hex );
-            }
-            
-            return buf.toString();
-        }
-        catch( Exception e )
-        {
-            throw new RuntimeException( e );
-        }
     }
     
 }

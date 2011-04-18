@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeDef;
-import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeRef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeRef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -21,10 +21,10 @@ import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
 public final class MasterDetailsTreeNodeRefMethods
 {
-    public static IMasterDetailsTreeNodeDef resolve( final IMasterDetailsTreeNodeRef ref )
+    public static IMasterDetailsContentNodeDef resolve( final IMasterDetailsContentNodeRef ref )
     {
         final ISapphireUiDef rootdef = ref.nearest( ISapphireUiDef.class );
-        return (IMasterDetailsTreeNodeDef) rootdef.getPartDef( ref.getPart().getText(), true, IMasterDetailsTreeNodeDef.class );
+        return (IMasterDetailsContentNodeDef) rootdef.getPartDef( ref.getPart().getText(), true, IMasterDetailsContentNodeDef.class );
     }
     
 }

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [342897] Integrate with properties view
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.def;
@@ -28,6 +29,7 @@ import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.Color;
 import org.eclipse.sapphire.ui.LineStyle;
+import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 /**
@@ -40,7 +42,7 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 public interface IDiagramConnectionDef 
 	
-	extends ISapphirePartDef 
+	extends ISapphirePartDef, IPropertiesViewContributorDef
 	
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramConnectionDef.class );
@@ -50,7 +52,6 @@ public interface IDiagramConnectionDef
     @NonNullValue
     
     ValueProperty PROP_ID = new ValueProperty( TYPE, ISapphirePartDef.PROP_ID );
-    
     
     // *** ImplicitConnection ***
     

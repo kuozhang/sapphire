@@ -12,6 +12,8 @@
 
 package org.eclipse.sapphire.sdk.build.processor.internal;
 
+import static org.eclipse.sapphire.modeling.util.MiscUtil.createStringDigest;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +26,6 @@ import java.util.Set;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NamedValues;
-import org.eclipse.sapphire.modeling.localization.LocalizationUtil;
 
 import com.sun.mirror.apt.AnnotationProcessorEnvironment;
 import com.sun.mirror.apt.Filer.Location;
@@ -71,8 +72,7 @@ public final class ExternalizeStringResourcesProcessor
                 
                 for( String string : strings )
                 {
-                    final String digest = LocalizationUtil.createStringDigest( string );
-                    resources.put( digest, string );
+                    resources.put( createStringDigest( string ), string );
                 }
                 
                 final String pkg = type.getPackage().getQualifiedName();

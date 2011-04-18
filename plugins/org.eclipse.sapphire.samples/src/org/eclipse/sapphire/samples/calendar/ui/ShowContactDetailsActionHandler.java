@@ -61,7 +61,7 @@ public final class ShowContactDetailsActionHandler
     protected Object run( SapphireRenderingContext context )
     {
         final ISapphirePart part = getPart();
-        final CalendarEditor editor = part.getNearestPart( CalendarEditor.class );
+        final CalendarEditor editor = part.nearest( CalendarEditor.class );
         final IModelElement modelElement = part.getModelElement();
         
         ContactDetailsJumpHandler.jump( editor, modelElement );

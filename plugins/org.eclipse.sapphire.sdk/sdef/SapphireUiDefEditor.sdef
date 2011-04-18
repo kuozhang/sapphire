@@ -16,6 +16,7 @@
     <import>
         <bundle>org.eclipse.sapphire.ui</bundle>
         <package>org.eclipse.sapphire.ui.def</package>
+        <package>org.eclipse.sapphire.ui.form.editors.masterdetails.def</package>
         <package>org.eclipse.sapphire.ui.diagram.def</package>
     </import>
 
@@ -821,7 +822,7 @@
         </node-template>
         
         <node-template>
-            <model-element-type>IMasterDetailsTreeNodeDef</model-element-type>
+            <model-element-type>IMasterDetailsContentNodeDef</model-element-type>
             <label>${ Id == null ? ( Label == null ? "Content Outline Node" : Label ) : Id }</label>
             <use-model-element-image/>
             <section>
@@ -844,7 +845,7 @@
             <node-list>
                 <property>Sections</property>
                 <node-template>
-                    <model-element-type>IMasterDetailsPageSectionDef</model-element-type>
+                    <model-element-type>IMasterDetailsSectionDef</model-element-type>
                     <label>${ Label == null ? "&lt;section&gt;" : Label }</label>
                     <use-model-element-image/>
                     <section>
@@ -881,11 +882,12 @@
                     <value>ChildNodes</value>
                 </param>
             </node-list-ref>
+            <node-ref>PropertiesViewContributionNode</node-ref>
             <node-ref>DocumentationNode</node-ref>
         </node-template>
 
         <node-template>
-            <model-element-type>IMasterDetailsTreeNodeRef</model-element-type>
+            <model-element-type>IMasterDetailsContentNodeRef</model-element-type>
             <label>${ Part == null ? "Content Outline Node Reference" : Part }</label>
             <use-model-element-image/>
             <section>
@@ -898,7 +900,7 @@
         </node-template>
         
         <node-template>
-            <model-element-type>IMasterDetailsTreeNodeFactoryDef</model-element-type>
+            <model-element-type>IMasterDetailsContentNodeFactoryDef</model-element-type>
             <label>${ Id == null ? ( ListProperty == null ? "Content Outline Node List" : ListProperty ) : Id }</label>
             <use-model-element-image/>
             <section>
@@ -913,7 +915,7 @@
             <node-list>
                 <property>TypeSpecificDefinitions</property>
                 <node-template>
-                    <model-element-type>IMasterDetailsTreeNodeFactoryEntry</model-element-type>
+                    <model-element-type>IMasterDetailsContentNodeFactoryEntry</model-element-type>
                     <label>${ Type == null ? "Default Case" : Type }</label>
                     <section>
                         <label>Case</label>
@@ -932,7 +934,7 @@
                     <node-list>
                         <property>Sections</property>
                         <node-template>
-                            <model-element-type>IMasterDetailsPageSectionDef</model-element-type>
+                            <model-element-type>IMasterDetailsSectionDef</model-element-type>
                             <label>${ Label == null ? "&lt;section&gt;" : Label }</label>
                             <use-model-element-image/>
                             <section>
@@ -969,13 +971,14 @@
                             <value>ChildNodes</value>
                         </param>
                     </node-list-ref>
+                    <node-ref>PropertiesViewContributionNode</node-ref>
                     <node-ref>DocumentationNode</node-ref>
                 </node-template>
             </node-list>
         </node-template>
 
         <node-template>
-            <model-element-type>IMasterDetailsTreeNodeFactoryRef</model-element-type>
+            <model-element-type>IMasterDetailsContentNodeFactoryRef</model-element-type>
             <label>${ Part == null ? "Content Outline Node List Reference" : Part }</label>
             <use-model-element-image/>
             <section>
@@ -988,7 +991,7 @@
         </node-template>
         
         <node-template>
-            <model-element-type>IEditorPageDef</model-element-type>
+            <model-element-type>IMasterDetailsEditorPageDef</model-element-type>
             <label>${ Id == null ? "Form Editor Page" : Id }</label>
             <use-model-element-image/>
             <section>
@@ -1016,7 +1019,7 @@
         </node-template>
         
         <node-template>
-            <model-element-type>IDiagramPageDef</model-element-type>
+            <model-element-type>IDiagramEditorPageDef</model-element-type>
             <label>${ Id == null ? &quot;Diagram Editor Page&quot; : Id }</label>
             <section>
                 <label>diagram editor page</label>
@@ -1036,6 +1039,7 @@
                         <section>
                             <label>diagram node</label>
                             <content>
+                                <property-editor>Id</property-editor>
                                 <property-editor>InstanceId</property-editor>
                                 <property-editor>ToolPaletteLabel</property-editor>
                                 <property-editor>ToolPaletteDesc</property-editor>
@@ -1265,6 +1269,7 @@
                             </node-list>
                         </node>
                         <node-ref>ActionsOverallNode</node-ref>
+                        <node-ref>PropertiesViewContributionNode</node-ref>
                     </node-template>
                 </node-list>
             </node>
@@ -1312,6 +1317,7 @@
                         </section>
                         <label>${ ToolPaletteLabel == null ? &quot;&lt;connection&gt;&quot; : ToolPaletteLabel }</label>
                         <use-model-element-image></use-model-element-image>
+                        <node-ref>PropertiesViewContributionNode</node-ref>
                     </node-template>
                 </node-list>
             </node>
@@ -1398,8 +1404,45 @@
                     </node-template>
                 </node-list>
             </node>
+            <node-ref>PropertiesViewContributionNode</node-ref>
         </node-template>
         
     </node-list>
+    
+    <node>
+        <id>PropertiesViewContributionNode</id>
+        <label>properties view contribution</label>
+        <property>PropertiesViewContribution</property>
+        <node-list>
+            <property>Pages</property>
+            <node-template>
+                <section>
+                    <label>properties view contribution page</label>
+                    <content>
+                        <property-editor>Label</property-editor>
+                        <property-editor>ImagePath</property-editor>
+                    </content>
+                </section>
+                <node-list-ref>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>Content</value>
+                    </param>
+                </node-list-ref>
+                <label>${ Label == null ? &quot;&lt;page&gt;&quot; : Label }</label>
+            </node-template>
+        </node-list>
+        <section>
+            <content>
+                <label>Define properties view contribution.</label>
+                <spacer></spacer>
+                <action-link>
+                    <label>Add a page</label>
+                    <action-id>Sapphire.Add</action-id>
+                </action-link>
+            </content>
+        </section>
+    </node>
 
 </definition>

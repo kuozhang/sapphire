@@ -23,6 +23,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.help.IContext;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementListener;
@@ -239,7 +240,7 @@ public abstract class SapphirePart
     }
     
     @SuppressWarnings( "unchecked" )
-    public final <T> T getNearestPart( final Class<T> partType )
+    public final <T> T nearest( final Class<T> partType )
     {
         if( partType.isAssignableFrom( getClass() ) )
         {
@@ -249,7 +250,7 @@ public abstract class SapphirePart
         {
             if( this.parent != null )
             {
-                return this.parent.getNearestPart( partType );
+                return this.parent.nearest( partType );
             }
             else
             {
@@ -261,6 +262,11 @@ public abstract class SapphirePart
     public final IModelElement getModelElement()
     {
         return this.modelElement;
+    }
+    
+    public final Map<String,String> getParams()
+    {
+        return Collections.unmodifiableMap( this.params );
     }
     
     public final IStatus getValidationState()
@@ -433,6 +439,24 @@ public abstract class SapphirePart
         }
     }
     
+    public final void notifyListeners( final SapphirePartEvent event )
+    {
+        if( this.listeners != null )
+        {
+            for( SapphirePartListener listener : this.listeners )
+            {
+                try
+                {
+                    listener.handleEvent( event );
+                }
+                catch( Exception e )
+                {
+                    SapphireUiFrameworkPlugin.log( e );
+                }
+            }
+        }
+    }
+
     public final ModelProperty resolve( final String propertyName )
     {
         return resolve( this.modelElement, propertyName );
@@ -584,6 +608,93 @@ public abstract class SapphirePart
             {
                 actionsForContext.dispose();
             }
+        }
+    }
+    
+    protected final class ImageManager
+    {
+        private final ImageDescriptor base;
+        private ImageDescriptor error;
+        private ImageDescriptor warning;
+        private ImageDescriptor current;
+        
+        public ImageManager( final ImageDescriptor base )
+        {
+            this.base = base;
+            
+            addListener
+            (
+                new SapphirePartListener()
+                {
+                    @Override
+                    public void handleValidateStateChange( final IStatus oldValidateState,
+                                                           final IStatus newValidationState )
+                    {
+                        refresh( true );
+                    }
+                }
+            );
+            
+            refresh( false );
+        }
+        
+        public ImageDescriptor getImage()
+        {
+            return this.current;
+        }
+        
+        private void refresh( final boolean notifyListenersIfNecessary )
+        {
+            final IStatus st = getValidationState();
+            final int severity = st.getSeverity();
+            final ImageDescriptor old = this.current;
+            
+            if( this.base != null )
+            {
+                if( severity == IStatus.ERROR )
+                {
+                    if( this.error == null )
+                    {
+                        this.error = new ProblemOverlayImageDescriptor( this.base, Status.ERROR );
+                    }
+                    
+                    this.current = this.error;
+                }
+                else if( severity == IStatus.WARNING )
+                {
+                    if( this.warning == null )
+                    {
+                        this.warning = new ProblemOverlayImageDescriptor( this.base, Status.WARNING );
+                    }
+                    
+                    this.current = this.warning;
+                }
+                else
+                {
+                    this.current = this.base;
+                }
+            }
+            
+            if( notifyListenersIfNecessary && this.current != old )
+            {
+                notifyListeners( new ImageChangedEvent( SapphirePart.this ) );
+            }
+        }
+    }
+    
+    public static final class LabelChangedEvent extends SapphirePartEvent
+    {
+        public LabelChangedEvent( final SapphirePart part )
+        {
+            super( part );
+        }
+    }
+    
+    public static final class ImageChangedEvent extends SapphirePartEvent
+    {
+        public ImageChangedEvent( final SapphirePart part )
+        {
+            super( part );
         }
     }
     

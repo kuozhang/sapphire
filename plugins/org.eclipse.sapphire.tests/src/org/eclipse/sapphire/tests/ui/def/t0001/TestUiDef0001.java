@@ -18,10 +18,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.tests.SapphireTestCase;
-import org.eclipse.sapphire.ui.def.IEditorPageDef;
 import org.eclipse.sapphire.ui.def.IImportDirective;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEditorPageDef;
 
 /**
  * Tests class resolution via import statements in the Sapphire UI Definition model.
@@ -53,7 +53,7 @@ public final class TestUiDef0001
     public void test()
     {
         final ISapphireUiDef sdef = ISapphireUiDef.TYPE.instantiate();
-        final IEditorPageDef page = sdef.getPartDefs().addNewElement( IEditorPageDef.class );
+        final IMasterDetailsEditorPageDef page = sdef.getPartDefs().addNewElement( IMasterDetailsEditorPageDef.class );
         final ISapphireActionHandlerDef handler = page.getActionHandlers().addNewElement( ISapphireActionHandlerDef.class );
         
         IImportDirective imp;

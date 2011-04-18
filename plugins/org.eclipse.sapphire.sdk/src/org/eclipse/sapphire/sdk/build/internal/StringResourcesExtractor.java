@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.sdk.build.internal;
 
+import static org.eclipse.sapphire.modeling.util.MiscUtil.createStringDigest;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.HashSet;
@@ -29,7 +31,6 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.PropertyAccessFunction;
 import org.eclipse.sapphire.modeling.localization.Localizable;
-import org.eclipse.sapphire.modeling.localization.LocalizationUtil;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.sdk.extensibility.ISapphireExtensionDef;
@@ -99,8 +100,7 @@ public final class StringResourcesExtractor
         
         for( String string : strings )
         {
-            final String digest = LocalizationUtil.createStringDigest( string );
-            resources.put( digest, string );
+            resources.put( createStringDigest( string ), string );
         }
         
         // Serialize the resources file content and return it to caller.

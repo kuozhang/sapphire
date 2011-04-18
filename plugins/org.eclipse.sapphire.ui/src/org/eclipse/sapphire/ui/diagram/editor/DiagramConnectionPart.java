@@ -8,6 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [341856] NPE when a diagram connection doesn't define a label
+ *    Konstantin Komissarchik - [342897] Integrate with properties view
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -27,6 +28,9 @@ import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
+import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
+import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -39,7 +43,11 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramLabelDef;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class DiagramConnectionPart extends SapphirePart 
+public class DiagramConnectionPart 
+
+    extends SapphirePart
+    implements IPropertiesViewContributorPart
+    
 {
 	protected DiagramConnectionTemplate connectionTemplate;
 	protected IDiagramExplicitConnectionBindingDef bindingDef;
@@ -59,6 +67,7 @@ public class DiagramConnectionPart extends SapphirePart
 	protected ValueProperty labelProperty;
 	protected FunctionResult idFunctionResult;
 	protected ModelPropertyListener modelPropertyListener;
+	private PropertiesViewContributionManager propertiesViewContributionManager;
 		
 	public DiagramConnectionPart() {}
 	
@@ -309,7 +318,7 @@ public class DiagramConnectionPart extends SapphirePart
 			{
 				if (refVal.getText() != null)
 				{
-					SapphireDiagramEditorPart diagramEditorPart = this.getDiagramConnectionTemplate().getDiagramEditor();
+					SapphireDiagramEditorPagePart diagramEditorPart = this.getDiagramConnectionTemplate().getDiagramEditor();
 					DiagramNodePart targetNode = IdUtil.getNodePart(diagramEditorPart, refVal.getText());
 					targetObj = targetNode.getLocalModelElement();
 				}
@@ -483,4 +492,15 @@ public class DiagramConnectionPart extends SapphirePart
 			}
 		}
 	}
+	
+    public PropertiesViewContributionPart getPropertiesViewContribution()
+    {
+        if( this.propertiesViewContributionManager == null )
+        {
+            this.propertiesViewContributionManager = new PropertiesViewContributionManager( this, getLocalModelElement() );
+        }
+        
+        return this.propertiesViewContributionManager.getPropertiesViewContribution();
+    }
+	
 }

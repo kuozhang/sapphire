@@ -27,7 +27,10 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 import org.eclipse.sapphire.ui.def.internal.SapphireUiDefMethods;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramPageDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeFactoryDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEditorPageDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -96,10 +99,10 @@ public interface ISapphireUiDef
             ISapphireTabGroupDef.class,
             ISapphireHtmlPanelDef.class,
             IFormDef.class,
-            IMasterDetailsTreeNodeDef.class,
-            IMasterDetailsTreeNodeFactoryDef.class,
-            IEditorPageDef.class,
-            IDiagramPageDef.class,
+            IMasterDetailsContentNodeDef.class,
+            IMasterDetailsContentNodeFactoryDef.class,
+            IMasterDetailsEditorPageDef.class,
+            IDiagramEditorPageDef.class,
             ISapphireDialogDef.class,
             ISapphireWizardDef.class
         }
@@ -124,10 +127,10 @@ public interface ISapphireUiDef
             @XmlListBinding.Mapping( element = "tab-group", type = ISapphireTabGroupDef.class ),
             @XmlListBinding.Mapping( element = "html", type = ISapphireHtmlPanelDef.class ),
             @XmlListBinding.Mapping( element = "form", type = IFormDef.class ),
-            @XmlListBinding.Mapping( element = "node", type = IMasterDetailsTreeNodeDef.class ),
-            @XmlListBinding.Mapping( element = "node-list", type = IMasterDetailsTreeNodeFactoryDef.class ),
-            @XmlListBinding.Mapping( element = "editor-page", type = IEditorPageDef.class ),
-            @XmlListBinding.Mapping( element = "diagram-page", type = IDiagramPageDef.class ),
+            @XmlListBinding.Mapping( element = "node", type = IMasterDetailsContentNodeDef.class ),
+            @XmlListBinding.Mapping( element = "node-list", type = IMasterDetailsContentNodeFactoryDef.class ),
+            @XmlListBinding.Mapping( element = "editor-page", type = IMasterDetailsEditorPageDef.class ),
+            @XmlListBinding.Mapping( element = "diagram-page", type = IDiagramEditorPageDef.class ),
             @XmlListBinding.Mapping( element = "dialog", type = ISapphireDialogDef.class ),
             @XmlListBinding.Mapping( element = "wizard", type = ISapphireWizardDef.class )
         }

@@ -23,7 +23,7 @@ import org.eclipse.sapphire.samples.calendar.integrated.internal.CalendarResourc
 import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
 import org.eclipse.sapphire.ui.CorruptedResourceExceptionInterceptorImpl;
 import org.eclipse.sapphire.ui.SapphireEditor;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
 import org.eclipse.sapphire.ui.swt.xml.editor.XmlEditorResourceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
@@ -46,8 +46,8 @@ public final class CalendarEditor
     private org.eclipse.sapphire.samples.calendar.integrated.ICalendar modelCalendarIntegrated;
     private IContactsDatabase modelContacts;
     
-    private MasterDetailsPage calendarDesignPage;
-    private MasterDetailsPage contactsDesignPage;
+    private MasterDetailsEditorPage calendarDesignPage;
+    private MasterDetailsEditorPage contactsDesignPage;
 
     public CalendarEditor()
     {
@@ -104,11 +104,11 @@ public final class CalendarEditor
         
     {
         IPath path = new Path( "org.eclipse.sapphire.samples/sdef/CalendarEditor.sdef/main" );
-        this.calendarDesignPage = new MasterDetailsPage( this, this.modelCalendarIntegrated, path );
+        this.calendarDesignPage = new MasterDetailsEditorPage( this, this.modelCalendarIntegrated, path );
         addPage( 0, this.calendarDesignPage );
 
         path = new Path( "org.eclipse.sapphire.samples/sdef/ContactsDatabaseEditor.sdef/main" );
-        this.contactsDesignPage = new MasterDetailsPage( this, this.modelContacts, path, Resources.contactsPageName );
+        this.contactsDesignPage = new MasterDetailsEditorPage( this, this.modelContacts, path, Resources.contactsPageName );
         addPage( 1, this.contactsDesignPage );
     }
 

@@ -26,6 +26,7 @@
     <li><a href="#related-content">Related Content</a></li>
     <li><a href="#action-label-el">Expressions in Action Labels</a></li>
     <li><a href="#checkbox-layouts">Checkbox Layouts</a></li>
+    <li><a href="#properties-view">Properties View</a></li>
   </ol>
 </ol>
  
@@ -240,6 +241,66 @@ property editor hint. The various values for this hint are explained in this scr
 the gallery sample:</p>
 
 <p style="margin-left: 20px;"><img src="images/checkbox.png"/></p>
+
+<h2><a name="properties-view">Properties View</a></h2>
+
+<p>You can now easily contribute content to the properties view based on the current context in a Sapphire
+form or diagram editor page. The following contexts can currently host properties view content:</p>
+
+<ul>
+  <li>Diagram Editor Page</li>
+  <li>Diagram Node</li>
+  <li>Diagram Connection</li>
+  <li>Master Details Content Outline Node</li>
+</ul>
+
+<p>Multiple pages of content can be defined for the properties view. The pages are accessible via tabs on
+the left side of the properties view. The content of properties view pages is defined and rendered by Sapphire.</p>
+
+<p style="margin-left: 20px;"><b>Example</b><p>
+
+<p style="margin-left: 20px;">In this screen capture, the architecture sample is shown with focus on one
+of the components. The details of the component are shown in the properties view.</p>
+
+<p style="margin-left: 20px;"><img src="images/properties-view-1.png"/></p>
+
+<p>If no content is contributed to the properties view for a given context,
+the view will state as much.</p>
+
+<p style="margin-left: 20px;"><b>Example</b><p>
+
+<p style="margin-left: 20px;"><img src="images/properties-view-2.png"/></p>
+
+<p>You can also specify an image to be used for a content page. This not only makes it easier for users to
+visually differentiate pages, but the system will also add a problem badge if any of the page's
+content has validation problems.</p>
+
+<p style="margin-left: 20px;"><b>Example</b><p>
+
+<p style="margin-left: 20px;"><img src="images/properties-view-3.png"/></p>
+
+<p>Define the properties view contribution right in the sdef file as part of the definition of the
+context part.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;node>
+    ...</font>
+    &lt;properties-view>
+        &lt;page>
+            &lt;label>general&lt;/label>
+            &lt;content>
+                &lt;property-editor>Name&lt;/property-editor>
+                &lt;property-editor>Description&lt;/property-editor>
+            &lt;/content>
+        &lt;/page>
+        &lt;page>
+            &lt;label>dependencies&lt;/label>
+            &lt;image>images/dependencies.png&lt;/image>
+            &lt;content>
+                &lt;property-editor>Dependencies&lt;/property-editor>
+            &lt;/content>
+        &lt;/page>
+    &lt;/properties-view>
+<font color="#888888">&lt;/node></font></code></pre>
 
 <br/><br/>
 

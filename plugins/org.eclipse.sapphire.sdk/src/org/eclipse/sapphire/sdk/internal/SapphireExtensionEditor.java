@@ -53,7 +53,7 @@ public final class SapphireExtensionEditor
         this.browser = new Browser( getContainer(), SWT.NONE );
         
         addPage( 2, this.browser );
-        setPageId( this.browser, "summary" );
+        setPageId( this.browser, "summary", null );
         setPageText( 2, Resources.summaryPageTitle );
     }
     

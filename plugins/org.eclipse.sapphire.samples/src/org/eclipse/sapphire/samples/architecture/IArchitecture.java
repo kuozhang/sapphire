@@ -15,8 +15,12 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 
@@ -33,6 +37,16 @@ public interface IArchitecture
     
 {
     ModelElementType TYPE = new ModelElementType( IArchitecture.class );
+    
+    // *** Description ***
+    
+    @LongString
+    @XmlBinding( path = "description" )
+    
+    ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );
+    
+    Value<String> getDescription();
+    void setDescription( String value );
     
     // *** Components ***
     

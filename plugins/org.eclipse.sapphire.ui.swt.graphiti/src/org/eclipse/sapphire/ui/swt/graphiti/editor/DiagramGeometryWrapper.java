@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [342897] Integrate with properties view
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.graphiti.editor;
@@ -28,7 +29,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.IdUtil;
-import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.geometry.IBendPoint;
 import org.eclipse.sapphire.ui.diagram.geometry.IDiagramConnectionGeometry;
 import org.eclipse.sapphire.ui.diagram.geometry.IDiagramGeometry;
@@ -44,13 +45,13 @@ public class DiagramGeometryWrapper
 {
 	private IFile file;
 	private IDiagramGeometry geometryModel;
-	private SapphireDiagramEditorPart diagramPart;
+	private SapphireDiagramEditorPagePart diagramPart;
 	
 	private HashMap<DiagramNodePart, Bounds> nodeGeometries;
 	private HashMap<DiagramConnectionPart, List<Point>> connectionBendpoints;
 	private HashMap<DiagramNodePart, HashMap<DiagramConnectionPart, List<Point>>> embeddedConnectionBendpoints;
 	
-	public DiagramGeometryWrapper(IFile file, SapphireDiagramEditorPart diagramPart)
+	public DiagramGeometryWrapper(IFile file, SapphireDiagramEditorPagePart diagramPart)
 	{
 		if (file == null)
 		{

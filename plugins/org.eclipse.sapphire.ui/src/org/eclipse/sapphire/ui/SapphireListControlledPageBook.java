@@ -17,10 +17,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.util.MutableReference;
 import org.eclipse.sapphire.ui.def.ISapphirePageBookExtDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.renderers.swt.DefaultListPropertyEditorRenderer;
-import org.eclipse.sapphire.ui.util.internal.MutableReference;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 

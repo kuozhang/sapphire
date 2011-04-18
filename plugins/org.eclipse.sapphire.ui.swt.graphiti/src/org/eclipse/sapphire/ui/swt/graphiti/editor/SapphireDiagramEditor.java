@@ -8,6 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [335539] Create editor for sdef files
+ *    Konstantin Komissarchik - [342897] Integrate with properties view
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.graphiti.editor;
@@ -54,7 +55,7 @@ import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramPageDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
@@ -62,7 +63,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProvider;
@@ -79,9 +80,9 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 @SuppressWarnings("restriction")
 public class SapphireDiagramEditor extends DiagramEditor 
 {
-	private SapphireDiagramEditorPart diagramPart;
+	private SapphireDiagramEditorPagePart diagramPart;
 	private DiagramGeometryWrapper diagramGeometry;
-	private IDiagramPageDef diagramPageDef;
+	private IDiagramEditorPageDef diagramPageDef;
 	private SapphireDiagramPartListener diagramPartListener;
     private int defaultX = 50;
     private int defaultY = 50;
@@ -96,9 +97,9 @@ public class SapphireDiagramEditor extends DiagramEditor
         
         final ISapphireUiDef def = SapphireUiDefFactory.load( bundleId, relPath );
         
-        this.diagramPageDef = (IDiagramPageDef) def.getPartDef( pageId, true, IDiagramPageDef.class );
+        this.diagramPageDef = (IDiagramEditorPageDef) def.getPartDef( pageId, true, IDiagramEditorPageDef.class );
 		
-		this.diagramPart = new SapphireDiagramEditorPart();
+		this.diagramPart = new SapphireDiagramEditorPagePart();
 		this.diagramPart.init(null, rootModelElement, this.diagramPageDef, Collections.<String,String>emptyMap());
 		
 		this.diagramPartListener = new SapphireDiagramPartListener() 
@@ -149,7 +150,7 @@ public class SapphireDiagramEditor extends DiagramEditor
 		this.diagramPart.addListener(this.diagramPartListener);
 	}
 	
-	public SapphireDiagramEditorPart getDiagramEditorPart()
+	public SapphireDiagramEditorPagePart getPart()
 	{
 		return this.diagramPart;
 	}
@@ -242,14 +243,14 @@ public class SapphireDiagramEditor extends DiagramEditor
 					PictogramElement pe = (PictogramElement) editPart.getModel();
 					if (pe instanceof Diagram)
 					{
-						getDiagramEditorPart().handleSelectionEvent(getDiagramEditorPart());
+						getPart().setSelection(getPart());
 					}
 					else {
 						SapphireDiagramFeatureProvider sfp = (SapphireDiagramFeatureProvider)getDiagramTypeProvider().getFeatureProvider();
 						Object bo = sfp.getBusinessObjectForPictogramElement(pe);
 						
 						if (bo instanceof SapphirePart) {
-							getDiagramEditorPart().handleSelectionEvent((SapphirePart)bo);
+							getPart().setSelection((SapphirePart)bo);
 						}
 					}						
 				}
@@ -290,7 +291,7 @@ public class SapphireDiagramEditor extends DiagramEditor
 		super.setInput(input);
 		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput)input;
 		IFile npFile = diagramInput.getNodePositionFile();
-		this.diagramGeometry = new DiagramGeometryWrapper(npFile, getDiagramEditorPart());
+		this.diagramGeometry = new DiagramGeometryWrapper(npFile, getPart());
 	}
 	
 	@Override
@@ -627,8 +628,8 @@ public class SapphireDiagramEditor extends DiagramEditor
 			final Diagram diagram = getDiagramTypeProvider().getDiagram();
 			final TransactionalEditingDomain ted = TransactionUtil.getEditingDomain(diagram);
 
-			DiagramNodePart srcNodePart = getDiagramEditorPart().getDiagramNodePart(connPart.getEndpoint1());
-			DiagramNodePart targetNodePart = getDiagramEditorPart().getDiagramNodePart(connPart.getEndpoint2());
+			DiagramNodePart srcNodePart = getPart().getDiagramNodePart(connPart.getEndpoint1());
+			DiagramNodePart targetNodePart = getPart().getDiagramNodePart(connPart.getEndpoint2());
 			ContainerShape srcNode = getContainerShape(srcNodePart);
 			ContainerShape targetNode = getContainerShape(targetNodePart);
 			final AddConnectionContext addContext = 

@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui.def.internal;
 
 import org.eclipse.sapphire.modeling.DefaultValueService;
-import org.eclipse.sapphire.ui.def.IMasterDetailsTreeNodeDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -26,7 +26,7 @@ public final class MasterDetailsPageSectionDefLabelDefaultValueProvider
     @Override
     public String getDefaultValue()
     {
-        final IMasterDetailsTreeNodeDef node = (IMasterDetailsTreeNodeDef) element().parent().parent();
+        final IMasterDetailsContentNodeDef node = (IMasterDetailsContentNodeDef) element().parent().parent();
         return node.getLabel().getText();
     }
     

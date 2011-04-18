@@ -19,7 +19,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.samples.architecture.IArchitecture;
 import org.eclipse.sapphire.ui.SapphireEditor;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditorFactory;
@@ -41,7 +41,7 @@ public final class ArchitectureEditor
     private IArchitecture model;
     private StructuredTextEditor pageSource;
     private SapphireDiagramEditor pageDiagram;
-    private MasterDetailsPage pageDetails;
+    private MasterDetailsEditorPage pageDetails;
     
     public ArchitectureEditor()
     {
@@ -86,7 +86,7 @@ public final class ArchitectureEditor
         {
             addPage( 0, this.pageDiagram, diagramEditorInput );
             setPageText( 0, "Diagram" );
-            setPageId( this.pages.get( 0 ), "Diagram" );
+            setPageId( this.pages.get( 0 ), "Diagram", this.pageDiagram.getPart() );
         }
     }
     
@@ -94,10 +94,10 @@ public final class ArchitectureEditor
     protected void createFormPages() throws PartInitException 
     {
         IPath path = new Path( "org.eclipse.sapphire.samples/sdef/ArchitectureEditor.sdef/DetailsPage" );
-        this.pageDetails = new MasterDetailsPage( this, this.model, path );
+        this.pageDetails = new MasterDetailsEditorPage( this, this.model, path );
         addPage( 1, this.pageDetails );
         setPageText( 1, "Details" );
-        setPageId( this.pages.get( 1 ), "Details" );        
+        setPageId( this.pages.get( 1 ), "Details", this.pageDetails.getPart() );        
     }
 
     @Override

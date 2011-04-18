@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [342897] Integrate with properties view
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.graphiti.features;
@@ -26,7 +27,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -34,10 +35,10 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
 
 public class SapphireCreateConnectionFeature extends AbstractCreateConnectionFeature 
 {
-	private SapphireDiagramEditorPart diagramPart;
+	private SapphireDiagramEditorPagePart diagramPart;
 	private IDiagramConnectionDef connDef;
 	
-	public SapphireCreateConnectionFeature(IFeatureProvider fp, SapphireDiagramEditorPart diagramPart, 
+	public SapphireCreateConnectionFeature(IFeatureProvider fp, SapphireDiagramEditorPagePart diagramPart, 
 					IDiagramConnectionDef connDef, String tpLabel, String tpDesc)
 	{
 		super(fp, tpLabel, tpDesc);

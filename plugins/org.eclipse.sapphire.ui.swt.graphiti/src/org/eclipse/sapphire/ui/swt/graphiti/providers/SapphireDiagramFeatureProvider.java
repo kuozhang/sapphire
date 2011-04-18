@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [342897] Integrate with properties view
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.graphiti.providers;
@@ -50,7 +51,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPart;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.DiagramGeometryWrapper;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
@@ -156,7 +157,7 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 	@Override
     public ICreateConnectionFeature[] getCreateConnectionFeatures() 
 	{
-		SapphireDiagramEditorPart diagramPart = getDiagramPart();
+		SapphireDiagramEditorPagePart diagramPart = getDiagramPart();
 		List<IDiagramConnectionDef> connectionDefs = diagramPart.getDiagramConnectionDefs();
 		List<ICreateConnectionFeature> features = 
 			new ArrayList<ICreateConnectionFeature>(connectionDefs.size());
@@ -293,10 +294,10 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 		return diagramEditor;
 	}
 	
-	private SapphireDiagramEditorPart getDiagramPart()
+	private SapphireDiagramEditorPagePart getDiagramPart()
 	{
 		SapphireDiagramEditor diagramEditor = getDiagramEditor();
-		return diagramEditor.getDiagramEditorPart();
+		return diagramEditor.getPart();
 	}
 	    
 }

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [342897] Integrate with properties view
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -64,7 +65,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         }
     }
 	
-	protected SapphireDiagramEditorPart diagramEditor;
+	protected SapphireDiagramEditorPagePart diagramEditor;
 	protected IDiagramConnectionDef definition;
 	protected IDiagramExplicitConnectionBindingDef bindingDef;
 	protected IModelElement modelElement;
@@ -94,7 +95,7 @@ public class DiagramConnectionTemplate extends SapphirePart
 	@Override
     public void init()
     {
-    	this.diagramEditor = (SapphireDiagramEditorPart)getParentPart();
+    	this.diagramEditor = (SapphireDiagramEditorPagePart)getParentPart();
     	this.modelElement = getModelElement();
     	this.definition = (IDiagramConnectionDef)super.definition;;
     	
@@ -236,7 +237,7 @@ public class DiagramConnectionTemplate extends SapphirePart
 					{
 						if (reference.getText() != null)
 						{
-							SapphireDiagramEditorPart diagramEditorPart = getDiagramEditor();
+							SapphireDiagramEditorPagePart diagramEditorPart = getDiagramEditor();
 							DiagramNodePart targetNode = IdUtil.getNodePart(diagramEditorPart, reference.getText());
 							if (targetNode != null)
 							{
@@ -313,7 +314,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         this.templateListeners.remove( listener );
     }
     
-    public SapphireDiagramEditorPart getDiagramEditor()
+    public SapphireDiagramEditorPagePart getDiagramEditor()
     {
     	return this.diagramEditor;
     }

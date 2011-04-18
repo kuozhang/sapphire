@@ -17,7 +17,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.ui.SapphireEditor;
-import org.eclipse.sapphire.ui.editor.views.masterdetails.MasterDetailsPage;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
@@ -31,9 +31,10 @@ public abstract class SapphireEditorForXml
     extends SapphireEditor
     
 {
-    public static final String PAGE_MAIN_SOURCE = "main.source"; //$NON-NLS-1$
+    private static final String PAGE_MAIN_FORM = "main.form";
+    private static final String PAGE_MAIN_SOURCE = "main.source";
 
-    private MasterDetailsPage mainPage;
+    private MasterDetailsEditorPage mainPage;
     private StructuredTextEditor sourceEditor;
     private ModelElementType rootModelElementType;
     private String editorDefinitionPath;
@@ -85,7 +86,7 @@ public abstract class SapphireEditorForXml
         
         final int index = addPage( this.sourceEditor, getEditorInput() );
         setPageText( index, Resources.sourcePageTitle );
-        setPageId( this.sourceEditor, PAGE_MAIN_SOURCE );
+        setPageId( this.sourceEditor, PAGE_MAIN_SOURCE, null );
     }
     
     @Override
@@ -94,8 +95,9 @@ public abstract class SapphireEditorForXml
         throws PartInitException
         
     {
-        this.mainPage = new MasterDetailsPage( this, getModelElement(), new Path( getEditorDefinitionPath() ) );
+        this.mainPage = new MasterDetailsEditorPage( this, getModelElement(), new Path( getEditorDefinitionPath() ) );
         addPage( 0, this.mainPage );
+        setPageId( this.mainPage, PAGE_MAIN_FORM, this.mainPage.getPart());
     }
 
     @Override

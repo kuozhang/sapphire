@@ -228,20 +228,20 @@
         <action>Sapphire.Outline.CollapseAll</action>
         <id>Sapphire.Outline.CollapseAll</id>
         <description>Collapses all nodes in the content outline.</description>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.OutlineCollapseAllActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineCollapseAllActionHandler</impl>
     </action-handler>
     <action-handler>
         <action>Sapphire.Delete</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.OutlineNodeDeleteActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeDeleteActionHandler</impl>
         <id>Sapphire.Outline.Delete</id>
         <description>Deletes the model element associated with a given content outline node. Activates if the UI part is a content outline or a content outline node. All affected nodes must have the same parent and that parent must be a list property.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.OutlineNodeListMemberActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeListMemberActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Outline.ExpandAll</action>
         <id>Sapphire.Outline.ExpandAll</id>
         <description>Expands all nodes in the content outline.</description>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.OutlineExpandAllActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineExpandAllActionHandler</impl>
     </action-handler>
     <action-handler>
         <action>Sapphire.Restore.Defaults</action>
@@ -252,30 +252,30 @@
     </action-handler>
     <action-handler>
         <action>Sapphire.Move.Down</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.OutlineNodeMoveDownActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeMoveDownActionHandler</impl>
         <id>Sapphire.Outline.Move.Down</id>
         <description>Moves the model element one position towards the end of the containing list, swapping places with the following element. Activates if the UI part is a content outline node. The affected node must have a list property parent.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.OutlineNodeListMemberActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeListMemberActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Move.Up</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.OutlineNodeMoveUpActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeMoveUpActionHandler</impl>
         <id>Sapphire.Outline.Move.Up</id>
         <description>Moves the model element one position towards the beginning of the containing list, swapping places with the preceding element. Activates if the UI part is a content outline node. The affected node must have a list property parent.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.OutlineNodeListMemberActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeListMemberActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Outline.ShowInSource</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.OutlineNodeShowInSourceActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeShowInSourceActionHandler</impl>
         <id>Sapphire.Outline.ShowInSource</id>
         <description>Shows the model element associated with a given content outline node in the corresponding source editor.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.OutlineNodeShowInSourceActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeShowInSourceActionHandlerCondition</condition>
     </action-handler>
     <action-handler-factory>
         <action>Sapphire.Add</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.OutlineNodeAddActionHandlerFactory</impl>
+        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeAddActionHandlerFactory</impl>
         <description>Creates an add action handler for every possible member element type for all lists whose members are shown as child nodes beneath the content outline node in question.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.OutlineNodeAddActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeAddActionHandlerCondition</condition>
     </action-handler-factory>
     <model-property-service>
         <type>org.eclipse.sapphire.modeling.ReferenceService</type>

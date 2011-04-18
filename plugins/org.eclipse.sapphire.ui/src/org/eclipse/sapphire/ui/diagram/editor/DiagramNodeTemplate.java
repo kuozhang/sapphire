@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [342897] Integrate with properties view
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -56,7 +57,7 @@ public class DiagramNodeTemplate extends SapphirePart
         }
     }
     
-	private SapphireDiagramEditorPart diagramEditor;
+	private SapphireDiagramEditorPagePart diagramEditor;
 	private IDiagramNodeDef definition;
 	private IModelElement modelElement;	
 	private String propertyName;
@@ -75,7 +76,7 @@ public class DiagramNodeTemplate extends SapphirePart
 	@Override
     public void init()
     {
-    	this.diagramEditor = (SapphireDiagramEditorPart)getParentPart();
+    	this.diagramEditor = (SapphireDiagramEditorPagePart)getParentPart();
     	this.modelElement = getModelElement();
     	this.definition = (IDiagramNodeDef)super.definition;
     	
@@ -351,7 +352,7 @@ public class DiagramNodeTemplate extends SapphirePart
 		}
 	}
     
-	public SapphireDiagramEditorPart getDiagramEditorPart()
+	public SapphireDiagramEditorPagePart getDiagramEditorPart()
 	{
 		return this.diagramEditor;
 	}

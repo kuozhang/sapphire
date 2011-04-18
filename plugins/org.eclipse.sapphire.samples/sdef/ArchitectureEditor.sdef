@@ -34,6 +34,45 @@
                     <value>${ Name }</value>
                 </endpoint2>
             </connection-binding>
+            <id>Component</id>
+            <properties-view>
+                <page>
+                    <label>general</label>
+                    <content>
+                        <property-editor>Name</property-editor>
+                        <property-editor>
+                            <property>Description</property>
+                            <hint>
+                                <name>expand.vertically</name>
+                                <value>true</value>
+                            </hint>
+                        </property-editor>
+                    </content>
+                </page>
+                <page>
+                    <label>dependencies</label>
+                    <image>images/dependencies.png</image>
+                    <content>
+                        <property-editor>
+                            <property>Dependencies</property>
+                            <child-property>Name</child-property>
+                            <child-property>Description</child-property>
+                            <hint>
+                                <name>show.label</name>
+                                <value>false</value>
+                            </hint>
+                            <hint>
+                                <name>expand.vertically</name>
+                                <value>true</value>
+                            </hint>
+                            <hint>
+                                <name>column.widths</name>
+                                <value>100:30,100:70</value>
+                            </hint>
+                        </property-editor>
+                    </content>
+                </page>
+            </properties-view>
         </node>
         <page-header-text>architecture</page-header-text>
         <connection>
@@ -42,7 +81,43 @@
             <endpoint2>
                 <type>arrow</type>
             </endpoint2>
+            <properties-view>
+                <page>
+                    <label>description</label>
+                    <content>
+                        <property-editor>
+                            <property>Description</property>
+                            <hint>
+                                <name>show.label</name>
+                                <value>false</value>
+                            </hint>
+                            <hint>
+                                <name>expand.vertically</name>
+                                <value>true</value>
+                            </hint>
+                        </property-editor>
+                    </content>
+                </page>
+            </properties-view>
         </connection>
+        <properties-view>
+            <page>
+                <label>description</label>
+                <content>
+                    <property-editor>
+                        <property>Description</property>
+                        <hint>
+                            <name>show.label</name>
+                            <value>false</value>
+                        </hint>
+                        <hint>
+                            <name>expand.vertically</name>
+                            <value>true</value>
+                        </hint>
+                    </property-editor>
+                </content>
+            </page>
+        </properties-view>
     </diagram-page>
     <editor-page>
         <id>DetailsPage</id>
@@ -55,17 +130,75 @@
                     <property>Components</property>
                     <node-template>
                         <model-element-type>IComponent</model-element-type>
-                        <label>${ Name == null ? &quot;&amp;lt;component&amp;gt;&quot; : Name }</label>
+                        <label>${ Name == null ? &quot;&lt;component&gt;&quot; : Name }</label>
                         <section>
                             <label>component</label>
                             <content>
                                 <property-editor>Name</property-editor>
-                                <property-editor>Dependencies</property-editor>
+                                <property-editor>Description</property-editor>
+                                <property-editor>
+                                    <property>Dependencies</property>
+                                    <child-property>Name</child-property>
+                                    <child-property>Description</child-property>
+                                    <hint>
+                                        <name>column.widths</name>
+                                        <value>100:30,100:70</value>
+                                    </hint>
+                                </property-editor>
                             </content>
                         </section>
+                        <properties-view>
+                            <page>
+                                <label>general</label>
+                                <content>
+                                    <property-editor>Name</property-editor>
+                                    <property-editor>
+                                        <property>Description</property>
+                                        <hint>
+                                            <name>expand.vertically</name>
+                                            <value>true</value>
+                                        </hint>
+                                    </property-editor>
+                                </content>
+                            </page>
+                            <page>
+                                <label>dependencies</label>
+                                <image>images/dependencies.png</image>
+                                <content>
+                                    <property-editor>
+                                        <property>Dependencies</property>
+                                        <child-property>Name</child-property>
+                                        <child-property>Description</child-property>
+                                        <hint>
+                                            <name>show.label</name>
+                                            <value>false</value>
+                                        </hint>
+                                        <hint>
+                                            <name>expand.vertically</name>
+                                            <value>true</value>
+                                        </hint>
+                                        <hint>
+                                            <name>column.widths</name>
+                                            <value>100:30,100:70</value>
+                                        </hint>
+                                    </property-editor>
+                                </content>
+                            </page>
+                        </properties-view>
                     </node-template>
                 </node-list>
+                <section>
+                    <content>
+                        <label>Define components.</label>
+                        <spacer></spacer>
+                        <action-link>
+                            <action-id>Sapphire.Add</action-id>
+                            <label>Add a component</label>
+                        </action-link>
+                    </content>
+                </section>
             </node>
         </root-node>
+        <initial-selection>Components</initial-selection>
     </editor-page>
 </definition>

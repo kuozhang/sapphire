@@ -8,6 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [341856] NPE when a diagram connection doesn't define a label
+ *    Konstantin Komissarchik - [342897] Integrate with properties view
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -67,7 +68,7 @@ public class IdUtil
 		return buffer.toString();		
 	}
 
-	public static DiagramNodePart getNodePart(SapphireDiagramEditorPart diagramPart, String nodeId)
+	public static DiagramNodePart getNodePart(SapphireDiagramEditorPagePart diagramPart, String nodeId)
 	{
 		int index = nodeId.indexOf(NODE_ID_SEPARATOR);
 		if (index == -1)
@@ -108,7 +109,7 @@ public class IdUtil
 		return null;
 	}
 	
-	public static DiagramConnectionPart getConnectionPart(SapphireDiagramEditorPart diagramPart, String connId)
+	public static DiagramConnectionPart getConnectionPart(SapphireDiagramEditorPagePart diagramPart, String connId)
 	{
 		int index = connId.indexOf(CONNECTION_ID_SEPARATOR);
 		if (index == -1)

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [342897] Integrate with properties view
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.def;
@@ -32,6 +33,7 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 /**
@@ -44,7 +46,7 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 public interface IDiagramNodeDef 
 
-	extends ISapphirePartDef, IDiagramDimension
+	extends ISapphirePartDef, IDiagramDimension, IPropertiesViewContributorDef
 	
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramNodeDef.class );
