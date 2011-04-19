@@ -123,7 +123,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         }
         
         this.selection = this;
-        this.propertiesViewContributionManager = new PropertiesViewContributionManager( this );
+        this.propertiesViewContributionManager = new PropertiesViewContributionManager( this, this.modelElement );
         
         this.addListener
         (

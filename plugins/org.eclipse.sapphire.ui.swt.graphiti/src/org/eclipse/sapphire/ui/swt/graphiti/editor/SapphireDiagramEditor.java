@@ -262,31 +262,7 @@ public class SapphireDiagramEditor extends DiagramEditor
 		}
 		
 	}
-	
-//	@Override
-//	public void selectionChanged(IWorkbenchPart part, ISelection selection) 
-//	{
-//		boolean editorIsActive = getSite().getPage().isPartVisible(this);
-//		if (editorIsActive)
-//		{
-//			super.selectionChanged(part, selection);
-//		}
-//		else 
-//		{
-//			// Check if we are a page of the active multipage editor
-//			IEditorPart activeEditor = getSite().getPage().getActiveEditor();
-//			if (getSite().getPage().isPartVisible(activeEditor) && 
-//					activeEditor instanceof MultiPageEditorPart)
-//			{
-//				MultiPageEditorPart me = (MultiPageEditorPart)activeEditor;
-//				if (me.getActivePage() == 0)
-//				{
-//					updateActions(getSelectionActions());
-//				}
-//			}
-//		}
-//	}
-	
+		
 	@Override
 	protected void setInput(IEditorInput input) 
 	{
