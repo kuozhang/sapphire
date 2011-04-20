@@ -38,6 +38,7 @@ to 0.3 release. Only changes from the previous milestone are covered.</p>
   <li><a href="#related-content">Related Content</a></li>
   <li><a href="#composite-ref">Composite Reference</a></li>
   <li><a href="#section-description">Section Description</a></li>
+  <li><a href="#function">Function Name Method</a></li>
 </ol>
 
 <h2><a name="modularity">Modularity Changes</a></h2>
@@ -478,6 +479,48 @@ migration (only works when there are no params):</p>
     &lt;spacer/>
   &lt;/content>
 &lt;/section></code></pre>
+    </td>
+  </tr>
+</table>
+
+<h2><a name="function">Function Name Method</a></h2>
+
+<p>Implementations of custom expression language functions (classes that extend Function) need to be updated
+to implement the required new name method. The returned name should be consistent with the name used when
+registering the function in sapphire-extension.xml file. The new method is used during toString() execution
+on a parsed expression.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>public class CustomFunction extends Function
+{
+    @Override
+    public FunctionResult evaluate( FunctionContext context )
+    {
+        ...
+    }
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>public class CustomFunction extends Function
+{
+    @Override
+    public String name()
+    {
+        return "Custom";
+    }
+
+    @Override
+    public FunctionResult evaluate( FunctionContext context )
+    {
+        ...
+    }
+}</code></pre>
     </td>
   </tr>
 </table>
