@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [342775] Support EL in IMasterDetailsTreeNodeDef.ImagePath
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -222,7 +223,9 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
 			FunctionResult fr = initExpression
 			( 
 				entryModelElement,
-			    this.bindingDef.getCondition(), 
+			    this.bindingDef.getCondition().getContent(), 
+			    String.class,
+			    null,
 			    new Runnable()
 			    {
 					public void run()
