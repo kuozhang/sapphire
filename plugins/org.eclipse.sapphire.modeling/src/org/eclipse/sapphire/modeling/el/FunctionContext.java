@@ -33,6 +33,12 @@ public class FunctionContext
         final Function f = new Function()
         {
             @Override
+            public String name()
+            {
+                return "ReadProperty";
+            }
+            
+            @Override
             public FunctionResult evaluate( final FunctionContext context )
             {
                 return new FunctionResult( this, context )

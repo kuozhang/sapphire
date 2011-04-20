@@ -54,8 +54,11 @@ public final class SapphireLabel
         context.adapt( this.labelFormText );
         
         this.labelFunctionResult = initExpression
-        ( 
-            def.getText(), 
+        (
+            getModelElement(),
+            def.getText().getContent(), 
+            String.class,
+            null,
             new Runnable()
             {
                 public void run()

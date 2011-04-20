@@ -29,6 +29,12 @@ public final class LastSegmentFunction
 
 {
     @Override
+    public String name()
+    {
+        return "LastSegment";
+    }
+
+    @Override
     public FunctionResult evaluate( final FunctionContext context )
     {
         return new FunctionResult( this, context )

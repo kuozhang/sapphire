@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.swt;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -19,10 +20,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
+import org.eclipse.sapphire.ui.SapphireWizardPagePart;
+import org.eclipse.sapphire.ui.SapphireWizardPart;
 import org.eclipse.sapphire.ui.def.ISapphireWizardDef;
-import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.ui.IWorkbenchPage;
@@ -40,22 +41,26 @@ public class SapphireWizard<M extends IExecutableModelElement>
     extends Wizard
     
 {
-    private final M modelElement;
-    private final ISapphireWizardDef definition;
+    private final M element;
+    private final SapphireWizardPart part;
     
     public SapphireWizard( final M modelElement,
                            final String wizardDefPath )
     {
-        this.modelElement = modelElement;
-        this.definition = SapphireUiDefFactory.getWizardDef( wizardDefPath );
+        this.element = modelElement;
         
-        setWindowTitle( this.definition.getLabel().getLocalizedText( CapitalizationType.TITLE_STYLE, false ) );
+        final ISapphireWizardDef definition = SapphireUiDefFactory.getWizardDef( wizardDefPath );
         
-        final ImageDescriptor imageDescriptor = this.definition.getImage().resolve();
+        this.part = new SapphireWizardPart();
+        this.part.init( null, this.element, definition, Collections.<String,String>emptyMap() );
         
-        if( imageDescriptor != null )
+        setWindowTitle( this.part.getLabel() );
+        
+        final ImageDescriptor image = this.part.getImage();
+        
+        if( image != null )
         {
-            setDefaultPageImageDescriptor( imageDescriptor );
+            setDefaultPageImageDescriptor( image );
         }
         
         setNeedsProgressMonitor( true );
@@ -63,16 +68,15 @@ public class SapphireWizard<M extends IExecutableModelElement>
     
     public final M getModelElement()
     {
-        return this.modelElement;
+        return this.element;
     }
     
     @Override
     public final void addPages()
     {
-        for( ISapphireWizardPageDef pageDef : this.definition.getPageDefs() )
+        for( SapphireWizardPagePart pagePart : this.part.getPages() )
         {
-            final SapphireWizardPage page = new SapphireWizardPage( this.modelElement, pageDef );
-            addPage( page );
+            addPage( new SapphireWizardPage( pagePart ) );
         }
     }
 
@@ -85,7 +89,7 @@ public class SapphireWizard<M extends IExecutableModelElement>
         {
             public void run( final IProgressMonitor monitor ) throws InvocationTargetException
             {
-                result[ 0 ] = SapphireWizard.this.modelElement.execute( monitor );
+                result[ 0 ] = SapphireWizard.this.element.execute( monitor );
             }
         };
         

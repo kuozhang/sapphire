@@ -156,6 +156,38 @@
                     </node-template>
                 </node-list>
             </node>
+            <node>
+                <label>type casts</label>
+                <section>
+                    <content>
+                        <action-link>
+                            <label>Add an expression language type cast</label>
+                            <action-id>Sapphire.Add</action-id>
+                        </action-link>
+                    </content>
+                </section>
+                <node-list>
+                    <property>TypeCasts</property>
+                    <node-template>
+                        <label>${ Implementation == null ? &quot;&lt;type-cast&gt;&quot; : LastSegment( Implementation, '.' ) }</label>
+                        <section>
+                            <label>type cast</label>
+                            <content>
+                                <property-editor>SourceType</property-editor>
+                                <property-editor>TargetType</property-editor>
+                                <property-editor>Implementation</property-editor>
+                                <property-editor>
+                                    <property>Description</property>
+                                    <hint>
+                                        <name>height</name>
+                                        <value>5</value>
+                                    </hint>
+                                </property-editor>
+                            </content>
+                        </section>
+                    </node-template>
+                </node-list>
+            </node>
             <node-ref>
                 <part>ActionsNode</part>
                 <param>

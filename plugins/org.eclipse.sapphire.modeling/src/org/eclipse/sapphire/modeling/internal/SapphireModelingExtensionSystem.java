@@ -39,6 +39,8 @@ import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.TypeCast;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
@@ -65,6 +67,9 @@ public final class SapphireModelingExtensionSystem
     private static final String EL_IMPL = "impl";
     private static final String EL_ID = "id";
     private static final String EL_OVERRIDES = "overrides";
+    private static final String EL_SOURCE = "source";
+    private static final String EL_TARGET = "target";
+    private static final String EL_TYPE_CAST = "type-cast";
 
     private static boolean initialized = false;
     private static List<ExtensionHandle> extensionHandles;
@@ -72,6 +77,7 @@ public final class SapphireModelingExtensionSystem
     private static List<ModelPropertyServiceFactoryProxy> modelPropertyServiceFactories;
     private static List<ValueSerializationServiceFactory> valueSerializerFactories;
     private static Map<String,FunctionFactory> functionFactories;
+    private static List<TypeCast> typeCasts;
 
     public static List<ExtensionHandle> getExtensionHandles()
     {
@@ -128,6 +134,12 @@ public final class SapphireModelingExtensionSystem
 
         return null;
     }
+    
+    public static List<TypeCast> getTypeCasts()
+    {
+        initialize();
+        return typeCasts;
+    }
 
     private static synchronized void initialize()
     {
@@ -138,6 +150,7 @@ public final class SapphireModelingExtensionSystem
             modelPropertyServiceFactories = new ArrayList<ModelPropertyServiceFactoryProxy>();
             valueSerializerFactories = new ArrayList<ValueSerializationServiceFactory>();
             functionFactories = new HashMap<String,FunctionFactory>();
+            typeCasts = new ArrayList<TypeCast>();
 
             extensionHandles = new ArrayList<ExtensionHandle>();
 
@@ -208,6 +221,14 @@ public final class SapphireModelingExtensionSystem
                                         final Class<? extends Function> impl = handle.loadClass( text( child( el, EL_IMPL ) ) );
 
                                         functionFactories.put( name.toLowerCase(), new FunctionFactory( impl ) );
+                                    }
+                                    else if( elname.equals( EL_TYPE_CAST ) )
+                                    {
+                                        final Class<?> source = handle.loadClass( text( child( el, EL_SOURCE ) ) );
+                                        final Class<?> target = handle.loadClass( text( child( el, EL_TARGET ) ) );
+                                        final Class<? extends TypeCast> impl = handle.loadClass( text( child( el, EL_IMPL ) ) );
+                                        
+                                        typeCasts.add( new TypeCastProxy( source, target, impl ) );
                                     }
                                 }
                                 catch( InvalidExtensionException e ) {}
@@ -744,6 +765,71 @@ public final class SapphireModelingExtensionSystem
             }
 
             return function;
+        }
+    }
+    
+    private static final class TypeCastProxy extends TypeCast
+    {
+        private final Class<?> source;
+        private final Class<?> target;
+        private final Class<? extends TypeCast> implClass;
+        private TypeCast implInstance;
+        private boolean implInstantiationFailed;
+        
+        public TypeCastProxy( final Class<?> source,
+                              final Class<?> target,
+                              final Class<? extends TypeCast> implementation )
+        {
+            this.source = source;
+            this.target = target;
+            this.implClass = implementation;
+        }
+        
+        @Override
+        public boolean applicable( final FunctionContext context,
+                                   final Function requestor,
+                                   final Object value,
+                                   final Class<?> target )
+        {
+            if( ! this.implInstantiationFailed )
+            {
+                if( target == this.target && ( value == null || value.getClass() == this.source ) )
+                {
+                    if( this.implInstance == null )
+                    {
+                        try
+                        {
+                            this.implInstance = this.implClass.newInstance();
+                        }
+                        catch( Exception e )
+                        {
+                            SapphireModelingFrameworkPlugin.log( e );
+                            this.implInstantiationFailed = true;
+                        }
+                    }
+                    
+                    if( ! this.implInstantiationFailed )
+                    {
+                        return this.implInstance.applicable( context, requestor, value, target );
+                    }
+                }
+            }
+            
+            return false;
+        }
+
+        @Override
+        public Object evaluate( final FunctionContext context,
+                                final Function requestor,
+                                final Object value,
+                                final Class<?> target )
+        {
+            if( this.implInstance == null || this.implInstantiationFailed )
+            {
+                throw new IllegalStateException();
+            }
+            
+            return this.implInstance.evaluate( context, requestor, value, target );
         }
     }
 

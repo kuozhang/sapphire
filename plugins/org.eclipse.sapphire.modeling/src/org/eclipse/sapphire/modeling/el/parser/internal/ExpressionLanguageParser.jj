@@ -178,8 +178,8 @@ PARSER_END( ExpressionLanguageParserImpl )
 
 Function Start() :
 {
-    Function res = null;
     Token t = null;
+    List<Function> functions = new ArrayList<Function>();
     Function f = null;
 }
 {
@@ -194,22 +194,28 @@ Function Start() :
             {
                 f = Literal.create( t.image );
             }
-        
-            if( res == null )
-            {
-                res = f;
-            }
-            else
-            {
-                res = ConcatFunction.create( res, f );
-            }
+            
+            functions.add( f );
         
             t = null;
             f = null;
         }
     )*
     {
-        return res;
+        final int count = functions.size();
+        
+        if( count == 0 )
+        {
+            return null;
+        }
+        else if( count == 1 )
+        {
+            return functions.get( 0 );
+        }
+        else
+        {
+            return ConcatFunction.create( functions );
+        }
     }
 }
 

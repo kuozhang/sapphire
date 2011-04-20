@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.def;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -82,16 +81,17 @@ public interface IMasterDetailsContentNodeDef
     void setUseModelElementImage( String useModelElementImage );
     void setUseModelElementImage( Boolean useModelElementImage );
     
-    // *** ImagePath ***
+    // *** Image ***
     
-    @Reference( target = ImageDescriptor.class )
-    @Label( standard = "image path" )
+    @Type( base = Function.class )
+    @Label( standard = "image" )
     @XmlBinding( path = "image" )
     
-    ValueProperty PROP_IMAGE_PATH = new ValueProperty( TYPE, "ImagePath" );
+    ValueProperty PROP_IMAGE = new ValueProperty( TYPE, "Image" );
     
-    ReferenceValue<String,ImageDescriptor> getImagePath();
-    void setImagePath( String imagePath );
+    Value<Function> getImage();
+    void setImage( String value );
+    void setImage( Function value );
     
     // *** Sections ***
     

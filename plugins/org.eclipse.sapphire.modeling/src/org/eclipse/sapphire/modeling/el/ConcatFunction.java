@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import java.util.List;
+
 /**
  * Concatenates two or more strings into a single string. Particularly useful in 
  * contexts where composite expressions cannot be used, such as where the result of 
@@ -24,6 +26,13 @@ public final class ConcatFunction
     extends Function
 
 {
+    public static ConcatFunction create( final List<Function> operands )
+    {
+        final ConcatFunction function = new ConcatFunction();
+        function.init( operands );
+        return function;
+    }
+
     public static ConcatFunction create( final Function a,
                                          final Function b )
     {
@@ -51,6 +60,12 @@ public final class ConcatFunction
     }
 
     @Override
+    public String name()
+    {
+        return "Concat";
+    }
+
+    @Override
     public FunctionResult evaluate( final FunctionContext context )
     {
         return new FunctionResult( this, context )
@@ -68,6 +83,32 @@ public final class ConcatFunction
                 return buf.toString();
             }
         };
+    }
+
+    @Override
+    public void toString( final StringBuilder buf,
+                          final boolean topLevel )
+    {
+        if( topLevel )
+        {
+            for( Function operand : operands() )
+            {
+                if( operand instanceof Literal )
+                {
+                    operand.toString( buf, true );
+                }
+                else
+                {
+                    buf.append( "$( " );
+                    operand.toString( buf, false );
+                    buf.append( " }" );
+                }
+            }
+        }
+        else
+        {
+            super.toString( buf, topLevel );
+        }
     }
 
 }

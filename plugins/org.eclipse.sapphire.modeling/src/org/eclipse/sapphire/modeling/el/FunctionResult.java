@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 /**
@@ -173,6 +174,11 @@ public abstract class FunctionResult
         catch( Exception e )
         {
             newStatus = FunctionException.createErrorStatus( e );
+        }
+        
+        if( newValue instanceof Function )
+        {
+            throw new IllegalStateException();
         }
         
         if( ! equal( this.value, newValue ) || ! equal( this.status, newStatus ))
@@ -477,11 +483,18 @@ public abstract class FunctionResult
             {
                 return (X) obj;
             }
-            else if( obj instanceof String )
+            else if( obj instanceof String && ( (String) obj ).length() == 0 )
             {
-                if( ( (String) obj ).length() == 0 )
+                return null;
+            }
+            else
+            {
+                for( TypeCast cast : SapphireModelingExtensionSystem.getTypeCasts() )
                 {
-                    return null;
+                    if( cast.applicable( this.context, this.function, obj, type ) )
+                    {
+                        return (X) cast.evaluate( this.context, this.function, obj, type );
+                    }
                 }
             }
             

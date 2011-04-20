@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.java.JavaType;
@@ -33,17 +32,21 @@ import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.SapphireMultiStatus;
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.FunctionException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
-import org.eclipse.sapphire.ui.ProblemOverlayImageDescriptor;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireCondition;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.SapphirePartEvent;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphirePropertyEnabledCondition;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -71,12 +74,6 @@ public final class MasterDetailsContentNode
     
 {
     public static final String HINT_HIDE_IF_DISABLED = "hide.if.disabled"; //$NON-NLS-1$
-    private static final ImageDescriptor IMG_DESC_CONTAINER = SapphireImageCache.OBJECT_CONTAINER_NODE;
-    private static final ImageDescriptor IMG_DESC_CONTAINER_WITH_ERROR = new ProblemOverlayImageDescriptor( IMG_DESC_CONTAINER, IStatus.ERROR );
-    private static final ImageDescriptor IMG_DESC_CONTAINER_WITH_WARNING = new ProblemOverlayImageDescriptor( IMG_DESC_CONTAINER, IStatus.WARNING );
-    private static final ImageDescriptor IMG_DESC_LEAF = SapphireImageCache.OBJECT_LEAF_NODE;
-    private static final ImageDescriptor IMG_DESC_LEAF_WITH_ERROR = new ProblemOverlayImageDescriptor( IMG_DESC_LEAF, IStatus.ERROR );
-    private static final ImageDescriptor IMG_DESC_LEAF_WITH_WARNING = new ProblemOverlayImageDescriptor( IMG_DESC_LEAF, IStatus.WARNING );
     
     private MasterDetailsContentOutline contentTree;
     private IMasterDetailsContentNodeDef definition;
@@ -86,9 +83,7 @@ public final class MasterDetailsContentNode
     private MasterDetailsContentNode parentNode;
     private FunctionResult labelFunctionResult;
     private Set<String> listProperties;
-    private ImageDescriptor imageDescriptor;
-    private ImageDescriptor imageDescriptorWithError;
-    private ImageDescriptor imageDescriptorWithWarning;
+    private ImageManager imageManager;
     private SapphirePartListener childPartListener;
     private List<Object> rawChildren;
     private List<SapphireSection> sections;
@@ -139,23 +134,6 @@ public final class MasterDetailsContentNode
         {
             this.modelElement = getModelElement();
         }
-        
-        this.labelFunctionResult = initExpression
-        ( 
-            this.modelElement, 
-            this.definition.getLabel(), 
-            new Runnable()
-            {
-                public void run()
-                {
-                    getContentTree().notifyOfNodeUpdate( MasterDetailsContentNode.this );
-                }
-            }
-        );
-        
-        this.imageDescriptor = this.definition.getImagePath().resolve();
-        this.imageDescriptorWithError = null;
-        this.imageDescriptorWithWarning = null;
         
         this.visibleWhenCondition = null;
 
@@ -378,6 +356,77 @@ public final class MasterDetailsContentNode
             }
         }
         
+        // Label
+        
+        this.labelFunctionResult = initExpression
+        ( 
+            this.modelElement, 
+            this.definition.getLabel().getContent(),
+            String.class,
+            null,
+            new Runnable()
+            {
+                public void run()
+                {
+                    getContentTree().notifyOfNodeUpdate( MasterDetailsContentNode.this );
+                }
+            }
+        );
+        
+        // Image
+        
+        final Literal defaultImageLiteral = Literal.create( ( hasChildNodes() ? SapphireImageCache.OBJECT_CONTAINER_NODE : SapphireImageCache.OBJECT_LEAF_NODE ) );
+        final Function imageFunction;
+        
+        if( this.definition.getUseModelElementImage().getContent() )
+        {
+            imageFunction = new Function()
+            {
+                @Override
+                public String name()
+                {
+                    return "ImageFromModelElement";
+                }
+                
+                @Override
+                public FunctionResult evaluate( final FunctionContext context )
+                {
+                    return new FunctionResult( this, context )
+                    {
+                        @Override
+                        protected Object evaluate() throws FunctionException
+                        {
+                            final Image img = getImageCache().getImage( getLocalModelElement() );
+                            return ImageDescriptor.createFromImage( img );
+                        }
+                    };
+                }
+            };
+            
+            imageFunction.init();
+        }
+        else
+        {
+            imageFunction = this.definition.getImage().getContent();
+        }
+        
+        this.imageManager = new ImageManager( this.modelElement, imageFunction, defaultImageLiteral );
+        
+        addListener
+        (
+            new SapphirePartListener()
+            {
+                @Override
+                public void handleEvent( final SapphirePartEvent event )
+                {
+                    if( event instanceof SapphirePart.ImageChangedEvent )
+                    {
+                        getContentTree().notifyOfNodeUpdate( MasterDetailsContentNode.this );
+                    }
+                }
+            }
+        );
+        
         // Listeners
         
         this.listProperties = new HashSet<String>();
@@ -447,83 +496,9 @@ public final class MasterDetailsContentNode
         return label;
     }
 
-    public ImageDescriptor getImageDescriptor()
+    public ImageDescriptor getImage()
     {
-        final IStatus st = getValidationState();
-        final int severity = st.getSeverity();
-        final ImageDescriptor base;
-    
-        if( this.definition.getUseModelElementImage().getContent() )
-        {
-            final Image img = getImageCache().getImage( getLocalModelElement() );
-            base = ImageDescriptor.createFromImage( img );
-        }
-        else
-        {
-            base = this.imageDescriptor;
-        }
-        
-        if( base == null )
-        {
-            if( severity == IStatus.ERROR )
-            {
-                if( hasChildNodes() )
-                {
-                    return IMG_DESC_CONTAINER_WITH_ERROR;
-                }
-                else
-                {
-                    return IMG_DESC_LEAF_WITH_ERROR;
-                }
-            }
-            else if( severity == IStatus.WARNING )
-            {
-                if( hasChildNodes() )
-                {
-                    return IMG_DESC_CONTAINER_WITH_WARNING;
-                }
-                else
-                {
-                    return IMG_DESC_LEAF_WITH_WARNING;
-                }
-            }
-            else
-            {
-                if( hasChildNodes() )
-                {
-                    return IMG_DESC_CONTAINER;
-                }
-                else
-                {
-                    return IMG_DESC_LEAF;
-                }
-            }
-        }
-        else
-        {
-            if( severity == IStatus.ERROR )
-            {
-                if( this.imageDescriptorWithError == null )
-                {
-                    this.imageDescriptorWithError = new ProblemOverlayImageDescriptor( base, Status.ERROR );
-                }
-                
-                return this.imageDescriptorWithError;
-            }
-            else if( severity == IStatus.WARNING )
-            {
-                if( this.imageDescriptorWithWarning == null )
-                {
-                    this.imageDescriptorWithWarning = new ProblemOverlayImageDescriptor( base, Status.WARNING );
-                }
-                
-                return this.imageDescriptorWithWarning;
-            }
-            else
-            {
-                return base;
-            }
-        }
+        return this.imageManager.getImage();
     }
 
     public boolean isVisible()
@@ -779,6 +754,11 @@ public final class MasterDetailsContentNode
         if( this.labelFunctionResult != null )
         {
             this.labelFunctionResult.dispose();
+        }
+        
+        if( this.imageManager != null )
+        {
+            this.imageManager.dispose();
         }
     }
 

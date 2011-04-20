@@ -15,15 +15,11 @@ package org.eclipse.sapphire.ui.swt;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
-import java.util.Collections;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.help.IContext;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartEvent;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -32,7 +28,6 @@ import org.eclipse.sapphire.ui.SapphireWizardPagePart;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
-import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -49,12 +44,6 @@ public class SapphireWizardPage
 {
     private final SapphireWizardPagePart part;
     
-    public SapphireWizardPage( final IModelElement rootModelElement,
-                               final ISapphireWizardPageDef definition )
-    {
-        this( (SapphireWizardPagePart) SapphirePart.create( null, rootModelElement, definition, Collections.<String,String>emptyMap() ) );
-    }
-
     public SapphireWizardPage( final SapphireWizardPagePart part )
     {
         super( part.getDefinition().getId().getContent() );
@@ -64,11 +53,11 @@ public class SapphireWizardPage
         setTitle( this.part.getLabel() );
         setDescription( this.part.getDescription() );
         
-        final ImageDescriptor imageDescriptor = this.part.getImageDescriptor();
+        final ImageDescriptor image = this.part.getImage();
         
-        if( imageDescriptor != null )
+        if( image != null )
         {
-            setImageDescriptor( imageDescriptor );
+            setImageDescriptor( image );
         }
     }
     

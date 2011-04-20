@@ -10,9 +10,10 @@
 <h1>Enhancements in 0.3</h1>
 
 <ol>
-  <li><a href="#common">Common</a></li>
+  <li><a href="#el">Expression Language</a></li>
   <ol type="A">
-    <li><a href="#el">Expression Language Improvements</a></li>
+    <li><a href="#el-general">General Improvements</a></li>
+    <li><a href="#el-type-casts">Custom Type Casts</a></li>
   </ol>
   <li><a href="#modeling">Modeling</a></li>
   <ol type="A">
@@ -27,10 +28,11 @@
     <li><a href="#action-label-el">Expressions in Action Labels</a></li>
     <li><a href="#checkbox-layouts">Checkbox Layouts</a></li>
     <li><a href="#properties-view">Properties View</a></li>
+    <li><a href="#image-el">Image Expressions</a></li>
   </ol>
 </ol>
  
-<h2><a name="common"><a name="el">Expression Language Improvements</a></a></h2>
+<h2><a name="el"><a name="el-general">Expression Language Improvements</a></a></h2>
 
 <p>Index into any list or array using array notation.</p>
 
@@ -66,6 +68,33 @@ ${ Parent().Parent().Name == "John" }
 ${ Root().Name == "John" }
 </code></pre>
 
+<h2><a name="el-type-casts">Custom Type Casts</a></h2>
+
+<p>Contribute custom type casts to handle data type conversion in expressions. Custom type casts are
+registered in sapphire-extension.xml file.</p>
+
+<p style="margin-left: 20px;"><b>Example</b><p>
+
+<pre class="source-code"><code><font color="#888888">&lt;extension></font>
+    &lt;type-cast>
+        &lt;source>java.lang.String&lt;/source>
+        &lt;target>org.example.FooBar&lt;/target>
+        &lt;impl>org.example.StringToFooBarTypeCast&lt;/impl>
+    &lt;/type-cast>
+<font color="#888888">&lt;/extension></font></code></pre>
+
+<pre class="source-code"><code>public class StringToFooBarTypeCast extends TypeCast
+{
+    @Override
+    public Object evaluate( final FunctionContext context,
+                            final Function requestor,
+                            final Object value,
+                            final Class&lt;?> target )
+    {
+        return new FooBar( (String) value );
+    }
+}</code></pre>
+
 <h2><a name="modeling"><a name="ref">ReferenceValue Improvements</a></a></h2>
 
 <p>In the past releases, the reference value properties were assumed to always use string as the reference
@@ -81,8 +110,7 @@ than a string for the reference.</p>
 ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );
     
 ReferenceValue&lt;String,JavaType> getImplClass();
-void setImplClass( String value );
-</code></pre>
+void setImplClass( String value );</code></pre>
 
 <p style="margin-left: 20px;"><b>Example</b><p>
 
@@ -301,6 +329,31 @@ context part.</p>
         &lt;/page>
     &lt;/properties-view>
 <font color="#888888">&lt;/node></font></code></pre>
+
+<h2><a name="image-el">Image Expressions</a></h2>
+
+<p>Use expressions to specify images for content outline nodes and other parts. This allows the image
+to vary based on a condition, such as a property value.</p>
+
+<p style="margin-left: 20px;"><b>Example</b><p>
+
+<p style="margin-left: 20px;">In this example from the architecture sample, parent node image is defined
+with a static path, while child node image varies based on the number dependencies.<p>
+
+<pre class="source-code"><code><font color="#888888">&lt;node>
+    &lt;label>components&lt;/label></font>
+    &lt;image>images/components.png&lt;/image>
+    <font color="#888888">&lt;node-list>
+        &lt;property>Components&lt;/property>
+        &lt;node-template>
+            &lt;model-element-type>IComponent&lt;/model-element-type>
+            &lt;label>${ Name == null ? "&amp;lt;component&amp;gt;" : Name }&lt;/label></font>
+            &lt;image>${ Dependencies.Size == 0 ? "images/component-leaf.png" : "images/component.png" }&lt;/image>
+            <font color="#888888">...
+        &lt;/node-template>
+    &lt;/node-list>
+    ...
+&lt;/node></font></code></pre>
 
 <br/><br/>
 

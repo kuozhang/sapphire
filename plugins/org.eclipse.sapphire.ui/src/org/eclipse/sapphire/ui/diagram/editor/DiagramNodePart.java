@@ -8,6 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
+ *    Konstantin Komissarchik - [342775] Support EL in IMasterDetailsTreeNodeDef.ImagePath
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -70,7 +71,9 @@ public class DiagramNodePart
         this.labelFunctionResult = initExpression
         ( 
         	this.modelElement,
-            this.definition.getLabel().element().getText(), 
+            this.definition.getLabel().element().getText().getContent(),
+            String.class,
+            null,
             new Runnable()
             {
                 public void run()
@@ -84,7 +87,9 @@ public class DiagramNodePart
         this.idFunctionResult = initExpression
         ( 
         	this.modelElement,
-            this.definition.getInstanceId(), 
+            this.definition.getInstanceId().getContent(), 
+            String.class,
+            null,
             new Runnable()
             {
                 public void run()
@@ -98,7 +103,9 @@ public class DiagramNodePart
 	        this.imageFunctionResult = initExpression
 	        ( 
 	        	this.modelElement,
-	            this.definition.getImage().element().getId(), 
+	            this.definition.getImage().element().getId().getContent(),
+	            String.class,
+	            null,
 	            new Runnable()
 	            {
 	                public void run()
@@ -118,7 +125,9 @@ public class DiagramNodePart
         	FunctionResult imageResult = initExpression
             ( 
             	this.modelElement,
-                imageDecorator.getVisibleWhen(), 
+                imageDecorator.getVisibleWhen().getContent(),
+                String.class,
+                null,
                 new Runnable()
                 {
                     public void run()

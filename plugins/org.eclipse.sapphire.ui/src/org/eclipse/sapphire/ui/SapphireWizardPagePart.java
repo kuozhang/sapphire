@@ -13,6 +13,8 @@ package org.eclipse.sapphire.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
 
 /**
@@ -24,35 +26,62 @@ public final class SapphireWizardPagePart
     extends SapphireComposite
     
 {
-    private ISapphireWizardPageDef def;
+    private FunctionResult imageFunctionResult;
     
     @Override
     protected void init()
     {
         super.init();
         
-        this.def = (ISapphireWizardPageDef) this.definition;
+        final IModelElement element = getModelElement();
+        final ISapphireWizardPageDef def = getDefinition();
+        
+        this.imageFunctionResult = initExpression
+        (
+            element,
+            def.getImage().getContent(),
+            ImageDescriptor.class,
+            null,
+            new Runnable()
+            {
+                public void run()
+                {
+                    notifyListeners( new ImageChangedEvent( SapphireWizardPagePart.this ) );
+                }
+            }
+        );
     }
 
     @Override
     public ISapphireWizardPageDef getDefinition()
     {
-        return this.def;
+        return (ISapphireWizardPageDef) super.getDefinition();
     }
     
     public String getLabel()
     {
-        return this.def.getLabel().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
+        return getDefinition().getLabel().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
     }
     
     public String getDescription()
     {
-        return this.def.getDescription().getLocalizedText( CapitalizationType.NO_CAPS, false );
+        return getDefinition().getDescription().getLocalizedText( CapitalizationType.NO_CAPS, false );
     }
     
-    public ImageDescriptor getImageDescriptor()
+    public ImageDescriptor getImage()
     {
-        return this.def.getImage().resolve();
+        return (ImageDescriptor) this.imageFunctionResult.value();
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        if( this.imageFunctionResult != null )
+        {
+            this.imageFunctionResult.dispose();
+        }
     }
     
 }

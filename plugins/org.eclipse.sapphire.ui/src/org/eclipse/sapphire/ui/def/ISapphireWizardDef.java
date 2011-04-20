@@ -11,19 +11,17 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
-import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -68,22 +66,23 @@ public interface ISapphireWizardDef
 
     // *** Image ***
     
-    @Reference( target = ImageDescriptor.class )
+    @Type( base = Function.class )
     @Label( standard = "image" )
     @XmlBinding( path = "image" )
     
     ValueProperty PROP_IMAGE = new ValueProperty( TYPE, "Image" );
     
-    ReferenceValue<String,ImageDescriptor> getImage();
-    void setImage( String image );
+    Value<Function> getImage();
+    void setImage( String value );
+    void setImage( Function value );
     
-    // *** PageDefs ***
+    // *** Pages ***
     
     @Type( base = ISapphireWizardPageDef.class )
     @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "page", type = ISapphireWizardPageDef.class ) )
                              
-    ListProperty PROP_PAGE_DEFS = new ListProperty( TYPE, "PageDefs" );
+    ListProperty PROP_PAGES = new ListProperty( TYPE, "Pages" );
     
-    ModelElementList<ISapphireWizardPageDef> getPageDefs();
+    ModelElementList<ISapphireWizardPageDef> getPages();
     
 }

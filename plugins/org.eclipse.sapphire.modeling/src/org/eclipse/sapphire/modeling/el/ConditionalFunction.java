@@ -37,6 +37,24 @@ public final class ConditionalFunction
     }
     
     @Override
+    public String name()
+    {
+        return "Conditional";
+    }
+
+    @Override
+    public boolean operator()
+    {
+        return true;
+    }
+
+    @Override
+    public int precedence()
+    {
+        return 7;
+    }
+
+    @Override
     public FunctionResult evaluate( final FunctionContext context )
     {
         return new FunctionResult( this, context )
@@ -100,6 +118,35 @@ public final class ConditionalFunction
                 return this.lastActiveBranch.value();
             }
         };
+    }
+
+    @Override
+    public void toString( final StringBuilder buf,
+                          final boolean topLevel )
+    {
+        toString( buf, operand( 0 ) );
+        buf.append( " ? " );
+        toString( buf, operand( 1 ) );
+        buf.append( " : " );
+        toString( buf, operand( 2 ) );
+    }
+    
+    private void toString( final StringBuilder buf,
+                           final Function operand )
+    {
+        final boolean parens = ( precedence() <= operand.precedence() );
+        
+        if( parens )
+        {
+            buf.append( "( " );
+        }
+        
+        operand.toString( buf, false );
+        
+        if( parens )
+        {
+            buf.append( " )" );
+        }
     }
     
 }

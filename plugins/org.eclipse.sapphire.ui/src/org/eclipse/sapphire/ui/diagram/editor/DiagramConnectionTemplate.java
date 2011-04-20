@@ -8,6 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
+ *    Konstantin Komissarchik - [342775] Support EL in IMasterDetailsTreeNodeDef.ImagePath
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -35,6 +36,7 @@ import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -469,7 +471,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         if( f != null )
         {
             
-            f = FailSafeFunction.create( f, String.class );
+            f = FailSafeFunction.create( f, Literal.create( String.class ) );
             fr = f.evaluate( new ModelElementFunctionContext( nodePart.getLocalModelElement(), ls ));
         }
         return fr;

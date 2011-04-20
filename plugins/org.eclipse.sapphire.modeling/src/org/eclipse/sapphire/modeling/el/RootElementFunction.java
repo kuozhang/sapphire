@@ -34,6 +34,12 @@ public final class RootElementFunction
     }
     
     @Override
+    public String name()
+    {
+        return "Root";
+    }
+
+    @Override
     public FunctionResult evaluate( final FunctionContext context )
     {
         return new FunctionResult( this, context )

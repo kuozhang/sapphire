@@ -17,15 +17,20 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.SapphireMultiStatus;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.ISapphireTabDef;
 import org.eclipse.sapphire.ui.def.ISapphireTabGroupDef;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
@@ -35,24 +40,28 @@ import org.eclipse.swt.widgets.TabItem;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class SapphireTabGroup
+public final class TabGroupPart
 
     extends SapphirePart
     
 {
-    private List<SapphirePart> tabParts;
+    private List<TabGroupPagePart> pages;
     
     @Override
     protected void init()
     {
         super.init();
-
-        this.tabParts = new ArrayList<SapphirePart>();
         
-        for( ISapphireTabDef tabDef : ( (ISapphireTabGroupDef) this.definition ).getTabs() )
+        final IModelElement element = getModelElement();
+
+        this.pages = new ArrayList<TabGroupPagePart>();
+        
+        for( ISapphireTabDef pageDef : ( (ISapphireTabGroupDef) this.definition ).getTabs() )
         {
-            final SapphirePart tabPart = create( this, getModelElement(), tabDef, null );
-            this.tabParts.add( tabPart );
+            final TabGroupPagePart pagePart = new TabGroupPagePart();
+            pagePart.init( this, element, pageDef, this.params );
+            
+            this.pages.add( pagePart );
 
             final SapphirePartListener tabPartListener = new SapphirePartListener()
             {
@@ -64,7 +73,7 @@ public class SapphireTabGroup
                 }
             };
             
-            tabPart.addListener( tabPartListener );
+            pagePart.addListener( tabPartListener );
         }
     }
 
@@ -78,46 +87,68 @@ public class SapphireTabGroup
         tabGroup.setLayoutData( gdhspan( ( expandVertically ? gdfill() : gdhfill() ), 2 ) );
         context.adapt( tabGroup );
         
-        for( final SapphirePart tabPart : this.tabParts )
+        for( final TabGroupPagePart page : this.pages )
         {
             final Composite tabControl = new Composite( tabGroup, SWT.NONE );
             tabControl.setLayout( glayout( 2, 0, 0 ) );
 
             final TabItem tab = new TabItem( tabGroup, SWT.NONE );
-            tab.setText( ( (ISapphireTabDef) tabPart.getDefinition() ).getLabel().getLocalizedText() );
+            tab.setText( page.getLabel() );
             tab.setControl( tabControl );
+            
+            final Map<ImageDescriptor,Image> images = new HashMap<ImageDescriptor,Image>();
+            updateTabImage( tab, page, images );
             
             final SapphirePartListener tabPartListener = new SapphirePartListener()
             {
                 @Override
-                public void handleValidateStateChange( final IStatus oldValidateState,
-                                                       final IStatus newValidationState )
+                public void handleEvent( final SapphirePartEvent event )
                 {
-                    updateTabImage( tab, tabPart, newValidationState );
+                    if( event instanceof SapphirePart.LabelChangedEvent )
+                    {
+                        tab.setText( page.getLabel() );
+                    }
+                    else if( event instanceof SapphirePart.ImageChangedEvent )
+                    {
+                        updateTabImage( tab, page, images );
+                    }
                 }
             };
             
-            tabPart.addListener( tabPartListener );
-            updateTabImage( tab, tabPart, tabPart.getValidationState() );
+            page.addListener( tabPartListener );
             
-            tabPart.render( new SapphireRenderingContext( tabPart, context, tabControl ) );
+            tab.addDisposeListener
+            (
+                new DisposeListener()
+                {
+                    public void widgetDisposed( final DisposeEvent event )
+                    {
+                        page.removeListener( tabPartListener );
+                        
+                        for( Image image : images.values() )
+                        {
+                            image.dispose();
+                        }
+                    }
+                }
+            );
+            
+            page.render( new SapphireRenderingContext( page, context, tabControl ) );
         }
     }
     
     private void updateTabImage( final TabItem tab,
-                                 final SapphirePart tabPart,
-                                 final IStatus newValidationState )
+                                 final TabGroupPagePart tabPart,
+                                 final Map<ImageDescriptor,Image> images )
     {
-        final int severity = newValidationState.getSeverity();
+        final ImageDescriptor imageDescriptor = tabPart.getImage();
+        Image image = images.get( imageDescriptor );
         
-        ImageDescriptor imageDescriptor = ( (ISapphireTabDef) tabPart.getDefinition() ).getImagePath().resolve();
-        
-        if( imageDescriptor == null )
+        if( image == null )
         {
-            imageDescriptor = SapphireImageCache.OBJECT_LEAF_NODE; 
+            image = imageDescriptor.createImage();
+            images.put( imageDescriptor, image );
         }
-        
-        final Image image = getImageCache().getImage( imageDescriptor, severity );            
         
         tab.setImage( image );
     }
@@ -127,9 +158,9 @@ public class SapphireTabGroup
     {
         final SapphireMultiStatus st = new SapphireMultiStatus();
 
-        for( SapphirePart tabPart : this.tabParts )
+        for( TabGroupPagePart page : this.pages )
         {
-            st.add( tabPart.getValidationState() );
+            st.add( page.getValidationState() );
         }
         
         return st;
@@ -140,9 +171,9 @@ public class SapphireTabGroup
     {
         super.dispose();
         
-        for( SapphirePart tabPart : this.tabParts )
+        for( SapphirePart page : this.pages )
         {
-            tabPart.dispose();
+            page.dispose();
         }
     }
     

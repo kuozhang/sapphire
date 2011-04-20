@@ -11,15 +11,12 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -53,15 +50,16 @@ public interface IPropertiesViewContributionPageDef
     void setLabel( String value );
     void setLabel( Function value );
     
-    // *** ImagePath ***
+    // *** Image ***
     
-    @Reference( target = ImageDescriptor.class )
-    @Label( standard = "image path" )
+    @Type( base = Function.class )
+    @Label( standard = "image" )
     @XmlBinding( path = "image" )
     
-    ValueProperty PROP_IMAGE_PATH = new ValueProperty( TYPE, "ImagePath" );
+    ValueProperty PROP_IMAGE = new ValueProperty( TYPE, "Image" );
     
-    ReferenceValue<String,ImageDescriptor> getImagePath();
-    void setImagePath( String imagePath );
+    Value<Function> getImage();
+    void setImage( String value );
+    void setImage( Function value );
     
 }

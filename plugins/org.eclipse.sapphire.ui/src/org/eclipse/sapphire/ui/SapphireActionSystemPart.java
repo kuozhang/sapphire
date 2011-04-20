@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
@@ -61,33 +62,34 @@ public abstract class SapphireActionSystemPart
         {
             this.id = def.getId().getContent();
             
-            final Function labelFunction = def.getLabel().getContent();
+            final Function labelFunction = FailSafeFunction.create( def.getLabel().getContent(), Literal.create( String.class ) );
             
-            if( labelFunction != null )
-            {
-                this.labelFunctionResult = labelFunction.evaluate( this.functionContext );
-                
-                this.labelFunctionResult.addListener
-                (
-                    new FunctionResult.Listener()
+            this.labelFunctionResult = labelFunction.evaluate( this.functionContext );
+            
+            this.labelFunctionResult.addListener
+            (
+                new FunctionResult.Listener()
+                {
+                    @Override
+                    public void handleValueChanged()
                     {
-                        @Override
-                        public void handleValueChanged()
-                        {
-                            notifyListeners( new Event( EVENT_LABEL_CHANGED ) );
-                        }
+                        notifyListeners( new Event( EVENT_LABEL_CHANGED ) );
                     }
-                );
-            }
+                }
+            );
             
             for( ISapphireActionImage image : def.getImages() )
             {
-                final ImageDescriptor img = image.getImage().resolve();
+                final Function imageFunction = FailSafeFunction.create( image.getImage().getContent(), Literal.create( ImageDescriptor.class ) );
+                final FunctionResult imageFunctionResult = imageFunction.evaluate( this.functionContext ); 
+                final ImageDescriptor img = (ImageDescriptor) imageFunctionResult.value();
                 
                 if( img != null )
                 {
                     this.images.add( img );
                 }
+                
+                imageFunctionResult.dispose();
             }
             
             for( ISapphireActionLocationHint locationHintDef : def.getLocationHints() )

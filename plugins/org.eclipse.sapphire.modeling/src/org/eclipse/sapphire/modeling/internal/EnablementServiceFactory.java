@@ -23,6 +23,7 @@ import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 
@@ -94,7 +95,7 @@ public final class EnablementServiceFactory
                 
                 if( f != null )
                 {
-                    f = FailSafeFunction.create( f, Boolean.class );
+                    f = FailSafeFunction.create( f, Literal.create( Boolean.class ) );
                     fr = f.evaluate( new ModelElementFunctionContext( element ) );
                 }
                 

@@ -260,4 +260,13 @@ public interface IGallery
     
     IHtmlContentGallery getHtmlContentGallery();
     
+    // *** TabGroupGallery ***
+    
+    @Type( base = ITabGroupGallery.class )
+    @XmlBinding( path = "tab-group" )
+
+    ImpliedElementProperty PROP_TAB_GROUP_GALLERY = new ImpliedElementProperty( TYPE, "TabGroupGallery" );
+    
+    ITabGroupGallery getTabGroupGallery();
+    
 }

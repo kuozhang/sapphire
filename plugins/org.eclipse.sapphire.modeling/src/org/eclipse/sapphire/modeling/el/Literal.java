@@ -24,10 +24,17 @@ public final class Literal
     extends Function
 
 {
+    public static final Literal NULL = create( null );
+    
     private Object value;
     
     public Literal( final Object value )
     {
+        if( value instanceof Function )
+        {
+            throw new IllegalArgumentException();
+        }
+        
         this.value = value;
     }
     
@@ -36,6 +43,12 @@ public final class Literal
         final Literal literal = new Literal( obj );
         literal.init();
         return literal;
+    }
+    
+    @Override
+    public String name()
+    {
+        return "Literal";
     }
     
     public Object value()
@@ -62,5 +75,38 @@ public final class Literal
             }
         };
     }
-    
+
+    @Override
+    public void toString( final StringBuilder buf,
+                          final boolean topLevel )
+    {
+        if( this.value == null )
+        {
+            buf.append( "null" );
+        }
+        else if( this.value instanceof Boolean || this.value instanceof Number )
+        {
+            buf.append( this.value.toString() );
+        }
+        else if( this.value instanceof String )
+        {
+            if( topLevel )
+            {
+                buf.append( (String) this.value );
+            }
+            else
+            {
+                buf.append( '"' );
+                buf.append( ( (String) this.value ).replace( "\"", "\\\"" ) );
+                buf.append( '"' );
+            }
+        }
+        else
+        {
+            buf.append( '$' );
+            buf.append( this.value.toString() );
+            buf.append( '$' );
+        }
+    }
+
 }

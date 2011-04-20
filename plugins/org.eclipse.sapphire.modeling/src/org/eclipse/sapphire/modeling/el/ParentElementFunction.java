@@ -35,6 +35,12 @@ public final class ParentElementFunction
     }
     
     @Override
+    public String name()
+    {
+        return "Parent";
+    }
+
+    @Override
     public FunctionResult evaluate( final FunctionContext context )
     {
         return new FunctionResult( this, context )

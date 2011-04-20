@@ -983,6 +983,12 @@ public final class ExpressionLanguageTests
                     function = new Function()
                     {
                         @Override
+                        public String name()
+                        {
+                            return "eclipse:add";
+                        }
+
+                        @Override
                         public FunctionResult evaluate( final FunctionContext context )
                         {
                             return new FunctionResult( this, context )
@@ -1000,6 +1006,12 @@ public final class ExpressionLanguageTests
                 {
                     function = new Function()
                     {
+                        @Override
+                        public String name()
+                        {
+                            return "subtract";
+                        }
+
                         @Override
                         public FunctionResult evaluate( final FunctionContext context )
                         {

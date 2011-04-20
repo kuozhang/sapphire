@@ -31,6 +31,24 @@ public final class OrFunction
     }
 
     @Override
+    public String name()
+    {
+        return "||";
+    }
+
+    @Override
+    public boolean operator()
+    {
+        return true;
+    }
+
+    @Override
+    public int precedence()
+    {
+        return 6;
+    }
+
+    @Override
     public FunctionResult evaluate( final FunctionContext context )
     {
         return new FunctionResult( this, context )

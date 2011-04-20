@@ -44,5 +44,5 @@ public interface ISapphireTabGroupDef
     ListProperty PROP_TABS = new ListProperty( TYPE, "Tabs" );
     
     ModelElementList<ISapphireTabDef> getTabs();
-
+    
 }

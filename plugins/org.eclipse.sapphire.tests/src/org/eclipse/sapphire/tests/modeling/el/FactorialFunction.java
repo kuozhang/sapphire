@@ -30,6 +30,12 @@ public final class FactorialFunction
     private static final BigInteger ONE = BigInteger.valueOf( 1 );
     
     @Override
+    public String name()
+    {
+        return "test:factorial";
+    }
+    
+    @Override
     public FunctionResult evaluate( final FunctionContext context )
     {
         return new FunctionResult( this, context )
@@ -57,5 +63,5 @@ public final class FactorialFunction
             }
         };
     }
-    
+
 }

@@ -51,6 +51,24 @@ public final class PropertyAccessFunction
     }
     
     @Override
+    public String name()
+    {
+        return ".";
+    }
+
+    @Override
+    public boolean operator()
+    {
+        return true;
+    }
+
+    @Override
+    public int precedence()
+    {
+        return 1;
+    }
+    
+    @Override
     public FunctionResult evaluate( final FunctionContext context )
     {
         return new FunctionResult( this, context )
@@ -126,5 +144,33 @@ public final class PropertyAccessFunction
             }
         };
     }
-    
+
+    @Override
+    public void toString( final StringBuilder buf,
+                          final boolean topLevel )
+    {
+        if( operands().size() == 1 )
+        {
+            buf.append( (String) ( (Literal) operand( 0 ) ).value() );
+        }
+        else
+        {
+            operand( 0 ).toString( buf, false );
+            
+            final Function p = operand( 1 );
+            
+            if( p instanceof Literal )
+            {
+                buf.append( '.' );
+                ( (Literal) p ).toString( buf, false );
+            }
+            else
+            {
+                buf.append( "[ " );
+                p.toString( buf, false );
+                buf.append( " ]" );
+            }
+        }
+    }
+
 }

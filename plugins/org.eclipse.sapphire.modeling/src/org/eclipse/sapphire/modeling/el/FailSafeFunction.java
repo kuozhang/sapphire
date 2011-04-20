@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import org.eclipse.sapphire.modeling.Value;
+
 /**
  * Function that ensures that the returned value is of specified type and prevents function
  * exceptions from propagating.  
@@ -26,27 +28,53 @@ public class FailSafeFunction
     public static Function create( final Function operand,
                                    final Function expectedType )
     {
-        final FailSafeFunction function = new FailSafeFunction();
-        function.init( operand, expectedType );
-        return function;
+        return create( operand, expectedType, Literal.NULL );
     }
 
-    public static Function create( final Function operand,
-                                   final Class<?> expectedType )
+    public static Function create( Function operand,
+                                   Function expectedType,
+                                   Function defaultValue )
     {
-        if( operand instanceof Literal )
+        if( operand == null )
         {
-            final Object val = ( (Literal) operand ).value();
+            operand = Literal.NULL;
+        }
+        
+        if( expectedType == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( defaultValue == null )
+        {
+            defaultValue = Literal.NULL;
+        }
+        
+        if( operand instanceof Literal && expectedType instanceof Literal && defaultValue instanceof Literal )
+        {
+            final Object op = ( (Literal) operand ).value();
+            final Object et = ( (Literal) expectedType ).value();
+            final Object dv = ( (Literal) defaultValue ).value();
             
-            if( val != null && val.getClass().equals( expectedType ) )
+            if( dv == null && ( op == null || op.getClass().equals( et ) ) )
             {
                 return operand;
             }
         }
         
-        return create( operand, Literal.create( expectedType ) );
+        final FailSafeFunction function = new FailSafeFunction();
+        function.init( operand, expectedType, defaultValue );
+        function.initOrigin( operand.origin(), false );
+        
+        return function;
     }
-    
+
+    @Override
+    public String name()
+    {
+        return "FailSafe";
+    }
+
     @Override
     public FunctionResult evaluate( final FunctionContext context )
     {
@@ -57,9 +85,21 @@ public class FailSafeFunction
             
             protected Object evaluate()
             {
+                Object val = operand( 0 ).value();
+                
+                if( val instanceof Value )
+                {
+                    val = ( (Value<?>) val ).getContent();
+                }
+                
+                if( val == null )
+                {
+                    val = operand( 2 ).value();
+                }
+                
                 try
                 {
-                    return cast( operand( 0 ).value(), cast( operand( 1 ).value(), Class.class ) );
+                    return cast( val, cast( operand( 1 ).value(), Class.class ) );
                 }
                 catch( FunctionException e )
                 {

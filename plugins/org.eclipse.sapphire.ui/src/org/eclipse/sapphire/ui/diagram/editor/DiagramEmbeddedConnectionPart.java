@@ -9,6 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [341856] NPE when a diagram connection doesn't define a label
  *    Konstantin Komissarchik - [342897] Integrate with properties view
+ *    Konstantin Komissarchik - [342775] Support EL in IMasterDetailsTreeNodeDef.ImagePath
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -52,7 +53,9 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
 	        this.endpointFunctionResult = initExpression
 	        (
 	        	this.endpointModel, 
-	        	this.endpointDef.getValue(), 
+	        	this.endpointDef.getValue().getContent(),
+	        	String.class,
+	        	null,
 	            new Runnable()
 	        	{
 		            public void run()
@@ -165,7 +168,9 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
 	        this.endpointFunctionResult = initExpression
 	        (
 	        	this.endpointModel, 
-	        	this.endpointDef.getValue(), 
+	        	this.endpointDef.getValue().getContent(), 
+	        	String.class,
+	        	null,
 	            new Runnable()
 	        	{
 		            public void run()

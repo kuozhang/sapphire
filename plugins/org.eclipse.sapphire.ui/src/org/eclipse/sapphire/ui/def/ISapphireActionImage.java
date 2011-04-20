@@ -11,19 +11,15 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
+import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
-import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.annotations.ValidFileExtensions;
-import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
+import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -42,17 +38,15 @@ public interface ISapphireActionImage
     
     // *** Image ***
     
-    @Reference( target = ImageDescriptor.class )
+    @Type( base = Function.class )
     @Label( standard = "image" )
     @NonNullValue
-    @ValidFileSystemResourceType( FileSystemResourceType.FILE )
-    @ValidFileExtensions( { "gif", "png" } )
-    @MustExist
     @XmlBinding( path = "" )
     
     ValueProperty PROP_IMAGE = new ValueProperty( TYPE, "Image" );
     
-    ReferenceValue<String,ImageDescriptor> getImage();
+    Value<Function> getImage();
     void setImage( String value );
+    void setImage( Function value );
     
 }

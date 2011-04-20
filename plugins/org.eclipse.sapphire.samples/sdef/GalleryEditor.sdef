@@ -1262,6 +1262,58 @@
                     </section>
                 </node>
             </node>
+            <node>
+                <label>tab group</label>
+                <section>
+                    <content>
+                        <tab-group>
+                            <tab>
+                                <label>tab 1</label>
+                                <content>
+                                    <composite>
+                                        <content>
+                                            <label>Specify an image for a tab to make it easier for users to visually differentiate tabs. An expression can be used to specify the image. This allows the image to vary based some condition, such as property value. Change type kind property to see this in action.</label>
+                                            <spacer></spacer>
+                                            <property-editor>
+                                                <property>TypeKind</property>
+                                                <hint>
+                                                    <name>prefer.radio.buttons</name>
+                                                    <value>true</value>
+                                                </hint>
+                                            </property-editor>
+                                            <property-editor>Property1</property-editor>
+                                            <property-editor>Property2</property-editor>
+                                        </content>
+                                        <margin-left>0</margin-left>
+                                        <margin-right>10</margin-right>
+                                        <margin-top>10</margin-top>
+                                        <margin-bottom>10</margin-bottom>
+                                    </composite>
+                                </content>
+                                <image>${ TypeKind == &quot;ANNOTATION&quot; ? &quot;images/java-annotation.png&quot; : ( TypeKind == &quot;ENUM&quot; ? &quot;images/java-enum.png&quot; : ( TypeKind == &quot;INTERFACE&quot; ? &quot;images/java-interface.png&quot; : &quot;images/java-class.png&quot; ) ) }</image>
+                            </tab>
+                            <tab>
+                                <label>tab 2</label>
+                                <content>
+                                    <composite>
+                                        <content>
+                                            <label>If no tab image is specified, a default one is used. This allows problem markers to be shown in all cases.</label>
+                                            <spacer></spacer>
+                                            <property-editor>Property3</property-editor>
+                                            <property-editor>Property4</property-editor>
+                                        </content>
+                                        <margin-left>0</margin-left>
+                                        <margin-right>10</margin-right>
+                                        <margin-top>10</margin-top>
+                                        <margin-bottom>10</margin-bottom>
+                                    </composite>
+                                </content>
+                            </tab>
+                        </tab-group>
+                    </content>
+                </section>
+                <property>TabGroupGallery</property>
+            </node>
         </root-node>
     </editor-page>
     <import>

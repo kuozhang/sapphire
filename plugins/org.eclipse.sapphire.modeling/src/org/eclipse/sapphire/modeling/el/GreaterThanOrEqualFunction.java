@@ -36,6 +36,24 @@ public final class GreaterThanOrEqualFunction
     }
     
     @Override
+    public String name()
+    {
+        return ">=";
+    }
+
+    @Override
+    public boolean operator()
+    {
+        return true;
+    }
+
+    @Override
+    public int precedence()
+    {
+        return 5;
+    }
+
+    @Override
     public FunctionResult evaluate( final FunctionContext context )
     {
         return new FunctionResult( this, context )

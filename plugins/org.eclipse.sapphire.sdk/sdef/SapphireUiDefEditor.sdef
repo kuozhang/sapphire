@@ -478,7 +478,7 @@
                 </content>
             </section>
             <node-list>
-                <property>PageDefs</property>
+                <property>Pages</property>
                 <node-template>
                     <model-element-type>ISapphireWizardPageDef</model-element-type>
                     <label>${ Label == null ? "&lt;page&gt;" : Label }</label>
@@ -776,7 +776,7 @@
                         <label>Tab</label>
                         <content>
                             <property-editor>Label</property-editor>
-                            <property-editor>ImagePath</property-editor>
+                            <property-editor>Image</property-editor>
                         </content>
                     </section>
                     <section>
@@ -830,7 +830,7 @@
                 <content>
                     <include>PartId</include>
                     <property-editor>Label</property-editor>
-                    <property-editor>ImagePath</property-editor>
+                    <property-editor>Image</property-editor>
                     <composite>
                         <indent>true</indent>
                         <content>
@@ -922,7 +922,7 @@
                         <content>
                             <property-editor>Type</property-editor>
                             <property-editor>Label</property-editor>
-                            <property-editor>ImagePath</property-editor>
+                            <property-editor>Image</property-editor>
                             <composite>
                                 <indent>true</indent>
                                 <content>
@@ -1420,7 +1420,7 @@
                     <label>properties view contribution page</label>
                     <content>
                         <property-editor>Label</property-editor>
-                        <property-editor>ImagePath</property-editor>
+                        <property-editor>Image</property-editor>
                     </content>
                 </section>
                 <node-list-ref>

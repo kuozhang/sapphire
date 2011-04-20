@@ -37,6 +37,7 @@ public final class DeferredFunction
         return function;
     }
 
+    @Override
     public String name()
     {
         return this.name;

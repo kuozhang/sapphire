@@ -78,8 +78,11 @@ public final class SapphireSection
         this.section.setLayoutData( twd() );
         
         this.titleFunctionResult = initExpression
-        ( 
-            this.definition.getLabel(), 
+        (
+            getModelElement(),
+            this.definition.getLabel().getContent(), 
+            String.class,
+            null,
             new Runnable()
             {
                 public void run()

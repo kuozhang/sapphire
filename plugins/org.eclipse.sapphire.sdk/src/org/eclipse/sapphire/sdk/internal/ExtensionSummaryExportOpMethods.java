@@ -42,6 +42,7 @@ import org.eclipse.sapphire.sdk.extensibility.IFunctionDef;
 import org.eclipse.sapphire.sdk.extensibility.IModelElementServiceDef;
 import org.eclipse.sapphire.sdk.extensibility.IModelPropertyServiceDef;
 import org.eclipse.sapphire.sdk.extensibility.ISapphireExtensionDef;
+import org.eclipse.sapphire.sdk.extensibility.ITypeCastDef;
 import org.eclipse.sapphire.sdk.extensibility.IValueSerializationServiceDef;
 import org.eclipse.sapphire.ui.def.ISapphireActionContext;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
@@ -109,6 +110,9 @@ public final class ExtensionSummaryExportOpMethods
             def.setExtensionType( ISapphireExtensionDef.PROP_FUNCTIONS.getName() );
 
             def = sections.addNewElement();
+            def.setExtensionType( ISapphireExtensionDef.PROP_TYPE_CASTS.getName() );
+
+            def = sections.addNewElement();
             def.setExtensionType( ISapphireExtensionDef.PROP_ACTIONS.getName() );
 
             def = sections.addNewElement();
@@ -138,6 +142,10 @@ public final class ExtensionSummaryExportOpMethods
             else if( extensionType.endsWith( ISapphireExtensionDef.PROP_FUNCTIONS.getName() ) )
             {
                 sectionWriter = new FunctionsSectionWriter( out, extensions, def );
+            }
+            else if( extensionType.endsWith( ISapphireExtensionDef.PROP_TYPE_CASTS.getName() ) )
+            {
+                sectionWriter = new TypeCastsSectionWriter( out, extensions, def );
             }
             else if( extensionType.endsWith( ISapphireExtensionDef.PROP_ACTIONS.getName() ) )
             {
@@ -266,6 +274,47 @@ public final class ExtensionSummaryExportOpMethods
             columns.add( IFunctionDef.PROP_NAME );
             columns.add( IFunctionDef.PROP_DESCRIPTION );
             columns.add( IFunctionDef.PROP_IMPL_CLASS );
+            return columns;
+        }
+    }
+    
+    private static final class TypeCastsSectionWriter extends SectionWriter
+    {
+        public TypeCastsSectionWriter( final PrintWriter out,
+                                       final List<ISapphireExtensionDef> extensions,
+                                       final IExtensionSummarySectionDef def )
+        {
+            super( out, extensions, def );
+        }
+        
+        @Override
+        protected void sort( final List<IModelElement> extElements )
+        {
+            Collections.sort
+            ( 
+                extElements, 
+                new Comparator<IModelElement>()
+                {
+                    public int compare( final IModelElement a,
+                                        final IModelElement b )
+                    {
+                        final ITypeCastDef x = (ITypeCastDef) a;
+                        final ITypeCastDef y = (ITypeCastDef) b;
+                        
+                        return comp( x.getTargetType().getText(), y.getTargetType().getText() );
+                    }
+                }
+            );
+        }
+
+        @Override
+        protected List<ModelProperty> getDefaultColumns()
+        {
+            final List<ModelProperty> columns = new ArrayList<ModelProperty>();
+            columns.add( ITypeCastDef.PROP_SOURCE_TYPE );
+            columns.add( ITypeCastDef.PROP_TARGET_TYPE );
+            columns.add( ITypeCastDef.PROP_DESCRIPTION );
+            columns.add( ITypeCastDef.PROP_IMPLEMENTATION );
             return columns;
         }
     }

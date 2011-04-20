@@ -9,6 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [341856] NPE when a diagram connection doesn't define a label
  *    Konstantin Komissarchik - [342897] Integrate with properties view
+ *    Konstantin Komissarchik - [342775] Support EL in IMasterDetailsTreeNodeDef.ImagePath
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -91,7 +92,9 @@ public class DiagramConnectionPart
 	        this.labelFunctionResult = initExpression
 	        ( 
 	        	this.modelElement,
-	        	labelDef.getText(), 
+	        	labelDef.getText().getContent(), 
+	        	String.class,
+	        	null,
 	            new Runnable()
 	            {
 	                public void run()
@@ -108,7 +111,9 @@ public class DiagramConnectionPart
         this.idFunctionResult = initExpression
         ( 
         	this.modelElement,
-            this.bindingDef.getInstanceId(), 
+            this.bindingDef.getInstanceId().getContent(), 
+            String.class,
+            null,
             new Runnable()
             {
                 public void run()
@@ -130,7 +135,9 @@ public class DiagramConnectionPart
 	        this.endpoint1FunctionResult = initExpression
 	        (
 	        	this.srcNodeModel, 
-	        	this.endpoint1Def.getValue(), 
+	        	this.endpoint1Def.getValue().getContent(),
+	        	String.class,
+	        	null,
 	            new Runnable()
 	        	{
 		            public void run()
@@ -147,7 +154,9 @@ public class DiagramConnectionPart
 	        this.endpoint2FunctionResult = initExpression
 	        (
 	        	this.targetNodeModel, 
-	        	this.endpoint2Def.getValue(), 
+	        	this.endpoint2Def.getValue().getContent(),
+	        	String.class,
+	        	null,
 	            new Runnable()
 	        	{
 		            public void run()
@@ -432,7 +441,9 @@ public class DiagramConnectionPart
 		        this.endpoint1FunctionResult = initExpression
 		        (
 		        	this.srcNodeModel, 
-		        	this.endpoint1Def.getValue(), 
+		        	this.endpoint1Def.getValue().getContent(), 
+		        	String.class,
+		        	null,
 		            new Runnable()
 		        	{
 			            public void run()
@@ -455,7 +466,9 @@ public class DiagramConnectionPart
 		        this.endpoint2FunctionResult = initExpression
 		        (
 		        	this.targetNodeModel, 
-		        	this.endpoint2Def.getValue(), 
+		        	this.endpoint2Def.getValue().getContent(),
+		        	String.class,
+		        	null,
 		            new Runnable()
 		        	{
 			            public void run()

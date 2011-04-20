@@ -20,6 +20,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.el.ConcatFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
@@ -54,6 +55,7 @@ public final class SapphireHtmlPanel
     {
         super.init();
         
+        final IModelElement element = getModelElement();
         this.def = (ISapphireHtmlPanelDef) this.definition;
 
         if( this.def.getContentSourceType().getContent() == HtmlContentSourceType.EMBEDDED )
@@ -68,8 +70,10 @@ public final class SapphireHtmlPanel
     
             this.contentFunctionResult = initExpression
             (
-                getModelElement(),
+                element,
                 contentFunction, 
+                String.class,
+                null,
                 new Runnable()
                 {
                     public void run()
@@ -83,8 +87,10 @@ public final class SapphireHtmlPanel
         {
             this.urlFunctionResult = initExpression
             (
-                getModelElement(),
+                element,
                 this.def.getContentUrl().getContent(), 
+                String.class,
+                null,
                 new Runnable()
                 {
                     public void run()

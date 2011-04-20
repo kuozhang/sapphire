@@ -624,7 +624,7 @@ public final class MasterDetailsEditorPage
             
             private Image getImage( final MasterDetailsContentNode node )
             {
-                final ImageDescriptor imageDescriptor = node.getImageDescriptor();
+                final ImageDescriptor imageDescriptor = node.getImage();
                 Image image = this.images.get( imageDescriptor );
                 
                 if( image == null )

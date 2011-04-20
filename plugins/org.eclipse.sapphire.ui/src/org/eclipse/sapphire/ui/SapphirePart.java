@@ -31,7 +31,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
@@ -156,73 +155,51 @@ public abstract class SapphirePart
         // The default implement doesn't do anything.
     }
     
-    protected final FunctionResult initExpression( final Value<Function> function,
-                                                   final Runnable refreshOp )
-    {
-        return initExpression( getModelElement(), function.getContent(), refreshOp );
-    }
-    
-    protected final FunctionResult initExpression( final Function function,
-                                                   final Runnable refreshOp )
-    {
-        return initExpression( getModelElement(), function, refreshOp );
-    }
-    
-    protected final FunctionResult initExpression( final IModelElement contextModelElement,
-                                                   final Value<Function> function,
-                                                   final Runnable refreshOp )
-    {
-        return initExpression( contextModelElement, function.getContent(), refreshOp );
-    }
-    
     protected final FunctionResult initExpression( final IModelElement contextModelElement,
                                                    final Function function,
+                                                   final Class<?> expectedType,
+                                                   final Function defaultValue,
                                                    final Runnable refreshOp )
     {
-        Function f = function;
-        FunctionResult fr = null;
+        Function f = ( function == null ? Literal.NULL : function );
+        f = FailSafeFunction.create( f, Literal.create( expectedType ), defaultValue );
         
-        if( f != null )
+        final FunctionContext context = new ModelElementFunctionContext( contextModelElement, this.definition.adapt( LocalizationService.class ) )
         {
-            f = FailSafeFunction.create( f, String.class );
+            @Override
+            public FunctionResult property( final Object element,
+                                            final String name )
+            {
+                if( name.equalsIgnoreCase( "params" ) )
+                {
+                    return Literal.create( SapphirePart.this.params ).evaluate( this );
+                }
 
-            final FunctionContext context = new ModelElementFunctionContext( contextModelElement, this.definition.adapt( LocalizationService.class ) )
+                return super.property( element, name );
+            }
+        };
+        
+        final FunctionResult fr = f.evaluate( context );
+        
+        fr.addListener
+        (
+            new FunctionResult.Listener()
             {
                 @Override
-                public FunctionResult property( final Object element,
-                                                final String name )
+                public void handleValueChanged()
                 {
-                    if( name.equalsIgnoreCase( "params" ) )
+                    final Runnable notifyOfUpdateOperation = new Runnable()
                     {
-                        return Literal.create( SapphirePart.this.params ).evaluate( this );
-                    }
-
-                    return super.property( element, name );
-                }
-            };
-            
-            fr = f.evaluate( context );
-            
-            fr.addListener
-            (
-                new FunctionResult.Listener()
-                {
-                    @Override
-                    public void handleValueChanged()
-                    {
-                        final Runnable notifyOfUpdateOperation = new Runnable()
+                        public void run()
                         {
-                            public void run()
-                            {
-                                refreshOp.run();
-                            }
-                        };
-                     
-                        Display.getDefault().asyncExec( notifyOfUpdateOperation );
-                    }
+                            refreshOp.run();
+                        }
+                    };
+                 
+                    Display.getDefault().asyncExec( notifyOfUpdateOperation );
                 }
-            );
-        }
+            }
+        );
         
         return fr;
     }
@@ -613,14 +590,36 @@ public abstract class SapphirePart
     
     protected final class ImageManager
     {
-        private final ImageDescriptor base;
+        private final FunctionResult imageFunctionResult;
+        private ImageDescriptor base;
         private ImageDescriptor error;
         private ImageDescriptor warning;
         private ImageDescriptor current;
         
-        public ImageManager( final ImageDescriptor base )
+        public ImageManager( final IModelElement element,
+                             final Function imageFunction )
         {
-            this.base = base;
+            this( element, imageFunction, Literal.NULL );
+        }
+        
+        public ImageManager( final IModelElement element,
+                             final Function imageFunction,
+                             final Function defaultValueFunction )
+        {
+            this.imageFunctionResult = initExpression
+            (
+                element,
+                imageFunction,
+                ImageDescriptor.class,
+                defaultValueFunction,
+                new Runnable()
+                {
+                    public void run()
+                    {
+                        refresh( true );
+                    }
+                }
+            );
             
             addListener
             (
@@ -649,29 +648,45 @@ public abstract class SapphirePart
             final int severity = st.getSeverity();
             final ImageDescriptor old = this.current;
             
-            if( this.base != null )
+            if( this.imageFunctionResult != null )
             {
-                if( severity == IStatus.ERROR )
+                final ImageDescriptor newBase = (ImageDescriptor) this.imageFunctionResult.value();
+                
+                if( this.base != newBase )
                 {
-                    if( this.error == null )
-                    {
-                        this.error = new ProblemOverlayImageDescriptor( this.base, Status.ERROR );
-                    }
-                    
-                    this.current = this.error;
+                    this.base = newBase;
+                    this.error = null;
+                    this.warning = null;
                 }
-                else if( severity == IStatus.WARNING )
+                
+                if( this.base == null )
                 {
-                    if( this.warning == null )
-                    {
-                        this.warning = new ProblemOverlayImageDescriptor( this.base, Status.WARNING );
-                    }
-                    
-                    this.current = this.warning;
+                    this.current = null;
                 }
                 else
                 {
-                    this.current = this.base;
+                    if( severity == IStatus.ERROR )
+                    {
+                        if( this.error == null )
+                        {
+                            this.error = new ProblemOverlayImageDescriptor( this.base, Status.ERROR );
+                        }
+                        
+                        this.current = this.error;
+                    }
+                    else if( severity == IStatus.WARNING )
+                    {
+                        if( this.warning == null )
+                        {
+                            this.warning = new ProblemOverlayImageDescriptor( this.base, Status.WARNING );
+                        }
+                        
+                        this.current = this.warning;
+                    }
+                    else
+                    {
+                        this.current = this.base;
+                    }
                 }
             }
             
@@ -679,6 +694,11 @@ public abstract class SapphirePart
             {
                 notifyListeners( new ImageChangedEvent( SapphirePart.this ) );
             }
+        }
+        
+        public void dispose()
+        {
+            this.imageFunctionResult.dispose();
         }
     }
     
@@ -810,7 +830,7 @@ public abstract class SapphirePart
         }
         else if( definition instanceof ISapphireTabGroupDef )
         {
-            part = new SapphireTabGroup();
+            part = new TabGroupPart();
         }
         else if( definition instanceof ISapphireIfElseDirectiveDef )
         {

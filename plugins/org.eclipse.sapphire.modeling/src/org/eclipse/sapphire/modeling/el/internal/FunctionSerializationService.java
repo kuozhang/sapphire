@@ -39,6 +39,11 @@ public final class FunctionSerializationService
             // problems. That's handled by validators.
         }
         
+        if( result != null )
+        {
+            result.initOrigin( element(), true );
+        }
+        
         return result;
     }
     
