@@ -53,48 +53,53 @@ public final class XmlDocumentSchemaParser
     {
         final XmlDocumentSchema.Factory schema = new XmlDocumentSchema.Factory();
         schema.setSchemaLocation( schemaLocation );
-        parse( schema, schemaLocation, baseLocation );
+        parse( schema, schemaLocation, baseLocation, null );
         return schema.create();
     }
     
     private static void parse( final XmlDocumentSchema.Factory schema,
                                final String schemaLocation,
-                               final String baseLocation )
+                               final String baseLocation,
+                               Map<String,String> prefixToNamespaceMap )
     {
         final Element root = parseSchemaToDom( schemaLocation, baseLocation );
         
         if( root != null )
         {
-            final String ns = root.getAttribute( "targetNamespace" );
-            
-            if( ns.length() > 0 )
-            {
-                schema.setNamespace( ns );
-            }
+        	if ( prefixToNamespaceMap == null )
+        	{
+                prefixToNamespaceMap = new HashMap<String,String>();
 
-            final Map<String,String> prefixToNamespaceMap = new HashMap<String,String>();
-            final NamedNodeMap rootAttributes = root.getAttributes();
-            
-            for( int i = 0, n = rootAttributes.getLength(); i < n; i++ )
-            {
-                final Node attributeNode = rootAttributes.item( i );
-                final String attributeNodeName = attributeNode.getNodeName();
-                final String attributeNodeValue = ( (Attr) attributeNode ).getValue();
+                final String ns = root.getAttribute( "targetNamespace" );
                 
-                if( attributeNodeName.equals( "xmlns" ) )
+                if( ns.length() > 0 )
                 {
-                    prefixToNamespaceMap.put( "", attributeNodeValue );
+                    schema.setNamespace( ns );
                 }
-                else if( attributeNodeName.startsWith( "xmlns:" ) )
+
+                final NamedNodeMap rootAttributes = root.getAttributes();
+                
+                for( int i = 0, n = rootAttributes.getLength(); i < n; i++ )
                 {
-                    prefixToNamespaceMap.put( attributeNodeName.substring( 6 ), attributeNodeValue );
+                    final Node attributeNode = rootAttributes.item( i );
+                    final String attributeNodeName = attributeNode.getNodeName();
+                    final String attributeNodeValue = ( (Attr) attributeNode ).getValue();
+                    
+                    if( attributeNodeName.equals( "xmlns" ) )
+                    {
+                        prefixToNamespaceMap.put( "", attributeNodeValue );
+                    }
+                    else if( attributeNodeName.startsWith( "xmlns:" ) )
+                    {
+                        prefixToNamespaceMap.put( attributeNodeName.substring( 6 ), attributeNodeValue );
+                    }
                 }
-            }
-            
-            if( ! prefixToNamespaceMap.containsValue( ns ) )
-            {
-                prefixToNamespaceMap.put( "", ns );
-            }
+                
+                if( ! prefixToNamespaceMap.containsValue( ns ) )
+                {
+                    prefixToNamespaceMap.put( "", ns );
+                }
+        	}
             
             for( Element el : elements( root ) )
             {
@@ -128,7 +133,7 @@ public final class XmlDocumentSchemaParser
                         includedSchemaLocation = baseUrl + "/" + includedSchemaLocation;
                     }
                     
-                    parse( schema, includedSchemaLocation, baseLocation );
+                    parse( schema, includedSchemaLocation, baseLocation, prefixToNamespaceMap );
                     
                     if( elname.equals( "redefine" ) )
                     {
