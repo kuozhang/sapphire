@@ -43,7 +43,6 @@ public interface IDiagramDecoratorDef
     @Type( base = DecoratorPlacement.class )
     @Label( standard = "placement")
     @DefaultValue( text = "image" )
-    @Enablement( expr = "${ ShowDecorator }" )
     @XmlBinding( path = "decorator-placement" )
     
     ValueProperty PROP_DECORATOR_PLACEMENT = new ValueProperty( TYPE, "DecoratorPlacement" );
@@ -57,7 +56,6 @@ public interface IDiagramDecoratorDef
     @Type( base = HorizontalAlignment.class )
     @Label( standard = "horizontal alignment")
     @DefaultValue( text = "left" )
-    @Enablement( expr = "${ ShowDecorator }" )
     @XmlBinding( path = "horizontal-align" )
     
     ValueProperty PROP_HORIZONTAL_ALIGNMENT = new ValueProperty( TYPE, "HorizontalAlignment" );
@@ -71,7 +69,6 @@ public interface IDiagramDecoratorDef
     @Type( base = VerticalAlignment.class )
     @Label( standard = "vertical alignment")
     @DefaultValue( text = "bottom" )
-    @Enablement( expr = "${ ShowDecorator }" )
     @XmlBinding( path = "vertical-align" )
     
     ValueProperty PROP_VERTICAL_ALIGNMENT = new ValueProperty( TYPE, "VerticalAlignment" );
@@ -85,7 +82,6 @@ public interface IDiagramDecoratorDef
     @Type( base = Integer.class )
     @Label( standard = "vertical margin" )
     @DefaultValue( text = "0" )
-    @Enablement( expr = "${ ShowDecorator }" )
     @XmlBinding( path = "vertical-margin" )
     
     ValueProperty PROP_VERTICAL_MARGIN = new ValueProperty( TYPE, "VerticalMargin" );
@@ -99,7 +95,6 @@ public interface IDiagramDecoratorDef
     @Type( base = Integer.class )
     @Label( standard = "horizontal margin" )
     @DefaultValue( text = "0" )
-    @Enablement( expr = "${ ShowDecorator }" )
     @XmlBinding( path = "horizontal-margin" )
     
     ValueProperty PROP_HORIZONTAL_MARGIN = new ValueProperty( TYPE, "HorizontalMargin" );

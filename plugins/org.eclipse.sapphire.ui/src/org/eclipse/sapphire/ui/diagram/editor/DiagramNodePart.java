@@ -221,7 +221,21 @@ public class DiagramNodePart
 		{
 			this.idFunctionResult.dispose();
 		}
-				
+		
+		if (this.imageFunctionResult != null)
+		{
+			this.imageFunctionResult.dispose();
+		}
+	
+    	for (int i = 0; i < this.imageDecoratorFunctionResults.size(); i++)
+    	{
+    		FunctionResult result = this.imageDecoratorFunctionResults.get(i);
+    		if (result != null)
+    		{
+    			result.dispose();
+    		}
+    	}
+		
 		this.modelElement.removeListener(this.modelPropertyListener, "*");
 	}
 	

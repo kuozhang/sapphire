@@ -237,6 +237,10 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
 			{
 				isRightType = true;
 			}
+			if (fr != null)
+			{
+				fr.dispose();
+			}
 		}
 		return isRightType;
 	}
