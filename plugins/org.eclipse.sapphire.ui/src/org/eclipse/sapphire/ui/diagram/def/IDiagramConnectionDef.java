@@ -29,7 +29,6 @@ import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.Color;
 import org.eclipse.sapphire.ui.LineStyle;
-import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 /**
@@ -42,7 +41,7 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 public interface IDiagramConnectionDef 
 	
-	extends ISapphirePartDef, IPropertiesViewContributorDef
+	extends ISapphirePartDef
 	
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramConnectionDef.class );

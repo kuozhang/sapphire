@@ -33,6 +33,24 @@
                     <property>Name</property>
                     <value>${ Name }</value>
                 </endpoint2>
+                <properties-view>
+                    <page>
+                        <label>description</label>
+                        <content>
+                            <property-editor>
+                                <property>Description</property>
+                                <hint>
+                                    <name>show.label</name>
+                                    <value>false</value>
+                                </hint>
+                                <hint>
+                                    <name>expand.vertically</name>
+                                    <value>true</value>
+                                </hint>
+                            </property-editor>
+                        </content>
+                    </page>
+                </properties-view>
             </connection-binding>
             <id>Component</id>
             <properties-view>
@@ -81,24 +99,6 @@
             <endpoint2>
                 <type>arrow</type>
             </endpoint2>
-            <properties-view>
-                <page>
-                    <label>description</label>
-                    <content>
-                        <property-editor>
-                            <property>Description</property>
-                            <hint>
-                                <name>show.label</name>
-                                <value>false</value>
-                            </hint>
-                            <hint>
-                                <name>expand.vertically</name>
-                                <value>true</value>
-                            </hint>
-                        </property-editor>
-                    </content>
-                </page>
-            </properties-view>
         </connection>
         <properties-view>
             <page>

@@ -22,6 +22,7 @@ import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 public final class PropertiesViewContributionManager
 {
     private final SapphirePart part;
+    private final IPropertiesViewContributorDef def;
     private final IModelElement element;
     private PropertiesViewContributionPart propertiesViewContribution;
     private boolean propertiesViewContributionInitialized;
@@ -34,17 +35,23 @@ public final class PropertiesViewContributionManager
     public PropertiesViewContributionManager( final SapphirePart part,
                                               final IModelElement element )
     {
+        this( part, element, (IPropertiesViewContributorDef) part.getDefinition() );
+    }
+    
+    public PropertiesViewContributionManager( final SapphirePart part,
+                                              final IModelElement element,
+                                              final IPropertiesViewContributorDef def )
+    {
         this.part = part;
         this.element = element;
+        this.def = def;
     }
     
     public PropertiesViewContributionPart getPropertiesViewContribution()
     {
-        final IPropertiesViewContributorDef definition = (IPropertiesViewContributorDef) this.part.getDefinition();
-        
         if( ! this.propertiesViewContributionInitialized )
         {
-            final IPropertiesViewContributionDef def = definition.getPropertiesViewContribution();
+            final IPropertiesViewContributionDef def = this.def.getPropertiesViewContribution();
             
             if( ! def.getPages().isEmpty() )
             {

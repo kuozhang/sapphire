@@ -510,7 +510,7 @@ public class DiagramConnectionPart
     {
         if( this.propertiesViewContributionManager == null )
         {
-            this.propertiesViewContributionManager = new PropertiesViewContributionManager( this, getLocalModelElement() );
+            this.propertiesViewContributionManager = new PropertiesViewContributionManager( this, getLocalModelElement(), this.bindingDef );
         }
         
         return this.propertiesViewContributionManager.getPropertiesViewContribution();
