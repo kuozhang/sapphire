@@ -21,8 +21,10 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementDisposedEvent;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
@@ -32,6 +34,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -101,6 +104,7 @@ public final class SapphirePropertyEditor
         FACTORIES.add( new DefaultListPropertyEditorRenderer.Factory() );
     }
     
+    private IModelElement element;
     private ModelProperty property;
     private List<ModelProperty> childProperties;
     private List<ModelProperty> childPropertiesReadOnly;
@@ -108,6 +112,7 @@ public final class SapphirePropertyEditor
     private Map<String,Object> hints;
     private List<SapphirePart> relatedContentParts;
     private List<SapphirePart> relatedContentPartsReadOnly;
+    private ModelPropertyListener listener;
     
     @Override
     protected void init()
@@ -117,7 +122,60 @@ public final class SapphirePropertyEditor
         final ISapphireUiDef rootdef = this.definition.nearest( ISapphireUiDef.class );
         final ISapphirePropertyEditorDef propertyEditorPartDef = (ISapphirePropertyEditorDef) this.definition;
         
-        this.property = resolve( propertyEditorPartDef.getProperty().getContent() );
+        final String pathString = propertyEditorPartDef.getProperty().getContent();
+        final ModelPath path = new ModelPath( pathString );
+        
+        this.element = getModelElement();
+        
+        for( int i = 0, n = path.length(); i < n; i++ )
+        {
+            final ModelPath.Segment segment = path.segment( i );
+            
+            if( segment instanceof ModelPath.ModelRootSegment )
+            {
+                this.element = (IModelElement) this.element.root();
+            }
+            else if( segment instanceof ModelPath.ParentElementSegment )
+            {
+                IModelParticle parent = this.element.parent();
+                
+                if( ! ( parent instanceof IModelElement ) )
+                {
+                    parent = parent.parent();
+                }
+                
+                this.element = (IModelElement) parent;
+            }
+            else if( segment instanceof ModelPath.PropertySegment )
+            {
+                this.property = resolve( this.element, ( (ModelPath.PropertySegment) segment ).getPropertyName() );
+                
+                if( i + 1 != n )
+                {
+                    throw new RuntimeException( NLS.bind( Resources.invalidPath, pathString ) );
+                }
+            }
+            else
+            {
+                throw new RuntimeException( NLS.bind( Resources.invalidPath, pathString ) );
+            }
+        }
+        
+        if( this.property == null )
+        {
+            throw new RuntimeException( NLS.bind( Resources.invalidPath, pathString ) );
+        }
+        
+        this.listener = new ModelPropertyListener()
+        {
+            @Override
+            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            {
+                updateValidationState();
+            }
+        };
+        
+        this.element.addListener( this.listener, this.property.getName() );
         
         this.childProperties = new ArrayList<ModelProperty>();
         this.childPropertiesReadOnly = Collections.unmodifiableList( this.childProperties );
@@ -228,8 +286,13 @@ public final class SapphirePropertyEditor
         
         for( ISapphirePartDef relatedContentPartDef : propertyEditorPartDef.getRelatedContent() )
         {
-            this.relatedContentParts.add( create( this, getModelElement(), relatedContentPartDef, this.params ) );
+            this.relatedContentParts.add( create( this, this.element, relatedContentPartDef, this.params ) );
         }
+    }
+    
+    public IModelElement getLocalModelElement()
+    {
+        return this.element;
     }
     
     public ModelProperty getProperty()
@@ -420,11 +483,9 @@ public final class SapphirePropertyEditor
     @Override
     protected IStatus computeValidationState()
     {
-        final IModelElement modelElement = getModelElement();
-        
-        if( modelElement.isPropertyEnabled( this.property ) )
+        if( this.element.isPropertyEnabled( this.property ) )
         {
-            final Object particle = modelElement.read( this.property );
+            final Object particle = this.element.read( this.property );
             
             if( particle instanceof Value<?> )
             {
@@ -441,17 +502,6 @@ public final class SapphirePropertyEditor
         }
         
         return Status.OK_STATUS;
-    }
-    
-    @Override
-    protected void handleModelElementChange( final ModelPropertyChangeEvent event )
-    {
-        super.handleModelElementChange( event );
-        
-        if( event.getProperty().getName().equals( this.property.getName() ) )
-        {
-            updateValidationState();
-        }
     }
     
     public static <T> T findControlForProperty( final Control context,
@@ -505,7 +555,7 @@ public final class SapphirePropertyEditor
     
     public boolean setFocus()
     {
-        if( getModelElement().isPropertyEnabled( this.property ) )
+        if( this.element.isPropertyEnabled( this.property ) )
         {
             notifyFocusRecievedEventListeners();
             return true;
@@ -579,12 +629,27 @@ public final class SapphirePropertyEditor
     {
         super.dispose();
         
+        if( this.listener != null )
+        {
+            this.element.removeListener( this.listener, this.property.getName() );
+        }
+        
         for( Map<ModelProperty,SapphirePropertyEditor> propertyEditorsForElement : this.childPropertyEditors.values() )
         {
             for( SapphirePropertyEditor propertyEditor : propertyEditorsForElement.values() )
             {
                 propertyEditor.dispose();
             }
+        }
+    }
+    
+    private static final class Resources extends NLS
+    {
+        public static String invalidPath;
+        
+        static
+        {
+            initializeMessages( SapphirePropertyEditor.class.getName(), Resources.class );
         }
     }
     

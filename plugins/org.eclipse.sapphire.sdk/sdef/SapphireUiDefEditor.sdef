@@ -645,7 +645,7 @@
             <use-model-element-image/>
             <section>
                 <content>
-                    <property-editor>Property</property-editor>
+                    <property-editor>Path</property-editor>
                     <property-editor>Label</property-editor>
                 </content>
             </section>

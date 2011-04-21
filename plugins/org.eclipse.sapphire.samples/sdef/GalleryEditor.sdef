@@ -1314,6 +1314,118 @@
                 </section>
                 <property>TabGroupGallery</property>
             </node>
+            <node>
+                <label>ancestor access</label>
+                <property>AncestorAccessGallery</property>
+                <section>
+                    <content>
+                        <html>
+                            <fragment></fragment>
+                            <content>&lt;p&gt;Ancestor navigation path syntax (leading &quot;/&quot; for root and &quot;..&quot; for parent) can be used when specifying a property editor or using the with directive.&lt;/p&gt;
+
+&lt;p&gt;Examples of valid paths:&lt;/p&gt;
+
+&lt;table&gt;
+    &lt;tr&gt;
+        &lt;td&gt;&lt;b&gt;Text&lt;/b&gt;&lt;/li&gt;
+        &lt;td&gt;Property Text of the context element.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;&lt;b&gt;../Text&lt;/b&gt;&lt;/li&gt;
+        &lt;td&gt;Property Text of the parent of the context element.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;&lt;b&gt;../../Text&lt;/b&gt;&lt;/li&gt;
+        &lt;td&gt;Property Text of the grandparent of the context element.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;&lt;b&gt;/Text&lt;/b&gt;&lt;/li&gt;
+        &lt;td&gt;Property Text of the root element.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;&lt;b&gt;../..&lt;/b&gt;&lt;/li&gt;
+        &lt;td&gt;Grandparent of the context element. Only legal for the with directive as this path doesn't end with a property.&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</content>
+                            <height>300</height>
+                        </html>
+                    </content>
+                </section>
+                <node>
+                    <label>level 1</label>
+                    <section>
+                        <content>
+                            <property-editor>Text</property-editor>
+                        </content>
+                    </section>
+                    <node-list>
+                        <property>List</property>
+                        <node-template>
+                            <label>Level 2</label>
+                            <section>
+                                <label>level 2</label>
+                                <content>
+                                    <property-editor>../Text</property-editor>
+                                    <property-editor>Text</property-editor>
+                                </content>
+                            </section>
+                            <node>
+                                <label>level 3</label>
+                                <property>Child</property>
+                                <section>
+                                    <content>
+                                        <property-editor>../../Text</property-editor>
+                                        <property-editor>../Text</property-editor>
+                                        <property-editor>Text</property-editor>
+                                    </content>
+                                </section>
+                                <section>
+                                    <label>with ..</label>
+                                    <content>
+                                        <with>
+                                            <property>..</property>
+                                            <default-panel>
+                                                <content>
+                                                    <property-editor>../Text</property-editor>
+                                                    <property-editor>Text</property-editor>
+                                                </content>
+                                            </default-panel>
+                                        </with>
+                                    </content>
+                                </section>
+                                <section>
+                                    <label>with ../..</label>
+                                    <content>
+                                        <with>
+                                            <property>../..</property>
+                                            <default-panel>
+                                                <content>
+                                                    <property-editor>Text</property-editor>
+                                                </content>
+                                            </default-panel>
+                                        </with>
+                                    </content>
+                                </section>
+                                <section>
+                                    <label>with ../Child</label>
+                                    <content>
+                                        <with>
+                                            <property>../Child</property>
+                                            <default-panel>
+                                                <content>
+                                                    <property-editor>../../Text</property-editor>
+                                                    <property-editor>../Text</property-editor>
+                                                    <property-editor>Text</property-editor>
+                                                </content>
+                                            </default-panel>
+                                        </with>
+                                    </content>
+                                </section>
+                            </node>
+                        </node-template>
+                    </node-list>
+                </node>
+            </node>
         </root-node>
     </editor-page>
     <import>

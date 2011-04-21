@@ -236,7 +236,7 @@ public class CompactListPropertyEditorRenderer
         // add back text controls and add link
     	for (int i = 0; i < count; i++) {
             final CompactListProxyResource resource = new CompactListProxyResource(this);
-            final IModelElement proxyElement = this.memberProperty.getModelElementType().instantiate(getPart().getModelElement(), getPart().getProperty(), resource); 
+            final IModelElement proxyElement = this.memberProperty.getModelElementType().instantiate(getPart().getLocalModelElement(), getPart().getProperty(), resource); 
             resource.init(proxyElement, this.memberProperty);
             final SapphirePropertyEditor editor = this.getPart().getChildPropertyEditor( proxyElement, this.memberProperty );
             
@@ -415,7 +415,7 @@ public class CompactListPropertyEditorRenderer
 		final Collection<Control> relatedControls = (Collection<Control>)this.innerComposite.getData( RELATED_CONTROLS );
 
     	CompactListProxyResource resource = new CompactListProxyResource(this);
-        final IModelElement proxyElement = this.memberProperty.getModelElementType().instantiate(getPart().getModelElement(), getPart().getProperty(), resource); 
+        final IModelElement proxyElement = this.memberProperty.getModelElementType().instantiate(getPart().getLocalModelElement(), getPart().getProperty(), resource); 
         resource.init(proxyElement, this.memberProperty);
         SapphirePropertyEditor editor = this.getPart().getChildPropertyEditor( proxyElement, this.memberProperty );
 

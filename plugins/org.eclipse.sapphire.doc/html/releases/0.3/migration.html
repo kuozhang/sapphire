@@ -39,6 +39,7 @@ to 0.3 release. Only changes from the previous milestone are covered.</p>
   <li><a href="#composite-ref">Composite Reference</a></li>
   <li><a href="#section-description">Section Description</a></li>
   <li><a href="#function">Function Name Method</a></li>
+  <li><a href="#with">With Directive Changes</a></li>
 </ol>
 
 <h2><a name="modularity">Modularity Changes</a></h2>
@@ -450,7 +451,7 @@ any form part to be included.</p>
   </tr>
 </table>
 
-<p>The following Eclipse search/replace regular expressions can be used to perform this
+<p>The following Eclipse search/replace regular expression can be used to perform this
 migration (only works when there are no params):</p>
 
 <p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
@@ -524,6 +525,47 @@ on a parsed expression.</p>
     </td>
   </tr>
 </table>
+
+<h2><a name="with">With Directive Changes</a></h2>
+
+<p>The with directive capabilities have been expanded to allow ancestor element access via a path. To
+accommodate this feature, the "property" XML element in the sdef syntax has been renamed to "path".</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;with></font>
+    &lt;property><font color="#888888">SomeProperty</font>&lt;/property>
+    <font color="#888888">&lt;default-panel>
+        &lt;content>
+            ...
+        &lt;/content>
+    &lt;/default-panel>
+&lt;/with></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;with></font>
+    &lt;path><font color="#888888">SomeProperty</font>&lt;/path>
+    <font color="#888888">&lt;default-panel>
+        &lt;content>
+            ...
+        &lt;/content>
+    &lt;/default-panel>
+&lt;/with></font></code></pre>
+    </td>
+  </tr>
+</table>
+
+<p>The following Eclipse search/replace regular expression can be used to perform this
+migration:</p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;(?s)&lt;with>(.*?)&lt;property>(.*?)&lt;/property>(.*?)&lt;/with></nobr><br/>
+<nobr>Replace: &nbsp;&lt;with>\1&lt;path>\2&lt;/path>\3&lt;/with></nobr></p>
 
 <br/><br/>
 

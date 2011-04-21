@@ -95,7 +95,7 @@ public class DefaultValuePropertyEditorRenderer
                                       final boolean suppressBrowseAction )
     {
         final SapphirePropertyEditor part = getPart();
-        final IModelElement element = part.getModelElement();
+        final IModelElement element = part.getLocalModelElement();
         final ValueProperty property = (ValueProperty) part.getProperty();
         
         final boolean isLongString = property.hasAnnotation( LongString.class );

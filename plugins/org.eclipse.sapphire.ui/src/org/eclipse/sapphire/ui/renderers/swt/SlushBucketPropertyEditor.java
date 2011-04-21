@@ -91,7 +91,7 @@ public final class SlushBucketPropertyEditor
         
         this.memberType = getProperty().getType();
         this.memberProperty = (ValueProperty) this.memberType.getProperties().get( 0 );
-        this.valuesProvider = part.getModelElement().service( this.memberProperty, PossibleValuesService.class );
+        this.valuesProvider = part.getLocalModelElement().service( this.memberProperty, PossibleValuesService.class );
         
         setAddActionDesired( false );
     }

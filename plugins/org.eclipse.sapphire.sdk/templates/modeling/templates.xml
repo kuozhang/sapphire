@@ -57,7 +57,7 @@ ${cursor}
     
 ElementProperty PROP_${field} = new ElementProperty( TYPE, "${name}" );
     
-ModelElementHandle&lt;${type}&lt; get${name}();
+ModelElementHandle&lt;${type}&gt; get${name}();
 ${:import(org.eclipse.sapphire.modeling.ElementProperty,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type,org.eclipse.sapphire.modeling.ModelElementHandle)}
 ${cursor}
   </template>

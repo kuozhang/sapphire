@@ -54,7 +54,7 @@ public abstract class AbstractBinding
             }
         };
 
-        this.editor.getModelElement().addListener( this.propertyChangeListener, this.editor.getProperty().getName() );
+        getModelElement().addListener( this.propertyChangeListener, this.editor.getProperty().getName() );
         
         this.control.addDisposeListener
         (
@@ -73,7 +73,7 @@ public abstract class AbstractBinding
     
     public final IModelElement getModelElement()
     {
-        return this.editor.getModelElement();
+        return this.editor.getLocalModelElement();
     }
     
     public ModelProperty getProperty()

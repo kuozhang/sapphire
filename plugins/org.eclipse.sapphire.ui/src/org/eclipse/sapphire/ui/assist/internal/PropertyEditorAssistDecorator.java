@@ -187,7 +187,7 @@ public class PropertyEditorAssistDecorator
     
     public void refresh()
     {
-        final IModelElement element = this.propertyEditor.getModelElement();
+        final IModelElement element = this.propertyEditor.getLocalModelElement();
         
         final boolean enabled 
             = ( element == null ? false : element.isPropertyEnabled( this.property ) );

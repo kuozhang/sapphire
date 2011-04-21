@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.modeling.localization;
 
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -30,12 +29,17 @@ public final class LocalizationUtil
             
             if( Character.isUpperCase( ch ) )
             {
-                if( label.length() > 0 )
+                if( i > 0 )
                 {
                     label.append( ' ' );
                 }
                 
                 label.append( Character.toLowerCase( ch ) );
+            }
+            else if( Character.isDigit( ch ) && i > 0 && ! Character.isDigit( value.charAt( i - 1 ) ) )
+            {
+                label.append( ' ' );
+                label.append( ch );
             }
             else
             {

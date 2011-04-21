@@ -48,7 +48,7 @@ public final class PropertyEditorAssistContext
     
     public IModelElement getModelElement()
     {
-        return this.propertyEditor.getModelElement();
+        return this.propertyEditor.getLocalModelElement();
     }
     
     public ModelProperty getProperty()

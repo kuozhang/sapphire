@@ -25,10 +25,12 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
+import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
@@ -56,20 +58,88 @@ public final class SapphireWithDirective
     extends SapphirePageBook
     
 {
-    private IModelElement modelElementForChildParts;
+    private ModelPath path;
+    private IModelElement element;
     private ElementProperty property;
+    private IModelElement elementForChildParts;
+    private ModelPropertyListener listener;
     
     @Override
     protected void init()
     {
         final ISapphireWithDirectiveDef def = (ISapphireWithDirectiveDef) this.definition;
         
-        this.property = (ElementProperty) resolve( def.getProperty().getText() );
+        final String pathString = def.getPath().getText();
+        this.path = new ModelPath( pathString );
+        
+        this.element = getModelElement();
+        
+        for( int i = 0, n = this.path.length(); i < n; i++ )
+        {
+            final ModelPath.Segment segment = this.path.segment( i );
+            
+            if( segment instanceof ModelPath.ModelRootSegment )
+            {
+                this.element = (IModelElement) this.element.root();
+            }
+            else if( segment instanceof ModelPath.ParentElementSegment )
+            {
+                IModelParticle parent = this.element.parent();
+                
+                if( ! ( parent instanceof IModelElement ) )
+                {
+                    parent = parent.parent();
+                }
+                
+                this.element = (IModelElement) parent;
+            }
+            else if( segment instanceof ModelPath.PropertySegment )
+            {
+                final ModelProperty prop = resolve( this.element, ( (ModelPath.PropertySegment) segment ).getPropertyName() );
+                
+                if( prop instanceof ImpliedElementProperty )
+                {
+                    this.element = this.element.read( (ImpliedElementProperty) prop );
+                }
+                else if( prop instanceof ElementProperty )
+                {
+                    this.property = (ElementProperty) prop;
+                    
+                    if( i + 1 != n )
+                    {
+                        throw new RuntimeException( NLS.bind( Resources.invalidPath, pathString ) );
+                    }
+                }
+            }
+            else
+            {
+                throw new RuntimeException( NLS.bind( Resources.invalidPath, pathString ) );
+            }
+        }
 
         super.init();
         
         setExposePageValidationState( true );
-        updateCurrentPage( true );
+        
+        if( this.property == null )
+        {
+            changePage( this.element, ClassBasedKey.create( this.element ) );
+        }
+        else
+        {
+            this.listener = new ModelPropertyListener()
+            {
+                @Override
+                public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                {
+                    updateCurrentPage( false );
+                }
+            };
+            
+            this.element.addListener( this.listener, this.property.getName() );
+            
+            updateCurrentPage( true );
+        }
     }
     
     @Override
@@ -81,6 +151,16 @@ public final class SapphireWithDirective
         label.setText( Resources.noAdditionalPropertiesMessage );
         
         return composite;
+    }
+    
+    public ModelPath getPath()
+    {
+        return this.path;
+    }
+    
+    public IModelElement getLocalModelElement()
+    {
+        return this.element;
     }
 
     public ElementProperty getProperty()
@@ -98,10 +178,10 @@ public final class SapphireWithDirective
         composite.setLayout( glayout( 1, 0, 0 ) );
         context.adapt( composite );
         
-        if( ! ( this.property instanceof ImpliedElementProperty ) )
+        if( this.property != null )
         {
             final List<ModelElementType> allPossibleTypes = this.property.getAllPossibleTypes();
-            final IModelElement element = getModelElement();
+            final IModelElement element = this.element;
             final ElementProperty property = this.property;
             final ModelPropertyListener modelPropertyListener;
             
@@ -277,17 +357,6 @@ public final class SapphireWithDirective
     }
 
     @Override
-    protected void handleModelElementChange( final ModelPropertyChangeEvent event )
-    {
-        super.handleModelElementChange( event );
-        
-        if( event.getProperty().getName().equals( this.property.getName() ) )
-        {
-            updateCurrentPage( false );
-        }
-    }
-    
-    @Override
     protected Object parsePageKey( final String pageKeyString )
     {
         final ISapphireUiDef rootdef = this.definition.nearest( ISapphireUiDef.class );
@@ -297,29 +366,19 @@ public final class SapphireWithDirective
 
     private void updateCurrentPage( final boolean force )
     {
-        final IModelElement element = getModelElement();
-        final IModelElement child;
+        final IModelElement child = this.element.read( this.property ).element();
         
-        if( this.property instanceof ImpliedElementProperty )
+        if( force == true || this.elementForChildParts != child )
         {
-            child = element.read( (ImpliedElementProperty) this.property );
-        }
-        else
-        {
-            child = element.read( this.property ).element();
-        }
-        
-        if( force == true || this.modelElementForChildParts != child )
-        {
-            this.modelElementForChildParts = child;
+            this.elementForChildParts = child;
 
-            if( this.modelElementForChildParts != null )
+            if( this.elementForChildParts == null )
             {
-                changePage( this.modelElementForChildParts, ClassBasedKey.create( this.modelElementForChildParts ) );
+                changePage( this.element, null );
             }
             else
             {
-                changePage( element, null );
+                changePage( this.elementForChildParts, ClassBasedKey.create( this.elementForChildParts ) );
             }
         }
     }
@@ -327,30 +386,35 @@ public final class SapphireWithDirective
     @Override
     public boolean setFocus( final ModelPath path )
     {
-        final ModelPath.Segment head = path.head();
-        
-        if( head instanceof ModelPath.PropertySegment )
+        if( this.path.isPrefixOf( path ) )
         {
-            final String propertyName = ( (ModelPath.PropertySegment) head ).getPropertyName();
+            final ModelPath tail = path.makeRelativeTo( this.path );
             
-            if( propertyName.equals( this.property.getName() ) )
+            if( this.property == null || ( this.element.isPropertyEnabled( this.property ) && this.element.read( this.property ) != null ) )
             {
-                final IModelElement element = getModelElement();
-                
-                if( element.isPropertyEnabled( this.property ) && element.read( this.property ) != null )
-                {
-                    super.setFocus( path.tail() );
-                }
+                return super.setFocus( tail );
             }
         }
         
         return false;
     }
     
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        if( this.listener != null )
+        {
+            this.element.removeListener( this.listener, this.property.getName() );
+        }
+    }
+
     private static final class Resources extends NLS
     {
         public static String noneRadioButton;
         public static String noAdditionalPropertiesMessage;
+        public static String invalidPath;
         
         static
         {

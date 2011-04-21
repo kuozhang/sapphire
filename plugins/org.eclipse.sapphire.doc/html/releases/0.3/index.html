@@ -29,6 +29,7 @@
     <li><a href="#checkbox-layouts">Checkbox Layouts</a></li>
     <li><a href="#properties-view">Properties View</a></li>
     <li><a href="#image-el">Image Expressions</a></li>
+    <li><a href="#ancestor-access">Ancestor Access</a></li>
   </ol>
 </ol>
  
@@ -36,13 +37,13 @@
 
 <p>Index into any list or array using array notation.</p>
 
-<p style="margin-left: 20px;"><b>Example</b><p>
+<p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code>${ Contacts[ 0 ].Name }</code></pre>
 
 <p>Retrieve the size of any collection or array using Size property.</p>
 
-<p style="margin-left: 20px;"><b>Example</b><p>
+<p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code>${ Contacts.Size }</code></pre>
 
@@ -50,7 +51,7 @@
 the conditional operator would always evaluate both alternatives, which made it impossible to use
 it in cases where evaluating the unused alternative results in an error.</p>
 
-<p style="margin-left: 20px;"><b>Example</b><p>
+<p style="margin-left: 20px;"><b>Example</b></p>
 
 <p style="margin-left: 20px;">In this example, evaluating the true alternative when the size of the contacts list is zero would
 produce an error.</p>
@@ -61,7 +62,7 @@ produce an error.</p>
 using Foo.Bar.Xyz syntax, but in certain cases it is useful to navigate up the model hierarchy. To
 support these scenarios, Parent and Root functions have been added.</p>
 
-<p style="margin-left: 20px;"><b>Examples</b><p>
+<p style="margin-left: 20px;"><b>Examples</b></p>
 
 <pre class="source-code"><code>${ Parent().Name == "John" }
 ${ Parent().Parent().Name == "John" }
@@ -73,7 +74,7 @@ ${ Root().Name == "John" }
 <p>Contribute custom type casts to handle data type conversion in expressions. Custom type casts are
 registered in sapphire-extension.xml file.</p>
 
-<p style="margin-left: 20px;"><b>Example</b><p>
+<p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code><font color="#888888">&lt;extension></font>
     &lt;type-cast>
@@ -101,7 +102,7 @@ registered in sapphire-extension.xml file.</p>
 type. The developer could only specify the reference target type. In this release, you can use a type other
 than a string for the reference.</p>
 
-<p style="margin-left: 20px;"><b>Example</b><p>
+<p style="margin-left: 20px;"><b>Example</b></p>
 
 <p style="margin-left: 20px;">Use string as reference type, similar to what was possible in past releases.<p>
 
@@ -112,7 +113,7 @@ ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );
 ReferenceValue&lt;String,JavaType> getImplClass();
 void setImplClass( String value );</code></pre>
 
-<p style="margin-left: 20px;"><b>Example</b><p>
+<p style="margin-left: 20px;"><b>Example</b></p>
 
 <p style="margin-left: 20px;">Use a non-string type as reference type.<p>
 
@@ -161,7 +162,7 @@ root of the context project. Use this annotation in conjunction with @MustExist,
 and @ValidFileExtensions annotations to gain validation, browse dialog and jump action (ctrl+click on path 
 to open file). For this feature to work, the model must be based on a resource contained in a project.</p>
 
-<p style="margin-left: 20px;"><b>Example</b><p>
+<p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code>// *** WorkspaceRelativePath ***
     
@@ -255,7 +256,7 @@ related content is used to display explanatory text.</p>
 <p>Labels for actions and action handlers can now be specified using expressions. This is currently
 mostly useful for action labels, where you can reference active handlers while composing the label.</p>
 
-<p style="margin-left: 20px;"><b>Example</b><p>
+<p style="margin-left: 20px;"><b>Example</b></p>
 
 <p style="margin-left: 20px;">This following is the actual label definition for the Sapphire.Add action. It is designed to include
 handler label in the action label when there is only one handler.</p>
@@ -285,7 +286,7 @@ form or diagram editor page. The following contexts can currently host propertie
 <p>Multiple pages of content can be defined for the properties view. The pages are accessible via tabs on
 the left side of the properties view. The content of properties view pages is defined and rendered by Sapphire.</p>
 
-<p style="margin-left: 20px;"><b>Example</b><p>
+<p style="margin-left: 20px;"><b>Example</b></p>
 
 <p style="margin-left: 20px;">In this screen capture, the architecture sample is shown with focus on one
 of the components. The details of the component are shown in the properties view.</p>
@@ -295,7 +296,7 @@ of the components. The details of the component are shown in the properties view
 <p>If no content is contributed to the properties view for a given context,
 the view will state as much.</p>
 
-<p style="margin-left: 20px;"><b>Example</b><p>
+<p style="margin-left: 20px;"><b>Example</b></p>
 
 <p style="margin-left: 20px;"><img src="images/properties-view-2.png"/></p>
 
@@ -303,7 +304,7 @@ the view will state as much.</p>
 visually differentiate pages, but the system will also add a problem badge if any of the page's
 content has validation problems.</p>
 
-<p style="margin-left: 20px;"><b>Example</b><p>
+<p style="margin-left: 20px;"><b>Example</b></p>
 
 <p style="margin-left: 20px;"><img src="images/properties-view-3.png"/></p>
 
@@ -335,7 +336,7 @@ context part.</p>
 <p>Use expressions to specify images for content outline nodes and other parts. This allows the image
 to vary based on a condition, such as a property value.</p>
 
-<p style="margin-left: 20px;"><b>Example</b><p>
+<p style="margin-left: 20px;"><b>Example</b></p>
 
 <p style="margin-left: 20px;">In this example from the architecture sample, parent node image is defined
 with a static path, while child node image varies based on the number dependencies.<p>
@@ -354,6 +355,63 @@ with a static path, while child node image varies based on the number dependenci
     &lt;/node-list>
     ...
 &lt;/node></font></code></pre>
+
+<h2><a name="ancestor-access">Ancestor Access</a></h2>
+
+<p>Use ancestor access path syntax (leading "/" for root and ".." for parent) when specifying a property
+editor or using the with directive. The path used in a property editor definition must end with a property name,
+while the path used in a with directive can end with an element or an element property name.</p>
+
+<p style="margin-left: 20px;"><b>Examples</b></p>
+
+<p style="margin-left: 20px;">Edit property Text of the context element.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>Text<font color="#888888">&lt;/property-editor></font></code></pre>
+
+<p style="margin-left: 20px;">Edit property Text of the parent of the context element.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>../Text<font color="#888888">&lt;/property-editor></font></code></pre>
+
+<p style="margin-left: 20px;">Edit property Text of the grandparent of the context element.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>../../Text<font color="#888888">&lt;/property-editor></font></code></pre>
+
+<p style="margin-left: 20px;">Edit property Text of the root element.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>/Text<font color="#888888">&lt;/property-editor></font></code></pre>
+
+<p style="margin-left: 20px;">Shift context to the element held by Child property.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;with>
+    &lt;path></font>Child<font color="#888888">&lt;/path>
+    &lt;default-panel>
+        &lt;content>
+            ...
+        &lt;/content>
+    &lt;/default-panel>
+&lt;/with></font></code></pre>
+
+<p style="margin-left: 20px;">Shift context to the parent element.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;with>
+    &lt;path></font>..<font color="#888888">&lt;/path>
+    &lt;default-panel>
+        &lt;content>
+            ...
+        &lt;/content>
+    &lt;/default-panel>
+&lt;/with></font></code></pre>
+
+<p style="margin-left: 20px;">Shift context to the grandparent element.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;with>
+    &lt;path></font>../..<font color="#888888">&lt;/path>
+    &lt;default-panel>
+        &lt;content>
+            ...
+        &lt;/content>
+    &lt;/default-panel>
+&lt;/with></font></code></pre>
 
 <br/><br/>
 

@@ -9,53 +9,50 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.def;
+package org.eclipse.sapphire.samples.gallery;
 
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
-import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
-import org.eclipse.sapphire.modeling.localization.Localizable;
+import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "with" )
-@Image( small = "org.eclipse.sapphire.ui/images/objects/part.gif" )
 @GenerateImpl
 
-public interface ISapphireWithDirectiveDef
+public interface IAncestorAccessGalleryLevel1
 
-    extends ISapphirePageBookDef
-    
+    extends IModelElement
+
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireWithDirectiveDef.class );
+    ModelElementType TYPE = new ModelElementType( IAncestorAccessGalleryLevel1.class );
     
-    // *** Path ***
+    // *** Text ***
     
-    @Label( standard = "path" )
-    @NonNullValue
-    @XmlBinding( path = "path" )
+    @XmlBinding( path = "text" )
+    @Label( standard = "level 1 text" )
     
-    ValueProperty PROP_PATH = new ValueProperty( TYPE, "Path" );
+    ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
     
-    Value<String> getPath();
-    void setPath( String value );
+    Value<String> getText();
+    void setText( String value );
     
-    // *** Label ***
+    // *** List ***
     
-    @Label( standard = "label" )
-    @Localizable
-    @XmlBinding( path = "label" )
+    @Type( base = IAncestorAccessGalleryLevel2.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "child", type = IAncestorAccessGalleryLevel2.class ) )
     
-    ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
+    ListProperty PROP_LIST = new ListProperty( TYPE, "List" );
     
-    Value<String> getLabel();
-    void setLabel( String value );
+    ModelElementList<IAncestorAccessGalleryLevel2> getList();
     
 }

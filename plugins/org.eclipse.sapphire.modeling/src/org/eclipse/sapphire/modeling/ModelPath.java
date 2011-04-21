@@ -47,28 +47,16 @@ public final class ModelPath
     {
         this.segments = segments;
         this.offset = offset;
-        
-        if( length() == 0 )
-        {
-            throw new MalformedPathException( "Cannot construct a zero-length path." );
-        }
-        
-        final Segment tail = segments.get( segments.size() - 1 );
-        
-        if( tail instanceof ModelRootSegment )
-        {
-            throw new MalformedPathException( "A model path cannot end with model root reference." );
-        }
-        
-        if( tail instanceof ParentElementSegment )
-        {
-            throw new MalformedPathException( "A model path cannot end with parent element reference." );
-        }
     }
     
     public int length()
     {
         return this.segments.size() - this.offset;
+    }
+    
+    public Segment segment( final int index )
+    {
+        return this.segments.get( index );
     }
     
     public Segment head()
@@ -102,6 +90,50 @@ public final class ModelPath
         }
         
         return new ModelPath( segments, 0 );
+    }
+    
+    public boolean isPrefixOf( final ModelPath path )
+    {
+        final int length = length();
+        
+        if( length < path.length() )
+        {
+            for( int i = 0; i < length; i++ )
+            {
+                if( ! segment( 0 ).equals( path.segment( 0 ) ) )
+                {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public ModelPath makeRelativeTo( final ModelPath path )
+    {
+        if( length() == 1 )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( head().equals( path.head() ) )
+        {
+            if( path.length() == 1 )
+            {
+                return tail();
+            }
+            else
+            {
+                return tail().makeRelativeTo( path.tail() );
+            }
+        }
+        else
+        {
+            throw new IllegalArgumentException();
+        }
     }
     
     @Override

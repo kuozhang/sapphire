@@ -37,7 +37,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -168,13 +167,13 @@ public final class RestoreDefaultsActionHandler
             final SapphireWithDirective w = ( (SapphireWithDirective) part );
             final ElementProperty property = w.getProperty();
             
-            if( property instanceof ImpliedElementProperty )
+            if( property == null )
             {
                 collectProperties( w.getCurrentPage(), result );
             }
             else
             {
-                result.add( new PropertyRef( part.getModelElement(), property ) );
+                result.add( new PropertyRef( w.getLocalModelElement(), property ) );
             }
         }
         else if( part instanceof SapphireEnumControlledPageBook )
@@ -189,7 +188,7 @@ public final class RestoreDefaultsActionHandler
         else if( part instanceof SapphirePropertyEditor )
         {
             final SapphirePropertyEditor editor = (SapphirePropertyEditor) part;
-            result.add( new PropertyRef( editor.getModelElement(), editor.getProperty() ) );
+            result.add( new PropertyRef( editor.getLocalModelElement(), editor.getProperty() ) );
             
             for( SapphirePart related : editor.getRelatedContent() )
             {

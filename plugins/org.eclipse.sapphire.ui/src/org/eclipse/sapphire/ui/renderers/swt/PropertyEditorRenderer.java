@@ -115,7 +115,7 @@ public abstract class PropertyEditorRenderer
     
     public IModelElement getModelElement()
     {
-        return this.part.getModelElement();
+        return this.part.getLocalModelElement();
     }
     
     public ModelProperty getProperty()

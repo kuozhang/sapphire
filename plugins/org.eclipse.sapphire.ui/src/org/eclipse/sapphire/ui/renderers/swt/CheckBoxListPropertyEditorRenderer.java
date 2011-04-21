@@ -94,7 +94,7 @@ public class CheckBoxListPropertyEditorRenderer
         // Initialize
         
         final SapphirePropertyEditor part = getPart();
-        final IModelElement element = part.getModelElement();
+        final IModelElement element = part.getLocalModelElement();
         final ListProperty listProperty = (ListProperty) part.getProperty();
         
         this.memberType = listProperty.getType();

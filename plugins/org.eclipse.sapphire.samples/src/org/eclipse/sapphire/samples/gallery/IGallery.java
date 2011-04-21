@@ -269,4 +269,13 @@ public interface IGallery
     
     ITabGroupGallery getTabGroupGallery();
     
+    // *** AncestorAccessGallery ***
+    
+    @Type( base = IAncestorAccessGalleryLevel1.class )
+    @XmlBinding( path = "ancestor-access" )
+    
+    ImpliedElementProperty PROP_ANCESTOR_ACCESS_GALLERY = new ImpliedElementProperty( TYPE, "AncestorAccessGallery" );
+    
+    IAncestorAccessGalleryLevel1 getAncestorAccessGallery();
+    
 }
