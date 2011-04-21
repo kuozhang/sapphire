@@ -98,7 +98,17 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
 	{
 		if (this.endpointFunctionResult != null)
 		{
-			Object value = this.endpointFunctionResult.value();
+			String value = (String)this.endpointFunctionResult.value();
+			if (value == null  || value.length() == 0)
+			{
+				SapphireDiagramEditorPagePart diagramPart = this.getDiagramConnectionTemplate().getDiagramEditor();
+				DiagramNodePart nodePart = diagramPart.getDiagramNodePart(this.endpointModel);
+				if (nodePart != null)
+				{
+					value = IdUtil.computeNodeId(nodePart);
+				}
+			}			
+			
 			String property = this.endpointDef.getProperty().getContent();
 			setModelProperty(this.modelElement, property, value);
 		}		

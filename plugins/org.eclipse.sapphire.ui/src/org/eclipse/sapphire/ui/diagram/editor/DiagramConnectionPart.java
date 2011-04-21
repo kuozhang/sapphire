@@ -291,7 +291,16 @@ public class DiagramConnectionPart
 	{
 		if (this.endpoint1FunctionResult != null)
 		{
-			Object value = this.endpoint1FunctionResult.value();
+			String value = (String)this.endpoint1FunctionResult.value();
+			if (value == null  || value.length() == 0)
+			{
+				SapphireDiagramEditorPagePart diagramPart = this.getDiagramConnectionTemplate().getDiagramEditor();
+				DiagramNodePart nodePart = diagramPart.getDiagramNodePart(this.srcNodeModel);
+				if (nodePart != null)
+				{
+					value = IdUtil.computeNodeId(nodePart);
+				}
+			}
 			setModelProperty(this.modelElement, this.endpoint1Path, value);
 		}		
 	}
@@ -300,7 +309,16 @@ public class DiagramConnectionPart
 	{
 		if (this.endpoint2FunctionResult != null)
 		{
-			Object value = this.endpoint2FunctionResult.value();
+			String value = (String)this.endpoint2FunctionResult.value();
+			if (value == null  || value.length() == 0)
+			{
+				SapphireDiagramEditorPagePart diagramPart = this.getDiagramConnectionTemplate().getDiagramEditor();
+				DiagramNodePart nodePart = diagramPart.getDiagramNodePart(this.targetNodeModel);
+				if (nodePart != null)
+				{
+					value = IdUtil.computeNodeId(nodePart);
+				}
+			}			
 			setModelProperty(this.modelElement, this.endpoint2Path, value);
 		}		
 	}
