@@ -75,7 +75,7 @@
                             </documentation>
                             <content>
                                 <with>
-                                    <property>Address</property>
+                                    <path>Address</path>
                                     <default-panel>
                                         <content>
                                             <property-editor>Street</property-editor>
@@ -139,7 +139,7 @@
                             <section>
                                 <content>
                                     <with>
-                                        <property>Assistant</property>
+                                        <path>Assistant</path>
                                         <label>delegate some tasks to an assistant</label>
                                         <panel>
                                             <key>IAssistant</key>
@@ -184,7 +184,7 @@
                             <section>
                                 <content>
                                     <with>
-                                        <property>PrimaryOccupation</property>
+                                        <path>PrimaryOccupation</path>
                                         <panel>
                                             <key>IJobOccupation</key>
                                             <content>

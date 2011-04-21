@@ -1383,7 +1383,7 @@
                                     <label>with ..</label>
                                     <content>
                                         <with>
-                                            <property>..</property>
+                                            <path>..</path>
                                             <default-panel>
                                                 <content>
                                                     <property-editor>../Text</property-editor>
@@ -1397,7 +1397,7 @@
                                     <label>with ../..</label>
                                     <content>
                                         <with>
-                                            <property>../..</property>
+                                            <path>../..</path>
                                             <default-panel>
                                                 <content>
                                                     <property-editor>Text</property-editor>
@@ -1410,7 +1410,7 @@
                                     <label>with ../Child</label>
                                     <content>
                                         <with>
-                                            <property>../Child</property>
+                                            <path>../Child</path>
                                             <default-panel>
                                                 <content>
                                                     <property-editor>../../Text</property-editor>

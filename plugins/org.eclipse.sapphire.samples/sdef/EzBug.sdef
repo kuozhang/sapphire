@@ -170,7 +170,7 @@
             <initial-focus>Title</initial-focus>
             <content>
                 <with>
-                    <property>BugReport</property>
+                    <path>BugReport</path>
                     <default-panel>
                         <content>
                             <include>bug.report</include>

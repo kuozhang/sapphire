@@ -114,7 +114,7 @@
         <section>
             <content>
                 <with>
-                    <property>Documentation</property>
+                    <path>Documentation</path>
                     <panel>
                         <key>ISapphireDocumentationDef</key>
                         <content>
@@ -1044,7 +1044,7 @@
                                 <property-editor>ToolPaletteLabel</property-editor>
                                 <property-editor>ToolPaletteDesc</property-editor>
                                 <with>
-                                    <property>ToolPaletteImage</property>
+                                    <path>ToolPaletteImage</path>
                                     <label>Add Tool Palette Image</label>
                                     <panel>
                                         <key>IDiagramImageChoice</key>
@@ -1077,7 +1077,7 @@
                             <section>
                                 <content>
                                     <with>
-                                        <property>Image</property>
+                                        <path>Image</path>
                                         <panel>
                                             <key>IDiagramNodeImageDef</key>
                                             <content>
@@ -1103,7 +1103,7 @@
                             <section>
                                 <content>
                                     <with>
-                                        <property>Label</property>
+                                        <path>Label</path>
                                         <label>show node label</label>
                                         <panel>
                                             <key>IDiagramLabelDef</key>
@@ -1217,7 +1217,7 @@
                                     <section>
                                         <content>
                                             <with>
-                                                <property>Label</property>
+                                                <path>Label</path>
                                                 <label>show connection label</label>
                                                 <panel>
                                                     <key>IDiagramLabelDef</key>
@@ -1236,7 +1236,7 @@
                                         <label>endpoint 1</label>
                                         <content>
                                             <with>
-                                                <property>Endpoint1</property>
+                                                <path>Endpoint1</path>
                                                 <label>Define endpoint.</label>
                                                 <panel>
                                                     <key>IDiagramConnectionEndpointBindingDef</key>
@@ -1252,7 +1252,7 @@
                                         <label>endpoint 2</label>
                                         <content>
                                             <with>
-                                                <property>Endpoint2</property>
+                                                <path>Endpoint2</path>
                                                 <label>Define endpoint.</label>
                                                 <panel>
                                                     <key>IDiagramConnectionEndpointBindingDef</key>
@@ -1294,7 +1294,7 @@
                             <label>endpoint 1</label>
                             <content>
                                 <with>
-                                    <property>Endpoint1</property>
+                                    <path>Endpoint1</path>
                                     <default-panel>
                                         <content>
                                             <property-editor>Type</property-editor>
@@ -1307,7 +1307,7 @@
                             <label>endpoint 2</label>
                             <content>
                                 <with>
-                                    <property>Endpoint2</property>
+                                    <path>Endpoint2</path>
                                     <default-panel>
                                         <content>
                                             <property-editor>Type</property-editor>
@@ -1337,7 +1337,7 @@
                         <section>
                             <content>
                                 <with>
-                                    <property>Label</property>
+                                    <path>Label</path>
                                     <label>show connection label</label>
                                     <panel>
                                         <key>IDiagramLabelDef</key>
@@ -1356,7 +1356,7 @@
                             <label>endpoint 1</label>
                             <content>
                                 <with>
-                                    <property>Endpoint1</property>
+                                    <path>Endpoint1</path>
                                     <label>Define endpoint.</label>
                                     <panel>
                                         <key>IDiagramConnectionEndpointBindingDef</key>
@@ -1372,7 +1372,7 @@
                             <label>endpoint 2</label>
                             <content>
                                 <with>
-                                    <property>Endpoint2</property>
+                                    <path>Endpoint2</path>
                                     <label>Define endpoint.</label>
                                     <panel>
                                         <key>IDiagramConnectionEndpointBindingDef</key>
