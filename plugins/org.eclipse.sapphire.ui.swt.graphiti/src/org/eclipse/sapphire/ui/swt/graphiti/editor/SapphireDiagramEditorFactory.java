@@ -52,6 +52,7 @@ public class SapphireDiagramEditorFactory
 		final IProject project = file.getProject();
 		
 		final IFolder diagramFolder = project.getFolder(".settings/diagrams/");
+		diagramFolder.refreshLocal(0, null);
 		String fileName = file.getName();
 		if (fileName.endsWith(".xml"))
 		{
@@ -65,6 +66,8 @@ public class SapphireDiagramEditorFactory
 		
 		// create diagram file if it doesn't exist
 		final IFile diagramFile = diagramFolder.getFile(fileName + ".xmi");
+		diagramFile.refreshLocal(0,  null);
+		
 		if (!diagramFile.exists())
 		{
 			FileUtil.mkdirs( diagramFile.getParent().getLocation().toFile() );
