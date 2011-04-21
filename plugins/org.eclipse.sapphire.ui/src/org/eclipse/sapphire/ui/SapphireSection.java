@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.help.IContext;
+import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -60,12 +61,12 @@ public final class SapphireSection
         
         this.visibleWhenCondition = null;
         
-        final Class<?> visibleWhenConditionClass = this.definition.getVisibleWhenConditionClass().resolve();
+        final JavaType visibleWhenConditionClass = this.definition.getVisibleWhenConditionClass().resolve();
         
         if( visibleWhenConditionClass != null )
         {
             final String parameter = this.definition.getVisibleWhenConditionParameter().getText();
-            this.visibleWhenCondition = SapphireCondition.create( this, visibleWhenConditionClass, parameter );
+            this.visibleWhenCondition = SapphireCondition.create( this, visibleWhenConditionClass.artifact(), parameter );
         }
     }
     

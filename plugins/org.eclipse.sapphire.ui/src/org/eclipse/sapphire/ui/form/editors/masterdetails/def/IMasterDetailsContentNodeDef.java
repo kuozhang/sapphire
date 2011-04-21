@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.def;
 
+import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -136,14 +138,16 @@ public interface IMasterDetailsContentNodeDef
     
     // *** VisibleWhenConditionClass ***
     
-    @Reference( target = Class.class )
+    @Type( base = JavaTypeName.class )
+    @Reference( target = JavaType.class )
     @Label( standard = "visible when condition class" )
     @XmlBinding( path = "visible-when/condition/class" )
     
     ValueProperty PROP_VISIBLE_WHEN_CONDITION_CLASS = new ValueProperty( TYPE, "VisibleWhenConditionClass" );
     
-    ReferenceValue<String,Class<?>> getVisibleWhenConditionClass();
-    void setVisibleWhenConditionClass( String visibleWhenConditionClass );
+    ReferenceValue<JavaTypeName,JavaType> getVisibleWhenConditionClass();
+    void setVisibleWhenConditionClass( String value );
+    void setVisibleWhenConditionClass( JavaTypeName value );
     
     // *** VisibleWhenConditionParameter ***
     

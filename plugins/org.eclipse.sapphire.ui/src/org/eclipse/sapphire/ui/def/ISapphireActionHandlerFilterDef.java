@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui.def;
 
+import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
@@ -20,6 +22,7 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -38,7 +41,8 @@ public interface ISapphireActionHandlerFilterDef
     
     // *** ImplClass ***
     
-    @Reference( target = Class.class )
+    @Type( base = JavaTypeName.class )
+    @Reference( target = JavaType.class )
     @Label( standard = "implementation class" )
     @NonNullValue
     @XmlBinding( path = "impl" )
@@ -47,8 +51,9 @@ public interface ISapphireActionHandlerFilterDef
 
     ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );
     
-    ReferenceValue<String,Class<?>> getImplClass();
-    void setImplClass( String implClass );
+    ReferenceValue<JavaTypeName,JavaType> getImplClass();
+    void setImplClass( String value );
+    void setImplClass( JavaTypeName value );
     
     // *** Contexts ***
     

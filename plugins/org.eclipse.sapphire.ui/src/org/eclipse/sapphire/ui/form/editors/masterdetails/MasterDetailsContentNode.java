@@ -144,8 +144,13 @@ public final class MasterDetailsContentNode
         
         if( visibleWhenConditionClassValidation.getSeverity() != IStatus.ERROR )
         {
-            visibleWhenConditionClass = this.definition.getVisibleWhenConditionClass().resolve();
-            visibleWhenConditionParameter = this.definition.getVisibleWhenConditionParameter().getText();
+            final JavaType visibleWhenConditionType = this.definition.getVisibleWhenConditionClass().resolve();
+            
+            if( visibleWhenConditionType != null )
+            {
+                visibleWhenConditionClass = visibleWhenConditionType.artifact();
+                visibleWhenConditionParameter = this.definition.getVisibleWhenConditionParameter().getText();
+            }
         }
         else
         {
@@ -298,12 +303,12 @@ public final class MasterDetailsContentNode
                 
                 SapphireCondition factoryVisibleWhenCondition = null;
                 
-                final Class<?> factoryVisibleWhenConditionClass = def.getVisibleWhenConditionClass().resolve();
+                final JavaType factoryVisibleWhenConditionClass = def.getVisibleWhenConditionClass().resolve();
                 
                 if( factoryVisibleWhenConditionClass != null )
                 {
                     final String parameter = def.getVisibleWhenConditionParameter().getText();
-                    factoryVisibleWhenCondition = SapphireCondition.create( this, factoryVisibleWhenConditionClass, parameter );
+                    factoryVisibleWhenCondition = SapphireCondition.create( this, factoryVisibleWhenConditionClass.artifact(), parameter );
                     
                     if( factoryVisibleWhenCondition != null )
                     {

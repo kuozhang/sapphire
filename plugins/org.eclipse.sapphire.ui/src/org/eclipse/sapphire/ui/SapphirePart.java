@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.help.IContext;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -114,7 +115,7 @@ public abstract class SapphirePart
         
         for( ISapphirePartListenerDef listenerDefinition : definition.getListeners() )
         {
-            final Class<?> listenerClass = listenerDefinition.getListenerClass().resolve();
+            final JavaType listenerClass = listenerDefinition.getListenerClass().resolve();
             
             if( listenerClass != null )
             {
@@ -122,11 +123,11 @@ public abstract class SapphirePart
                 
                 try
                 {
-                    listener = listenerClass.newInstance();
+                    listener = listenerClass.artifact().newInstance();
                 }
                 catch( Exception e )
                 {
-                    final String msg = NLS.bind( Resources.failedToInstantiate, listenerClass.getName() );
+                    final String msg = NLS.bind( Resources.failedToInstantiate, listenerClass.name() );
                     logError( msg, e );
                 }
                 
@@ -138,7 +139,7 @@ public abstract class SapphirePart
                     }
                     else
                     {
-                        final String msg = NLS.bind( Resources.doesNotExtend, listenerClass.getName() );
+                        final String msg = NLS.bind( Resources.doesNotExtend, listenerClass.name() );
                         logError( msg );
                     }
                 }
@@ -754,13 +755,13 @@ public abstract class SapphirePart
         }
         else if( definition instanceof ISapphireCustomPartDef )
         {
-            final Class<?> customPartImplClass = ( (ISapphireCustomPartDef) definition ).getImplClass().resolve();
+            final JavaType customPartImplClass = ( (ISapphireCustomPartDef) definition ).getImplClass().resolve();
             
             if( customPartImplClass != null )
             {
                 try
                 {
-                    part = (SapphirePart) customPartImplClass.newInstance();
+                    part = (SapphirePart) customPartImplClass.artifact().newInstance();
                 }
                 catch( Exception e )
                 {

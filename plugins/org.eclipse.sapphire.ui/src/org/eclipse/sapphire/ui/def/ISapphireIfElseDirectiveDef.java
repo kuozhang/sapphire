@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui.def;
 
+import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -42,14 +44,16 @@ public interface ISapphireIfElseDirectiveDef
  
     // *** ConditionClass ***
     
-    @Reference( target = Class.class )
+    @Type( base = JavaTypeName.class )
+    @Reference( target = JavaType.class )
     @Label( standard = "condition class" )
     @XmlBinding( path = "condition/class" )
     
     ValueProperty PROP_CONDITION_CLASS = new ValueProperty( TYPE, "ConditionClass" );
     
-    ReferenceValue<String,Class<?>> getConditionClass();
-    void setConditionClass( String conditionClass );
+    ReferenceValue<JavaTypeName,JavaType> getConditionClass();
+    void setConditionClass( String value );
+    void setConditionClass( JavaTypeName value );
     
     // *** ConditionParameter ***
     

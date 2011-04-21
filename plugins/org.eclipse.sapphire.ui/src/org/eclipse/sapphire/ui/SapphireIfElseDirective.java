@@ -52,7 +52,7 @@ public final class SapphireIfElseDirective
         
         if( conditionClassValidation.getSeverity() != IStatus.ERROR )
         {
-            conditionClass = this.def.getConditionClass().resolve();
+            conditionClass = this.def.getConditionClass().resolve().artifact();
         }
         else
         {

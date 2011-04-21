@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui.def;
 
+import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
@@ -18,6 +20,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -36,13 +39,15 @@ public interface ISapphirePartListenerDef
     
     // *** ListenerClass ***
     
-    @Reference( target = Class.class )
+    @Type( base = JavaTypeName.class )
+    @Reference( target = JavaType.class )
     @Label( standard = "listener class" )
     @XmlBinding( path = "" )
     
     ValueProperty PROP_LISTENER_CLASS = new ValueProperty( TYPE, "ListenerClass" );
     
-    ReferenceValue<String,Class<?>> getListenerClass();
-    void setListenerClass( String listenerClass );
+    ReferenceValue<JavaTypeName,JavaType> getListenerClass();
+    void setListenerClass( String value );
+    void setListenerClass( JavaTypeName value );
 
 }

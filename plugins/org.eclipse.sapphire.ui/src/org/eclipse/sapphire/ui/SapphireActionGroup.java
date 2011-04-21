@@ -261,11 +261,11 @@ public final class SapphireActionGroup
             {
                 try
                 {
-                    final Class<?> implClass = def.getImplClass().resolve();
+                    final JavaType implClass = def.getImplClass().resolve();
                     
                     if( implClass != null )
                     {
-                        final SapphireActionHandlerFilter filter = (SapphireActionHandlerFilter) implClass.newInstance();
+                        final SapphireActionHandlerFilter filter = (SapphireActionHandlerFilter) implClass.artifact().newInstance();
                         addFilter( filter );
                     }
                 }
