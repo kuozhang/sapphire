@@ -1357,7 +1357,7 @@
                             <content>
                                 <with>
                                     <path>Endpoint1</path>
-                                    <label>Define endpoint.</label>
+                                    <label>Define endpoint</label>
                                     <panel>
                                         <key>IDiagramConnectionEndpointBindingDef</key>
                                         <content>
@@ -1386,6 +1386,58 @@
                         </section>
                         <use-model-element-image></use-model-element-image>
                         <node-ref>PropertiesViewContributionNode</node-ref>
+                    </node-template>
+                </node-list>
+            </node>
+            <node>
+                <label>implicit connection bindings</label>
+                <node-list>
+                    <property>ImplicitConnectionBindingDefs</property>
+                    <node-template>
+                        <label>${ Property == null ? &quot;&lt;implicit-connection-binding&gt;&quot; : Property }</label>
+                        <section>
+                            <label>implicit connection binding</label>
+                            <content>
+                                <property-editor>ConnectionId</property-editor>
+                                <property-editor>Property</property-editor>
+                            </content>
+                        </section>
+                        <section>
+                            <label>model element types</label>
+                            <content>
+                                <property-editor>
+                                    <property>ModelElementTypes</property>
+                                    <hint>
+                                        <name>show.label</name>
+                                        <value>false</value>
+                                    </hint>
+                                </property-editor>
+                            </content>
+                        </section>
+                        <section>
+                            <label>condition</label>
+                            <content>
+                                <property-editor>
+                                    <property>Condition</property>
+                                    <hint>
+                                        <name>show.label</name>
+                                        <value>false</value>
+                                    </hint>
+                                </property-editor>
+                            </content>
+                        </section>
+                        <section>
+                            <label>connection wiring strategy</label>
+                            <content>
+                                <property-editor>
+                                    <property>ConnectionWiringStrategy</property>
+                                    <hint>
+                                        <name>show.label</name>
+                                        <value>false</value>
+                                    </hint>
+                                </property-editor>
+                            </content>
+                        </section>
                     </node-template>
                 </node-list>
             </node>
