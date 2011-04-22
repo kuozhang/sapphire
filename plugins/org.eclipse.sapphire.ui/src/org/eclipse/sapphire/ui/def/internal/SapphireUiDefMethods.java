@@ -16,8 +16,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.ui.def.IDefinitionReference;
 import org.eclipse.sapphire.ui.def.IImportDirective;
@@ -175,10 +175,10 @@ public final class SapphireUiDefMethods
         return property;
     }
     
-    public static ImageDescriptor resolveImage( final ISapphireUiDef def,
-                                                final String imagePath )
+    public static ImageData resolveImage( final ISapphireUiDef def,
+                                          final String imagePath )
     {
-        ImageDescriptor img = null;
+        ImageData img = null;
         
         for( IImportDirective directive : def.getImportDirectives() )
         {

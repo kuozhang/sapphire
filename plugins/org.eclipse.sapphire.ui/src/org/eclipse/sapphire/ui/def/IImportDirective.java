@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -32,7 +32,7 @@ import org.eclipse.sapphire.ui.def.internal.ImportDirectiveMethods;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Image( small = "org.eclipse.sapphire.ui/images/objects/bundle.gif" )
+@Image( path = "org.eclipse.sapphire.ui/images/objects/bundle.gif" )
 @GenerateImpl
 
 public interface IImportDirective
@@ -83,6 +83,6 @@ public interface IImportDirective
     
     @DelegateImplementation( ImportDirectiveMethods.class )
     
-    ImageDescriptor resolveImage( String imagePath );
+    ImageData resolveImage( String imagePath );
     
 }

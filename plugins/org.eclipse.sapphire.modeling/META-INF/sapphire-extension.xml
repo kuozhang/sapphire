@@ -89,6 +89,11 @@
         <factory>org.eclipse.sapphire.modeling.validation.internal.NumericRangeValidationService$Factory</factory>
         <id>Sapphire.NumericRangeValidationService</id>
     </model-property-service>
+    <model-element-service>
+        <type>org.eclipse.sapphire.modeling.ImageService</type>
+        <factory>org.eclipse.sapphire.modeling.internal.StaticImageService$Factory</factory>
+        <id>Sapphire.ImageService.Static</id>
+    </model-element-service>
     <value-serialization-service>
         <type>java.lang.Enum</type>
         <impl>org.eclipse.sapphire.modeling.serialization.internal.EnumSerializationService</impl>

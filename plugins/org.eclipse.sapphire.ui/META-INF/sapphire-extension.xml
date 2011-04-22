@@ -283,8 +283,8 @@
     </value-serialization-service>
     <type-cast>
         <source>java.lang.String</source>
-        <target>org.eclipse.jface.resource.ImageDescriptor</target>
-        <impl>org.eclipse.sapphire.ui.def.internal.StringToImageTypeCast</impl>
+        <target>org.eclipse.sapphire.modeling.ImageData</target>
+        <impl>org.eclipse.sapphire.ui.def.internal.StringToImageDataCast</impl>
         <description>Able to convert a string to an image if the requesting function origin is a model element and if that element is contained in ISapphireUiDef or if the element is adaptable to ResourceLocator.</description>
     </type-cast>
 </extension>

@@ -20,6 +20,7 @@
     <li><a href="#ref">ReferenceValue Improvements</a></li>
     <li><a href="#folding">Folding XML Element Binding</a></li>
     <li><a href="#project-relative">Project Relative Paths</a></li>
+    <li><a href="#image-service">Image Service</a></li>
   </ol>
   <li><a href="#ui">UI</a></li>
   <ol type="A">
@@ -188,6 +189,73 @@ Value&lt;IPath> getProjectRelativePath();
 void setProjectRelativePath( String value );
 void setProjectRelativePath( IPath value );</code></pre>
 
+<h2><a name="image-service">Image Service</a></h2>
+
+<p>The API for model element image provider has been changed to unify it with the model element services
+API and to support notification of image changes.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">This following code is taken from the calendar sample. The event attendee
+image varies based on whether or not attendee is found in the contacts directory.</p>
+
+<pre class="source-code"><code>@Image( path = "org.eclipse.sapphire.samples/images/person.png" )
+@Service( impl = AttendeeImageService.class )
+
+public interface IAttendee extends IModelElement
+{
+    ...
+}
+
+...
+
+public class AttendeeImageService extends ImageService
+{
+    private static final ImageData IMG_PERSON 
+        = ImageData.readFromBundle( SapphireSamplesPlugin.PLUGIN_ID, "images/person.png" );
+
+    private static final ImageData IMG_PERSON_FADED 
+        = ImageData.readFromBundle( SapphireSamplesPlugin.PLUGIN_ID, "images/person-faded.png" );
+    
+    private ModelPropertyListener listener;
+    
+    @Override
+    public void init( IModelElement element, String[] params )
+    {
+        super.init( element, params );
+        
+        this.listener = new ModelPropertyListener()
+        {
+            @Override
+            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            {
+                notifyListeners( new ImageChangedEvent( AttendeeImageProviderService.this ) );
+            }
+        };
+        
+        element.addListener( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
+    }
+
+    @Override
+    public ImageData provide()
+    {
+        if( ( (IAttendee) element() ).isInContactsDatabase().getContent() )
+        {
+            return IMG_PERSON;
+        }
+        else
+        {
+            return IMG_PERSON_FADED;
+        }
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        element().removeListener( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
+    }
+}</code></pre>
 
 <h2><a name="html">HTML Content Presentation</a></h2>
 

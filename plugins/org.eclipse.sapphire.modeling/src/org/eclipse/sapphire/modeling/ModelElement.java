@@ -1289,6 +1289,39 @@ public abstract class ModelElement
             {
                 SapphireModelingFrameworkPlugin.log( e );
             }
+            
+            for( Collection<ModelElementService> list : this.elementServices.values() )
+            {
+                for( ModelElementService service : list )
+                {
+                    try
+                    {
+                        service.dispose();
+                    }
+                    catch( Exception e )
+                    {
+                        SapphireModelingFrameworkPlugin.log( e );
+                    }
+                }
+            }
+            
+            for( Map<Class<? extends ModelPropertyService>,Collection<ModelPropertyService>> map : this.propertyServices.values() )
+            {
+                for( Collection<ModelPropertyService> list : map.values() )
+                {
+                    for( ModelPropertyService service : list )
+                    {
+                        try
+                        {
+                            service.dispose();
+                        }
+                        catch( Exception e )
+                        {
+                            SapphireModelingFrameworkPlugin.log( e );
+                        }
+                    }
+                }
+            }
         }
     }
     

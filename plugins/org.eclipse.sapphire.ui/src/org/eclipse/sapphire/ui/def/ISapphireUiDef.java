@@ -15,8 +15,8 @@ package org.eclipse.sapphire.ui.def;
 
 import java.util.List;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -164,6 +164,6 @@ public interface ISapphireUiDef
     
     @DelegateImplementation( SapphireUiDefMethods.class )
     
-    ImageDescriptor resolveImage( String imagePath );
+    ImageData resolveImage( String imagePath );
     
 }

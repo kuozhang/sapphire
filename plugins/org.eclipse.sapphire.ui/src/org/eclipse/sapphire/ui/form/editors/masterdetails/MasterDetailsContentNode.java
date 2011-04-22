@@ -25,12 +25,15 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageService;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.ModelService;
+import org.eclipse.sapphire.modeling.ModelService.Event;
 import org.eclipse.sapphire.modeling.SapphireMultiStatus;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
@@ -60,7 +63,6 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsCont
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeListEntry;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeRef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -380,35 +382,77 @@ public final class MasterDetailsContentNode
         
         // Image
         
-        final Literal defaultImageLiteral = Literal.create( ( hasChildNodes() ? SapphireImageCache.OBJECT_CONTAINER_NODE : SapphireImageCache.OBJECT_LEAF_NODE ) );
+        final Literal defaultImageLiteral = Literal.create( ( hasChildNodes() ? SapphireImageCache.IMG_OBJECT_CONTAINER_NODE : SapphireImageCache.IMG_OBJECT_LEAF_NODE ) );
         final Function imageFunction;
         
         if( this.definition.getUseModelElementImage().getContent() )
         {
-            imageFunction = new Function()
-            {
-                @Override
-                public String name()
-                {
-                    return "ImageFromModelElement";
-                }
-                
-                @Override
-                public FunctionResult evaluate( final FunctionContext context )
-                {
-                    return new FunctionResult( this, context )
-                    {
-                        @Override
-                        protected Object evaluate() throws FunctionException
-                        {
-                            final Image img = getImageCache().getImage( getLocalModelElement() );
-                            return ImageDescriptor.createFromImage( img );
-                        }
-                    };
-                }
-            };
+            final IModelElement element = getLocalModelElement();
+            final ImageService imageService = element.service( ImageService.class );
             
-            imageFunction.init();
+            if( imageService == null )
+            {
+                imageFunction = null;
+            }
+            else
+            {
+                imageFunction = new Function()
+                {
+                    @Override
+                    public String name()
+                    {
+                        return "ImageFromModelElement";
+                    }
+                    
+                    @Override
+                    public FunctionResult evaluate( final FunctionContext context )
+                    {
+                        return new FunctionResult( this, context )
+                        {
+                            private ModelService.Listener listener;
+                            
+                            @Override
+                            protected void init()
+                            {
+                                super.init();
+                                
+                                this.listener = new ModelService.Listener()
+                                {
+                                    @Override
+                                    public void handleEvent( final Event event )
+                                    {
+                                        if( event instanceof ImageService.ImageChangedEvent )
+                                        {
+                                            refresh();
+                                        }
+                                    }
+                                };
+                                
+                                imageService.addListener( this.listener );
+                            }
+
+                            @Override
+                            protected Object evaluate() throws FunctionException
+                            {
+                                return imageService.provide();
+                            }
+
+                            @Override
+                            public void dispose()
+                            {
+                                super.dispose();
+                                
+                                if( this.listener != null )
+                                {
+                                    imageService.removeListener( this.listener );
+                                }
+                            }
+                        };
+                    }
+                };
+                
+                imageFunction.init();
+            }
         }
         else
         {

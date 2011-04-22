@@ -22,6 +22,7 @@ import java.util.TreeMap;
 
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.internal.MemoryResource;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -42,6 +43,8 @@ public final class ModelElementType
     private boolean implClassLoaded = false;
     private final List<ModelProperty> properties;
     private final LocalizationService localizationService;
+    private ImageData image;
+    private boolean imageInitialized;
     
     public ModelElementType( final Class<?> modelElementClass )
     {
@@ -274,6 +277,30 @@ public final class ModelElementType
     public LocalizationService getLocalizationService()
     {
         return this.localizationService;
+    }
+    
+    public ImageData image()
+    {
+        if( ! this.imageInitialized )
+        {
+            final Image imageAnnotation = getAnnotation( Image.class );
+            
+            if( imageAnnotation != null )
+            {
+                try
+                {
+                    this.image = ImageData.readFromBundle( imageAnnotation.path() );
+                }
+                catch( Exception e )
+                {
+                    SapphireModelingFrameworkPlugin.log( e );
+                }
+            }
+            
+            this.imageInitialized = true;
+        }
+        
+        return this.image;
     }
 
     protected static abstract class ModelPropertyInitListener

@@ -9,21 +9,35 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.annotations;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package org.eclipse.sapphire.modeling;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Retention( RetentionPolicy.RUNTIME )
-@Target( ElementType.TYPE )
+public abstract class ImageService
 
-public @interface Image
+    extends ModelElementService
+    
 {
-    String path();
+    public abstract ImageData provide();
+    
+    /**
+     * Event that should be triggered if the image changes after it was initially provided.
+     */
+    
+    public static final class ImageChangedEvent extends Event
+    {
+        public ImageChangedEvent( final ImageService service )
+        {
+            super( service );
+        }
+        
+        @Override
+        public ImageService service()
+        {
+            return (ImageService) super.service();
+        }
+    }
+    
 }

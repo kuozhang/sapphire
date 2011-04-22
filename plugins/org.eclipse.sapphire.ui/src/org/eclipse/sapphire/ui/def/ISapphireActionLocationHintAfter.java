@@ -24,7 +24,7 @@ import org.eclipse.sapphire.ui.def.internal.LocationHintBinding;
  */
 
 @Label( standard = "after location hint" )
-@Image( small = "org.eclipse.sapphire.ui/images/objects/location-hint-after.png" )
+@Image( path = "org.eclipse.sapphire.ui/images/objects/location-hint-after.png" )
 @GenerateImpl
 
 public interface ISapphireActionLocationHintAfter

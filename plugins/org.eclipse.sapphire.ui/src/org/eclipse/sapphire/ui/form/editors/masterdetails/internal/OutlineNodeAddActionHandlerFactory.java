@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
+import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescriptor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +90,7 @@ public final class OutlineNodeAddActionHandlerFactory
         {
             super.init( action, def );
             
-            ImageDescriptor typeSpecificAddImage = getPart().getImageCache().getImageDescriptor( this.type );
+            final ImageDescriptor typeSpecificAddImage = toImageDescriptor( this.type.image() );
             
             if( typeSpecificAddImage != null )
             {

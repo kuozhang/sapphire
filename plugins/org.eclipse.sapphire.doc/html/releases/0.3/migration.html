@@ -39,7 +39,8 @@ to 0.3 release. Only changes from the previous milestone are covered.</p>
   <li><a href="#composite-ref">Composite Reference</a></li>
   <li><a href="#section-description">Section Description</a></li>
   <li><a href="#function">Function Name Method</a></li>
-  <li><a href="#with">With Directive Changes</a></li>
+  <li><a href="#with">With Directive</a></li>
+  <li><a href="#element-image">Model Element Image</a></li>
 </ol>
 
 <h2><a name="modularity">Modularity Changes</a></h2>
@@ -526,7 +527,7 @@ on a parsed expression.</p>
   </tr>
 </table>
 
-<h2><a name="with">With Directive Changes</a></h2>
+<h2><a name="with">With Directive</a></h2>
 
 <p>The with directive capabilities have been expanded to allow ancestor element access via a path. To
 accommodate this feature, the "property" XML element in the sdef syntax has been renamed to "path".</p>
@@ -566,6 +567,125 @@ migration:</p>
 <p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
 <nobr>Search: &nbsp;&nbsp;(?s)&lt;with>(.*?)&lt;property>(.*?)&lt;/property>(.*?)&lt;/with></nobr><br/>
 <nobr>Replace: &nbsp;&lt;with>\1&lt;path>\2&lt;/path>\3&lt;/with></nobr></p>
+
+<h2><a name="element-image">Model Element Image</a></h2>
+
+<p>The API for model element image provider has been changed to unify it with the model element services
+API and to support notification of image changes.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Image( </font>small<font color="#888888"> = "..." )</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Image( </font>path<font color="#888888"> = "..." )</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@Image( provider = AttendeeImageProvider.class )
+
+public interface IAttendee extends IModelElement
+{
+    ...
+}
+
+...
+
+public class AttendeeImageProvider extends ImageProvider
+{
+    private static final String IMG_PERSON 
+        = SapphireSamplesPlugin.PLUGIN_ID + "/images/person.png";
+
+    private static final String IMG_PERSON_FADED 
+        = SapphireSamplesPlugin.PLUGIN_ID + "/images/person-faded.png";
+
+    @Override
+    public String getSmallImagePath( IModelElement element )
+    {
+        if( ( (IAttendee) element ).isInContactsDatabase().getContent() )
+        {
+            return IMG_PERSON;
+        }
+        else
+        {
+            return IMG_PERSON_FADED;
+        }
+    }
+
+    @Override
+    public String getSmallImagePath( ModelElementType type )
+    {
+        return IMG_PERSON;
+    }
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@Image( path = "org.eclipse.sapphire.samples/images/person.png" )
+@Service( impl = AttendeeImageService.class )
+
+public interface IAttendee extends IModelElement
+{
+    ...
+}
+
+...
+
+public class AttendeeImageService extends ImageService
+{
+    private static final ImageData IMG_PERSON 
+        = ImageData.readFromBundle( SapphireSamplesPlugin.PLUGIN_ID, "images/person.png" );
+
+    private static final ImageData IMG_PERSON_FADED 
+        = ImageData.readFromBundle( SapphireSamplesPlugin.PLUGIN_ID, "images/person-faded.png" );
+    
+    private ModelPropertyListener listener;
+    
+    @Override
+    public void init( IModelElement element, String[] params )
+    {
+        super.init( element, params );
+        
+        this.listener = new ModelPropertyListener()
+        {
+            @Override
+            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            {
+                notifyListeners( new ImageChangedEvent( AttendeeImageProviderService.this ) );
+            }
+        };
+        
+        element.addListener( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
+    }
+
+    @Override
+    public ImageData provide()
+    {
+        if( ( (IAttendee) element() ).isInContactsDatabase().getContent() )
+        {
+            return IMG_PERSON;
+        }
+        else
+        {
+            return IMG_PERSON_FADED;
+        }
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        element().removeListener( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
+    }
+}</code></pre>
+    </td>
+  </tr>
+</table>
 
 <br/><br/>
 

@@ -11,12 +11,18 @@
 
 package org.eclipse.sapphire.modeling;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public abstract class ModelService
 {
+    private final List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
     private IModelElement element;
     
     protected final void init( final IModelElement element )
@@ -37,6 +43,65 @@ public abstract class ModelService
     public final <A> A adapt( final Class<A> adapterType )
     {
         return this.element.adapt( adapterType );
+    }
+    
+    public final void addListener( final Listener listener )
+    {
+        if( listener == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        this.listeners.add( listener );
+    }
+    
+    public final void removeListener( final Listener listener )
+    {
+        if( listener == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        this.listeners.remove( listener );
+    }
+    
+    protected final void notifyListeners( final Event event )
+    {
+        for( Listener listener : this.listeners )
+        {
+            try
+            {
+                listener.handleEvent( event );
+            }
+            catch( Exception e )
+            {
+                SapphireModelingFrameworkPlugin.log( e );
+            }
+        }
+    }
+    
+    public void dispose()
+    {
+    }
+    
+    public static class Event
+    {
+        private final ModelService service;
+        
+        public Event( final ModelService service )
+        {
+            this.service = service;
+        }
+        
+        public ModelService service()
+        {
+            return this.service;
+        }
+    }
+    
+    public static abstract class Listener
+    {
+        public abstract void handleEvent( Event event );
     }
     
 }

@@ -75,7 +75,7 @@ public final class SapphireListControlledPageBook
                     
                     if( ! sel.isEmpty() )
                     {
-                        newModelElement = (IModelElement) sel.getFirstElement();
+                        newModelElement = ( (DefaultListPropertyEditorRenderer.TableRow) sel.getFirstElement() ).element();
                         newPageKey = ClassBasedKey.create( newModelElement );
                     }
                     else

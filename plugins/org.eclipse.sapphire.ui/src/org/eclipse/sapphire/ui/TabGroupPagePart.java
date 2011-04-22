@@ -54,7 +54,7 @@ public final class TabGroupPagePart
             }
         );
         
-        this.imageManager = new ImageManager( element, def.getImage().getContent(), Literal.create( SapphireImageCache.OBJECT_LEAF_NODE ) );
+        this.imageManager = new ImageManager( element, def.getImage().getContent(), Literal.create( SapphireImageCache.IMG_OBJECT_LEAF_NODE ) );
     }
 
     @Override

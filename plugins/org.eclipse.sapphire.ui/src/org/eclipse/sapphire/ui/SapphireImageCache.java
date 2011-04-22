@@ -12,19 +12,19 @@
 package org.eclipse.sapphire.ui;
 
 import static org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin.PLUGIN_ID;
+import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescriptor;
 import static org.eclipse.ui.plugin.AbstractUIPlugin.imageDescriptorFromPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.ImageProvider;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -108,11 +108,17 @@ public final class SapphireImageCache
     public static final ImageDescriptor OBJECT_PACKAGE
         = imageDescriptorFromPlugin( PLUGIN_ID, "images/objects/package.png" );
     
-    public static final ImageDescriptor OBJECT_CONTAINER_NODE
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/objects/container-node.png" );
+    public static final ImageData IMG_OBJECT_CONTAINER_NODE
+        = ImageData.readFromBundle( PLUGIN_ID, "images/objects/container-node.png" );
     
+    public static final ImageDescriptor OBJECT_CONTAINER_NODE
+        = SwtRendererUtil.toImageDescriptor( IMG_OBJECT_CONTAINER_NODE );
+
+    public static final ImageData IMG_OBJECT_LEAF_NODE
+        = ImageData.readFromBundle( PLUGIN_ID, "images/objects/leaf-node.png" );
+
     public static final ImageDescriptor OBJECT_LEAF_NODE
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/objects/leaf-node.png" );
+        = SwtRendererUtil.toImageDescriptor( IMG_OBJECT_LEAF_NODE );
     
     public static final ImageDescriptor OBJECT_CHECK_ON
         = imageDescriptorFromPlugin( PLUGIN_ID, "images/objects/check-on.gif" );
@@ -122,8 +128,8 @@ public final class SapphireImageCache
     
     private final Map<ImageDescriptor,ImageHandle> imageDescToImageHandle = new HashMap<ImageDescriptor,ImageHandle>();
     
-    private final Map<Class<? extends ImageProvider>,ImageProvider> imageProviderInstances 
-        = new WeakHashMap<Class<? extends ImageProvider>,ImageProvider>();
+    private final Map<org.eclipse.sapphire.modeling.ImageData,ImageDescriptor> imageDataToImageDesc 
+        = new HashMap<org.eclipse.sapphire.modeling.ImageData,ImageDescriptor>();
     
     public Image getImage( final ImageDescriptor imageDescriptor )
     {
@@ -162,42 +168,6 @@ public final class SapphireImageCache
         return null;
     }
 
-    public Image getImage( final ModelElementType type )
-    {
-        return getImage( type, IStatus.OK );
-    }
-    
-    public Image getImage( final ModelElementType type,
-                           final int problemSeverity )
-    {
-        return getImage( type, null, problemSeverity );
-    }
-    
-    public Image getImage( final IModelElement element )
-    {
-        return getImage( element, IStatus.OK );
-    }
-    
-    public Image getImage( final IModelElement element,
-                           final int problemSeverity )
-    {
-        return getImage( element.getModelElementType(), element, problemSeverity );
-    }
-    
-    private Image getImage( final ModelElementType type,
-                            final IModelElement element,
-                            final int problemSeverity )
-    {
-        final ImageDescriptor imageDescriptor = getImageDescriptor( type, element );
-        
-        if( imageDescriptor != null )
-        {
-            return getImage( imageDescriptor, problemSeverity );
-        }
-        
-        return null;
-    }
-    
     public ImageDescriptor getImageDescriptor( final String imagePath )
     {
         final int slash = imagePath.indexOf( '/' );
@@ -214,67 +184,36 @@ public final class SapphireImageCache
         
         return imageDescriptor;
     }
-
+    
     public ImageDescriptor getImageDescriptor( final ModelElementType type )
     {
-        return getImageDescriptor( type, null );
+        return toImageDescriptor( type.image() );
     }
     
-    public ImageDescriptor getImageDescriptor( final IModelElement element )
+    public Image getImage( final ModelElementType type )
     {
-        return getImageDescriptor( element.getModelElementType(), element );
+        return getImage( type.image() );
     }
     
-    private ImageDescriptor getImageDescriptor( final ModelElementType type,
-                                                final IModelElement element )
+    public Image getImage( final org.eclipse.sapphire.modeling.ImageData imageData )
     {
-        final org.eclipse.sapphire.modeling.annotations.Image imageAnnotation
-            = type.getAnnotation( org.eclipse.sapphire.modeling.annotations.Image.class );
-        
-        if( imageAnnotation != null )
+        return getImage( imageData, IStatus.OK );
+    }
+    
+    public Image getImage( final org.eclipse.sapphire.modeling.ImageData imageData,
+                           final int severity )
+    {
+        if( imageData != null )
         {
-            String imagePath = null;
+            ImageDescriptor imageDescriptor = this.imageDataToImageDesc.get( imageData );
             
-            if( imageAnnotation.provider() != ImageProvider.class )
+            if( imageDescriptor == null )
             {
-                final Class<? extends ImageProvider> imageProviderClass = imageAnnotation.provider();
-                ImageProvider imageProvider = this.imageProviderInstances.get( imageProviderClass );
-                
-                if( imageProvider == null )
-                {
-                    try
-                    {
-                        imageProvider = imageProviderClass.newInstance();
-                    }
-                    catch( Exception e )
-                    {
-                        SapphireUiFrameworkPlugin.log( e );
-                    }
-    
-                    if( imageProvider != null )
-                    {
-                        this.imageProviderInstances.put( imageProviderClass, imageProvider );
-                    }
-                }
-                
-                if( imageProvider != null )
-                {
-                    if( element != null )
-                    {
-                        imagePath = imageProvider.getSmallImagePath( element );
-                    }
-                    else
-                    {
-                        imagePath = imageProvider.getSmallImagePath( type );
-                    }
-                }
-            }
-            else if( imageAnnotation.small().length() > 0 )
-            {
-                imagePath = imageAnnotation.small();
+                imageDescriptor = toImageDescriptor( imageData );
+                this.imageDataToImageDesc.put( imageData, imageDescriptor );
             }
             
-            return getImageDescriptor( imagePath );
+            return getImage( imageDescriptor, severity );
         }
         
         return null;

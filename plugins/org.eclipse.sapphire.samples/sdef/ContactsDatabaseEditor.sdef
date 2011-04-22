@@ -210,6 +210,7 @@
                                 </content>
                             </section>
                         </node>
+                        <use-model-element-image></use-model-element-image>
                     </node-template>
                 </node-list>
             </node>

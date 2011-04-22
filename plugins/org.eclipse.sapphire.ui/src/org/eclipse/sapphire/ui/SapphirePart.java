@@ -27,6 +27,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
@@ -61,6 +62,7 @@ import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
 import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
 import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -592,6 +594,7 @@ public abstract class SapphirePart
     protected final class ImageManager
     {
         private final FunctionResult imageFunctionResult;
+        private ImageData baseImageData;
         private ImageDescriptor base;
         private ImageDescriptor error;
         private ImageDescriptor warning;
@@ -611,7 +614,7 @@ public abstract class SapphirePart
             (
                 element,
                 imageFunction,
-                ImageDescriptor.class,
+                ImageData.class,
                 defaultValueFunction,
                 new Runnable()
                 {
@@ -651,11 +654,12 @@ public abstract class SapphirePart
             
             if( this.imageFunctionResult != null )
             {
-                final ImageDescriptor newBase = (ImageDescriptor) this.imageFunctionResult.value();
+                final ImageData newBaseImageData = (ImageData) this.imageFunctionResult.value();
                 
-                if( this.base != newBase )
+                if( this.baseImageData != newBaseImageData )
                 {
-                    this.base = newBase;
+                    this.baseImageData = newBaseImageData;
+                    this.base = SwtRendererUtil.toImageDescriptor( this.baseImageData );
                     this.error = null;
                     this.warning = null;
                 }

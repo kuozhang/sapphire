@@ -76,13 +76,13 @@ public final class SlushBucketPropertyEditor
     extends AbstractSlushBucketPropertyEditorRenderer
     
 {
-    private ModelElementType memberType = null;
-    private ValueProperty memberProperty = null;
-    private PossibleValuesService valuesProvider = null;
-    private PossibleValuesService.Listener valuesProviderListener = null;
-    private TableViewer sourceTableViewer = null;
-    private Table sourceTable = null;
-    private MoveRightActionHandler moveRightActionHandler = null;
+    private ModelElementType memberType;
+    private ValueProperty memberProperty;
+    private PossibleValuesService valuesProvider;
+    private PossibleValuesService.Listener valuesProviderListener;
+    private TableViewer sourceTableViewer;
+    private Table sourceTable;
+    private MoveRightActionHandler moveRightActionHandler;
     
     public SlushBucketPropertyEditor( final SapphireRenderingContext context,
                                       final SapphirePropertyEditor part )
@@ -98,8 +98,6 @@ public final class SlushBucketPropertyEditor
 
     public Control createSourceControl( final Composite parent )
     {
-        final SapphirePropertyEditor part = getPart();
-
         final Composite composite = new Composite( parent, SWT.NONE );
         composite.setLayout( glayout( 1, 0, 0 ) );
         
@@ -183,7 +181,7 @@ public final class SlushBucketPropertyEditor
         
         this.sourceTableViewer.setContentProvider( contentProvider );
         
-        final Image memberTypeImage = part.getImageCache().getImage( this.memberType );
+        final Image memberTypeImage = getPart().getImageCache().getImage( this.memberType );
         
         final ColumnLabelProvider labelProvider = new ColumnLabelProvider()
         {

@@ -42,7 +42,9 @@ import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.suppressDashedTableEn
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -76,12 +78,14 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EnumValueType;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageService;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.ModelService;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.FixedOrderList;
@@ -141,6 +145,7 @@ public class DefaultListPropertyEditorRenderer
     
     private boolean exposeAddAction;
     private boolean exposeDeleteAction;
+    private Map<IModelElement,TableRow> rows;
     private Table table;
     private TableViewer tableViewer;
     private SelectionProvider selectionProvider;
@@ -368,15 +373,6 @@ public class DefaultListPropertyEditorRenderer
         
         boolean showImages = true;
         
-        for( ModelElementType modelElementType : property.getAllPossibleTypes() )
-        {
-            if( modelElementType.getAnnotation( org.eclipse.sapphire.modeling.annotations.Image.class ) == null )
-            {
-                showImages = false;
-                break;
-            }
-        }
-        
         final String columnWidthsHint = part.getRenderingHint( HINT_COLUMN_WIDTHS, "" );
         final StringTokenizer columnWidthsHintTokenizer = new StringTokenizer( columnWidthsHint, "," );
         
@@ -481,15 +477,36 @@ public class DefaultListPropertyEditorRenderer
             public Object[] getElements( final Object inputElement )
             {
                 final ModelElementList<IModelElement> list = getList();
+                final Map<IModelElement,TableRow> rows = new LinkedHashMap<IModelElement,TableRow>();
+                
+                for( IModelElement element : list )
+                {
+                    TableRow row = null;
+                    
+                    if( DefaultListPropertyEditorRenderer.this.rows != null )
+                    {
+                        row = DefaultListPropertyEditorRenderer.this.rows.remove( element );
+                    }
+                    
+                    if( row == null )
+                    {
+                        row = new TableRow( element );
+                    }
+                    
+                    rows.put( element, row );
+                }
+                
+                if( DefaultListPropertyEditorRenderer.this.rows != null )
+                {
+                    for( TableRow row : DefaultListPropertyEditorRenderer.this.rows.values() )
+                    {
+                        row.dispose();
+                    }
+                }
+                
+                DefaultListPropertyEditorRenderer.this.rows = rows;
 
-                if( list != null )
-                {
-                    return list.toArray();
-                }
-                else
-                {
-                    return new Object[ 0 ];
-                }
+                return rows.values().toArray();
             }
 
             public void inputChanged( final Viewer viewer,
@@ -500,6 +517,10 @@ public class DefaultListPropertyEditorRenderer
 
             public void dispose()
             {
+                for( TableRow row : DefaultListPropertyEditorRenderer.this.rows.values() )
+                {
+                    row.dispose();
+                }
             }
         };
         
@@ -558,8 +579,11 @@ public class DefaultListPropertyEditorRenderer
                             if( newListElement != null )
                             {
                                 DefaultListPropertyEditorRenderer.this.refreshOperation.run();
-                                DefaultListPropertyEditorRenderer.this.tableViewer.setSelection( new StructuredSelection( newListElement ), true );
-                                DefaultListPropertyEditorRenderer.this.tableViewer.editElement( newListElement, 0 );
+                                
+                                final TableRow row = DefaultListPropertyEditorRenderer.this.rows.get( newListElement );
+                                
+                                DefaultListPropertyEditorRenderer.this.tableViewer.setSelection( new StructuredSelection( row ), true );
+                                DefaultListPropertyEditorRenderer.this.tableViewer.editElement( row, 0 );
                                 DefaultListPropertyEditorRenderer.this.table.notifyListeners( SWT.Selection, null );
                             }
                         }
@@ -705,7 +729,7 @@ public class DefaultListPropertyEditorRenderer
                 private SapphireActionHandler getJumpHandler( final TableItem item,
                                                               final int column )
                 {
-                    final IModelElement element = (IModelElement) item.getData();
+                    final IModelElement element = ( (TableRow) item.getData() ).element();
                     final ValueProperty property = columnProperties.get( column );
                     final SapphirePropertyEditor propertyEditor = getPart().getChildPropertyEditor( element, property );
                     final SapphireActionGroup actions = propertyEditor.getActions();
@@ -761,7 +785,7 @@ public class DefaultListPropertyEditorRenderer
         }
         else
         {
-            return (IModelElement) sel.getFirstElement();
+            return ( (TableRow) sel.getFirstElement() ).element();
         }
     }
     
@@ -774,7 +798,7 @@ public class DefaultListPropertyEditorRenderer
         {
             for( Iterator<?> itr = sel.iterator(); itr.hasNext(); )
             {
-                elements.add( (IModelElement) itr.next() );
+                elements.add( ( (TableRow) itr.next() ).element() );
             }
         }
         
@@ -810,7 +834,7 @@ public class DefaultListPropertyEditorRenderer
             {
                 public void run()
                 {
-                    DefaultListPropertyEditorRenderer.this.tableViewer.update( event.getModelElement(), null );
+                    update( event.getModelElement() );
                     
                     // Cause the overall list editor decorator to be updated.
                     
@@ -824,7 +848,7 @@ public class DefaultListPropertyEditorRenderer
     {
         if( this.tableViewer.getSelection().isEmpty() && this.table.getItemCount() > 0 )
         {
-            final IModelElement firstItem = (IModelElement) this.table.getItem( 0 ).getData();
+            final Object firstItem = this.table.getItem( 0 ).getData();
             this.tableViewer.setSelection( new StructuredSelection( firstItem ) );
         }
     }
@@ -839,7 +863,7 @@ public class DefaultListPropertyEditorRenderer
             
             if( selection.size() == 1 )
             {
-                final IModelElement element = (IModelElement) selection.getFirstElement();
+                final IModelElement element = ( (TableRow) selection.getFirstElement() ).element();
                 int firstEditableColumn = -1;
                 
                 for( int i = 0, n = getColumnCount(); i < n; i++ )
@@ -903,6 +927,26 @@ public class DefaultListPropertyEditorRenderer
     {
         return this.columnHandlers.get( column );
     }
+    
+    private void update( final IModelElement element )
+    {
+        if( element == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        update( this.rows.get( element ) );
+    }
+
+    private void update( final TableRow row )
+    {
+        if( row == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        this.tableViewer.update( row, null );
+    }
 
     public static final class Factory
     
@@ -936,20 +980,20 @@ public class DefaultListPropertyEditorRenderer
         }
     
         @Override
-        public String getText( final Object element )
+        public String getText( final Object obj )
         {
             String str = null;
 
-            final IModelElement modelElement = (IModelElement) element;
+            final IModelElement element = ( (TableRow) obj ).element();
             
-            if( modelElement.isPropertyEnabled( this.columnHandler.getProperty() ) )
+            if( element.isPropertyEnabled( this.columnHandler.getProperty() ) )
             {
-                str = getTextInternal( this.columnHandler.getPropertyValue( modelElement ) );
+                str = getTextInternal( this.columnHandler.getPropertyValue( element ) );
             }
             
             if( str == null )
             {
-                if( this.columnHandler.isEmptyTextLabelDesired( modelElement ) )
+                if( this.columnHandler.isEmptyTextLabelDesired( element ) )
                 {
                     str = Resources.emptyRowIndicator;
                 }
@@ -968,13 +1012,11 @@ public class DefaultListPropertyEditorRenderer
         }
         
         @Override
-        public Image getImage( final Object element )
+        public Image getImage( final Object obj )
         {
             if( this.columnHandler.isElementImageDesired() )
             {
-                final IModelElement modelElement = (IModelElement) element;
-                final SapphireImageCache imageCache = this.columnHandler.getListPropertyEditor().getImageCache();
-                return imageCache.getImage( modelElement, modelElement.validate().getSeverity() );
+                return ( (TableRow) obj ).image();
             }
             else
             {
@@ -983,9 +1025,9 @@ public class DefaultListPropertyEditorRenderer
         }
     
         @Override
-        public Color getForeground( final Object element )
+        public Color getForeground( final Object obj )
         {
-            final Value<?> value = ( (IModelElement) element ).read( this.columnHandler.getProperty() );
+            final Value<?> value = ( (TableRow) obj ).element().read( this.columnHandler.getProperty() );
             
             if( value.getText( false ) == null )
             {
@@ -1013,10 +1055,10 @@ public class DefaultListPropertyEditorRenderer
         }
 
         @Override
-        public boolean canEdit( final Object element )
+        public boolean canEdit( final Object obj )
         {
             final ValueProperty property = this.columnHandler.getProperty();
-            return ( ! property.isReadOnly() && ( (IModelElement) element ).isPropertyEnabled( property ) );
+            return ( ! property.isReadOnly() && ( (TableRow) obj ).element().isPropertyEnabled( property ) );
         }
         
         public abstract CellEditor getCellEditor( Object element );
@@ -1148,7 +1190,7 @@ public class DefaultListPropertyEditorRenderer
                         this.cellEditor.dispose();
                     }
                     
-                    final IModelElement element = (IModelElement) obj;
+                    final IModelElement element = ( (TableRow) obj ).element();
                     final ValueProperty property = ColumnHandler.this.property;
                     final SapphirePropertyEditor propertyEditor = getListPropertyEditor().getChildPropertyEditor( element, property );
                     final SapphireActionGroup actions = propertyEditor.getActions();
@@ -1168,16 +1210,16 @@ public class DefaultListPropertyEditorRenderer
                 }
     
                 @Override
-                public Object getValue( final Object element )
+                public Object getValue( final Object obj )
                 {
-                    return getPropertyValue( (IModelElement) element );
+                    return getPropertyValue( ( (TableRow) obj ).element() );
                 }
     
                 @Override
-                public void setValue( final Object element,
+                public void setValue( final Object obj,
                                       final Object value )
                 {
-                    setPropertyValue( (IModelElement) element, (String) value );
+                    setPropertyValue( ( (TableRow) obj ).element(), (String) value );
                 }
             };
         }
@@ -1304,7 +1346,7 @@ public class DefaultListPropertyEditorRenderer
                 private List<String> cellEditorItems;
 
                 @Override
-                public CellEditor getCellEditor( final Object element )
+                public CellEditor getCellEditor( final Object obj )
                 {
                     if( this.cellEditor == null )
                     {
@@ -1312,10 +1354,12 @@ public class DefaultListPropertyEditorRenderer
                         this.cellEditorItems = new ArrayList<String>();
                     }
                     
+                    final IModelElement element = ( (TableRow) obj ).element();
+                    
                     final EnumValueType annotatedEnumeration = EnumPropertyColumnHandler.this.annotatedEnumeration;
                     final Enum<?>[] enumValues = EnumPropertyColumnHandler.this.enumValues;
                     
-                    final Value<?> value = ( (IModelElement) element ).read( getProperty() );
+                    final Value<?> value = element.read( getProperty() );
                     final String stringValue = value.getText( false );
                     
                     boolean needExtraEntry = false;
@@ -1328,12 +1372,10 @@ public class DefaultListPropertyEditorRenderer
                     final String[] items = new String[ enumValues.length + ( needExtraEntry ? 1 : 0 ) ];
                     this.cellEditorItems.clear();
                     
-                    final IModelElement modelElement = (IModelElement) element;
-                    
                     for( int i = 0; i < enumValues.length; i++ )
                     {
                         final Enum<?> enumValue = enumValues[ i ];
-                        final String enumValueText = modelElement.service( getProperty(), ValueSerializationService.class ).encode( enumValue );
+                        final String enumValueText = element.service( getProperty(), ValueSerializationService.class ).encode( enumValue );
                         this.cellEditorItems.add( enumValueText );
                         items[ i ] = annotatedEnumeration.getLabel( enumValue, false, CapitalizationType.FIRST_WORD_ONLY, false );
                     }
@@ -1349,9 +1391,9 @@ public class DefaultListPropertyEditorRenderer
                 }
 
                 @Override
-                public Object getValue( final Object element )
+                public Object getValue( final Object obj )
                 {
-                    String str = getPropertyValue( (IModelElement) element ).getText( false );
+                    String str = getPropertyValue( ( (TableRow) obj ).element() ).getText( false );
                     str = ( str != null ? str : MiscUtil.EMPTY_STRING );
                     
                     for( int i = 0, n = this.cellEditorItems.size(); i < n; i++ )
@@ -1366,12 +1408,12 @@ public class DefaultListPropertyEditorRenderer
                 }
 
                 @Override
-                public void setValue( final Object element,
+                public void setValue( final Object obj,
                                       final Object value )
                 {
                     final int index = (Integer) value;
                     final String str = ( index == -1 ? null : this.cellEditorItems.get( index ) );
-                    setPropertyValue( (IModelElement) element, str );
+                    setPropertyValue( ( (TableRow) obj ).element(), str );
                 }
             };
         }
@@ -1420,7 +1462,7 @@ public class DefaultListPropertyEditorRenderer
                                       final Object object )
                 {
                     final TableItem item = (TableItem) event.item;
-                    final IModelElement element = (IModelElement) item.getData();
+                    final IModelElement element = ( (TableRow) item.getData() ).element();
                     
                     if( element.isPropertyEnabled( getProperty() ) )
                     {
@@ -1459,19 +1501,19 @@ public class DefaultListPropertyEditorRenderer
                 @Override
                 @SuppressWarnings( "unchecked" )
                 
-                public Object getValue( final Object element )
+                public Object getValue( final Object obj )
                 {
-                    final Value<Boolean> value = (Value<Boolean>) getPropertyValue( (IModelElement) element );
+                    final Value<Boolean> value = (Value<Boolean>) getPropertyValue( ( (TableRow) obj ).element() );
                     final Boolean val = value.getContent();
                     return ( val != null ? val : Boolean.FALSE );
                 }
 
                 @Override
-                public void setValue( final Object element,
+                public void setValue( final Object obj,
                                       final Object value )
                 {
                     final String str = String.valueOf( ( (Boolean) value ).booleanValue() );
-                    setPropertyValue( (IModelElement) element, str );
+                    setPropertyValue( ( (TableRow) obj ).element(), str );
                 }
             };
         }
@@ -1547,7 +1589,7 @@ public class DefaultListPropertyEditorRenderer
                             final Object x,
                             final Object y )
         {
-            int result = this.columnHandler.comparePropertyValues( (IModelElement) x, (IModelElement) y );
+            int result = this.columnHandler.comparePropertyValues( ( (TableRow) x ).element(), ( (TableRow) y ).element() );
             
             if( this.direction == SWT.UP )
             {
@@ -1672,8 +1714,10 @@ public class DefaultListPropertyEditorRenderer
             IModelElement elementToSelectAfterDelete = null;
             boolean preferNextElement = true;
 
-            for( Object element : contentProvider.getElements( null ) )
+            for( Object obj : contentProvider.getElements( null ) )
             {
+                final IModelElement element = ( (TableRow) obj ).element();
+                
                 boolean toBeDeleted = false;
                 
                 for( IModelElement x : elementsToDelete )
@@ -1688,7 +1732,7 @@ public class DefaultListPropertyEditorRenderer
                 
                 if( ! toBeDeleted && preferNextElement )
                 {
-                    elementToSelectAfterDelete = (IModelElement) element;
+                    elementToSelectAfterDelete = element;
                     preferNextElement = false;
                 }
             }
@@ -1849,6 +1893,65 @@ public class DefaultListPropertyEditorRenderer
             for( ISelectionChangedListener listener : this.listeners )
             {
                 listener.selectionChanged( event );
+            }
+        }
+    }
+    
+    public final class TableRow
+    {
+        private final IModelElement element;
+        private final ImageService imageService;
+        private final ModelService.Listener listener;
+        
+        public TableRow( final IModelElement element )
+        {
+            this.element = element;
+            this.imageService = element.service( ImageService.class );
+            
+            if( this.imageService == null )
+            {
+                this.listener = null;
+            }
+            else
+            {
+                this.listener = new ModelService.Listener()
+                {
+                    @Override
+                    public void handleEvent( final ModelService.Event event )
+                    {
+                        if( event instanceof ImageService.ImageChangedEvent )
+                        {
+                            update( TableRow.this );
+                        }
+                    }
+                };
+                
+                this.imageService.addListener( this.listener );
+            }
+        }
+        
+        public IModelElement element()
+        {
+            return this.element;
+        }
+        
+        public Image image()
+        {
+            if( this.imageService == null )
+            {
+                return null;
+            }
+            else
+            {
+                return getPart().getImageCache().getImage( this.imageService.provide(), this.element.validate().getSeverity() );
+            }
+        }
+        
+        public void dispose()
+        {
+            if( this.imageService != null )
+            {
+                this.imageService.removeListener( this.listener );
             }
         }
     }

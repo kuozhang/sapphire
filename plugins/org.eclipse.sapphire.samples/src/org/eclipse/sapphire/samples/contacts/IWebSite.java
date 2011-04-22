@@ -25,7 +25,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Image( small = "org.eclipse.sapphire.samples/images/web.png" )
+@Image( path = "org.eclipse.sapphire.samples/images/web.png" )
 @GenerateImpl
 
 public interface IWebSite

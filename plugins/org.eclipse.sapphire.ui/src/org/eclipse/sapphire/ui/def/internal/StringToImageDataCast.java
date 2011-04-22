@@ -13,8 +13,8 @@ package org.eclipse.sapphire.ui.def.internal;
 
 import java.net.URL;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ResourceLocator;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
@@ -26,7 +26,7 @@ import org.eclipse.sapphire.ui.def.ISapphireUiDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class StringToImageTypeCast
+public final class StringToImageDataCast
 
     extends TypeCast
     
@@ -58,7 +58,7 @@ public final class StringToImageTypeCast
         final ISapphireUiDef sdef = element.nearest( ISapphireUiDef.class );
         
         final String imagePath = (String) value;
-        ImageDescriptor img = null;
+        ImageData img = null;
 
         if( sdef != null )
         {
@@ -79,7 +79,7 @@ public final class StringToImageTypeCast
             
             if( url != null )
             {
-                img = ImageDescriptor.createFromURL( url );
+                img = ImageData.readFromUrl( url );
             }
         }
         

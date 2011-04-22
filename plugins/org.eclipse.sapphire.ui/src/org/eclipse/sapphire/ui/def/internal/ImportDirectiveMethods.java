@@ -11,10 +11,8 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import static org.eclipse.ui.plugin.AbstractUIPlugin.imageDescriptorFromPlugin;
-
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.def.IImportDirective;
 import org.eclipse.sapphire.ui.def.IPackageReference;
 import org.osgi.framework.Bundle;
@@ -83,14 +81,14 @@ public final class ImportDirectiveMethods
         return null;
     }
     
-    public static ImageDescriptor resolveImage( final IImportDirective directive,
-                                                final String imagePath )
+    public static ImageData resolveImage( final IImportDirective directive,
+                                          final String imagePath )
     {
         final String bundleId = directive.getBundle().getText();
         
         if( bundleId != null )
         {
-            return imageDescriptorFromPlugin( bundleId, imagePath );
+            return ImageData.createFromBundle( bundleId, imagePath );
         }
         
         return null;

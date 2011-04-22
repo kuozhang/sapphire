@@ -46,12 +46,16 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageService;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.ModelService;
+import org.eclipse.sapphire.modeling.ModelService.Event;
 import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
@@ -184,8 +188,20 @@ public class CheckBoxListPropertyEditorRenderer
         
         final IStructuredContentProvider contentProvider = new IStructuredContentProvider()
         {
+            private List<Entry> entries = new ArrayList<Entry>();
+            
             public Object[] getElements( final Object input )
             {
+                if( this.entries != null )
+                {
+                    for( Entry entry : this.entries )
+                    {
+                        entry.dispose();
+                    }
+                    
+                    this.entries = null;
+                }
+                
                 // To preserve selection in the table, it is important to re-use the entry that has the
                 // current selection, if appropriate. For other entries, it is quicker to re-create.
                 
@@ -193,7 +209,7 @@ public class CheckBoxListPropertyEditorRenderer
                 
                 // First add entries for values listed in the model.
                 
-                final List<Entry> entries = new ArrayList<Entry>();
+                this.entries = new ArrayList<Entry>();
                 final Set<String> checked = new HashSet<String>();
                 
                 for( IModelElement element : getList() )
@@ -212,7 +228,7 @@ public class CheckBoxListPropertyEditorRenderer
                         entry = new Entry( value, element );
                     }
                     
-                    entries.add( entry );
+                    this.entries.add( entry );
                     checked.add( value );
                 }
                 
@@ -248,20 +264,26 @@ public class CheckBoxListPropertyEditorRenderer
                                 entry = new Entry( value, null );
                             }
 
-                            entries.add( entry );
+                            this.entries.add( entry );
                         }
                     }
                 }
                 
                 // Sort in order to not make the above two pass algorithm evident to the user.
                 
-                Collections.sort( entries, comparator );
+                Collections.sort( this.entries, comparator );
                 
-                return entries.toArray();
+                return this.entries.toArray();
             }
             
             public void dispose()
             {
+                for( Entry entry : this.entries )
+                {
+                    entry.dispose();
+                }
+                
+                this.entries = null;
             }
 
             public void inputChanged( final Viewer viewer,
@@ -413,12 +435,36 @@ public class CheckBoxListPropertyEditorRenderer
     {
         private String value;
         private IModelElement element;
+        private ImageService imageService;
+        private ModelService.Listener listener;
         
         public Entry( final String value,
                       final IModelElement element )
         {
             this.value = value;
             this.element = element;
+            
+            this.listener = new ModelService.Listener()
+            {
+                @Override
+                public void handleEvent( final Event event )
+                {
+                    if( event instanceof ImageService.ImageChangedEvent )
+                    {
+                        CheckBoxListPropertyEditorRenderer.this.tableViewer.update( Entry.this, null );
+                    }
+                }
+            };
+            
+            if( this.element != null )
+            {
+                this.imageService = this.element.service( ImageService.class );
+                
+                if( this.imageService != null )
+                {
+                    this.imageService.addListener( this.listener );
+                }
+            }
         }
         
         public String text()
@@ -435,16 +481,21 @@ public class CheckBoxListPropertyEditorRenderer
 
         public Image image()
         {
+            final SapphireImageCache cache = getPart().getImageCache();
             final Image image;
             
             if( this.element == null )
             {
-                image = getPart().getImageCache().getImage( getMemberType() );
+                image = cache.getImage( getMemberType() );
+            }
+            else if( this.imageService != null )
+            {
+                final IStatus st = this.element.read( getMemberProperty() ).validate();
+                image = cache.getImage( this.imageService.provide(), st.getSeverity() );
             }
             else
             {
-                final IStatus st = this.element.read( getMemberProperty() ).validate();
-                image = getPart().getImageCache().getImage( getMemberType(), st.getSeverity() );
+                image = null;
             }
             
             return image;
@@ -473,9 +524,22 @@ public class CheckBoxListPropertyEditorRenderer
             {
                 this.element = getList().addNewElement();
                 this.element.write( getMemberProperty(), this.value );
+                
+                this.imageService = this.element.service( ImageService.class );
+                
+                if( this.imageService != null )
+                {
+                    this.imageService.addListener( this.listener );
+                }
             }
             else
             {
+                if( this.imageService != null )
+                {
+                    this.imageService.removeListener( this.listener );
+                    this.imageService = null;
+                }
+                
                 // Must null the element field before trying to remove the element as remove will 
                 // trigger property change event and it is possible for the resulting refresh to 
                 // set the element field to a new value before returning.
@@ -483,6 +547,14 @@ public class CheckBoxListPropertyEditorRenderer
                 final IModelElement el = this.element;
                 this.element = null;
                 getList().remove( el );
+            }
+        }
+        
+        public void dispose()
+        {
+            if( this.imageService != null )
+            {
+                this.imageService.removeListener( this.listener );
             }
         }
     }

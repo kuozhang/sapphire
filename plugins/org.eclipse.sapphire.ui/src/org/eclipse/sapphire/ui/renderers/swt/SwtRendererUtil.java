@@ -9,25 +9,26 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.annotations;
+package org.eclipse.sapphire.ui.renderers.swt;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.ImageData;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class ImageProvider
+public final class SwtRendererUtil
 {
-    public String getSmallImagePath( final ModelElementType type )
+    public static ImageDescriptor toImageDescriptor( final org.eclipse.sapphire.modeling.ImageData data )
     {
+        if( data != null )
+        {
+            final ImageData swtImageData = new ImageData( data.contents() );
+            return ImageDescriptor.createFromImageData( swtImageData );
+        }
+        
         return null;
-    }
-    
-    public String getSmallImagePath( final IModelElement element )
-    {
-        return getSmallImagePath( element.getModelElementType() );
     }
     
 }
