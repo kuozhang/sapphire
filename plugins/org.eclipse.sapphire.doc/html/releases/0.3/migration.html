@@ -687,6 +687,13 @@ public class AttendeeImageService extends ImageService
   </tr>
 </table>
 
+<p>The following Eclipse search/replace regular expression can be used to perform some of this
+migration:</p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.java<br/>
+<nobr>Search: &nbsp;&nbsp;(?s)@Image\((.*?)small(.*?)=(.*?)"(.*?)"(.*?)\)</nobr><br/>
+<nobr>Replace: &nbsp;@Image\(\1path\2=\3"\4"\5\)</nobr></p>
+
 <br/><br/>
 
 </body>
