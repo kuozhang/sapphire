@@ -7,15 +7,19 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Greg Amerson - [342777] ImageProvider needs to support a listener mechanism
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
+
+import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescriptor;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
@@ -80,13 +84,18 @@ public abstract class SapphireActionSystemPart
             
             for( ISapphireActionImage image : def.getImages() )
             {
-                final Function imageFunction = FailSafeFunction.create( image.getImage().getContent(), Literal.create( ImageDescriptor.class ) );
+                final Function imageFunction = FailSafeFunction.create( image.getImage().getContent(), Literal.create( ImageData.class ) );
                 final FunctionResult imageFunctionResult = imageFunction.evaluate( this.functionContext ); 
-                final ImageDescriptor img = (ImageDescriptor) imageFunctionResult.value();
+                final ImageData data = (ImageData) imageFunctionResult.value();
                 
-                if( img != null )
+                if( data != null )
                 {
-                    this.images.add( img );
+                    final ImageDescriptor img = toImageDescriptor( data );
+                    
+                    if( img != null )
+                    {
+                        this.images.add( img ); 
+                    }
                 }
                 
                 imageFunctionResult.dispose();
