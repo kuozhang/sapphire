@@ -1027,6 +1027,7 @@
                     </param>
                 </node-list-ref>
             </node>
+            <node-ref>ActionsOverallNode</node-ref>
             <node-ref>DocumentationNode</node-ref>
         </node-template>
         
