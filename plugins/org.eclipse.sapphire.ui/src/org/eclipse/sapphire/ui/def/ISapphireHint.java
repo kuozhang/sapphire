@@ -71,8 +71,9 @@ public interface ISapphireHint
             "show.header",
             "show.label",
             "show.label.above",
+            ISapphirePartDef.HINT_STYLE,
             "suppress.assist.contributors",
-            ISapphirePartDef.HINT_WIDTH
+            ISapphirePartDef.HINT_WIDTH,
         },
         invalidValueMessage = "\"{0}\" is not a valid hint.",
         invalidValueSeverity = IStatus.OK

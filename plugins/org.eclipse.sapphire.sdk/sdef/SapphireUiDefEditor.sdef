@@ -697,6 +697,18 @@
                     </param>
                 </node-list-ref>
             </node>
+            <section>
+                <label>presentation hints</label>
+                <content>
+                    <property-editor>
+                        <property>Hints</property>
+                        <hint>
+                            <name>show.label</name>
+                            <value>false</value>
+                        </hint>
+                    </property-editor>
+                </content>
+            </section>
         </node-template>
 
         <node-template>

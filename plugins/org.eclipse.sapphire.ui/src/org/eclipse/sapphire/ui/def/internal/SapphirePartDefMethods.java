@@ -42,6 +42,14 @@ public final class SapphirePartDefMethods
         return hintValue;
     }
     
+    public static String getHint( final ISapphirePartDef def,
+                                  final String hintName,
+                                  final String defaultValue )
+    {
+        final String hintValueStr = getHint( def, hintName );
+        return ( hintValueStr == null ? defaultValue : hintValueStr );
+    }
+    
     public static boolean getHint( final ISapphirePartDef def,
                                    final String hintName,
                                    final boolean defaultValue )

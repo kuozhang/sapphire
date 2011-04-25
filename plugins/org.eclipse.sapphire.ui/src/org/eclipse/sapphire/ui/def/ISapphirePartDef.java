@@ -44,6 +44,7 @@ public interface ISapphirePartDef
     String HINT_WIDTH = "width";
     String HINT_HEIGHT = "height";
     String HINT_PREFER_FORM_STYLE = "prefer.form.style";
+    String HINT_STYLE = "style";
     
     // *** Id ***
     
@@ -95,6 +96,13 @@ public interface ISapphirePartDef
     @DelegateImplementation( SapphirePartDefMethods.class )
     
     String getHint( String name );
+    
+    // *** Method : getHint ***
+    
+    @DelegateImplementation( SapphirePartDefMethods.class )
+    
+    String getHint( String name,
+                    String defaultValue );
     
     // *** Method : getHint ***
     

@@ -31,6 +31,7 @@
     <li><a href="#properties-view">Properties View</a></li>
     <li><a href="#image-el">Image Expressions</a></li>
     <li><a href="#ancestor-access">Ancestor Access</a></li>
+    <li><a href="#with">Improved With Directive Presentation</a></li>
   </ol>
 </ol>
  
@@ -480,6 +481,35 @@ while the path used in a with directive can end with an element or an element pr
         &lt;/content>
     &lt;/default-panel>
 &lt;/with></font></code></pre>
+
+<h2><a name="with">Improved With Directive Presentation</a></h2>
+
+<p>The presentation of the with directive has been enhanced to better support the case where an element
+property has a large number of possible types. The presentation will now use a drop down list instead of
+radio buttons if there are more than three possible types. You can also use the new style hint to suggest
+the desired presentation.</p>
+
+<p>The new hint name is "style" and it has three possible values for the with directive: "checkbox", "radio.buttons"
+and "drop.down.list". If a particular style is not appropriate for the situation, the hint will be ignored. For
+instance, selecting "checkbox" style for an element property with more than one possible type is not valid.</p>
+
+<p style="margin-left: 20px;"><b>Examples</b></p>
+
+<p style="margin-left: 20px;">Default presentation when the element property has one possible type.</p>
+
+<p style="margin-left: 20px;"><img src="images/with-1.png"/></p>
+
+<p style="margin-left: 20px;">The same property as above, but with style hint set to "radio.buttons".</p>
+
+<p style="margin-left: 20px;"><img src="images/with-2.png"/></p>
+
+<p style="margin-left: 20px;">Default presentation when the element property has three possible types.</p>
+
+<p style="margin-left: 20px;"><img src="images/with-3.png"/></p>
+
+<p style="margin-left: 20px;">The same property as above, but with style hint set to "drop.down.list".</p>
+
+<p style="margin-left: 20px;"><img src="images/with-4.png"/></p>
 
 <br/><br/>
 

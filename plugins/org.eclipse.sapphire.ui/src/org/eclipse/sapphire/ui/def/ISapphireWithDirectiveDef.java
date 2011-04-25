@@ -33,6 +33,10 @@ public interface ISapphireWithDirectiveDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireWithDirectiveDef.class );
+
+    static final String HINT_VALUE_STYLE_CHECKBOX = "checkbox";
+    static final String HINT_VALUE_STYLE_RADIO_BUTTONS = "radio.buttons";
+    static final String HINT_VALUE_STYLE_DROP_DOWN_LIST = "drop.down.list";
     
     // *** Path ***
     

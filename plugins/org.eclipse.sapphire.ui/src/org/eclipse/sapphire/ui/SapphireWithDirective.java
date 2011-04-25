@@ -46,6 +46,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
@@ -181,11 +182,34 @@ public final class SapphireWithDirective
         if( this.property != null )
         {
             final List<ModelElementType> allPossibleTypes = this.property.getAllPossibleTypes();
+            final int allPossibleTypesCount = allPossibleTypes.size();
             final IModelElement element = this.element;
             final ElementProperty property = this.property;
             final ModelPropertyListener modelPropertyListener;
             
-            if( allPossibleTypes.size() == 1 )
+            final Style defaultStyle;
+            
+            if( allPossibleTypesCount == 1 )
+            {
+                defaultStyle = Style.CHECKBOX;
+            }
+            else if( allPossibleTypesCount <= 3 )
+            {
+                defaultStyle = Style.RADIO_BUTTONS;
+            }
+            else
+            {
+                defaultStyle = Style.CHECKBOX;
+            }
+            
+            Style style = Style.decode( def.getHint( ISapphireWithDirectiveDef.HINT_STYLE ) );
+            
+            if( style == null || ( style == Style.CHECKBOX && allPossibleTypesCount != 1 ) )
+            {
+                style = defaultStyle;
+            }
+
+            if( style == Style.CHECKBOX )
             {
                 final Button masterCheckBox = new Button( composite, SWT.CHECK );
                 masterCheckBox.setLayoutData( gdhindent( gdhspan( gdhfill(), 2 ), 10 ) );
@@ -246,13 +270,13 @@ public final class SapphireWithDirective
                     }
                 );
             }
-            else
+            else if( style == Style.RADIO_BUTTONS )
             {
                 final RadioButtonsGroup radioButtonsGroup = new RadioButtonsGroup( context, composite, false );
                 radioButtonsGroup.setLayoutData( gdhindent( gdhspan( gdhfill(), 2 ), 10 ) );
                 context.adapt( radioButtonsGroup );
                 
-                final Button noneButton = radioButtonsGroup.addRadioButton( Resources.noneRadioButton );
+                final Button noneButton = radioButtonsGroup.addRadioButton( Resources.noneSelection );
                 final Map<ModelElementType,Button> typeToButton = new HashMap<ModelElementType,Button>();
                 final Map<Button,ModelElementType> buttonToType = new HashMap<Button,ModelElementType>();
                 
@@ -328,6 +352,98 @@ public final class SapphireWithDirective
                         }
                     }
                 );
+            }
+            else if( style == Style.DROP_DOWN_LIST )
+            {
+                final Combo combo = new Combo( composite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+                combo.setLayoutData( gdhindent( gdhspan( gdhfill(), 2 ), 10 ) );
+                context.adapt( combo );
+                
+                combo.add( Resources.noneSelection );
+                
+                final Map<ModelElementType,Integer> typeToIndex = new HashMap<ModelElementType,Integer>();
+                final Map<Integer,ModelElementType> indexToType = new HashMap<Integer,ModelElementType>();
+                
+                int index = 1;
+                
+                for( ModelElementType type : allPossibleTypes )
+                {
+                    final String label = type.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false );
+                    combo.add( label );
+                    typeToIndex.put( type, index );
+                    indexToType.put( index, type );
+                    
+                    index++;
+                }
+                
+                modelPropertyListener = new ModelPropertyListener()
+                {
+                    @Override
+                    public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                    {
+                        final IModelElement subModelElement = element.read( property ).element();
+                        final int index;
+                        
+                        if( subModelElement == null )
+                        {
+                            index = 0;
+                        }
+                        else
+                        {
+                            index = typeToIndex.get( subModelElement.getModelElementType() );
+                        }
+                        
+                        if( combo.getSelectionIndex() != index )
+                        {
+                            combo.select( index );
+                        }
+                        
+                        combo.setEnabled( element.isPropertyEnabled( property ) );
+                    }
+                };
+                
+                combo.addSelectionListener
+                (
+                    new SelectionAdapter()
+                    {
+                        @Override
+                        public void widgetSelected( final SelectionEvent event )
+                        {
+                            try
+                            {
+                                final ModelElementHandle<?> handle = element.read( property );
+                                final int index = combo.getSelectionIndex();
+                                
+                                if( handle.element() != null && index == 0 )
+                                {
+                                    handle.remove();
+                                }
+                                else
+                                {
+                                    final ModelElementType type = indexToType.get( index );
+                                    handle.element( true, type );
+                                }
+                            }
+                            catch( Exception e )
+                            {
+                                // Note that the EditFailedException is ignored here because the user has already
+                                // been notified and likely has taken action that led to the exception (such as
+                                // declining to make a file writable).
+                                
+                                final EditFailedException editFailedException = EditFailedException.findAsCause( e );
+                                
+                                if( editFailedException == null )
+                                {
+                                    SapphireUiFrameworkPlugin.log( e );
+                                }
+                            }
+                        }
+                    }
+                );
+            }
+            else
+            {
+                throw new IllegalStateException();
             }
         
             final Composite separatorComposite = new Composite( composite, SWT.NONE );
@@ -409,10 +525,46 @@ public final class SapphireWithDirective
             this.element.removeListener( this.listener, this.property.getName() );
         }
     }
+    
+    private enum Style
+    {
+        CHECKBOX( "checkbox" ),
+        RADIO_BUTTONS( "radio.buttons" ),
+        DROP_DOWN_LIST( "drop.down.list" );
+        
+        public static Style decode( final String text )
+        {
+            if( text != null )
+            {
+                for( Style style : Style.values() )
+                {
+                    if( style.text.equals( text ) )
+                    {
+                        return style;
+                    }
+                }
+            }
+            
+            return null;
+        }
+
+        private final String text;
+        
+        private Style( final String text )
+        {
+            this.text = text;
+        }
+        
+        @Override
+        public String toString()
+        {
+            return this.text;
+        }
+    }
 
     private static final class Resources extends NLS
     {
-        public static String noneRadioButton;
+        public static String noneSelection;
         public static String noAdditionalPropertiesMessage;
         public static String invalidPath;
         
