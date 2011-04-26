@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
@@ -44,7 +44,7 @@ public interface IAddress
 
     @XmlBinding( path = "a:street" )
     @Label( standard = "street" )
-    @NonNullValue
+    @Required
 
     ValueProperty PROP_STREET = new ValueProperty( TYPE, "Street" );
 
@@ -55,7 +55,7 @@ public interface IAddress
 
     @XmlBinding( path = "a:city" )
     @Label( standard = "city" )
-    @NonNullValue
+    @Required
     @PossibleValues( service = CityNameValuesProvider.class )
     @DependsOn( { "ZipCode", "State" } )
 
@@ -68,7 +68,7 @@ public interface IAddress
 
     @XmlBinding( path = "a:state" )
     @Label( standard = "state" )
-    @NonNullValue
+    @Required
     @PossibleValues( service = StateCodeValuesProvider.class )
     @DependsOn( { "ZipCode", "City" } )
 
@@ -81,7 +81,7 @@ public interface IAddress
 
     @XmlBinding( path = "a:zip" )
     @Label( standard = "ZIP code" )
-    @NonNullValue
+    @Required
     @PossibleValues( service = ZipCodeValuesProvider.class )
     @DependsOn( { "State", "City" } )
 

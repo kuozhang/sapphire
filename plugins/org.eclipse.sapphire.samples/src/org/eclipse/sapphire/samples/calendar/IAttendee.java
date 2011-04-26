@@ -19,7 +19,7 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -40,7 +40,7 @@ public interface IAttendee
     // *** Name ***
     
     @Label( standard = "name" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "name" )
 
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );

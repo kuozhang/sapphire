@@ -19,7 +19,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -38,7 +38,7 @@ public interface IDestination extends IModelElement
     
     @XmlBinding( path = "name" )
     @Label( standard = "name" )
-    @NonNullValue
+    @Required
 
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
 

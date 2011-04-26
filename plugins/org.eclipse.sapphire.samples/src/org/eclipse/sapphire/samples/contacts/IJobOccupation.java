@@ -16,7 +16,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -39,7 +39,7 @@ public interface IJobOccupation
     // *** Employer ***
     
     @Label( standard = "employer" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "employer" )
     
     ValueProperty PROP_EMPLOYER = new ValueProperty( TYPE, "Employer" );
@@ -50,7 +50,7 @@ public interface IJobOccupation
     // *** Title ***
     
     @Label( standard = "title" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "title" )
     
     ValueProperty PROP_TITLE = new ValueProperty( TYPE, "Title" );

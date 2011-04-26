@@ -16,7 +16,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.ui.def.internal.PageBookPartDefControlMethodBinding;
@@ -40,7 +40,7 @@ public interface ISapphirePageBookExtDef
     
     @Type( base = PageBookPartControlMethod.class )
     @Label( standard = "control method" )
-    @NonNullValue
+    @Required
     @CustomXmlValueBinding( impl = PageBookPartDefControlMethodBinding.class )
     
     ValueProperty PROP_CONTROL_METHOD = new ValueProperty( TYPE, "ControlMethod" );
@@ -52,7 +52,7 @@ public interface ISapphirePageBookExtDef
     // *** ControlProperty ***
     
     @Label( standard = "control property" )
-    @NonNullValue
+    @Required
     @CustomXmlValueBinding( impl = PageBookPartDefControlPropertyBinding.class )
     
     ValueProperty PROP_CONTROL_PROPERTY = new ValueProperty( TYPE, "ControlProperty" );

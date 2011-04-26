@@ -25,19 +25,32 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
+import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionGroup;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireImageCache;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
+import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
@@ -53,7 +66,7 @@ import org.eclipse.swt.widgets.Shell;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class PropertyEditorAssistDecorator
+public final class PropertyEditorAssistDecorator
 {
     private static final List<PropertyEditorAssistContributor> SYSTEM_CONTRIBUTORS
         = new ArrayList<PropertyEditorAssistContributor>();
@@ -69,28 +82,95 @@ public class PropertyEditorAssistDecorator
         SYSTEM_CONTRIBUTORS.add( new ShowInSourceActionAssistContributor() );
     }
     
-    private final SapphirePropertyEditor propertyEditor;
+    private final SapphirePart part;
+    private IModelElement element;
+    private final ModelProperty property;
     private final SapphireRenderingContext context;
     private final Label control;
-    private final ModelProperty property;
     private final Collection<String> contributorsToSuppress;
     private final Collection<Class<?>> additionalContributors;
-    protected PropertyEditorAssistContext assistContext;
-    protected IStatus problem;
+    private PropertyEditorAssistContext assistContext;
+    private IStatus problem;
     private boolean mouseOverEditorControl;
     private EditorControlMouseTrackListener mouseTrackListener;
+    private ModelPropertyListener modelPropertyListener;
     
-    public PropertyEditorAssistDecorator( final SapphirePropertyEditor propertyEditor,
+    public PropertyEditorAssistDecorator( final SapphirePropertyEditor part,
                                           final SapphireRenderingContext context,
                                           final Composite parent )
     {
-        this.propertyEditor = propertyEditor;
+        this( part, part.getLocalModelElement(), part.getProperty(), context, parent );
+    }
+    
+    public PropertyEditorAssistDecorator( final SapphirePart part,
+                                          final IModelElement element,
+                                          final ModelProperty property,
+                                          final SapphireRenderingContext context,
+                                          final Composite parent )
+    {
+        this.part = part;
+        this.property = property;
         this.context = context;
-        this.property = propertyEditor.getProperty();
-        this.contributorsToSuppress = propertyEditor.getRenderingHint( HINT_SUPPRESS_ASSIST_CONTRIBUTORS, Collections.<String>emptyList() );
-        this.additionalContributors = propertyEditor.getRenderingHint( HINT_ASSIST_CONTRIBUTORS, Collections.<Class<?>>emptyList() );
         this.mouseOverEditorControl = false;
         this.mouseTrackListener = new EditorControlMouseTrackListener();
+        
+        final ISapphirePartDef def = this.part.getDefinition();
+        
+        this.contributorsToSuppress = new ArrayList<String>();
+        final String contributorsToSuppressStr = def.getHint( HINT_SUPPRESS_ASSIST_CONTRIBUTORS );
+        
+        if( contributorsToSuppressStr != null )
+        {
+            for( String segment : contributorsToSuppressStr.split( "," ) )
+            {
+                this.contributorsToSuppress.add( segment.trim() );
+            }
+        }
+        
+        this.additionalContributors = new ArrayList<Class<?>>();
+        final String additionalContributorsStr = def.getHint( HINT_ASSIST_CONTRIBUTORS );
+        
+        if( additionalContributorsStr != null )
+        {
+            final ISapphireUiDef rootdef = def.nearest( ISapphireUiDef.class );
+            
+            for( String segment : additionalContributorsStr.split( "," ) )
+            {
+                final Class<?> cl = rootdef.resolveClass( segment.trim() );
+                
+                if( cl != null )
+                {
+                    this.additionalContributors.add( cl );
+                }
+            }
+        }
+        
+        this.modelPropertyListener = new ModelPropertyListener()
+        {
+            @Override
+            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            {
+                refresh();
+            }
+        };
+        
+        element( element );
+        
+        final SapphireActionGroup actions = part.getActions();
+        final SapphireAction assistAction = actions.getAction( SapphireActionSystem.ACTION_ASSIST );
+        
+        final SapphireActionHandler assistActionHandler = new SapphireActionHandler()
+        {
+            @Override
+            protected Object run( final SapphireRenderingContext context )
+            {
+                openAssistDialog();
+                return null;
+            }
+        };
+        
+        assistActionHandler.init( assistAction, null );
+        assistAction.addHandler( assistActionHandler );
         
         this.control = new Label( parent, SWT.NONE );
         this.context.adapt( this.control );
@@ -126,22 +206,64 @@ public class PropertyEditorAssistDecorator
             }
         );
         
+        this.control.addDisposeListener
+        (
+            new DisposeListener()
+            {
+                public void widgetDisposed( final DisposeEvent event )
+                {
+                    element( null );
+                    assistAction.removeHandler( assistActionHandler );
+                }
+            }
+        );
+        
         refresh();
     }
     
-    public Label getControl()
+    public Label control()
     {
         return this.control;
     }
     
-    public SapphireRenderingContext getUiContext()
+    public SapphireRenderingContext context()
     {
         return this.context;
     }
     
-    public Shell getShell()
+    public Shell shell()
     {
         return this.context.getShell();
+    }
+    
+    public SapphirePart part()
+    {
+        return this.part;
+    }
+    
+    public IModelElement element()
+    {
+        return this.element;
+    }
+    
+    public void element( final IModelElement element )
+    {
+        if( this.element != null )
+        {
+            this.element.removeListener( this.modelPropertyListener, this.property.getName() );
+        }
+        
+        this.element = element;
+        
+        if( this.element != null )
+        {
+            this.element.addListener( this.modelPropertyListener, this.property.getName() );
+        }
+    }
+    
+    public ModelProperty property()
+    {
+        return this.property;
     }
     
     public void addEditorControl( final Control control )
@@ -170,7 +292,7 @@ public class PropertyEditorAssistDecorator
         control.removeMouseTrackListener( this.mouseTrackListener );
     }
 
-    public void openAssistDialog()
+    private void openAssistDialog()
     {
         if( this.assistContext != null && ! this.assistContext.isEmpty() )
         {
@@ -179,37 +301,39 @@ public class PropertyEditorAssistDecorator
             position = new Point( position.x + bounds.width + 4, position.y + 2 );
             
             final PropertyEditorAssistDialog dialog 
-                = new PropertyEditorAssistDialog( getShell(), position, this.assistContext );
+                = new PropertyEditorAssistDialog( shell(), position, this.assistContext );
             
             dialog.open();
         }
     }
     
-    public void refresh()
+    private void refresh()
     {
-        final IModelElement element = this.propertyEditor.getLocalModelElement();
-        
-        final boolean enabled 
-            = ( element == null ? false : element.isPropertyEnabled( this.property ) );
+        final boolean enabled  = ( this.element == null ? false : this.element.isPropertyEnabled( this.property ) );
         
         if( enabled )
         {
             if( this.property instanceof ValueProperty )
             {
-                final Value<?> value = element.read( (ValueProperty) this.property );
+                final Value<?> value = this.element.read( (ValueProperty) this.property );
                 this.problem = value.validate();
             }
             else if( this.property instanceof ListProperty )
             {
-                final ModelElementList<?> list = element.read( (ListProperty) this.property );
+                final ModelElementList<?> list = this.element.read( (ListProperty) this.property );
                 this.problem = list.validate();
+            }
+            else if( this.property instanceof ElementProperty )
+            {
+                final ModelElementHandle<?> handle = this.element.read( (ElementProperty) this.property );
+                this.problem = handle.validate( false );
             }
             else
             {
                 throw new IllegalStateException( this.property.getClass().getName() );
             }
             
-            this.assistContext = new PropertyEditorAssistContext( this.propertyEditor, this.context );
+            this.assistContext = new PropertyEditorAssistContext( this.part, this.element, this.property, this.context );
             
             final List<PropertyEditorAssistContributor> contributors 
                 = new ArrayList<PropertyEditorAssistContributor>( SYSTEM_CONTRIBUTORS );
@@ -283,14 +407,14 @@ public class PropertyEditorAssistDecorator
         refreshImageAndCursor();
     }
     
-    protected void refreshImageAndCursor()
+    private void refreshImageAndCursor()
     {
         if( this.control.isDisposed() ) 
         {
             return;
         }
         
-        final SapphireImageCache imageCache = this.propertyEditor.getImageCache();
+        final SapphireImageCache imageCache = this.part.getImageCache();
         
         if( this.assistContext != null )
         {

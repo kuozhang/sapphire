@@ -20,7 +20,7 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.serialization.ValueSerialization;
@@ -43,7 +43,7 @@ public interface ISapphireActionDef
     
     // *** Id ***
 
-    @NonNullValue
+    @Required
     @Label( standard = "ID", full = "action ID" )
     
     @Documentation( content = "An action ID serves to uniquely identify an action for a variety of purposes, " +
@@ -56,7 +56,7 @@ public interface ISapphireActionDef
     
     // *** Label ***
     
-    @NonNullValue
+    @Required
     @Label( standard = "label", full = "action label" )
     
     @Documentation( content = "An action label is used when presenting the action to the user." +

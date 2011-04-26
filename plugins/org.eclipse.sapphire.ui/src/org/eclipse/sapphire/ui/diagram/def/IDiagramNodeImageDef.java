@@ -20,7 +20,7 @@ import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -44,7 +44,7 @@ public interface IDiagramNodeImageDef
 
     @Type( base = Function.class )
     @Label( standard = "ID" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "id" )
     
     ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );

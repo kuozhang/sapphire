@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -36,7 +36,7 @@ public interface IDiagramConnectionGeometry extends IModelElement
 	// *** ConnectionId ***
 	
 	@XmlBinding( path = "id")
-	@NonNullValue
+	@Required
 
 	ValueProperty PROP_CONNECTION_ID = new ValueProperty( TYPE, "ConnectionId" );
 

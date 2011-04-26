@@ -20,7 +20,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
@@ -39,7 +39,7 @@ public interface IEvent
     // *** Subject ***
     
     @Label( standard = "subject" )
-    @NonNullValue
+    @Required
 
     ValueProperty PROP_SUBJECT = new ValueProperty( TYPE, "Subject" );
 
@@ -68,7 +68,7 @@ public interface IEvent
     // *** StartTime ***
     
     @Label( standard = "start time" )
-    @NonNullValue
+    @Required
 
     ValueProperty PROP_START_TIME = new ValueProperty( TYPE, "StartTime" );
 
@@ -78,7 +78,7 @@ public interface IEvent
     // *** EndTime ***
     
     @Label( standard = "end time" )
-    @NonNullValue
+    @Required
 
     ValueProperty PROP_END_TIME = new ValueProperty( TYPE, "EndTime" );
 

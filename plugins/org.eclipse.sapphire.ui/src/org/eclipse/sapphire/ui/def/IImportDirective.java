@@ -22,7 +22,7 @@ import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -45,7 +45,7 @@ public interface IImportDirective
     // *** Bundle ***
     
     @Label( standard = "bundle" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "bundle" )
     
     ValueProperty PROP_BUNDLE = new ValueProperty( TYPE, "Bundle" ); //$NON-NLS-1$

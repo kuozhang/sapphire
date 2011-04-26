@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -38,7 +38,7 @@ public interface ISapphireParam
     // *** Name ***
     
     @Label( standard = "name" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "name" )
     @Documentation( content = "The name of the parameter." )
     
@@ -50,7 +50,7 @@ public interface ISapphireParam
     // *** Value ***
     
     @Label( standard = "value" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "value" )
     @Documentation( content = "The value of the parameter." )
     

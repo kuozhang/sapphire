@@ -25,7 +25,7 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -49,7 +49,7 @@ public interface IFunctionDef
     // *** Name ***
     
     @Label( standard = "name" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "name" )
     
     @Documentation( content = "The name by which function will be referenced in the expression language. Functions " +
@@ -81,7 +81,7 @@ public interface IFunctionDef
     @Type( base = JavaTypeName.class )
     @Reference( target = JavaType.class )
     @Label( standard = "implementation class" )
-    @NonNullValue
+    @Required
     @JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.modeling.el.Function" )
     @MustExist
     @XmlBinding( path = "impl" )

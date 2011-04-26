@@ -19,7 +19,7 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 
 /**
@@ -39,7 +39,7 @@ public interface IConnection
     // *** Name ***
     
     @Label( standard = "name" )
-    @NonNullValue
+    @Required
     @NoDuplicates
     
     @PossibleValues

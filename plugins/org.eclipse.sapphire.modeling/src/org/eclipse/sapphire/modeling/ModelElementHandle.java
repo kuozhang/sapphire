@@ -25,9 +25,11 @@ public final class ModelElementHandle<T extends IModelElement>
     private final IModelElement parent;
     private final ElementProperty property;
     private final ElementBindingImpl binding;
+    private final ModelPropertyListener listener;
     private T element;
     private Boolean enabledState;
-    private IStatus validationState;
+    private IStatus validationStateLocal;
+    private IStatus validationStateFull;
     
     public ModelElementHandle( final IModelElement parent,
                                final ElementProperty property )
@@ -35,6 +37,15 @@ public final class ModelElementHandle<T extends IModelElement>
         this.parent = parent;
         this.property = property;
         this.binding = parent.resource().binding( property );
+        
+        this.listener = new ModelPropertyListener()
+        {
+            @Override
+            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            {
+                refresh();
+            }
+        };
     }
     
     public void init()
@@ -117,6 +128,11 @@ public final class ModelElementHandle<T extends IModelElement>
                     final Resource resource = this.binding.create( t );
                     this.element = t.instantiate( this.parent, this.property, resource );
                     
+                    for( ModelProperty property : t.getProperties() )
+                    {
+                        this.element.addListener( this.listener, property.getName() );
+                    }
+                    
                     refreshEnabledState();
                     refreshValidationState();
                     
@@ -145,9 +161,14 @@ public final class ModelElementHandle<T extends IModelElement>
     
     public IStatus validate()
     {
+        return validate( true );
+    }
+    
+    public IStatus validate( final boolean includeChildValidation )
+    {
         synchronized( this )
         {
-            return this.validationState;
+            return ( includeChildValidation ? this.validationStateFull : this.validationStateLocal );
         }
     }
     
@@ -239,33 +260,43 @@ public final class ModelElementHandle<T extends IModelElement>
     
     private boolean refreshValidationState()
     {
-        final IStatus oldValidationState = this.validationState;
-        final SapphireMultiStatus newValidationState = new SapphireMultiStatus();
+        final IStatus oldValidationStateFull = this.validationStateFull;
+        final SapphireMultiStatus newValidationStateLocal = new SapphireMultiStatus();
+        final SapphireMultiStatus newValidationStateFull = new SapphireMultiStatus();
         
         if( enabled() )
         {
             for( ModelPropertyValidationService<?> svc : parent().services( this.property, ModelPropertyValidationService.class ) )
             {
+                IStatus st = null;
+                
                 try
                 {
-                    newValidationState.merge( svc.validate() );
+                    st = svc.validate();
                 }
                 catch( Exception e )
                 {
                     SapphireModelingFrameworkPlugin.log( e );
                 }
+                
+                if( st != null )
+                {
+                    newValidationStateLocal.merge( st );
+                    newValidationStateFull.merge( st );
+                }
             }
             
             if( this.element != null )
             {
-                newValidationState.merge( this.element.validate() );
+                newValidationStateFull.merge( this.element.validate() );
             }
         }
         
-        if( ! newValidationState.equals( oldValidationState ) )
+        if( ! newValidationStateFull.equals( oldValidationStateFull ) )
         {
-            this.validationState = newValidationState;
-            return ( oldValidationState != null );
+            this.validationStateLocal = newValidationStateLocal;
+            this.validationStateFull = newValidationStateFull;
+            return ( oldValidationStateFull != null );
         }
         
         return false;

@@ -20,7 +20,7 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.internal.SapphireHintValueDefaultValueService;
@@ -43,7 +43,7 @@ public interface ISapphireHint
     // *** Name ***
     
     @Label( standard = "name" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "name" )
     
     @PossibleValues
@@ -87,7 +87,7 @@ public interface ISapphireHint
     // *** Value ***
     
     @Label( standard = "value" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "value" )
     @DependsOn( value = "Name" )
     @DefaultValue( service = SapphireHintValueDefaultValueService.class )

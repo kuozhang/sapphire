@@ -16,7 +16,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -37,7 +37,7 @@ public interface IDiagramImageDecoratorDef
     // *** ImageId ***
     
     @Label( standard = "image ID" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "id" )
     
     ValueProperty PROP_IMAGE_ID = new ValueProperty( TYPE, "ImageId" );

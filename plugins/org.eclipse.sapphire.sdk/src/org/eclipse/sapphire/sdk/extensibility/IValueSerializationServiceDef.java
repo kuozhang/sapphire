@@ -25,7 +25,7 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -66,7 +66,7 @@ public interface IValueSerializationServiceDef
     @Type( base = JavaTypeName.class )
     @Reference( target = JavaType.class )
     @Label( standard = "type class" )
-    @NonNullValue
+    @Required
     @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS, JavaTypeKind.INTERFACE } )
     @MustExist
     @XmlBinding( path = "type" )
@@ -84,7 +84,7 @@ public interface IValueSerializationServiceDef
     @Type( base = JavaTypeName.class )
     @Reference( target = JavaType.class )
     @Label( standard = "implementation class" )
-    @NonNullValue
+    @Required
     @JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.modeling.serialization.ValueSerializationService" )
     @MustExist
     @XmlBinding( path = "impl" )

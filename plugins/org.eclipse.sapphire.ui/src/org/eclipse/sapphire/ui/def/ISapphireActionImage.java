@@ -17,7 +17,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -40,7 +40,7 @@ public interface ISapphireActionImage
     
     @Type( base = Function.class )
     @Label( standard = "image" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "" )
     
     ValueProperty PROP_IMAGE = new ValueProperty( TYPE, "Image" );

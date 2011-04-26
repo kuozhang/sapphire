@@ -20,7 +20,7 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.FoldingXmlValueBindingImpl;
@@ -51,7 +51,7 @@ public interface ISapphirePropertyEditorDef
     // *** Property ***
     
     @Label( standard = "property" )
-    @NonNullValue
+    @Required
     @CustomXmlValueBinding( impl = FoldingXmlValueBindingImpl.class, params = "property" )
     
     ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );

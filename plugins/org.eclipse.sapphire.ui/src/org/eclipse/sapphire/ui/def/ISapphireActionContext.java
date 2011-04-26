@@ -17,8 +17,8 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 
@@ -39,7 +39,7 @@ public interface ISapphireActionContext
     // *** Context ***
     
     @Label( standard = "context" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "" )
     
     // TODO: Need way to dynamically list available action contexts.
@@ -58,7 +58,8 @@ public interface ISapphireActionContext
             SapphireActionSystem.CONTEXT_SECTION,
             SapphireActionSystem.CONTEXT_VALUE_PROPERTY_EDITOR,
             SapphireActionSystem.CONTEXT_DIAGRAM,
-            SapphireActionSystem.CONTEXT_DIAGRAM_NODE
+            SapphireActionSystem.CONTEXT_DIAGRAM_NODE,
+            SapphireActionSystem.CONTEXT_WITH_DIRECTIVE
         },
         invalidValueMessage = "\"{0}\" is not valid action context.",
         caseSensitive = false

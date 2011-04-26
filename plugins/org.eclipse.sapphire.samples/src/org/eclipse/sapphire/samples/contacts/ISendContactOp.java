@@ -24,7 +24,7 @@ import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.DerivedValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.samples.contacts.internal.SendContactOpContentProvider;
@@ -56,7 +56,7 @@ public interface ISendContactOp
     // *** To ***
 
     @Label( standard = "to", full = "message destination" )
-    @NonNullValue
+    @Required
     @PossibleValues( service = SendContactToPossibleValuesProvider.class )
     
     ValueProperty PROP_TO = new ValueProperty( TYPE, "To" );

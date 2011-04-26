@@ -22,7 +22,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -60,7 +60,7 @@ public interface IJavaTypeNameValueGallery
     @Label( standard = "required class 1" )
     @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS } )
     @MustExist
-    @NonNullValue
+    @Required
     @XmlBinding( path = "required-class-1" )
     
     ValueProperty PROP_REQUIRED_CLASS_1 = new ValueProperty( TYPE, "RequiredClass1" );
@@ -76,7 +76,7 @@ public interface IJavaTypeNameValueGallery
     @Label( standard = "required class 2" )
     @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS }, type = "java.util.List" )
     @MustExist
-    @NonNullValue
+    @Required
     @XmlBinding( path = "required-class-2" )
     
     ValueProperty PROP_REQUIRED_CLASS_2 = new ValueProperty( TYPE, "RequiredClass2" );
@@ -92,7 +92,7 @@ public interface IJavaTypeNameValueGallery
     @Label( standard = "required class 3" )
     @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS }, type = "java.util.AbstractList" )
     @MustExist
-    @NonNullValue
+    @Required
     @XmlBinding( path = "required-class-3" )
     
     ValueProperty PROP_REQUIRED_CLASS_3 = new ValueProperty( TYPE, "RequiredClass3" );
@@ -108,7 +108,7 @@ public interface IJavaTypeNameValueGallery
     @Label( standard = "required class 4" )
     @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS }, type = { "java.util.AbstractList", "java.lang.Cloneable" } )
     @MustExist
-    @NonNullValue
+    @Required
     @XmlBinding( path = "required-class-4" )
     
     ValueProperty PROP_REQUIRED_CLASS_4 = new ValueProperty( TYPE, "RequiredClass4" );
@@ -124,7 +124,7 @@ public interface IJavaTypeNameValueGallery
     @Label( standard = "required class 5" )
     @JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = "java.util.AbstractList" )
     @MustExist
-    @NonNullValue
+    @Required
     @XmlBinding( path = "required-class-5" )
     
     ValueProperty PROP_REQUIRED_CLASS_5 = new ValueProperty( TYPE, "RequiredClass5" );
@@ -140,7 +140,7 @@ public interface IJavaTypeNameValueGallery
     @Label( standard = "required interface 1" )
     @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE )
     @MustExist
-    @NonNullValue
+    @Required
     @XmlBinding( path = "required-interface-1" )
     
     ValueProperty PROP_REQUIRED_INTERFACE_1 = new ValueProperty( TYPE, "RequiredInterface1" );
@@ -156,7 +156,7 @@ public interface IJavaTypeNameValueGallery
     @Label( standard = "required interface 2" )
     @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE, type = "java.util.List" )
     @MustExist
-    @NonNullValue
+    @Required
     @XmlBinding( path = "required-interface-2" )
     
     ValueProperty PROP_REQUIRED_INTERFACE_2 = new ValueProperty( TYPE, "RequiredInterface2" );
@@ -172,7 +172,7 @@ public interface IJavaTypeNameValueGallery
     @Label( standard = "required interface 3" )
     @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE, type = { "java.util.List", "java.lang.Cloneable" } )
     @MustExist
-    @NonNullValue
+    @Required
     @XmlBinding( path = "required-interface-3" )
     
     ValueProperty PROP_REQUIRED_INTERFACE_3 = new ValueProperty( TYPE, "RequiredInterface3" );
@@ -188,7 +188,7 @@ public interface IJavaTypeNameValueGallery
     @Label( standard = "required annotation 1" )
     @JavaTypeConstraint( kind = JavaTypeKind.ANNOTATION )
     @MustExist
-    @NonNullValue
+    @Required
     @XmlBinding( path = "required-annotation-1" )
     
     ValueProperty PROP_REQUIRED_ANNOTATION_1 = new ValueProperty( TYPE, "RequiredAnnotation1" );
@@ -204,7 +204,7 @@ public interface IJavaTypeNameValueGallery
     @Label( standard = "required enum 1" )
     @JavaTypeConstraint( kind = JavaTypeKind.ENUM )
     @MustExist
-    @NonNullValue
+    @Required
     @XmlBinding( path = "required-enum-1" )
     
     ValueProperty PROP_REQUIRED_ENUM_1 = new ValueProperty( TYPE, "RequiredEnum1" );
@@ -220,7 +220,7 @@ public interface IJavaTypeNameValueGallery
     @Label( standard = "required mixed type 1" )
     @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.INTERFACE } )
     @MustExist
-    @NonNullValue
+    @Required
     @XmlBinding( path = "required-mixed-type-1" )
     
     ValueProperty PROP_REQUIRED_MIXED_TYPE_1 = new ValueProperty( TYPE, "RequiredMixedType1" );
@@ -236,7 +236,7 @@ public interface IJavaTypeNameValueGallery
     @Label( standard = "required mixed type 2" )
     @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.INTERFACE, JavaTypeKind.ENUM } )
     @MustExist
-    @NonNullValue
+    @Required
     @XmlBinding( path = "required-mixed-type-2" )
     
     ValueProperty PROP_REQUIRED_MIXED_TYPE_2 = new ValueProperty( TYPE, "RequiredMixedType2" );

@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.LongString;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -40,7 +40,7 @@ public interface IComponentDependency
     // *** Name ***
     
 	@Reference( target = IComponent.class, service = ComponentReferenceService.class )
-	@NonNullValue
+	@Required
 	@PossibleValues( property = "/Components/Name" )
 	@XmlBinding( path = "name" )
 

@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.samples.map.internal.DestinationReferenceService;
@@ -37,7 +37,7 @@ public interface IRoute extends IModelElement
 	
 	@Reference( target = IDestination.class, service = DestinationReferenceService.class )
 	@XmlBinding( path = "from-destination")
-	@NonNullValue
+	@Required
 	@Label(standard = "from destination")
 
 	ValueProperty PROP_FROM_DESTINATION = new ValueProperty( TYPE, "FromDestination" );
@@ -49,7 +49,7 @@ public interface IRoute extends IModelElement
 	
 	@Reference( target = IDestination.class, service = DestinationReferenceService.class )
 	@XmlBinding( path = "to-destination")
-	@NonNullValue
+	@Required
 	@Label(standard = "to destination")
 
 	ValueProperty PROP_TO_DESTINATION = new ValueProperty( TYPE, "ToDestination" );
@@ -61,7 +61,7 @@ public interface IRoute extends IModelElement
     
     @XmlBinding( path = "distance" )
     @Label( standard = "distance" )
-    @NonNullValue
+    @Required
 
     ValueProperty PROP_DISTANCE = new ValueProperty( TYPE, "Distance" );
 

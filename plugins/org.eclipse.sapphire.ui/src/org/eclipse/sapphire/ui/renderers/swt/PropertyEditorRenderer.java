@@ -39,10 +39,7 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
-import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
-import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartEvent;
@@ -382,33 +379,6 @@ public abstract class PropertyEditorRenderer
     protected final PropertyEditorAssistDecorator createDecorator( final Composite parent )
     {
         this.decorator = new PropertyEditorAssistDecorator( this.part, this.context, parent );
-        
-        final SapphireAction assistAction = this.actions.getAction( SapphireActionSystem.ACTION_ASSIST );
-        
-        final SapphireActionHandler assistActionHandler = new SapphireActionHandler()
-        {
-            @Override
-            protected Object run( final SapphireRenderingContext context )
-            {
-                PropertyEditorRenderer.this.decorator.openAssistDialog();
-                return null;
-            }
-        };
-        
-        assistActionHandler.init( assistAction, null );
-        assistAction.addHandler( assistActionHandler );
-        
-        addOnDisposeOperation
-        (
-            new Runnable()
-            {
-                public void run()
-                {
-                    assistAction.removeHandler( assistActionHandler );
-                }
-            }
-        );
-        
         return this.decorator;
     }
     
@@ -441,11 +411,6 @@ public abstract class PropertyEditorRenderer
             }
         }
 
-        if( this.decorator != null )
-        {
-            this.decorator.refresh();
-        }
-        
         if( this.auxTextProvider != null )
         {
             final String auxText = this.auxTextProvider.getAuxText( getModelElement(), getProperty() );

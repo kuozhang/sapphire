@@ -39,6 +39,7 @@
         <label>assist</label>
         <key-binding>SHIFT+CONTROL+ALT+i</key-binding>
         <description>Shows property editor assistance popup. The popup can also be accessed by clicking on the small decorator image (either a light builb, an error marker or a warning marker) that appears next to the property editor.</description>
+        <context>Sapphire.WithDirective</context>
     </action>
     <action>
         <id>Sapphire.Browse</id>

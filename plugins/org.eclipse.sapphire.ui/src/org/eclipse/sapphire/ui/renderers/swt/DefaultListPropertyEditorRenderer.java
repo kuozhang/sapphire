@@ -227,7 +227,7 @@ public class DefaultListPropertyEditorRenderer
             this.context.adapt( innerComposite );
             
             this.decorator = createDecorator( innerComposite );
-            this.decorator.getControl().setLayoutData( gdvalign( gd(), SWT.TOP ) );
+            this.decorator.control().setLayoutData( gdvalign( gd(), SWT.TOP ) );
 
             this.decorator.addEditorControl( innerComposite );
         }
@@ -261,7 +261,6 @@ public class DefaultListPropertyEditorRenderer
         
         this.tableViewer = new TableViewer( tableParentComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
         this.table = this.tableViewer.getTable();
-        this.table.setData( SapphirePropertyEditor.DATA_ASSIST_DECORATOR, this.decorator );
         this.context.adapt( this.table );
         this.decorator.addEditorControl( this.table );
         

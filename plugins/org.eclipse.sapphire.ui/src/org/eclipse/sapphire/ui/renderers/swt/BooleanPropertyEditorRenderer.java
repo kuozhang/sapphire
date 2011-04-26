@@ -114,7 +114,7 @@ public final class BooleanPropertyEditorRenderer
         composite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
 
         final PropertyEditorAssistDecorator decorator = createDecorator( composite ); 
-        decorator.getControl().setLayoutData( gdvalign( gd(), SWT.CENTER ) );
+        decorator.control().setLayoutData( gdvalign( gd(), SWT.CENTER ) );
         
         this.checkbox = new Button( composite, SWT.CHECK );
         this.checkbox.setLayoutData( gd() );

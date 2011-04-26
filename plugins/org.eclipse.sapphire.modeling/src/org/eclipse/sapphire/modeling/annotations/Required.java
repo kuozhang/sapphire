@@ -21,8 +21,8 @@ import java.lang.annotation.Target;
  */
 
 @Retention( RetentionPolicy.RUNTIME )
-@Target( { ElementType.FIELD } )
+@Target( ElementType.FIELD )
 
-public @interface NonNullValue
+public @interface Required
 {
 }

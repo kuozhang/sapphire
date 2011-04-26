@@ -11,14 +11,19 @@
 
 package org.eclipse.sapphire.ui;
 
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
@@ -34,12 +39,15 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
+import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.internal.binding.RadioButtonsGroup;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -208,13 +216,27 @@ public final class SapphireWithDirective
             {
                 style = defaultStyle;
             }
+            
+            final SapphireActionGroup actions = getActions( getMainActionContext() );
+            final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager( context, actions );
+            final SapphireKeyboardActionPresentation actionPresentationKeyboard = new SapphireKeyboardActionPresentation( actionPresentationManager );
+            
+            final Composite typeSelectorComposite = new Composite( composite, SWT.NONE );
+            typeSelectorComposite.setLayoutData( gdhspan( gdvalign( gdhfill(), SWT.CENTER ), 2 ) );
+            typeSelectorComposite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
+            context.adapt( typeSelectorComposite );
+            
+            final PropertyEditorAssistDecorator decorator = new PropertyEditorAssistDecorator( this, this.element, this.property, context, typeSelectorComposite );
+            decorator.control().setLayoutData( gdvalign( gd(), ( style == Style.DROP_DOWN_LIST ? SWT.TOP : SWT.CENTER ) ) );
 
             if( style == Style.CHECKBOX )
             {
-                final Button masterCheckBox = new Button( composite, SWT.CHECK );
-                masterCheckBox.setLayoutData( gdhindent( gdhspan( gdhfill(), 2 ), 10 ) );
+                final Button masterCheckBox = new Button( typeSelectorComposite, SWT.CHECK );
+                masterCheckBox.setLayoutData( gd() );
                 masterCheckBox.setText( LabelTransformer.transform( def.getLabel().getLocalizedText(), CapitalizationType.FIRST_WORD_ONLY, true ) );
                 context.adapt( masterCheckBox );
+                decorator.addEditorControl( masterCheckBox );
+                actionPresentationKeyboard.attach( masterCheckBox );
     
                 modelPropertyListener = new ModelPropertyListener()
                 {
@@ -272,11 +294,14 @@ public final class SapphireWithDirective
             }
             else if( style == Style.RADIO_BUTTONS )
             {
-                final RadioButtonsGroup radioButtonsGroup = new RadioButtonsGroup( context, composite, false );
-                radioButtonsGroup.setLayoutData( gdhindent( gdhspan( gdhfill(), 2 ), 10 ) );
+                final RadioButtonsGroup radioButtonsGroup = new RadioButtonsGroup( context, typeSelectorComposite, false );
+                radioButtonsGroup.setLayoutData( gdhfill() );
                 context.adapt( radioButtonsGroup );
                 
                 final Button noneButton = radioButtonsGroup.addRadioButton( Resources.noneSelection );
+                decorator.addEditorControl( noneButton );
+                actionPresentationKeyboard.attach( noneButton );
+                
                 final Map<ModelElementType,Button> typeToButton = new HashMap<ModelElementType,Button>();
                 final Map<Button,ModelElementType> buttonToType = new HashMap<Button,ModelElementType>();
                 
@@ -286,6 +311,8 @@ public final class SapphireWithDirective
                     final Button button = radioButtonsGroup.addRadioButton( label );
                     typeToButton.put( type, button );
                     buttonToType.put( button, type );
+                    decorator.addEditorControl( button );
+                    actionPresentationKeyboard.attach( button );
                 }
                 
                 modelPropertyListener = new ModelPropertyListener()
@@ -326,7 +353,7 @@ public final class SapphireWithDirective
                                 final ModelElementHandle<?> handle = element.read( property );
                                 final Button button = radioButtonsGroup.getSelection();
                                 
-                                if( handle.element() != null && button == noneButton )
+                                if( button == noneButton )
                                 {
                                     handle.remove();
                                 }
@@ -355,9 +382,11 @@ public final class SapphireWithDirective
             }
             else if( style == Style.DROP_DOWN_LIST )
             {
-                final Combo combo = new Combo( composite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
-                combo.setLayoutData( gdhindent( gdhspan( gdhfill(), 2 ), 10 ) );
+                final Combo combo = new Combo( typeSelectorComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+                combo.setLayoutData( gdhfill() );
                 context.adapt( combo );
+                decorator.addEditorControl( combo );
+                actionPresentationKeyboard.attach( combo );
                 
                 combo.add( Resources.noneSelection );
                 
@@ -414,7 +443,7 @@ public final class SapphireWithDirective
                                 final ModelElementHandle<?> handle = element.read( property );
                                 final int index = combo.getSelectionIndex();
                                 
-                                if( handle.element() != null && index == 0 )
+                                if( index == 0 )
                                 {
                                     handle.remove();
                                 }
@@ -445,9 +474,11 @@ public final class SapphireWithDirective
             {
                 throw new IllegalStateException();
             }
+            
+            actionPresentationKeyboard.render();
         
             final Composite separatorComposite = new Composite( composite, SWT.NONE );
-            separatorComposite.setLayoutData( gdhindent( gdhspan( gdhfill(), 2 ), 10 ) );
+            separatorComposite.setLayoutData( gdhindent( gdhspan( gdhfill(), 2 ), 9 ) );
             separatorComposite.setLayout( glayout( 1, 0, 5 ) );
             context.adapt( separatorComposite );
             
@@ -464,6 +495,8 @@ public final class SapphireWithDirective
                     public void widgetDisposed( final DisposeEvent event )
                     {
                         element.removeListener( modelPropertyListener, property.getName() );
+                        actionPresentationManager.dispose();
+                        actionPresentationKeyboard.dispose();
                     }
                 }
             );
@@ -513,6 +546,12 @@ public final class SapphireWithDirective
         }
         
         return false;
+    }
+    
+    @Override
+    public Set<String> getActionContexts()
+    {
+        return Collections.singleton( SapphireActionSystem.CONTEXT_WITH_DIRECTIVE );
     }
     
     @Override

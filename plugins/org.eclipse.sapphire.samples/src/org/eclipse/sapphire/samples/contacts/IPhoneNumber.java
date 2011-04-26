@@ -19,7 +19,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -65,7 +65,7 @@ public interface IPhoneNumber
     // *** AreaCode ***
     
     @Label( standard = "area code" )
-    @NonNullValue
+    @Required
     @CustomXmlValueBinding( impl = AreaCodeBinding.class )
     
     ValueProperty PROP_AREA_CODE = new ValueProperty( TYPE, "AreaCode" );
@@ -76,7 +76,7 @@ public interface IPhoneNumber
     // *** LocalNumber ***
     
     @Label( standard = "local number" )
-    @NonNullValue
+    @Required
     @CustomXmlValueBinding( impl = LocalNumberBinding.class )
     
     ValueProperty PROP_LOCAL_NUMBER = new ValueProperty( TYPE, "LocalNumber" );

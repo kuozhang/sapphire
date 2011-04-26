@@ -17,7 +17,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -38,7 +38,7 @@ public interface IDiagramConnectionEndpointBindingDef
     // *** Property ***
     
     @Label( standard = "property" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "property" )
     
     ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
@@ -50,7 +50,7 @@ public interface IDiagramConnectionEndpointBindingDef
 
     @Type( base = Function.class )
     @Label( standard = "value" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "value" )
     
     ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );

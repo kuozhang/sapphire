@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -38,7 +38,7 @@ public interface IDiagramNodeGeometry extends IModelElement
 	// *** NodeId ***
 	
 	@XmlBinding( path = "id")
-	@NonNullValue
+	@Required
 
 	ValueProperty PROP_NODE_ID = new ValueProperty( TYPE, "NodeId" );
 

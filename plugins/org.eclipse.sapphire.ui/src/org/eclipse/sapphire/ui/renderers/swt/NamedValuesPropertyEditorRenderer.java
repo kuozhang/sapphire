@@ -133,10 +133,9 @@ public final class NamedValuesPropertyEditorRenderer
         final PropertyEditorAssistDecorator decorator 
             = new PropertyEditorAssistDecorator( part, this.context, composite );
         
-        decorator.getControl().setLayoutData( gdvalign( gd(), SWT.CENTER ) );
+        decorator.control().setLayoutData( gdvalign( gd(), SWT.CENTER ) );
         decorator.addEditorControl( this.rootComposite );
         decorator.addEditorControl( composite );
-        this.rootComposite.setData( SapphirePropertyEditor.DATA_ASSIST_DECORATOR, decorator );        
         
         this.overallLabelControl = new Label( composite, SWT.WRAP );
         this.overallLabelControl.setLayoutData( gd() );

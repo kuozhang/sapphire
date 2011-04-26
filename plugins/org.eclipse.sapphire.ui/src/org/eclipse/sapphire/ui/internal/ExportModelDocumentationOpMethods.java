@@ -30,7 +30,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.docsys.DocumentationContent;
 import org.eclipse.sapphire.modeling.docsys.HtmlFormatter;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -183,7 +183,7 @@ public final class ExportModelDocumentationOpMethods
             
             if( property instanceof ValueProperty )
             {
-                if( property.hasAnnotation( NonNullValue.class ) )
+                if( property.hasAnnotation( Required.class ) )
                 {
                     cardinality = "1";
                 }

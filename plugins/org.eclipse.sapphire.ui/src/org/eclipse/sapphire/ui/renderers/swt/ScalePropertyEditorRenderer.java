@@ -117,7 +117,7 @@ public final class ScalePropertyEditorRenderer
         textFieldComposite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
 
         final PropertyEditorAssistDecorator decorator = createDecorator( textFieldComposite ); 
-        decorator.getControl().setLayoutData( gdvalign( gd(), SWT.TOP ) );
+        decorator.control().setLayoutData( gdvalign( gd(), SWT.TOP ) );
         
         this.textField = new Text( textFieldComposite, SWT.BORDER );
         this.textField.setLayoutData( gdhfill() );

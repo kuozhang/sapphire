@@ -17,7 +17,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -40,7 +40,7 @@ public interface ISapphireActionLinkDef
     // *** Label ***
     
     @Label( standard = "label" )
-    @NonNullValue
+    @Required
     @Localizable
     @XmlBinding( path = "label" )
     
@@ -65,7 +65,7 @@ public interface ISapphireActionLinkDef
     // *** ActionId ***
     
     @Label( standard = "action ID" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "action-id" )
     
     ValueProperty PROP_ACTION_ID = new ValueProperty( TYPE, "ActionId" );

@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -39,7 +39,7 @@ public interface IDiagramConnectionBindingDef
 	
     @Label( standard = "connection ID" )
     @XmlBinding( path = "connection-id" )
-    @NonNullValue
+    @Required
     
     ValueProperty PROP_CONNECTION_ID = new ValueProperty( TYPE, "ConnectionId" );
     
@@ -49,7 +49,7 @@ public interface IDiagramConnectionBindingDef
     // *** Property ***
     
     @Label( standard = "property" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "property" )
     
     ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
@@ -61,7 +61,7 @@ public interface IDiagramConnectionBindingDef
     
     @Type( base = Function.class )
     @Label( standard = "instance ID" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "instance-id" )
     
     ValueProperty PROP_INSTANCE_ID = new ValueProperty( TYPE, "InstanceId" );

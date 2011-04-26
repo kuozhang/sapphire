@@ -16,7 +16,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
@@ -37,7 +37,7 @@ public interface IDiagramNodeDefaultActionDef
     // *** Label ***
     
     @Label( standard = "label" )
-    @NonNullValue
+    @Required
     @Localizable
     @XmlBinding( path = "label" )
     
@@ -60,7 +60,7 @@ public interface IDiagramNodeDefaultActionDef
     // *** ActionId ***
     
     @Label( standard = "action id" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "action-id" )
     
     ValueProperty PROP_ACTION_ID = new ValueProperty( TYPE, "ActionId" );

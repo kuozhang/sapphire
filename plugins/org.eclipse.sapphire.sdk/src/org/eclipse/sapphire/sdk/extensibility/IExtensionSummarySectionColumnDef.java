@@ -17,7 +17,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -35,7 +35,7 @@ public interface IExtensionSummarySectionColumnDef
     // *** Name ***
     
     @Label( standard = "name" )
-    @NonNullValue
+    @Required
     
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
     

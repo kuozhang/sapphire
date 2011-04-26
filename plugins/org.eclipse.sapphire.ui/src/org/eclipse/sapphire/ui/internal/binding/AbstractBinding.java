@@ -20,7 +20,6 @@ import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -166,14 +165,6 @@ public abstract class AbstractBinding
         if (this.control.isDisposed()) {
             return;
         }
-        final PropertyEditorAssistDecorator dec 
-            = (PropertyEditorAssistDecorator) this.control.getData( SapphirePropertyEditor.DATA_ASSIST_DECORATOR );
-        
-        if( dec != null )
-        {
-            dec.refresh();
-        }
-        
         final boolean enabled = getModelElement().isPropertyEnabled( getProperty() );
         this.control.setEnabled( enabled );
         

@@ -16,7 +16,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -36,7 +36,7 @@ public interface IStudentOccupation
     // *** EducationalInstitution ***
     
     @Label( standard = "educational institution" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "educational-institution" )
     
     ValueProperty PROP_EDUCATIONAL_INSTITUTION = new ValueProperty( TYPE, "EducationalInstitution" );
@@ -47,7 +47,7 @@ public interface IStudentOccupation
     // *** Program ***
     
     @Label( standard = "program" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "program" )
     
     ValueProperty PROP_PROGRAM = new ValueProperty( TYPE, "Program" );

@@ -22,7 +22,7 @@ import org.eclipse.sapphire.modeling.annotations.BasePathsProvider;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.samples.calendar.internal.EventAttachmentLocalCopyBasePathsProvider;
@@ -44,7 +44,7 @@ public interface IEventAttachment
     
     @Type( base = IPath.class )
     @Label( standard = "local copy location" )
-    @NonNullValue
+    @Required
     @BasePathsProvider( EventAttachmentLocalCopyBasePathsProvider.class )
     @ValidFileSystemResourceType( FileSystemResourceType.FILE )
 
@@ -58,7 +58,7 @@ public interface IEventAttachment
 
     @Type( base = URL.class )
     @Label( standard = "public copy location" )
-    @NonNullValue
+    @Required
 
     ValueProperty PROP_PUBLIC_COPY_LOCATION = new ValueProperty( TYPE, "PublicCopyLocation" );
 

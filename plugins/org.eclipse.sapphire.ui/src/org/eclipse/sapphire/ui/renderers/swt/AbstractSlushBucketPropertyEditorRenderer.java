@@ -101,7 +101,7 @@ public abstract class AbstractSlushBucketPropertyEditorRenderer
         final PropertyEditorAssistDecorator decorator 
             = new PropertyEditorAssistDecorator( part, this.context, decoratorComposite );
         
-        decorator.getControl().setLayoutData( gd() );
+        decorator.control().setLayoutData( gd() );
         setDecorator( decorator );
         
         final Control sourceTable = createSourceControl( sourceTableComposite );

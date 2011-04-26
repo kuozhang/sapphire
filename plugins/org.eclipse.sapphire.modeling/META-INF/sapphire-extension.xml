@@ -51,8 +51,8 @@
     </model-property-service>
     <model-property-service>
         <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
-        <factory>org.eclipse.sapphire.modeling.validation.internal.NonNullValueValidationService$Factory</factory>
-        <id>Sapphire.NonNullValueValidationService</id>
+        <factory>org.eclipse.sapphire.modeling.validation.internal.RequiredPropertyValidationService$Factory</factory>
+        <id>Sapphire.RequiredPropertyValidationService</id>
     </model-property-service>
     <model-property-service>
         <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>

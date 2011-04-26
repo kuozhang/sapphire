@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -40,7 +40,7 @@ public interface IHardwareItem
     @Type( base = HardwareType.class )
     @XmlBinding( path = "type" )
     @Label( standard = "type" )
-    @NonNullValue
+    @Required
 
     ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
 
@@ -52,7 +52,7 @@ public interface IHardwareItem
     
     @XmlBinding( path = "make" )
     @Label( standard = "make" )
-    @NonNullValue
+    @Required
 
     ValueProperty PROP_MAKE = new ValueProperty( TYPE, "Make" );
 

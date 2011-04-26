@@ -30,7 +30,7 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -56,7 +56,7 @@ public interface IDiagramNodeDef
 	
     // *** Id ***
     
-    @NonNullValue
+    @Required
     
     ValueProperty PROP_ID = new ValueProperty( TYPE, ISapphirePartDef.PROP_ID );
 	
@@ -64,7 +64,7 @@ public interface IDiagramNodeDef
     
     @Type( base = Function.class )
     @Label( standard = "instance ID" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "instance-id" )
     
     ValueProperty PROP_INSTANCE_ID = new ValueProperty( TYPE, "InstanceId" );
@@ -76,7 +76,7 @@ public interface IDiagramNodeDef
     // *** ToolPaletteLabel ***
     
     @Label( standard = "tool palette label" )
-    @NonNullValue
+    @Required
     @Localizable
     @XmlBinding( path = "tool-palette-label" )
     
@@ -110,7 +110,7 @@ public interface IDiagramNodeDef
     
     @Label( standard = "property" )
     @XmlBinding( path = "property" )
-    @NonNullValue
+    @Required
     
     ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
     

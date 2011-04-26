@@ -65,7 +65,7 @@ public interface IBugReport extends IModelElementForXml, IRemovable
     
     @XmlBinding( path = "title" )
     @Label( standard = "title" )
-    @NonNullValue
+    @Required
 
     ValueProperty PROP_TITLE = new ValueProperty( TYPE, "Title" );
 
@@ -77,7 +77,7 @@ public interface IBugReport extends IModelElementForXml, IRemovable
     @XmlBinding( path = "details" )
     @Label( standard = "details" )
     @LongString
-    @NonNullValue
+    @Required
 
     ValueProperty PROP_DETAILS = new ValueProperty( TYPE, "Details" );
 
@@ -150,7 +150,7 @@ public interface IHardwareItem extends IModelElementForXml, IRemovable
     @Type( base = HardwareType.class )
     @XmlBinding( path = "type" )
     @Label( standard = "type" )
-    @NonNullValue
+    @Required
 
     ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
 
@@ -162,7 +162,7 @@ public interface IHardwareItem extends IModelElementForXml, IRemovable
     
     @XmlBinding( path = "make" )
     @Label( standard = "make" )
-    @NonNullValue
+    @Required
 
     ValueProperty PROP_MAKE = new ValueProperty( TYPE, "Make" );
 

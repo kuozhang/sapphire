@@ -20,7 +20,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
@@ -39,7 +39,7 @@ public interface IExtensionSummarySectionDef
     // *** ExtensionType ***
     
     @Label( standard = "extension type" )
-    @NonNullValue
+    @Required
     
     ValueProperty PROP_EXTENSION_TYPE = new ValueProperty( TYPE, "ExtensionType" );
     

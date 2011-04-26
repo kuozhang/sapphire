@@ -41,6 +41,7 @@ to 0.3 release. Only changes from the previous milestone are covered.</p>
   <li><a href="#function">Function Name Method</a></li>
   <li><a href="#with">With Directive</a></li>
   <li><a href="#element-image">Model Element Image</a></li>
+  <li><a href="#required-annotation">Required Annotation</a></li>
 </ol>
 
 <h2><a name="modularity">Modularity Changes</a></h2>
@@ -693,6 +694,47 @@ migration:</p>
 <p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.java<br/>
 <nobr>Search: &nbsp;&nbsp;(?s)@Image\((.*?)small(.*?)=(.*?)"(.*?)"(.*?)\)</nobr><br/>
 <nobr>Replace: &nbsp;@Image\(\1path\2=\3"\4"\5\)</nobr></p>
+
+<h2><a name="required-annotation">Required Annotation</a></h2>
+
+<p>The NonNullValue annotation has been renamed to Required to better reflect its broader usage
+with both value and element properties.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@NonNullValue
+
+<font color="#888888">ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+
+Value<String> getName();
+void setName( String name );</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@Required
+
+<font color="#888888">ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+
+Value<String> getName();
+void setName( String name );</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+<p>The following Eclipse search/replace regular expressions can be used to perform this
+migration:</p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.java<br/>
+<nobr>Search: &nbsp;&nbsp;(?s)@NonNullValue</nobr><br/>
+<nobr>Replace: &nbsp;@Required</nobr></p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.java<br/>
+<nobr>Search: &nbsp;&nbsp;(?s)import org\.eclipse\.sapphire\.modeling\.annotations\.NonNullValue;</nobr><br/>
+<nobr>Replace: &nbsp;import org\.eclipse\.sapphire\.modeling\.annotations\.Required;</nobr></p>
 
 <br/><br/>
 

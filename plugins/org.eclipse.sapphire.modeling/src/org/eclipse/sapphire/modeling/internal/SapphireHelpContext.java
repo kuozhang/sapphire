@@ -27,7 +27,7 @@ import org.eclipse.sapphire.modeling.annotations.DocumentationData;
 import org.eclipse.sapphire.modeling.annotations.DocumentationMergeStrategy;
 import org.eclipse.sapphire.modeling.annotations.DocumentationProvider;
 import org.eclipse.sapphire.modeling.annotations.DocumentationProviderImpl;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -106,7 +106,7 @@ public class SapphireHelpContext implements IContext, IContext2 {
             }
         }
         
-        NonNullValue nonNullAnnotation = property.getAnnotation(NonNullValue.class);
+        Required nonNullAnnotation = property.getAnnotation(Required.class);
         if (nonNullAnnotation != null) {
             buffer.append( NLS.bind(Resources.nonNullMessage, property.getLabel(false, CapitalizationType.FIRST_WORD_ONLY, false)) );
             buffer.append(LINE_BREAK); 

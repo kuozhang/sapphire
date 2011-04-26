@@ -17,7 +17,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 
 /**
@@ -36,7 +36,7 @@ public interface ISapphireActionLocationHint
     // *** ReferenceEntityId ***
     
     @Label( standard = "reference entity ID" )
-    @NonNullValue
+    @Required
     @PossibleValues( property = "../#/Id", invalidValueSeverity = IStatus.OK )
     
     ValueProperty PROP_REFERENCE_ENTITY_ID = new ValueProperty( TYPE, "ReferenceEntityId" );

@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_ASSIST_DECORATOR;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_PREFER_COMBO;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_PREFER_RADIO_BUTTONS;
@@ -92,7 +91,7 @@ public final class EnumPropertyEditorRenderer
                 this.context.adapt( composite );
                 
                 decorator = createDecorator( composite );
-                decorator.getControl().setLayoutData( gdvalign( gd(), SWT.CENTER ) );
+                decorator.control().setLayoutData( gdvalign( gd(), SWT.CENTER ) );
                 
                 final Label label = new Label( composite, SWT.WRAP );
                 label.setLayoutData( gd() );
@@ -126,7 +125,7 @@ public final class EnumPropertyEditorRenderer
                 this.context.adapt( composite );
                 
                 decorator = createDecorator( composite );
-                decorator.getControl().setLayoutData( gdvindent( gdvalign( gd(), SWT.TOP ), 4 ) );
+                decorator.control().setLayoutData( gdvindent( gdvalign( gd(), SWT.TOP ), 4 ) );
                 decorator.addEditorControl( composite );
                 
                 p = composite;
@@ -159,7 +158,7 @@ public final class EnumPropertyEditorRenderer
             {
                 composite.setLayoutData( gdhspan( gd(), hspan ) );
 
-                decorator.getControl().setLayoutData( gdvalign( gd(), SWT.CENTER ) );
+                decorator.control().setLayoutData( gdvalign( gd(), SWT.CENTER ) );
 
                 final RadioButtonsGroup buttonsGroup = new RadioButtonsGroup( this.context, composite, false );
                 buttonsGroup.setLayoutData( gdhfill() );
@@ -172,7 +171,7 @@ public final class EnumPropertyEditorRenderer
                 final int whint = part.getRenderingHint( ISapphirePartDef.HINT_WIDTH, SWT.DEFAULT );
                 composite.setLayoutData( gdhspan( whint == SWT.DEFAULT ? gdhfill() : gdwhint( gd(), whint ), hspan ) );
                 
-                decorator.getControl().setLayoutData( gdvalign( gd(), SWT.TOP ) );
+                decorator.control().setLayoutData( gdvalign( gd(), SWT.TOP ) );
 
                 final Combo c = new Combo( composite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
                 c.setLayoutData( gdhfill() );
@@ -183,8 +182,6 @@ public final class EnumPropertyEditorRenderer
             }
         }
     
-        this.control.setData( DATA_ASSIST_DECORATOR, decorator );
-        
         if( labelControl != null )
         {
             this.control.setData( RELATED_CONTROLS, labelControl );

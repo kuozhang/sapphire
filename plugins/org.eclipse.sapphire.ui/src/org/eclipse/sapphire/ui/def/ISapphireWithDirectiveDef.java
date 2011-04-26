@@ -16,7 +16,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -41,7 +41,7 @@ public interface ISapphireWithDirectiveDef
     // *** Path ***
     
     @Label( standard = "path" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "path" )
     
     ValueProperty PROP_PATH = new ValueProperty( TYPE, "Path" );

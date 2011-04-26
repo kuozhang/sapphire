@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -50,7 +50,7 @@ public interface ISapphireActionHandlerDef
     // *** Action ***
     
     @Label( standard = "action" )
-    @NonNullValue
+    @Required
     //@PossibleValuesFromModel( path = "/Actions/Id", invalidValueSeverity = IStatus.OK )
     @XmlBinding( path = "action" )
     
@@ -114,7 +114,7 @@ public interface ISapphireActionHandlerDef
     @Type( base = JavaTypeName.class )
     @Reference( target = JavaType.class )
     @Label( standard = "implementation class" )
-    @NonNullValue
+    @Required
     @JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.ui.SapphireActionHandler" )
     @MustExist
     @XmlBinding( path = "impl" )

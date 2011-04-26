@@ -69,7 +69,6 @@ public final class SapphirePropertyEditor
     public static final String RELATED_CONTROLS = "related-controls";
     public static final String BROWSE_BUTTON = "browse-button";
     public static final String DATA_BINDING = "binding";
-    public static final String DATA_ASSIST_DECORATOR = "assist-decorator";
     public static final String DATA_PROPERTY = "property";
     
     public static final String HINT_SHOW_LABEL = "show.label";
@@ -249,8 +248,7 @@ public final class SapphirePropertyEditor
             {
                 parsedValue = rootdef.resolveClass( valueString );
             }
-            else if( name.equals( HINT_ASSIST_CONTRIBUTORS ) ||
-                     name.equals( HINT_LISTENERS ) )
+            else if( name.equals( HINT_LISTENERS ) )
             {
                 final List<Class<?>> contributors = new ArrayList<Class<?>>();
                 
@@ -262,17 +260,6 @@ public final class SapphirePropertyEditor
                     {
                         contributors.add( cl );
                     }
-                }
-                
-                parsedValue = contributors;
-            }
-            else if( name.equals( HINT_SUPPRESS_ASSIST_CONTRIBUTORS ) )
-            {
-                final List<String> contributors = new ArrayList<String>();
-                
-                for( String segment : valueString.split( "," ) )
-                {
-                    contributors.add( segment.trim() );
                 }
                 
                 parsedValue = contributors;

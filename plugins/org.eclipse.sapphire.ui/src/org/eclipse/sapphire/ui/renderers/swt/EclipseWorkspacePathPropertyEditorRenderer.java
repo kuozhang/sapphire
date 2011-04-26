@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_ASSIST_DECORATOR;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_EXPAND_VERTICALLY;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL_ABOVE;
@@ -44,7 +43,6 @@ import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler.ContainersOnlyViewerFilter;
 import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler.ExtensionBasedViewerFilter;
@@ -145,11 +143,8 @@ public final class EclipseWorkspacePathPropertyEditorRenderer
         
         treeViewer.setInput( ResourcesPlugin.getWorkspace() );
         
-        final PropertyEditorAssistDecorator decorator 
-            = (PropertyEditorAssistDecorator) textField.getData( DATA_ASSIST_DECORATOR );
-
-        decorator.addEditorControl( drillDown );
-        decorator.addEditorControl( tree );
+        this.decorator.addEditorControl( drillDown );
+        this.decorator.addEditorControl( tree );
 
         treeViewer.addSelectionChangedListener
         (

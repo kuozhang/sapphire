@@ -17,7 +17,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -36,7 +36,7 @@ public interface IDefinitionReference
     // *** Path ***
     
     @Label( standard = "definition path" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "" )
     
     ValueProperty PROP_PATH = new ValueProperty( TYPE, "Path" ); //$NON-NLS-1$

@@ -16,7 +16,6 @@ import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ImageService;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
-import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.samples.contacts.IContact;
 import org.eclipse.sapphire.samples.internal.SapphireSamplesPlugin;
 
@@ -70,7 +69,7 @@ public final class ContactImageService
     {
         super.dispose();
         
-        element().removeListener( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
+        element().removeListener( this.listener, IContact.PROP_E_MAIL.getName() );
     }
     
 }

@@ -22,7 +22,7 @@ block:</p>
 
 @XmlBinding( path = "street" )
 @LabelText( "streetLabel" )
-@NonNullValue
+@Required
 
 ValueProperty PROP_STREET = new ValueProperty( TYPE, "Street" );
 
@@ -33,7 +33,7 @@ void setStreet( String street );
 
 @XmlBinding( path = "city" )
 @LabelText( "cityLabel" )
-@NonNullValue
+@Required
 @ValuesProvider( CityNameValuesProvider.class )
 @DependsOn( { "ZipCode", "State" } )
 
@@ -46,7 +46,7 @@ void setCity( String city );
 
 @XmlBinding( path = "state" )
 @LabelText( "stateLabel" )
-@NonNullValue
+@Required
 @ValuesProvider( StateCodeValuesProvider.class )
 @DependsOn( { "ZipCode", "City" } )
 
@@ -59,7 +59,7 @@ void setState( String state );
 
 @XmlBinding( path = "zip" )
 @LabelText( "zipCodeLabel" )
-@NonNullValue
+@Required
 @ValuesProvider( ZipCodeValuesProvider.class )
 @DependsOn( { "State", "City" } )
 
@@ -70,7 +70,7 @@ void setZipCode( String zipCode );</code></pre>
 
 <p>The above fully describes the semantics. Dependencies between properties are spelled
 out using the @DependsOn annotation. Constraints are attached in the form of 
-@NonNullValue and @ValueProvider annotations. Even a human-frendly name for each
+@Required and @ValueProvider annotations. Even a human-frendly name for each
 property is specified using the @LabelText annotation.</p>
 
 <p>So what would the UI code look for this? As simple as this:</p>

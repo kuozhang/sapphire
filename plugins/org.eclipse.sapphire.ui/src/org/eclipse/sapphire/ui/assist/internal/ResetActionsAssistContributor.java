@@ -13,8 +13,10 @@ package org.eclipse.sapphire.ui.assist.internal;
 
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.DefaultValueService;
+import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Value;
@@ -64,7 +66,7 @@ public final class ResetActionsAssistContributor
                 final boolean isBooleanType = prop.getTypeClass().equals( Boolean.class );
                 
                 final String actionText
-                    = ( hasDefaultValue || isBooleanType ? Resources.restoreDefaultValue : Resources.clearValue );
+                    = ( hasDefaultValue || isBooleanType ? Resources.restoreDefaultValue : Resources.clear );
                 
                 final PropertyEditorAssistContribution contribution = new PropertyEditorAssistContribution();
                 contribution.setText( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( actionText ) + "</a></p>" );
@@ -92,7 +94,7 @@ public final class ResetActionsAssistContributor
             if( ! list.isEmpty() )
             {
                 final PropertyEditorAssistContribution contribution = new PropertyEditorAssistContribution();
-                contribution.setText( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( Resources.clearList ) + "</a></p>" );
+                contribution.setText( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( Resources.clear ) + "</a></p>" );
                 
                 contribution.setHyperlinkListener
                 (
@@ -110,6 +112,31 @@ public final class ResetActionsAssistContributor
                 section.addContribution( contribution );
             }
         }
+        else if( prop instanceof ElementProperty )
+        {
+            final ModelElementHandle<?> handle = element.read( (ElementProperty) prop );
+
+            if( handle.element() != null )
+            {
+                final PropertyEditorAssistContribution contribution = new PropertyEditorAssistContribution();
+                contribution.setText( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( Resources.clear ) + "</a></p>" );
+                
+                contribution.setHyperlinkListener
+                (
+                    new HyperlinkAdapter()
+                    {
+                        @Override
+                        public void linkActivated( final HyperlinkEvent event )
+                        {
+                            handle.remove();
+                        }
+                    }
+                );
+                
+                final PropertyEditorAssistSection section = context.getSection( SECTION_ID_ACTIONS );
+                section.addContribution( contribution );
+            }
+        }
     }
     
     private static final class Resources
@@ -118,8 +145,7 @@ public final class ResetActionsAssistContributor
     
     {
         public static String restoreDefaultValue;
-        public static String clearValue;
-        public static String clearList;
+        public static String clear;
         
         static
         {

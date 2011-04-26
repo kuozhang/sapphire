@@ -21,6 +21,7 @@
     <li><a href="#folding">Folding XML Element Binding</a></li>
     <li><a href="#project-relative">Project Relative Paths</a></li>
     <li><a href="#image-service">Image Service</a></li>
+    <li><a href="#required-annotation">Required Annotation</a></li>
   </ol>
   <li><a href="#ui">UI</a></li>
   <ol type="A">
@@ -257,6 +258,27 @@ public class AttendeeImageService extends ImageService
         element().removeListener( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
     }
 }</code></pre>
+
+<h2><a name="required-annotation">Required Annotation</a></h2>
+
+<p>Use @Required (formerly @NonNullValue) on both value properties and element properties. If a required property
+is not set, a validation error will be shown.</p>
+
+<p style="margin-left: 20px;"><b>Examples</b></p>
+
+<pre class="source-code"><code>@Required
+
+ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+
+Value&lt;String> getName();
+void setName( String name );</code></pre>
+
+<pre class="source-code"><code>@Type( base = IOccupation.class, possible = { IJobOccupation.class, IStudentOccupation.class, IHomemakerOccupation.class } )
+@Required
+  
+ElementProperty PROP_PRIMARY_OCCUPATION = new ElementProperty( TYPE, "PrimaryOccupation" );
+    
+ModelElementHandle&lt;IOccupation> getPrimaryOccupation();</code></pre>
 
 <h2><a name="html">HTML Content Presentation</a></h2>
 

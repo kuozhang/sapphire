@@ -19,7 +19,7 @@ import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -59,7 +59,7 @@ public interface ISapphireHtmlPanelDef
     
     @Type( base = Function.class )
     @Label( standard = "content URL" )
-    @NonNullValue
+    @Required
     @Enablement( expr = "${ ContentSourceType == 'REMOTE' }" )
     @XmlValueBinding( path = "url", removeNodeOnSetIfNull = false )
     
@@ -73,7 +73,7 @@ public interface ISapphireHtmlPanelDef
     
     @Type( base = Function.class )
     @Label( standard = "content" )
-    @NonNullValue
+    @Required
     @Enablement( expr = "${ ContentSourceType == 'EMBEDDED' }" )
     @LongString
     @Localizable

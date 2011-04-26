@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -53,7 +53,7 @@ public interface IBugReport
     
     @XmlBinding( path = "title" )
     @Label( standard = "&title" )
-    @NonNullValue
+    @Required
 
     ValueProperty PROP_TITLE = new ValueProperty( TYPE, "Title" );
 
@@ -65,7 +65,7 @@ public interface IBugReport
     @XmlBinding( path = "details" )
     @Label( standard = "&details" )
     @LongString
-    @NonNullValue
+    @Required
 
     ValueProperty PROP_DETAILS = new ValueProperty( TYPE, "Details" );
 

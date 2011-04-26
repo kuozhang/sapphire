@@ -17,7 +17,7 @@ import java.util.Map;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.swt.widgets.Shell;
 
@@ -27,33 +27,39 @@ import org.eclipse.swt.widgets.Shell;
 
 public final class PropertyEditorAssistContext
 {
-    private final SapphirePropertyEditor propertyEditor;
+    private final SapphirePart part;
+    private final IModelElement element;
+    private final ModelProperty property;
     private final SapphireRenderingContext context;
     private final LinkedHashMap<String,PropertyEditorAssistSection> sections; 
     private final Map<String,PropertyEditorAssistSection> sectionsReadOnly; 
     
-    public PropertyEditorAssistContext( final SapphirePropertyEditor propertyEditor,
+    public PropertyEditorAssistContext( final SapphirePart part,
+                                        final IModelElement element,
+                                        final ModelProperty property,
                                         final SapphireRenderingContext context )
     {
-        this.propertyEditor = propertyEditor;
+        this.part = part;
+        this.element = element;
+        this.property = property;
         this.context = context;
         this.sections = new LinkedHashMap<String,PropertyEditorAssistSection>();
         this.sectionsReadOnly = Collections.unmodifiableMap( this.sections );
     }
     
-    public SapphirePropertyEditor getPropertyEditor()
+    public SapphirePart getPart()
     {
-        return this.propertyEditor;
+        return this.part;
     }
     
     public IModelElement getModelElement()
     {
-        return this.propertyEditor.getLocalModelElement();
+        return this.element;
     }
     
     public ModelProperty getProperty()
     {
-        return this.propertyEditor.getProperty().refine( getModelElement() );
+        return this.property;
     }
     
     public SapphireRenderingContext getUiContext()

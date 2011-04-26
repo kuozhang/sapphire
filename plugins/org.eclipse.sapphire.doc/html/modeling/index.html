@@ -101,7 +101,7 @@ public interface IContactName extends IModelElement
     // *** FirstName ***
     
     @Label( standard = "first name" )
-    @NonNullValue
+    @Required
 
     ValueProperty PROP_FIRST_NAME = new ValueProperty( TYPE, "FirstName" );
 
@@ -120,7 +120,7 @@ public interface IContactName extends IModelElement
     // *** LastName ***
     
     @Label( standard = "last name" )
-    @NonNullValue
+    @Required
 
     ValueProperty PROP_LAST_NAME = new ValueProperty( TYPE, "LastName" );
 
@@ -194,7 +194,7 @@ at an example of a value property definition in detail.</p>
 // available annotations. 
 
 @Label( standard = "age" )
-@NonNullValue
+@Required
 
 // The property itself. Note that this is not a simple string as you would have
 // with a Java Bean. This is an instance of ValueProperty. The name of the property
@@ -808,7 +808,7 @@ is not set, a validation error will be generated.
 
 <p><b>Example:</b></p>
 
-<pre class="source-code"><code>@NonNullValue</code></pre>
+<pre class="source-code"><code>@Required</code></pre>
 
 <a name="ReadOnly"><h3>ReadOnly</h3></a>
 

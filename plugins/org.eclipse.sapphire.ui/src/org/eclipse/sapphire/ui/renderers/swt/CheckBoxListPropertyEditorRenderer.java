@@ -147,7 +147,7 @@ public class CheckBoxListPropertyEditorRenderer
         mainComposite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
         
         final PropertyEditorAssistDecorator decorator = createDecorator( mainComposite );
-        decorator.getControl().setLayoutData( gdvalign( gd(), SWT.TOP ) );
+        decorator.control().setLayoutData( gdvalign( gd(), SWT.TOP ) );
         
         // Setting the whint in the following code is a hacky workaround for the problem
         // tracked by the following JFace bug:

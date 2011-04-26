@@ -15,7 +15,6 @@ import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_ASSIST;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_BROWSE;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_JUMP;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.createFilterByActionId;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_ASSIST_DECORATOR;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_BORDER;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_BROWSE_ONLY;
@@ -165,7 +164,7 @@ public class DefaultValuePropertyEditorRenderer
         
         final PropertyEditorAssistDecorator decorator = createDecorator( nestedComposite ); 
         
-        decorator.getControl().setLayoutData( gdvalign( gd(), SWT.TOP ) );
+        decorator.control().setLayoutData( gdvalign( gd(), SWT.TOP ) );
         decorator.addEditorControl( nestedComposite );
         
         final int style 
@@ -176,7 +175,6 @@ public class DefaultValuePropertyEditorRenderer
         
         this.textField = new Text( nestedComposite, style );
         this.textField.setLayoutData( gdfill() );
-        this.textField.setData( DATA_ASSIST_DECORATOR, decorator );
         this.context.adapt( this.textField );
         decorator.addEditorControl( this.textField );
         

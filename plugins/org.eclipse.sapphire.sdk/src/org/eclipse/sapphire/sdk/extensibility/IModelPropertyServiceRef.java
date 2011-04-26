@@ -17,7 +17,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NonNullValue;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -37,7 +37,7 @@ public interface IModelPropertyServiceRef
     // *** Id ***
     
     @Label( standard = "ID" )
-    @NonNullValue
+    @Required
     @XmlBinding( path = "" )
     
     ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );

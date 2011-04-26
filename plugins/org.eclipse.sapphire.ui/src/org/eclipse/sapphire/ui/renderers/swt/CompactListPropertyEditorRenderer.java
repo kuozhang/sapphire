@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.sapphire.modeling.BindingImpl;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -40,6 +41,9 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.xml.XmlElement;
+import org.eclipse.sapphire.modeling.xml.XmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -58,6 +62,8 @@ import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -82,7 +88,7 @@ public class CompactListPropertyEditorRenderer
     ValueProperty memberProperty;
     private Composite innerComposite;
     private Composite textComposite;
-    private List<CompactTextBinding> textBindings = new ArrayList<CompactTextBinding>();
+    private List<TextBinding> textBindings = new ArrayList<TextBinding>();
     private SapphireFormText addText;
     private HyperlinkAdapter addTextHyperlinkAdapter;
 
@@ -235,18 +241,17 @@ public class CompactListPropertyEditorRenderer
 
         // add back text controls and add link
     	for (int i = 0; i < count; i++) {
-            final CompactListProxyResource resource = new CompactListProxyResource(this);
+            final ProxyResource resource = new ProxyResource();
             final IModelElement proxyElement = this.memberProperty.getModelElementType().instantiate(getPart().getLocalModelElement(), getPart().getProperty(), resource); 
             resource.init(proxyElement, this.memberProperty);
             final SapphirePropertyEditor editor = this.getPart().getChildPropertyEditor( proxyElement, this.memberProperty );
             
-            CompactListTextAssistDecorator decorator = addDecorator(editor);
+            PropertyEditorAssistDecorator decorator = addDecorator(editor);
 
     		Text text = new Text(this.textComposite, SWT.BORDER);
     		text.setLayoutData( gdhindent( gdwhint( gdhfill(), 150 ), 0 ) );
-    		CompactTextBinding binding = new CompactTextBinding(this, text, resource);
+    		TextBinding binding = new TextBinding(text, resource);
     		binding.setDecorator(decorator);
-    		decorator.setBinding(binding);
     		this.textBindings.add(binding);
     		
     		relatedControls.add(text);
@@ -284,7 +289,7 @@ public class CompactListPropertyEditorRenderer
         this.addText.addHyperlinkListener(this.addTextHyperlinkAdapter);
     }
     
-    private void addToolbar(final CompactTextBinding binding, final SapphirePropertyEditor editor, final Collection<Control> relatedControls) {
+    private void addToolbar(final TextBinding binding, final SapphirePropertyEditor editor, final Collection<Control> relatedControls) {
         final SapphireActionGroup parentActions = new SapphireActionGroup(getPart(), getPart().getActionContext());
 
         final SapphireAction deleteAction = parentActions.getAction( ACTION_DELETE );
@@ -331,7 +336,7 @@ public class CompactListPropertyEditorRenderer
         actions.removeFilter(jumpFilter);
     }
     
-    private void addJumpOverlay(final SapphireActionHandler jumpActionHandler, final CompactTextBinding binding) {
+    private void addJumpOverlay(final SapphireActionHandler jumpActionHandler, final TextBinding binding) {
         final TextOverlayPainter.Controller textOverlayPainterController;
         
         if( jumpActionHandler != null )
@@ -353,7 +358,7 @@ public class CompactListPropertyEditorRenderer
                 @Override
                 public String getDefaultText()
                 {
-                	CompactListProxyResource resource = binding.getResource();
+                	ProxyResource resource = binding.getResource();
                 	IModelElement element = resource.getModelElement();
                     return element == null ? null : element.read( resource.getValueProperty() ).getDefaultText();
                 }
@@ -366,7 +371,7 @@ public class CompactListPropertyEditorRenderer
                 @Override
                 public String getDefaultText()
                 {
-                	CompactListProxyResource resource = binding.getResource();
+                	ProxyResource resource = binding.getResource();
                 	IModelElement element = resource.getModelElement();
                     return element == null ? null : element.read( resource.getValueProperty() ).getDefaultText();
                 }
@@ -376,36 +381,9 @@ public class CompactListPropertyEditorRenderer
         TextOverlayPainter.install( binding.getText(), textOverlayPainterController );
     }
     
-    private CompactListTextAssistDecorator addDecorator(final SapphirePropertyEditor editor) {
-    	final CompactListTextAssistDecorator decorator = new CompactListTextAssistDecorator(editor, this.context, this.textComposite);
-    	decorator.getControl().setLayoutData( gdvindent( gdvalign( gd(), SWT.TOP ), 2 ) );
-    	
-        final SapphireActionGroup actions = editor.getActions();
-        final SapphireAction assistAction = actions.getAction( SapphireActionSystem.ACTION_ASSIST );
-        
-        final SapphireActionHandler assistActionHandler = new SapphireActionHandler()
-        {
-            @Override
-            protected Object run( final SapphireRenderingContext context )
-            {
-                decorator.openAssistDialog();
-                return null;
-            }
-        };
-        
-        assistActionHandler.init( assistAction, null );
-        assistAction.addHandler( assistActionHandler );
-        
-        addOnDisposeOperation
-        (
-            new Runnable()
-            {
-                public void run()
-                {
-                    assistAction.removeHandler( assistActionHandler );
-                }
-            }
-        );
+    private PropertyEditorAssistDecorator addDecorator(final SapphirePropertyEditor editor) {
+    	final PropertyEditorAssistDecorator decorator = new PropertyEditorAssistDecorator(editor, this.context, this.textComposite);
+    	decorator.control().setLayoutData( gdvindent( gdvalign( gd(), SWT.TOP ), 2 ) );
 
         return decorator;
     }
@@ -414,23 +392,25 @@ public class CompactListPropertyEditorRenderer
     private void addActivated() {
 		final Collection<Control> relatedControls = (Collection<Control>)this.innerComposite.getData( RELATED_CONTROLS );
 
-    	CompactListProxyResource resource = new CompactListProxyResource(this);
+    	ProxyResource resource = new ProxyResource();
         final IModelElement proxyElement = this.memberProperty.getModelElementType().instantiate(getPart().getLocalModelElement(), getPart().getProperty(), resource); 
         resource.init(proxyElement, this.memberProperty);
         SapphirePropertyEditor editor = this.getPart().getChildPropertyEditor( proxyElement, this.memberProperty );
 
-        CompactListTextAssistDecorator decorator = addDecorator(editor);
+        PropertyEditorAssistDecorator decorator = addDecorator(editor);
 
 		Text text = new Text(this.textComposite, SWT.BORDER);
 		text.setLayoutData( gdwhint( gdhfill(), 150 ) );
-		CompactTextBinding binding = new CompactTextBinding(this, text, resource);
+		TextBinding binding = new TextBinding(text, resource);
 		binding.setDecorator(decorator);
-		decorator.setBinding(binding);
 		this.textBindings.add(binding);
 		
 		relatedControls.add(text);
 		
 		addToolbar(binding, editor, relatedControls);
+		
+        decorator.addEditorControl(text);
+        decorator.addEditorControl(binding.getToolbar());
 
 		this.context.layout();
     	text.setFocus();
@@ -463,18 +443,17 @@ public class CompactListPropertyEditorRenderer
     private void refreshDeleteActions() {
     	final int size = this.textBindings.size();
     	for (int i = 0; i < size ; i++) {
-    		CompactTextBinding binding = this.textBindings.get(i); 
+    		TextBinding binding = this.textBindings.get(i); 
     		if (i == 0 && size == 1) {
     			binding.getDeleteActionHandler().refreshEnablement();
     		} else {
         		binding.getDeleteActionHandler().setEnabled(true);
     		}
-    		binding.getDecorator().refresh();
     	}
     }
     
     private boolean needsRefresh() {
-    	for (CompactTextBinding binding : this.textBindings) {
+    	for (TextBinding binding : this.textBindings) {
     		if (binding.isModifying()) {
     			return false;
     		}
@@ -483,7 +462,7 @@ public class CompactListPropertyEditorRenderer
     }
     
 	@SuppressWarnings("unchecked")
-    void deleteBinding(CompactTextBinding binding) {
+    void deleteBinding(TextBinding binding) {
 		final Collection<Control> relatedControls = (Collection<Control>)this.innerComposite.getData( RELATED_CONTROLS );
 
 		IModelElement elem = binding.getModelElement();
@@ -508,7 +487,7 @@ public class CompactListPropertyEditorRenderer
     		text.dispose();
     		toolbar.dispose();
     		
-    		Control control = decorator.getControl();
+    		Control control = decorator.control();
     		decorator.removeEditorControl(control);
     		control.dispose();
 
@@ -519,8 +498,8 @@ public class CompactListPropertyEditorRenderer
     	refreshDeleteActions();
     }
     
-    public void insertEmpty(final CompactTextBinding binding) {
-    	for (CompactTextBinding b : this.textBindings) {
+    public void insertEmpty(final TextBinding binding) {
+    	for (TextBinding b : this.textBindings) {
     		if (b == binding) {
     			return;
     		}
@@ -575,11 +554,11 @@ public class CompactListPropertyEditorRenderer
     	this.textBindings.get(0).getText().setFocus();
     }
 
-    public final class DeleteActionHandler extends SapphireActionHandler {
+    private final class DeleteActionHandler extends SapphireActionHandler {
     	
-    	CompactTextBinding binding;
+    	TextBinding binding;
 
-    	public DeleteActionHandler(CompactTextBinding binding) {
+    	public DeleteActionHandler(TextBinding binding) {
     		this.binding = binding;
     	}
 
@@ -591,6 +570,205 @@ public class CompactListPropertyEditorRenderer
     	
         public final void refreshEnablement() {
             setEnabled(this.binding.getModelElement() != null);
+        }
+    }
+    
+    private final class ProxyResource extends XmlResource 
+    {
+        private IModelElement proxyElement;
+        private IModelElement actualElement;
+        private ValueProperty actualProperty;
+        
+        private String value;
+
+        public ProxyResource() {
+            super((XmlResource)getPart().getModelElement().resource());
+        }
+
+        public void init(IModelElement proxyElement, ValueProperty actualProperty) {
+            this.proxyElement = proxyElement;
+            this.actualProperty = actualProperty;
+        }
+        
+
+        @Override
+        protected BindingImpl createBinding(ModelProperty property) {
+            if (property instanceof ValueProperty) {
+                return new ProxyBinding();
+            }
+            return null;
+        }
+        
+        public void write(String value) {
+            this.value = value;
+
+            assert this.actualElement != null;
+            this.proxyElement.refresh();
+            this.actualElement.write( this.actualProperty, value );
+        }
+        
+        public void setModelElement(IModelElement element) {
+            this.actualElement = element;
+            this.value = element != null ? element.read(this.actualProperty).getText() : null;
+            this.proxyElement.refresh();
+        }
+
+        public IModelElement getModelElement() {
+            return this.actualElement;
+        }
+        
+        public ValueProperty getValueProperty() {
+            return this.actualProperty;
+        }
+        
+        private IModelElement getActualElement(boolean create) {
+            if (create && this.actualElement == null) {
+                final IModelElement element = getList().addNewElement();
+                setModelElement(element);
+            }
+            return this.actualElement;
+        }
+
+        private final class ProxyBinding extends XmlValueBindingImpl {
+
+            @Override
+            public String read() {
+                return ProxyResource.this.value;
+            }
+
+            @Override
+            public void write(String value) {
+                ProxyResource.this.value = value;
+                
+                final IModelElement element = getActualElement(true/*create*/);
+                final ValueProperty property = getValueProperty();
+                element.write(property, value);
+            }
+        }
+
+        @Override
+        public XmlElement getXmlElement(boolean createIfNecessary) {
+            final IModelElement element = getActualElement(true);
+            if (element != null) {
+                return ((XmlResource)element.resource()).getXmlElement();
+            }
+            return null;
+        }
+    }
+    
+    private final class TextBinding implements ModifyListener 
+    {
+        private Text text;
+        private ProxyResource resource;
+        private ToolBar toolbar;
+        private CompactListPropertyEditorRenderer.DeleteActionHandler deleteActionHandler;
+        private PropertyEditorAssistDecorator decorator;
+        private SapphireKeyboardActionPresentation actionPresentationKeyboard;
+        private boolean modifying = false;
+        
+        public TextBinding(Text text, ProxyResource resource) {
+            this.text = text;
+            this.text.addModifyListener(this);
+
+            this.resource = resource;
+        }
+        
+        public void removeListener() {
+            this.text.removeModifyListener(this);
+            this.actionPresentationKeyboard.dispose();
+        }
+        
+        public Text getText() {
+            return this.text;
+        }
+        
+        public ProxyResource getResource() {
+            return this.resource;
+        }
+        
+        public void refreshModelElement(IModelElement element) {
+            setModelElement(element);
+            String value = element != null ? element.read(this.resource.getValueProperty()).getText() : null;
+            value = value == null ? "" : value;
+            if (!CompactListPropertyEditorRenderer.equals(value, this.text.getText())) {
+                this.text.setText(value);
+            }
+        }
+        
+        public void setModelElement(IModelElement element) {
+            this.resource.setModelElement(element);
+        }
+        
+        public IModelElement getModelElement() {
+            return this.resource.getModelElement();
+        }
+        
+        public boolean isModifying() {
+            return this.modifying;
+        }
+        
+        public void setModifying(boolean modifying) {
+            this.modifying = modifying;
+        }
+
+        public ToolBar getToolbar() {
+            return this.toolbar;
+        }
+
+        public void setToolbar(ToolBar toolbar) {
+            this.toolbar = toolbar;
+        }
+
+        public void setActionPresentationKeyboard(SapphireKeyboardActionPresentation actionPresentationKeyboard) {
+            this.actionPresentationKeyboard = actionPresentationKeyboard;
+            this.actionPresentationKeyboard.attach(this.text);
+            this.actionPresentationKeyboard.render();
+        }
+
+        public CompactListPropertyEditorRenderer.DeleteActionHandler getDeleteActionHandler() {
+            return this.deleteActionHandler;
+        }
+
+        public void setDeleteActionHandler(
+                CompactListPropertyEditorRenderer.DeleteActionHandler deleteActionHandler) {
+            this.deleteActionHandler = deleteActionHandler;
+        }
+
+        public PropertyEditorAssistDecorator getDecorator() {
+            return this.decorator;
+        }
+
+        public void setDecorator(PropertyEditorAssistDecorator decorator) {
+            this.decorator = decorator;
+        }
+        
+        public void modifyText(ModifyEvent e) {
+            if( ! this.text.isDisposed() && ( this.text.getStyle() & SWT.READ_ONLY ) == 0 ) 
+            {
+                IModelElement element = this.resource.getModelElement();
+                final String value = this.text.getText();
+                if (value.length() == 0 && e.getSource().equals(this.text) && element == null) {
+                    // do nothing..
+                } else {
+                    this.modifying = true;
+                    
+                    boolean createNew = false;
+                    if (element == null) {
+                        // new element may not be the last one - insert empty strings 
+                        insertEmpty(this);
+                        
+                        final IModelElement newElement = getList().addNewElement();
+                        setModelElement(newElement);
+                        createNew = true;
+                    }
+                    this.resource.write(value);
+                    if (createNew) {
+                        this.text.setSelection(value.length(), value.length());
+                    }
+
+                    this.modifying = false;
+                }
+            }
         }
     }
     
