@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [343677] Element property validation is not surfaced by with directive
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.renderers.swt;
