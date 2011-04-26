@@ -207,7 +207,7 @@ public final class SapphireWithDirective
             }
             else
             {
-                defaultStyle = Style.CHECKBOX;
+                defaultStyle = Style.DROP_DOWN_LIST;
             }
             
             Style style = Style.decode( def.getHint( ISapphireWithDirectiveDef.HINT_STYLE ) );
