@@ -143,13 +143,13 @@ public interface IGallery
     
     // *** HomogeneousList ***
     
-    @Type( base = IListItem.class )
+    @Type( base = IChildElement.class )
     @Label( standard = "homogeneous list")
-    @XmlListBinding( path = "homogeneous-list", mappings = @XmlListBinding.Mapping( element = "item", type = IListItem.class ) )
+    @XmlListBinding( path = "homogeneous-list", mappings = @XmlListBinding.Mapping( element = "item", type = IChildElement.class ) )
     
     ListProperty PROP_HOMOGENEOUS_LIST = new ListProperty( TYPE, "HomogeneousList" );
     
-    ModelElementList<IListItem> getHomogeneousList();
+    ModelElementList<IChildElement> getHomogeneousList();
     
     // *** HomogeneousList of java types ***
 
@@ -177,7 +177,7 @@ public interface IGallery
 
     // *** HeterogeneousList ***
     
-    @Type( base = IListItem.class, possible = { IListItem.class, IListItemWithInteger.class, IListItemWithEnum.class } )
+    @Type( base = IChildElement.class, possible = { IChildElement.class, IChildElementWithInteger.class, IChildElementWithEnum.class } )
     @Label( standard = "heterogeneous list" )
     
     @XmlListBinding
@@ -185,15 +185,15 @@ public interface IGallery
         path = "heterogeneous-list", 
         mappings = 
         {
-            @XmlListBinding.Mapping( element = "item", type = IListItem.class ),
-            @XmlListBinding.Mapping( element = "item-with-integer", type = IListItemWithInteger.class ),
-            @XmlListBinding.Mapping( element = "item-with-enum", type = IListItemWithEnum.class )
+            @XmlListBinding.Mapping( element = "item", type = IChildElement.class ),
+            @XmlListBinding.Mapping( element = "item-with-integer", type = IChildElementWithInteger.class ),
+            @XmlListBinding.Mapping( element = "item-with-enum", type = IChildElementWithEnum.class )
         }
     )
     
     ListProperty PROP_HETEROGENEOUS_LIST = new ListProperty( TYPE, "HeterogeneousList" );
     
-    ModelElementList<IListItem> getHeterogeneousList();
+    ModelElementList<IChildElement> getHeterogeneousList();
 
     // *** MultiSelectListGallery ***
     
@@ -204,6 +204,15 @@ public interface IGallery
     ImpliedElementProperty PROP_MULTI_SELECT_LIST_GALLERY = new ImpliedElementProperty( TYPE, "MultiSelectListGallery" );
     
     IMultiSelectListGallery getMultiSelectListGallery();
+    
+    // *** ElementPropertiesGallery ***
+    
+    @Type( base = IElementPropertiesGallery.class )
+    @XmlBinding( path = "element-properties-gallery" )
+
+    ImpliedElementProperty PROP_ELEMENT_PROPERTIES_GALLERY = new ImpliedElementProperty( TYPE, "ElementPropertiesGallery" );
+    
+    IElementPropertiesGallery getElementPropertiesGallery();
     
     // *** ValuePropertyActionsGallery ***
     

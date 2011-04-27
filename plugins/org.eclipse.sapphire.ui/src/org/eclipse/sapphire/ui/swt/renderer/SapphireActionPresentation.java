@@ -250,7 +250,6 @@ public abstract class SapphireActionPresentation
                 public void widgetDisposed( final DisposeEvent event ) 
                 {
                     handler.removeListener( handlerListener );
-                    handler.dispose();
                 }
             }
         );

@@ -11,28 +11,42 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
+import org.eclipse.sapphire.modeling.ElementProperty;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.ISapphirePart;
-import org.eclipse.sapphire.ui.SapphireCondition;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class OutlineNodeAddActionHandlerCondition 
+public final class OutlineNodeDeleteActionHandlerCondition 
 
-    extends SapphireCondition
+    extends OutlineNodeListMemberActionHandlerCondition
     
 {
     @Override
-    protected boolean evaluate()
+    protected boolean check( final MasterDetailsContentNode node )
     {
-        final ISapphirePart part = getPart();
-        
-        if( part instanceof MasterDetailsContentNode )
+        if( super.check( node ) )
         {
-            final MasterDetailsContentNode node = (MasterDetailsContentNode) part;
-            return ( ! node.getChildNodeFactoryProperties().isEmpty() );
+            return true;
+        }
+        
+        final IModelElement element = node.getModelElement();
+        
+        if( element.getParentProperty() instanceof ElementProperty )
+        {
+            final ISapphirePart parentPart = node.getParentPart();
+            
+            if( parentPart != null && parentPart instanceof MasterDetailsContentNode )
+            {
+                final MasterDetailsContentNode parentNode = (MasterDetailsContentNode) parentPart;
+                
+                return ( element != parentNode.getLocalModelElement() );
+            }
+            
+            return true;
         }
         
         return false;

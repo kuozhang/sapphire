@@ -16,7 +16,10 @@ import static java.lang.Math.min;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.IModelParticle;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -122,9 +125,22 @@ public final class OutlineNodeDeleteActionHandler
         for( MasterDetailsContentNode node : nodes )
         {
             final IModelElement element = node.getModelElement();
-            final ModelElementList<?> list = (ModelElementList<?>) element.parent();
+            final IModelParticle elementParent = element.parent();
             
-            list.remove( element );
+            if( elementParent instanceof ModelElementList )
+            {
+                ( (ModelElementList<?>) elementParent ).remove( element );
+            }
+            else
+            {
+                final ElementProperty property = (ElementProperty) element.getParentProperty();
+                final ModelElementHandle<?> handle = ( (IModelElement) elementParent ).read( property );
+                
+                if( handle.element() == element )
+                {
+                    handle.remove();
+                }
+            }
         }
         
         if( newSelection != null )

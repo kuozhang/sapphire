@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.form.editors.masterdetails;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,11 +23,11 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageService;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
@@ -56,12 +55,11 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireSection;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeChildDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeFactoryCaseDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeFactoryDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeFactoryEntry;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeFactoryRef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeListEntry;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeRef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeInclude;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.swt.widgets.Display;
 
@@ -84,7 +82,6 @@ public final class MasterDetailsContentNode
     private ModelElementListener modelElementListener;
     private MasterDetailsContentNode parentNode;
     private FunctionResult labelFunctionResult;
-    private Set<String> listProperties;
     private ImageManager imageManager;
     private SapphirePartListener childPartListener;
     private List<Object> rawChildren;
@@ -235,40 +232,36 @@ public final class MasterDetailsContentNode
         
         this.rawChildren = new ArrayList<Object>();
         
-        for( IMasterDetailsContentNodeListEntry entry : this.definition.getChildNodes() )
+        for( IMasterDetailsContentNodeChildDef entry : this.definition.getChildNodes() )
         {
             final Map<String,String> params = new HashMap<String,String>( this.params );
-
-            if( entry instanceof IMasterDetailsContentNodeDef || entry instanceof IMasterDetailsContentNodeRef )
+            
+            if( entry instanceof IMasterDetailsContentNodeInclude )
             {
-                final IMasterDetailsContentNodeDef def;
+                final IMasterDetailsContentNodeInclude inc = (IMasterDetailsContentNodeInclude) entry;
+                entry = inc.resolve();
                 
-                if( entry instanceof IMasterDetailsContentNodeDef )
+                if( entry == null )
                 {
-                    def = (IMasterDetailsContentNodeDef) entry;
+                    final String msg = NLS.bind( Resources.couldNotResolveNode, inc.getPart() );
+                    throw new RuntimeException( msg );
                 }
-                else
-                {
-                    final IMasterDetailsContentNodeRef ref = (IMasterDetailsContentNodeRef) entry;
-                    def = ref.resolve();
-                    
-                    if( def == null )
-                    {
-                        final String msg = NLS.bind( Resources.couldNotResolveNode, ref.getPart() );
-                        throw new RuntimeException( msg );
-                    }
 
-                    for( ISapphireParam param : ref.getParams() )
+                for( ISapphireParam param : inc.getParams() )
+                {
+                    final String paramName = param.getName().getText();
+                    final String paramValue = param.getValue().getText();
+                    
+                    if( paramName != null && paramValue != null )
                     {
-                        final String paramName = param.getName().getText();
-                        final String paramValue = param.getValue().getText();
-                        
-                        if( paramName != null && paramValue != null )
-                        {
-                            params.put( paramName, paramValue );
-                        }
+                        params.put( paramName, paramValue );
                     }
                 }
+            }
+
+            if( entry instanceof IMasterDetailsContentNodeDef )
+            {
+                final IMasterDetailsContentNodeDef def = (IMasterDetailsContentNodeDef) entry;
                 
                 final MasterDetailsContentNode node = new MasterDetailsContentNode();
                 node.init( this, this.modelElement, def, params );
@@ -276,90 +269,70 @@ public final class MasterDetailsContentNode
                 
                 this.rawChildren.add( node );
             }
-            else if( entry instanceof IMasterDetailsContentNodeFactoryDef || entry instanceof IMasterDetailsContentNodeFactoryRef )
+            else if( entry instanceof IMasterDetailsContentNodeFactoryDef )
             {
-                final IMasterDetailsContentNodeFactoryDef def;
+                final IMasterDetailsContentNodeFactoryDef def = (IMasterDetailsContentNodeFactoryDef) entry;
                 
-                if( entry instanceof IMasterDetailsContentNodeFactoryDef )
+                final ModelProperty property = resolve( getLocalModelElement(), def.getProperty().getContent(), params );
+                final NodeFactory factory;
+                
+                if( property instanceof ListProperty )
                 {
-                    def = (IMasterDetailsContentNodeFactoryDef) entry;
-                }
-                else
-                {
-                    final IMasterDetailsContentNodeFactoryRef ref = (IMasterDetailsContentNodeFactoryRef) entry;
-                    def = ref.resolve();
+                    final ListProperty prop = (ListProperty) property;
                     
-                    for( ISapphireParam param : ref.getParams() )
+                    factory = new NodeFactory( def, params )
                     {
-                        final String paramName = param.getName().getText();
-                        final String paramValue = param.getValue().getText();
-                        
-                        if( paramName != null && paramValue != null )
+                        @Override
+                        public ModelProperty property()
                         {
-                            params.put( paramName, paramValue );
+                            return prop;
                         }
-                    }
-                }
-                
-                final ListProperty listProperty = (ListProperty) resolve( getLocalModelElement(), def.getListProperty().getContent(), params );
-                
-                SapphireCondition factoryVisibleWhenCondition = null;
-                
-                final JavaType factoryVisibleWhenConditionClass = def.getVisibleWhenConditionClass().resolve();
-                
-                if( factoryVisibleWhenConditionClass != null )
-                {
-                    final String parameter = def.getVisibleWhenConditionParameter().getText();
-                    factoryVisibleWhenCondition = SapphireCondition.create( this, factoryVisibleWhenConditionClass.artifact(), parameter );
-                    
-                    if( factoryVisibleWhenCondition != null )
-                    {
-                        this.allConditions.add( factoryVisibleWhenCondition );
-                    }
-                }
-                
-                final ListPropertyNodeFactory factory = new ListPropertyNodeFactory( this.modelElement, listProperty, factoryVisibleWhenCondition )
-                {
-                    protected MasterDetailsContentNode createNode( final IModelElement listEntryModelElement )
-                    {
-                        IMasterDetailsContentNodeDef listEntryNodeDef = null;
-                        
-                        for( IMasterDetailsContentNodeFactoryEntry entry : def.getTypeSpecificDefinitions() )
+    
+                        @Override
+                        protected List<IModelElement> elements()
                         {
-                            final JavaType type = entry.getType().resolve();
+                            return getLocalModelElement().read( prop );
+                        }
+                    };
+                }
+                else if( property instanceof ElementProperty )
+                {
+                    final ElementProperty prop = (ElementProperty) property;
+                    
+                    factory = new NodeFactory( def, params )
+                    {
+                        @Override
+                        public ModelProperty property()
+                        {
+                            return prop;
+                        }
+    
+                        @Override
+                        protected List<IModelElement> elements()
+                        {
+                            final IModelElement element = getLocalModelElement().read( prop ).element();
                             
-                            if( type == null )
+                            if( element == null )
                             {
-                                listEntryNodeDef = entry;
-                                break;
+                                return Collections.emptyList();
                             }
                             else
                             {
-                                final Class<?> cl = type.artifact();
-
-                                if( cl == null || cl.isAssignableFrom( listEntryModelElement.getClass() ) )
-                                {
-                                    listEntryNodeDef = entry;
-                                    break;
-                                }
+                                return Collections.singletonList( element );
                             }
                         }
-                        
-                        if( listEntryNodeDef == null )
-                        {
-                            throw new RuntimeException();
-                        }
-                        
-                        final MasterDetailsContentNode node = new MasterDetailsContentNode();
-                        node.init( MasterDetailsContentNode.this, listEntryModelElement, listEntryNodeDef, params );
-                        node.addListener( MasterDetailsContentNode.this.childPartListener );
-                        node.transformLabelCase = false;
-                        
-                        return node;
-                    }
-                };
+                    };
+                }
+                else
+                {
+                    throw new IllegalStateException();
+                }
                 
                 this.rawChildren.add( factory );
+            }
+            else
+            {
+                throw new IllegalStateException();
             }
         }
         
@@ -475,18 +448,6 @@ public final class MasterDetailsContentNode
                 }
             }
         );
-        
-        // Listeners
-        
-        this.listProperties = new HashSet<String>();
-        
-        for( Object entry : this.rawChildren )
-        {
-            if( entry instanceof ListPropertyNodeFactory )
-            {
-                this.listProperties.add( ( (ListPropertyNodeFactory) entry ).getListProperty().getName() );
-            }
-        }
     }
     
     public MasterDetailsContentOutline getContentTree()
@@ -648,24 +609,42 @@ public final class MasterDetailsContentNode
         return this.sectionsReadOnly;
     }
     
-    public List<ListProperty> getChildListProperties()
+    public List<ModelProperty> getChildNodeFactoryProperties()
     {
-        final ArrayList<ListProperty> listProperties = new ArrayList<ListProperty>();
+        final ArrayList<ModelProperty> properties = new ArrayList<ModelProperty>();
         
         for( Object object : this.rawChildren )
         {
-            if( object instanceof ListPropertyNodeFactory )
+            if( object instanceof NodeFactory )
             {
-                final ListPropertyNodeFactory factory = (ListPropertyNodeFactory) object;
+                final NodeFactory factory = (NodeFactory) object;
                 
-                if( factory.isVisible() )
+                if( factory.visible() )
                 {
-                    listProperties.add( factory.getListProperty() );
+                    properties.add( factory.property() );
                 }
             }
         }
         
-        return listProperties;
+        return properties;
+    }
+    
+    public boolean isChildNodeFactoryProperty( final ModelProperty property )
+    {
+        for( Object object : this.rawChildren )
+        {
+            if( object instanceof NodeFactory )
+            {
+                final NodeFactory factory = (NodeFactory) object;
+                
+                if( factory.visible() && factory.property() == property )
+                {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
     
     public boolean hasChildNodes()
@@ -688,13 +667,13 @@ public final class MasterDetailsContentNode
                     nodes.add( node );
                 }
             }
-            else if( entry instanceof ListPropertyNodeFactory )
+            else if( entry instanceof NodeFactory )
             {
-                final ListPropertyNodeFactory factory = (ListPropertyNodeFactory) entry;
+                final NodeFactory factory = (NodeFactory) entry;
                 
-                if( factory.isVisible() )
+                if( factory.visible() )
                 {
-                    nodes.addAll( factory.createNodes() );
+                    nodes.addAll( factory.nodes() );
                 }
             }
             else
@@ -758,9 +737,7 @@ public final class MasterDetailsContentNode
     {
         super.handleModelElementChange( event );
         
-        final ModelProperty property = event.getProperty();
-        
-        if( this.listProperties != null && this.listProperties.contains( property.getName() ) )
+        if( isChildNodeFactoryProperty( event.getProperty() ) )
         {
             final Runnable notifyOfStructureChangeOperation = new Runnable()
             {
@@ -817,34 +794,34 @@ public final class MasterDetailsContentNode
         throw new UnsupportedOperationException();
     }
     
-    private static abstract class ListPropertyNodeFactory
+    private abstract class NodeFactory
     {
-        private final IModelElement modelElement;
-        private final ListProperty listProperty;
+        private final IMasterDetailsContentNodeFactoryDef definition;
+        private final Map<String,String> params;
+        private SapphireCondition visibleWhenCondition;
         private Map<Object,MasterDetailsContentNode> nodesCache;
-        private final SapphireCondition visibleWhenCondition;
         
-        public ListPropertyNodeFactory( final IModelElement modelElement,
-                                        final ListProperty listProperty,
-                                        final SapphireCondition visibleWhenCondition )
+        public NodeFactory( final IMasterDetailsContentNodeFactoryDef definition,
+                            final Map<String,String> params )
         {
-            if( modelElement == null )
-            {
-                throw new IllegalArgumentException();
-            }
+            this.definition = definition;
+            this.params = params;
             
-            if( listProperty == null )
-            {
-                throw new IllegalArgumentException();
-            }
+            final JavaType visibleWhenConditionClass = this.definition.getVisibleWhenConditionClass().resolve();
             
-            this.modelElement = modelElement;
-            this.listProperty = listProperty;
-            this.nodesCache = null;
-            this.visibleWhenCondition = visibleWhenCondition;
+            if( visibleWhenConditionClass != null )
+            {
+                final String parameter = this.definition.getVisibleWhenConditionParameter().getText();
+                this.visibleWhenCondition = SapphireCondition.create( MasterDetailsContentNode.this, visibleWhenConditionClass.artifact(), parameter );
+                
+                if( this.visibleWhenCondition != null )
+                {
+                    MasterDetailsContentNode.this.allConditions.add( this.visibleWhenCondition );
+                }
+            }
         }
         
-        public final boolean isVisible()
+        public final boolean visible()
         {
             if( this.visibleWhenCondition != null )
             {
@@ -854,28 +831,34 @@ public final class MasterDetailsContentNode
             return true;
         }
         
-        public ListProperty getListProperty()
-        {
-            return this.listProperty;
-        }
+        public abstract ModelProperty property();
         
-        public List<MasterDetailsContentNode> createNodes()
+        protected abstract List<IModelElement> elements();
+        
+        public final List<MasterDetailsContentNode> nodes()
         {
             final Map<Object,MasterDetailsContentNode> newCache = new HashMap<Object,MasterDetailsContentNode>();
             final List<MasterDetailsContentNode> nodes = new ArrayList<MasterDetailsContentNode>();
-            final ModelElementList<?> list = this.modelElement.read( this.listProperty );
             
-            for( IModelElement listEntryModelElement : list )
+            for( IModelElement element : elements() )
             {
-                MasterDetailsContentNode node = ( this.nodesCache != null ? this.nodesCache.get( listEntryModelElement ) : null );
+                MasterDetailsContentNode node = ( this.nodesCache != null ? this.nodesCache.remove( element ) : null );
                 
                 if( node == null )
                 {
-                    node = createNode( listEntryModelElement );
+                    node = node( element );
                 }
                 
                 nodes.add( node );
-                newCache.put( listEntryModelElement, node );
+                newCache.put( element, node );
+            }
+            
+            if( this.nodesCache != null )
+            {
+                for( MasterDetailsContentNode node : this.nodesCache.values() )
+                {
+                    node.dispose();
+                }
             }
             
             this.nodesCache = newCache;
@@ -883,7 +866,43 @@ public final class MasterDetailsContentNode
             return nodes;
         }
         
-        protected abstract MasterDetailsContentNode createNode( final IModelElement listElement );
+        private final MasterDetailsContentNode node( final IModelElement element )
+        {
+            IMasterDetailsContentNodeDef relevantCaseDef = null;
+            
+            for( IMasterDetailsContentNodeFactoryCaseDef entry : this.definition.getCases() )
+            {
+                final JavaType type = entry.getType().resolve();
+                
+                if( type == null )
+                {
+                    relevantCaseDef = entry;
+                    break;
+                }
+                else
+                {
+                    final Class<?> cl = type.artifact();
+
+                    if( cl == null || cl.isAssignableFrom( element.getClass() ) )
+                    {
+                        relevantCaseDef = entry;
+                        break;
+                    }
+                }
+            }
+            
+            if( relevantCaseDef == null )
+            {
+                throw new RuntimeException();
+            }
+            
+            final MasterDetailsContentNode node = new MasterDetailsContentNode();
+            node.init( MasterDetailsContentNode.this, element, relevantCaseDef, this.params );
+            node.addListener( MasterDetailsContentNode.this.childPartListener );
+            node.transformLabelCase = false;
+            
+            return node;
+        }
     }
     
     private static final class Resources extends NLS

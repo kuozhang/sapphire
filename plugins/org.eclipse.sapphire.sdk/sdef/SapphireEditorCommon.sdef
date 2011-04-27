@@ -34,9 +34,9 @@
                 </action-link>
             </content>
         </section>
-        <node-list>
+        <node-factory>
             <property>Actions</property>
-            <node-template>
+            <case>
                 <label>${ Id == null ? "&lt;action&gt;" : Id }</label>
                 <section>
                     <label>action</label>
@@ -69,8 +69,8 @@
                         <property-editor>LocationHints</property-editor>
                     </content>
                 </section>
-            </node-template>
-        </node-list>
+            </case>
+        </node-factory>
     </node>
             
     <node>
@@ -85,9 +85,9 @@
                 </action-link>
             </content>
         </section>
-        <node-list>
+        <node-factory>
             <property>ActionHandlers</property>
-            <node-template>
+            <case>
                 <label>${ Id == null ? "&lt;action-handler&gt;" : Id }</label>
                 <section>
                     <label>action handler</label>
@@ -120,8 +120,8 @@
                         <property-editor>LocationHints</property-editor>
                     </content>
                 </section>
-            </node-template>
-        </node-list>
+            </case>
+        </node-factory>
     </node>
             
     <node>
@@ -136,9 +136,9 @@
                 </action-link>
             </content>
         </section>
-        <node-list>
+        <node-factory>
             <property>ActionHandlerFactories</property>
-            <node-template>
+            <case>
                 <label>${ Action == null ? "&lt;action-handler-factory&gt;" : Action }</label>
                 <section>
                     <label>action handler factory</label>
@@ -162,8 +162,8 @@
                         <property-editor>Contexts</property-editor>
                     </content>
                 </section>
-            </node-template>
-        </node-list>
+            </case>
+        </node-factory>
     </node>
     
 </definition>

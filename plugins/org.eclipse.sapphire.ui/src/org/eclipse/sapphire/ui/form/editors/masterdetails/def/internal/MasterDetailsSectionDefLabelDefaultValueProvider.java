@@ -9,20 +9,25 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.form.editors.masterdetails.def;
+package org.eclipse.sapphire.ui.form.editors.masterdetails.def.internal;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.modeling.DefaultValueService;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface IMasterDetailsContentNodeListEntry
+public final class MasterDetailsSectionDefLabelDefaultValueProvider
 
-    extends ISapphirePartDef
+    extends DefaultValueService
     
 {
-    ModelElementType TYPE = new ModelElementType( IMasterDetailsContentNodeListEntry.class );
-
+    @Override
+    public String getDefaultValue()
+    {
+        final IMasterDetailsContentNodeDef node = (IMasterDetailsContentNodeDef) element().parent().parent();
+        return node.getLabel().getText();
+    }
+    
 }

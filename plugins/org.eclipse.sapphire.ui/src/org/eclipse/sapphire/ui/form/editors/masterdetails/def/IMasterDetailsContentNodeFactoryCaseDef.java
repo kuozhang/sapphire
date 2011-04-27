@@ -29,15 +29,15 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "content outline node list case" )
+@Label( standard = "content outline node factory case" )
 @GenerateImpl
 
-public interface IMasterDetailsContentNodeFactoryEntry
+public interface IMasterDetailsContentNodeFactoryCaseDef
 
     extends IMasterDetailsContentNodeDef
     
 {
-    ModelElementType TYPE = new ModelElementType( IMasterDetailsContentNodeFactoryEntry.class );
+    ModelElementType TYPE = new ModelElementType( IMasterDetailsContentNodeFactoryCaseDef.class );
     
     // *** Type ***
     

@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -25,23 +25,21 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface IListItemWithInteger
+public interface IChildElement
 
-    extends IListItem
+    extends IModelElement
     
 {
-    ModelElementType TYPE = new ModelElementType( IListItemWithInteger.class );
-
-    // *** IntegerValue ***
+    ModelElementType TYPE = new ModelElementType( IChildElement.class );
     
-    @Type( base = Integer.class )
-    @Label( standard = "integer value" )
-    @XmlBinding( path = "integer" )
+    // *** StringValue ***
     
-    ValueProperty PROP_INTEGER_VALUE = new ValueProperty( TYPE, "IntegerValue" );
+    @Label( standard = "string value" )
+    @XmlBinding( path = "string" )
     
-    Value<Integer> getIntegerValue();
-    void setIntegerValue( String value );
-    void setIntegerValue( Integer value );
+    ValueProperty PROP_STRING_VALUE = new ValueProperty( TYPE, "StringValue" );
+    
+    Value<String> getStringValue();
+    void setStringValue( String value );
 
 }

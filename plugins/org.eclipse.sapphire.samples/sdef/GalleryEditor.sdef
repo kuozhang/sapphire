@@ -47,7 +47,7 @@
         </documentation>
         <root-node>
             <node>
-                <label>values</label>
+                <label>value properties</label>
                 <section>
                   <content>
                     <label>
@@ -396,16 +396,124 @@
                 </node>
             </node>
             <node>
-                <label>lists</label>
+                <label>element properties</label>
+                <property>ElementPropertiesGallery</property>
+                <node>
+                    <label>homogeneous</label>
+                    <section>
+                        <content>
+                            <label>A homogeneous element property has one possible child element type.</label>
+                            <spacer></spacer>
+                            <with>
+                                <path>Homogeneous</path>
+                                <label>include child element</label>
+                                <panel>
+                                    <key>IChildElement</key>
+                                    <content>
+                                        <property-editor>StringValue</property-editor>
+                                    </content>
+                                </panel>
+                            </with>
+                        </content>
+                    </section>
+                    <node-factory>
+                        <property>Homogeneous</property>
+                        <case>
+                            <section>
+                                <content>
+                                    <property-editor>StringValue</property-editor>
+                                </content>
+                                <label>child element</label>
+                            </section>
+                            <label>${ StringValue == null ? &quot;&lt;child&gt;&quot; : StringValue }</label>
+                        </case>
+                    </node-factory>
+                </node>
+                <node>
+                    <label>heterogeneous</label>
+                    <section>
+                        <content>
+                            <label>A heterogeneous element property has multiple possible child element types.</label>
+                            <spacer></spacer>
+                            <with>
+                                <path>Heterogeneous</path>
+                                <panel>
+                                    <key>IChildElementWithInteger</key>
+                                    <content>
+                                        <property-editor>StringValue</property-editor>
+                                        <property-editor>IntegerValue</property-editor>
+                                    </content>
+                                </panel>
+                                <panel>
+                                    <key>IChildElementWithEnum</key>
+                                    <content>
+                                        <property-editor>StringValue</property-editor>
+                                        <property-editor>EnumValue</property-editor>
+                                    </content>
+                                </panel>
+                                <panel>
+                                    <key>IChildElement</key>
+                                    <content>
+                                        <property-editor>StringValue</property-editor>
+                                    </content>
+                                </panel>
+                            </with>
+                        </content>
+                    </section>
+                    <node-factory>
+                        <property>Heterogeneous</property>
+                        <case>
+                            <model-element-type>IChildElementWithInteger</model-element-type>
+                            <section>
+                                <content>
+                                    <property-editor>StringValue</property-editor>
+                                    <property-editor>IntegerValue</property-editor>
+                                </content>
+                                <label>child element with integer</label>
+                            </section>
+                            <label>${ StringValue == null ? &quot;&lt;child-with-integer&gt;&quot; : StringValue }</label>
+                        </case>
+                        <case>
+                            <model-element-type>IChildElementWithEnum</model-element-type>
+                            <section>
+                                <content>
+                                    <property-editor>StringValue</property-editor>
+                                    <property-editor>EnumValue</property-editor>
+                                </content>
+                                <label>child element with enum</label>
+                            </section>
+                            <label>${ StringValue == null ? &quot;&lt;child-with-enum&gt;&quot; : StringValue }</label>
+                        </case>
+                        <case>
+                            <model-element-type>IChildElement</model-element-type>
+                            <section>
+                                <content>
+                                    <property-editor>StringValue</property-editor>
+                                </content>
+                                <label>child element</label>
+                            </section>
+                            <label>${ StringValue == null ? &quot;&lt;child&gt;&quot; : StringValue }</label>
+                        </case>
+                    </node-factory>
+                </node>
+                <section>
+                    <label>element properties</label>
+                    <content>
+                        <label>An element property holds an optional child element. </label>
+                    </content>
+                </section>
+            </node>
+            <node>
+                <label>list properties</label>
                 <node>
                     <label>homogeneous</label>
                     <section>
                         <content>
                             <label>A list with one possible element type.</label>
-                            <spacer/>
+                            <spacer />
                             <action-link>
                                 <action-id>Sapphire.Add</action-id>
-                                <label>add a list item</label>
+                                <label>add a child element</label>
                             </action-link>
                         </content>
                     </section>
@@ -446,9 +554,9 @@
                             </property-editor>
                         </content>
                     </section>
-                    <node-list>
+                    <node-factory>
                         <property>HomogeneousList</property>
-                        <node-template>
+                        <case>
                             <label>${ StringValue == null ? "&lt;item&gt;" : StringValue }</label>
                             <section>
                                 <label>list item</label>
@@ -456,29 +564,29 @@
                                     <property-editor>StringValue</property-editor>
                                 </content>
                             </section>
-                        </node-template>
-                    </node-list>
+                        </case>
+                    </node-factory>
                 </node>
                 <node>
                     <label>heterogeneous</label>
                     <section>
                         <content>
 	                        <label>A list with multiple possible element types.</label>
-                            <spacer/>
+                            <spacer />
                             <action-link>
                                 <action-id>Sapphire.Add</action-id>
-                                <action-handler-id>Sapphire.Add.IListItem</action-handler-id>
-                                <label>add a basic list item</label>
+                                <action-handler-id>Sapphire.Add.IChildElement</action-handler-id>
+                                <label>add a basic child element</label>
                             </action-link>
                             <action-link>
                                 <action-id>Sapphire.Add</action-id>
-                                <action-handler-id>Sapphire.Add.IListItemWithInteger</action-handler-id>
-                                <label>add a list item with integer</label>
+                                <action-handler-id>Sapphire.Add.IChildElementWithInteger</action-handler-id>
+                                <label>add a child element with integer</label>
                             </action-link>
                             <action-link>
                                 <action-id>Sapphire.Add</action-id>
-                                <action-handler-id>Sapphire.Add.IListItemWithEnum</action-handler-id>
-                                <label>add a list item with enum</label>
+                                <action-handler-id>Sapphire.Add.IChildElementWithEnum</action-handler-id>
+                                <label>add a child element with enum</label>
                             </action-link>
                         </content>
                     </section>
@@ -500,21 +608,21 @@
                                     <property>HeterogeneousList</property>
                                 </list-selection-controller>
                                 <panel>
-                                    <key>IListItemWithInteger</key>
+                                    <key>IChildElementWithInteger</key>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                         <property-editor>IntegerValue</property-editor>
                                     </content>
                                 </panel>
                                 <panel>
-                                    <key>IListItemWithEnum</key>
+                                    <key>IChildElementWithEnum</key>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                         <property-editor>EnumValue</property-editor>
                                     </content>
                                 </panel>
                                 <panel>
-                                    <key>IListItem</key>
+                                    <key>IChildElement</key>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                     </content>
@@ -527,41 +635,41 @@
                             </switching-panel>
                         </content>
                     </section>
-                    <node-list>
+                    <node-factory>
                         <property>HeterogeneousList</property>
-                        <node-template>
-                            <model-element-type>IListItemWithInteger</model-element-type>
-                            <label>${ StringValue == null ? "&lt;item-with-integer&gt;" : StringValue }</label>
+                        <case>
+                            <model-element-type>IChildElementWithInteger</model-element-type>
+                            <label>${ StringValue == null ? &quot;&lt;child-with-integer&gt;&quot; : StringValue }</label>
                             <section>
-                                <label>list item with integer</label>
+                                <label>child element with integer</label>
                                 <content>
                                     <property-editor>StringValue</property-editor>
                                     <property-editor>IntegerValue</property-editor>
                                 </content>
                             </section>
-                        </node-template>
-                        <node-template>
-                            <model-element-type>IListItemWithEnum</model-element-type>
-                            <label>${ StringValue == null ? "&lt;item-with-enum&gt;" : StringValue }</label>
+                        </case>
+                        <case>
+                            <model-element-type>IChildElementWithEnum</model-element-type>
+                            <label>${ StringValue == null ? &quot;&lt;child-with-enum&gt;&quot; : StringValue }</label>
                             <section>
-                                <label>list item with enum</label>
+                                <label>child element with enum</label>
                                 <content>
                                     <property-editor>StringValue</property-editor>
                                     <property-editor>EnumValue</property-editor>
                                 </content>
                             </section>
-                        </node-template>
-                        <node-template>
-                            <model-element-type>IListItem</model-element-type>
-                            <label>${ StringValue == null ? "&lt;item&gt;" : StringValue }</label>
+                        </case>
+                        <case>
+                            <model-element-type>IChildElement</model-element-type>
+                            <label>${ StringValue == null ? &quot;&lt;child&gt;&quot; : StringValue }</label>
                             <section>
-                                <label>list item</label>
+                                <label>child element</label>
                                 <content>
                                     <property-editor>StringValue</property-editor>
                                 </content>
                             </section>
-                        </node-template>
-                    </node-list>
+                        </case>
+                    </node-factory>
                 </node>
                 <node>
                     <label>multi-select</label>
@@ -574,7 +682,7 @@
                                 property. The value property must be decorated with one of the @PossibleValues annotations.
                                 The list property must be decorated with @NoDuplicates annotation.
                             </label> 
-                            <spacer/>
+                            <spacer />
                             <label>
                                 The slush bucket is the default property editor type. 
                             </label> 
@@ -585,7 +693,7 @@
                                     <value>false</value>
                                 </hint>
                             </property-editor>
-                            <spacer/>
+                            <spacer />
                             <label>
                                 The checkbox list is an alternate property editor type that may work better in some cases. To use it,
                                 specify CheckBoxListPropertyEditorRenderer$Factory for factory hint. The property editor is located in
@@ -616,7 +724,7 @@
                             properties. In this sample, the properties in the Controlling section influence the
                             enablement of properties in the Dependent section.
                         </label>
-                        <spacer/>
+                        <spacer />
                         <property-editor>ControllingPropBoolean</property-editor>
                         <property-editor>ControllingPropEnum</property-editor>
                     </content>
@@ -625,20 +733,20 @@
                     <label>dependent</label>
                     <content>
                         <label>Enabled if boolean controlling property is set true.</label>
-                        <spacer/>
+                        <spacer />
                         <property-editor>DependentProp1</property-editor>
-                        <spacer/>
-                        <spacer/>
+                        <spacer />
+                        <spacer />
                         <label>Enabled if enum controlling property is set to yes.</label>
-                        <spacer/>
+                        <spacer />
                         <property-editor>DependentProp2</property-editor>
-                        <spacer/>
-                        <spacer/>
+                        <spacer />
+                        <spacer />
                         <label>
                             Enabled if boolean controlling property is set to false and enum controlling 
                             property is set to yes or maybe.
                         </label>
-                        <spacer/>
+                        <spacer />
                         <property-editor>DependentProp3</property-editor>
                     </content>
                 </section>
@@ -764,7 +872,7 @@
                                 is contributed by the system. The create action handler is contributed in the sdef file. Notice how the 
                                 create button gets disabled when the referenced entity already exists.
                             </label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>
                                 <property>Reference</property>
                                 <action-handler>
@@ -772,15 +880,15 @@
                                     <impl>ValuePropertyActionsGalleryReferenceCreateActionHandler1</impl>
                                 </action-handler>
                             </property-editor>
-                            <spacer/>
-                            <spacer/>
+                            <spacer />
+                            <spacer />
                             <label>
                                 The following sample shows how multiple action handlers can be concurrently associated with the
                                 same action. The create button is enabled if any of its action handlers are enabled. Pressing on the 
                                 button activates a menu that shows all available action handlers. Notice how the action handler label 
                                 can vary depending on a property value. 
                             </label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>
                                 <property>Reference</property>
                                 <action-handler>
@@ -792,15 +900,15 @@
                                     <impl>ValuePropertyActionsGalleryReferenceCreateActionHandler2</impl>
                                 </action-handler>
                             </property-editor>
-                            <spacer/>
-                            <spacer/>
+                            <spacer />
+                            <spacer />
                             <label>
                                 The following sample shows how to define a new action in the sdef file, how to position it in relation
                                 to other actions, and how to associate images with action handlers. It also reinforces the concept
                                 that arbitrary handlers can be added to any action by contributing message dialog handlers to create
                                 and browse actions.
                             </label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>
                                 <property>Reference</property>
                                 <action>
@@ -881,14 +989,14 @@
                                     </param>
                                 </action-handler>
                             </property-editor>
-                            <spacer/>
-                            <spacer/>
+                            <spacer />
+                            <spacer />
                             <label>
                                 The following sample shows how to define a toggle action. Unlike a push action, a toggle action only
                                 supports one active handler. The first handler in the sequence specified by location hints will be
                                 used.
                             </label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>
                                 <property>Reference</property>
                                 <action>
@@ -918,16 +1026,16 @@
                             <label>
                                 The following sample shows actions inside a cell editor. In this case only system action handlers are used. 
                             </label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>References</property-editor>
-                            <spacer/>
-                            <spacer/>
+                            <spacer />
+                            <spacer />
                             <label>
                                 The following sample shows multiple actions inside a cell editor. The create action handler and the message
                                 handler for the browse action are contributed in the sdef file. This sample also shows adding actions and
                                 handlers to the list property editor itself.
                             </label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>
                                 <property>References</property>
                                 <action>
@@ -1012,19 +1120,19 @@
                                     </action-handler>
                                 </child-property>
                             </property-editor>
-                            <spacer/>
-                            <spacer/>
+                            <spacer />
+                            <spacer />
                             <label>
                                 The following sample shows how to define toggle actions for a list property editor as well as inside
                                 a cell editor. Unlike a push action, a toggle action only supports one active handler. The first 
                                 handler in the sequence specified by location hints will be used.
                             </label>
-                            <spacer/>
+                            <spacer />
                             <label>
                                 Note: There is currently no support for rendering of toggle states for actions inside a cell
                                 editor. In that context, toggle actions will only operate as toggles at API level.
                             </label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>
                                 <property>References</property>
                                 <action>
@@ -1087,7 +1195,7 @@
                         </documentation>
                         <content>
                             <label>Simple shows the help content annotation. Positive shows the help content provider annotation. Range constrained with default shows the auto-generated content help.</label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>Simple</property-editor>
                             <property-editor>Positive</property-editor>
                             <property-editor>RangeConstrainedWithDefault</property-editor>
@@ -1108,7 +1216,7 @@
                         </documentation>
                         <content>
                         	<label>Content help for the ExtendedHelpGallery model element will be appended to all properties. Both Simple and Positive have options to augment, in which the parent's content help will be appended. </label>
-                            <spacer/>
+                            <spacer />
                             <property-editor>Simple</property-editor>
                             <property-editor>Positive</property-editor>
                             <property-editor>RangeConstrainedWithDefault</property-editor>
@@ -1126,7 +1234,7 @@
                             Use related content to display two property editors on one line. This pattern is especially powerful
                             when the relationship of two properties is such that a single label will suffice.
                         </label>
-                        <spacer/>
+                        <spacer />
                         <property-editor>
                             <property>Measurement</property>
                             <related-content>
@@ -1139,11 +1247,11 @@
                                 </property-editor>
                             </related-content>
                         </property-editor>
-                        <spacer/>
+                        <spacer />
                         <label>
                             Display more than two parts on one line by nesting related content inside related content. Use sparingly.
                         </label>
-                        <spacer/>
+                        <spacer />
                         <property-editor>
                             <property>Measurement</property>
                             <related-content>
@@ -1160,13 +1268,13 @@
                                 </property-editor>
                             </related-content>
                         </property-editor>
-                        <spacer/>
+                        <spacer />
                         <label>
                             Related content isn't limited to property editors. Any part can be placed into related content. This is
                             particularly useful when the main property editor spans more than one vertical line, such as a list
                             property editor or a multi-line text box. In this example, related content is used to display explanatory text.
                         </label>
-                        <spacer/>
+                        <spacer />
                         <property-editor>
                             <property>Description</property>
                             <hint>
@@ -1193,16 +1301,16 @@
                                             &lt;tr>&lt;td>[li]...[/li]&lt;/td>&lt;td>list item&lt;/td>&lt;/tr>
                                         &lt;/table>
                                     </content>
-                                    <fragment/>
-                                    <expand-vertically/>
+                                    <fragment />
+                                    <expand-vertically />
                                 </html>
                             </related-content>
                         </property-editor>
-                        <spacer/>
+                        <spacer />
                         <label>
                             Multiple parts can be placed into related content. They will be arranged vertically.
                         </label>
-                        <spacer/>
+                        <spacer />
                         <property-editor>
                             <property>Description</property>
                             <related-content>
@@ -1226,7 +1334,7 @@
                     <content>
                         <property-editor>City</property-editor>
                         <property-editor>State</property-editor>
-                        <spacer/>
+                        <spacer />
                         <html>
                             <content>
                                 It is hard to beat the simplicity and flexibility of HTML for presenting formatted
@@ -1243,7 +1351,7 @@
                                     &lt;tr>&lt;td>Portland&lt;/td>&lt;td>OR&lt;/td>&lt;/tr>
                                 &lt;/table>
                             </content>
-                            <fragment/>
+                            <fragment />
                             <height>500</height>
                         </html>
                     </content>
@@ -1256,7 +1364,7 @@
                             <html>
                                 <url>${ Url }</url>
                                 <height>600</height>
-                                <show-border/>
+                                <show-border />
                             </html>
                         </content>
                     </section>
@@ -1358,9 +1466,9 @@
                             <property-editor>Text</property-editor>
                         </content>
                     </section>
-                    <node-list>
+                    <node-factory>
                         <property>List</property>
-                        <node-template>
+                        <case>
                             <label>Level 2</label>
                             <section>
                                 <label>level 2</label>
@@ -1422,8 +1530,8 @@
                                     </content>
                                 </section>
                             </node>
-                        </node-template>
-                    </node-list>
+                        </case>
+                    </node-factory>
                 </node>
             </node>
         </root-node>

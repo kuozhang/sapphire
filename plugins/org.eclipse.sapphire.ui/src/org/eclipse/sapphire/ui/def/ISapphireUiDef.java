@@ -128,7 +128,7 @@ public interface ISapphireUiDef
             @XmlListBinding.Mapping( element = "html", type = ISapphireHtmlPanelDef.class ),
             @XmlListBinding.Mapping( element = "form", type = IFormDef.class ),
             @XmlListBinding.Mapping( element = "node", type = IMasterDetailsContentNodeDef.class ),
-            @XmlListBinding.Mapping( element = "node-list", type = IMasterDetailsContentNodeFactoryDef.class ),
+            @XmlListBinding.Mapping( element = "node-factory", type = IMasterDetailsContentNodeFactoryDef.class ),
             @XmlListBinding.Mapping( element = "editor-page", type = IMasterDetailsEditorPageDef.class ),
             @XmlListBinding.Mapping( element = "diagram-page", type = IDiagramEditorPageDef.class ),
             @XmlListBinding.Mapping( element = "dialog", type = ISapphireDialogDef.class ),

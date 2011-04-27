@@ -39,9 +39,9 @@
                         </action-link>
                     </content>
                 </section>
-                <node-list>
+                <node-factory>
                     <property>Events</property>
-                    <node-template>
+                    <case>
                         <label>${ Subject == null ? "&lt;event&gt;" : Subject }</label>
                         <node>
                             <label>attachments</label>
@@ -133,8 +133,8 @@
                                 </switching-panel>
                             </content>
                         </section>
-                    </node-template>
-                </node-list>
+                    </case>
+                </node-factory>
             </node>
         </root-node>
     </editor-page>

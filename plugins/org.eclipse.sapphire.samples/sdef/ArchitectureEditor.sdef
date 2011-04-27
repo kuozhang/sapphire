@@ -126,9 +126,9 @@
         <root-node>
             <node>
                 <label>components</label>
-                <node-list>
+                <node-factory>
                     <property>Components</property>
-                    <node-template>
+                    <case>
                         <model-element-type>IComponent</model-element-type>
                         <label>${ Name == null ? &quot;&lt;component&gt;&quot; : Name }</label>
                         <section>
@@ -186,8 +186,8 @@
                             </page>
                         </properties-view>
                         <image>${ Dependencies.Size == 0 ? &quot;images/component-leaf.png&quot; : &quot;images/component.png&quot; }</image>
-                    </node-template>
-                </node-list>
+                    </case>
+                </node-factory>
                 <section>
                     <content>
                         <label>Define components.</label>

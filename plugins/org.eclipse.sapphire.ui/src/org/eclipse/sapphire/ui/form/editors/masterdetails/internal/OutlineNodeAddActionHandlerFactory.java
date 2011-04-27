@@ -19,10 +19,15 @@ import java.util.List;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
+import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFactory;
@@ -50,40 +55,55 @@ public final class OutlineNodeAddActionHandlerFactory
         final List<SapphireActionHandler> handlers = new ArrayList<SapphireActionHandler>();
         
         final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
-        final List<ListProperty> listProperties = node.getChildListProperties();
         
-        for( final ListProperty listProperty : listProperties )
+        for( final ModelProperty property : node.getChildNodeFactoryProperties() )
         {
-            for( final ModelElementType memberType : listProperty.getAllPossibleTypes() )
+            if( property instanceof ListProperty )
             {
-                final AddActionHandler handler = new AddActionHandler( listProperty, memberType );
-                handlers.add( handler );
+                final ListProperty prop = (ListProperty) property;
+                
+                for( final ModelElementType memberType : prop.getAllPossibleTypes() )
+                {
+                    final ListPropertyActionHandler handler = new ListPropertyActionHandler( prop, memberType );
+                    handlers.add( handler );
+                }
+            }
+            else if( property instanceof ElementProperty && ! ( property instanceof ImpliedElementProperty ) )
+            {
+                final ElementProperty prop = (ElementProperty) property;
+                
+                for( final ModelElementType memberType : prop.getAllPossibleTypes() )
+                {
+                    final ElementPropertyActionHandler handler = new ElementPropertyActionHandler( prop, memberType );
+                    handlers.add( handler );
+                }
+            }
+            else
+            {
+                throw new IllegalStateException();
             }
         }
         
         return handlers;
     }
 
-    private static final class AddActionHandler
-    
-        extends SapphireActionHandler
-        
+    private static abstract class AbstractActionHandler extends SapphireActionHandler
     {
-        private final ListProperty listProperty;
+        private final ModelProperty property;
         private final ModelElementType type;
         private MasterDetailsContentOutline contentTree;
         private MasterDetailsContentOutline.Listener contentTreeListener;
         
-        public AddActionHandler( final ListProperty listProperty,
-                                 final ModelElementType type )
+        public AbstractActionHandler( final ModelProperty property,
+                                      final ModelElementType type )
         {
-            this.listProperty = listProperty;
+            this.property = property;
             this.type = type;
             
             setId( ID_BASE + type.getSimpleName() );
             setLabel( type.getLabel( true, CapitalizationType.NO_CAPS, false ) );
         }
-
+    
         @Override
         public void init( final SapphireAction action,
                           final ISapphireActionHandlerDef def )
@@ -104,27 +124,41 @@ public final class OutlineNodeAddActionHandlerFactory
                 @Override
                 public void handleFilterChange( String newFilterText )
                 {
-                    refreshEnabledState();
+                    refreshEnablementState();
                 }
             };
             
             this.contentTree.addListener( this.contentTreeListener );
             
-            refreshEnabledState();
+            refreshEnablementState();
         }
-
+    
+        protected final void refreshEnablementState()
+        {
+            setEnabled( computeEnablementState() );
+        }
+        
+        protected boolean computeEnablementState()
+        {
+            return ( this.contentTree != null && this.contentTree.getFilterText().length() == 0 );
+        }
+        
+        public ModelProperty property()
+        {
+            return this.property;
+        }
+        
         @Override
-        protected Object run( final SapphireRenderingContext context )
+        protected final Object run( final SapphireRenderingContext context )
         {
             final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
             final IModelElement element = node.getLocalModelElement();
-            final ModelElementList<?> list = element.read( this.listProperty );
             
             IModelElement newModelElement = null;
             
             try
             {
-                newModelElement = list.addNewElement( this.type );
+                newModelElement = create( element, this.property, this.type );
             }
             catch( Exception e )
             {
@@ -158,10 +192,9 @@ public final class OutlineNodeAddActionHandlerFactory
             return newModelElement;
         }
         
-        private void refreshEnabledState()
-        {
-            setEnabled( this.contentTree != null && this.contentTree.getFilterText().length() == 0 );
-        }
+        protected abstract IModelElement create( IModelElement element,
+                                                 ModelProperty property,
+                                                 ModelElementType type );
         
         @Override
         public void dispose()
@@ -171,6 +204,94 @@ public final class OutlineNodeAddActionHandlerFactory
             if( this.contentTree != null )
             {
                 this.contentTree.removeListener( this.contentTreeListener );
+            }
+        }
+    }
+    
+    private static final class ListPropertyActionHandler extends AbstractActionHandler
+    {
+        public ListPropertyActionHandler( final ListProperty property,
+                                          final ModelElementType type )
+        {
+            super( property, type );
+        }
+        
+        @Override
+        protected IModelElement create( final IModelElement element,
+                                        final ModelProperty property,
+                                        final ModelElementType type )
+        {
+            return element.read( (ListProperty) property ).addNewElement( type );
+        }
+    }
+
+    private static final class ElementPropertyActionHandler extends AbstractActionHandler
+    {
+        private ModelPropertyListener listener;
+        
+        public ElementPropertyActionHandler( final ElementProperty property,
+                                             final ModelElementType type )
+        {
+            super( property, type );
+        }
+        
+        @Override
+        public void init( SapphireAction action,
+                          ISapphireActionHandlerDef def )
+        {
+            super.init( action, def );
+            
+            this.listener = new ModelPropertyListener()
+            {
+                @Override
+                public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                {
+                    refreshEnablementState();
+                }
+            };
+            
+            final IModelElement element = ( (MasterDetailsContentNode) getPart() ).getLocalModelElement();
+            element.addListener( this.listener, property().getName() );
+        }
+
+        @Override
+        public ElementProperty property()
+        {
+            return (ElementProperty) super.property();
+        }
+        
+        @Override
+        protected IModelElement create( final IModelElement element,
+                                        final ModelProperty property,
+                                        final ModelElementType type )
+        {
+            return element.read( (ElementProperty) property ).element( true, type );
+        }
+
+        @Override
+        protected boolean computeEnablementState()
+        {
+            boolean state = super.computeEnablementState();
+            
+            if( state == true )
+            {
+                final IModelElement element = ( (MasterDetailsContentNode) getPart() ).getLocalModelElement();
+                final ModelElementHandle<?> handle = element.read( property() );
+                state = ( handle.element() == null );
+            }
+            
+            return state;
+        }
+
+        @Override
+        public void dispose()
+        {
+            super.dispose();
+            
+            if( this.listener != null )
+            {
+                final IModelElement element = ( (MasterDetailsContentNode) getPart() ).getLocalModelElement();
+                element.removeListener( this.listener, property().getName() );
             }
         }
     }

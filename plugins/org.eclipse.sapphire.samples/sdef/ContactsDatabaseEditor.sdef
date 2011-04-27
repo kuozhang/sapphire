@@ -43,9 +43,9 @@
                         </action-link>
                     </content>
                 </section>
-                <node-list>
+                <node-factory>
                     <property>Contacts</property>
-                    <node-template>
+                    <case>
                         <label>${ Name == null ? "&lt;contact&gt;" : Name }</label>
                         <action>
                             <id>SendContact</id>
@@ -211,8 +211,8 @@
                             </section>
                         </node>
                         <use-model-element-image></use-model-element-image>
-                    </node-template>
-                </node-list>
+                    </case>
+                </node-factory>
             </node>
         </root-node>
     </editor-page>

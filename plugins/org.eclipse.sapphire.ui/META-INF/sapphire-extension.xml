@@ -236,7 +236,7 @@
         <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeDeleteActionHandler</impl>
         <id>Sapphire.Outline.Delete</id>
         <description>Deletes the model element associated with a given content outline node. Activates if the UI part is a content outline or a content outline node. All affected nodes must have the same parent and that parent must be a list property.</description>
-        <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeListMemberActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeDeleteActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Outline.ExpandAll</action>

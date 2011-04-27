@@ -25,12 +25,12 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface IListItemWithEnum
+public interface IChildElementWithEnum
 
-    extends IListItem
+    extends IChildElement
     
 {
-    ModelElementType TYPE = new ModelElementType( IListItemWithEnum.class );
+    ModelElementType TYPE = new ModelElementType( IChildElementWithEnum.class );
     
     // *** EnumValue ***
     

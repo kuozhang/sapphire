@@ -30,35 +30,35 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "content outline node list" )
+@Label( standard = "content outline node factory" )
 @GenerateImpl
 
 public interface IMasterDetailsContentNodeFactoryDef
 
-    extends IMasterDetailsContentNodeListEntry
+    extends IMasterDetailsContentNodeChildDef
     
 {
     ModelElementType TYPE = new ModelElementType( IMasterDetailsContentNodeFactoryDef.class );
     
-    // *** ListProperty ***
+    // *** Property ***
     
-    @Label( standard = "list property" )
+    @Label( standard = "property" )
     @XmlBinding( path = "property" )
     
-    ValueProperty PROP_LIST_PROPERTY = new ValueProperty( TYPE, "ListProperty" );
+    ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
     
-    Value<String> getListProperty();
-    void setListProperty( String listProperty );
+    Value<String> getProperty();
+    void setProperty( String value );
     
-    // *** TypeSpecificDefinitions ***
+    // *** Cases ***
     
-    @Label( standard = "definitions" )
-    @Type( base = IMasterDetailsContentNodeFactoryEntry.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "node-template", type = IMasterDetailsContentNodeFactoryEntry.class ) )
+    @Label( standard = "cases" )
+    @Type( base = IMasterDetailsContentNodeFactoryCaseDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "case", type = IMasterDetailsContentNodeFactoryCaseDef.class ) )
     
-    ListProperty PROP_TYPE_SPECIFIC_DEFINITIONS = new ListProperty( TYPE, "TypeSpecificDefinitions" );
+    ListProperty PROP_CASES = new ListProperty( TYPE, "Cases" );
     
-    ModelElementList<IMasterDetailsContentNodeFactoryEntry> getTypeSpecificDefinitions();
+    ModelElementList<IMasterDetailsContentNodeFactoryCaseDef> getCases();
     
     // *** VisibleWhenConditionClass ***
     

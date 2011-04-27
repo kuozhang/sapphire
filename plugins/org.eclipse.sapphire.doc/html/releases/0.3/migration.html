@@ -42,6 +42,7 @@ to 0.3 release. Only changes from the previous milestone are covered.</p>
   <li><a href="#with">With Directive</a></li>
   <li><a href="#element-image">Model Element Image</a></li>
   <li><a href="#required-annotation">Required Annotation</a></li>
+  <li><a href="#master-details-content-node-factory">Master Details Content Node Factory</a></li>
 </ol>
 
 <h2><a name="modularity">Modularity Changes</a></h2>
@@ -735,6 +736,145 @@ migration:</p>
 <p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.java<br/>
 <nobr>Search: &nbsp;&nbsp;(?s)import org\.eclipse\.sapphire\.modeling\.annotations\.NonNullValue;</nobr><br/>
 <nobr>Replace: &nbsp;import org\.eclipse\.sapphire\.modeling\.annotations\.Required;</nobr></p>
+
+<h2><a name="master-details-content-node-factory">Master Details Content Node Factory</a></h2>
+
+<p>The syntax of master details content node factory has been modified to better reflect its
+broader usage with both list and element properties.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;node-list>
+    <font color="#888888">&lt;property>HeterogeneousList&lt;/property></font>
+    &lt;node-template>
+        <font color="#888888">&lt;model-element-type>IChildElementWithInteger&lt;/model-element-type>
+        &lt;label>${ StringValue == null ? "&amp;lt;child-with-integer&amp;gt;" : StringValue }&lt;/label>
+        &lt;section>
+            &lt;label>child element with integer&lt;/label>
+            &lt;content>
+                &lt;property-editor>StringValue&lt;/property-editor>
+                &lt;property-editor>IntegerValue&lt;/property-editor>
+            &lt;/content>
+        &lt;/section></font>
+    &lt;/node-template>
+    &lt;node-template>
+        <font color="#888888">&lt;model-element-type>IChildElementWithEnum&lt;/model-element-type>
+        &lt;label>${ StringValue == null ? "&amp;lt;child-with-enum&amp;gt;" : StringValue }&lt;/label>
+        &lt;section>
+            &lt;label>child element with enum&lt;/label>
+            &lt;content>
+                &lt;property-editor>StringValue&lt;/property-editor>
+                &lt;property-editor>EnumValue&lt;/property-editor>
+            &lt;/content>
+        &lt;/section></font>
+    &lt;/node-template>
+    &lt;node-template>
+        <font color="#888888">&lt;model-element-type>IChildElement&lt;/model-element-type>
+        &lt;label>${ StringValue == null ? "&amp;lt;child&amp;gt;" : StringValue }&lt;/label>
+        &lt;section>
+            &lt;label>child element&lt;/label>
+            &lt;content>
+                &lt;property-editor>StringValue&lt;/property-editor>
+            &lt;/content>
+        &lt;/section></font>
+    &lt;/node-template>
+&lt;/node-list></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;node-factory>
+    <font color="#888888">&lt;property>HeterogeneousList&lt;/property></font>
+    &lt;case>
+        <font color="#888888">&lt;model-element-type>IChildElementWithInteger&lt;/model-element-type>
+        &lt;label>${ StringValue == null ? "&amp;lt;child-with-integer&amp;gt;" : StringValue }&lt;/label>
+        &lt;section>
+            &lt;label>child element with integer&lt;/label>
+            &lt;content>
+                &lt;property-editor>StringValue&lt;/property-editor>
+                &lt;property-editor>IntegerValue&lt;/property-editor>
+            &lt;/content>
+        &lt;/section></font>
+    &lt;/case>
+    &lt;case>
+        <font color="#888888">&lt;model-element-type>IChildElementWithEnum&lt;/model-element-type>
+        &lt;label>${ StringValue == null ? "&amp;lt;child-with-enum&amp;gt;" : StringValue }&lt;/label>
+        &lt;section>
+            &lt;label>child element with enum&lt;/label>
+            &lt;content>
+                &lt;property-editor>StringValue&lt;/property-editor>
+                &lt;property-editor>EnumValue&lt;/property-editor>
+            &lt;/content>
+        &lt;/section></font>
+    &lt;/case>
+    &lt;case>
+        <font color="#888888">&lt;model-element-type>IChildElement&lt;/model-element-type>
+        &lt;label>${ StringValue == null ? "&amp;lt;child&amp;gt;" : StringValue }&lt;/label>
+        &lt;section>
+            &lt;label>child element&lt;/label>
+            &lt;content>
+                &lt;property-editor>StringValue&lt;/property-editor>
+            &lt;/content>
+        &lt;/section></font>
+    &lt;/case>
+&lt;/node-factory></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;node-ref><font color="#888888">CommonNode</font>&lt;/node-ref></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;node-include><font color="#888888">CommonNode</font>&lt;/node-include></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;node-list-ref><font color="#888888">CommonNodeFactory</font>&lt;/node-list-ref></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;node-include><font color="#888888">CommonNodeFactory</font>&lt;/node-include></code></pre>
+    </td>
+  </tr>
+</table>
+
+<p>The following Eclipse search/replace regular expressions can be used to perform this
+migration:</p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;(?s)&lt;node-list></nobr><br/>
+<nobr>Replace: &nbsp;&lt;node-factory></nobr></p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;(?s)&lt;/node-list></nobr><br/>
+<nobr>Replace: &nbsp;&lt;/node-factory></nobr></p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;(?s)&lt;node-template></nobr><br/>
+<nobr>Replace: &nbsp;&lt;case></nobr></p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;(?s)&lt;/node-template></nobr><br/>
+<nobr>Replace: &nbsp;&lt;/case></nobr></p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;(?s)&lt;node-ref></nobr><br/>
+<nobr>Replace: &nbsp;&lt;node-include></nobr></p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;(?s)&lt;/node-ref></nobr><br/>
+<nobr>Replace: &nbsp;&lt;/node-include></nobr></p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;(?s)&lt;node-list-ref></nobr><br/>
+<nobr>Replace: &nbsp;&lt;node-include></nobr></p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;(?s)&lt;/node-list-ref></nobr><br/>
+<nobr>Replace: &nbsp;&lt;/node-include></nobr></p>
 
 <br/><br/>
 

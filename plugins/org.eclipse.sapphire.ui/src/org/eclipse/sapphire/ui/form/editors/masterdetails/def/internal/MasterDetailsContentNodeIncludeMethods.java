@@ -9,22 +9,22 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.def.internal;
+package org.eclipse.sapphire.ui.form.editors.masterdetails.def.internal;
 
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeRef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeChildDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeInclude;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MasterDetailsTreeNodeRefMethods
+public final class MasterDetailsContentNodeIncludeMethods
 {
-    public static IMasterDetailsContentNodeDef resolve( final IMasterDetailsContentNodeRef ref )
+    public static IMasterDetailsContentNodeChildDef resolve( final IMasterDetailsContentNodeInclude ref )
     {
         final ISapphireUiDef rootdef = ref.nearest( ISapphireUiDef.class );
-        return (IMasterDetailsContentNodeDef) rootdef.getPartDef( ref.getPart().getText(), true, IMasterDetailsContentNodeDef.class );
+        return (IMasterDetailsContentNodeChildDef) rootdef.getPartDef( ref.getPart().getText(), true, IMasterDetailsContentNodeChildDef.class );
     }
     
 }

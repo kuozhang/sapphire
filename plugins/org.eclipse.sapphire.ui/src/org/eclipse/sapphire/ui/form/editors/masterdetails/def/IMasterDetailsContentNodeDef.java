@@ -40,7 +40,7 @@ import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 
 public interface IMasterDetailsContentNodeDef
 
-    extends IMasterDetailsContentNodeListEntry, IPropertiesViewContributorDef
+    extends IMasterDetailsContentNodeChildDef, IPropertiesViewContributorDef
     
 {
     ModelElementType TYPE = new ModelElementType( IMasterDetailsContentNodeDef.class );
@@ -99,7 +99,7 @@ public interface IMasterDetailsContentNodeDef
     @Type( base = IMasterDetailsSectionDef.class )
     @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "section", type = IMasterDetailsSectionDef.class ) )
     
-    ListProperty PROP_SECTIONS = new ListProperty( TYPE, "Sections" ); //$NON-NLS-1$
+    ListProperty PROP_SECTIONS = new ListProperty( TYPE, "Sections" );
     
     ModelElementList<IMasterDetailsSectionDef> getSections();
     
@@ -109,30 +109,28 @@ public interface IMasterDetailsContentNodeDef
     
     @Type
     ( 
-        base = IMasterDetailsContentNodeListEntry.class, 
+        base = IMasterDetailsContentNodeChildDef.class, 
         possible = 
         { 
             IMasterDetailsContentNodeDef.class,
-            IMasterDetailsContentNodeRef.class,
             IMasterDetailsContentNodeFactoryDef.class,
-            IMasterDetailsContentNodeFactoryRef.class
+            IMasterDetailsContentNodeInclude.class
         } 
     )
     
     @XmlListBinding
-    ( 
+    (
         mappings = 
         { 
             @XmlListBinding.Mapping( element = "node", type = IMasterDetailsContentNodeDef.class ),
-            @XmlListBinding.Mapping( element = "node-ref", type = IMasterDetailsContentNodeRef.class ),
-            @XmlListBinding.Mapping( element = "node-list", type = IMasterDetailsContentNodeFactoryDef.class ),
-            @XmlListBinding.Mapping( element = "node-list-ref", type = IMasterDetailsContentNodeFactoryRef.class )
+            @XmlListBinding.Mapping( element = "node-factory", type = IMasterDetailsContentNodeFactoryDef.class ),
+            @XmlListBinding.Mapping( element = "node-include", type = IMasterDetailsContentNodeInclude.class )
         }
     )
     
     ListProperty PROP_CHILD_NODES = new ListProperty( TYPE, "ChildNodes" );
     
-    ModelElementList<IMasterDetailsContentNodeListEntry> getChildNodes();
+    ModelElementList<IMasterDetailsContentNodeChildDef> getChildNodes();
     
     // *** VisibleWhenConditionClass ***
     

@@ -24,7 +24,7 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPag
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class OutlineNodeListMemberActionHandlerCondition 
+public class OutlineNodeListMemberActionHandlerCondition 
 
     extends SapphireCondition
     
@@ -74,7 +74,7 @@ public final class OutlineNodeListMemberActionHandlerCondition
         return false;
     }
     
-    private static boolean check( final MasterDetailsContentNode node )
+    protected boolean check( final MasterDetailsContentNode node )
     {
         final IModelElement element = node.getModelElement();
         

@@ -33,6 +33,7 @@
     <li><a href="#image-el">Image Expressions</a></li>
     <li><a href="#ancestor-access">Ancestor Access</a></li>
     <li><a href="#with">Improved With Directive Presentation</a></li>
+    <li><a href="#master-details-element-properties">Element Properties in Master Details Content Outline</a></li>
   </ol>
 </ol>
  
@@ -532,6 +533,49 @@ instance, selecting "checkbox" style for an element property with more than one 
 <p style="margin-left: 20px;">The same property as above, but with style hint set to "drop.down.list".</p>
 
 <p style="margin-left: 20px;"><img src="images/with-4.png"/></p>
+
+<h2><a name="master-details-element-properties">Element Properties in Master Details Content Outline</a></h2>
+
+<p>The master details editor page has been made more flexible by allowing nodes in the content outline based
+on element properties. The syntax and semantics are identical to how list properties are handled.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>&lt;node-factory>
+    &lt;property>Heterogeneous&lt;/property>
+    &lt;case>
+        &lt;model-element-type>IChildElementWithInteger&lt;/model-element-type>
+        &lt;label>${ StringValue == null ? "&amp;lt;child-with-integer&amp;gt;" : StringValue }&lt;/label>
+        &lt;section>
+            &lt;label>child element with integer&lt;/label>
+            &lt;content>
+                &lt;property-editor>StringValue&lt;/property-editor>
+                &lt;property-editor>IntegerValue&lt;/property-editor>
+            &lt;/content>
+        &lt;/section>
+    &lt;/case>
+    &lt;case>
+        &lt;model-element-type>IChildElementWithEnum&lt;/model-element-type>
+        &lt;label>${ StringValue == null ? "&amp;lt;child-with-enum&amp;gt;" : StringValue }&lt;/label>
+        &lt;section>
+            &lt;label>child element with enum&lt;/label>
+            &lt;content>
+                &lt;property-editor>StringValue&lt;/property-editor>
+                &lt;property-editor>EnumValue&lt;/property-editor>
+            &lt;/content>
+        &lt;/section>
+    &lt;/case>
+    &lt;case>
+        &lt;model-element-type>IChildElement&lt;/model-element-type>
+        &lt;label>${ StringValue == null ? "&amp;lt;child&amp;gt;" : StringValue }&lt;/label>
+        &lt;section>
+            &lt;label>child element&lt;/label>
+            &lt;content>
+                &lt;property-editor>StringValue&lt;/property-editor>
+            &lt;/content>
+        &lt;/section>
+    &lt;/case>
+&lt;/node-factory></code></pre>
 
 <br/><br/>
 

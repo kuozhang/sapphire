@@ -24,21 +24,21 @@ import org.eclipse.sapphire.modeling.xml.FoldingXmlValueBindingImpl;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
-import org.eclipse.sapphire.ui.def.internal.MasterDetailsTreeNodeRefMethods;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.internal.MasterDetailsContentNodeIncludeMethods;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "content outline node reference" )
+@Label( standard = "content outline node include" )
 @GenerateImpl
 
-public interface IMasterDetailsContentNodeRef
+public interface IMasterDetailsContentNodeInclude
 
-    extends IMasterDetailsContentNodeListEntry
+    extends IMasterDetailsContentNodeChildDef
     
 {
-    ModelElementType TYPE = new ModelElementType( IMasterDetailsContentNodeRef.class );
+    ModelElementType TYPE = new ModelElementType( IMasterDetailsContentNodeInclude.class );
     
     // *** Part ***
     
@@ -62,8 +62,8 @@ public interface IMasterDetailsContentNodeRef
 
     // *** Method : resolve ***
     
-    @DelegateImplementation( MasterDetailsTreeNodeRefMethods.class )
+    @DelegateImplementation( MasterDetailsContentNodeIncludeMethods.class )
     
-    IMasterDetailsContentNodeDef resolve();
+    IMasterDetailsContentNodeChildDef resolve();
 
 }

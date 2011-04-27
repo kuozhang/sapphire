@@ -201,9 +201,9 @@
                         </action-link>
                     </content>
                 </section>
-                <node-list>
+                <node-factory>
                     <property>BugReports</property>
-                    <node-template>
+                    <case>
                         <label>${ Title == null ? "&lt;bug&gt;" : Title }</label>
                         <section>
                             <label>bug report</label>
@@ -211,8 +211,8 @@
                                 <include>bug.report</include>
                             </content>
                         </section>
-                    </node-template>
-                </node-list>
+                    </case>
+                </node-factory>
             </node>
         </root-node>
     </editor-page>
