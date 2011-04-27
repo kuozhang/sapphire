@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [344015] Insertion order lost if xsd includes another xsd
  ******************************************************************************/
 
 package org.eclipse.sapphire.tests.modeling.xml.xsd.t0001;
