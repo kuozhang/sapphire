@@ -12,14 +12,15 @@
 
 package org.eclipse.sapphire.ui.swt;
 
+import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescriptor;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.help.IContext;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
 import org.eclipse.sapphire.ui.SapphirePartEvent;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -43,6 +44,7 @@ public class SapphireWizardPage
     
 {
     private final SapphireWizardPagePart part;
+    private final SapphirePartListener listener;
     
     public SapphireWizardPage( final SapphireWizardPagePart part )
     {
@@ -53,12 +55,21 @@ public class SapphireWizardPage
         setTitle( this.part.getLabel() );
         setDescription( this.part.getDescription() );
         
-        final ImageDescriptor image = this.part.getImage();
-        
-        if( image != null )
+        this.listener = new SapphirePartListener()
         {
-            setImageDescriptor( image );
-        }
+            @Override
+            public void handleEvent( final SapphirePartEvent event )
+            {
+                if( event instanceof ImageChangedEvent )
+                {
+                    refreshImage();
+                }
+            }
+        };
+        
+        this.part.addListener( this.listener );
+        
+        refreshImage();
     }
     
     public void createControl( final Composite parent )
@@ -180,6 +191,19 @@ public class SapphireWizardPage
                 }
             }
         }
+    }
+    
+    private final void refreshImage()
+    {
+        setImageDescriptor( toImageDescriptor( this.part.getImage() ) );
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        this.part.removeListener( this.listener );
     }
     
 }

@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.def.ISapphireWizardDef;
 import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
@@ -47,7 +47,7 @@ public final class SapphireWizardPart
         (
             element,
             def.getImage().getContent(),
-            ImageDescriptor.class,
+            ImageData.class,
             null,
             new Runnable()
             {
@@ -84,9 +84,9 @@ public final class SapphireWizardPart
         return getDefinition().getDescription().getLocalizedText( CapitalizationType.NO_CAPS, false );
     }
     
-    public ImageDescriptor getImage()
+    public ImageData getImage()
     {
-        return (ImageDescriptor) this.imageFunctionResult.value();
+        return (ImageData) this.imageFunctionResult.value();
     }
     
     public List<SapphireWizardPagePart> getPages()

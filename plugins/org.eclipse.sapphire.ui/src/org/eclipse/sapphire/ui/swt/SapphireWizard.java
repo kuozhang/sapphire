@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui.swt;
 
+import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescriptor;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 
@@ -18,9 +20,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
+import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
+import org.eclipse.sapphire.ui.SapphirePartEvent;
+import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireWizardPagePart;
 import org.eclipse.sapphire.ui.SapphireWizardPart;
 import org.eclipse.sapphire.ui.def.ISapphireWizardDef;
@@ -43,6 +47,7 @@ public class SapphireWizard<M extends IExecutableModelElement>
 {
     private final M element;
     private final SapphireWizardPart part;
+    private final SapphirePartListener listener;
     
     public SapphireWizard( final M modelElement,
                            final String wizardDefPath )
@@ -56,12 +61,21 @@ public class SapphireWizard<M extends IExecutableModelElement>
         
         setWindowTitle( this.part.getLabel() );
         
-        final ImageDescriptor image = this.part.getImage();
-        
-        if( image != null )
+        this.listener = new SapphirePartListener()
         {
-            setDefaultPageImageDescriptor( image );
-        }
+            @Override
+            public void handleEvent( final SapphirePartEvent event )
+            {
+                if( event instanceof ImageChangedEvent )
+                {
+                    refreshImage();
+                }
+            }
+        };
+        
+        this.part.addListener( this.listener );
+        
+        refreshImage();
         
         setNeedsProgressMonitor( true );
     }
@@ -151,6 +165,19 @@ public class SapphireWizard<M extends IExecutableModelElement>
                 }
             }
         }
+    }
+    
+    private final void refreshImage()
+    {
+        setDefaultPageImageDescriptor( toImageDescriptor( this.part.getImage() ) );
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        this.part.removeListener( this.listener );
     }
     
 }
