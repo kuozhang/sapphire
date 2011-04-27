@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Greg Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.renderer;
@@ -22,6 +23,8 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.def.ISapphireActionDef;
+import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
@@ -129,8 +132,21 @@ public final class SapphireToolBarActionPresentation
             {
                 throw new IllegalStateException();
             }
-
-            toolItem.setImage( context.getImageCache().getImage( action.getImage( 16 ) ) );
+            
+            String hint = action.getRenderingHint( ISapphirePartDef.HINT_STYLE, ISapphireActionDef.HINT_VALUE_STYLE_IMAGE );
+            
+            if( ISapphireActionDef.HINT_VALUE_STYLE_IMAGE.equals( hint ) || 
+                ISapphireActionDef.HINT_VALUE_STYLE_IMAGE_TEXT.equals( hint ) )
+            {
+                toolItem.setImage( context.getImageCache().getImage( action.getImage( 16 ) ) );
+            }
+            
+            if( ISapphireActionDef.HINT_VALUE_STYLE_IMAGE_TEXT.equals( hint ) ||
+                ISapphireActionDef.HINT_VALUE_STYLE_TEXT.equals( hint ) )
+            {
+                toolItem.setText( LabelTransformer.transform( action.getLabel(), CapitalizationType.TITLE_STYLE, true ) );
+            }
+            
             toolItem.setToolTipText( LabelTransformer.transform( action.getLabel(), CapitalizationType.TITLE_STYLE, false ) );
             toolItem.setData( action );
             toolItem.addSelectionListener( toolItemListener );

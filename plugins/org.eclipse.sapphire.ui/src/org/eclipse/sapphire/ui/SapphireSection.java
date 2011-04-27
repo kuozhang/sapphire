@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,8 +7,9 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Ling Hao - [bugzilla 329115] support more details link for long descriptions
- *                 [bugzilla 329114] rewrite context help binding feature
+ *    Ling Hao - [329115] support more details link for long descriptions
+ *    Ling Hao - [329114] rewrite context help binding feature
+ *    Greg Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar           
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -108,7 +109,7 @@ public final class SapphireSection
         final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager( context, actions );
         final SapphireToolBarActionPresentation toolBarActionsPresentation = new SapphireToolBarActionPresentation( actionPresentationManager );
         
-        final ToolBar toolbar = new ToolBar( this.section, SWT.FLAT | SWT.HORIZONTAL );
+        final ToolBar toolbar = new ToolBar( this.section, SWT.FLAT | SWT.HORIZONTAL | SWT.RIGHT );
         toolBarActionsPresentation.setToolBar( toolbar );
         toolBarActionsPresentation.render();
         this.section.setTextClient( toolbar );

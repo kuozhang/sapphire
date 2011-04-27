@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,13 +7,16 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Greg Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar           
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.sapphire.modeling.el.Function;
@@ -21,6 +24,8 @@ import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
+import org.eclipse.sapphire.ui.def.ISapphireHint;
+import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
 import org.eclipse.sapphire.ui.def.SapphireKeySequence;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -48,6 +53,7 @@ public final class SapphireAction
     private final List<SapphireActionHandler> handlers = new CopyOnWriteArrayList<SapphireActionHandler>();
     private final List<SapphireActionHandlerFilter> filters = new CopyOnWriteArrayList<SapphireActionHandlerFilter>();
     private final Listener handlerListener;
+    private Map<String,Object> hints;
     
     public SapphireAction()
     {
@@ -103,6 +109,21 @@ public final class SapphireAction
         }
         
         setEnabled( false );
+        
+        this.hints = new HashMap<String,Object>();
+        
+        for( ISapphireHint hint : def.getHints() )
+        {
+            final String name = hint.getName().getText();
+            Object parsedValue = null;
+            
+            if( name.equals( ISapphirePartDef.HINT_STYLE ) )
+            {
+                parsedValue = hint.getValue().getText();
+            }
+           
+            this.hints.put( name, parsedValue );
+        }
     }
     
     @Override
@@ -196,6 +217,15 @@ public final class SapphireAction
         return this.parent.getContext();
     }
     
+    @SuppressWarnings( "unchecked" )
+    
+    public <T> T getRenderingHint( final String name,
+                                   final T defaultValue )
+    {
+        final Object hintValue = this.hints == null ? null : this.hints.get( name );
+        return hintValue == null ? defaultValue : (T) hintValue;
+    }
+
     public SapphireActionType getType()
     {
         synchronized( this )

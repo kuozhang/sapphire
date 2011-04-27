@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Greg Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.def.internal;
@@ -14,7 +15,9 @@ package org.eclipse.sapphire.ui.def.internal;
 import java.util.SortedSet;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.PossibleValuesService;
+import org.eclipse.sapphire.ui.def.ISapphireActionDef;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.ISapphirePropertyEditorDef;
@@ -33,7 +36,7 @@ public final class SapphireHintValuePossibleValuesService
     protected void fillPossibleValues( final SortedSet<String> values )
     {
         final ISapphireHint element = (ISapphireHint) element();
-        final ISapphirePartDef partdef = (ISapphirePartDef) element.parent().parent();
+        final IModelParticle partdef = element.parent().parent();
         final String hint = element.getName().getText();
         
         if( hint != null )
@@ -44,13 +47,19 @@ public final class SapphireHintValuePossibleValuesService
                 values.add( ISapphirePropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL );
                 values.add( ISapphirePropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL_INDENTED );
             }
-            else if( hint.equals( ISapphirePropertyEditorDef.HINT_STYLE ) )
+            else if ( hint.equals( ISapphirePartDef.HINT_STYLE ) ) 
             {
                 if( partdef instanceof ISapphireWithDirectiveDef )
                 {
                     values.add( ISapphireWithDirectiveDef.HINT_VALUE_STYLE_CHECKBOX );
-                    values.add( ISapphireWithDirectiveDef.HINT_VALUE_STYLE_DROP_DOWN_LIST );
                     values.add( ISapphireWithDirectiveDef.HINT_VALUE_STYLE_RADIO_BUTTONS );
+                    values.add( ISapphireWithDirectiveDef.HINT_VALUE_STYLE_DROP_DOWN_LIST );
+                }
+                else if( partdef instanceof ISapphireActionDef )
+                {
+                    values.add( ISapphireActionDef.HINT_VALUE_STYLE_IMAGE );
+                    values.add( ISapphireActionDef.HINT_VALUE_STYLE_IMAGE_TEXT );
+                    values.add( ISapphireActionDef.HINT_VALUE_STYLE_TEXT );
                 }
             }
         }

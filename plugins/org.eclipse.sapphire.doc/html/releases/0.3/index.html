@@ -1,3 +1,17 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2011 Oracle and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Greg Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar
+ ******************************************************************************
+-->
+
 <html>
 
 <head>
@@ -34,6 +48,7 @@
     <li><a href="#ancestor-access">Ancestor Access</a></li>
     <li><a href="#with">Improved With Directive Presentation</a></li>
     <li><a href="#master-details-element-properties">Element Properties in Master Details Content Outline</a></li>
+    <li><a href="#action-style-hint">Action Style Hint</a></li>
   </ol>
 </ol>
  
@@ -576,6 +591,34 @@ on element properties. The syntax and semantics are identical to how list proper
         &lt;/section>
     &lt;/case>
 &lt;/node-factory></code></pre>
+
+<h2><a name="action-style-hint">Action Style Hint</a></h2>
+
+<p>Use action style hint to control how actions are presented. The style hint will be respected if feasible.</p>
+
+<table>
+<tr><td>image</td><td>Only image is presented.</td></tr>
+<tr><td>image+text</td><td>Text will be presented to the right of the image.</td></tr>
+<tr><td>text</td><td>Only text is presented.</td></tr>
+</table>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following example is taken from the gallery sample.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;action&gt;
+    &lt;id&gt;Sapphire.Gallery.Open.Homepage&lt;/id&gt;
+    &lt;label&gt;Sapphire Homepage&lt;/label&gt;
+    &lt;image&gt;images/web.png&lt;/image&gt;
+    &lt;description&gt;Open Sapphire project homepage&lt;/description&gt;
+    &lt;context&gt;Sapphire.EditorPage&lt;/context&gt;</font>
+    &lt;hint&gt;
+        &lt;name>style&lt;/name&gt;
+        &lt;value>image+text&lt;/value&gt;
+    &lt;/hint&gt;
+<font color="#888888">&lt;/action&gt;</font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/action-style.png"/></p>
 
 <br/><br/>
 

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,14 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Greg Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -25,6 +27,7 @@ import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.serialization.ValueSerialization;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.internal.KeySequenceValueSerializationService;
 
 /**
@@ -41,6 +44,10 @@ public interface ISapphireActionDef
 {
     ModelElementType TYPE = new ModelElementType( ISapphireActionDef.class );
     
+    String HINT_VALUE_STYLE_IMAGE = "image";
+    String HINT_VALUE_STYLE_IMAGE_TEXT = "image+text";
+    String HINT_VALUE_STYLE_TEXT = "text";
+
     // *** Id ***
 
     @Required
@@ -166,6 +173,16 @@ public interface ISapphireActionDef
     Value<String> getGroup();
     void setGroup( String value );
     
+    // *** Hints ***
+
+    @Label( standard = "hints" )
+    @Type( base = ISapphireHint.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "hint", type = ISapphireHint.class ) )
+    
+    ListProperty PROP_HINTS = new ListProperty( TYPE, "Hints" );
+
+    ModelElementList<ISapphireHint> getHints();
+
     // *** LocationHints ***
     
     @Documentation( content = "Location hints are used to arrange actions in relation to each other. " +

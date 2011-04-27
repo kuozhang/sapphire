@@ -2,7 +2,7 @@
 
 <!-- 
  ******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Greg Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar
  ******************************************************************************
 -->
 
@@ -25,8 +26,14 @@
         <bundle>org.eclipse.sapphire.samples</bundle>
         <package>org.eclipse.sapphire.samples.gallery</package>
         <package>org.eclipse.sapphire.samples.gallery.internal</package>
+        <package>org.eclipse.sapphire.samples.gallery.ui</package>
     </import>
     
+    <import>
+        <bundle>org.eclipse.sapphire.workspace.ui</bundle>
+        <package>org.eclipse.sapphire.workspace.ui</package>
+    </import>
+
     <documentation>
         <id>documentation-id</id>
         <title>Help gallery</title>
@@ -571,7 +578,7 @@
                     <label>heterogeneous</label>
                     <section>
                         <content>
-	                        <label>A list with multiple possible element types.</label>
+                            <label>A list with multiple possible element types.</label>
                             <spacer />
                             <action-link>
                                 <action-id>Sapphire.Add</action-id>
@@ -1215,7 +1222,7 @@
                             </topic>
                         </documentation>
                         <content>
-                        	<label>Content help for the ExtendedHelpGallery model element will be appended to all properties. Both Simple and Positive have options to augment, in which the parent's content help will be appended. </label>
+                            <label>Content help for the ExtendedHelpGallery model element will be appended to all properties. Both Simple and Positive have options to augment, in which the parent's content help will be appended. </label>
                             <spacer />
                             <property-editor>Simple</property-editor>
                             <property-editor>Positive</property-editor>
@@ -1535,10 +1542,23 @@
                 </node>
             </node>
         </root-node>
+        <action>
+            <id>Sapphire.Gallery.Open.Homepage</id>
+            <label>Sapphire Homepage</label>
+            <image>images/web.png</image>
+            <description>Open Sapphire project homepage</description>
+            <context>Sapphire.EditorPage</context>
+            <hint>
+                <name>style</name>
+                <value>image+text</value>
+            </hint>
+        </action>
+        <action-handler>
+            <action>Sapphire.Gallery.Open.Homepage</action>
+            <id>Sapphire.Gallery.Open.Homepage</id>
+            <label>Sapphire Homepage</label>
+            <impl>OpenHomepageActionHandler</impl>
+        </action-handler>
     </editor-page>
-    <import>
-        <bundle>org.eclipse.sapphire.workspace.ui</bundle>
-        <package>org.eclipse.sapphire.workspace.ui</package>
-    </import>
     
 </definition>
