@@ -2,7 +2,6 @@
 
 <schema
     xmlns="http://www.w3.org/2001/XMLSchema" 
-    targetNamespace="http://www.eclipse.org/sapphire/tests/xml/xsd/0001"
     elementFormDefault="qualified">
 
     <complexType name="RedefineTestType">

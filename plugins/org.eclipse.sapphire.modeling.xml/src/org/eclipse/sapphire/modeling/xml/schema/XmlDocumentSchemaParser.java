@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [344015] Insertion order lost if xsd includes another xsd (regression)
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml.schema;

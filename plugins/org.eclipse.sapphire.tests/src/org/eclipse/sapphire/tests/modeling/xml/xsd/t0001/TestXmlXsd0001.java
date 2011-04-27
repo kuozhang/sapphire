@@ -13,6 +13,8 @@ package org.eclipse.sapphire.tests.modeling.xml.xsd.t0001;
 
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -49,6 +51,7 @@ public final class TestXmlXsd0001
         suite.setName( "XmlXsd0001" );
 
         suite.addTest( new TestXmlXsd0001( "testSchemaParsing" ) );
+        suite.addTest( new TestXmlXsd0001( "testChildSchemaParsing" ) );
         suite.addTest( new TestXmlXsd0001( "testInsertOrder" ) );
         
         return suite;
@@ -62,13 +65,27 @@ public final class TestXmlXsd0001
         final XmlSequenceGroup rootContentModel = (XmlSequenceGroup) rootElementDef.getContentModel();
         final List<XmlContentModel> nestedContent = rootContentModel.getNestedContent();
         
-        assertEquals( 4, nestedContent.size() );
+        assertEquals( 6, nestedContent.size() );
         assertEquals( "aaa", ( (XmlElementDefinition) nestedContent.get( 0 ) ).getName().getLocalPart() );
         assertEquals( "bbb", ( (XmlElementDefinition) nestedContent.get( 1 ) ).getName().getLocalPart() );
         assertEquals( "ccc", ( (XmlElementDefinition) nestedContent.get( 2 ) ).getName().getLocalPart() );
         assertEquals( "ddd", ( (XmlElementDefinition) nestedContent.get( 3 ) ).getName().getLocalPart() );
     }
     
+    public void testChildSchemaParsing() throws Exception
+    {
+        final XmlDocumentSchema schema = XmlDocumentSchemasCache.getSchema( "http://www.eclipse.org/sapphire/tests/xml/xsd/0001", null );
+        
+        final XmlElementDefinition rootElementDef = schema.getElement( "root" );
+        final XmlSequenceGroup rootContentModel = (XmlSequenceGroup) rootElementDef.getContentModel();
+        final XmlSequenceGroup childContentModel = (XmlSequenceGroup)rootContentModel.findChildElementContentModel(new QName( "http://www.eclipse.org/sapphire/tests/xml/xsd/0001", "element2" ));
+        final List<XmlContentModel> childNestedContent = childContentModel.getNestedContent();
+        assertEquals( 3, childNestedContent.size() );
+        assertEquals( "aaa2", ( (XmlElementDefinition) childNestedContent.get( 0 ) ).getName().getLocalPart() );
+        assertEquals( "bbb2", ( (XmlElementDefinition) childNestedContent.get( 1 ) ).getName().getLocalPart() );
+        assertEquals( "ccc2", ( (XmlElementDefinition) childNestedContent.get( 2 ) ).getName().getLocalPart() );
+    }
+
     public void testInsertOrder() throws Exception
     {
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();

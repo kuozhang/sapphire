@@ -5,17 +5,31 @@
     targetNamespace="http://www.eclipse.org/sapphire/tests/xml/xsd/0001"
     elementFormDefault="qualified">
     
+    <include schemaLocation="http://www.eclipse.org/sapphire/tests/xml/xsd/0001/c" />
+
     <redefine schemaLocation="http://www.eclipse.org/sapphire/tests/xml/xsd/0001/b">
         <complexType name="RedefineTestType">
             <complexContent>
                 <extension base="RedefineTestType">
                     <sequence>
                         <element name="ddd" type="string"/>
+                        <element ref="element2" minOccurs="0"/>
+                        <element ref="element1" minOccurs="0"/>
                     </sequence>
                 </extension>
             </complexContent>
         </complexType>
     </redefine>
+    
+	<element name="element2">
+	   <complexType>
+	   	<sequence>
+	   		<element name="aaa2" type="string"/>
+	   		<element name="bbb2" type="string"/>
+	   		<element name="ccc2" type="string"/>
+	   	</sequence>
+	   </complexType>
+	</element>
     
     <element name="root" type="RedefineTestType"/>
     
