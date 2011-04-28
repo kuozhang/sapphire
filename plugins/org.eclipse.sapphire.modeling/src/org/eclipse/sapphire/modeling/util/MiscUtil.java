@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.security.MessageDigest;
+import java.util.Collection;
 
 import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
@@ -49,6 +50,20 @@ public class MiscUtil
         for( int i = 0; i < array.length; i++ )
         {
             if( array[ i ].equals( object ) )
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public static <T> boolean containsUsingIdentity( final Collection<T> collection,
+                                                     final T item )
+    {
+        for( T x : collection )
+        {
+            if( x == item )
             {
                 return true;
             }

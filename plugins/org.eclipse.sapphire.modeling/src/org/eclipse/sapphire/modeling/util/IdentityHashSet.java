@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.modeling.util;
 
 import java.util.AbstractSet;
+import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 
@@ -23,7 +24,22 @@ import java.util.Iterator;
 
 public final class IdentityHashSet<T> extends AbstractSet<T>
 {
-    private final IdentityHashMap<T,Object> map = new IdentityHashMap<T,Object>();
+    private final IdentityHashMap<T,Object> map;
+    
+    public IdentityHashSet()
+    {
+        this.map = new IdentityHashMap<T,Object>();
+    }
+    
+    public IdentityHashSet( final Collection<T> set )
+    {
+        this();
+        
+        for( T item : set )
+        {
+            add( item );
+        }
+    }
 
     @Override
     public boolean add( final T item )

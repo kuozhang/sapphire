@@ -38,6 +38,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.suppressDashedTableEntryBorder;
+import static org.eclipse.sapphire.ui.util.MiscUtil.findSelectionPostDelete;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -804,6 +805,22 @@ public class DefaultListPropertyEditorRenderer
         return elements;
     }
     
+    private final List<TableRow> getSelectedRows()
+    {
+        final IStructuredSelection sel = (IStructuredSelection) DefaultListPropertyEditorRenderer.this.tableViewer.getSelection();
+        final List<TableRow> rows = new ArrayList<TableRow>();
+        
+        if( sel != null )
+        {
+            for( Iterator<?> itr = sel.iterator(); itr.hasNext(); )
+            {
+                rows.add( (TableRow) itr.next() );
+            }
+        }
+        
+        return rows;
+    }
+    
     public final void setSelection( final List<IModelElement> selection )
     {
         final IStructuredSelection sel = new StructuredSelection( selection );
@@ -862,14 +879,14 @@ public class DefaultListPropertyEditorRenderer
             
             if( selection.size() == 1 )
             {
-                final IModelElement element = ( (TableRow) selection.getFirstElement() ).element();
+                final TableRow row = (TableRow) selection.getFirstElement();
                 int firstEditableColumn = -1;
                 
                 for( int i = 0, n = getColumnCount(); i < n; i++ )
                 {
                     final ColumnHandler handler = getColumnHandler( i );
                     
-                    if( handler.getEditingSupport().canEdit( element ) )
+                    if( handler.getEditingSupport().canEdit( row ) )
                     {
                         firstEditableColumn = i;
                         break;
@@ -878,7 +895,7 @@ public class DefaultListPropertyEditorRenderer
                 
                 if( firstEditableColumn != -1 )
                 {
-                    this.tableViewer.editElement( element, firstEditableColumn );
+                    this.tableViewer.editElement( row, firstEditableColumn );
                 }
             }
         }
@@ -1706,48 +1723,23 @@ public class DefaultListPropertyEditorRenderer
         @Override
         protected final Object run( final SapphireRenderingContext context )
         {
-            final IStructuredContentProvider contentProvider 
-                = (IStructuredContentProvider) DefaultListPropertyEditorRenderer.this.tableViewer.getContentProvider();
+            final List<TableRow> rowsToDelete = getSelectedRows();
             
-            final List<IModelElement> elementsToDelete = getSelectedElements();
-            IModelElement elementToSelectAfterDelete = null;
-            boolean preferNextElement = true;
-
-            for( Object obj : contentProvider.getElements( null ) )
-            {
-                final IModelElement element = ( (TableRow) obj ).element();
-                
-                boolean toBeDeleted = false;
-                
-                for( IModelElement x : elementsToDelete )
-                {
-                    if( element == x )
-                    {
-                        toBeDeleted = true;
-                        preferNextElement = true;
-                        break;
-                    }
-                }
-                
-                if( ! toBeDeleted && preferNextElement )
-                {
-                    elementToSelectAfterDelete = element;
-                    preferNextElement = false;
-                }
-            }
+            final TableRow selectionPostDelete 
+                = findSelectionPostDelete( DefaultListPropertyEditorRenderer.this.rows.values(), rowsToDelete );
             
             final ModelElementList<IModelElement> list = getList();
 
-            for( IModelElement element : elementsToDelete )
+            for( TableRow row : rowsToDelete )
             {
-                list.remove( element );
+                list.remove( row.element() );
             }
             
             DefaultListPropertyEditorRenderer.this.refreshOperation.run();
             
-            if( elementToSelectAfterDelete != null )
+            if( selectionPostDelete != null )
             {
-                DefaultListPropertyEditorRenderer.this.tableViewer.setSelection( new StructuredSelection( elementToSelectAfterDelete ) );
+                DefaultListPropertyEditorRenderer.this.tableViewer.setSelection( new StructuredSelection( selectionPostDelete ) );
             }
             
             return null;

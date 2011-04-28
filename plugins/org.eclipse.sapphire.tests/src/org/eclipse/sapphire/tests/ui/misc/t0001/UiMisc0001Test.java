@@ -1,0 +1,80 @@
+/******************************************************************************
+ * Copyright (c) 2011 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************/
+
+package org.eclipse.sapphire.tests.ui.misc.t0001;
+
+import static java.util.Arrays.asList;
+import static org.eclipse.sapphire.ui.util.MiscUtil.findSelectionPostDelete;
+
+import java.util.List;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import org.eclipse.sapphire.tests.SapphireTestCase;
+
+/**
+ * Tests for findSelectionPostDelete algorithm. 
+ * 
+ * <p>The algorithm is defined as follows:</p>
+ * 
+ * <ol>
+ *   <li>Try to select the item following the last to-be-deleted item.</li>
+ *   <li>Failing that, try to select the last item not on the to-be-deleted list.</li>
+ * </ol>
+ * 
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ */
+
+public final class UiMisc0001Test
+
+    extends SapphireTestCase
+    
+{
+    private UiMisc0001Test( final String name )
+    {
+        super( name );
+    }
+    
+    public static Test suite()
+    {
+        final TestSuite suite = new TestSuite();
+        
+        suite.setName( "UiMisc0001" );
+
+        suite.addTest( new UiMisc0001Test( "test" ) );
+        
+        return suite;
+    }
+    
+    public void test() throws Exception
+    {
+        final String a = "a";
+        final String b = "b";
+        final String c = "c";
+        final String d = "d";
+        final String e = "e";
+        
+        final List<String> all = asList( a, b, c, d, e );
+        
+        assertEquals( d, findSelectionPostDelete( all, asList( c ) ) );
+        assertEquals( e, findSelectionPostDelete( all, asList( d ) ) );
+        assertEquals( d, findSelectionPostDelete( all, asList( e ) ) );
+        
+        assertEquals( e, findSelectionPostDelete( all, asList( b, d ) ) );
+        assertEquals( d, findSelectionPostDelete( all, asList( c, e ) ) );
+        
+        assertEquals( a, findSelectionPostDelete( all, asList( e, d, c, b ) ) );
+        assertEquals( b, findSelectionPostDelete( all, asList( a, c, d, e ) ) );
+        assertEquals( null, findSelectionPostDelete( all, asList( a, b, c, d, e ) ) );
+    }
+
+}

@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
-import static java.lang.Math.min;
+import static org.eclipse.sapphire.ui.util.MiscUtil.findSelectionPostDelete;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,82 +47,32 @@ public final class OutlineNodeDeleteActionHandler
     protected Object run( final SapphireRenderingContext context )
     {
         final ISapphirePart part = getPart();
-        final List<MasterDetailsContentNode> nodes;
+        final List<MasterDetailsContentNode> nodesToDelete;
         
         if( part instanceof MasterDetailsContentNode )
         {
-            nodes = Collections.singletonList( (MasterDetailsContentNode) part );
+            nodesToDelete = Collections.singletonList( (MasterDetailsContentNode) part );
         }
         else if( part instanceof MasterDetailsEditorPagePart )
         {
-            nodes = ( (MasterDetailsEditorPagePart) part ).getContentOutline().getSelectedNodes();
+            nodesToDelete = ( (MasterDetailsEditorPagePart) part ).getContentOutline().getSelectedNodes();
         }
         else
         {
             throw new IllegalStateException();
         }
         
-        MasterDetailsContentNode newSelection = null;
- 
-        final MasterDetailsContentNode parent = nodes.get( 0 ).getParentNode();
-        final List<MasterDetailsContentNode> siblings = parent.getChildNodes();
-        final int size = siblings.size();
+        final MasterDetailsContentNode parent = nodesToDelete.get( 0 ).getParentNode();
+        final List<MasterDetailsContentNode> allSiblingNodes = parent.getChildNodes();
         
-        if( size == nodes.size() )
+        MasterDetailsContentNode selectionPostDelete = findSelectionPostDelete( allSiblingNodes, nodesToDelete );
+        
+        if( selectionPostDelete == null )
         {
-            newSelection = parent;
-        }
-        else
-        {
-            int lowestIndexOfRemovedNode = -1;
-            
-            for( MasterDetailsContentNode node : nodes )
-            {
-                final int indexOfRemovedNode = siblings.indexOf( node );
-                
-                if( indexOfRemovedNode != -1 )
-                {
-                    if( lowestIndexOfRemovedNode == -1 )
-                    {
-                        lowestIndexOfRemovedNode = indexOfRemovedNode;
-                    }
-                    else
-                    {
-                        lowestIndexOfRemovedNode = min( lowestIndexOfRemovedNode, indexOfRemovedNode );
-                    }
-                }
-            }
-            
-            if( lowestIndexOfRemovedNode != -1 )
-            {
-                int indexOfNewSelection = -1;
-                
-                if( lowestIndexOfRemovedNode == 0 )
-                {
-                    for( int i = 0; i < size; i++ )
-                    {
-                        final MasterDetailsContentNode node = siblings.get( i );
-                        
-                        if( ! nodes.contains( node ) )
-                        {
-                            indexOfNewSelection = i;
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    indexOfNewSelection = lowestIndexOfRemovedNode - 1;
-                }
-    
-                if( indexOfNewSelection != -1 )
-                {
-                    newSelection = siblings.get( indexOfNewSelection );
-                }
-            }
+            selectionPostDelete = parent;
         }
         
-        for( MasterDetailsContentNode node : nodes )
+        for( MasterDetailsContentNode node : nodesToDelete )
         {
             final IModelElement element = node.getModelElement();
             final IModelParticle elementParent = element.parent();
@@ -143,9 +93,9 @@ public final class OutlineNodeDeleteActionHandler
             }
         }
         
-        if( newSelection != null )
+        if( selectionPostDelete != null )
         {
-            newSelection.getContentTree().setSelectedNode( newSelection );
+            selectionPostDelete.getContentTree().setSelectedNode( selectionPostDelete );
         }
         
         return null;

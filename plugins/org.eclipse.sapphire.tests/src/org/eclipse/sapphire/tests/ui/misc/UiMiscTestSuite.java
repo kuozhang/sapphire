@@ -9,25 +9,24 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.ui;
+package org.eclipse.sapphire.tests.ui.misc;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.tests.ui.def.UiDefTestSuite;
-import org.eclipse.sapphire.tests.ui.misc.UiMiscTestSuite;
+import org.eclipse.sapphire.tests.ui.misc.t0001.UiMisc0001Test;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class UiTestSuite
+public final class UiMiscTestSuite
 
     extends TestCase
     
 {
-    private UiTestSuite( final String name )
+    private UiMiscTestSuite( final String name )
     {
         super( name );
     }
@@ -36,10 +35,9 @@ public final class UiTestSuite
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "Ui" );
+        suite.setName( "UiMisc" );
 
-        suite.addTest( UiDefTestSuite.suite() );
-        suite.addTest( UiMiscTestSuite.suite() );
+        suite.addTest( UiMisc0001Test.suite() );
         
         return suite;
     }
