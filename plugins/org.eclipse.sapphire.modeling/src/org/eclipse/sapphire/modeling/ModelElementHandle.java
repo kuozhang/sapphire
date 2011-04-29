@@ -27,7 +27,6 @@ public final class ModelElementHandle<T extends IModelElement>
     private final ElementBindingImpl binding;
     private final ModelPropertyListener listener;
     private T element;
-    private Boolean enabledState;
     private IStatus validationStateLocal;
     private IStatus validationStateFull;
     
@@ -133,7 +132,6 @@ public final class ModelElementHandle<T extends IModelElement>
                         this.element.addListener( this.listener, property.getName() );
                     }
                     
-                    refreshEnabledState();
                     refreshValidationState();
                     
                     changed = true;
@@ -176,7 +174,7 @@ public final class ModelElementHandle<T extends IModelElement>
     {
         synchronized( this )
         {
-            return this.enabledState;
+            return this.parent.isPropertyEnabled( this.property );
         }
     }
     
@@ -207,7 +205,7 @@ public final class ModelElementHandle<T extends IModelElement>
         }
     }
 
-    public void refresh()
+    public boolean refresh()
     {
         final boolean changed = refreshInternal();
         
@@ -215,6 +213,8 @@ public final class ModelElementHandle<T extends IModelElement>
         {
             this.parent.notifyPropertyChangeListeners( this.property );
         }
+        
+        return changed;
     }
     
     private boolean refreshInternal()
@@ -241,21 +241,10 @@ public final class ModelElementHandle<T extends IModelElement>
                 changed = true;
             }
             
-            changed = refreshEnabledState() || changed;
             changed = refreshValidationState() || changed;
             
             return changed;
         }
-    }
-    
-    private boolean refreshEnabledState()
-    {
-        final Boolean oldEnabledState = this.enabledState;
-        final Boolean newEnabledState = this.parent.service( this.property, EnablementService.class ).isEnabled();
-        
-        this.enabledState = newEnabledState;
-        
-        return ( oldEnabledState != null && ! oldEnabledState.equals( newEnabledState ) );
     }
     
     private boolean refreshValidationState()

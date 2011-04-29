@@ -227,30 +227,17 @@ public abstract class PropertyEditorRenderer
         
         this.actionPresentationKeyboard.render();
         
-        final DisposeListener disposeListener = new DisposeListener()
-        {
-            boolean executed = false;
-            
-            public void widgetDisposed( final DisposeEvent event )
+        addOnDisposeOperation
+        (
+            new Runnable()
             {
-                if( ! this.executed )
+                public void run()
                 {
                     part.removeListener( partListener );
                     modelElement.removeListener( propertyChangeListener, property.getName() );
-                    handleDisposeEvent();
-                    this.executed = true;
                 }
             }
-        };
-
-        for( Control c : this.controls )
-        {
-            this.context.setHelp( c, modelElement, property );
-            
-            // This is not really a good way to do this...
-            
-            c.addDisposeListener( disposeListener );
-        }
+        );
     }
     
     protected abstract void createContents( final Composite parent );
@@ -384,9 +371,39 @@ public abstract class PropertyEditorRenderer
     
     protected final void addControl( final Control control )
     {
+        final IModelElement element = getModelElement();
+        final ModelProperty property = getProperty();
+        
         this.controls.add( control );
         
-        control.setData( SapphirePropertyEditor.DATA_PROPERTY, getProperty() );
+        control.setEnabled( element.isPropertyEnabled( property ) );
+        control.setData( SapphirePropertyEditor.DATA_PROPERTY, property );
+        
+        control.addDisposeListener
+        (
+            new DisposeListener()
+            {
+                public void widgetDisposed( final DisposeEvent event )
+                {
+                    PropertyEditorRenderer.this.controls.remove( control );
+                    
+                    boolean timeToDispose = true;
+                    
+                    for( Control control : PropertyEditorRenderer.this.controls )
+                    {
+                        if( ! control.isDisposed() )
+                        {
+                            timeToDispose = false;
+                        }
+                    }
+                    
+                    if( timeToDispose )
+                    {
+                        dispose();
+                    }
+                }
+            }
+        );
         
         if( control instanceof Composite )
         {
@@ -397,6 +414,8 @@ public abstract class PropertyEditorRenderer
         }
         
         this.actionPresentationKeyboard.attach( control );
+        
+        this.context.setHelp( control, element, property );
     }
     
     protected void handlePropertyChangedEvent()
@@ -422,7 +441,12 @@ public abstract class PropertyEditorRenderer
     {
     }
     
-    protected void handleDisposeEvent()
+    protected final void addOnDisposeOperation( final Runnable op )
+    {
+        this.onDisposeOperations.add( op );
+    }
+    
+    private final void dispose()
     {
         for( Runnable op : this.onDisposeOperations )
         {
@@ -435,13 +459,10 @@ public abstract class PropertyEditorRenderer
                 SapphireUiFrameworkPlugin.log( e );
             }
         }
+        
+        this.onDisposeOperations.clear();
     }
-    
-    protected final void addOnDisposeOperation( final Runnable op )
-    {
-        this.onDisposeOperations.add( op );
-    }
-    
+
     private static final class Resources extends NLS
     {
         public static String actionsContextLabel;

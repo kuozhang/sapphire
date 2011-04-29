@@ -13,18 +13,11 @@ package org.eclipse.sapphire.samples.gallery;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 
 /**
@@ -141,70 +134,6 @@ public interface IGallery
     
     IBrowseSupportGallery getBrowseSupportGallery();
     
-    // *** HomogeneousList ***
-    
-    @Type( base = IChildElement.class )
-    @Label( standard = "homogeneous list")
-    @XmlListBinding( path = "homogeneous-list", mappings = @XmlListBinding.Mapping( element = "item", type = IChildElement.class ) )
-    
-    ListProperty PROP_HOMOGENEOUS_LIST = new ListProperty( TYPE, "HomogeneousList" );
-    
-    ModelElementList<IChildElement> getHomogeneousList();
-    
-    // *** HomogeneousList of java types ***
-
-    @Type( base = Boolean.class )
-    @Label( standard = "show list of java types" )
-    @DefaultValue( text = "true" )
-    @XmlBinding( path = "show-another" )
-    
-    ValueProperty PROP_SHOW_ANOTHER = new ValueProperty( TYPE, "ShowAnother" );
-    
-    Value<Boolean> getShowAnother();
-    void setShowAnother( String value );
-    void setShowAnother( Boolean value );
-
-    // *** Another HomogeneousList ***
-    
-    @Type( base = IListItemWithJavaType.class )
-    @Label( standard = "homogeneous list of java types")
-    @Enablement( expr = "${ ShowAnother }" )
-    @XmlListBinding( path = "another-list", mappings = @XmlListBinding.Mapping( element = "another", type = IListItemWithJavaType.class ) )
-    
-    ListProperty PROP_ANOTHER_LIST = new ListProperty( TYPE, "AnotherList" );
-    
-    ModelElementList<IListItemWithJavaType> getAnotherList();
-
-    // *** HeterogeneousList ***
-    
-    @Type( base = IChildElement.class, possible = { IChildElement.class, IChildElementWithInteger.class, IChildElementWithEnum.class } )
-    @Label( standard = "heterogeneous list" )
-    
-    @XmlListBinding
-    (
-        path = "heterogeneous-list", 
-        mappings = 
-        {
-            @XmlListBinding.Mapping( element = "item", type = IChildElement.class ),
-            @XmlListBinding.Mapping( element = "item-with-integer", type = IChildElementWithInteger.class ),
-            @XmlListBinding.Mapping( element = "item-with-enum", type = IChildElementWithEnum.class )
-        }
-    )
-    
-    ListProperty PROP_HETEROGENEOUS_LIST = new ListProperty( TYPE, "HeterogeneousList" );
-    
-    ModelElementList<IChildElement> getHeterogeneousList();
-
-    // *** MultiSelectListGallery ***
-    
-    @Type( base = IMultiSelectListGallery.class )
-    @Label( standard = "multi select list gallery" )
-    @XmlBinding( path = "multi-select-list" )
-    
-    ImpliedElementProperty PROP_MULTI_SELECT_LIST_GALLERY = new ImpliedElementProperty( TYPE, "MultiSelectListGallery" );
-    
-    IMultiSelectListGallery getMultiSelectListGallery();
-    
     // *** ElementPropertiesGallery ***
     
     @Type( base = IElementPropertiesGallery.class )
@@ -213,6 +142,15 @@ public interface IGallery
     ImpliedElementProperty PROP_ELEMENT_PROPERTIES_GALLERY = new ImpliedElementProperty( TYPE, "ElementPropertiesGallery" );
     
     IElementPropertiesGallery getElementPropertiesGallery();
+    
+    // *** ListPropertiesGallery ***
+    
+    @Type( base = IListPropertiesGallery.class )
+    @XmlBinding( path = "list-properties-gallery" )
+
+    ImpliedElementProperty PROP_LIST_PROPERTIES_GALLERY = new ImpliedElementProperty( TYPE, "ListPropertiesGallery" );
+    
+    IListPropertiesGallery getListPropertiesGallery();
     
     // *** ValuePropertyActionsGallery ***
     

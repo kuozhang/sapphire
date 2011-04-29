@@ -42,19 +42,20 @@ public final class JavaTypeJumpActionHandler
     }
     
     @Override
-    protected void refreshEnablementState()
+    protected boolean computeEnablementState()
     {
-        final IModelElement element = getModelElement();
-        final String typeName = element.read( getProperty() ).getText( true );
+        if( super.computeEnablementState() == true )
+        {
+            final IModelElement element = getModelElement();
+            final String typeName = element.read( getProperty() ).getText( true );
+            
+            if( typeName != null && getType( typeName, element.adapt( IProject.class ) ) != null )
+            {
+                return true;
+            }
+        }
         
-        if( typeName != null && getType( typeName, element.adapt( IProject.class ) ) != null )
-        {
-            setEnabled( true );
-        }
-        else
-        {
-            setEnabled( false );
-        }
+        return false;
     }
 
     @Override

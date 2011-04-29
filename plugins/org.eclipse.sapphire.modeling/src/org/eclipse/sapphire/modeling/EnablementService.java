@@ -20,5 +20,59 @@ public abstract class EnablementService
     extends ModelPropertyService
     
 {
-    public abstract boolean isEnabled();
+    private boolean state = false;
+    
+    @Override
+    public final void init( final IModelElement element,
+                            final ModelProperty property,
+                            final String[] params )
+    {
+        super.init( element, property, params );
+        
+        initEnablementService( element, property, params );
+        
+        refresh( false );
+    }
+
+    protected void initEnablementService( final IModelElement element,
+                                          final ModelProperty property,
+                                          final String[] params )
+    {
+    }
+    
+    public final boolean state()
+    {
+        return this.state;
+    }
+    
+    protected abstract boolean compute();
+    
+    protected final void refresh()
+    {
+        refresh( true );
+    }
+    
+    protected final void refresh( final boolean notifyListeners )
+    {
+        final boolean newState = compute();
+        
+        if( this.state != newState )
+        {
+            this.state = newState;
+            
+            if( notifyListeners )
+            {
+                notifyListeners( new StateChangedEvent( this ) );
+            }
+        }
+    }
+    
+    public static class StateChangedEvent extends Event
+    {
+        public StateChangedEvent( final ModelService service )
+        {
+            super( service );
+        }
+    }
+    
 }

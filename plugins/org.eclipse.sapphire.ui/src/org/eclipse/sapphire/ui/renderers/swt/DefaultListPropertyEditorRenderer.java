@@ -85,7 +85,6 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.ModelService;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -97,6 +96,7 @@ import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
@@ -461,9 +461,9 @@ public class DefaultListPropertyEditorRenderer
                         {
                             for( SapphireActionHandler handler : action.getActiveHandlers() )
                             {
-                                if( handler instanceof AbstractActionHandler )
+                                if( handler instanceof SapphirePropertyEditorActionHandler )
                                 {
-                                    ( (AbstractActionHandler) handler ).refreshEnablement();
+                                    ( (SapphirePropertyEditorActionHandler) handler ).refreshEnablementState();
                                 }
                             }
                         }
@@ -998,14 +998,8 @@ public class DefaultListPropertyEditorRenderer
         @Override
         public String getText( final Object obj )
         {
-            String str = null;
-
             final IModelElement element = ( (TableRow) obj ).element();
-            
-            if( element.isPropertyEnabled( this.columnHandler.getProperty() ) )
-            {
-                str = getTextInternal( this.columnHandler.getPropertyValue( element ) );
-            }
+            String str = getTextInternal( this.columnHandler.getPropertyValue( element ) );
             
             if( str == null )
             {
@@ -1616,53 +1610,9 @@ public class DefaultListPropertyEditorRenderer
         }
     }
     
-    private abstract class AbstractActionHandler
-
-        extends SapphireActionHandler
-        
-    {
-        private ModelPropertyListener listPropertyListener;
-        
-        @Override
-        public void init( final SapphireAction action,
-                          final ISapphireActionHandlerDef def )
-        {
-            super.init( action, def );
-
-            this.listPropertyListener = new ModelPropertyListener()
-            {
-                @Override
-                public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
-                {
-                    refreshEnablement();
-                }
-            };
-            
-            getModelElement().addListener( this.listPropertyListener, getProperty().getName() );
-        }
-
-        public final void refreshEnablement()
-        {
-            setEnabled( computeEnablementState() );
-        }
-        
-        protected boolean computeEnablementState()
-        {
-            return getModelElement().isPropertyEnabled( getProperty() );
-        }
-
-        @Override
-        public void dispose()
-        {
-            super.dispose();
-            
-            getModelElement().removeListener( this.listPropertyListener, getProperty().getName() );
-        }
-    }
-
     private final class AddActionHandler
     
-        extends AbstractActionHandler
+        extends SapphirePropertyEditorActionHandler
         
     {
         private final ModelElementType type;
@@ -1697,7 +1647,7 @@ public class DefaultListPropertyEditorRenderer
     
     private abstract class SelectionBasedActionHandler
 
-        extends AbstractActionHandler
+        extends SapphirePropertyEditorActionHandler
         
     {
         public SelectionBasedActionHandler()
@@ -1708,7 +1658,7 @@ public class DefaultListPropertyEditorRenderer
                 {
                     public void selectionChanged( final SelectionChangedEvent event )
                     {
-                        refreshEnablement();
+                        refreshEnablementState();
                     }
                 }
             );
@@ -1748,7 +1698,12 @@ public class DefaultListPropertyEditorRenderer
         @Override
         protected boolean computeEnablementState()
         {
-            return ( super.computeEnablementState() && ! getSelectedElements().isEmpty() );
+            if( super.computeEnablementState() == true )
+            {
+                return ! getSelectedElements().isEmpty();
+            }
+            
+            return false;
         }
     }
 
@@ -1760,16 +1715,16 @@ public class DefaultListPropertyEditorRenderer
         @Override
         protected boolean computeEnablementState()
         {
-            if( ! super.computeEnablementState() || getSelectedElements().size() != 1 
-                || DefaultListPropertyEditorRenderer.this.tableViewer.getComparator() != null  )
+            if( super.computeEnablementState() == true )
             {
-                return false;
+                if( getSelectedElements().size() == 1 && DefaultListPropertyEditorRenderer.this.tableViewer.getComparator() == null )
+                {
+                    final IModelElement modelElement = getSelectedElement();
+                    return ( getList().indexOf( modelElement ) > 0 );
+                }
             }
-            else
-            {
-                final IModelElement modelElement = getSelectedElement();
-                return ( getList().indexOf( modelElement ) > 0 );
-            }
+            
+            return false;
         }
 
         @Override
@@ -1792,17 +1747,17 @@ public class DefaultListPropertyEditorRenderer
         @Override
         protected boolean computeEnablementState()
         {
-            if( ! super.computeEnablementState() || getSelectedElements().size() != 1 
-                || DefaultListPropertyEditorRenderer.this.tableViewer.getComparator() != null  )
+            if( super.computeEnablementState() == true )
             {
-                return false;
+                if( getSelectedElements().size() == 1 && DefaultListPropertyEditorRenderer.this.tableViewer.getComparator() == null )
+                {
+                    final IModelElement modelElement = getSelectedElement();
+                    final ModelElementList<?> list = getList();
+                    return ( list.indexOf( modelElement ) < ( list.size() - 1 ) );
+                }
             }
-            else
-            {
-                final IModelElement modelElement = getSelectedElement();
-                final ModelElementList<?> list = getList();
-                return ( list.indexOf( modelElement ) < ( list.size() - 1 ) );
-            }
+            
+            return false;
         }
     
         @Override

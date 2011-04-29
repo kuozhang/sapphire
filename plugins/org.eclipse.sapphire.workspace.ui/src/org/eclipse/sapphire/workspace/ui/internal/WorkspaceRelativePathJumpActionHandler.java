@@ -34,22 +34,24 @@ public final class WorkspaceRelativePathJumpActionHandler
     
 {
     @Override
-    protected void refreshEnablementState()
+    protected boolean computeEnablementState()
     {
-        boolean enabled = false;
-        final IPath path = getModelElement().<IPath>read( getProperty() ).getContent( true );
-        
-        if( path != null )
+        if( super.computeEnablementState() == true )
         {
-            final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( path );
+            final IPath path = getModelElement().<IPath>read( getProperty() ).getContent( true );
             
-            if( resource != null && resource.exists() && resource.getType() == IResource.FILE )
+            if( path != null )
             {
-                enabled = true;
+                final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( path );
+                
+                if( resource != null && resource.exists() && resource.getType() == IResource.FILE )
+                {
+                    return true;
+                }
             }
         }
 
-        setEnabled( enabled );
+        return false;
     }
 
     @Override

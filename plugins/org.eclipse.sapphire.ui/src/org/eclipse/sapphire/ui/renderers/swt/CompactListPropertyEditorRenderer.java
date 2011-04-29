@@ -8,6 +8,7 @@
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [343677] Element property validation is not surfaced by with directive
+ *    Konstantin Komissarchik - [338857] List property editor doesn't disable add action button when the list property is disabled
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.renderers.swt;
@@ -17,7 +18,6 @@ import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_DELETE;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_JUMP;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL_ABOVE;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.RELATED_CONTROLS;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
@@ -31,7 +31,6 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.sapphire.modeling.BindingImpl;
@@ -145,6 +144,7 @@ public class CompactListPropertyEditorRenderer
             this.label.setLayoutData( gdvindent( gdhindent( gdhspan( gdvalign( gd(), SWT.TOP ), showLabelAbove ? 2 : 1 ), leftMargin + 9 ), 4) );
             this.label.setText( labelText );
             this.context.adapt( this.label );
+            addControl( this.label );
         }
         else
         {
@@ -156,14 +156,7 @@ public class CompactListPropertyEditorRenderer
         this.innerComposite.setLayout( glayout( 2, 0, 0, 2, 2 ) );
         this.context.adapt(this.innerComposite);
 
-        final List<Control> relatedControls = new ArrayList<Control>();
-        
-        if( this.label != null ) {
-            relatedControls.add( this.label );
-        }
-        this.innerComposite.setData( RELATED_CONTROLS, relatedControls );
-        
-        this.addControls( 1 );
+        addControls( 1 );
 
         this.refreshOperation = new Runnable()
         {
@@ -216,7 +209,6 @@ public class CompactListPropertyEditorRenderer
         return this.innerComposite;
     }
     
-    @SuppressWarnings("unchecked")
 	private void addControls(int count) {
     	// first remove everything
         if (this.addText != null && this.addTextHyperlinkAdapter != null) {
@@ -230,15 +222,11 @@ public class CompactListPropertyEditorRenderer
     	}
     	this.textBindings.clear();
 
-    	final Collection<Control> relatedControls = (Collection<Control>)this.innerComposite.getData( RELATED_CONTROLS );
-    	relatedControls.clear();
-        if( this.label != null ) {
-            relatedControls.add( this.label );
-        }
-    	
         this.textComposite = new Composite( this.innerComposite, SWT.NONE );
         this.textComposite.setLayoutData( gdhspan( gdfill(), 2 ) );
         this.textComposite.setLayout( glspacing( glayout( 3, 0, 0 ), 2, 4 ) );
+        
+        addControl( this.textComposite );
 
         // add back text controls and add link
     	for (int i = 0; i < count; i++) {
@@ -254,10 +242,10 @@ public class CompactListPropertyEditorRenderer
     		TextBinding binding = new TextBinding(text, resource);
     		binding.setDecorator(decorator);
     		this.textBindings.add(binding);
-    		
-    		relatedControls.add(text);
 
-    		addToolbar(binding, editor, relatedControls);
+    		addControl( text );
+
+    		addToolbar(binding, editor);
     		
     		decorator.addEditorControl(text);
     		decorator.addEditorControl(binding.getToolbar());
@@ -267,7 +255,7 @@ public class CompactListPropertyEditorRenderer
         this.addText.setLayoutData( gdhindent( gdvalign( gdhfill(), SWT.CENTER ), 10 ) );
         this.context.adapt( this.addText );
         
-		relatedControls.add(this.addText);
+		addControl(this.addText);
 
 		final StringBuilder buf = new StringBuilder();
         buf.append( "<form><p vspace=\"false\"><a href=\"action\" nowrap=\"true\">" );
@@ -290,7 +278,7 @@ public class CompactListPropertyEditorRenderer
         this.addText.addHyperlinkListener(this.addTextHyperlinkAdapter);
     }
     
-    private void addToolbar(final TextBinding binding, final SapphirePropertyEditor editor, final Collection<Control> relatedControls) {
+    private void addToolbar(final TextBinding binding, final SapphirePropertyEditor editor) {
         final SapphireActionGroup parentActions = new SapphireActionGroup(getPart(), getPart().getActionContext());
 
         final SapphireAction deleteAction = parentActions.getAction( ACTION_DELETE );
@@ -321,7 +309,7 @@ public class CompactListPropertyEditorRenderer
         toolBarActionsPresentation.render();
         this.context.adapt( toolbar );
         
-        relatedControls.add(toolbar);
+        addControl(toolbar);
         
         toolbar.addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
@@ -389,10 +377,7 @@ public class CompactListPropertyEditorRenderer
         return decorator;
     }
     
-	@SuppressWarnings("unchecked")
     private void addActivated() {
-		final Collection<Control> relatedControls = (Collection<Control>)this.innerComposite.getData( RELATED_CONTROLS );
-
     	ProxyResource resource = new ProxyResource();
         final IModelElement proxyElement = this.memberProperty.getModelElementType().instantiate(getPart().getLocalModelElement(), getPart().getProperty(), resource); 
         resource.init(proxyElement, this.memberProperty);
@@ -406,9 +391,9 @@ public class CompactListPropertyEditorRenderer
 		binding.setDecorator(decorator);
 		this.textBindings.add(binding);
 		
-		relatedControls.add(text);
+		addControl(text);
 		
-		addToolbar(binding, editor, relatedControls);
+		addToolbar(binding, editor);
 		
         decorator.addEditorControl(text);
         decorator.addEditorControl(binding.getToolbar());
@@ -462,10 +447,7 @@ public class CompactListPropertyEditorRenderer
         return true;
     }
     
-	@SuppressWarnings("unchecked")
     void deleteBinding(TextBinding binding) {
-		final Collection<Control> relatedControls = (Collection<Control>)this.innerComposite.getData( RELATED_CONTROLS );
-
 		IModelElement elem = binding.getModelElement();
     	Text text = binding.getText();
     	ToolBar toolbar = binding.getToolbar();
@@ -480,9 +462,6 @@ public class CompactListPropertyEditorRenderer
     	binding.setModifying(false);
 
     	if (this.textBindings.size() > 1) {
-        	relatedControls.remove(toolbar);
-        	relatedControls.remove(text);
-
         	binding.removeListener();
     		this.textBindings.remove(binding);
     		text.dispose();
@@ -598,14 +577,6 @@ public class CompactListPropertyEditorRenderer
                 return new ProxyBinding();
             }
             return null;
-        }
-        
-        public void write(String value) {
-            this.value = value;
-
-            assert this.actualElement != null;
-            this.proxyElement.refresh();
-            this.actualElement.write( this.actualProperty, value );
         }
         
         public void setModelElement(IModelElement element) {
@@ -762,7 +733,7 @@ public class CompactListPropertyEditorRenderer
                         setModelElement(newElement);
                         createNew = true;
                     }
-                    this.resource.write(value);
+                    this.resource.element().write( this.resource.getValueProperty(), value );
                     if (createNew) {
                         this.text.setSelection(value.length(), value.length());
                     }

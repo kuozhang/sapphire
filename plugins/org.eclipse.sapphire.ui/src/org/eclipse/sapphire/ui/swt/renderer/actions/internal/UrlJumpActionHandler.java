@@ -40,10 +40,15 @@ public final class UrlJumpActionHandler
     }
     
     @Override
-    protected void refreshEnablementState()
+    protected boolean computeEnablementState()
     {
-        final Value<URL> value = getModelElement().read( getProperty() );
-        setEnabled( value.validate().getSeverity() != IStatus.ERROR );
+        if( super.computeEnablementState() == true )
+        {
+            final Value<URL> value = getModelElement().read( getProperty() );
+            return ( value.validate().getSeverity() != IStatus.ERROR );
+        }
+        
+        return false;
     }
 
     @Override

@@ -30,6 +30,7 @@ import org.eclipse.sapphire.modeling.ModelPath.AllSiblingsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ModelRootSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.ModelPath.TypeFilterSegment;
+import org.eclipse.sapphire.modeling.ModelService.Event;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
@@ -53,6 +54,7 @@ public abstract class ModelElement
     private Set<ModelElementListener> listeners;
     private Map<ModelProperty,Set<ModelPropertyListener>> propertyListeners;
     private final Map<ModelProperty,Boolean> enablementStatuses;
+    private boolean enablementServicesInitialized;
     private final Map<Class<? extends ModelElementService>,Collection<ModelElementService>> elementServices;
     private final Map<ModelProperty,Map<Class<? extends ModelPropertyService>,Collection<ModelPropertyService>>> propertyServices;
     
@@ -707,7 +709,7 @@ public abstract class ModelElement
         }
     }
 
-    public boolean isPropertyEnabled( final ModelProperty property )
+    public final boolean isPropertyEnabled( final ModelProperty property )
     {
         synchronized( root() )
         {
@@ -715,7 +717,7 @@ public abstract class ModelElement
             
             if( status == null )
             {
-                refreshPropertyEnabledStatus( property );
+                refreshPropertyEnabledStatus( property, true );
                 status = this.enablementStatuses.get( property );
             }
             
@@ -725,14 +727,70 @@ public abstract class ModelElement
     
     protected final boolean refreshPropertyEnabledStatus( final ModelProperty property )
     {
+        return refreshPropertyEnabledStatus( property, false );
+    }
+    
+    private final boolean refreshPropertyEnabledStatus( final ModelProperty property,
+                                                        final boolean notifyListenersIfNecessary )
+    {
         synchronized( root() )
         {
-            final Boolean oldStatus = this.enablementStatuses.get( property );
-            final boolean newStatus = service( property, EnablementService.class ).isEnabled();
+            if( ! this.enablementServicesInitialized )
+            {
+                for( final ModelProperty prop : this.type.getProperties() )
+                {
+                    final ModelService.Listener enablementServiceListener = new ModelService.Listener()
+                    {
+                        @Override
+                        public void handleEvent( final Event event )
+                        {
+                            if( event instanceof EnablementService.StateChangedEvent )
+                            {
+                                refreshPropertyEnabledStatus( prop, true );
+                            }
+                        }
+                    };
+                    
+                    for( EnablementService service : services( prop, EnablementService.class ) )
+                    {
+                        service.addListener( enablementServiceListener );
+                    }
+                }
+                
+                this.enablementServicesInitialized = true;
+            }
             
-            this.enablementStatuses.put( property, newStatus );
+            boolean newState = true;
             
-            return ( oldStatus != null && ! oldStatus.equals( newStatus ) );
+            for( EnablementService service : services( property, EnablementService.class ) )
+            {
+                newState = ( newState && service.state() );
+                
+                if( newState == false )
+                {
+                    break;
+                }
+            }
+            
+            final Boolean oldState = this.enablementStatuses.get( property );
+            
+            if( oldState == null )
+            {
+                this.enablementStatuses.put( property, newState );
+            }
+            else if( ! oldState.equals( newState ) )
+            {
+                this.enablementStatuses.put( property, newState );
+                
+                if( notifyListenersIfNecessary )
+                {
+                    notifyPropertyChangeListeners( property );
+                }
+                
+                return true;
+            }
+            
+            return false;
         }
     }
 
@@ -752,7 +810,7 @@ public abstract class ModelElement
         
         for( ModelProperty property : this.type.getProperties() )
         {
-            if( service( property, EnablementService.class ).isEnabled() )
+            if( isPropertyEnabled( property ) )
             {
                 final IStatus x;
                 

@@ -45,6 +45,25 @@ public abstract class ListPropertyEditorRenderer
         };
         
         attachListElementListener();
+        
+        addOnDisposeOperation
+        (
+            new Runnable()
+            {
+                public void run()
+                {
+                    final ModelElementList<IModelElement> list = getList();
+
+                    if( list != null )
+                    {
+                        for( IModelElement entry : list )
+                        {
+                            entry.removeListener( ListPropertyEditorRenderer.this.listElementListener );
+                        }
+                    }
+                }
+            }
+        );
     }
 
     @Override
@@ -74,22 +93,6 @@ public abstract class ListPropertyEditorRenderer
 
     protected void handleListElementChangedEvent( final ModelPropertyChangeEvent event )
     {
-    }
-    
-    @Override
-    protected void handleDisposeEvent()
-    {
-        super.handleDisposeEvent();
-        
-        final ModelElementList<IModelElement> list = getList();
-
-        if( list != null )
-        {
-            for( IModelElement entry : list )
-            {
-                entry.removeListener( this.listElementListener );
-            }
-        }
     }
     
     private void attachListElementListener()

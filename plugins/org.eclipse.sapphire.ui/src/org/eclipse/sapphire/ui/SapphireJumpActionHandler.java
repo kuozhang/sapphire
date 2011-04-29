@@ -71,8 +71,6 @@ public abstract class SapphireJumpActionHandler
         return (ValueProperty) super.getProperty();
     }
     
-    protected abstract void refreshEnablementState();
-    
     @Override
     public void dispose()
     {

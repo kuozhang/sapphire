@@ -94,6 +94,7 @@ public final class BooleanPropertyEditorRenderer
             final Label lbl = new Label( parent, SWT.NONE );
             lbl.setLayoutData( gdhindent( gd(), part.getLeftMarginHint() + 9 ) );
             lbl.setText( label + ":" );
+            addControl( lbl );
         }
         else if( checkboxLayout == CheckboxLayout.TRAILING_LABEL )
         {
@@ -104,6 +105,7 @@ public final class BooleanPropertyEditorRenderer
             final Label lbl = new Label( parent, SWT.NONE );
             lbl.setLayoutData( gd() );
             lbl.setText( "" );
+            addControl( lbl );
         }
         else
         {

@@ -254,6 +254,20 @@ public final class SlushBucketPropertyEditor
         
         this.sourceTableViewer.setInput( new Object() );
         
+        addOnDisposeOperation
+        (
+            new Runnable()
+            {
+                public void run()
+                {
+                    if( SlushBucketPropertyEditor.this.valuesProviderListener != null )
+                    {
+                        SlushBucketPropertyEditor.this.valuesProvider.removeListener( SlushBucketPropertyEditor.this.valuesProviderListener );
+                    }
+                }
+            }
+        );
+        
         return composite;
     }
 
@@ -306,17 +320,6 @@ public final class SlushBucketPropertyEditor
         this.sourceTableViewer.setSelection( StructuredSelection.EMPTY );
     }
     
-    @Override
-    protected void handleDisposeEvent()
-    {
-        super.handleDisposeEvent();
-        
-        if( this.valuesProviderListener != null )
-        {
-            this.valuesProvider.removeListener( this.valuesProviderListener );
-        }
-    }
-
     private void handleSourceTableDoubleClickEvent( final MouseEvent event )
     {
         String doubleClickedItem = null;

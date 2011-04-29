@@ -522,13 +522,17 @@
                                 <action-id>Sapphire.Add</action-id>
                                 <label>add a child element</label>
                             </action-link>
+                            <spacer></spacer>
+                            <label>Use the following property to experiment with enabling and disabling the lists.</label>
+                            <spacer></spacer>
+                            <property-editor>Enabled</property-editor>
                         </content>
                     </section>
                     <section>
                         <label>list</label>
                         <content>
                             <property-editor>
-                                <property>HomogeneousList</property>
+                                <property>Homogeneous</property>
                                 <hint>
                                     <name>show.label</name>
                                     <value>false</value>
@@ -540,7 +544,7 @@
                         <label>compact presentation</label>
                         <content>
                             <property-editor>
-                                <property>HomogeneousList</property>
+                                <property>Homogeneous</property>
                                 <hint>
                                     <name>factory</name>
                                     <value>CompactListPropertyEditorRenderer$Factory</value>
@@ -551,9 +555,8 @@
                     <section>
                         <label>compact presentation for a list of java types</label>
                         <content>
-                            <property-editor>ShowAnother</property-editor>
                             <property-editor>
-                                <property>AnotherList</property>
+                                <property>HomogeneousWithJavaType</property>
                                 <hint>
                                     <name>factory</name>
                                     <value>CompactListPropertyEditorRenderer$Factory</value>
@@ -562,11 +565,11 @@
                         </content>
                     </section>
                     <node-factory>
-                        <property>HomogeneousList</property>
+                        <property>Homogeneous</property>
                         <case>
                             <label>${ StringValue == null ? "&lt;item&gt;" : StringValue }</label>
                             <section>
-                                <label>list item</label>
+                                <label>child element</label>
                                 <content>
                                     <property-editor>StringValue</property-editor>
                                 </content>
@@ -595,13 +598,17 @@
                                 <action-handler-id>Sapphire.Add.IChildElementWithEnum</action-handler-id>
                                 <label>add a child element with enum</label>
                             </action-link>
+                            <spacer></spacer>
+                            <label>Use the following property to experiment with enabling and disabling the lists.</label>
+                            <spacer></spacer>
+                            <property-editor>Enabled</property-editor>
                         </content>
                     </section>
                     <section>
                         <label>list</label>
                         <content>
                             <property-editor>
-                                <property>HeterogeneousList</property>
+                                <property>Heterogeneous</property>
                                 <hint>
                                     <name>show.label</name>
                                     <value>false</value>
@@ -612,7 +619,7 @@
                             </separator>
                             <switching-panel>
                                 <list-selection-controller>
-                                    <property>HeterogeneousList</property>
+                                    <property>Heterogeneous</property>
                                 </list-selection-controller>
                                 <panel>
                                     <key>IChildElementWithInteger</key>
@@ -643,7 +650,7 @@
                         </content>
                     </section>
                     <node-factory>
-                        <property>HeterogeneousList</property>
+                        <property>Heterogeneous</property>
                         <case>
                             <model-element-type>IChildElementWithInteger</model-element-type>
                             <label>${ StringValue == null ? &quot;&lt;child-with-integer&gt;&quot; : StringValue }</label>
@@ -680,7 +687,6 @@
                 </node>
                 <node>
                     <label>multi-select</label>
-                    <property>MultiSelectListGallery</property>
                     <section>
                         <content>
                             <label>
@@ -690,11 +696,15 @@
                                 The list property must be decorated with @NoDuplicates annotation.
                             </label> 
                             <spacer />
+                            <label>Use the following property to experiment with enabling and disabling the lists.</label> 
+                            <spacer></spacer>
+                            <property-editor>Enabled</property-editor>
+                            <spacer></spacer> 
                             <label>
                                 The slush bucket is the default property editor type. 
-                            </label> 
+                            </label>
                             <property-editor>
-                                <property>List</property>
+                                <property>MultiSelect</property>
                                 <hint>
                                     <name>show.label</name>
                                     <value>false</value>
@@ -704,9 +714,9 @@
                             <label>
                                 The checkbox list is an alternate property editor type that may work better in some cases. To use it,
                                 specify CheckBoxListPropertyEditorRenderer$Factory for factory hint. The property editor is located in
-                                the org.eclipse.sapphire.ui.renderers.swt package.</label> 
+                                the org.eclipse.sapphire.ui.renderers.swt package.</label>
                             <property-editor>
-                                <property>List</property>
+                                <property>MultiSelect</property>
                                 <hint>
                                     <name>show.label</name>
                                     <value>false</value>
@@ -719,6 +729,7 @@
                         </content>
                     </section>
                 </node>
+                <property>ListPropertiesGallery</property>
             </node>
             <node>
                 <label>enablement</label>

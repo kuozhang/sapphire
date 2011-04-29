@@ -39,10 +39,15 @@ public final class ContactDetailsJumpHandler
     }
 
     @Override
-    protected void refreshEnablementState()
+    protected boolean computeEnablementState()
     {
-        final IAttendee attendee = (IAttendee) getModelElement();
-        setEnabled( attendee.isInContactsDatabase().getContent() );
+        if( super.computeEnablementState() == true )
+        {
+            final IAttendee attendee = (IAttendee) getModelElement();
+            return attendee.isInContactsDatabase().getContent();
+        }
+        
+        return false;
     }
 
     @Override

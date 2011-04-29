@@ -18,6 +18,8 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.def.SapphireKeySequence;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -43,6 +45,22 @@ public final class SapphireKeyboardActionPresentation
     public void attach( final Control control )
     {
         this.attachedControls.add( control );
+        
+        control.addDisposeListener
+        (
+            new DisposeListener()
+            {
+                public void widgetDisposed( final DisposeEvent event )
+                {
+                    detach( control );
+                }
+            }
+        );
+    }
+    
+    public void detach( final Control control )
+    {
+        this.attachedControls.remove( control );
     }
     
     public void render()

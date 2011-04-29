@@ -47,28 +47,31 @@ public final class RelativePathJumpActionHandler
     }
     
     @Override
-    protected void refreshEnablementState()
+    protected boolean computeEnablementState()
     {
-        final IModelElement element = getModelElement();
-        final ValueProperty property = getProperty();
-        
-        final String relativePath = element.read( property ).getText( true );
-        
-        if( relativePath != null )
+        if( super.computeEnablementState() == true )
         {
-            for( IPath basePath : getBasePaths( element, property ) )
+            final IModelElement element = getModelElement();
+            final ValueProperty property = getProperty();
+            
+            final String relativePath = element.read( property ).getText( true );
+            
+            if( relativePath != null )
             {
-                final IPath absolutePath = basePath.append( relativePath );
-                File absoluteFile = absolutePath.toFile();
-                
-                if( absoluteFile.exists() && absoluteFile.isFile() )
+                for( IPath basePath : getBasePaths( element, property ) )
                 {
-                    setEnabled( true );
+                    final IPath absolutePath = basePath.append( relativePath );
+                    File absoluteFile = absolutePath.toFile();
+                    
+                    if( absoluteFile.exists() && absoluteFile.isFile() )
+                    {
+                        return true;
+                    }
                 }
             }
         }
-
-        setEnabled( false );
+        
+        return false;
     }
 
     @Override

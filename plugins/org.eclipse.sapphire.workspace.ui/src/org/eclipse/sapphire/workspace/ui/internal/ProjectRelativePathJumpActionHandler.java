@@ -35,29 +35,30 @@ public final class ProjectRelativePathJumpActionHandler
     
 {
     @Override
-    protected void refreshEnablementState()
+    protected boolean computeEnablementState()
     {
-        boolean enabled = false;
-        
-        final IModelElement element = getModelElement();
-        final IProject project = element.adapt( IProject.class );
-        
-        if( project != null )
+        if( super.computeEnablementState() == true )
         {
-            final IPath path = element.<IPath>read( getProperty() ).getContent( true );
+            final IModelElement element = getModelElement();
+            final IProject project = element.adapt( IProject.class );
             
-            if( path != null )
+            if( project != null )
             {
-                final IResource resource = project.findMember( path );
+                final IPath path = element.<IPath>read( getProperty() ).getContent( true );
                 
-                if( resource != null && resource.exists() && resource.getType() == IResource.FILE )
+                if( path != null )
                 {
-                    enabled = true;
+                    final IResource resource = project.findMember( path );
+                    
+                    if( resource != null && resource.exists() && resource.getType() == IResource.FILE )
+                    {
+                        return true;
+                    }
                 }
             }
         }
-
-        setEnabled( enabled );
+        
+        return false;
     }
 
     @Override
