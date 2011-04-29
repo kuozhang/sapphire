@@ -40,7 +40,7 @@ public abstract class EnablementService
     {
     }
     
-    public final boolean state()
+    public boolean state()
     {
         return this.state;
     }
