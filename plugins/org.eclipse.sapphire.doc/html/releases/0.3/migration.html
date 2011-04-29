@@ -33,6 +33,7 @@ to 0.3 release. Only changes from the previous milestone are covered.</p>
   <li><a href="#ref">ReferenceValue Changes</a></li>
   <li><a href="#services">Services</a></li>
   <li><a href="#validation">Validation</a></li>
+  <li><a href="#enablement">Enablement</a></li>
   <li><a href="#java">Java Support</a></li>
   <li><a href="#html">HTML Content Presentation</a></li>
   <li><a href="#related-content">Related Content</a></li>
@@ -43,6 +44,7 @@ to 0.3 release. Only changes from the previous milestone are covered.</p>
   <li><a href="#element-image">Model Element Image</a></li>
   <li><a href="#required-annotation">Required Annotation</a></li>
   <li><a href="#master-details-content-node-factory">Master Details Content Node Factory</a></li>
+  <li><a href="#jump-action-handle">Jump Action Handler</a></li>
 </ol>
 
 <h2><a name="modularity">Modularity Changes</a></h2>
@@ -275,6 +277,81 @@ system or at the level of an individual property using the @Service annotation.<
 {
     ...
 }</code></pre>
+    </td>
+  </tr>
+</table>
+
+<h2><a name="enablement">Enablement</a></h2>
+
+<p>Enablement is now handled by true model element services. They can be registered globaly via the extension
+system or at the level of an individual property using the @Service annotation.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@Enablement( service = CustomEnablementService.class )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@Service( impl = CustomEnablementService.class )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>public class CustomEnablementService extends EnablementService
+{
+    @Override
+    public void init( IModelElement element,
+                      ModelProperty property,
+                      String[] params )
+    {
+        super.init( element, property, params );
+
+        ...
+    }
+    
+    @Override
+    public boolean isEnabled() 
+    {
+        ...
+    }
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>public class CustomEnablementService extends EnablementService
+{
+    @Override
+    protected void initEnablementService( IModelElement element,
+                                          ModelProperty property,
+                                          String[] params )
+    {
+        super.initEnablementService( element, property, params );
+
+        ...
+    }
+    
+    @Override
+    public boolean state()
+    {
+        refresh();
+        return super.state();
+    }
+    
+    @Override
+    protected boolean compute() 
+    {
+        ...
+    }
+}
+</code></pre>
+
+<p>The above represents the quickest way to migrate an existing enablement service, but is far from
+ideal. A better solution would be to not override the state() method with a refresh on every invocation.
+To do that, the service would need to listen on changes to data used in the compute() method and call
+refresh() method when that data changes.</p>
     </td>
   </tr>
 </table>
@@ -875,6 +952,45 @@ migration:</p>
 <p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
 <nobr>Search: &nbsp;&nbsp;(?s)&lt;/node-list-ref></nobr><br/>
 <nobr>Replace: &nbsp;&lt;/node-include></nobr></p>
+
+<h2><a name="jump-action-handle">Jump Action Handler</a></h2>
+
+<p>Jump action handler API has been improved slightly to make it less likely that a subclass will override
+enablement logic from the parent class rather than augmenting it.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>public class CustomJumpActionHandler extends SapphireJumpActionHandler
+{
+    @Override
+    public void refreshEnablementState()
+    {
+        setEnabled( ... );
+    }
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>public class CustomJumpActionHandler extends SapphireJumpActionHandler
+{
+    @Override
+    protected boolean computeEnablementState()
+    {
+        if( super.computeEnablementState() == true )
+        {
+            return ...
+        }
+        
+        return false;
+    }
+}</code></pre>
+    </td>
+  </tr>
+</table>
 
 <br/><br/>
 
