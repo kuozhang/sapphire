@@ -8,5 +8,6 @@ Bundle-Localization: plugin
 Bundle-Vendor: %providerName
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.sapphire.modeling,
- org.eclipse.jdt.apt.core
+ org.eclipse.jdt.apt.core,
+ org.eclipse.core.runtime
 

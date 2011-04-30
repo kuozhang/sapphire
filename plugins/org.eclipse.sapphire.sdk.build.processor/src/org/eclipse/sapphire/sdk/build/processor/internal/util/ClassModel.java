@@ -36,6 +36,7 @@ public final class ClassModel
     private List<FieldModel> fields;
     private List<StaticInitializerModel> staticInitializers;
     private List<MethodModel> methods;
+    private boolean invalid;
     
     public ClassModel()
     {
@@ -279,6 +280,16 @@ public final class ClassModel
     {
         this.methods.remove( method );
         method.setParent( null );
+    }
+    
+    public boolean isInvalid()
+    {
+        return this.invalid;
+    }
+    
+    public void markInvalid()
+    {
+        this.invalid = true;
     }
     
     @Override

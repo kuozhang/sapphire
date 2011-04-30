@@ -14,16 +14,16 @@ package org.eclipse.sapphire.sdk.build.processor.internal;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.DerivedValueService;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelParticle;
@@ -43,6 +43,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.DerivedValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
@@ -57,6 +58,7 @@ import org.eclipse.sapphire.sdk.build.processor.internal.util.TypeReference;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.WildcardTypeReference;
 
 import com.sun.mirror.apt.AnnotationProcessorEnvironment;
+import com.sun.mirror.apt.Messager;
 import com.sun.mirror.declaration.AnnotationMirror;
 import com.sun.mirror.declaration.ClassDeclaration;
 import com.sun.mirror.declaration.Declaration;
@@ -74,6 +76,7 @@ import com.sun.mirror.type.MirroredTypeException;
 import com.sun.mirror.type.PrimitiveType;
 import com.sun.mirror.type.TypeMirror;
 import com.sun.mirror.type.VoidType;
+import com.sun.mirror.util.SourcePosition;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -110,17 +113,20 @@ public final class GenerateImplProcessor
             final InterfaceDeclaration interfaceDeclaration = (InterfaceDeclaration) annotatedEntity;
             final ClassModel implClassModel = new ClassModel();
             
-            process( implClassModel, interfaceDeclaration );
+            process( env.getMessager(), implClassModel, interfaceDeclaration );
             
-            final PrintWriter pw = env.getFiler().createSourceFile( implClassModel.getName().getQualifiedName() );
-            
-            try
+            if( ! implClassModel.isInvalid() )
             {
-                implClassModel.write( new IndentingPrintWriter( pw ) );
-            }
-            finally
-            {
-                pw.close();
+                final PrintWriter pw = env.getFiler().createSourceFile( implClassModel.getName().getQualifiedName() );
+                
+                try
+                {
+                    implClassModel.write( new IndentingPrintWriter( pw ) );
+                }
+                finally
+                {
+                    pw.close();
+                }
             }
         }
         catch( Exception e )
@@ -176,7 +182,8 @@ public final class GenerateImplProcessor
         return false;
     }
 
-    private void process( final ClassModel elImplClass,
+    private void process( final Messager messager,
+                          final ClassModel elImplClass,
                           final InterfaceDeclaration elInterface )
     {
         final String simpleName = elInterface.getSimpleName().substring( 1 );
@@ -238,19 +245,19 @@ public final class GenerateImplProcessor
         {
             if( isInstanceOf( field.getType(), ValueProperty.class.getName() ) )
             {
-                processValueProperty( elImplClass, elInterface, field );
+                processValueProperty( messager, elImplClass, elInterface, field );
             }
             else if( isInstanceOf( field.getType(), ElementProperty.class.getName() ) )
             {
-                processElementProperty( elImplClass, elInterface, field );
+                processElementProperty( messager, elImplClass, elInterface, field );
             }
             else if( isInstanceOf( field.getType(), ListProperty.class.getName() ) )
             {
-                processListProperty( elImplClass, elInterface, field );
+                processListProperty( messager, elImplClass, elInterface, field );
             }
             else if( isInstanceOf( field.getType(), TransientProperty.class.getName() ) )
             {
-                processTransientProperty( elImplClass, elInterface, field );
+                processTransientProperty( messager, elImplClass, elInterface, field );
             }
         }
         
@@ -361,13 +368,18 @@ public final class GenerateImplProcessor
         }
     }
 
-    private void processValueProperty( final ClassModel implClassModel,
+    private void processValueProperty( final Messager messager,
+                                       final ClassModel implClassModel,
                                        final InterfaceDeclaration interfaceDeclaration,
                                        final PropertyFieldDeclaration propField )
     {
         try
         {
-            processValuePropertyInternal( implClassModel, interfaceDeclaration, propField );
+            processValuePropertyInternal( messager, implClassModel, interfaceDeclaration, propField );
+        }
+        catch( AbortException e )
+        {
+            implClassModel.markInvalid();
         }
         catch( RuntimeException e )
         {
@@ -392,7 +404,8 @@ public final class GenerateImplProcessor
         }
     }
 
-    private void processValuePropertyInternal( final ClassModel implClassModel,
+    private void processValuePropertyInternal( final Messager messager,
+                                               final ClassModel implClassModel,
                                                final InterfaceDeclaration interfaceDeclaration,
                                                final PropertyFieldDeclaration propField )
     {
@@ -464,27 +477,27 @@ public final class GenerateImplProcessor
         
         final String variableName = propField.propertyName.substring( 0, 1 ).toLowerCase() + propField.propertyName.substring( 1 );
         
-        final String setterMethodName = "set" + propField.propertyName;
         String getterMethodName = null;
         
         final InterfaceDeclaration modelElementInterface = propField.getDeclaringType();
         final String getterAlt1 = "get" + propField.propertyName;
         final String getterAlt2 = "is" + propField.propertyName;
 
-        MethodDeclaration getterMethod = findMethodDeclaration( modelElementInterface, getterAlt1 );
+        MethodDeclaration getterMethodInInterface = findMethodDeclaration( modelElementInterface, getterAlt1 );
         
-        if( getterMethod == null )
+        if( getterMethodInInterface == null )
         {
-            getterMethod = findMethodDeclaration( modelElementInterface, getterAlt2 );
+            getterMethodInInterface = findMethodDeclaration( modelElementInterface, getterAlt2 );
         }
         
-        if( getterMethod == null )
+        if( getterMethodInInterface == null )
         {
-            throw new IllegalStateException( "Unable to find getter method for " + modelElementInterface.getSimpleName() + '@' + propField.name );
+            final String msg = NLS.bind( Resources.unableToFindGetter, modelElementInterface.getSimpleName(), propField.name );
+            messager.printError( propField.getSourcePosition(), msg );
+            throw new AbortException();
         }
         
-        getterMethodName = getterMethod.getSimpleName();
-        
+        getterMethodName = getterMethodInInterface.getSimpleName();
         propField.setGetterMethodName( getterMethodName );
         
         // Define the field that will hold the cached value of the property.
@@ -557,17 +570,30 @@ public final class GenerateImplProcessor
         
         // Define the setter method, if necessary.
         
-        MethodModel setter = null;
-        
-        if( ! hasDerivedValueProviderAnnotation && findMethodDeclaration( modelElementInterface, setterMethodName ) != null )
+        if( ! hasDerivedValueProviderAnnotation && propField.getAnnotation( ReadOnly.class ) == null )
         {
+            final MethodDeclaration setterMethodInInterface 
+                = findMethodDeclaration( modelElementInterface, "set" + propField.propertyName, "java.lang.String" );
+            
+            if( setterMethodInInterface == null )
+            {
+                final String msg = NLS.bind( Resources.unableToFindStringSetter, modelElementInterface.getSimpleName(), propField.name );
+                messager.printError( propField.getSourcePosition(), msg );
+                throw new AbortException();
+            }
+            
+            final String setterMethodName = setterMethodInInterface.getSimpleName();
+            propField.setSetterMethodName( setterMethodName );
+            
+            MethodModel setter = null;
+            
             setter = implClassModel.addMethod();
             setter.setName( setterMethodName );
             
-            final MethodParameterModel param = new MethodParameterModel( "value", String.class );
-            param.setFinal( false );
+            final MethodParameterModel setterParam = new MethodParameterModel( "value", String.class );
+            setterParam.setFinal( false );
             
-            setter.addParameter( param );
+            setter.addParameter( setterParam );
             
             final Body sb = setter.getBody();
             
@@ -592,8 +618,21 @@ public final class GenerateImplProcessor
             
             if( ! baseType.getQualifiedName().equals( String.class.getName() ) )
             {
+                final MethodDeclaration typedSetterMethodInInterface
+                    = findMethodDeclaration( modelElementInterface, "set" + propField.propertyName, baseType.getQualifiedName() );
+                
+                if( typedSetterMethodInInterface == null )
+                {
+                    final String msg = NLS.bind( Resources.unableToFindTypedSetter, modelElementInterface.getSimpleName(), propField.name );
+                    messager.printError( propField.getSourcePosition(), msg );
+                    throw new AbortException();
+                }
+                
+                final String typeSetterMethodName = typedSetterMethodInInterface.getSimpleName();
+                propField.setTypedSetterMethodName( typeSetterMethodName );
+                
                 final MethodModel setterForTyped = implClassModel.addMethod();
-                setterForTyped.setName( setterMethodName );
+                setterForTyped.setName( typeSetterMethodName );
                 setterForTyped.addParameter( new MethodParameterModel( "value", baseType ) );
                 
                 final Body stb = setterForTyped.getBody();
@@ -603,25 +642,27 @@ public final class GenerateImplProcessor
                 
                 implClassModel.addImport( ValueSerializationService.class );
             }
-        }
-        
-        // Contribute read and write method blocks.
-        
-        contributeReadMethodBlock( implClassModel, propField );
-        
-        if( setter != null )
-        {
+            
             contributeValueWriteMethodBlock( implClassModel, propField );
         }
+        
+        // Contribute read method block.
+        
+        contributeReadMethodBlock( implClassModel, propField );
     }
     
-    private void processElementProperty( final ClassModel implClassModel,
+    private void processElementProperty( final Messager messager,
+                                         final ClassModel implClassModel,
                                          final InterfaceDeclaration interfaceDeclaration,
                                          final PropertyFieldDeclaration propField )
     {
         try
         {
-            processElementPropertyInternal( implClassModel, interfaceDeclaration, propField );
+            processElementPropertyInternal( messager, implClassModel, interfaceDeclaration, propField );
+        }
+        catch( AbortException e )
+        {
+            implClassModel.markInvalid();
         }
         catch( RuntimeException e )
         {
@@ -646,12 +687,24 @@ public final class GenerateImplProcessor
         }
     }
 
-    private void processElementPropertyInternal( final ClassModel implClassModel,
+    private void processElementPropertyInternal( final Messager messager,
+                                                 final ClassModel implClassModel,
                                                  final InterfaceDeclaration interfaceDeclaration,
                                                  final PropertyFieldDeclaration propField )
     {
         final boolean isImplied = isInstanceOf( propField.getType(), ImpliedElementProperty.class.getName() );
-        final String getterMethodName = "get" + propField.propertyName;
+
+        final MethodDeclaration getterMethodInInterface = findMethodDeclaration( interfaceDeclaration, "get" + propField.propertyName );
+        
+        if( getterMethodInInterface == null )
+        {
+            final String msg = NLS.bind( Resources.unableToFindGetter, interfaceDeclaration.getSimpleName(), propField.name );
+            messager.printError( propField.getSourcePosition(), msg );
+            throw new AbortException();
+        }
+        
+        final String getterMethodName = getterMethodInInterface.getSimpleName();
+        propField.setGetterMethodName( getterMethodName );
         
         final String variableName = propField.propertyName.substring( 0, 1 ).toLowerCase() + propField.propertyName.substring( 1 );
         
@@ -722,13 +775,18 @@ public final class GenerateImplProcessor
         contributeReadMethodBlock( implClassModel, propField );
     }
     
-    private void processListProperty( final ClassModel implClassModel,
+    private void processListProperty( final Messager messager,
+                                      final ClassModel implClassModel,
                                       final InterfaceDeclaration interfaceDeclaration,
                                       final PropertyFieldDeclaration propField )
     {
         try
         {
-            processListPropertyInternal( implClassModel, interfaceDeclaration, propField );
+            processListPropertyInternal( messager, implClassModel, interfaceDeclaration, propField );
+        }
+        catch( AbortException e )
+        {
+            implClassModel.markInvalid();
         }
         catch( RuntimeException e )
         {
@@ -753,11 +811,22 @@ public final class GenerateImplProcessor
         }
     }
 
-    private void processListPropertyInternal( final ClassModel implClassModel,
+    private void processListPropertyInternal( final Messager messager,
+                                              final ClassModel implClassModel,
                                               final InterfaceDeclaration interfaceDeclaration,
                                               final PropertyFieldDeclaration propField )
     {
-        final String getterMethodName = "get" + propField.propertyName;
+        final MethodDeclaration getterMethodInInterface = findMethodDeclaration( interfaceDeclaration, "get" + propField.propertyName );
+        
+        if( getterMethodInInterface == null )
+        {
+            final String msg = NLS.bind( Resources.unableToFindGetter, interfaceDeclaration.getSimpleName(), propField.name );
+            messager.printError( propField.getSourcePosition(), msg );
+            throw new AbortException();
+        }
+        
+        final String getterMethodName = getterMethodInInterface.getSimpleName();
+        propField.setGetterMethodName( getterMethodName );
         
         final String variableName = propField.propertyName.substring( 0, 1 ).toLowerCase() + propField.propertyName.substring( 1 );
         
@@ -831,13 +900,18 @@ public final class GenerateImplProcessor
         contributeReadMethodBlock( implClassModel, propField );
     }
     
-    private void processTransientProperty( final ClassModel implClassModel,
+    private void processTransientProperty( final Messager messager,
+                                           final ClassModel implClassModel,
                                            final InterfaceDeclaration interfaceDeclaration,
                                            final PropertyFieldDeclaration propField )
     {
         try
         {
-            processTransientPropertyInternal( implClassModel, interfaceDeclaration, propField );
+            processTransientPropertyInternal( messager, implClassModel, interfaceDeclaration, propField );
+        }
+        catch( AbortException e )
+        {
+            implClassModel.markInvalid();
         }
         catch( RuntimeException e )
         {
@@ -862,7 +936,8 @@ public final class GenerateImplProcessor
         }
     }
 
-    private void processTransientPropertyInternal( final ClassModel implClassModel,
+    private void processTransientPropertyInternal( final Messager messager,
+                                                   final ClassModel implClassModel,
                                                    final InterfaceDeclaration interfaceDeclaration,
                                                    final PropertyFieldDeclaration propField )
     {
@@ -895,8 +970,29 @@ public final class GenerateImplProcessor
         
         final String variableName = propField.propertyName.substring( 0, 1 ).toLowerCase() + propField.propertyName.substring( 1 );
         
-        final String getterMethodName = "get" + propField.propertyName;;
-        final String setterMethodName = "set" + propField.propertyName;
+        final MethodDeclaration getterMethodInInterface = findMethodDeclaration( interfaceDeclaration, "get" + propField.propertyName );
+        
+        if( getterMethodInInterface == null )
+        {
+            final String msg = NLS.bind( Resources.unableToFindGetter, interfaceDeclaration.getSimpleName(), propField.name );
+            messager.printError( propField.getSourcePosition(), msg );
+            throw new AbortException();
+        }
+        
+        final String getterMethodName = getterMethodInInterface.getSimpleName();
+        propField.setGetterMethodName( getterMethodName );
+        
+        final MethodDeclaration setterMethodInInterface = findMethodDeclaration( interfaceDeclaration, "set" + propField.propertyName, baseType.getQualifiedName() );
+        
+        if( setterMethodInInterface == null )
+        {
+            final String msg = NLS.bind( Resources.unableToFindSetter, interfaceDeclaration.getSimpleName(), propField.name );
+            messager.printError( propField.getSourcePosition(), msg );
+            throw new AbortException();
+        }
+        
+        final String setterMethodName = setterMethodInInterface.getSimpleName();
+        propField.setSetterMethodName( setterMethodName );
         
         // Define the field that will hold the cached value of the property.
         
@@ -990,44 +1086,55 @@ public final class GenerateImplProcessor
     }
     
     private static MethodDeclaration findMethodDeclaration( final InterfaceDeclaration interfaceDeclaration,
-                                                            final String methodName )
-    {
-        final List<MethodDeclaration> results = findMethodDeclarations( interfaceDeclaration, methodName );
-        
-        if( results.isEmpty() )
-        {
-            return null;
-        }
-        else
-        {
-            return results.get( 0 );
-        }
-    }
-    
-    private static List<MethodDeclaration> findMethodDeclarations( final InterfaceDeclaration interfaceDeclaration,
-                                                                   final String methodName )
-    {
-        final List<MethodDeclaration> results = new ArrayList<MethodDeclaration>();
-        findMethodDeclarations( interfaceDeclaration, methodName, results );
-        return results;
-    }
-    
-    private static void findMethodDeclarations( final InterfaceDeclaration interfaceDeclaration,
-                                                final String methodName,
-                                                final List<MethodDeclaration> results )
+                                                            final String methodName,
+                                                            final String... paramTypes )
     {
         for( MethodDeclaration method : interfaceDeclaration.getMethods() )
         {
-            if( method.getSimpleName().equals( methodName ) )
+            if( method.getSimpleName().equalsIgnoreCase( methodName ) )
             {
-                results.add( method );
+                final Collection<ParameterDeclaration> params = method.getParameters();
+                
+                if( params.size() == paramTypes.length )
+                {
+                    final Iterator<ParameterDeclaration> itr = params.iterator();
+                    boolean paramsMatch = true;
+                    
+                    for( String expectedParamTypeName : paramTypes )
+                    {
+                        final TypeMirror actualParamType = itr.next().getType();
+    
+                        if( actualParamType instanceof DeclaredType )
+                        {
+                            final TypeDeclaration actualParamTypeDeclaration = ( (DeclaredType) actualParamType ).getDeclaration();
+                            
+                            if( actualParamTypeDeclaration == null || ! actualParamTypeDeclaration.getQualifiedName().equals( expectedParamTypeName ) )
+                            {
+                                paramsMatch = false;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if( paramsMatch )
+                    {
+                        return method;
+                    }
+                }
             }
         }
         
         for( InterfaceType superInterfaceType : interfaceDeclaration.getSuperinterfaces() )
         {
-            findMethodDeclarations( superInterfaceType.getDeclaration(), methodName, results );
+            final MethodDeclaration method = findMethodDeclaration( superInterfaceType.getDeclaration(), methodName, paramTypes );
+            
+            if( method != null )
+            {
+                return method;
+            }
         }
+        
+        return null;
     }
     
     private static String preparePropName( final String propFieldName )
@@ -1216,23 +1323,23 @@ public final class GenerateImplProcessor
         
         if( type == null )
         {
-            rb.append( "set#1( (String) value );\n" +
+            rb.append( "#1( (String) value );\n" +
                        "return;", 
-                       propField.propertyName );
+                       propField.getSetterMethodName() );
         }
         else
         {
             rb.append( "if( ! ( value instanceof String ) )\n" +
                        "{\n" +
-                       "    set#1( (#2) value );\n" +
+                       "    #2( (#3) value );\n" +
                        "}\n" +
                        "else\n" +
                        "{\n" +
-                       "    set#1( (String) value );\n" +
+                       "    #1( (String) value );\n" +
                        "}\n" +
                        "\n" +
                        "return;",
-                       propField.propertyName, type.getSimpleName() );
+                       propField.getSetterMethodName(), propField.getTypedSetterMethodName(), type.getSimpleName() );
             
             implClassModel.addImport( type );
         }
@@ -1301,11 +1408,11 @@ public final class GenerateImplProcessor
         
         if( type == null )
         {
-            rb.append( "set#1( object );", propField.propertyName );
+            rb.append( "#1( object );", propField.getSetterMethodName() );
         }
         else
         {
-            rb.append( "set#1( (#2) object );", propField.propertyName, type.getSimpleName() );
+            rb.append( "#1( (#2) object );", propField.getSetterMethodName(), type.getSimpleName() );
         }
         
         rb.append( "return;" );
@@ -1399,6 +1506,8 @@ public final class GenerateImplProcessor
         public String propertyName;
         public LinkedList<FieldDeclaration> declarations = new LinkedList<FieldDeclaration>();
         private String getterMethodName;
+        private String setterMethodName;
+        private String typedSetterMethodName;
         
         public boolean isElementProperty()
         {
@@ -1459,20 +1568,56 @@ public final class GenerateImplProcessor
         
         public String getGetterMethodName()
         {
-            if( this.getterMethodName == null )
-            {
-                return "get" + this.propertyName;
-            }
-            else
-            {
-                return this.getterMethodName;
-            }
+            return this.getterMethodName;
         }
         
         public void setGetterMethodName( final String getterMethodName )
         {
             this.getterMethodName = getterMethodName;
         }
+        
+        public String getSetterMethodName()
+        {
+            return this.setterMethodName;
+        }
+        
+        public void setSetterMethodName( final String setterMethodName )
+        {
+            this.setterMethodName = setterMethodName;
+        }
+        
+        public String getTypedSetterMethodName()
+        {
+            return this.typedSetterMethodName;
+        }
+        
+        public void setTypedSetterMethodName( final String typedSetterMethodName )
+        {
+            this.typedSetterMethodName = typedSetterMethodName;
+        }
+        
+        public SourcePosition getSourcePosition()
+        {
+            return this.declarations.get( 0 ).getPosition();
+        }
     }
-
+    
+    private static class AbortException extends RuntimeException 
+    {
+        private static final long serialVersionUID = 1L;
+    }
+    
+    private static final class Resources extends NLS
+    {
+        public static String unableToFindGetter;
+        public static String unableToFindSetter;
+        public static String unableToFindStringSetter;
+        public static String unableToFindTypedSetter;
+        
+        static
+        {
+            initializeMessages( GenerateImplProcessor.class.getName(), Resources.class );
+        }
+    }
+    
 }
