@@ -33,7 +33,7 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 
 public interface IMisc0003TestRootElement extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType(IMisc0003TestRootElement.class);
+    ModelElementType TYPE = new ModelElementType( IMisc0003TestRootElement.class );
     
     // *** ValueProperty1 ***
 

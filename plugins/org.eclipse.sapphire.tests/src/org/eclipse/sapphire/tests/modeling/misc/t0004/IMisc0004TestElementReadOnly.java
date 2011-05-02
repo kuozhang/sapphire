@@ -9,13 +9,12 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.misc.t0003;
+package org.eclipse.sapphire.tests.modeling.misc.t0004;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -23,15 +22,20 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 
 @GenerateImpl
 
-public interface IMisc0003TestChildElement extends IModelElement
+public interface IMisc0004TestElementReadOnly extends IMisc0004TestElementWritable
 {
-    ModelElementType TYPE = new ModelElementType( IMisc0003TestChildElement.class );
+    ModelElementType TYPE = new ModelElementType( IMisc0004TestElementReadOnly.class );
     
     // *** Text ***
+
+    @ReadOnly
     
-    ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
+    ValueProperty PROP_TEXT = new ValueProperty( TYPE, IMisc0004TestElementWritable.PROP_TEXT );
     
-    Value<String> getText();
-    void setText( String value );
+    // *** Integer ***
+    
+    @ReadOnly
+
+    ValueProperty PROP_INTEGER = new ValueProperty( TYPE, IMisc0004TestElementWritable.PROP_INTEGER );
 
 }

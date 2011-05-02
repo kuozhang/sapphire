@@ -9,13 +9,14 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.misc.t0003;
+package org.eclipse.sapphire.tests.modeling.misc.t0004;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -23,9 +24,9 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 
 @GenerateImpl
 
-public interface IMisc0003TestChildElement extends IModelElement
+public interface IMisc0004TestElementWritable extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IMisc0003TestChildElement.class );
+    ModelElementType TYPE = new ModelElementType( IMisc0004TestElementWritable.class );
     
     // *** Text ***
     
@@ -33,5 +34,15 @@ public interface IMisc0003TestChildElement extends IModelElement
     
     Value<String> getText();
     void setText( String value );
+    
+    // *** Integer ***
+    
+    @Type( base = Integer.class )
+
+    ValueProperty PROP_INTEGER = new ValueProperty( TYPE, "Integer" );
+    
+    Value<Integer> getInteger();
+    void setInteger( String value );
+    void setInteger( Integer value );
 
 }

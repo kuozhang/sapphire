@@ -645,6 +645,49 @@ public final class GenerateImplProcessor
             
             contributeValueWriteMethodBlock( implClassModel, propField );
         }
+        else
+        {
+            final MethodDeclaration setterMethodInInterface 
+                = findMethodDeclaration( modelElementInterface, "set" + propField.propertyName, "java.lang.String" );
+            
+            if( setterMethodInInterface != null )
+            {
+                final String setterMethodName = setterMethodInInterface.getSimpleName();
+                propField.setSetterMethodName( setterMethodName );
+                
+                MethodModel setter = null;
+                
+                setter = implClassModel.addMethod();
+                setter.setName( setterMethodName );
+                
+                final MethodParameterModel setterParam = new MethodParameterModel( "value", String.class );
+                setterParam.setFinal( false );
+                
+                setter.addParameter( setterParam );
+                
+                final Body sb = setter.getBody();
+                sb.append( "throw new UnsupportedOperationException();" );
+            }
+            
+            if( ! baseType.getQualifiedName().equals( String.class.getName() ) )
+            {
+                final MethodDeclaration typedSetterMethodInInterface
+                    = findMethodDeclaration( modelElementInterface, "set" + propField.propertyName, baseType.getQualifiedName() );
+                
+                if( typedSetterMethodInInterface != null )
+                {
+                    final String typeSetterMethodName = typedSetterMethodInInterface.getSimpleName();
+                    propField.setTypedSetterMethodName( typeSetterMethodName );
+                    
+                    final MethodModel setterForTyped = implClassModel.addMethod();
+                    setterForTyped.setName( typeSetterMethodName );
+                    setterForTyped.addParameter( new MethodParameterModel( "value", baseType ) );
+                    
+                    final Body stb = setterForTyped.getBody();
+                    stb.append( "throw new UnsupportedOperationException();" );
+                }
+            }
+        }
         
         // Contribute read method block.
         

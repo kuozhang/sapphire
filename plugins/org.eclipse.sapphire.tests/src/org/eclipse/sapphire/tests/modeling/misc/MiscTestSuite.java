@@ -18,6 +18,7 @@ import junit.framework.TestSuite;
 import org.eclipse.sapphire.tests.modeling.misc.t0001.TestMisc0001;
 import org.eclipse.sapphire.tests.modeling.misc.t0002.TestMisc0002;
 import org.eclipse.sapphire.tests.modeling.misc.t0003.Misc0003Test;
+import org.eclipse.sapphire.tests.modeling.misc.t0004.Misc0004Test;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -42,6 +43,7 @@ public final class MiscTestSuite
         suite.addTest( TestMisc0001.suite() );
         suite.addTest( TestMisc0002.suite() );
         suite.addTest( Misc0003Test.suite() );
+        suite.addTest( Misc0004Test.suite() );
         
         return suite;
     }
