@@ -8,6 +8,7 @@
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Ling Hao - [344015] Insertion order lost if xsd includes another xsd (regression)
+ *               [337232] Certain schema causes elements to be out of order in corresponding xml files
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml.schema;
@@ -338,6 +339,26 @@ public final class XmlDocumentSchemaParser
         }
     }
     
+    private static QName getQName(final String name, final Map<String,String> prefixToNamespaceMap) {
+        final int colon = name.indexOf( ':' );
+        final String refNamespacePrefix;
+        final String refLocalName;
+        
+        if( colon == -1 )
+        {
+            refNamespacePrefix = "";
+            refLocalName = name;
+        }
+        else
+        {
+            refNamespacePrefix = name.substring( 0, colon );
+            refLocalName = name.substring( colon + 1 );
+        }
+        
+        final String refNamespace = prefixToNamespaceMap.get( refNamespacePrefix );
+        return new QName( refNamespace, refLocalName );
+    }
+    
     private static XmlElementDefinition.Factory parseElement( final XmlDocumentSchema.Factory schema,
                                                               final Map<String,String> prefixToNamespaceMap,
                                                               final Element el )
@@ -350,23 +371,7 @@ public final class XmlDocumentSchemaParser
         
         if( ref.length() > 0 )
         {
-            final int colon = ref.indexOf( ':' );
-            final String refNamespacePrefix;
-            final String refLocalName;
-            
-            if( colon == -1 )
-            {
-                refNamespacePrefix = "";
-                refLocalName = ref;
-            }
-            else
-            {
-                refNamespacePrefix = ref.substring( 0, colon );
-                refLocalName = ref.substring( colon + 1 );
-            }
-            
-            final String refNamespace = prefixToNamespaceMap.get( refNamespacePrefix );
-            qname = new QName( refNamespace, refLocalName );
+        	qname = getQName( ref, prefixToNamespaceMap );
             isReference = true;
         }
 
@@ -448,6 +453,16 @@ public final class XmlDocumentSchemaParser
                 def.setMaxOccur( Integer.parseInt( maxOccursStr ) );
             }
             catch( NumberFormatException e ) {}
+        }
+        
+        final String isAbstract = el.getAttribute("abstract");
+        if ("true".equals(isAbstract)) {
+        	def.setAbstract(true);
+        }
+        
+        final String substitutionGroup = el.getAttribute("substitutionGroup");
+        if (substitutionGroup != null && substitutionGroup.length() > 0) {
+        	def.setSubstitutionGroup(getQName(substitutionGroup, prefixToNamespaceMap));
         }
         
         return def;

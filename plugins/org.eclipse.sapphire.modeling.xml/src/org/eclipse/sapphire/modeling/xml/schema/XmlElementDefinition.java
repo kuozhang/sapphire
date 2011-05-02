@@ -7,9 +7,12 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [337232] Certain schema causes elements to be out of order in corresponding xml files
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml.schema;
+
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -24,6 +27,9 @@ public class XmlElementDefinition extends XmlContentModel
 {
     private QName elementName;
     private QName contentModelName;
+    private boolean isAbstract;
+    private QName substitutionGroup;
+    private List<XmlElementDefinition> substitutionList;
     
     protected XmlElementDefinition( final XmlDocumentSchema schema,
                                     final QName elementName,
@@ -31,12 +37,25 @@ public class XmlElementDefinition extends XmlContentModel
                                     final int minOccur,
                                     final int maxOccur )
     {
-        super( schema, minOccur, maxOccur );
-
-        this.elementName = elementName;
-        this.contentModelName = contentModelName;
+        this( schema, elementName, contentModelName, minOccur, maxOccur, false, null );
     }
     
+    protected XmlElementDefinition( final XmlDocumentSchema schema,
+            final QName elementName,
+            final QName contentModelName,
+            final int minOccur,
+            final int maxOccur,
+            final boolean isAbstract, 
+            final QName substitutionGroup )
+	{
+		super( schema, minOccur, maxOccur );
+		
+		this.elementName = elementName;
+		this.contentModelName = contentModelName;
+		this.isAbstract = isAbstract;
+		this.substitutionGroup = substitutionGroup;
+	}
+
     public QName getName()
     {
         return this.elementName;
@@ -47,7 +66,23 @@ public class XmlElementDefinition extends XmlContentModel
         return this.contentModelName;
     }
     
-    public XmlContentModel getContentModel()
+    public boolean isAbstract() {
+		return this.isAbstract;
+	}
+
+	public QName getSubstitutionGroup() {
+		return this.substitutionGroup;
+	}
+
+	public List<XmlElementDefinition> getSubstitutionList() {
+		return this.substitutionList;
+	}
+
+	public void setSubstitutionList(List<XmlElementDefinition> substitutionList) {
+		this.substitutionList = substitutionList;
+	}
+
+	public XmlContentModel getContentModel()
     {
         final QName contentModelName = getContentModelName();
         
@@ -104,7 +139,7 @@ public class XmlElementDefinition extends XmlContentModel
             {
                 final QName eln = new QName( node.getNamespaceURI(), node.getLocalName() );
                 
-                if( eln.equals( this.elementName ) )
+                if ( sameElementName( eln ) )
                 {
                     elementsConsumed++;
                     position.listIndex++;
@@ -118,7 +153,7 @@ public class XmlElementDefinition extends XmlContentModel
         
         final InsertionPosition result = new InsertionPosition();
 
-        if( this.elementName.equals( qname ) )
+        if( sameElementName( qname ) )
         {
             result.listIndex = position.listIndex;
             
@@ -139,6 +174,13 @@ public class XmlElementDefinition extends XmlContentModel
         }
         
         return result;
+    }
+    
+    protected boolean sameElementName(QName qname) {
+    	if (this.elementName.equals( qname )) {
+    		return true;
+    	}
+    	return false;
     }
     
     @Override
@@ -169,6 +211,21 @@ public class XmlElementDefinition extends XmlContentModel
             buf.append( contentModelName );
             buf.append( '\n' );
         }
+        
+        if ( isAbstract() ) 
+        {
+            buf.append( indent );
+        	buf.append( "    abstract=\"true\" "); //$NON-NLS-1$
+            buf.append( '\n' );
+        }
+        
+        if ( getSubstitutionGroup() != null )
+        {
+            buf.append( indent );
+            buf.append( "    SubstitutionGroup = " ); //$NON-NLS-1$
+            buf.append( getSubstitutionGroup() );
+            buf.append( '\n' );
+        }
 
         buf.append( indent );
         buf.append( '}' );
@@ -178,6 +235,8 @@ public class XmlElementDefinition extends XmlContentModel
     {
         protected QName elementName;
         private QName contentModelName;
+        private boolean isAbstract = false;
+        private QName substitutionGroup = null;
         
         public final QName getName()
         {
@@ -199,7 +258,7 @@ public class XmlElementDefinition extends XmlContentModel
             return this.contentModelName;
         }
         
-        public void setContentModelName( final QName contentModelName )
+		public void setContentModelName( final QName contentModelName )
         {
             this.contentModelName = contentModelName;
         }
@@ -209,10 +268,26 @@ public class XmlElementDefinition extends XmlContentModel
             this.contentModelName = new QName( contentModelName );
         }
 
+        public final boolean isAbstract() {
+			return this.isAbstract;
+		}
+
+		public final void setAbstract(boolean isAbstract) {
+			this.isAbstract = isAbstract;
+		}
+
+		public final QName getSubstitutionGroup() {
+			return this.substitutionGroup;
+		}
+
+		public final void setSubstitutionGroup(QName substitutionGroup) {
+			this.substitutionGroup = substitutionGroup;
+		}
+
         @Override
         public XmlContentModel create( final XmlDocumentSchema schema )
         {
-            return new XmlElementDefinition( schema, this.elementName, this.contentModelName, this.minOccur, this.maxOccur );
+            return new XmlElementDefinition( schema, this.elementName, this.contentModelName, this.minOccur, this.maxOccur, this.isAbstract, this.substitutionGroup );
         }
     }
     

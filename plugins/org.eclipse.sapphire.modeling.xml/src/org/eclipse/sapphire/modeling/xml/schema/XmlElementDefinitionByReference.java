@@ -7,9 +7,12 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [337232] Certain schema causes elements to be out of order in corresponding xml files
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml.schema;
+
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -81,7 +84,50 @@ public final class XmlElementDefinitionByReference extends XmlElementDefinition
         return this.contentModelName;
     }
     
-    public static final class Factory extends XmlElementDefinition.Factory
+    @Override
+	public XmlContentModel findChildElementContentModel(QName childElementName) {
+		final XmlContentModel model = super.findChildElementContentModel(childElementName);
+		if (model == null) {
+			// first check to see if this reference is abstract
+			final XmlElementDefinition definition = getSchema().getElement(getName().getLocalPart());
+			if (definition.isAbstract()) {
+				// Then see if the childElement specify the substitutionGroup
+				List<XmlElementDefinition> list = definition.getSubstitutionList();
+		        if (list != null && list.size() > 0) {
+		        	for (XmlElementDefinition subGroup : list) {
+		        		if (subGroup.getName().equals(childElementName)) {
+		        			return subGroup;
+		        		}
+		        	}
+		        }
+			}
+		}
+		return model;
+	}
+
+	@Override
+	protected boolean sameElementName(QName qname) {
+		boolean isSame = super.sameElementName(qname);
+		
+		if (!isSame) {
+			// first check to see if this reference is abstract
+			final XmlElementDefinition definition = getSchema().getElement(getName().getLocalPart());
+			if (definition.isAbstract()) {
+				// Then see if the childElement specify the substitutionGroup
+				List<XmlElementDefinition> list = definition.getSubstitutionList();
+		        if (list != null && list.size() > 0) {
+		        	for (XmlElementDefinition subGroup : list) {
+		        		if (subGroup.getName().equals(qname)) {
+		        			return true;
+		        		}
+		        	}
+		        }
+			}
+		}
+		return isSame;
+	}
+
+	public static final class Factory extends XmlElementDefinition.Factory
     {
         @Override
         public QName getContentModelName()

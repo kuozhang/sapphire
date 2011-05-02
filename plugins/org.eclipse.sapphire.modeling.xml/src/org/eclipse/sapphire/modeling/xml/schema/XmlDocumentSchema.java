@@ -8,6 +8,7 @@
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Ling Hao - [338605] The include directive not handled in XML Schema parsing (regression)
+ *               [337232] Certain schema causes elements to be out of order in corresponding xml files
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml.schema;
@@ -60,6 +61,20 @@ public final class XmlDocumentSchema
         {
             final XmlElementDefinition def = (XmlElementDefinition) optimize( factory.create( this ) );
             this.topLevelElements.put( def.getName().getLocalPart(), def );
+        }
+        
+        for ( Map.Entry<String, XmlElementDefinition> map : this.topLevelElements.entrySet() ) { 
+        	final XmlElementDefinition definition = map.getValue();
+        	if (definition.isAbstract()) {
+        		List<XmlElementDefinition> substitutionList = new ArrayList<XmlElementDefinition>();
+                for ( Map.Entry<String, XmlElementDefinition> map2 : this.topLevelElements.entrySet() ) {
+                	final XmlElementDefinition definition2 = map2.getValue();
+                	if (definition.getName().equals(definition2.getSubstitutionGroup())) {
+                		substitutionList.add(definition2);
+                	}
+                }
+                definition.setSubstitutionList(substitutionList);
+        	}
         }
     }
     

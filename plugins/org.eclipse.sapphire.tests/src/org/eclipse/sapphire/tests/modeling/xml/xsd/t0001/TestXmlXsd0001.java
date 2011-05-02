@@ -8,6 +8,7 @@
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Ling Hao - [344015] Insertion order lost if xsd includes another xsd
+ *               [337232] Certain schema causes elements to be out of order in corresponding xml files
  ******************************************************************************/
 
 package org.eclipse.sapphire.tests.modeling.xml.xsd.t0001;
@@ -40,6 +41,8 @@ public final class TestXmlXsd0001
     extends SapphireTestCase
     
 {
+	private final static String SCHEMA_LOCATION = "http://www.eclipse.org/sapphire/tests/xml/xsd/0001";
+	
     private TestXmlXsd0001( final String name )
     {
         super( name );
@@ -60,7 +63,7 @@ public final class TestXmlXsd0001
     
     public void testSchemaParsing() throws Exception
     {
-        final XmlDocumentSchema schema = XmlDocumentSchemasCache.getSchema( "http://www.eclipse.org/sapphire/tests/xml/xsd/0001", null );
+        final XmlDocumentSchema schema = XmlDocumentSchemasCache.getSchema( SCHEMA_LOCATION, null );
         
         final XmlElementDefinition rootElementDef = schema.getElement( "root" );
         final XmlSequenceGroup rootContentModel = (XmlSequenceGroup) rootElementDef.getContentModel();
@@ -75,16 +78,22 @@ public final class TestXmlXsd0001
     
     public void testChildSchemaParsing() throws Exception
     {
-        final XmlDocumentSchema schema = XmlDocumentSchemasCache.getSchema( "http://www.eclipse.org/sapphire/tests/xml/xsd/0001", null );
+        final XmlDocumentSchema schema = XmlDocumentSchemasCache.getSchema( SCHEMA_LOCATION, null );
         
         final XmlElementDefinition rootElementDef = schema.getElement( "root" );
         final XmlSequenceGroup rootContentModel = (XmlSequenceGroup) rootElementDef.getContentModel();
-        final XmlSequenceGroup childContentModel = (XmlSequenceGroup)rootContentModel.findChildElementContentModel(new QName( "http://www.eclipse.org/sapphire/tests/xml/xsd/0001", "element2" ));
+        final XmlSequenceGroup childContentModel = (XmlSequenceGroup)rootContentModel.findChildElementContentModel(new QName( SCHEMA_LOCATION, "element2" ));
         final List<XmlContentModel> childNestedContent = childContentModel.getNestedContent();
-        assertEquals( 3, childNestedContent.size() );
-        assertEquals( "aaa2", ( (XmlElementDefinition) childNestedContent.get( 0 ) ).getName().getLocalPart() );
-        assertEquals( "bbb2", ( (XmlElementDefinition) childNestedContent.get( 1 ) ).getName().getLocalPart() );
-        assertEquals( "ccc2", ( (XmlElementDefinition) childNestedContent.get( 2 ) ).getName().getLocalPart() );
+        assertEquals( 4, childNestedContent.size() );
+        assertEquals( "shape", ( (XmlElementDefinition) childNestedContent.get( 0 ) ).getName().getLocalPart() );
+        assertEquals( "aaa2", ( (XmlElementDefinition) childNestedContent.get( 1 ) ).getName().getLocalPart() );
+        assertEquals( "bbb2", ( (XmlElementDefinition) childNestedContent.get( 2 ) ).getName().getLocalPart() );
+        assertEquals( "ccc2", ( (XmlElementDefinition) childNestedContent.get( 3 ) ).getName().getLocalPart() );
+        
+        final XmlContentModel circleContentModel = childContentModel.findChildElementContentModel(new QName( SCHEMA_LOCATION, "circle" ));
+        assertNotNull(circleContentModel);
+        final XmlContentModel squareContentModel = childContentModel.findChildElementContentModel(new QName( SCHEMA_LOCATION, "square" ));
+        assertNotNull(squareContentModel);
     }
 
     public void testInsertOrder() throws Exception
@@ -96,10 +105,17 @@ public final class TestXmlXsd0001
         model.setCcc( "ccc" );
         model.setBbb( "bbb" );
         model.setAaa( "aaa" );
+        final ITestXmlXsd0001Element2 element2 = model.getElement2();
+        element2.setCcc2("ccc2");
+        element2.setBbb2( "bbb2" );
+        element2.setCircle( "circle" );
+        element2.setAaa2( "aaa2" );
+        element2.setSquare( "square" );
         
         model.resource().save();
         
         final String result = new String( resourceStore.getContents(), "UTF-8" );
+        System.out.println(result);
         
         assertEqualsIgnoreNewLineDiffs( loadResource( "0001.txt" ), result );
     }

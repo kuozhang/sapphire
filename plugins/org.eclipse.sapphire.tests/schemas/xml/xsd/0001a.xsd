@@ -38,13 +38,37 @@
 	<element name="element2">
 	   <complexType>
 	   	<sequence>
+            <element ref="shape" minOccurs="0" maxOccurs="unbounded"/>
 	   		<element name="aaa2" type="string"/>
 	   		<element name="bbb2" type="string"/>
 	   		<element name="ccc2" type="string"/>
 	   	</sequence>
 	   </complexType>
 	</element>
+	
+	<element name="shape" abstract="true">
+	</element>
+	
+	<element name="square" substitutionGroup="shape">
+	  <complexType>
+	    <sequence>
+	   		<element name="square1" type="string"/>
+	   		<element name="square2" type="string"/>
+	   		<element name="square3" type="string"/>
+	    </sequence>
+	  </complexType>
+	</element>
     
+	<element name="circle" substitutionGroup="shape">
+	  <complexType>
+	    <sequence>
+	   		<element name="circle1" type="string"/>
+	   		<element name="circle2" type="string"/>
+	   		<element name="circle3" type="string"/>
+	    </sequence>
+	  </complexType>
+	</element>
+
     <element name="root" type="RedefineTestType"/>
     
 </schema>
