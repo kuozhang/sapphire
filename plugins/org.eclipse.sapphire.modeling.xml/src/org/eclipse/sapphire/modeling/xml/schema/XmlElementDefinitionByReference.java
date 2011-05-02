@@ -112,7 +112,7 @@ public final class XmlElementDefinitionByReference extends XmlElementDefinition
 		if (!isSame) {
 			// first check to see if this reference is abstract
 			final XmlElementDefinition definition = getSchema().getElement(getName().getLocalPart());
-			if (definition.isAbstract()) {
+			if (definition != null && definition.isAbstract()) {
 				// Then see if the childElement specify the substitutionGroup
 				List<XmlElementDefinition> list = definition.getSubstitutionList();
 		        if (list != null && list.size() > 0) {
