@@ -9,7 +9,7 @@
  *    Ling Hao - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.xml.xsd.t0001;
+package org.eclipse.sapphire.tests.modeling.xml.xsd.t0003;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -17,6 +17,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -24,12 +25,15 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface ITestXmlXsd0001Element2
+@XmlRootBinding( namespace = "http://www.eclipse.org/sapphire/tests/xml/xsd/0003",
+                 elementName = "element" )
+
+public interface ITestXmlXsd0003Element
 
     extends IModelElement
     
 {
-    ModelElementType TYPE = new ModelElementType( ITestXmlXsd0001Element2.class );
+    ModelElementType TYPE = new ModelElementType( ITestXmlXsd0003Element.class );
     
     // *** circle ***
     
@@ -49,31 +53,31 @@ public interface ITestXmlXsd0001Element2
     Value<String> getSquare();
     void setSquare( String value );
 
-    // *** Aaa2 ***
+    // *** Aaa ***
     
-    @XmlBinding( path = "aaa2" )
+    @XmlBinding( path = "aaa" )
     
-    ValueProperty PROP_AAA2 = new ValueProperty( TYPE, "Aaa2" );
+    ValueProperty PROP_AAA = new ValueProperty( TYPE, "Aaa" );
     
-    Value<String> getAaa2();
-    void setAaa2( String value );
-
-    // *** Bbb2 ***
+    Value<String> getAaa();
+    void setAaa( String value );
     
-    @XmlBinding( path = "bbb2" )
+    // *** Bbb ***
     
-    ValueProperty PROP_BBB2 = new ValueProperty( TYPE, "Bbb2" );
+    @XmlBinding( path = "bbb" )
     
-    Value<String> getBbb2();
-    void setBbb2( String value );
+    ValueProperty PROP_BBB = new ValueProperty( TYPE, "Bbb" );
     
-    // *** CCC2 ***
+    Value<String> getBbb();
+    void setBbb( String value );
     
-    @XmlBinding( path = "ccc2" )
+    // *** CCC ***
     
-    ValueProperty PROP_CCC2 = new ValueProperty( TYPE, "Ccc2" );
+    @XmlBinding( path = "ccc" )
     
-    Value<String> getCcc2();
-    void setCcc2( String value );
+    ValueProperty PROP_CCC = new ValueProperty( TYPE, "Ccc" );
+    
+    Value<String> getCcc();
+    void setCcc( String value );
     
 }

@@ -41,8 +41,28 @@
     </catalogContribution>
     <catalogContribution>
       <system
-        systemId="http://www.eclipse.org/sapphire/tests/xml/xsd/0001/c"
-        uri="schemas/xml/xsd/0001c.xsd"/>
+        systemId="http://www.eclipse.org/sapphire/tests/xml/xsd/0002"
+        uri="schemas/xml/xsd/0002a.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/xsd/0002/a"
+        uri="schemas/xml/xsd/0002a.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/xsd/0002/b"
+        uri="schemas/xml/xsd/0002b.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/xsd/0003"
+        uri="schemas/xml/xsd/0003a.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/xsd/0003/a"
+        uri="schemas/xml/xsd/0003a.xsd"/>
     </catalogContribution>
     <catalogContribution>
       <system

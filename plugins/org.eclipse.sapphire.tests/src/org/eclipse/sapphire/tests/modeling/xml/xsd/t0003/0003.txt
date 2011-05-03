@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<element xmlns="http://www.eclipse.org/sapphire/tests/xml/xsd/0003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <circle>circle</circle>
+    <square>square</square>
+    <aaa>aaa</aaa>
+    <bbb>bbb</bbb>
+    <ccc>ccc</ccc>
+</element>

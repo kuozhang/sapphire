@@ -15,16 +15,28 @@
 
 <schema
     xmlns="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="http://www.eclipse.org/sapphire/tests/xml/xsd/0002"
     elementFormDefault="qualified">
+    
+    <include schemaLocation="http://www.eclipse.org/sapphire/tests/xml/xsd/0002/b" />
 
-  <element name="element1">
-    <complexType>
-    	<sequence>
-    		<element name="element1-aaa" type="string"/>
-    		<element name="element1-bbb" type="string"/>
-    		<element name="element1-ccc" type="string"/>
-    	</sequence>
-    </complexType>
-  </element>
+    <element name="element">
+        <complexType>
+            <sequence>
+	    		<element name="aaa" type="string"/>
+	    		<element name="bbb" type="string"/>
+	    		<element name="ccc" type="string"/>
+                <element ref="element-2b"/>
+            </sequence>
+        </complexType>
+    </element>
+    
+    <element name="root">
+        <complexType>
+            <sequence>
+                <element ref="element"/>
+            </sequence>
+        </complexType>
+    </element>
     
 </schema>

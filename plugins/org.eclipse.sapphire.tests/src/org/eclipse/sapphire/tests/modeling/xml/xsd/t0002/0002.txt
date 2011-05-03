@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<element xmlns="http://www.eclipse.org/sapphire/tests/xml/xsd/0002" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <aaa>aaa</aaa>
+    <bbb>bbb</bbb>
+    <ccc>ccc</ccc>
+    <element2>
+        <ccc-2c>ccc2</ccc-2c>
+        <bbb-2b>bbb2</bbb-2b>
+        <aaa-2b>aaa2</aaa-2b>
+    </element2>
+</element>

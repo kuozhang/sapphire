@@ -4,11 +4,4 @@
     <bbb>bbb</bbb>
     <ccc>ccc</ccc>
     <ddd>ddd</ddd>
-    <element2>
-        <circle>circle</circle>
-        <square>square</square>
-        <aaa2>aaa2</aaa2>
-        <bbb2>bbb2</bbb2>
-        <ccc2>ccc2</ccc2>
-    </element2>
 </root>

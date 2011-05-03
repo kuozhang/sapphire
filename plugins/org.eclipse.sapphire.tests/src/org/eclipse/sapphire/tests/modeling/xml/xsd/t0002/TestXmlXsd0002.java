@@ -6,12 +6,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.xml.xsd.t0001;
+package org.eclipse.sapphire.tests.modeling.xml.xsd.t0002;
 
 import java.util.List;
+
+import javax.xml.namespace.QName;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -27,17 +29,18 @@ import org.eclipse.sapphire.modeling.xml.schema.XmlSequenceGroup;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
- * Tests handling of XML Schema redefine directive.
+ * Tests handling of XML Schema include directive.
  * 
- * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public final class TestXmlXsd0001
+public final class TestXmlXsd0002
 
     extends SapphireTestCase
-    
-{
-    private TestXmlXsd0001( final String name )
+{   
+	private final static String SCHEMA_LOCATION = "http://www.eclipse.org/sapphire/tests/xml/xsd/0002";
+	
+    private TestXmlXsd0002( final String name )
     {
         super( name );
     }
@@ -46,19 +49,19 @@ public final class TestXmlXsd0001
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "XmlXsd0001" );
+        suite.setName( "XmlXsd0002" );
 
-        suite.addTest( new TestXmlXsd0001( "testSchemaParsing" ) );
-        suite.addTest( new TestXmlXsd0001( "testInsertOrder" ) );
+        suite.addTest( new TestXmlXsd0002( "testSchemaParsing" ) );
+        suite.addTest( new TestXmlXsd0002( "testInsertOrder" ) );
         
         return suite;
     }
     
     public void testSchemaParsing() throws Exception
     {
-        final XmlDocumentSchema schema = XmlDocumentSchemasCache.getSchema( "http://www.eclipse.org/sapphire/tests/xml/xsd/0001", null );
+        final XmlDocumentSchema schema = XmlDocumentSchemasCache.getSchema( SCHEMA_LOCATION, null );
         
-        final XmlElementDefinition rootElementDef = schema.getElement( "root" );
+        final XmlElementDefinition rootElementDef = schema.getElement( "element" );
         final XmlSequenceGroup rootContentModel = (XmlSequenceGroup) rootElementDef.getContentModel();
         final List<XmlContentModel> nestedContent = rootContentModel.getNestedContent();
         
@@ -66,24 +69,35 @@ public final class TestXmlXsd0001
         assertEquals( "aaa", ( (XmlElementDefinition) nestedContent.get( 0 ) ).getName().getLocalPart() );
         assertEquals( "bbb", ( (XmlElementDefinition) nestedContent.get( 1 ) ).getName().getLocalPart() );
         assertEquals( "ccc", ( (XmlElementDefinition) nestedContent.get( 2 ) ).getName().getLocalPart() );
-        assertEquals( "ddd", ( (XmlElementDefinition) nestedContent.get( 3 ) ).getName().getLocalPart() );
+        assertEquals( "element-2b", ( (XmlElementDefinition) nestedContent.get( 3 ) ).getName().getLocalPart() );
+
+        final XmlSequenceGroup childContentModel = (XmlSequenceGroup)rootContentModel.findChildElementContentModel(new QName( SCHEMA_LOCATION, "element-2b" ));
+        final List<XmlContentModel> childNestedContent = childContentModel.getNestedContent();
+        assertEquals( 3, childNestedContent.size() );
+        assertEquals( "aaa-2b", ( (XmlElementDefinition) childNestedContent.get( 0 ) ).getName().getLocalPart() );
+        assertEquals( "bbb-2b", ( (XmlElementDefinition) childNestedContent.get( 1 ) ).getName().getLocalPart() );
+        assertEquals( "ccc-2b", ( (XmlElementDefinition) childNestedContent.get( 2 ) ).getName().getLocalPart() );
     }
     
     public void testInsertOrder() throws Exception
     {
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
-        final ITestXmlXsd0001ModelRoot model = ITestXmlXsd0001ModelRoot.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( resourceStore ) ) );
+        final ITestXmlXsd0002ModelRoot model = ITestXmlXsd0002ModelRoot.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( resourceStore ) ) );
         
-        model.setDdd( "ddd" );
         model.setCcc( "ccc" );
-        model.setBbb( "bbb" );
         model.setAaa( "aaa" );
+        
+        ITestXmlXsd0002Element2b element2b = model.getElement2();
+        element2b.setCcc2( "ccc2" );
+        element2b.setBbb2( "bbb2" );
+        element2b.setAaa2( "aaa2" );
+
+        model.setBbb( "bbb" );
         
         model.resource().save();
         
         final String result = new String( resourceStore.getContents(), "UTF-8" );
         
-        assertEqualsIgnoreNewLineDiffs( loadResource( "0001.txt" ), result );
+        assertEqualsIgnoreNewLineDiffs( loadResource( "0002.txt" ), result );
     }
-    
 }

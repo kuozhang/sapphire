@@ -1,74 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- 
- ******************************************************************************
- * Copyright (c) 2011 Oracle
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Ling Hao - [344015] Insertion order lost if xsd includes another xsd
- ******************************************************************************
--->
-
 <schema
     xmlns="http://www.w3.org/2001/XMLSchema" 
     targetNamespace="http://www.eclipse.org/sapphire/tests/xml/xsd/0001"
     elementFormDefault="qualified">
     
-    <include schemaLocation="http://www.eclipse.org/sapphire/tests/xml/xsd/0001/c" />
-
     <redefine schemaLocation="http://www.eclipse.org/sapphire/tests/xml/xsd/0001/b">
         <complexType name="RedefineTestType">
             <complexContent>
                 <extension base="RedefineTestType">
                     <sequence>
                         <element name="ddd" type="string"/>
-                        <element ref="element2" minOccurs="0"/>
-                        <element ref="element1" minOccurs="0"/>
                     </sequence>
                 </extension>
             </complexContent>
         </complexType>
     </redefine>
     
-	<element name="element2">
-	   <complexType>
-	   	<sequence>
-            <element ref="shape" minOccurs="0" maxOccurs="unbounded"/>
-	   		<element name="aaa2" type="string"/>
-	   		<element name="bbb2" type="string"/>
-	   		<element name="ccc2" type="string"/>
-	   	</sequence>
-	   </complexType>
-	</element>
-	
-	<element name="shape" abstract="true">
-	</element>
-	
-	<element name="square" substitutionGroup="shape">
-	  <complexType>
-	    <sequence>
-	   		<element name="square1" type="string"/>
-	   		<element name="square2" type="string"/>
-	   		<element name="square3" type="string"/>
-	    </sequence>
-	  </complexType>
-	</element>
-    
-	<element name="circle" substitutionGroup="shape">
-	  <complexType>
-	    <sequence>
-	   		<element name="circle1" type="string"/>
-	   		<element name="circle2" type="string"/>
-	   		<element name="circle3" type="string"/>
-	    </sequence>
-	  </complexType>
-	</element>
-
     <element name="root" type="RedefineTestType"/>
     
 </schema>

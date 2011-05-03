@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [337232] Certain schema causes elements to be out of order in corresponding xml files
  ******************************************************************************/
 
 package org.eclipse.sapphire.tests.modeling.xml.xsd;
@@ -16,6 +17,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.tests.modeling.xml.xsd.t0001.TestXmlXsd0001;
+import org.eclipse.sapphire.tests.modeling.xml.xsd.t0002.TestXmlXsd0002;
+import org.eclipse.sapphire.tests.modeling.xml.xsd.t0003.TestXmlXsd0003;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -38,6 +41,8 @@ public final class XmlXsdTestSuite
         suite.setName( "XmlXsd" );
 
         suite.addTest( TestXmlXsd0001.suite() );
+        suite.addTest( TestXmlXsd0002.suite() );
+        suite.addTest( TestXmlXsd0003.suite() );
         
         return suite;
     }

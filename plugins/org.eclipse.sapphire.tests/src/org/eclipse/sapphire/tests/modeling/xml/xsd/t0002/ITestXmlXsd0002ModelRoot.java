@@ -6,34 +6,36 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.xml.xsd.t0001;
+package org.eclipse.sapphire.tests.modeling.xml.xsd.t0002;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 
 /**
- * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 @GenerateImpl
 
-@XmlRootBinding( namespace = "http://www.eclipse.org/sapphire/tests/xml/xsd/0001",
-                 elementName = "root" )
+@XmlRootBinding( namespace = "http://www.eclipse.org/sapphire/tests/xml/xsd/0002",
+                 elementName = "element" )
 
-public interface ITestXmlXsd0001ModelRoot
+public interface ITestXmlXsd0002ModelRoot
 
     extends IModelElement
     
 {
-    ModelElementType TYPE = new ModelElementType( ITestXmlXsd0001ModelRoot.class );
+    ModelElementType TYPE = new ModelElementType( ITestXmlXsd0002ModelRoot.class );
     
     // *** Aaa ***
     
@@ -62,13 +64,12 @@ public interface ITestXmlXsd0001ModelRoot
     Value<String> getCcc();
     void setCcc( String value );
     
-    // *** DDD ***
+    // *** ITestXmlXsd0002Element2b ***
     
-    @XmlBinding( path = "ddd" )
-    
-    ValueProperty PROP_DDD = new ValueProperty( TYPE, "Ddd" );
-    
-    Value<String> getDdd();
-    void setDdd( String value );
-
+	@Type( base = ITestXmlXsd0002Element2b.class )
+	@XmlBinding( path = "element2" )
+	
+	ImpliedElementProperty PROP_ELEMENT2 = new ImpliedElementProperty( TYPE, "Element2" );
+	
+	ITestXmlXsd0002Element2b getElement2();
 }
