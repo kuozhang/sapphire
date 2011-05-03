@@ -115,7 +115,6 @@ public final class TestXmlXsd0001
         model.resource().save();
         
         final String result = new String( resourceStore.getContents(), "UTF-8" );
-        System.out.println(result);
         
         assertEqualsIgnoreNewLineDiffs( loadResource( "0001.txt" ), result );
     }
