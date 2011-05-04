@@ -20,13 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.internal.MemoryResource;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.LocalizationSystem;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -152,7 +151,7 @@ public final class ModelElementType
                         {
                             // todo: log a better message here
                             
-                            SapphireModelingFrameworkPlugin.log( e );
+                            LoggingService.log( e );
                             
                             this.implClass = null;
                         }
@@ -252,6 +251,13 @@ public final class ModelElementType
     {
         return this.modelElementClass.getAnnotation( type );
     }
+    
+    public Class<?> getAnnotationHostClass( final Annotation annotation )
+    {
+        // TODO: Improve to take into account type hierarchies.
+        
+        return this.modelElementClass;
+    }
 
     @Override
     protected String getDefaultLabel()
@@ -289,11 +295,11 @@ public final class ModelElementType
             {
                 try
                 {
-                    this.image = ImageData.readFromBundle( imageAnnotation.path() );
+                    this.image = ImageData.createFromClassLoader( getAnnotationHostClass( imageAnnotation ), imageAnnotation.path() );
                 }
                 catch( Exception e )
                 {
-                    SapphireModelingFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                 }
             }
             

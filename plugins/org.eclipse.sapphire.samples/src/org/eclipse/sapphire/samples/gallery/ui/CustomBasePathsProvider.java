@@ -14,9 +14,8 @@ package org.eclipse.sapphire.samples.gallery.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.annotations.BasePathsProviderImpl;
 
 /**
@@ -29,9 +28,9 @@ public final class CustomBasePathsProvider
     
 {
     @Override
-    public List<IPath> getBasePaths( final IModelElement element )
+    public List<Path> getBasePaths( final IModelElement element )
     {
-        final List<IPath> roots = new ArrayList<IPath>();
+        final List<Path> roots = new ArrayList<Path>();
         
         roots.add( new Path( "c:/Windows" ) );
         roots.add( new Path( "c:/Program Files" ) );

@@ -11,16 +11,15 @@
 
 package org.eclipse.sapphire.modeling.validation;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -32,7 +31,7 @@ public class UniqueValueValidationService<T>
     
 {
     @Override
-    public IStatus validate()
+    public Status validate()
     {
         final Value<T> value = target();
         
@@ -42,10 +41,10 @@ public class UniqueValueValidationService<T>
             final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
             final String str = value.getText();
             final String msg = NLS.bind( Resources.message, label, str );
-            return createErrorStatus( msg );
+            return Status.createErrorStatus( msg );
         }
         
-        return Status.OK_STATUS;
+        return Status.createOkStatus();
     }
     
     protected boolean isUniqueValue( final Value<T> value )

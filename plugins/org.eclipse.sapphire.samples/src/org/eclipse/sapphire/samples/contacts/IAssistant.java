@@ -33,7 +33,7 @@ import org.eclipse.sapphire.samples.contacts.internal.AssistantNameValidationSer
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Image( path = "org.eclipse.sapphire.samples/images/person.png" )
+@Image( path = "images/person.png" )
 @GenerateImpl
 
 public interface IAssistant

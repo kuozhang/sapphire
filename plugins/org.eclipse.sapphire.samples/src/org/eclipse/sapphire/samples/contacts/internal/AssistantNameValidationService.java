@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.Status;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -23,9 +23,9 @@ public final class AssistantNameValidationService
     extends ConnectionNameValidationService
     
 {
-    protected IStatus createErrorStatus()
+    protected Status createErrorStatus()
     {
-        return createErrorStatus( Resources.cannotBeYourOwnAssistant );
+        return Status.createErrorStatus( Resources.cannotBeYourOwnAssistant );
     }
     
     private static final class Resources extends NLS

@@ -11,9 +11,6 @@
 
 package org.eclipse.sapphire.java.internal;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
@@ -25,8 +22,10 @@ import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
 import org.eclipse.sapphire.modeling.ReferenceValue;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -86,7 +85,7 @@ public final class JavaTypeValidationService
     }
     
     @Override
-    public IStatus validate()
+    public Status validate()
     {
         final ReferenceValue<JavaTypeName,JavaType> value = target();
         final String val = value.getText( false );
@@ -97,7 +96,7 @@ public final class JavaTypeValidationService
             
             if( type == null )
             {
-                return Status.OK_STATUS;
+                return Status.createOkStatus();
             }
             
             final JavaTypeKind kind = type.kind();
@@ -110,7 +109,7 @@ public final class JavaTypeValidationService
                     {
                         final String label = this.property.getLabel( false, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.classNotAllowed, val, label );
-                        return createErrorStatus( msg );
+                        return Status.createErrorStatus( msg );
                     }
                     
                     break;
@@ -121,7 +120,7 @@ public final class JavaTypeValidationService
                     {
                         final String label = this.property.getLabel( false, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.abstractClassNotAllowed, val, label );
-                        return createErrorStatus( msg );
+                        return Status.createErrorStatus( msg );
                     }
                     
                     break;
@@ -132,7 +131,7 @@ public final class JavaTypeValidationService
                     {
                         final String label = this.property.getLabel( false, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.interfaceNotAllowed, val, label );
-                        return createErrorStatus( msg );
+                        return Status.createErrorStatus( msg );
                     }
                     
                     break;
@@ -143,7 +142,7 @@ public final class JavaTypeValidationService
                     {
                         final String label = this.property.getLabel( false, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.annotationNotAllowed, val, label );
-                        return createErrorStatus( msg );
+                        return Status.createErrorStatus( msg );
                     }
                     
                     break;
@@ -154,7 +153,7 @@ public final class JavaTypeValidationService
                     {
                         final String label = this.property.getLabel( false, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.enumNotAllowed, val, label );
-                        return createErrorStatus( msg );
+                        return Status.createErrorStatus( msg );
                     }
                     
                     break;
@@ -173,13 +172,13 @@ public final class JavaTypeValidationService
                     {
                         final String template = ( type.kind() == JavaTypeKind.INTERFACE ? Resources.interfaceDoesNotExtend : Resources.classDoesNotImplementOrExtend );
                         final String msg = Resources.bind( template, val, baseType );
-                        return createErrorStatus( msg );
+                        return Status.createErrorStatus( msg );
                     }
                 }
             }
         }
         
-        return Status.OK_STATUS;
+        return Status.createOkStatus();
     }
     
     

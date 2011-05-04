@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementDisposedEvent;
 import org.eclipse.sapphire.modeling.ModelElementListener;
@@ -28,8 +27,11 @@ import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.PossibleValuesService;
+import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -67,7 +69,7 @@ public final class PossibleValuesServiceFactory
                 }
                 catch( Exception e )
                 {
-                    SapphireModelingFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                     svc = null;
                 }
             }
@@ -96,11 +98,11 @@ public final class PossibleValuesServiceFactory
     private static abstract class PossibleValuesServiceExt extends PossibleValuesService
     {
         private final String invalidValueMessageTemplate;
-        private final int invalidValueSeverity;
+        private final Status.Severity invalidValueSeverity;
         private final boolean caseSensitive;
         
         public PossibleValuesServiceExt( final String invalidValueMessageTemplate,
-                                         final int invalidValueSeverity,
+                                         final Status.Severity invalidValueSeverity,
                                          final boolean caseSensitive )
         {
             if( invalidValueMessageTemplate == null || invalidValueMessageTemplate.length() == 0 )
@@ -128,7 +130,7 @@ public final class PossibleValuesServiceFactory
         }
 
         @Override
-        public int getInvalidValueSeverity( final String invalidValue )
+        public Status.Severity getInvalidValueSeverity( final String invalidValue )
         {
             return this.invalidValueSeverity;
         }
@@ -146,7 +148,7 @@ public final class PossibleValuesServiceFactory
         
         public PossibleValuesServiceStatic( final String[] values,
                                             final String invalidValueMessageTemplate,
-                                            final int invalidValueSeverity,
+                                            final Status.Severity invalidValueSeverity,
                                             final boolean caseSensitive )
         {
             super( invalidValueMessageTemplate, invalidValueSeverity, caseSensitive );
@@ -178,7 +180,7 @@ public final class PossibleValuesServiceFactory
         
         public PossibleValuesServiceFromModel( final ModelPath path,
                                                final String invalidValueMessageTemplate,
-                                               final int invalidValueSeverity,
+                                               final Status.Severity invalidValueSeverity,
                                                final boolean caseSensitive )
         {
             super( invalidValueMessageTemplate, invalidValueSeverity, caseSensitive );

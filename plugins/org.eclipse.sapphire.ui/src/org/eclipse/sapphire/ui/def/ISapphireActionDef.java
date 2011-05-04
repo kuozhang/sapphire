@@ -12,18 +12,18 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.serialization.ValueSerialization;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -158,7 +158,7 @@ public interface ISapphireActionDef
     // *** Group ***
     
     @Label( standard = "group" )
-    @PossibleValues( property = "../Actions/Group", invalidValueSeverity = IStatus.OK ) // TODO: Bug. This isn't working.
+    @PossibleValues( property = "../Actions/Group", invalidValueSeverity = Status.Severity.OK ) // TODO: Bug. This isn't working.
     @XmlBinding( path = "group" )
     
     @Documentation( content = "Specifies the ID of the group that this action belongs to, if any. Groups " +

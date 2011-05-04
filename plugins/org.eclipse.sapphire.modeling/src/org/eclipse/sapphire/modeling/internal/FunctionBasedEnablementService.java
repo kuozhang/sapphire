@@ -19,6 +19,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -64,7 +65,7 @@ public final class FunctionBasedEnablementService
             }
             catch( Exception e )
             {
-                SapphireModelingFrameworkPlugin.log( e );
+                LoggingService.log( e );
                 function = null;
             }
             
@@ -106,7 +107,7 @@ public final class FunctionBasedEnablementService
             }
             catch( Exception e )
             {
-                SapphireModelingFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
         }
     }

@@ -20,8 +20,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.help.IContext;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
@@ -33,6 +31,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
@@ -79,7 +78,7 @@ public abstract class SapphirePart
     protected ISapphirePartDef definition;
     protected Map<String,String> params;
     private ModelElementListener modelElementListener;
-    private IStatus validationState;
+    private Status validationState;
     private Set<SapphirePartListener> listeners;
     private SapphireImageCache imageCache;
     private Map<String,SapphireActionGroup> actions;
@@ -112,7 +111,7 @@ public abstract class SapphirePart
         
         this.modelElement.addListener( this.modelElementListener );
         
-        this.validationState = Status.OK_STATUS;
+        this.validationState = Status.createOkStatus();
         this.listeners = null;
         
         for( ISapphirePartListenerDef listenerDefinition : definition.getListeners() )
@@ -249,19 +248,19 @@ public abstract class SapphirePart
         return Collections.unmodifiableMap( this.params );
     }
     
-    public final IStatus getValidationState()
+    public final Status getValidationState()
     {
         return this.validationState;
     }
     
-    protected IStatus computeValidationState()
+    protected Status computeValidationState()
     {
-        return Status.OK_STATUS;
+        return Status.createOkStatus();
     }
     
     public final void updateValidationState()
     {
-        final IStatus newValidationState = computeValidationState();
+        final Status newValidationState = computeValidationState();
         boolean updateNeeded = false;
         
         if( this.validationState != newValidationState )
@@ -272,8 +271,8 @@ public abstract class SapphirePart
             }
             else
             {
-                if( this.validationState.getSeverity() != newValidationState.getSeverity() ||
-                    ! this.validationState.getMessage().equals( newValidationState.getMessage() ) )
+                if( this.validationState.severity() != newValidationState.severity() ||
+                    ! this.validationState.message().equals( newValidationState.message() ) )
                 {
                     updateNeeded = true;
                 }
@@ -282,7 +281,7 @@ public abstract class SapphirePart
         
         if( updateNeeded )
         {
-            final IStatus oldValidationState = this.validationState;
+            final Status oldValidationState = this.validationState;
             this.validationState = newValidationState;
             
             if( this.listeners != null )
@@ -630,8 +629,8 @@ public abstract class SapphirePart
                 new SapphirePartListener()
                 {
                     @Override
-                    public void handleValidateStateChange( final IStatus oldValidateState,
-                                                           final IStatus newValidationState )
+                    public void handleValidateStateChange( final Status oldValidateState,
+                                                           final Status newValidationState )
                     {
                         refresh( true );
                     }
@@ -648,8 +647,8 @@ public abstract class SapphirePart
         
         private void refresh( final boolean notifyListenersIfNecessary )
         {
-            final IStatus st = getValidationState();
-            final int severity = st.getSeverity();
+            final Status st = getValidationState();
+            final Status.Severity severity = st.severity();
             final ImageDescriptor old = this.current;
             
             if( this.imageFunctionResult != null )
@@ -670,20 +669,20 @@ public abstract class SapphirePart
                 }
                 else
                 {
-                    if( severity == IStatus.ERROR )
+                    if( severity == Status.Severity.ERROR )
                     {
                         if( this.error == null )
                         {
-                            this.error = new ProblemOverlayImageDescriptor( this.base, Status.ERROR );
+                            this.error = new ProblemOverlayImageDescriptor( this.base, Status.Severity.ERROR );
                         }
                         
                         this.current = this.error;
                     }
-                    else if( severity == IStatus.WARNING )
+                    else if( severity == Status.Severity.WARNING )
                     {
                         if( this.warning == null )
                         {
-                            this.warning = new ProblemOverlayImageDescriptor( this.base, Status.WARNING );
+                            this.warning = new ProblemOverlayImageDescriptor( this.base, Status.Severity.WARNING );
                         }
                         
                         this.current = this.warning;

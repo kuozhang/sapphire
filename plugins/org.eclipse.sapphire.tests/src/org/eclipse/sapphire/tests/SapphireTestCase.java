@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 
 /**
@@ -85,16 +85,16 @@ public abstract class SapphireTestCase
     
     protected static final void assertValidationOk( final Value<?> value )
     {
-        assertEquals( IStatus.OK, value.validate().getSeverity() );
+        assertEquals( Status.Severity.OK, value.validate().severity() );
     }
     
     protected static final void assertValidationError( final Value<?> value,
                                                        final String expectedMessage )
     {
-        final IStatus st = value.validate();
+        final Status st = value.validate();
         
-        assertEquals( IStatus.ERROR, st.getSeverity() );
-        assertEquals( expectedMessage, st.getMessage() );
+        assertEquals( Status.Severity.ERROR, st.severity() );
+        assertEquals( expectedMessage, st.message() );
     }
     
 }

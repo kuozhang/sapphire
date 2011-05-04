@@ -18,12 +18,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -36,7 +35,7 @@ public abstract class FunctionResult
     private final List<FunctionResult> operands;
     private final List<Listener> listeners;
     private Object value;
-    private IStatus status;
+    private Status status;
     
     public FunctionResult( final Function function,
                            final FunctionContext context )
@@ -138,7 +137,7 @@ public abstract class FunctionResult
         throws FunctionException
         
     {
-        if( this.status.getSeverity() == IStatus.ERROR )
+        if( this.status.severity() == Status.Severity.ERROR )
         {
             throw new FunctionException( this.status );
         }
@@ -153,7 +152,7 @@ public abstract class FunctionResult
      * @return the status of function execution
      */
     
-    public final IStatus status()
+    public final Status status()
     {
         return this.status;
     }
@@ -161,7 +160,7 @@ public abstract class FunctionResult
     protected final void refresh()
     {
         Object newValue = null;
-        IStatus newStatus = Status.OK_STATUS;
+        Status newStatus = Status.createOkStatus();
         
         try
         {
@@ -173,7 +172,7 @@ public abstract class FunctionResult
         }
         catch( Exception e )
         {
-            newStatus = FunctionException.createErrorStatus( e );
+            newStatus = Status.createErrorStatus( e );
         }
         
         if( newValue instanceof Function )
@@ -226,7 +225,7 @@ public abstract class FunctionResult
             }
             catch( Exception e )
             {
-                SapphireModelingFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
         }
     }

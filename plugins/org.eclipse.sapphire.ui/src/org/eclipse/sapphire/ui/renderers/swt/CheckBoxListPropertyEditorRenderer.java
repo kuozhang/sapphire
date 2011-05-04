@@ -31,7 +31,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -54,6 +53,7 @@ import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelService;
 import org.eclipse.sapphire.modeling.ModelService.Event;
 import org.eclipse.sapphire.modeling.PossibleValuesService;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
@@ -490,8 +490,8 @@ public class CheckBoxListPropertyEditorRenderer
             }
             else if( this.imageService != null )
             {
-                final IStatus st = this.element.read( getMemberProperty() ).validate();
-                image = cache.getImage( this.imageService.provide(), st.getSeverity() );
+                final Status st = this.element.read( getMemberProperty() ).validate();
+                image = cache.getImage( this.imageService.provide(), st.severity() );
             }
             else
             {

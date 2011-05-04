@@ -23,8 +23,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ValidateEditException;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -324,7 +324,7 @@ public abstract class XmlNode
                 }
                 catch( Exception e )
                 {
-                    SapphireModelingFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                 }
             }
         }

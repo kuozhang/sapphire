@@ -1,14 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.eclipse.sapphire.java;singleton:=true
+Bundle-SymbolicName: org.eclipse.sapphire.java
 Bundle-Version: 0.3.0.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Bundle-Localization: plugin
+Bundle-Localization: bundle
 Export-Package: org.eclipse.sapphire.java,
  org.eclipse.sapphire.java.internal;x-friends:="org.eclipse.sapphire.tests"
 Bundle-Vendor: %providerName
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.sapphire.modeling,
- org.eclipse.core.runtime
+Require-Bundle: org.eclipse.sapphire.modeling
 

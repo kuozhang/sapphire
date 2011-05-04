@@ -16,11 +16,12 @@ import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.tests.SapphireTestCase;
-import org.eclipse.sapphire.ui.def.IImportDirective;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
+import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEditorPageDef;
 
 /**
@@ -52,46 +53,35 @@ public final class TestUiDef0001
     
     public void test()
     {
-        final ISapphireUiDef sdef = ISapphireUiDef.TYPE.instantiate();
-        final IMasterDetailsEditorPageDef page = sdef.getPartDefs().addNewElement( IMasterDetailsEditorPageDef.class );
-        final ISapphireActionHandlerDef handler = page.getActionHandlers().addNewElement( ISapphireActionHandlerDef.class );
+        final ISapphireUiDef sdef = SapphireUiDefFactory.load( "org.eclipse.sapphire.tests", "sdef/ui/def/t0001/TestDefinition.sdef" );
+
+        final IMasterDetailsEditorPageDef page = (IMasterDetailsEditorPageDef) sdef.getPartDef( "TestPage", false, IMasterDetailsEditorPageDef.class );
+        assertNotNull( page );
         
-        IImportDirective imp;
+        final ModelElementList<ISapphireActionHandlerDef> handlers = page.getActionHandlers();
+        assertNotNull( handlers );
+        assertEquals( 3, handlers.size() );
+        
         JavaType type;
         Class<?> cl;
         
-        imp = sdef.getImportDirectives().addNewElement();
-        imp.setBundle( "org.eclipse.core.resources" );
-        imp.getPackages().addNewElement().setName( "org.eclipse.core.resources" );
-        
-        handler.setImplClass( "IFile" );
-        type = handler.getImplClass().resolve();
+        type = handlers.get( 0 ).getImplClass().resolve();
         assertNotNull( type );
         cl = type.artifact();
         assertNotNull( cl );
         assertEquals( IFile.class, cl );
 
-        imp = sdef.getImportDirectives().addNewElement();
-        imp.setBundle( "org.eclipse.sapphire.modeling.xml" );
-        imp.getPackages().addNewElement().setName( "org.eclipse.sapphire.modeling.xml.annotations" );
-        
-        handler.setImplClass( "XmlBinding" );
-        type = handler.getImplClass().resolve();
+        type = handlers.get( 1 ).getImplClass().resolve();
         assertNotNull( type );
         cl = type.artifact();
         assertNotNull( cl );
         assertEquals( XmlBinding.class, cl );
 
-        imp = sdef.getImportDirectives().addNewElement();
-        imp.setBundle( "org.eclipse.sapphire.tests" );
-        imp.getPackages().addNewElement().setName( "org.eclipse.sapphire.tests.ui.def.t0001" );
-        
-        handler.setImplClass( "TestClass" );
-        type = handler.getImplClass().resolve();
+        type = handlers.get( 2 ).getImplClass().resolve();
         assertNotNull( type );
         cl = type.artifact();
         assertNotNull( cl );
-        assertEquals( TestClass.class, cl );
+        assertEquals( TestActionHandler.class, cl );
     }
 
 }

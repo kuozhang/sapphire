@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [342098] Separate modeling dependency on org.eclipse.core.runtime
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.graphiti.editor;
@@ -31,6 +32,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.ui.editor.DiagramEditorFactory;
 import org.eclipse.graphiti.ui.internal.services.GraphitiUiInternal;
 import org.eclipse.graphiti.ui.services.GraphitiUi;
+import org.eclipse.sapphire.modeling.StatusException;
 import org.eclipse.sapphire.modeling.util.internal.FileUtil;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.graphiti.GraphitiFileService;
@@ -44,7 +46,7 @@ public class SapphireDiagramEditorFactory
 	public static final String SAPPHIRE_DIAGRAM_TYPE = "sapphireDiagram";
 	
 	public static SapphireDiagramEditorInput createEditorInput(IFile file) 
-		throws CoreException
+		throws StatusException, CoreException
 	{
 		if (file == null)
 			return null;

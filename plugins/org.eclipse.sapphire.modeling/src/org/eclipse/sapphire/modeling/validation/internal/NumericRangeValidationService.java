@@ -14,19 +14,18 @@ package org.eclipse.sapphire.modeling.validation.internal;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
+import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueKeyword;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -48,7 +47,7 @@ public final class NumericRangeValidationService<T extends Comparable<T>>
     }
     
     @Override
-    public IStatus validate()
+    public Status validate()
     {
         final Value<T> value = target();
         final T val = value.getContent( true );
@@ -60,17 +59,17 @@ public final class NumericRangeValidationService<T extends Comparable<T>>
             if( this.min != null && val.compareTo( this.min ) < 0 )
             {
                 final String msg = NLS.bind( Resources.smallerThanMinimumMessage, val, normalizeForDisplay( property, this.min ) );
-                return createErrorStatus( msg );
+                return Status.createErrorStatus( msg );
             }
             
             if( this.max != null && val.compareTo( this.max ) > 0 )
             {
                 final String msg = NLS.bind( Resources.largerThanMaxiumMessage, val, normalizeForDisplay( property, this.max ) );
-                return createErrorStatus( msg );                
+                return Status.createErrorStatus( msg );                
             }
         }
         
-        return Status.OK_STATUS;
+        return Status.createOkStatus();
     }
     
     private String normalizeForDisplay( final ValueProperty property,
@@ -151,7 +150,7 @@ public final class NumericRangeValidationService<T extends Comparable<T>>
                 }
                 catch( NumberFormatException e )
                 {
-                    SapphireModelingFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                 }
             }
             

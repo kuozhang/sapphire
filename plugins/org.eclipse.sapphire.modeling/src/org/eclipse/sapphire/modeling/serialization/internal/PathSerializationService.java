@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.modeling.serialization.internal;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 
 /**
@@ -25,7 +24,7 @@ public final class PathSerializationService
     
 {
     @Override
-    protected IPath decodeFromString( final String value )
+    protected Path decodeFromString( final String value )
     {
         return new Path( value );
     }

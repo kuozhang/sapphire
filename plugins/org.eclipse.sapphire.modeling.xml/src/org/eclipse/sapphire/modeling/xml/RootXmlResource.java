@@ -17,7 +17,7 @@ import org.eclipse.sapphire.modeling.CorruptedResourceException;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlRootBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
@@ -90,7 +90,7 @@ public class RootXmlResource
                 }
                 catch( Exception e )
                 {
-                    SapphireModelingFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                 }
             }
         }

@@ -22,13 +22,12 @@ import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
 import org.eclipse.sapphire.java.jdt.JdtJavaType;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
-import org.eclipse.sapphire.ui.def.IImportDirective;
 import org.eclipse.sapphire.ui.def.IPackageReference;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
@@ -63,32 +62,26 @@ public final class SdkJavaTypeReferenceServiceForSdef
         
         final String n = name.replace( '$', '.' );
         
-        // We are cheating here and are completely ignoring bundle in the import directive. All packages
-        // are resolved in the context of the project that sdef file is located in.
-        
         try
         {
-            for( IImportDirective directive : element().nearest( ISapphireUiDef.class ).getImportDirectives() )
+            for( IPackageReference packageRef : element().nearest( ISapphireUiDef.class ).getImportedPackages() )
             {
-                for( IPackageReference packageRef : directive.getPackages() )
+                final String packageName = packageRef.getName().getText();
+                
+                if( packageName != null )
                 {
-                    final String packageName = packageRef.getName().getText();
-                    
-                    if( packageName != null )
-                    {
-                        final IType type = this.project.findType( packageName, n );
+                    final IType type = this.project.findType( packageName, n );
 
-                        if( type != null && type.exists() && ! type.isAnonymous() )
-                        {
-                            return new JdtJavaType( type );
-                        }
+                    if( type != null && type.exists() && ! type.isAnonymous() )
+                    {
+                        return new JdtJavaType( type );
                     }
                 }
             }
         }
         catch( JavaModelException e )
         {
-            SapphireModelingFrameworkPlugin.log( e );
+            LoggingService.log( e );
         }
         
         return null;
@@ -123,7 +116,7 @@ public final class SdkJavaTypeReferenceServiceForSdef
                         }
                         catch( CoreException e )
                         {
-                            SapphireModelingFrameworkPlugin.log( e );
+                            LoggingService.log( e );
                         }
                     }
                 }

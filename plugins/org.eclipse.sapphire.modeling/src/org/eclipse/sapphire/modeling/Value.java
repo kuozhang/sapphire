@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.modeling;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
@@ -29,7 +27,7 @@ public class Value<T>
     private final ValueProperty property;
     private final String raw;
     private final T parsed;
-    private SapphireMultiStatus valres;
+    private Status valres;
     private boolean defaultValueInitialized;
     private String defaultText;
     private T defaultContent;
@@ -67,19 +65,21 @@ public class Value<T>
     {
         if( this.valres == null )
         {
-            this.valres = new SapphireMultiStatus();
+            final Status.CompositeStatusFactory factory = Status.factoryForComposite();
             
             for( ModelPropertyValidationService<?> svc : parent().services( this.property, ModelPropertyValidationService.class ) )
             {
                 try
                 {
-                    this.valres.merge( svc.validate() );
+                    factory.merge( svc.validate() );
                 }
                 catch( Exception e )
                 {
-                    SapphireModelingFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                 }
             }
+            
+            this.valres = factory.create();
         }
     }
 
@@ -202,7 +202,7 @@ public class Value<T>
         }
     }
     
-    public IStatus validate()
+    public Status validate()
     {
         initValidation();
         return this.valres;
@@ -226,7 +226,7 @@ public class Value<T>
         final Value<?> value = (Value<?>) val;
         
         return ( parent() == value.parent() ) && ( this.property == value.property ) &&
-               ( MiscUtil.equal( this.raw, value.raw ) ) && equal( this.valres, value.valres ) &&
+               ( MiscUtil.equal( this.raw, value.raw ) ) && this.valres.equals( value.valres ) &&
                ( MiscUtil.equal( this.defaultText, value.defaultText ) ); 
     }
     
@@ -268,12 +268,6 @@ public class Value<T>
         }
         
         return str;
-    }
-    
-    private static boolean equal( final IStatus x,
-                                  final IStatus y )
-    {
-        return x.getMessage().equals( y.getMessage() ) && ( x.getSeverity() == y.getSeverity());
     }
     
 }

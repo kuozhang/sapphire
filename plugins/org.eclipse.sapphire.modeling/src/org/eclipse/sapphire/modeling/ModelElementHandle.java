@@ -13,8 +13,6 @@ package org.eclipse.sapphire.modeling;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,8 +25,8 @@ public final class ModelElementHandle<T extends IModelElement>
     private final ElementBindingImpl binding;
     private final ModelPropertyListener listener;
     private T element;
-    private IStatus validationStateLocal;
-    private IStatus validationStateFull;
+    private Status validationStateLocal;
+    private Status validationStateFull;
     
     public ModelElementHandle( final IModelElement parent,
                                final ElementProperty property )
@@ -157,12 +155,12 @@ public final class ModelElementHandle<T extends IModelElement>
         return this.element;
     }
     
-    public IStatus validate()
+    public Status validate()
     {
         return validate( true );
     }
     
-    public IStatus validate( final boolean includeChildValidation )
+    public Status validate( final boolean includeChildValidation )
     {
         synchronized( this )
         {
@@ -249,15 +247,15 @@ public final class ModelElementHandle<T extends IModelElement>
     
     private boolean refreshValidationState()
     {
-        final IStatus oldValidationStateFull = this.validationStateFull;
-        final SapphireMultiStatus newValidationStateLocal = new SapphireMultiStatus();
-        final SapphireMultiStatus newValidationStateFull = new SapphireMultiStatus();
+        final Status oldValidationStateFull = this.validationStateFull;
+        final Status.CompositeStatusFactory newValidationStateLocalFactory = Status.factoryForComposite();
+        final Status.CompositeStatusFactory newValidationStateFullFactory = Status.factoryForComposite();
         
         if( enabled() )
         {
             for( ModelPropertyValidationService<?> svc : parent().services( this.property, ModelPropertyValidationService.class ) )
             {
-                IStatus st = null;
+                Status st = null;
                 
                 try
                 {
@@ -265,22 +263,25 @@ public final class ModelElementHandle<T extends IModelElement>
                 }
                 catch( Exception e )
                 {
-                    SapphireModelingFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                 }
                 
                 if( st != null )
                 {
-                    newValidationStateLocal.merge( st );
-                    newValidationStateFull.merge( st );
+                    newValidationStateLocalFactory.merge( st );
+                    newValidationStateFullFactory.merge( st );
                 }
             }
             
             if( this.element != null )
             {
-                newValidationStateFull.merge( this.element.validate() );
+                newValidationStateFullFactory.merge( this.element.validate() );
             }
         }
         
+        final Status newValidationStateLocal = newValidationStateLocalFactory.create();
+        final Status newValidationStateFull = newValidationStateFullFactory.create();
+
         if( ! newValidationStateFull.equals( oldValidationStateFull ) )
         {
             this.validationStateLocal = newValidationStateLocal;

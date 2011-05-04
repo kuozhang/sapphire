@@ -11,21 +11,19 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.sapphire.java.ClassBasedJavaType;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
+import org.eclipse.sapphire.modeling.ClassLocator;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.ui.def.IImportDirective;
 import org.eclipse.sapphire.ui.def.IPackageReference;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
-import org.osgi.framework.Bundle;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -39,30 +37,23 @@ public final class JavaTypeReferenceServiceForSdef
     @Override
     public JavaType resolve( final String name )
     {
-        for( IImportDirective directive : element().nearest( ISapphireUiDef.class ).getImportDirectives() )
+        final ISapphireUiDef sdef = element().nearest( ISapphireUiDef.class );
+        final ClassLocator locator = sdef.adapt( ClassLocator.class );
+        
+        if( locator != null )
         {
-            final String bundleId = directive.getBundle().getText();
-            
-            if( bundleId != null )
+            for( IPackageReference packageRef : sdef.getImportedPackages() )
             {
-                final Bundle bundle = Platform.getBundle( bundleId );
+                final String packageName = packageRef.getName().getText();
                 
-                if( bundle != null )
+                if( packageName != null )
                 {
-                    for( IPackageReference packageRef : directive.getPackages() )
+                    final String fullClassName = packageName + "." + name;
+                    final Class<?> cl = locator.find( fullClassName );
+                    
+                    if( cl != null )
                     {
-                        final String packageName = packageRef.getName().getText();
-                        
-                        if( packageName != null )
-                        {
-                            final String fullClassName = packageName + "." + name;
-                            
-                            try
-                            {
-                                return new ClassBasedJavaType( bundle.loadClass( fullClassName ) );
-                            }
-                            catch( ClassNotFoundException e ) {}
-                        }
+                        return new ClassBasedJavaType( cl );
                     }
                 }
             }

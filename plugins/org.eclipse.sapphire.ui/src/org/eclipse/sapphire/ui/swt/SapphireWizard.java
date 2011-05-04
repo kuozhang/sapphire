@@ -18,10 +18,10 @@ import java.util.Collections;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
 import org.eclipse.sapphire.ui.SapphirePartEvent;
 import org.eclipse.sapphire.ui.SapphirePartListener;
@@ -97,13 +97,13 @@ public class SapphireWizard<M extends IExecutableModelElement>
     @Override
     public final boolean performFinish()
     {
-        final IStatus[] result = new IStatus[ 1 ];
+        final Status[] result = new Status[ 1 ];
         
         final IRunnableWithProgress runnable = new IRunnableWithProgress()
         {
             public void run( final IProgressMonitor monitor ) throws InvocationTargetException
             {
-                result[ 0 ] = SapphireWizard.this.element.execute( monitor );
+                result[ 0 ] = SapphireWizard.this.element.execute( new ProgressMonitorBridge( monitor ) );
             }
         };
         
@@ -121,9 +121,9 @@ public class SapphireWizard<M extends IExecutableModelElement>
             return false;
         }
         
-        final IStatus st = result[ 0 ];
+        final Status st = result[ 0 ];
         
-        if( st.isOK() )
+        if( st.ok() )
         {
             performPostFinish();
             

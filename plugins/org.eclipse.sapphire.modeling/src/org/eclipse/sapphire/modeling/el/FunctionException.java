@@ -11,10 +11,8 @@
 
 package org.eclipse.sapphire.modeling.el;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * Thrown if a function evaluation fails for any reason.
@@ -29,33 +27,28 @@ public class FunctionException
 {
     private static final long serialVersionUID = 1L;
     
-    private final IStatus status;
+    private final Status status;
     
-    public FunctionException( final IStatus status )
+    public FunctionException( final Status status )
     {
-        super( status.getMessage(), status.getException() );
+        super( status.message(), status.exception() );
         
         this.status = status;
     }
     
     public FunctionException( final String message )
     {
-        this( new Status( IStatus.ERROR, SapphireModelingFrameworkPlugin.PLUGIN_ID, message ) );
+        this( Status.createErrorStatus( message ) );
     }
     
     public FunctionException( final Throwable throwable )
     {
-        this( createErrorStatus( throwable ) );
+        this( Status.createErrorStatus( Resources.unexpectedException, throwable ) );
     }
     
-    public IStatus status()
+    public Status status()
     {
         return this.status;
-    }
-    
-    public static IStatus createErrorStatus( final Throwable throwable )
-    {
-        return new Status( IStatus.ERROR, SapphireModelingFrameworkPlugin.PLUGIN_ID, Resources.unexpectedException, throwable );
     }
     
     private static final class Resources extends NLS

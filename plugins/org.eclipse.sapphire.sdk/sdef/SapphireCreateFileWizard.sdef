@@ -14,7 +14,6 @@
 <definition>
 
     <import>
-        <bundle>org.eclipse.sapphire.ui</bundle>
         <package>org.eclipse.sapphire.ui.renderers.swt</package>
     </import>
 

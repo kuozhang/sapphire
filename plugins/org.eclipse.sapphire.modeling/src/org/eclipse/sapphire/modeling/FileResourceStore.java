@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.sapphire.modeling.util.internal.FileUtil;
 
 /**
@@ -82,7 +81,7 @@ public class FileResourceStore
         {
             FileUtil.mkdirs( this.file.getParentFile() );
         }
-        catch( CoreException e )
+        catch( StatusException e )
         {
             throw new ResourceStoreException( e );
         }

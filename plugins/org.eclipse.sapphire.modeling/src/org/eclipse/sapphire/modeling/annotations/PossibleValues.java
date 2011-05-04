@@ -16,8 +16,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.PossibleValuesService;
+import org.eclipse.sapphire.modeling.Status;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -40,7 +40,7 @@ public @interface PossibleValues
     
     String property() default "";
     String invalidValueMessage() default "";
-    int invalidValueSeverity() default IStatus.ERROR;
+    Status.Severity invalidValueSeverity() default Status.Severity.ERROR;
     boolean caseSensitive() default true;
     Class<? extends PossibleValuesService> service() default PossibleValuesService.class;
     String[] params() default {};

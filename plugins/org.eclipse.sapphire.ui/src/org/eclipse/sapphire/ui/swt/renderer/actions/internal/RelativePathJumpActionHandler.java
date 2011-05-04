@@ -14,9 +14,9 @@ package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 import java.io.File;
 import java.util.List;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.BasePathsProvider;
 import org.eclipse.sapphire.modeling.annotations.BasePathsProviderImpl;
@@ -58,9 +58,9 @@ public final class RelativePathJumpActionHandler
             
             if( relativePath != null )
             {
-                for( IPath basePath : getBasePaths( element, property ) )
+                for( Path basePath : getBasePaths( element, property ) )
                 {
-                    final IPath absolutePath = basePath.append( relativePath );
+                    final Path absolutePath = basePath.append( relativePath );
                     File absoluteFile = absolutePath.toFile();
                     
                     if( absoluteFile.exists() && absoluteFile.isFile() )
@@ -86,9 +86,9 @@ public final class RelativePathJumpActionHandler
         {
             File file = null;
             
-            for( IPath basePath : getBasePaths( element, property ) )
+            for( Path basePath : getBasePaths( element, property ) )
             {
-                final IPath absolutePath = basePath.append( relativePath );
+                final Path absolutePath = basePath.append( relativePath );
                 File absoluteFile = absolutePath.toFile();
                 
                 if( absoluteFile.exists() && absoluteFile.isFile() )
@@ -134,8 +134,8 @@ public final class RelativePathJumpActionHandler
         return null;
     }
 
-    private List<IPath> getBasePaths( final IModelElement modelElement,
-                                      final ModelProperty property )
+    private List<Path> getBasePaths( final IModelElement modelElement,
+                                     final ModelProperty property )
     {
         final BasePathsProvider basePathsProviderAnnotation = property.getAnnotation( BasePathsProvider.class );
         final Class<? extends BasePathsProviderImpl> basePathsProviderClass = basePathsProviderAnnotation.value();

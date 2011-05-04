@@ -11,18 +11,17 @@
 
 package org.eclipse.sapphire.modeling.validation.internal;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.localization.LocalizationSystem;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -36,7 +35,7 @@ public final class MalformedValueValidationService
     private String valueTypeName;
     
     @Override
-    public IStatus validate()
+    public Status validate()
     {
         final Value<?> value = target();
         
@@ -49,11 +48,11 @@ public final class MalformedValueValidationService
             }
             
             final String msg = NLS.bind( Resources.cannotParseValueMessage, this.valueTypeName, value.getText() );
-            return createErrorStatus( msg );
+            return Status.createErrorStatus( msg );
         }
         else
         {
-            return Status.OK_STATUS;
+            return Status.createOkStatus();
         }
     }
     

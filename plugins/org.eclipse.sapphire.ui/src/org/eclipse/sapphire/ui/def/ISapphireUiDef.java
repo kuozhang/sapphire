@@ -13,16 +13,14 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import java.util.List;
-
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
@@ -46,20 +44,25 @@ public interface ISapphireUiDef
 {
     ModelElementType TYPE = new ModelElementType( ISapphireUiDef.class );
     
-    // *** ImportDirectives ***
+    // *** ImportedPackages ***
     
-    @Type( base = IImportDirective.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "import", type = IImportDirective.class ) )
-                             
-    ListProperty PROP_IMPORT_DIRECTIVES = new ListProperty( TYPE, "ImportDirectives" );
+    @Type( base = IPackageReference.class )
+    @Label( standard = "imported packages" )
+    @XmlListBinding( path = "import", mappings = @XmlListBinding.Mapping( element = "package", type = IPackageReference.class ) )
     
-    ModelElementList<IImportDirective> getImportDirectives();
+    ListProperty PROP_IMPORTED_PACKAGES = new ListProperty( TYPE, "ImportedPackages" );
     
-    // *** Method : getImportedDefinnitions ***
+    ModelElementList<IPackageReference> getImportedPackages();
     
-    @DelegateImplementation( SapphireUiDefMethods.class )
+    // *** ImportedDefinitions ***
     
-    List<ISapphireUiDef> getImportedDefinitions();
+    @Type( base = IDefinitionReference.class )
+    @Label( standard = "imported definitions" )
+    @XmlListBinding( path = "import", mappings = @XmlListBinding.Mapping( element = "definition", type = IDefinitionReference.class ) )
+    
+    ListProperty PROP_IMPORTED_DEFINITIONS = new ListProperty( TYPE, "ImportedDefinitions" );
+    
+    ModelElementList<IDefinitionReference> getImportedDefinitions();
     
     // *** DocumentationDefs ***
     
@@ -159,11 +162,5 @@ public interface ISapphireUiDef
     @DelegateImplementation( SapphireUiDefMethods.class )
     
     ModelProperty resolveProperty( String qualifiedPropertyName );
-    
-    // *** Method : resolveImage ***
-    
-    @DelegateImplementation( SapphireUiDefMethods.class )
-    
-    ImageData resolveImage( String imagePath );
     
 }

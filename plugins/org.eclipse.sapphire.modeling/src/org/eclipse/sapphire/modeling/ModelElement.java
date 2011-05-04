@@ -23,8 +23,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.ModelPath.AllDescendentsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.AllSiblingsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ModelRootSegment;
@@ -36,7 +34,7 @@ import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem.ModelElementServiceFactoryProxy;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem.ModelPropertyServiceFactoryProxy;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -50,7 +48,7 @@ public abstract class ModelElement
 {
     private final ModelElementType type;
     private final ModelProperty parentProperty;
-    private IStatus valres;
+    private Status valres;
     private Set<ModelElementListener> listeners;
     private Map<ModelProperty,Set<ModelPropertyListener>> propertyListeners;
     private final Map<ModelProperty,Boolean> enablementStatuses;
@@ -505,7 +503,7 @@ public abstract class ModelElement
                         }
                         catch( Exception e )
                         {
-                            SapphireModelingFrameworkPlugin.log( e );
+                            LoggingService.log( e );
                         }
                         
                         if( instance != null )
@@ -536,7 +534,7 @@ public abstract class ModelElement
                     }
                     catch( Exception e )
                     {
-                        SapphireModelingFrameworkPlugin.log( e );
+                        LoggingService.log( e );
                     }
                 }
                 
@@ -650,7 +648,7 @@ public abstract class ModelElement
                         }
                         catch( Exception e )
                         {
-                            SapphireModelingFrameworkPlugin.log( e );
+                            LoggingService.log( e );
                         }
                         
                         if( instance != null )
@@ -681,7 +679,7 @@ public abstract class ModelElement
                     }
                     catch( Exception e )
                     {
-                        SapphireModelingFrameworkPlugin.log( e );
+                        LoggingService.log( e );
                     }
                 }
                 
@@ -794,7 +792,7 @@ public abstract class ModelElement
         }
     }
 
-    public IStatus validate()
+    public Status validate()
     {
         if( this.valres == null )
         {
@@ -806,13 +804,13 @@ public abstract class ModelElement
     
     private void refreshValidationResult()
     {
-        final SapphireMultiStatus st = new SapphireMultiStatus();
+        final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         
         for( ModelProperty property : this.type.getProperties() )
         {
             if( isPropertyEnabled( property ) )
             {
-                final IStatus x;
+                final Status x;
                 
                 if( property instanceof ValueProperty )
                 {
@@ -839,9 +837,11 @@ public abstract class ModelElement
                     throw new IllegalStateException();
                 }
                 
-                st.add( x );
+                factory.add( x );
             }
         }
+        
+        final Status st = factory.create();
         
         if( this.valres == null )
         {
@@ -849,7 +849,7 @@ public abstract class ModelElement
         }
         else if( ! this.valres.equals( st ) )
         {
-            final IStatus oldValidationState = this.valres;
+            final Status oldValidationState = this.valres;
             this.valres = st;
             
             notifyValidationStateChangeListeners( oldValidationState, this.valres );
@@ -1208,7 +1208,7 @@ public abstract class ModelElement
                     }
                     catch( Exception e )
                     {
-                        SapphireModelingFrameworkPlugin.log( e );
+                        LoggingService.log( e );
                     }
                 }
             }
@@ -1227,7 +1227,7 @@ public abstract class ModelElement
                         }
                         catch( Exception e )
                         {
-                            SapphireModelingFrameworkPlugin.log( e );
+                            LoggingService.log( e );
                         }
                     }
                 }
@@ -1241,14 +1241,14 @@ public abstract class ModelElement
                 }
                 catch( Exception e )
                 {
-                    SapphireModelingFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                 }
             }
         }
     }
 
-    private void notifyValidationStateChangeListeners( final IStatus oldValidationState,
-                                                       final IStatus newValidationState )
+    private void notifyValidationStateChangeListeners( final Status oldValidationState,
+                                                       final Status newValidationState )
     {
         final ValidationStateChangeEvent event = new ValidationStateChangeEvent( this, oldValidationState, newValidationState );
         
@@ -1264,7 +1264,7 @@ public abstract class ModelElement
                     }
                     catch( Exception e )
                     {
-                        SapphireModelingFrameworkPlugin.log( e );
+                        LoggingService.log( e );
                     }
                 }
             }
@@ -1310,7 +1310,7 @@ public abstract class ModelElement
                     }
                     catch( Exception e )
                     {
-                        SapphireModelingFrameworkPlugin.log( e );
+                        LoggingService.log( e );
                     }
                 }
             }
@@ -1345,7 +1345,7 @@ public abstract class ModelElement
             }
             catch( Exception e )
             {
-                SapphireModelingFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
             
             for( Collection<ModelElementService> list : this.elementServices.values() )
@@ -1358,7 +1358,7 @@ public abstract class ModelElement
                     }
                     catch( Exception e )
                     {
-                        SapphireModelingFrameworkPlugin.log( e );
+                        LoggingService.log( e );
                     }
                 }
             }
@@ -1375,7 +1375,7 @@ public abstract class ModelElement
                         }
                         catch( Exception e )
                         {
-                            SapphireModelingFrameworkPlugin.log( e );
+                            LoggingService.log( e );
                         }
                     }
                 }
@@ -1388,7 +1388,7 @@ public abstract class ModelElement
         final String message 
             = NLS.bind( Resources.invalidModelPath, this.type.getModelElementClass().getName(), path.toString() );
         
-        SapphireModelingFrameworkPlugin.logError( message, null );
+        LoggingService.log( Status.createErrorStatus( message ) );
     }
     
     protected static final boolean equal( final String value1,

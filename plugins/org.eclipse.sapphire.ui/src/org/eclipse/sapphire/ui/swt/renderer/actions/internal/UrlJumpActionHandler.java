@@ -13,7 +13,7 @@ package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 
 import java.net.URL;
 
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.ui.SapphireJumpActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -45,7 +45,7 @@ public final class UrlJumpActionHandler
         if( super.computeEnablementState() == true )
         {
             final Value<URL> value = getModelElement().read( getProperty() );
-            return ( value.validate().getSeverity() != IStatus.ERROR );
+            return ( value.validate().severity() != Status.Severity.ERROR );
         }
         
         return false;

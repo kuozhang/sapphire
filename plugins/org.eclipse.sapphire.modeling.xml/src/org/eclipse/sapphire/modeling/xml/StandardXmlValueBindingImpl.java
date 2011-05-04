@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
@@ -121,7 +121,7 @@ public final class StandardXmlValueBindingImpl
         }
         catch( Exception e )
         {
-            final String msg = NLS.bind( Resources.failure, new String[] { element.getModelElementType().getSimpleName(), property.getName(), e.getMessage() } );
+            final String msg = NLS.bind( Resources.failure, element.getModelElementType().getSimpleName(), property.getName(), e.getMessage() );
             throw new RuntimeException( msg, e );
         }
     }

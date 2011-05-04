@@ -13,7 +13,6 @@ package org.eclipse.sapphire.modeling;
 
 import java.text.NumberFormat;
 
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -43,7 +42,7 @@ public final class IntegerValueKeyword
         }
         catch( NumberFormatException e )
         {
-            SapphireModelingFrameworkPlugin.log( e );
+            LoggingService.log( e );
         }
         
         final StringBuilder buf = new StringBuilder();

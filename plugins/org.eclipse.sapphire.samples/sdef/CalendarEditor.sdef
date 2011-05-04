@@ -16,7 +16,6 @@
 <definition>
 
     <import>
-        <bundle>org.eclipse.sapphire.samples</bundle>
         <package>org.eclipse.sapphire.samples.calendar.integrated</package>
         <package>org.eclipse.sapphire.samples.calendar.ui</package>
     </import>

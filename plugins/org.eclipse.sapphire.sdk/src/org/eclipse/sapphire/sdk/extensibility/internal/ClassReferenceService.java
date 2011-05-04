@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.sdk.extensibility.internal;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ReferenceService;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -32,7 +32,7 @@ public final class ClassReferenceService
         {
             try
             {
-                cl = SapphireModelingFrameworkPlugin.class.getClassLoader().loadClass( className );
+                cl = IModelElement.class.getClassLoader().loadClass( className );
             }
             catch( ClassNotFoundException e ) {}
         }

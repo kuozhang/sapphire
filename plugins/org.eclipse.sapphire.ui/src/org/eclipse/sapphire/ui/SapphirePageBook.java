@@ -18,9 +18,8 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphirePageBookDef;
 import org.eclipse.sapphire.ui.def.ISapphirePageBookKeyMapping;
@@ -187,7 +186,7 @@ public abstract class SapphirePageBook
     protected abstract Object parsePageKey( final String pageKeyString );
     
     @Override
-    protected IStatus computeValidationState()
+    protected Status computeValidationState()
     {
         if( this.exposePageValidationState == true )
         {
@@ -199,7 +198,7 @@ public abstract class SapphirePageBook
             }
         }
         
-        return Status.OK_STATUS;
+        return Status.createOkStatus();
     }
     
     protected final void setExposePageValidationState( final boolean exposePageValidationState )
@@ -213,8 +212,8 @@ public abstract class SapphirePageBook
                 this.childPartListener = new SapphirePartListener()
                 {
                     @Override
-                    public void handleValidateStateChange( final IStatus oldValidateState,
-                                                           final IStatus newValidationState )
+                    public void handleValidateStateChange( final Status oldValidateState,
+                                                           final Status newValidationState )
                     {
                         updateValidationState();
                     }

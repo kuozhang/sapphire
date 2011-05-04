@@ -13,18 +13,15 @@
 package org.eclipse.sapphire.ui.def.internal;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.modeling.ClassLocator;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.ui.def.IDefinitionReference;
-import org.eclipse.sapphire.ui.def.IImportDirective;
+import org.eclipse.sapphire.ui.def.IPackageReference;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
-import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
@@ -33,36 +30,6 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 public final class SapphireUiDefMethods
 {
-    public static List<ISapphireUiDef> getImportedDefinitions( final ISapphireUiDef def )
-    {
-        final List<ISapphireUiDef> result = new ArrayList<ISapphireUiDef>();
-        
-        for( IImportDirective importDirective : def.getImportDirectives() )
-        {
-            final String bundleId = importDirective.getBundle().getText();
-            
-            if( bundleId != null )
-            {
-                for( IDefinitionReference ref : importDirective.getDefinitions() )
-                {
-                    final String path = ref.getPath().getText();
-                    
-                    if( path != null )
-                    {
-                        final ISapphireUiDef referencedDefinition = SapphireUiDefFactory.load( bundleId, path );
-                        
-                        if( referencedDefinition != null )
-                        {
-                            result.add( referencedDefinition );
-                        }
-                    }
-                }
-            }
-        }
-        
-        return result;
-    }
-    
     public static ISapphirePartDef getPartDef( final ISapphireUiDef rootdef,
                                                final String id,
                                                final boolean searchImportedDefinitions,
@@ -88,13 +55,18 @@ public final class SapphireUiDefMethods
             
             if( searchImportedDefinitions )
             {
-                for( ISapphireUiDef importedDefinition : rootdef.getImportedDefinitions() )
+                for( IDefinitionReference ref : rootdef.getImportedDefinitions() )
                 {
-                    final ISapphirePartDef def = importedDefinition.getPartDef( id, true, expectedType );
+                    final ISapphireUiDef sdef = ref.resolve();
                     
-                    if( def != null )
+                    if( sdef != null )
                     {
-                        return def;
+                        final ISapphirePartDef def = sdef.getPartDef( id, true, expectedType );
+                        
+                        if( def != null )
+                        {
+                            return def;
+                        }
                     }
                 }
             }
@@ -112,12 +84,20 @@ public final class SapphireUiDefMethods
                 }
             }
 
-            if (searchImportedDefinitions) {
-                for (ISapphireUiDef importedDefinition : rootdef.getImportedDefinitions()) {
-                    final ISapphireDocumentationDef def = importedDefinition.getDocumentationDef(id, true);
-
-                    if (def != null) {
-                        return def;
+            if( searchImportedDefinitions )
+            {
+                for( IDefinitionReference ref : rootdef.getImportedDefinitions() )
+                {
+                    final ISapphireUiDef sdef = ref.resolve();
+                    
+                    if( sdef != null )
+                    {
+                        final ISapphireDocumentationDef def = sdef.getDocumentationDef( id, true );
+                        
+                        if( def != null )
+                        {
+                            return def;
+                        }
                     }
                 }
             }
@@ -129,13 +109,21 @@ public final class SapphireUiDefMethods
     public static Class<?> resolveClass( final ISapphireUiDef def,
                                          final String className )
     {
-        for( IImportDirective directive : def.getImportDirectives() )
+        final ClassLocator locator = def.adapt( ClassLocator.class );
+        
+        for( IPackageReference packageRef : def.getImportedPackages() )
         {
-            final Class<?> cl = directive.resolveClass( className );
+            final String packageName = packageRef.getName().getText();
             
-            if( cl != null )
+            if( packageName != null )
             {
-                return cl;
+                final String fullClassName = packageName + "." + className;
+                final Class<?> cl = locator.find( fullClassName );
+                
+                if( cl != null )
+                {
+                    return cl;
+                }
             }
         }
         
@@ -173,24 +161,6 @@ public final class SapphireUiDefMethods
         }
         
         return property;
-    }
-    
-    public static ImageData resolveImage( final ISapphireUiDef def,
-                                          final String imagePath )
-    {
-        ImageData img = null;
-        
-        for( IImportDirective directive : def.getImportDirectives() )
-        {
-            img = directive.resolveImage( imagePath );
-            
-            if( img != null )
-            {
-                break;
-            }
-        }
-        
-        return img;
     }
     
     private static final class Resources extends NLS

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [342098] Separate modeling dependency on org.eclipse.core.runtime
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.graphiti.providers;
@@ -35,8 +36,8 @@ public class ErrorIndicatorImageProvider extends AbstractImageProvider
 	protected void addAvailableImages() 
 	{
 		// register the path for each image identifier
-		addImageFilePath(IMG_ERROR_DECORATOR, "icons/error-indicator.png"); //$NON-NLS-1$
-		addImageFilePath(IMG_WARNING_DECORATOR, "icons/warning.png"); //$NON-NLS-1$
+		addImageFilePath(IMG_ERROR_DECORATOR, "images/error-indicator.png"); //$NON-NLS-1$
+		addImageFilePath(IMG_WARNING_DECORATOR, "images/warning.png"); //$NON-NLS-1$
 	}
 
 }

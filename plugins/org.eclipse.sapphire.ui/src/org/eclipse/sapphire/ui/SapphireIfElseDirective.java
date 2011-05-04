@@ -15,12 +15,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.SapphireMultiStatus;
+import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.ISapphireIfElseDirectiveDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -48,15 +47,15 @@ public final class SapphireIfElseDirective
         this.def = (ISapphireIfElseDirectiveDef) this.definition;
         
         final Class<?> conditionClass;
-        final IStatus conditionClassValidation = this.def.getConditionClass().validate();
+        final Status conditionClassValidation = this.def.getConditionClass().validate();
         
-        if( conditionClassValidation.getSeverity() != IStatus.ERROR )
+        if( conditionClassValidation.severity() != Status.Severity.ERROR )
         {
             conditionClass = this.def.getConditionClass().resolve().artifact();
         }
         else
         {
-            SapphireUiFrameworkPlugin.log( conditionClassValidation );
+            LoggingService.log( conditionClassValidation );
             conditionClass = null;
         }
         
@@ -90,8 +89,8 @@ public final class SapphireIfElseDirective
         final SapphirePartListener childPartListener = new SapphirePartListener()
         {
             @Override
-            public void handleValidateStateChange( final IStatus oldValidateState,
-                                                   final IStatus newValidationState )
+            public void handleValidateStateChange( final Status oldValidateState,
+                                                   final Status newValidationState )
             {
                 updateValidationState();
             }
@@ -141,19 +140,19 @@ public final class SapphireIfElseDirective
     }
     
     @Override
-    protected IStatus computeValidationState()
+    protected Status computeValidationState()
     {
-        final SapphireMultiStatus st = new SapphireMultiStatus();
+        final Status.CompositeStatusFactory factory = Status.factoryForComposite();
 
         if( this.condition != null )
         {
             for( SapphirePart child : ( this.condition.getConditionState() == true ? this.thenContent : this.elseContent ) )
             {
-                st.add( child.getValidationState() );
+                factory.add( child.getValidationState() );
             }
         }
         
-        return st;
+        return factory.create();
     }
     
     @Override

@@ -13,7 +13,7 @@ package org.eclipse.sapphire.modeling.xml;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

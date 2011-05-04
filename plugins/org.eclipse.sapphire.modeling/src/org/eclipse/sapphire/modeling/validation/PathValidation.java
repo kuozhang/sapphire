@@ -11,11 +11,8 @@
 
 package org.eclipse.sapphire.modeling.validation;
 
-import static org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin.PLUGIN_ID;
-
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -23,8 +20,8 @@ import org.eclipse.osgi.util.NLS;
 
 public final class PathValidation
 {
-    public static final IStatus validateExtensions( final String fileName,
-                                                    final String[] validFileExtensions )
+    public static final Status validateExtensions( final String fileName,
+                                                   final String[] validFileExtensions )
     {
         if( validFileExtensions != null && validFileExtensions.length > 0 )
         {
@@ -65,7 +62,7 @@ public final class PathValidation
                 }
                 else if( validFileExtensions.length == 2 )
                 {
-                    message = NLS.bind( Resources.invalidFileExtensionOne, new String[] { trimmedFileName, validFileExtensions[ 0 ], validFileExtensions[ 1 ] } );
+                    message = NLS.bind( Resources.invalidFileExtensionOne, trimmedFileName, validFileExtensions[ 0 ], validFileExtensions[ 1 ] );
                 }
                 else
                 {
@@ -84,11 +81,11 @@ public final class PathValidation
                     message = NLS.bind( Resources.invalidFileExtensionMultiple, trimmedFileName, buf.toString() ); 
                 }
                 
-                return new Status( Status.ERROR, PLUGIN_ID, message );
+                return Status.createErrorStatus( message );
             }
         }
         
-        return Status.OK_STATUS;
+        return Status.createOkStatus();
     }
     
     protected static final class Resources extends NLS

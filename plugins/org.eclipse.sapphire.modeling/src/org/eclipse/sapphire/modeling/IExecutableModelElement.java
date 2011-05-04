@@ -11,9 +11,6 @@
 
 package org.eclipse.sapphire.modeling;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -23,5 +20,5 @@ public interface IExecutableModelElement
     extends IModelElement
     
 {
-    IStatus execute( IProgressMonitor monitor );
+    Status execute( ProgressMonitor monitor );
 }

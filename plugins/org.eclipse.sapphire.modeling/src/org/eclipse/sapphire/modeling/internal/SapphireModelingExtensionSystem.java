@@ -17,7 +17,6 @@ import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,11 +26,9 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.sapphire.modeling.ExtensionsLocator;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementService;
 import org.eclipse.sapphire.modeling.ModelElementServiceFactory;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -42,7 +39,6 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.TypeCast;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
-import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -72,19 +68,11 @@ public final class SapphireModelingExtensionSystem
     private static final String EL_TYPE_CAST = "type-cast";
 
     private static boolean initialized = false;
-    private static List<ExtensionHandle> extensionHandles;
     private static List<ModelElementServiceFactoryProxy> modelElementServiceFactories;
     private static List<ModelPropertyServiceFactoryProxy> modelPropertyServiceFactories;
     private static List<ValueSerializationServiceFactory> valueSerializerFactories;
     private static Map<String,FunctionFactory> functionFactories;
     private static List<TypeCast> typeCasts;
-
-    public static List<ExtensionHandle> getExtensionHandles()
-    {
-        initialize();
-
-        return extensionHandles;
-    }
 
     public static List<ModelElementServiceFactoryProxy> getModelElementServices()
     {
@@ -152,87 +140,67 @@ public final class SapphireModelingExtensionSystem
             functionFactories = new HashMap<String,FunctionFactory>();
             typeCasts = new ArrayList<TypeCast>();
 
-            extensionHandles = new ArrayList<ExtensionHandle>();
-
-            final IExtensionRegistry registry = Platform.getExtensionRegistry();
-            final IExtensionPoint point = registry.getExtensionPoint( SapphireModelingFrameworkPlugin.PLUGIN_ID, "extension" );
-
-            if( point == null )
+            for( final ExtensionsLocator.Handle handle : ExtensionsLocator.instance().find() )
             {
-				extensionHandles.add( new ClassLoaderExtensionHandle( SapphireModelingExtensionSystem.class.getClassLoader() ) );
-		    }
-            else
-            {
-                for( IExtension extension : point.getExtensions() )
+                final Element root = parse( handle.extension() );
+
+                if( root != null )
                 {
-                    extensionHandles.add( new BundleExtensionHandle( extension.getContributor().getName() ) );
-                }
-		    }
+                    final NodeList nodes = root.getChildNodes();
 
-            for( ExtensionHandle handle : extensionHandles )
-            {
-                for( URL url : handle.findExtensionFiles() )
-                {
-                    final Element root = parse( url );
-
-                    if( root != null )
+                    for( int i = 0, n = nodes.getLength(); i < n; i++ )
                     {
-                        final NodeList nodes = root.getChildNodes();
+                        final Node node = nodes.item( i );
 
-                        for( int i = 0, n = nodes.getLength(); i < n; i++ )
+                        if( node instanceof Element )
                         {
-                            final Node node = nodes.item( i );
+                            final Element el = (Element) node;
+                            final String elname = el.getLocalName();
 
-                            if( node instanceof Element )
+                            try
                             {
-                                final Element el = (Element) node;
-                                final String elname = el.getLocalName();
-
-                                try
+                                if( elname.equals( EL_VALUE_SERIALIZATION_SERVICE ) )
                                 {
-                                    if( elname.equals( EL_VALUE_SERIALIZATION_SERVICE ) )
-                                    {
-                                        final Class<?> valueType = handle.loadClass( text( child( el, EL_TYPE ) ) );
-                                        final Class<? extends ValueSerializationService> serializerClass = handle.loadClass( text( child( el, EL_IMPL ) ) );
+                                    final Class<?> valueType = handle.findClass( text( child( el, EL_TYPE ) ) );
+                                    final Class<? extends ValueSerializationService> serializerClass = handle.findClass( text( child( el, EL_IMPL ) ) );
 
-                                        valueSerializerFactories.add( new ValueSerializationServiceFactory( valueType, serializerClass ) );
-                                    }
-                                    else if( elname.equals( EL_MODEL_ELEMENT_SERVICE ) )
-                                    {
-                                        final String id = text( child( el, EL_ID ) );
-                                        final Class<? extends ModelElementService> serviceType = handle.loadClass( text( child( el, EL_TYPE ) ) );
-                                        final Class<? extends ModelElementServiceFactory> serviceFactory = handle.loadClass( text( child( el, EL_FACTORY ) ) );
-                                        final Set<String> overrides = parseOverrides( el );
-
-                                        modelElementServiceFactories.add( new ModelElementServiceFactoryProxy( id, serviceType, serviceFactory, overrides ) );
-                                    }
-                                    else if( elname.equals( EL_MODEL_PROPERTY_SERVICE ) )
-                                    {
-                                        final String id = text( child( el, EL_ID ) );
-                                        final Class<? extends ModelPropertyService> serviceType = handle.loadClass( text( child( el, EL_TYPE ) ) );
-                                        final Class<? extends ModelPropertyServiceFactory> serviceFactory = handle.loadClass( text( child( el, EL_FACTORY ) ) );
-                                        final Set<String> overrides = parseOverrides( el );
-
-                                        modelPropertyServiceFactories.add( new ModelPropertyServiceFactoryProxy( id, serviceType, serviceFactory, overrides ) );
-                                    }
-                                    else if( elname.equals( EL_FUNCTION ) )
-                                    {
-                                        final String name = text( child( el, EL_NAME ) );
-                                        final Class<? extends Function> impl = handle.loadClass( text( child( el, EL_IMPL ) ) );
-
-                                        functionFactories.put( name.toLowerCase(), new FunctionFactory( impl ) );
-                                    }
-                                    else if( elname.equals( EL_TYPE_CAST ) )
-                                    {
-                                        final Class<?> source = handle.loadClass( text( child( el, EL_SOURCE ) ) );
-                                        final Class<?> target = handle.loadClass( text( child( el, EL_TARGET ) ) );
-                                        final Class<? extends TypeCast> impl = handle.loadClass( text( child( el, EL_IMPL ) ) );
-                                        
-                                        typeCasts.add( new TypeCastProxy( source, target, impl ) );
-                                    }
+                                    valueSerializerFactories.add( new ValueSerializationServiceFactory( valueType, serializerClass ) );
                                 }
-                                catch( InvalidExtensionException e ) {}
+                                else if( elname.equals( EL_MODEL_ELEMENT_SERVICE ) )
+                                {
+                                    final String id = text( child( el, EL_ID ) );
+                                    final Class<? extends ModelElementService> serviceType = handle.findClass( text( child( el, EL_TYPE ) ) );
+                                    final Class<? extends ModelElementServiceFactory> serviceFactory = handle.findClass( text( child( el, EL_FACTORY ) ) );
+                                    final Set<String> overrides = parseOverrides( el );
+
+                                    modelElementServiceFactories.add( new ModelElementServiceFactoryProxy( id, serviceType, serviceFactory, overrides ) );
+                                }
+                                else if( elname.equals( EL_MODEL_PROPERTY_SERVICE ) )
+                                {
+                                    final String id = text( child( el, EL_ID ) );
+                                    final Class<? extends ModelPropertyService> serviceType = handle.findClass( text( child( el, EL_TYPE ) ) );
+                                    final Class<? extends ModelPropertyServiceFactory> serviceFactory = handle.findClass( text( child( el, EL_FACTORY ) ) );
+                                    final Set<String> overrides = parseOverrides( el );
+
+                                    modelPropertyServiceFactories.add( new ModelPropertyServiceFactoryProxy( id, serviceType, serviceFactory, overrides ) );
+                                }
+                                else if( elname.equals( EL_FUNCTION ) )
+                                {
+                                    final String name = text( child( el, EL_NAME ) );
+                                    final Class<? extends Function> impl = handle.findClass( text( child( el, EL_IMPL ) ) );
+
+                                    functionFactories.put( name.toLowerCase(), new FunctionFactory( impl ) );
+                                }
+                                else if( elname.equals( EL_TYPE_CAST ) )
+                                {
+                                    final Class<?> source = handle.findClass( text( child( el, EL_SOURCE ) ) );
+                                    final Class<?> target = handle.findClass( text( child( el, EL_TARGET ) ) );
+                                    final Class<? extends TypeCast> impl = handle.findClass( text( child( el, EL_IMPL ) ) );
+                                    
+                                    typeCasts.add( new TypeCastProxy( source, target, impl ) );
+                                }
                             }
+                            catch( InvalidExtensionException e ) {}
                         }
                     }
                 }
@@ -363,150 +331,6 @@ public final class SapphireModelingExtensionSystem
         return buf.toString().trim();
     }
 
-    public static abstract class ExtensionHandle
-    {
-        public abstract List<URL> findExtensionFiles();
-        public abstract <T> Class<T> loadClass( String className );
-        public abstract URL resolveResource( String name );
-    }
-
-    public static final class ClassLoaderExtensionHandle extends ExtensionHandle
-    {
-        private final ClassLoader classLoader;
-
-        public ClassLoaderExtensionHandle( final ClassLoader classLoader )
-        {
-            this.classLoader = classLoader;
-        }
-
-        @Override
-        
-        public List<URL> findExtensionFiles()
-        {
-            final List<URL> files = new ArrayList<URL>();
-
-            try
-            {
-                final Enumeration<URL> urls = this.classLoader.getResources( "META-INF/sapphire-extension.xml" );
-
-                while( urls.hasMoreElements() )
-                {
-                    final URL url = urls.nextElement();
-
-                    if( url != null )
-                    {
-                        files.add( url );
-                    }
-                }
-            }
-            catch( IOException e )
-            {
-                SapphireModelingFrameworkPlugin.log( e );
-            }
-
-            return files;
-        }
-
-        @SuppressWarnings( "unchecked" )
-        @Override
-        public <T> Class<T> loadClass( final String className )
-        {
-            Class<?> cl = null;
-
-            if( className != null )
-            {
-                try
-                {
-                    cl = this.classLoader.loadClass( className );
-                }
-                catch( ClassNotFoundException e )
-                {
-                    // TODO: Log the problem.
-                    throw new InvalidExtensionException();
-                }
-            }
-
-            return (Class<T>) cl;
-        }
-
-        @Override
-        public URL resolveResource( final String name )
-        {
-            return this.classLoader.getResource( name );
-        }
-    }
-
-    public static final class BundleExtensionHandle extends ExtensionHandle
-    {
-        private final Bundle bundle;
-
-        public BundleExtensionHandle( final String bundleId )
-        {
-            this.bundle = Platform.getBundle( bundleId );
-        }
-
-        @Override
-        public List<URL> findExtensionFiles()
-        {
-            final List<URL> files = new ArrayList<URL>();
-
-            if( this.bundle != null )
-            {
-                try
-                {
-                    final Enumeration<URL> urls = this.bundle.getResources( "META-INF/sapphire-extension.xml" );
-
-                    if( urls != null )
-                    {
-                        while( urls.hasMoreElements() )
-                        {
-                            final URL url = urls.nextElement();
-    
-                            if( url != null )
-                            {
-                                files.add( url );
-                            }
-                        }
-                    }
-                }
-                catch( IOException e )
-                {
-                    SapphireModelingFrameworkPlugin.log( e );
-                }
-            }
-
-            return files;
-        }
-
-        @SuppressWarnings( "unchecked" )
-        @Override
-        public <T> Class<T> loadClass( final String className )
-        {
-            Class<?> cl = null;
-
-            if( className != null )
-            {
-                try
-                {
-                    cl = this.bundle.loadClass( className );
-                }
-                catch( ClassNotFoundException e )
-                {
-                    // TODO: Log the problem.
-                    throw new InvalidExtensionException();
-                }
-            }
-
-            return (Class<T>) cl;
-        }
-
-        @Override
-        public URL resolveResource( final String name )
-        {
-            return this.bundle.getResource( name );
-        }
-    }
-
     public static final class InvalidExtensionException extends RuntimeException
     {
         private static final long serialVersionUID = 1L;
@@ -589,7 +413,7 @@ public final class SapphireModelingExtensionSystem
                 }
                 catch( Exception e )
                 {
-                    SapphireModelingFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                     this.factoryInstantiationFailed = true;
                 }
             }
@@ -677,7 +501,7 @@ public final class SapphireModelingExtensionSystem
                 }
                 catch( Exception e )
                 {
-                    SapphireModelingFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                     this.factoryInstantiationFailed = true;
                 }
             }
@@ -725,7 +549,7 @@ public final class SapphireModelingExtensionSystem
                 }
                 catch( Exception e )
                 {
-                    SapphireModelingFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                     serializer = null;
                     this.serializerInstantiationFailed = true;
                 }
@@ -758,7 +582,7 @@ public final class SapphireModelingExtensionSystem
                 }
                 catch( Exception e )
                 {
-                    SapphireModelingFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                     function = null;
                     this.functionInstantiationFailed = true;
                 }
@@ -803,7 +627,7 @@ public final class SapphireModelingExtensionSystem
                         }
                         catch( Exception e )
                         {
-                            SapphireModelingFrameworkPlugin.log( e );
+                            LoggingService.log( e );
                             this.implInstantiationFailed = true;
                         }
                     }

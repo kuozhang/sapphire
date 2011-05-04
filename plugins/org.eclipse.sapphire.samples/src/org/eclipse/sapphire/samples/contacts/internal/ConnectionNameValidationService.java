@@ -11,9 +11,8 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.samples.contacts.IContact;
 
@@ -27,7 +26,7 @@ public abstract class ConnectionNameValidationService
     
 {
     @Override
-    public IStatus validate()
+    public Status validate()
     {
         final Value<?> value = target();
         final String assistantName = value.getText();
@@ -38,9 +37,9 @@ public abstract class ConnectionNameValidationService
             return createErrorStatus();
         }
         
-        return Status.OK_STATUS;
+        return Status.createOkStatus();
     }
     
-    protected abstract IStatus createErrorStatus();
+    protected abstract Status createErrorStatus();
     
 }

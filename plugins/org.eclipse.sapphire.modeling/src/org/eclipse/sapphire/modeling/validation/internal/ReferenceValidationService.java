@@ -11,9 +11,6 @@
 
 package org.eclipse.sapphire.modeling.validation.internal;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -21,9 +18,11 @@ import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
 import org.eclipse.sapphire.modeling.ReferenceValue;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -35,7 +34,7 @@ public final class ReferenceValidationService
     
 {
     @Override
-    public IStatus validate()
+    public Status validate()
     {
         final ReferenceValue<?,?> value = target();
         
@@ -45,10 +44,10 @@ public final class ReferenceValidationService
             final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
             final String str = value.getText();
             final String msg = NLS.bind( Resources.message, label, str );
-            return createErrorStatus( msg );
+            return Status.createErrorStatus( msg );
         }
         
-        return Status.OK_STATUS;
+        return Status.createOkStatus();
     }
     
     public static final class Factory extends ModelPropertyServiceFactory

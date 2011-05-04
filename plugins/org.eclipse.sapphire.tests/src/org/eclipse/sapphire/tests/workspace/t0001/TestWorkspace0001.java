@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
@@ -124,7 +125,7 @@ public final class TestWorkspace0001
                                    final ValueProperty property,
                                    final IPath path )
     {
-        element.write( property, path );
+        element.write( property, new Path( path.toPortableString() ) );
         assertValidationOk( element.read( property ) );
     }
     
@@ -140,7 +141,7 @@ public final class TestWorkspace0001
                                       final IPath path,
                                       final String expectedErrorMessage )
     {
-        element.write( property, path );
+        element.write( property, new Path( path.toPortableString() ) );
         assertValidationError( element.read( property ), expectedErrorMessage );
     }
 

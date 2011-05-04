@@ -18,7 +18,7 @@ import java.io.Reader;
 import java.security.MessageDigest;
 import java.util.Collection;
 
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.LoggingService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -122,7 +122,7 @@ public class MiscUtil
         }
         catch( IOException e )
         {
-            SapphireModelingFrameworkPlugin.log( e );
+            LoggingService.log( e );
             return "";
         }
         finally

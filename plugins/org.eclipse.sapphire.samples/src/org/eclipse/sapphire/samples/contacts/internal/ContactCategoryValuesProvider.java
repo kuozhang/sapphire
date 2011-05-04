@@ -13,8 +13,8 @@ package org.eclipse.sapphire.samples.contacts.internal;
 
 import java.util.SortedSet;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.PossibleValuesService;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.samples.contacts.IContact;
 import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
 
@@ -45,9 +45,9 @@ public final class ContactCategoryValuesProvider
     }
 
     @Override
-    public int getInvalidValueSeverity( String invalidValue )
+    public Status.Severity getInvalidValueSeverity( final String invalidValue )
     {
-        return IStatus.OK;
+        return Status.Severity.OK;
     }
     
 }

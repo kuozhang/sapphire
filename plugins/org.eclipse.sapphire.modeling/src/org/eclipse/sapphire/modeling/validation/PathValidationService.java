@@ -11,18 +11,17 @@
 
 package org.eclipse.sapphire.modeling.validation;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
+import org.eclipse.sapphire.modeling.Path;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.ValidFileExtensions;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -30,7 +29,7 @@ import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 
 public abstract class PathValidationService
 
-    extends ModelPropertyValidationService<Value<IPath>>
+    extends ModelPropertyValidationService<Value<Path>>
     
 {
     protected boolean resourceMustExist;
@@ -61,7 +60,7 @@ public abstract class PathValidationService
         }
     }
     
-    protected final IStatus validateExtensions( final IPath path )
+    protected final Status validateExtensions( final Path path )
     {
         final String fileName = path.lastSegment();
         
@@ -70,7 +69,7 @@ public abstract class PathValidationService
             return PathValidation.validateExtensions( fileName, this.validFileExtensions );
         }
         
-        return Status.OK_STATUS;
+        return Status.createOkStatus();
     }
     
     protected static final class Resources extends NLS

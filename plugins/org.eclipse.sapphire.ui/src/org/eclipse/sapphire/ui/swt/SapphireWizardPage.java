@@ -16,10 +16,9 @@ import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescr
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.help.IContext;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
 import org.eclipse.sapphire.ui.SapphirePartEvent;
 import org.eclipse.sapphire.ui.SapphirePartListener;
@@ -90,16 +89,16 @@ public class SapphireWizardPage
         {
             public void run()
             {
-                final IStatus st = SapphireWizardPage.this.part.getValidationState();
+                final Status st = SapphireWizardPage.this.part.getValidationState();
                 
-                if( st.getSeverity() == Status.ERROR )
+                if( st.severity() == Status.Severity.ERROR )
                 {
-                    setMessage( st.getMessage(), ERROR );
+                    setMessage( st.message(), ERROR );
                     setPageComplete( false );
                 }
-                else if( st.getSeverity() == Status.WARNING )
+                else if( st.severity() == Status.Severity.WARNING )
                 {
-                    setMessage( st.getMessage(), WARNING );
+                    setMessage( st.message(), WARNING );
                     setPageComplete( true );
                 }
                 else
@@ -115,8 +114,8 @@ public class SapphireWizardPage
         final SapphirePartListener messageUpdateListener = new SapphirePartListener()
         {
             @Override
-            public void handleValidateStateChange( final IStatus oldValidateState,
-                                                   final IStatus newValidationState )
+            public void handleValidateStateChange( final Status oldValidateState,
+                                                   final Status newValidationState )
             {
                 messageUpdateOperation.run();
             }

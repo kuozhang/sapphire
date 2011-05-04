@@ -11,16 +11,16 @@
 
 package org.eclipse.sapphire.samples.contacts;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.samples.contacts.internal.AreaCodeBinding;
@@ -54,7 +54,7 @@ public interface IPhoneNumber
             "work",
             "other"
         },
-        invalidValueSeverity = IStatus.OK
+        invalidValueSeverity = Status.Severity.OK
     )
     
     ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );

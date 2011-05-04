@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.ui.assist.internal;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
@@ -30,9 +29,9 @@ public final class ProblemsAssistContributor
     extends PropertyEditorAssistContributor
     
 {
-    private final IStatus status;
+    private final Status status;
     
-    public ProblemsAssistContributor( final IStatus status )
+    public ProblemsAssistContributor( final Status status )
     {
         setId( ID_PROBLEMS_CONTRIBUTOR );
         setPriority( PRIORITY_PROBLEMS_CONTRIBUTOR );
@@ -42,32 +41,32 @@ public final class ProblemsAssistContributor
     @Override
     public void contribute( final PropertyEditorAssistContext context )
     {
-        if( this.status.isMultiStatus() )
+        if( this.status.children().isEmpty() )
         {
-            for( IStatus child : this.status.getChildren() )
+            contribute( context, this.status );
+        }
+        else
+        {
+            for( Status child : this.status.children() )
             {
                 contribute( context, child );
             }
         }
-        else
-        {
-            contribute( context, this.status );
-        }
     }
     
     private static void contribute( final PropertyEditorAssistContext context,
-                                    final IStatus status )
+                                    final Status status )
     {
-        final int valResultSeverity = status.getSeverity();
+        final Status.Severity valResultSeverity = status.severity();
         String imageKey = null;
         Image image = null;
         
-        if( valResultSeverity == Status.ERROR )
+        if( valResultSeverity == Status.Severity.ERROR )
         {
             imageKey = "error";
             image = PlatformUI.getWorkbench().getSharedImages().getImage( ISharedImages.IMG_OBJS_ERROR_TSK );
         }
-        else if( valResultSeverity == Status.WARNING )
+        else if( valResultSeverity == Status.Severity.WARNING )
         {
             imageKey = "error";
             image = PlatformUI.getWorkbench().getSharedImages().getImage( ISharedImages.IMG_OBJS_WARN_TSK );
@@ -76,7 +75,7 @@ public final class ProblemsAssistContributor
         if( imageKey != null )
         {
             final PropertyEditorAssistContribution contribution = new PropertyEditorAssistContribution();
-            contribution.setText( "<li style=\"image\" value=\"" + imageKey + "\">" + escapeForXml( status.getMessage() ) + "</li>" );
+            contribution.setText( "<li style=\"image\" value=\"" + imageKey + "\">" + escapeForXml( status.message() ) + "</li>" );
             contribution.setImage( imageKey, image );
             
             final PropertyEditorAssistSection section = context.getSection( SECTION_ID_PROBLEMS );

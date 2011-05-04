@@ -15,10 +15,12 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.ui.def.internal.DefinitionReferenceMethods;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -43,5 +45,11 @@ public interface IDefinitionReference
     
     Value<String> getPath();
     void setPath( String path );
+    
+    // *** Method : resolve ***
+    
+    @DelegateImplementation( DefinitionReferenceMethods.class )
+    
+    ISapphireUiDef resolve();
     
 }

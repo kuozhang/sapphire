@@ -16,6 +16,7 @@ import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ImageService;
 import org.eclipse.sapphire.modeling.ModelElementService;
 import org.eclipse.sapphire.modeling.ModelElementServiceFactory;
+import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.Image;
 
 /**
@@ -35,9 +36,9 @@ public final class StaticImageService
     {
         super.init( element, params );
         
-        final Image imageAnnotation = element.getModelElementType().getAnnotation( Image.class );
-        final String imagePath = imageAnnotation.path();
-        this.image = ImageData.readFromBundle( imagePath );
+        final ModelElementType type = element.getModelElementType();
+        final Image imageAnnotation = type.getAnnotation( Image.class );
+        this.image = ImageData.createFromClassLoader( type.getAnnotationHostClass( imageAnnotation ), imageAnnotation.path() );
     }
 
     @Override

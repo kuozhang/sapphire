@@ -16,7 +16,6 @@
 <definition>
 
     <import>
-        <bundle>org.eclipse.sapphire.samples</bundle>
         <package>org.eclipse.sapphire.samples.ezbug</package>
     </import>
     
@@ -193,8 +192,9 @@
             <node>
                 <label>bug reports</label>
                 <section>
-                    <description>Use this editor to manage your bug database.</description>
                     <content>
+                        <label>Use this editor to manage your bug database.</label>
+                        <spacer/>
                         <action-link>
                             <action-id>Sapphire.Add</action-id>
                             <label>add a bug report</label>

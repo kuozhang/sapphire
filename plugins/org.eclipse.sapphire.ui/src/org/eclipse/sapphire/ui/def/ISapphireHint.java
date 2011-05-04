@@ -11,17 +11,17 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.internal.SapphireHintValueDefaultValueService;
 import org.eclipse.sapphire.ui.def.internal.SapphireHintValuePossibleValuesService;
@@ -76,7 +76,7 @@ public interface ISapphireHint
             ISapphirePartDef.HINT_WIDTH,
         },
         invalidValueMessage = "\"{0}\" is not a valid hint.",
-        invalidValueSeverity = IStatus.OK
+        invalidValueSeverity = Status.Severity.OK
     )
     
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );

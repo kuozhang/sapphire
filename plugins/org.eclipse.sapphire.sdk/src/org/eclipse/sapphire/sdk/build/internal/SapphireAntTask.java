@@ -57,7 +57,6 @@ public final class SapphireAntTask
 			throw new BuildException( "Attribute dest not set!" );
 		}
 
-try{
 		final Set<File> files = new HashSet<File>();
 		gatherSourceFiles( this.src, files );
 
@@ -97,12 +96,6 @@ try{
             	throw new BuildException( e );
             }
         }
-}
-catch( Exception e )
-{
-	e.printStackTrace();
-	throw new BuildException( e );
-}
 	}
 
     private static void gatherSourceFiles( final File directory,

@@ -15,10 +15,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.SapphireMultiStatus;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.IFormDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
@@ -49,8 +48,8 @@ public class SapphirePartContainer
             final SapphirePartListener childPartListener = new SapphirePartListener()
             {
                 @Override
-                public void handleValidateStateChange( final IStatus oldValidateState,
-                                                       final IStatus newValidationState )
+                public void handleValidateStateChange( final Status oldValidateState,
+                                                       final Status newValidationState )
                 {
                     updateValidationState();
                 }
@@ -89,16 +88,16 @@ public class SapphirePartContainer
     
     @Override
     
-    protected IStatus computeValidationState()
+    protected Status computeValidationState()
     {
-        final SapphireMultiStatus st = new SapphireMultiStatus();
+        final Status.CompositeStatusFactory factory = Status.factoryForComposite();
 
         for( SapphirePart child : this.childParts )
         {
-            st.add( child.getValidationState() );
+            factory.add( child.getValidationState() );
         }
         
-        return st;
+        return factory.create();
     }
     
     @Override

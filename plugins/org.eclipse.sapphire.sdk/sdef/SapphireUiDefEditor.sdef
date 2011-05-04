@@ -14,14 +14,9 @@
 <definition>
 
     <import>
-        <bundle>org.eclipse.sapphire.ui</bundle>
         <package>org.eclipse.sapphire.ui.def</package>
         <package>org.eclipse.sapphire.ui.form.editors.masterdetails.def</package>
         <package>org.eclipse.sapphire.ui.diagram.def</package>
-    </import>
-
-    <import>
-        <bundle>org.eclipse.sapphire.sdk</bundle>
         <package>org.eclipse.sapphire.sdk.internal</package>
         <definition>sdef/SapphireEditorCommon.sdef</definition>
     </import>
@@ -33,35 +28,19 @@
             <node>
                 <label>imports</label>
                 <section>
-                    <description>Import packages and definitions from bundles.</description>
                     <content>
-                        <action-link>
-                            <action-id>Sapphire.Add</action-id>
-                            <label>Add an import</label>
-                        </action-link>
+                        <property-editor>ImportedPackages</property-editor>
+                        <property-editor>ImportedDefinitions</property-editor>
                     </content>
                 </section>
-                <node-factory>
-                    <property>ImportDirectives</property>
-                    <case>
-                        <label>${ Bundle == null ? "&lt;import&gt;" : Bundle }</label>
-                        <section>
-                            <label>import</label>
-                            <content>
-                                <property-editor>Bundle</property-editor>
-                                <property-editor>Packages</property-editor>
-                                <property-editor>Definitions</property-editor>
-                            </content>
-                        </section>
-                    </case>
-                </node-factory>
             </node>
             <node>
                 <label>documentation</label>
                 <image>images/editors/sdef/documentation.gif</image>
                 <section>
-                    <description>Define named documentation content. Reference the same documentation content from multiple parts.</description>
                     <content>
+                        <label>Define named documentation content. Reference the same documentation content from multiple parts.</label>
+                        <spacer/>
                         <action-link>
                             <action-id>Sapphire.Add</action-id>
                             <label>Add documentation content</label>
@@ -86,10 +65,9 @@
             <node>
                 <label>parts</label>
                 <section>
-                    <description>
-                        Define parts.
-                    </description>
                     <content>
+                        <label>Define parts.</label>
+                        <spacer/>
                         <action-link>
                             <action-id>Sapphire.Add</action-id>
                             <label>Add a part</label>
@@ -198,8 +176,9 @@
         <node>
             <label>handler filters</label>
             <section>
-                <description>Define action handler filters.</description>
                 <content>
+                    <label>Define action handler filters.</label>
+                    <spacer/>
                     <action-link>
                         <action-id>Sapphire.Add</action-id>
                         <label>Add an action handler filter</label>

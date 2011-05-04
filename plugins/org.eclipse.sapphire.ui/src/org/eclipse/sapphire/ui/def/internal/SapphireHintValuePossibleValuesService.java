@@ -14,9 +14,9 @@ package org.eclipse.sapphire.ui.def.internal;
 
 import java.util.SortedSet;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.PossibleValuesService;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
@@ -66,9 +66,9 @@ public final class SapphireHintValuePossibleValuesService
     }
     
     @Override
-    public int getInvalidValueSeverity( final String invalidValue )
+    public Status.Severity getInvalidValueSeverity( final String invalidValue )
     {
-        return IStatus.OK;
+        return Status.Severity.OK;
     }
     
 }

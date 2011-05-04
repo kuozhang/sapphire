@@ -14,9 +14,9 @@ package org.eclipse.sapphire.ui;
 
 import java.util.Set;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.help.IContext;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 /**
@@ -28,7 +28,7 @@ public interface ISapphirePart
     ISapphirePart getParentPart();
     <T> T nearest( final Class<T> partType );
     IModelElement getModelElement();
-    IStatus getValidationState();
+    Status getValidationState();
     IContext getDocumentationContext();
     SapphireImageCache getImageCache();
     void addListener( SapphirePartListener listener );

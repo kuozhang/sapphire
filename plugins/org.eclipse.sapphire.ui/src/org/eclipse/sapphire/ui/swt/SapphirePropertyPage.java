@@ -11,12 +11,11 @@
 
 package org.eclipse.sapphire.ui.swt;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -60,16 +59,16 @@ public abstract class SapphirePropertyPage
         {
             public void run()
             {
-                final IStatus st = control.getPart().getValidationState();
+                final Status st = control.getPart().getValidationState();
                 
-                if( st.getSeverity() == Status.ERROR )
+                if( st.severity() == Status.Severity.ERROR )
                 {
-                    setMessage( st.getMessage(), ERROR );
+                    setMessage( st.message(), ERROR );
                     setValid( false );
                 }
-                else if( st.getSeverity() == Status.WARNING )
+                else if( st.severity() == Status.Severity.WARNING )
                 {
-                    setMessage( st.getMessage(), WARNING );
+                    setMessage( st.message(), WARNING );
                     setValid( true );
                 }
                 else
@@ -85,8 +84,8 @@ public abstract class SapphirePropertyPage
         final SapphirePartListener messageUpdateListener = new SapphirePartListener()
         {
             @Override
-            public void handleValidateStateChange( final IStatus oldValidateState,
-                                                   final IStatus newValidationState )
+            public void handleValidateStateChange( final Status oldValidateState,
+                                                   final Status newValidationState )
             {
                 messageUpdateOperation.run();
             }

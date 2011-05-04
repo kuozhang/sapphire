@@ -14,19 +14,18 @@ package org.eclipse.sapphire.modeling.validation.internal;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
 import org.eclipse.sapphire.modeling.PossibleValuesService;
+import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -38,7 +37,7 @@ public final class PossibleValuesValidationService
     
 {
     @Override
-    public IStatus validate()
+    public Status validate()
     {
         final Value<?> value = target();
         final IModelElement modelElement = value.parent();
@@ -57,7 +56,7 @@ public final class PossibleValuesValidationService
                     if( v == null )
                     {
                         final String msg = NLS.bind( Resources.valuesProviderReturnedNull, valuesProvider.getClass().getName() );
-                        SapphireModelingFrameworkPlugin.logError( msg, null );
+                        LoggingService.log( Status.createErrorStatus( msg ) );
                         
                         values = Collections.emptyList();
                     }
@@ -83,14 +82,14 @@ public final class PossibleValuesValidationService
 
                 if( ! found )
                 {
-                    final int severity = valuesProvider.getInvalidValueSeverity( valueString );
+                    final Status.Severity severity = valuesProvider.getInvalidValueSeverity( valueString );
                     final String message = valuesProvider.getInvalidValueMessage( valueString );
-                    return new Status( severity, SapphireModelingFrameworkPlugin.PLUGIN_ID, message );
+                    return Status.createStatus( severity, message );
                 }
             }
         }
         
-        return Status.OK_STATUS;
+        return Status.createOkStatus();
     }
     
     public static final class Factory extends ModelPropertyServiceFactory
@@ -104,7 +103,7 @@ public final class PossibleValuesValidationService
             {
                 final PossibleValues annotation = property.getAnnotation( PossibleValues.class );
                 
-                if( annotation != null && ( annotation.service() != PossibleValuesService.class || annotation.invalidValueSeverity() != IStatus.OK ) )
+                if( annotation != null && ( annotation.service() != PossibleValuesService.class || annotation.invalidValueSeverity() != Status.Severity.OK ) )
                 {
                     return true;
                 }

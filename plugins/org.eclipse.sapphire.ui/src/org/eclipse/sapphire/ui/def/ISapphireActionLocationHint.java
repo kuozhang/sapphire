@@ -11,14 +11,14 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.modeling.annotations.Required;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -37,7 +37,7 @@ public interface ISapphireActionLocationHint
     
     @Label( standard = "reference entity ID" )
     @Required
-    @PossibleValues( property = "../#/Id", invalidValueSeverity = IStatus.OK )
+    @PossibleValues( property = "../#/Id", invalidValueSeverity = Status.Severity.OK )
     
     ValueProperty PROP_REFERENCE_ENTITY_ID = new ValueProperty( TYPE, "ReferenceEntityId" );
     

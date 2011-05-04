@@ -11,17 +11,14 @@
 
 package org.eclipse.sapphire.modeling.validation.internal;
 
-import static org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin.PLUGIN_ID;
-
 import java.io.File;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
+import org.eclipse.sapphire.modeling.Path;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.AbsolutePath;
@@ -38,10 +35,10 @@ public final class AbsolutePathValidationService
     
 {
     @Override
-    public IStatus validate()
+    public Status validate()
     {
-        final Value<IPath> value = target();
-        final IPath path = value.getContent( false );
+        final Value<Path> value = target();
+        final Path path = value.getContent( false );
         
         if( path != null )
         {
@@ -58,7 +55,7 @@ public final class AbsolutePathValidationService
                     else
                     {
                         final String message = Resources.bind( Resources.pathIsNotFile, path.toString() );
-                        return new Status( Status.ERROR, PLUGIN_ID, message );
+                        return Status.createErrorStatus( message );
                     }
                 }
                 else if( this.validResourceType == FileSystemResourceType.FOLDER )
@@ -66,7 +63,7 @@ public final class AbsolutePathValidationService
                     if( ! f.isDirectory() )
                     {
                         final String message = Resources.bind( Resources.pathIsNotFolder, path.toString() );
-                        return new Status( Status.ERROR, PLUGIN_ID, message );
+                        return Status.createErrorStatus( message );
                     }
                 }
             }
@@ -77,23 +74,23 @@ public final class AbsolutePathValidationService
                     if( this.validResourceType == FileSystemResourceType.FILE )
                     {
                         final String message = Resources.bind( Resources.fileMustExist, path.toString() );
-                        return new Status( Status.ERROR, PLUGIN_ID, message );
+                        return Status.createErrorStatus( message );
                     }
                     else if( this.validResourceType == FileSystemResourceType.FOLDER )
                     {
                         final String message = Resources.bind( Resources.folderMustExist, path.toString() );
-                        return new Status( Status.ERROR, PLUGIN_ID, message );
+                        return Status.createErrorStatus( message );
                     }
                     else
                     {
                         final String message = Resources.bind( Resources.resourceMustExist, path.toString() );
-                        return new Status( Status.ERROR, PLUGIN_ID, message );
+                        return Status.createErrorStatus( message );
                     }
                 }
             }
         }
         
-        return Status.OK_STATUS;
+        return Status.createOkStatus();
     }
     
     public static final class Factory extends ModelPropertyServiceFactory
@@ -103,7 +100,7 @@ public final class AbsolutePathValidationService
                                    final ModelProperty property,
                                    final Class<? extends ModelPropertyService> service )
         {
-            return ( property instanceof ValueProperty && property.hasAnnotation( AbsolutePath.class ) && IPath.class.isAssignableFrom( property.getTypeClass() ) );
+            return ( property instanceof ValueProperty && property.hasAnnotation( AbsolutePath.class ) && Path.class.isAssignableFrom( property.getTypeClass() ) );
         }
 
         @Override

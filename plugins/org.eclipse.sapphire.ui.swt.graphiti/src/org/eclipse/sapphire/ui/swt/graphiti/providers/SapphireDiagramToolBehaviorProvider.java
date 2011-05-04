@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [342098] Separate modeling dependency on org.eclipse.core.runtime
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.graphiti.providers;
@@ -14,7 +15,6 @@ package org.eclipse.sapphire.ui.swt.graphiti.providers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -33,6 +33,7 @@ import org.eclipse.graphiti.tb.IDecorator;
 import org.eclipse.graphiti.tb.ImageDecorator;
 import org.eclipse.graphiti.ui.services.GraphitiUi;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.def.VerticalAlignment;
@@ -139,11 +140,11 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 	{
 		IModelElement model = nodePart.getModelElement();
 		IDiagramNodeProblemDecoratorDef decoratorDef = nodePart.getProblemIndicatorDef();
-		IStatus status = model.validate();
+		Status status = model.validate();
 		ImageDecorator imageRenderingDecorator = null;
-		if (status.getSeverity() != IStatus.OK)
+		if (status.severity() != Status.Severity.OK)
 		{
-			if (status.getSeverity() == IStatus.WARNING)
+			if (status.severity() == Status.Severity.WARNING)
 			{
 				if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL)
 				{
@@ -154,7 +155,7 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 					imageRenderingDecorator = new ImageDecorator(IPlatformImageConstants.IMG_ECLIPSE_WARNING);
 				}
 			}
-			else if (status.getSeverity() == IStatus.ERROR)
+			else if (status.severity() == Status.Severity.ERROR)
 			{
 				if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL)
 				{
@@ -174,7 +175,7 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 			Point pt = getDecoratorPosition(pe, decoratorDef, indicatorWidth, indicatorHeight);
 			imageRenderingDecorator.setX(pt.getX());
 			imageRenderingDecorator.setY(pt.getY());
-			imageRenderingDecorator.setMessage(status.getMessage());
+			imageRenderingDecorator.setMessage(status.message());
 			decoratorList.add(imageRenderingDecorator);
 		}		
 	}

@@ -15,8 +15,6 @@
 
 <plugin>
 
-  <extension point="org.eclipse.sapphire.modeling.extension"/>
-
   <!-- 
     *******************
     * Contacts Sample *

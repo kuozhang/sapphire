@@ -11,9 +11,6 @@
 
 package org.eclipse.sapphire.modeling.validation.internal;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -23,10 +20,11 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Required;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -38,17 +36,17 @@ public abstract class RequiredPropertyValidationService<T>
 
 {
     @Override
-    public final IStatus validate()
+    public final Status validate()
     {
         if( check() )
         {
-            return Status.OK_STATUS;
+            return Status.createOkStatus();
         }
         else
         {
             final String label = property().getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false );
             final String message = NLS.bind( Resources.message, label );
-            return new Status( Status.ERROR, SapphireModelingFrameworkPlugin.PLUGIN_ID, message );
+            return Status.createErrorStatus( message );
         }
     }
     

@@ -7,13 +7,17 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [342098] Separate modeling dependency on org.eclipse.core.runtime
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.gallery.internal;
 
-import org.eclipse.help.IHelpResource;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.sapphire.modeling.annotations.DocumentationData;
 import org.eclipse.sapphire.modeling.annotations.DocumentationProviderImpl;
+import org.eclipse.sapphire.modeling.annotations.DocumentationResource;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -31,20 +35,9 @@ public class PositiveIntegerDocumentationProvider extends DocumentationProviderI
             }
 
             @Override
-            public IHelpResource[] getTopics() {
-                IHelpResource topics[] = new IHelpResource[1];
-                topics[0] = new IHelpResource() {
-        
-                    public String getHref() {
-                        return "http://en.wikipedia.org/wiki/Positive_number";
-                    }
-        
-                    public String getLabel() {
-                        return "wikipedia positive number";
-                    }
-                    
-                };
-                return topics;
+            public List<DocumentationResource> getTopics() {
+                final DocumentationResource resource = new DocumentationResource( "wikipedia positive number", "http://en.wikipedia.org/wiki/Positive_number" );
+                return Collections.singletonList( resource );
             }
         };
     }

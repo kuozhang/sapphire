@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 
@@ -37,7 +37,7 @@ public final class ProblemOverlayImageDescriptor
     private final Point size;
     
     public ProblemOverlayImageDescriptor( final ImageDescriptor base,
-                                          final int severity ) 
+                                          final Status.Severity severity ) 
     {
         this.base = base.getImageData();
         this.overlay = getOverlay( severity );
@@ -56,13 +56,13 @@ public final class ProblemOverlayImageDescriptor
         return this.size;
     }
     
-    private ImageData getOverlay( final int severity )
+    private ImageData getOverlay( final Status.Severity severity )
     {
-        if( severity == IStatus.ERROR )
+        if( severity == Status.Severity.ERROR )
         {
             return IMG_DATA_ERROR_OVERLAY;
         }
-        else if( severity == IStatus.WARNING )
+        else if( severity == Status.Severity.WARNING )
         {
             return IMG_DATA_WARNING_OVERLAY;
         }

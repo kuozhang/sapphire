@@ -15,8 +15,8 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.sapphire.java.ClassLocator;
 import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.modeling.ClassLocator;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.osgi.framework.Bundle;

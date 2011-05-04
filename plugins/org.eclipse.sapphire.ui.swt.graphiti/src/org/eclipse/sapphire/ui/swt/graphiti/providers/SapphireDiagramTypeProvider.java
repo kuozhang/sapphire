@@ -8,18 +8,13 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
+ *    Konstantin Komissarchik - [342098] Separate modeling dependency on org.eclipse.core.runtime
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.graphiti.providers;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.graphiti.dt.AbstractDiagramTypeProvider;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.graphiti.platform.IDiagramEditor;
@@ -28,7 +23,6 @@ import org.eclipse.graphiti.ui.internal.platform.ExtensionManager;
 import org.eclipse.graphiti.ui.platform.IImageProvider;
 import org.eclipse.graphiti.ui.services.GraphitiUi;
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.ui.def.IImportDirective;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
@@ -36,10 +30,8 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeImageDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
-import org.eclipse.ui.internal.util.BundleUtility;
 import org.osgi.framework.Bundle;
 
 /**
@@ -159,32 +151,13 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
     
     private String resolveImageBundle(ISapphireUiDef def, String imagePath)
     {
-    	try
-    	{
-	    	for (IImportDirective directive : def.getImportDirectives())
-	    	{
-	            final String bundleId = directive.getBundle().getText();
-	            Bundle bundle = Platform.getBundle(bundleId);
-	            URL url = BundleUtility.find(bundle, imagePath);
-	            if (url != null)
-	            {
-					URL locatedURL = FileLocator.toFileURL(url);
-					if ("file".equalsIgnoreCase(locatedURL.getProtocol()))
-					{
-						String fullPath = new Path(locatedURL.getPath()).toOSString();
-						File f = new File(fullPath);
-						if (f.exists())
-						{
-							return bundleId;
-						}
-					}
-	            }
-	    	}
-    	}
-    	catch (IOException e)
-    	{
-    		SapphireUiFrameworkPlugin.log(e);
-    	}
+        final Bundle bundle = def.adapt( Bundle.class );
+        
+        if( bundle != null )
+        {
+            return bundle.getSymbolicName();
+        }
+
     	return null;
     }
     

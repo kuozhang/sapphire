@@ -11,9 +11,8 @@
 
 package org.eclipse.sapphire.samples.ezbug.internal;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.sapphire.modeling.ProgressMonitor;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.samples.ezbug.IFileBugReportOp;
 
 /**
@@ -22,11 +21,11 @@ import org.eclipse.sapphire.samples.ezbug.IFileBugReportOp;
 
 public final class FileBugReportOpMethods
 {
-    public static final IStatus execute( final IFileBugReportOp context,
-                                         final IProgressMonitor monitor )
+    public static final Status execute( final IFileBugReportOp context,
+                                        final ProgressMonitor monitor )
     {
         // Do something here.
         
-        return Status.OK_STATUS;
+        return Status.createOkStatus();
     }
 }

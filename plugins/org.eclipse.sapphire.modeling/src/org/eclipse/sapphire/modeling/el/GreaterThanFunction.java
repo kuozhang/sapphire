@@ -14,7 +14,7 @@ package org.eclipse.sapphire.modeling.el;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * Greater than comparison function. 

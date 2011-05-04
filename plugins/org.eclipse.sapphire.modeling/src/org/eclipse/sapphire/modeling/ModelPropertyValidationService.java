@@ -11,10 +11,6 @@
 
 package org.eclipse.sapphire.modeling;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -24,27 +20,12 @@ public abstract class ModelPropertyValidationService<T>
     extends ModelPropertyService
     
 {
-    public abstract IStatus validate();
+    public abstract Status validate();
     
     @SuppressWarnings( "unchecked" )
     protected T target()
     {
         return (T) element().read( property() );
     }
-    
-    protected final IStatus createErrorStatus( final String message )
-    {
-        return createErrorStatus( message, 0 );
-    }
 
-    protected final IStatus createErrorStatus( final String message,
-                                               final int code )
-    {
-        return new Status( Status.ERROR, SapphireModelingFrameworkPlugin.PLUGIN_ID, code, message, null );
-    }
-
-    protected final IStatus createWarningStatus( final String message )
-    {
-        return new Status( Status.WARNING, SapphireModelingFrameworkPlugin.PLUGIN_ID, 0, message, null );
-    }
 }

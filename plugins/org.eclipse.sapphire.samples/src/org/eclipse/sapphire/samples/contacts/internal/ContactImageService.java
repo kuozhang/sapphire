@@ -17,7 +17,6 @@ import org.eclipse.sapphire.modeling.ImageService;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.samples.contacts.IContact;
-import org.eclipse.sapphire.samples.internal.SapphireSamplesPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -28,8 +27,8 @@ public final class ContactImageService
     extends ImageService
     
 {
-    private static final ImageData IMG_PERSON = ImageData.readFromBundle( SapphireSamplesPlugin.PLUGIN_ID, "images/person.png" );
-    private static final ImageData IMG_PERSON_FADED = ImageData.readFromBundle( SapphireSamplesPlugin.PLUGIN_ID, "images/person-faded.png" );
+    private static final ImageData IMG_PERSON = ImageData.readFromClassLoader( ContactImageService.class, "images/person.png" );
+    private static final ImageData IMG_PERSON_FADED = ImageData.readFromClassLoader( ContactImageService.class, "images/person-faded.png" );
     
     private ModelPropertyListener listener;
     

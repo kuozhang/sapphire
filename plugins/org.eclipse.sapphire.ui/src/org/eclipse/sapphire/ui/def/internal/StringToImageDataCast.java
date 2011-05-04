@@ -19,8 +19,6 @@ import org.eclipse.sapphire.modeling.ResourceLocator;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.TypeCast;
-import org.eclipse.sapphire.ui.def.IImportDirective;
-import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -41,8 +39,7 @@ public final class StringToImageDataCast
         
         if( origin instanceof IModelElement )
         {
-            final IModelElement element = (IModelElement) origin;
-            return ( element.nearest( ISapphireUiDef.class ) != null || element.adapt( ResourceLocator.class ) != null );
+            return ( ( (IModelElement) origin ).adapt( ResourceLocator.class ) != null );
         }
         
         return false;
@@ -55,35 +52,15 @@ public final class StringToImageDataCast
                             final Class<?> target )
     {
         final IModelElement element = (IModelElement) requestor.origin();
-        final ISapphireUiDef sdef = element.nearest( ISapphireUiDef.class );
+        final ResourceLocator resourceLocator = element.adapt( ResourceLocator.class );
+        final URL url = resourceLocator.find( (String) value );
         
-        final String imagePath = (String) value;
-        ImageData img = null;
-
-        if( sdef != null )
+        if( url != null )
         {
-            for( IImportDirective directive : sdef.getImportDirectives() )
-            {
-                img = directive.resolveImage( imagePath );
-                
-                if( img != null )
-                {
-                    break;
-                }
-            }
-        }
-        else
-        {
-            final ResourceLocator resourceLocator = element.adapt( ResourceLocator.class );
-            final URL url = resourceLocator.find( imagePath );
-            
-            if( url != null )
-            {
-                img = ImageData.readFromUrl( url );
-            }
+            return ImageData.readFromUrl( url );
         }
         
-        return img;
+        return null;
     }
 
 }

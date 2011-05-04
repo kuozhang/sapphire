@@ -18,8 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 @SuppressWarnings( "unchecked" )
 
@@ -36,7 +34,7 @@ public final class ModelElementList<T extends IModelElement>
     private final ListProperty property;
     private ListBindingImpl binding;
     private List<IModelElement> data;
-    private IStatus valres;
+    private Status valres;
     private ModelElementListener listMemberListener;
     
     public ModelElementList( final IModelElement parent,
@@ -75,7 +73,7 @@ public final class ModelElementList<T extends IModelElement>
         return this.property;
     }
     
-    public synchronized IStatus validate()
+    public synchronized Status validate()
     {
         if( this.valres == null )
         {
@@ -171,7 +169,7 @@ public final class ModelElementList<T extends IModelElement>
                         }
                         catch( Exception e )
                         {
-                            SapphireModelingFrameworkPlugin.log( e );
+                            LoggingService.log( e );
                         }
                     }
                 }
@@ -199,24 +197,26 @@ public final class ModelElementList<T extends IModelElement>
     
     private void refreshValidationResult( final boolean notifyListenersIfChanged )
     {
-        final SapphireMultiStatus st = new SapphireMultiStatus();
+        final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         
         for( ModelPropertyValidationService<?> svc : parent().services( this.property, ModelPropertyValidationService.class ) )
         {
             try
             {
-                st.merge( svc.validate() );
+                factory.merge( svc.validate() );
             }
             catch( Exception e )
             {
-                SapphireModelingFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
         }
         
         for( T item : this )
         {
-            st.add( item.validate() );
+            factory.add( item.validate() );
         }
+        
+        final Status st = factory.create();
         
         if( this.valres == null )
         {

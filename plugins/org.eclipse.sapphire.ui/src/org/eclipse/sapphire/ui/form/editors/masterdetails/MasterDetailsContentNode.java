@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.java.JavaType;
@@ -32,8 +31,9 @@ import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelService;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelService.Event;
-import org.eclipse.sapphire.modeling.SapphireMultiStatus;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionException;
@@ -60,7 +60,6 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsCont
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeFactoryCaseDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeFactoryDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeInclude;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -139,9 +138,9 @@ public final class MasterDetailsContentNode
         Class<?> visibleWhenConditionClass = null;
         String visibleWhenConditionParameter = null;
         
-        final IStatus visibleWhenConditionClassValidation = this.definition.getVisibleWhenConditionClass().validate();
+        final Status visibleWhenConditionClassValidation = this.definition.getVisibleWhenConditionClass().validate();
         
-        if( visibleWhenConditionClassValidation.getSeverity() != IStatus.ERROR )
+        if( visibleWhenConditionClassValidation.severity() != Status.Severity.ERROR )
         {
             final JavaType visibleWhenConditionType = this.definition.getVisibleWhenConditionClass().resolve();
             
@@ -153,7 +152,7 @@ public final class MasterDetailsContentNode
         }
         else
         {
-            SapphireUiFrameworkPlugin.log( visibleWhenConditionClassValidation );
+            LoggingService.log( visibleWhenConditionClassValidation );
         }
         
         if( visibleWhenConditionClass == null && this.modelElementProperty != null )
@@ -195,8 +194,8 @@ public final class MasterDetailsContentNode
         this.childPartListener = new SapphirePartListener()
         {
             @Override
-            public void handleValidateStateChange( final IStatus oldValidateState,
-                                                   final IStatus newValidationState )
+            public void handleValidateStateChange( final Status oldValidateState,
+                                                   final Status newValidationState )
             {
                 updateValidationState();
             }
@@ -205,8 +204,8 @@ public final class MasterDetailsContentNode
         final SapphirePartListener validationStateListener = new SapphirePartListener()
         {
             @Override
-            public void handleValidateStateChange( final IStatus oldValidateState,
-                                                   final IStatus newValidationState )
+            public void handleValidateStateChange( final Status oldValidateState,
+                                                   final Status newValidationState )
             {
                 getContentTree().notifyOfNodeUpdate( MasterDetailsContentNode.this );
             }
@@ -715,21 +714,21 @@ public final class MasterDetailsContentNode
     }
 
     @Override
-    protected IStatus computeValidationState()
+    protected Status computeValidationState()
     {
-        final SapphireMultiStatus st = new SapphireMultiStatus();
+        final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         
         for( SapphirePart child : this.sections )
         {
-            st.add( child.getValidationState() );
+            factory.add( child.getValidationState() );
         }
 
         for( SapphirePart child : getChildNodes() )
         {
-            st.add( child.getValidationState() );
+            factory.add( child.getValidationState() );
         }
         
-        return st;
+        return factory.create();
     }
     
     @Override

@@ -12,10 +12,10 @@
 package org.eclipse.sapphire.java.internal;
 
 import org.eclipse.sapphire.java.ClassBasedJavaType;
-import org.eclipse.sapphire.java.ClassLocator;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
+import org.eclipse.sapphire.modeling.ClassLocator;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;

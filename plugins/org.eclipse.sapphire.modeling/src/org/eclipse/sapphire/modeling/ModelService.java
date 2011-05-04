@@ -14,7 +14,6 @@ package org.eclipse.sapphire.modeling;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -75,7 +74,7 @@ public abstract class ModelService
             }
             catch( Exception e )
             {
-                SapphireModelingFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
         }
     }

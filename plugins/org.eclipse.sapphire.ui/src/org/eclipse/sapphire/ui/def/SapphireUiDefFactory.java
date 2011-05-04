@@ -11,12 +11,17 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.BundleResourceStore;
+import java.net.URL;
+
+import org.eclipse.sapphire.modeling.ClassLocator;
+import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.modeling.ResourceLocator;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.SharedModelsCache;
+import org.eclipse.sapphire.modeling.UrlResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.osgi.BundleResourceStore;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -33,9 +38,53 @@ public final class SapphireUiDefFactory
         }
         catch( ResourceStoreException e )
         {
-            SapphireUiFrameworkPlugin.log( e );
-            return null;
+            LoggingService.log( e );
         }
+        
+        return null;
+    }
+    
+    public static ISapphireUiDef load( final ISapphireUiDef context,
+                                       final String path )
+    {
+        final ResourceLocator resourceLocator = context.adapt( ResourceLocator.class );
+        final URL url = resourceLocator.find( path );
+        
+        if( url != null )
+        {
+            final ClassLocator classLocator = context.adapt( ClassLocator.class );
+            
+            try
+            {
+                final UrlResourceStore resourceStore = new UrlResourceStore( url )
+                {
+                    @Override
+                    @SuppressWarnings( "unchecked" )
+                    
+                    public <A> A adapt( final Class<A> adapterType )
+                    {
+                        if( adapterType == ResourceLocator.class )
+                        {
+                            return (A) resourceLocator;
+                        }
+                        else if( adapterType == ClassLocator.class )
+                        {
+                            return (A) classLocator;
+                        }
+                        
+                        return super.adapt( adapterType );
+                    }
+                };
+                
+                return load( new XmlResourceStore( resourceStore ), false );
+            }
+            catch( ResourceStoreException e )
+            {
+                LoggingService.log( e );
+            }
+        }
+        
+        return null;
     }
     
     public static ISapphireUiDef load( final XmlResourceStore resourceStore,

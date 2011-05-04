@@ -1889,7 +1889,7 @@ public class DefaultListPropertyEditorRenderer
             }
             else
             {
-                return getPart().getImageCache().getImage( this.imageService.provide(), this.element.validate().getSeverity() );
+                return getPart().getImageCache().getImage( this.imageService.provide(), this.element.validate().severity() );
             }
         }
         
@@ -1902,10 +1902,7 @@ public class DefaultListPropertyEditorRenderer
         }
     }
     
-    private static final class Resources
-    
-        extends NLS
-    
+    private static final class Resources extends NLS
     {
         public static String emptyRowIndicator;
         

@@ -136,8 +136,8 @@
         <impl>org.eclipse.sapphire.modeling.serialization.internal.UrlSerializationService</impl>
     </value-serialization-service>
     <value-serialization-service>
-        <type>org.eclipse.core.runtime.IPath</type>
         <impl>org.eclipse.sapphire.modeling.serialization.internal.PathSerializationService</impl>
+        <type>org.eclipse.sapphire.modeling.Path</type>
     </value-serialization-service>
     <value-serialization-service>
         <type>org.eclipse.sapphire.modeling.el.Function</type>

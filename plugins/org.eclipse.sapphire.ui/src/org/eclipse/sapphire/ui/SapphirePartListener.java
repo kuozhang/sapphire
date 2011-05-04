@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui;
 
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.sapphire.modeling.Status;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -24,8 +24,8 @@ public abstract class SapphirePartListener
         // The default implementation doesn't do anything.
     }
     
-    public void handleValidateStateChange( final IStatus oldValidateState,
-                                           final IStatus newValidationState )
+    public void handleValidateStateChange( final Status oldValidateState,
+                                           final Status newValidationState )
     {
         // The default implementation doesn't do anything.
     }

@@ -155,7 +155,7 @@
         </adaptedGradientColoredAreas>
       </renderingStyle>
     </graphicsAlgorithm>
-    <anchors xsi:type="pi:ChopboxAnchor" incomingConnections="//@connections.6 //@connections.10 //@connections.19"/>
+    <anchors xsi:type="pi:ChopboxAnchor" incomingConnections="//@connections.0 //@connections.18 //@connections.19"/>
     <children visible="true">
       <properties key="independentObject" value="0"/>
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" width="100" height="30" font="//@fonts.0" horizontalAlignment="ALIGNMENT_CENTER" value="Modeling"/>
@@ -315,7 +315,7 @@
         </adaptedGradientColoredAreas>
       </renderingStyle>
     </graphicsAlgorithm>
-    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.5 //@connections.6" incomingConnections="//@connections.4 //@connections.21"/>
+    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.17 //@connections.18" incomingConnections="//@connections.3 //@connections.21"/>
     <children visible="true">
       <properties key="independentObject" value="1"/>
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" width="100" height="30" font="//@fonts.0" horizontalAlignment="ALIGNMENT_CENTER" value="XML Support"/>
@@ -475,7 +475,7 @@
         </adaptedGradientColoredAreas>
       </renderingStyle>
     </graphicsAlgorithm>
-    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.19 //@connections.20 //@connections.21" incomingConnections="//@connections.2 //@connections.13 //@connections.17"/>
+    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.19 //@connections.20 //@connections.21" incomingConnections="//@connections.1 //@connections.6 //@connections.10"/>
     <children visible="true">
       <properties key="independentObject" value="2"/>
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" width="100" height="30" font="//@fonts.0" horizontalAlignment="ALIGNMENT_CENTER" value="UI"/>
@@ -635,7 +635,7 @@
         </adaptedGradientColoredAreas>
       </renderingStyle>
     </graphicsAlgorithm>
-    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.2 //@connections.3 //@connections.4" incomingConnections="//@connections.1 //@connections.7"/>
+    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.1 //@connections.2 //@connections.3" incomingConnections="//@connections.12 //@connections.16"/>
     <children visible="true">
       <properties key="independentObject" value="3"/>
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" width="100" height="30" font="//@fonts.0" horizontalAlignment="ALIGNMENT_CENTER" value="XML Editor Support"/>
@@ -795,7 +795,7 @@
         </adaptedGradientColoredAreas>
       </renderingStyle>
     </graphicsAlgorithm>
-    <anchors xsi:type="pi:ChopboxAnchor" incomingConnections="//@connections.3"/>
+    <anchors xsi:type="pi:ChopboxAnchor" incomingConnections="//@connections.2"/>
     <children visible="true">
       <properties key="independentObject" value="4"/>
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" width="100" height="30" font="//@fonts.0" horizontalAlignment="ALIGNMENT_CENTER" value="WTP XML Editor"/>
@@ -955,7 +955,7 @@
         </adaptedGradientColoredAreas>
       </renderingStyle>
     </graphicsAlgorithm>
-    <anchors xsi:type="pi:ChopboxAnchor" incomingConnections="//@connections.5"/>
+    <anchors xsi:type="pi:ChopboxAnchor" incomingConnections="//@connections.17"/>
     <children visible="true">
       <properties key="independentObject" value="5"/>
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" width="100" height="30" font="//@fonts.0" horizontalAlignment="ALIGNMENT_CENTER" value="WTP URI Resolver"/>
@@ -1115,7 +1115,7 @@
         </adaptedGradientColoredAreas>
       </renderingStyle>
     </graphicsAlgorithm>
-    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.13 //@connections.14" incomingConnections="//@connections.9"/>
+    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.10 //@connections.11" incomingConnections="//@connections.14"/>
     <children visible="true">
       <properties key="independentObject" value="6"/>
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" width="100" height="30" font="//@fonts.0" horizontalAlignment="ALIGNMENT_CENTER" value="Graphiti Renderer"/>
@@ -1275,7 +1275,7 @@
         </adaptedGradientColoredAreas>
       </renderingStyle>
     </graphicsAlgorithm>
-    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.11 //@connections.12" incomingConnections="//@connections.14"/>
+    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.8 //@connections.9" incomingConnections="//@connections.11"/>
     <children visible="true">
       <properties key="independentObject" value="7"/>
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" width="100" height="30" font="//@fonts.0" horizontalAlignment="ALIGNMENT_CENTER" value="Graphiti"/>
@@ -1435,7 +1435,7 @@
         </adaptedGradientColoredAreas>
       </renderingStyle>
     </graphicsAlgorithm>
-    <anchors xsi:type="pi:ChopboxAnchor" incomingConnections="//@connections.12"/>
+    <anchors xsi:type="pi:ChopboxAnchor" incomingConnections="//@connections.9"/>
     <children visible="true">
       <properties key="independentObject" value="8"/>
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" width="100" height="30" font="//@fonts.0" horizontalAlignment="ALIGNMENT_CENTER" value="GEF"/>
@@ -1595,7 +1595,7 @@
         </adaptedGradientColoredAreas>
       </renderingStyle>
     </graphicsAlgorithm>
-    <anchors xsi:type="pi:ChopboxAnchor" incomingConnections="//@connections.11"/>
+    <anchors xsi:type="pi:ChopboxAnchor" incomingConnections="//@connections.8"/>
     <children visible="true">
       <properties key="independentObject" value="9"/>
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" width="100" height="30" font="//@fonts.0" horizontalAlignment="ALIGNMENT_CENTER" value="EMF"/>
@@ -1755,7 +1755,7 @@
         </adaptedGradientColoredAreas>
       </renderingStyle>
     </graphicsAlgorithm>
-    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.0 //@connections.1"/>
+    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.15 //@connections.16"/>
     <children visible="true">
       <properties key="independentObject" value="10"/>
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" width="100" height="30" font="//@fonts.0" horizontalAlignment="ALIGNMENT_CENTER" value="SDK"/>
@@ -1915,7 +1915,7 @@
         </adaptedGradientColoredAreas>
       </renderingStyle>
     </graphicsAlgorithm>
-    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.7 //@connections.8 //@connections.9"/>
+    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.12 //@connections.13 //@connections.14"/>
     <children visible="true">
       <properties key="independentObject" value="11"/>
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" width="100" height="30" font="//@fonts.0" horizontalAlignment="ALIGNMENT_CENTER" value="Samples"/>
@@ -2075,7 +2075,7 @@
         </adaptedGradientColoredAreas>
       </renderingStyle>
     </graphicsAlgorithm>
-    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.18"/>
+    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.7"/>
     <children visible="true">
       <properties key="independentObject" value="12"/>
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" width="100" height="30" font="//@fonts.0" horizontalAlignment="ALIGNMENT_CENTER" value="Tests"/>
@@ -2235,7 +2235,7 @@
         </adaptedGradientColoredAreas>
       </renderingStyle>
     </graphicsAlgorithm>
-    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.15 //@connections.16 //@connections.17" incomingConnections="//@connections.0 //@connections.8 //@connections.18"/>
+    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.4 //@connections.5 //@connections.6" incomingConnections="//@connections.7 //@connections.13 //@connections.15"/>
     <children visible="true">
       <properties key="independentObject" value="13"/>
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" width="100" height="30" font="//@fonts.0" horizontalAlignment="ALIGNMENT_CENTER" value="JDT Support"/>
@@ -2395,7 +2395,7 @@
         </adaptedGradientColoredAreas>
       </renderingStyle>
     </graphicsAlgorithm>
-    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.10" incomingConnections="//@connections.15 //@connections.20"/>
+    <anchors xsi:type="pi:ChopboxAnchor" outgoingConnections="//@connections.0" incomingConnections="//@connections.4 //@connections.20"/>
     <children visible="true">
       <properties key="independentObject" value="14"/>
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" width="100" height="30" font="//@fonts.0" horizontalAlignment="ALIGNMENT_CENTER" value="Java Support"/>
@@ -2555,14 +2555,250 @@
         </adaptedGradientColoredAreas>
       </renderingStyle>
     </graphicsAlgorithm>
-    <anchors xsi:type="pi:ChopboxAnchor" incomingConnections="//@connections.16"/>
+    <anchors xsi:type="pi:ChopboxAnchor" incomingConnections="//@connections.5"/>
     <children visible="true">
       <properties key="independentObject" value="15"/>
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" width="100" height="30" font="//@fonts.0" horizontalAlignment="ALIGNMENT_CENTER" value="JDT"/>
     </children>
   </children>
-  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.10/@anchors.0" end="//@children.13/@anchors.0">
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.14/@anchors.0" end="//@children.0/@anchors.0">
     <properties key="independentObject" value="16"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
+    </connectionDecorators>
+    <connectionDecorators visible="true" locationRelative="true"/>
+    <connectionDecorators visible="true" locationRelative="true" location="1.0">
+      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
+        <points x="-8" y="5"/>
+        <points/>
+        <points x="-8" y="-5"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+    <bendpoints x="397" y="566"/>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.3/@anchors.0" end="//@children.2/@anchors.0">
+    <properties key="independentObject" value="17"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
+    </connectionDecorators>
+    <connectionDecorators visible="true" locationRelative="true"/>
+    <connectionDecorators visible="true" locationRelative="true" location="1.0">
+      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
+        <points x="-8" y="5"/>
+        <points/>
+        <points x="-8" y="-5"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+    <bendpoints x="496" y="268"/>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.3/@anchors.0" end="//@children.4/@anchors.0">
+    <properties key="independentObject" value="18"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
+    </connectionDecorators>
+    <connectionDecorators visible="true" locationRelative="true"/>
+    <connectionDecorators visible="true" locationRelative="true" location="1.0">
+      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
+        <points x="-8" y="5"/>
+        <points/>
+        <points x="-8" y="-5"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+    <bendpoints x="694" y="268"/>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.3/@anchors.0" end="//@children.1/@anchors.0">
+    <properties key="independentObject" value="19"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
+    </connectionDecorators>
+    <connectionDecorators visible="true" locationRelative="true"/>
+    <connectionDecorators visible="true" locationRelative="true" location="1.0">
+      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
+        <points x="-8" y="5"/>
+        <points/>
+        <points x="-8" y="-5"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.13/@anchors.0" end="//@children.14/@anchors.0">
+    <properties key="independentObject" value="20"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
+    </connectionDecorators>
+    <connectionDecorators visible="true" locationRelative="true"/>
+    <connectionDecorators visible="true" locationRelative="true" location="1.0">
+      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
+        <points x="-8" y="5"/>
+        <points/>
+        <points x="-8" y="-5"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.13/@anchors.0" end="//@children.15/@anchors.0">
+    <properties key="independentObject" value="21"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
+    </connectionDecorators>
+    <connectionDecorators visible="true" locationRelative="true"/>
+    <connectionDecorators visible="true" locationRelative="true" location="1.0">
+      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
+        <points x="-8" y="5"/>
+        <points/>
+        <points x="-8" y="-5"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+    <bendpoints x="298" y="270"/>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.13/@anchors.0" end="//@children.2/@anchors.0">
+    <properties key="independentObject" value="22"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
+    </connectionDecorators>
+    <connectionDecorators visible="true" locationRelative="true"/>
+    <connectionDecorators visible="true" locationRelative="true" location="1.0">
+      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
+        <points x="-8" y="5"/>
+        <points/>
+        <points x="-8" y="-5"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+    <bendpoints x="496" y="268"/>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.12/@anchors.0" end="//@children.13/@anchors.0">
+    <properties key="independentObject" value="23"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
+    </connectionDecorators>
+    <connectionDecorators visible="true" locationRelative="true"/>
+    <connectionDecorators visible="true" locationRelative="true" location="1.0">
+      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
+        <points x="-8" y="5"/>
+        <points/>
+        <points x="-8" y="-5"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.7/@anchors.0" end="//@children.9/@anchors.0">
+    <properties key="independentObject" value="24"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
+    </connectionDecorators>
+    <connectionDecorators visible="true" locationRelative="true"/>
+    <connectionDecorators visible="true" locationRelative="true" location="1.0">
+      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
+        <points x="-8" y="5"/>
+        <points/>
+        <points x="-8" y="-5"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+    <bendpoints x="298" y="468"/>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.7/@anchors.0" end="//@children.8/@anchors.0">
+    <properties key="independentObject" value="25"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
+    </connectionDecorators>
+    <connectionDecorators visible="true" locationRelative="true"/>
+    <connectionDecorators visible="true" locationRelative="true" location="1.0">
+      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
+        <points x="-8" y="5"/>
+        <points/>
+        <points x="-8" y="-5"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+    <bendpoints x="100" y="468"/>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.6/@anchors.0" end="//@children.2/@anchors.0">
+    <properties key="independentObject" value="26"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
+    </connectionDecorators>
+    <connectionDecorators visible="true" locationRelative="true"/>
+    <connectionDecorators visible="true" locationRelative="true" location="1.0">
+      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
+        <points x="-8" y="5"/>
+        <points/>
+        <points x="-8" y="-5"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.6/@anchors.0" end="//@children.7/@anchors.0">
+    <properties key="independentObject" value="27"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
+    </connectionDecorators>
+    <connectionDecorators visible="true" locationRelative="true"/>
+    <connectionDecorators visible="true" locationRelative="true" location="1.0">
+      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
+        <points x="-8" y="5"/>
+        <points/>
+        <points x="-8" y="-5"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.11/@anchors.0" end="//@children.3/@anchors.0">
+    <properties key="independentObject" value="28"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
+    </connectionDecorators>
+    <connectionDecorators visible="true" locationRelative="true"/>
+    <connectionDecorators visible="true" locationRelative="true" location="1.0">
+      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
+        <points x="-8" y="5"/>
+        <points/>
+        <points x="-8" y="-5"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.11/@anchors.0" end="//@children.13/@anchors.0">
+    <properties key="independentObject" value="29"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
+    </connectionDecorators>
+    <connectionDecorators visible="true" locationRelative="true"/>
+    <connectionDecorators visible="true" locationRelative="true" location="1.0">
+      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
+        <points x="-8" y="5"/>
+        <points/>
+        <points x="-8" y="-5"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+    <bendpoints x="595" y="200"/>
+    <bendpoints x="397" y="200"/>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.11/@anchors.0" end="//@children.6/@anchors.0">
+    <properties key="independentObject" value="30"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
+    </connectionDecorators>
+    <connectionDecorators visible="true" locationRelative="true"/>
+    <connectionDecorators visible="true" locationRelative="true" location="1.0">
+      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
+        <points x="-8" y="5"/>
+        <points/>
+        <points x="-8" y="-5"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+    <bendpoints x="595" y="57"/>
+    <bendpoints x="199" y="57"/>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.10/@anchors.0" end="//@children.13/@anchors.0">
+    <properties key="independentObject" value="31"/>
     <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
     <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
@@ -2580,7 +2816,7 @@
     <bendpoints x="396" y="222"/>
   </connections>
   <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.10/@anchors.0" end="//@children.3/@anchors.0">
-    <properties key="independentObject" value="17"/>
+    <properties key="independentObject" value="32"/>
     <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
     <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
@@ -2597,55 +2833,8 @@
     <bendpoints x="699" y="223"/>
     <bendpoints x="595" y="223"/>
   </connections>
-  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.3/@anchors.0" end="//@children.2/@anchors.0">
-    <properties key="independentObject" value="18"/>
-    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
-    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
-      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
-    </connectionDecorators>
-    <connectionDecorators visible="true" locationRelative="true"/>
-    <connectionDecorators visible="true" locationRelative="true" location="1.0">
-      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
-        <points x="-8" y="5"/>
-        <points/>
-        <points x="-8" y="-5"/>
-      </graphicsAlgorithm>
-    </connectionDecorators>
-    <bendpoints x="496" y="268"/>
-  </connections>
-  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.3/@anchors.0" end="//@children.4/@anchors.0">
-    <properties key="independentObject" value="19"/>
-    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
-    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
-      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
-    </connectionDecorators>
-    <connectionDecorators visible="true" locationRelative="true"/>
-    <connectionDecorators visible="true" locationRelative="true" location="1.0">
-      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
-        <points x="-8" y="5"/>
-        <points/>
-        <points x="-8" y="-5"/>
-      </graphicsAlgorithm>
-    </connectionDecorators>
-    <bendpoints x="694" y="268"/>
-  </connections>
-  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.3/@anchors.0" end="//@children.1/@anchors.0">
-    <properties key="independentObject" value="20"/>
-    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
-    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
-      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
-    </connectionDecorators>
-    <connectionDecorators visible="true" locationRelative="true"/>
-    <connectionDecorators visible="true" locationRelative="true" location="1.0">
-      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
-        <points x="-8" y="5"/>
-        <points/>
-        <points x="-8" y="-5"/>
-      </graphicsAlgorithm>
-    </connectionDecorators>
-  </connections>
   <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.1/@anchors.0" end="//@children.5/@anchors.0">
-    <properties key="independentObject" value="21"/>
+    <properties key="independentObject" value="33"/>
     <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
     <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
       <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
@@ -2661,196 +2850,6 @@
     <bendpoints x="698" y="467"/>
   </connections>
   <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.1/@anchors.0" end="//@children.0/@anchors.0">
-    <properties key="independentObject" value="22"/>
-    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
-    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
-      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
-    </connectionDecorators>
-    <connectionDecorators visible="true" locationRelative="true"/>
-    <connectionDecorators visible="true" locationRelative="true" location="1.0">
-      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
-        <points x="-8" y="5"/>
-        <points/>
-        <points x="-8" y="-5"/>
-      </graphicsAlgorithm>
-    </connectionDecorators>
-    <bendpoints x="595" y="566"/>
-  </connections>
-  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.11/@anchors.0" end="//@children.3/@anchors.0">
-    <properties key="independentObject" value="23"/>
-    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
-    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
-      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
-    </connectionDecorators>
-    <connectionDecorators visible="true" locationRelative="true"/>
-    <connectionDecorators visible="true" locationRelative="true" location="1.0">
-      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
-        <points x="-8" y="5"/>
-        <points/>
-        <points x="-8" y="-5"/>
-      </graphicsAlgorithm>
-    </connectionDecorators>
-  </connections>
-  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.11/@anchors.0" end="//@children.13/@anchors.0">
-    <properties key="independentObject" value="24"/>
-    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
-    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
-      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
-    </connectionDecorators>
-    <connectionDecorators visible="true" locationRelative="true"/>
-    <connectionDecorators visible="true" locationRelative="true" location="1.0">
-      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
-        <points x="-8" y="5"/>
-        <points/>
-        <points x="-8" y="-5"/>
-      </graphicsAlgorithm>
-    </connectionDecorators>
-    <bendpoints x="595" y="200"/>
-    <bendpoints x="397" y="200"/>
-  </connections>
-  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.11/@anchors.0" end="//@children.6/@anchors.0">
-    <properties key="independentObject" value="25"/>
-    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
-    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
-      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
-    </connectionDecorators>
-    <connectionDecorators visible="true" locationRelative="true"/>
-    <connectionDecorators visible="true" locationRelative="true" location="1.0">
-      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
-        <points x="-8" y="5"/>
-        <points/>
-        <points x="-8" y="-5"/>
-      </graphicsAlgorithm>
-    </connectionDecorators>
-    <bendpoints x="595" y="57"/>
-    <bendpoints x="199" y="57"/>
-  </connections>
-  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.14/@anchors.0" end="//@children.0/@anchors.0">
-    <properties key="independentObject" value="26"/>
-    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
-    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
-      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
-    </connectionDecorators>
-    <connectionDecorators visible="true" locationRelative="true"/>
-    <connectionDecorators visible="true" locationRelative="true" location="1.0">
-      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
-        <points x="-8" y="5"/>
-        <points/>
-        <points x="-8" y="-5"/>
-      </graphicsAlgorithm>
-    </connectionDecorators>
-    <bendpoints x="397" y="566"/>
-  </connections>
-  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.7/@anchors.0" end="//@children.9/@anchors.0">
-    <properties key="independentObject" value="27"/>
-    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
-    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
-      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
-    </connectionDecorators>
-    <connectionDecorators visible="true" locationRelative="true"/>
-    <connectionDecorators visible="true" locationRelative="true" location="1.0">
-      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
-        <points x="-8" y="5"/>
-        <points/>
-        <points x="-8" y="-5"/>
-      </graphicsAlgorithm>
-    </connectionDecorators>
-    <bendpoints x="298" y="468"/>
-  </connections>
-  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.7/@anchors.0" end="//@children.8/@anchors.0">
-    <properties key="independentObject" value="28"/>
-    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
-    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
-      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
-    </connectionDecorators>
-    <connectionDecorators visible="true" locationRelative="true"/>
-    <connectionDecorators visible="true" locationRelative="true" location="1.0">
-      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
-        <points x="-8" y="5"/>
-        <points/>
-        <points x="-8" y="-5"/>
-      </graphicsAlgorithm>
-    </connectionDecorators>
-    <bendpoints x="100" y="468"/>
-  </connections>
-  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.6/@anchors.0" end="//@children.2/@anchors.0">
-    <properties key="independentObject" value="29"/>
-    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
-    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
-      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
-    </connectionDecorators>
-    <connectionDecorators visible="true" locationRelative="true"/>
-    <connectionDecorators visible="true" locationRelative="true" location="1.0">
-      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
-        <points x="-8" y="5"/>
-        <points/>
-        <points x="-8" y="-5"/>
-      </graphicsAlgorithm>
-    </connectionDecorators>
-  </connections>
-  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.6/@anchors.0" end="//@children.7/@anchors.0">
-    <properties key="independentObject" value="30"/>
-    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
-    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
-      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
-    </connectionDecorators>
-    <connectionDecorators visible="true" locationRelative="true"/>
-    <connectionDecorators visible="true" locationRelative="true" location="1.0">
-      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
-        <points x="-8" y="5"/>
-        <points/>
-        <points x="-8" y="-5"/>
-      </graphicsAlgorithm>
-    </connectionDecorators>
-  </connections>
-  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.13/@anchors.0" end="//@children.14/@anchors.0">
-    <properties key="independentObject" value="31"/>
-    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
-    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
-      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
-    </connectionDecorators>
-    <connectionDecorators visible="true" locationRelative="true"/>
-    <connectionDecorators visible="true" locationRelative="true" location="1.0">
-      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
-        <points x="-8" y="5"/>
-        <points/>
-        <points x="-8" y="-5"/>
-      </graphicsAlgorithm>
-    </connectionDecorators>
-  </connections>
-  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.13/@anchors.0" end="//@children.15/@anchors.0">
-    <properties key="independentObject" value="32"/>
-    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
-    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
-      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
-    </connectionDecorators>
-    <connectionDecorators visible="true" locationRelative="true"/>
-    <connectionDecorators visible="true" locationRelative="true" location="1.0">
-      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
-        <points x="-8" y="5"/>
-        <points/>
-        <points x="-8" y="-5"/>
-      </graphicsAlgorithm>
-    </connectionDecorators>
-    <bendpoints x="298" y="270"/>
-  </connections>
-  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.13/@anchors.0" end="//@children.2/@anchors.0">
-    <properties key="independentObject" value="33"/>
-    <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
-    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
-      <graphicsAlgorithm xsi:type="al:Text" foreground="//@colors.2" lineWidth="1" transparency="0.0" x="10"/>
-    </connectionDecorators>
-    <connectionDecorators visible="true" locationRelative="true"/>
-    <connectionDecorators visible="true" locationRelative="true" location="1.0">
-      <graphicsAlgorithm xsi:type="al:Polygon" background="//@colors.2" lineWidth="1" transparency="0.0">
-        <points x="-8" y="5"/>
-        <points/>
-        <points x="-8" y="-5"/>
-      </graphicsAlgorithm>
-    </connectionDecorators>
-    <bendpoints x="496" y="268"/>
-  </connections>
-  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.12/@anchors.0" end="//@children.13/@anchors.0">
     <properties key="independentObject" value="34"/>
     <graphicsAlgorithm xsi:type="al:Polyline" foreground="//@colors.2" lineWidth="1" filled="false" transparency="0.0"/>
     <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
@@ -2864,6 +2863,7 @@
         <points x="-8" y="-5"/>
       </graphicsAlgorithm>
     </connectionDecorators>
+    <bendpoints x="595" y="566"/>
   </connections>
   <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.2/@anchors.0" end="//@children.0/@anchors.0">
     <properties key="independentObject" value="35"/>

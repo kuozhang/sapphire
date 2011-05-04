@@ -21,8 +21,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.sapphire.modeling.ElementProperty;
@@ -33,6 +31,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -90,7 +89,7 @@ public final class PropertyEditorAssistDecorator
     private final Collection<String> contributorsToSuppress;
     private final Collection<Class<?>> additionalContributors;
     private PropertyEditorAssistContext assistContext;
-    private IStatus problem;
+    private Status problem;
     private boolean mouseOverEditorControl;
     private EditorControlMouseTrackListener mouseTrackListener;
     private ModelPropertyListener modelPropertyListener;
@@ -390,9 +389,9 @@ public final class PropertyEditorAssistDecorator
             }
             else
             {
-                final int valResultSeverity = this.problem.getSeverity();
+                final Status.Severity valResultSeverity = this.problem.severity();
                 
-                if( valResultSeverity != Status.ERROR && valResultSeverity != Status.WARNING && valResultSeverity != Status.INFO )
+                if( valResultSeverity != Status.Severity.ERROR && valResultSeverity != Status.Severity.WARNING && valResultSeverity != Status.Severity.INFO )
                 {
                     this.problem = null;
                 }
@@ -420,17 +419,16 @@ public final class PropertyEditorAssistDecorator
         {
             if( this.problem != null )
             {
-                final int severity = this.problem.getSeverity();
                 final String fieldDecorationId;
                 
-                switch( severity )
+                switch( this.problem.severity() )
                 {
-                    case Status.ERROR:
+                    case ERROR:
                     {
                         fieldDecorationId = FieldDecorationRegistry.DEC_ERROR;
                         break;
                     }
-                    case Status.WARNING:
+                    case WARNING:
                     {
                         fieldDecorationId = FieldDecorationRegistry.DEC_WARNING;
                         break;

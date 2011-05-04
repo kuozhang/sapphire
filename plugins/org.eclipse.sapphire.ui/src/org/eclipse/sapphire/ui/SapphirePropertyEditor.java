@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -35,6 +33,7 @@ import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -414,7 +413,7 @@ public final class SapphirePropertyEditor
     {
         final Value<Integer> relatedContentWidth = ( (ISapphirePropertyEditorDef) getDefinition() ).getRelatedContentWidth();
         
-        if( relatedContentWidth.validate().isOK() )
+        if( relatedContentWidth.validate().ok() )
         {
             return relatedContentWidth.getContent();
         }
@@ -468,7 +467,7 @@ public final class SapphirePropertyEditor
     }
 
     @Override
-    protected IStatus computeValidationState()
+    protected Status computeValidationState()
     {
         if( this.element.isPropertyEnabled( this.property ) )
         {
@@ -488,7 +487,7 @@ public final class SapphirePropertyEditor
             }
         }
         
-        return Status.OK_STATUS;
+        return Status.createOkStatus();
     }
     
     public static <T> T findControlForProperty( final Control context,

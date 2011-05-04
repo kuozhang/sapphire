@@ -11,9 +11,8 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.sapphire.modeling.ProgressMonitor;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.samples.contacts.ISendContactOp;
 
 /**
@@ -22,10 +21,10 @@ import org.eclipse.sapphire.samples.contacts.ISendContactOp;
 
 public final class SendContactOpMethods
 {
-    public static IStatus execute( final ISendContactOp op,
-                                   final IProgressMonitor monitor )
+    public static Status execute( final ISendContactOp op,
+                                  final ProgressMonitor monitor )
     {
-        return Status.OK_STATUS;
+        return Status.createOkStatus();
     }
     
 }

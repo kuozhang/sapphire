@@ -11,24 +11,21 @@
 
 package org.eclipse.sapphire.modeling.validation.internal;
 
-import static org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin.PLUGIN_ID;
-
 import java.io.File;
 import java.util.List;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
+import org.eclipse.sapphire.modeling.Path;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.BasePathsProvider;
 import org.eclipse.sapphire.modeling.annotations.BasePathsProviderImpl;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.validation.PathValidationService;
 
 /**
@@ -63,18 +60,18 @@ public final class RelativePathValidationService
     }
 
     @Override
-    public IStatus validate()
+    public Status validate()
     {
-        final Value<IPath> value = target();
-        final IPath path = value.getContent();
+        final Value<Path> value = target();
+        final Path path = value.getContent();
         
         if( path != null )
         {
-            final List<IPath> basePaths = this.basePathsProvider.getBasePaths( value.parent() );
+            final List<Path> basePaths = this.basePathsProvider.getBasePaths( value.parent() );
             
-            for( IPath basePath : basePaths )
+            for( Path basePath : basePaths )
             {
-                final IPath absolutePath = basePath.append( path );
+                final Path absolutePath = basePath.append( path );
                 final File absolutePathFile = absolutePath.toFile();
                 
                 if( absolutePathFile.exists() )
@@ -88,7 +85,7 @@ public final class RelativePathValidationService
                         else
                         {
                             final String message = NLS.bind( Resources.pathIsNotFile, absolutePath.toPortableString() );
-                            return new Status( Status.ERROR, PLUGIN_ID, message );
+                            return Status.createErrorStatus( message );
                         }
                     }
                     else if( this.validResourceType == FileSystemResourceType.FOLDER )
@@ -96,11 +93,11 @@ public final class RelativePathValidationService
                         if( ! absolutePathFile.isDirectory() )
                         {
                             final String message = NLS.bind( Resources.pathIsNotFolder, absolutePath.toPortableString() );
-                            return new Status( Status.ERROR, PLUGIN_ID, message );
+                            return Status.createErrorStatus( message );
                         }
                     }
                     
-                    return Status.OK_STATUS;
+                    return Status.createOkStatus();
                 }
             }
             
@@ -109,22 +106,22 @@ public final class RelativePathValidationService
                 if( this.validResourceType == FileSystemResourceType.FILE )
                 {
                     final String message = Resources.bind( Resources.fileMustExist, path.toString() );
-                    return new Status( Status.ERROR, PLUGIN_ID, message );
+                    return Status.createErrorStatus( message );
                 }
                 else if( this.validResourceType == FileSystemResourceType.FOLDER )
                 {
                     final String message = Resources.bind( Resources.folderMustExist, path.toString() );
-                    return new Status( Status.ERROR, PLUGIN_ID, message );
+                    return Status.createErrorStatus( message );
                 }
                 else
                 {
                     final String message = Resources.bind( Resources.resourceMustExist, path.toString() );
-                    return new Status( Status.ERROR, PLUGIN_ID, message );
+                    return Status.createErrorStatus( message );
                 }
             }
         }
         
-        return Status.OK_STATUS;
+        return Status.createOkStatus();
     }
     
     public static final class Factory extends ModelPropertyServiceFactory
@@ -134,7 +131,7 @@ public final class RelativePathValidationService
                                    final ModelProperty property,
                                    final Class<? extends ModelPropertyService> service )
         {
-            return ( property instanceof ValueProperty && property.hasAnnotation( BasePathsProvider.class ) && IPath.class.isAssignableFrom( property.getTypeClass() ) );
+            return ( property instanceof ValueProperty && property.hasAnnotation( BasePathsProvider.class ) && Path.class.isAssignableFrom( property.getTypeClass() ) );
         }
 
         @Override

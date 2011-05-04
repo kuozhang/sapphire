@@ -11,19 +11,15 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin.PLUGIN_ID;
 import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescriptor;
-import static org.eclipse.ui.plugin.AbstractUIPlugin.imageDescriptorFromPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.graphics.Image;
 
@@ -34,97 +30,97 @@ import org.eclipse.swt.graphics.Image;
 public final class SapphireImageCache
 {
     public static final ImageDescriptor OVERLAY_ERROR
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/overlays/error.gif" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/overlays/error.gif" ) );
     
     public static final ImageDescriptor OVERLAY_WARNING
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/overlays/warning.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/overlays/warning.png" ) );
     
     public static final ImageDescriptor DECORATOR_ASSIST
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/decorators/assist.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/decorators/assist.png" ) );
     
     public static final ImageDescriptor DECORATOR_ASSIST_FAINT
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/decorators/assist-faint.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/decorators/assist-faint.png" ) );
     
     public static final ImageDescriptor DECORATOR_BLANK
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/decorators/blank.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/decorators/blank.png" ) );
     
     public static final ImageDescriptor ACTION_ADD 
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/add.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/actions/add.png" ) );
     
     public static final ImageDescriptor ACTION_EDIT 
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/edit.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/actions/edit.png" ) );
     
     public static final ImageDescriptor ACTION_DELETE 
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/delete.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/actions/delete.png" ) );
     
     public static final ImageDescriptor ACTION_MOVE_UP 
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/move-up.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/actions/move-up.png" ) );
     
     public static final ImageDescriptor ACTION_MOVE_DOWN 
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/move-down.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/actions/move-down.png" ) );
     
     public static final ImageDescriptor ACTION_MOVE_LEFT 
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/move-left.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/actions/move-left.png" ) );
     
     public static final ImageDescriptor ACTION_MOVE_RIGHT 
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/move-right.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/actions/move-right.png" ) );
     
     public static final ImageDescriptor ACTION_EXPAND_ALL 
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/expand-all.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/actions/expand-all.png" ) );
     
     public static final ImageDescriptor ACTION_COLLAPSE_ALL 
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/collapse-all.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/actions/collapse-all.png" ) );
     
     public static final ImageDescriptor ACTION_RESTORE_DEFAULTS 
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/restore-defaults.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/actions/restore-defaults.png" ) );
     
     public static final ImageDescriptor ACTION_BROWSE
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/browse.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/actions/browse.png" ) );
     
     public static final ImageDescriptor ACTION_BROWSE_MINI
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/browse-mini.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/actions/browse-mini.png" ) );
     
     public static final ImageDescriptor ACTION_SELECT_ALL
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/select-all.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/actions/select-all.png" ) );
     
     public static final ImageDescriptor ACTION_DESELECT_ALL
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/deselect-all.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/actions/deselect-all.png" ) );
     
     public static final ImageDescriptor ACTION_SHOW_IN_SOURCE
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/show-in-source.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/actions/show-in-source.png" ) );
     
     public static final ImageDescriptor ACTION_DEFAULT
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/default.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/actions/default.png" ) );
     
     public static final ImageDescriptor ACTION_HIDE_OUTLINE
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/actions/hide-outline.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/actions/hide-outline.png" ) );
     
     public static final ImageDescriptor OBJECT_FILE
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/objects/file.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/objects/file.png" ) );
     
     public static final ImageDescriptor OBJECT_FOLDER
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/objects/folder.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/objects/folder.png" ) );
     
     public static final ImageDescriptor OBJECT_PACKAGE
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/objects/package.png" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/objects/package.png" ) );
     
     public static final ImageData IMG_OBJECT_CONTAINER_NODE
-        = ImageData.readFromBundle( PLUGIN_ID, "images/objects/container-node.png" );
+        = ImageData.createFromClassLoader( SapphireImageCache.class, "images/objects/container-node.png" );
     
     public static final ImageDescriptor OBJECT_CONTAINER_NODE
         = SwtRendererUtil.toImageDescriptor( IMG_OBJECT_CONTAINER_NODE );
 
     public static final ImageData IMG_OBJECT_LEAF_NODE
-        = ImageData.readFromBundle( PLUGIN_ID, "images/objects/leaf-node.png" );
+        = ImageData.createFromClassLoader( SapphireImageCache.class, "images/objects/leaf-node.png" );
 
     public static final ImageDescriptor OBJECT_LEAF_NODE
         = SwtRendererUtil.toImageDescriptor( IMG_OBJECT_LEAF_NODE );
     
     public static final ImageDescriptor OBJECT_CHECK_ON
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/objects/check-on.gif" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/objects/check-on.gif" ) );
     
     public static final ImageDescriptor OBJECT_CHECK_OFF
-        = imageDescriptorFromPlugin( PLUGIN_ID, "images/objects/check-off.gif" );
+        = SwtRendererUtil.toImageDescriptor( ImageData.createFromClassLoader( SapphireImageCache.class, "images/objects/check-off.gif" ) );
     
     private final Map<ImageDescriptor,ImageHandle> imageDescToImageHandle = new HashMap<ImageDescriptor,ImageHandle>();
     
@@ -133,11 +129,11 @@ public final class SapphireImageCache
     
     public Image getImage( final ImageDescriptor imageDescriptor )
     {
-        return getImage( imageDescriptor, IStatus.OK );
+        return getImage( imageDescriptor, Status.Severity.OK );
     }
 
     public Image getImage( final ImageDescriptor imageDescriptor,
-                           final int problemSeverity )
+                           final Status.Severity problemSeverity )
     {
         ImageHandle imageHandle = this.imageDescToImageHandle.get( imageDescriptor );
         
@@ -150,41 +146,6 @@ public final class SapphireImageCache
         return imageHandle.getImage( problemSeverity );
     }
 
-    public Image getImage( final String imagePath )
-    {
-        return getImage( imagePath, IStatus.OK );
-    }
-
-    public Image getImage( final String imagePath,
-                           final int problemSeverity )
-    {
-        final ImageDescriptor imageDescriptor = getImageDescriptor( imagePath );
-        
-        if( imageDescriptor != null )
-        {
-            return getImage( imageDescriptor, problemSeverity );
-        }
-        
-        return null;
-    }
-
-    public ImageDescriptor getImageDescriptor( final String imagePath )
-    {
-        final int slash = imagePath.indexOf( '/' );
-        final String pluginId = imagePath.substring( 0, slash );
-        final String relPath = imagePath.substring( slash + 1 );
-        
-        final ImageDescriptor imageDescriptor = imageDescriptorFromPlugin( pluginId, relPath );
-        
-        if( imageDescriptor == null )
-        {
-            final String msg = NLS.bind( Resources.couldNotLoadImage, imagePath );
-            SapphireUiFrameworkPlugin.logError( msg, null );
-        }
-        
-        return imageDescriptor;
-    }
-    
     public ImageDescriptor getImageDescriptor( final ModelElementType type )
     {
         return toImageDescriptor( type.image() );
@@ -197,11 +158,11 @@ public final class SapphireImageCache
     
     public Image getImage( final org.eclipse.sapphire.modeling.ImageData imageData )
     {
-        return getImage( imageData, IStatus.OK );
+        return getImage( imageData, Status.Severity.OK );
     }
     
     public Image getImage( final org.eclipse.sapphire.modeling.ImageData imageData,
-                           final int severity )
+                           final Status.Severity severity )
     {
         if( imageData != null )
         {
@@ -239,28 +200,28 @@ public final class SapphireImageCache
             this.baseImageDescriptor = baseImageDescriptor;
         }
         
-        public Image getImage( final int severity )
+        public Image getImage( final Status.Severity severity )
         {
             if( this.baseImageDescriptor == null )
             {
                 return null;
             }
             
-            if( severity == IStatus.ERROR )
+            if( severity == Status.Severity.ERROR )
             {
                 if( this.errorImage == null )
                 {
-                    final ImageDescriptor desc = new ProblemOverlayImageDescriptor( this.baseImageDescriptor, IStatus.ERROR );
+                    final ImageDescriptor desc = new ProblemOverlayImageDescriptor( this.baseImageDescriptor, Status.Severity.ERROR );
                     this.errorImage = desc.createImage();
                 }
                 
                 return this.errorImage;
             }
-            else if( severity == IStatus.WARNING )
+            else if( severity == Status.Severity.WARNING )
             {
                 if( this.warningImage == null )
                 {
-                    final ImageDescriptor desc = new ProblemOverlayImageDescriptor( this.baseImageDescriptor, IStatus.WARNING );
+                    final ImageDescriptor desc = new ProblemOverlayImageDescriptor( this.baseImageDescriptor, Status.Severity.WARNING );
                     this.warningImage = desc.createImage();
                 }
                 
@@ -293,16 +254,6 @@ public final class SapphireImageCache
             {
                 this.warningImage.dispose();
             }
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String couldNotLoadImage;
-        
-        static
-        {
-            initializeMessages( SapphireImageCache.class.getName(), Resources.class );
         }
     }
 

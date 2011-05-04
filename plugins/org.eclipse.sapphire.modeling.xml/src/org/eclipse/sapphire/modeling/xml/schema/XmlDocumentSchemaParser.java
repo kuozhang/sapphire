@@ -30,9 +30,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -571,8 +571,7 @@ public final class XmlDocumentSchemaParser
         catch( Exception e )
         {
             final String message = NLS.bind( Resources.parseFailed, schemaLocation );
-            final IStatus st = SapphireModelingFrameworkPlugin.createWarningStatus( message, e );
-            SapphireModelingFrameworkPlugin.log( st );
+            LoggingService.log( Status.createErrorStatus( message, e ) );
         }
         
         return null;

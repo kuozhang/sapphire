@@ -20,9 +20,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.dtd.internal.DtdParserImpl;
 import org.eclipse.sapphire.modeling.xml.schema.UrlResolver;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
@@ -64,8 +64,7 @@ public final class DtdParser
         catch( Exception e )
         {
             final String message = NLS.bind( Resources.parseFailed, "##string##" );
-            final IStatus st = SapphireModelingFrameworkPlugin.createWarningStatus( message, e );
-            SapphireModelingFrameworkPlugin.log( st );
+            LoggingService.log( Status.createErrorStatus( message, e ) );
             
             return ( new XmlDocumentSchema.Factory() ).create();
         }
@@ -83,8 +82,7 @@ public final class DtdParser
         catch( MalformedURLException e )
         {
             final String message = NLS.bind( Resources.parseFailed, url );
-            final IStatus st = SapphireModelingFrameworkPlugin.createWarningStatus( message, e );
-            SapphireModelingFrameworkPlugin.log( st );
+            LoggingService.log( Status.createErrorStatus( message, e ) );
         }
         
         if( dtdLocationUrl != null )
@@ -99,8 +97,7 @@ public final class DtdParser
             catch( Exception e )
             {
                 final String message = NLS.bind( Resources.parseFailed, url );
-                final IStatus st = SapphireModelingFrameworkPlugin.createWarningStatus( message, e );
-                SapphireModelingFrameworkPlugin.log( st );
+                LoggingService.log( Status.createErrorStatus( message, e ) );
             }
             finally
             {

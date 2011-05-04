@@ -13,9 +13,9 @@ package org.eclipse.sapphire.modeling.util.internal;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.StatusException;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -23,20 +23,14 @@ import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 public final class FileUtil
 {
-    public static void mkdirs( final File f )
-    
-        throws CoreException
-        
+    public static void mkdirs( final File f ) throws StatusException
     {
         if( f.exists() )
         {
             if( f.isFile() )
             {
-                final String msg
-                    = NLS.bind( Resources.locationIsFile, 
-                                f.getAbsolutePath() );
-                
-                throw new CoreException( SapphireModelingFrameworkPlugin.createErrorStatus( msg ) );
+                final String msg = NLS.bind( Resources.locationIsFile, f.getAbsolutePath() );
+                throw new StatusException( Status.createErrorStatus( msg ) );
             }
         }
         else
@@ -47,27 +41,20 @@ public final class FileUtil
             
             if( ! isSuccessful )
             {
-                final String msg
-                    = NLS.bind( Resources.failedToCreateDirectory, 
-                                f.getAbsolutePath() );
-                
-                throw new CoreException( SapphireModelingFrameworkPlugin.createErrorStatus( msg ) );
+                final String msg = NLS.bind( Resources.failedToCreateDirectory, f.getAbsolutePath() );
+                throw new StatusException( Status.createErrorStatus( msg ) );
             }
         }
     }
     
-    private static final class Resources
-    
-        extends NLS
-        
+    private static final class Resources extends NLS
     {
         public static String failedToCreateDirectory;
         public static String locationIsFile;
         
         static
         {
-            initializeMessages( FileUtil.class.getName(), 
-                                Resources.class );
+            initializeMessages( FileUtil.class.getName(), Resources.class );
         }
     }
 

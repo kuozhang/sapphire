@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.sapphire.tests;singleton:=true
 Bundle-Version: 0.3.0.qualifier
-Bundle-Localization: plugin
+Bundle-Localization: bundle
 Require-Bundle: org.eclipse.sapphire.modeling,
  org.eclipse.sapphire.modeling.xml,
  org.eclipse.sapphire.ui,

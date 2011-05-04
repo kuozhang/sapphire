@@ -16,7 +16,6 @@
 <definition>
 
     <import>
-        <bundle>org.eclipse.sapphire.samples</bundle>
         <package>org.eclipse.sapphire.samples.contacts</package>
         <package>org.eclipse.sapphire.samples.contacts.internal</package>
         <package>org.eclipse.sapphire.samples.contacts.ui.internal</package>

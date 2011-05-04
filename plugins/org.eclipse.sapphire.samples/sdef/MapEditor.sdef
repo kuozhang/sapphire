@@ -16,12 +16,8 @@
 <definition>
 
     <import>
-        <bundle>org.eclipse.sapphire.samples</bundle>
         <package>org.eclipse.sapphire.samples.map</package>
         <package>org.eclipse.sapphire.samples.map.ui</package>
-    </import>
-    <import>
-        <bundle>org.eclipse.sapphire.ui</bundle>
         <package>org.eclipse.sapphire.ui.diagram.actions</package>
     </import>
     

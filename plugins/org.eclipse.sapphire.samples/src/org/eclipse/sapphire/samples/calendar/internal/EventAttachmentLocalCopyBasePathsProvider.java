@@ -15,9 +15,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.annotations.BasePathsProviderImpl;
 
 /**
@@ -30,13 +29,13 @@ public final class EventAttachmentLocalCopyBasePathsProvider
     
 {
     @Override
-    public List<IPath> getBasePaths( final IModelElement modelElement )
+    public List<Path> getBasePaths( final IModelElement modelElement )
     {
         final IFile file = modelElement.adapt( IFile.class );
             
         if( file != null )
         {
-            return Collections.<IPath>singletonList( new Path( file.getParent().getLocation().toPortableString() ) );
+            return Collections.<Path>singletonList( new Path( file.getParent().getLocation().toPortableString() ) );
         }
 
         return Collections.emptyList();

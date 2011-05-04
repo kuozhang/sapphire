@@ -25,9 +25,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -40,6 +38,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.BasePathsProvider;
 import org.eclipse.sapphire.modeling.annotations.BasePathsProviderImpl;
@@ -173,10 +172,10 @@ public class RelativePathBrowseActionHandler
     {
         final ModelProperty property = getProperty();
         
-        final List<IPath> basePaths = getBasePaths();
+        final List<Path> basePaths = getBasePaths();
         final List<IContainer> baseContainers = new ArrayList<IContainer>();
         
-        for( IPath path : basePaths )
+        for( Path path : basePaths )
         {
             final IContainer baseContainer = getWorkspaceContainer( path.toFile() );
             
@@ -242,7 +241,7 @@ public class RelativePathBrowseActionHandler
         
         if( dialog.open() == Window.OK )
         {
-            final IPath path;
+            final Path path;
             final Object firstResult = dialog.getFirstResult();
             
             if( firstResult instanceof IResource )
@@ -254,7 +253,7 @@ public class RelativePathBrowseActionHandler
                 path = new Path( ( (FileSystemNode) firstResult ).getFile().getPath() );
             }
             
-            for( IPath basePath : basePaths )
+            for( Path basePath : basePaths )
             {
                 if( basePath.isPrefixOf( path ) )
                 {
@@ -273,7 +272,7 @@ public class RelativePathBrowseActionHandler
         return null;
     }
     
-    protected List<IPath> getBasePaths()
+    protected List<Path> getBasePaths()
     {
         final BasePathsProvider basePathsProviderAnnotation = getProperty().getAnnotation( BasePathsProvider.class );
         final Class<? extends BasePathsProviderImpl> basePathsProviderClass = basePathsProviderAnnotation.value();
@@ -552,7 +551,7 @@ public class RelativePathBrowseActionHandler
     {
         private final FileSystemNode[] roots;
         
-        public FileSystemContentProvider( final List<IPath> roots )
+        public FileSystemContentProvider( final List<Path> roots )
         {
             this.roots = new FileSystemNode[ roots.size() ];
             

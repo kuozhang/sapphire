@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.modeling;
 
-import org.eclipse.core.runtime.IStatus;
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -23,6 +21,6 @@ public interface IModelParticle
     IModelParticle root();
     IModelParticle parent();
     <T> T nearest( Class<T> particleType );    
-    IStatus validate();
+    Status validate();
     <A> A adapt( Class<A> adapterType );
 }

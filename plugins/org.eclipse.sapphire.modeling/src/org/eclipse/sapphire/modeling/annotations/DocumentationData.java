@@ -7,26 +7,25 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [342098] Separate modeling dependency on org.eclipse.core.runtime
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.annotations;
 
-import org.eclipse.help.IHelpResource;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public abstract class DocumentationData {
-
-    public final static IHelpResource[] EMPTY_RELATED_TOPICS = new IHelpResource[0];
-    
-
+public abstract class DocumentationData 
+{
     public abstract String getContent();
     
-    public IHelpResource[] getTopics() 
+    public List<DocumentationResource> getTopics() 
     {
-        return EMPTY_RELATED_TOPICS;
+        return Collections.emptyList();
     }
     
     public DocumentationMergeStrategy getMergeStrategy()

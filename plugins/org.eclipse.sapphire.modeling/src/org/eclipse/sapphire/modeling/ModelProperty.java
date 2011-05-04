@@ -28,7 +28,6 @@ import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.PropertyListeners;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 
 /**
@@ -84,14 +83,14 @@ public abstract class ModelProperty
                     }
                     catch( Exception e )
                     {
-                        SapphireModelingFrameworkPlugin.log( e );
+                        LoggingService.log( e );
                     }
                 }
             }
         }
         catch( RuntimeException e )
         {
-            SapphireModelingFrameworkPlugin.log( e );
+            LoggingService.log( e );
             throw e;
         }
         
@@ -140,7 +139,7 @@ public abstract class ModelProperty
         }
         catch( RuntimeException e )
         {
-            SapphireModelingFrameworkPlugin.log( e );
+            LoggingService.log( e );
             throw e;
         }
         
@@ -408,7 +407,7 @@ public abstract class ModelProperty
             }
             catch( ModelPath.MalformedPathException e )
             {
-                SapphireModelingFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
             
             dependencies.add( path );

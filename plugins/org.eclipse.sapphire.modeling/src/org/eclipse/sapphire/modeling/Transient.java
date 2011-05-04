@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.modeling;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 
 /**
@@ -26,7 +24,7 @@ public class Transient<T>
 {
     private final TransientProperty property;
     private final T content;
-    private SapphireMultiStatus valres;
+    private Status valres;
 
     public Transient( final IModelElement parent,
                       final TransientProperty property,
@@ -48,19 +46,21 @@ public class Transient<T>
     {
         if( this.valres == null )
         {
-            this.valres = new SapphireMultiStatus();
+            final Status.CompositeStatusFactory factory = Status.factoryForComposite();
             
             for( ModelPropertyValidationService<?> svc : parent().services( this.property, ModelPropertyValidationService.class ) )
             {
                 try
                 {
-                    this.valres.merge( svc.validate() );
+                    factory.merge( svc.validate() );
                 }
                 catch( Exception e )
                 {
-                    SapphireModelingFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                 }
             }
+            
+            this.valres = factory.create();
         }
     }
 
@@ -80,7 +80,7 @@ public class Transient<T>
         return this.content;
     }
     
-    public IStatus validate()
+    public Status validate()
     {
         initValidation();
         return this.valres;
@@ -104,7 +104,7 @@ public class Transient<T>
         final Transient<?> value = (Transient<?>) val;
         
         return ( parent() == value.parent() ) && ( this.property == value.property ) &&
-               ( MiscUtil.equal( this.content, value.content ) ) && equal( this.valres, value.valres ); 
+               ( MiscUtil.equal( this.content, value.content ) ) && this.valres.equals( value.valres ); 
     }
     
     @Override
@@ -121,12 +121,6 @@ public class Transient<T>
     public String toString()
     {
         return ( this.content == null ? "<null>" : this.content.toString() );
-    }
-    
-    private static boolean equal( final IStatus x,
-                                  final IStatus y )
-    {
-        return x.getMessage().equals( y.getMessage() ) && ( x.getSeverity() == y.getSeverity());
     }
     
 }

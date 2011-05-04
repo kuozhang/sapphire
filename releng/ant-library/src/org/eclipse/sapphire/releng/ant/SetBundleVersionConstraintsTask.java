@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.tools.ant.BuildException;
 
@@ -100,7 +101,7 @@ public final class SetBundleVersionConstraintsTask
     {
         for( Rule rule : this.rules )
         {
-            if( rule.getBundle().equals( bundleId ) )
+            if( rule.matchBundleId( bundleId ) )
             {
                 return rule;
             }
@@ -346,6 +347,7 @@ public final class SetBundleVersionConstraintsTask
     public static final class Rule
     {
         private String bundleId;
+        private Pattern bundleIdPattern;
         private boolean startInclusive;
         private List<Particle> startVersion;
         private boolean endInclusive;
@@ -368,6 +370,14 @@ public final class SetBundleVersionConstraintsTask
         public void setBundle( final String bundleId )
         {
             this.bundleId = bundleId;
+            
+            final String bundleIdExpr = this.bundleId.replace( ".", "\\." ).replace( "*", ".*" );
+            this.bundleIdPattern = Pattern.compile( bundleIdExpr );
+        }
+        
+        public boolean matchBundleId( final String bundleId )
+        {
+            return ( this.bundleIdPattern.matcher( bundleId ).matches() );
         }
         
         public void setExpr( final String expr )

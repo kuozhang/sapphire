@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.samples.contacts;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.ProgressMonitor;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Transient;
 import org.eclipse.sapphire.modeling.TransientProperty;
 import org.eclipse.sapphire.modeling.Value;
@@ -24,8 +24,8 @@ import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.DerivedValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.samples.contacts.internal.SendContactOpContentProvider;
 import org.eclipse.sapphire.samples.contacts.internal.SendContactOpMethods;
@@ -78,6 +78,6 @@ public interface ISendContactOp
     
     @DelegateImplementation( SendContactOpMethods.class )
     
-    IStatus execute( IProgressMonitor monitor );
+    Status execute( ProgressMonitor monitor );
 
 }

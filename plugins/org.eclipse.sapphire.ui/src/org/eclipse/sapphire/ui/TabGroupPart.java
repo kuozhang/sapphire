@@ -21,10 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.SapphireMultiStatus;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.ISapphireTabDef;
 import org.eclipse.sapphire.ui.def.ISapphireTabGroupDef;
@@ -66,8 +65,8 @@ public final class TabGroupPart
             final SapphirePartListener tabPartListener = new SapphirePartListener()
             {
                 @Override
-                public void handleValidateStateChange( final IStatus oldValidateState,
-                                                       final IStatus newValidationState )
+                public void handleValidateStateChange( final Status oldValidateState,
+                                                       final Status newValidationState )
                 {
                     updateValidationState();
                 }
@@ -154,16 +153,16 @@ public final class TabGroupPart
     }
     
     @Override
-    protected IStatus computeValidationState()
+    protected Status computeValidationState()
     {
-        final SapphireMultiStatus st = new SapphireMultiStatus();
+        final Status.CompositeStatusFactory factory = Status.factoryForComposite();
 
         for( TabGroupPagePart page : this.pages )
         {
-            st.add( page.getValidationState() );
+            factory.add( page.getValidationState() );
         }
         
-        return st;
+        return factory.create();
     }
     
     @Override

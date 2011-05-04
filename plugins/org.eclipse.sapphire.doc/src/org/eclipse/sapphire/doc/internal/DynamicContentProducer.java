@@ -16,7 +16,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,11 +23,10 @@ import java.util.Locale;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.help.IHelpContentProducer;
+import org.eclipse.sapphire.modeling.ExtensionsLocator;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.UrlResourceStore;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem.ExtensionHandle;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.sdk.extensibility.IExtensionSummaryExportOp;
@@ -160,21 +158,18 @@ public class DynamicContentProducer implements IHelpContentProducer
         {
             final List<ISapphireExtensionDef> list = new ArrayList<ISapphireExtensionDef>();
 
-            for( ExtensionHandle handle : SapphireModelingExtensionSystem.getExtensionHandles() )
+            for( ExtensionsLocator.Handle handle : ExtensionsLocator.instance().find() )
             {
-                for( URL url : handle.findExtensionFiles() )
+                try
                 {
-                    try
-                    {
-                        final XmlResourceStore store = new XmlResourceStore( new UrlResourceStore( url ) );
-                        final RootXmlResource resource = new RootXmlResource( store );
-                        final ISapphireExtensionDef extension = ISapphireExtensionDef.TYPE.instantiate( resource );
-                        list.add( extension );
-                    }
-                    catch( ResourceStoreException e )
-                    {
-                        SapphireUiFrameworkPlugin.log( e );
-                    }
+                    final XmlResourceStore store = new XmlResourceStore( new UrlResourceStore( handle.extension() ) );
+                    final RootXmlResource resource = new RootXmlResource( store );
+                    final ISapphireExtensionDef extension = ISapphireExtensionDef.TYPE.instantiate( resource );
+                    list.add( extension );
+                }
+                catch( ResourceStoreException e )
+                {
+                    SapphireUiFrameworkPlugin.log( e );
                 }
             }
 

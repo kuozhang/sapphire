@@ -1,78 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <diagram-geometry>
     <node>
-        <id>Component#JDT</id>
-        <gemometry height="30" width="100" x="248" y="304"/>
-    </node>
-    <node>
         <id>Component#Graphiti</id>
         <gemometry height="30" width="100" x="149" y="453"/>
         <connection>
-            <id>Dependency&amp;GEF</id>
-            <bendpoint x="100" y="468"/>
-        </connection>
-        <connection>
             <id>Dependency&amp;EMF</id>
             <bendpoint x="298" y="468"/>
+        </connection>
+        <connection>
+            <id>Dependency&amp;GEF</id>
+            <bendpoint x="100" y="468"/>
         </connection>
     </node>
     <node>
         <id>Component#Samples</id>
         <gemometry height="30" width="100" x="545" y="150"/>
         <connection>
-            <id>Dependency&amp;JDT Support</id>
-            <bendpoint x="595" y="200"/>
-            <bendpoint x="397" y="200"/>
-        </connection>
-        <connection>
             <id>Dependency&amp;Graphiti Renderer</id>
             <bendpoint x="595" y="57"/>
             <bendpoint x="199" y="57"/>
         </connection>
-    </node>
-    <node>
-        <id>Component#XML Support</id>
-        <gemometry height="30" width="100" x="545" y="452"/>
         <connection>
-            <id>Dependency&amp;Modeling</id>
-            <bendpoint x="595" y="566"/>
+            <id>Dependency&amp;JDT Support</id>
+            <bendpoint x="595" y="200"/>
+            <bendpoint x="397" y="200"/>
         </connection>
-        <connection>
-            <id>Dependency&amp;WTP URI Resolver</id>
-            <bendpoint x="698" y="467"/>
-        </connection>
-    </node>
-    <node>
-        <id>Component#GEF</id>
-        <gemometry height="30" width="100" x="50" y="501"/>
-    </node>
-    <node>
-        <id>Component#Tests</id>
-        <gemometry height="30" width="100" x="347" y="150"/>
-    </node>
-    <node>
-        <id>Component#WTP XML Editor</id>
-        <gemometry height="30" width="100" x="644" y="304"/>
-    </node>
-    <node>
-        <id>Component#Graphiti Renderer</id>
-        <gemometry height="30" width="100" x="149" y="353"/>
-    </node>
-    <node>
-        <id>Component#UI</id>
-        <gemometry height="30" width="100" x="446" y="353"/>
-        <connection>
-            <id>Dependency&amp;XML Support</id>
-            <bendpoint x="496" y="466"/>
-        </connection>
-        <connection>
-            <id>Dependency&amp;Java Support</id>
-            <bendpoint x="496" y="467"/>
-        </connection>
-    </node>
-    <node>
-        <id>Component#WTP URI Resolver</id>
-        <gemometry height="30" width="100" x="648" y="501"/>
     </node>
     <node>
         <id>Component#XML Editor Support</id>
@@ -87,8 +39,32 @@
         </connection>
     </node>
     <node>
-        <id>Component#Modeling</id>
-        <gemometry height="30" width="100" x="446" y="551"/>
+        <id>Component#Tests</id>
+        <gemometry height="30" width="100" x="347" y="150"/>
+    </node>
+    <node>
+        <id>Component#JDT</id>
+        <gemometry height="30" width="100" x="248" y="304"/>
+    </node>
+    <node>
+        <id>Component#EMF</id>
+        <gemometry height="30" width="100" x="248" y="501"/>
+    </node>
+    <node>
+        <id>Component#WTP URI Resolver</id>
+        <gemometry height="30" width="100" x="648" y="501"/>
+    </node>
+    <node>
+        <id>Component#XML Support</id>
+        <gemometry height="30" width="100" x="545" y="452"/>
+        <connection>
+            <id>Dependency&amp;WTP URI Resolver</id>
+            <bendpoint x="698" y="467"/>
+        </connection>
+        <connection>
+            <id>Dependency&amp;Modeling</id>
+            <bendpoint x="595" y="566"/>
+        </connection>
     </node>
     <node>
         <id>Component#SDK</id>
@@ -107,18 +83,6 @@
         </connection>
     </node>
     <node>
-        <id>Component#JDT Support</id>
-        <gemometry height="30" width="100" x="347" y="253"/>
-        <connection>
-            <id>Dependency&amp;UI</id>
-            <bendpoint x="496" y="268"/>
-        </connection>
-        <connection>
-            <id>Dependency&amp;JDT</id>
-            <bendpoint x="298" y="270"/>
-        </connection>
-    </node>
-    <node>
         <id>Component#Java Support</id>
         <gemometry height="30" width="100" x="347" y="452"/>
         <connection>
@@ -127,7 +91,43 @@
         </connection>
     </node>
     <node>
-        <id>Component#EMF</id>
-        <gemometry height="30" width="100" x="248" y="501"/>
+        <id>Component#GEF</id>
+        <gemometry height="30" width="100" x="50" y="501"/>
+    </node>
+    <node>
+        <id>Component#UI</id>
+        <gemometry height="30" width="100" x="446" y="353"/>
+        <connection>
+            <id>Dependency&amp;Java Support</id>
+            <bendpoint x="496" y="467"/>
+        </connection>
+        <connection>
+            <id>Dependency&amp;XML Support</id>
+            <bendpoint x="496" y="466"/>
+        </connection>
+    </node>
+    <node>
+        <id>Component#Graphiti Renderer</id>
+        <gemometry height="30" width="100" x="149" y="353"/>
+    </node>
+    <node>
+        <id>Component#WTP XML Editor</id>
+        <gemometry height="30" width="100" x="644" y="304"/>
+    </node>
+    <node>
+        <id>Component#JDT Support</id>
+        <gemometry height="30" width="100" x="347" y="253"/>
+        <connection>
+            <id>Dependency&amp;JDT</id>
+            <bendpoint x="298" y="270"/>
+        </connection>
+        <connection>
+            <id>Dependency&amp;UI</id>
+            <bendpoint x="496" y="268"/>
+        </connection>
+    </node>
+    <node>
+        <id>Component#Modeling</id>
+        <gemometry height="30" width="100" x="446" y="551"/>
     </node>
 </diagram-geometry>

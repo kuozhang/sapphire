@@ -32,9 +32,9 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.sdk.extensibility.IExtensionSummaryExportOp;
 import org.eclipse.sapphire.sdk.extensibility.IExtensionSummarySectionColumnDef;
 import org.eclipse.sapphire.sdk.extensibility.IExtensionSummarySectionDef;
@@ -701,7 +701,7 @@ public final class ExtensionSummaryExportOpMethods
             }
             catch( Exception e )
             {
-                SapphireModelingFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
             
             buf.append( "\n</style>" );

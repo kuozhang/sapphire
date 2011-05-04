@@ -16,9 +16,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -45,9 +43,9 @@ public abstract class PossibleValuesService
         return NLS.bind( Resources.defaultInvalidValueMessage, invalidValue, property().getLabel( true, CapitalizationType.NO_CAPS, false ) );
     }
     
-    public int getInvalidValueSeverity( final String invalidValue )
+    public Status.Severity getInvalidValueSeverity( final String invalidValue )
     {
-        return IStatus.ERROR;
+        return Status.Severity.ERROR;
     }
     
     public boolean isCaseSensitive()
@@ -90,7 +88,7 @@ public abstract class PossibleValuesService
             }
             catch( Exception e )
             {
-                SapphireModelingFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
         }
     }

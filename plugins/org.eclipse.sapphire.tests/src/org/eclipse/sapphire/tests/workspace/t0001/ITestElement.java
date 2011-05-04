@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.tests.workspace.t0001;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
@@ -34,26 +34,26 @@ public interface ITestElement extends IModelElement
     
     // *** WorkspaceRelativePath ***
     
-    @Type( base = IPath.class )
+    @Type( base = Path.class )
     @WorkspaceRelativePath
     @MustExist
     
     ValueProperty PROP_WORKSPACE_RELATIVE_PATH = new ValueProperty( TYPE, "WorkspaceRelativePath" );
     
-    Value<IPath> getWorkspaceRelativePath();
+    Value<Path> getWorkspaceRelativePath();
     void setWorkspaceRelativePath( String value );
-    void setWorkspaceRelativePath( IPath value );
+    void setWorkspaceRelativePath( Path value );
     
     // *** ProjectRelativePath ***
     
-    @Type( base = IPath.class )
+    @Type( base = Path.class )
     @ProjectRelativePath
     @MustExist
 
     ValueProperty PROP_PROJECT_RELATIVE_PATH = new ValueProperty( TYPE, "ProjectRelativePath" );
     
-    Value<IPath> getProjectRelativePath();
+    Value<Path> getProjectRelativePath();
     void setProjectRelativePath( String value );
-    void setProjectRelativePath( IPath value );
+    void setProjectRelativePath( Path value );
     
 }

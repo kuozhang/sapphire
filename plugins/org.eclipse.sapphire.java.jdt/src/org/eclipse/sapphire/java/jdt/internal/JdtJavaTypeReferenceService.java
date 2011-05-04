@@ -24,8 +24,8 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -68,7 +68,7 @@ public final class JdtJavaTypeReferenceService
         }
         catch( JavaModelException e )
         {
-            SapphireModelingFrameworkPlugin.log( e );
+            LoggingService.log( e );
         }
         
         return null;
@@ -101,7 +101,7 @@ public final class JdtJavaTypeReferenceService
                     }
                     catch( CoreException e )
                     {
-                        SapphireModelingFrameworkPlugin.log( e );
+                        LoggingService.log( e );
                     }
                 }
             }

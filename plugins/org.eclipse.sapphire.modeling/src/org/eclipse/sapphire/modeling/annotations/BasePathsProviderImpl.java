@@ -13,8 +13,8 @@ package org.eclipse.sapphire.modeling.annotations;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.Path;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -22,5 +22,5 @@ import org.eclipse.sapphire.modeling.IModelElement;
 
 public abstract class BasePathsProviderImpl
 {
-    public abstract List<IPath> getBasePaths( final IModelElement modelElement );
+    public abstract List<Path> getBasePaths( final IModelElement modelElement );
 }

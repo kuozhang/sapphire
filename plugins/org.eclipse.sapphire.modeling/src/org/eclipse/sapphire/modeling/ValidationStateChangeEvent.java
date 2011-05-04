@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.modeling;
 
-import org.eclipse.core.runtime.IStatus;
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -20,12 +18,12 @@ import org.eclipse.core.runtime.IStatus;
 public final class ValidationStateChangeEvent
 {
     private final IModelElement modelElement;
-    private final IStatus oldValidationState;
-    private final IStatus newValidationState;
+    private final Status oldValidationState;
+    private final Status newValidationState;
     
     public ValidationStateChangeEvent( final IModelElement modelElement,
-                                       final IStatus oldValidationState,
-                                       final IStatus newValidationState )
+                                       final Status oldValidationState,
+                                       final Status newValidationState )
     {
         this.modelElement = modelElement;
         this.oldValidationState = oldValidationState;
@@ -37,12 +35,12 @@ public final class ValidationStateChangeEvent
         return this.modelElement;
     }
     
-    public IStatus getOldValidationState()
+    public Status getOldValidationState()
     {
         return this.oldValidationState;
     }
     
-    public IStatus getNewValidationState()
+    public Status getNewValidationState()
     {
         return this.newValidationState;
     }

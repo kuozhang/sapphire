@@ -15,8 +15,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler;
@@ -43,9 +43,9 @@ public final class WorkspaceRelativePathBrowseActionHandler
     }
 
     @Override
-    protected List<IPath> getBasePaths()
+    protected List<Path> getBasePaths()
     {
-        return Collections.singletonList( ResourcesPlugin.getWorkspace().getRoot().getLocation() );
+        return Collections.singletonList( new Path( ResourcesPlugin.getWorkspace().getRoot().getLocation().toPortableString() ) );
     }
     
     private static final class Resources extends NLS 

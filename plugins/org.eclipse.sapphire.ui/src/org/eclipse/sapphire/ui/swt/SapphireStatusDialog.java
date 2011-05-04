@@ -20,8 +20,8 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
 import java.util.Iterator;
+import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -32,6 +32,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -58,34 +59,34 @@ public final class SapphireStatusDialog
     extends Dialog
     
 {
-    private final IStatus status;
+    private final Status status;
     private TreeViewer treeViewer;
     private Tree tree;
     
     private SapphireStatusDialog( final Shell shell,
-                                  final IStatus status )
+                                  final Status status )
     {
         super( shell );
         this.status = status;
     }
     
     public static void open( final Shell shell,
-                             final IStatus status )
+                             final Status status )
     {
-        if( status.isMultiStatus() )
+        if( status.children().isEmpty() )
         {
-            ( new SapphireStatusDialog( shell, status ) ).open();
-        }
-        else
-        {
-            if( status.getSeverity() == IStatus.ERROR )
+            if( status.severity() == Status.Severity.ERROR )
             {
-                MessageDialog.openError( shell, Resources.errorDialogTitle, status.getMessage() );
+                MessageDialog.openError( shell, Resources.errorDialogTitle, status.message() );
             }
             else
             {
-                MessageDialog.openWarning( shell, Resources.warningDialogTitle, status.getMessage() );
+                MessageDialog.openWarning( shell, Resources.warningDialogTitle, status.message() );
             }
+        }
+        else
+        {
+            ( new SapphireStatusDialog( shell, status ) ).open();
         }
     }
     
@@ -101,7 +102,7 @@ public final class SapphireStatusDialog
         final Label imageLabel = new Label( composite, SWT.NONE );
         imageLabel.setLayoutData( gdvalign( gd(), SWT.TOP ) );
         
-        if( this.status.getSeverity() == IStatus.ERROR )
+        if( this.status.severity() == Status.Severity.ERROR )
         {
             imageLabel.setImage( getShell().getDisplay().getSystemImage( SWT.ICON_ERROR ) );
         }
@@ -119,29 +120,29 @@ public final class SapphireStatusDialog
         {
             public Object[] getElements( final Object input )
             {
-                return SapphireStatusDialog.this.status.getChildren();
+                return SapphireStatusDialog.this.status.children().toArray();
             }
 
             public Object[] getChildren( final Object element )
             {
-                return ( (IStatus) element ).getChildren();
+                return ( (Status) element ).children().toArray();
             }
 
             public boolean hasChildren( final Object element )
             {
-                return ( ( (IStatus) element ).getChildren().length > 0 );
+                return ( ! ( (Status) element ).children().isEmpty() );
             }
 
             public Object getParent( final Object element )
             {
-                return findParent( null, SapphireStatusDialog.this.status.getChildren(), (IStatus) element );
+                return findParent( null, SapphireStatusDialog.this.status.children(), (Status) element );
             }
             
-            private IStatus findParent( final IStatus parent,
-                                        final IStatus[] children,
-                                        final IStatus element )
+            private Status findParent( final Status parent,
+                                       final List<Status> children,
+                                       final Status element )
             {
-                for( IStatus child : children )
+                for( Status child : children )
                 {
                     if( child == element )
                     {
@@ -149,7 +150,7 @@ public final class SapphireStatusDialog
                     }
                     else
                     {
-                        final IStatus result = findParent( child, child.getChildren(), element );
+                        final Status result = findParent( child, child.children(), element );
                         
                         if( result != null )
                         {
@@ -178,12 +179,12 @@ public final class SapphireStatusDialog
         {
             public String getText( final Object element )
             {
-                return ( (IStatus) element ).getMessage();
+                return ( (Status) element ).message();
             }
 
             public Image getImage( final Object element )
             {
-                if( ( (IStatus) element ).getSeverity() == IStatus.ERROR )
+                if( ( (Status) element ).severity() == Status.Severity.ERROR )
                 {
                     return sharedImages.getImage( ISharedImages.IMG_OBJS_ERROR_TSK );
                 }
@@ -260,16 +261,16 @@ public final class SapphireStatusDialog
         
         for( Iterator<?> itr = selection.iterator(); itr.hasNext(); )
         {
-            final IStatus st = (IStatus) itr.next();
+            final Status st = (Status) itr.next();
             
             if( buf.length() > 0 )
             {
                 buf.append( nl );
             }
             
-            buf.append( st.getSeverity() == IStatus.ERROR ? Resources.errorMessagePrefix : Resources.warningMessagePrefix );
+            buf.append( st.severity() == Status.Severity.ERROR ? Resources.errorMessagePrefix : Resources.warningMessagePrefix );
             buf.append( ' ' );
-            buf.append( st.getMessage() );
+            buf.append( st.message() );
         }
         
         final String text = buf.toString();

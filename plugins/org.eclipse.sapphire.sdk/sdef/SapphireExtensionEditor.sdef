@@ -14,7 +14,6 @@
 <definition>
 
     <import>
-        <bundle>org.eclipse.sapphire.sdk</bundle>
         <package>org.eclipse.sapphire.sdk.internal</package>
         <definition>sdef/SapphireEditorCommon.sdef</definition>
     </import>
@@ -27,8 +26,9 @@
             <node>
                 <label>model element services</label>
                 <section>
-                    <description>Define services for model elements.</description>
                     <content>
+                        <label>Define services for model elements.</label>
+                        <spacer/>
                         <action-link>
                             <action-id>Sapphire.Add</action-id>
                             <label>Add a model element service</label>
@@ -61,8 +61,9 @@
             <node>
                 <label>model property services</label>
                 <section>
-                    <description>Define services for model properties.</description>
                     <content>
+                        <label>Define services for model properties.</label>
+                        <spacer/>
                         <action-link>
                             <action-id>Sapphire.Add</action-id>
                             <label>Add a model property service</label>
@@ -95,8 +96,9 @@
             <node>
                 <label>value serialization services</label>
                 <section>
-                    <description>Define value serialization services.</description>
                     <content>
+                        <label>Define value serialization services.</label>
+                        <spacer/>
                         <action-link>
                             <action-id>Sapphire.Add</action-id>
                             <label>Add a value serialization service</label>
@@ -127,8 +129,9 @@
             <node>
                 <label>functions</label>
                 <section>
-                    <description>Define expression language functions.</description>
                     <content>
+                        <label>Define expression language functions.</label>
+                        <spacer/>
                         <action-link>
                             <action-id>Sapphire.Add</action-id>
                             <label>Add an expression language function</label>

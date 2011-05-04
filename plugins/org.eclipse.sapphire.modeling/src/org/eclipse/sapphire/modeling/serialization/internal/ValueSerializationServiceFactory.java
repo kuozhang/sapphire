@@ -11,16 +11,17 @@
 
 package org.eclipse.sapphire.modeling.serialization.internal;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
+import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
 import org.eclipse.sapphire.modeling.serialization.ValueSerialization;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -69,7 +70,7 @@ public final class ValueSerializationServiceFactory
                 }
                 catch( Exception e )
                 {
-                    SapphireModelingFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                 }
             }
             
@@ -85,7 +86,7 @@ public final class ValueSerializationServiceFactory
                     }
                     catch( Exception e )
                     {
-                        SapphireModelingFrameworkPlugin.log( e );
+                        LoggingService.log( e );
                         serializer = null;
                     }
                 }
@@ -93,10 +94,10 @@ public final class ValueSerializationServiceFactory
                 {
                     final String message
                         = NLS.bind( Resources.noSerializer, 
-                                    new Object[] { element.getModelElementType().getModelElementClass().getName(),
-                                    property.getName(), type.getName() } );
+                                    element.getModelElementType().getModelElementClass().getName(),
+                                    property.getName(), type.getName() );
                     
-                    SapphireModelingFrameworkPlugin.logError( message, null );
+                    LoggingService.log( Status.createErrorStatus( message ) );
                 }
             }
         }

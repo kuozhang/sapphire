@@ -13,8 +13,8 @@ package org.eclipse.sapphire.tests.modeling.el;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
@@ -74,9 +74,9 @@ public abstract class TestExpr
         
         try
         {
-            final IStatus status = result.status();
-            assertEquals( IStatus.ERROR, status.getSeverity() );
-            assertEquals( expected, status.getMessage() );
+            final Status status = result.status();
+            assertEquals( Status.Severity.ERROR, status.severity() );
+            assertEquals( expected, status.message() );
         }
         finally
         {

@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.modeling.xml.schema;
 
-import org.eclipse.sapphire.modeling.internal.SapphireModelingFrameworkPlugin;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 
@@ -36,7 +36,7 @@ public final class UrlResolver
         }
         catch( Exception e )
         {
-            SapphireModelingFrameworkPlugin.log( e );
+            LoggingService.log( e );
         }
          
         if( resolvedUrl == null )

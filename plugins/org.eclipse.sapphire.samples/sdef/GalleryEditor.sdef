@@ -17,20 +17,11 @@
 <definition>
 
     <import>
-        <bundle>org.eclipse.sapphire.ui</bundle>
         <package>org.eclipse.sapphire.ui.swt.renderer.actions</package>
         <package>org.eclipse.sapphire.ui.renderers.swt</package>
-    </import>
-
-    <import>
-        <bundle>org.eclipse.sapphire.samples</bundle>
         <package>org.eclipse.sapphire.samples.gallery</package>
         <package>org.eclipse.sapphire.samples.gallery.internal</package>
         <package>org.eclipse.sapphire.samples.gallery.ui</package>
-    </import>
-    
-    <import>
-        <bundle>org.eclipse.sapphire.workspace.ui</bundle>
         <package>org.eclipse.sapphire.workspace.ui</package>
     </import>
 
@@ -1557,7 +1548,7 @@
             <id>Sapphire.Gallery.Open.Homepage</id>
             <label>Sapphire Homepage</label>
             <image>images/web.png</image>
-            <description>Open Sapphire project homepage</description>
+            <description>Open Sapphire project homepage.</description>
             <context>Sapphire.EditorPage</context>
             <hint>
                 <name>style</name>

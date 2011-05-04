@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.sapphire.ui.swt.graphiti;singleton:=true
 Bundle-Version: 0.3.0.qualifier
 Bundle-Vendor: %providerName
-Bundle-Localization: plugin
+Bundle-Localization: bundle
 Export-Package: org.eclipse.sapphire.ui.swt.graphiti,
  org.eclipse.sapphire.ui.swt.graphiti.editor,
  org.eclipse.sapphire.ui.swt.graphiti.features,
