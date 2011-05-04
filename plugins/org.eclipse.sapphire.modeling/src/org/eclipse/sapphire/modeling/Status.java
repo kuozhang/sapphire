@@ -18,17 +18,32 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.sapphire.modeling.util.NLS;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public final class Status
 {
-    private static final Status OK_STATUS = new Status( Severity.OK, "", null, Collections.<Status>emptyList() );
+    public static final String TYPE_MISC_OK = "Sapphire.Miscellaneous.Ok";
+    public static final String TYPE_MISC_PROBLEM = "Sapphire.Miscellaneous.Problem";
+    
+    private static final Status OK_STATUS = new Status( Severity.OK, TYPE_MISC_OK, Resources.defaultOkMessage, null, Collections.<Status>emptyList() );
     
     public static Status createOkStatus()
     {
         return OK_STATUS;
+    }
+    
+    public static Status createInfoStatus( final String message )
+    {
+        return createStatus( Severity.INFO, message );
+    }
+    
+    public static Status createWarningStatus( final String message )
+    {
+        return createStatus( Severity.WARNING, message );
     }
     
     public static Status createErrorStatus( final String message )
@@ -42,7 +57,7 @@ public final class Status
         
         if( message == null )
         {
-            message = "ERROR"; // TODO: externalize
+            message = Resources.defaultErrorMessage;
         }
         
         return createErrorStatus( message, exception );
@@ -78,16 +93,19 @@ public final class Status
     }
     
     private final Severity severity;
+    private final String type;
     private final String message;
     private final Throwable exception;
     private final List<Status> children;
     
     private Status( final Severity severity,
+                    final String type,
                     final String message,
                     final Throwable exception,
                     final List<Status> children )
     {
         this.severity = severity;
+        this.type = ( type == null ? ( severity == Severity.OK ? TYPE_MISC_OK : TYPE_MISC_PROBLEM ) : type );
         this.message = message;
         this.exception = exception;
         this.children = children;
@@ -101,6 +119,11 @@ public final class Status
     public Severity severity()
     {
         return this.severity;
+    }
+    
+    public String type()
+    {
+        return this.type;
     }
 
     public String message()
@@ -202,6 +225,7 @@ public final class Status
     public static final class LeafStatusFactory
     {
         private Severity severity;
+        private String type;
         private String message;
         private Throwable exception;
         
@@ -213,6 +237,12 @@ public final class Status
         public LeafStatusFactory severity( final Severity severity )
         {
             this.severity = severity;
+            return this;
+        }
+
+        public LeafStatusFactory type( final String type )
+        {
+            this.type = type;
             return this;
         }
 
@@ -240,7 +270,7 @@ public final class Status
                 throw new IllegalStateException();
             }
             
-            return new Status( this.severity, this.message, this.exception, Collections.<Status>emptyList() );
+            return new Status( this.severity, this.type, this.message, this.exception, Collections.<Status>emptyList() );
         }
     }
     
@@ -312,8 +342,19 @@ public final class Status
             }
             else
             {
-                return new Status( this.severity, this.message, this.exception, Collections.unmodifiableList( this.children ) );
+                return new Status( this.severity, TYPE_MISC_PROBLEM, this.message, this.exception, Collections.unmodifiableList( this.children ) );
             }
+        }
+    }
+    
+    private static final class Resources extends NLS
+    {
+        public static String defaultErrorMessage;
+        public static String defaultOkMessage;
+
+        static
+        {
+            initializeMessages( Status.class.getName(), Resources.class );
         }
     }
     
