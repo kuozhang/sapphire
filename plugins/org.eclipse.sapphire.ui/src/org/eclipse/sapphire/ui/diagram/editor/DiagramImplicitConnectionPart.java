@@ -12,7 +12,6 @@
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 
@@ -76,6 +75,11 @@ public class DiagramImplicitConnectionPart extends DiagramConnectionPart
     public PropertiesViewContributionPart getPropertiesViewContribution()
     {
     	return null;
+    }
+    
+    @Override
+    public void removeModelListener()
+    {    	
     }
     
 }

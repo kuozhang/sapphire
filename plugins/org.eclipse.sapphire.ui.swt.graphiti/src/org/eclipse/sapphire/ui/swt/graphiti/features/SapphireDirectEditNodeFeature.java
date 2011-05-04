@@ -25,6 +25,7 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 
 /**
@@ -86,7 +87,7 @@ public class SapphireDirectEditNodeFeature extends AbstractDirectEditingFeature
 				{
 					Connection connection = iterator.next();
 					Object bo = getBusinessObjectForPictogramElement(connection);
-					if (bo instanceof DiagramConnectionPart)
+					if (bo instanceof DiagramConnectionPart && !(bo instanceof DiagramImplicitConnectionPart))
 					{
 						DiagramConnectionPart connectionPart = (DiagramConnectionPart)bo;
 						IModelElement endpoint1 = connectionPart.getEndpoint1();
