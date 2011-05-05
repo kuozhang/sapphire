@@ -347,7 +347,10 @@ public class DiagramConnectionPart
 				{
 					SapphireDiagramEditorPagePart diagramEditorPart = this.getDiagramConnectionTemplate().getDiagramEditor();
 					DiagramNodePart targetNode = IdUtil.getNodePart(diagramEditorPart, refVal.getText());
-					targetObj = targetNode.getLocalModelElement();
+					if (targetNode != null)
+					{
+						targetObj = targetNode.getLocalModelElement();
+					}
 				}
 			}
 			return (IModelElement)targetObj;
