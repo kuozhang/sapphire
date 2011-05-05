@@ -13,7 +13,6 @@ package org.eclipse.sapphire.osgi;
 
 import java.net.URL;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.osgi.framework.Bundle;
 
@@ -57,7 +56,7 @@ public final class BundleImageDataFactory
     public static ImageData createFromBundle( final String bundleSymbolicName,
                                               final String path )
     {
-        final Bundle bundle = Platform.getBundle( bundleSymbolicName );
+        final Bundle bundle = BundleLocator.find( bundleSymbolicName );
         
         if( bundle == null )
         {
