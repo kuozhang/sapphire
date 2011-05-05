@@ -27,19 +27,23 @@
         %license
     </license>
 
-    <plugin download-size="0" id="org.eclipse.sapphire.modeling.source" install-size="0" unpack="false" version="0.0.0"/>
-    <plugin download-size="0" id="org.eclipse.sapphire.modeling.xml.source" install-size="0" unpack="false" version="0.0.0"/>
-    <plugin download-size="0" id="org.eclipse.sapphire.samples.source" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.doc.source" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.java.source" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.java.jdt.source" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.java.jdt.ui.source" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.modeling.source" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.modeling.xml.source" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.osgi.source" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.osgi.fragment.source" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.platform.source" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.samples.source" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.sdk.source" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.sdk.build.processor.source" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.tests.source" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.ui.source" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.ui.swt.graphiti.source" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.ui.swt.xml.editor.source" install-size="0" unpack="false" version="0.0.0"/>
-    <plugin download-size="0" id="org.eclipse.sapphire.osgi.source" install-size="0" unpack="false" version="0.0.0"/>
-    <plugin download-size="0" id="org.eclipse.sapphire.osgi.fragment.source" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.workspace.source" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.workspace.ui.source" install-size="0" unpack="false" version="0.0.0"/>
 
 </feature>

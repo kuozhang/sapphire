@@ -24,6 +24,9 @@
    <feature url="features/org.eclipse.sapphire.osgi_##version##.jar" id="org.eclipse.sapphire.osgi" version="##version##">
       <category name="org.eclipse.sapphire"/>
    </feature>
+   <feature url="features/org.eclipse.sapphire.platform_##version##.jar" id="org.eclipse.sapphire.platform" version="##version##">
+      <category name="org.eclipse.sapphire"/>
+   </feature>
    <feature url="features/org.eclipse.sapphire.sdk_##version##.jar" id="org.eclipse.sapphire.sdk" version="##version##">
       <category name="org.eclipse.sapphire"/>
    </feature>
