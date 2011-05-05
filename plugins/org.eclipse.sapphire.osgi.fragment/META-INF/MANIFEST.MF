@@ -7,4 +7,4 @@ Fragment-Host: org.eclipse.sapphire.modeling;bundle-version="[0.3.0,0.3.1)"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %providerName
 Bundle-Localization: bundle
-Require-Bundle: org.eclipse.core.runtime
+Import-Package: org.osgi.framework

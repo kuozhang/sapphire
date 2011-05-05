@@ -17,7 +17,6 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.sapphire.modeling.ClassLocator;
 import org.eclipse.sapphire.modeling.ResourceLocator;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
@@ -58,7 +57,7 @@ public class BundleResourceStore
     {
         if( this.bundle == null )
         {
-            this.bundle = Platform.getBundle( this.bundleId );
+            this.bundle = BundleLocator.find( this.bundleId );
         }
         
         return this.bundle;
@@ -132,7 +131,7 @@ public class BundleResourceStore
                                     final String path,
                                     final boolean throwExceptionOnNotFound )
     {
-        final Bundle bundle = Platform.getBundle( bundleId );
+        final Bundle bundle = BundleLocator.find( bundleId );
         final URL url = bundle.getResource( path );
         
         if( url == null && throwExceptionOnNotFound )

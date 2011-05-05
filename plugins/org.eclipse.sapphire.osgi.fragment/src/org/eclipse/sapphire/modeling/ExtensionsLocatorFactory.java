@@ -17,11 +17,9 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
-import org.eclipse.core.runtime.IBundleGroup;
-import org.eclipse.core.runtime.IBundleGroupProvider;
-import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleReference;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * Locates Sapphire extensions in an OSGi system by scanning all bundles.
@@ -34,20 +32,7 @@ public final class ExtensionsLocatorFactory extends ExtensionsLocator.Factory
     @Override
     public boolean applicable()
     {
-        // There got to be a better way to detect that code is running inside an OSGi container...
-        
-        /*try
-        {
-            ExtensionsLocator.class.getClassLoader().loadClass( "org.eclipse.sapphire.osgi.BundleResourceStore" );
-            
-            return false;
-        }
-        catch( ClassNotFoundException e )
-        {
-            return true;
-        }*/
-        
-        return ( getClass().getClassLoader() instanceof BundleReference );
+        return ( FrameworkUtil.getBundle( ExtensionsLocatorFactory.class ) != null );
     }
 
     @Override
@@ -58,70 +43,65 @@ public final class ExtensionsLocatorFactory extends ExtensionsLocator.Factory
             @Override
             public List<Handle> find()
             {
+                final BundleContext context = FrameworkUtil.getBundle( ExtensionsLocatorFactory.class ).getBundleContext();
                 final List<Handle> handles = new ArrayList<Handle>();
                 
-                for( final IBundleGroupProvider bundleGroupProvider : Platform.getBundleGroupProviders() )
+                for( final Bundle bundle : context.getBundles() )
                 {
-                    for( final IBundleGroup bundleGroup : bundleGroupProvider.getBundleGroups() )
+                    final int state = bundle.getState();
+                    
+                    if( state == Bundle.RESOLVED || state == Bundle.STARTING || state == Bundle.ACTIVE )
                     {
-                        for( final Bundle bundle : bundleGroup.getBundles() )
+                        Enumeration<URL> urls = null;
+                        
+                        try
                         {
-                            final int state = bundle.getState();
-                            
-                            if( state == Bundle.RESOLVED || state == Bundle.STARTING || state == Bundle.ACTIVE )
+                            urls = bundle.getResources( DEFAULT_PATH );
+                        }
+                        catch( Exception e )
+                        {
+                            LoggingService.log( e );
+                        }
+                        
+                        if( urls != null )
+                        {
+                            while( urls.hasMoreElements() )
                             {
-                                Enumeration<URL> urls = null;
+                                final URL url = urls.nextElement();
                                 
-                                try
+                                final Handle handle = new Handle()
                                 {
-                                    urls = bundle.getResources( DEFAULT_PATH );
-                                }
-                                catch( Exception e )
-                                {
-                                    LoggingService.log( e );
-                                }
-                                
-                                if( urls != null )
-                                {
-                                    while( urls.hasMoreElements() )
+                                    @Override
+                                    public URL extension()
                                     {
-                                        final URL url = urls.nextElement();
-                                        
-                                        final Handle handle = new Handle()
-                                        {
-                                            @Override
-                                            public URL extension()
-                                            {
-                                                return url;
-                                            }
-
-                                            @Override
-                                            public URL findResource( final String name )
-                                            {
-                                                return bundle.getResource( name );
-                                            }
-
-                                            @Override
-                                            @SuppressWarnings( "unchecked" )
-                                            
-                                            public <T> Class<T> findClass( final String name )
-                                            {
-                                                try
-                                                {
-                                                    return (Class<T>) bundle.loadClass( name );
-                                                }
-                                                catch( ClassNotFoundException e )
-                                                {
-                                                    // Intentionally converting ClassNotFoundException to null return.
-                                                }
-
-                                                return null;
-                                            }
-                                        };
-                                        
-                                        handles.add( handle );
+                                        return url;
                                     }
-                                }
+
+                                    @Override
+                                    public URL findResource( final String name )
+                                    {
+                                        return bundle.getResource( name );
+                                    }
+
+                                    @Override
+                                    @SuppressWarnings( "unchecked" )
+                                    
+                                    public <T> Class<T> findClass( final String name )
+                                    {
+                                        try
+                                        {
+                                            return (Class<T>) bundle.loadClass( name );
+                                        }
+                                        catch( ClassNotFoundException e )
+                                        {
+                                            // Intentionally converting ClassNotFoundException to null return.
+                                        }
+
+                                        return null;
+                                    }
+                                };
+                                
+                                handles.add( handle );
                             }
                         }
                     }

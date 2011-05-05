@@ -28,10 +28,10 @@ public final class BundleImageDataFactory
         // This class is not meant to be instantiated.
     }
     
-    public static ImageData readFromBundle( final String bundleId,
+    public static ImageData readFromBundle( final String bundleSymbolicName,
                                             final String path )
     {
-        final Bundle bundle = Platform.getBundle( bundleId );
+        final Bundle bundle = BundleLocator.find( bundleSymbolicName );
         
         if( bundle != null )
         {
@@ -54,10 +54,10 @@ public final class BundleImageDataFactory
         return null;
     }
     
-    public static ImageData createFromBundle( final String bundleId,
+    public static ImageData createFromBundle( final String bundleSymbolicName,
                                               final String path )
     {
-        final Bundle bundle = Platform.getBundle( bundleId );
+        final Bundle bundle = Platform.getBundle( bundleSymbolicName );
         
         if( bundle == null )
         {
