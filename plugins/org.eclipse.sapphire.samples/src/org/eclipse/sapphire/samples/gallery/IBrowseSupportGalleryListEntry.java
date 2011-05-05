@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
@@ -36,14 +36,14 @@ public interface IBrowseSupportGalleryListEntry
     
     // *** MultiOptionPath ***
     
-    @Type( base = IPath.class )
+    @Type( base = Path.class )
     @Label( standard = "multi option path" )
     @XmlBinding( path = "multi-option-path" )
 
     ValueProperty PROP_MULTI_OPTION_PATH = new ValueProperty( TYPE, "MultiOptionPath" );
     
-    Value<IPath> getMultiOptionPath();
+    Value<Path> getMultiOptionPath();
     void setMultiOptionPath( String value );
-    void setMultiOptionPath( IPath value );
+    void setMultiOptionPath( Path value );
     
 }

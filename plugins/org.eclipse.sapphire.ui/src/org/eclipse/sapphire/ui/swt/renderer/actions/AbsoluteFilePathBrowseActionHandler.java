@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.ValidFileExtensions;
@@ -103,8 +103,8 @@ public final class AbsoluteFilePathBrowseActionHandler
         final FileDialog dialog = new FileDialog( context.getShell() );
         dialog.setText( property.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ) );
         
-        final Value<IPath> value = getModelElement().read( property );
-        final IPath path = value.getContent();
+        final Value<Path> value = getModelElement().read( property );
+        final Path path = value.getContent();
         
         if( path != null && path.segmentCount() > 1 )
         {

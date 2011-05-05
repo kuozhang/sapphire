@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.swt.renderer.actions;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -55,8 +55,8 @@ public final class AbsoluteFolderPathBrowseActionHandler
         dialog.setText( property.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ) );
         dialog.setMessage( createBrowseDialogMessage( property.getLabel( true, CapitalizationType.NO_CAPS, false ) ) );
         
-        final Value<IPath> value = getModelElement().read( property );
-        final IPath path = value.getContent();
+        final Value<Path> value = getModelElement().read( property );
+        final Path path = value.getContent();
         
         if( path != null )
         {

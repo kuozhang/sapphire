@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.AbsolutePath;
@@ -48,7 +48,7 @@ public interface IBrowseSupportGallery
     
     // *** AbsoluteFilePath ***
     
-    @Type( base = IPath.class )
+    @Type( base = Path.class )
     @Label( standard = "absolute file path" )
     @AbsolutePath
     @ValidFileSystemResourceType( FileSystemResourceType.FILE )
@@ -58,13 +58,13 @@ public interface IBrowseSupportGallery
     
     ValueProperty PROP_ABSOLUTE_FILE_PATH = new ValueProperty( TYPE, "AbsoluteFilePath" );
     
-    Value<IPath> getAbsoluteFilePath();
+    Value<Path> getAbsoluteFilePath();
     void setAbsoluteFilePath( String value );
-    void setAbsoluteFilePath( IPath value );
+    void setAbsoluteFilePath( Path value );
 
     // *** AbsoluteFolderPath ***
     
-    @Type( base = IPath.class )
+    @Type( base = Path.class )
     @Label( standard = "absolute folder path" )
     @AbsolutePath
     @ValidFileSystemResourceType( FileSystemResourceType.FOLDER )
@@ -73,13 +73,13 @@ public interface IBrowseSupportGallery
     
     ValueProperty PROP_ABSOLUTE_FOLDER_PATH = new ValueProperty( TYPE, "AbsoluteFolderPath" );
     
-    Value<IPath> getAbsoluteFolderPath();
+    Value<Path> getAbsoluteFolderPath();
     void setAbsoluteFolderPath( String value );
-    void setAbsoluteFolderPath( IPath value );
+    void setAbsoluteFolderPath( Path value );
     
     // *** RelativeFilePath ***
     
-    @Type( base = IPath.class )
+    @Type( base = Path.class )
     @Label( standard = "relative file path" )
     @BasePathsProvider( CustomBasePathsProvider.class )
     @ValidFileSystemResourceType( FileSystemResourceType.FILE )
@@ -89,13 +89,13 @@ public interface IBrowseSupportGallery
     
     ValueProperty PROP_RELATIVE_FILE_PATH = new ValueProperty( TYPE, "RelativeFilePath" );
     
-    Value<IPath> getRelativeFilePath();
+    Value<Path> getRelativeFilePath();
     void setRelativeFilePath( String value );
-    void setRelativeFilePath( IPath value );
+    void setRelativeFilePath( Path value );
     
     // *** WorkspaceRelativePath ***
     
-    @Type( base = IPath.class )
+    @Type( base = Path.class )
     @Label( standard = "workspace relative path" )
     @WorkspaceRelativePath
     @MustExist
@@ -103,13 +103,13 @@ public interface IBrowseSupportGallery
     
     ValueProperty PROP_WORKSPACE_RELATIVE_PATH = new ValueProperty( TYPE, "WorkspaceRelativePath" );
     
-    Value<IPath> getWorkspaceRelativePath();
+    Value<Path> getWorkspaceRelativePath();
     void setWorkspaceRelativePath( String value );
-    void setWorkspaceRelativePath( IPath value );
+    void setWorkspaceRelativePath( Path value );
     
     // *** ProjectRelativePath ***
     
-    @Type( base = IPath.class )
+    @Type( base = Path.class )
     @Label( standard = "project relative path" )
     @ProjectRelativePath
     @MustExist
@@ -117,21 +117,21 @@ public interface IBrowseSupportGallery
     
     ValueProperty PROP_PROJECT_RELATIVE_PATH = new ValueProperty( TYPE, "ProjectRelativePath" );
     
-    Value<IPath> getProjectRelativePath();
+    Value<Path> getProjectRelativePath();
     void setProjectRelativePath( String value );
-    void setProjectRelativePath( IPath value );
+    void setProjectRelativePath( Path value );
     
     // *** MultiOptionPath ***
     
-    @Type( base = IPath.class )
+    @Type( base = Path.class )
     @Label( standard = "multi option path" )
     @XmlBinding( path = "multi-option-path" )
 
     ValueProperty PROP_MULTI_OPTION_PATH = new ValueProperty( TYPE, "MultiOptionPath" );
     
-    Value<IPath> getMultiOptionPath();
+    Value<Path> getMultiOptionPath();
     void setMultiOptionPath( String value );
-    void setMultiOptionPath( IPath value );
+    void setMultiOptionPath( Path value );
     
     // *** List ***
     

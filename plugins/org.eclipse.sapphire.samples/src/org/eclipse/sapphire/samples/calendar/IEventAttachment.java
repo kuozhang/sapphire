@@ -13,9 +13,9 @@ package org.eclipse.sapphire.samples.calendar;
 
 import java.net.URL;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.BasePathsProvider;
@@ -43,7 +43,7 @@ public interface IEventAttachment
 
     // *** LocalCopyLocation ***
     
-    @Type( base = IPath.class )
+    @Type( base = Path.class )
     @Label( standard = "local copy location" )
     @Required
     @BasePathsProvider( EventAttachmentLocalCopyBasePathsProvider.class )
@@ -52,9 +52,9 @@ public interface IEventAttachment
 
     ValueProperty PROP_LOCAL_COPY_LOCATION = new ValueProperty( TYPE, "LocalCopyLocation" );
 
-    Value<IPath> getLocalCopyLocation();
+    Value<Path> getLocalCopyLocation();
     void setLocalCopyLocation( String localCopyLocation );
-    void setLocalCopyLocation( IPath localCopyLocation );
+    void setLocalCopyLocation( Path localCopyLocation );
     
     // *** PublicCopyLocation ***
 
