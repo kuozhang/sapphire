@@ -55,7 +55,7 @@ public class SapphirePartContainer
                 }
             };
     
-            final IFormDef def = (IFormDef) this.definition;
+            final IFormDef def = getFormDefinition();
             
             for( ISapphirePartDef childPartDef : def.getContent() )
             {
@@ -66,6 +66,11 @@ public class SapphirePartContainer
         }
         
         updateValidationState();
+    }
+    
+    public IFormDef getFormDefinition()
+    {
+        return (IFormDef) this.definition;
     }
     
     protected IModelElement getModelElementForChildParts()

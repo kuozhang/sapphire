@@ -782,7 +782,17 @@ public abstract class SapphirePart
         }
         else if( definition instanceof ISapphireWithDirectiveDef )
         {
-            part = new SapphireWithDirective();
+            final SapphireWithDirectiveHelper.ResolvePathResult resolvePathResult 
+                = SapphireWithDirectiveHelper.resolvePath( modelElement, (ISapphireWithDirectiveDef) definition, partParams );
+            
+            if( resolvePathResult.property == null )
+            {
+                part = new SapphireWithDirectiveImplied();
+            }
+            else
+            {
+                part = new SapphireWithDirective();
+            }
         }
         else if( definition instanceof ISapphirePageBookExtDef )
         {

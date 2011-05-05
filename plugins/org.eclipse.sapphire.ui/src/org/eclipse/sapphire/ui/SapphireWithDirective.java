@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui;
 
+import static org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.resolvePath;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
@@ -30,15 +31,13 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
+import org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.ResolvePathResult;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
@@ -77,78 +76,33 @@ public final class SapphireWithDirective
     protected void init()
     {
         final ISapphireWithDirectiveDef def = (ISapphireWithDirectiveDef) this.definition;
+        final ResolvePathResult resolvePathResult = resolvePath( getModelElement(), def, this.params );
         
-        final String pathString = def.getPath().getText();
-        this.path = new ModelPath( pathString );
-        
-        this.element = getModelElement();
-        
-        for( int i = 0, n = this.path.length(); i < n; i++ )
+        if( resolvePathResult.property == null )
         {
-            final ModelPath.Segment segment = this.path.segment( i );
-            
-            if( segment instanceof ModelPath.ModelRootSegment )
-            {
-                this.element = (IModelElement) this.element.root();
-            }
-            else if( segment instanceof ModelPath.ParentElementSegment )
-            {
-                IModelParticle parent = this.element.parent();
-                
-                if( ! ( parent instanceof IModelElement ) )
-                {
-                    parent = parent.parent();
-                }
-                
-                this.element = (IModelElement) parent;
-            }
-            else if( segment instanceof ModelPath.PropertySegment )
-            {
-                final ModelProperty prop = resolve( this.element, ( (ModelPath.PropertySegment) segment ).getPropertyName() );
-                
-                if( prop instanceof ImpliedElementProperty )
-                {
-                    this.element = this.element.read( (ImpliedElementProperty) prop );
-                }
-                else if( prop instanceof ElementProperty )
-                {
-                    this.property = (ElementProperty) prop;
-                    
-                    if( i + 1 != n )
-                    {
-                        throw new RuntimeException( NLS.bind( Resources.invalidPath, pathString ) );
-                    }
-                }
-            }
-            else
-            {
-                throw new RuntimeException( NLS.bind( Resources.invalidPath, pathString ) );
-            }
+            throw new IllegalStateException();
         }
+        
+        this.path = resolvePathResult.path;
+        this.element = resolvePathResult.element;
+        this.property = resolvePathResult.property;
 
         super.init();
         
         setExposePageValidationState( true );
         
-        if( this.property == null )
+        this.listener = new ModelPropertyListener()
         {
-            changePage( this.element, ClassBasedKey.create( this.element ) );
-        }
-        else
-        {
-            this.listener = new ModelPropertyListener()
+            @Override
+            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
             {
-                @Override
-                public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
-                {
-                    updateCurrentPage( false );
-                }
-            };
-            
-            this.element.addListener( this.listener, this.property.getName() );
-            
-            updateCurrentPage( true );
-        }
+                updateCurrentPage( false );
+            }
+        };
+        
+        this.element.addListener( this.listener, this.property.getName() );
+        
+        updateCurrentPage( true );
     }
     
     @Override
@@ -605,7 +559,6 @@ public final class SapphireWithDirective
     {
         public static String noneSelection;
         public static String noAdditionalPropertiesMessage;
-        public static String invalidPath;
         
         static
         {

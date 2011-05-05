@@ -13,10 +13,15 @@ package org.eclipse.sapphire.samples.gallery;
 
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 
 /**
@@ -59,5 +64,36 @@ public interface IElementPropertiesGallery
     ElementProperty PROP_HETEROGENEOUS = new ElementProperty( TYPE, "Heterogeneous" );
     
     ModelElementHandle<IChildElement> getHeterogeneous();
+    
+    // *** Implied ***
+    
+    @Type( base = IChildElementWithInteger.class )
+    @XmlBinding( path = "implied" )
+    
+    ImpliedElementProperty PROP_IMPLIED = new ImpliedElementProperty( TYPE, "Implied" );
+    
+    IChildElementWithInteger getImplied();
+    
+    // *** StringValue ***
+    
+    @XmlBinding( path = "string" )
+    @Label( standard = "root string value" )
+    
+    ValueProperty PROP_STRING_VALUE = new ValueProperty( TYPE, "StringValue" );
+    
+    Value<String> getStringValue();
+    void setStringValue( String value );
+    
+    // *** IntegerValue ***
+    
+    @Type( base = Integer.class )
+    @Label( standard = "root integer value" )
+    @XmlBinding( path = "integer" )
+
+    ValueProperty PROP_INTEGER_VALUE = new ValueProperty( TYPE, "IntegerValue" );
+    
+    Value<Integer> getIntegerValue();
+    void setIntegerValue( String value );
+    void setIntegerValue( Integer value );
     
 }

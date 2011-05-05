@@ -500,6 +500,28 @@
                         <label>An element property holds an optional child element. </label>
                     </content>
                 </section>
+                <node>
+                    <label>implied</label>
+                    <section>
+                        <content>
+                            <label>An implied element property has one possible child element type. The child element is not created explicitly and cannot be deleted.</label>
+                            <spacer></spacer>
+                            <label>When an implied element property is referenced in a with construct, the context model element changes without any manifestation in the user interface. Contrast with explicit element properties where controls for managing the child element are presented. In the following example, the last two properties are from the child element accessed using with construct.</label>
+                            <spacer></spacer>
+                            <property-editor>StringValue</property-editor>
+                            <property-editor>IntegerValue</property-editor>
+                            <with>
+                                <path>Implied</path>
+                                <default-panel>
+                                    <content>
+                                        <property-editor>StringValue</property-editor>
+                                        <property-editor>IntegerValue</property-editor>
+                                    </content>
+                                </default-panel>
+                            </with>
+                        </content>
+                    </section>
+                </node>
             </node>
             <node>
                 <label>list properties</label>

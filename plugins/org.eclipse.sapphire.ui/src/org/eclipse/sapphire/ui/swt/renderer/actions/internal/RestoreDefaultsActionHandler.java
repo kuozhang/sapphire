@@ -165,16 +165,7 @@ public final class RestoreDefaultsActionHandler
         else if( part instanceof SapphireWithDirective )
         {
             final SapphireWithDirective w = ( (SapphireWithDirective) part );
-            final ElementProperty property = w.getProperty();
-            
-            if( property == null )
-            {
-                collectProperties( w.getCurrentPage(), result );
-            }
-            else
-            {
-                result.add( new PropertyRef( w.getLocalModelElement(), property ) );
-            }
+            result.add( new PropertyRef( w.getLocalModelElement(), w.getProperty() ) );
         }
         else if( part instanceof SapphireEnumControlledPageBook )
         {
