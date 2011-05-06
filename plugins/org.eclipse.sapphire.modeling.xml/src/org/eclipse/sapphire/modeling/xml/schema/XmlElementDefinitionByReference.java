@@ -96,7 +96,7 @@ public final class XmlElementDefinitionByReference extends XmlElementDefinition
 		        if (list != null && list.size() > 0) {
 		        	for (XmlElementDefinition subGroup : list) {
 		        		if (subGroup.getName().equals(childElementName)) {
-		        			return subGroup;
+		        			return subGroup.getContentModel();
 		        		}
 		        	}
 		        }

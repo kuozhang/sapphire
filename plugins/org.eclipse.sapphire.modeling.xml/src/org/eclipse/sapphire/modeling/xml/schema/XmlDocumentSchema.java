@@ -70,7 +70,11 @@ public final class XmlDocumentSchema
                 for ( Map.Entry<String, XmlElementDefinition> map2 : this.topLevelElements.entrySet() ) {
                 	final XmlElementDefinition definition2 = map2.getValue();
                 	if (definition.getName().equals(definition2.getSubstitutionGroup())) {
-                		substitutionList.add(definition2);
+                		XmlElementDefinition.Factory def = new XmlElementDefinitionByReference.Factory();
+                		def.setName(definition2.getName());
+                		def.setMinOccur(definition2.getMinOccur());
+                		def.setMaxOccur(definition2.getMaxOccur());
+                		substitutionList.add((XmlElementDefinition)def.create(this));
                 	}
                 }
                 definition.setSubstitutionList(substitutionList);

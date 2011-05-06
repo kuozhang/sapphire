@@ -12,10 +12,12 @@
 package org.eclipse.sapphire.tests.modeling.xml.xsd.t0003;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 
@@ -37,22 +39,22 @@ public interface ITestXmlXsd0003Element
     
     // *** circle ***
     
-    @XmlBinding( path = "circle" )
-    
-    ValueProperty PROP_CIRCLE = new ValueProperty( TYPE, "Circle" );
-    
-    Value<String> getCircle();
-    void setCircle( String value );
+	@Type( base = ITestXmlXsd0003Circle.class )
+	@XmlBinding( path = "circle" )
+	
+	ImpliedElementProperty PROP_CIRCLE = new ImpliedElementProperty( TYPE, "Circle" );
+	
+	ITestXmlXsd0003Circle getCircle();
     
     // *** square ***
     
-    @XmlBinding( path = "square" )
+	@Type( base = ITestXmlXsd0003Square.class )
+	@XmlBinding( path = "square" )
+	
+	ImpliedElementProperty PROP_SQUARE = new ImpliedElementProperty( TYPE, "Square" );
+	
+	ITestXmlXsd0003Square getSquare();
     
-    ValueProperty PROP_SQUARE = new ValueProperty( TYPE, "Square" );
-    
-    Value<String> getSquare();
-    void setSquare( String value );
-
     // *** Aaa ***
     
     @XmlBinding( path = "aaa" )

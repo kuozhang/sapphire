@@ -85,13 +85,20 @@ public final class TestXmlXsd0003
         
         model.setCcc( "ccc" );
         model.setBbb( "bbb" );
-        model.setCircle( "circle" );
+        ITestXmlXsd0003Circle circle=  model.getCircle();
+        circle.setCircle3( "333");
+        circle.setCircle2( "222");
+        circle.setCircle1( "111");
         model.setAaa( "aaa" );
-        model.setSquare( "square" );
+        ITestXmlXsd0003Square square =  model.getSquare();
+        square.setSquare3( "333");
+        square.setSquare2( "222");
+        square.setSquare1( "111");
 
         model.resource().save();
         
         final String result = new String( resourceStore.getContents(), "UTF-8" );
+        System.out.println(result);
         
         assertEqualsIgnoreNewLineDiffs( loadResource( "0003.txt" ), result );
     }
