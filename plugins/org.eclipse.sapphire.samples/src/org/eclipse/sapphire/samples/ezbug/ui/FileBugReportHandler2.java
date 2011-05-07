@@ -43,7 +43,7 @@ public class FileBugReportHandler2
         final IBugReport report = op.getBugReport();
         
         final SapphireDialog dialog 
-            = new SapphireDialog( window.getShell(), report, "org.eclipse.sapphire.samples/sdef/EzBug.sdef!dialog2" );
+            = new SapphireDialog( window.getShell(), report, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef!dialog2" );
         
         if( dialog.open() == Dialog.OK )
         {

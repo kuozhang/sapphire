@@ -24,14 +24,15 @@ import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ImageService;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelService;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelService.Event;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -46,7 +47,6 @@ import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireCondition;
-import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartEvent;
 import org.eclipse.sapphire.ui.SapphirePartListener;
@@ -72,6 +72,12 @@ public final class MasterDetailsContentNode
     implements IPropertiesViewContributorPart
     
 {
+    private static final ImageData IMG_CONTAINER_NODE
+        = ImageData.createFromClassLoader( MasterDetailsContentNode.class, "ContainerNode.png" );
+
+    private static final ImageData IMG_LEAF_NODE
+        = ImageData.createFromClassLoader( MasterDetailsContentNode.class, "LeafNode.png" );
+
     public static final String HINT_HIDE_IF_DISABLED = "hide.if.disabled"; //$NON-NLS-1$
     
     private MasterDetailsContentOutline contentTree;
@@ -354,7 +360,7 @@ public final class MasterDetailsContentNode
         
         // Image
         
-        final Literal defaultImageLiteral = Literal.create( ( hasChildNodes() ? SapphireImageCache.IMG_OBJECT_CONTAINER_NODE : SapphireImageCache.IMG_OBJECT_LEAF_NODE ) );
+        final Literal defaultImageLiteral = Literal.create( ( hasChildNodes() ? IMG_CONTAINER_NODE : IMG_LEAF_NODE ) );
         final Function imageFunction;
         
         if( this.definition.getUseModelElementImage().getContent() )

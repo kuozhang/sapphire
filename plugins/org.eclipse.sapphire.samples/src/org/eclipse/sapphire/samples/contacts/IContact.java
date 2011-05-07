@@ -44,14 +44,11 @@ import org.eclipse.sapphire.samples.contacts.internal.ContactMethods;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Image( path = "images/person.png" )
+@Image( path = "Contact.png" )
 @Service( impl = ContactImageService.class )
 @GenerateImpl
 
-public interface IContact
-
-    extends IModelElement
-
+public interface IContact extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IContact.class );
 

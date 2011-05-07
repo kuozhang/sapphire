@@ -28,7 +28,7 @@ public final class BugDatabaseEditor
         super( "org.eclipse.sapphire.samples" );
         
         setRootModelElementType( IBugDatabase.TYPE );
-        setEditorDefinitionPath( "org.eclipse.sapphire.samples/sdef/EzBug.sdef/editor.page" );
+        setEditorDefinitionPath( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef/editor.page" );
     }
     
 }

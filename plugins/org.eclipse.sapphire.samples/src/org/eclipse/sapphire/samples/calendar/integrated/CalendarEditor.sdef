@@ -16,6 +16,7 @@
 <definition>
 
     <import>
+        <package>org.eclipse.sapphire.samples.contacts</package>
         <package>org.eclipse.sapphire.samples.calendar.integrated</package>
         <package>org.eclipse.sapphire.samples.calendar.ui</package>
     </import>
@@ -115,7 +116,7 @@
                                                 <show-image/>
                                                 <action>
                                                     <id>sapphire.sample.ShowContactDetails</id>
-                                                    <image>images/person.png</image>
+                                                    <image>Contact.png</image>
                                                 </action>
                                                 <action-handler>
                                                     <action>Sapphire.Sample.ShowContactDetails</action>

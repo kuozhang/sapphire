@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @GenerateImpl
-@Image( path = "images/person.png" )
+@Image( path = "org/eclipse/sapphire/samples/contacts/Contact.png" )
 
 public interface IAttendee
 

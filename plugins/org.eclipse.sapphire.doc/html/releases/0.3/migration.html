@@ -130,6 +130,274 @@ may require adopters to modify Requite-Bundle declarations and import statements
   </tr>
 </table>
 
+<p>The core dependency on IStatus, IPath and IProgressMonitor types from org.eclipse.core.runtime bundle
+has been eliminated. These classes have been replaced with Status, Path and ProgressMonitor classes in
+org.eclipse.sapphire.modeling bundle. StatusBridge, PathBridge and ProgressMonitorBridge classes are available
+in org.eclipse.sapphire.platform bundle when back-n-forth conversion is necessary.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomValidationService extends ModelPropertyValidationService&lt;Value&lt;String>> 
+{
+    public</font> IStatus <font color="#888888">validate() 
+    {
+        if( ... )
+        {
+            return</font> createErrorStatus( Resources.errorMessage );
+        <font color="#888888">}
+
+        return</font> Status.OK_STATUS;
+    <font color="#888888">}
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomValidationService extends ModelPropertyValidationService&lt;Value&lt;String>> 
+{
+    public</font> Status <font color="#888888">validate() 
+    {
+        if( ... )
+        {
+            return</font> Status.createErrorStatus( Resources.errorMessage );
+        <font color="#888888">}
+
+        return</font> Status.createOkStatus();
+    <font color="#888888">}
+}</font></code></pre>
+
+<p>When necessary, use StatusBridge class from org.eclipse.sapphire.platform bundle to convert back-n-forth between Sapphire's Status object and
+Eclipse's IStatus object.</p> 
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><font color="#888888">@PossibleValues( service = CustomPossibleValuesService.class, invalidValueSeverity = </font>IStatus.OK <font color="#888888">)</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><font color="#888888">@PossibleValues( service = CustomPossibleValuesService.class, invalidValueSeverity = </font>Status.Severity.OK <font color="#888888">)</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomPossibleValuesService extends PossibleValuesService
+{
+    ...
+    
+    public</font> int <font color="#888888">getInvalidValueSeverity( String value ) 
+    {
+        if( ... )
+        {
+            return</font> IStatus.ERROR<font color="#888888">;
+        }
+        else if( ... )
+        {
+            return</font> IStatus.WARNING<font color="#888888">;
+        }
+
+        return</font> IStatus.OK<font color="#888888">;
+    }
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomPossibleValuesService extends PossibleValuesService
+{
+    ...
+    
+    public</font> Status.Severity <font color="#888888">getInvalidValueSeverity( String value ) 
+    {
+        if( ... )
+        {
+            return</font> Status.Severity.ERROR<font color="#888888">;
+        }
+        else if( ... )
+        {
+            return</font> Status.Severity.WARNING<font color="#888888">;
+        }
+
+        return</font> Status.Severity.OK<font color="#888888">;
+    }
+}</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><font color="#888888">@Type( base =</font> IPath<font color="#888888">.class )
+@Required
+@MustExist
+@WorkspaceRelativePath
+@ValidFileSystemResourceType( FileSystemResourceType.FILE )
+@ValidFileExtensions( "xml" )
+    
+ValueProperty PROP_LOCATION = new ValueProperty( TYPE, "Location" );
+    
+Value&lt;</font>IPath<font color="#888888">&gt; getLocation();
+void setLocation( String location );
+void setLocation( </font>IPath<font color="#888888"> location );</font></code></pre>
+
+<p>These migration sites will not be obvious via problems at compile times. Search for "Value&lt;IPath&gt;".</p>
+    </td>
+    <td>
+<pre class="source-code"><font color="#888888">@Type( base =</font> Path<font color="#888888">.class )
+@Required
+@MustExist
+@WorkspaceRelativePath
+@ValidFileSystemResourceType( FileSystemResourceType.FILE )
+@ValidFileExtensions( "xml" )
+    
+ValueProperty PROP_LOCATION = new ValueProperty( TYPE, "Location" );
+    
+Value&lt;</font>Path<font color="#888888">&gt; getLocation();
+void setLocation( String location );
+void setLocation( </font>Path<font color="#888888"> location );</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><font color="#888888">public class CustomBasePathsProvider extends BasePathsProviderImpl
+{
+    public List&lt;</font>IPath<font color="#888888">&gt; getBasePaths( IModelElement element )
+    {
+        ...
+    }
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><font color="#888888">public class CustomBasePathsProvider extends BasePathsProviderImpl
+{
+    public List&lt;</font>Path<font color="#888888">&gt; getBasePaths( IModelElement element )
+    {
+        ...
+    }
+}</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><font color="#888888">public class ProjectRootsBasePathsProvider extends BasePathsProviderImpl
+{
+    public List&lt;</font>IPath<font color="#888888">&gt; getBasePaths( IModelElement element )
+    {
+        final List&lt;</font>IPath<font color="#888888">&gt; paths = new ArrayList&lt;</font>IPath<font color="#888888">&gt;();
+
+        for( IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects() )
+        {
+            paths.add(</font> project.getLocation() <font color="#888888">);
+        }
+        
+        return paths;
+    }
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><font color="#888888">public class ProjectRootsBasePathsProvider extends BasePathsProviderImpl
+{
+    public List&lt;</font>Path<font color="#888888">&gt; getBasePaths( IModelElement element )
+    {
+        final List&lt;</font>Path<font color="#888888">&gt; paths = new ArrayList&lt;</font>Path<font color="#888888">&gt;();
+
+        for( IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects() )
+        {
+            paths.add(</font> PathBridge.create( project.getLocation() ) <font color="#888888">);
+        }
+        
+        return paths;
+    }
+}</font></code></pre>
+
+<p>When necessary, use PathBridge class from org.eclipse.sapphire.platform bundle to convert back-n-forth between Sapphire's Path object and
+Eclipse's IPath object.</p> 
+    </td>
+  </tr>
+</table>
+
+<p>Sapphire extension system no longer requires a flag from Eclipse extension system in order to discover extensions.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;plugin>
+
+    ...</font>
+
+    &lt;extension point="org.eclipse.sapphire.modeling.extension"/>
+  
+<font color="#888888">&lt;/plugin></font></code></pre>
+    </td>
+    <td>
+      <i>remove</i>
+    </td>
+  </tr>
+</table>
+
+<p>Sapphire now loads all resources (such as images and sdef files) from the class loader. To access resources from another
+bundle use standard OSGi facilities to require another bundle or to import packages. To make re-use from other bundles
+easier, place images and sdef files into exported packages along with Java source code.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;definition></font>
+
+    &lt;import>
+      &lt;bundle>org.sample.foo&lt;/bundle>
+      &lt;package>org.sample.foo&lt;/package>
+      &lt;package>org.sample.foo.xyz&lt;/package>
+      &lt;definition>sdef/Foo.sdef&lt;/definition>
+    &lt;/import>
+
+    &lt;import>
+      &lt;bundle>org.sample.bar&lt;/bundle>
+      &lt;package>org.sample.bar&lt;/package>
+    &lt;/import>
+
+    <font color="#888888">...
+
+&lt;/definition></font>
+</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;definition></font>
+
+    &lt;import>
+      &lt;package>org.sample.foo&lt;/package>
+      &lt;package>org.sample.foo.xyz&lt;/package>
+      &lt;definition>org/sample/foo/Foo.sdef&lt;/definition>
+      &lt;package>org.sample.bar&lt;/package>
+    &lt;/import>
+
+    <font color="#888888">...
+
+&lt;/definition></font></code></pre>
+
+      <p>Note that multiple import elements are no longer supported.</p>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Image( path = "</font>org.sample.foo/images/something.png<font color="#888888">" )</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Image( path = "</font>images/something.png<font color="#888888">" )</font></code></pre>
+
+      <p>The above migration is sufficient if the annotated type is located in the same plugin as the image. If the image is located
+      in a different plugin, then you need to arrange to place the image in an exported package and adjust the path in the annotation
+      accordingly.</p>
+    </td>
+  </tr>
+</table>
+
 <h2><a name="ref">ReferenceValue Changes</a></h2>
 
 <p>The ReferenceValue class now takes two type parameters instead of one. The first is the 
@@ -248,7 +516,7 @@ system or at the level of an individual property using the @Service annotation.<
         ...
     }
     
-    public IStatus validate()
+    public Status validate()
     {
         final Value&lt;?> value = target();
 
@@ -679,10 +947,10 @@ public interface IAttendee extends IModelElement
 public class AttendeeImageProvider extends ImageProvider
 {
     private static final String IMG_PERSON 
-        = SapphireSamplesPlugin.PLUGIN_ID + "/images/person.png";
+        = SapphireSamplesPlugin.PLUGIN_ID + "/org/eclipse/sapphire/samples/contacts/Contact.png";
 
     private static final String IMG_PERSON_FADED 
-        = SapphireSamplesPlugin.PLUGIN_ID + "/images/person-faded.png";
+        = SapphireSamplesPlugin.PLUGIN_ID + "/org/eclipse/sapphire/samples/contacts/ContactFaded.png";
 
     @Override
     public String getSmallImagePath( IModelElement element )
@@ -705,7 +973,7 @@ public class AttendeeImageProvider extends ImageProvider
 }</code></pre>
     </td>
     <td>
-<pre class="source-code"><code>@Image( path = "org.eclipse.sapphire.samples/images/person.png" )
+<pre class="source-code"><code>@Image( path = "Contact.png" )
 @Service( impl = AttendeeImageService.class )
 
 public interface IAttendee extends IModelElement
@@ -718,10 +986,10 @@ public interface IAttendee extends IModelElement
 public class AttendeeImageService extends ImageService
 {
     private static final ImageData IMG_PERSON 
-        = ImageData.readFromBundle( SapphireSamplesPlugin.PLUGIN_ID, "images/person.png" );
+        = ImageData.readFromClassLoader( IContact.class, "Contact.png" );
 
     private static final ImageData IMG_PERSON_FADED 
-        = ImageData.readFromBundle( SapphireSamplesPlugin.PLUGIN_ID, "images/person-faded.png" );
+        = ImageData.readFromClassLoader( IContact.class, "ContactFaded.png" );
     
     private ModelPropertyListener listener;
     

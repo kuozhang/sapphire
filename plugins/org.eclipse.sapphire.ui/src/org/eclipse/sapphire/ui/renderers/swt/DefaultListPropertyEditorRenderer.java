@@ -1434,6 +1434,12 @@ public class DefaultListPropertyEditorRenderer
         extends ColumnHandler
         
     {
+        private static final ImageDescriptor IMG_CHECKBOX_ON
+            = SwtRendererUtil.createImageDescriptor( BooleanPropertyColumnHandler.class, "CheckBoxOn.gif" );
+        
+        private static final ImageDescriptor IMG_CHECKBOX_OFF
+            = SwtRendererUtil.createImageDescriptor( BooleanPropertyColumnHandler.class, "CheckBoxOff.gif" );
+        
         private static final int CHECKBOX_IMAGE_WIDTH = 16;
         private static final int CHECKBOX_IMAGE_HEIGHT = 16;
         
@@ -1478,7 +1484,7 @@ public class DefaultListPropertyEditorRenderer
                     {
                         final boolean value = getPropertyValueAsBoolean( element );
                         
-                        final Image image = getImageCache().getImage( value ? SapphireImageCache.OBJECT_CHECK_ON : SapphireImageCache.OBJECT_CHECK_OFF );
+                        final Image image = getImageCache().getImage( value ? IMG_CHECKBOX_ON : IMG_CHECKBOX_OFF );
                         final Rectangle cellBounds = item.getBounds( event.index );
                         final Rectangle imageBounds = image.getBounds();
                         final int x = event.x + ( cellBounds.width - imageBounds.width ) / 2;

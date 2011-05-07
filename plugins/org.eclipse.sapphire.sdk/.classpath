@@ -13,6 +13,5 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="images"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

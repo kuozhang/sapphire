@@ -60,7 +60,30 @@ public final class ImageData extends BinaryData
     public static ImageData readFromClassLoader( final Class<?> cl,
                                                  final String path )
     {
-        return readFromClassLoader( cl.getClassLoader(), path );
+        final ClassLoader classloader = cl.getClassLoader();
+        
+        if( ! path.contains( "/" ) )
+        {
+            final Package p = cl.getPackage();
+            
+            if( p != null )
+            {
+                final String pn = p.getName();
+                
+                if( pn != null && pn.length() > 0 )
+                {
+                    final String possibleFullPath = pn.replace( '.', '/' ) + "/" + path;
+                    final ImageData img = readFromClassLoader( classloader, possibleFullPath );
+                    
+                    if( img != null )
+                    {
+                        return img;
+                    }
+                }
+            }
+        }
+        
+        return readFromClassLoader( classloader, path );
     }
     
     public static ImageData readFromClassLoader( final ClassLoader cl,
@@ -91,7 +114,14 @@ public final class ImageData extends BinaryData
     public static ImageData createFromClassLoader( final Class<?> cl,
                                                    final String path )
     {
-        return createFromClassLoader( cl.getClassLoader(), path );
+        final ImageData image = readFromClassLoader( cl, path );
+        
+        if( image == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return image;
     }
     
     public static ImageData createFromClassLoader( final ClassLoader cl,

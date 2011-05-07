@@ -26,7 +26,7 @@
         <context>Sapphire.ListPropertyEditor</context>
         <context>Sapphire.EditorPage.Outline.Node</context>
         <label>${ Handlers.Size == 1 ? Concat( &quot;add &quot;, Handlers[ 0 ].Label ) : &quot;add&quot; }</label>
-        <image>images/actions/add.png</image>
+        <image>org/eclipse/sapphire/ui/actions/Add.png</image>
         <group>Sapphire.AddDeleteGroup</group>
         <key-binding>SHIFT+CONTROL+ALT+n</key-binding>
         <description>Adds an entity. A common use is to add a new element to the model.</description>
@@ -45,8 +45,8 @@
         <id>Sapphire.Browse</id>
         <context>Sapphire.ValuePropertyEditor</context>
         <label>browse</label>
-        <image>images/actions/browse.png</image>
-        <image>images/actions/browse-mini.png</image>
+        <image>org/eclipse/sapphire/ui/actions/Browse.png</image>
+        <image>org/eclipse/sapphire/ui/actions/BrowseMini.png</image>
         <key-binding>SHIFT+CONTROL+ALT+l</key-binding>
         <description>Browses among possible values for a property.</description>
     </action>
@@ -54,8 +54,8 @@
         <id>Sapphire.Create</id>
         <context>Sapphire.ValuePropertyEditor</context>
         <label>create</label>
-        <image>images/actions/create.png</image>
-        <image>images/actions/create-mini.png</image>
+        <image>org/eclipse/sapphire/ui/actions/Create.png</image>
+        <image>org/eclipse/sapphire/ui/actions/CreateMini.png</image>
         <location>after:Sapphire.Browse</location>
         <key-binding>SHIFT+CONTROL+ALT+c</key-binding>
         <description>Creates the entity referenced by the property value.</description>
@@ -63,7 +63,7 @@
     <action>
         <id>Sapphire.Delete</id>
         <label>delete</label>
-        <image>images/actions/delete.png</image>
+        <image>org/eclipse/sapphire/ui/actions/Delete.png</image>
         <location>after:Sapphire.Add</location>
         <group>Sapphire.AddDeleteGroup</group>
         <key-binding>DEL</key-binding>
@@ -77,7 +77,7 @@
         <context>Sapphire.EditorPage</context>
         <context>Sapphire.Section</context>
         <label>help</label>
-        <image>images/actions/help.gif</image>
+        <image>org/eclipse/sapphire/ui/actions/Help.gif</image>
         <description>Shows help content for the entity.</description>
     </action>
     <action>
@@ -93,7 +93,7 @@
         <context>Sapphire.ListPropertyEditor</context>
         <context>Sapphire.EditorPage.Outline.Node</context>
         <label>move down</label>
-        <image>images/actions/move-down.png</image>
+        <image>org/eclipse/sapphire/ui/actions/MoveDown.png</image>
         <location>after:Sapphire.Add</location>
         <location>after:Sapphire.Delete</location>
         <location>after:Sapphire.Move.Up</location>
@@ -105,7 +105,7 @@
         <id>Sapphire.Move.Left</id>
         <context>Sapphire.ListPropertyEditor</context>
         <label>move left</label>
-        <image>images/actions/move-left.png</image>
+        <image>org/eclipse/sapphire/ui/actions/MoveLeft.png</image>
         <description>Moves an entity to the left, from the perspective of how the entity appears on the screen.</description>
         <group>Sapphire.MoveGroup</group>
     </action>
@@ -113,7 +113,7 @@
         <id>Sapphire.Move.Right</id>
         <context>Sapphire.ListPropertyEditor</context>
         <label>move right</label>
-        <image>images/actions/move-right.png</image>
+        <image>org/eclipse/sapphire/ui/actions/MoveRight.png</image>
         <description>Moves an entity to the right, from the perspective of how the entity appears on the screen.</description>
         <group>Sapphire.MoveGroup</group>
     </action>
@@ -122,7 +122,7 @@
         <context>Sapphire.ListPropertyEditor</context>
         <context>Sapphire.EditorPage.Outline.Node</context>
         <label>move up</label>
-        <image>images/actions/move-up.png</image>
+        <image>org/eclipse/sapphire/ui/actions/MoveUp.png</image>
         <location>after:Sapphire.Add</location>
         <location>after:Sapphire.Delete</location>
         <group>Sapphire.MoveGroup</group>
@@ -133,14 +133,14 @@
         <id>Sapphire.Outline.CollapseAll</id>
         <context>Sapphire.EditorPage.Outline.Header</context>
         <label>collapse all</label>
-        <image>images/actions/collapse-all.png</image>
+        <image>org/eclipse/sapphire/ui/actions/CollapseAll.png</image>
         <description>Collapses all nodes in the content outline.</description>
     </action>
     <action>
         <id>Sapphire.Outline.ExpandAll</id>
         <context>Sapphire.EditorPage.Outline.Header</context>
         <label>expand all</label>
-        <image>images/actions/expand-all.png</image>
+        <image>org/eclipse/sapphire/ui/actions/ExpandAll.png</image>
         <description>Expands all nodes in the content outline.</description>
     </action>
     <action>
@@ -148,7 +148,7 @@
         <context>Sapphire.EditorPage</context>
         <label>hide outline</label>
         <type>toggle</type>
-        <image>images/actions/hide-outline.png</image>
+        <image>org/eclipse/sapphire/ui/actions/HideOutline.png</image>
         <description>Hides the content outline that is embedded in an editor page. This is a toggle action. It can be used to show the embedded outline after it has been hidden.</description>
         <location>before:Sapphire.Help</location>
     </action>
@@ -156,14 +156,14 @@
         <id>Sapphire.Outline.ShowInSource</id>
         <context>Sapphire.EditorPage.Outline.Node</context>
         <label>show in source</label>
-        <image>images/actions/show-in-source.png</image>
+        <image>org/eclipse/sapphire/ui/actions/ShowInSource.png</image>
         <description>Shows the model element associated with a given content outline node in the corresponding source editor.</description>
     </action>
     <action>
         <id>Sapphire.Restore.Defaults</id>
         <context>Sapphire.Section</context>
         <label>restore defaults</label>
-        <image>images/actions/restore-defaults.png</image>
+        <image>org/eclipse/sapphire/ui/actions/RestoreDefaults.png</image>
         <description>Restores properties in a section to their default values. For value properties, it means setting the property to null. For list properties, it means clearing the list.</description>
     </action>
     <action>

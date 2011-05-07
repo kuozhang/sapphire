@@ -31,4 +31,38 @@ public final class SwtRendererUtil
         return null;
     }
     
+    public static ImageData toImageData( final org.eclipse.sapphire.modeling.ImageData data )
+    {
+        if( data != null )
+        {
+            return new ImageData( data.contents() );
+        }
+        
+        return null;
+    }
+
+    public static ImageData createImageData( final ClassLoader cl,
+                                             final String path )
+    {
+        return toImageData( org.eclipse.sapphire.modeling.ImageData.createFromClassLoader( cl, path ) );
+    }
+
+    public static ImageData createImageData( final Class<?> cl,
+                                             final String path )
+    {
+        return toImageData( org.eclipse.sapphire.modeling.ImageData.createFromClassLoader( cl, path ) );
+    }
+
+    public static ImageDescriptor createImageDescriptor( final ClassLoader cl,
+                                                         final String path )
+    {
+        return toImageDescriptor( org.eclipse.sapphire.modeling.ImageData.createFromClassLoader( cl, path ) );
+    }
+
+    public static ImageDescriptor createImageDescriptor( final Class<?> cl,
+                                                         final String path )
+    {
+        return toImageDescriptor( org.eclipse.sapphire.modeling.ImageData.createFromClassLoader( cl, path ) );
+    }
+
 }

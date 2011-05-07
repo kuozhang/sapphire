@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -47,6 +48,7 @@ import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -80,6 +82,15 @@ public final class PropertyEditorAssistDecorator
         SYSTEM_CONTRIBUTORS.add( new ResetActionsAssistContributor() );
         SYSTEM_CONTRIBUTORS.add( new ShowInSourceActionAssistContributor() );
     }
+    
+    private static final ImageDescriptor IMG_ASSIST
+        = SwtRendererUtil.createImageDescriptor( PropertyEditorAssistContext.class, "Assist.png" );
+    
+    private static final ImageDescriptor IMG_ASSIST_FAINT
+        = SwtRendererUtil.createImageDescriptor( PropertyEditorAssistContext.class, "AssistFaint.png" );
+    
+    private static final ImageDescriptor IMG_ASSIST_CLEAR
+        = SwtRendererUtil.createImageDescriptor( PropertyEditorAssistContext.class, "AssistClear.png" );
     
     private final SapphirePart part;
     private IModelElement element;
@@ -449,11 +460,11 @@ public final class PropertyEditorAssistDecorator
             {
                 if( this.mouseOverEditorControl )
                 {
-                    this.control.setImage( imageCache.getImage( SapphireImageCache.DECORATOR_ASSIST ) );
+                    this.control.setImage( imageCache.getImage( IMG_ASSIST ) );
                 }
                 else
                 {
-                    this.control.setImage( imageCache.getImage( SapphireImageCache.DECORATOR_ASSIST_FAINT ) );
+                    this.control.setImage( imageCache.getImage( IMG_ASSIST_FAINT ) );
                 }
             }
             
@@ -463,7 +474,7 @@ public final class PropertyEditorAssistDecorator
         else
         {
             this.control.setVisible( false );
-            this.control.setImage( imageCache.getImage( SapphireImageCache.DECORATOR_BLANK ) );
+            this.control.setImage( imageCache.getImage( IMG_ASSIST_CLEAR ) );
             this.control.setCursor( null );
         }
     }

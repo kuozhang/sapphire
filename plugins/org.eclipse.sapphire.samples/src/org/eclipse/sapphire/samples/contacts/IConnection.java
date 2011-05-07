@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.annotations.PossibleValues;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Image( path = "images/person.png" )
+@Image( path = "Contact.png" )
 @GenerateImpl
 
 public interface IConnection

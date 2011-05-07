@@ -40,7 +40,7 @@ public final class FileBugReportView
         final IBugReport report = op.getBugReport();
         
         final SapphireControl control 
-            = new SapphireControl( parent, report, "org.eclipse.sapphire.samples/sdef/EzBug.sdef!bug.report.form.style.scrolled" );
+            = new SapphireControl( parent, report, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef!bug.report.form.style.scrolled" );
 
         control.setLayoutData( gdfill() );
     }

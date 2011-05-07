@@ -19,6 +19,8 @@ import org.eclipse.sapphire.modeling.ResourceLocator;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.TypeCast;
+import org.eclipse.sapphire.ui.def.IPackageReference;
+import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -53,7 +55,38 @@ public final class StringToImageDataCast
     {
         final IModelElement element = (IModelElement) requestor.origin();
         final ResourceLocator resourceLocator = element.adapt( ResourceLocator.class );
-        final URL url = resourceLocator.find( (String) value );
+        final String path = (String) value;
+        
+        URL url = null;
+        
+        if( path != null && ! path.contains( "/" ) )
+        {
+            final ISapphireUiDef sdef = element.nearest( ISapphireUiDef.class );
+            
+            if( sdef != null )
+            {
+                for( IPackageReference p : sdef.getImportedPackages() )
+                {
+                    final String pname = p.getName().getContent();
+                    
+                    if( pname != null )
+                    {
+                        final String possibleFullPath = pname.replace( '.', '/' ) + "/" + path;
+                        url = resourceLocator.find( possibleFullPath );
+                        
+                        if( url != null )
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        
+        if( url == null )
+        {
+            url = resourceLocator.find( path );
+        }
         
         if( url != null )
         {

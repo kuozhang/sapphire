@@ -103,11 +103,11 @@ public final class CalendarEditor
         throws PartInitException
         
     {
-        IPath path = new Path( "org.eclipse.sapphire.samples/sdef/CalendarEditor.sdef/main" );
+        IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/calendar/integrated/CalendarEditor.sdef/main" );
         this.calendarDesignPage = new MasterDetailsEditorPage( this, this.modelCalendarIntegrated, path );
         addPage( 0, this.calendarDesignPage );
 
-        path = new Path( "org.eclipse.sapphire.samples/sdef/ContactsDatabaseEditor.sdef/main" );
+        path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/contacts/ContactsDatabaseEditor.sdef/main" );
         this.contactsDesignPage = new MasterDetailsEditorPage( this, this.modelContacts, path, Resources.contactsPageName );
         addPage( 1, this.contactsDesignPage );
     }

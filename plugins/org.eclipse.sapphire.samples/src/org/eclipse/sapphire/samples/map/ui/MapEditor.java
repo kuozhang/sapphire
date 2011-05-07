@@ -66,7 +66,7 @@ public class MapEditor extends SapphireEditor
 	@Override
 	protected void createDiagramPages() throws PartInitException
 	{
-		IPath path = new Path( "org.eclipse.sapphire.samples/sdef/MapEditor.sdef/diagram" );
+		IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/map/MapEditor.sdef/diagram" );
 		this.mapDiagram = new SapphireDiagramEditor(this.modelMap, path);
 		SapphireDiagramEditorInput diagramEditorInput = null;
 		try
@@ -89,7 +89,7 @@ public class MapEditor extends SapphireEditor
 	@Override
 	protected void createFormPages() throws PartInitException 
 	{
-		IPath path = new Path( "org.eclipse.sapphire.samples/sdef/MapEditor.sdef/overview" );
+		IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/map/MapEditor.sdef/overview" );
 		this.mapOverviewPage = new MasterDetailsEditorPage(this, this.modelMap, path);
         addPage(1, this.mapOverviewPage);
         setPageText(1, "Overview");

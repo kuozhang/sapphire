@@ -36,7 +36,7 @@ public final class SendContactActionHandler
         op.setContact( contact );
         
         final SapphireWizard<ISendContactOp> wizard 
-            = new SapphireWizard<ISendContactOp>( op, "org.eclipse.sapphire.samples/sdef/ContactsDatabaseEditor.sdef!SendContactWizard" );
+            = new SapphireWizard<ISendContactOp>( op, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/contacts/ContactsDatabaseEditor.sdef!SendContactWizard" );
         
         final WizardDialog dialog = new WizardDialog( context.getShell(), wizard );
         

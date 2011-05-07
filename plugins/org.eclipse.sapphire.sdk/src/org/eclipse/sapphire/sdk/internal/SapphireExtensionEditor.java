@@ -39,7 +39,7 @@ public final class SapphireExtensionEditor
         super( "org.eclipse.sapphire.sdk" );
         
         setRootModelElementType( ISapphireExtensionDef.TYPE );
-        setEditorDefinitionPath( "org.eclipse.sapphire.sdk/sdef/SapphireExtensionEditor.sdef/main" );
+        setEditorDefinitionPath( "org.eclipse.sapphire.sdk/org/eclipse/sapphire/sdk/ExtensionEditor.sdef/main" );
     }
 
     @Override

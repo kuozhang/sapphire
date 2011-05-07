@@ -27,8 +27,8 @@ public final class ContactImageService
     extends ImageService
     
 {
-    private static final ImageData IMG_PERSON = ImageData.readFromClassLoader( ContactImageService.class, "images/person.png" );
-    private static final ImageData IMG_PERSON_FADED = ImageData.readFromClassLoader( ContactImageService.class, "images/person-faded.png" );
+    private static final ImageData IMG_PERSON = ImageData.readFromClassLoader( IContact.class, "Contact.png" );
+    private static final ImageData IMG_PERSON_FADED = ImageData.readFromClassLoader( IContact.class, "ContactFaded.png" );
     
     private ModelPropertyListener listener;
     

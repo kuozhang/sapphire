@@ -430,7 +430,7 @@ externally from Java code.</p>
 final IBugReport report = op.getBugReport( true );
 
 final SapphireDialog dialog 
-    = new SapphireDialog( shell, report, "org.eclipse.sapphire.samples/sdef/EzBug.sdef!bug.report.dialog" );
+    = new SapphireDialog( shell, report, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef!bug.report.dialog" );
         
 if( dialog.open() == Dialog.OK )
 {
@@ -516,7 +516,7 @@ to use the wizard...</p>
 op.getBugReport( true );  // Force creation of the bug report.
 
 final SapphireWizard&lt;IFileBugReportOp> wizard 
-    = new SapphireWizard&lt;IFileBugReportOp>( op, "org.eclipse.sapphire.samples/sdef/EzBug.sdef!wizard" );
+    = new SapphireWizard&lt;IFileBugReportOp>( op, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef!wizard" );
         
 final WizardDialog dialog = new WizardDialog( shell, wizard );
         
@@ -620,7 +620,7 @@ file and you want to have an editor page rendered by Sapphire along with an XML 
     public BugDatabaseEditor()
     {
         super( "org.eclipse.sapphire.samples" );
-        setEditorDefinitionPath( "org.eclipse.sapphire.samples/sdef/EzBug.sdef/editor.page" );
+        setEditorDefinitionPath( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef/editor.page" );
     }
 
     @Override

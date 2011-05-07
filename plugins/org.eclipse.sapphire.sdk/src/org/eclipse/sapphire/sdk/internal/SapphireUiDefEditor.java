@@ -28,7 +28,7 @@ public final class SapphireUiDefEditor
         super( "org.eclipse.sapphire.sdk" );
         
         setRootModelElementType( ISapphireUiDef.TYPE );
-        setEditorDefinitionPath( "org.eclipse.sapphire.sdk/sdef/SapphireUiDefEditor.sdef/main" );
+        setEditorDefinitionPath( "org.eclipse.sapphire.sdk/org/eclipse/sapphire/sdk/DefinitionEditor.sdef/main" );
     }
 
 }

@@ -19,6 +19,7 @@
     <import>
         <package>org.eclipse.sapphire.ui.swt.renderer.actions</package>
         <package>org.eclipse.sapphire.ui.renderers.swt</package>
+        <package>org.eclipse.sapphire.samples</package>
         <package>org.eclipse.sapphire.samples.gallery</package>
         <package>org.eclipse.sapphire.samples.gallery.internal</package>
         <package>org.eclipse.sapphire.samples.gallery.ui</package>
@@ -945,7 +946,7 @@
                                 <action>
                                     <id>Sapphire.Sample.Message</id>
                                     <label>message</label>
-                                    <image>images/balloon-yellow.png</image>
+                                    <image>BalloonYellow.png</image>
                                     <location>after:Sapphire.Browse</location>
                                     <location>before:Sapphire.Create</location>
                                     <key-binding>SHIFT+CONTROL+ALT+m</key-binding>
@@ -965,7 +966,7 @@
                                     <id>Sapphire.Sample.Message.1</id>
                                     <impl>MessageBoxActionHandler</impl>
                                     <label>first message</label>
-                                    <image>images/balloon-yellow.png</image>
+                                    <image>BalloonYellow.png</image>
                                     <param>
                                         <name>message</name>
                                         <value>This is the first message.</value>
@@ -976,7 +977,7 @@
                                     <id>Sapphire.Sample.Message.2</id>
                                     <impl>MessageBoxActionHandler</impl>
                                     <label>second message</label>
-                                    <image>images/balloon-blue.png</image>
+                                    <image>BalloonBlue.png</image>
                                     <location>after:Sapphire.Sample.Message.1</location>
                                     <param>
                                         <name>message</name>
@@ -988,7 +989,7 @@
                                     <id>Sapphire.Sample.Message.3</id>
                                     <impl>MessageBoxActionHandler</impl>
                                     <label>third message</label>
-                                    <image>images/balloon-red.png</image>
+                                    <image>BalloonRed.png</image>
                                     <location>after:Sapphire.Sample.Message.2</location>
                                     <param>
                                         <name>message</name>
@@ -1000,7 +1001,7 @@
                                     <id>Sapphire.Sample.Message.4</id>
                                     <impl>MessageBoxActionHandler</impl>
                                     <label>fourth message</label>
-                                    <image>images/balloon-yellow.png</image>
+                                    <image>BalloonYellow.png</image>
                                     <location>after:Sapphire.Browse.Possible</location>
                                     <param>
                                         <name>message</name>
@@ -1012,7 +1013,7 @@
                                     <id>Sapphire.Sample.Message.5</id>
                                     <impl>MessageBoxActionHandler</impl>
                                     <label>fifth message</label>
-                                    <image>images/balloon-yellow.png</image>
+                                    <image>BalloonYellow.png</image>
                                     <location>after:create.2</location>
                                     <param>
                                         <name>message</name>
@@ -1033,7 +1034,7 @@
                                 <action>
                                     <id>Sapphire.Sample.Prefix</id>
                                     <label>prefix</label>
-                                    <image>images/prefix.png</image>
+                                    <image>Prefix.png</image>
                                     <type>toggle</type>
                                     <location>after:Sapphire.Browse</location>
                                     <key-binding>SHIFT+CONTROL+ALT+p</key-binding>
@@ -1072,7 +1073,7 @@
                                 <action>
                                     <id>Sapphire.Sample.Message</id>
                                     <label>message</label>
-                                    <image>images/balloon-yellow.png</image>
+                                    <image>BalloonYellow.png</image>
                                     <location>before:Sapphire.Add</location>
                                     <key-binding>SHIFT+CONTROL+ALT+m</key-binding>
                                 </action>
@@ -1081,7 +1082,7 @@
                                     <id>Sapphire.Sample.Message.Yellow</id>
                                     <impl>MessageBoxActionHandler</impl>
                                     <label>yellow message</label>
-                                    <image>images/balloon-yellow.png</image>
+                                    <image>BalloonYellow.png</image>
                                     <param>
                                         <name>message</name>
                                         <value>This is a yellow message.</value>
@@ -1092,7 +1093,7 @@
                                     <id>Sapphire.Sample.Message.Blue</id>
                                     <impl>MessageBoxActionHandler</impl>
                                     <label>blue message</label>
-                                    <image>images/balloon-blue.png</image>
+                                    <image>BalloonBlue.png</image>
                                     <param>
                                         <name>message</name>
                                         <value>This is a blue message.</value>
@@ -1103,7 +1104,7 @@
                                     <id>Sapphire.Sample.Message.Red</id>
                                     <impl>MessageBoxActionHandler</impl>
                                     <label>red message</label>
-                                    <image>images/balloon-red.png</image>
+                                    <image>BalloonRed.png</image>
                                     <param>
                                         <name>message</name>
                                         <value>This is a red message.</value>
@@ -1114,7 +1115,7 @@
                                     <id>Sapphire.Sample.Message.Yellow</id>
                                     <impl>MessageBoxActionHandler</impl>
                                     <label>yellow message</label>
-                                    <image>images/balloon-yellow.png</image>
+                                    <image>BalloonYellow.png</image>
                                     <param>
                                         <name>message</name>
                                         <value>This is a yellow message.</value>
@@ -1125,7 +1126,7 @@
                                     <id>Sapphire.Sample.Message.Blue</id>
                                     <impl>MessageBoxActionHandler</impl>
                                     <label>blue message</label>
-                                    <image>images/balloon-blue.png</image>
+                                    <image>BalloonBlue.png</image>
                                     <param>
                                         <name>message</name>
                                         <value>This is a blue message.</value>
@@ -1142,7 +1143,7 @@
                                         <id>Sapphire.Sample.Message</id>
                                         <impl>MessageBoxActionHandler</impl>
                                         <label>message</label>
-                                        <image>images/balloon-yellow.png</image>
+                                        <image>BalloonYellow.png</image>
                                         <location>after:Sapphire.Browse.Possible</location>
                                         <param>
                                             <name>message</name>
@@ -1169,7 +1170,7 @@
                                 <action>
                                     <id>Sapphire.Sample.Prefix</id>
                                     <label>prefix first</label>
-                                    <image>images/prefix.png</image>
+                                    <image>Prefix.png</image>
                                     <type>toggle</type>
                                     <location>before:Sapphire.Add</location>
                                     <key-binding>SHIFT+CONTROL+ALT+p</key-binding>
@@ -1187,7 +1188,7 @@
                                     <action>
                                         <id>Sapphire.Sample.Prefix</id>
                                         <label>prefix</label>
-                                        <image>images/prefix-mini.png</image>
+                                        <image>PrefixMini.png</image>
                                         <type>toggle</type>
                                         <location>after:Sapphire.Browse</location>
                                         <key-binding>SHIFT+CONTROL+ALT+p</key-binding>
@@ -1429,7 +1430,7 @@
                                         <margin-bottom>10</margin-bottom>
                                     </composite>
                                 </content>
-                                <image>${ TypeKind == &quot;ANNOTATION&quot; ? &quot;images/java-annotation.png&quot; : ( TypeKind == &quot;ENUM&quot; ? &quot;images/java-enum.png&quot; : ( TypeKind == &quot;INTERFACE&quot; ? &quot;images/java-interface.png&quot; : &quot;images/java-class.png&quot; ) ) }</image>
+                                <image>${ TypeKind == &quot;ANNOTATION&quot; ? &quot;JavaAnnotation.png&quot; : ( TypeKind == &quot;ENUM&quot; ? &quot;JavaEnum.png&quot; : ( TypeKind == &quot;INTERFACE&quot; ? &quot;JavaInterface.png&quot; : &quot;JavaClass.png&quot; ) ) }</image>
                             </tab>
                             <tab>
                                 <label>tab 2</label>
@@ -1569,7 +1570,7 @@
         <action>
             <id>Sapphire.Gallery.Open.Homepage</id>
             <label>Sapphire Homepage</label>
-            <image>images/web.png</image>
+            <image>Web.png</image>
             <description>Open Sapphire project homepage.</description>
             <context>Sapphire.EditorPage</context>
             <hint>

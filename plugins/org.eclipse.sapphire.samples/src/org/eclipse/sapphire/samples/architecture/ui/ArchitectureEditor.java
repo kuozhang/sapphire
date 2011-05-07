@@ -69,7 +69,7 @@ public final class ArchitectureEditor
     @Override
     protected void createDiagramPages() throws PartInitException
     {
-        IPath path = new Path( "org.eclipse.sapphire.samples/sdef/ArchitectureEditor.sdef/DiagramPage" );
+        IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/architecture/ArchitectureEditor.sdef/DiagramPage" );
         this.pageDiagram = new SapphireDiagramEditor( this.model, path );
         SapphireDiagramEditorInput diagramEditorInput = null;
         
@@ -93,7 +93,7 @@ public final class ArchitectureEditor
     @Override
     protected void createFormPages() throws PartInitException 
     {
-        IPath path = new Path( "org.eclipse.sapphire.samples/sdef/ArchitectureEditor.sdef/DetailsPage" );
+        IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/architecture/ArchitectureEditor.sdef/DetailsPage" );
         this.pageDetails = new MasterDetailsEditorPage( this, this.model, path );
         addPage( 1, this.pageDetails );
         setPageText( 1, "Details" );

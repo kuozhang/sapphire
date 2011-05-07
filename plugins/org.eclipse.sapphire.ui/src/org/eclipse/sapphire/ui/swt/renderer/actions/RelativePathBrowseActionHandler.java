@@ -27,6 +27,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -48,10 +49,10 @@ import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
-import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -69,6 +70,12 @@ public class RelativePathBrowseActionHandler
     extends SapphireBrowseActionHandler
     
 {
+    private static final ImageDescriptor IMG_FILE
+        = SwtRendererUtil.createImageDescriptor( RelativePathBrowseActionHandler.class, "File.png" );
+    
+    private static final ImageDescriptor IMG_FOLDER
+        = SwtRendererUtil.createImageDescriptor( RelativePathBrowseActionHandler.class, "Folder.png" );
+    
     public static final String ID = "Sapphire.Browse.Path.Relative";
     
     public static final String PARAM_TYPE = "type";
@@ -615,11 +622,11 @@ public class RelativePathBrowseActionHandler
         {
             if( ( (FileSystemNode) element ).getFile().isDirectory() )
             {
-                return this.context.getImageCache().getImage( SapphireImageCache.OBJECT_FOLDER );
+                return this.context.getImageCache().getImage( IMG_FOLDER );
             }
             else
             {
-                return this.context.getImageCache().getImage( SapphireImageCache.OBJECT_FILE );
+                return this.context.getImageCache().getImage( IMG_FILE );
             }
         }
     }

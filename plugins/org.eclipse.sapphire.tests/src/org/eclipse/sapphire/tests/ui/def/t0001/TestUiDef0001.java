@@ -53,7 +53,7 @@ public final class TestUiDef0001
     
     public void test()
     {
-        final ISapphireUiDef sdef = SapphireUiDefFactory.load( "org.eclipse.sapphire.tests", "sdef/ui/def/t0001/TestDefinition.sdef" );
+        final ISapphireUiDef sdef = SapphireUiDefFactory.load( "org.eclipse.sapphire.tests", "org/eclipse/sapphire/tests/ui/def/t0001/TestDefinition.sdef" );
 
         final IMasterDetailsEditorPageDef page = (IMasterDetailsEditorPageDef) sdef.getPartDef( "TestPage", false, IMasterDetailsEditorPageDef.class );
         assertNotNull( page );

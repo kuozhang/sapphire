@@ -35,7 +35,7 @@ automatically adds validation and browsing support.</p>
 <p>Consider the case where a property must hold an absolute path to a file that must exist and must
 have "jar" or "zip" extension. Such a property could be declared as follows:</p>
 
-<pre class="source-code"><code>@Type( base = IPath.class )
+<pre class="source-code"><code>@Type( base = Path.class )
 @AbsolutePath
 @ValidFileSystemResourceType( FileSystemResourceType.FILE )
 @ValidFileExtensions( { "jar", "zip" } )
@@ -43,9 +43,9 @@ have "jar" or "zip" extension. Such a property could be declared as follows:</p>
     
 ValueProperty PROP_ABSOLUTE_FILE_PATH = new ValueProperty( TYPE, "AbsoluteFilePath" );
     
-Value&lt;IPath> getAbsoluteFilePath();
+Value&lt;Path> getAbsoluteFilePath();
 void setAbsoluteFilePath( String value );
-void setAbsoluteFilePath( IPath value );</code></pre>
+void setAbsoluteFilePath( Path value );</code></pre>
 
 <p>Based on the above specification, the framework will attach validation that will make sure
 that the entered path is absolute, that it references a file, that the referenced file exists and 
@@ -65,7 +65,7 @@ browse dialog will be replaced with the standard Eclipse workspace resources dia
 these relative paths are to be resolved. Sapphire still got you covered. Just replace @AbsolutePath
 with @BasePathsProvider annotations and implement a class that returns all possible roots...</p>
 
-<pre class="source-code"><code>@Type( base = IPath.class )
+<pre class="source-code"><code>@Type( base = Path.class )
 @BasePathsProvider( CustomBasePathsProvider.class )
 @ValidFileSystemResourceType( FileSystemResourceType.FILE )
 @ValidFileExtensions( "dll" )
@@ -73,16 +73,16 @@ with @BasePathsProvider annotations and implement a class that returns all possi
     
 ValueProperty PROP_RELATIVE_FILE_PATH = new ValueProperty( TYPE, "RelativeFilePath" );
     
-Value&lt;IPath> getRelativeFilePath();
+Value&lt;Path> getRelativeFilePath();
 void setRelativeFilePath( String value );
-void setRelativeFilePath( IPath value );</code></pre>
+void setRelativeFilePath( Path value );</code></pre>
 
 <pre class="source-code"><code>public final class CustomBasePathsProvider extends BasePathsProviderImpl
 {
     @Override
-    public List&lt;IPath> getBasePaths( IModelElement element )
+    public List&lt;Path> getBasePaths( IModelElement element )
     {
-        final List&lt;IPath> roots = new ArrayList&lt;IPath>();
+        final List&lt;Path> roots = new ArrayList&lt;Path>();
         
         roots.add( new Path( "c:/Windows" ) );
         roots.add( new Path( "c:/Program Files" ) );

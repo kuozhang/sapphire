@@ -28,7 +28,7 @@ public final class ContactsDatabaseEditor
         super( "org.eclipse.sapphire.samples" );
         
         setRootModelElementType( IContactsDatabase.TYPE );
-        setEditorDefinitionPath( "org.eclipse.sapphire.samples/sdef/ContactsDatabaseEditor.sdef/main" );
+        setEditorDefinitionPath( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/contacts/ContactsDatabaseEditor.sdef/main" );
     }
     
 }

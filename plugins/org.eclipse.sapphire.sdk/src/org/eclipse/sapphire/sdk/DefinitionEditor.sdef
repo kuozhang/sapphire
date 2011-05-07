@@ -17,8 +17,9 @@
         <package>org.eclipse.sapphire.ui.def</package>
         <package>org.eclipse.sapphire.ui.form.editors.masterdetails.def</package>
         <package>org.eclipse.sapphire.ui.diagram.def</package>
+        <package>org.eclipse.sapphire.sdk</package>
         <package>org.eclipse.sapphire.sdk.internal</package>
-        <definition>sdef/SapphireEditorCommon.sdef</definition>
+        <definition>org/eclipse/sapphire/sdk/Common.sdef</definition>
     </import>
     
     <editor-page>
@@ -36,7 +37,7 @@
             </node>
             <node>
                 <label>documentation</label>
-                <image>images/editors/sdef/documentation.gif</image>
+                <image>Documentation.gif</image>
                 <section>
                     <content>
                         <label>Define named documentation content. Reference the same documentation content from multiple parts.</label>
@@ -51,7 +52,7 @@
                     <property>DocumentationDefs</property>
                     <case>
                         <label>${ Id == null ? "&lt;documentation&gt;" : Id }</label>
-                        <image>images/editors/sdef/documentation.gif</image>
+                        <image>Documentation.gif</image>
                         <section>
                             <label>documentation</label>
                             <content>
@@ -88,7 +89,7 @@
     <node>
         <id>DocumentationNode</id>
         <label>documentation</label>
-        <image>images/editors/sdef/documentation.gif</image>
+        <image>Documentation.gif</image>
         <section>
             <content>
                 <with>

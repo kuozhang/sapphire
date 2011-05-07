@@ -28,7 +28,7 @@ public final class SapphireGallerySampleEditor
         super( "org.eclipse.sapphire.samples" );
         
         setRootModelElementType( IGallery.TYPE );
-        setEditorDefinitionPath( "org.eclipse.sapphire.samples/sdef/GalleryEditor.sdef/main" );
+        setEditorDefinitionPath( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/gallery/GalleryEditor.sdef/main" );
     }
     
 }

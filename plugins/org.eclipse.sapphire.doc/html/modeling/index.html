@@ -696,7 +696,7 @@ influence the image.</p>
 
 <p>This example attaches a static image. The first segment in the path must be a bundle id.</p>
 
-<pre class="source-code"><code>@Image( small = "org.eclipse.sapphire.samples/images/person.png" )</code></pre> 
+<pre class="source-code"><code>@Image( small = "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/contacts/Contact.png" )</code></pre> 
 
 <p><b>Example B:</b></p>
 
@@ -713,8 +713,8 @@ import org.eclipse.sapphire.modeling.annotations.*;
 
 public class AttendeeImageProvider extends ImageProvider
 {
-    private static final String IMG_PERSON = SapphireSamplesPlugin.PLUGIN_ID + "/images/person.png";
-    private static final String IMG_PERSON_FADED = SapphireSamplesPlugin.PLUGIN_ID + "/images/person-faded.png";
+    private static final String IMG_PERSON = SapphireSamplesPlugin.PLUGIN_ID + "/org/eclipse/sapphire/samples/contacts/Contact.png";
+    private static final String IMG_PERSON_FADED = SapphireSamplesPlugin.PLUGIN_ID + "/org/eclipse/sapphire/samples/contacts/ContactFaded.png";
 
     public String getSmallImagePath( IModelElement element )
     {

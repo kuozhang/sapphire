@@ -24,7 +24,7 @@ import org.eclipse.sapphire.ui.def.internal.LocationHintBinding;
  */
 
 @Label( standard = "before location hint" )
-@Image( path = "images/objects/location-hint-before.png" )
+@Image( path = "ActionLocationHintBefore.png" )
 @GenerateImpl
 
 public interface ISapphireActionLocationHintBefore

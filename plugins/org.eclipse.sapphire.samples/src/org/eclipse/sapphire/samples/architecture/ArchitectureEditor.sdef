@@ -68,7 +68,7 @@
                 </page>
                 <page>
                     <label>dependencies</label>
-                    <image>${ Dependencies.Size == 0 ? &quot;images/dependencies-none.png&quot; : ( Dependencies.Size == 1 ? &quot;images/dependencies-one.png&quot; :  &quot;images/dependencies-multiple.png&quot; ) }</image>
+                    <image>${ Dependencies.Size == 0 ? &quot;DependenciesNone.png&quot; : ( Dependencies.Size == 1 ? &quot;DependenciesOne.png&quot; :  &quot;DependenciesMultiple.png&quot; ) }</image>
                     <content>
                         <property-editor>
                             <property>Dependencies</property>
@@ -162,7 +162,7 @@
                             </page>
                             <page>
                                 <label>dependencies</label>
-                                <image>${ Dependencies.Size == 0 ? &quot;images/dependencies-none.png&quot; : ( Dependencies.Size == 1 ? &quot;images/dependencies-one.png&quot; :  &quot;images/dependencies-multiple.png&quot; ) }</image>
+                                <image>${ Dependencies.Size == 0 ? &quot;DependenciesNone.png&quot; : ( Dependencies.Size == 1 ? &quot;DependenciesOne.png&quot; :  &quot;DependenciesMultiple.png&quot; ) }</image>
                                 <content>
                                     <property-editor>
                                         <property>Dependencies</property>
@@ -184,7 +184,7 @@
                                 </content>
                             </page>
                         </properties-view>
-                        <image>${ Dependencies.Size == 0 ? &quot;images/component-leaf.png&quot; : &quot;images/component.png&quot; }</image>
+                        <image>${ Dependencies.Size == 0 ? &quot;ComponentLeaf.png&quot; : &quot;Component.png&quot; }</image>
                     </case>
                 </node-factory>
                 <section>
@@ -197,7 +197,7 @@
                         </action-link>
                     </content>
                 </section>
-                <image>images/components.png</image>
+                <image>Components.png</image>
             </node>
         </root-node>
         <initial-selection>Components</initial-selection>

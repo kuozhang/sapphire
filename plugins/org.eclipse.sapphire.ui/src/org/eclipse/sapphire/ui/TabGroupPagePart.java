@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -28,6 +29,9 @@ public final class TabGroupPagePart
     extends SapphirePartContainer
     
 {
+    private static final ImageData IMG_TAB_GROUP_PAGE
+        = ImageData.createFromClassLoader( TabGroupPagePart.class, "TabGroupPage.png" );
+    
     private FunctionResult labelFunctionResult;
     private ImageManager imageManager;
 
@@ -54,7 +58,7 @@ public final class TabGroupPagePart
             }
         );
         
-        this.imageManager = new ImageManager( element, def.getImage().getContent(), Literal.create( SapphireImageCache.IMG_OBJECT_LEAF_NODE ) );
+        this.imageManager = new ImageManager( element, def.getImage().getContent(), Literal.create( IMG_TAB_GROUP_PAGE ) );
     }
 
     @Override

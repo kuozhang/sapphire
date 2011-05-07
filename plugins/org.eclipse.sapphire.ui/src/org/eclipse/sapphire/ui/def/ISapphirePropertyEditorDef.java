@@ -33,7 +33,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  */
 
 @Label( standard = "property editor" )
-@Image( path = "images/objects/property-editor.gif" )
+@Image( path = "PropertyEditorDef.gif" )
 @GenerateImpl
 
 public interface ISapphirePropertyEditorDef

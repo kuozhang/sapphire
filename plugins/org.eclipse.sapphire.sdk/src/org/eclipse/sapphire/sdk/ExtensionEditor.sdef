@@ -15,7 +15,7 @@
 
     <import>
         <package>org.eclipse.sapphire.sdk.internal</package>
-        <definition>sdef/SapphireEditorCommon.sdef</definition>
+        <definition>org/eclipse/sapphire/sdk/Common.sdef</definition>
     </import>
 
     <editor-page>

@@ -41,7 +41,7 @@ public class FileBugReportHandler3
         final IFileBugReportOp op = IFileBugReportOp.TYPE.instantiate();
         
         final SapphireWizard<IFileBugReportOp> wizard 
-            = new SapphireWizard<IFileBugReportOp>( op, "org.eclipse.sapphire.samples/sdef/EzBug.sdef!wizard" );
+            = new SapphireWizard<IFileBugReportOp>( op, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef!wizard" );
         
         final WizardDialog dialog = new WizardDialog( window.getShell(), wizard );
         
