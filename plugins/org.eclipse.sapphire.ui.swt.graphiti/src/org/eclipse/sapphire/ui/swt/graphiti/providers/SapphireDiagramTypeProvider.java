@@ -8,7 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
- *    Konstantin Komissarchik - [342098] Separate modeling dependency on org.eclipse.core.runtime
+ *    Konstantin Komissarchik - [342098] Separate dependency on org.eclipse.core.runtime (part 1)
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.graphiti.providers;
