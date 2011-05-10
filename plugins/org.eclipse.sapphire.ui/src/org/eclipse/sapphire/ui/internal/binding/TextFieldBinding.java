@@ -11,9 +11,12 @@
 
 package org.eclipse.sapphire.ui.internal.binding;
 
+import static org.eclipse.sapphire.modeling.util.MiscUtil.EMPTY_STRING;
+import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
+
 import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueNormalizationService;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -34,6 +37,7 @@ public class TextFieldBinding
 {
     private Text text;
     private String textContent;
+    private ValueNormalizationService valueNormalizationService;
     private DelayedTasksExecutor.Task onTextContentModifyTask;
     
     public TextFieldBinding( final SapphirePropertyEditor editor,
@@ -76,6 +80,8 @@ public class TextFieldBinding
                 }
             }
         );
+        
+        this.valueNormalizationService = editor.getLocalModelElement().service( editor.getProperty(), ValueNormalizationService.class );
     }
     
     protected void updateTextContent( final String textContent )
@@ -96,24 +102,12 @@ public class TextFieldBinding
     @Override
     protected void doUpdateTarget()
     {
-        final Value<?> value = (Value<?>) getPropertyValue();
-        final String existingValue = this.text.getText();
+        final String oldValue = this.valueNormalizationService.normalize( this.text.getText() );
+        final String newValue = this.valueNormalizationService.normalize( ( (Value<?>) getPropertyValue() ).getText( false ) );
         
-        if( value == null )
+        if( ! equal( oldValue, newValue ) )
         {
-            if( ! existingValue.equals( MiscUtil.EMPTY_STRING ) )
-            {
-                this.text.setText( MiscUtil.EMPTY_STRING );
-            }
-        }
-        else
-        {
-            final String newValue = value.getText( false );
-            
-            if( ! existingValue.equals( newValue ) )
-            {
-                this.text.setText( newValue == null ? MiscUtil.EMPTY_STRING : newValue );
-            }
+            this.text.setText( newValue == null ? EMPTY_STRING : newValue );
         }
     }
     

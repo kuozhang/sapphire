@@ -393,6 +393,63 @@
                         </content>
                     </section>
                 </node>
+                <node>
+                    <label>whitespace</label>
+                    <property>ValuePropertiesGallery</property>
+                    <section>
+                        <content>
+                            <with>
+                                <path>WhitespaceHandlingGallery</path>
+                                <default-panel>
+                                    <content>
+                                        <property-editor>
+                                            <property>Preserved</property>
+                                            <hint>
+                                                <name>show.label</name>
+                                                <value>false</value>
+                                            </hint>
+                                            <related-content>
+                                                <html>
+                                                    <fragment></fragment>
+                                                    <content>&lt;p&gt;@Whitespace( trim = false, collapse = false )&lt;/p&gt;
+&lt;p&gt;Preserve all whitespace, including leading and trailing.&lt;/p&gt;</content>
+                                                </html>
+                                            </related-content>
+                                        </property-editor>
+                                        <property-editor>
+                                            <property>Trimmed</property>
+                                            <hint>
+                                                <name>show.label</name>
+                                                <value>false</value>
+                                            </hint>
+                                            <related-content>
+                                                <html>
+                                                    <fragment></fragment>
+                                                    <content>&lt;p&gt;@Whitespace( trim = true, collapse = false )&lt;/p&gt;
+&lt;p&gt;Remove leading and trailing whitespace. This is the default treatment.&lt;/p&gt;</content>
+                                                </html>
+                                            </related-content>
+                                        </property-editor>
+                                        <property-editor>
+                                            <property>Collapsed</property>
+                                            <hint>
+                                                <name>show.label</name>
+                                                <value>false</value>
+                                            </hint>
+                                            <related-content>
+                                                <html>
+                                                    <fragment></fragment>
+                                                    <content>&lt;p&gt;@Whitespace( trim = true, collapse = true )&lt;/p&gt;
+&lt;p&gt;Remove leading and trailing whitespace. Further, replace all sequences of one or more whitespace characters with a single space character.&lt;/p&gt;</content>
+                                                </html>
+                                            </related-content>
+                                        </property-editor>
+                                    </content>
+                                </default-panel>
+                            </with>
+                        </content>
+                    </section>
+                </node>
             </node>
             <node>
                 <label>element properties</label>

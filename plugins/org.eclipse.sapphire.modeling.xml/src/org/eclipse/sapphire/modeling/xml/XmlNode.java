@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
-import static org.eclipse.sapphire.modeling.util.MiscUtil.collapseWhitespace;
-
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,27 +100,7 @@ public abstract class XmlNode
         return this.domNode.hashCode();
     }
     
-    public final String getText()
-    {
-        return getText( false );
-    }
-    
-    public final String getText( final boolean removeExtraWhitespace )
-    {
-        // The leading and trailing spaces are always removed. Internal spaces are only
-        // collapsed if requested.
-        
-        String text = getTextInternal().trim();
-        
-        if( removeExtraWhitespace )
-        {
-            return collapseWhitespace( text );
-        }
-        
-        return text;
-    }
-    
-    protected abstract String getTextInternal();
+    public abstract String getText();
     
     public abstract void setText( String text );
     

@@ -38,7 +38,7 @@ public class XmlComment
     }
     
     @Override
-    protected String getTextInternal()
+    public String getText()
     {
         final String text = getDomNode().getData();
         

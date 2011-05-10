@@ -27,7 +27,6 @@ public final class StandardXmlValueBindingImpl
     
 {
     private XmlPath path;
-    private boolean collapseWhitespace;
     private boolean treatExistanceAsValue;
     private String valueWhenPresent;
     private String valueWhenNotPresent;
@@ -58,7 +57,6 @@ public final class StandardXmlValueBindingImpl
                 if( bindingAnnotation != null )
                 {
                     this.path = new XmlPath( bindingAnnotation.path(), xmlNamespaceResolver );
-                    this.collapseWhitespace = bindingAnnotation.collapseWhitespace();
                     this.removeNodeOnSetIfNull = bindingAnnotation.removeNodeOnSetIfNull();
                     
                     if( bindingAnnotation.mapExistanceToValue().length() > 0 )
@@ -142,11 +140,11 @@ public final class StandardXmlValueBindingImpl
             }
             else if( this.path == null )
             {
-                value = element.getText( this.collapseWhitespace );
+                value = element.getText();
             }
             else
             {
-                value = element.getChildNodeText( this.path, this.collapseWhitespace );
+                value = element.getChildNodeText( this.path );
             }
         }
         

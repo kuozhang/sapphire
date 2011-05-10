@@ -36,6 +36,7 @@
     <li><a href="#project-relative">Project Relative Paths</a></li>
     <li><a href="#image-handling">Image Handling</a></li>
     <li><a href="#required-annotation">Required Annotation</a></li>
+    <li><a href="#whitespace-handling">Whitespace Handling and Value Normalization</a></li>
   </ol>
   <li><a href="#ui">UI</a></li>
   <ol type="A">
@@ -327,6 +328,77 @@ void setName( String name );</code></pre>
 ElementProperty PROP_PRIMARY_OCCUPATION = new ElementProperty( TYPE, "PrimaryOccupation" );
     
 ModelElementHandle&lt;IOccupation> getPrimaryOccupation();</code></pre>
+
+<h2><a name="whitespace-handling">Whitespace Handling and Value Normalization</a></h2>
+
+<p>Use the new @Whitespace annotation on value properties to control exactly how whitespace 
+in property values is normalized. By default, leading and trailing whitespace is removed.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">Preserve all whitespace, including leading and trailing.</p>
+
+<pre class="source-code"><code>@Whitespace( trim = false )
+
+ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
+
+Value&lt;String> getText();
+void setName( String value );</code></pre>
+
+<p style="margin-left: 20px;">Remove leading and trailing whitespace. Further, replace all sequences
+of one or more whitespace characters with a single space character.</p>
+
+<pre class="source-code"><code>@Whitespace( trim = true, collapse = true )
+
+ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
+
+Value&lt;String> getText();
+void setName( String value );</code></pre>
+
+<p>Implement custom value normalization via ValueNormalizationService.</p> 
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>@Service( impl = CustomValueNormalizationService.class )
+
+ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
+
+Value&lt;String> getText();
+void setName( String value );</code></pre>
+
+<pre class="source-code"><code>public class CustomValueNormalizationService extends ValueNormalizationService
+{
+    public String normalize( String str )
+    {
+        ...
+    }
+}</code></pre>
+
+<p>Extend StandardValueNormalizationService to add custom normalization logic to what is provided by the system.</p> 
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>@Whitespace( trim = true, collapse = true )
+@Service( impl = CustomValueNormalizationService.class )
+
+ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
+
+Value&lt;String> getText();
+void setName( String value );</code></pre>
+
+<pre class="source-code"><code>public class CustomValueNormalizationService extends StandardValueNormalizationService
+{
+    public String normalize( String str )
+    {
+        str = super.normalize( str );
+        
+        ...
+    }
+}</code></pre>
+
+
+
+
 
 <h2><a name="html">HTML Content Presentation</a></h2>
 

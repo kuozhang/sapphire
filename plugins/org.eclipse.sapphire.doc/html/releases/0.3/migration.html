@@ -34,6 +34,7 @@ to 0.3 release. Only changes from the previous milestone are covered.</p>
   <li><a href="#services">Services</a></li>
   <li><a href="#validation">Validation</a></li>
   <li><a href="#enablement">Enablement</a></li>
+  <li><a href="#whitespace">Whitespace Handling</a></li>
   <li><a href="#java">Java Support</a></li>
   <li><a href="#html">HTML Content Presentation</a></li>
   <li><a href="#related-content">Related Content</a></li>
@@ -620,6 +621,28 @@ system or at the level of an individual property using the @Service annotation.<
 ideal. A better solution would be to not override the state() method with a refresh on every invocation.
 To do that, the service would need to listen on changes to data used in the compute() method and call
 refresh() method when that data changes.</p>
+    </td>
+  </tr>
+</table>
+
+<h2><a name="whitespace">Whitespace Handling</a></h2>
+
+<p>Whitespace handling has been made more flexible via the new @Whitespace annotation and the 
+ValueNormalizationService API. The collapseWhitespace attribute on @XmlValueBinding annotation
+is no longer supported.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@XmlValueBinding( <font color="#888888">path = "description",</font> collapseWhitespace = true )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@XmlValueBinding( <font color="#888888">path = "description"</font> )
+@Whitespace( collapse = true )</code></pre>
     </td>
   </tr>
 </table>

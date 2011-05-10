@@ -7,12 +7,12 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [333782] Problems in whitespace handling
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.util.internal;
 
-import static org.eclipse.sapphire.modeling.util.MiscUtil.collapseWhitespace;
-
+import org.eclipse.sapphire.modeling.StandardValueNormalizationService;
 import org.eclipse.sapphire.modeling.docsys.BoldPart;
 import org.eclipse.sapphire.modeling.docsys.CodePart;
 import org.eclipse.sapphire.modeling.docsys.DocumentationContent;
@@ -69,7 +69,7 @@ public class DocumentationUtil {
         	if (startsWithSpace && buf.toString().endsWith(BOLD_END)) {
         		buf.append(' ');
         	}
-            buf.append(collapseSpaces ? collapseWhitespace(str) : str);
+            buf.append(collapseSpaces ? StandardValueNormalizationService.collapse(str) : str);
             flags.endsInSpace = endsWithSpace;
         } else if (part instanceof LineBreakPart) {
             buf.append(NEW_LINE);

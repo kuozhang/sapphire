@@ -39,6 +39,7 @@ import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.Transient;
 import org.eclipse.sapphire.modeling.TransientProperty;
 import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueNormalizationService;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.DerivedValue;
@@ -527,7 +528,7 @@ public final class GenerateImplProcessor
         
         rb.appendEmptyLine();
         
-        rb.append( "this.#1 = new #2( this, #3, #3.encodeKeywords( val ) );\n" +
+        rb.append( "this.#1 = new #2( this, #3, service( #3, ValueNormalizationService.class ).normalize( #3.encodeKeywords( val ) ) );\n" +
                    "this.#1.init();\n" +
                    "\n" +
                    "final boolean propertyEnabledStatusChanged = refreshPropertyEnabledStatus( #3 );\n" +
@@ -548,6 +549,8 @@ public final class GenerateImplProcessor
         
         rb.closeBlock();
         rb.closeBlock();
+        
+        implClassModel.addImport( ValueNormalizationService.class );
         
         // Define the getter method.
         
@@ -605,6 +608,7 @@ public final class GenerateImplProcessor
                        "    }\n" +
                        "    \n" +
                        "    value = #1.decodeKeywords( value );\n" + 
+                       "    value = service( #1, ValueNormalizationService.class ).normalize( value );\n" +
                        "    \n" +
                        "    refresh( #1, true );\n" +
                        "    \n" +

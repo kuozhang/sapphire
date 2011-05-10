@@ -20,6 +20,7 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.annotations.Whitespace;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
@@ -78,7 +79,8 @@ public interface IRelatedContentGallery
     
     @Label( standard = "description" )
     @LongString
-    @XmlValueBinding( path = "description", collapseWhitespace = true )
+    @Whitespace( collapse = true )
+    @XmlValueBinding( path = "description" )
     
     ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );
     

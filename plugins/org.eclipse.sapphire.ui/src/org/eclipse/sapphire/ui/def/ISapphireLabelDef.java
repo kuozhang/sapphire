@@ -19,6 +19,7 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.annotations.Whitespace;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
@@ -44,7 +45,8 @@ public interface ISapphireLabelDef
     @Required
     @LongString
     @Localizable
-    @XmlValueBinding( path = "", collapseWhitespace = true )
+    @Whitespace( collapse = true )
+    @XmlValueBinding( path = "" )
     
     ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
     

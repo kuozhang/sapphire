@@ -99,6 +99,11 @@
         <factory>org.eclipse.sapphire.modeling.internal.FunctionBasedEnablementService$Factory</factory>
         <id>Sapphire.EnablementService.FunctionBased</id>
     </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ValueNormalizationService</type>
+        <factory>org.eclipse.sapphire.modeling.internal.StandardValueNormalizationServiceFactory</factory>
+        <id>Sapphire.ValueNormalizationService</id>
+    </model-property-service>
     <value-serialization-service>
         <type>java.lang.Enum</type>
         <impl>org.eclipse.sapphire.modeling.serialization.internal.EnumSerializationService</impl>

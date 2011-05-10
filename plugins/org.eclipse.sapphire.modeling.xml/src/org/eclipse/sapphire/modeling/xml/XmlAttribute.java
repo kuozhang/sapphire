@@ -53,7 +53,7 @@ public final class XmlAttribute
     }
     
     @Override
-    protected String getTextInternal()
+    public String getText()
     {
         final String text = getDomNode().getValue();
         

@@ -32,7 +32,7 @@ public final class XmlMetaComment
     
     public String getName()
     {
-        final String text = super.getTextInternal();
+        final String text = super.getText();
         final int colon = text.indexOf( ':' );
         
         if( colon == -1 )
@@ -54,9 +54,9 @@ public final class XmlMetaComment
     }
 
     @Override
-    protected String getTextInternal()
+    public String getText()
     {
-        final String text = super.getTextInternal();
+        final String text = super.getText();
         final int colon = text.indexOf( ':' );
         
         if( colon == -1 || colon + 1 == text.length() )

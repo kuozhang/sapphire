@@ -19,6 +19,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.annotations.Whitespace;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
@@ -76,7 +77,8 @@ public interface ISapphireActionSystemPartDef
     @LongString
     @Localizable
     @Label( standard = "description" )
-    @XmlValueBinding( path = "description", collapseWhitespace = true )
+    @Whitespace( collapse = true )
+    @XmlValueBinding( path = "description" )
     
     ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );
     

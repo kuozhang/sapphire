@@ -124,6 +124,15 @@ public interface IGallery
     
     ICustomValueGallery getCustomValueGallery();
     
+    // *** ValuePropertiesGallery ***
+    
+    @Type( base = IValuePropertiesGallery.class )
+    @XmlBinding( path = "value-properties-gallery" )
+
+    ImpliedElementProperty PROP_VALUE_PROPERTIES_GALLERY = new ImpliedElementProperty( TYPE, "ValuePropertiesGallery" );
+    
+    IValuePropertiesGallery getValuePropertiesGallery();
+    
     // *** BrowseSupportGallery ***
     
     @Type( base = IBrowseSupportGallery.class )

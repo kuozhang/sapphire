@@ -27,9 +27,10 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
-import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.annotations.Whitespace;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -67,7 +68,8 @@ public interface IModelElementServiceDef
     @LongString
     @Label( standard = "description" )
     @Localizable
-    @XmlValueBinding( path = "description", collapseWhitespace = true )
+    @Whitespace( collapse = true )
+    @XmlValueBinding( path = "description" )
     
     @Documentation( content = "Provides information about the model element service. The " +
                               "description should be in the form of properly capitalized and punctuated sentences." )

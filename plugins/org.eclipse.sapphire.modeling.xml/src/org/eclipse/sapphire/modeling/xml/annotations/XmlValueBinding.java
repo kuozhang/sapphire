@@ -28,16 +28,6 @@ public @interface XmlValueBinding
     String path();
     
     /**
-     * Controls whether the whitespace found inside the text content read from XML
-     * is collapsed. The behavior is similar to HTML. Multiple whitespace characters 
-     * between words will be replaced with a single space character. The default 
-     * behavior does remove the leading and trailing whitespace, but the 
-     * internal whitespace is left unchanged.
-     */
-    
-    boolean collapseWhitespace() default false;
-    
-    /**
      * Instructs the XML binding system to treat the existence of the node 
      * specified by the path as the property value. This overrides the default behavior
      * of using the text content of the node at the end of the path for property

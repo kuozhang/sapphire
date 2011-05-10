@@ -211,7 +211,7 @@ public final class XmlElement
     }
     
     @Override
-    protected String getTextInternal()
+    public String getText()
     {
         final NodeList nodes = getDomNode().getChildNodes();
    
@@ -757,17 +757,11 @@ public final class XmlElement
     
     public String getChildNodeText( final XmlPath path )
     {
-        return getChildNodeText( path, false );
-    }
-    
-    public String getChildNodeText( final XmlPath path,
-                                    final boolean removeExtraWhitespace )
-    {
         final XmlNode node = getChildNode( path, false );
         
         if( node != null )
         {
-            return node.getText( removeExtraWhitespace );
+            return node.getText();
         }
         else
         {
@@ -778,12 +772,6 @@ public final class XmlElement
     public String getChildNodeText( final String path )
     {
         return getChildNodeText( new XmlPath( path ) );
-    }
-
-    public String getChildNodeText( final String path,
-                                    final boolean removeExtraWhitespace )
-    {
-        return getChildNodeText( new XmlPath( path ), removeExtraWhitespace );
     }
     
     public void setChildNodeText( final XmlPath path,
