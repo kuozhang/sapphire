@@ -36,8 +36,8 @@ public class ErrorIndicatorImageProvider extends AbstractImageProvider
 	protected void addAvailableImages() 
 	{
 		// register the path for each image identifier
-		addImageFilePath(IMG_ERROR_DECORATOR, "org/eclipse/sapphire/ui/swt/graphiti/Error.png"); //$NON-NLS-1$
-		addImageFilePath(IMG_WARNING_DECORATOR, "org/eclipse/sapphire/ui/swt/graphiti/Warning.png"); //$NON-NLS-1$
+		addImageFilePath(IMG_ERROR_DECORATOR, "icons/error-indicator.png"); //$NON-NLS-1$
+		addImageFilePath(IMG_WARNING_DECORATOR, "icons/warning.png"); //$NON-NLS-1$
 	}
 
 }
