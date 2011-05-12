@@ -84,22 +84,30 @@ public final class XmlElementDefinitionByReference extends XmlElementDefinition
         return this.contentModelName;
     }
     
+    private XmlElementDefinition getElementInGroup(final QName childElementName) {
+		final XmlElementDefinition definition = getSchema().getElement(getName().getLocalPart());
+		// First check to see if this reference is abstract
+		if (definition != null && definition.isAbstract()) {
+			// Then see if the childElement specify the substitutionGroup
+			List<XmlElementDefinition> list = definition.getSubstitutionList();
+	        if (list != null && list.size() > 0) {
+	        	for (XmlElementDefinition subGroup : list) {
+	        		if (subGroup.getName().equals(childElementName)) {
+	        			return subGroup;
+	        		}
+	        	}
+	        }
+		}
+		return null;
+    }
+    
     @Override
 	public XmlContentModel findChildElementContentModel(QName childElementName) {
 		final XmlContentModel model = super.findChildElementContentModel(childElementName);
 		if (model == null) {
-			// first check to see if this reference is abstract
-			final XmlElementDefinition definition = getSchema().getElement(getName().getLocalPart());
-			if (definition.isAbstract()) {
-				// Then see if the childElement specify the substitutionGroup
-				List<XmlElementDefinition> list = definition.getSubstitutionList();
-		        if (list != null && list.size() > 0) {
-		        	for (XmlElementDefinition subGroup : list) {
-		        		if (subGroup.getName().equals(childElementName)) {
-		        			return subGroup.getContentModel();
-		        		}
-		        	}
-		        }
+			XmlElementDefinition subGroup = getElementInGroup(childElementName);
+			if (subGroup != null) {
+    			return subGroup.getContentModel();
 			}
 		}
 		return model;
@@ -110,18 +118,9 @@ public final class XmlElementDefinitionByReference extends XmlElementDefinition
 		boolean isSame = super.sameElementName(qname);
 		
 		if (!isSame) {
-			// first check to see if this reference is abstract
-			final XmlElementDefinition definition = getSchema().getElement(getName().getLocalPart());
-			if (definition != null && definition.isAbstract()) {
-				// Then see if the childElement specify the substitutionGroup
-				List<XmlElementDefinition> list = definition.getSubstitutionList();
-		        if (list != null && list.size() > 0) {
-		        	for (XmlElementDefinition subGroup : list) {
-		        		if (subGroup.getName().equals(qname)) {
-		        			return true;
-		        		}
-		        	}
-		        }
+			XmlElementDefinition subGroup = getElementInGroup(qname);
+			if (subGroup != null) {
+    			return true;
 			}
 		}
 		return isSame;
