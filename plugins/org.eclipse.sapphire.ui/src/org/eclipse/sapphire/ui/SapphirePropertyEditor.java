@@ -43,6 +43,7 @@ import org.eclipse.sapphire.ui.def.ISapphirePropertyEditorDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.BooleanPropertyEditorRenderer;
+import org.eclipse.sapphire.ui.renderers.swt.CheckBoxListPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.DefaultListPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.DefaultValuePropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.EnumPropertyEditorRenderer;
@@ -98,6 +99,7 @@ public final class SapphirePropertyEditor
         FACTORIES.add( new EnumPropertyEditorRenderer.Factory() );
         FACTORIES.add( new NamedValuesPropertyEditorRenderer.Factory() );
         FACTORIES.add( new DefaultValuePropertyEditorRenderer.Factory() );
+        FACTORIES.add( new CheckBoxListPropertyEditorRenderer.EnumFactory() );
         FACTORIES.add( new SlushBucketPropertyEditor.Factory() );
         FACTORIES.add( new DefaultListPropertyEditorRenderer.Factory() );
     }

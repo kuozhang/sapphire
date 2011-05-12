@@ -35,6 +35,11 @@
         <id>Sapphire.PossibleValuesService</id>
     </model-property-service>
     <model-property-service>
+        <type>org.eclipse.sapphire.modeling.PossibleValuesService</type>
+        <factory>org.eclipse.sapphire.modeling.internal.EnumPossibleValuesService$Factory</factory>
+        <id>Sapphire.PossibleValuesService.Enum</id>
+    </model-property-service>
+    <model-property-service>
         <type>org.eclipse.sapphire.modeling.ReferenceService</type>
         <factory>org.eclipse.sapphire.modeling.internal.ReferenceServiceFactory</factory>
         <id>Sapphire.ReferenceService</id>
@@ -79,16 +84,16 @@
         <factory>org.eclipse.sapphire.modeling.validation.internal.PossibleValuesValidationService$Factory</factory>
         <id>Sapphire.PossibleValuesValidationService</id>
     </model-property-service>
-    <model-property-service>
-        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
-        <factory>org.eclipse.sapphire.modeling.validation.internal.NumericRangeValidationService$Factory</factory>
-        <id>Sapphire.NumericRangeValidationService</id>
-    </model-property-service>
     <model-element-service>
         <type>org.eclipse.sapphire.modeling.ImageService</type>
         <factory>org.eclipse.sapphire.modeling.internal.StaticImageService$Factory</factory>
         <id>Sapphire.ImageService.Static</id>
     </model-element-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
+        <factory>org.eclipse.sapphire.modeling.validation.internal.NumericRangeValidationService$Factory</factory>
+        <id>Sapphire.NumericRangeValidationService</id>
+    </model-property-service>
     <model-property-service>
         <type>org.eclipse.sapphire.modeling.EnablementService</type>
         <factory>org.eclipse.sapphire.modeling.internal.ParentBasedEnablementService$Factory</factory>

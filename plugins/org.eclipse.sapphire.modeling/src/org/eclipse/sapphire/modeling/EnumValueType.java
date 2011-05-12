@@ -39,6 +39,11 @@ public final class EnumValueType
         this.localizationService = LocalizationSystem.service( enumClass );
     }
     
+    public Class<?> getEnumTypeClass()
+    {
+        return this.enumClass;
+    }
+    
     @Override
     public <A extends Annotation> A getAnnotation( final Class<A> type,
                                                    final boolean localOnly )

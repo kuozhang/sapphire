@@ -11,10 +11,9 @@
 
 package org.eclipse.sapphire.modeling;
 
-import java.util.Set;
+import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.sapphire.modeling.util.NLS;
 
@@ -27,13 +26,11 @@ public abstract class PossibleValuesService
     extends ModelPropertyService
     
 {
-    private final Set<Listener> listeners = new CopyOnWriteArraySet<Listener>();
-    
-    public final SortedSet<String> getPossibleValues()
+    public final SortedSet<String> values()
     {
         final TreeSet<String> values = new TreeSet<String>();
         fillPossibleValues( values );
-        return values;
+        return Collections.unmodifiableSortedSet( values );
     }
     
     protected abstract void fillPossibleValues( final SortedSet<String> values );
@@ -53,54 +50,40 @@ public abstract class PossibleValuesService
         return true;
     }
     
-    public final void addListener( final Listener listener )
+    /**
+     * Returns the label to use when presenting a given value to the user. The default implementation 
+     * returns the value itself. If an unrecognized value is encountered, the implementation should
+     * return the value itself.
+     *   
+     * @param value the value that will be presented to the user
+     * @return the label to use when presenting a given value to the user
+     */
+    
+    public String label( final String value )
     {
-        if( listener == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        this.listeners.add( listener );
+        return value;
     }
     
-    public final void removeListener( final Listener listener )
+    /**
+     * Returns the image to use when presenting a given value to the user. The default implementation
+     * returns null. If an unrecognized value is encountered, the implementation should
+     * return null.
+     * 
+     * @param value the value that will be presented to the user
+     * @return the image to use when presenting a given value to the user
+     */
+    
+    public ImageData image( final String value )
     {
-        if( listener == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        this.listeners.remove( listener );
+        return null;
     }
     
-    protected final void notifyListeners( final PossibleValuesChangedEvent event )
+    public static class PossibleValuesChangedEvent extends Event
     {
-        if( event == null )
+        public PossibleValuesChangedEvent( final ModelService service )
         {
-            throw new IllegalArgumentException();
+            super( service );
         }
-        
-        for( Listener listener : this.listeners )
-        {
-            try
-            {
-                listener.handlePossibleValuesChangedEvent( event );
-            }
-            catch( Exception e )
-            {
-                LoggingService.log( e );
-            }
-        }
-    }
-    
-    public static abstract class Listener
-    {
-        public abstract void handlePossibleValuesChangedEvent( PossibleValuesChangedEvent event );
-    }
-    
-    public static class PossibleValuesChangedEvent
-    {
-        // This is a placeholder for now, to allow for API growth.
     }
     
     private static final class Resources extends NLS

@@ -45,7 +45,7 @@ public final class PossibleValuesProviderBrowseActionHandler
 
         if( valuesProvider != null )
         {
-            final Collection<String> valuesList = valuesProvider.getPossibleValues();
+            final Collection<String> valuesList = valuesProvider.values();
             final String[] valuesArray = valuesList.toArray( new String[ valuesList.size() ] );
             
             final ElementListSelectionDialog dialog 

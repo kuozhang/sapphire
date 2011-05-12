@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementDisposedEvent;
 import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelPath;
@@ -27,7 +28,6 @@ import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.PossibleValuesService;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
@@ -233,7 +233,7 @@ public final class PossibleValuesServiceFactory
             if( ! this.values.equals( newValues ) )
             {
                 this.values = Collections.unmodifiableSet( newValues );
-                notifyListeners( new PossibleValuesChangedEvent() );
+                notifyListeners( new PossibleValuesChangedEvent( this ) );
             }
         }
     }

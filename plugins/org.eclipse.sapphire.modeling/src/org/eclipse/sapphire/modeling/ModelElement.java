@@ -108,12 +108,15 @@ public abstract class ModelElement
                 {
                     possibleValuesProvider.addListener
                     (
-                        new PossibleValuesService.Listener()
+                        new ModelService.Listener()
                         {
                             @Override
-                            public void handlePossibleValuesChangedEvent( final PossibleValuesService.PossibleValuesChangedEvent event )
+                            public void handleEvent( final Event event )
                             {
-                                refresh( property );
+                                if( event instanceof PossibleValuesService.PossibleValuesChangedEvent )
+                                {
+                                    refresh( property );
+                                }
                             }
                         }
                     );

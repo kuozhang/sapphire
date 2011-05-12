@@ -49,7 +49,7 @@ public final class PossibleValuesValidationService
             
             if( valuesProvider != null )
             {
-                Collection<String> values = valuesProvider.getPossibleValues();
+                Collection<String> values = valuesProvider.values();
                 
                 for( String v : values )
                 {

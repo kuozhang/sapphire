@@ -35,6 +35,7 @@
     <li><a href="#folding">Folding XML Element Binding</a></li>
     <li><a href="#project-relative">Project Relative Paths</a></li>
     <li><a href="#image-handling">Image Handling</a></li>
+    <li><a href="#possible-values">Possible Values Service Improvements</a></li>
     <li><a href="#required-annotation">Required Annotation</a></li>
     <li><a href="#whitespace-handling">Whitespace Handling and Value Normalization</a></li>
   </ol>
@@ -50,6 +51,7 @@
     <li><a href="#with">Improved With Directive Presentation</a></li>
     <li><a href="#master-details-element-properties">Element Properties in Master Details Content Outline</a></li>
     <li><a href="#action-style-hint">Action Style Hint</a></li>
+    <li><a href="#checkbox-list-for-enum">Checkbox List as Default Enum List Presentation</a></li>
   </ol>
 </ol>
  
@@ -307,6 +309,94 @@ public class AttendeeImageService extends ImageService
         element().removeListener( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
     }
 }</code></pre>
+
+<p>Use @Image annotation on enumeration items. The images will be shown where appropriate, such when a
+list of enumeration values is presented using a checkbox list.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public enum DispatcherEvent
+{
+    @Label( standard = "forward" )
+    @Image( path = "CircleBlue.png" )
+    
+    FORWARD,
+
+    @Label( standard = "include" )
+    @Image( path = "CircleCyan.png" )
+    
+    INCLUDE,
+
+    @Label( standard = "request" )
+    @Image( path = "CircleGreen.png" )
+    
+    REQUEST,
+
+    @Label( standard = "error" )
+    @Image( path = "CircleRed.png" )
+    
+    ERROR
+}
+
+public interface IDispatcherEventRef extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( IDispatcherEventRef.class );
+    
+    // *** DispatcherEvent ***
+    
+    @Type( base = DispatcherEvent.class )
+    @Required
+    @NoDuplicates
+    
+    ValueProperty PROP_DISPATCHER_EVENT = new ValueProperty( TYPE, "DispatcherEvent" );
+    
+    Value&lt;DispatcherEvent> getDispatcherEvent();
+    void setDispatcherEvent( String value );
+    void setDispatcherEvent( DispatcherEvent value );
+}
+
+public interface IFilterMapping extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( IFilterMapping .class );
+
+    // *** DispatcherEvents ***
+    
+    @Type( base = IDispatcherEventRef.class )
+    
+    ListProperty PROP_DISPATCHER_EVENTS = new ListProperty( TYPE, "DispatcherEvents" );
+    
+    ModelElementList&lt;IDispatcherEventRef> getDispatcherEvents();
+
+    ...
+
+}</code></pre>
+
+<p style="margin-left: 20px;"><img src="images/checkbox-list-with-images.png"/></p>
+
+<h2><a name="possible-values">Possible Values Service Improvements</a></h2>
+
+<p>Provide custom labels and images for values returned by the possible values service. Currently, only the
+checkbox list property editor takes advantage of this, but other possible values service consumers will be
+similarly enhanced over time.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class CustomPossibleValuesService extends PossibleValuesService
+{
+    ...
+    
+    public String label( String value )
+    {
+        ...
+    }
+    
+    public ImageData image( String value )
+    {
+        ...
+    }
+}</code></pre>
+
+<p style="margin-left: 20px;"><img src="images/checkbox-list-with-images.png"/></p>
 
 <h2><a name="required-annotation">Required Annotation</a></h2>
 
@@ -732,6 +822,62 @@ on element properties. The syntax and semantics are identical to how list proper
 <font color="#888888">&lt;/action&gt;</font></code></pre>
 
 <p style="margin-left: 20px;"><img src="images/action-style.png"/></p>
+
+<h2><a name="checkbox-list-for-enum">Checkbox List as Default Enum List Presentation</a></h2>
+
+<p>The checkbox list property editor is now the default presentation for enum lists. An enum list
+is defined as follows:</p>
+
+<ol>
+  <li>A list property with exactly one possible child element type.</li>
+  <li>The child element type has exactly one property and it is a value property.</li>
+  <li>The value property is of enum type and has @NoDuplicates annotation.</li>
+</ol>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public enum DispatcherEvent
+{
+    FORWARD,
+    INCLUDE,
+    REQUEST,
+    ERROR
+}
+
+public interface IDispatcherEventRef extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( IDispatcherEventRef.class );
+    
+    // *** DispatcherEvent ***
+    
+    @Type( base = DispatcherEvent.class )
+    @Required
+    @NoDuplicates
+    
+    ValueProperty PROP_DISPATCHER_EVENT = new ValueProperty( TYPE, "DispatcherEvent" );
+    
+    Value&lt;DispatcherEvent> getDispatcherEvent();
+    void setDispatcherEvent( String value );
+    void setDispatcherEvent( DispatcherEvent value );
+}
+
+public interface IFilterMapping extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( IFilterMapping .class );
+
+    // *** DispatcherEvents ***
+    
+    @Type( base = IDispatcherEventRef.class )
+    
+    ListProperty PROP_DISPATCHER_EVENTS = new ListProperty( TYPE, "DispatcherEvents" );
+    
+    ModelElementList&lt;IDispatcherEventRef> getDispatcherEvents();
+
+    ...
+
+}</code></pre>
+
+<p style="margin-left: 20px;"><img src="images/checkbox-list-with-no-images.png"/></p>
 
 <br/><br/>
 

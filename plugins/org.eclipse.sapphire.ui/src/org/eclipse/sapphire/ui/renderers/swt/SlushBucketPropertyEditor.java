@@ -43,6 +43,8 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.ModelService;
+import org.eclipse.sapphire.modeling.ModelService.Event;
 import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
@@ -142,7 +144,7 @@ public final class SlushBucketPropertyEditor
                 
                 try
                 {
-                    allValues = SlushBucketPropertyEditor.this.valuesProvider.getPossibleValues();
+                    allValues = SlushBucketPropertyEditor.this.valuesProvider.values();
                 }
                 catch( Exception e )
                 {
@@ -241,12 +243,15 @@ public final class SlushBucketPropertyEditor
             }
         );
         
-        this.valuesProviderListener = new PossibleValuesService.Listener()
+        this.valuesProviderListener = new ModelService.Listener()
         {
             @Override
-            public void handlePossibleValuesChangedEvent( final PossibleValuesService.PossibleValuesChangedEvent event )
+            public void handleEvent( final Event event )
             {
-                SlushBucketPropertyEditor.this.sourceTableViewer.refresh();
+                if( event instanceof PossibleValuesService.PossibleValuesChangedEvent )
+                {
+                    SlushBucketPropertyEditor.this.sourceTableViewer.refresh();
+                }
             }
         };
         
@@ -359,10 +364,7 @@ public final class SlushBucketPropertyEditor
         }
     }
     
-    public static final class Factory
-    
-        extends PropertyEditorRendererFactory
-        
+    public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
         public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )

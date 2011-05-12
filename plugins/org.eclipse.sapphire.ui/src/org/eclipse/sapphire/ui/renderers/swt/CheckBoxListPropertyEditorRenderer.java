@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
+import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_HEADER;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL_ABOVE;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
@@ -45,8 +46,10 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ImageService;
 import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
@@ -55,6 +58,8 @@ import org.eclipse.sapphire.modeling.ModelService.Event;
 import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -123,12 +128,13 @@ public class CheckBoxListPropertyEditorRenderer
             throw new IllegalStateException();
         }
         
-        final PossibleValuesService possibleValuesProvider = element.service( this.memberProperty, PossibleValuesService.class );
+        final PossibleValuesService possibleValuesService = element.service( this.memberProperty, PossibleValuesService.class );
         
         // Create Controls
         
         final boolean showLabelAbove = part.getRenderingHint( HINT_SHOW_LABEL_ABOVE, false );
         final boolean showLabelInline = part.getRenderingHint( HINT_SHOW_LABEL, ! showLabelAbove );
+        
         Label label = null;
         
         final int baseIndent = part.getLeftMarginHint() + 9;
@@ -163,7 +169,6 @@ public class CheckBoxListPropertyEditorRenderer
         
         this.tableViewer = CheckboxTableViewer.newCheckList( tableComposite, SWT.BORDER | SWT.FULL_SELECTION );
         this.table = this.tableViewer.getTable();
-        this.table.setHeaderVisible( true );
         
         final TableViewerColumn viewerColumn = new TableViewerColumn( this.tableViewer, SWT.NONE );
         final TableColumn column = viewerColumn.getColumn();
@@ -225,7 +230,7 @@ public class CheckBoxListPropertyEditorRenderer
                     }
                     else
                     {
-                        entry = new Entry( value, element );
+                        entry = new Entry( possibleValuesService, value, element );
                     }
                     
                     this.entries.add( entry );
@@ -238,7 +243,7 @@ public class CheckBoxListPropertyEditorRenderer
                 
                 try
                 {
-                    possibleValues = possibleValuesProvider.getPossibleValues();
+                    possibleValues = possibleValuesService.values();
                 }
                 catch( Exception e )
                 {
@@ -261,7 +266,7 @@ public class CheckBoxListPropertyEditorRenderer
                             }
                             else
                             {
-                                entry = new Entry( value, null );
+                                entry = new Entry( possibleValuesService, value, null );
                             }
 
                             this.entries.add( entry );
@@ -300,7 +305,7 @@ public class CheckBoxListPropertyEditorRenderer
             @Override
             public String getText( final Object element )
             {
-                return ( (Entry) element ).text();
+                return ( (Entry) element ).label();
             }
 
             @Override
@@ -333,7 +338,11 @@ public class CheckBoxListPropertyEditorRenderer
         
         this.tableViewer.setCheckStateProvider( checkStateProvider );
         
-        makeTableSortable( this.tableViewer, Collections.<TableColumn,Comparator<Object>>singletonMap( column, comparator ) );
+        if( part.getRenderingHint( HINT_SHOW_HEADER, true ) == true )
+        {
+            this.table.setHeaderVisible( true );
+            makeTableSortable( this.tableViewer, Collections.<TableColumn,Comparator<Object>>singletonMap( column, comparator ) );
+        }
         
         this.tableViewer.addCheckStateListener
         (
@@ -433,14 +442,19 @@ public class CheckBoxListPropertyEditorRenderer
     
     public final class Entry
     {
+        private final PossibleValuesService possibleValuesService;
+        private final LocalizationService localizationService;
         private String value;
         private IModelElement element;
         private ImageService imageService;
         private ModelService.Listener listener;
         
-        public Entry( final String value,
+        public Entry( final PossibleValuesService possibleValuesService,
+                      final String value,
                       final IModelElement element )
         {
+            this.possibleValuesService = possibleValuesService;
+            this.localizationService = getPart().getDefinition().adapt( LocalizationService.class );
             this.value = value;
             this.element = element;
             
@@ -467,16 +481,36 @@ public class CheckBoxListPropertyEditorRenderer
             }
         }
         
-        public String text()
+        public String label()
         {
-            String text = this.value;
-            
-            if( text.length() == 0 )
+            String label = null;
+        
+            if( this.value.length() == 0 )
             {
-                text = Resources.emptyIndicator;
+                label = Resources.emptyIndicator;
+            }
+            else
+            {
+                try
+                {
+                    label = this.possibleValuesService.label( this.value );
+                }
+                catch( Exception e )
+                {
+                    LoggingService.log( e );
+                }
+                
+                if( label == null )
+                {
+                    label = this.value;
+                }
+                else if( ! label.equals( this.value ) )
+                {
+                    label = this.localizationService.transform( label, CapitalizationType.FIRST_WORD_ONLY, false );
+                }
             }
             
-            return text;
+            return label;
         }
 
         public Image image()
@@ -484,9 +518,16 @@ public class CheckBoxListPropertyEditorRenderer
             final SapphireImageCache cache = getPart().getImageCache();
             final Image image;
             
-            if( this.element == null )
+            if( this.element == null || this.imageService == null )
             {
-                image = cache.getImage( getMemberType() );
+                ImageData imageData = this.possibleValuesService.image( this.value );
+                
+                if( imageData == null )
+                {
+                    imageData = getMemberType().image();
+                }
+                
+                image = cache.getImage( imageData );
             }
             else if( this.imageService != null )
             {
@@ -559,10 +600,7 @@ public class CheckBoxListPropertyEditorRenderer
         }
     }
     
-    public static final class Factory
-    
-        extends PropertyEditorRendererFactory
-        
+    public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
         public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
@@ -578,10 +616,48 @@ public class CheckBoxListPropertyEditorRenderer
         }
     }
     
-    private static final class Resources
+    public static final class EnumFactory extends PropertyEditorRendererFactory
+    {
+        @Override
+        public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
+        {
+            final ModelProperty property = propertyEditorDefinition.getProperty();
+            
+            if( property instanceof ListProperty )
+            {
+                final ListProperty listProperty = (ListProperty) property;
+                
+                if( listProperty.getAllPossibleTypes().size() == 1 )
+                {
+                    final ModelElementType memberType = listProperty.getType();
+                    final List<ModelProperty> properties = memberType.getProperties();
+                    
+                    if( properties.size() == 1 )
+                    {
+                        final ModelProperty memberProperty = properties.get( 0 );
+                        
+                        if( memberProperty instanceof ValueProperty &&
+                            memberProperty.hasAnnotation( NoDuplicates.class ) &&
+                            Enum.class.isAssignableFrom( memberProperty.getTypeClass() ) )
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
     
-        extends NLS
+            return false;
+        }
+        
+        @Override
+        public PropertyEditorRenderer create( final SapphireRenderingContext context,
+                                              final SapphirePropertyEditor part )
+        {
+            return new CheckBoxListPropertyEditorRenderer( context, part );
+        }
+    }
     
+    private static final class Resources extends NLS
     {
         public static String emptyIndicator;
         
