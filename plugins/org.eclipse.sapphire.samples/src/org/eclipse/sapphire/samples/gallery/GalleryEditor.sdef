@@ -11,6 +11,7 @@
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Greg Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar
+ *    Greg Amerson - [343972] Support image in editor page header
  ******************************************************************************
 -->
 
@@ -39,6 +40,7 @@
     <editor-page>
         <id>main</id>
         <page-header-text>sapphire gallery</page-header-text>
+        <page-header-image>SapphireFile.png</page-header-image>
         <initial-selection>simple values</initial-selection>
         <documentation>
             <title>Sapphire Gallery</title>

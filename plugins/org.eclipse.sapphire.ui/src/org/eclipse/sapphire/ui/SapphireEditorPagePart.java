@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Greg Amerson - [343972] Support image in editor page header
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -15,6 +16,9 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.help.IContext;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.def.IEditorPageDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
@@ -32,6 +36,31 @@ public class SapphireEditorPagePart
     
 {
     private PropertiesViewContributionPart propertiesViewContributionPart;
+    private FunctionResult imageFunctionResult;
+    
+    @Override
+    protected void init() 
+    {
+        super.init();
+        
+        final IModelElement element = getModelElement();
+        final IEditorPageDef def = getDefinition();
+        
+        this.imageFunctionResult = initExpression
+        (
+            element,
+            def.getPageHeaderImage().getContent(),
+            ImageData.class,
+            null,
+            new Runnable()
+            {
+                public void run()
+                {
+                    notifyListeners( new ImageChangedEvent( SapphireEditorPagePart.this ) );
+                }
+            }
+        );
+    }
     
     @Override
     public IEditorPageDef getDefinition()
@@ -83,6 +112,22 @@ public class SapphireEditorPagePart
         {
             this.propertiesViewContributionPart = propertiesViewContributionPart;
             notifyListeners( new PropertiesViewContributionChangedEvent( this, this.propertiesViewContributionPart ) );
+        }
+    }
+    
+    public ImageData getPageHeaderImage()
+    {
+        return (ImageData) this.imageFunctionResult.value();
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        if( this.imageFunctionResult != null )
+        {
+            this.imageFunctionResult.dispose();
         }
     }
     

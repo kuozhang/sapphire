@@ -1,6 +1,6 @@
 <!-- 
  ******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Greg Amerson - [343972] Support image in editor page header
  ******************************************************************************
 -->
 
@@ -25,6 +26,7 @@
     <editor-page>
         <id>main</id>
         <page-header-text>Sapphire UI Definition</page-header-text>
+        <page-header-image>SapphireFile.png</page-header-image>
         <root-node>
             <node>
                 <label>imports</label>
@@ -991,6 +993,7 @@
                     <include>PartId</include>
                     <property-editor>PageName</property-editor>
                     <property-editor>PageHeaderText</property-editor>
+                    <property-editor>PageHeaderImage</property-editor>
                     <property-editor>OutlineHeaderText</property-editor>
                     <property-editor>InitialSelectionPath</property-editor>
                 </content>
