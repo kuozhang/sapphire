@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.internal.CompositeMarginLeftRightDefaultValueProvider;
@@ -82,7 +83,7 @@ public interface ISapphireCompositeDef
     @Type( base = Integer.class )
     @Label( standard = "left margin" )
     @XmlBinding( path = "margin-left" )
-    @DefaultValue( service = CompositeMarginLeftRightDefaultValueProvider.class )
+    @Service( impl = CompositeMarginLeftRightDefaultValueProvider.class )
     @DependsOn( "MarginWidth" )
     
     ValueProperty PROP_MARGIN_LEFT = new ValueProperty( TYPE, "MarginLeft" );
@@ -96,7 +97,7 @@ public interface ISapphireCompositeDef
     @Type( base = Integer.class )
     @Label( standard = "right margin" )
     @XmlBinding( path = "margin-right" )
-    @DefaultValue( service = CompositeMarginLeftRightDefaultValueProvider.class )
+    @Service( impl = CompositeMarginLeftRightDefaultValueProvider.class )
     @DependsOn( "MarginWidth" )
     
     ValueProperty PROP_MARGIN_RIGHT = new ValueProperty( TYPE, "MarginRight" );
@@ -110,7 +111,7 @@ public interface ISapphireCompositeDef
     @Type( base = Integer.class )
     @Label( standard = "top margin" )
     @XmlBinding( path = "margin-top" )
-    @DefaultValue( service = CompositeMarginTopBottomDefaultValueProvider.class )
+    @Service( impl = CompositeMarginTopBottomDefaultValueProvider.class )
     @DependsOn( "MarginHeight" )
     
     ValueProperty PROP_MARGIN_TOP = new ValueProperty( TYPE, "MarginTop" );
@@ -124,7 +125,7 @@ public interface ISapphireCompositeDef
     @Type( base = Integer.class )
     @Label( standard = "bottom margin" )
     @XmlBinding( path = "margin-bottom" )
-    @DefaultValue( service = CompositeMarginTopBottomDefaultValueProvider.class )
+    @Service( impl = CompositeMarginTopBottomDefaultValueProvider.class )
     @DependsOn( "MarginHeight" )
     
     ValueProperty PROP_MARGIN_BOTTOM = new ValueProperty( TYPE, "MarginBottom" );
@@ -138,7 +139,7 @@ public interface ISapphireCompositeDef
     @Type( base = Integer.class )
     @Label( standard = "margin width" )
     @XmlBinding( path = "margin-width" )
-    @DefaultValue( service = CompositeMarginWidthHeightDefaultValueProvider.class )
+    @Service( impl = CompositeMarginWidthHeightDefaultValueProvider.class )
     @DependsOn( { "ScrollVertically", "ScrollHorizontally" } )
     
     ValueProperty PROP_MARGIN_WIDTH = new ValueProperty( TYPE, "MarginWidth" );
@@ -152,7 +153,7 @@ public interface ISapphireCompositeDef
     @Type( base = Integer.class )
     @Label( standard = "margin height" )
     @XmlBinding( path = "margin-height" )
-    @DefaultValue( service = CompositeMarginWidthHeightDefaultValueProvider.class )
+    @Service( impl = CompositeMarginWidthHeightDefaultValueProvider.class )
     @DependsOn( { "ScrollVertically", "ScrollHorizontally" } )
     
     ValueProperty PROP_MARGIN_HEIGHT = new ValueProperty( TYPE, "MarginHeight" );

@@ -797,6 +797,11 @@ public final class XmlElement
         setChildNodeText( new XmlPath( path ), text, removeIfNullOrEmpty );
     }
     
+    public void removeChildNode( final String path )
+    {
+        removeChildNode( new XmlPath( path ) );
+    }
+    
     public void removeChildNode( final XmlPath path )
     {
         removeChildNode( this, path, 0 );

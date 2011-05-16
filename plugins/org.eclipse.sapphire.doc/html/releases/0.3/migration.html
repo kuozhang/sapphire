@@ -454,6 +454,31 @@ of what the reference resolves to.</p>
 }</code></pre>
     </td>
   </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@Reference( target = IComponent.class, service = ComponentReferenceService.class )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@Reference( target = IComponent.class )
+@Service( impl = ComponentReferenceService.class )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@PossibleValues( service = CustomPossibleValuesService.class )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@Service( impl = CustomPossibleValuesService.class )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@DefaultValue( service = CustomDefaultValueService.class )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@Service( impl = CustomDefaultValueService.class )</code></pre>
+    </td>
+  </tr>
 </table>
 
 <h2><a name="validation">Validation</a></h2>

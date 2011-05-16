@@ -16,19 +16,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.eclipse.sapphire.modeling.ReferenceService;
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Retention( RetentionPolicy.RUNTIME )
-@Target( { ElementType.FIELD } )
+@Target( ElementType.FIELD )
 
 public @interface Reference
 {
     Class<?> target();
-    Class<? extends ReferenceService> service() default ReferenceService.class;
-    String[] params() default {};
-    boolean mustResolve() default true;
 }

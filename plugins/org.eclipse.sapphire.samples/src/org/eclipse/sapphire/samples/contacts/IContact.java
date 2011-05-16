@@ -27,7 +27,6 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -68,7 +67,7 @@ public interface IContact extends IModelElement
     
     @Label( standard = "category" )
     @DefaultValue( text = "Personal" )
-    @PossibleValues( service = ContactCategoryValuesProvider.class )
+    @Service( impl = ContactCategoryValuesProvider.class )
     @XmlBinding( path = "%category" )
     @Documentation( content = "This would be the help content for the category property." )
 

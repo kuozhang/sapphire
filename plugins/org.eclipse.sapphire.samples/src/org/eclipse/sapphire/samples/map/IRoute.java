@@ -18,8 +18,9 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.samples.map.internal.DestinationReferenceService;
 
@@ -35,7 +36,8 @@ public interface IRoute extends IModelElement
 	
 	// *** FromDestination ***
 	
-	@Reference( target = IDestination.class, service = DestinationReferenceService.class )
+	@Reference( target = IDestination.class )
+	@Service( impl = DestinationReferenceService.class )
 	@XmlBinding( path = "from-destination")
 	@Required
 	@Label(standard = "from destination")
@@ -47,7 +49,8 @@ public interface IRoute extends IModelElement
 	
 	// *** ToDestination ***
 	
-	@Reference( target = IDestination.class, service = DestinationReferenceService.class )
+	@Reference( target = IDestination.class )
+	@Service( impl = DestinationReferenceService.class )
 	@XmlBinding( path = "to-destination")
 	@Required
 	@Label(standard = "to destination")

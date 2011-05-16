@@ -703,6 +703,26 @@ public final class MasterDetailsContentNode
         return null;
     }
     
+    public MasterDetailsContentNode findNodeByModelElement( final IModelElement element )
+    {
+        if( getModelElement() == element )
+        {
+            return this;
+        }
+
+        for( MasterDetailsContentNode child : getChildNodes() )
+        {
+            final MasterDetailsContentNode res = child.findNodeByModelElement( element );
+            
+            if( res != null )
+            {
+                return res;
+            }
+        }
+        
+        return null;
+    }
+    
     public PropertiesViewContributionPart getPropertiesViewContribution()
     {
         if( this.propertiesViewContributionManager == null )

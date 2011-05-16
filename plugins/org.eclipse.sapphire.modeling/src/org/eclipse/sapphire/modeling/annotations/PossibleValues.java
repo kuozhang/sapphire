@@ -16,7 +16,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.modeling.Status;
 
 /**
@@ -24,7 +23,7 @@ import org.eclipse.sapphire.modeling.Status;
  */
 
 @Retention( RetentionPolicy.RUNTIME )
-@Target( { ElementType.FIELD } )
+@Target( ElementType.FIELD )
 
 public @interface PossibleValues
 {
@@ -42,6 +41,4 @@ public @interface PossibleValues
     String invalidValueMessage() default "";
     Status.Severity invalidValueSeverity() default Status.Severity.ERROR;
     boolean caseSensitive() default true;
-    Class<? extends PossibleValuesService> service() default PossibleValuesService.class;
-    String[] params() default {};
 }

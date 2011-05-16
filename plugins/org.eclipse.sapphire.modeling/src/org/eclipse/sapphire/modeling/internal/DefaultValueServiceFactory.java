@@ -16,7 +16,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 
@@ -47,23 +46,7 @@ public final class DefaultValueServiceFactory
         
         if( defaultValueAnnotation != null )
         {
-            if( ! defaultValueAnnotation.service().equals( DefaultValueService.class ) )
-            {
-                try
-                {
-                    svc = defaultValueAnnotation.service().newInstance();
-                    svc.init( element, property, defaultValueAnnotation.params() );
-                }
-                catch( Exception e )
-                {
-                    LoggingService.log( e );
-                    svc = null;
-                }
-            }
-            else
-            {
-                svc = new StaticDefaultValueService( defaultValueAnnotation.text() );
-            }
+            svc = new StaticDefaultValueService( defaultValueAnnotation.text() );
         }
         
         if( svc == null )

@@ -174,4 +174,20 @@
   </extension>
 
   
+  <!-- 
+    ***********
+    * Java EE *
+    ***********
+  -->
+  
+  <extension point="org.eclipse.ui.editors">
+    <editor
+      class="org.eclipse.sapphire.samples.jee.web.ui.internal.WebAppConfigEditor"
+      default="true"
+      filenames="web.xml"
+      id="org.eclipse.sapphire.samples.jee.web.ui.internal.WebAppConfigEditor"
+      name="Web Application Configuration Editor"/>
+  </extension>
+  
+
 </plugin>

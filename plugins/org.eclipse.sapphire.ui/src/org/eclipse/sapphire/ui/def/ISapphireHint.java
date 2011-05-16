@@ -16,12 +16,13 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.annotations.Service;
+import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.internal.SapphireHintValueDefaultValueService;
 import org.eclipse.sapphire.ui.def.internal.SapphireHintValuePossibleValuesService;
@@ -90,8 +91,7 @@ public interface ISapphireHint
     @Required
     @XmlBinding( path = "value" )
     @DependsOn( value = "Name" )
-    @DefaultValue( service = SapphireHintValueDefaultValueService.class )
-    @PossibleValues( service = SapphireHintValuePossibleValuesService.class )
+    @Services( { @Service( impl = SapphireHintValueDefaultValueService.class ), @Service( impl = SapphireHintValuePossibleValuesService.class ) } )
     
     ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
     

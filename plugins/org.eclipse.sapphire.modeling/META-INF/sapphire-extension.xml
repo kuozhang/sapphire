@@ -40,11 +40,6 @@
         <id>Sapphire.PossibleValuesService.Enum</id>
     </model-property-service>
     <model-property-service>
-        <type>org.eclipse.sapphire.modeling.ReferenceService</type>
-        <factory>org.eclipse.sapphire.modeling.internal.ReferenceServiceFactory</factory>
-        <id>Sapphire.ReferenceService</id>
-    </model-property-service>
-    <model-property-service>
         <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
         <factory>org.eclipse.sapphire.modeling.validation.internal.CountConstraintValidationService$Factory</factory>
         <id>Sapphire.CountConstraintValidationService</id>

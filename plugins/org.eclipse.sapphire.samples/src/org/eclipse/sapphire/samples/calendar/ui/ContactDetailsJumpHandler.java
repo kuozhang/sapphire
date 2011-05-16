@@ -81,7 +81,7 @@ public final class ContactDetailsJumpHandler
             {
                 final MasterDetailsEditorPage contactsFormPage = (MasterDetailsEditorPage) editor.getPage( "Contacts" );
                 final MasterDetailsContentOutline content = contactsFormPage.getContentTree();
-                final MasterDetailsContentNode contactNode = findContactNode( content.getRoot(), contact );
+                final MasterDetailsContentNode contactNode = content.getRoot().findNodeByModelElement( contact );
                 
                 if( contactNode != null )
                 {
@@ -90,27 +90,6 @@ public final class ContactDetailsJumpHandler
                 }
             }
         }
-    }
-
-    private static MasterDetailsContentNode findContactNode( final MasterDetailsContentNode node,
-                                                             final IContact contact )
-    {
-        if( node.getModelElement() == contact )
-        {
-            return node;
-        }
-
-        for( MasterDetailsContentNode child : node.getChildNodes() )
-        {
-            final MasterDetailsContentNode res = findContactNode( child, contact );
-            
-            if( res != null )
-            {
-                return res;
-            }
-        }
-        
-        return null;
     }
     
 }

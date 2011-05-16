@@ -107,7 +107,7 @@ public final class JavaTypeValidationService
                 {
                     if( ! this.isClassOk )
                     {
-                        final String label = this.property.getLabel( false, CapitalizationType.NO_CAPS, false );
+                        final String label = this.property.getLabel( true, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.classNotAllowed, val, label );
                         return Status.createErrorStatus( msg );
                     }
@@ -118,7 +118,7 @@ public final class JavaTypeValidationService
                 {
                     if( ! this.isAbstractClassOk )
                     {
-                        final String label = this.property.getLabel( false, CapitalizationType.NO_CAPS, false );
+                        final String label = this.property.getLabel( true, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.abstractClassNotAllowed, val, label );
                         return Status.createErrorStatus( msg );
                     }
@@ -129,7 +129,7 @@ public final class JavaTypeValidationService
                 {
                     if( ! this.isInterfaceOk )
                     {
-                        final String label = this.property.getLabel( false, CapitalizationType.NO_CAPS, false );
+                        final String label = this.property.getLabel( true, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.interfaceNotAllowed, val, label );
                         return Status.createErrorStatus( msg );
                     }
@@ -140,7 +140,7 @@ public final class JavaTypeValidationService
                 {
                     if( ! this.isAnnotationOk )
                     {
-                        final String label = this.property.getLabel( false, CapitalizationType.NO_CAPS, false );
+                        final String label = this.property.getLabel( true, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.annotationNotAllowed, val, label );
                         return Status.createErrorStatus( msg );
                     }
@@ -151,7 +151,7 @@ public final class JavaTypeValidationService
                 {
                     if( ! this.isEnumOk )
                     {
-                        final String label = this.property.getLabel( false, CapitalizationType.NO_CAPS, false );
+                        final String label = this.property.getLabel( true, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.enumNotAllowed, val, label );
                         return Status.createErrorStatus( msg );
                     }

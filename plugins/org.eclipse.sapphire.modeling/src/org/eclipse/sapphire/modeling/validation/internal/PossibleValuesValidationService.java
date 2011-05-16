@@ -15,16 +15,16 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
 import org.eclipse.sapphire.modeling.PossibleValuesService;
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.modeling.ReferenceService;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
@@ -83,8 +83,12 @@ public final class PossibleValuesValidationService
                 if( ! found )
                 {
                     final Status.Severity severity = valuesProvider.getInvalidValueSeverity( valueString );
-                    final String message = valuesProvider.getInvalidValueMessage( valueString );
-                    return Status.createStatus( severity, message );
+                    
+                    if( severity != Status.Severity.OK )
+                    {
+                        final String message = valuesProvider.getInvalidValueMessage( valueString );
+                        return Status.createStatus( severity, message );
+                    }
                 }
             }
         }
@@ -101,9 +105,7 @@ public final class PossibleValuesValidationService
         {
             if( property instanceof ValueProperty )
             {
-                final PossibleValues annotation = property.getAnnotation( PossibleValues.class );
-                
-                if( annotation != null && ( annotation.service() != PossibleValuesService.class || annotation.invalidValueSeverity() != Status.Severity.OK ) )
+                if( element.service( property, PossibleValuesService.class ) != null && element.service( property, ReferenceService.class ) == null )
                 {
                     return true;
                 }

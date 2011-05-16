@@ -18,7 +18,6 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementDisposedEvent;
 import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelPath;
@@ -60,21 +59,7 @@ public final class PossibleValuesServiceFactory
         
         if( annotation != null )
         {
-            if( ! annotation.service().equals( PossibleValuesService.class ) )
-            {
-                try
-                {
-                    svc = annotation.service().newInstance();
-                    svc.init( element, property, annotation.params() );
-                }
-                catch( Exception e )
-                {
-                    LoggingService.log( e );
-                    svc = null;
-                }
-            }
-            
-            if( svc == null && annotation.values().length > 0 )
+            if( annotation.values().length > 0 )
             {
                 svc = new PossibleValuesServiceStatic( annotation.values(), annotation.invalidValueMessage(),
                                                        annotation.invalidValueSeverity(), annotation.caseSensitive() );

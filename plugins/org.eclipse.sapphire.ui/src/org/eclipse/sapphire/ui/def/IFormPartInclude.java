@@ -18,9 +18,11 @@ import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.FoldingXmlValueBindingImpl;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
@@ -43,10 +45,12 @@ public interface IFormPartInclude
     
     // *** Part ***
 
-    @Reference( target = IFormPartDef.class, service = FormPartIncludeReferenceService.class )
+    @Reference( target = IFormPartDef.class )
+    @Service( impl = FormPartIncludeReferenceService.class )
     @Label( standard = "part" )
-    @PossibleValues( property = "/PartDefs/Id")
+    @PossibleValues( property = "/PartDefs/Id" )
     @Required
+    @MustExist
     @CustomXmlValueBinding( impl = FoldingXmlValueBindingImpl.class, params = "part" )
     
     ValueProperty PROP_PART = new ValueProperty( TYPE, "Part" );
