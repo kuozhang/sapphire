@@ -64,6 +64,40 @@
                         </content>
                     </section>
                 </node>
+                <node>
+                    <label>MIME types</label>
+                    <section>
+                        <content>
+                            <label>MIME type mappings tell the server how to set the content type when serving files with unrecognized extensions.</label>
+                            <spacer></spacer>
+                            <property-editor>
+                                <property>MimeTypeMappings</property>
+                                <child-property>FileExtension</child-property>
+                                <child-property>MimeType</child-property>
+                                <hint>
+                                    <name>show.label</name>
+                                    <value>false</value>
+                                </hint>
+                            </property-editor>
+                        </content>
+                    </section>
+                </node>
+                <node>
+                    <label>welcome files</label>
+                    <section>
+                        <content>
+                            <label>When a request for a folder path is received, the server uses the list of welcome file names (such as index.html) to determine the content of the response.</label>
+                            <spacer></spacer>
+                            <property-editor>
+                                <property>WelcomeFiles</property>
+                                <hint>
+                                    <name>show.label</name>
+                                    <value>false</value>
+                                </hint>
+                            </property-editor>
+                        </content>
+                    </section>
+                </node>
                 <node-include>DescriptionNode</node-include>
             </node>
             <node>
@@ -312,6 +346,15 @@
                         </content>
                     </section>
                 </node>
+            </node>
+            <node>
+                <label>session</label>
+                <section>
+                    <content>
+                        <property-editor>Timeout</property-editor>
+                    </content>
+                </section>
+                <property>SessionConfig</property>
             </node>
         </root-node>
         <page-name>configuration</page-name>

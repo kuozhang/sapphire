@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.samples.jee.web;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -21,6 +22,7 @@ import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
@@ -140,6 +142,53 @@ public interface IWebAppConfig extends IModelElement, IDescribable
     ListProperty PROP_SERVLET_MAPPINGS = new ListProperty( TYPE, "ServletMappings" );
     
     ModelElementList<IServletMapping> getServletMappings();
+    
+    // *** SessionConfig ***
+    
+    @Type( base = ISessionConfig.class )
+    @Label( standard = "session configuration" )
+    @XmlBinding( path = "session-config" )
+    
+    ImpliedElementProperty PROP_SESSION_CONFIG = new ImpliedElementProperty( TYPE, "SessionConfig" );
+    
+    ISessionConfig getSessionConfig();
+    
+    // *** MimeTypeMappings ***
+    
+    @Type( base = IMimeTypeMapping.class )
+    @Label( standard = "MIME type mappings" )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "mime-mapping", type = IMimeTypeMapping.class ) )
+    
+    @Documentation
+    (
+        content = "MIME type mappings tell the server how to set the content type when serving files with unrecognized " +
+                  "extensions."
+    )
+
+    ListProperty PROP_MIME_TYPE_MAPPINGS = new ListProperty( TYPE, "MimeTypeMappings" );
+    
+    ModelElementList<IMimeTypeMapping> getMimeTypeMappings();
+    
+    // *** WelcomeFiles ***
+    
+    @Type( base = IWelcomeFile.class )
+    @Label( standard = "welcome files" )
+    @XmlListBinding( path = "welcome-file-list", mappings = @XmlListBinding.Mapping( element = "welcome-file", type = IWelcomeFile.class ) )
+    
+    @Documentation
+    (
+        content = "When a request for a folder path is received, the server uses the list of welcome file names " +
+                  "(such as index.html) to determine the content of the response. Files are matched in order of specification. " +
+                  "[pbr/]" +
+                  "If not specified by the web application, the server is responsible for providing the default list. Depending " +
+                  "on server implimentation, this list may be configurable."
+    )
+
+    ListProperty PROP_WELCOME_FILES = new ListProperty( TYPE, "WelcomeFiles" );
+    
+    ModelElementList<IWelcomeFile> getWelcomeFiles();
+    
+
     
     
 
