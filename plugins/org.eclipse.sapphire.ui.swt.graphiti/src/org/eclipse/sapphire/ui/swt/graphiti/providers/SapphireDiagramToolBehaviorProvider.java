@@ -133,7 +133,7 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 					}
 					else
 					{
-						button.setIconId(IPlatformImageConstants.IMG_MISSING);
+						button.setIconId(SapphireDiagramCommonImageProvider.IMG_CONNECTION);
 					}
 					// 3.c. add context button, if it contains at least one feature
 					if (button.getDragAndDropFeatures().size() > 0) 

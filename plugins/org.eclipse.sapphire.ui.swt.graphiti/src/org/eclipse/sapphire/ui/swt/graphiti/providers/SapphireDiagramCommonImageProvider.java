@@ -27,6 +27,7 @@ public class SapphireDiagramCommonImageProvider extends AbstractImageProvider
 	public static final String IMG_ERROR_DECORATOR = PREFIX + "error"; //$NON-NLS-1$
 	public static final String IMG_WARNING_DECORATOR = PREFIX + "warning"; //$NON-NLS-1$
 	public static final String IMG_SHOW_IN_SOURCE = PREFIX + "showInSource"; //$NON-NLS-1$
+	public static final String IMG_CONNECTION = PREFIX + "connection"; //$NON-NLS-1$
 
 	public SapphireDiagramCommonImageProvider()
 	{
@@ -40,6 +41,7 @@ public class SapphireDiagramCommonImageProvider extends AbstractImageProvider
 		addImageFilePath(IMG_ERROR_DECORATOR, "icons/error-indicator.png"); //$NON-NLS-1$
 		addImageFilePath(IMG_WARNING_DECORATOR, "icons/warning.png"); //$NON-NLS-1$
 		addImageFilePath(IMG_SHOW_IN_SOURCE, "icons/show-in-source.png"); //$NON-NLS-1$
+		addImageFilePath(IMG_CONNECTION, "icons/connection.png"); //$NON-NLS-1$
 	}
 
 }
