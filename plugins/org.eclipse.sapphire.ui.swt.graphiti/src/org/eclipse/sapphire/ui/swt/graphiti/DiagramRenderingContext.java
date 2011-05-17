@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.swt.graphiti;
 
-import org.eclipse.graphiti.mm.pictograms.ContainerShape;
+import org.eclipse.graphiti.mm.GraphicsAlgorithmContainer;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 
@@ -21,16 +21,16 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 
 public class DiagramRenderingContext extends SapphireRenderingContext 
 {
-	private ContainerShape containerShape;
+	private GraphicsAlgorithmContainer ga;
 	
-	public DiagramRenderingContext(ISapphirePart part, ContainerShape containerShape)
+	public DiagramRenderingContext(ISapphirePart part, GraphicsAlgorithmContainer containerShape)
 	{
 		super(part, null);
-		this.containerShape = containerShape;
+		this.ga = containerShape;
 	}
 	
-	public ContainerShape getContainerShape()
+	public GraphicsAlgorithmContainer getGAContainer()
 	{
-		return this.containerShape;
+		return this.ga;
 	}
 }

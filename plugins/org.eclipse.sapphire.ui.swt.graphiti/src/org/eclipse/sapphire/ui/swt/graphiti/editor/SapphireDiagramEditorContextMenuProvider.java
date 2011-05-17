@@ -22,6 +22,7 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.swt.graphiti.actions.AddNodeAction;
@@ -122,6 +123,18 @@ public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvide
 						}
 					}
 				}
+			}
+			else if (selectedPart instanceof DiagramConnectionPart)
+			{
+				DiagramConnectionPart connPart = (DiagramConnectionPart)selectedPart;
+				// add "show in source" action
+				SapphireActionHandler showInSourceHandler = connPart.getShowInSourceActionHandler();
+				if (showInSourceHandler != null)
+				{
+					SapphireActionHandlerDelegate handlerWrapper = 
+							new SapphireActionHandlerDelegate(this.sapphireDiagramEditor, showInSourceHandler);
+					menuMgr.add(handlerWrapper);					
+				}				
 			}
 		}
 	}

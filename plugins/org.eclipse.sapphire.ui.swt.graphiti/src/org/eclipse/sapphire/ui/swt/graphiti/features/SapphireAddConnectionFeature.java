@@ -35,6 +35,8 @@ import org.eclipse.sapphire.ui.diagram.def.ConnectionEndpointType;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
+import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProvider;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -112,6 +114,11 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
         directEditingInfo.setPictogramElement(textDecorator);
         directEditingInfo.setGraphicsAlgorithm(text);
 		
+        // Create a rendering context for the connection
+        DiagramRenderingContext renderingCtx = new DiagramRenderingContext(connectionPart, connection);
+        SapphireDiagramFeatureProvider sfp = (SapphireDiagramFeatureProvider)getFeatureProvider();
+        sfp.addRenderingContext(connectionPart, renderingCtx);
+        
 		return connection;
 	}
 

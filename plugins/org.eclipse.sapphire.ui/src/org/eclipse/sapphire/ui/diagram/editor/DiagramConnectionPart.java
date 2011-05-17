@@ -14,6 +14,7 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
+import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -32,6 +33,9 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
+import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -50,6 +54,8 @@ public class DiagramConnectionPart
     implements IPropertiesViewContributorPart
     
 {
+	private static final String SHOW_IN_SOURCE_ACTION_ID = "Sapphire.Diagram.Part.ShowInSource";
+	
 	protected DiagramConnectionTemplate connectionTemplate;
 	protected IDiagramExplicitConnectionBindingDef bindingDef;
 	protected IDiagramConnectionDef definition;
@@ -69,7 +75,9 @@ public class DiagramConnectionPart
 	protected FunctionResult idFunctionResult;
 	protected ModelPropertyListener modelPropertyListener;
 	private PropertiesViewContributionManager propertiesViewContributionManager;
-		
+	private SapphireAction showInSourceAction;
+	private SapphireActionHandler showInSourceActionHandler;
+	
 	public DiagramConnectionPart() {}
 	
 	public DiagramConnectionPart(IDiagramExplicitConnectionBindingDef bindingDef, ModelPath endpoint1Path, ModelPath endpoint2Path)
@@ -120,7 +128,12 @@ public class DiagramConnectionPart
                 {
                 }
             }
-        );        		
+        ); 
+        
+        // "show in source" action handler
+        this.showInSourceAction = getAction(SHOW_IN_SOURCE_ACTION_ID);
+        this.showInSourceActionHandler = this.showInSourceAction.getFirstActiveHandler();
+        
 	}
 	
     @Override
@@ -256,6 +269,17 @@ public class DiagramConnectionPart
         }
         
         return id;
+	}
+    
+    @Override
+    public Set<String> getActionContexts()
+    {
+        return Collections.singleton( SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION );
+    }
+
+	public SapphireActionHandler getShowInSourceActionHandler()
+	{
+		return this.showInSourceActionHandler;
 	}
 
     @Override

@@ -50,7 +50,7 @@ public class DiagramNodePart
     
 {
 	private static final String DEFAULT_ACTION_ID = "Sapphire.Diagram.Node.Default";
-	private static final String SHOW_IN_SOURCE_ACTION_ID = "Sapphire.Diagram.Node.ShowInSource";
+	private static final String SHOW_IN_SOURCE_ACTION_ID = "Sapphire.Diagram.Part.ShowInSource";
 	
 	private DiagramNodeTemplate nodeTemplate;
 	private IDiagramNodeDef definition;

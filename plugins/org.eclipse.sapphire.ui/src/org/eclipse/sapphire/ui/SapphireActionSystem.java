@@ -31,6 +31,7 @@ public final class SapphireActionSystem
     public static final String CONTEXT_DIAGRAM_EDITOR = PREFIX + "Diagram.Editor";
     public static final String CONTEXT_DIAGRAM = PREFIX + "Diagram";
     public static final String CONTEXT_DIAGRAM_NODE = PREFIX + "Diagram.Node";
+    public static final String CONTEXT_DIAGRAM_CONNECTION = PREFIX + "Diagram.Connection";
     public static final String CONTEXT_WITH_DIRECTIVE = PREFIX + "WithDirective";
     
     public static final String ACTION_ADD = PREFIX + "Add";
