@@ -188,6 +188,24 @@ public interface IWebAppConfig extends IModelElement, IDescribable
     
     ModelElementList<IWelcomeFile> getWelcomeFiles();
     
+    // *** ErrorPages ***
+    
+    @Type( base = IErrorPage.class )
+    @Label( standard = "error pages" )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "error-page", type = IErrorPage.class ) )
+    
+    @Documentation
+    (
+        content = "A web application can provide custom error pages to show when an HTTP error response is generated or when " +
+                  "a Java exception is encountered. " +
+                  "[pbr/]" +
+                  "Each error page definition maps one HTTP error response code or a Java " +
+                  "exception to a resource in the web application."
+    )
+
+    ListProperty PROP_ERROR_PAGES = new ListProperty( TYPE, "ErrorPages" );
+    
+    ModelElementList<IErrorPage> getErrorPages();
 
     
     

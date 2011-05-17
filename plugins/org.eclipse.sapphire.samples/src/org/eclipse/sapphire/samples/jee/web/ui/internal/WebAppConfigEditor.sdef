@@ -98,6 +98,35 @@
                         </content>
                     </section>
                 </node>
+                <node>
+                    <label>error pages</label>
+                    <section>
+                        <content>
+                            <label>A web application can provide custom error pages to show when an HTTP error response is generated or when a Java exception is encountered.</label>
+                            <spacer></spacer>
+                            <action-link>
+                                <label>Add an error page</label>
+                                <action-id>Sapphire.Add</action-id>
+                            </action-link>
+                        </content>
+                    </section>
+                    <node-factory>
+                        <property>ErrorPages</property>
+                        <case>
+                            <model-element-type>IErrorPage</model-element-type>
+                            <label>${ Type == 'HTTP_ERROR_CODE' ? ( HttpErrorCode == null ? &quot;&lt;error-page&gt;&quot; : Concat( &quot;HTTP &quot;, HttpErrorCode ) ) : ( JavaExceptionType == null ? &quot;&lt;error-page&gt;&quot; : LastSegment( JavaExceptionType, &quot;.&quot; ) ) }</label>
+                            <section>
+                                <label>error page</label>
+                                <content>
+                                    <property-editor>Type</property-editor>
+                                    <property-editor>HttpErrorCode</property-editor>
+                                    <property-editor>JavaExceptionType</property-editor>
+                                    <property-editor>Location</property-editor>
+                                </content>
+                            </section>
+                        </case>
+                    </node-factory>
+                </node>
                 <node-include>DescriptionNode</node-include>
             </node>
             <node>

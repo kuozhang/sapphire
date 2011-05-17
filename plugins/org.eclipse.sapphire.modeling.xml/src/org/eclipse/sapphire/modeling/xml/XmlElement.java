@@ -663,7 +663,7 @@ public final class XmlElement
     private void addSchemaLocation( final String namespace,
                                     final String schemaLocation )
     {
-        if( schemaLocation != null )
+        if( schemaLocation != null && ! namespace.equals( schemaLocation ) )
         {
             final String xsiNamespacePrefix 
                 = findNamespacePrefix( "http://www.w3.org/2001/XMLSchema-instance", "xsi" );

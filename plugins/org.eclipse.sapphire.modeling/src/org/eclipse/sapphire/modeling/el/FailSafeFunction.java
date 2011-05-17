@@ -87,12 +87,7 @@ public class FailSafeFunction
             {
                 Object val = operand( 0 ).value();
                 
-                if( val instanceof Value )
-                {
-                    val = ( (Value<?>) val ).getContent();
-                }
-                
-                if( val == null )
+                if( val == null || ( val instanceof Value && ( (Value<?>) val ).getContent() == null ) )
                 {
                     val = operand( 2 ).value();
                 }

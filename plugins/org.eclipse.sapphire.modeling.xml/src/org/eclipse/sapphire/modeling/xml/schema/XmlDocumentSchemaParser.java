@@ -325,17 +325,9 @@ public final class XmlDocumentSchemaParser
             
             return ref;
         }
-        else if( elname.equals( "any" ) || 
-                 elname.equals( "annotation" ) ||
-                 elname.equals( "simpleContent" ) ||
-                 elname.equals( "attribute" ) ||
-                 elname.equals( "anyAttribute" ) )
-        {
-            return null;
-        }
         else
         {
-            throw new RuntimeException( elname );
+            return null;
         }
     }
     

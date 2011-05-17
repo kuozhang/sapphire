@@ -94,14 +94,23 @@ public final class XmlDocumentSchema
     
     public String getSchemaLocation( final String namespace )
     {
+        String res;
+        
         if( namespace.equals( this.namespace ) )
         {
-            return this.schemaLocation;
+            res = this.schemaLocation;
         }
         else
         {
-            return this.importedNamespaces.get( namespace );
+            res = this.importedNamespaces.get( namespace );
+            
+            if( res == null )
+            {
+                res = namespace;
+            }
         }
+        
+        return res;
     }
     
     public Map<String,String> getSchemaLocations()
