@@ -36,6 +36,9 @@
    <feature url="features/org.eclipse.sapphire.samples_##version##.jar" id="org.eclipse.sapphire.samples" version="##version##">
       <category name="org.eclipse.sapphire"/>
    </feature>
+   <feature url="features/org.eclipse.sapphire.samples.jee_##version##.jar" id="org.eclipse.sapphire.samples.jee" version="##version##">
+      <category name="org.eclipse.sapphire"/>
+   </feature>
    <feature url="features/org.eclipse.sapphire.tests_##version##.jar" id="org.eclipse.sapphire.tests" version="##version##">
       <category name="org.eclipse.sapphire"/>
    </feature>
