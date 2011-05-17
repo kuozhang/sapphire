@@ -15,6 +15,9 @@ import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -53,14 +56,32 @@ public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvide
 				SapphireActionGroup actionGroup = diagramPart.getNodeAddActionGroup();
 				// diagram page context menu
 				// First add "Add" submenu for each node type
-				MenuManager addMenuMgr = new MenuManager("&Add");
-				addMenuMgr.setParent(menuMgr);
-				menuMgr.add(addMenuMgr);
 				SapphireAction action = actionGroup.getAction("Sapphire.Diagram.Add");
-				for (SapphireActionHandler handler : action.getActiveHandlers())
+				if (action.getActiveHandlers().size() == 1)
 				{
-					AddNodeAction addNodeAction = new AddNodeAction(this.sapphireDiagramEditor, handler);
-					addMenuMgr.add(addNodeAction);
+					final SapphireActionHandler actionHandler = action.getActiveHandlers().get(0);
+					AddNodeAction addNodeAction = new AddNodeAction(this.sapphireDiagramEditor, action.getActiveHandlers().get(0))
+					{
+						@Override
+						public String getText()
+						{
+							String text = NLS.bind(Resources.singleAdd, actionHandler.getLabel());
+							return LabelTransformer.transform(text, CapitalizationType.TITLE_STYLE, true);
+						}
+					};
+					
+					menuMgr.add(addNodeAction);
+				}
+				else
+				{
+					MenuManager addMenuMgr = new MenuManager(Resources.add);
+					addMenuMgr.setParent(menuMgr);
+					menuMgr.add(addMenuMgr);
+					for (SapphireActionHandler handler : action.getActiveHandlers())
+					{
+						AddNodeAction addNodeAction = new AddNodeAction(this.sapphireDiagramEditor, handler);
+						addMenuMgr.add(addNodeAction);
+					}
 				}
 				// TODO Print, Save AS Image, Zoom context menus
 			}
@@ -105,4 +126,15 @@ public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvide
 		}
 	}
 
+	private static final class Resources extends NLS    
+	{
+		public static String add;
+		public static String singleAdd;
+		
+	    static
+	    {
+	        initializeMessages( SapphireDiagramEditorContextMenuProvider.class.getName(), Resources.class );
+	    }
+	}
+	
 }

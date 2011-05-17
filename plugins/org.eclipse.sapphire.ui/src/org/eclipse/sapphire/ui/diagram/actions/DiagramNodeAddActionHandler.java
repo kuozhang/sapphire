@@ -13,7 +13,6 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 
@@ -58,6 +57,10 @@ public class DiagramNodeAddActionHandler extends SapphireDiagramActionHandler
 	
 	public String getImageId()
 	{
-		return this.nodeTemplate.getToolPaletteImage().getImageId().getContent();
+		if (this.nodeTemplate.getToolPaletteImage() != null)
+		{
+			return this.nodeTemplate.getToolPaletteImage().getImageId().getContent();
+		}
+		return null;
 	}
 }
