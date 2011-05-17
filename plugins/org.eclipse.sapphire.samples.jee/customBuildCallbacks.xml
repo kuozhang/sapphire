@@ -1,0 +1,294 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2011 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<!-- ===================================================================== -->
+<!-- Custom targets called from a project's generated build.xml            -->
+<!-- Set customBuildCallbacks=<path/to/this/file> in your build.properties.-->
+<!-- ===================================================================== -->
+
+<project name="Build specific targets and properties" default="noDefault">
+
+  <!-- ===================================================================== -->
+  <!-- Steps to do before the compilation target <name>                      -->
+  <!-- Substitute "name" with the name of the compilation target, eg @dot    -->
+  <!-- Available parameters :                                                -->
+  <!--   source.foldern : n = 1 ... N, the source folders                    -->
+  <!--   target.folder  : where the results of the compilation go            -->
+  <!--   <name>.classpath : name = name of the compilation target. A         -->
+  <!--                      reference to the classpath structure.            -->
+  <!-- ===================================================================== -->
+
+  <target name="pre.@dot">
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+      <classpath>
+        <pathelement location="../../releng/ant-contrib/ant-contrib-1.0b3.jar"/>
+      </classpath>
+    </taskdef>
+
+    <mkdir dir=".apt_generated"/>
+    <delete dir=".apt_generated"/>
+    <mkdir dir=".apt_generated"/>
+
+    <path id="sapphire.classpath">
+      <fileset dir="../../build/repository/plugins" includes="*.jar"/>
+    </path>
+
+    <safe-apt srcdir="src"
+      destdir=".apt_generated"
+      preprocessdir=".apt_generated"
+      classpathref="@dot.classpath"
+      factorypathref="sapphire.classpath"
+      compile="false"/>
+
+    <taskdef 
+      resource="org/eclipse/sapphire/sdk/build/antlib.xml"
+      classpathref="sapphire.classpath"/>
+    
+    <sapphire src="." dest=".resources"/>
+    
+  </target>
+
+
+  <!--
+    macro : safe-apt
+
+    If classpath or factorypath get too long, the apt task can run into the 32k character limit 
+    of Windows CreateProcess function. This macro gets around that problem by creating jar files 
+    for classpath and factorypath. The only contents of these jar files is a manifest with 
+    manifest classpath referencing the original classpath/factorypath entries.
+  -->
+     
+  <macrodef name="safe-apt">
+    <attribute name="srcdir"/>
+    <attribute name="destdir"/>
+    <attribute name="preprocessdir"/>
+    <attribute name="classpathref"/>
+    <attribute name="factorypathref"/>
+    <attribute name="compile"/>
+    <sequential>
+
+      <classpath-to-jar classpathref="@{classpathref}" jar="apt-classpath.jar"/>
+      <classpath-to-jar classpathref="@{factorypathref}" jar="apt-factorypath.jar"/>
+
+      <path id="safe.apt.factorypath">
+        <pathelement location="apt-factorypath.jar"/>
+      </path>
+
+      <apt srcdir="@{srcdir}"
+           destdir="@{destdir}"
+           preprocessdir="@{preprocessdir}"
+           classpath="apt-classpath.jar"
+           factorypathref="safe.apt.factorypath"
+           compile="@{compile}"/>
+
+      <delete file="apt-classpath.jar"/>
+      <delete file="apt-factorypath.jar"/>
+
+    </sequential>
+  </macrodef>
+
+
+  <!--
+    macro : classpath-to-jar
+
+    When classpath gets too long, composing commands that reference it can cause one to exceed
+    the 32k character limit of Windows CreateProcess function. This macro helps get around that 
+    problem by converting classpath into a jar whose manifest references all of the original 
+    classpath entries.
+  -->
+
+  <macrodef name="classpath-to-jar">
+    <attribute name="classpathref"/>
+    <attribute name="jar"/>
+    <sequential>
+
+      <manifestclasspath property="manifest.cp" jarfile="@{jar}" maxParentLevels="10">
+        <classpath refid="@{classpathref}"/>
+      </manifestclasspath>
+
+      <manifest file="@{jar}.manifest">
+        <attribute name="Class-Path" value="${manifest.cp}"/>
+      </manifest>
+
+      <jar destfile="@{jar}" manifest="@{jar}.manifest"/>
+
+      <delete file="@{jar}.manifest"/>
+      <var name="manifest.cp" unset="true"/>
+
+    </sequential>
+  </macrodef>
+
+
+  <!-- ===================================================================== -->
+  <!-- Steps to do during the compilation target <name>, after the compile   -->
+  <!-- but before jaring.  Substitute "name" with the name of the compilation-->
+  <!-- target, eg @dot                                                       -->
+  <!-- Available parameters :                                                -->
+  <!--   source.foldern : n = 1 ... N, the source folders                    -->
+  <!--   target.folder  : where the results of the compilation go            -->
+  <!--   <name>.classpath : name = name of the compilation target. A         -->
+  <!--                      reference to the classpath structure.            -->
+  <!-- ===================================================================== -->
+
+  <target name="post.compile.@dot">
+  </target>
+
+  
+  <!-- ===================================================================== -->
+  <!-- Default target                                                        -->
+  <!-- ===================================================================== -->
+
+  <target name="noDefault">
+    <echo message="This file must be called with explicit targets" />
+  </target>
+
+
+  <!-- ===================================================================== -->
+  <!-- Steps to do before the target build.jars                              -->
+  <!-- Available parameters :                                                -->
+  <!--   build.result.folder - folder to contain the build results           -->
+  <!-- ===================================================================== -->
+
+  <target name="pre.build.jars">
+  </target>
+
+
+  <!-- ===================================================================== -->
+  <!-- Steps to do after the target build.jars                               -->
+  <!-- Available parameters :                                                -->
+  <!--   build.result.folder - folder to contain the build results           -->
+  <!-- ===================================================================== -->
+
+  <target name="post.build.jars">
+  </target>
+
+
+  <!-- ===================================================================== -->
+  <!-- Steps to do before the target build.sources                           -->
+  <!-- Available parameters :                                                -->
+  <!--   build.result.folder - folder to contain the build results           -->
+  <!-- ===================================================================== -->
+
+  <target name="pre.build.sources">
+  </target>
+
+
+  <!-- ===================================================================== -->
+  <!-- Steps to do after the target build.sources                            -->
+  <!-- Available parameters :                                                -->
+  <!--   build.result.folder - folder to contain the build results           -->
+  <!-- ===================================================================== -->
+
+  <target name="post.build.sources">
+  </target>
+
+
+  <!-- ===================================================================== -->
+  <!-- Steps to do after the compilation target <name>                       -->
+  <!-- Substitute "name" with the name of the compilation target, eg @dot    -->
+  <!-- Available parameters :                                                -->
+  <!--   jar.location - the location of the compilation results              -->
+  <!--   <name>.classpath : name = name of the compilation target. A         -->
+  <!--                      reference to the classpath structure.            -->
+  <!-- ===================================================================== -->
+
+  <target name="post.@dot">
+  </target>
+
+
+  <!-- ===================================================================== -->
+  <!-- Steps to do before the target gather.bin.parts                        -->
+  <!-- Available parameters :                                                -->
+  <!--   build.result.folder - folder containing the build results           -->
+  <!--   target.folder - destination folder                                  -->
+  <!-- ===================================================================== -->
+
+  <target name="pre.gather.bin.parts">
+  </target>
+
+
+  <!-- ===================================================================== -->
+  <!-- Steps to do after the target gather.bin.parts                         -->
+  <!-- Available parameters :                                                -->
+  <!--   build.result.folder - folder containing the build results           -->
+  <!--   target.folder - destination folder                                  -->
+  <!-- ===================================================================== -->
+
+  <target name="post.gather.bin.parts">
+  </target>
+
+
+  <!-- ===================================================================== -->
+  <!-- Steps to do before the target gather.sources                          -->
+  <!-- Available parameters :                                                -->
+  <!--   destination.temp.folder - destination folder                        -->
+  <!-- ===================================================================== -->
+
+  <target name="pre.gather.sources">
+  </target>
+
+
+  <!-- ===================================================================== -->
+  <!-- Steps to do after the target gather.sources                           -->
+  <!-- Available parameters :                                                -->
+  <!--   destination.temp.folder - destination folder                        -->
+  <!-- ===================================================================== -->
+
+  <target name="post.gather.sources">
+  </target>
+
+
+  <!-- ===================================================================== -->
+  <!-- Steps to do before the target gather.logs                             -->
+  <!-- Available parameters :                                                -->
+  <!--   destination.temp.folder - destination folder                        -->
+  <!-- ===================================================================== -->
+
+  <target name="pre.gather.logs">
+  </target>
+
+
+  <!-- ===================================================================== -->
+  <!-- Steps to do after the target gather.logs                              -->
+  <!-- Available parameters :                                                -->
+  <!--   destination.temp.folder - destination folder                        -->
+  <!-- ===================================================================== -->
+
+  <target name="post.gather.logs">
+  </target>
+
+
+  <!-- ===================================================================== -->
+  <!-- Steps to do before the target clean                                   -->
+  <!-- Available parameters :                                                -->
+  <!--   destination.temp.folder - destination folder                        -->
+  <!-- ===================================================================== -->
+
+  <target name="pre.clean">
+  </target>
+
+
+  <!-- ===================================================================== -->
+  <!-- Steps to do after the target clean                                    -->
+  <!-- Available parameters :                                                -->
+  <!--   plugin.destination - final destination of the build                 -->
+  <!--   build.result.folder - results of the compilation                    -->
+  <!--   temp.folder - temporary folder                                      -->
+  <!-- ===================================================================== -->
+
+  <target name="post.clean">
+  </target>
+
+  
+</project>
