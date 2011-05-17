@@ -114,11 +114,14 @@ public abstract class SapphireEditorFormPage
         
         this.part.removeListener( this.listener );
         
-        final Image image = getManagedForm().getForm().getImage();
-        
-        if( image != null )
+        if( getManagedForm() != null )
         {
-            image.dispose();
+            final Image image = getManagedForm().getForm().getImage();
+            
+            if( image != null )
+            {
+                image.dispose();
+            }
         }
     }
     
