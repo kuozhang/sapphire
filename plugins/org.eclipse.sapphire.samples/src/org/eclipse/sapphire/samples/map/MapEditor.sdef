@@ -57,10 +57,6 @@
                 </endpoint2>
                 <instance-id>${ToDestination}</instance-id>                
             </connection-binding>
-		    <action-handler>
-        		<action>Sapphire.Diagram.Node.Default</action>          
-        		<impl>DiagramShowInSourceActionHandler</impl>
-      		</action-handler>            
         </node>
         <connection-binding>
             <connection-id>highway_routes</connection-id>
