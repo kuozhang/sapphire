@@ -112,9 +112,15 @@ public class SapphireCreateConnectionFeature extends AbstractCreateConnectionFea
 	public boolean canStartConnection(ICreateConnectionContext context) 
 	{
 		// return true if start anchor belongs to an IModelElement
-		if (getEndpoint(context.getSourceAnchor()) instanceof DiagramNodePart) 
+		SapphirePart part = getEndpoint(context.getSourceAnchor());
+		if (part instanceof DiagramNodePart) 
 		{
-			return true;
+			DiagramNodePart nodePart = (DiagramNodePart)part;
+			DiagramConnectionTemplate connTemplate = getConnectionTemplate(nodePart);
+			if (connTemplate.canStartNewConnection(nodePart))
+			{
+				return true;
+			}
 		}
 		return false;
 	}

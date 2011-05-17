@@ -24,7 +24,7 @@ import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 public class DiagramShowInSourceActionHandler extends
 		SapphireDiagramActionHandler 
 {
-
+	
 	@Override
 	public boolean canExecute(Object obj) 
 	{

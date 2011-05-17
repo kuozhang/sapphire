@@ -28,6 +28,7 @@ import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -48,6 +49,9 @@ public class DiagramNodePart
     implements IPropertiesViewContributorPart
     
 {
+	private static final String DEFAULT_ACTION_ID = "Sapphire.Diagram.Node.Default";
+	private static final String SHOW_IN_SOURCE_ACTION_ID = "Sapphire.Diagram.Node.ShowInSource";
+	
 	private DiagramNodeTemplate nodeTemplate;
 	private IDiagramNodeDef definition;
 	private IModelElement modelElement;
@@ -57,7 +61,9 @@ public class DiagramNodePart
 	private List<FunctionResult> imageDecoratorFunctionResults;
 	private ValueProperty labelProperty;
 	private SapphireAction defaultAction;
+	private SapphireAction showInSourceAction;
 	private SapphireActionHandler defaultActionHandler;
+	private SapphireActionHandler showInSourceActionHandler;
 	private ModelPropertyListener modelPropertyListener;
 	private PropertiesViewContributionManager propertiesViewContributionManager; 
 		
@@ -140,8 +146,12 @@ public class DiagramNodePart
         }
         
         // Default Action handler
-        this.defaultAction = getAction("Sapphire.Diagram.Node.Default");
+        this.defaultAction = getAction(DEFAULT_ACTION_ID);
         this.defaultActionHandler = this.defaultAction.getFirstActiveHandler();
+        
+        // "show in source" action handler
+        this.showInSourceAction = getAction(SHOW_IN_SOURCE_ACTION_ID);
+        this.showInSourceActionHandler = this.showInSourceAction.getFirstActiveHandler();
         
         // Add model property listener. It listens to all the properties so that the
         // validation status change would trigger node update
@@ -206,6 +216,31 @@ public class DiagramNodePart
 	public SapphireActionHandler getDefaultActionHandler()
 	{		
 		return this.defaultActionHandler;
+	}
+	
+	public SapphireAction getShowInSourceAction()
+	{
+		return this.showInSourceAction;
+	}
+	
+	public SapphireActionHandler getShowInSourceActionHandler()
+	{
+		return this.showInSourceActionHandler;
+	}
+	
+	public List<SapphireAction> getAllOtherActions()
+	{
+		List<SapphireAction> sapphireActions = new ArrayList<SapphireAction>();
+		SapphireActionGroup actionGroup = getActions(SapphireActionSystem.CONTEXT_DIAGRAM_NODE);
+		List<SapphireAction> allActions = actionGroup.getActions();
+		for (SapphireAction action : allActions)
+		{
+			if (!(action.getId().equals(DEFAULT_ACTION_ID)) && !(action.getId().equals(SHOW_IN_SOURCE_ACTION_ID)))
+			{
+				sapphireActions.add(action);
+			}
+		}
+		return sapphireActions;
 	}
 	
 	@Override

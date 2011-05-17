@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.swt.graphiti.providers;
 import java.util.HashMap;
 
 import org.eclipse.graphiti.features.impl.IIndependenceSolver;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
 
@@ -26,13 +27,13 @@ public class SapphireDiagramSolver implements IIndependenceSolver
 	private HashMap<String, SapphirePart> keyToBOMap;
 	private HashMap<SapphirePart, String> bOToKeyMap;
 	private int counter = 0;
-	private HashMap<SapphirePart, DiagramRenderingContext> partContextMap;
+	private HashMap<ISapphirePart, DiagramRenderingContext> partContextMap;
 
 	public SapphireDiagramSolver()
 	{
 		this.keyToBOMap = new HashMap<String, SapphirePart>();
 		this.bOToKeyMap = new HashMap<SapphirePart, String>();
-		this.partContextMap = new HashMap<SapphirePart, DiagramRenderingContext>();
+		this.partContextMap = new HashMap<ISapphirePart, DiagramRenderingContext>();
 	}
 	
 	public String getKeyForBusinessObject(Object bo) 
@@ -78,12 +79,12 @@ public class SapphireDiagramSolver implements IIndependenceSolver
 		return false;
 	}
 	
-	public void addRendingContext(SapphirePart part, DiagramRenderingContext ctx)
+	public void addRendingContext(ISapphirePart part, DiagramRenderingContext ctx)
 	{
 		this.partContextMap.put(part, ctx);
 	}
 	
-	public DiagramRenderingContext getRenderingContext(SapphirePart part)
+	public DiagramRenderingContext getRenderingContext(ISapphirePart part)
 	{
 		return this.partContextMap.get(part);
 	}

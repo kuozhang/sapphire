@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditPart;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -90,6 +91,7 @@ public class SapphireDiagramEditor extends DiagramEditor
     private int defaultY = 50;
     private static int xInc = 100;
     private static int yInc = 0;
+    private List<SapphirePart> selectedParts = null;
 	
 	public SapphireDiagramEditor(final IModelElement rootModelElement, final IPath pageDefinitionLocation)
 	{
@@ -156,6 +158,12 @@ public class SapphireDiagramEditor extends DiagramEditor
 	{
 		return this.diagramPart;
 	}
+	
+	@Override
+	protected ContextMenuProvider createContextMenuProvider() 
+	{
+		return new SapphireDiagramEditorContextMenuProvider(this);
+	}	
 	
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
@@ -231,30 +239,48 @@ public class SapphireDiagramEditor extends DiagramEditor
 			
 			// Bug 339360 - MultiPage Editor's selectionProvider does not notify PropertySheet (edit) 
 			// bypass the selection provider
-			if (selection instanceof StructuredSelection) {
+			if (selection instanceof StructuredSelection) 
+			{
 				StructuredSelection structuredSelection = (StructuredSelection) selection;
-				Object firstElement = structuredSelection.getFirstElement();
-				EditPart editPart = null;
-				if (firstElement instanceof EditPart) {
-					editPart = (EditPart) firstElement;
-				} else if (firstElement instanceof IAdaptable) {
-					editPart = (EditPart) ((IAdaptable) firstElement).getAdapter(EditPart.class);
-				}
-				if (editPart != null && editPart.getModel() instanceof PictogramElement) {
-					
-					PictogramElement pe = (PictogramElement) editPart.getModel();
-					if (pe instanceof Diagram)
+				List<SapphirePart> partList = new ArrayList<SapphirePart>();
+				for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) 
+				{
+					Object object = iterator.next();
+					EditPart editPart = null;
+					if (object instanceof EditPart) 
 					{
-						getPart().setSelection(getPart());
+						editPart = (EditPart) object;
 					}
-					else {
-						SapphireDiagramFeatureProvider sfp = (SapphireDiagramFeatureProvider)getDiagramTypeProvider().getFeatureProvider();
-						Object bo = sfp.getBusinessObjectForPictogramElement(pe);
-						
-						if (bo instanceof SapphirePart) {
-							getPart().setSelection((SapphirePart)bo);
+					else if (object instanceof IAdaptable) 
+					{
+						editPart = (EditPart) ((IAdaptable) object).getAdapter(EditPart.class);
+					}
+					if (editPart != null && editPart.getModel() instanceof PictogramElement) 
+					{					
+						PictogramElement pe = (PictogramElement) editPart.getModel();
+						if (pe instanceof Diagram)
+						{
+							partList.add(getPart());
 						}
-					}						
+						else 
+						{
+							SapphireDiagramFeatureProvider sfp = (SapphireDiagramFeatureProvider)getDiagramTypeProvider().getFeatureProvider();
+							Object bo = sfp.getBusinessObjectForPictogramElement(pe);							
+							if (bo instanceof SapphirePart) 
+							{
+								partList.add((SapphirePart)bo);
+							}
+						}
+					}
+					if (partList.size() == 1)
+					{
+						getPart().setSelection(partList.get(0));
+					}
+					else
+					{
+						getPart().setSelection(null);
+					}
+					this.selectedParts = partList;
 				}
 				
 			}
@@ -299,6 +325,11 @@ public class SapphireDiagramEditor extends DiagramEditor
 	{
 		super.dispose();
 		this.diagramPart.dispose();
+	}
+	
+	public List<SapphirePart> getSelectedParts()
+	{
+		return this.selectedParts;
 	}
 	
 	public org.eclipse.sapphire.ui.Point getDefaultNodePosition()

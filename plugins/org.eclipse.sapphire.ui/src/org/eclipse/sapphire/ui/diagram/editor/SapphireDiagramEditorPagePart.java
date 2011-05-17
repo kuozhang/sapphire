@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,6 +24,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
+import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -53,6 +55,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     private PropertiesViewContributionManager propertiesViewContributionManager;
     private SapphirePart selection;
     private ImplicitConnectionTemplateListener implicitConnTemplateListener;
+    private SapphireActionGroup addActionGroup;
 	    
     @Override
     protected void init()
@@ -124,6 +127,9 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         
         this.selection = this;
         this.propertiesViewContributionManager = new PropertiesViewContributionManager( this, this.modelElement );
+        
+        // node add action
+        this.addActionGroup = this.getActions(SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR);
         
         this.addListener
         (
@@ -197,7 +203,15 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     @Override
     public Set<String> getActionContexts()
     {
-        return Collections.singleton( SapphireActionSystem.CONTEXT_DIAGRAM );
+    	Set<String> contextSet = new HashSet<String>();
+    	contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM);
+    	contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR);
+    	return contextSet;
+    }
+    
+    public SapphireActionGroup getNodeAddActionGroup()
+    {
+    	return this.addActionGroup;
     }
     
     public SapphirePart getSelection()
@@ -207,11 +221,6 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 	
     public void setSelection( final SapphirePart selection )
     {
-        if( selection == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
         if( this.selection != selection )
         {
             final SapphirePart oldSelection = this.selection;
@@ -260,7 +269,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 		}
 		return null;
 	}
-	
+		
 	@Override
 	public void dispose() 
 	{

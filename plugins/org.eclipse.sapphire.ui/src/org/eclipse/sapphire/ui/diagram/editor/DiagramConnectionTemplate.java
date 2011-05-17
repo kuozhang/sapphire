@@ -257,18 +257,27 @@ public class DiagramConnectionTemplate extends SapphirePart
     	return null;
     }
     
+    public boolean canStartNewConnection(DiagramNodePart srcNode)
+    {
+       	boolean canStart = false;
+    	ModelElementType srcType = srcNode.getModelElement().getModelElementType();
+        if (this.endpoint1Property.getType() == null && this.endpoint1Property.hasAnnotation(Reference.class))
+        {
+        	canStart = this.endpoint1Property.getAnnotation(Reference.class).target().isAssignableFrom(srcType.getModelElementClass());
+        }
+    	return canStart;
+    }
+    
     public boolean canCreateNewConnection(DiagramNodePart srcNode, DiagramNodePart targetNode)
     {
     	boolean canCreate = false;
-    	ModelElementType srcType = srcNode.getModelElement().getModelElementType();
+    	
+    	canCreate = canStartNewConnection(srcNode);
+    	if (!canCreate)
+    		return false;
+    	
     	ModelElementType targetType = targetNode.getModelElement().getModelElementType();
     	
-        if (this.endpoint1Property.getType() == null && this.endpoint1Property.hasAnnotation(Reference.class))
-        {
-        	canCreate = this.endpoint1Property.getAnnotation(Reference.class).target().isAssignableFrom(srcType.getModelElementClass());
-        	if (!canCreate)
-        		return false;
-        }
         if (this.endpoint2Property.getType() == null && this.endpoint2Property.hasAnnotation(Reference.class))
         {
         	canCreate = this.endpoint2Property.getAnnotation(Reference.class).target().isAssignableFrom(targetType.getModelElementClass());

@@ -18,7 +18,7 @@ import org.eclipse.graphiti.ui.platform.AbstractImageProvider;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class ErrorIndicatorImageProvider extends AbstractImageProvider 
+public class SapphireDiagramCommonImageProvider extends AbstractImageProvider 
 {
 	// The prefix for all identifiers of this image provider
 	protected static final String PREFIX = "org.eclipse.sapphire.ui.swt.graphiti."; //$NON-NLS-1$
@@ -26,8 +26,9 @@ public class ErrorIndicatorImageProvider extends AbstractImageProvider
 	// The image identifier for an EReference.
 	public static final String IMG_ERROR_DECORATOR = PREFIX + "error"; //$NON-NLS-1$
 	public static final String IMG_WARNING_DECORATOR = PREFIX + "warning"; //$NON-NLS-1$
+	public static final String IMG_SHOW_IN_SOURCE = PREFIX + "showInSource"; //$NON-NLS-1$
 
-	public ErrorIndicatorImageProvider()
+	public SapphireDiagramCommonImageProvider()
 	{
 		super();
 	}
@@ -38,6 +39,7 @@ public class ErrorIndicatorImageProvider extends AbstractImageProvider
 		// register the path for each image identifier
 		addImageFilePath(IMG_ERROR_DECORATOR, "icons/error-indicator.png"); //$NON-NLS-1$
 		addImageFilePath(IMG_WARNING_DECORATOR, "icons/warning.png"); //$NON-NLS-1$
+		addImageFilePath(IMG_SHOW_IN_SOURCE, "icons/show-in-source.png"); //$NON-NLS-1$
 	}
 
 }

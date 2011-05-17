@@ -123,12 +123,11 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         	}
         }            	
     }
-        
-    @Override
-    public boolean canCreateNewConnection(DiagramNodePart srcNode, DiagramNodePart targetNode)
-    {    
-    	IModelElement srcNodeModel = srcNode.getLocalModelElement();
-    	
+	
+	@Override
+	public boolean canStartNewConnection(DiagramNodePart srcNode)
+	{
+		IModelElement srcNodeModel = srcNode.getLocalModelElement();
     	// check the source node type
     	ModelElementType srcNodeType = srcNodeModel.getModelElementType();
     	ModelElementType desiredsrcNodeType = this.nodeTemplate.getNodeType();
@@ -137,7 +136,17 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     	{
     		return false;
     	}
-    	
+    	return true;
+	}
+        
+    @Override
+    public boolean canCreateNewConnection(DiagramNodePart srcNode, DiagramNodePart targetNode)
+    {    
+    	if (!canStartNewConnection(srcNode))
+    	{
+    		return false;
+    	}
+    	IModelElement srcNodeModel = srcNode.getLocalModelElement();
     	// check the target node type
     	ModelElementType targetType = targetNode.getLocalModelElement().getModelElementType();
     	

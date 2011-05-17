@@ -167,6 +167,11 @@
         <description>Restores properties in a section to their default values. For value properties, it means setting the property to null. For list properties, it means clearing the list.</description>
     </action>
     <action>
+        <id>Sapphire.Diagram.Add</id>
+        <context>Sapphire.Diagram.Editor</context>
+        <label>diagram add node action</label>
+    </action>    
+    <action>
         <id>Sapphire.Diagram.Drop</id>
         <context>Sapphire.Diagram</context>
         <label>diagram drop action</label>
@@ -175,6 +180,13 @@
         <id>Sapphire.Diagram.Node.Default</id>
         <context>Sapphire.Diagram.Node</context>
         <label>node default action</label>
+    </action>
+    <action>
+        <id>Sapphire.Diagram.Node.ShowInSource</id>
+        <context>Sapphire.Diagram.Node</context>
+        <label>show in source</label>
+        <image>org/eclipse/sapphire/ui/actions/ShowInSource.png</image>
+        <description>Shows the model element associated with a given diagram node in the corresponding source editor.</description>
     </action>
     <action-handler>
         <action>Sapphire.Browse</action>
@@ -272,12 +284,23 @@
         <description>Shows the model element associated with a given content outline node in the corresponding source editor.</description>
         <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeShowInSourceActionHandlerCondition</condition>
     </action-handler>
+    <action-handler>
+        <action>Sapphire.Diagram.Node.ShowInSource</action>
+        <impl>org.eclipse.sapphire.ui.diagram.actions.DiagramShowInSourceActionHandler</impl>
+        <id>Sapphire.Diagram.Node.ShowInSource</id>
+        <description>Shows the model element associated with a given diagram node in the corresponding source editor.</description>
+    </action-handler>    
     <action-handler-factory>
         <action>Sapphire.Add</action>
         <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeAddActionHandlerFactory</impl>
         <description>Creates an add action handler for every possible member element type for all lists whose members are shown as child nodes beneath the content outline node in question.</description>
         <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeAddActionHandlerCondition</condition>
     </action-handler-factory>
+    <action-handler-factory>
+        <action>Sapphire.Diagram.Add</action>
+        <impl>org.eclipse.sapphire.ui.diagram.actions.DiagramNodeAddActionHandlerFactory</impl>
+        <description>Creates an add action handler for every node type.</description>
+    </action-handler-factory>    
     <value-serialization-service>
         <type>org.eclipse.sapphire.ui.Color</type>
         <impl>org.eclipse.sapphire.ui.internal.ColorSerializationService</impl>

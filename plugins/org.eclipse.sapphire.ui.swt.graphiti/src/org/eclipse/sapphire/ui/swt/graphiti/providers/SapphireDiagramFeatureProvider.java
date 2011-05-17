@@ -46,6 +46,7 @@ import org.eclipse.graphiti.mm.pictograms.FreeFormConnection;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramDropActionHandler;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
@@ -308,7 +309,7 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 		((SapphireDiagramSolver)this.getIndependenceSolver()).addRendingContext(part, ctx);
 	}
 	
-	public DiagramRenderingContext getRenderingContext(SapphirePart part)
+	public DiagramRenderingContext getRenderingContext(ISapphirePart part)
 	{
 		return ((SapphireDiagramSolver)this.getIndependenceSolver()).getRenderingContext(part);
 	}
