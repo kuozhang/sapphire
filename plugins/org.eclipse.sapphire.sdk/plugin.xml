@@ -23,7 +23,7 @@
       filenames="*.sdef"
       id="org.eclipse.sapphire.sdk.internal.SapphireUiDefEditor"
       name="%saphireUiDefEditor"
-      icon="src/org/eclipse/sapphire/sdk/SapphireFile.png"/>
+      icon="org/eclipse/sapphire/sdk/SapphireFile.png"/>
   </extension>
   
   <extension point="org.eclipse.core.runtime.contentTypes">
@@ -57,7 +57,7 @@
       filenames="sapphire-extension.xml"
       id="org.eclipse.sapphire.sdk.internal.SapphireExtensionEditor"
       name="%sapphireExtensionEditorName"
-      icon="src/org/eclipse/sapphire/sdk/SapphireFile.png"/>
+      icon="org/eclipse/sapphire/sdk/SapphireFile.png"/>
   </extension>
   
   <extension point="org.eclipse.ui.editors.templates">

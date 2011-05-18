@@ -55,7 +55,7 @@
       resource="org/eclipse/sapphire/sdk/build/antlib.xml"
       classpathref="sapphire.classpath"/>
     
-    <sapphire src="." dest=".resources"/>
+    <sapphire src="src" dest=".resources"/>
     
   </target>
 
