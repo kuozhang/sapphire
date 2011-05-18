@@ -1292,6 +1292,7 @@
                                         </content>
                                     </panel>
                                 </with>
+                                <separator></separator>
                                 <property-editor>LineStyle</property-editor>
                                 <property-editor>LineColor</property-editor>
                                 <property-editor>LineWidth</property-editor>
