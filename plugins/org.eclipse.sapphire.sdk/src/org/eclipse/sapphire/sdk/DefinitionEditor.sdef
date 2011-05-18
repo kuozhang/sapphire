@@ -9,6 +9,7 @@
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Greg Amerson - [343972] Support image in editor page header
+ *                   [345198] Specify image in sdef editor for connection elements
  ******************************************************************************
 -->
 
@@ -1280,6 +1281,17 @@
                                 <property-editor>Id</property-editor>
                                 <property-editor>ToolPaletteLabel</property-editor>
                                 <property-editor>ToolPaletteDesc</property-editor>
+                                <with>
+                                    <path>ToolPaletteImage</path>
+                                    <label>Add Tool Palette Image</label>
+                                    <panel>
+                                        <key>IDiagramImageChoice</key>
+                                        <content>
+                                            <property-editor>ImageId</property-editor>
+                                            <property-editor>ImagePath</property-editor>
+                                        </content>
+                                    </panel>
+                                </with>
                                 <property-editor>LineStyle</property-editor>
                                 <property-editor>LineColor</property-editor>
                                 <property-editor>LineWidth</property-editor>
