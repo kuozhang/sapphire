@@ -29,10 +29,14 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.annotations.Service;
+import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.samples.jee.web.internal.ErrorPageTypeBinding;
+import org.eclipse.sapphire.samples.jee.web.internal.LeadingSlashValidationService;
+import org.eclipse.sapphire.samples.jee.web.internal.WebContentRelativePathService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -104,6 +108,16 @@ public interface IErrorPage extends IModelElement
     @Type( base = Path.class )
     @Label( standard = "location" )
     @Required
+    @MustExist
+    
+    @Services
+    (
+        {
+            @Service( impl = WebContentRelativePathService.class ), 
+            @Service( impl = LeadingSlashValidationService.class )
+        }
+    )
+    
     @XmlBinding( path = "location" )
     
     ValueProperty PROP_LOCATION = new ValueProperty( TYPE, "Location" );

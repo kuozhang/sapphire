@@ -207,7 +207,7 @@
         <action>Sapphire.Browse</action>
         <impl>org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler</impl>
         <id>Sapphire.Browse.Path.Relative</id>
-        <description>Opens a browse dialog for a relative path to a file or a folder. Activates if the property is a value property and has @BasePathsProvider annotation.</description>
+        <description>Opens a browse dialog for a relative path to a file or a folder. Activates if the property is a value property and has a RelativePathService.</description>
         <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.RelativePathBrowseActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
@@ -228,7 +228,7 @@
         <action>Sapphire.Jump</action>
         <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.RelativePathJumpActionHandler</impl>
         <id>Sapphire.Jump.Path.Relative</id>
-        <description>Opens the file specified by a relative path using the associated Eclipse editor. Activates if the property is a value property and has @BasePathsProvider annotation.</description>
+        <description>Opens the file specified by a relative path using the associated Eclipse editor. Activates if the property is a value property and has a RelativePathService.</description>
         <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.RelativePathJumpActionHandlerCondition</condition>
     </action-handler>
     <action-handler>

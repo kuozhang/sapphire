@@ -850,8 +850,9 @@
                         <property-editor>AbsoluteFilePath</property-editor>
                         <property-editor>AbsoluteFolderPath</property-editor>
                         <property-editor>RelativeFilePath</property-editor>
-                        <property-editor>WorkspaceRelativePath</property-editor>
+                        <property-editor>ModelRelativePath</property-editor>
                         <property-editor>ProjectRelativePath</property-editor>
+                        <property-editor>WorkspaceRelativePath</property-editor>
                         <property-editor>
                             <property>MultiOptionPath</property>
                             <action-handler>

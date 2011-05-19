@@ -62,11 +62,11 @@ in the above example. The validation will change to use Eclipse resources API an
 browse dialog will be replaced with the standard Eclipse workspace resources dialog.</p>
 
 <p>Or maybe you need to deal with relative paths, but you have custom requirements for how
-these relative paths are to be resolved. Sapphire still got you covered. Just replace @AbsolutePath
-with @BasePathsProvider annotations and implement a class that returns all possible roots...</p>
+these relative paths are to be resolved. Sapphire still got you covered. Just implement
+RelativePathService that returns all possible roots...</p>
 
 <pre class="source-code"><code>@Type( base = Path.class )
-@BasePathsProvider( CustomBasePathsProvider.class )
+@Service( impl = CustomRelativePathService.class )
 @ValidFileSystemResourceType( FileSystemResourceType.FILE )
 @ValidFileExtensions( "dll" )
 @MustExist
@@ -77,10 +77,10 @@ Value&lt;Path> getRelativeFilePath();
 void setRelativeFilePath( String value );
 void setRelativeFilePath( Path value );</code></pre>
 
-<pre class="source-code"><code>public final class CustomBasePathsProvider extends BasePathsProviderImpl
+<pre class="source-code"><code>public final class CustomRelativePathService extends RelativePathService
 {
     @Override
-    public List&lt;Path> getBasePaths( IModelElement element )
+    public List&lt;Path> roots()
     {
         final List&lt;Path> roots = new ArrayList&lt;Path>();
         

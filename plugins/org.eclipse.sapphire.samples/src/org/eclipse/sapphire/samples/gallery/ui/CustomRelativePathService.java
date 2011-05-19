@@ -9,18 +9,29 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.annotations;
+package org.eclipse.sapphire.samples.gallery.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Path;
+import org.eclipse.sapphire.modeling.RelativePathService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class BasePathsProviderImpl
+public final class CustomRelativePathService extends RelativePathService
 {
-    public abstract List<Path> getBasePaths( final IModelElement modelElement );
+    @Override
+    public List<Path> roots()
+    {
+        final List<Path> roots = new ArrayList<Path>();
+        
+        roots.add( new Path( "c:/Windows" ) );
+        roots.add( new Path( "c:/Program Files" ) );
+        
+        return roots;
+    }
+    
 }

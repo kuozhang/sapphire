@@ -38,11 +38,10 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Path;
+import org.eclipse.sapphire.modeling.RelativePathService;
+import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.BasePathsProvider;
-import org.eclipse.sapphire.modeling.annotations.BasePathsProviderImpl;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileExtensions;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
@@ -54,6 +53,8 @@ import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
@@ -177,125 +178,210 @@ public class RelativePathBrowseActionHandler
     @Override
     protected String browse( final SapphireRenderingContext context )
     {
-        final ModelProperty property = getProperty();
+        final ValueProperty property = getProperty();
+        final List<Path> roots = getBasePaths();
+        String selectedAbsolutePath = null;
         
-        final List<Path> basePaths = getBasePaths();
-        final List<IContainer> baseContainers = new ArrayList<IContainer>();
-        
-        for( Path path : basePaths )
+        if( enclosed() )
         {
-            final IContainer baseContainer = getWorkspaceContainer( path.toFile() );
+            final List<IContainer> baseContainers = new ArrayList<IContainer>();
             
-            if( baseContainer != null )
+            for( Path path : roots )
             {
-                baseContainers.add( baseContainer );
-            }
-            else
-            {
-                break;
-            }
-        }
-        
-        final ITreeContentProvider contentProvider;
-        final ILabelProvider labelProvider;
-        final ViewerComparator viewerComparator;
-        final Object input;
-        
-        if( basePaths.size() == baseContainers.size() )
-        {
-            // All paths are in the Eclipse Workspace. Use the available content and label
-            // providers.
-        
-            contentProvider = new WorkspaceContentProvider( baseContainers );
-            labelProvider = new WorkbenchLabelProvider();
-            viewerComparator = new ResourceComparator();
-            input = ResourcesPlugin.getWorkspace().getRoot();
-        }
-        else
-        {
-            // At least one of the roots is not in the Eclipse Workspace. Use custom file
-            // system content and label providers.
-            
-            contentProvider = new FileSystemContentProvider( basePaths );
-            labelProvider = new FileSystemLabelProvider( context );
-            viewerComparator = new FileSystemNodeComparator();
-            input = new Object();
-        }
-    
-        final ElementTreeSelectionDialog dialog
-            = new ElementTreeSelectionDialog( context.getShell(), labelProvider, contentProvider );
-        
-        dialog.setTitle( property.getLabel( false, CapitalizationType.TITLE_STYLE, false ) );
-        dialog.setMessage( createBrowseDialogMessage( property.getLabel( true, CapitalizationType.NO_CAPS, false ) ) );
-        dialog.setAllowMultiple( false );
-        dialog.setHelpAvailable( false );
-        dialog.setInput( input );
-        dialog.setComparator( viewerComparator );
-        
-        if( this.type == FileSystemResourceType.FILE )
-        {
-            dialog.setValidator( new FileSelectionStatusValidator() );
-        }
-        else if( this.type == FileSystemResourceType.FOLDER )
-        {
-            dialog.addFilter( new ContainersOnlyViewerFilter() );
-        }
-        
-        if( ! this.extensions.isEmpty() )
-        {
-            dialog.addFilter( new ExtensionBasedViewerFilter( this.extensions ) );
-        }
-        
-        if( dialog.open() == Window.OK )
-        {
-            final Path path;
-            final Object firstResult = dialog.getFirstResult();
-            
-            if( firstResult instanceof IResource )
-            {
-                path = new Path( ( (IResource) firstResult ).getLocation().toString() );
-            }
-            else
-            {
-                path = new Path( ( (FileSystemNode) firstResult ).getFile().getPath() );
-            }
-            
-            for( Path basePath : basePaths )
-            {
-                if( basePath.isPrefixOf( path ) )
+                final IContainer baseContainer = getWorkspaceContainer( path.toFile() );
+                
+                if( baseContainer != null )
                 {
-                    String relpath = path.makeRelativeTo( basePath ).toPortableString();
-                    
-                    if( this.includeLeadingSlash )
-                    {
-                        relpath = "/" + relpath;
-                    }
-                    
-                    return relpath;
+                    baseContainers.add( baseContainer );
+                }
+                else
+                {
+                    break;
+                }
+            }
+            
+            final ITreeContentProvider contentProvider;
+            final ILabelProvider labelProvider;
+            final ViewerComparator viewerComparator;
+            final Object input;
+            
+            if( roots.size() == baseContainers.size() )
+            {
+                // All paths are in the Eclipse Workspace. Use the available content and label
+                // providers.
+            
+                contentProvider = new WorkspaceContentProvider( baseContainers );
+                labelProvider = new WorkbenchLabelProvider();
+                viewerComparator = new ResourceComparator();
+                input = ResourcesPlugin.getWorkspace().getRoot();
+            }
+            else
+            {
+                // At least one of the roots is not in the Eclipse Workspace. Use custom file
+                // system content and label providers.
+                
+                contentProvider = new FileSystemContentProvider( roots );
+                labelProvider = new FileSystemLabelProvider( context );
+                viewerComparator = new FileSystemNodeComparator();
+                input = new Object();
+            }
+        
+            final ElementTreeSelectionDialog dialog
+                = new ElementTreeSelectionDialog( context.getShell(), labelProvider, contentProvider );
+            
+            dialog.setTitle( property.getLabel( false, CapitalizationType.TITLE_STYLE, false ) );
+            dialog.setMessage( createBrowseDialogMessage( property.getLabel( true, CapitalizationType.NO_CAPS, false ) ) );
+            dialog.setAllowMultiple( false );
+            dialog.setHelpAvailable( false );
+            dialog.setInput( input );
+            dialog.setComparator( viewerComparator );
+            
+            if( this.type == FileSystemResourceType.FILE )
+            {
+                dialog.setValidator( new FileSelectionStatusValidator() );
+            }
+            else if( this.type == FileSystemResourceType.FOLDER )
+            {
+                dialog.addFilter( new ContainersOnlyViewerFilter() );
+            }
+            
+            if( ! this.extensions.isEmpty() )
+            {
+                dialog.addFilter( new ExtensionBasedViewerFilter( this.extensions ) );
+            }
+            
+            if( dialog.open() == Window.OK )
+            {
+                final Object firstResult = dialog.getFirstResult();
+                
+                if( firstResult instanceof IResource )
+                {
+                    selectedAbsolutePath = ( (IResource) firstResult ).getLocation().toString();
+                }
+                else
+                {
+                    selectedAbsolutePath = ( (FileSystemNode) firstResult ).getFile().getPath();
                 }
             }
         }
+        else if( this.type == FileSystemResourceType.FOLDER )
+        {
+            final DirectoryDialog dialog = new DirectoryDialog( context.getShell() );
+            dialog.setText( property.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ) );
+            dialog.setMessage( createBrowseDialogMessage( property.getLabel( true, CapitalizationType.NO_CAPS, false ) ) );
+            
+            final Value<Path> value = getModelElement().read( property );
+            final Path path = value.getContent();
+            
+            if( path != null )
+            {
+                dialog.setFilterPath( path.toOSString() );
+            }
+            else if( roots.size() > 0 )
+            {
+                dialog.setFilterPath( roots.get( 0 ).toOSString() );
+            }
+            
+            selectedAbsolutePath = dialog.open();
+        }
+        else
+        {
+            final FileDialog dialog = new FileDialog( context.getShell() );
+            dialog.setText( property.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ) );
+            
+            final Value<Path> value = getModelElement().read( property );
+            final Path path = value.getContent();
+            
+            if( path != null && path.segmentCount() > 1 )
+            {
+                dialog.setFilterPath( path.removeLastSegments( 1 ).toOSString() );
+                dialog.setFileName( path.lastSegment() );
+            }
+            else if( roots.size() > 0 )
+            {
+                dialog.setFilterPath( roots.get( 0 ).toOSString() );
+            }
+            
+            if( ! this.extensions.isEmpty() )
+            {
+                final StringBuilder buf = new StringBuilder();
+                
+                for( String extension : this.extensions )
+                {
+                    if( buf.length() > 0 )
+                    {
+                        buf.append( ';' );
+                    }
+                    
+                    buf.append( "*." );
+                    buf.append( extension );
+                }
+                
+                dialog.setFilterExtensions( new String[] { buf.toString() } );
+            }
+            
+            selectedAbsolutePath = dialog.open();
+        }
     
+        if( selectedAbsolutePath != null )
+        {
+            final Path relativePath = convertToRelative( new Path( selectedAbsolutePath ) );
+            
+            if( relativePath != null )
+            {
+                String result = relativePath.toPortableString();
+    
+                if( this.includeLeadingSlash )
+                {
+                    result = "/" + result;
+                }
+                        
+                return result;
+            }
+        }
+
         return null;
     }
     
     protected List<Path> getBasePaths()
     {
-        final BasePathsProvider basePathsProviderAnnotation = getProperty().getAnnotation( BasePathsProvider.class );
-        final Class<? extends BasePathsProviderImpl> basePathsProviderClass = basePathsProviderAnnotation.value();
+        return getModelElement().service( getProperty(), RelativePathService.class ).roots();
+    }
+    
+    protected Path convertToRelative( final Path path )
+    {
+        final RelativePathService service = getModelElement().service( getProperty(), RelativePathService.class );
         
-        final BasePathsProviderImpl basePathsProvider;
-        
-        try
+        if( service == null )
         {
-            basePathsProvider = basePathsProviderClass.newInstance();
+            for( Path root : getBasePaths() )
+            {
+                if( root.isPrefixOf( path ) )
+                {
+                    return path.makeRelativeTo( root );
+                }
+            }
+            
+            return null;
         }
-        catch( Exception e )
+        else
         {
-            throw new RuntimeException( e );
+            return service.convertToRelative( path );
         }
+    }
+    
+    protected boolean enclosed()
+    {
+        final RelativePathService service = getModelElement().service( getProperty(), RelativePathService.class );
         
-        return basePathsProvider.getBasePaths( getModelElement() );
+        if( service == null )
+        {
+            return true;
+        }
+        else
+        {
+            return service.enclosed();
+        }
     }
     
     private static String getFileExtension( final String fileName ) 

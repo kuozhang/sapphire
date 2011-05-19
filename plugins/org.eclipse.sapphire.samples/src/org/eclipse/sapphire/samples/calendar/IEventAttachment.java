@@ -18,15 +18,15 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.BasePathsProvider;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.samples.calendar.internal.EventAttachmentLocalCopyBasePathsProvider;
+import org.eclipse.sapphire.samples.calendar.internal.EventAttachmentLocalCopyRelativePathService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -46,7 +46,7 @@ public interface IEventAttachment
     @Type( base = Path.class )
     @Label( standard = "local copy location" )
     @Required
-    @BasePathsProvider( EventAttachmentLocalCopyBasePathsProvider.class )
+    @Service( impl = EventAttachmentLocalCopyRelativePathService.class )
     @ValidFileSystemResourceType( FileSystemResourceType.FILE )
     @XmlBinding( path = "local-copy" )
 

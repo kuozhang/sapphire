@@ -12,14 +12,11 @@
 package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 
 import java.io.File;
-import java.util.List;
 
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Path;
+import org.eclipse.sapphire.modeling.RelativePathService;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.BasePathsProvider;
-import org.eclipse.sapphire.modeling.annotations.BasePathsProviderImpl;
 import org.eclipse.sapphire.ui.SapphireJumpActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -58,10 +55,11 @@ public final class RelativePathJumpActionHandler
             
             if( relativePath != null )
             {
-                for( Path basePath : getBasePaths( element, property ) )
+                final Path absolutePath = element.service( property, RelativePathService.class ).convertToAbsolute( relativePath );
+                
+                if( absolutePath != null )
                 {
-                    final Path absolutePath = basePath.append( relativePath );
-                    File absoluteFile = absolutePath.toFile();
+                    final File absoluteFile = absolutePath.toFile();
                     
                     if( absoluteFile.exists() && absoluteFile.isFile() )
                     {
@@ -84,47 +82,40 @@ public final class RelativePathJumpActionHandler
         
         if( relativePath != null )
         {
-            File file = null;
+            final Path absolutePath = element.service( property, RelativePathService.class ).convertToAbsolute( relativePath );
             
-            for( Path basePath : getBasePaths( element, property ) )
+            if( absolutePath != null )
             {
-                final Path absolutePath = basePath.append( relativePath );
-                File absoluteFile = absolutePath.toFile();
+                final File file = absolutePath.toFile();
                 
-                if( absoluteFile.exists() && absoluteFile.isFile() )
+                if( file.exists() && file.isFile() )
                 {
-                    file = absoluteFile;
-                    break;
-                }
-            }
-            
-            if( file != null )
-            {
-                final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-                
-                if( window != null )
-                {
-                    final IWorkbenchPage page = window.getActivePage();
-                    IEditorDescriptor editorDescriptor = null;
+                    final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
                     
-                    try
+                    if( window != null )
                     {
-                        editorDescriptor = IDE.getEditorDescriptor( file.getName() );
-                    }
-                    catch( PartInitException e )
-                    {
-                        // No editor was found for this file type.
-                    }
-                    
-                    if( editorDescriptor != null )
-                    {
+                        final IWorkbenchPage page = window.getActivePage();
+                        IEditorDescriptor editorDescriptor = null;
+                        
                         try
                         {
-                            IDE.openEditor( page, file.toURI(), editorDescriptor.getId(), true );
-                        } 
-                        catch( PartInitException e ) 
+                            editorDescriptor = IDE.getEditorDescriptor( file.getName() );
+                        }
+                        catch( PartInitException e )
                         {
-                            SapphireUiFrameworkPlugin.log( e );
+                            // No editor was found for this file type.
+                        }
+                        
+                        if( editorDescriptor != null )
+                        {
+                            try
+                            {
+                                IDE.openEditor( page, file.toURI(), editorDescriptor.getId(), true );
+                            } 
+                            catch( PartInitException e ) 
+                            {
+                                SapphireUiFrameworkPlugin.log( e );
+                            }
                         }
                     }
                 }
@@ -132,26 +123,6 @@ public final class RelativePathJumpActionHandler
         }
         
         return null;
-    }
-
-    private List<Path> getBasePaths( final IModelElement modelElement,
-                                     final ModelProperty property )
-    {
-        final BasePathsProvider basePathsProviderAnnotation = property.getAnnotation( BasePathsProvider.class );
-        final Class<? extends BasePathsProviderImpl> basePathsProviderClass = basePathsProviderAnnotation.value();
-        
-        final BasePathsProviderImpl basePathsProvider;
-        
-        try
-        {
-            basePathsProvider = basePathsProviderClass.newInstance();
-        }
-        catch( Exception e )
-        {
-            throw new RuntimeException( e );
-        }
-        
-        return basePathsProvider.getBasePaths( modelElement );
     }
     
 }

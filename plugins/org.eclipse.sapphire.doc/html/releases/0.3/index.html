@@ -33,7 +33,7 @@
   <ol type="A">
     <li><a href="#ref">ReferenceValue Improvements</a></li>
     <li><a href="#folding">Folding XML Element Binding</a></li>
-    <li><a href="#project-relative">Project Relative Paths</a></li>
+    <li><a href="#relative">Relative Path Support Improvements</a></li>
     <li><a href="#image-handling">Image Handling</a></li>
     <li><a href="#possible-values">Possible Values Service Improvements</a></li>
     <li><a href="#required-annotation">Required Annotation</a></li>
@@ -177,7 +177,7 @@ will automatically transform into the first.</p>
 <p>Set params attribute to the name of the folding element. Take care not to
 apply this binding to more than one child element in a given parent.</p>
 
-<h2><a name="project-relative">Project Relative Paths</a></h2>
+<h2><a name="relative">Relative Path Support Improvements</a></h2>
 
 <p>Similar to the existing @WorkspaceRelativePath annotation, you can now use 
 @ProjectRelativePath annotation to support paths relative to the
@@ -210,6 +210,58 @@ ValueProperty PROP_PROJECT_RELATIVE_PATH = new ValueProperty( TYPE, "ProjectRela
 Value&lt;Path> getProjectRelativePath();
 void setProjectRelativePath( String value );
 void setProjectRelativePath( Path value );</code></pre>
+
+<p>Relative path support now can handle both enclosed paths and those that use parent navigation "../"
+to reach outside. Override RelativePathService.enclosed() method as necessary. The default implementation
+returns true.</p>
+
+<p>A common scenario for relative paths that reach outside the root is where the paths in the model should be
+relative to the location where the model is stored. Use the new @ModelRelativePath annotation to handle
+this case.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>// *** RelativePath ***
+    
+@Type( base = Path.class )
+@ModelRelativePath
+@MustExist
+    
+ValueProperty PROP_RELATIVE_PATH = new ValueProperty( TYPE, "RelativePath" );
+    
+Value&lt;Path> getRelativePath();
+void setRelativePath( String value );
+void setRelativePath( Path value );</code></pre>
+
+<p>The service implementation backing @ModelRelativePath may be instructive for those looking to implement
+a custom relative path service.</p>
+
+<pre class="source-code"><code>public class ModelRelativePathService extends RelativePathService
+{
+    public List&lt;Path> roots()
+    {
+        final File file = element().adapt( File.class );
+        
+        if( file == null )
+        {
+            return Collections.emptyList();
+        }
+        else
+        {
+            return Collections.singletonList( new Path( file.getParent() ) );
+        }
+    }
+
+    public boolean enclosed()
+    {
+        return false;
+    }
+}</code></pre>
+
+<p>The new RelativePathService also exposes convertToRelative() and convertToAbsolute() methods. While the
+default implementation should be sufficient for most cases, the conversion methods can be overridden to
+support custom requirements. Some examples of such requirements include leading slash in front of a relative
+path and path variables.</p>
 
 <h2><a name="image-handling">Image Handling</a></h2>
 

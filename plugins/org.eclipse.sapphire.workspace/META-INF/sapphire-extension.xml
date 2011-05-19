@@ -15,13 +15,13 @@
 
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <model-property-service>
-        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
-        <factory>org.eclipse.sapphire.workspace.internal.WorkspaceRelativePathValidationService$Factory</factory>
-        <id>Sapphire.WorkspaceRelativePathValidationService</id>
+        <type>org.eclipse.sapphire.modeling.RelativePathService</type>
+        <factory>org.eclipse.sapphire.workspace.internal.ProjectRelativePathService$Factory</factory>
+        <id>Sapphire.RelativePathService.Project</id>
     </model-property-service>
     <model-property-service>
-        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
-        <factory>org.eclipse.sapphire.workspace.internal.ProjectRelativePathValidationService$Factory</factory>
-        <id>Sapphire.ProjectRelativePathValidationService</id>
+        <type>org.eclipse.sapphire.modeling.RelativePathService</type>
+        <factory>org.eclipse.sapphire.workspace.internal.WorkspaceRelativePathService$Factory</factory>
+        <id>Sapphire.RelativePathService.Workspace</id>
     </model-property-service>
 </extension>

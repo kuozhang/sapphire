@@ -57,8 +57,10 @@ public interface ISapphireActionContext
             SapphireActionSystem.CONTEXT_LIST_PROPERTY_EDITOR,
             SapphireActionSystem.CONTEXT_SECTION,
             SapphireActionSystem.CONTEXT_VALUE_PROPERTY_EDITOR,
+            SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR,
             SapphireActionSystem.CONTEXT_DIAGRAM,
             SapphireActionSystem.CONTEXT_DIAGRAM_NODE,
+            SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION,
             SapphireActionSystem.CONTEXT_WITH_DIRECTIVE
         },
         invalidValueMessage = "\"{0}\" is not valid action context.",

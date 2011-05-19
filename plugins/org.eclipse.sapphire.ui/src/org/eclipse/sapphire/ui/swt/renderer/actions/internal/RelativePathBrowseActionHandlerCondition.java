@@ -11,7 +11,11 @@
 
 package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 
-import org.eclipse.sapphire.modeling.annotations.BasePathsProvider;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.Path;
+import org.eclipse.sapphire.modeling.RelativePathService;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
 
@@ -27,14 +31,10 @@ public final class RelativePathBrowseActionHandlerCondition
     @Override
     protected boolean evaluate( final SapphirePropertyEditor part )
     {
-        if( part.getProperty().hasAnnotation( BasePathsProvider.class ) )
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        final IModelElement element = part.getModelElement();
+        final ModelProperty property = part.getProperty();
+        
+        return ( property instanceof ValueProperty && Path.class.isAssignableFrom( property.getTypeClass() ) && element.service( property, RelativePathService.class ) != null );
     }
 
 }

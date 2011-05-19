@@ -267,9 +267,9 @@ void setLocation( </font>Path<font color="#888888"> location );</font></code></p
 }</font></code></pre>
     </td>
     <td>
-<pre class="source-code"><font color="#888888">public class CustomBasePathsProvider extends BasePathsProviderImpl
+<pre class="source-code"><font color="#888888">public class CustomRelativePathService extends RelativePathService
 {
-    public List&lt;</font>Path<font color="#888888">&gt; getBasePaths( IModelElement element )
+    public List&lt;</font>Path<font color="#888888">&gt; roots()
     {
         ...
     }
@@ -294,9 +294,9 @@ void setLocation( </font>Path<font color="#888888"> location );</font></code></p
 }</font></code></pre>
     </td>
     <td>
-<pre class="source-code"><font color="#888888">public class ProjectRootsBasePathsProvider extends BasePathsProviderImpl
+<pre class="source-code"><font color="#888888">public class ProjectRootsRelativePathService extends RelativePathService
 {
-    public List&lt;</font>Path<font color="#888888">&gt; getBasePaths( IModelElement element )
+    public List&lt;</font>Path<font color="#888888">&gt; roots()
     {
         final List&lt;</font>Path<font color="#888888">&gt; paths = new ArrayList&lt;</font>Path<font color="#888888">&gt;();
 
@@ -477,6 +477,34 @@ of what the reference resolves to.</p>
     </td>
     <td>
 <pre class="source-code"><code>@Service( impl = CustomDefaultValueService.class )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@BasePathsProvider( CustomBasePathsProvider.class )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@Service( impl = CustomRelativePathService.class )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>public class CustomBasePathsProvider extends BasePathsProviderImpl
+{
+    public List&lt;Path> getBasePaths( IModelElement element )
+    {
+        ...
+    }
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>public class CustomRelativePathService extends RelativePathService
+{
+    public List&lt;Path> roots()
+    {
+        ...
+    }
+}</code></pre>
     </td>
   </tr>
 </table>

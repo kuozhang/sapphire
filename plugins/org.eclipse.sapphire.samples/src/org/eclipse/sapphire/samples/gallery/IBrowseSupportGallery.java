@@ -15,21 +15,22 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.ModelRelativePath;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.AbsolutePath;
-import org.eclipse.sapphire.modeling.annotations.BasePathsProvider;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.ValidFileExtensions;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.samples.gallery.ui.CustomBasePathsProvider;
+import org.eclipse.sapphire.samples.gallery.ui.CustomRelativePathService;
 import org.eclipse.sapphire.workspace.ProjectRelativePath;
 import org.eclipse.sapphire.workspace.WorkspaceRelativePath;
 
@@ -81,17 +82,32 @@ public interface IBrowseSupportGallery
     
     @Type( base = Path.class )
     @Label( standard = "relative file path" )
-    @BasePathsProvider( CustomBasePathsProvider.class )
+    @Service( impl = CustomRelativePathService.class )
     @ValidFileSystemResourceType( FileSystemResourceType.FILE )
     @ValidFileExtensions( "dll" )
     @MustExist
-    @XmlBinding( path = "relative-folder-path" )
+    @XmlBinding( path = "relative-file-path" )
     
     ValueProperty PROP_RELATIVE_FILE_PATH = new ValueProperty( TYPE, "RelativeFilePath" );
     
     Value<Path> getRelativeFilePath();
     void setRelativeFilePath( String value );
     void setRelativeFilePath( Path value );
+    
+    // *** ModelRelativePath ***
+    
+    @Type( base = Path.class )
+    @Label( standard = "model relative path" )
+    @ModelRelativePath
+    @ValidFileSystemResourceType( FileSystemResourceType.FILE )
+    @MustExist
+    @XmlBinding( path = "model-relative-path" )
+    
+    ValueProperty PROP_MODEL_RELATIVE_PATH = new ValueProperty( TYPE, "ModelRelativePath" );
+    
+    Value<Path> getModelRelativePath();
+    void setModelRelativePath( String value );
+    void setModelRelativePath( Path value );
     
     // *** WorkspaceRelativePath ***
     

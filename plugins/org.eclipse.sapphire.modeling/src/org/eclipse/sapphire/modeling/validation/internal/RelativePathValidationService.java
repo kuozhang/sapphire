@@ -12,18 +12,16 @@
 package org.eclipse.sapphire.modeling.validation.internal;
 
 import java.io.File;
-import java.util.List;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.Path;
+import org.eclipse.sapphire.modeling.RelativePathService;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.BasePathsProvider;
-import org.eclipse.sapphire.modeling.annotations.BasePathsProviderImpl;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.validation.PathValidationService;
@@ -37,28 +35,6 @@ public final class RelativePathValidationService
     extends PathValidationService
     
 {
-    private BasePathsProviderImpl basePathsProvider;
-    
-    @Override
-    public void init( final IModelElement element,
-                      final ModelProperty property,
-                      final String[] params )
-    {
-        super.init( element, property, params );
-        
-        final BasePathsProvider basePathsProviderAnnotation = property.getAnnotation( BasePathsProvider.class );
-        final Class<? extends BasePathsProviderImpl> basePathsProviderClass = basePathsProviderAnnotation.value();
-        
-        try
-        {
-            this.basePathsProvider = basePathsProviderClass.newInstance();
-        }
-        catch( Exception e )
-        {
-            throw new RuntimeException( e );
-        }
-    }
-
     @Override
     public Status validate()
     {
@@ -67,11 +43,15 @@ public final class RelativePathValidationService
         
         if( path != null )
         {
-            final List<Path> basePaths = this.basePathsProvider.getBasePaths( value.parent() );
+            final Path absolutePath = element().service( property(), RelativePathService.class ).convertToAbsolute( path );
             
-            for( Path basePath : basePaths )
+            if( absolutePath == null )
             {
-                final Path absolutePath = basePath.append( path );
+                final String message = Resources.bind( LocalResources.couldNotResolveRelative, path.toString() );
+                return Status.createErrorStatus( message );
+            }
+            else
+            {
                 final File absolutePathFile = absolutePath.toFile();
                 
                 if( absolutePathFile.exists() )
@@ -131,7 +111,7 @@ public final class RelativePathValidationService
                                    final ModelProperty property,
                                    final Class<? extends ModelPropertyService> service )
         {
-            return ( property instanceof ValueProperty && property.hasAnnotation( BasePathsProvider.class ) && Path.class.isAssignableFrom( property.getTypeClass() ) );
+            return ( property instanceof ValueProperty && Path.class.isAssignableFrom( property.getTypeClass() ) && element.service( property, RelativePathService.class ) != null );
         }
 
         @Override
@@ -140,6 +120,16 @@ public final class RelativePathValidationService
                                             final Class<? extends ModelPropertyService> service )
         {
             return new RelativePathValidationService();
+        }
+    }
+    
+    private static final class LocalResources extends NLS
+    {
+        public static String couldNotResolveRelative;
+        
+        static
+        {
+            initializeMessages( RelativePathValidationService.class.getName(), LocalResources.class );
         }
     }
     

@@ -9,33 +9,32 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.gallery.ui;
+package org.eclipse.sapphire.samples.calendar.internal;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.annotations.BasePathsProviderImpl;
+import org.eclipse.sapphire.modeling.RelativePathService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class CustomBasePathsProvider
-
-    extends BasePathsProviderImpl
-    
+public final class EventAttachmentLocalCopyRelativePathService extends RelativePathService
 {
     @Override
-    public List<Path> getBasePaths( final IModelElement element )
+    public List<Path> roots()
     {
-        final List<Path> roots = new ArrayList<Path>();
-        
-        roots.add( new Path( "c:/Windows" ) );
-        roots.add( new Path( "c:/Program Files" ) );
-        
-        return roots;
+        final IFile file = element().adapt( IFile.class );
+            
+        if( file != null )
+        {
+            return Collections.<Path>singletonList( new Path( file.getParent().getLocation().toPortableString() ) );
+        }
+
+        return Collections.emptyList();
     }
     
 }

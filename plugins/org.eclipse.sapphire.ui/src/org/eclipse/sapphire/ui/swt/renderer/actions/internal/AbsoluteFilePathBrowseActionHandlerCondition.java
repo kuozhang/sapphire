@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.annotations.AbsolutePath;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
@@ -33,10 +33,9 @@ public final class AbsoluteFilePathBrowseActionHandlerCondition
     {
         final ModelProperty property = part.getProperty();
         
-        if( property.isOfType( IPath.class ) && property.hasAnnotation( AbsolutePath.class ) )
+        if( property.isOfType( Path.class ) && property.hasAnnotation( AbsolutePath.class ) )
         {
-            final ValidFileSystemResourceType validFileSystemResourceType 
-                = property.getAnnotation( ValidFileSystemResourceType.class );
+            final ValidFileSystemResourceType validFileSystemResourceType = property.getAnnotation( ValidFileSystemResourceType.class );
             
             if( validFileSystemResourceType != null && validFileSystemResourceType.value() == FileSystemResourceType.FILE )
             {
