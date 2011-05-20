@@ -165,7 +165,6 @@ public class SapphireDiagramEditor extends DiagramEditor
 		return new SapphireDiagramEditorContextMenuProvider(this);
 	}	
 	
-	@Override
 	protected boolean shouldRegisterContextMenu() 
 	{
 		return false;
