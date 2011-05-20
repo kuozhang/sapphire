@@ -63,8 +63,7 @@ import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireAddConnectionFeatur
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireAddNodeFeature;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireCreateConnectionFeature;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireCreateNodeFeature;
-import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireDeleteConnectionFeature;
-import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireDeleteNodeFeature;
+import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireDeleteFeature;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireDirectEditConnectionFeature;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireDirectEditNodeFeature;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireMoveBendpointFeature;
@@ -139,21 +138,7 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 	@Override
 	public IDeleteFeature getDeleteFeature(IDeleteContext context) 
 	{
-		PictogramElement pe = context.getPictogramElement();
-		if (pe instanceof Connection)
-		{
-			// should not delete implicit connections
-			Object bo = getBusinessObjectForPictogramElement(pe);
-			if (!(bo instanceof DiagramImplicitConnectionPart))
-			{
-				return new SapphireDeleteConnectionFeature(this);
-			}
-		}
-		else if (pe instanceof ContainerShape)
-		{
-			return new SapphireDeleteNodeFeature(this);
-		}
-		return null;
+		return new SapphireDeleteFeature(this);
 	}
 	
 	@Override

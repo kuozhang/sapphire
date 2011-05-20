@@ -166,6 +166,12 @@ public class SapphireDiagramEditor extends DiagramEditor
 	}	
 	
 	@Override
+	protected boolean shouldRegisterContextMenu() 
+	{
+		return false;
+	}
+	
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		// If not the active editor, ignore selection changed.
 		boolean editorIsActive = getSite().getPage().isPartVisible(this);

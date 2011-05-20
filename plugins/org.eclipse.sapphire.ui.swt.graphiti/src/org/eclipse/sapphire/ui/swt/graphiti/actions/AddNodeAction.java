@@ -16,10 +16,7 @@ import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.context.impl.AddContext;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
-import org.eclipse.graphiti.ui.services.GraphitiUi;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.diagram.actions.DiagramNodeAddActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
 
@@ -57,15 +54,4 @@ public class AddNodeAction extends SapphireActionHandlerDelegate
 		});
 	}
 		
-	@Override
-	public ImageDescriptor getImageDescriptor() 
-	{
-		DiagramNodeAddActionHandler addNodeHandler = (DiagramNodeAddActionHandler)getSapphireActionHandler();
-		String imageId = addNodeHandler.getImageId();
-		if (imageId != null)
-		{
-			return GraphitiUi.getImageService().getImageDescriptorForId(imageId);
-		}
-		return null;
-	}
 }

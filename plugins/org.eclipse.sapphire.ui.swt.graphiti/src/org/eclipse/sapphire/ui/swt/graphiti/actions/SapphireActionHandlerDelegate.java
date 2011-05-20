@@ -46,12 +46,7 @@ public class SapphireActionHandlerDelegate extends Action
 	@Override
 	public ImageDescriptor getImageDescriptor() 
 	{
-		ImageDescriptor id = this.sapphireActionHandler.getImage(16);
-		if (id == null)
-		{
-			id = this.sapphireActionHandler.getAction().getImage(16);
-		}
-		return id;
+		return this.sapphireActionHandler.getImage(16);
 	}
 	
 	@Override

@@ -53,9 +53,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeProblemDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.ProblemDecoratorSize;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireActionCustomFeature;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireDoubleClickNodeFeature;
 
@@ -70,13 +68,22 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 	private static final int LARGE_ERROR_DECORATOR_WIDTH = 16;
 	private static final int LARGE_ERROR_DECORATOR_HEIGHT = 16;
 	
+	private static final String SHOW_IN_SOURCE_ACTION_ID = "Sapphire.Diagram.Part.ShowInSource";
+	
 	public SapphireDiagramToolBehaviorProvider(IDiagramTypeProvider dtp) 
 	{
 		super(dtp);
 	}
 
+	/**
+	 * Returning null to not display a floating palette around node
+	 * The context pad api is not compatible with sapphire action api.
+	 * There is no way to reconcile how action image is specified between them.
+	 */
 	@Override
-	public IContextButtonPadData getContextButtonPad(IPictogramElementContext context) {
+	public IContextButtonPadData getContextButtonPad(IPictogramElementContext context) 
+	{
+		//return null;
 		IContextButtonPadData data = super.getContextButtonPad(context);
 		PictogramElement pe = context.getPictogramElement();
 		
@@ -90,7 +97,8 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 	
 			// 2. add "show in source" context button
 			DiagramNodePart nodePart = (DiagramNodePart)bo;
-			SapphireActionHandler showInSourceHandler = nodePart.getShowInSourceActionHandler();
+			SapphireActionHandler showInSourceHandler = 
+					nodePart.getAction(SHOW_IN_SOURCE_ACTION_ID).getFirstActiveHandler();
 			SapphireActionCustomFeature sapphireActionFeature = 
 					new SapphireActionCustomFeature(this.getFeatureProvider(), showInSourceHandler);
 			CustomContext cc = new CustomContext(new PictogramElement[] { pe });
