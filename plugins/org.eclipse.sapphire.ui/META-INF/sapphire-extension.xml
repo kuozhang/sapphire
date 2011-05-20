@@ -169,17 +169,18 @@
     <action>
         <id>Sapphire.Diagram.Add</id>
         <context>Sapphire.Diagram.Editor</context>
-        <label>diagram add node action</label>
+        <label>${ Handlers.Size == 1 ? Concat( &quot;add &quot;, Handlers[ 0 ].Label ) : &quot;add&quot; }</label>
+        <image>org/eclipse/sapphire/ui/actions/Add.png</image>
     </action>    
     <action>
         <id>Sapphire.Diagram.Drop</id>
         <context>Sapphire.Diagram</context>
-        <label>diagram drop action</label>
+        <label>drop</label>
     </action>    
     <action>
         <id>Sapphire.Diagram.Node.Default</id>
         <context>Sapphire.Diagram.Node</context>
-        <label>node default action</label>
+        <label>default action</label>
     </action>
     <action>
         <id>Sapphire.Diagram.Part.ShowInSource</id>
@@ -189,6 +190,14 @@
         <image>org/eclipse/sapphire/ui/actions/ShowInSource.png</image>
         <description>Shows the model element associated with a given diagram node in the corresponding source editor.</description>
     </action>
+    <action>
+        <id>Sapphire.Diagram.Part.Delete</id>
+        <context>Sapphire.Diagram.Node</context>
+        <context>Sapphire.Diagram.Connection</context>
+        <label>delete</label>
+        <image>org/eclipse/sapphire/ui/actions/Delete.png</image>
+        <description>Deletes an entity. A common use is to delete an element from the model.</description>        
+    </action>    
     <action-handler>
         <action>Sapphire.Browse</action>
         <impl>org.eclipse.sapphire.ui.swt.renderer.actions.AbsoluteFilePathBrowseActionHandler</impl>
@@ -290,7 +299,13 @@
         <impl>org.eclipse.sapphire.ui.diagram.actions.DiagramShowInSourceActionHandler</impl>
         <id>Sapphire.Diagram.Part.ShowInSource</id>
         <description>Shows the model element associated with a given diagram node in the corresponding source editor.</description>
-    </action-handler>    
+    </action-handler>
+    <action-handler>
+        <action>Sapphire.Diagram.Part.Delete</action>
+        <impl>org.eclipse.sapphire.ui.diagram.actions.DiagramDeleteActionHandler</impl>
+        <id>Sapphire.Diagram.Part.Delete</id>
+        <description>Deletes the model element associated with a given diagram node or connection.</description>
+    </action-handler>        
     <action-handler-factory>
         <action>Sapphire.Add</action>
         <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeAddActionHandlerFactory</impl>

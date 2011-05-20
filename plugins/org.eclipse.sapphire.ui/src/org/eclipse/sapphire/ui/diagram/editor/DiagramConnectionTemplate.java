@@ -204,13 +204,13 @@ public class DiagramConnectionTemplate extends SapphirePart
     
     public List<DiagramConnectionPart> getDiagramConnections(IModelElement connListParent)
     {
+    	List<DiagramConnectionPart> connList = new ArrayList<DiagramConnectionPart>();
     	if (connListParent == null || getConnectionType() == ConnectionType.OneToOne)
     	{
-    		return this.diagramConnections;
+    		connList.addAll(this.diagramConnections);
     	}
     	else
-    	{
-    		List<DiagramConnectionPart> connList = new ArrayList<DiagramConnectionPart>();
+    	{    		
     		for (DiagramConnectionPart connPart : this.diagramConnections)
     		{
     			IModelElement connModel = connPart.getLocalModelElement();
@@ -218,9 +218,9 @@ public class DiagramConnectionTemplate extends SapphirePart
     			{
     				connList.add(connPart);
     			}
-    		}
-    		return connList;
+    		}    		
     	}
+    	return connList;
     }
         
     public IModelElement getConnectionParentElement(IModelElement srcNodeModel)

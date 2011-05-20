@@ -9,6 +9,9 @@
 
 package org.eclipse.sapphire.ui.diagram.actions;
 
+import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescriptor;
+
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
@@ -37,7 +40,12 @@ public class DiagramNodeAddActionHandler extends SapphireDiagramActionHandler
 		if (this.nodeTemplate.getToolPaletteLabel() != null)
 		{
 			setLabel(this.nodeTemplate.getToolPaletteLabel());
-		}    	
+		}
+		final ImageDescriptor typeSpecificAddImage = toImageDescriptor(this.nodeTemplate.getNodeType().image());
+		if (typeSpecificAddImage != null)
+		{
+			addImage(typeSpecificAddImage);
+		}
     }
     
 	@Override
@@ -54,13 +62,5 @@ public class DiagramNodeAddActionHandler extends SapphireDiagramActionHandler
 		this.nodeTemplate.addModelListener();
 		return nodePart;
 	}	
-	
-	public String getImageId()
-	{
-		if (this.nodeTemplate.getToolPaletteImage() != null)
-		{
-			return this.nodeTemplate.getToolPaletteImage().getImageId().getContent();
-		}
-		return null;
-	}
+
 }

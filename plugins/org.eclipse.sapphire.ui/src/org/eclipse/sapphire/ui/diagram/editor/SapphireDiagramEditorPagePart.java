@@ -24,7 +24,6 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
-import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -55,7 +54,6 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     private PropertiesViewContributionManager propertiesViewContributionManager;
     private SapphirePart selection;
     private ImplicitConnectionTemplateListener implicitConnTemplateListener;
-    private SapphireActionGroup addActionGroup;
 	    
     @Override
     protected void init()
@@ -127,10 +125,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         
         this.selection = this;
         this.propertiesViewContributionManager = new PropertiesViewContributionManager( this, this.modelElement );
-        
-        // node add action
-        this.addActionGroup = this.getActions(SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR);
-        
+                
         this.addListener
         (
             new SapphirePartListener()
@@ -208,12 +203,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR);
     	return contextSet;
     }
-    
-    public SapphireActionGroup getNodeAddActionGroup()
-    {
-    	return this.addActionGroup;
-    }
-    
+        
     public SapphirePart getSelection()
     {
         return this.selection;

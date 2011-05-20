@@ -54,8 +54,6 @@ public class DiagramConnectionPart
     implements IPropertiesViewContributorPart
     
 {
-	private static final String SHOW_IN_SOURCE_ACTION_ID = "Sapphire.Diagram.Part.ShowInSource";
-	
 	protected DiagramConnectionTemplate connectionTemplate;
 	protected IDiagramExplicitConnectionBindingDef bindingDef;
 	protected IDiagramConnectionDef definition;
@@ -75,8 +73,6 @@ public class DiagramConnectionPart
 	protected FunctionResult idFunctionResult;
 	protected ModelPropertyListener modelPropertyListener;
 	private PropertiesViewContributionManager propertiesViewContributionManager;
-	private SapphireAction showInSourceAction;
-	private SapphireActionHandler showInSourceActionHandler;
 	
 	public DiagramConnectionPart() {}
 	
@@ -129,10 +125,6 @@ public class DiagramConnectionPart
                 }
             }
         ); 
-        
-        // "show in source" action handler
-        this.showInSourceAction = getAction(SHOW_IN_SOURCE_ACTION_ID);
-        this.showInSourceActionHandler = this.showInSourceAction.getFirstActiveHandler();
         
 	}
 	
@@ -276,12 +268,7 @@ public class DiagramConnectionPart
     {
         return Collections.singleton( SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION );
     }
-
-	public SapphireActionHandler getShowInSourceActionHandler()
-	{
-		return this.showInSourceActionHandler;
-	}
-
+	
     @Override
 	public void render(SapphireRenderingContext context)
 	{

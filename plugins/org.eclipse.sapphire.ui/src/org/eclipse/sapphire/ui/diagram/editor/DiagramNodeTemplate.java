@@ -230,7 +230,15 @@ public class DiagramNodeTemplate extends SapphirePart
     
     public ModelElementType getNodeType()
     {
-    	return this.modelProperty.getType();
+    	if (this.modelElementType == null)
+    	{
+    		return this.modelProperty.getType();
+    	}
+    	else 
+    	{
+    		final Class<?> cl = this.modelElementType.artifact();
+    		return ModelElementType.getModelElementType(cl);
+    	}
     }
     
     public DiagramEmbeddedConnectionTemplate getEmbeddedConnectionTemplate()
