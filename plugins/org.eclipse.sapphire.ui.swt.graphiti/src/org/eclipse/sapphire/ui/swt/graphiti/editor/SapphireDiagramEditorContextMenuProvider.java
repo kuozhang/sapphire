@@ -37,6 +37,7 @@ import org.eclipse.sapphire.ui.swt.graphiti.actions.SapphireActionHandlerDelegat
 public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvider
 {
 	private static final String DIAGRAM_ADD_ACTION = "Sapphire.Diagram.Add";
+	private static final String DIAGRAM_NODE_DEFAULT_ACTION = "Sapphire.Diagram.Node.Default";
 	
 	private SapphireDiagramEditor sapphireDiagramEditor;
 	
@@ -110,14 +111,29 @@ public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvide
 					@Override
 					public String getText()
 					{
-						String text = action.getLabel(); 
+						String text;
+						if (action.getId().equals(DIAGRAM_NODE_DEFAULT_ACTION))
+						{
+							text = actionHandler.getLabel();
+						}
+						else
+						{
+							text = action.getLabel(); 
+						}
 						return LabelTransformer.transform(text, CapitalizationType.TITLE_STYLE, true);
 					}
 					
 					@Override
 					public ImageDescriptor getImageDescriptor()
 					{
-						return action.getImage(16);
+						if (action.getId().equals(DIAGRAM_NODE_DEFAULT_ACTION))
+						{
+							return actionHandler.getImage(16);
+						}
+						else
+						{
+							return action.getImage(16);
+						}
 					}
 				};				
 			}
