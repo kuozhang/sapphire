@@ -137,7 +137,6 @@ public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvide
 					}
 				};				
 			}
-			
 			menuMgr.add(actionDelegate);
 		}
 		else if (action.getActiveHandlers().size() > 1)

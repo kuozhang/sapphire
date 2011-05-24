@@ -16,8 +16,10 @@ import java.util.List;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
@@ -34,10 +36,19 @@ public class DiagramDeleteActionHandler extends SapphireDiagramActionHandler
 {
 	private static final String DELETE_ACTION_ID = "Sapphire.Diagram.Part.Delete";
 	
+    @Override
+    public void init( final SapphireAction action,
+                      final ISapphireActionHandlerDef def )
+    {
+        super.init( action, def );
+        ISapphirePart part = getPart();
+        setEnabled(!(part instanceof DiagramImplicitConnectionPart));
+    }
+	
 	@Override
 	public boolean canExecute(Object obj) 
 	{
-		return true;
+		return isEnabled();
 	}
 
 	@Override
