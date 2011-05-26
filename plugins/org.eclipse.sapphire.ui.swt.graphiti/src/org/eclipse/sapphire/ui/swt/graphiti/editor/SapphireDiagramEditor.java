@@ -76,7 +76,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartConstants;
-import org.eclipse.ui.part.MultiPageEditorPart;
+import org.eclipse.ui.forms.editor.FormEditor;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -208,14 +208,19 @@ public class SapphireDiagramEditor extends DiagramEditor
 			if (activeEditor != null) {
 				// Check if the top level editor if it is active
 				editorIsActive = getSite().getPage().isPartVisible(activeEditor);
-				if (activeEditor instanceof MultiPageEditorPart) {
-					int activePage = ((MultiPageEditorPart) activeEditor).getActivePage();
-					if (activePage != 0) {
-						// Editor is active but the diagram sub editor is not
-						// its active page
-						editorIsActive = false;
-					}
+				if ( activeEditor instanceof FormEditor ) {
+                    if ( !( this.equals( ( (FormEditor) activeEditor).getActiveEditor() ) ) ) {
+                    	editorIsActive = false;
+                    }
 				}
+//				if (activeEditor instanceof MultiPageEditorPart) {
+//					int activePage = ((MultiPageEditorPart) activeEditor).getActivePage();
+//					if (activePage != 0) {
+//						// Editor is active but the diagram sub editor is not
+//						// its active page
+//						editorIsActive = false;
+//					}
+//				}
 			}
 		}
 		if (editorIsActive) {
