@@ -260,7 +260,7 @@ public abstract class SapphireActionSystemPart
         }
     }
     
-    public final boolean isChecked()
+    public boolean isChecked()
     {
         synchronized( this )
         {

@@ -30,6 +30,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.SnapToGrid;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.IRemoveFeature;
@@ -74,6 +75,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartConstants;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
 /**
@@ -92,6 +94,8 @@ public class SapphireDiagramEditor extends DiagramEditor
     private static int xInc = 100;
     private static int yInc = 0;
     private List<SapphirePart> selectedParts = null;
+    private boolean isGridVisible;
+    private boolean gridVisibilityChanged = false;
 	
 	public SapphireDiagramEditor(final IModelElement rootModelElement, final IPath pageDefinitionLocation)
 	{
@@ -168,6 +172,30 @@ public class SapphireDiagramEditor extends DiagramEditor
 	protected boolean shouldRegisterContextMenu() 
 	{
 		return false;
+	}
+	
+	public boolean isGridVisible()
+	{
+		return this.isGridVisible;
+	}
+	
+	public void setGridVisible(boolean visible)
+	{
+		if (this.isGridVisible != visible)
+		{
+			this.isGridVisible = visible;
+			this.gridVisibilityChanged = true;
+			this.diagramGeometry.setGridVisible(this.isGridVisible);
+			firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY); 
+		}
+	}
+	
+	@Override
+	public boolean isDirty()
+	{
+		boolean dirty = super.isDirty();
+		dirty |= this.gridVisibilityChanged;
+		return dirty;
 	}
 	
 	@Override
@@ -301,6 +329,14 @@ public class SapphireDiagramEditor extends DiagramEditor
 		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput)input;
 		IFile npFile = diagramInput.getNodePositionFile();
 		this.diagramGeometry = new DiagramGeometryWrapper(npFile, getPart());
+		if (this.diagramGeometry.isGridPropertySet())
+		{
+			this.isGridVisible = this.diagramGeometry.isGridVisible();
+		}
+		else
+		{
+			this.isGridVisible = this.diagramPart.isGridVisible();
+		}
 	}
 	
 	@Override
@@ -308,6 +344,13 @@ public class SapphireDiagramEditor extends DiagramEditor
 	{
 		super.initializeGraphicalViewer();
 		syncDiagramWithModel();
+		boolean isGridVisibleInViewer = (Boolean) getGraphicalViewer()
+				.getProperty(SnapToGrid.PROPERTY_GRID_VISIBLE);
+		if (this.isGridVisible != isGridVisibleInViewer)
+		{
+			getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, this.isGridVisible);
+			getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, this.isGridVisible);			
+		}
 		doSave(null);
 	}
 		
@@ -318,6 +361,8 @@ public class SapphireDiagramEditor extends DiagramEditor
 		try
 		{
 			getDiagramGeometry().write();
+			this.gridVisibilityChanged = false;
+			firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);
 		}
         catch( Exception e )
         {

@@ -1024,6 +1024,15 @@
                     <property-editor>PageName</property-editor>
                     <property-editor>PageHeaderText</property-editor>
                     <property-editor>Property</property-editor>
+                    <with>
+                        <path>GridDefinition</path>
+                        <panel>
+                            <key>IDiagramGridDef</key>
+                            <content>
+                                <property-editor>Visible</property-editor>
+                            </content>
+                        </panel>
+                    </with>
                 </content>
             </section>
             <use-model-element-image></use-model-element-image>

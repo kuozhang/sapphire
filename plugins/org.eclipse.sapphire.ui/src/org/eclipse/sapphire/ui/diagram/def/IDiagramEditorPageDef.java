@@ -12,6 +12,7 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -38,6 +39,15 @@ public interface IDiagramEditorPageDef
 	
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramEditorPageDef.class);
+	
+	// *** GridDefinition ***
+	
+	@Type( base = IDiagramGridDef.class )
+	@XmlBinding( path = "grid")
+	
+	ImpliedElementProperty PROP_GRID_DEFINITION = new ImpliedElementProperty( TYPE, "GridDefinition" );
+
+	IDiagramGridDef getGridDefinition();	
 	
     // *** Property ***
     

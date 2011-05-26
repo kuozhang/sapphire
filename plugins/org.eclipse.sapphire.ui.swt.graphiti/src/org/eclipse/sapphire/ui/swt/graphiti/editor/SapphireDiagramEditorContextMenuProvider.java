@@ -27,6 +27,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.swt.graphiti.actions.AddNodeAction;
 import org.eclipse.sapphire.ui.swt.graphiti.actions.SapphireActionHandlerDelegate;
+import org.eclipse.sapphire.ui.swt.graphiti.actions.ToggleDiagramGridActionHandler;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -38,6 +39,7 @@ public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvide
 {
 	private static final String DIAGRAM_ADD_ACTION = "Sapphire.Diagram.Add";
 	private static final String DIAGRAM_NODE_DEFAULT_ACTION = "Sapphire.Diagram.Node.Default";
+	private static final String DIAGRAM_GRID_ACTION = "Sapphire.Diagram.ToggleGrid";
 	
 	private SapphireDiagramEditor sapphireDiagramEditor;
 	
@@ -81,7 +83,7 @@ public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvide
 
 	private void addActionToContextMenu(IMenuManager menuMgr, final SapphireAction action)
 	{
-		if (action.getActiveHandlers().size() == 1)
+		if (action.getActiveHandlers().size() == 1 || action.getId().equals(DIAGRAM_GRID_ACTION))
 		{
 			final SapphireActionHandler actionHandler = action.getActiveHandlers().get(0);
 			
@@ -106,6 +108,10 @@ public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvide
 			}
 			else
 			{
+				if (action.getId().equals(DIAGRAM_GRID_ACTION))
+				{
+					((ToggleDiagramGridActionHandler)actionHandler).setDiagramEditor(this.sapphireDiagramEditor);
+				}
 				actionDelegate = new SapphireActionHandlerDelegate(this.sapphireDiagramEditor, actionHandler)
 				{
 					@Override

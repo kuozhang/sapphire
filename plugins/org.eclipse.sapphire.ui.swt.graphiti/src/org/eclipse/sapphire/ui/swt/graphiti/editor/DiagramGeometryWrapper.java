@@ -73,6 +73,21 @@ public class DiagramGeometryWrapper
 		}
 	}
 	
+	public boolean isGridPropertySet()
+	{
+		return this.geometryModel.getGridDefinition().isVisible().getContent(false) != null;
+	}
+	
+	public boolean isGridVisible()
+	{
+		return this.geometryModel.getGridDefinition().isVisible().getContent();
+	}
+	
+	public void setGridVisible(boolean visible)
+	{
+		this.geometryModel.getGridDefinition().setVisible(visible);
+	}
+	
 	public void addNode(DiagramNodePart nodePart, int x, int y, int w, int h)
 	{
 		Bounds bounds = new Bounds(x, y, w, h);

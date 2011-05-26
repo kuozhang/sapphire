@@ -54,6 +54,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     private PropertiesViewContributionManager propertiesViewContributionManager;
     private SapphirePart selection;
     private ImplicitConnectionTemplateListener implicitConnTemplateListener;
+    private boolean showGrid;
 	    
     @Override
     protected void init()
@@ -70,6 +71,8 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         {
             this.modelElement = getModelElement();
         }
+		
+		this.showGrid = this.diagramPageDef.getGridDefinition().isVisible().getContent();
 		
         this.nodeTemplateListener = new NodeTemplateListener();
         this.connTemplateListener = new ConnectionTemplateListener();
@@ -144,6 +147,11 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         refreshPropertiesViewContribution();
 	}
 
+    public boolean isGridVisible()
+    {
+    	return this.showGrid;
+    }
+        
     public List<IDiagramImageChoice> getImageDecorators()
     {
     	return this.diagramPageDef.getDiagramImageDecorators();

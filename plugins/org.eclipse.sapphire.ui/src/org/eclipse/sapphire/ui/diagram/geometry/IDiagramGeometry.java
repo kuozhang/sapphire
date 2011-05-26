@@ -12,13 +12,16 @@
 package org.eclipse.sapphire.ui.diagram.geometry;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramGridDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -30,6 +33,15 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 public interface IDiagramGeometry extends IModelElement 
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramGeometry.class );
+	
+	// *** GridDefinition ***
+	
+	@Type( base = IDiagramGridDef.class )
+	@XmlBinding( path = "grid")
+	
+	ImpliedElementProperty PROP_GRID_DEFINITION = new ImpliedElementProperty( TYPE, "GridDefinition" );
+
+	IDiagramGridDef getGridDefinition();	
 	
     // *** DiagramNodeGeometries ***
 

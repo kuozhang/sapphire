@@ -56,7 +56,10 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
 		super.init(diagram, diagramEditor);
 		
 		SapphireDiagramEditorPagePart editorPart = ((SapphireDiagramEditor)diagramEditor).getPart();
-		DiagramRenderingContext renderingCtx = new DiagramRenderingContext(editorPart, diagram);
+		DiagramRenderingContext renderingCtx = new DiagramRenderingContext(
+								editorPart, 
+								(SapphireDiagramEditor)diagramEditor,
+								diagram);
 		this.featureProvider.addRenderingContext(editorPart, renderingCtx);
 		
 		ExtensionManager extManager = (ExtensionManager)GraphitiUi.getExtensionManager();

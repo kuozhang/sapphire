@@ -176,7 +176,13 @@
         <id>Sapphire.Diagram.Drop</id>
         <context>Sapphire.Diagram</context>
         <label>drop</label>
-    </action>    
+    </action>
+    <action>
+        <id>Sapphire.Diagram.ToggleGrid</id>
+        <context>Sapphire.Diagram.Editor</context>
+        <label>grid</label>
+        <description>Show or hide the grid</description>       
+    </action>
     <action>
         <id>Sapphire.Diagram.Node.Default</id>
         <context>Sapphire.Diagram.Node</context>

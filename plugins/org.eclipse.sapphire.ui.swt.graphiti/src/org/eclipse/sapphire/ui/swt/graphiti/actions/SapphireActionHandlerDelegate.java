@@ -36,6 +36,7 @@ public class SapphireActionHandlerDelegate extends Action
 		this.diagramEditor = diagramEditor;
 		this.sapphireActionHandler = sapphireActionHandler;
 		setEnabled(this.sapphireActionHandler.isEnabled());
+		setChecked(this.sapphireActionHandler.isChecked());
 	}
 	
 	@Override

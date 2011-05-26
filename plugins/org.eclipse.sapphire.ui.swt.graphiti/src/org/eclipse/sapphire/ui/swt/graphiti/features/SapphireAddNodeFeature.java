@@ -199,7 +199,10 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
         diagramGeometry.addNode(nodePart, x, y, width, height);
         
         // Create a rendering context for the node
-        DiagramRenderingContext renderingCtx = new DiagramRenderingContext(nodePart, containerShape);
+        DiagramRenderingContext renderingCtx = new DiagramRenderingContext(
+        					nodePart, 
+        					(SapphireDiagramEditor)getDiagramEditor(),
+        					containerShape);
         SapphireDiagramFeatureProvider sfp = (SapphireDiagramFeatureProvider)getFeatureProvider();
         sfp.addRenderingContext(nodePart, renderingCtx);
 		return containerShape;

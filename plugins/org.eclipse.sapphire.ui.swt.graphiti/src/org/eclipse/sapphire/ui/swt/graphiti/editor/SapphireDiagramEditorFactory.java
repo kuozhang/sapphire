@@ -77,7 +77,7 @@ public class SapphireDiagramEditorFactory
 			
 			// Create Diagram Obj
 			diagram = Graphiti.getPeCreateService().createDiagram(
-					SAPPHIRE_DIAGRAM_TYPE, fileName, 10, false);
+					SAPPHIRE_DIAGRAM_TYPE, fileName, 10, true);
 			diagramFileUri = URI.createPlatformResourceURI(diagramFile.getFullPath().toString(), true);
 			domain = GraphitiFileService.createEmfFileForDiagram(diagramFileUri, diagram);
 		}
