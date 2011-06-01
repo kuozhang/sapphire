@@ -27,7 +27,7 @@ import org.eclipse.graphiti.ui.editor.DiagramEditorInput;
 public class SapphireDiagramEditorInput extends DiagramEditorInput 
 {
 	private Diagram diagram;
-	private IFile nodePositionFile;
+	private IFile layoutFile;
 	
 	public SapphireDiagramEditorInput(Diagram diagram, String diagramUriString,
 			TransactionalEditingDomain domain, String providerId,
@@ -77,14 +77,14 @@ public class SapphireDiagramEditorInput extends DiagramEditorInput
 		return null;
 	}
 	
-	public IFile getNodePositionFile()
+	public IFile getLayoutFile()
 	{
-		return this.nodePositionFile;
+		return this.layoutFile;
 	}
 	
-	public void setNodePositionFile(IFile file)
+	public void setLayoutFile(IFile file)
 	{
-		this.nodePositionFile = file;
+		this.layoutFile = file;
 	}
 	
 	

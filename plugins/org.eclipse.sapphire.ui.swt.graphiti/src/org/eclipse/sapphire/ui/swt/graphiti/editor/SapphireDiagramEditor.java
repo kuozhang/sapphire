@@ -332,7 +332,7 @@ public class SapphireDiagramEditor extends DiagramEditor
 	{
 		super.setInput(input);
 		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput)input;
-		IFile npFile = diagramInput.getNodePositionFile();
+		IFile npFile = diagramInput.getLayoutFile();
 		this.diagramGeometry = new DiagramGeometryWrapper(npFile, getPart());
 		if (this.diagramGeometry.isGridPropertySet())
 		{

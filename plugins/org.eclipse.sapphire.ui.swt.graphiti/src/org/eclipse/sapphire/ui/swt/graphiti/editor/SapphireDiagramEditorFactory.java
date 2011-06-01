@@ -19,8 +19,9 @@ import java.util.Iterator;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -45,35 +46,79 @@ public class SapphireDiagramEditorFactory
 {
 	public static final String SAPPHIRE_DIAGRAM_TYPE = "sapphireDiagram";
 	
-	public static SapphireDiagramEditorInput createEditorInput(IFile file) 
+	public static SapphireDiagramEditorInput createEditorInput(IFile file)
+			throws StatusException, CoreException
+	{
+		return createEditorInput(file, null, false);
+	}
+	
+	public static SapphireDiagramEditorInput createEditorInput(IFile file, String diagramPageId, boolean sideBySideLayoutFile) 
 		throws StatusException, CoreException
 	{
 		if (file == null)
 			return null;
 		
-		final IProject project = file.getProject();
+		IProject project = file.getProject();
+		IPath inputFilePath = file.getProjectRelativePath().removeLastSegments(1);		
 		
-		final IFolder diagramFolder = project.getFolder(".settings/diagrams/");
-		diagramFolder.refreshLocal(0, null);
-		String fileName = file.getName();
-		if (fileName.endsWith(".xml"))
+		String fileName;
+		String inputFileName = file.getName();
+		if (inputFileName.endsWith(".xml"))
 		{
-			fileName = fileName.substring(0, fileName.indexOf(".xml"));
+			fileName = inputFileName.substring(0, inputFileName.indexOf(".xml"));
 		}
+		else
+		{
+			fileName = inputFileName;
+		}
+		if (diagramPageId != null)
+		{
+			fileName += "_" + diagramPageId;
+		}
+		
+		// compute layout folder path
+		
+		IFolder diagramSettingRootFolder = project.getFolder(".settings/org.eclipse.sapphire.ui.diagram/");					
+		IPath diagramSettingFolderPath = diagramSettingRootFolder.getProjectRelativePath().append(inputFilePath);
+		IFolder diagramSettingFolder = project.getFolder(diagramSettingFolderPath);
+		if (!diagramSettingFolder.exists())
+		{
+			FileUtil.mkdirs(diagramSettingFolder.getLocation().toFile());
+			diagramSettingFolder.refreshLocal(IResource.DEPTH_ONE, null);
+		}
+		
+		IFolder layoutFolder;
+		if (!sideBySideLayoutFile)
+		{
+			layoutFolder = diagramSettingFolder;
+		}
+		else
+		{
+			layoutFolder = (IFolder)file.getParent();
+		}
+		
+		// create diagram layout file if it doesn't exist
+		IFile layoutFile = layoutFolder.getFile(fileName + ".layout");
+		if (!layoutFile.exists())
+		{
+			layoutFile.create(new ByteArrayInputStream(new byte[0]), true, null);
+		}
+		
+		// We don't need to persist Graphiti diagram. But due to limitations on Graphiti's
+		// diagram model, we still need to pass a file when creating Graphiti Diagram obj.
+		// See http://www.eclipse.org/forums/index.php/t/202467/
 		
 		TransactionalEditingDomain domain = null;
 		ResourceSet resourceSet = null;
 		Diagram diagram = null;
 		URI diagramFileUri = null;
-		
-		// create diagram file if it doesn't exist
-		final IFile diagramFile = diagramFolder.getFile(fileName + ".xmi");
-		diagramFile.refreshLocal(0,  null);
-		
+
+		String diagramFileName = fileName + ".xmi";
+		IFile diagramFile = diagramSettingFolder.getFile(diagramFileName);
+
 		if (!diagramFile.exists())
 		{
-			FileUtil.mkdirs( diagramFile.getParent().getLocation().toFile() );
-			diagramFile.create( new ByteArrayInputStream(new byte[0]), true, null );
+			diagramFile.create(new ByteArrayInputStream(new byte[0]), true, null);			
 			
 			// Create Diagram Obj
 			diagram = Graphiti.getPeCreateService().createDiagram(
@@ -110,12 +155,6 @@ public class SapphireDiagramEditorFactory
 				}
 			}				
 		}
-		// create diagram node position file if it doesn't exist
-		IFile nodePosFile = diagramFile.getParent().getFile(new Path(fileName + ".np"));
-		if (!nodePosFile.exists())
-		{
-			nodePosFile.create( new ByteArrayInputStream(new byte[0]), true, null );
-		}
 
 		// create sapphire diagram editor input
 		if (diagram != null)
@@ -123,11 +162,13 @@ public class SapphireDiagramEditorFactory
 			String providerId = GraphitiUi.getExtensionManager().getDiagramTypeProviderId(diagram.getDiagramTypeId());
 			final SapphireDiagramEditorInput diagramEditorInput = 
 				SapphireDiagramEditorInput.createEditorInput(diagram, domain, providerId, false);
-			diagramEditorInput.setNodePositionFile(nodePosFile);
+			diagramEditorInput.setLayoutFile(layoutFile);
 			return diagramEditorInput;
 		}
-	
-		return null;
+		else
+		{
+			return null;
+		}
 	}
 
 }

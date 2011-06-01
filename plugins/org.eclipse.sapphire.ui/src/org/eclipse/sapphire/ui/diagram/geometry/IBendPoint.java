@@ -17,8 +17,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
-import org.eclipse.sapphire.ui.diagram.geometry.internal.GeometryAttributeBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -33,7 +32,7 @@ public interface IBendPoint extends IModelElement
     // *** X ***
     
     @Type( base = Integer.class )
-    @CustomXmlValueBinding( impl = GeometryAttributeBinding.class, params = {"x"})
+    @XmlBinding( path = "@x" )    
     
     ValueProperty PROP_X = new ValueProperty( TYPE, "X");
     
@@ -44,7 +43,7 @@ public interface IBendPoint extends IModelElement
     // *** Y ***
     
     @Type( base = Integer.class )
-    @CustomXmlValueBinding( impl = GeometryAttributeBinding.class, params = {"y"})
+    @XmlBinding( path = "@y" )
 
     ValueProperty PROP_Y = new ValueProperty( TYPE, "Y");
     

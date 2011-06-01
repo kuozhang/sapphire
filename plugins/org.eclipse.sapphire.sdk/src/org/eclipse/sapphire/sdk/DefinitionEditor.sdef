@@ -1033,6 +1033,7 @@
                             </content>
                         </panel>
                     </with>
+                    <property-editor>SideBySideLayoutStorage</property-editor>
                 </content>
             </section>
             <use-model-element-image></use-model-element-image>

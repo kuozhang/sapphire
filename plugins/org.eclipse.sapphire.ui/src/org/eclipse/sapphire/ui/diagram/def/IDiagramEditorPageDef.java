@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -48,6 +49,19 @@ public interface IDiagramEditorPageDef
 	ImpliedElementProperty PROP_GRID_DEFINITION = new ImpliedElementProperty( TYPE, "GridDefinition" );
 
 	IDiagramGridDef getGridDefinition();	
+	
+	// *** SideBySideLayoutStorage ***
+	
+    @Type( base = Boolean.class )
+    @XmlBinding( path = "side-by-side-layout-storage" )
+    @DefaultValue( text = "false" )
+    @Label( standard = "side by side layout storage")
+    
+    ValueProperty PROP_SIDE_BY_SIDE_LAYOUT_STORAGE = new ValueProperty(TYPE, "SideBySideLayoutStorage");
+    
+    Value<Boolean> isSideBySideLayoutStorage();
+    void setSideBySideLayoutStorage( String value );
+    void setSideBySideLayoutStorage( Boolean value );
 	
     // *** Property ***
     

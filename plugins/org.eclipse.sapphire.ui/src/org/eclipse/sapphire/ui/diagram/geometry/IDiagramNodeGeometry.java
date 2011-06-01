@@ -20,10 +20,8 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.ui.diagram.geometry.internal.GeometryAttributeBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -48,7 +46,7 @@ public interface IDiagramNodeGeometry extends IModelElement
     // *** X ***
     
     @Type( base = Integer.class )
-    @CustomXmlValueBinding( impl = GeometryAttributeBinding.class, params = {"gemometry", "x"})
+    @XmlBinding( path = "bounds/@x" )
     
     ValueProperty PROP_X = new ValueProperty( TYPE, "X");
     
@@ -59,7 +57,7 @@ public interface IDiagramNodeGeometry extends IModelElement
     // *** Y ***
     
     @Type( base = Integer.class )
-    @CustomXmlValueBinding( impl = GeometryAttributeBinding.class, params = {"gemometry", "y"})
+    @XmlBinding( path = "bounds/@y" )
 
     ValueProperty PROP_Y = new ValueProperty( TYPE, "Y");
     
@@ -70,7 +68,7 @@ public interface IDiagramNodeGeometry extends IModelElement
     // *** Width ***
     
     @Type( base = Integer.class )
-    @CustomXmlValueBinding( impl = GeometryAttributeBinding.class, params = {"gemometry", "width"})
+    @XmlBinding( path = "bounds/@width" )
     
     ValueProperty PROP_WIDTH = new ValueProperty( TYPE, "Width");
     
@@ -81,7 +79,7 @@ public interface IDiagramNodeGeometry extends IModelElement
     // *** Height ***
     
     @Type( base = Integer.class )
-    @CustomXmlValueBinding( impl = GeometryAttributeBinding.class, params = {"gemometry", "height"})
+    @XmlBinding( path = "bounds/@height" )
     
     ValueProperty PROP_HEIGHT = new ValueProperty( TYPE, "Height");
     

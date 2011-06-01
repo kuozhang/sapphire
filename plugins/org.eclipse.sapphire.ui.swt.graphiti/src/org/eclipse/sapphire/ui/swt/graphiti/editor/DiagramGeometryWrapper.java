@@ -265,8 +265,11 @@ public class DiagramGeometryWrapper
 				diagramNode.setNodeId(id);
 				diagramNode.setX(bounds.getX());
 				diagramNode.setY(bounds.getY());
-				diagramNode.setWidth(bounds.getWidth());
-				diagramNode.setHeight(bounds.getHeight());
+				if (nodePart.canResizeShape())
+				{
+					diagramNode.setWidth(bounds.getWidth());
+					diagramNode.setHeight(bounds.getHeight());
+				}
 				
 				// save the embedded connection bendpoints
 				HashMap<DiagramConnectionPart, List<Point>> embeddedConnBendpointsMap = 
