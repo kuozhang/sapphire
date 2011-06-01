@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [348011] NPE when clearing element text
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml;
@@ -14,6 +15,7 @@ package org.eclipse.sapphire.modeling.xml;
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.EMPTY_STRING;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -270,6 +272,7 @@ public final class XmlElement
          
         final Element domElement = getDomNode();
         final NodeList elementChildren = domElement.getChildNodes();
+        final List<Node> removeList = new ArrayList<Node>();
         Text text = null;
          
         for( int i = 0, n = elementChildren.getLength(); i < n; i++ )
@@ -282,8 +285,13 @@ public final class XmlElement
             }
             else
             {
-                domElement.removeChild( elementChildren.item( i ) );
+            	removeList.add( child );
             }
+        }
+        
+        for ( Node child : removeList ) 
+        {
+        	domElement.removeChild( child );
         }
 
         if( isElementTextNonEmpty )
