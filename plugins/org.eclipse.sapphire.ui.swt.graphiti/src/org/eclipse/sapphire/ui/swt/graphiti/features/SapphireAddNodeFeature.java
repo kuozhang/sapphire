@@ -182,10 +182,28 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
             int labelWidth = nodePart.getLabelWidth();
             int labelHeight = nodePart.getLabelHeight();
             int lwidth = labelWidth > 0 ? labelWidth : width;
-            int lheight = labelHeight > 0 ? labelHeight : (nodePart.getImageId() == null ? height : DEFAULT_TEXT_HEIGHT);
+            int lheight = labelHeight > 0 ? labelHeight : DEFAULT_TEXT_HEIGHT;
+
+            int textX = labelLocation.getX();
+            if (lwidth == width)
+            {
+            	// Leave a few pixels in the left and right for direct editing cell
+            	lwidth -= 6;
+            	textX += 3;
+            }
+            // If the node doesn't have image, we need to center the text vertically.
+            // We either give the text the entire node height and rely on text's 
+            // vertical alignment to center the text vertically. Or we give the text
+            // the default text height (20) and center it by calculating it's vertical
+            // offset. For the first approach, we'd run into misalignment for direct
+            // editing. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=344022
+            int textY = labelLocation.getY();
+            if (nodePart.getImageId() == null && lheight < height)
+            {
+            	textY += (height - lheight) >> 1;
+            }
             
-            gaService.setLocationAndSize(text, labelLocation.getX(), labelLocation.getY(), 
-            		lwidth, lheight);
+            gaService.setLocationAndSize(text, textX, textY, lwidth, lheight);
  
             // create link and wire it
             link(shape, nodePart); 
