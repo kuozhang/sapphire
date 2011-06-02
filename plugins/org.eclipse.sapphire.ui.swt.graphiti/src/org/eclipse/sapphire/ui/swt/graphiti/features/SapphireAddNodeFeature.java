@@ -109,8 +109,8 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
         int x, y;
         if (context.getX() != -1 && context.getY() != -1)
         {
-        	x = context.getX();
-        	y = context.getY();
+        	x = context.getX() - (width >> 1);
+        	y = context.getY() - (height >> 1);
         }
         else
         {
@@ -200,7 +200,7 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
             int textY = labelLocation.getY();
             if (nodePart.getImageId() == null && lheight < height)
             {
-            	textY += (height - lheight) >> 1;
+            	textY += height - lheight >> 1;
             }
             
             gaService.setLocationAndSize(text, textX, textY, lwidth, lheight);
