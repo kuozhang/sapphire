@@ -49,6 +49,9 @@ public class SapphireCreateNodeFeature extends AbstractCreateFeature
 		this.nodeTemplate.addModelListener();
 		
 		addGraphicalRepresentation(context, nodePart);
+		// activate direct editing after object creation
+		getFeatureProvider().getDirectEditingInfo().setActive(true);
+		
 		return new Object[] { nodePart };
 	}
 	

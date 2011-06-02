@@ -108,7 +108,7 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
         IDirectEditingInfo directEditingInfo = getFeatureProvider().getDirectEditingInfo();
 
         // set container shape for direct editing after object creation
-        directEditingInfo.setMainPictogramElement(connection);
+        directEditingInfo.setMainPictogramElement(textDecorator);
 
         // set shape and graphics algorithm where the editor for
         // direct editing shall be opened after object creation
