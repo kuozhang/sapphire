@@ -50,6 +50,7 @@ public class AddNodeAction extends SapphireActionHandlerDelegate
 			protected void doExecute() 
 			{		
 				ft.add(ctx);
+				ft.getFeatureProvider().getDirectEditingInfo().setActive(true);
 			}
 		});
 	}
