@@ -71,7 +71,8 @@ public class MapEditor extends SapphireEditor
 		SapphireDiagramEditorInput diagramEditorInput = null;
 		try
 		{
-			diagramEditorInput = SapphireDiagramEditorFactory.createEditorInput(this.modelMap.adapt(IFile.class));
+			diagramEditorInput = SapphireDiagramEditorFactory.createEditorInput(
+					this.modelMap.adapt(IFile.class), this.mapDiagram.getPart().getDefinition().getId().getContent(), false);
 		}
 		catch (Exception e)
 		{
