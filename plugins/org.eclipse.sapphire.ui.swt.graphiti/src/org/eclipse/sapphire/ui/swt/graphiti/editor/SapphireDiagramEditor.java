@@ -70,6 +70,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireAddNodeFeature;
 import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProvider;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
@@ -480,10 +481,17 @@ public class SapphireDiagramEditor extends DiagramEditor
 				AddContext ctx = new AddContext();
 				ctx.setNewObject(nodePart);
 				ctx.setTargetContainer(diagram);
+				
+				// Need to convert the node left top coordinate into node middle point
+				// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=344175
+				int width = SapphireAddNodeFeature.getNodeWidth(nodePart, bounds.getWidth());
+				int height = SapphireAddNodeFeature.getNodeHeight(nodePart, bounds.getHeight());
+				int middleX = bounds.getX() + (width >> 1);
+				int middleY = bounds.getY() + (height >> 1);
+				ctx.setX(middleX);
+				ctx.setY(middleY);				
 				ctx.setWidth(bounds.getWidth());
 				ctx.setHeight(bounds.getHeight());
-				ctx.setX(bounds.getX());
-				ctx.setY(bounds.getY());
 				IAddFeature ft = getDiagramTypeProvider().getFeatureProvider().getAddFeature(ctx);						
 				ft.add(ctx);						
 			}

@@ -52,8 +52,8 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 {
     private static final IColorConstant DEFAULT_TEXT_FOREGROUND = new ColorConstant(51, 51, 153);
     private static final IColorConstant DEFAULT_NODE_FOREGROUND = new ColorConstant(51, 51, 153);
-    private static final int DEFAULT_NODE_WIDTH = 100;
-    private static final int DEFAULT_NODE_HEIGHT = 30;
+    public static final int DEFAULT_NODE_WIDTH = 100;
+    public static final int DEFAULT_NODE_HEIGHT = 30;
     private static final int DEFAULT_TEXT_HEIGHT = 20;
     private DiagramNodeTemplate nodeTemplate;
     
@@ -101,23 +101,21 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		
         // define a default size for the shape
         IDiagramNodeDef nodeDef = (IDiagramNodeDef)nodePart.getDefinition();
-        int nodew = getNodeWidth(nodePart);
-        int nodeh = getNodeHeight(nodePart);
-        int width = nodew > 0 ? nodew : DEFAULT_NODE_WIDTH;
-        int height = nodeh > 0 ? nodeh : DEFAULT_NODE_HEIGHT;
+        int width = getNodeWidth(nodePart, context.getWidth());
+        int height = getNodeHeight(nodePart, context.getHeight());
         
-        int x, y;
+        int ltX, ltY;
         if (context.getX() != -1 && context.getY() != -1)
         {
-        	x = context.getX() - (width >> 1);
-        	y = context.getY() - (height >> 1);
+        	ltX = context.getX() - (width >> 1);
+        	ltY = context.getY() - (height >> 1);
         }
         else
         {
         	SapphireDiagramEditor diagramEditor = (SapphireDiagramEditor)getFeatureProvider().getDiagramTypeProvider().getDiagramEditor();
         	Point np = diagramEditor.getDefaultNodePosition();
-        	x = np.getX();
-        	y = np.getY();
+        	ltX = np.getX();
+        	ltY = np.getY();
         }
 
         IPeCreateService peCreateService = Graphiti.getPeCreateService();
@@ -133,7 +131,7 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
             rectangle.setForeground(manageColor(DEFAULT_NODE_FOREGROUND));
             gaService.setRenderingStyle(rectangle, PredefinedColoredAreas.getBlueWhiteGlossAdaptions());
             rectangle.setLineWidth(1);
-            gaService.setLocationAndSize(rectangle, x, y, width, height);
+            gaService.setLocationAndSize(rectangle, ltX, ltY, width, height);
  
             // create link and wire it
             link(containerShape, nodePart);        		
@@ -143,7 +141,7 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
         	Rectangle rectangle = gaService.createRectangle(containerShape);
         	rectangle.setFilled(false);
         	rectangle.setLineVisible(false);
-        	gaService.setLocationAndSize(rectangle, x, y, width, height);
+        	gaService.setLocationAndSize(rectangle, ltX, ltY, width, height);
         	
         	link(containerShape, nodePart);
         	
@@ -226,7 +224,7 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
         // Save the node bounds
         DiagramGeometryWrapper diagramGeometry = 
         	((SapphireDiagramFeatureProvider)getFeatureProvider()).getDiagramGeometry();
-        diagramGeometry.addNode(nodePart, x, y, width, height);
+        diagramGeometry.addNode(nodePart, ltX, ltY, width, height);
         
         // Create a rendering context for the node
         DiagramRenderingContext renderingCtx = new DiagramRenderingContext(
@@ -238,8 +236,16 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		return containerShape;
 	}
 
-	private int getNodeWidth(DiagramNodePart nodePart)
+	/*
+	 * Calculate node width based on passed in width, width returned from DiagramNodePart
+	 * and width calculated based on the node image, label placement and margins.
+	 */
+	public static int getNodeWidth(DiagramNodePart nodePart, int widthParam)
 	{
+		if (widthParam > 0)
+		{
+			return widthParam;			
+		}
 		if (nodePart.getNodeWidth() > 0)
 		{
 			return nodePart.getNodeWidth();
@@ -267,11 +273,24 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		{
 			width = labelWidth;
 		}
+		if (width <= 0)
+		{
+			width = DEFAULT_NODE_WIDTH;
+		}
 		return width;
 	}
 
-	private int getNodeHeight(DiagramNodePart nodePart)
+	/*
+	 * Calculate node height based on passed in height, height returned from DiagramNodePart
+	 * and height calculated based on the node image, label placement and margins.
+	 */
+	
+	public static int getNodeHeight(DiagramNodePart nodePart, int heightParam)
 	{
+		if (heightParam > 0)
+		{
+			return heightParam;
+		}
 		if (nodePart.getNodeHeight() > 0)
 		{
 			return nodePart.getNodeHeight();
@@ -352,7 +371,7 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		return new Point(0, 0);
 	}
 	
-	private int getImageWidth(DiagramNodePart nodePart)
+	private static int getImageWidth(DiagramNodePart nodePart)
 	{
 		String imageId = nodePart.getImageId();
 		if (imageId != null)
@@ -368,7 +387,7 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		return 0;
 	}
 
-	private int getImageHeight(DiagramNodePart nodePart)
+	private static int getImageHeight(DiagramNodePart nodePart)
 	{
 		String imageId = nodePart.getImageId();
 		if (imageId != null)
