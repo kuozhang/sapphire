@@ -317,6 +317,10 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		{
 			height = labelHeight;
 		}
+		if (height <= 0)
+		{
+			height = DEFAULT_NODE_HEIGHT;
+		}
 		return height;
 	}
 	
