@@ -17,35 +17,25 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
-import org.eclipse.graphiti.features.ICreateConnectionFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IDoubleClickContext;
 import org.eclipse.graphiti.features.context.IPictogramElementContext;
-import org.eclipse.graphiti.features.context.impl.CreateConnectionContext;
-import org.eclipse.graphiti.features.context.impl.CustomContext;
 import org.eclipse.graphiti.features.custom.ICustomFeature;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Image;
 import org.eclipse.graphiti.mm.algorithms.Text;
-import org.eclipse.graphiti.mm.pictograms.Anchor;
-import org.eclipse.graphiti.mm.pictograms.AnchorContainer;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.platform.IPlatformImageConstants;
-import org.eclipse.graphiti.services.Graphiti;
-import org.eclipse.graphiti.tb.ContextButtonEntry;
 import org.eclipse.graphiti.tb.DefaultToolBehaviorProvider;
 import org.eclipse.graphiti.tb.IContextButtonPadData;
 import org.eclipse.graphiti.tb.IDecorator;
 import org.eclipse.graphiti.tb.ImageDecorator;
 import org.eclipse.graphiti.ui.services.GraphitiUi;
-import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.Point;
-import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.def.VerticalAlignment;
 import org.eclipse.sapphire.ui.diagram.def.DecoratorPlacement;
@@ -54,7 +44,6 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramImageDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeProblemDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.ProblemDecoratorSize;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireActionCustomFeature;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireDoubleClickNodeFeature;
 
 /**
@@ -83,76 +72,76 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 	@Override
 	public IContextButtonPadData getContextButtonPad(IPictogramElementContext context) 
 	{
-		//return null;
-		IContextButtonPadData data = super.getContextButtonPad(context);
-		PictogramElement pe = context.getPictogramElement();
-		
-		IFeatureProvider featureProvider = getFeatureProvider();
-		Object bo = featureProvider.getBusinessObjectForPictogramElement(pe);
-		if (bo instanceof DiagramNodePart)
-		{
-			// 1. set the generic context buttons
-			// note, we only add "Delete" button
-			setGenericContextButtons(data, pe, CONTEXT_BUTTON_DELETE);
-	
-			// 2. add "show in source" context button
-			DiagramNodePart nodePart = (DiagramNodePart)bo;
-			SapphireActionHandler showInSourceHandler = 
-					nodePart.getAction(SHOW_IN_SOURCE_ACTION_ID).getFirstActiveHandler();
-			SapphireActionCustomFeature sapphireActionFeature = 
-					new SapphireActionCustomFeature(this.getFeatureProvider(), showInSourceHandler);
-			CustomContext cc = new CustomContext(new PictogramElement[] { pe });
-			ContextButtonEntry showInSourceButton = new ContextButtonEntry(sapphireActionFeature, cc);
-			String ccText = LabelTransformer.transform(showInSourceHandler.getLabel(), CapitalizationType.TITLE_STYLE, false);
-			showInSourceButton.setText(ccText);
-			showInSourceButton.setIconId(SapphireDiagramCommonImageProvider.IMG_SHOW_IN_SOURCE);
-			data.getDomainSpecificContextButtons().add(showInSourceButton);
-			
-			// 3. add one domain specific context-button, which offers all
-			// available connection-features as drag&drop features...
-	
-			// 3.a. create new CreateConnectionContext
-			CreateConnectionContext ccc = new CreateConnectionContext();
-			ccc.setSourcePictogramElement(pe);
-			Anchor anchor = null;
-			if (pe instanceof Anchor) 
-			{
-				anchor = (Anchor) pe;
-			} 
-			else if (pe instanceof AnchorContainer) 
-			{
-				// assume, that our shapes always have chopbox anchors
-				anchor = Graphiti.getPeService().getChopboxAnchor((AnchorContainer) pe);
-			}
-			ccc.setSourceAnchor(anchor);
-	
-			// 3.b. create context button and add all applicable features
-			ICreateConnectionFeature[] features = getFeatureProvider().getCreateConnectionFeatures();
-			for (ICreateConnectionFeature feature : features) 
-			{
-				ContextButtonEntry button = new ContextButtonEntry(null, context);
-				if (feature.isAvailable(ccc) && feature.canStartConnection(ccc))
-				{
-					button.addDragAndDropFeature(feature);
-					button.setText("Create " + feature.getCreateName()); //$NON-NLS-1$
-					if (feature.getCreateImageId() != null)
-					{
-						button.setIconId(feature.getCreateImageId());
-					}
-					else
-					{
-						button.setIconId(SapphireDiagramCommonImageProvider.IMG_CONNECTION);
-					}
-					// 3.c. add context button, if it contains at least one feature
-					if (button.getDragAndDropFeatures().size() > 0) 
-					{
-						data.getDomainSpecificContextButtons().add(button);
-					}
-				}
-			}
-	
-		}
-		return data;
+		return null;
+//		IContextButtonPadData data = super.getContextButtonPad(context);
+//		PictogramElement pe = context.getPictogramElement();
+//		
+//		IFeatureProvider featureProvider = getFeatureProvider();
+//		Object bo = featureProvider.getBusinessObjectForPictogramElement(pe);
+//		if (bo instanceof DiagramNodePart)
+//		{
+//			// 1. set the generic context buttons
+//			// note, we only add "Delete" button
+//			setGenericContextButtons(data, pe, CONTEXT_BUTTON_DELETE);
+//	
+//			// 2. add "show in source" context button
+//			DiagramNodePart nodePart = (DiagramNodePart)bo;
+//			SapphireActionHandler showInSourceHandler = 
+//					nodePart.getAction(SHOW_IN_SOURCE_ACTION_ID).getFirstActiveHandler();
+//			SapphireActionCustomFeature sapphireActionFeature = 
+//					new SapphireActionCustomFeature(this.getFeatureProvider(), showInSourceHandler);
+//			CustomContext cc = new CustomContext(new PictogramElement[] { pe });
+//			ContextButtonEntry showInSourceButton = new ContextButtonEntry(sapphireActionFeature, cc);
+//			String ccText = LabelTransformer.transform(showInSourceHandler.getLabel(), CapitalizationType.TITLE_STYLE, false);
+//			showInSourceButton.setText(ccText);
+//			showInSourceButton.setIconId(SapphireDiagramCommonImageProvider.IMG_SHOW_IN_SOURCE);
+//			data.getDomainSpecificContextButtons().add(showInSourceButton);
+//			
+//			// 3. add one domain specific context-button, which offers all
+//			// available connection-features as drag&drop features...
+//	
+//			// 3.a. create new CreateConnectionContext
+//			CreateConnectionContext ccc = new CreateConnectionContext();
+//			ccc.setSourcePictogramElement(pe);
+//			Anchor anchor = null;
+//			if (pe instanceof Anchor) 
+//			{
+//				anchor = (Anchor) pe;
+//			} 
+//			else if (pe instanceof AnchorContainer) 
+//			{
+//				// assume, that our shapes always have chopbox anchors
+//				anchor = Graphiti.getPeService().getChopboxAnchor((AnchorContainer) pe);
+//			}
+//			ccc.setSourceAnchor(anchor);
+//	
+//			// 3.b. create context button and add all applicable features
+//			ICreateConnectionFeature[] features = getFeatureProvider().getCreateConnectionFeatures();
+//			for (ICreateConnectionFeature feature : features) 
+//			{
+//				ContextButtonEntry button = new ContextButtonEntry(null, context);
+//				if (feature.isAvailable(ccc) && feature.canStartConnection(ccc))
+//				{
+//					button.addDragAndDropFeature(feature);
+//					button.setText("Create " + feature.getCreateName()); //$NON-NLS-1$
+//					if (feature.getCreateImageId() != null)
+//					{
+//						button.setIconId(feature.getCreateImageId());
+//					}
+//					else
+//					{
+//						button.setIconId(SapphireDiagramCommonImageProvider.IMG_CONNECTION);
+//					}
+//					// 3.c. add context button, if it contains at least one feature
+//					if (button.getDragAndDropFeatures().size() > 0) 
+//					{
+//						data.getDomainSpecificContextButtons().add(button);
+//					}
+//				}
+//			}
+//	
+//		}
+//		return data;
 	}
 		
 	@Override
