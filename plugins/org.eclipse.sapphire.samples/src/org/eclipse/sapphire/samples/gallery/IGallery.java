@@ -181,6 +181,16 @@ public interface IGallery
     
     ISectionsGallery getSectionsGallery();
 
+    // *** IfThenElseGallery ***
+    
+    @Type( base = IIfThenElseGallery.class )
+    @Label( standard = "if then else" )
+    @XmlBinding( path = "if-then-else-gallery" )
+    
+    ImpliedElementProperty PROP_IF_THEN_ELSE_GALLERY = new ImpliedElementProperty( TYPE, "IfThenElseGallery" );
+    
+    IIfThenElseGallery getIfThenElseGallery();
+
     // *** HelpGallery ***
     
     @Type( base = IHelpGallery.class )

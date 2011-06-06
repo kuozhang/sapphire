@@ -1302,6 +1302,51 @@
                 <property>SectionsGallery</property>
             </node>
             <node>
+                <property>IfThenElseGallery</property>
+                <label>if then else</label>
+                <section>
+                    <content>
+                        <property-editor>ShapeType</property-editor>
+                        <if>
+                            <then>
+                                <property-editor>Radius</property-editor>
+                            </then>
+                            <condition>
+                                <class>PropertyEnabledCondition</class>
+                                <parameter>Radius</parameter>
+                            </condition>
+                        </if>
+                        <if>
+                            <then>
+                                <property-editor>EdgeLength1</property-editor>
+                            </then>
+                            <condition>
+                                <class>PropertyEnabledCondition</class>
+                                <parameter>EdgeLength1</parameter>
+                            </condition>
+                        </if>
+                        <if>
+                            <then>
+                                <property-editor>EdgeLength2</property-editor>
+                            </then>
+                            <condition>
+                                <class>PropertyEnabledCondition</class>
+                                <parameter>EdgeLength2</parameter>
+                            </condition>
+                        </if>
+                        <if>
+                            <then>
+                                <property-editor>EdgeLength3</property-editor>
+                            </then>
+                            <condition>
+                                <class>PropertyEnabledCondition</class>
+                                <parameter>EdgeLength3</parameter>
+                            </condition>
+                        </if>
+                    </content>
+                </section>
+            </node>
+            <node>
                 <label>help</label>
                 <section>
                     <documentation-ref>

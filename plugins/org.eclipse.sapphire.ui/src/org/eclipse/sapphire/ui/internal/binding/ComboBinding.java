@@ -100,9 +100,12 @@ public class ComboBinding
     
     protected void removeMalformedItem()
     {
-        if( this.combo.getItemCount() > this.enumValues.length )
+        if( ! this.combo.isDisposed() ) 
         {
-            this.combo.remove( this.enumValues.length );
+            if( this.combo.getItemCount() > this.enumValues.length )
+            {
+                this.combo.remove( this.enumValues.length );
+            }
         }
     }
     

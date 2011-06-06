@@ -109,11 +109,14 @@ public final class RadioButtonsGroupBinding
     
     protected void removeMalformedItem()
     {
-        if( this.badValueButton != null )
+        if( ! this.buttonsGroup.isDisposed() )
         {
-            this.badValueButton.dispose();
-            this.badValueButton = null;
-            getContext().layout();
+            if( this.badValueButton != null )
+            {
+                this.badValueButton.dispose();
+                this.badValueButton = null;
+                getContext().layout();
+            }
         }
     }
 

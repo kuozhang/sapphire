@@ -162,27 +162,27 @@ public abstract class AbstractBinding
     
     public final void updateTargetAttributes()
     {
-        if (this.control.isDisposed()) {
-            return;
-        }
-        final boolean enabled = getModelElement().isPropertyEnabled( getProperty() );
-        this.control.setEnabled( enabled );
-        
-        final Object relatedControls = this.control.getData( SapphirePropertyEditor.RELATED_CONTROLS );
-        
-        if( relatedControls != null )
+        if( ! this.control.isDisposed() ) 
         {
-            if( relatedControls instanceof Control )
+            final boolean enabled = getModelElement().isPropertyEnabled( getProperty() );
+            this.control.setEnabled( enabled );
+            
+            final Object relatedControls = this.control.getData( SapphirePropertyEditor.RELATED_CONTROLS );
+            
+            if( relatedControls != null )
             {
-                ( (Control) relatedControls ).setEnabled( enabled );
-            }
-            else if( relatedControls instanceof Collection<?> )
-            {
-                for( Object control : (Collection<?>) relatedControls )
+                if( relatedControls instanceof Control )
                 {
-                    if( control != null )
+                    ( (Control) relatedControls ).setEnabled( enabled );
+                }
+                else if( relatedControls instanceof Collection<?> )
+                {
+                    for( Object control : (Collection<?>) relatedControls )
                     {
-                        ( (Control) control ).setEnabled( enabled );
+                        if( control != null )
+                        {
+                            ( (Control) control ).setEnabled( enabled );
+                        }
                     }
                 }
             }

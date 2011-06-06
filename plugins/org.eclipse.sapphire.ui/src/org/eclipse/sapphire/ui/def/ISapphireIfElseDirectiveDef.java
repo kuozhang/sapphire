@@ -21,7 +21,9 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -45,6 +47,8 @@ public interface ISapphireIfElseDirectiveDef
     @Type( base = JavaTypeName.class )
     @Reference( target = JavaType.class )
     @Label( standard = "condition class" )
+    @Required
+    @MustExist
     @XmlBinding( path = "condition/class" )
     
     ValueProperty PROP_CONDITION_CLASS = new ValueProperty( TYPE, "ConditionClass" );
