@@ -76,8 +76,16 @@ public final class SapphireSection
     {
         final FormToolkit toolkit = new FormToolkit( context.getDisplay() );
         
-        this.section = toolkit.createSection( context.getComposite(), Section.TITLE_BAR );
+        final boolean collapsible = this.definition.getCollapsible().getContent();
+        final int style = Section.TITLE_BAR | ( collapsible ? Section.TWISTIE : SWT.NONE );
+        
+        this.section = toolkit.createSection( context.getComposite(), style );
         this.section.setLayoutData( twd() );
+        
+        if( collapsible )
+        {
+            this.section.setExpanded( ! this.definition.getCollapsedInitially().getContent() );
+        }
         
         this.titleFunctionResult = initExpression
         (

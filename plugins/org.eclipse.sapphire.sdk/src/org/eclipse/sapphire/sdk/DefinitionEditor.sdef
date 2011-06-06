@@ -231,9 +231,27 @@
             <property-editor>MarginTop</property-editor>
             <property-editor>MarginBottom</property-editor>
             <spacer/>
-            <property-editor>Indent</property-editor>
-            <property-editor>ScrollVertically</property-editor>
-            <property-editor>ScrollHorizontally</property-editor>
+            <property-editor>
+                <property>Indent</property>
+                <hint>
+                    <name>checkbox.layout</name>
+                    <value>leading.label</value>
+                </hint>
+            </property-editor>
+            <property-editor>
+                <property>ScrollVertically</property>
+                <hint>
+                    <name>checkbox.layout</name>
+                    <value>leading.label</value>
+                </hint>
+            </property-editor>
+            <property-editor>
+                <property>ScrollHorizontally</property>
+                <hint>
+                    <name>checkbox.layout</name>
+                    <value>leading.label</value>
+                </hint>
+            </property-editor>
         </content>
     </form>
     
@@ -857,6 +875,21 @@
                             <label>presentation</label>
                             <content>
                                 <include>CompositePresentation</include>
+                                <spacer></spacer>
+                                <property-editor>
+                                    <property>Collapsible</property>
+                                    <hint>
+                                        <name>checkbox.layout</name>
+                                        <value>leading.label</value>
+                                    </hint>
+                                </property-editor>
+                                <property-editor>
+                                    <property>CollapsedInitially</property>
+                                    <hint>
+                                        <name>checkbox.layout</name>
+                                        <value>leading.label</value>
+                                    </hint>
+                                </property-editor>
                             </content>
                         </section>
                         <node>
@@ -939,6 +972,21 @@
                                     <label>presentation</label>
                                     <content>
                                         <include>CompositePresentation</include>
+                                        <spacer></spacer>
+                                        <property-editor>
+                                            <property>Collapsible</property>
+                                            <hint>
+                                                <name>checkbox.layout</name>
+                                                <value>leading.label</value>
+                                            </hint>
+                                        </property-editor>
+                                        <property-editor>
+                                            <property>CollapsedInitially</property>
+                                            <hint>
+                                                <name>checkbox.layout</name>
+                                                <value>leading.label</value>
+                                            </hint>
+                                        </property-editor>
                                     </content>
                                 </section>
                                 <node>

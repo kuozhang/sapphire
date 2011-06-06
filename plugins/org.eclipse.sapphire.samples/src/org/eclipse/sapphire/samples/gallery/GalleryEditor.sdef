@@ -1268,6 +1268,40 @@
                 </node>
             </node>
             <node>
+                <label>sections</label>
+                <section>
+                    <label>regular section</label>
+                    <content>
+                        <label>Each content outline node can have zero or more sections associated with it. A section can hold any form content.</label>
+                        <spacer></spacer>
+                        <property-editor>Text</property-editor>
+                        <property-editor>ThreeChoiceAnswer</property-editor>
+                    </content>
+                </section>
+                <section>
+                    <label>collapsible section</label>
+                    <content>
+                        <label>A section can be collapsible. This is one approach for handling too much content to fit on the screen. Another, typically more effective, approach is to break up content between more nodes in the content outline.</label>
+                        <spacer></spacer>
+                        <property-editor>Text</property-editor>
+                        <property-editor>ThreeChoiceAnswer</property-editor>
+                    </content>
+                    <collapsible>true</collapsible>
+                </section>
+                <section>
+                    <label>collapsed initially section</label>
+                    <content>
+                        <label>A collapsible section can be specified to be showed collapsed initially.</label>
+                        <spacer></spacer>
+                        <property-editor>Text</property-editor>
+                        <property-editor>ThreeChoiceAnswer</property-editor>
+                    </content>
+                    <collapsible>true</collapsible>
+                    <collapsed-initially>true</collapsed-initially>
+                </section>
+                <property>SectionsGallery</property>
+            </node>
+            <node>
                 <label>help</label>
                 <section>
                     <documentation-ref>

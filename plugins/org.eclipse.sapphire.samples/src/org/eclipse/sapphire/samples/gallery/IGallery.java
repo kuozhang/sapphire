@@ -170,6 +170,16 @@ public interface IGallery
     ImpliedElementProperty PROP_VALUE_PROPERTY_ACTIONS_GALLERY = new ImpliedElementProperty( TYPE, "ValuePropertyActionsGallery" );
     
     IValuePropertyActionsGallery getValuePropertyActionsGallery();
+    
+    // *** SectionsGallery ***
+    
+    @Type( base = ISectionsGallery.class )
+    @Label( standard = "sections gallery" )
+    @XmlBinding( path = "sections-gallery" )
+    
+    ImpliedElementProperty PROP_SECTIONS_GALLERY = new ImpliedElementProperty( TYPE, "SectionsGallery" );
+    
+    ISectionsGallery getSectionsGallery();
 
     // *** HelpGallery ***
     

@@ -53,6 +53,7 @@
     <li><a href="#action-style-hint">Action Style Hint</a></li>
     <li><a href="#page-header-image">Page Header Image</a></li>
     <li><a href="#checkbox-list-for-enum">Checkbox List as Default Enum List Presentation</a></li>
+    <li><a href="#collapsible-sections">Collapsible Sections</a></li>
   </ol>
 </ol>
  
@@ -947,6 +948,39 @@ public interface IFilterMapping extends IModelElement
 }</code></pre>
 
 <p style="margin-left: 20px;"><img src="images/checkbox-list-with-no-images.png"/></p>
+
+<h2><a name="collapsible-sections">Collapsible Sections</a></h2>
+
+<p>Define collapsible sections. This is one approach for handling too much content to fit on the 
+screen. Another, typically more effective, approach is to break up content between more nodes in 
+the content outline. A collapsible section can be defined to be showed initially in the collapsed
+state. This can be effective for very infrequently used content.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;section>
+    &lt;label>collapsible section&lt;/label>
+    &lt;content>
+        &lt;label>A section can be collapsible... [snip]&lt;/label>
+        &lt;spacer>&lt;/spacer>
+        &lt;property-editor>Text&lt;/property-editor>
+        &lt;property-editor>ThreeChoiceAnswer&lt;/property-editor>
+    &lt;/content></font>
+    &lt;collapsible>true&lt;/collapsible>
+<font color="#888888">&lt;/section>
+&lt;section>
+    &lt;label>collapsed initially section&lt;/label>
+    &lt;content>
+        &lt;label>A collapsible section can be specified to be showed collapsed initially.&lt;/label>
+        &lt;spacer>&lt;/spacer>
+        &lt;property-editor>Text&lt;/property-editor>
+        &lt;property-editor>ThreeChoiceAnswer&lt;/property-editor>
+    &lt;/content></font>
+    &lt;collapsible>true&lt;/collapsible>
+    &lt;collapsed-initially>true&lt;/collapsed-initially>
+<font color="#888888">&lt;/section></font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/collapsible-sections.png"/></p>
 
 <br/><br/>
 

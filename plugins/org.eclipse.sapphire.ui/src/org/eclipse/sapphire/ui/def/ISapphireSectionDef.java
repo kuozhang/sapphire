@@ -17,6 +17,8 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
@@ -74,5 +76,32 @@ public interface ISapphireSectionDef
     
     Value<String> getVisibleWhenConditionParameter();
     void setVisibleWhenConditionParameter( String visibleWhenConditionParameter );
+    
+    // *** Collapsible ***
+    
+    @Type( base = Boolean.class )
+    @Label( standard = "collapsible" )
+    @DefaultValue( text = "false" )
+    @XmlBinding( path = "collapsible" )
+    
+    ValueProperty PROP_COLLAPSIBLE = new ValueProperty( TYPE, "Collapsible" );
+    
+    Value<Boolean> getCollapsible();
+    void setCollapsible( String value );
+    void setCollapsible( Boolean value );
+    
+    // *** CollapsedInitially ***
+    
+    @Type( base = Boolean.class )
+    @Label( standard = "collapsed initially" )
+    @DefaultValue( text = "false" )
+    @Enablement( expr = "${ Collapsible }" )
+    @XmlBinding( path = "collapsed-initially" )
+    
+    ValueProperty PROP_COLLAPSED_INITIALLY = new ValueProperty( TYPE, "CollapsedInitially" );
+    
+    Value<Boolean> getCollapsedInitially();
+    void setCollapsedInitially( String value );
+    void setCollapsedInitially( Boolean value );
     
 }
