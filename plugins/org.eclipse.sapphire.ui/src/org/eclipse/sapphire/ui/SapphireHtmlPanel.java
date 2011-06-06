@@ -20,6 +20,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.el.ConcatFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -27,7 +28,9 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.def.HtmlContentSourceType;
 import org.eclipse.sapphire.ui.def.ISapphireHtmlPanelDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -174,10 +177,6 @@ public final class SapphireHtmlPanel
     @Override
     public void render( final SapphireRenderingContext context )
     {
-        final int style = ( getShowBorder() == true ? SWT.BORDER : SWT.NONE );
-        
-        final Browser browser = new Browser( context.getComposite(), style );
-        
         final boolean expandVertically = this.def.getExpandVertically().getContent();
         GridData gd = gdhindent( gdwhint( gdhspan( ( expandVertically ? gdfill() : gdhfill() ), 2 ), 100 ), 9 );
         
@@ -186,49 +185,71 @@ public final class SapphireHtmlPanel
             gd = gdhhint( gd, this.def.getHeight().getContent() );
         }
         
-        browser.setLayoutData( gd );
+        final int style = ( getShowBorder() == true ? SWT.BORDER : SWT.NONE );
         
-        final Listener listener;
-        
-        if( this.def.getContentSourceType().getContent() == HtmlContentSourceType.EMBEDDED )
+        try
         {
-            browser.setText( getContent() );
+            final Browser browser = new Browser( context.getComposite(), style );
+            browser.setLayoutData( gd );
             
-            listener = new Listener()
-            {
-                @Override
-                public void handleContentChangeEvent( final SapphirePartEvent event )
-                {
-                    browser.setText( getContent() );
-                }
-            };
-        }
-        else
-        {
-            browser.setUrl( getContentUrl() );
+            final Listener listener;
             
-            listener = new Listener()
+            if( this.def.getContentSourceType().getContent() == HtmlContentSourceType.EMBEDDED )
             {
-                @Override
-                public void handleContentChangeEvent( final SapphirePartEvent event )
+                browser.setText( getContent() );
+                
+                listener = new Listener()
                 {
-                    browser.setUrl( getContentUrl() );
-                }
-            };
-        }
-        
-        addListener( listener );
-        
-        browser.addDisposeListener
-        (
-            new DisposeListener()
-            {
-                public void widgetDisposed( final DisposeEvent event )
-                {
-                    removeListener( listener );
-                }
+                    @Override
+                    public void handleContentChangeEvent( final SapphirePartEvent event )
+                    {
+                        browser.setText( getContent() );
+                    }
+                };
             }
-        );
+            else
+            {
+                browser.setUrl( getContentUrl() );
+                
+                listener = new Listener()
+                {
+                    @Override
+                    public void handleContentChangeEvent( final SapphirePartEvent event )
+                    {
+                        browser.setUrl( getContentUrl() );
+                    }
+                };
+            }
+            
+            addListener( listener );
+            
+            browser.addDisposeListener
+            (
+                new DisposeListener()
+                {
+                    public void widgetDisposed( final DisposeEvent event )
+                    {
+                        removeListener( listener );
+                    }
+                }
+            );
+        }
+        catch( SWTError e )
+        {
+            final SapphireFormText text = new SapphireFormText( context.getComposite(), style );
+            text.setText( Resources.couldNotInitializeBrowserMessage, false, false );
+            text.setLayoutData( gd );
+        }
+    }
+    
+    private static final class Resources extends NLS 
+    {
+        public static String couldNotInitializeBrowserMessage;
+
+        static 
+        {
+            initializeMessages( SapphireHtmlPanel.class.getName(), Resources.class );
+        }
     }
     
 }
