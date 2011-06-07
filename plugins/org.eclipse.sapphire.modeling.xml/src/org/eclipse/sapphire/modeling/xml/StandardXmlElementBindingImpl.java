@@ -205,10 +205,12 @@ public final class StandardXmlElementBindingImpl
     @Override
     public void remove()
     {
-        XmlElement parent = ( (XmlResource) element().resource() ).getXmlElement( false );
+        XmlElement base = ( (XmlResource) element().resource() ).getXmlElement( false );
         
-        if( parent != null )
+        if( base != null )
         {
+            XmlElement parent = base;
+            
             if( this.path != null )
             {
                 parent = (XmlElement) parent.getChildNode( this.path, false );
@@ -224,6 +226,11 @@ public final class StandardXmlElementBindingImpl
                     {
                         element.remove();
                     }
+                }
+                
+                if( parent != base && parent.isEmpty() )
+                {
+                    base.removeChildNode( this.path );
                 }
             }
         }
