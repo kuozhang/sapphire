@@ -14,6 +14,9 @@ package org.eclipse.sapphire.tests.java.t0004;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.sapphire.java.JavaTypeConstraint;
+import org.eclipse.sapphire.java.JavaTypeConstraintBehavior;
+import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
@@ -47,6 +50,7 @@ public class TestJava0004
         suite.addTest( new TestJava0004( "testRequiredClass3" ) );
         suite.addTest( new TestJava0004( "testRequiredClass4" ) );
         suite.addTest( new TestJava0004( "testRequiredClass5" ) );
+        suite.addTest( new TestJava0004( "testRequiredClass6" ) );
         suite.addTest( new TestJava0004( "testRequiredInterface1" ) );
         suite.addTest( new TestJava0004( "testRequiredInterface2" ) );
         suite.addTest( new TestJava0004( "testRequiredInterface3" ) );
@@ -169,6 +173,25 @@ public class TestJava0004
         test( property, "java.util.List", "Type java.util.List is an interface, which is not allowed for required class 5." );
         test( property, "java.lang.Deprecated", "Type java.lang.Deprecated is an annotation, which is not allowed for required class 5." );
         test( property, "java.lang.annotation.ElementType", "Type java.lang.annotation.ElementType is an enum, which is not allowed for required class 5." );
+    }
+
+    /**
+     * @JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = { "java.util.List", "java.util.Map" }, behavior = JavaTypeConstraintBehavior.AT_LEAST_ONE )
+     * @MustExist
+     */
+
+    public void testRequiredClass6()
+    {
+        final ValueProperty property = ITestElement.PROP_REQUIRED_CLASS_6;
+        
+        test( property, "foo.bar.FooBar", "Could not resolve required class 6 \"foo.bar.FooBar\"." );
+        test( property, "java.util.ArrayList" );
+        test( property, "java.util.HashMap" );
+        test( property, "java.util.HashSet", "Class java.util.HashSet does not implement or extend one of [java.util.List, java.util.Map]." );
+        test( property, "java.util.AbstractList", "Type java.util.AbstractList is an abstract class, which is not allowed for required class 6." );
+        test( property, "java.util.List", "Type java.util.List is an interface, which is not allowed for required class 6." );
+        test( property, "java.lang.Deprecated", "Type java.lang.Deprecated is an annotation, which is not allowed for required class 6." );
+        test( property, "java.lang.annotation.ElementType", "Type java.lang.annotation.ElementType is an enum, which is not allowed for required class 6." );
     }
 
     /**

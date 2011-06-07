@@ -15,17 +15,8 @@ package org.eclipse.sapphire.java;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Retention( RetentionPolicy.RUNTIME )
-@Target( ElementType.FIELD )
-
-public @interface JavaTypeConstraint
+public enum JavaTypeConstraintBehavior
 {
-    JavaTypeKind[] kind() default { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS, JavaTypeKind.INTERFACE, JavaTypeKind.ANNOTATION, JavaTypeKind.ENUM };
-    String[] type() default {};
-    JavaTypeConstraintBehavior behavior() default JavaTypeConstraintBehavior.ALL;
+    ALL,
+    AT_LEAST_ONE
 }

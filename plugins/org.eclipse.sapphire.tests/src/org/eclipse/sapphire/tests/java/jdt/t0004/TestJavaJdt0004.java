@@ -54,6 +54,7 @@ public final class TestJavaJdt0004
         suite.addTest( new TestJavaJdt0004( "testRequiredClass3" ) );
         suite.addTest( new TestJavaJdt0004( "testRequiredClass4" ) );
         suite.addTest( new TestJavaJdt0004( "testRequiredClass5" ) );
+        suite.addTest( new TestJavaJdt0004( "testRequiredClass6" ) );
         suite.addTest( new TestJavaJdt0004( "testRequiredInterface1" ) );
         suite.addTest( new TestJavaJdt0004( "testRequiredInterface2" ) );
         suite.addTest( new TestJavaJdt0004( "testRequiredInterface3" ) );

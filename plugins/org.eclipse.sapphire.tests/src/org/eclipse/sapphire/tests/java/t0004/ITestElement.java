@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.tests.java.t0004;
 
+import org.eclipse.sapphire.java.JavaTypeConstraintBehavior;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
@@ -22,8 +23,8 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
-import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -132,6 +133,22 @@ public interface ITestElement
     ReferenceValue<JavaTypeName,JavaType> getRequiredClass5();
     void setRequiredClass5( String value );
     void setRequiredClass5( JavaTypeName value );
+
+    // *** RequiredClass6 ***
+    
+    @Type( base = JavaTypeName.class )
+    @Reference( target = JavaType.class )
+    @Label( standard = "required class 6" )
+    @JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = { "java.util.List", "java.util.Map" }, behavior = JavaTypeConstraintBehavior.AT_LEAST_ONE )
+    @MustExist
+    @Required
+    @XmlBinding( path = "required-class-6" )
+    
+    ValueProperty PROP_REQUIRED_CLASS_6 = new ValueProperty( TYPE, "RequiredClass6" );
+    
+    ReferenceValue<JavaTypeName,JavaType> getRequiredClass6();
+    void setRequiredClass6( String value );
+    void setRequiredClass6( JavaTypeName value );
 
     // *** RequiredInterface1 ***
     

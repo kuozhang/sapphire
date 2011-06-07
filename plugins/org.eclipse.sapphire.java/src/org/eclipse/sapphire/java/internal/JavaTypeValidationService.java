@@ -13,6 +13,7 @@ package org.eclipse.sapphire.java.internal;
 
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
+import org.eclipse.sapphire.java.JavaTypeConstraintBehavior;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.CapitalizationType;
@@ -43,6 +44,7 @@ public final class JavaTypeValidationService
     private boolean isAnnotationOk;
     private boolean isEnumOk;
     private String[] requiredBaseTypes;
+    private JavaTypeConstraintBehavior behavior;
     
     @Override
     public void init( final IModelElement element,
@@ -61,6 +63,7 @@ public final class JavaTypeValidationService
         }
         
         this.requiredBaseTypes = javaTypeConstraintAnnotation.type();
+        this.behavior = javaTypeConstraintAnnotation.behavior();
         
         boolean c = false, d = false, i = false, a = false, e = false;
         
@@ -166,12 +169,47 @@ public final class JavaTypeValidationService
             
             if( kind != JavaTypeKind.ENUM && kind != JavaTypeKind.ANNOTATION )
             {
-                for( String baseType : this.requiredBaseTypes )
+                if( this.behavior == JavaTypeConstraintBehavior.ALL )
                 {
-                    if( ! type.isOfType( baseType ) )
+                    for( String baseType : this.requiredBaseTypes )
                     {
-                        final String template = ( type.kind() == JavaTypeKind.INTERFACE ? Resources.interfaceDoesNotExtend : Resources.classDoesNotImplementOrExtend );
-                        final String msg = Resources.bind( template, val, baseType );
+                        if( ! type.isOfType( baseType ) )
+                        {
+                            final String template = ( type.kind() == JavaTypeKind.INTERFACE ? Resources.interfaceDoesNotExtend : Resources.classDoesNotImplementOrExtend );
+                            final String msg = Resources.bind( template, val, baseType );
+                            return Status.createErrorStatus( msg );
+                        }
+                    }
+                }
+                else
+                {
+                    boolean satisfied = false;
+                    
+                    for( String baseType : this.requiredBaseTypes )
+                    {
+                        if( type.isOfType( baseType ) )
+                        {
+                            satisfied = true;
+                            break;
+                        }
+                    }
+                    
+                    if( ! satisfied )
+                    {
+                        final StringBuilder list = new StringBuilder();
+                        
+                        for( String baseType : this.requiredBaseTypes )
+                        {
+                            if( list.length() > 0 )
+                            {
+                                list.append( ", " );
+                            }
+                            
+                            list.append( baseType );
+                        }
+                        
+                        final String template = ( type.kind() == JavaTypeKind.INTERFACE ? Resources.interfaceDoesNotExtendOneOf : Resources.classDoesNotImplementOrExtendOneOf );
+                        final String msg = Resources.bind( template, val, list.toString() );
                         return Status.createErrorStatus( msg );
                     }
                 }
@@ -215,6 +253,8 @@ public final class JavaTypeValidationService
     {
         public static String classDoesNotImplementOrExtend;
         public static String interfaceDoesNotExtend;
+        public static String classDoesNotImplementOrExtendOneOf;
+        public static String interfaceDoesNotExtendOneOf;
         public static String abstractClassNotAllowed;
         public static String classNotAllowed;
         public static String interfaceNotAllowed;
