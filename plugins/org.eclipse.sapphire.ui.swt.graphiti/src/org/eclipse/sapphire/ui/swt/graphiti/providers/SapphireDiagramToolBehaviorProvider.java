@@ -15,6 +15,8 @@ package org.eclipse.sapphire.ui.swt.graphiti.providers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.draw2d.TextUtilities;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -33,6 +35,7 @@ import org.eclipse.graphiti.tb.DefaultToolBehaviorProvider;
 import org.eclipse.graphiti.tb.IContextButtonPadData;
 import org.eclipse.graphiti.tb.IDecorator;
 import org.eclipse.graphiti.tb.ImageDecorator;
+import org.eclipse.graphiti.ui.internal.util.DataTypeTransformation;
 import org.eclipse.graphiti.ui.services.GraphitiUi;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
@@ -208,16 +211,19 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 	@Override
 	public String getToolTip(GraphicsAlgorithm ga) 
 	{
-		PictogramElement pe = ga.getPictogramElement();
-		Object bo = getFeatureProvider().getBusinessObjectForPictogramElement(pe);
-		if (bo instanceof DiagramNodePart) 
+		if (ga instanceof Text)
 		{
-			String name = ((DiagramNodePart) bo).getLabel();
-			if (name != null && name.length() > 0) 
+			Text text = (Text)ga;
+			if (text.getValue() != null)
 			{
-				return name;
+				org.eclipse.swt.graphics.Font swtFont = DataTypeTransformation.toSwtFont(text.getFont());
+				Dimension d = TextUtilities.INSTANCE.getStringExtents(text.getValue(), swtFont);
+				if (d.width > ga.getWidth())
+				{
+					return text.getValue();
+				}
 			}
-		}
+		}				
 		return super.getToolTip(ga);
 	}
 	
