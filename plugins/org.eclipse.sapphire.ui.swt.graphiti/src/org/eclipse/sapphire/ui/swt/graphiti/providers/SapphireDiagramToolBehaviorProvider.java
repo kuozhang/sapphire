@@ -24,6 +24,7 @@ import org.eclipse.graphiti.features.custom.ICustomFeature;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Image;
 import org.eclipse.graphiti.mm.algorithms.Text;
+import org.eclipse.graphiti.mm.pictograms.ConnectionDecorator;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
@@ -43,6 +44,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeProblemDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.ProblemDecoratorSize;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireDoubleClickNodeFeature;
 
@@ -156,12 +158,22 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 				if (bo instanceof DiagramNodePart)
 				{
 					DiagramNodePart nodePart = (DiagramNodePart)bo;
-					if (nodePart.getDefaultActionHandler() != null)
+					if (nodePart.getDefaultActionHandler() != null || nodePart.canEditLabel())
 					{
 						SapphireDoubleClickNodeFeature dblClikFeature = 
 							new SapphireDoubleClickNodeFeature(getFeatureProvider(), nodePart);
 						return dblClikFeature;
 					}
+				}
+			}
+			else if (pe instanceof ConnectionDecorator && pe.getGraphicsAlgorithm() instanceof Text)
+			{
+				Object bo = getFeatureProvider().getBusinessObjectForPictogramElement((PictogramElement)pe.eContainer());
+				if (bo instanceof DiagramConnectionPart)
+				{
+					SapphireDoubleClickNodeFeature dblClikFeature = 
+							new SapphireDoubleClickNodeFeature(getFeatureProvider(), (DiagramConnectionPart)bo);
+					return dblClikFeature;
 				}
 			}
 		}

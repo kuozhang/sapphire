@@ -14,6 +14,8 @@ package org.eclipse.sapphire.ui.swt.graphiti.features;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICustomContext;
 import org.eclipse.graphiti.features.custom.AbstractCustomFeature;
+import org.eclipse.graphiti.mm.algorithms.Text;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -25,44 +27,64 @@ import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProv
 
 public class SapphireDoubleClickNodeFeature extends AbstractCustomFeature 
 {
-	private DiagramNodePart diagramNodePart;
+	private ISapphirePart sapphirePart;
 	
-	public SapphireDoubleClickNodeFeature(IFeatureProvider fp, DiagramNodePart diagramNodePart)
+	public SapphireDoubleClickNodeFeature(IFeatureProvider fp, ISapphirePart sapphirePart)
 	{
 		super(fp);
-		this.diagramNodePart = diagramNodePart;
+		this.sapphirePart = sapphirePart;
 	}
-	
-	@Override
-	public String getName() 
-	{
-		return this.diagramNodePart.getDefaultAction().getLabel();
-	}
-
-	@Override
-	public String getDescription() 
-	{		
-		return this.diagramNodePart.getDefaultAction().getLabel();
-	}	
-	
+		
 	@Override
 	public boolean canExecute(ICustomContext context) 
 	{
-		SapphireDiagramActionHandler handler = (SapphireDiagramActionHandler)this.diagramNodePart.getDefaultActionHandler();
-		return handler.canExecute(this.diagramNodePart);
+		if (context.getInnerGraphicsAlgorithm() instanceof Text)
+		{
+			return true;
+		}
+		else if (sapphirePart instanceof DiagramNodePart)
+		{
+			DiagramNodePart diagramNodePart = (DiagramNodePart)sapphirePart;
+			SapphireDiagramActionHandler handler = (SapphireDiagramActionHandler)diagramNodePart.getDefaultActionHandler();
+			if (handler != null)
+			{
+				return handler.canExecute(diagramNodePart);
+			}			
+		}
+		return false;
 	}
 	
 	public void execute(ICustomContext context) 
 	{
-		SapphireRenderingContext renderingCtx = ((SapphireDiagramFeatureProvider)this.getFeatureProvider()).getRenderingContext(this.diagramNodePart);
-		this.diagramNodePart.getDefaultActionHandler().execute(renderingCtx);
+		if (context.getInnerGraphicsAlgorithm() instanceof Text)
+		{
+			getFeatureProvider().getDirectEditingInfo().setGraphicsAlgorithm(context.getInnerGraphicsAlgorithm());
+			getFeatureProvider().getDirectEditingInfo().setPictogramElement(context.getInnerPictogramElement());
+			getFeatureProvider().getDirectEditingInfo().setMainPictogramElement(context.getPictogramElements()[0]);
+			getFeatureProvider().getDirectEditingInfo().setActive(true);
+			getFeatureProvider().getDiagramTypeProvider().getDiagramEditor().refresh();
+		}
+		else if (sapphirePart instanceof DiagramNodePart)
+		{
+			DiagramNodePart diagramNodePart = (DiagramNodePart)sapphirePart;
+			SapphireRenderingContext renderingCtx = ((SapphireDiagramFeatureProvider)this.getFeatureProvider()).getRenderingContext(diagramNodePart);
+			diagramNodePart.getDefaultActionHandler().execute(renderingCtx);
+		}
 	}
 		
 	@Override
 	public boolean hasDoneChanges() 
 	{
-		SapphireDiagramActionHandler handler = (SapphireDiagramActionHandler)this.diagramNodePart.getDefaultActionHandler();
-		return handler.hasDoneModelChanges();
+		if (sapphirePart instanceof DiagramNodePart)
+		{
+			DiagramNodePart diagramNodePart = (DiagramNodePart)sapphirePart;
+			SapphireDiagramActionHandler handler = (SapphireDiagramActionHandler)diagramNodePart.getDefaultActionHandler();
+			if (handler != null)
+			{
+				return handler.hasDoneModelChanges();
+			}
+		}
+		return false;
 	}
 	
 }
