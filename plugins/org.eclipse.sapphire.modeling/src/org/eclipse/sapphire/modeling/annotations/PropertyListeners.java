@@ -23,7 +23,7 @@ import org.eclipse.sapphire.modeling.ModelPropertyListener;
  */
 
 @Retention( RetentionPolicy.RUNTIME )
-@Target( { ElementType.FIELD } )
+@Target( ElementType.FIELD )
 
 public @interface PropertyListeners
 {

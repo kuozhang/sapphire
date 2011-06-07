@@ -11,41 +11,25 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
- * Equality function. 
+ * Function that constructs a list from arbitrary number of operands. 
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EqualityFunction
+public final class ListFunction
 
     extends Function
 
 {
-    public static EqualityFunction create( final Function a,
-                                           final Function b )
-    {
-        final EqualityFunction function = new EqualityFunction();
-        function.init( a, b );
-        return function;
-    }
-    
     @Override
     public String name()
     {
-        return "==";
-    }
-
-    @Override
-    public boolean operator()
-    {
-        return true;
-    }
-
-    @Override
-    public int precedence()
-    {
-        return 5;
+        return "List";
     }
 
     @Override
@@ -56,10 +40,27 @@ public final class EqualityFunction
             @Override
             protected Object evaluate()
             {
-                final Object a = operand( 0 ).value();
-                final Object b = operand( 1 ).value();
+                final int size = operands().size();
                 
-                return equal( a, b );
+                if( size == 0 )
+                {
+                    return Collections.emptyList();
+                }
+                else if( size == 1 )
+                {
+                    return Collections.singletonList( operand( 0 ).value() );
+                }
+                else
+                {
+                    final List<Object> list = new ArrayList<Object>();
+                    
+                    for( int i = 0; i < size; i++ )
+                    {
+                        list.add( operand( i ).value() );
+                    }
+                    
+                    return list;
+                }
             }
         };
     }

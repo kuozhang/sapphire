@@ -84,17 +84,19 @@ PARSER_END( ExpressionLanguageParserImpl )
 | 
     < DOT : "." >
 | 
-    < GT : ( ">" | "gt" ) >
+    < GT : ( ">" | [ "g", "G" ] [ "t", "T" ] ) >
 | 
-    < LT : ( "<" | "lt" ) >
+    < LT : ( "<" | [ "l", "L" ] [ "t", "T" ] ) >
 | 
-    < EQ : ( "==" | "eq" ) >
+    < EQ : ( "==" | [ "e", "E" ] [ "q", "Q" ] ) >
 | 
-    < LE : ( "<=" | "le" ) >
+    < LE : ( "<=" | [ "l", "L" ] [ "e", "E" ] ) >
 | 
-    < GE : ( ">=" | "ge" ) >
+    < GE : ( ">=" | [ "g", "G" ] [ "e", "E" ] ) >
 | 
-    < NE : ( "!=" | "ne" ) >
+    < NE : ( "!=" | [ "n", "N" ] [ "e", "E" ] ) >
+|
+    < IN : [ "i", "I" ] [ "n", "N" ] >
 | 
     < LPAREN : "(" >
 | 
@@ -116,17 +118,17 @@ PARSER_END( ExpressionLanguageParserImpl )
 | 
     < MULTIPLY : "*" >
 | 
-    < DIVIDE : ( "/" | "div" ) >
+    < DIVIDE : ( "/" | [ "d", "D" ] [ "i", "I" ] [ "v", "V" ] ) >
 | 
-    < MODULUS : ( "%" | "mod" ) >
+    < MODULUS : ( "%" | [ "m", "M" ] [ "o", "O" ] [ "d", "D" ] ) >
 | 
-    < NOT : ( "!" | "not" ) >
+    < NOT : ( "!" | [ "n", "N" ] [ "o", "O" ] [ "t", "T" ] ) >
 | 
-    < AND : ( "&&" | "and" ) >
+    < AND : ( "&&" | [ "a", "A" ] [ "n", "N" ] [ "d", "D" ] ) >
 | 
-    < OR : ( "||" | "or" ) >
+    < OR : ( "||" | [ "o", "O" ] [ "r", "R" ] ) >
 | 
-    < EMPTY : "empty" >
+    < EMPTY : [ "e", "E" ] [ "m", "M" ] [ "p", "P" ] [ "t", "T" ] [ "y", "Y" ] >
 | 
     < IDENTIFIER : <LETTER> ( <LETTER> | <DIGIT> )* >
 |
@@ -299,22 +301,30 @@ Function EqualityExpression() :
 {
     Function res;
     Function f;
-    boolean ne;
+    int ftype;
 }
 {
     res = RelationalExpression()
     (
         (
-            <EQ>  { ne = false; } |
-            <NE>  { ne = true; }
+            <EQ>  { ftype = 1; } |
+            <NE>  { ftype = 2; } |
+            <IN>  { ftype = 3; }
         )
         f = RelationalExpression()
         {
-            res = EqualityFunction.create( res, f );
-            
-            if( ne )
+            if( ftype == 3 )
             {
-                res = NotFunction.create( res );
+                res = InFunction.create( res, f );
+            }
+            else
+            {
+                res = EqualityFunction.create( res, f );
+            
+                if( ftype == 2 )
+                {
+                    res = NotFunction.create( res );
+                }
             }
         }
     )*

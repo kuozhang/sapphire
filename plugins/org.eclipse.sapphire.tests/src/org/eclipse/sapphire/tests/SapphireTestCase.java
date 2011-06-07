@@ -15,6 +15,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -95,6 +97,11 @@ public abstract class SapphireTestCase
         
         assertEquals( Status.Severity.ERROR, st.severity() );
         assertEquals( expectedMessage, st.message() );
+    }
+    
+    protected static <T> List<T> list( final T... items )
+    {
+        return Arrays.asList( items );
     }
     
 }

@@ -15,9 +15,11 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.ClearOnDisable;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -47,7 +49,9 @@ public interface IIfThenElseGallery extends IModelElement
     
     @Type( base = Integer.class )
     @Label( standard = "radius" )
-    @Enablement( expr = "${ ShapeType == 'CIRCLE' || ShapeType == 'PENTAGON' || ShapeType == 'HEXAGON' || ShapeType == 'HEPTAGON' || ShapeType == 'OCTAGON' }" )
+    @Enablement( expr = "${ ShapeType IN List( 'CIRCLE', 'PENTAGON', 'HEXAGON', 'HEPTAGON', 'OCTAGON' ) }" )
+    @ClearOnDisable
+    @Required
     @XmlBinding( path = "radius" )
     
     ValueProperty PROP_RADIUS = new ValueProperty( TYPE, "Radius" );
@@ -60,7 +64,9 @@ public interface IIfThenElseGallery extends IModelElement
     
     @Type( base = Integer.class )
     @Label( standard = "edge length 1" )
-    @Enablement( expr = "${ ShapeType == 'TRIANGLE' || ShapeType == 'RECTANGLE' || ShapeType == 'SQUARE' }" )
+    @Enablement( expr = "${ ShapeType IN List( 'TRIANGLE', 'RECTANGLE', 'SQUARE' ) }" )
+    @ClearOnDisable
+    @Required
     @XmlBinding( path = "edge-length-1" )
     
     ValueProperty PROP_EDGE_LENGTH_1 = new ValueProperty( TYPE, "EdgeLength1" );
@@ -73,7 +79,9 @@ public interface IIfThenElseGallery extends IModelElement
     
     @Type( base = Integer.class )
     @Label( standard = "edge length 2" )
-    @Enablement( expr = "${ ShapeType == 'TRIANGLE' || ShapeType == 'RECTANGLE' }" )
+    @Enablement( expr = "${ ShapeType IN List( 'TRIANGLE', 'RECTANGLE' ) }" )
+    @ClearOnDisable
+    @Required
     @XmlBinding( path = "edge-length-2" )
     
     ValueProperty PROP_EDGE_LENGTH_2 = new ValueProperty( TYPE, "EdgeLength2" );
@@ -87,6 +95,8 @@ public interface IIfThenElseGallery extends IModelElement
     @Type( base = Integer.class )
     @Label( standard = "edge length 3" )
     @Enablement( expr = "${ ShapeType == 'TRIANGLE' }" )
+    @ClearOnDisable
+    @Required
     @XmlBinding( path = "edge-length-3" )
     
     ValueProperty PROP_EDGE_LENGTH_3 = new ValueProperty( TYPE, "EdgeLength3" );

@@ -19,12 +19,18 @@ public final class ModelPropertyChangeEvent
 {
     private final IModelElement modelElement;
     private final ModelProperty property;
+    private final boolean oldEnablementState;
+    private final boolean newEnablementState;
     
     public ModelPropertyChangeEvent( final IModelElement modelElement,
-                                     final ModelProperty property )
+                                     final ModelProperty property,
+                                     final Boolean oldEnablementState,
+                                     final boolean newEnablementState )
     {
         this.modelElement = modelElement;
         this.property = property;
+        this.oldEnablementState = ( oldEnablementState == null ? newEnablementState : oldEnablementState );
+        this.newEnablementState = newEnablementState;
     }
     
     public IModelElement getModelElement()
@@ -35,6 +41,16 @@ public final class ModelPropertyChangeEvent
     public ModelProperty getProperty()
     {
         return this.property;
+    }
+    
+    public boolean getOldEnablementState()
+    {
+        return this.oldEnablementState;
+    }
+    
+    public boolean getNewEnablementState()
+    {
+        return this.newEnablementState;
     }
 
 }

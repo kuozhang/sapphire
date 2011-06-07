@@ -178,4 +178,9 @@
         <impl>org.eclipse.sapphire.modeling.el.RootElementFunction</impl>
         <description>Returns the root of the model.</description>
     </function>
+    <function>
+        <name>List</name>
+        <impl>org.eclipse.sapphire.modeling.el.ListFunction</impl>
+        <description>Constructs a list from arbitrary number of operands.</description>
+    </function>
 </extension>

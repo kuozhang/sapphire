@@ -17,13 +17,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Specifies that the property value should be cleared when the property transitions from
+ * enabled to disabled state. This can be useful for pruning unnecessary data from the
+ * model and persistent storage, but can make it more difficult for users to return to the
+ * prior state as data is erased. 
+ * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Retention( RetentionPolicy.RUNTIME )
 @Target( ElementType.FIELD )
 
-public @interface ValidFileExtensions
+public @interface ClearOnDisable
 {
-    String[] value();
 }

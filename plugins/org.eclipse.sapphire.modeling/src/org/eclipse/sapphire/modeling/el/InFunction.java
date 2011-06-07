@@ -11,21 +11,23 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import java.util.List;
+
 /**
- * Equality function. 
+ * In function. 
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EqualityFunction
+public final class InFunction
 
     extends Function
 
 {
-    public static EqualityFunction create( final Function a,
-                                           final Function b )
+    public static InFunction create( final Function a,
+                                     final Function b )
     {
-        final EqualityFunction function = new EqualityFunction();
+        final InFunction function = new InFunction();
         function.init( a, b );
         return function;
     }
@@ -33,7 +35,7 @@ public final class EqualityFunction
     @Override
     public String name()
     {
-        return "==";
+        return "in";
     }
 
     @Override
@@ -57,9 +59,24 @@ public final class EqualityFunction
             protected Object evaluate()
             {
                 final Object a = operand( 0 ).value();
-                final Object b = operand( 1 ).value();
+                final List<?> b = cast( operand( 1 ).value(), List.class );
                 
-                return equal( a, b );
+                if( b == null )
+                {
+                    return false;
+                }
+                else
+                {
+                    for( Object entry : b )
+                    {
+                        if( equal( a, entry ) )
+                        {
+                            return true;
+                        }
+                    }
+                    
+                    return false;
+                }
             }
         };
     }

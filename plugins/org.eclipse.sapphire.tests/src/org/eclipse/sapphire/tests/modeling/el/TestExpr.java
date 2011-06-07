@@ -11,14 +11,13 @@
 
 package org.eclipse.sapphire.tests.modeling.el;
 
-import junit.framework.TestCase;
-
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
+import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -26,7 +25,7 @@ import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 
 public abstract class TestExpr
 
-    extends TestCase
+    extends SapphireTestCase
     
 {
     protected TestExpr( final String name )

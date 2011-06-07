@@ -16,9 +16,9 @@ import java.util.Collections;
 import java.util.List;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.eclipse.sapphire.ui.util.TopologicalSorter;
 import org.eclipse.sapphire.ui.util.TopologicalSorter.Entity;
 
@@ -30,7 +30,7 @@ import org.eclipse.sapphire.ui.util.TopologicalSorter.Entity;
 
 public final class TopologicalSorterTests
 
-    extends TestCase
+    extends SapphireTestCase
     
 {
     private TopologicalSorterTests( final String name )
@@ -344,18 +344,6 @@ public final class TopologicalSorterTests
         
         assertEquals( expectedOrderAsStrings, actualOrder );
         assertEquals( expectedCycles, actualCycles );
-    }
-    
-    private static <T> List<T> list( final T... items )
-    {
-        final List<T> list = new ArrayList<T>();
-        
-        for( T item : items )
-        {
-            list.add( item );
-        }
-        
-        return list;
     }
     
 }

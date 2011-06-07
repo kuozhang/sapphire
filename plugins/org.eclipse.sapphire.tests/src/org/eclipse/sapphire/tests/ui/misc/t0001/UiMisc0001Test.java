@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.tests.ui.misc.t0001;
 
-import static java.util.Arrays.asList;
 import static org.eclipse.sapphire.ui.util.MiscUtil.findSelectionPostDelete;
 
 import java.util.List;
@@ -63,18 +62,18 @@ public final class UiMisc0001Test
         final String d = "d";
         final String e = "e";
         
-        final List<String> all = asList( a, b, c, d, e );
+        final List<String> all = list( a, b, c, d, e );
         
-        assertEquals( d, findSelectionPostDelete( all, asList( c ) ) );
-        assertEquals( e, findSelectionPostDelete( all, asList( d ) ) );
-        assertEquals( d, findSelectionPostDelete( all, asList( e ) ) );
+        assertEquals( d, findSelectionPostDelete( all, list( c ) ) );
+        assertEquals( e, findSelectionPostDelete( all, list( d ) ) );
+        assertEquals( d, findSelectionPostDelete( all, list( e ) ) );
         
-        assertEquals( e, findSelectionPostDelete( all, asList( b, d ) ) );
-        assertEquals( d, findSelectionPostDelete( all, asList( c, e ) ) );
+        assertEquals( e, findSelectionPostDelete( all, list( b, d ) ) );
+        assertEquals( d, findSelectionPostDelete( all, list( c, e ) ) );
         
-        assertEquals( a, findSelectionPostDelete( all, asList( e, d, c, b ) ) );
-        assertEquals( b, findSelectionPostDelete( all, asList( a, c, d, e ) ) );
-        assertEquals( null, findSelectionPostDelete( all, asList( a, b, c, d, e ) ) );
+        assertEquals( a, findSelectionPostDelete( all, list( e, d, c, b ) ) );
+        assertEquals( b, findSelectionPostDelete( all, list( a, c, d, e ) ) );
+        assertEquals( null, findSelectionPostDelete( all, list( a, b, c, d, e ) ) );
     }
 
 }

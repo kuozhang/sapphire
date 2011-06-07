@@ -211,6 +211,7 @@ are the evaluation of subexpressions.</p>
   <li><a href="#rel-less-than-or-equal">Less Than or Equal</a></li>
   <li><a href="#rel-greater-than">Greater Than</a></li>
   <li><a href="#rel-greater-than-or-equal">Greater Than or Equal</a></li>
+  <li><a href="#rel-in">In</a></li>
 </ul>
 
 <p>The evaluation of relational operators is described in the following sections. A and B
@@ -342,6 +343,14 @@ are the evaluation of subexpressions.</p>
   <li>Otherwise, error.</li>
 </ul>
 
+<a name="rel-in"><h3>In : A in B</h3></a>
+
+<ul>
+  <li>If A is <code>null</code> or B is <code>null</code> return <code>false</code>.</li>
+  <li>Otherwise, return <code>true</code> if <code>A == B[ i ]</code> for any value of <code>i</code>
+    between <code>0</code> and <code>B.Size - 1</code>.  
+</ul>
+  
 <a name="logical"><h2>Logical Operators</h2></a>
 
 <p>Logical operators are provided to perform boolean logic.</p>
@@ -413,7 +422,7 @@ are the evaluation of subexpressions.</p>
   <li><code>* / div % mod</code></li>
   <li><code>+ - (binary)</code></li>
   <li><code>&lt; &gt; &lt;= &gt;= lt gt le ge</code></li>
-  <li><code>== != eq ne</code></li>
+  <li><code>== != eq ne in</code></li>
   <li><code>&amp;&amp; and</code></li>
   <li><code>|| or</code></li>
   <li><code>? :</code></li>

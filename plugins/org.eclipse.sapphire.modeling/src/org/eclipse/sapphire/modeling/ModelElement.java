@@ -29,6 +29,7 @@ import org.eclipse.sapphire.modeling.ModelPath.ModelRootSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.ModelPath.TypeFilterSegment;
 import org.eclipse.sapphire.modeling.ModelService.Event;
+import org.eclipse.sapphire.modeling.annotations.ClearOnDisable;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
@@ -120,6 +121,65 @@ public abstract class ModelElement
                             }
                         }
                     );
+                }
+            }
+            
+            if( property.hasAnnotation( ClearOnDisable.class ) )
+            {
+                ModelPropertyListener listener = null;
+                
+                if( property instanceof ValueProperty )
+                {
+                    final ValueProperty prop = (ValueProperty) property;
+                    
+                    listener = new ModelPropertyListener()
+                    {
+                        @Override
+                        public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                        {
+                            if( event.getOldEnablementState() == true && event.getNewEnablementState() == false )
+                            {
+                                write( prop, null );
+                            }
+                        }
+                    };
+                }
+                else if( property instanceof ListProperty )
+                {
+                    final ListProperty prop = (ListProperty) property;
+                    
+                    listener = new ModelPropertyListener()
+                    {
+                        @Override
+                        public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                        {
+                            if( event.getOldEnablementState() == true && event.getNewEnablementState() == false )
+                            {
+                                read( prop ).clear();
+                            }
+                        }
+                    };
+                }
+                else if( property instanceof ElementProperty && ! ( property instanceof ImpliedElementProperty ) )
+                {
+                    final ElementProperty prop = (ElementProperty) property;
+                    
+                    listener = new ModelPropertyListener()
+                    {
+                        @Override
+                        public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                        {
+                            if( event.getOldEnablementState() == true && event.getNewEnablementState() == false )
+                            {
+                                read( prop ).remove();
+                            }
+                        }
+                    };
+                }
+                
+                if( listener != null )
+                {
+                    addListener( listener, property.getName() );
                 }
             }
         }
@@ -718,7 +778,7 @@ public abstract class ModelElement
             
             if( status == null )
             {
-                refreshPropertyEnabledStatus( property, true );
+                refreshPropertyEnablement( property, true );
                 status = this.enablementStatuses.get( property );
             }
             
@@ -726,13 +786,13 @@ public abstract class ModelElement
         }
     }
     
-    protected final boolean refreshPropertyEnabledStatus( final ModelProperty property )
+    protected final EnablementRefreshResult refreshPropertyEnablement( final ModelProperty property )
     {
-        return refreshPropertyEnabledStatus( property, false );
+        return refreshPropertyEnablement( property, false );
     }
     
-    private final boolean refreshPropertyEnabledStatus( final ModelProperty property,
-                                                        final boolean notifyListenersIfNecessary )
+    private final EnablementRefreshResult refreshPropertyEnablement( final ModelProperty property,
+                                                                     final boolean notifyListenersIfNecessary )
     {
         synchronized( root() )
         {
@@ -747,7 +807,7 @@ public abstract class ModelElement
                         {
                             if( event instanceof EnablementService.StateChangedEvent )
                             {
-                                refreshPropertyEnabledStatus( prop, true );
+                                refreshPropertyEnablement( prop, true );
                             }
                         }
                     };
@@ -785,13 +845,11 @@ public abstract class ModelElement
                 
                 if( notifyListenersIfNecessary )
                 {
-                    notifyPropertyChangeListeners( property );
+                    notifyPropertyChangeListeners( new ModelPropertyChangeEvent( this, property, oldState, newState ) );
                 }
-                
-                return true;
             }
             
-            return false;
+            return new EnablementRefreshResult( oldState, newState );
         }
     }
 
@@ -1192,8 +1250,18 @@ public abstract class ModelElement
     
     public final void notifyPropertyChangeListeners( final ModelProperty property )
     {
-        final ModelPropertyChangeEvent event = new ModelPropertyChangeEvent( this, property );
-        
+        final boolean enabled = isPropertyEnabled( property );
+        notifyPropertyChangeListeners( new ModelPropertyChangeEvent( this, property, enabled, enabled ) );
+    }
+    
+    protected final void notifyPropertyChangeListeners( final ModelProperty property,
+                                                        final EnablementRefreshResult enablementRefreshResult )
+    {
+        notifyPropertyChangeListeners( new ModelPropertyChangeEvent( this, property, enablementRefreshResult.before(), enablementRefreshResult.after() ) );
+    }
+
+    private void notifyPropertyChangeListeners( final ModelPropertyChangeEvent event )
+    {
         synchronized( root() )
         {
             if( this.valres != null )
@@ -1218,7 +1286,7 @@ public abstract class ModelElement
             
             if( this.propertyListeners != null )
             {
-                final Set<ModelPropertyListener> listeners = this.propertyListeners.get( property );
+                final Set<ModelPropertyListener> listeners = this.propertyListeners.get( event.getProperty() );
                 
                 if( listeners != null )
                 {
@@ -1236,7 +1304,7 @@ public abstract class ModelElement
                 }
             }
             
-            for( ModelPropertyListener listener : property.getListeners() )
+            for( ModelPropertyListener listener : event.getProperty().getListeners() )
             {
                 try
                 {
@@ -1422,6 +1490,41 @@ public abstract class ModelElement
         }
         
         return value;
+    }
+    
+    protected final class EnablementRefreshResult
+    {
+        private final Boolean oldEnablementState;
+        private final boolean newEnablementState;
+        
+        public EnablementRefreshResult( final Boolean before,
+                                        final boolean after )
+        {
+            this.oldEnablementState = before;
+            this.newEnablementState = after;
+        }
+        
+        public Boolean before()
+        {
+            return this.oldEnablementState;
+        }
+        
+        public boolean after()
+        {
+            return this.newEnablementState;
+        }
+        
+        public boolean changed()
+        {
+            if( this.oldEnablementState == null )
+            {
+                return false;
+            }
+            else
+            {
+                return ( this.oldEnablementState != this.newEnablementState );
+            }
+        }
     }
     
     private final class PropagationListener

@@ -11,9 +11,11 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -188,23 +190,6 @@ public abstract class FunctionResult
         }
     }
     
-    protected boolean equal( final Object a,
-                             final Object b )
-    {
-        if( a == b )
-        {
-            return true;
-        }
-        else if( a == null || b == null )
-        {
-            return false;
-        }
-        else
-        {
-            return a.equals( b );
-        }
-    }
-    
     public final void addListener( final Listener listener )
     {
         this.listeners.add( listener );
@@ -240,8 +225,8 @@ public abstract class FunctionResult
     
     @SuppressWarnings( { "unchecked", "rawtypes" } )
     
-    protected <X> X cast( Object obj,
-                          final Class<X> type )
+    protected final <X> X cast( Object obj,
+                                final Class<X> type )
     {
         if( obj instanceof FunctionResult )
         {
@@ -467,6 +452,41 @@ public abstract class FunctionResult
 
             throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
         }
+        else if( List.class.isAssignableFrom( type ) )
+        {
+            if( obj instanceof Value )
+            {
+                obj = ( (Value<?>) obj ).getContent();
+            }
+            
+            if( obj == null )
+            {
+                return null;
+            }
+            else if( obj instanceof List )
+            {
+                return (X) obj;
+            }
+            else if( obj instanceof Collection )
+            {
+                return (X) new ArrayList<Object>( (Collection<?>) obj );
+            }
+            else if( obj.getClass().isArray() )
+            {
+                final List<Object> list = new ArrayList<Object>();
+                
+                for( int i = 0, n = Array.getLength( obj ); i < n; i++ )
+                {
+                    list.add( Array.get( obj, i ) );
+                }
+                
+                return (X) list;
+            }
+            else
+            {
+                return (X) Collections.singletonList( obj );
+            }
+        }
         else
         {
             if( obj instanceof Value )
@@ -498,6 +518,82 @@ public abstract class FunctionResult
             }
             
             throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
+        }
+    }
+    
+    protected final boolean equal( final Object a,
+                                   final Object b )
+    {
+        if( a == b )
+        {
+            return true;
+        }
+        else if( a == null )
+        {
+            if( b instanceof Value<?> )
+            {
+                return ( ( (Value<?>) b ).getText() == null );
+            }
+            
+            return false;
+        }
+        else if( b == null )
+        {
+            if( a instanceof Value<?> )
+            {
+                return ( ( (Value<?>) a ).getText() == null );
+            }
+            
+            return false;
+        }
+        else if( a instanceof BigDecimal || b instanceof BigDecimal )
+        {
+            final BigDecimal x = cast( a, BigDecimal.class );
+            final BigDecimal y = cast( b, BigDecimal.class );
+            return x.equals( y );
+        }
+        else if( a instanceof Float || a instanceof Double || b instanceof Float || b instanceof Double )
+        {
+            final Double x = cast( a, Double.class );
+            final Double y = cast( b, Double.class );
+            return ( x == y );
+        }
+        else if( a instanceof BigInteger || b instanceof BigInteger )
+        {
+            final BigInteger x = cast( a, BigInteger.class );
+            final BigInteger y = cast( b, BigInteger.class );
+            return x.equals( y );
+        }
+        else if( a instanceof Byte || a instanceof Short || a instanceof Character || a instanceof Integer || a instanceof Long || 
+                 b instanceof Byte || b instanceof Short || b instanceof Character || b instanceof Integer || b instanceof Long )
+        {
+            final Long x = cast( a, Long.class );
+            final Long y = cast( b, Long.class );
+            return ( x == y );
+        }
+        else if( a instanceof Boolean || b instanceof Boolean )
+        {
+            final Boolean x = cast( a, Boolean.class );
+            final Boolean y = cast( b, Boolean.class );
+            return ( x == y );
+        }
+        else if( a instanceof Enum )
+        {
+            return ( a == cast( b, a.getClass() ) );
+        }
+        else if( b instanceof Enum )
+        {
+            return ( cast( a, b.getClass() ) == b );
+        }
+        else if( a instanceof String || b instanceof String )
+        {
+            final String x = cast( a, String.class );
+            final String y = cast( b, String.class );
+            return ( x.compareTo( y ) == 0 );
+        }
+        else
+        {
+            return a.equals( b );
         }
     }
 

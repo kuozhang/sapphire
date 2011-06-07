@@ -531,7 +531,7 @@ public final class GenerateImplProcessor
         rb.append( "this.#1 = new #2( this, #3, service( #3, ValueNormalizationService.class ).normalize( #3.encodeKeywords( val ) ) );\n" +
                    "this.#1.init();\n" +
                    "\n" +
-                   "final boolean propertyEnabledStatusChanged = refreshPropertyEnabledStatus( #3 );\n" +
+                   "final EnablementRefreshResult enablementRefreshResult = refreshPropertyEnablement( #3 );\n" +
                    "\n" +
                    "if( oldValue != null )\n" +
                    "{\n" + 
@@ -540,9 +540,9 @@ public final class GenerateImplProcessor
                    "        this.#1 = oldValue;\n" + 
                    "    }\n" + 
                    "    \n" +
-                   "    if( this.#1 != oldValue || propertyEnabledStatusChanged )\n" +
+                   "    if( this.#1 != oldValue || enablementRefreshResult.changed() )\n" +
                    "    {\n" +
-                   "        notifyPropertyChangeListeners( #3 );\n" +
+                   "        notifyPropertyChangeListeners( #3, enablementRefreshResult );\n" +
                    "    }\n" +
                    "}",
                    variableName, wrapperType.getSimpleName(), propField.name );
@@ -800,17 +800,17 @@ public final class GenerateImplProcessor
                    "    {\n" +
                    "        this.#1 = new ModelElementHandle<#3>( this, #2 );\n" +
                    "        this.#1.init();\n" +
-                   "        refreshPropertyEnabledStatus( #2 );\n" +
+                   "        refreshPropertyEnablement( #2 );\n" +
                    "    }\n" +
                    "}\n" +
                    "else\n" +
                    "{\n" +
-                   "    final boolean propertyEnabledStatusChanged = refreshPropertyEnabledStatus( #2 );\n" +
+                   "    final EnablementRefreshResult enablementRefreshResult = refreshPropertyEnablement( #2 );\n" +
                    "    final boolean notified = this.#1.refresh();\n" +
                    "    \n" +
-                   "    if( ! notified && propertyEnabledStatusChanged )\n" +
+                   "    if( ! notified && enablementRefreshResult.changed() )\n" +
                    "    {\n" +
-                   "        notifyPropertyChangeListeners( #2 );\n" +
+                   "        notifyPropertyChangeListeners( #2, enablementRefreshResult );\n" +
                    "    }\n" +
                    "}",
                    variableName, propField.name, memberType.getSimpleName() );
@@ -923,17 +923,17 @@ public final class GenerateImplProcessor
                    "        this.#1 = new ModelElementList<#3>( this, #2 );\n" +
                    "        final ListBindingImpl binding = resource().binding( #2 );\n" +
                    "        this.#1.init( binding );\n" +
-                   "        refreshPropertyEnabledStatus( #2 );\n" +
+                   "        refreshPropertyEnablement( #2 );\n" +
                    "    }\n" +
                    "}\n" +
                    "else\n" +
                    "{\n" +
-                   "    final boolean propertyEnabledStatusChanged = refreshPropertyEnabledStatus( #2 );\n" +
+                   "    final EnablementRefreshResult enablementRefreshResult = refreshPropertyEnablement( #2 );\n" +
                    "    final boolean notified = this.#1.refresh();\n" +
                    "    \n" +
-                   "    if( ! notified && propertyEnabledStatusChanged )\n" +
+                   "    if( ! notified && enablementRefreshResult.changed() )\n" +
                    "    {\n" +
-                   "        notifyPropertyChangeListeners( #2 );\n" +
+                   "        notifyPropertyChangeListeners( #2, enablementRefreshResult );\n" +
                    "    }\n" +
                    "}",
                    variableName, propField.name, memberType.getSimpleName() );
@@ -1102,13 +1102,13 @@ public final class GenerateImplProcessor
                    "    this.#1 = new #2( this, #3, object );\n" +
                    "    this.#1.init();\n" +
                    "    \n" +
-                   "    final boolean propertyEnabledStatusChanged = refreshPropertyEnabledStatus( #3 );\n" +
+                   "    final EnablementRefreshResult enablementRefreshResult = refreshPropertyEnablement( #3 );\n" +
                    "    \n" +
                    "    if( oldTransient == null )\n" +
                    "    {\n" +
                    "        if( object != null )\n" +
                    "        {\n" +
-                   "            notifyPropertyChangeListeners( #3 );\n" +
+                   "            notifyPropertyChangeListeners( #3, enablementRefreshResult );\n" +
                    "        }\n" +
                    "    }\n" +
                    "    else\n" +
@@ -1118,9 +1118,9 @@ public final class GenerateImplProcessor
                    "            this.#1 = oldTransient;\n" + 
                    "        }\n" + 
                    "        \n" +
-                   "        if( this.#1 != oldTransient || propertyEnabledStatusChanged )\n" +
+                   "        if( this.#1 != oldTransient || enablementRefreshResult.changed() )\n" +
                    "        {\n" +
-                   "            notifyPropertyChangeListeners( #3 );\n" +
+                   "            notifyPropertyChangeListeners( #3, enablementRefreshResult );\n" +
                    "        }\n" +
                    "    }\n" +
                    "}",
