@@ -123,11 +123,16 @@ public enum CapitalizationType
         WORDS_NOT_TO_CAPITALIZE.add( "an" );
         WORDS_NOT_TO_CAPITALIZE.add( "and" );
         WORDS_NOT_TO_CAPITALIZE.add( "as" );
+        WORDS_NOT_TO_CAPITALIZE.add( "at" );
         WORDS_NOT_TO_CAPITALIZE.add( "but" );
+        WORDS_NOT_TO_CAPITALIZE.add( "by" );
         WORDS_NOT_TO_CAPITALIZE.add( "if" );
+        WORDS_NOT_TO_CAPITALIZE.add( "in" );
         WORDS_NOT_TO_CAPITALIZE.add( "nor" );
+        WORDS_NOT_TO_CAPITALIZE.add( "of" );
         WORDS_NOT_TO_CAPITALIZE.add( "or" );
         WORDS_NOT_TO_CAPITALIZE.add( "the" );
+        WORDS_NOT_TO_CAPITALIZE.add( "to" );
     }
     
 }

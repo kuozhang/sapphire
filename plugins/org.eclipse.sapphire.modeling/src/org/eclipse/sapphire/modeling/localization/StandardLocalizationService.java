@@ -144,8 +144,8 @@ public abstract class StandardLocalizationService
     
     @Override
     public String text( final String sourceLangString,
-                          final CapitalizationType capitalizationType,
-                          final boolean includeMnemonic )
+                        final CapitalizationType capitalizationType,
+                        final boolean includeMnemonic )
     {
         init();
         
