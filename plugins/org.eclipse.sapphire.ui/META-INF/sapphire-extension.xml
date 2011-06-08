@@ -30,6 +30,7 @@
         <group>Sapphire.AddDeleteGroup</group>
         <key-binding>SHIFT+CONTROL+ALT+n</key-binding>
         <description>Adds an entity. A common use is to add a new element to the model.</description>
+        <context>Sapphire.Diagram.Editor</context>
     </action>
     <action>
         <id>Sapphire.Assist</id>
@@ -71,6 +72,8 @@
         <context>Sapphire.ListPropertyEditor</context>
         <context>Sapphire.EditorPage.Outline</context>
         <context>Sapphire.EditorPage.Outline.Node</context>
+        <context>Sapphire.Diagram.Node</context>
+        <context>Sapphire.Diagram.Connection</context>
     </action>
     <action>
         <id>Sapphire.Help</id>
@@ -130,6 +133,27 @@
         <description>Moves an entity up, from the perspective of how the entity appears on the screen. A common use is to move a model element one position towards the beginning of the list, swapping places with the preceding element.</description>
     </action>
     <action>
+        <id>Sapphire.ShowInSource</id>
+        <context>Sapphire.EditorPage.Outline.Node</context>
+        <label>show in source</label>
+        <image>org/eclipse/sapphire/ui/actions/ShowInSource.png</image>
+        <description>Shows the model element associated with a given part in the corresponding source editor.</description>
+        <context>Sapphire.Diagram.Node</context>
+        <context>Sapphire.Diagram.Connection</context>
+    </action>
+    <action>
+        <id>Sapphire.Restore.Defaults</id>
+        <context>Sapphire.Section</context>
+        <label>restore defaults</label>
+        <image>org/eclipse/sapphire/ui/actions/RestoreDefaults.png</image>
+        <description>Restores properties in a section to their default values. For value properties, it means setting the property to null. For list properties, it means clearing the list.</description>
+    </action>
+    <action>
+        <id>Sapphire.Drop</id>
+        <context>Sapphire.Diagram</context>
+        <label>drop</label>
+    </action>
+    <action>
         <id>Sapphire.Outline.CollapseAll</id>
         <context>Sapphire.EditorPage.Outline.Header</context>
         <label>collapse all</label>
@@ -142,7 +166,7 @@
         <label>expand all</label>
         <image>org/eclipse/sapphire/ui/actions/ExpandAll.png</image>
         <description>Expands all nodes in the content outline.</description>
-    </action>
+    </action>    
     <action>
         <id>Sapphire.Outline.Hide</id>
         <context>Sapphire.EditorPage</context>
@@ -151,31 +175,6 @@
         <image>org/eclipse/sapphire/ui/actions/HideOutline.png</image>
         <description>Hides the content outline that is embedded in an editor page. This is a toggle action. It can be used to show the embedded outline after it has been hidden.</description>
         <location>before:Sapphire.Help</location>
-    </action>
-    <action>
-        <id>Sapphire.Outline.ShowInSource</id>
-        <context>Sapphire.EditorPage.Outline.Node</context>
-        <label>show in source</label>
-        <image>org/eclipse/sapphire/ui/actions/ShowInSource.png</image>
-        <description>Shows the model element associated with a given content outline node in the corresponding source editor.</description>
-    </action>
-    <action>
-        <id>Sapphire.Restore.Defaults</id>
-        <context>Sapphire.Section</context>
-        <label>restore defaults</label>
-        <image>org/eclipse/sapphire/ui/actions/RestoreDefaults.png</image>
-        <description>Restores properties in a section to their default values. For value properties, it means setting the property to null. For list properties, it means clearing the list.</description>
-    </action>
-    <action>
-        <id>Sapphire.Diagram.Add</id>
-        <context>Sapphire.Diagram.Editor</context>
-        <label>${ Handlers.Size == 1 ? Concat( &quot;add &quot;, Handlers[ 0 ].Label ) : &quot;add&quot; }</label>
-        <image>org/eclipse/sapphire/ui/actions/Add.png</image>
-    </action>    
-    <action>
-        <id>Sapphire.Diagram.Drop</id>
-        <context>Sapphire.Diagram</context>
-        <label>drop</label>
     </action>
     <action>
         <id>Sapphire.Diagram.ToggleGrid</id>
@@ -187,22 +186,6 @@
         <id>Sapphire.Diagram.Node.Default</id>
         <context>Sapphire.Diagram.Node</context>
         <label>default action</label>
-    </action>
-    <action>
-        <id>Sapphire.Diagram.Part.ShowInSource</id>
-        <context>Sapphire.Diagram.Node</context>
-        <context>Sapphire.Diagram.Connection</context>
-        <label>show in source</label>
-        <image>org/eclipse/sapphire/ui/actions/ShowInSource.png</image>
-        <description>Shows the model element associated with a given diagram node in the corresponding source editor.</description>
-    </action>
-    <action>
-        <id>Sapphire.Diagram.Part.Delete</id>
-        <context>Sapphire.Diagram.Node</context>
-        <context>Sapphire.Diagram.Connection</context>
-        <label>delete</label>
-        <image>org/eclipse/sapphire/ui/actions/Delete.png</image>
-        <description>Deletes an entity. A common use is to delete an element from the model.</description>        
     </action>    
     <action-handler>
         <action>Sapphire.Browse</action>
@@ -254,6 +237,13 @@
         <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.UrlJumpActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
+        <action>Sapphire.Restore.Defaults</action>
+        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.RestoreDefaultsActionHandler</impl>
+        <id>Sapphire.Restore.Defaults</id>
+        <description>Opens a dialog showing all properties in the section with non-default values. The user can select which of those properties to restore to their default state.</description>
+        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.RestoreDefaultsActionHandlerCondition</condition>
+    </action-handler>
+    <action-handler>
         <action>Sapphire.Outline.CollapseAll</action>
         <id>Sapphire.Outline.CollapseAll</id>
         <description>Collapses all nodes in the content outline.</description>
@@ -264,6 +254,8 @@
         <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeDeleteActionHandler</impl>
         <id>Sapphire.Outline.Delete</id>
         <description>Deletes the model element associated with a given content outline node. Activates if the UI part is a content outline or a content outline node. All affected nodes must have the same parent and that parent must be a list property.</description>
+        <context>Sapphire.EditorPage.Outline</context>
+        <context>Sapphire.EditorPage.Outline.Node</context>
         <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeDeleteActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
@@ -271,13 +263,6 @@
         <id>Sapphire.Outline.ExpandAll</id>
         <description>Expands all nodes in the content outline.</description>
         <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineExpandAllActionHandler</impl>
-    </action-handler>
-    <action-handler>
-        <action>Sapphire.Restore.Defaults</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.RestoreDefaultsActionHandler</impl>
-        <id>Sapphire.Restore.Defaults</id>
-        <description>Opens a dialog showing all properties in the section with non-default values. The user can select which of those properties to restore to their default state.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.RestoreDefaultsActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Move.Down</action>
@@ -294,34 +279,42 @@
         <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeListMemberActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
-        <action>Sapphire.Outline.ShowInSource</action>
+        <action>Sapphire.ShowInSource</action>
         <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeShowInSourceActionHandler</impl>
         <id>Sapphire.Outline.ShowInSource</id>
         <description>Shows the model element associated with a given content outline node in the corresponding source editor.</description>
+        <context>Sapphire.EditorPage.Outline.Node</context>
         <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeShowInSourceActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
-        <action>Sapphire.Diagram.Part.ShowInSource</action>
+        <action>Sapphire.ShowInSource</action>
         <impl>org.eclipse.sapphire.ui.diagram.actions.DiagramShowInSourceActionHandler</impl>
-        <id>Sapphire.Diagram.Part.ShowInSource</id>
+        <id>Sapphire.Diagram.ShowInSource</id>
         <description>Shows the model element associated with a given diagram node in the corresponding source editor.</description>
+        <context>Sapphire.Diagram.Node</context>
+        <context>Sapphire.Diagram.Connection</context>
+        <condition>org.eclipse.sapphire.ui.diagram.actions.internal.DiagramShowInSourceActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
-        <action>Sapphire.Diagram.Part.Delete</action>
+        <action>Sapphire.Delete</action>
         <impl>org.eclipse.sapphire.ui.diagram.actions.DiagramDeleteActionHandler</impl>
-        <id>Sapphire.Diagram.Part.Delete</id>
+        <id>Sapphire.Diagram.Delete</id>
         <description>Deletes the model element associated with a given diagram node or connection.</description>
+        <context>Sapphire.Diagram.Node</context>
+        <context>Sapphire.Diagram.Connection</context>
     </action-handler>        
     <action-handler-factory>
         <action>Sapphire.Add</action>
         <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeAddActionHandlerFactory</impl>
         <description>Creates an add action handler for every possible member element type for all lists whose members are shown as child nodes beneath the content outline node in question.</description>
+        <context>Sapphire.EditorPage.Outline.Node</context>
         <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeAddActionHandlerCondition</condition>
     </action-handler-factory>
     <action-handler-factory>
-        <action>Sapphire.Diagram.Add</action>
+        <action>Sapphire.Add</action>
         <impl>org.eclipse.sapphire.ui.diagram.actions.DiagramNodeAddActionHandlerFactory</impl>
         <description>Creates an add action handler for every node type.</description>
+        <context>Sapphire.Diagram.Editor</context>
     </action-handler-factory>    
     <value-serialization-service>
         <type>org.eclipse.sapphire.ui.Color</type>

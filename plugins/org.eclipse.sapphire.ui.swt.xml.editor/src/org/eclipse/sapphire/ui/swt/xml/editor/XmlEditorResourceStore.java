@@ -521,6 +521,13 @@ public class XmlEditorResourceStore
     private final class XmlSourceEditorService extends SourceEditorService
     {
         @Override
+        public boolean find( final IModelElement element,
+                             final ModelProperty property )
+        {
+            return ( element.resource() instanceof XmlResource );
+        }
+        
+        @Override
         public void show( final IModelElement element,
                           final ModelProperty property )
         {

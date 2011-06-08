@@ -8,6 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342098] Separate dependency on org.eclipse.core.runtime (part 1)
+ *    Konstantin Komissarchik - [348808] Create common Sapphire.ShowInSource action
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.graphiti.providers;
@@ -58,8 +59,6 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 	private static final int SMALL_ERROR_DECORATOR_HEIGHT = 8;
 	private static final int LARGE_ERROR_DECORATOR_WIDTH = 16;
 	private static final int LARGE_ERROR_DECORATOR_HEIGHT = 16;
-	
-	private static final String SHOW_IN_SOURCE_ACTION_ID = "Sapphire.Diagram.Part.ShowInSource";
 	
 	public SapphireDiagramToolBehaviorProvider(IDiagramTypeProvider dtp) 
 	{

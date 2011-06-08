@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [348811] Eliminate separate Sapphire.Diagram.Part.Delete action
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.actions;
@@ -34,7 +35,7 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 public class DiagramDeleteActionHandler extends SapphireDiagramActionHandler
 {
-	private static final String DELETE_ACTION_ID = "Sapphire.Diagram.Part.Delete";
+	private static final String DELETE_ACTION_ID = "Sapphire.Delete";
 	
     @Override
     public void init( final SapphireAction action,

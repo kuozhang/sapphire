@@ -21,6 +21,22 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 public abstract class SourceEditorService
 {
     /**
+     * Determines if locating the specified element and property in the source editor
+     * is possible. 
+     * 
+     * <p>The model element parameter must always be specified, but the property parameter
+     * is optional. If property is omitted, the entire text associated with model element
+     * should be shown.</p>
+     * 
+     * @param element the model element
+     * @param property the property or null
+     * @return true if locating the specified element and property in the source editor is possible
+     */
+    
+    public abstract boolean find( IModelElement element,
+                                  ModelProperty property );
+    
+    /**
      * Locates the specified element and property in the source editor. The appropriate
      * block of text should be selected and revealed in the editor. If an exact match
      * cannot be made, the closest relevant block of text should be shown.

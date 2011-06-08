@@ -10,7 +10,7 @@
  *
  * Contributors:
  *   Shenxue Zhou - initial implementation and ongoing maintenance
- *   Konstantin Komissarchik - [341518] Sample needed for Diagram.Drop and Diagram.Node.Default actions
+ *   Konstantin Komissarchik - [341518] Sample needed for diagram drop and default node actions
  ******************************************************************************
 -->
 
@@ -63,8 +63,8 @@
                 <id>Sapphire.Samples.Map.Destination.ShowInWikipedia</id>
                 <label>show in Wikipedia</label>
                 <image>org/eclipse/sapphire/samples/map/internal/ShowInWikipedia.png</image>
-                <location>after:Sapphire.Diagram.Part.ShowInSource</location>
-                <location>before:Sapphire.Diagram.Part.Delete</location>
+                <location>after:Sapphire.ShowInSource</location>
+                <location>before:Sapphire.Delete</location>
             </action>
             <action-handler>
                 <action>Sapphire.Diagram.Node.Default</action>
@@ -77,7 +77,7 @@
                 <impl>DestinationShowInWikipediaActionHandler</impl>
             </action-handler>
             <action-handler>
-                <action>Sapphire.Diagram.Drop</action>
+                <action>Sapphire.Drop</action>
                 <id>Sapphire.Samples.Map.Drop</id>
                 <impl>MapDropActionHandler</impl>
             </action-handler>

@@ -32,14 +32,7 @@ public final class OutlineNodeShowInSourceActionHandler
     extends SapphireActionHandler
     
 {
-    public static final String ID = "Sapphire.Outline.ShowInSource";
-    
     private ModelElementListener listener;
-    
-    public OutlineNodeShowInSourceActionHandler()
-    {
-        setId( ID );
-    }
     
     @Override
     public void init( final SapphireAction action, 

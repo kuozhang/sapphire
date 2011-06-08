@@ -28,7 +28,7 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramDropActionHandler;
 
 /**
- * Action handler for Sapphire.Diagram.Drop action for the map editor. The implementation reads city names
+ * Action handler for Sapphire.Drop action for the map editor. The implementation reads city names
  * from the dropped text file (one line per city name) and adds these cities to the map. 
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

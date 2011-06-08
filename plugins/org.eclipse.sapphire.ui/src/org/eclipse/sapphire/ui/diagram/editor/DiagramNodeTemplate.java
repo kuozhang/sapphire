@@ -8,6 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
+ *    Konstantin Komissarchik - [348813] Generalize Sapphire.Diagram.Drop action
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -128,7 +129,7 @@ public class DiagramNodeTemplate extends SapphirePart
         }
 
         // handle drop action
-        this.dropAction = getAction("Sapphire.Diagram.Drop");
+        this.dropAction = getAction("Sapphire.Drop");
         this.dropActionHandler = (SapphireDiagramDropActionHandler)this.dropAction.getFirstActiveHandler();
 
         // Add model property listener

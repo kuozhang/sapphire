@@ -9,18 +9,18 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
+package org.eclipse.sapphire.ui.diagram.actions.internal;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.ui.SapphireCondition;
 import org.eclipse.sapphire.ui.SourceEditorService;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class OutlineNodeShowInSourceActionHandlerCondition 
+public final class DiagramShowInSourceActionHandlerCondition 
 
     extends SapphireCondition
     
@@ -28,19 +28,21 @@ public final class OutlineNodeShowInSourceActionHandlerCondition
     @Override
     protected boolean evaluate()
     {
-        final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
-        final IModelElement element = node.getLocalModelElement();
+        final IModelElement element = getPart().getModelElement();
+        final SourceEditorService service = element.adapt( SourceEditorService.class );
         
-        if( element.adapt( SourceEditorService.class ) != null )
+        if( service != null )
         {
-            final MasterDetailsContentNode parent = node.getParentNode();
-            
-            if( parent == null || parent.getLocalModelElement() != node.getLocalModelElement() )
+            try
             {
-                return true;
+                return service.find( element, null );
+            }
+            catch( Exception e )
+            {
+                LoggingService.log( e );
             }
         }
-            
+        
         return false;
     }
 

@@ -5,6 +5,9 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
+ * Contributors:
+ *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [348812] Eliminate separate Sapphire.Diagram.Add action
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.graphiti.editor;
@@ -37,7 +40,7 @@ import org.eclipse.sapphire.ui.swt.graphiti.actions.ToggleDiagramGridActionHandl
 
 public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvider
 {
-	private static final String DIAGRAM_ADD_ACTION = "Sapphire.Diagram.Add";
+	private static final String DIAGRAM_ADD_ACTION = "Sapphire.Add";
 	private static final String DIAGRAM_NODE_DEFAULT_ACTION = "Sapphire.Diagram.Node.Default";
 	private static final String DIAGRAM_GRID_ACTION = "Sapphire.Diagram.ToggleGrid";
 	

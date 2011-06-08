@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [348811] Eliminate separate Sapphire.Diagram.Part.Delete action
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.graphiti.features;
@@ -27,7 +28,7 @@ import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProv
 
 public class SapphireDeleteFeature extends DefaultDeleteFeature 
 {
-	private static final String DELETE_ACTION_ID = "Sapphire.Diagram.Part.Delete";
+	private static final String DELETE_ACTION_ID = "Sapphire.Delete";
 	private boolean doneChanges = false;
 	
 	public SapphireDeleteFeature(IFeatureProvider fp)

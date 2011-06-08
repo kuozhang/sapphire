@@ -46,6 +46,7 @@ to 0.3 release. Only changes from the previous milestone are covered.</p>
   <li><a href="#required-annotation">Required Annotation</a></li>
   <li><a href="#master-details-content-node-factory">Master Details Content Node Factory</a></li>
   <li><a href="#jump-action-handle">Jump Action Handler</a></li>
+  <li><a href="#show-in-source">Show In Source Action</a></li>
 </ol>
 
 <h2><a name="modularity">Modularity Changes</a></h2>
@@ -1335,6 +1336,27 @@ enablement logic from the parent class rather than augmenting it.</p>
     </td>
   </tr>
 </table>
+
+<h2><a name="show-in-source">Show In Source Action</a></h2>
+
+<p>The "show in source" action has been generalized to apply to other contexts besides the content outline. 
+This necessitated change of the id.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>Sapphire.Outline.ShowInSource</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>Sapphire.ShowInSource</code></pre>
+    </td>
+  </tr>
+</table>
+
 
 <br/><br/>
 
