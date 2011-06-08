@@ -10,6 +10,7 @@
  *
  * Contributors:
  *   Shenxue Zhou - initial implementation and ongoing maintenance
+ *   Konstantin Komissarchik - [341518] Sample needed for Diagram.Drop and Diagram.Node.Default actions
  ******************************************************************************
 -->
 
@@ -18,6 +19,7 @@
     <import>
         <package>org.eclipse.sapphire.samples.map</package>
         <package>org.eclipse.sapphire.samples.map.ui</package>
+        <package>org.eclipse.sapphire.samples.map.internal</package>
         <package>org.eclipse.sapphire.ui.diagram.actions</package>
     </import>
     
@@ -57,6 +59,28 @@
                 </endpoint2>
                 <instance-id>${ToDestination}</instance-id>                
             </connection-binding>
+            <action>
+                <id>Sapphire.Samples.Map.Destination.ShowInWikipedia</id>
+                <label>show in Wikipedia</label>
+                <image>org/eclipse/sapphire/samples/map/internal/ShowInWikipedia.png</image>
+                <location>after:Sapphire.Diagram.Part.ShowInSource</location>
+                <location>before:Sapphire.Diagram.Part.Delete</location>
+            </action>
+            <action-handler>
+                <action>Sapphire.Diagram.Node.Default</action>
+                <id>Sapphire.Samples.Map.Destination.Default</id>
+                <impl>DestinationShowInWikipediaActionHandler</impl>
+            </action-handler>
+            <action-handler>
+                <action>Sapphire.Samples.Map.Destination.ShowInWikipedia</action>
+                <id>Sapphire.Samples.Map.Destination.ShowInWikipedia</id>
+                <impl>DestinationShowInWikipediaActionHandler</impl>
+            </action-handler>
+            <action-handler>
+                <action>Sapphire.Diagram.Drop</action>
+                <id>Sapphire.Samples.Map.Drop</id>
+                <impl>MapDropActionHandler</impl>
+            </action-handler>
         </node>
         <connection-binding>
             <connection-id>highway_routes</connection-id>
