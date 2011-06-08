@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.sapphire.modeling.annotations.DerivedValue;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 
 /**
@@ -106,6 +107,12 @@ public final class ValueProperty
         {
             this.keywords = NO_KEYWORDS;
         }
+    }
+    
+    @Override
+    public boolean isReadOnly()
+    {
+        return super.isReadOnly() || hasAnnotation( DerivedValue.class );
     }
     
     public Set<ValueKeyword> getKeywords()

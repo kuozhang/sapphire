@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [348751] Diagram connection labels should check for derived and readonly properties
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -35,7 +36,8 @@ public class FunctionUtil
     			String propName = (String)functionResult.operand(0).value();
     	        final ModelElementType type = modelElement.getModelElementType();
     	        final ModelProperty property = type.getProperty(propName);
-    			if (property instanceof ValueProperty)
+    	        
+    	        if( isWritableValueProperty( property ) )
     			{
     				return (ValueProperty)property;
     			}
@@ -47,13 +49,19 @@ public class FunctionUtil
     		for (FunctionResult subFunc : subFuncs)
     		{
     			ValueProperty property = getFunctionProperty(modelElement, subFunc);
-    			if (property != null)
+    			
+    			if( isWritableValueProperty( property ) )
     			{
     				return property;
     			}
     		}
     	}
     	return null;
+    }
+    
+    private static boolean isWritableValueProperty( final ModelProperty property )
+    {
+        return ( property != null && property instanceof ValueProperty && ! property.isReadOnly() );
     }
 
 }
