@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.eclipse.sapphire.modeling.ExtensionsLocator.Handle;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
@@ -69,39 +70,42 @@ public final class ExtensionsLocatorFactory extends ExtensionsLocator.Factory
                             {
                                 final URL url = urls.nextElement();
                                 
-                                final Handle handle = new Handle()
+                                if( ! contains( handles, url ) )
                                 {
-                                    @Override
-                                    public URL extension()
+                                    final Handle handle = new Handle()
                                     {
-                                        return url;
-                                    }
-
-                                    @Override
-                                    public URL findResource( final String name )
-                                    {
-                                        return bundle.getResource( name );
-                                    }
-
-                                    @Override
-                                    @SuppressWarnings( "unchecked" )
+                                        @Override
+                                        public URL extension()
+                                        {
+                                            return url;
+                                        }
+    
+                                        @Override
+                                        public URL findResource( final String name )
+                                        {
+                                            return bundle.getResource( name );
+                                        }
+    
+                                        @Override
+                                        @SuppressWarnings( "unchecked" )
+                                        
+                                        public <T> Class<T> findClass( final String name )
+                                        {
+                                            try
+                                            {
+                                                return (Class<T>) bundle.loadClass( name );
+                                            }
+                                            catch( ClassNotFoundException e )
+                                            {
+                                                // Intentionally converting ClassNotFoundException to null return.
+                                            }
+    
+                                            return null;
+                                        }
+                                    };
                                     
-                                    public <T> Class<T> findClass( final String name )
-                                    {
-                                        try
-                                        {
-                                            return (Class<T>) bundle.loadClass( name );
-                                        }
-                                        catch( ClassNotFoundException e )
-                                        {
-                                            // Intentionally converting ClassNotFoundException to null return.
-                                        }
-
-                                        return null;
-                                    }
-                                };
-                                
-                                handles.add( handle );
+                                    handles.add( handle );
+                                }
                             }
                         }
                     }
@@ -110,6 +114,20 @@ public final class ExtensionsLocatorFactory extends ExtensionsLocator.Factory
                 return Collections.unmodifiableList( handles );
             }
         };
+    }
+    
+    private static boolean contains( final List<Handle> handles,
+                                     final URL url )
+    {
+        for( Handle handle : handles )
+        {
+            if( url.toString().equals( handle.extension().toString() ) )
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
 }
