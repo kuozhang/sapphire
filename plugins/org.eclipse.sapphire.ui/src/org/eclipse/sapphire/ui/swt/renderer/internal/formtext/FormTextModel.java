@@ -592,6 +592,7 @@ public class FormTextModel {
 				hyperlinkSettings.setForeground(activeForeground);
 			}
 			enabledForeground = hyperlinkSettings.getForeground();
+			// Bug 22782 - DCR - Need API to draw disabled text in native platform way
 			disabledForeground = display.getSystemColor(SWT.COLOR_GRAY);
 		}
 		return hyperlinkSettings;
