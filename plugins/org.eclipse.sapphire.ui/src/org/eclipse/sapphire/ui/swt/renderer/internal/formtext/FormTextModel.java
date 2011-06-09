@@ -73,6 +73,9 @@ public class FormTextModel {
 	
 	private Color activeForeground;
 	
+	private Color disabledForeground;
+	private Color enabledForeground;
+	
 	private static final RGB LINK_FOREGROUND = new RGB (0, 102, 204);
 
 	public static final String BOLD_FONT_ID = "f.____bold"; //$NON-NLS-1$
@@ -588,12 +591,19 @@ public class FormTextModel {
 				activeForeground = new Color(display, LINK_FOREGROUND);
 				hyperlinkSettings.setForeground(activeForeground);
 			}
+			enabledForeground = hyperlinkSettings.getForeground();
+			disabledForeground = display.getSystemColor(SWT.COLOR_GRAY);
 		}
 		return hyperlinkSettings;
 	}
 
 	public void setHyperlinkSettings(HyperlinkSettings settings) {
 		this.hyperlinkSettings = settings;
+	}
+	
+	public void setEnabled(boolean enabled) {
+		HyperlinkSettings settings = getHyperlinkSettings();
+		settings.setForeground(enabled ? enabledForeground : disabledForeground);
 	}
 
 	private void reset() {

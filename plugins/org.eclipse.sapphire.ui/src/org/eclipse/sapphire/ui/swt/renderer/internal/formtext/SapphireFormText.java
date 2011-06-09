@@ -1686,6 +1686,7 @@ public class SapphireFormText extends Canvas {
 	 */
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
+		model.setEnabled(enabled);
 		redraw();
 	}
 
