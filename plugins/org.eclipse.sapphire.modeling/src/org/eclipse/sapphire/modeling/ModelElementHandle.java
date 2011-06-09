@@ -117,7 +117,7 @@ public final class ModelElementHandle<T extends IModelElement>
                 
                 if( this.element != null && this.element.getModelElementType() != t )
                 {
-                    remove();
+                    removeInternal();
                 }
                 
                 if( this.element == null )
@@ -178,20 +178,27 @@ public final class ModelElementHandle<T extends IModelElement>
     
     public void remove()
     {
-        boolean changed = false;
-
+        final boolean changed = removeInternal();
+        
+        if( changed )
+        {
+            this.parent.notifyPropertyChangeListeners( this.property );
+        }
+    }
+    
+    private boolean removeInternal()
+    {
         synchronized( this )
         {
+            boolean changed = false;
+
             if( this.element != null )
             {
                 this.binding.remove();
                 changed = refreshInternal();
             }
-        }
-        
-        if( changed )
-        {
-            this.parent.notifyPropertyChangeListeners( this.property );
+            
+            return changed;
         }
     }
     
