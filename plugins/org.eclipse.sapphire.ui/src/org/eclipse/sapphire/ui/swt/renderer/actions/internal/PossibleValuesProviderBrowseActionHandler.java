@@ -13,12 +13,13 @@ package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 
 import java.util.Collection;
 
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
+import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.renderers.swt.ValueLabelProvider;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 
 /**
@@ -48,8 +49,9 @@ public final class PossibleValuesProviderBrowseActionHandler
             final Collection<String> valuesList = valuesProvider.values();
             final String[] valuesArray = valuesList.toArray( new String[ valuesList.size() ] );
             
-            final ElementListSelectionDialog dialog 
-                = new ElementListSelectionDialog( context.getShell(), new LabelProvider() );
+            final ValueLabelProvider labelProvider = new ValueLabelProvider( (SapphirePropertyEditor) getPart(), property );
+            
+            final ElementListSelectionDialog dialog = new ElementListSelectionDialog( context.getShell(), labelProvider );
             
             dialog.setElements( valuesArray );
             dialog.setMultipleSelection( false );

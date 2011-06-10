@@ -11,17 +11,13 @@
 
 package org.eclipse.sapphire.modeling.internal;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedSet;
-
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EnumValueType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
-import org.eclipse.sapphire.modeling.PossibleValuesService;
-import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.ValueLabelService;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 
@@ -29,12 +25,10 @@ import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EnumPossibleValuesService
-
-    extends PossibleValuesService
-    
+public final class EnumValueLabelService extends ValueLabelService
 {
-    private final List<String> values = new ArrayList<String>();
+    private EnumValueType enumType;
+    private ValueSerializationService valueSerializationService;
     
     @Override
     public void init( final IModelElement element,
@@ -43,25 +37,23 @@ public final class EnumPossibleValuesService
     {
         super.init( element );
         
-        final EnumValueType enumType = new EnumValueType( property.getTypeClass() );
-        final ValueSerializationService valueSerializationService = element.service( property, ValueSerializationService.class );
-        
-        for( Enum<?> item : enumType.getItems() )
-        {
-            this.values.add( valueSerializationService.encode( item ) );
-        }
+        this.enumType = new EnumValueType( property.getTypeClass() );
+        this.valueSerializationService = element.service( property, ValueSerializationService.class );
     }
     
     @Override
-    protected void fillPossibleValues( final SortedSet<String> values )
+    public String provide( final String value )
     {
-        values.addAll( this.values );
-    }
-
-    @Override
-    public Status.Severity getInvalidValueSeverity( final String invalidValue )
-    {
-        return Status.Severity.OK;
+        final Enum<?> item = (Enum<?>) this.valueSerializationService.decode( value );
+        
+        if( item == null )
+        {
+            return value;
+        }
+        else
+        {
+            return this.enumType.getLabel( item, false, CapitalizationType.NO_CAPS, false );
+        }
     }
 
     public static final class Factory extends ModelPropertyServiceFactory
@@ -79,7 +71,7 @@ public final class EnumPossibleValuesService
                                             final ModelProperty property,
                                             final Class<? extends ModelPropertyService> service )
         {
-            return new EnumPossibleValuesService();
+            return new EnumValueLabelService();
         }
     }
     

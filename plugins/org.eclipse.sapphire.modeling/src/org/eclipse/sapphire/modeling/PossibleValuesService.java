@@ -50,34 +50,6 @@ public abstract class PossibleValuesService
         return true;
     }
     
-    /**
-     * Returns the label to use when presenting a given value to the user. The default implementation 
-     * returns the value itself. If an unrecognized value is encountered, the implementation should
-     * return the value itself.
-     *   
-     * @param value the value that will be presented to the user
-     * @return the label to use when presenting a given value to the user
-     */
-    
-    public String label( final String value )
-    {
-        return value;
-    }
-    
-    /**
-     * Returns the image to use when presenting a given value to the user. The default implementation
-     * returns null. If an unrecognized value is encountered, the implementation should
-     * return null.
-     * 
-     * @param value the value that will be presented to the user
-     * @return the image to use when presenting a given value to the user
-     */
-    
-    public ImageData image( final String value )
-    {
-        return null;
-    }
-    
     public static class PossibleValuesChangedEvent extends Event
     {
         public PossibleValuesChangedEvent( final ModelService service )

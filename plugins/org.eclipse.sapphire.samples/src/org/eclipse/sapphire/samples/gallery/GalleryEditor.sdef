@@ -762,12 +762,7 @@
                     <label>multi-select</label>
                     <section>
                         <content>
-                            <label>
-                                One common requirement is to allow the user to select zero or more items from a set of
-                                possible values. This is modeled with a list property whose entry type has a single value
-                                property. The value property must be decorated with one of the @PossibleValues annotations.
-                                The list property must be decorated with @NoDuplicates annotation.
-                            </label> 
+                            <label>One common requirement is to allow the user to select zero or more items from a set of possible values. This is modeled with a list property whose entry type has a single value property. The value property must be decorated with @NoDuplicates annotation and must have a PossibleValuesService (either a custom implementation or via @PossibleValues annotation).</label> 
                             <spacer />
                             <label>Use the following property to experiment with enabling and disabling the lists.</label> 
                             <spacer></spacer>
@@ -777,7 +772,7 @@
                                 The slush bucket is the default property editor type. 
                             </label>
                             <property-editor>
-                                <property>MultiSelect</property>
+                                <property>MultiSelectString</property>
                                 <hint>
                                     <name>show.label</name>
                                     <value>false</value>
@@ -789,7 +784,7 @@
                                 specify CheckBoxListPropertyEditorRenderer$Factory for factory hint. The property editor is located in
                                 the org.eclipse.sapphire.ui.renderers.swt package.</label>
                             <property-editor>
-                                <property>MultiSelect</property>
+                                <property>MultiSelectString</property>
                                 <hint>
                                     <name>show.label</name>
                                     <value>false</value>
@@ -797,6 +792,19 @@
                                 <hint>
                                     <name>factory</name>
                                     <value>CheckBoxListPropertyEditorRenderer$Factory</value>
+                                </hint>
+                            </property-editor>
+                            <spacer></spacer>
+                            <label>A common variant of a multi-select list is an enum list. In this case, the PossibleValueService is implied by the enum. The checkbox list is the default presentation for enum lists.</label>
+                            <property-editor>
+                                <property>MultiSelectEnum</property>
+                                <hint>
+                                    <name>show.label</name>
+                                    <value>false</value>
+                                </hint>
+                                <hint>
+                                    <name>show.header</name>
+                                    <value>false</value>
                                 </hint>
                             </property-editor>
                         </content>

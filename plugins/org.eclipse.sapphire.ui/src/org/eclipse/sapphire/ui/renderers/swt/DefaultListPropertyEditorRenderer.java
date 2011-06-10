@@ -79,6 +79,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EnumValueType;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ImageService;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -983,23 +984,26 @@ public class DefaultListPropertyEditorRenderer
         }
     }
 
-    private static class DefaultColumnLabelProvider
+    private class DefaultColumnLabelProvider
     
         extends ColumnLabelProvider
         
     {
         private final ColumnHandler columnHandler;
+        private final ValueLabelProvider valueLabelProvider;
         
         public DefaultColumnLabelProvider( final ColumnHandler columnHandler )
         {
             this.columnHandler = columnHandler;
+            this.valueLabelProvider = new ValueLabelProvider( getPart(), columnHandler.getProperty() );
         }
     
         @Override
         public String getText( final Object obj )
         {
             final IModelElement element = ( (TableRow) obj ).element();
-            String str = getTextInternal( this.columnHandler.getPropertyValue( element ) );
+            final Value<?> value = this.columnHandler.getPropertyValue( element );
+            String str = this.valueLabelProvider.getText( value.getText() );
             
             if( str == null )
             {
@@ -1016,17 +1020,28 @@ public class DefaultListPropertyEditorRenderer
             return str;
         }
         
-        protected String getTextInternal( final Value<?> value )
-        {
-            return value.getText();
-        }
-        
         @Override
         public Image getImage( final Object obj )
         {
             if( this.columnHandler.isElementImageDesired() )
             {
-                return ( (TableRow) obj ).image();
+                final TableRow row = (TableRow) obj;
+                
+                Image image = row.image();
+                
+                if( image == null )
+                {
+                    final IModelElement element = row.element();
+                    final Value<?> value = this.columnHandler.getPropertyValue( element );
+                    final ImageData valueImageData = this.valueLabelProvider.getImageData( value.getText() );
+                    
+                    if( valueImageData != null )
+                    {
+                        image = getPart().getImageCache().getImage( valueImageData, element.validate().severity() );
+                    }
+                }
+                
+                return image;
             }
             else
             {
@@ -1077,7 +1092,7 @@ public class DefaultListPropertyEditorRenderer
 
     }
     
-    private static class ColumnHandler
+    private class ColumnHandler
     {
         protected final SapphireRenderingContext context;
         protected final Table table;
@@ -1295,7 +1310,7 @@ public class DefaultListPropertyEditorRenderer
         }
     }
     
-    private static final class EnumPropertyColumnHandler
+    private final class EnumPropertyColumnHandler
     
         extends ColumnHandler
         
@@ -1315,36 +1330,6 @@ public class DefaultListPropertyEditorRenderer
             
             this.annotatedEnumeration = new EnumValueType( property.getTypeClass() );
             this.enumValues = this.annotatedEnumeration.getItems();
-        }
-        
-        @Override
-        protected CellLabelProvider createLabelProvider()
-        {
-            return new DefaultColumnLabelProvider( this )
-            {
-                @Override
-                protected String getTextInternal( final Value<?> value )
-                {
-                    String str = null;
-                    
-                    if( EnumPropertyColumnHandler.this.annotatedEnumeration != null )
-                    {
-                        final Enum<?> enumItem = (Enum<?>) value.getContent( true );
-                        
-                        if( enumItem != null )
-                        {
-                            str = EnumPropertyColumnHandler.this.annotatedEnumeration.getLabel( enumItem, false, CapitalizationType.FIRST_WORD_ONLY, false );
-                        }
-                    }
-                    
-                    if( str == null )
-                    {
-                        str = value.getText( true );
-                    }
-                    
-                    return str;
-                }
-            };
         }
         
         @Override
@@ -1429,17 +1414,14 @@ public class DefaultListPropertyEditorRenderer
         }
     }
     
-    private static final class BooleanPropertyColumnHandler
+    private static final ImageDescriptor IMG_CHECKBOX_ON
+        = SwtRendererUtil.createImageDescriptor( BooleanPropertyColumnHandler.class, "CheckBoxOn.gif" );
     
-        extends ColumnHandler
-        
+    private static final ImageDescriptor IMG_CHECKBOX_OFF
+        = SwtRendererUtil.createImageDescriptor( BooleanPropertyColumnHandler.class, "CheckBoxOff.gif" );
+    
+    private final class BooleanPropertyColumnHandler extends ColumnHandler
     {
-        private static final ImageDescriptor IMG_CHECKBOX_ON
-            = SwtRendererUtil.createImageDescriptor( BooleanPropertyColumnHandler.class, "CheckBoxOn.gif" );
-        
-        private static final ImageDescriptor IMG_CHECKBOX_OFF
-            = SwtRendererUtil.createImageDescriptor( BooleanPropertyColumnHandler.class, "CheckBoxOff.gif" );
-        
         private static final int CHECKBOX_IMAGE_WIDTH = 16;
         private static final int CHECKBOX_IMAGE_HEIGHT = 16;
         

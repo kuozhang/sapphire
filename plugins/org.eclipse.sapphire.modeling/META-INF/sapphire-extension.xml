@@ -109,6 +109,28 @@
         <factory>org.eclipse.sapphire.modeling.internal.ModelRelativePathService$Factory</factory>
         <id>Sapphire.RelativePathService.Model</id>
     </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ValueLabelService</type>
+        <factory>org.eclipse.sapphire.modeling.internal.DefaultValueLabelService$Factory</factory>
+        <id>Sapphire.ValueLabelService.Default</id>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ValueLabelService</type>
+        <factory>org.eclipse.sapphire.modeling.internal.EnumValueLabelService$Factory</factory>
+        <id>Sapphire.ValueLabelService.Enum</id>
+        <overrides>Sapphire.ValueLabelService.Default</overrides>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ValueImageService</type>
+        <factory>org.eclipse.sapphire.modeling.internal.DefaultValueImageService$Factory</factory>
+        <id>Sapphire.ValueImageService.Default</id>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.modeling.ValueImageService</type>
+        <factory>org.eclipse.sapphire.modeling.internal.EnumValueImageService$Factory</factory>
+        <id>Sapphire.ValueImageService.Enum</id>
+        <overrides>Sapphire.ValueImageService.Default</overrides>
+    </model-property-service>
     <value-serialization-service>
         <type>java.lang.Enum</type>
         <impl>org.eclipse.sapphire.modeling.serialization.internal.EnumSerializationService</impl>

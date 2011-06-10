@@ -57,6 +57,8 @@ import org.eclipse.sapphire.modeling.ModelService;
 import org.eclipse.sapphire.modeling.ModelService.Event;
 import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.ValueImageService;
+import org.eclipse.sapphire.modeling.ValueLabelService;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -230,7 +232,7 @@ public class CheckBoxListPropertyEditorRenderer
                     }
                     else
                     {
-                        entry = new Entry( possibleValuesService, value, element );
+                        entry = new Entry( value, element );
                     }
                     
                     this.entries.add( entry );
@@ -266,7 +268,7 @@ public class CheckBoxListPropertyEditorRenderer
                             }
                             else
                             {
-                                entry = new Entry( possibleValuesService, value, null );
+                                entry = new Entry( value, null );
                             }
 
                             this.entries.add( entry );
@@ -388,14 +390,26 @@ public class CheckBoxListPropertyEditorRenderer
     protected void handlePropertyChangedEvent()
     {
         super.handlePropertyChangedEvent();
-        this.tableViewer.refresh();
+        refresh();
     }
     
     @Override
     protected void handleListElementChangedEvent( final ModelPropertyChangeEvent event )
     {
         super.handleListElementChangedEvent( event );
+        refresh();
+    }
+    
+    private void refresh()
+    {
+        final int oldItemCount = this.table.getItemCount();
         this.tableViewer.refresh();
+        final int newItemCount = this.table.getItemCount();
+        
+        if( oldItemCount != newItemCount )
+        {
+            this.table.getParent().layout( true, true );
+        }
     }
 
     private void handleCheckStateChangedEvent( final CheckStateChangedEvent event )
@@ -442,21 +456,25 @@ public class CheckBoxListPropertyEditorRenderer
     
     public final class Entry
     {
-        private final PossibleValuesService possibleValuesService;
         private final LocalizationService localizationService;
         private String value;
         private IModelElement element;
-        private ImageService imageService;
+        private ValueLabelService valueLabelService;
+        private ValueImageService valueImageService;
+        private ImageService elementImageService;
         private ModelService.Listener listener;
         
-        public Entry( final PossibleValuesService possibleValuesService,
-                      final String value,
+        public Entry( final String value,
                       final IModelElement element )
         {
-            this.possibleValuesService = possibleValuesService;
             this.localizationService = getPart().getDefinition().adapt( LocalizationService.class );
             this.value = value;
             this.element = element;
+            
+            final IModelElement parent = getModelElement();
+            
+            this.valueLabelService = parent.service( CheckBoxListPropertyEditorRenderer.this.memberProperty, ValueLabelService.class );
+            this.valueImageService = parent.service( CheckBoxListPropertyEditorRenderer.this.memberProperty, ValueImageService.class );
             
             this.listener = new ModelService.Listener()
             {
@@ -472,11 +490,11 @@ public class CheckBoxListPropertyEditorRenderer
             
             if( this.element != null )
             {
-                this.imageService = this.element.service( ImageService.class );
+                this.elementImageService = this.element.service( ImageService.class );
                 
-                if( this.imageService != null )
+                if( this.elementImageService != null )
                 {
-                    this.imageService.addListener( this.listener );
+                    this.elementImageService.addListener( this.listener );
                 }
             }
         }
@@ -493,7 +511,7 @@ public class CheckBoxListPropertyEditorRenderer
             {
                 try
                 {
-                    label = this.possibleValuesService.label( this.value );
+                    label = this.valueLabelService.provide( this.value );
                 }
                 catch( Exception e )
                 {
@@ -518,9 +536,18 @@ public class CheckBoxListPropertyEditorRenderer
             final SapphireImageCache cache = getPart().getImageCache();
             final Image image;
             
-            if( this.element == null || this.imageService == null )
+            if( this.element == null || this.elementImageService == null )
             {
-                ImageData imageData = this.possibleValuesService.image( this.value );
+                ImageData imageData = null;
+                
+                try
+                {
+                    imageData = this.valueImageService.provide( this.value );
+                }
+                catch( Exception e )
+                {
+                    LoggingService.log( e );
+                }
                 
                 if( imageData == null )
                 {
@@ -529,10 +556,10 @@ public class CheckBoxListPropertyEditorRenderer
                 
                 image = cache.getImage( imageData );
             }
-            else if( this.imageService != null )
+            else if( this.elementImageService != null )
             {
                 final Status st = this.element.read( getMemberProperty() ).validate();
-                image = cache.getImage( this.imageService.provide(), st.severity() );
+                image = cache.getImage( this.elementImageService.provide(), st.severity() );
             }
             else
             {
@@ -566,19 +593,19 @@ public class CheckBoxListPropertyEditorRenderer
                 this.element = getList().addNewElement();
                 this.element.write( getMemberProperty(), this.value );
                 
-                this.imageService = this.element.service( ImageService.class );
+                this.elementImageService = this.element.service( ImageService.class );
                 
-                if( this.imageService != null )
+                if( this.elementImageService != null )
                 {
-                    this.imageService.addListener( this.listener );
+                    this.elementImageService.addListener( this.listener );
                 }
             }
             else
             {
-                if( this.imageService != null )
+                if( this.elementImageService != null )
                 {
-                    this.imageService.removeListener( this.listener );
-                    this.imageService = null;
+                    this.elementImageService.removeListener( this.listener );
+                    this.elementImageService = null;
                 }
                 
                 // Must null the element field before trying to remove the element as remove will 
@@ -593,9 +620,9 @@ public class CheckBoxListPropertyEditorRenderer
         
         public void dispose()
         {
-            if( this.imageService != null )
+            if( this.elementImageService != null )
             {
-                this.imageService.removeListener( this.listener );
+                this.elementImageService.removeListener( this.listener );
             }
         }
     }

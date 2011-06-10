@@ -48,7 +48,6 @@ import org.eclipse.sapphire.modeling.ModelService.Event;
 import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
@@ -80,8 +79,8 @@ public final class SlushBucketPropertyEditor
 {
     private ModelElementType memberType;
     private ValueProperty memberProperty;
-    private PossibleValuesService valuesProvider;
-    private PossibleValuesService.Listener valuesProviderListener;
+    private PossibleValuesService possibleValuesService;
+    private PossibleValuesService.Listener possibleValuesServiceListener;
     private TableViewer sourceTableViewer;
     private Table sourceTable;
     private MoveRightActionHandler moveRightActionHandler;
@@ -93,7 +92,7 @@ public final class SlushBucketPropertyEditor
         
         this.memberType = getProperty().getType();
         this.memberProperty = (ValueProperty) this.memberType.getProperties().get( 0 );
-        this.valuesProvider = part.getLocalModelElement().service( this.memberProperty, PossibleValuesService.class );
+        this.possibleValuesService = part.getLocalModelElement().service( this.memberProperty, PossibleValuesService.class );
         
         setAddActionDesired( false );
     }
@@ -128,7 +127,7 @@ public final class SlushBucketPropertyEditor
         {
             public Object[] getElements( final Object inputElement )
             {
-                if( SlushBucketPropertyEditor.this.valuesProvider == null )
+                if( SlushBucketPropertyEditor.this.possibleValuesService == null )
                 {
                     return new Object[ 0 ];
                 }
@@ -144,7 +143,7 @@ public final class SlushBucketPropertyEditor
                 
                 try
                 {
-                    allValues = SlushBucketPropertyEditor.this.valuesProvider.values();
+                    allValues = SlushBucketPropertyEditor.this.possibleValuesService.values();
                 }
                 catch( Exception e )
                 {
@@ -183,20 +182,28 @@ public final class SlushBucketPropertyEditor
         
         this.sourceTableViewer.setContentProvider( contentProvider );
         
-        final Image memberTypeImage = getPart().getImageCache().getImage( this.memberType );
+        final ValueLabelProvider valueLabelProvider = new ValueLabelProvider( getPart(), this.memberProperty );
         
         final ColumnLabelProvider labelProvider = new ColumnLabelProvider()
         {
             @Override
             public String getText( final Object element )
             {
-                return (String) element;
+                return valueLabelProvider.getText( element );
             }
             
             @Override
             public Image getImage( final Object element )
             {
-                return memberTypeImage;
+                return valueLabelProvider.getImage( element );
+            }
+
+            @Override
+            public void dispose()
+            {
+                super.dispose();
+                valueLabelProvider.dispose();
+                
             }
         };
         
@@ -243,7 +250,7 @@ public final class SlushBucketPropertyEditor
             }
         );
         
-        this.valuesProviderListener = new ModelService.Listener()
+        this.possibleValuesServiceListener = new ModelService.Listener()
         {
             @Override
             public void handleEvent( final Event event )
@@ -255,7 +262,7 @@ public final class SlushBucketPropertyEditor
             }
         };
         
-        this.valuesProvider.addListener( this.valuesProviderListener );
+        this.possibleValuesService.addListener( this.possibleValuesServiceListener );
         
         this.sourceTableViewer.setInput( new Object() );
         
@@ -265,9 +272,9 @@ public final class SlushBucketPropertyEditor
             {
                 public void run()
                 {
-                    if( SlushBucketPropertyEditor.this.valuesProviderListener != null )
+                    if( SlushBucketPropertyEditor.this.possibleValuesService != null )
                     {
-                        SlushBucketPropertyEditor.this.valuesProvider.removeListener( SlushBucketPropertyEditor.this.valuesProviderListener );
+                        SlushBucketPropertyEditor.this.possibleValuesService.removeListener( SlushBucketPropertyEditor.this.possibleValuesServiceListener );
                     }
                 }
             }
@@ -367,9 +374,9 @@ public final class SlushBucketPropertyEditor
     public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
-        public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
+        public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorPart )
         {
-            final ModelProperty property = propertyEditorDefinition.getProperty();
+            final ModelProperty property = propertyEditorPart.getProperty();
             
             if( property instanceof ListProperty )
             {
@@ -386,7 +393,7 @@ public final class SlushBucketPropertyEditor
                         
                         if( memberProperty instanceof ValueProperty &&
                             memberProperty.hasAnnotation( NoDuplicates.class ) &&
-                            memberProperty.hasAnnotation( PossibleValues.class ) )
+                            propertyEditorPart.getLocalModelElement().service( memberProperty, PossibleValuesService.class ) != null )
                         {
                             return true;
                         }

@@ -37,7 +37,7 @@
     <li><a href="#folding">Folding XML Element Binding</a></li>
     <li><a href="#relative">Relative Path Support Improvements</a></li>
     <li><a href="#image-handling">Image Handling</a></li>
-    <li><a href="#possible-values">Possible Values Service Improvements</a></li>
+    <li><a href="#value-label-image-services">Value Label and Image Services</a></li>
     <li><a href="#required-annotation">Required Annotation</a></li>
     <li><a href="#whitespace-handling">Whitespace Handling and Value Normalization</a></li>
     <li><a href="#clear-on-disable">Clear Property on Disable</a></li>
@@ -453,27 +453,132 @@ public interface IFilterMapping extends IModelElement
 
 <p style="margin-left: 20px;"><img src="images/checkbox-list-with-images.png"/></p>
 
-<h2><a name="possible-values">Possible Values Service Improvements</a></h2>
+<h2><a name="value-label-image-services">Value Label and Image Services</a></h2>
 
-<p>Provide custom labels and images for values returned by the possible values service. Currently, only the
-checkbox list property editor takes advantage of this, but other possible values service consumers will be
-similarly enhanced over time.</p>
+<p>Provide custom labels and images for values. These will be used where possible when presenting the
+value to the user. Some examples include list property editor, checkbox list property editor, slush bucket 
+property editor and possible values browse dialog.</p>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
 
-<pre class="source-code"><code>public class CustomPossibleValuesService extends PossibleValuesService
+<pre class="source-code"><code>public class ColorValueLabelService extends ValueLabelService
+{
+    @Override
+    public String provide( String value )
+    {
+        if( value != null )
+        {
+            if( value.equals( "red" ) )
+            {
+                return "Red [FF0000]";
+            }
+            else if( value.equals( "orange" ) )
+            {
+                return "Orange [FF8A00]";
+            }
+            else if( value.equals( "yellow" ) )
+            {
+                return "Yellow [FFF200]";
+            }
+            else if( value.equals( "green" ) )
+            {
+                return "Green [00BC00]";
+            }
+            else if( value.equals( "blue" ) )
+            {
+                return "Blue [0000FF]";
+            }
+            else if( value.equals( "violet" ) )
+            {
+                return "Violet [8A00FF]";
+            }
+        }
+        
+        return value;
+    }
+}
+
+public class ColorValueImageService extends ValueImageService
+{
+    private final Map&lt;String,ImageData> images = new HashMap&lt;String,ImageData>();
+
+    @Override
+    public ImageData provide( String value )
+    {
+        ImageData image = this.images.get( value );
+        
+        if( image == null )
+        {
+            String imageResourceName = null;
+            
+            if( value != null )
+            {
+                if( value.equals( "red" ) )
+                {
+                    imageResourceName = "SquareRed.png";
+                }
+                else if( value.equals( "orange" ) )
+                {
+                    imageResourceName = "SquareOrange.png";
+                }
+                else if( value.equals( "yellow" ) )
+                {
+                    imageResourceName = "SquareYellow.png";
+                }
+                else if( value.equals( "green" ) )
+                {
+                    imageResourceName = "SquareGreen.png";
+                }
+                else if( value.equals( "blue" ) )
+                {
+                    imageResourceName = "SquareBlue.png";
+                }
+                else if( value.equals( "violet" ) )
+                {
+                    imageResourceName = "SquareViolet.png";
+                }
+            }
+            
+            if( imageResourceName != null )
+            {
+                final String imageResourcePath = "org/eclipse/sapphire/samples/" + imageResourceName;
+                image = readFromClassLoader( ColorValueImageService.class, imageResourcePath );
+            }
+        }
+        
+        return image;
+    }
+}
+
+public interface IColor extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( IColor.class );
+    
+    // *** Code ***
+    
+    @Label( standard = "color code" )
+    @NoDuplicates
+    @PossibleValues( values = { "red", "orange", "yellow", "green", "blue", "violet" }, invalidValueMessage = "{0} is not a valid color." )
+    @Services( { @Service( impl = ColorValueLabelService.class ), @Service( impl = ColorValueImageService.class ) } )
+
+    ValueProperty PROP_CODE = new ValueProperty( TYPE, "Code" );
+    
+    Value&lt;String> getCode();
+    void setCode( String value );
+}
+
+public interface ICustomModel extends IModelElement
 {
     ...
     
-    public String label( String value )
-    {
-        ...
-    }
+    // *** Colors ***
     
-    public ImageData image( String value )
-    {
-        ...
-    }
+    @Type( base = IColor.class )
+    @Label( standard = "colors" )
+    
+    ListProperty PROP_COLORS = new ListProperty( TYPE, "Colors" );
+    
+    ModelElementList&lt;IColor> getColors();
 }</code></pre>
 
 <p style="margin-left: 20px;"><img src="images/checkbox-list-with-images.png"/></p>

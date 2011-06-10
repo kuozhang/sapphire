@@ -91,15 +91,26 @@ public interface IListPropertiesGallery
     
     ModelElementList<IChildElement> getHeterogeneous();
     
-    // *** MultiSelect ***
+    // *** MultiSelectString ***
     
-    @Type( base = IMultiSelectListGalleryItem.class )
-    @Label( standard = "multi-select" )
+    @Type( base = IMultiSelectListGalleryStringItem.class )
+    @Label( standard = "multi-select string" )
     @Enablement( expr = "${ Enabled }" )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "child", type = IMultiSelectListGalleryItem.class ) )
+    @XmlListBinding( path = "multi-select-string", mappings = @XmlListBinding.Mapping( element = "child", type = IMultiSelectListGalleryStringItem.class ) )
     
-    ListProperty PROP_MULTI_SELECT = new ListProperty( TYPE, "MultiSelect" );
+    ListProperty PROP_MULTI_SELECT_STRING = new ListProperty( TYPE, "MultiSelectString" );
     
-    ModelElementList<IMultiSelectListGalleryItem> getMultiSelect();
+    ModelElementList<IMultiSelectListGalleryStringItem> getMultiSelectString();
     
+    // *** MultiSelectEnum ***
+    
+    @Type( base = IMultiSelectListGalleryEnumItem.class )
+    @Label( standard = "multi-select enumeration" )
+    @Enablement( expr = "${ Enabled }" )
+    @XmlListBinding( path = "multi-select-enum", mappings = @XmlListBinding.Mapping( element = "child", type = IMultiSelectListGalleryEnumItem.class ) )
+    
+    ListProperty PROP_MULTI_SELECT_ENUM = new ListProperty( TYPE, "MultiSelectEnum" );
+    
+    ModelElementList<IMultiSelectListGalleryEnumItem> getMultiSelectEnum();
+
 }

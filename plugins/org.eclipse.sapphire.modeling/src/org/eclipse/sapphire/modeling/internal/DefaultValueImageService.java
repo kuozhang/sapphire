@@ -11,57 +11,24 @@
 
 package org.eclipse.sapphire.modeling.internal;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedSet;
-
-import org.eclipse.sapphire.modeling.EnumValueType;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
-import org.eclipse.sapphire.modeling.PossibleValuesService;
-import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.ValueImageService;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EnumPossibleValuesService
-
-    extends PossibleValuesService
-    
+public final class DefaultValueImageService extends ValueImageService
 {
-    private final List<String> values = new ArrayList<String>();
-    
     @Override
-    public void init( final IModelElement element,
-                      final ModelProperty property,
-                      final String[] params )
+    public ImageData provide( final String value )
     {
-        super.init( element );
-        
-        final EnumValueType enumType = new EnumValueType( property.getTypeClass() );
-        final ValueSerializationService valueSerializationService = element.service( property, ValueSerializationService.class );
-        
-        for( Enum<?> item : enumType.getItems() )
-        {
-            this.values.add( valueSerializationService.encode( item ) );
-        }
-    }
-    
-    @Override
-    protected void fillPossibleValues( final SortedSet<String> values )
-    {
-        values.addAll( this.values );
-    }
-
-    @Override
-    public Status.Severity getInvalidValueSeverity( final String invalidValue )
-    {
-        return Status.Severity.OK;
+        return null;
     }
 
     public static final class Factory extends ModelPropertyServiceFactory
@@ -71,7 +38,7 @@ public final class EnumPossibleValuesService
                                    final ModelProperty property,
                                    final Class<? extends ModelPropertyService> service )
         {
-            return ( property instanceof ValueProperty && Enum.class.isAssignableFrom( property.getTypeClass() ) );
+            return ( property instanceof ValueProperty );
         }
 
         @Override
@@ -79,7 +46,7 @@ public final class EnumPossibleValuesService
                                             final ModelProperty property,
                                             final Class<? extends ModelPropertyService> service )
         {
-            return new EnumPossibleValuesService();
+            return new DefaultValueImageService();
         }
     }
     

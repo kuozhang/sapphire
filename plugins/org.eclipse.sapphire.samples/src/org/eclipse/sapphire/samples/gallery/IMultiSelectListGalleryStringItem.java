@@ -19,7 +19,11 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.modeling.annotations.Service;
+import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.samples.gallery.internal.ColorValueImageService;
+import org.eclipse.sapphire.samples.gallery.internal.ColorValueLabelService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,19 +31,20 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface IMultiSelectListGalleryItem
+public interface IMultiSelectListGalleryStringItem
 
     extends IModelElement
     
 {
-    ModelElementType TYPE = new ModelElementType( IMultiSelectListGalleryItem.class );
+    ModelElementType TYPE = new ModelElementType( IMultiSelectListGalleryStringItem.class );
     
     // *** Item ***
     
-    @Label( standard = "item" )
+    @Label( standard = "color" )
     @XmlBinding( path = "" )
     @NoDuplicates
-    @PossibleValues( values = { "Red", "Orange", "Yellow", "Green", "Blue", "Violet" }, invalidValueMessage = "{0} is not a valid color." )
+    @PossibleValues( values = { "red", "orange", "yellow", "green", "blue", "violet" }, invalidValueMessage = "{0} is not a valid color." )
+    @Services( { @Service( impl = ColorValueLabelService.class ), @Service( impl = ColorValueImageService.class ) } )
 
     ValueProperty PROP_ITEM = new ValueProperty( TYPE, "Item" );
     
