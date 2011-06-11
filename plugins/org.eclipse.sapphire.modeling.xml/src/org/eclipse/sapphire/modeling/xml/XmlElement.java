@@ -911,11 +911,18 @@ public final class XmlElement
     
     public boolean isEmpty()
     {
-        final NodeList nodes = getDomNode().getChildNodes();
-         
-        for( int i = 0, n = nodes.getLength(); i < n; i++ )
+        final Node node = getDomNode();
+        
+        if( node.hasAttributes() )
         {
-            final Node child = nodes.item( i );
+            return false;
+        }
+         
+        final NodeList children = node.getChildNodes();
+
+        for( int i = 0, n = children.getLength(); i < n; i++ )
+        {
+            final Node child = children.item( i );
              
             if( child.getNodeType() != Node.TEXT_NODE || child.getNodeValue().trim().length() > 0 )
             {
