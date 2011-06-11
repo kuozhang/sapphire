@@ -333,11 +333,16 @@ public abstract class SapphireEditor
 
     protected final void addPages() 
     {
-        final IFile file = getFile();
-        
         String error = null;
         
-        if( file.isAccessible() )
+        final IFile file = getFile();
+        
+        if( file != null && ! file.isAccessible() )
+        {
+            error = Resources.resourceNotAccessible;
+        }
+        
+        if( error == null )
         {
             try 
             {
@@ -397,10 +402,6 @@ public abstract class SapphireEditor
                 
                 setActivePage( page );
             }
-        }
-        else
-        {
-            error = Resources.resourceNotAccessible;
         }
         
         if( error != null )
