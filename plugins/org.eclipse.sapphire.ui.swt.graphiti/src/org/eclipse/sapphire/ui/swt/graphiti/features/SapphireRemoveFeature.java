@@ -23,19 +23,19 @@ import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProv
 
 public class SapphireRemoveFeature extends DefaultRemoveFeature 
 {
-	public SapphireRemoveFeature(IFeatureProvider fp)
-	{
-		super(fp);
-	}
+    public SapphireRemoveFeature(IFeatureProvider fp)
+    {
+        super(fp);
+    }
 
-	@Override
-	public void preRemove(IRemoveContext context) 
-	{
-		PictogramElement pe = context.getPictogramElement();
-		SapphireDiagramFeatureProvider sfp = (SapphireDiagramFeatureProvider)getFeatureProvider();
-		final Object bo = sfp.getBusinessObjectForPictogramElement(pe);
-		
-		sfp.remove(bo);
-	 }
+    @Override
+    public void preRemove(IRemoveContext context) 
+    {
+        PictogramElement pe = context.getPictogramElement();
+        SapphireDiagramFeatureProvider sfp = (SapphireDiagramFeatureProvider)getFeatureProvider();
+        final Object bo = sfp.getBusinessObjectForPictogramElement(pe);
+        
+        sfp.remove(bo);
+     }
 
 }

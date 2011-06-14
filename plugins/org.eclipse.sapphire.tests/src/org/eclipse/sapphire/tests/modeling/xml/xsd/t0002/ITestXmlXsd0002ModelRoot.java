@@ -66,10 +66,10 @@ public interface ITestXmlXsd0002ModelRoot
     
     // *** ITestXmlXsd0002Element2b ***
     
-	@Type( base = ITestXmlXsd0002Element2b.class )
-	@XmlBinding( path = "element2" )
-	
-	ImpliedElementProperty PROP_ELEMENT2 = new ImpliedElementProperty( TYPE, "Element2" );
-	
-	ITestXmlXsd0002Element2b getElement2();
+    @Type( base = ITestXmlXsd0002Element2b.class )
+    @XmlBinding( path = "element2" )
+    
+    ImpliedElementProperty PROP_ELEMENT2 = new ImpliedElementProperty( TYPE, "Element2" );
+    
+    ITestXmlXsd0002Element2b getElement2();
 }

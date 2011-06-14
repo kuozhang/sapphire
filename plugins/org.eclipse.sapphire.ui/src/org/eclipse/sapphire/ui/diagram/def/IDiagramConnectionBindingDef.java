@@ -30,13 +30,13 @@ import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 
 public interface IDiagramConnectionBindingDef 
 
-	extends IModelElement, IPropertiesViewContributorDef
-	
+    extends IModelElement, IPropertiesViewContributorDef
+    
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramConnectionBindingDef.class );
-	
-	// *** ConnectionId ***
-	
+    ModelElementType TYPE = new ModelElementType( IDiagramConnectionBindingDef.class );
+    
+    // *** ConnectionId ***
+    
     @Label( standard = "connection ID" )
     @XmlBinding( path = "connection-id" )
     @Required

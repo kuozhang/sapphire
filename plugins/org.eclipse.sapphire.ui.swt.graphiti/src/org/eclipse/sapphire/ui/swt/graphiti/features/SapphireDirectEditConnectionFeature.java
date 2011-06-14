@@ -23,54 +23,54 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 
 public class SapphireDirectEditConnectionFeature extends AbstractDirectEditingFeature 
 {
-	public SapphireDirectEditConnectionFeature(IFeatureProvider fp)
-	{
-		super(fp);
-	}
-	
-	public int getEditingType() 
-	{
-		return TYPE_TEXT;
-	}
+    public SapphireDirectEditConnectionFeature(IFeatureProvider fp)
+    {
+        super(fp);
+    }
+    
+    public int getEditingType() 
+    {
+        return TYPE_TEXT;
+    }
 
-	@Override
-	public boolean canDirectEdit(IDirectEditingContext context) 
-	{
-		PictogramElement pe = (PictogramElement)context.getPictogramElement().eContainer();
-		Object bo = getBusinessObjectForPictogramElement(pe);
-		// support direct editing, if it is a DiagramConnectionPart, and the 
-		// DiagramConnectionPart contains editable label
-		if (bo instanceof DiagramConnectionPart && 
-				((DiagramConnectionPart)bo).canEditLabel()) 
-		{
-			return true;
-		}
-		// direct editing not supported in all other cases
-		return false;
-	}
-	
-	public String getInitialValue(IDirectEditingContext context) 
-	{
-		PictogramElement pe = (PictogramElement)context.getPictogramElement().eContainer();
-		Object bo = getBusinessObjectForPictogramElement(pe);
-		if (bo instanceof DiagramConnectionPart)
-		{
-			DiagramConnectionPart connPart = (DiagramConnectionPart)bo;
-			return connPart.getLabel();
-		}
-		return null;
-	}
+    @Override
+    public boolean canDirectEdit(IDirectEditingContext context) 
+    {
+        PictogramElement pe = (PictogramElement)context.getPictogramElement().eContainer();
+        Object bo = getBusinessObjectForPictogramElement(pe);
+        // support direct editing, if it is a DiagramConnectionPart, and the 
+        // DiagramConnectionPart contains editable label
+        if (bo instanceof DiagramConnectionPart && 
+                ((DiagramConnectionPart)bo).canEditLabel()) 
+        {
+            return true;
+        }
+        // direct editing not supported in all other cases
+        return false;
+    }
+    
+    public String getInitialValue(IDirectEditingContext context) 
+    {
+        PictogramElement pe = (PictogramElement)context.getPictogramElement().eContainer();
+        Object bo = getBusinessObjectForPictogramElement(pe);
+        if (bo instanceof DiagramConnectionPart)
+        {
+            DiagramConnectionPart connPart = (DiagramConnectionPart)bo;
+            return connPart.getLabel();
+        }
+        return null;
+    }
 
-	public void setValue(String value, IDirectEditingContext context) 
-	{
-		PictogramElement pe = (PictogramElement)context.getPictogramElement().eContainer();
-		Object bo = getBusinessObjectForPictogramElement(pe);
-		if (bo instanceof DiagramConnectionPart)
-		{
-			DiagramConnectionPart connPart = (DiagramConnectionPart)bo;
-			connPart.setLabel(value);
-			updatePictogramElement(pe);
-		}
-	}
+    public void setValue(String value, IDirectEditingContext context) 
+    {
+        PictogramElement pe = (PictogramElement)context.getPictogramElement().eContainer();
+        Object bo = getBusinessObjectForPictogramElement(pe);
+        if (bo instanceof DiagramConnectionPart)
+        {
+            DiagramConnectionPart connPart = (DiagramConnectionPart)bo;
+            connPart.setLabel(value);
+            updatePictogramElement(pe);
+        }
+    }
 
 }

@@ -27,64 +27,64 @@ import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProv
 
 public class SapphireDoubleClickNodeFeature extends AbstractCustomFeature 
 {
-	private ISapphirePart sapphirePart;
-	
-	public SapphireDoubleClickNodeFeature(IFeatureProvider fp, ISapphirePart sapphirePart)
-	{
-		super(fp);
-		this.sapphirePart = sapphirePart;
-	}
-		
-	@Override
-	public boolean canExecute(ICustomContext context) 
-	{
-		if (context.getInnerGraphicsAlgorithm() instanceof Text)
-		{
-			return true;
-		}
-		else if (sapphirePart instanceof DiagramNodePart)
-		{
-			DiagramNodePart diagramNodePart = (DiagramNodePart)sapphirePart;
-			SapphireDiagramActionHandler handler = (SapphireDiagramActionHandler)diagramNodePart.getDefaultActionHandler();
-			if (handler != null)
-			{
-				return handler.canExecute(diagramNodePart);
-			}			
-		}
-		return false;
-	}
-	
-	public void execute(ICustomContext context) 
-	{
-		if (context.getInnerGraphicsAlgorithm() instanceof Text)
-		{
-			getFeatureProvider().getDirectEditingInfo().setGraphicsAlgorithm(context.getInnerGraphicsAlgorithm());
-			getFeatureProvider().getDirectEditingInfo().setPictogramElement(context.getInnerPictogramElement());
-			getFeatureProvider().getDirectEditingInfo().setMainPictogramElement(context.getPictogramElements()[0]);
-			getFeatureProvider().getDirectEditingInfo().setActive(true);
-			getFeatureProvider().getDiagramTypeProvider().getDiagramEditor().refresh();
-		}
-		else if (sapphirePart instanceof DiagramNodePart)
-		{
-			DiagramNodePart diagramNodePart = (DiagramNodePart)sapphirePart;
-			SapphireRenderingContext renderingCtx = ((SapphireDiagramFeatureProvider)this.getFeatureProvider()).getRenderingContext(diagramNodePart);
-			diagramNodePart.getDefaultActionHandler().execute(renderingCtx);
-		}
-	}
-		
-	@Override
-	public boolean hasDoneChanges() 
-	{
-		if (sapphirePart instanceof DiagramNodePart)
-		{
-			DiagramNodePart diagramNodePart = (DiagramNodePart)sapphirePart;
-			SapphireDiagramActionHandler handler = (SapphireDiagramActionHandler)diagramNodePart.getDefaultActionHandler();
-			if (handler != null)
-			{
-				return handler.hasDoneModelChanges();
-			}
-		}
-		return false;
-	}
-	
+    private ISapphirePart sapphirePart;
+    
+    public SapphireDoubleClickNodeFeature(IFeatureProvider fp, ISapphirePart sapphirePart)
+    {
+        super(fp);
+        this.sapphirePart = sapphirePart;
+    }
+        
+    @Override
+    public boolean canExecute(ICustomContext context) 
+    {
+        if (context.getInnerGraphicsAlgorithm() instanceof Text)
+        {
+            return true;
+        }
+        else if (sapphirePart instanceof DiagramNodePart)
+        {
+            DiagramNodePart diagramNodePart = (DiagramNodePart)sapphirePart;
+            SapphireDiagramActionHandler handler = (SapphireDiagramActionHandler)diagramNodePart.getDefaultActionHandler();
+            if (handler != null)
+            {
+                return handler.canExecute(diagramNodePart);
+            }            
+        }
+        return false;
+    }
+    
+    public void execute(ICustomContext context) 
+    {
+        if (context.getInnerGraphicsAlgorithm() instanceof Text)
+        {
+            getFeatureProvider().getDirectEditingInfo().setGraphicsAlgorithm(context.getInnerGraphicsAlgorithm());
+            getFeatureProvider().getDirectEditingInfo().setPictogramElement(context.getInnerPictogramElement());
+            getFeatureProvider().getDirectEditingInfo().setMainPictogramElement(context.getPictogramElements()[0]);
+            getFeatureProvider().getDirectEditingInfo().setActive(true);
+            getFeatureProvider().getDiagramTypeProvider().getDiagramEditor().refresh();
+        }
+        else if (sapphirePart instanceof DiagramNodePart)
+        {
+            DiagramNodePart diagramNodePart = (DiagramNodePart)sapphirePart;
+            SapphireRenderingContext renderingCtx = ((SapphireDiagramFeatureProvider)this.getFeatureProvider()).getRenderingContext(diagramNodePart);
+            diagramNodePart.getDefaultActionHandler().execute(renderingCtx);
+        }
+    }
+        
+    @Override
+    public boolean hasDoneChanges() 
+    {
+        if (sapphirePart instanceof DiagramNodePart)
+        {
+            DiagramNodePart diagramNodePart = (DiagramNodePart)sapphirePart;
+            SapphireDiagramActionHandler handler = (SapphireDiagramActionHandler)diagramNodePart.getDefaultActionHandler();
+            if (handler != null)
+            {
+                return handler.hasDoneModelChanges();
+            }
+        }
+        return false;
+    }
+    
 }

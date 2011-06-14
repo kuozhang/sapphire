@@ -385,6 +385,141 @@
                 </section>
                 <property>SessionConfig</property>
             </node>
+            <node>
+                <label>JSP</label>
+                <node>
+                    <label>tag libraries</label>
+                    <node-factory>
+                        <property>TagLibraries</property>
+                        <case>
+                            <model-element-type>ITagLibrary</model-element-type>
+                            <label>${ Uri == null ? &quot;&lt;tag-library&gt;&quot; : Uri }</label>
+                            <section>
+                                <label>Tag Library</label>
+                                <content>
+                                    <property-editor>Uri</property-editor>
+                                    <property-editor>Location</property-editor>
+                                </content>
+                            </section>
+                        </case>
+                    </node-factory>
+                    <section>
+                        <content>
+                            <label>Specify the tag libraries available to the web application. This can be done to override implicit map entries from TLD files and from the container.</label>
+                            <spacer></spacer>
+                            <action-link>
+                                <label>Add a tag library</label>
+                                <action-id>Sapphire.Add</action-id>
+                            </action-link>
+                        </content>
+                    </section>
+                </node>
+                <node>
+                    <label>property groups</label>
+                    <node-factory>
+                        <property>PropertyGroups</property>
+                        <case>
+                            <model-element-type>IJspPropertyGroup</model-element-type>
+                            <label>${ UrlPatterns.Size == 0 ? &quot;&lt;property-group&gt;&quot; : ( UrlPatterns[ 0 ].UrlPattern == null ? &quot;&lt;property-group&gt;&quot; : UrlPatterns[ 0 ].UrlPattern ) }</label>
+                            <section>
+                                <label>JSP Property Group</label>
+                                <content>
+                                    <property-editor>
+                                        <property>UrlPatterns</property>
+                                        <hint>
+                                            <name>show.header</name>
+                                            <value>false</value>
+                                        </hint>
+                                        <hint>
+                                            <name>height</name>
+                                            <value>8</value>
+                                        </hint>
+                                    </property-editor>
+                                    <property-editor>PageEncoding</property-editor>
+                                    <property-editor>
+                                        <property>ExpressionsLanguageEnabled</property>
+                                        <hint>
+                                            <name>checkbox.layout</name>
+                                            <value>trailing.label.idented</value>
+                                        </hint>
+                                    </property-editor>
+                                    <property-editor>
+                                        <property>ScriptingEnabled</property>
+                                        <hint>
+                                            <name>checkbox.layout</name>
+                                            <value>trailing.label.idented</value>
+                                        </hint>
+                                    </property-editor>
+                                    <property-editor>
+                                        <property>XmlContent</property>
+                                        <hint>
+                                            <name>checkbox.layout</name>
+                                            <value>trailing.label.idented</value>
+                                        </hint>
+                                    </property-editor>
+                                </content>
+                            </section>
+                            <section>
+                                <label>preludes</label>
+                                <content>
+                                    <property-editor>
+                                        <property>Preludes</property>
+                                        <hint>
+                                            <name>show.label</name>
+                                            <value>false</value>
+                                        </hint>
+                                        <hint>
+                                            <name>show.header</name>
+                                            <value>false</value>
+                                        </hint>
+                                        <hint>
+                                            <name>height</name>
+                                            <value>8</value>
+                                        </hint>
+                                    </property-editor>
+                                </content>
+                            </section>
+                            <section>
+                                <label>codas</label>
+                                <content>
+                                    <property-editor>
+                                        <property>Codas</property>
+                                        <hint>
+                                            <name>show.label</name>
+                                            <value>false</value>
+                                        </hint>
+                                        <hint>
+                                            <name>show.header</name>
+                                            <value>false</value>
+                                        </hint>
+                                        <hint>
+                                            <name>height</name>
+                                            <value>8</value>
+                                        </hint>
+                                    </property-editor>
+                                </content>
+                            </section>
+                            <node-include>DescriptionNode</node-include>
+                        </case>
+                    </node-factory>
+                    <section>
+                        <content>
+                            <label>Provide global configuration for groups of web application resources. All resources so described are deemed to be JSP files.</label>
+                            <spacer></spacer>
+                            <action-link>
+                                <label>Add a property group</label>
+                                <action-id>Sapphire.Add</action-id>
+                            </action-link>
+                        </content>
+                    </section>
+                </node>
+                <property>JspConfig</property>
+                <section>
+                    <content>
+                        <label>Provide global configuration information for the JSP files in the web application.</label>
+                    </content>
+                </section>
+            </node>
         </root-node>
         <page-name>configuration</page-name>
     </editor-page>

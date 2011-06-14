@@ -34,10 +34,10 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface IModelElementTypeDef 
 
-	extends IModelElement 
+    extends IModelElement 
 
 {
-	ModelElementType TYPE = new ModelElementType( IModelElementTypeDef.class );
+    ModelElementType TYPE = new ModelElementType( IModelElementTypeDef.class );
 
     // *** Type ***
     
@@ -53,5 +53,5 @@ public interface IModelElementTypeDef
     ReferenceValue<JavaTypeName,JavaType> getType();
     void setType( String value );
     void setType( JavaTypeName value );
-	
+    
 }

@@ -285,13 +285,13 @@ public final class XmlElement
             }
             else
             {
-            	removeList.add( child );
+                removeList.add( child );
             }
         }
         
         for ( Node child : removeList ) 
         {
-        	domElement.removeChild( child );
+            domElement.removeChild( child );
         }
 
         if( isElementTextNonEmpty )

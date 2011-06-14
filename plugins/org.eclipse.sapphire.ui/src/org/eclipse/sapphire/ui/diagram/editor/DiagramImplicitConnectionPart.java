@@ -21,44 +21,44 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 
 public class DiagramImplicitConnectionPart extends DiagramConnectionPart 
 {
-	private IModelElement srcNodeModel;
-	private IModelElement targetNodeModel;
-	private DiagramImplicitConnectionTemplate connectionTemplate;
-	
-	public DiagramImplicitConnectionPart(IModelElement srcNodeModel, IModelElement targetNodeModel)
-	{
-		this.srcNodeModel = srcNodeModel;
-		this.targetNodeModel = targetNodeModel;
-	}
-	
+    private IModelElement srcNodeModel;
+    private IModelElement targetNodeModel;
+    private DiagramImplicitConnectionTemplate connectionTemplate;
+    
+    public DiagramImplicitConnectionPart(IModelElement srcNodeModel, IModelElement targetNodeModel)
+    {
+        this.srcNodeModel = srcNodeModel;
+        this.targetNodeModel = targetNodeModel;
+    }
+    
     @Override
     protected void init()
     {   
-    	this.connectionTemplate = (DiagramImplicitConnectionTemplate)getParentPart();
+        this.connectionTemplate = (DiagramImplicitConnectionTemplate)getParentPart();
         
-        this.definition = (IDiagramConnectionDef)getDefinition();    	
+        this.definition = (IDiagramConnectionDef)getDefinition();        
     }
     
     @Override
     public IModelElement getEndpoint1()
     {
-    	return this.srcNodeModel;
+        return this.srcNodeModel;
     }
     
     @Override
     public IModelElement getEndpoint2()
     {
-    	return this.targetNodeModel;
+        return this.targetNodeModel;
     }
-	
+    
     @Override
     public void resetEndpoint1()
-    {    	
+    {        
     }
 
     @Override
     public void resetEndpoint2()
-    {    	
+    {        
     }
     
     @Override
@@ -68,18 +68,18 @@ public class DiagramImplicitConnectionPart extends DiagramConnectionPart
     
     public DiagramImplicitConnectionTemplate getImplicitConnectionTemplate()
     {
-    	return this.connectionTemplate;
+        return this.connectionTemplate;
     }
     
     @Override
     public PropertiesViewContributionPart getPropertiesViewContribution()
     {
-    	return null;
+        return null;
     }
     
     @Override
     public void removeModelListener()
-    {    	
+    {        
     }
     
 }

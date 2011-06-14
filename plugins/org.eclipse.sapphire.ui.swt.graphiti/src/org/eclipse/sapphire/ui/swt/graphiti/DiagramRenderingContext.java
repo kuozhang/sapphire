@@ -22,24 +22,24 @@ import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
 
 public class DiagramRenderingContext extends SapphireRenderingContext 
 {
-	private GraphicsAlgorithmContainer ga;
-	private SapphireDiagramEditor diagramEditor;
-	
-	public DiagramRenderingContext(ISapphirePart part, SapphireDiagramEditor diagramEditor,
-			GraphicsAlgorithmContainer containerShape)
-	{
-		super(part, null);
-		this.diagramEditor = diagramEditor;
-		this.ga = containerShape;
-	}
-	
-	public GraphicsAlgorithmContainer getGAContainer()
-	{
-		return this.ga;
-	}
-	
-	public SapphireDiagramEditor getDiagramEditor()
-	{
-		return this.diagramEditor;
-	}
+    private GraphicsAlgorithmContainer ga;
+    private SapphireDiagramEditor diagramEditor;
+    
+    public DiagramRenderingContext(ISapphirePart part, SapphireDiagramEditor diagramEditor,
+            GraphicsAlgorithmContainer containerShape)
+    {
+        super(part, null);
+        this.diagramEditor = diagramEditor;
+        this.ga = containerShape;
+    }
+    
+    public GraphicsAlgorithmContainer getGAContainer()
+    {
+        return this.ga;
+    }
+    
+    public SapphireDiagramEditor getDiagramEditor()
+    {
+        return this.diagramEditor;
+    }
 }

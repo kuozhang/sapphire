@@ -18,38 +18,38 @@
     targetNamespace="http://www.eclipse.org/sapphire/tests/xml/xsd/0003"
     elementFormDefault="qualified">
     
-	<element name="element">
-	   <complexType>
-	   	<sequence>
+    <element name="element">
+       <complexType>
+           <sequence>
             <element ref="shape" minOccurs="0" maxOccurs="unbounded"/>
-	   		<element name="aaa" type="string"/>
-	   		<element name="bbb" type="string"/>
-	   		<element name="ccc" type="string"/>
-	   	</sequence>
-	   </complexType>
-	</element>
-	
-	<element name="shape" abstract="true">
-	</element>
-	
-	<element name="square" substitutionGroup="shape">
-	  <complexType>
-	    <sequence>
-	   		<element name="square1" type="string"/>
-	   		<element name="square2" type="string"/>
-	   		<element name="square3" type="string"/>
-	    </sequence>
-	  </complexType>
-	</element>
+               <element name="aaa" type="string"/>
+               <element name="bbb" type="string"/>
+               <element name="ccc" type="string"/>
+           </sequence>
+       </complexType>
+    </element>
     
-	<element name="circle" substitutionGroup="shape">
-	  <complexType>
-	    <sequence>
-	   		<element name="circle1" type="string"/>
-	   		<element name="circle2" type="string"/>
-	   		<element name="circle3" type="string"/>
-	    </sequence>
-	  </complexType>
-	</element>
+    <element name="shape" abstract="true">
+    </element>
+    
+    <element name="square" substitutionGroup="shape">
+      <complexType>
+        <sequence>
+               <element name="square1" type="string"/>
+               <element name="square2" type="string"/>
+               <element name="square3" type="string"/>
+        </sequence>
+      </complexType>
+    </element>
+    
+    <element name="circle" substitutionGroup="shape">
+      <complexType>
+        <sequence>
+               <element name="circle1" type="string"/>
+               <element name="circle2" type="string"/>
+               <element name="circle3" type="string"/>
+        </sequence>
+      </complexType>
+    </element>
 
 </schema>

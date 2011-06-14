@@ -26,33 +26,33 @@ import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
 
 public class AddNodeAction extends SapphireActionHandlerDelegate
 {
-	
-	public AddNodeAction(SapphireDiagramEditor diagramEditor, SapphireActionHandler sapphireActionHandler)
-	{
-		super(diagramEditor, sapphireActionHandler);
-	}
-		
-	@Override
-	protected void handlePostExecutionEvent(SapphireActionHandler.PostExecuteEvent event)
-	{
-		DiagramNodePart nodePart = (DiagramNodePart)event.getResult();
-		ILocation loc = getSapphireDiagramEditor().getCurrentMouseLocation();
-		final AddContext ctx = new AddContext();
-		ctx.setNewObject(nodePart);
-		Diagram diagram = getSapphireDiagramEditor().getDiagramTypeProvider().getDiagram();
-		ctx.setTargetContainer(diagram);
-		ctx.setX(loc.getX());
-		ctx.setY(loc.getY());
-		final IAddFeature ft = getSapphireDiagramEditor().getDiagramTypeProvider().getFeatureProvider().getAddFeature(ctx);
-		TransactionalEditingDomain ted = TransactionUtil.getEditingDomain(diagram);
-		ted.getCommandStack().execute(new RecordingCommand(ted) 
-		{
-			protected void doExecute() 
-			{		
-				ft.add(ctx);
-				ft.getFeatureProvider().getDirectEditingInfo().setActive(true);
-			}
-		});
-	}
-		
+    
+    public AddNodeAction(SapphireDiagramEditor diagramEditor, SapphireActionHandler sapphireActionHandler)
+    {
+        super(diagramEditor, sapphireActionHandler);
+    }
+        
+    @Override
+    protected void handlePostExecutionEvent(SapphireActionHandler.PostExecuteEvent event)
+    {
+        DiagramNodePart nodePart = (DiagramNodePart)event.getResult();
+        ILocation loc = getSapphireDiagramEditor().getCurrentMouseLocation();
+        final AddContext ctx = new AddContext();
+        ctx.setNewObject(nodePart);
+        Diagram diagram = getSapphireDiagramEditor().getDiagramTypeProvider().getDiagram();
+        ctx.setTargetContainer(diagram);
+        ctx.setX(loc.getX());
+        ctx.setY(loc.getY());
+        final IAddFeature ft = getSapphireDiagramEditor().getDiagramTypeProvider().getFeatureProvider().getAddFeature(ctx);
+        TransactionalEditingDomain ted = TransactionUtil.getEditingDomain(diagram);
+        ted.getCommandStack().execute(new RecordingCommand(ted) 
+        {
+            protected void doExecute() 
+            {        
+                ft.add(ctx);
+                ft.getFeatureProvider().getDirectEditingInfo().setActive(true);
+            }
+        });
+    }
+        
 }

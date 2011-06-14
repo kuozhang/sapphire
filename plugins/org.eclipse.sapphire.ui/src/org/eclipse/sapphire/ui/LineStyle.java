@@ -20,24 +20,24 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 
 public enum LineStyle 
 {
-	@Label( standard = "solid" )
-	@EnumSerialization( primary = "solid" )
-	
-	SOLID,
-	
-	@Label( standard = "dash" )
-	@EnumSerialization( primary = "dash" )
-	
-	DASH,
-	
-	@Label( standard = "dot" )
-	@EnumSerialization( primary = "dot" )
-	
-	DOT,
-	
-	@Label( standard = "dash-dot" )
-	@EnumSerialization( primary = "dash-dot" )
-	
-	DASH_DOT;
-	
+    @Label( standard = "solid" )
+    @EnumSerialization( primary = "solid" )
+    
+    SOLID,
+    
+    @Label( standard = "dash" )
+    @EnumSerialization( primary = "dash" )
+    
+    DASH,
+    
+    @Label( standard = "dot" )
+    @EnumSerialization( primary = "dot" )
+    
+    DOT,
+    
+    @Label( standard = "dash-dot" )
+    @EnumSerialization( primary = "dash-dot" )
+    
+    DASH_DOT;
+    
 }

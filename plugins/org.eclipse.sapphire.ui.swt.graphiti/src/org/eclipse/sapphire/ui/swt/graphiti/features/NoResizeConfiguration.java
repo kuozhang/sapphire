@@ -19,14 +19,14 @@ import org.eclipse.graphiti.features.IResizeConfiguration;
 
 public class NoResizeConfiguration implements IResizeConfiguration 
 {
-	public boolean isVerticalResizeAllowed() 
-	{
-		return false;
-	}
+    public boolean isVerticalResizeAllowed() 
+    {
+        return false;
+    }
 
-	public boolean isHorizontalResizeAllowed() 
-	{
-		return false;
-	}
+    public boolean isHorizontalResizeAllowed() 
+    {
+        return false;
+    }
 
 }

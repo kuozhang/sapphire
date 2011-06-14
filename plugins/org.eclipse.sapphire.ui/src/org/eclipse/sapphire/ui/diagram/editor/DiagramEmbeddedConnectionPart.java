@@ -29,40 +29,40 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 
 public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart 
 {
-	private IModelElement srcNodeModel;
-	private IModelElement endpointModel;
-	private ModelPath endpointPath;
-	private FunctionResult endpointFunctionResult;
-	private IDiagramConnectionEndpointBindingDef endpointDef;
-	
-	public DiagramEmbeddedConnectionPart(IDiagramExplicitConnectionBindingDef connBindingDef, IModelElement srcNodeModel, ModelPath endpointPath)
-	{
-		this.bindingDef = connBindingDef;
-		this.srcNodeModel = srcNodeModel;
-		this.endpointPath = endpointPath;
-	}
-	
+    private IModelElement srcNodeModel;
+    private IModelElement endpointModel;
+    private ModelPath endpointPath;
+    private FunctionResult endpointFunctionResult;
+    private IDiagramConnectionEndpointBindingDef endpointDef;
+    
+    public DiagramEmbeddedConnectionPart(IDiagramExplicitConnectionBindingDef connBindingDef, IModelElement srcNodeModel, ModelPath endpointPath)
+    {
+        this.bindingDef = connBindingDef;
+        this.srcNodeModel = srcNodeModel;
+        this.endpointPath = endpointPath;
+    }
+    
     @Override
     protected void init()
     {   
-    	initLabelId();
+        initLabelId();
         this.endpointDef = this.bindingDef.getEndpoint2().element();
         this.endpointModel = resolveEndpoint(this.modelElement, this.endpointPath);
         if (this.endpointModel != null)
         {
-	        this.endpointFunctionResult = initExpression
-	        (
-	        	this.endpointModel, 
-	        	this.endpointDef.getValue().getContent(),
-	        	String.class,
-	        	null,
-	            new Runnable()
-	        	{
-		            public void run()
-		            {
-		            }
-	        	}
-	        );
+            this.endpointFunctionResult = initExpression
+            (
+                this.endpointModel, 
+                this.endpointDef.getValue().getContent(),
+                String.class,
+                null,
+                new Runnable()
+                {
+                    public void run()
+                    {
+                    }
+                }
+            );
         }        
         // Add model property listener
         this.modelPropertyListener = new ModelPropertyListener()
@@ -79,90 +79,90 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
     @Override
     public IModelElement getEndpoint1()
     {
-    	return this.srcNodeModel;
+        return this.srcNodeModel;
     }
     
     @Override
     public IModelElement getEndpoint2()
     {
-    	return this.endpointModel;
+        return this.endpointModel;
     }
 
     @Override
-	public void resetEndpoint1()
-	{
-	}
-	
+    public void resetEndpoint1()
+    {
+    }
+    
     @Override
-	public void resetEndpoint2()
-	{
-		if (this.endpointFunctionResult != null)
-		{
-			String value = (String)this.endpointFunctionResult.value();
-			if (value == null  || value.length() == 0)
-			{
-				SapphireDiagramEditorPagePart diagramPart = this.getDiagramConnectionTemplate().getDiagramEditor();
-				DiagramNodePart nodePart = diagramPart.getDiagramNodePart(this.endpointModel);
-				if (nodePart != null)
-				{
-					value = IdUtil.computeNodeId(nodePart);
-				}
-			}			
-			
-			String property = this.endpointDef.getProperty().getContent();
-			setModelProperty(this.modelElement, property, value);
-		}		
-	}
+    public void resetEndpoint2()
+    {
+        if (this.endpointFunctionResult != null)
+        {
+            String value = (String)this.endpointFunctionResult.value();
+            if (value == null  || value.length() == 0)
+            {
+                SapphireDiagramEditorPagePart diagramPart = this.getDiagramConnectionTemplate().getDiagramEditor();
+                DiagramNodePart nodePart = diagramPart.getDiagramNodePart(this.endpointModel);
+                if (nodePart != null)
+                {
+                    value = IdUtil.computeNodeId(nodePart);
+                }
+            }            
+            
+            String property = this.endpointDef.getProperty().getContent();
+            setModelProperty(this.modelElement, property, value);
+        }        
+    }
         
     public DiagramNodePart getSourceNodePart()
     {
-    	SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)getParentPart().getParentPart().getParentPart();
-    	return diagramPart.getDiagramNodePart(this.srcNodeModel);
+        SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)getParentPart().getParentPart().getParentPart();
+        return diagramPart.getDiagramNodePart(this.srcNodeModel);
     }
     
     @Override
     public void dispose()
     {
-    	super.dispose();
-    	if (this.endpointFunctionResult != null)
-    	{
-    		this.endpointFunctionResult.dispose();
-    	}    	
+        super.dispose();
+        if (this.endpointFunctionResult != null)
+        {
+            this.endpointFunctionResult.dispose();
+        }        
     }
     
     @Override
     public void addModelListener()
     {
-    	if (this.labelProperty != null)
-    	{
-	    	this.modelElement.addListener(this.modelPropertyListener, 
-	    								this.labelProperty.getName());
-    	}
-    	this.modelElement.addListener(this.modelPropertyListener, 
-    								this.endpointDef.getProperty().getContent());
+        if (this.labelProperty != null)
+        {
+            this.modelElement.addListener(this.modelPropertyListener, 
+                                        this.labelProperty.getName());
+        }
+        this.modelElement.addListener(this.modelPropertyListener, 
+                                    this.endpointDef.getProperty().getContent());
     }
     
     @Override
     public void removeModelListener()
     {
-    	if (this.labelProperty != null)
-    	{
-	    	this.modelElement.removeListener(this.modelPropertyListener, 
-	    								this.labelProperty.getName());
-    	}
-    	this.modelElement.removeListener(this.modelPropertyListener, 
-    								this.endpointDef.getProperty().getContent());
+        if (this.labelProperty != null)
+        {
+            this.modelElement.removeListener(this.modelPropertyListener, 
+                                        this.labelProperty.getName());
+        }
+        this.modelElement.removeListener(this.modelPropertyListener, 
+                                    this.endpointDef.getProperty().getContent());
     }
 
     @Override
     protected void handleModelPropertyChange(final ModelPropertyChangeEvent event)
     {
-    	final ModelProperty property = event.getProperty();
-    	if (property.getName().equals(this.endpointDef.getProperty().getContent()))
-    	{
-			handleEndpointChange();
-			notifyConnectionEndpointUpdate();
-    	}    			
+        final ModelProperty property = event.getProperty();
+        if (property.getName().equals(this.endpointDef.getProperty().getContent()))
+        {
+            handleEndpointChange();
+            notifyConnectionEndpointUpdate();
+        }                
     }    
     
     private void handleEndpointChange()
@@ -170,24 +170,24 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
         this.endpointModel = resolveEndpoint(this.modelElement, this.endpointPath);
         if (this.endpointFunctionResult != null)
         {
-        	this.endpointFunctionResult.dispose();
-        	this.endpointFunctionResult = null;
+            this.endpointFunctionResult.dispose();
+            this.endpointFunctionResult = null;
         }
         if (this.endpointModel != null)
-        {        	
-	        this.endpointFunctionResult = initExpression
-	        (
-	        	this.endpointModel, 
-	        	this.endpointDef.getValue().getContent(), 
-	        	String.class,
-	        	null,
-	            new Runnable()
-	        	{
-		            public void run()
-		            {
-		            }
-	        	}
-	        );
+        {            
+            this.endpointFunctionResult = initExpression
+            (
+                this.endpointModel, 
+                this.endpointDef.getValue().getContent(), 
+                String.class,
+                null,
+                new Runnable()
+                {
+                    public void run()
+                    {
+                    }
+                }
+            );
         }        
     }
     

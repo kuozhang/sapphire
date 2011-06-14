@@ -17,30 +17,30 @@ package org.eclipse.sapphire.ui;
 
 public class Color 
 {
-	private final int red;
-	private final int green;
-	private final int blue;
-	
-	public Color(int r, int g, int b)
-	{
-		this.red = r;
-		this.green = g;
-		this.blue = b;
-	}
-	
-	public int getRed()
-	{
-		return this.red;
-	}
-		
-	public int getGreen()
-	{
-		return this.green;
-	}
-	
-	public int getBlue()
-	{
-		return this.blue;
-	}
-	
+    private final int red;
+    private final int green;
+    private final int blue;
+    
+    public Color(int r, int g, int b)
+    {
+        this.red = r;
+        this.green = g;
+        this.blue = b;
+    }
+    
+    public int getRed()
+    {
+        return this.red;
+    }
+        
+    public int getGreen()
+    {
+        return this.green;
+    }
+    
+    public int getBlue()
+    {
+        return this.blue;
+    }
+    
 }

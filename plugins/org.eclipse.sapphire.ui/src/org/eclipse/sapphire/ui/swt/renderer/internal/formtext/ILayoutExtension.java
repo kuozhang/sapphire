@@ -26,26 +26,26 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
  * @author IBM Combination
  */
 public interface ILayoutExtension {
-	/**
-	 * Computes the minimum width of the parent. All widgets capable of word
-	 * wrapping should return the width of the longest word that cannot be
-	 * broken any further.
-	 * 
-	 * @param parent the parent composite
-	 * @param changed <code>true</code> if the cached information should be
-	 * flushed, <code>false</code> otherwise.
-	 * @return the minimum width of the parent composite
-	 */
-	public int computeMinimumWidth(Composite parent, boolean changed);
-	/**
-	 * Computes the maximum width of the parent. All widgets capable of word
-	 * wrapping should return the length of the entire text with wrapping
-	 * turned off.
-	 * 
-	 * @param parent the parent composite
-	 * @param changed <code>true</code> if the cached information
-	 * should be flushed, <code>false</code> otherwise.
-	 * @return the maximum width of the parent composite
-	 */
-	public int computeMaximumWidth(Composite parent, boolean changed);
+    /**
+     * Computes the minimum width of the parent. All widgets capable of word
+     * wrapping should return the width of the longest word that cannot be
+     * broken any further.
+     * 
+     * @param parent the parent composite
+     * @param changed <code>true</code> if the cached information should be
+     * flushed, <code>false</code> otherwise.
+     * @return the minimum width of the parent composite
+     */
+    public int computeMinimumWidth(Composite parent, boolean changed);
+    /**
+     * Computes the maximum width of the parent. All widgets capable of word
+     * wrapping should return the length of the entire text with wrapping
+     * turned off.
+     * 
+     * @param parent the parent composite
+     * @param changed <code>true</code> if the cached information
+     * should be flushed, <code>false</code> otherwise.
+     * @return the maximum width of the parent composite
+     */
+    public int computeMaximumWidth(Composite parent, boolean changed);
 }

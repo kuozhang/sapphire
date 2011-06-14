@@ -29,13 +29,13 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface IDiagramDimension
 
-	extends IModelElement
-	
+    extends IModelElement
+    
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramDimension.class );
-	
+    ModelElementType TYPE = new ModelElementType( IDiagramDimension.class );
+    
     // *** Width ***
-	
+    
     @Type( base = Integer.class )
     @Label( standard = "width" )
     @NumericRange( min = "1" )
@@ -48,7 +48,7 @@ public interface IDiagramDimension
     void setWidth( Integer width );
 
     // *** Height ***
-	
+    
     @Type( base = Integer.class )
     @Label( standard = "height" )
     @NumericRange( min = "1" )
@@ -59,5 +59,5 @@ public interface IDiagramDimension
     Value<Integer> getHeight();
     void setHeight( String width );
     void setHeight( Integer width );
-	
+    
 }

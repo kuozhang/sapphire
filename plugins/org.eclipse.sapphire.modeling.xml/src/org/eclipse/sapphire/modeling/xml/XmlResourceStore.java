@@ -204,14 +204,14 @@ public class XmlResourceStore
                 final DocumentType doctype = this.document.getDoctype();
                 if (doctype != null) 
                 {
-                	if (doctype.getPublicId() != null) 
-                	{
-                		transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
-                	}
-                	if (doctype.getSystemId() != null) 
-                	{
-                		transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
-                	}
+                    if (doctype.getPublicId() != null) 
+                    {
+                        transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
+                    }
+                    if (doctype.getSystemId() != null) 
+                    {
+                        transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
+                    }
                 }
                 
                 transformer.transform( source, result );

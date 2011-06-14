@@ -49,17 +49,17 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 public interface IDiagramNodeDef 
 
-	extends ISapphirePartDef, IDiagramDimension, IPropertiesViewContributorDef
-	
+    extends ISapphirePartDef, IDiagramDimension, IPropertiesViewContributorDef
+    
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramNodeDef.class );
-	
+    ModelElementType TYPE = new ModelElementType( IDiagramNodeDef.class );
+    
     // *** Id ***
     
     @Required
     
     ValueProperty PROP_ID = new ValueProperty( TYPE, ISapphirePartDef.PROP_ID );
-	
+    
     // *** InstanceId ***
     
     @Type( base = Function.class )
@@ -146,7 +146,7 @@ public interface IDiagramNodeDef
     void setResizable( Boolean value );
     
     // *** HorizontalSpacing ***
-	
+    
     @Type( base = Integer.class )
     @Label( standard = "horizontal spacing" )
     @XmlBinding( path = "horizontal-spacing" )
@@ -159,7 +159,7 @@ public interface IDiagramNodeDef
     void setHorizontalSpacing( Integer value );
     
     // *** VerticalSpacing ***
-	
+    
     @Type( base = Integer.class )
     @Label( standard = "vertical spacing" )
     @XmlBinding( path = "vertical-spacing" )
@@ -188,7 +188,7 @@ public interface IDiagramNodeDef
     ElementProperty PROP_LABEL = new ElementProperty( TYPE, "Label" );
     
     ModelElementHandle<IDiagramLabelDef> getLabel();
-    	    
+            
     // *** ProblemDecorator ***
     
     @Type( base = IDiagramNodeProblemDecoratorDef.class )
@@ -198,7 +198,7 @@ public interface IDiagramNodeDef
     
     IDiagramNodeProblemDecoratorDef getProblemDecorator();
     
-	// *** ImageDecorators ***
+    // *** ImageDecorators ***
     
     @Type( base = IDiagramImageDecoratorDef.class )
     @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "image-decorator", type = IDiagramImageDecoratorDef.class ) )

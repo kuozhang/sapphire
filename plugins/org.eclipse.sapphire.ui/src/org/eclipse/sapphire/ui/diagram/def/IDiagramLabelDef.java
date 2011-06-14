@@ -31,11 +31,11 @@ import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 
 public interface IDiagramLabelDef 
 
-	extends IDiagramDimension
-	
+    extends IDiagramDimension
+    
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramLabelDef.class );
-	
+    ModelElementType TYPE = new ModelElementType( IDiagramLabelDef.class );
+    
     // *** Text ***
     
     @Type( base = Function.class )

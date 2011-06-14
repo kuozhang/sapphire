@@ -129,12 +129,12 @@ public class SapphireComposite
         final int marginBottom = def.getMarginBottom().getContent();
         
         final Composite composite = new Composite( parent, SWT.NONE ) {
-        	public Point computeSize (int wHint, int hHint, boolean changed) {
-        		if (this.getChildren().length == 0) {
-        			return new Point(0, 0);
-        		}
-        		return super.computeSize(wHint, hHint, changed);
-        	}
+            public Point computeSize (int wHint, int hHint, boolean changed) {
+                if (this.getChildren().length == 0) {
+                    return new Point(0, 0);
+                }
+                return super.computeSize(wHint, hHint, changed);
+            }
         };
         composite.setLayout( glayout( 2, marginLeft, marginRight, marginTop, marginBottom ) );
         ctxt.adapt( composite );

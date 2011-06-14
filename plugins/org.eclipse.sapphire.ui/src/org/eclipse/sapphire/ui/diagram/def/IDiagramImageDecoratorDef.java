@@ -28,12 +28,12 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 @GenerateImpl
 
 public interface IDiagramImageDecoratorDef 
-	
-	extends IDiagramDecoratorDef 
+    
+    extends IDiagramDecoratorDef 
 
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramImageDecoratorDef.class );
-	
+    ModelElementType TYPE = new ModelElementType( IDiagramImageDecoratorDef.class );
+    
     // *** ImageId ***
     
     @Label( standard = "image ID" )
@@ -45,8 +45,8 @@ public interface IDiagramImageDecoratorDef
     Value<String> getImageId();
     void setImageId( String Id );
     
-	// *** VisibleWhen ***
-	
+    // *** VisibleWhen ***
+    
     @Type( base = Function.class )
     @XmlBinding( path = "visible-when" )
     @Label( standard = "visible when" )
@@ -56,5 +56,5 @@ public interface IDiagramImageDecoratorDef
     Value<Function> getVisibleWhen();
     void setVisibleWhen( String value );
     void setVisibleWhen( Function value );        
-	
+    
 }

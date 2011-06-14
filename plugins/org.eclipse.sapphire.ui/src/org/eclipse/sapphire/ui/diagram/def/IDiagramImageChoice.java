@@ -28,11 +28,11 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface IDiagramImageChoice 
 
-	extends IModelElement 
-	
+    extends IModelElement 
+    
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramImageChoice.class );
-	
+    ModelElementType TYPE = new ModelElementType( IDiagramImageChoice.class );
+    
     // *** ImageId ***
     
     @Label( standard = "image ID" )

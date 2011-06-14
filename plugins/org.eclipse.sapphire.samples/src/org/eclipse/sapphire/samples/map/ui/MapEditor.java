@@ -35,77 +35,77 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public class MapEditor extends SapphireEditor 
 {
-	private IMap modelMap;
-	private StructuredTextEditor mapSourceEditor;
-	private SapphireDiagramEditor mapDiagram;
-	private MasterDetailsEditorPage mapOverviewPage;
-	
+    private IMap modelMap;
+    private StructuredTextEditor mapSourceEditor;
+    private SapphireDiagramEditor mapDiagram;
+    private MasterDetailsEditorPage mapOverviewPage;
+    
     public MapEditor()
     {
         super( "org.eclipse.sapphire.samples" );
     }
 
-	@Override
-	protected void createSourcePages() throws PartInitException 
-	{
-		this.mapSourceEditor = new StructuredTextEditor();
-		this.mapSourceEditor.setEditorPart(this);
+    @Override
+    protected void createSourcePages() throws PartInitException 
+    {
+        this.mapSourceEditor = new StructuredTextEditor();
+        this.mapSourceEditor.setEditorPart(this);
         final FileEditorInput rootEditorInput = (FileEditorInput) getEditorInput();
         
         int index = addPage( this.mapSourceEditor, rootEditorInput );
         setPageText( index, "map.xml" );
-	}
+    }
 
-	@Override
-	protected IModelElement createModel() 
-	{
-		this.modelMap = IMap.TYPE.instantiate(new RootXmlResource(new XmlEditorResourceStore(this, this.mapSourceEditor)));
-		return this.modelMap;
-	}
+    @Override
+    protected IModelElement createModel() 
+    {
+        this.modelMap = IMap.TYPE.instantiate(new RootXmlResource(new XmlEditorResourceStore(this, this.mapSourceEditor)));
+        return this.modelMap;
+    }
 
-	@Override
-	protected void createDiagramPages() throws PartInitException
-	{
-		IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/map/MapEditor.sdef/diagram" );
-		this.mapDiagram = new SapphireDiagramEditor(this.modelMap, path);
-		SapphireDiagramEditorInput diagramEditorInput = null;
-		try
-		{
-			diagramEditorInput = SapphireDiagramEditorFactory.createEditorInput(this.modelMap.adapt(IFile.class), null, false);
-		}
-		catch (Exception e)
-		{
-			SapphireUiFrameworkPlugin.log( e );
-		}
+    @Override
+    protected void createDiagramPages() throws PartInitException
+    {
+        IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/map/MapEditor.sdef/diagram" );
+        this.mapDiagram = new SapphireDiagramEditor(this.modelMap, path);
+        SapphireDiagramEditorInput diagramEditorInput = null;
+        try
+        {
+            diagramEditorInput = SapphireDiagramEditorFactory.createEditorInput(this.modelMap.adapt(IFile.class), null, false);
+        }
+        catch (Exception e)
+        {
+            SapphireUiFrameworkPlugin.log( e );
+        }
 
-		if (diagramEditorInput != null)
-		{
-			addPage(0, mapDiagram, diagramEditorInput);
-			setPageText( 0, "Diagram" );
-			setPageId(this.pages.get(0), "Diagram", this.mapDiagram.getPart());
-		}
-	}
-	
-	@Override
-	protected void createFormPages() throws PartInitException 
-	{
-		IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/map/MapEditor.sdef/overview" );
-		this.mapOverviewPage = new MasterDetailsEditorPage(this, this.modelMap, path);
+        if (diagramEditorInput != null)
+        {
+            addPage(0, mapDiagram, diagramEditorInput);
+            setPageText( 0, "Diagram" );
+            setPageId(this.pages.get(0), "Diagram", this.mapDiagram.getPart());
+        }
+    }
+    
+    @Override
+    protected void createFormPages() throws PartInitException 
+    {
+        IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/map/MapEditor.sdef/overview" );
+        this.mapOverviewPage = new MasterDetailsEditorPage(this, this.modelMap, path);
         addPage(1, this.mapOverviewPage);
         setPageText(1, "Overview");
-        setPageId(this.pages.get(1), "Overview", this.mapOverviewPage.getPart());		
-	}
+        setPageId(this.pages.get(1), "Overview", this.mapOverviewPage.getPart());        
+    }
 
-	public IMap getMap()
-	{
-		return this.modelMap;
-	}
-	
-	@Override
-	public void doSave( final IProgressMonitor monitor )
-	{
-		super.doSave(monitor);		
-		this.mapDiagram.doSave(monitor);
-	}
-	
+    public IMap getMap()
+    {
+        return this.modelMap;
+    }
+    
+    @Override
+    public void doSave( final IProgressMonitor monitor )
+    {
+        super.doSave(monitor);        
+        this.mapDiagram.doSave(monitor);
+    }
+    
 }

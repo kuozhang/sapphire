@@ -107,8 +107,8 @@
                 <label>Destinations</label>
                 <section>
                     <content>
-                    	<label>Destinations in the map</label>
-                    	<spacer/>
+                        <label>Destinations in the map</label>
+                        <spacer/>
                         <property-editor>Destinations</property-editor>
                         <separator>
                             <label>Railway Routes</label>
@@ -136,8 +136,8 @@
                 <label>Highway Routes</label>
                 <section>
                     <content>
-                    	<label>Highway Routes in the map</label>
-                    	<spacer/>
+                        <label>Highway Routes in the map</label>
+                        <spacer/>
                         <property-editor>Routes</property-editor>
                     </content>
                 </section>

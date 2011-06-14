@@ -22,31 +22,31 @@ import org.eclipse.sapphire.modeling.IModelElement;
 
 public class ListUtil 
 {
-	public static List<IModelElement> ListDiff(List<? extends IModelElement> list1, 
-			List<? extends IModelElement> list2)
-	{
-		List<IModelElement> retList = new ArrayList<IModelElement>();
-		if (list1.size() > list2.size())
-		{
-			for (IModelElement element : list1)
-			{
-				if (!list2.contains(element))
-				{
-					retList.add(element);
-				}
-			}
-		}
-		else if (list2.size() > list1.size())
-		{			
-			for (IModelElement element : list2)
-			{
-				if (!list1.contains(element))
-				{
-					retList.add(element);
-				}
-			}
-		}
-		return retList;
-	}
-	
+    public static List<IModelElement> ListDiff(List<? extends IModelElement> list1, 
+            List<? extends IModelElement> list2)
+    {
+        List<IModelElement> retList = new ArrayList<IModelElement>();
+        if (list1.size() > list2.size())
+        {
+            for (IModelElement element : list1)
+            {
+                if (!list2.contains(element))
+                {
+                    retList.add(element);
+                }
+            }
+        }
+        else if (list2.size() > list1.size())
+        {            
+            for (IModelElement element : list2)
+            {
+                if (!list1.contains(element))
+                {
+                    retList.add(element);
+                }
+            }
+        }
+        return retList;
+    }
+    
 }

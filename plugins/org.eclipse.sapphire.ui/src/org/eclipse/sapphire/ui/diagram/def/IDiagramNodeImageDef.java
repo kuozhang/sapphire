@@ -35,12 +35,12 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface IDiagramNodeImageDef 
 
-	extends IDiagramDimension 
+    extends IDiagramDimension 
 
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramNodeImageDef.class );
+    ModelElementType TYPE = new ModelElementType( IDiagramNodeImageDef.class );
 
-	// *** Id ***
+    // *** Id ***
 
     @Type( base = Function.class )
     @Label( standard = "ID" )
@@ -76,5 +76,5 @@ public interface IDiagramNodeImageDef
     ListProperty PROP_POSSIBLE_IMAGES = new ListProperty( TYPE, "PossibleImages" );
     
     ModelElementList<IDiagramImageChoice> getPossibleImages();
-    		
+            
 }

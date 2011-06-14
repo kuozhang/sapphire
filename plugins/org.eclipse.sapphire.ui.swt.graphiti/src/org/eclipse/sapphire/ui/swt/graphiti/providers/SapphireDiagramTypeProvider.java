@@ -40,87 +40,87 @@ import org.osgi.framework.Bundle;
 
 public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider 
 {
-	private SapphireDiagramFeatureProvider featureProvider;
-	private IToolBehaviorProvider[] toolBehaviorProviders;
-	
-	public SapphireDiagramTypeProvider()
-	{
-		this.featureProvider = 
-			new SapphireDiagramFeatureProvider(this, new SapphireDiagramSolver());
-		setFeatureProvider(this.featureProvider);
-	}
-	
-	@Override
-	public void init(Diagram diagram, IDiagramEditor diagramEditor)
-	{
-		super.init(diagram, diagramEditor);
-		
-		SapphireDiagramEditorPagePart editorPart = ((SapphireDiagramEditor)diagramEditor).getPart();
-		DiagramRenderingContext renderingCtx = new DiagramRenderingContext(
-								editorPart, 
-								(SapphireDiagramEditor)diagramEditor,
-								diagram);
-		this.featureProvider.addRenderingContext(editorPart, renderingCtx);
-		
-		ExtensionManager extManager = (ExtensionManager)GraphitiUi.getExtensionManager();
-		IImageProvider imageProviders[] = extManager.getImageProviders();
-		SapphireDiagramImageProvider sapphireImageProvider = null;
-		for (IImageProvider imageProvider : imageProviders)
-		{
-			if (imageProvider instanceof SapphireDiagramImageProvider)
-			{
-				sapphireImageProvider = (SapphireDiagramImageProvider)imageProvider;
-				break;
-			}
-		}
-		if (sapphireImageProvider != null)
-		{
-			SapphireDiagramEditorPagePart diagramPart = getDiagramPart();
-			List<IDiagramImageChoice> diagramImages = diagramPart.getImageDecorators();
-			
-			// Add diagram page images
-			for (IDiagramImageChoice imageChoice : diagramImages)
-			{
-				registerImage(sapphireImageProvider, imageChoice);
-			}
-			
-			// Add node images
-			List<DiagramNodeTemplate> nodeTemplates = diagramPart.getNodeTemplates();
-			for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
-			{
-				final IDiagramNodeDef nodeDef = nodeTemplate.getDefinition();
-				final IDiagramNodeImageDef imageDef = nodeDef.getImage().element();
-				
-				if (imageDef != null)
-				{
-					ModelElementList<IDiagramImageChoice> images = imageDef.getPossibleImages();
-					for (IDiagramImageChoice imageChoice : images)
-					{
-						registerImage(sapphireImageProvider, imageChoice);
-					}
-				}
-				
-				// register node tool palette image
-				IDiagramImageChoice toolImage = nodeTemplate.getToolPaletteImage();
-				if (toolImage != null)
-				{
-					registerImage(sapphireImageProvider, toolImage);
-				}
-			}
-			
-			// Add connection tool palette images
-			List<IDiagramConnectionDef> connDefs = diagramPart.getDiagramConnectionDefs();
-			for (IDiagramConnectionDef connDef : connDefs)
-			{
-				IDiagramImageChoice image = connDef.getToolPaletteImage().element();
-				if (image != null)
-				{
-					registerImage(sapphireImageProvider, image);
-				}
-			}
-		}
-	}
-	
+    private SapphireDiagramFeatureProvider featureProvider;
+    private IToolBehaviorProvider[] toolBehaviorProviders;
+    
+    public SapphireDiagramTypeProvider()
+    {
+        this.featureProvider = 
+            new SapphireDiagramFeatureProvider(this, new SapphireDiagramSolver());
+        setFeatureProvider(this.featureProvider);
+    }
+    
+    @Override
+    public void init(Diagram diagram, IDiagramEditor diagramEditor)
+    {
+        super.init(diagram, diagramEditor);
+        
+        SapphireDiagramEditorPagePart editorPart = ((SapphireDiagramEditor)diagramEditor).getPart();
+        DiagramRenderingContext renderingCtx = new DiagramRenderingContext(
+                                editorPart, 
+                                (SapphireDiagramEditor)diagramEditor,
+                                diagram);
+        this.featureProvider.addRenderingContext(editorPart, renderingCtx);
+        
+        ExtensionManager extManager = (ExtensionManager)GraphitiUi.getExtensionManager();
+        IImageProvider imageProviders[] = extManager.getImageProviders();
+        SapphireDiagramImageProvider sapphireImageProvider = null;
+        for (IImageProvider imageProvider : imageProviders)
+        {
+            if (imageProvider instanceof SapphireDiagramImageProvider)
+            {
+                sapphireImageProvider = (SapphireDiagramImageProvider)imageProvider;
+                break;
+            }
+        }
+        if (sapphireImageProvider != null)
+        {
+            SapphireDiagramEditorPagePart diagramPart = getDiagramPart();
+            List<IDiagramImageChoice> diagramImages = diagramPart.getImageDecorators();
+            
+            // Add diagram page images
+            for (IDiagramImageChoice imageChoice : diagramImages)
+            {
+                registerImage(sapphireImageProvider, imageChoice);
+            }
+            
+            // Add node images
+            List<DiagramNodeTemplate> nodeTemplates = diagramPart.getNodeTemplates();
+            for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
+            {
+                final IDiagramNodeDef nodeDef = nodeTemplate.getDefinition();
+                final IDiagramNodeImageDef imageDef = nodeDef.getImage().element();
+                
+                if (imageDef != null)
+                {
+                    ModelElementList<IDiagramImageChoice> images = imageDef.getPossibleImages();
+                    for (IDiagramImageChoice imageChoice : images)
+                    {
+                        registerImage(sapphireImageProvider, imageChoice);
+                    }
+                }
+                
+                // register node tool palette image
+                IDiagramImageChoice toolImage = nodeTemplate.getToolPaletteImage();
+                if (toolImage != null)
+                {
+                    registerImage(sapphireImageProvider, toolImage);
+                }
+            }
+            
+            // Add connection tool palette images
+            List<IDiagramConnectionDef> connDefs = diagramPart.getDiagramConnectionDefs();
+            for (IDiagramConnectionDef connDef : connDefs)
+            {
+                IDiagramImageChoice image = connDef.getToolPaletteImage().element();
+                if (image != null)
+                {
+                    registerImage(sapphireImageProvider, image);
+                }
+            }
+        }
+    }
+    
     @Override
     public IToolBehaviorProvider[] getAvailableToolBehaviorProviders() 
     {
@@ -131,25 +131,25 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
         }
         return this.toolBehaviorProviders;
     }
-	    
+        
     private void registerImage(SapphireDiagramImageProvider sapphireImageProvider, IDiagramImageChoice imageChoice)
     {
-		ISapphireUiDef uiDef = imageChoice.nearest(ISapphireUiDef.class);
-		String imageId = imageChoice.getImageId().getContent();
-		String imagePath = imageChoice.getImagePath().getContent();
-		String bundleId = resolveImageBundle(uiDef, imagePath);
-		// Graphiti's image provider doesn't support images from different plugins.
-		// See http://www.eclipse.org/forums/index.php?t=tree&th=201973&start=0&S=3813ad4d99f2ac8bd56a0072ffa6ebd9
-		if (bundleId != null)
-		{
-			sapphireImageProvider.setPluginId(bundleId);
-		}
-		
-		if (imageId != null && imagePath != null && 
-				sapphireImageProvider.getImageFilePath(imageId) == null)
-		{
-			sapphireImageProvider.registerImage(imageId, imagePath);
-		}						    	
+        ISapphireUiDef uiDef = imageChoice.nearest(ISapphireUiDef.class);
+        String imageId = imageChoice.getImageId().getContent();
+        String imagePath = imageChoice.getImagePath().getContent();
+        String bundleId = resolveImageBundle(uiDef, imagePath);
+        // Graphiti's image provider doesn't support images from different plugins.
+        // See http://www.eclipse.org/forums/index.php?t=tree&th=201973&start=0&S=3813ad4d99f2ac8bd56a0072ffa6ebd9
+        if (bundleId != null)
+        {
+            sapphireImageProvider.setPluginId(bundleId);
+        }
+        
+        if (imageId != null && imagePath != null && 
+                sapphireImageProvider.getImageFilePath(imageId) == null)
+        {
+            sapphireImageProvider.registerImage(imageId, imagePath);
+        }                                
     }
     
     private String resolveImageBundle(ISapphireUiDef def, String imagePath)
@@ -161,14 +161,14 @@ public class SapphireDiagramTypeProvider extends AbstractDiagramTypeProvider
             return bundle.getSymbolicName();
         }
 
-    	return null;
+        return null;
     }
     
-	
-	private SapphireDiagramEditorPagePart getDiagramPart()
-	{
-		SapphireDiagramEditor diagramEditor = (SapphireDiagramEditor)getDiagramEditor();
-		return diagramEditor.getPart();
-	}
+    
+    private SapphireDiagramEditorPagePart getDiagramPart()
+    {
+        SapphireDiagramEditor diagramEditor = (SapphireDiagramEditor)getDiagramEditor();
+        return diagramEditor.getPart();
+    }
     
 }

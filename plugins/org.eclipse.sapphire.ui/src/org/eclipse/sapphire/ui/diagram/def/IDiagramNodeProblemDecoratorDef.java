@@ -28,14 +28,14 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 @GenerateImpl
 
 public interface IDiagramNodeProblemDecoratorDef 
-	
-	extends IDiagramDecoratorDef 
+    
+    extends IDiagramDecoratorDef 
 
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramNodeProblemDecoratorDef.class );
+    ModelElementType TYPE = new ModelElementType( IDiagramNodeProblemDecoratorDef.class );
     
-	// *** ShowDecorator ***
-	
+    // *** ShowDecorator ***
+    
     @Type( base = Boolean.class )
     @XmlBinding( path = "show-decorator" )
     @DefaultValue( text = "true" )
@@ -45,7 +45,7 @@ public interface IDiagramNodeProblemDecoratorDef
     Value<Boolean> isShowDecorator();
     void setShowDecorator( String value );
     void setShowDecorator( Boolean value );
-	
+    
     // *** Size ***
     
     @Type( base = ProblemDecoratorSize.class )

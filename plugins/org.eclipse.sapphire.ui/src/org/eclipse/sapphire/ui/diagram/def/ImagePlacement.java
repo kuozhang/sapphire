@@ -20,24 +20,24 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 
 public enum ImagePlacement 
 {
-	@Label( standard = "left" )
-	@EnumSerialization( primary = "left" )
-	
-	LEFT,
-	
-	@Label( standard = "right" )
-	@EnumSerialization( primary = "right" )
-	
-	RIGHT,
-	
-	@Label( standard = "top" )
-	@EnumSerialization( primary = "top" )
-	
-	TOP,
-	
-	@Label( standard = "bottom" )
-	@EnumSerialization( primary = "bottom" )
-	
-	BOTTOM;
+    @Label( standard = "left" )
+    @EnumSerialization( primary = "left" )
+    
+    LEFT,
+    
+    @Label( standard = "right" )
+    @EnumSerialization( primary = "right" )
+    
+    RIGHT,
+    
+    @Label( standard = "top" )
+    @EnumSerialization( primary = "top" )
+    
+    TOP,
+    
+    @Label( standard = "bottom" )
+    @EnumSerialization( primary = "bottom" )
+    
+    BOTTOM;
 
 }

@@ -6,11 +6,11 @@
     elementFormDefault="qualified">
 
     <complexType name="RedefineTestType">
-    	<sequence>
-    		<element name="aaa" type="string"/>
-    		<element name="bbb" type="string"/>
-    		<element name="ccc" type="string"/>
-    	</sequence>
+        <sequence>
+            <element name="aaa" type="string"/>
+            <element name="bbb" type="string"/>
+            <element name="ccc" type="string"/>
+        </sequence>
     </complexType>
     
 </schema>

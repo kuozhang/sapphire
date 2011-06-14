@@ -45,62 +45,62 @@ import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProv
 
 public class SapphireAddConnectionFeature extends AbstractAddFeature 
 {
-	private static final IColorConstant DEFAULT_LINK_COLOR = new ColorConstant(51, 51, 153);
-	
-	public SapphireAddConnectionFeature(IFeatureProvider fp)
-	{
-		super(fp);
-	}
-	
-	public boolean canAdd(IAddContext context) 
-	{
-		// return true if given business object is an DiagramConnectionPart
-		// note, that the context must be an instance of IAddConnectionContext
-		if (context instanceof IAddConnectionContext && 
-				context.getNewObject() instanceof DiagramConnectionPart) 
-		{
-			return true;
-		}
-		return false;
-	}
+    private static final IColorConstant DEFAULT_LINK_COLOR = new ColorConstant(51, 51, 153);
+    
+    public SapphireAddConnectionFeature(IFeatureProvider fp)
+    {
+        super(fp);
+    }
+    
+    public boolean canAdd(IAddContext context) 
+    {
+        // return true if given business object is an DiagramConnectionPart
+        // note, that the context must be an instance of IAddConnectionContext
+        if (context instanceof IAddConnectionContext && 
+                context.getNewObject() instanceof DiagramConnectionPart) 
+        {
+            return true;
+        }
+        return false;
+    }
 
-	public PictogramElement add(IAddContext context) 
-	{
-		IAddConnectionContext addConContext = (IAddConnectionContext) context;
-		DiagramConnectionPart connectionPart = (DiagramConnectionPart) context.getNewObject();
-		
-		IDiagramConnectionDef connDef = connectionPart.getConnectionDef();
-		IColorConstant linkColor = getLinkColor(connDef);
-		LineStyle linkStyle = getLinkStyle(connDef);
+    public PictogramElement add(IAddContext context) 
+    {
+        IAddConnectionContext addConContext = (IAddConnectionContext) context;
+        DiagramConnectionPart connectionPart = (DiagramConnectionPart) context.getNewObject();
+        
+        IDiagramConnectionDef connDef = connectionPart.getConnectionDef();
+        IColorConstant linkColor = getLinkColor(connDef);
+        LineStyle linkStyle = getLinkStyle(connDef);
 
-		IPeCreateService peCreateService = Graphiti.getPeCreateService();
-		// CONNECTION WITH POLYLINE
-		Connection connection = peCreateService.createFreeFormConnection(getDiagram());
-		connection.setStart(addConContext.getSourceAnchor());
-		connection.setEnd(addConContext.getTargetAnchor());
+        IPeCreateService peCreateService = Graphiti.getPeCreateService();
+        // CONNECTION WITH POLYLINE
+        Connection connection = peCreateService.createFreeFormConnection(getDiagram());
+        connection.setStart(addConContext.getSourceAnchor());
+        connection.setEnd(addConContext.getTargetAnchor());
 
-		IGaService gaService = Graphiti.getGaService();
-		Polyline polyline = gaService.createPolyline(connection);
-		
-		polyline.setForeground(manageColor(linkColor));
-		polyline.setLineWidth(connDef.getLineWidth().getContent());
-		polyline.setLineStyle(linkStyle);
+        IGaService gaService = Graphiti.getGaService();
+        Polyline polyline = gaService.createPolyline(connection);
+        
+        polyline.setForeground(manageColor(linkColor));
+        polyline.setLineWidth(connDef.getLineWidth().getContent());
+        polyline.setLineStyle(linkStyle);
        
-		// create link and wire it
-		link(connection, connectionPart);
+        // create link and wire it
+        link(connection, connectionPart);
 
-		// add dynamic text decorator for the reference name
-		ConnectionDecorator textDecorator = peCreateService.createConnectionDecorator(connection, true, 0.5, true);
-		Diagram diagram = (Diagram)context.getTargetContainer();
-		//Text text = gaService.createDefaultText(diagram, textDecorator, connectionPart.getLabel());
+        // add dynamic text decorator for the reference name
+        ConnectionDecorator textDecorator = peCreateService.createConnectionDecorator(connection, true, 0.5, true);
+        Diagram diagram = (Diagram)context.getTargetContainer();
+        //Text text = gaService.createDefaultText(diagram, textDecorator, connectionPart.getLabel());
         Text text = TextUtil.createDefaultText(diagram, textDecorator, connectionPart.getLabel());
 
-		text.setForeground(manageColor(linkColor));
-		gaService.setLocation(text, 10, 0);		
-		
-		// add static graphical decorators (composition and navigable)
-		createEndpointDecorator(connection, connDef.getEndpoint1(), linkColor, true);
-		createEndpointDecorator(connection, connDef.getEndpoint2(), linkColor, false);
+        text.setForeground(manageColor(linkColor));
+        gaService.setLocation(text, 10, 0);        
+        
+        // add static graphical decorators (composition and navigable)
+        createEndpointDecorator(connection, connDef.getEndpoint1(), linkColor, true);
+        createEndpointDecorator(connection, connDef.getEndpoint2(), linkColor, false);
 
         // provide information to support direct-editing directly 
 
@@ -114,90 +114,90 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
         // direct editing shall be opened after object creation
         directEditingInfo.setPictogramElement(textDecorator);
         directEditingInfo.setGraphicsAlgorithm(text);
-		
+        
         // Create a rendering context for the connection
         DiagramRenderingContext renderingCtx = new DiagramRenderingContext(
-        				connectionPart, 
-        				(SapphireDiagramEditor)getDiagramEditor(), 
-        				connection);
+                        connectionPart, 
+                        (SapphireDiagramEditor)getDiagramEditor(), 
+                        connection);
         SapphireDiagramFeatureProvider sfp = (SapphireDiagramFeatureProvider)getFeatureProvider();
         sfp.addRenderingContext(connectionPart, renderingCtx);
         
-		return connection;
-	}
+        return connection;
+    }
 
-	private ConnectionDecorator createEndpointDecorator(Connection connection, IDiagramConnectionEndpointDef endpointDef, 
-						IColorConstant color, boolean begin)
-	{
-		IPeCreateService peCreateService = Graphiti.getPeCreateService();
-		ConnectionDecorator cd = null;
-		if (begin)
-		{
-			cd = peCreateService.createConnectionDecorator(connection, false, 0, true);
-		}
-		else
-		{
-			cd = peCreateService.createConnectionDecorator(connection, false, 1.0, true);
-		}
-		if (endpointDef.getType().getContent() == ConnectionEndpointType.ARROW)
-		{						
-			Polygon polygon = Graphiti.getGaCreateService().createPolygon(cd, new int[] { -8, 5, 0, 0, -8, -5 });
-			polygon.setBackground(manageColor(color));
-			polygon.setFilled(true);
-		}
-		else if (endpointDef.getType().getContent() == ConnectionEndpointType.CIRCLE)
-		{
-			Ellipse ellipse = Graphiti.getGaCreateService().createEllipse(cd);
-			ellipse.setHeight(8);
-			ellipse.setWidth(8);
-			ellipse.setBackground(manageColor(color));
-			ellipse.setFilled(true);			
-		}
-		else if (endpointDef.getType().getContent() == ConnectionEndpointType.ELLIPSE)
-		{
-			Ellipse ellipse = Graphiti.getGaCreateService().createEllipse(cd);
-			ellipse.setHeight(6);
-			ellipse.setWidth(10);
-			ellipse.setBackground(manageColor(color));
-			ellipse.setFilled(true);			
-		}
-		return cd;
-	}
-	
-	private IColorConstant getLinkColor(IDiagramConnectionDef def)
-	{
-		IColorConstant linkColor = DEFAULT_LINK_COLOR;
-		if (def != null)
-		{
-			Color color = def.getLineColor().getContent();
-			if (color != null)
-			{
-				linkColor = new ColorConstant(color.getRed(), color.getGreen(), color.getBlue());
-			}
-		}
-		return linkColor;		
-	}
-	
-	private LineStyle getLinkStyle(IDiagramConnectionDef def)
-	{	
-		LineStyle linkStyle = LineStyle.SOLID;
-		if (def != null)
-		{
-			org.eclipse.sapphire.ui.LineStyle style = def.getLineStyle().getContent();
-			if (style == org.eclipse.sapphire.ui.LineStyle.DASH )
-			{
-				linkStyle = LineStyle.DASH;
-			}
-			else if (style == org.eclipse.sapphire.ui.LineStyle.DOT)
-			{
-				linkStyle = LineStyle.DOT;
-			}
-			else if (style == org.eclipse.sapphire.ui.LineStyle.DASH_DOT)
-			{
-				linkStyle = LineStyle.DASHDOT;
-			}
-		}			
-		return linkStyle;
-	}
-	
+    private ConnectionDecorator createEndpointDecorator(Connection connection, IDiagramConnectionEndpointDef endpointDef, 
+                        IColorConstant color, boolean begin)
+    {
+        IPeCreateService peCreateService = Graphiti.getPeCreateService();
+        ConnectionDecorator cd = null;
+        if (begin)
+        {
+            cd = peCreateService.createConnectionDecorator(connection, false, 0, true);
+        }
+        else
+        {
+            cd = peCreateService.createConnectionDecorator(connection, false, 1.0, true);
+        }
+        if (endpointDef.getType().getContent() == ConnectionEndpointType.ARROW)
+        {                        
+            Polygon polygon = Graphiti.getGaCreateService().createPolygon(cd, new int[] { -8, 5, 0, 0, -8, -5 });
+            polygon.setBackground(manageColor(color));
+            polygon.setFilled(true);
+        }
+        else if (endpointDef.getType().getContent() == ConnectionEndpointType.CIRCLE)
+        {
+            Ellipse ellipse = Graphiti.getGaCreateService().createEllipse(cd);
+            ellipse.setHeight(8);
+            ellipse.setWidth(8);
+            ellipse.setBackground(manageColor(color));
+            ellipse.setFilled(true);            
+        }
+        else if (endpointDef.getType().getContent() == ConnectionEndpointType.ELLIPSE)
+        {
+            Ellipse ellipse = Graphiti.getGaCreateService().createEllipse(cd);
+            ellipse.setHeight(6);
+            ellipse.setWidth(10);
+            ellipse.setBackground(manageColor(color));
+            ellipse.setFilled(true);            
+        }
+        return cd;
+    }
+    
+    private IColorConstant getLinkColor(IDiagramConnectionDef def)
+    {
+        IColorConstant linkColor = DEFAULT_LINK_COLOR;
+        if (def != null)
+        {
+            Color color = def.getLineColor().getContent();
+            if (color != null)
+            {
+                linkColor = new ColorConstant(color.getRed(), color.getGreen(), color.getBlue());
+            }
+        }
+        return linkColor;        
+    }
+    
+    private LineStyle getLinkStyle(IDiagramConnectionDef def)
+    {    
+        LineStyle linkStyle = LineStyle.SOLID;
+        if (def != null)
+        {
+            org.eclipse.sapphire.ui.LineStyle style = def.getLineStyle().getContent();
+            if (style == org.eclipse.sapphire.ui.LineStyle.DASH )
+            {
+                linkStyle = LineStyle.DASH;
+            }
+            else if (style == org.eclipse.sapphire.ui.LineStyle.DOT)
+            {
+                linkStyle = LineStyle.DOT;
+            }
+            else if (style == org.eclipse.sapphire.ui.LineStyle.DASH_DOT)
+            {
+                linkStyle = LineStyle.DASHDOT;
+            }
+        }            
+        return linkStyle;
+    }
+    
 }

@@ -20,14 +20,14 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 
 public enum ProblemDecoratorSize 
 {
-	@Label( standard = "large" )
-	@EnumSerialization( primary = "large" )
-	
-	LARGE,
-	
-	@Label( standard = "small" )
-	@EnumSerialization( primary = "small" )
-	
-	SMALL;
+    @Label( standard = "large" )
+    @EnumSerialization( primary = "large" )
+    
+    LARGE,
+    
+    @Label( standard = "small" )
+    @EnumSerialization( primary = "small" )
+    
+    SMALL;
 
 }

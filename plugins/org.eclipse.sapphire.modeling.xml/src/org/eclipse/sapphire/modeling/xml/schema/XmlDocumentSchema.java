@@ -64,21 +64,21 @@ public final class XmlDocumentSchema
         }
         
         for ( Map.Entry<String, XmlElementDefinition> map : this.topLevelElements.entrySet() ) { 
-        	final XmlElementDefinition definition = map.getValue();
-        	if (definition.isAbstract()) {
-        		List<XmlElementDefinition> substitutionList = new ArrayList<XmlElementDefinition>();
+            final XmlElementDefinition definition = map.getValue();
+            if (definition.isAbstract()) {
+                List<XmlElementDefinition> substitutionList = new ArrayList<XmlElementDefinition>();
                 for ( Map.Entry<String, XmlElementDefinition> map2 : this.topLevelElements.entrySet() ) {
-                	final XmlElementDefinition definition2 = map2.getValue();
-                	if (definition.getName().equals(definition2.getSubstitutionGroup())) {
-                		XmlElementDefinition.Factory def = new XmlElementDefinitionByReference.Factory();
-                		def.setName(definition2.getName());
-                		def.setMinOccur(definition2.getMinOccur());
-                		def.setMaxOccur(definition2.getMaxOccur());
-                		substitutionList.add((XmlElementDefinition)def.create(this));
-                	}
+                    final XmlElementDefinition definition2 = map2.getValue();
+                    if (definition.getName().equals(definition2.getSubstitutionGroup())) {
+                        XmlElementDefinition.Factory def = new XmlElementDefinitionByReference.Factory();
+                        def.setName(definition2.getName());
+                        def.setMinOccur(definition2.getMinOccur());
+                        def.setMaxOccur(definition2.getMaxOccur());
+                        substitutionList.add((XmlElementDefinition)def.create(this));
+                    }
                 }
                 definition.setSubstitutionList(substitutionList);
-        	}
+            }
         }
     }
     

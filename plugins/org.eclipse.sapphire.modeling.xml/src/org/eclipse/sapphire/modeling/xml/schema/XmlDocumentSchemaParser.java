@@ -68,8 +68,8 @@ public final class XmlDocumentSchemaParser
         
         if( root != null )
         {
-        	if ( prefixToNamespaceMap == null )
-        	{
+            if ( prefixToNamespaceMap == null )
+            {
                 prefixToNamespaceMap = new HashMap<String,String>();
 
                 final String ns = root.getAttribute( "targetNamespace" );
@@ -101,7 +101,7 @@ public final class XmlDocumentSchemaParser
                 {
                     prefixToNamespaceMap.put( "", ns );
                 }
-        	}
+            }
             
             for( Element el : elements( root ) )
             {
@@ -363,7 +363,7 @@ public final class XmlDocumentSchemaParser
         
         if( ref.length() > 0 )
         {
-        	qname = getQName( ref, prefixToNamespaceMap );
+            qname = getQName( ref, prefixToNamespaceMap );
             isReference = true;
         }
 
@@ -449,12 +449,12 @@ public final class XmlDocumentSchemaParser
         
         final String isAbstract = el.getAttribute("abstract");
         if ("true".equals(isAbstract)) {
-        	def.setAbstract(true);
+            def.setAbstract(true);
         }
         
         final String substitutionGroup = el.getAttribute("substitutionGroup");
         if (substitutionGroup != null && substitutionGroup.length() > 0) {
-        	def.setSubstitutionGroup(getQName(substitutionGroup, prefixToNamespaceMap));
+            def.setSubstitutionGroup(getQName(substitutionGroup, prefixToNamespaceMap));
         }
         
         return def;

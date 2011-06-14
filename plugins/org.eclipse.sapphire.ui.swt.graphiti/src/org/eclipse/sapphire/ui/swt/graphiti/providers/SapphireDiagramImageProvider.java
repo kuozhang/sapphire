@@ -19,20 +19,20 @@ import org.eclipse.graphiti.ui.platform.AbstractImageProvider;
 
 public class SapphireDiagramImageProvider extends AbstractImageProvider 
 {
-	public SapphireDiagramImageProvider()
-	{
-		super();
-	}
-	
-	@Override
-	protected void addAvailableImages() 
-	{
+    public SapphireDiagramImageProvider()
+    {
+        super();
+    }
+    
+    @Override
+    protected void addAvailableImages() 
+    {
 
-	}
-	
-	public void registerImage(String imageId, String imageFilePath)
-	{
-		this.addImageFilePath(imageId, imageFilePath);
-	}
+    }
+    
+    public void registerImage(String imageId, String imageFilePath)
+    {
+        this.addImageFilePath(imageId, imageFilePath);
+    }
 
 }

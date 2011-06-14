@@ -31,14 +31,14 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface IDiagramNodeGeometry extends IModelElement
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramNodeGeometry.class );
-	
-	// *** NodeId ***
-	
-	@XmlBinding( path = "id")
-	@Required
+    ModelElementType TYPE = new ModelElementType( IDiagramNodeGeometry.class );
+    
+    // *** NodeId ***
+    
+    @XmlBinding( path = "id")
+    @Required
 
-	ValueProperty PROP_NODE_ID = new ValueProperty( TYPE, "NodeId" );
+    ValueProperty PROP_NODE_ID = new ValueProperty( TYPE, "NodeId" );
 
     Value<String> getNodeId();
     void setNodeId( String name );
@@ -52,7 +52,7 @@ public interface IDiagramNodeGeometry extends IModelElement
     
     Value<Integer> getX();
     void setX(Integer value);
-	void setX(String value);
+    void setX(String value);
 
     // *** Y ***
     
@@ -63,7 +63,7 @@ public interface IDiagramNodeGeometry extends IModelElement
     
     Value<Integer> getY();
     void setY(Integer value);
-	void setY(String value);
+    void setY(String value);
     
     // *** Width ***
     
@@ -74,8 +74,8 @@ public interface IDiagramNodeGeometry extends IModelElement
     
     Value<Integer> getWidth();
     void setWidth(Integer value);
-	void setWidth(String value);
-	
+    void setWidth(String value);
+    
     // *** Height ***
     
     @Type( base = Integer.class )
@@ -85,8 +85,8 @@ public interface IDiagramNodeGeometry extends IModelElement
     
     Value<Integer> getHeight();
     void setHeight(Integer value);
-	void setHeight(String value);
-	
+    void setHeight(String value);
+    
     // *** EmbeddedConnectionGeometries ***
 
     @Type( base = IDiagramConnectionGeometry.class )
@@ -95,6 +95,6 @@ public interface IDiagramNodeGeometry extends IModelElement
     
     ListProperty PROP_EMBEDDED_CONNECTION_GEOMETRIES = new ListProperty( TYPE, "EmbeddedConnectionGeometries" );
     
-    ModelElementList<IDiagramConnectionGeometry> getEmbeddedConnectionGeometries();	
-	
+    ModelElementList<IDiagramConnectionGeometry> getEmbeddedConnectionGeometries();    
+    
 }

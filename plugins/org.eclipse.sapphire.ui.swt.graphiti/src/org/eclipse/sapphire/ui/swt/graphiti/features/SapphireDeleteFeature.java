@@ -28,79 +28,79 @@ import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProv
 
 public class SapphireDeleteFeature extends DefaultDeleteFeature 
 {
-	private static final String DELETE_ACTION_ID = "Sapphire.Delete";
-	private boolean doneChanges = false;
-	
-	public SapphireDeleteFeature(IFeatureProvider fp)
-	{
-		super(fp);
-	}
-	
-	@Override
-	public boolean canDelete(IDeleteContext context) 
-	{
-		PictogramElement pe = context.getPictogramElement();
-		Object bo = this.getBusinessObjectForPictogramElement(pe);
-		if (bo instanceof DiagramImplicitConnectionPart)
-		{
-			return false;
-		}
-		return true;
-	}
-		
-	/**
-	 * Copied from DefaultDeleteFeature mainly because we don't want to remove the PE here. 
-	 * We want to remove the PE after the BO is removed using the model listening mechanism. 
-	 * BO is deleted using sapphire diagram delete action which requires a sapphire rendering context. 
-	 * Removing the PE first would remove the rendering context cached at the solver.
-	 * In order to be consistent with the delete action that can be invoked from context menu,
-	 * we suppress user feedback as well. If feedback is needed, we need to provide at the sapphire
-	 * delete action.
-	 */
-	
-	public void delete(IDeleteContext context) 
-	{
-		PictogramElement pe = context.getPictogramElement();
-		Object[] businessObjectsForPictogramElement = getAllBusinessObjectsForPictogramElement(pe);
-		setDoneChanges(true);
+    private static final String DELETE_ACTION_ID = "Sapphire.Delete";
+    private boolean doneChanges = false;
+    
+    public SapphireDeleteFeature(IFeatureProvider fp)
+    {
+        super(fp);
+    }
+    
+    @Override
+    public boolean canDelete(IDeleteContext context) 
+    {
+        PictogramElement pe = context.getPictogramElement();
+        Object bo = this.getBusinessObjectForPictogramElement(pe);
+        if (bo instanceof DiagramImplicitConnectionPart)
+        {
+            return false;
+        }
+        return true;
+    }
+        
+    /**
+     * Copied from DefaultDeleteFeature mainly because we don't want to remove the PE here. 
+     * We want to remove the PE after the BO is removed using the model listening mechanism. 
+     * BO is deleted using sapphire diagram delete action which requires a sapphire rendering context. 
+     * Removing the PE first would remove the rendering context cached at the solver.
+     * In order to be consistent with the delete action that can be invoked from context menu,
+     * we suppress user feedback as well. If feedback is needed, we need to provide at the sapphire
+     * delete action.
+     */
+    
+    public void delete(IDeleteContext context) 
+    {
+        PictogramElement pe = context.getPictogramElement();
+        Object[] businessObjectsForPictogramElement = getAllBusinessObjectsForPictogramElement(pe);
+        setDoneChanges(true);
 
-		preDelete(context);
+        preDelete(context);
 
-		deleteBusinessObjects(businessObjectsForPictogramElement);
+        deleteBusinessObjects(businessObjectsForPictogramElement);
 
-		postDelete(context);
-	}
+        postDelete(context);
+    }
 
-	
-	@Override
-	protected void deleteBusinessObject(Object bo) 
-	{
-		if (bo instanceof ISapphirePart)
-		{
-			final ISapphirePart part = (ISapphirePart)bo;
-			SapphireRenderingContext sapphireContext = 
-					((SapphireDiagramFeatureProvider)this.getFeatureProvider()).getRenderingContext(part);
-			SapphireActionHandler deleteActionHandler = part.getAction(DELETE_ACTION_ID).getFirstActiveHandler();
-			deleteActionHandler.execute(sapphireContext);
-//			if (!(connPart instanceof DiagramImplicitConnectionPart))
-//			{
-//				final IModelElement element = connPart.getLocalModelElement();
-//				final ModelElementList<?> list = (ModelElementList<?>) element.parent();
-//				list.remove(element);
-//			}
-		}
-	}
-	
-	@Override
-	public boolean hasDoneChanges() 
-	{
-		return doneChanges;
-	}
+    
+    @Override
+    protected void deleteBusinessObject(Object bo) 
+    {
+        if (bo instanceof ISapphirePart)
+        {
+            final ISapphirePart part = (ISapphirePart)bo;
+            SapphireRenderingContext sapphireContext = 
+                    ((SapphireDiagramFeatureProvider)this.getFeatureProvider()).getRenderingContext(part);
+            SapphireActionHandler deleteActionHandler = part.getAction(DELETE_ACTION_ID).getFirstActiveHandler();
+            deleteActionHandler.execute(sapphireContext);
+//            if (!(connPart instanceof DiagramImplicitConnectionPart))
+//            {
+//                final IModelElement element = connPart.getLocalModelElement();
+//                final ModelElementList<?> list = (ModelElementList<?>) element.parent();
+//                list.remove(element);
+//            }
+        }
+    }
+    
+    @Override
+    public boolean hasDoneChanges() 
+    {
+        return doneChanges;
+    }
 
-	protected void setDoneChanges(boolean doneChanges) 
-	{
-		this.doneChanges = doneChanges;
-	}
-	
-	
+    protected void setDoneChanges(boolean doneChanges) 
+    {
+        this.doneChanges = doneChanges;
+    }
+    
+    
 }

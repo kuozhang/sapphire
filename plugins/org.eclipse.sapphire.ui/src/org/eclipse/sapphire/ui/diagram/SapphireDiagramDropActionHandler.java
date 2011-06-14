@@ -19,8 +19,8 @@ import org.eclipse.sapphire.modeling.IModelElement;
 
 public abstract class SapphireDiagramDropActionHandler
 
-	extends SapphireDiagramActionHandler 
-		
+    extends SapphireDiagramActionHandler 
+        
 {
-	public abstract IModelElement newModelElement(Object obj);
+    public abstract IModelElement newModelElement(Object obj);
 }

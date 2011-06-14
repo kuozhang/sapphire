@@ -32,11 +32,11 @@ import org.eclipse.sapphire.ui.def.VerticalAlignment;
 
 public interface IDiagramDecoratorDef 
 
-	extends IModelElement 
-	
+    extends IModelElement 
+    
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramDecoratorDef.class );
-	
+    ModelElementType TYPE = new ModelElementType( IDiagramDecoratorDef.class );
+    
     // *** DecoratorPlacement ***
     
     @Type( base = DecoratorPlacement.class )
@@ -62,7 +62,7 @@ public interface IDiagramDecoratorDef
     Value<HorizontalAlignment> getHorizontalAlignment();
     void setHorizontalAlignment( String value );
     void setHorizontalAlignment( HorizontalAlignment value ) ;
-	
+    
     // *** VerticalAlignment ***
     
     @Type( base = VerticalAlignment.class )
@@ -77,7 +77,7 @@ public interface IDiagramDecoratorDef
     void setVerticalAlignment( VerticalAlignment value ) ;
     
     // *** VerticalMargin ***
-	
+    
     @Type( base = Integer.class )
     @Label( standard = "vertical margin" )
     @DefaultValue( text = "0" )
@@ -90,7 +90,7 @@ public interface IDiagramDecoratorDef
     void setVerticalMargin( Integer value );
     
     // *** HorizontalMargin ***
-	
+    
     @Type( base = Integer.class )
     @Label( standard = "horizontal margin" )
     @DefaultValue( text = "0" )

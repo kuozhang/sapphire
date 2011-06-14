@@ -31,14 +31,14 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface IDiagramConnectionGeometry extends IModelElement 
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramConnectionGeometry.class );
-	
-	// *** ConnectionId ***
-	
-	@XmlBinding( path = "id")
-	@Required
+    ModelElementType TYPE = new ModelElementType( IDiagramConnectionGeometry.class );
+    
+    // *** ConnectionId ***
+    
+    @XmlBinding( path = "id")
+    @Required
 
-	ValueProperty PROP_CONNECTION_ID = new ValueProperty( TYPE, "ConnectionId" );
+    ValueProperty PROP_CONNECTION_ID = new ValueProperty( TYPE, "ConnectionId" );
 
     Value<String> getConnectionId();
     void setConnectionId( String name );

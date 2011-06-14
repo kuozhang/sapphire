@@ -20,7 +20,7 @@ import org.eclipse.swt.graphics.Rectangle;
 
 @SuppressWarnings(value = { "rawtypes" })
 public interface IFocusSelectable {
-	boolean isFocusSelectable(Hashtable resourceTable);
-	boolean setFocus(Hashtable resourceTable, boolean direction);
-	Rectangle getBounds();
+    boolean isFocusSelectable(Hashtable resourceTable);
+    boolean setFocus(Hashtable resourceTable, boolean direction);
+    Rectangle getBounds();
 }

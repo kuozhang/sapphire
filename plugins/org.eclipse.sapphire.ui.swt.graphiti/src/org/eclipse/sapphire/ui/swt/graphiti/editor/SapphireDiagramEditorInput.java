@@ -26,81 +26,81 @@ import org.eclipse.graphiti.ui.editor.DiagramEditorInput;
 
 public class SapphireDiagramEditorInput extends DiagramEditorInput 
 {
-	private Diagram diagram;
-	private IFile layoutFile;
-	
-	public SapphireDiagramEditorInput(Diagram diagram, String diagramUriString,
-			TransactionalEditingDomain domain, String providerId,
-			boolean disposeEditingDomain) 
-	{
-		super(diagramUriString, domain, providerId, disposeEditingDomain);
-		this.diagram = diagram;
-	}
+    private Diagram diagram;
+    private IFile layoutFile;
+    
+    public SapphireDiagramEditorInput(Diagram diagram, String diagramUriString,
+            TransactionalEditingDomain domain, String providerId,
+            boolean disposeEditingDomain) 
+    {
+        super(diagramUriString, domain, providerId, disposeEditingDomain);
+        this.diagram = diagram;
+    }
 
-	public SapphireDiagramEditorInput(Diagram diagram, URI diagramUri,
-			TransactionalEditingDomain domain, String providerId,
-			boolean disposeEditingDomain) 
-	{
-		super(diagramUri, domain, providerId, disposeEditingDomain);
-		this.diagram = diagram;
-	}
-	
-	public Diagram getDiagram() 
-	{
-		return this.diagram;
-	}	
-	
-	public TransactionalEditingDomain getEditingDomain() 
-	{
-		return this.editingDomain;
-	}
-	
-	@SuppressWarnings("rawtypes")
-	public Object getAdapter(Class adapter) 
-	{
-		if (EObject.class.isAssignableFrom(adapter)) 
-		{
-			return getDiagram();
-		} 
-		else if (Diagram.class.isAssignableFrom(adapter)) 
-		{
-			return getDiagram();
-		}
-		else if (TransactionalEditingDomain.class.isAssignableFrom(adapter)) 
-		{
-			return getEditingDomain();
-		} 
-		else if (ResourceSet.class.isAssignableFrom(adapter)) 
-		{
-			return getEditingDomain().getResourceSet();
-		}		
-		return null;
-	}
-	
-	public IFile getLayoutFile()
-	{
-		return this.layoutFile;
-	}
-	
-	public void setLayoutFile(IFile file)
-	{
-		this.layoutFile = file;
-	}
-	
-	
-	public static SapphireDiagramEditorInput createEditorInput(Diagram diagram, 
-			TransactionalEditingDomain domain, String providerId, boolean disposeEditingDomain) 
-	{
-		final Resource resource = diagram.eResource();
-		if (resource == null) {
-			throw new IllegalArgumentException();
-		}
-		final String fragment = resource.getURIFragment(diagram);
-		final URI fragmentUri = resource.getURI().appendFragment(fragment);
-		SapphireDiagramEditorInput diagramEditorInput;
-		diagramEditorInput = new SapphireDiagramEditorInput(diagram, fragmentUri,
-				domain, providerId, disposeEditingDomain);
-		return diagramEditorInput;
-	}	
-	
+    public SapphireDiagramEditorInput(Diagram diagram, URI diagramUri,
+            TransactionalEditingDomain domain, String providerId,
+            boolean disposeEditingDomain) 
+    {
+        super(diagramUri, domain, providerId, disposeEditingDomain);
+        this.diagram = diagram;
+    }
+    
+    public Diagram getDiagram() 
+    {
+        return this.diagram;
+    }    
+    
+    public TransactionalEditingDomain getEditingDomain() 
+    {
+        return this.editingDomain;
+    }
+    
+    @SuppressWarnings("rawtypes")
+    public Object getAdapter(Class adapter) 
+    {
+        if (EObject.class.isAssignableFrom(adapter)) 
+        {
+            return getDiagram();
+        } 
+        else if (Diagram.class.isAssignableFrom(adapter)) 
+        {
+            return getDiagram();
+        }
+        else if (TransactionalEditingDomain.class.isAssignableFrom(adapter)) 
+        {
+            return getEditingDomain();
+        } 
+        else if (ResourceSet.class.isAssignableFrom(adapter)) 
+        {
+            return getEditingDomain().getResourceSet();
+        }        
+        return null;
+    }
+    
+    public IFile getLayoutFile()
+    {
+        return this.layoutFile;
+    }
+    
+    public void setLayoutFile(IFile file)
+    {
+        this.layoutFile = file;
+    }
+    
+    
+    public static SapphireDiagramEditorInput createEditorInput(Diagram diagram, 
+            TransactionalEditingDomain domain, String providerId, boolean disposeEditingDomain) 
+    {
+        final Resource resource = diagram.eResource();
+        if (resource == null) {
+            throw new IllegalArgumentException();
+        }
+        final String fragment = resource.getURIFragment(diagram);
+        final URI fragmentUri = resource.getURI().appendFragment(fragment);
+        SapphireDiagramEditorInput diagramEditorInput;
+        diagramEditorInput = new SapphireDiagramEditorInput(diagram, fragmentUri,
+                domain, providerId, disposeEditingDomain);
+        return diagramEditorInput;
+    }    
+    
 }

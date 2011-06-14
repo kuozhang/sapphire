@@ -426,7 +426,7 @@ public abstract class SapphireEditor
     // default impl does nothing, subclass may override it to add diagram pages
     protected void createDiagramPages() throws PartInitException
     {
-    	
+        
     }
     
     protected final void setPageId( final Object page,

@@ -48,21 +48,21 @@ public class DiagramNodePart
     implements IPropertiesViewContributorPart
     
 {
-	private static final String DEFAULT_ACTION_ID = "Sapphire.Diagram.Node.Default";
-	
-	private DiagramNodeTemplate nodeTemplate;
-	private IDiagramNodeDef definition;
-	private IModelElement modelElement;
-	private FunctionResult labelFunctionResult;
-	private FunctionResult idFunctionResult;
-	private FunctionResult imageFunctionResult;
-	private List<FunctionResult> imageDecoratorFunctionResults;
-	private ValueProperty labelProperty;
-	private SapphireAction defaultAction;
-	private SapphireActionHandler defaultActionHandler;
-	private ModelPropertyListener modelPropertyListener;
-	private PropertiesViewContributionManager propertiesViewContributionManager; 
-		
+    private static final String DEFAULT_ACTION_ID = "Sapphire.Diagram.Node.Default";
+    
+    private DiagramNodeTemplate nodeTemplate;
+    private IDiagramNodeDef definition;
+    private IModelElement modelElement;
+    private FunctionResult labelFunctionResult;
+    private FunctionResult idFunctionResult;
+    private FunctionResult imageFunctionResult;
+    private List<FunctionResult> imageDecoratorFunctionResults;
+    private ValueProperty labelProperty;
+    private SapphireAction defaultAction;
+    private SapphireActionHandler defaultActionHandler;
+    private ModelPropertyListener modelPropertyListener;
+    private PropertiesViewContributionManager propertiesViewContributionManager; 
+        
     @Override
     protected void init()
     {
@@ -72,7 +72,7 @@ public class DiagramNodePart
         this.modelElement = getModelElement();
         this.labelFunctionResult = initExpression
         ( 
-        	this.modelElement,
+            this.modelElement,
             this.definition.getLabel().element().getText().getContent(),
             String.class,
             null,
@@ -80,7 +80,7 @@ public class DiagramNodePart
             {
                 public void run()
                 {
-                	refreshLabel();
+                    refreshLabel();
                 }
             }
         );
@@ -88,7 +88,7 @@ public class DiagramNodePart
         
         this.idFunctionResult = initExpression
         ( 
-        	this.modelElement,
+            this.modelElement,
             this.definition.getInstanceId().getContent(), 
             String.class,
             null,
@@ -102,20 +102,20 @@ public class DiagramNodePart
         
         if (this.definition.getImage().element() != null)
         {
-	        this.imageFunctionResult = initExpression
-	        ( 
-	        	this.modelElement,
-	            this.definition.getImage().element().getId().getContent(),
-	            String.class,
-	            null,
-	            new Runnable()
-	            {
-	                public void run()
-	                {
-	                	refreshImage();
-	                }
-	            }
-	        );
+            this.imageFunctionResult = initExpression
+            ( 
+                this.modelElement,
+                this.definition.getImage().element().getId().getContent(),
+                String.class,
+                null,
+                new Runnable()
+                {
+                    public void run()
+                    {
+                        refreshImage();
+                    }
+                }
+            );
         }
                 
         // Image decorator functions
@@ -124,9 +124,9 @@ public class DiagramNodePart
         this.imageDecoratorFunctionResults = new ArrayList<FunctionResult>();
         for (IDiagramImageDecoratorDef imageDecorator : imageDecorators)
         {
-        	FunctionResult imageResult = initExpression
+            FunctionResult imageResult = initExpression
             ( 
-            	this.modelElement,
+                this.modelElement,
                 imageDecorator.getVisibleWhen().getContent(),
                 String.class,
                 null,
@@ -134,7 +134,7 @@ public class DiagramNodePart
                 {
                     public void run()
                     {
-                    	refreshDecorator();
+                        refreshDecorator();
                     }
                 }
             );
@@ -152,7 +152,7 @@ public class DiagramNodePart
             @Override
             public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
             {
-            	notifyNodeUpdate();
+                notifyNodeUpdate();
             }
         };
         this.modelElement.addListener(this.modelPropertyListener, "*");
@@ -160,7 +160,7 @@ public class DiagramNodePart
     
     public DiagramNodeTemplate getDiagramNodeTemplate()
     {
-    	return this.nodeTemplate;
+        return this.nodeTemplate;
     }
     
     public IModelElement getLocalModelElement()
@@ -170,79 +170,79 @@ public class DiagramNodePart
            
     public List<IDiagramImageDecoratorDef> getImageDecorators()
     {
-    	List<IDiagramImageDecoratorDef> imageDecorators = new ArrayList<IDiagramImageDecoratorDef>();
-    	ModelElementList<IDiagramImageDecoratorDef> defs = this.definition.getImageDecorators();
-    	for (int i = 0; i < this.imageDecoratorFunctionResults.size(); i++)
-    	{
-    		FunctionResult result = this.imageDecoratorFunctionResults.get(i);
-    		IDiagramImageDecoratorDef def = defs.get(i);
-    		if (result != null)
-    		{
-    			String show = (String)result.value();
-    			if (show != null && show.equals("true"))
-    			{
-    				imageDecorators.add(def);
-    			}
-    		}
-    	}
-    	return imageDecorators;
+        List<IDiagramImageDecoratorDef> imageDecorators = new ArrayList<IDiagramImageDecoratorDef>();
+        ModelElementList<IDiagramImageDecoratorDef> defs = this.definition.getImageDecorators();
+        for (int i = 0; i < this.imageDecoratorFunctionResults.size(); i++)
+        {
+            FunctionResult result = this.imageDecoratorFunctionResults.get(i);
+            IDiagramImageDecoratorDef def = defs.get(i);
+            if (result != null)
+            {
+                String show = (String)result.value();
+                if (show != null && show.equals("true"))
+                {
+                    imageDecorators.add(def);
+                }
+            }
+        }
+        return imageDecorators;
     }
     
-	@Override
-	public void render(SapphireRenderingContext context)
-	{
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public void render(SapphireRenderingContext context)
+    {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     public Set<String> getActionContexts()
     {
         return Collections.singleton( SapphireActionSystem.CONTEXT_DIAGRAM_NODE );
     }
-	
+    
     public SapphireAction getDefaultAction()
     {
-    	return this.defaultAction;
+        return this.defaultAction;
     }
     
-	public SapphireActionHandler getDefaultActionHandler()
-	{		
-		return this.defaultActionHandler;
-	}
-	
-	@Override
-	public void dispose()
-	{
-		super.dispose();
-		if (this.labelFunctionResult != null)
-		{
-			this.labelFunctionResult.dispose();
-		}
-		
-		if (this.idFunctionResult != null)
-		{
-			this.idFunctionResult.dispose();
-		}
-		
-		if (this.imageFunctionResult != null)
-		{
-			this.imageFunctionResult.dispose();
-		}
-	
-    	for (int i = 0; i < this.imageDecoratorFunctionResults.size(); i++)
-    	{
-    		FunctionResult result = this.imageDecoratorFunctionResults.get(i);
-    		if (result != null)
-    		{
-    			result.dispose();
-    		}
-    	}
-		
-		this.modelElement.removeListener(this.modelPropertyListener, "*");
-	}
-	
-	public String getLabel()
-	{
+    public SapphireActionHandler getDefaultActionHandler()
+    {        
+        return this.defaultActionHandler;
+    }
+    
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        if (this.labelFunctionResult != null)
+        {
+            this.labelFunctionResult.dispose();
+        }
+        
+        if (this.idFunctionResult != null)
+        {
+            this.idFunctionResult.dispose();
+        }
+        
+        if (this.imageFunctionResult != null)
+        {
+            this.imageFunctionResult.dispose();
+        }
+    
+        for (int i = 0; i < this.imageDecoratorFunctionResults.size(); i++)
+        {
+            FunctionResult result = this.imageDecoratorFunctionResults.get(i);
+            if (result != null)
+            {
+                result.dispose();
+            }
+        }
+        
+        this.modelElement.removeListener(this.modelPropertyListener, "*");
+    }
+    
+    public String getLabel()
+    {
         String label = null;
         
         if( this.labelFunctionResult != null )
@@ -256,43 +256,43 @@ public class DiagramNodePart
         }
         
         return label;
-	}
+    }
 
-	public void setLabel(String newValue)
-	{
-		if (this.labelProperty != null)
-		{
-			this.modelElement.write(this.labelProperty, newValue);
-		}
-	}
-	
-	public void refreshLabel()
-	{
-		notifyNodeUpdate();
-	}
-	
-	public void refreshImage()
-	{
-		notifyNodeUpdate();
-	}
-	
-	public void refreshDecorator()
-	{
-		notifyNodeUpdate();
-	}
+    public void setLabel(String newValue)
+    {
+        if (this.labelProperty != null)
+        {
+            this.modelElement.write(this.labelProperty, newValue);
+        }
+    }
+    
+    public void refreshLabel()
+    {
+        notifyNodeUpdate();
+    }
+    
+    public void refreshImage()
+    {
+        notifyNodeUpdate();
+    }
+    
+    public void refreshDecorator()
+    {
+        notifyNodeUpdate();
+    }
 
-	public boolean canEditLabel()
-	{
-		return this.labelProperty != null;
-	}
-	
-	public String getNodeTypeId()
-	{
-		return this.definition.getId().getContent();
-	}
-	
-	public String getInstanceId()
-	{
+    public boolean canEditLabel()
+    {
+        return this.labelProperty != null;
+    }
+    
+    public String getNodeTypeId()
+    {
+        return this.definition.getId().getContent();
+    }
+    
+    public String getInstanceId()
+    {
         String id = null;
         
         if( this.idFunctionResult != null )
@@ -300,129 +300,129 @@ public class DiagramNodePart
             id = (String) this.idFunctionResult.value();
         }
                 
-        return id;		
-	}
-	
-	public boolean canResizeShape()
-	{
-		return this.definition.isResizable().getContent();
-	}
-	
-	public int getNodeWidth()
-	{
-		if (this.definition.getWidth().getContent() != null)
-		{
-			return this.definition.getWidth().getContent();
-		}
-		return 0;
-	}
-	
-	public int getNodeHeight()
-	{
-		if (this.definition.getHeight().getContent() != null)
-		{
-			return this.definition.getHeight().getContent();
-		}
-		return 0;
-	}
+        return id;        
+    }
+    
+    public boolean canResizeShape()
+    {
+        return this.definition.isResizable().getContent();
+    }
+    
+    public int getNodeWidth()
+    {
+        if (this.definition.getWidth().getContent() != null)
+        {
+            return this.definition.getWidth().getContent();
+        }
+        return 0;
+    }
+    
+    public int getNodeHeight()
+    {
+        if (this.definition.getHeight().getContent() != null)
+        {
+            return this.definition.getHeight().getContent();
+        }
+        return 0;
+    }
 
-	public int getHorizontalSpacing()
-	{
-		if (this.definition.getHorizontalSpacing().getContent() != null)
-		{
-			return this.definition.getHorizontalSpacing().getContent();
-		}
-		return 0;
-	}
-	
-	public int getVerticalSpacing()
-	{
-		if (this.definition.getVerticalSpacing().getContent() != null)
-		{
-			return this.definition.getVerticalSpacing().getContent();
-		}
-		return 0;
-	}
+    public int getHorizontalSpacing()
+    {
+        if (this.definition.getHorizontalSpacing().getContent() != null)
+        {
+            return this.definition.getHorizontalSpacing().getContent();
+        }
+        return 0;
+    }
+    
+    public int getVerticalSpacing()
+    {
+        if (this.definition.getVerticalSpacing().getContent() != null)
+        {
+            return this.definition.getVerticalSpacing().getContent();
+        }
+        return 0;
+    }
 
-	public String getImageId()
-	{
+    public String getImageId()
+    {
         if( this.imageFunctionResult != null )
         {
             String idStr = (String) this.imageFunctionResult.value();
             return idStr;
         }
-        return null;		
-	}
-	
-	public ImagePlacement getImagePlacement()
-	{
-		if (this.definition.getImage().element() != null)
-		{
-			return this.definition.getImage().element().getPlacement().getContent();
-		}
-		return null;
-	}
-	
-	public int getImageWidth()
-	{
-		if (this.definition.getImage().element() != null)
-		{
-			if (this.definition.getImage().element().getWidth().getContent() != null)
-			{
-				this.definition.getImage().element().getWidth().getContent();
-			}
-		}
-		return 0;
-	}
-	
-	public int getImageHeight()
-	{
-		if (this.definition.getImage().element() != null)
-		{
-			if (this.definition.getImage().element().getHeight().getContent() != null)
-			{
-				this.definition.getImage().element().getHeight().getContent();
-			}
-		}
-		return 0;
-	}
+        return null;        
+    }
+    
+    public ImagePlacement getImagePlacement()
+    {
+        if (this.definition.getImage().element() != null)
+        {
+            return this.definition.getImage().element().getPlacement().getContent();
+        }
+        return null;
+    }
+    
+    public int getImageWidth()
+    {
+        if (this.definition.getImage().element() != null)
+        {
+            if (this.definition.getImage().element().getWidth().getContent() != null)
+            {
+                this.definition.getImage().element().getWidth().getContent();
+            }
+        }
+        return 0;
+    }
+    
+    public int getImageHeight()
+    {
+        if (this.definition.getImage().element() != null)
+        {
+            if (this.definition.getImage().element().getHeight().getContent() != null)
+            {
+                this.definition.getImage().element().getHeight().getContent();
+            }
+        }
+        return 0;
+    }
 
-	public int getLabelWidth()
-	{
-		if (this.definition.getLabel().element().getWidth().getContent() != null)
-		{
-			return this.definition.getLabel().element().getWidth().getContent();
-		}
-		return 0;
-	}
+    public int getLabelWidth()
+    {
+        if (this.definition.getLabel().element().getWidth().getContent() != null)
+        {
+            return this.definition.getLabel().element().getWidth().getContent();
+        }
+        return 0;
+    }
 
-	public int getLabelHeight()
-	{
-		if (this.definition.getLabel().element().getHeight().getContent() != null)
-		{
-			return this.definition.getLabel().element().getHeight().getContent();
-		}
-		return 0;
-	}
-	
-	public IDiagramNodeProblemDecoratorDef getProblemIndicatorDef()
-	{
-		return this.definition.getProblemDecorator();
-	}
-		
-	private void notifyNodeUpdate()
-	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramNodeEvent nue = new DiagramNodeEvent(this);
-				((SapphireDiagramPartListener)listener).handleNodeUpdateEvent(nue);
-			}
-		}
-	}
-	
+    public int getLabelHeight()
+    {
+        if (this.definition.getLabel().element().getHeight().getContent() != null)
+        {
+            return this.definition.getLabel().element().getHeight().getContent();
+        }
+        return 0;
+    }
+    
+    public IDiagramNodeProblemDecoratorDef getProblemIndicatorDef()
+    {
+        return this.definition.getProblemDecorator();
+    }
+        
+    private void notifyNodeUpdate()
+    {
+        Set<SapphirePartListener> listeners = this.getListeners();
+        for(SapphirePartListener listener : listeners)
+        {
+            if (listener instanceof SapphireDiagramPartListener)
+            {
+                DiagramNodeEvent nue = new DiagramNodeEvent(this);
+                ((SapphireDiagramPartListener)listener).handleNodeUpdateEvent(nue);
+            }
+        }
+    }
+    
     public PropertiesViewContributionPart getPropertiesViewContribution()
     {
         if( this.propertiesViewContributionManager == null )

@@ -19,11 +19,11 @@
 
   <element name="element-2b">
     <complexType>
-    	<sequence>
-    		<element name="aaa-2b" type="string"/>
-    		<element name="bbb-2b" type="string"/>
-    		<element name="ccc-2b" type="string"/>
-    	</sequence>
+        <sequence>
+            <element name="aaa-2b" type="string"/>
+            <element name="bbb-2b" type="string"/>
+            <element name="ccc-2b" type="string"/>
+        </sequence>
     </complexType>
   </element>
     

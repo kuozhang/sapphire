@@ -29,8 +29,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 
 public interface IMap extends IModelElement
 {
-	ModelElementType TYPE = new ModelElementType( IMap.class );
-	
+    ModelElementType TYPE = new ModelElementType( IMap.class );
+    
     // *** Destinations ***
 
     @Type( base = IDestination.class )
@@ -39,7 +39,7 @@ public interface IMap extends IModelElement
     ListProperty PROP_DESTINATIONS = new ListProperty( TYPE, "Destinations" );
     
     ModelElementList<IDestination> getDestinations();
-	
+    
     // *** Routes ***
     
     @Type( base = IRoute.class )

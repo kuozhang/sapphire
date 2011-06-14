@@ -25,24 +25,24 @@ import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProv
 
 public class SapphireAddBendpointFeature extends DefaultAddBendpointFeature 
 {
-	public SapphireAddBendpointFeature(IFeatureProvider fp)
-	{
-		super(fp);
-	}
-	
-	@Override
-	public void addBendpoint(IAddBendpointContext context) 
-	{
-		super.addBendpoint(context);
-		
-		FreeFormConnection freeFormConnection = context.getConnection();
-		Object bo = getBusinessObjectForPictogramElement(freeFormConnection);
-		if (bo instanceof DiagramConnectionPart)
-		{
-			DiagramGeometryWrapper dg = 
-				((SapphireDiagramFeatureProvider)getFeatureProvider()).getDiagramGeometry();
-			dg.addConnectionBendpoint((DiagramConnectionPart)bo, 
-					context.getBendpointIndex(), context.getX(), context.getY());
-		}		
-	}	
+    public SapphireAddBendpointFeature(IFeatureProvider fp)
+    {
+        super(fp);
+    }
+    
+    @Override
+    public void addBendpoint(IAddBendpointContext context) 
+    {
+        super.addBendpoint(context);
+        
+        FreeFormConnection freeFormConnection = context.getConnection();
+        Object bo = getBusinessObjectForPictogramElement(freeFormConnection);
+        if (bo instanceof DiagramConnectionPart)
+        {
+            DiagramGeometryWrapper dg = 
+                ((SapphireDiagramFeatureProvider)getFeatureProvider()).getDiagramGeometry();
+            dg.addConnectionBendpoint((DiagramConnectionPart)bo, 
+                    context.getBendpointIndex(), context.getX(), context.getY());
+        }        
+    }    
 }

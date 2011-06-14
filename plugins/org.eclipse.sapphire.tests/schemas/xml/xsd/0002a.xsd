@@ -23,9 +23,9 @@
     <element name="element">
         <complexType>
             <sequence>
-	    		<element name="aaa" type="string"/>
-	    		<element name="bbb" type="string"/>
-	    		<element name="ccc" type="string"/>
+                <element name="aaa" type="string"/>
+                <element name="bbb" type="string"/>
+                <element name="ccc" type="string"/>
                 <element ref="element-2b"/>
             </sequence>
         </complexType>

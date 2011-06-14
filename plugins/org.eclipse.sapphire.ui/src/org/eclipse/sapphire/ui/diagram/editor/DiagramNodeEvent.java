@@ -19,8 +19,8 @@ import org.eclipse.sapphire.ui.SapphirePartEvent;
 
 public class DiagramNodeEvent extends SapphirePartEvent 
 {
-	 public DiagramNodeEvent(final DiagramNodePart part)
-	 {
-		 super(part);
-	 }
+     public DiagramNodeEvent(final DiagramNodePart part)
+     {
+         super(part);
+     }
 }

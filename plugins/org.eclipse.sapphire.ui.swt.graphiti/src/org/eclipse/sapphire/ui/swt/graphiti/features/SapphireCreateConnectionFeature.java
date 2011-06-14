@@ -35,141 +35,141 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 public class SapphireCreateConnectionFeature extends AbstractCreateConnectionFeature 
 {
-	private SapphireDiagramEditorPagePart diagramPart;
-	private IDiagramConnectionDef connDef;
-	
-	public SapphireCreateConnectionFeature(IFeatureProvider fp, SapphireDiagramEditorPagePart diagramPart, 
-					IDiagramConnectionDef connDef, String tpLabel, String tpDesc)
-	{
-		super(fp, tpLabel, tpDesc);
-		this.diagramPart = diagramPart;
-		this.connDef = connDef;		
-	}
-	
-	public boolean canCreate(ICreateConnectionContext context) 
-	{
-		SapphirePart source = getEndpoint(context.getSourceAnchor());
-		SapphirePart target = getEndpoint(context.getTargetAnchor());
-		if (source instanceof DiagramNodePart && 
-				target instanceof DiagramNodePart && source != target) 
-		{
-			DiagramConnectionTemplate connectionTemplate = getConnectionTemplate((DiagramNodePart)source);
-			if (connectionTemplate != null)
-			{
-				return connectionTemplate.canCreateNewConnection((DiagramNodePart)source, 
-						(DiagramNodePart)target);
-			}
-		}
-		return false;
-	}
+    private SapphireDiagramEditorPagePart diagramPart;
+    private IDiagramConnectionDef connDef;
+    
+    public SapphireCreateConnectionFeature(IFeatureProvider fp, SapphireDiagramEditorPagePart diagramPart, 
+                    IDiagramConnectionDef connDef, String tpLabel, String tpDesc)
+    {
+        super(fp, tpLabel, tpDesc);
+        this.diagramPart = diagramPart;
+        this.connDef = connDef;        
+    }
+    
+    public boolean canCreate(ICreateConnectionContext context) 
+    {
+        SapphirePart source = getEndpoint(context.getSourceAnchor());
+        SapphirePart target = getEndpoint(context.getTargetAnchor());
+        if (source instanceof DiagramNodePart && 
+                target instanceof DiagramNodePart && source != target) 
+        {
+            DiagramConnectionTemplate connectionTemplate = getConnectionTemplate((DiagramNodePart)source);
+            if (connectionTemplate != null)
+            {
+                return connectionTemplate.canCreateNewConnection((DiagramNodePart)source, 
+                        (DiagramNodePart)target);
+            }
+        }
+        return false;
+    }
 
-	public Connection create(ICreateConnectionContext context) 
-	{
-		Connection newConnection = null;
+    public Connection create(ICreateConnectionContext context) 
+    {
+        Connection newConnection = null;
 
-		// get model elements which should be connected
-		SapphirePart source = getEndpoint(context.getSourceAnchor());
-		SapphirePart target = getEndpoint(context.getTargetAnchor());
+        // get model elements which should be connected
+        SapphirePart source = getEndpoint(context.getSourceAnchor());
+        SapphirePart target = getEndpoint(context.getTargetAnchor());
 
-		if (source instanceof DiagramNodePart && target instanceof DiagramNodePart) 
-		{
-			DiagramNodePart sourceNode = (DiagramNodePart)source;
-			DiagramNodePart targetNode = (DiagramNodePart)target;
-			DiagramConnectionTemplate connectionTemplate = getConnectionTemplate(sourceNode);
-			// create new business object
-			if (connectionTemplate instanceof DiagramEmbeddedConnectionTemplate)
-			{
-				((DiagramEmbeddedConnectionTemplate)connectionTemplate).removeModelListener(sourceNode.getLocalModelElement());
-			}
-			else
-			{
-				connectionTemplate.removeModelListener();
-			}
-			DiagramConnectionPart connectionPart = 
-				connectionTemplate.createNewDiagramConnection(sourceNode, targetNode);
+        if (source instanceof DiagramNodePart && target instanceof DiagramNodePart) 
+        {
+            DiagramNodePart sourceNode = (DiagramNodePart)source;
+            DiagramNodePart targetNode = (DiagramNodePart)target;
+            DiagramConnectionTemplate connectionTemplate = getConnectionTemplate(sourceNode);
+            // create new business object
+            if (connectionTemplate instanceof DiagramEmbeddedConnectionTemplate)
+            {
+                ((DiagramEmbeddedConnectionTemplate)connectionTemplate).removeModelListener(sourceNode.getLocalModelElement());
+            }
+            else
+            {
+                connectionTemplate.removeModelListener();
+            }
+            DiagramConnectionPart connectionPart = 
+                connectionTemplate.createNewDiagramConnection(sourceNode, targetNode);
 
-			if (connectionTemplate instanceof DiagramEmbeddedConnectionTemplate)
-			{
-				((DiagramEmbeddedConnectionTemplate)connectionTemplate).addModelListener(sourceNode.getLocalModelElement());
-			}
-			else
-			{
-				connectionTemplate.addModelListener();
-			}
-			
-			// add connection for business object
-			AddConnectionContext addContext = new AddConnectionContext(context.getSourceAnchor(), context.getTargetAnchor());
-			addContext.setNewObject(connectionPart);
-			newConnection = (Connection) getFeatureProvider().addIfPossible(addContext);
-			
-	        // activate direct editing after object creation
-	        getFeatureProvider().getDirectEditingInfo().setActive(true);
-		}
+            if (connectionTemplate instanceof DiagramEmbeddedConnectionTemplate)
+            {
+                ((DiagramEmbeddedConnectionTemplate)connectionTemplate).addModelListener(sourceNode.getLocalModelElement());
+            }
+            else
+            {
+                connectionTemplate.addModelListener();
+            }
+            
+            // add connection for business object
+            AddConnectionContext addContext = new AddConnectionContext(context.getSourceAnchor(), context.getTargetAnchor());
+            addContext.setNewObject(connectionPart);
+            newConnection = (Connection) getFeatureProvider().addIfPossible(addContext);
+            
+            // activate direct editing after object creation
+            getFeatureProvider().getDirectEditingInfo().setActive(true);
+        }
 
-		return newConnection;
-	}
+        return newConnection;
+    }
 
-	public boolean canStartConnection(ICreateConnectionContext context) 
-	{
-		// return true if start anchor belongs to an IModelElement
-		SapphirePart part = getEndpoint(context.getSourceAnchor());
-		if (part instanceof DiagramNodePart) 
-		{
-			DiagramNodePart nodePart = (DiagramNodePart)part;
-			DiagramConnectionTemplate connTemplate = getConnectionTemplate(nodePart);
-			if (connTemplate.canStartNewConnection(nodePart))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	@Override
-	public String getCreateImageId() 
-	{
-		IDiagramImageChoice imageChoice = this.connDef.getToolPaletteImage().element();
-		if (imageChoice != null)
-		{
-			return imageChoice.getImageId().getContent();
-		}
-		return null;
-	}
-	
-	/**
-	 * Returns the SapphirePart belonging to the anchor, or null if not available.
-	 */
-	private SapphirePart getEndpoint(Anchor anchor) 
-	{
-		if (anchor != null) 
-		{
-			Object obj = getBusinessObjectForPictogramElement(anchor.getParent());
-			if (obj instanceof SapphirePart) 
-			{
-				return (SapphirePart) obj;
-			}
-		}
-		return null;
-	}
-	
-	private DiagramConnectionTemplate getConnectionTemplate(DiagramNodePart srcNode)
-	{
-		DiagramEmbeddedConnectionTemplate embeddedConn = srcNode.getDiagramNodeTemplate().getEmbeddedConnectionTemplate();
-		if (embeddedConn != null && 
-				embeddedConn.getConnectionId().equalsIgnoreCase(this.connDef.getId().getContent()))
-		{
-			return embeddedConn;
-		}
-		
-		// check top level connections
-		List<DiagramConnectionTemplate> connTemplates = this.diagramPart.getConnectionTemplates();
-		for (DiagramConnectionTemplate connTemplate : connTemplates)
-		{
-			if (connTemplate.getConnectionId().equalsIgnoreCase(this.connDef.getId().getContent()))
-			{
-				return connTemplate;
-			}
-		}
-		return null;
-	}
+    public boolean canStartConnection(ICreateConnectionContext context) 
+    {
+        // return true if start anchor belongs to an IModelElement
+        SapphirePart part = getEndpoint(context.getSourceAnchor());
+        if (part instanceof DiagramNodePart) 
+        {
+            DiagramNodePart nodePart = (DiagramNodePart)part;
+            DiagramConnectionTemplate connTemplate = getConnectionTemplate(nodePart);
+            if (connTemplate.canStartNewConnection(nodePart))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public String getCreateImageId() 
+    {
+        IDiagramImageChoice imageChoice = this.connDef.getToolPaletteImage().element();
+        if (imageChoice != null)
+        {
+            return imageChoice.getImageId().getContent();
+        }
+        return null;
+    }
+    
+    /**
+     * Returns the SapphirePart belonging to the anchor, or null if not available.
+     */
+    private SapphirePart getEndpoint(Anchor anchor) 
+    {
+        if (anchor != null) 
+        {
+            Object obj = getBusinessObjectForPictogramElement(anchor.getParent());
+            if (obj instanceof SapphirePart) 
+            {
+                return (SapphirePart) obj;
+            }
+        }
+        return null;
+    }
+    
+    private DiagramConnectionTemplate getConnectionTemplate(DiagramNodePart srcNode)
+    {
+        DiagramEmbeddedConnectionTemplate embeddedConn = srcNode.getDiagramNodeTemplate().getEmbeddedConnectionTemplate();
+        if (embeddedConn != null && 
+                embeddedConn.getConnectionId().equalsIgnoreCase(this.connDef.getId().getContent()))
+        {
+            return embeddedConn;
+        }
+        
+        // check top level connections
+        List<DiagramConnectionTemplate> connTemplates = this.diagramPart.getConnectionTemplates();
+        for (DiagramConnectionTemplate connTemplate : connTemplates)
+        {
+            if (connTemplate.getConnectionId().equalsIgnoreCase(this.connDef.getId().getContent()))
+            {
+                return connTemplate;
+            }
+        }
+        return null;
+    }
 }

@@ -27,13 +27,13 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface IDiagramGridDef 
 
-	extends IModelElement 
+    extends IModelElement 
 
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramGridDef.class);
-	
-	// *** Visible ***
-	
+    ModelElementType TYPE = new ModelElementType( IDiagramGridDef.class);
+    
+    // *** Visible ***
+    
     @Type( base = Boolean.class )
     @XmlBinding( path = "visible" )
     @DefaultValue( text = "false" )
@@ -44,5 +44,5 @@ public interface IDiagramGridDef
     Value<Boolean> isVisible();
     void setVisible( String value );
     void setVisible( Boolean value );
-	
+    
 }

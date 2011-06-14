@@ -55,318 +55,318 @@ import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireDoubleClickNodeFeat
 
 public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProvider 
 {
-	private static final int SMALL_ERROR_DECORATOR_WIDTH = 7;
-	private static final int SMALL_ERROR_DECORATOR_HEIGHT = 8;
-	private static final int LARGE_ERROR_DECORATOR_WIDTH = 16;
-	private static final int LARGE_ERROR_DECORATOR_HEIGHT = 16;
-	
-	public SapphireDiagramToolBehaviorProvider(IDiagramTypeProvider dtp) 
-	{
-		super(dtp);
-	}
+    private static final int SMALL_ERROR_DECORATOR_WIDTH = 7;
+    private static final int SMALL_ERROR_DECORATOR_HEIGHT = 8;
+    private static final int LARGE_ERROR_DECORATOR_WIDTH = 16;
+    private static final int LARGE_ERROR_DECORATOR_HEIGHT = 16;
+    
+    public SapphireDiagramToolBehaviorProvider(IDiagramTypeProvider dtp) 
+    {
+        super(dtp);
+    }
 
-	/**
-	 * Returning null to not display a floating palette around node
-	 * The context pad api is not compatible with sapphire action api.
-	 * There is no way to reconcile how action image is specified between them.
-	 */
-	@Override
-	public IContextButtonPadData getContextButtonPad(IPictogramElementContext context) 
-	{
-		return null;
-//		IContextButtonPadData data = super.getContextButtonPad(context);
-//		PictogramElement pe = context.getPictogramElement();
-//		
-//		IFeatureProvider featureProvider = getFeatureProvider();
-//		Object bo = featureProvider.getBusinessObjectForPictogramElement(pe);
-//		if (bo instanceof DiagramNodePart)
-//		{
-//			// 1. set the generic context buttons
-//			// note, we only add "Delete" button
-//			setGenericContextButtons(data, pe, CONTEXT_BUTTON_DELETE);
-//	
-//			// 2. add "show in source" context button
-//			DiagramNodePart nodePart = (DiagramNodePart)bo;
-//			SapphireActionHandler showInSourceHandler = 
-//					nodePart.getAction(SHOW_IN_SOURCE_ACTION_ID).getFirstActiveHandler();
-//			SapphireActionCustomFeature sapphireActionFeature = 
-//					new SapphireActionCustomFeature(this.getFeatureProvider(), showInSourceHandler);
-//			CustomContext cc = new CustomContext(new PictogramElement[] { pe });
-//			ContextButtonEntry showInSourceButton = new ContextButtonEntry(sapphireActionFeature, cc);
-//			String ccText = LabelTransformer.transform(showInSourceHandler.getLabel(), CapitalizationType.TITLE_STYLE, false);
-//			showInSourceButton.setText(ccText);
-//			showInSourceButton.setIconId(SapphireDiagramCommonImageProvider.IMG_SHOW_IN_SOURCE);
-//			data.getDomainSpecificContextButtons().add(showInSourceButton);
-//			
-//			// 3. add one domain specific context-button, which offers all
-//			// available connection-features as drag&drop features...
-//	
-//			// 3.a. create new CreateConnectionContext
-//			CreateConnectionContext ccc = new CreateConnectionContext();
-//			ccc.setSourcePictogramElement(pe);
-//			Anchor anchor = null;
-//			if (pe instanceof Anchor) 
-//			{
-//				anchor = (Anchor) pe;
-//			} 
-//			else if (pe instanceof AnchorContainer) 
-//			{
-//				// assume, that our shapes always have chopbox anchors
-//				anchor = Graphiti.getPeService().getChopboxAnchor((AnchorContainer) pe);
-//			}
-//			ccc.setSourceAnchor(anchor);
-//	
-//			// 3.b. create context button and add all applicable features
-//			ICreateConnectionFeature[] features = getFeatureProvider().getCreateConnectionFeatures();
-//			for (ICreateConnectionFeature feature : features) 
-//			{
-//				ContextButtonEntry button = new ContextButtonEntry(null, context);
-//				if (feature.isAvailable(ccc) && feature.canStartConnection(ccc))
-//				{
-//					button.addDragAndDropFeature(feature);
-//					button.setText("Create " + feature.getCreateName()); //$NON-NLS-1$
-//					if (feature.getCreateImageId() != null)
-//					{
-//						button.setIconId(feature.getCreateImageId());
-//					}
-//					else
-//					{
-//						button.setIconId(SapphireDiagramCommonImageProvider.IMG_CONNECTION);
-//					}
-//					// 3.c. add context button, if it contains at least one feature
-//					if (button.getDragAndDropFeatures().size() > 0) 
-//					{
-//						data.getDomainSpecificContextButtons().add(button);
-//					}
-//				}
-//			}
-//	
-//		}
-//		return data;
-	}
-		
-	@Override
-	public ICustomFeature getDoubleClickFeature(IDoubleClickContext context) 
-	{
-		PictogramElement[] pes = context.getPictogramElements();
-		for (PictogramElement pe : pes)
-		{
-			if (pe instanceof ContainerShape)
-			{
-				Object bo = getFeatureProvider().getBusinessObjectForPictogramElement(pe);
-				if (bo instanceof DiagramNodePart)
-				{
-					DiagramNodePart nodePart = (DiagramNodePart)bo;
-					if (nodePart.getDefaultActionHandler() != null || nodePart.canEditLabel())
-					{
-						SapphireDoubleClickNodeFeature dblClikFeature = 
-							new SapphireDoubleClickNodeFeature(getFeatureProvider(), nodePart);
-						return dblClikFeature;
-					}
-				}
-			}
-			else if (pe instanceof ConnectionDecorator && pe.getGraphicsAlgorithm() instanceof Text)
-			{
-				Object bo = getFeatureProvider().getBusinessObjectForPictogramElement((PictogramElement)pe.eContainer());
-				if (bo instanceof DiagramConnectionPart)
-				{
-					SapphireDoubleClickNodeFeature dblClikFeature = 
-							new SapphireDoubleClickNodeFeature(getFeatureProvider(), (DiagramConnectionPart)bo);
-					return dblClikFeature;
-				}
-			}
-		}
-		return null;
-	}
-	
-	@Override
-	public IDecorator[] getDecorators(PictogramElement pe) 
-	{
-		IFeatureProvider featureProvider = getFeatureProvider();
-		Object bo = featureProvider.getBusinessObjectForPictogramElement(pe);
-		if (bo instanceof DiagramNodePart)
-		{
-			List<IDecorator> decoratorList = new ArrayList<IDecorator>();			
-			DiagramNodePart nodePart = (DiagramNodePart)bo;
-			
-			if (nodePart.getProblemIndicatorDef().isShowDecorator().getContent())
-			{
-				addNodeProblemDecorator(pe, nodePart, decoratorList);
-			}
-			
-			List<IDiagramImageDecoratorDef> imageDecorators = nodePart.getImageDecorators();
-			for (IDiagramImageDecoratorDef imageDecorator : imageDecorators)
-			{
-				addNodeImageDecorator(pe, imageDecorator, decoratorList);
-			}
-			return decoratorList.toArray(new IDecorator[0]);
-		}
-		return super.getDecorators(pe);
-	}
-	
-	@Override
-	public String getToolTip(GraphicsAlgorithm ga) 
-	{
-//		if (ga instanceof Text)
-//		{
-//			Text text = (Text)ga;
-//			if (text.getValue() != null)
-//			{
-//				org.eclipse.swt.graphics.Font swtFont = DataTypeTransformation.toSwtFont(text.getFont());
-//				Dimension d = TextUtilities.INSTANCE.getStringExtents(text.getValue(), swtFont);
-//				if (d.width > ga.getWidth())
-//				{
-//					return text.getValue();
-//				}
-//			}
-//		}
-		PictogramElement pe = ga.getPictogramElement();
-		Object bo = getFeatureProvider().getBusinessObjectForPictogramElement(pe);
-		if (bo instanceof DiagramNodePart) 
-		{
-			String name = ((DiagramNodePart) bo).getLabel();
-			if (name != null && name.length() > 0) 
-			{
-				return name;
-			}
-		}
-		return super.getToolTip(ga);		
-	}
-	
-	private void addNodeProblemDecorator(PictogramElement pe, DiagramNodePart nodePart, List<IDecorator> decoratorList)
-	{
-		IModelElement model = nodePart.getModelElement();
-		IDiagramNodeProblemDecoratorDef decoratorDef = nodePart.getProblemIndicatorDef();
-		Status status = model.validate();
-		ImageDecorator imageRenderingDecorator = null;
-		if (status.severity() != Status.Severity.OK)
-		{
-			if (status.severity() == Status.Severity.WARNING)
-			{
-				if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL)
-				{
-					imageRenderingDecorator = new ImageDecorator(SapphireDiagramCommonImageProvider.IMG_WARNING_DECORATOR);
-				}
-				else
-				{
-					imageRenderingDecorator = new ImageDecorator(IPlatformImageConstants.IMG_ECLIPSE_WARNING);
-				}
-			}
-			else if (status.severity() == Status.Severity.ERROR)
-			{
-				if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL)
-				{
-					imageRenderingDecorator = new ImageDecorator(SapphireDiagramCommonImageProvider.IMG_ERROR_DECORATOR);
-				}
-				else
-				{
-					imageRenderingDecorator = new ImageDecorator(IPlatformImageConstants.IMG_ECLIPSE_ERROR);
-				}
-			}
-		}
-		if (imageRenderingDecorator != null)
-		{
-			int indicatorWidth = decoratorDef.getSize().getContent() == ProblemDecoratorSize.LARGE ? LARGE_ERROR_DECORATOR_WIDTH : SMALL_ERROR_DECORATOR_WIDTH;
-			int indicatorHeight = decoratorDef.getSize().getContent() == ProblemDecoratorSize.LARGE ? LARGE_ERROR_DECORATOR_HEIGHT : SMALL_ERROR_DECORATOR_HEIGHT;
-			
-			Point pt = getDecoratorPosition(pe, decoratorDef, indicatorWidth, indicatorHeight);
-			imageRenderingDecorator.setX(pt.getX());
-			imageRenderingDecorator.setY(pt.getY());
-			imageRenderingDecorator.setMessage(status.message());
-			decoratorList.add(imageRenderingDecorator);
-		}		
-	}
-	
-	private void addNodeImageDecorator(PictogramElement pe, IDiagramImageDecoratorDef imageDecoratorDef,
-								List<IDecorator> decoratorList)
-	{
-		String imageId = imageDecoratorDef.getImageId().getContent();
-		if (imageId != null)
-		{
-			ImageDecorator imageRenderingDecorator = new ImageDecorator(imageId);
-			org.eclipse.swt.graphics.Image image = GraphitiUi.getImageService().getImageForId(imageId);
-			int imageWidth = image.getImageData().width;
-			int imageHeight = image.getImageData().height;
-			Point pt = getDecoratorPosition(pe, imageDecoratorDef, imageWidth, imageHeight);
-			imageRenderingDecorator.setX(pt.getX());
-			imageRenderingDecorator.setY(pt.getY());
-			decoratorList.add(imageRenderingDecorator);
-		}
-	}
-	
-	private Point getDecoratorPosition(PictogramElement pe, IDiagramDecoratorDef decoratorDef, int decoratorWidth, int decoratorHeight)
-	{
-		GraphicsAlgorithm referencedGA = null;
-		Text text = null;
-		ContainerShape containerShape = (ContainerShape)pe;
-		EList<Shape> children = containerShape.getChildren();
-		for (Shape child : children)
-		{
-			GraphicsAlgorithm ga = child.getGraphicsAlgorithm();
-			if (ga instanceof Image)
-			{
-				if (decoratorDef.getDecoratorPlacement().getContent() == DecoratorPlacement.IMAGE)
-				{
-					referencedGA = ga;
-					break;
-				}				
-			}
-			else if (ga instanceof Text)
-			{
-				if (decoratorDef.getDecoratorPlacement().getContent() == DecoratorPlacement.LABEL)
-				{
-					referencedGA = ga;
-					break;
-				}
-				if (text == null)
-				{
-					text = (Text)ga;
-				}
-			}
-		}		
-		if (referencedGA == null)
-		{
-			referencedGA = text;
-		}
-		
-		if (referencedGA != null)
-		{
-			HorizontalAlignment horizontalAlign = decoratorDef.getHorizontalAlignment().getContent();						
-			int offsetX = 0;
-			int offsetY = 0;
-			if (horizontalAlign == HorizontalAlignment.RIGHT)
-			{
-				offsetX = referencedGA.getWidth() - decoratorWidth;
-			    offsetX -= decoratorDef.getHorizontalMargin().getContent();
-			}
-			else if (horizontalAlign == HorizontalAlignment.LEFT)
-			{
-				offsetX += decoratorDef.getHorizontalMargin().getContent();
-			}
-			else if (horizontalAlign == HorizontalAlignment.CENTER)
-			{
-				offsetX = (referencedGA.getWidth() - decoratorWidth) >> 1;
-			}
-			
-			VerticalAlignment verticalAlign = decoratorDef.getVerticalAlignment().getContent();
-			
-			if (verticalAlign == VerticalAlignment.BOTTOM)
-			{
-				offsetY = referencedGA.getHeight() - decoratorHeight;
-				offsetY -= decoratorDef.getVerticalMargin().getContent();
-			}
-			else if (verticalAlign == VerticalAlignment.TOP)
-			{
-				offsetY += decoratorDef.getVerticalMargin().getContent();
-			}
-			else if (verticalAlign == VerticalAlignment.CENTER)
-			{
-				offsetY = (referencedGA.getHeight() - decoratorHeight) / 2;
-			}
-			
-			return new Point(offsetX + referencedGA.getX(), offsetY + referencedGA.getY());
-		}
-		return new Point(0, 0);
-	}
-	
+    /**
+     * Returning null to not display a floating palette around node
+     * The context pad api is not compatible with sapphire action api.
+     * There is no way to reconcile how action image is specified between them.
+     */
+    @Override
+    public IContextButtonPadData getContextButtonPad(IPictogramElementContext context) 
+    {
+        return null;
+//        IContextButtonPadData data = super.getContextButtonPad(context);
+//        PictogramElement pe = context.getPictogramElement();
+//        
+//        IFeatureProvider featureProvider = getFeatureProvider();
+//        Object bo = featureProvider.getBusinessObjectForPictogramElement(pe);
+//        if (bo instanceof DiagramNodePart)
+//        {
+//            // 1. set the generic context buttons
+//            // note, we only add "Delete" button
+//            setGenericContextButtons(data, pe, CONTEXT_BUTTON_DELETE);
+//    
+//            // 2. add "show in source" context button
+//            DiagramNodePart nodePart = (DiagramNodePart)bo;
+//            SapphireActionHandler showInSourceHandler = 
+//                    nodePart.getAction(SHOW_IN_SOURCE_ACTION_ID).getFirstActiveHandler();
+//            SapphireActionCustomFeature sapphireActionFeature = 
+//                    new SapphireActionCustomFeature(this.getFeatureProvider(), showInSourceHandler);
+//            CustomContext cc = new CustomContext(new PictogramElement[] { pe });
+//            ContextButtonEntry showInSourceButton = new ContextButtonEntry(sapphireActionFeature, cc);
+//            String ccText = LabelTransformer.transform(showInSourceHandler.getLabel(), CapitalizationType.TITLE_STYLE, false);
+//            showInSourceButton.setText(ccText);
+//            showInSourceButton.setIconId(SapphireDiagramCommonImageProvider.IMG_SHOW_IN_SOURCE);
+//            data.getDomainSpecificContextButtons().add(showInSourceButton);
+//            
+//            // 3. add one domain specific context-button, which offers all
+//            // available connection-features as drag&drop features...
+//    
+//            // 3.a. create new CreateConnectionContext
+//            CreateConnectionContext ccc = new CreateConnectionContext();
+//            ccc.setSourcePictogramElement(pe);
+//            Anchor anchor = null;
+//            if (pe instanceof Anchor) 
+//            {
+//                anchor = (Anchor) pe;
+//            } 
+//            else if (pe instanceof AnchorContainer) 
+//            {
+//                // assume, that our shapes always have chopbox anchors
+//                anchor = Graphiti.getPeService().getChopboxAnchor((AnchorContainer) pe);
+//            }
+//            ccc.setSourceAnchor(anchor);
+//    
+//            // 3.b. create context button and add all applicable features
+//            ICreateConnectionFeature[] features = getFeatureProvider().getCreateConnectionFeatures();
+//            for (ICreateConnectionFeature feature : features) 
+//            {
+//                ContextButtonEntry button = new ContextButtonEntry(null, context);
+//                if (feature.isAvailable(ccc) && feature.canStartConnection(ccc))
+//                {
+//                    button.addDragAndDropFeature(feature);
+//                    button.setText("Create " + feature.getCreateName()); //$NON-NLS-1$
+//                    if (feature.getCreateImageId() != null)
+//                    {
+//                        button.setIconId(feature.getCreateImageId());
+//                    }
+//                    else
+//                    {
+//                        button.setIconId(SapphireDiagramCommonImageProvider.IMG_CONNECTION);
+//                    }
+//                    // 3.c. add context button, if it contains at least one feature
+//                    if (button.getDragAndDropFeatures().size() > 0) 
+//                    {
+//                        data.getDomainSpecificContextButtons().add(button);
+//                    }
+//                }
+//            }
+//    
+//        }
+//        return data;
+    }
+        
+    @Override
+    public ICustomFeature getDoubleClickFeature(IDoubleClickContext context) 
+    {
+        PictogramElement[] pes = context.getPictogramElements();
+        for (PictogramElement pe : pes)
+        {
+            if (pe instanceof ContainerShape)
+            {
+                Object bo = getFeatureProvider().getBusinessObjectForPictogramElement(pe);
+                if (bo instanceof DiagramNodePart)
+                {
+                    DiagramNodePart nodePart = (DiagramNodePart)bo;
+                    if (nodePart.getDefaultActionHandler() != null || nodePart.canEditLabel())
+                    {
+                        SapphireDoubleClickNodeFeature dblClikFeature = 
+                            new SapphireDoubleClickNodeFeature(getFeatureProvider(), nodePart);
+                        return dblClikFeature;
+                    }
+                }
+            }
+            else if (pe instanceof ConnectionDecorator && pe.getGraphicsAlgorithm() instanceof Text)
+            {
+                Object bo = getFeatureProvider().getBusinessObjectForPictogramElement((PictogramElement)pe.eContainer());
+                if (bo instanceof DiagramConnectionPart)
+                {
+                    SapphireDoubleClickNodeFeature dblClikFeature = 
+                            new SapphireDoubleClickNodeFeature(getFeatureProvider(), (DiagramConnectionPart)bo);
+                    return dblClikFeature;
+                }
+            }
+        }
+        return null;
+    }
+    
+    @Override
+    public IDecorator[] getDecorators(PictogramElement pe) 
+    {
+        IFeatureProvider featureProvider = getFeatureProvider();
+        Object bo = featureProvider.getBusinessObjectForPictogramElement(pe);
+        if (bo instanceof DiagramNodePart)
+        {
+            List<IDecorator> decoratorList = new ArrayList<IDecorator>();            
+            DiagramNodePart nodePart = (DiagramNodePart)bo;
+            
+            if (nodePart.getProblemIndicatorDef().isShowDecorator().getContent())
+            {
+                addNodeProblemDecorator(pe, nodePart, decoratorList);
+            }
+            
+            List<IDiagramImageDecoratorDef> imageDecorators = nodePart.getImageDecorators();
+            for (IDiagramImageDecoratorDef imageDecorator : imageDecorators)
+            {
+                addNodeImageDecorator(pe, imageDecorator, decoratorList);
+            }
+            return decoratorList.toArray(new IDecorator[0]);
+        }
+        return super.getDecorators(pe);
+    }
+    
+    @Override
+    public String getToolTip(GraphicsAlgorithm ga) 
+    {
+//        if (ga instanceof Text)
+//        {
+//            Text text = (Text)ga;
+//            if (text.getValue() != null)
+//            {
+//                org.eclipse.swt.graphics.Font swtFont = DataTypeTransformation.toSwtFont(text.getFont());
+//                Dimension d = TextUtilities.INSTANCE.getStringExtents(text.getValue(), swtFont);
+//                if (d.width > ga.getWidth())
+//                {
+//                    return text.getValue();
+//                }
+//            }
+//        }
+        PictogramElement pe = ga.getPictogramElement();
+        Object bo = getFeatureProvider().getBusinessObjectForPictogramElement(pe);
+        if (bo instanceof DiagramNodePart) 
+        {
+            String name = ((DiagramNodePart) bo).getLabel();
+            if (name != null && name.length() > 0) 
+            {
+                return name;
+            }
+        }
+        return super.getToolTip(ga);        
+    }
+    
+    private void addNodeProblemDecorator(PictogramElement pe, DiagramNodePart nodePart, List<IDecorator> decoratorList)
+    {
+        IModelElement model = nodePart.getModelElement();
+        IDiagramNodeProblemDecoratorDef decoratorDef = nodePart.getProblemIndicatorDef();
+        Status status = model.validate();
+        ImageDecorator imageRenderingDecorator = null;
+        if (status.severity() != Status.Severity.OK)
+        {
+            if (status.severity() == Status.Severity.WARNING)
+            {
+                if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL)
+                {
+                    imageRenderingDecorator = new ImageDecorator(SapphireDiagramCommonImageProvider.IMG_WARNING_DECORATOR);
+                }
+                else
+                {
+                    imageRenderingDecorator = new ImageDecorator(IPlatformImageConstants.IMG_ECLIPSE_WARNING);
+                }
+            }
+            else if (status.severity() == Status.Severity.ERROR)
+            {
+                if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL)
+                {
+                    imageRenderingDecorator = new ImageDecorator(SapphireDiagramCommonImageProvider.IMG_ERROR_DECORATOR);
+                }
+                else
+                {
+                    imageRenderingDecorator = new ImageDecorator(IPlatformImageConstants.IMG_ECLIPSE_ERROR);
+                }
+            }
+        }
+        if (imageRenderingDecorator != null)
+        {
+            int indicatorWidth = decoratorDef.getSize().getContent() == ProblemDecoratorSize.LARGE ? LARGE_ERROR_DECORATOR_WIDTH : SMALL_ERROR_DECORATOR_WIDTH;
+            int indicatorHeight = decoratorDef.getSize().getContent() == ProblemDecoratorSize.LARGE ? LARGE_ERROR_DECORATOR_HEIGHT : SMALL_ERROR_DECORATOR_HEIGHT;
+            
+            Point pt = getDecoratorPosition(pe, decoratorDef, indicatorWidth, indicatorHeight);
+            imageRenderingDecorator.setX(pt.getX());
+            imageRenderingDecorator.setY(pt.getY());
+            imageRenderingDecorator.setMessage(status.message());
+            decoratorList.add(imageRenderingDecorator);
+        }        
+    }
+    
+    private void addNodeImageDecorator(PictogramElement pe, IDiagramImageDecoratorDef imageDecoratorDef,
+                                List<IDecorator> decoratorList)
+    {
+        String imageId = imageDecoratorDef.getImageId().getContent();
+        if (imageId != null)
+        {
+            ImageDecorator imageRenderingDecorator = new ImageDecorator(imageId);
+            org.eclipse.swt.graphics.Image image = GraphitiUi.getImageService().getImageForId(imageId);
+            int imageWidth = image.getImageData().width;
+            int imageHeight = image.getImageData().height;
+            Point pt = getDecoratorPosition(pe, imageDecoratorDef, imageWidth, imageHeight);
+            imageRenderingDecorator.setX(pt.getX());
+            imageRenderingDecorator.setY(pt.getY());
+            decoratorList.add(imageRenderingDecorator);
+        }
+    }
+    
+    private Point getDecoratorPosition(PictogramElement pe, IDiagramDecoratorDef decoratorDef, int decoratorWidth, int decoratorHeight)
+    {
+        GraphicsAlgorithm referencedGA = null;
+        Text text = null;
+        ContainerShape containerShape = (ContainerShape)pe;
+        EList<Shape> children = containerShape.getChildren();
+        for (Shape child : children)
+        {
+            GraphicsAlgorithm ga = child.getGraphicsAlgorithm();
+            if (ga instanceof Image)
+            {
+                if (decoratorDef.getDecoratorPlacement().getContent() == DecoratorPlacement.IMAGE)
+                {
+                    referencedGA = ga;
+                    break;
+                }                
+            }
+            else if (ga instanceof Text)
+            {
+                if (decoratorDef.getDecoratorPlacement().getContent() == DecoratorPlacement.LABEL)
+                {
+                    referencedGA = ga;
+                    break;
+                }
+                if (text == null)
+                {
+                    text = (Text)ga;
+                }
+            }
+        }        
+        if (referencedGA == null)
+        {
+            referencedGA = text;
+        }
+        
+        if (referencedGA != null)
+        {
+            HorizontalAlignment horizontalAlign = decoratorDef.getHorizontalAlignment().getContent();                        
+            int offsetX = 0;
+            int offsetY = 0;
+            if (horizontalAlign == HorizontalAlignment.RIGHT)
+            {
+                offsetX = referencedGA.getWidth() - decoratorWidth;
+                offsetX -= decoratorDef.getHorizontalMargin().getContent();
+            }
+            else if (horizontalAlign == HorizontalAlignment.LEFT)
+            {
+                offsetX += decoratorDef.getHorizontalMargin().getContent();
+            }
+            else if (horizontalAlign == HorizontalAlignment.CENTER)
+            {
+                offsetX = (referencedGA.getWidth() - decoratorWidth) >> 1;
+            }
+            
+            VerticalAlignment verticalAlign = decoratorDef.getVerticalAlignment().getContent();
+            
+            if (verticalAlign == VerticalAlignment.BOTTOM)
+            {
+                offsetY = referencedGA.getHeight() - decoratorHeight;
+                offsetY -= decoratorDef.getVerticalMargin().getContent();
+            }
+            else if (verticalAlign == VerticalAlignment.TOP)
+            {
+                offsetY += decoratorDef.getVerticalMargin().getContent();
+            }
+            else if (verticalAlign == VerticalAlignment.CENTER)
+            {
+                offsetY = (referencedGA.getHeight() - decoratorHeight) / 2;
+            }
+            
+            return new Point(offsetX + referencedGA.getX(), offsetY + referencedGA.getY());
+        }
+        return new Point(0, 0);
+    }
+    
 }

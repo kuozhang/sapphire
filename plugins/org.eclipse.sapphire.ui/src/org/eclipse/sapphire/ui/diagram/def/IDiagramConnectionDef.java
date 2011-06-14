@@ -38,12 +38,12 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 @GenerateImpl
 
 public interface IDiagramConnectionDef 
-	
-	extends ISapphirePartDef
-	
+    
+    extends ISapphirePartDef
+    
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramConnectionDef.class );
-	
+    ModelElementType TYPE = new ModelElementType( IDiagramConnectionDef.class );
+    
     // *** Id ***
     
     @Required
@@ -114,7 +114,7 @@ public interface IDiagramConnectionDef
     IDiagramConnectionEndpointDef getEndpoint2();
         
     // *** LineWidth ***
-	
+    
     @Type( base = Integer.class )
     @Label( standard = "line width" )
     @XmlBinding( path = "line-width" )

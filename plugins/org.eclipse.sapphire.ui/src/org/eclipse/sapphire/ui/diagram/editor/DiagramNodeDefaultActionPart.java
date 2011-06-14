@@ -28,11 +28,11 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDefaultActionDef;
 
 public class DiagramNodeDefaultActionPart extends SapphirePart 
 {
-	private IDiagramNodeDefaultActionDef definition;
-	private SapphireActionHandler actionHandler;
-	private String label;
-	private String description;
-	
+    private IDiagramNodeDefaultActionDef definition;
+    private SapphireActionHandler actionHandler;
+    private String label;
+    private String description;
+    
     @Override
     protected void init()
     {
@@ -47,7 +47,7 @@ public class DiagramNodeDefaultActionPart extends SapphirePart
         
         if( actionHandlerId == null )
         {
-        	this.actionHandler = action.getFirstActiveHandler();
+            this.actionHandler = action.getFirstActiveHandler();
         }
         else
         {
@@ -55,37 +55,37 @@ public class DiagramNodeDefaultActionPart extends SapphirePart
             {
                 if( h.getId().equalsIgnoreCase( actionHandlerId ) )
                 {
-                	this.actionHandler = h;
+                    this.actionHandler = h;
                     break;
                 }
             }
         }        
     }
-	
-	@Override
-	public void render(SapphireRenderingContext context) 
-	{
-		throw new UnsupportedOperationException();
-	}
+    
+    @Override
+    public void render(SapphireRenderingContext context) 
+    {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     public Set<String> getActionContexts()
     {
         return Collections.singleton( SapphireActionSystem.CONTEXT_DIAGRAM_NODE );
     }
-	
+    
     public String getLabel()
     {
-    	return this.label;
+        return this.label;
     }
 
     public String getDescription()
     {
-    	return this.description;
+        return this.description;
     }
     
     public SapphireActionHandler getActionHandler()
     {
-    	return this.actionHandler;
+        return this.actionHandler;
     }
 }

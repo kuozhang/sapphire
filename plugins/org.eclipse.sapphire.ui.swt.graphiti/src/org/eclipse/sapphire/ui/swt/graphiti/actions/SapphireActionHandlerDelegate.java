@@ -27,61 +27,61 @@ import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProv
 
 public class SapphireActionHandlerDelegate extends Action 
 {
-	private SapphireDiagramEditor diagramEditor;
-	private SapphireActionHandler sapphireActionHandler;
-	
-	public SapphireActionHandlerDelegate(SapphireDiagramEditor diagramEditor, 
-			SapphireActionHandler sapphireActionHandler)
-	{
-		this.diagramEditor = diagramEditor;
-		this.sapphireActionHandler = sapphireActionHandler;
-		setEnabled(this.sapphireActionHandler.isEnabled());
-		setChecked(this.sapphireActionHandler.isChecked());
-	}
-	
-	@Override
-	public String getText()
-	{
-		return LabelTransformer.transform(this.sapphireActionHandler.getLabel(), CapitalizationType.TITLE_STYLE, true);
-	}
+    private SapphireDiagramEditor diagramEditor;
+    private SapphireActionHandler sapphireActionHandler;
+    
+    public SapphireActionHandlerDelegate(SapphireDiagramEditor diagramEditor, 
+            SapphireActionHandler sapphireActionHandler)
+    {
+        this.diagramEditor = diagramEditor;
+        this.sapphireActionHandler = sapphireActionHandler;
+        setEnabled(this.sapphireActionHandler.isEnabled());
+        setChecked(this.sapphireActionHandler.isChecked());
+    }
+    
+    @Override
+    public String getText()
+    {
+        return LabelTransformer.transform(this.sapphireActionHandler.getLabel(), CapitalizationType.TITLE_STYLE, true);
+    }
 
-	@Override
-	public ImageDescriptor getImageDescriptor() 
-	{
-		return this.sapphireActionHandler.getImage(16);
-	}
-	
-	@Override
-	public void run() 
-	{
-		this.sapphireActionHandler.addListener(new SapphireActionSystemPart.Listener() 
-		{			
-			@Override
-			public void handleEvent(Event event) 
-			{
-				if (event instanceof SapphireActionHandler.PostExecuteEvent)
-				{
-					handlePostExecutionEvent((SapphireActionHandler.PostExecuteEvent)event);
-				}
-			}
-		});
-		SapphireDiagramFeatureProvider fp = (SapphireDiagramFeatureProvider)this.diagramEditor.getDiagramTypeProvider().getFeatureProvider();
-		SapphireRenderingContext context = fp.getRenderingContext((SapphirePart)this.sapphireActionHandler.getPart());
-		this.sapphireActionHandler.execute(context);
-	}
-	
-	public SapphireDiagramEditor getSapphireDiagramEditor()
-	{
-		return this.diagramEditor;
-	}
-	
-	public SapphireActionHandler getSapphireActionHandler()
-	{
-		return this.sapphireActionHandler;
-	}
-	
-	protected void handlePostExecutionEvent(SapphireActionHandler.PostExecuteEvent event)
-	{
-		
-	}
+    @Override
+    public ImageDescriptor getImageDescriptor() 
+    {
+        return this.sapphireActionHandler.getImage(16);
+    }
+    
+    @Override
+    public void run() 
+    {
+        this.sapphireActionHandler.addListener(new SapphireActionSystemPart.Listener() 
+        {            
+            @Override
+            public void handleEvent(Event event) 
+            {
+                if (event instanceof SapphireActionHandler.PostExecuteEvent)
+                {
+                    handlePostExecutionEvent((SapphireActionHandler.PostExecuteEvent)event);
+                }
+            }
+        });
+        SapphireDiagramFeatureProvider fp = (SapphireDiagramFeatureProvider)this.diagramEditor.getDiagramTypeProvider().getFeatureProvider();
+        SapphireRenderingContext context = fp.getRenderingContext((SapphirePart)this.sapphireActionHandler.getPart());
+        this.sapphireActionHandler.execute(context);
+    }
+    
+    public SapphireDiagramEditor getSapphireDiagramEditor()
+    {
+        return this.diagramEditor;
+    }
+    
+    public SapphireActionHandler getSapphireActionHandler()
+    {
+        return this.sapphireActionHandler;
+    }
+    
+    protected void handlePostExecutionEvent(SapphireActionHandler.PostExecuteEvent event)
+    {
+        
+    }
 }

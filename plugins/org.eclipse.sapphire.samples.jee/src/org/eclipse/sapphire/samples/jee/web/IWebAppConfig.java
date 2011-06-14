@@ -207,24 +207,19 @@ public interface IWebAppConfig extends IModelElement, IDescribable
     
     ModelElementList<IErrorPage> getErrorPages();
 
+    // *** JspConfig ***
     
+    @Type( base = IJspConfig.class )
+    @Label( standard = "JSP configuration" )
+    @XmlBinding( path = "jsp-config" )
     
+    @Documentation
+    (
+        content = "Provides global configuration information for the JSP files in the web application."
+    )
 
+    ImpliedElementProperty PROP_JSP_CONFIG = new ImpliedElementProperty( TYPE, "JspConfig" );
     
-    
-
-    
-
-    
-    
-
-
-    
-    
-
-
-
-
-    
+    IJspConfig getJspConfig();
     
 }

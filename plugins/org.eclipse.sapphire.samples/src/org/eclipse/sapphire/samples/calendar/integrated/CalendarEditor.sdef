@@ -31,8 +31,8 @@
                 <label>events</label>
                 <section>
                     <content>
-                    	<label>Use this simple editor to organize your calendar.</label>
-                    	<spacer/>
+                        <label>Use this simple editor to organize your calendar.</label>
+                        <spacer/>
                         <action-link>
                             <action-id>Sapphire.Add</action-id>
                             <label>add an event</label>

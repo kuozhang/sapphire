@@ -21,19 +21,19 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 public enum VerticalAlignment 
 
 {
-	@Label( standard = "top" )
-	@EnumSerialization( primary = "top" )
-	
-	TOP,
-	
+    @Label( standard = "top" )
+    @EnumSerialization( primary = "top" )
+    
+    TOP,
+    
     @Label( standard = "center" )
     @EnumSerialization( primary = "center" )
     
     CENTER,
     
-	@Label( standard = "bottom" )
-	@EnumSerialization( primary = "bottom" )
-	
-	BOTTOM
-	
+    @Label( standard = "bottom" )
+    @EnumSerialization( primary = "bottom" )
+    
+    BOTTOM
+    
 }

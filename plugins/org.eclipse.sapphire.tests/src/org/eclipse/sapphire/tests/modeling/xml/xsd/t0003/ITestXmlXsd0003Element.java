@@ -39,21 +39,21 @@ public interface ITestXmlXsd0003Element
     
     // *** circle ***
     
-	@Type( base = ITestXmlXsd0003Circle.class )
-	@XmlBinding( path = "circle" )
-	
-	ImpliedElementProperty PROP_CIRCLE = new ImpliedElementProperty( TYPE, "Circle" );
-	
-	ITestXmlXsd0003Circle getCircle();
+    @Type( base = ITestXmlXsd0003Circle.class )
+    @XmlBinding( path = "circle" )
+    
+    ImpliedElementProperty PROP_CIRCLE = new ImpliedElementProperty( TYPE, "Circle" );
+    
+    ITestXmlXsd0003Circle getCircle();
     
     // *** square ***
     
-	@Type( base = ITestXmlXsd0003Square.class )
-	@XmlBinding( path = "square" )
-	
-	ImpliedElementProperty PROP_SQUARE = new ImpliedElementProperty( TYPE, "Square" );
-	
-	ITestXmlXsd0003Square getSquare();
+    @Type( base = ITestXmlXsd0003Square.class )
+    @XmlBinding( path = "square" )
+    
+    ImpliedElementProperty PROP_SQUARE = new ImpliedElementProperty( TYPE, "Square" );
+    
+    ITestXmlXsd0003Square getSquare();
     
     // *** Aaa ***
     

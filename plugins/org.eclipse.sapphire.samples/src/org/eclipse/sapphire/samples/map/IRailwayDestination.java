@@ -32,8 +32,8 @@ import org.eclipse.sapphire.samples.map.internal.DestinationReferenceService;
 
 public interface IRailwayDestination extends IModelElement 
 {
-	ModelElementType TYPE = new ModelElementType( IRailwayDestination.class );
-	
+    ModelElementType TYPE = new ModelElementType( IRailwayDestination.class );
+    
     // *** Distance ***
     
     @XmlBinding( path = "distance" )
@@ -47,13 +47,13 @@ public interface IRailwayDestination extends IModelElement
 
     // *** ToDestination ***
     
-	@Reference( target = IDestination.class )
-	@Service( impl = DestinationReferenceService.class )
-	@XmlBinding( path = "to-destination")
-	@Required
-	@Label(standard = "to destination")
+    @Reference( target = IDestination.class )
+    @Service( impl = DestinationReferenceService.class )
+    @XmlBinding( path = "to-destination")
+    @Required
+    @Label(standard = "to destination")
 
-	ValueProperty PROP_TO_DESTINATION = new ValueProperty( TYPE, "ToDestination" );
+    ValueProperty PROP_TO_DESTINATION = new ValueProperty( TYPE, "ToDestination" );
 
     ReferenceValue<String,IDestination> getToDestination();
     void setToDestination( String name );

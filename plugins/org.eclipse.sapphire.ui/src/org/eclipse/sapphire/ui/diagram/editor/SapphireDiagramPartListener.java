@@ -26,12 +26,12 @@ public abstract class SapphireDiagramPartListener extends SapphirePartListener
 
     public void handleNodeAddEvent(final DiagramNodeEvent event)
     {
-    	// The default implementation doesn't do anything.
+        // The default implementation doesn't do anything.
     }
 
     public void handleNodeDeleteEvent(final DiagramNodeEvent event)
     {
-    	// The default implementation doesn't do anything.
+        // The default implementation doesn't do anything.
     }
 
     public void handleConnectionUpdateEvent(final DiagramConnectionEvent event)
@@ -41,16 +41,16 @@ public abstract class SapphireDiagramPartListener extends SapphirePartListener
 
     public void handleConnectionEndpointEvent(final DiagramConnectionEvent event)
     {
-    	// The default implementation doesn't do anything.
+        // The default implementation doesn't do anything.
     }
     
     public void handleConnectionAddEvent(final DiagramConnectionEvent event)
     {
-    	// The default implementation doesn't do anything.
+        // The default implementation doesn't do anything.
     }
 
     public void handleConnectionDeleteEvent(final DiagramConnectionEvent event)
     {
-    	// The default implementation doesn't do anything.
+        // The default implementation doesn't do anything.
     }
 }

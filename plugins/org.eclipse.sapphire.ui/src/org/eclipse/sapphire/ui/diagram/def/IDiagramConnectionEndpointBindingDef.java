@@ -30,10 +30,10 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface IDiagramConnectionEndpointBindingDef 
 
-	extends IModelElement 
-	
+    extends IModelElement 
+    
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramConnectionEndpointBindingDef.class );
+    ModelElementType TYPE = new ModelElementType( IDiagramConnectionEndpointBindingDef.class );
 
     // *** Property ***
     
@@ -59,5 +59,5 @@ public interface IDiagramConnectionEndpointBindingDef
     void setValue( String value );
     void setValue( Function value );
         
-	
+    
 }

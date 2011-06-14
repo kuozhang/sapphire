@@ -26,90 +26,90 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 public class ModelUtil 
 {
     public static ModelProperty resolve(final IModelElement modelElement, 
-    		String propertyName)
+            String propertyName)
     {
-    	if (propertyName != null)
-    	{
-	        final ModelElementType type = modelElement.getModelElementType();
-	        final ModelProperty property = type.getProperty( propertyName );
-	        if( property == null )
-	        {
-	            throw new RuntimeException( "Could not find property " + propertyName + " in " + type.getQualifiedName() );
-	        }
-	        return property;
-    	}    
+        if (propertyName != null)
+        {
+            final ModelElementType type = modelElement.getModelElementType();
+            final ModelProperty property = type.getProperty( propertyName );
+            if( property == null )
+            {
+                throw new RuntimeException( "Could not find property " + propertyName + " in " + type.getQualifiedName() );
+            }
+            return property;
+        }    
         return null;
     }
 
     public static ModelProperty resolve(ModelElementType modelElementType, ModelPath path)
     {
-    	if (path.length() == 1)
-    	{
-			String propertyName = ((ModelPath.PropertySegment)path.head()).getPropertyName();
-			ModelProperty modelProperty = modelElementType.getProperty(propertyName);
-    		return modelProperty;
-    	}
-    	else
-    	{
-    		ModelPath.Segment head = path.head();
-    		if (head instanceof ModelPath.PropertySegment)
-    		{
+        if (path.length() == 1)
+        {
+            String propertyName = ((ModelPath.PropertySegment)path.head()).getPropertyName();
+            ModelProperty modelProperty = modelElementType.getProperty(propertyName);
+            return modelProperty;
+        }
+        else
+        {
+            ModelPath.Segment head = path.head();
+            if (head instanceof ModelPath.PropertySegment)
+            {
                 final String propertyName = ((ModelPath.PropertySegment)head).getPropertyName();
                 final ModelProperty property = modelElementType.getProperty(propertyName);
                 if (property instanceof ListProperty)
                 {
-                	ModelElementType type = ((ListProperty)property).getType();
-                	return resolve(type, path.tail());
+                    ModelElementType type = ((ListProperty)property).getType();
+                    return resolve(type, path.tail());
                 }
                 else
                 {
-                	throw new RuntimeException("Invalid model path <" + path + "> in ModelElementType " + modelElementType.getSimpleName());
+                    throw new RuntimeException("Invalid model path <" + path + "> in ModelElementType " + modelElementType.getSimpleName());
                 }
-    		}
-    		else 
-    		{
-    			throw new RuntimeException("Invalid model path <" + path + "> in ModelElementType " + modelElementType.getSimpleName());
-    		}
-    	}
+            }
+            else 
+            {
+                throw new RuntimeException("Invalid model path <" + path + "> in ModelElementType " + modelElementType.getSimpleName());
+            }
+        }
     }
 
     public static ModelProperty resolve(IModelElement modelElement, ModelPath path)
     {
-    	if (path.length() == 1)
-    	{
-			String propertyName = ((ModelPath.PropertySegment)path.head()).getPropertyName();			
-    		return resolve(modelElement, propertyName);
-    	}
-    	else
-    	{
-    		ModelPath.Segment head = path.head();
-    		if (head instanceof ModelPath.PropertySegment)
-    		{
+        if (path.length() == 1)
+        {
+            String propertyName = ((ModelPath.PropertySegment)path.head()).getPropertyName();            
+            return resolve(modelElement, propertyName);
+        }
+        else
+        {
+            ModelPath.Segment head = path.head();
+            if (head instanceof ModelPath.PropertySegment)
+            {
                 final String propertyName = ((ModelPath.PropertySegment)head).getPropertyName();
                 final ModelProperty property = modelElement.getModelElementType().getProperty(propertyName);
                 if (property instanceof ListProperty)
                 {
-                	ModelElementType type = ((ListProperty)property).getType();
-                	return resolve(type, path.tail());
+                    ModelElementType type = ((ListProperty)property).getType();
+                    return resolve(type, path.tail());
                 }
                 else
                 {
-                	throw new RuntimeException("Invalid model path <" + path + "> in model element " + modelElement);
+                    throw new RuntimeException("Invalid model path <" + path + "> in model element " + modelElement);
                 }
-    		}
-    		else if (head instanceof ModelPath.ParentElementSegment)
-    		{
-    			IModelParticle parent = modelElement.parent();
-    			if (parent instanceof ModelElementList<?>)
-    			{
-    				parent = parent.parent();
-    			}
-    			return resolve((IModelElement)parent, path.tail());
-    		}
-    		else 
-    		{
-    			throw new RuntimeException("Invalid model path <" + path + "> in model element " + modelElement);
-    		}
-    	}
+            }
+            else if (head instanceof ModelPath.ParentElementSegment)
+            {
+                IModelParticle parent = modelElement.parent();
+                if (parent instanceof ModelElementList<?>)
+                {
+                    parent = parent.parent();
+                }
+                return resolve((IModelElement)parent, path.tail());
+            }
+            else 
+            {
+                throw new RuntimeException("Invalid model path <" + path + "> in model element " + modelElement);
+            }
+        }
     }
 }

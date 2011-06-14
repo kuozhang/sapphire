@@ -21,19 +21,19 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 public enum HorizontalAlignment 
 
 {
-	@Label( standard = "left" )
-	@EnumSerialization( primary = "left" )
-	
-	LEFT,
-	
+    @Label( standard = "left" )
+    @EnumSerialization( primary = "left" )
+    
+    LEFT,
+    
     @Label( standard = "center" )
     @EnumSerialization( primary = "center" )
     
     CENTER,
     
-	@Label( standard = "right" )
-	@EnumSerialization( primary = "right" )
-	
-	RIGHT
-	
+    @Label( standard = "right" )
+    @EnumSerialization( primary = "right" )
+    
+    RIGHT
+    
 }

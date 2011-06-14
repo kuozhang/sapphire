@@ -38,30 +38,30 @@ public class TextUtil
      */
     public static Text createDefaultText(Diagram diagram, GraphicsAlgorithmContainer gaContainer, String value)
     {
-    	IGaService gaService = Graphiti.getGaService();
+        IGaService gaService = Graphiti.getGaService();
         Text text = null;
         Method createTextMethod = null;
-    	try
-    	{
-    		createTextMethod = gaService.getClass().getMethod("createDefaultText", PARAM_M5);
-    		Object[] args = new Object[]{gaContainer, value};
-    		text = (Text)createTextMethod.invoke(gaService, args);            		
-    	}
-    	catch (NoSuchMethodException e)
-    	{
-    		try
-    		{
-        		createTextMethod = gaService.getClass().getMethod("createDefaultText", PARAM_M6);
-        		Object[] args = new Object[]{diagram, gaContainer, value};
-        		text = (Text)createTextMethod.invoke(gaService, args);
-    		}
-            catch (NoSuchMethodException e2) {}        		
+        try
+        {
+            createTextMethod = gaService.getClass().getMethod("createDefaultText", PARAM_M5);
+            Object[] args = new Object[]{gaContainer, value};
+            text = (Text)createTextMethod.invoke(gaService, args);                    
+        }
+        catch (NoSuchMethodException e)
+        {
+            try
+            {
+                createTextMethod = gaService.getClass().getMethod("createDefaultText", PARAM_M6);
+                Object[] args = new Object[]{diagram, gaContainer, value};
+                text = (Text)createTextMethod.invoke(gaService, args);
+            }
+            catch (NoSuchMethodException e2) {}                
             catch (IllegalAccessException ia) {}
             catch (InvocationTargetException ie) {}
-    	}
+        }
         catch (IllegalAccessException ia) {}
         catch (InvocationTargetException ie) {}
-    	
+        
         return text;
     }
 }

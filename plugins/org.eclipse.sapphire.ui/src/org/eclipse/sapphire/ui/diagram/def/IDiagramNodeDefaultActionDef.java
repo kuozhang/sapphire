@@ -29,11 +29,11 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 public interface IDiagramNodeDefaultActionDef 
 
-	extends ISapphirePartDef
-	
+    extends ISapphirePartDef
+    
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramNodeDefaultActionDef.class );
-	
+    ModelElementType TYPE = new ModelElementType( IDiagramNodeDefaultActionDef.class );
+    
     // *** Label ***
     
     @Label( standard = "label" )
@@ -44,8 +44,8 @@ public interface IDiagramNodeDefaultActionDef
     ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
     
     Value<String> getLabel();
-    void setLabel( String value );	
-	
+    void setLabel( String value );    
+    
     // *** Description ***
     
     @Label( standard = "description" )
@@ -55,7 +55,7 @@ public interface IDiagramNodeDefaultActionDef
     ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );
     
     Value<String> getDescription();
-    void setDescription( String value );	
+    void setDescription( String value );    
 
     // *** ActionId ***
     
@@ -76,6 +76,6 @@ public interface IDiagramNodeDefaultActionDef
     ValueProperty PROP_ACTION_HANDLER_ID = new ValueProperty( TYPE, "ActionHandlerId" );
     
     Value<String> getActionHandlerId();
-    void setActionHandlerId( String value );	
-	
+    void setActionHandlerId( String value );    
+    
 }

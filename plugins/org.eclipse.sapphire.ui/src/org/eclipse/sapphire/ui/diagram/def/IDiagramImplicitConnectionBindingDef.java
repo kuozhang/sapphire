@@ -33,11 +33,11 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface IDiagramImplicitConnectionBindingDef 
 
-	extends IDiagramConnectionBindingDef 
+    extends IDiagramConnectionBindingDef 
 
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramImplicitConnectionBindingDef.class );
-	
+    ModelElementType TYPE = new ModelElementType( IDiagramImplicitConnectionBindingDef.class );
+    
     // *** ModelElementTypes ***
     
     @Type( base = IModelElementTypeDef.class )
@@ -61,14 +61,14 @@ public interface IDiagramImplicitConnectionBindingDef
     
     // *** ConnectionWiringStrategy ***
     
-	@Type( base = ImplicitConnectionWiringStrategy.class )
-	@DefaultValue( text = "sequential" )
-	@XmlBinding( path = "connection-wiring-strategy" )
-	
-	ValueProperty PROP_CONNECTION_WIRING_STRATEGY = new ValueProperty( TYPE, "ConnectionWiringStrategy" );
-	
-	Value<ImplicitConnectionWiringStrategy> getConnectionWiringStrategy();
-	void setConnectionWiringStrategy( String value );
-	void setConnectionWiringStrategy( ImplicitConnectionWiringStrategy value );
+    @Type( base = ImplicitConnectionWiringStrategy.class )
+    @DefaultValue( text = "sequential" )
+    @XmlBinding( path = "connection-wiring-strategy" )
+    
+    ValueProperty PROP_CONNECTION_WIRING_STRATEGY = new ValueProperty( TYPE, "ConnectionWiringStrategy" );
+    
+    Value<ImplicitConnectionWiringStrategy> getConnectionWiringStrategy();
+    void setConnectionWiringStrategy( String value );
+    void setConnectionWiringStrategy( ImplicitConnectionWiringStrategy value );
     
 }

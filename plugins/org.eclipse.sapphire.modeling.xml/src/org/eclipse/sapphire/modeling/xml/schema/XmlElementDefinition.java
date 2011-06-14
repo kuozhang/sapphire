@@ -47,14 +47,14 @@ public class XmlElementDefinition extends XmlContentModel
             final int maxOccur,
             final boolean isAbstract, 
             final QName substitutionGroup )
-	{
-		super( schema, minOccur, maxOccur );
-		
-		this.elementName = elementName;
-		this.contentModelName = contentModelName;
-		this.isAbstract = isAbstract;
-		this.substitutionGroup = substitutionGroup;
-	}
+    {
+        super( schema, minOccur, maxOccur );
+        
+        this.elementName = elementName;
+        this.contentModelName = contentModelName;
+        this.isAbstract = isAbstract;
+        this.substitutionGroup = substitutionGroup;
+    }
 
     public QName getName()
     {
@@ -67,22 +67,22 @@ public class XmlElementDefinition extends XmlContentModel
     }
     
     public boolean isAbstract() {
-		return this.isAbstract;
-	}
+        return this.isAbstract;
+    }
 
-	public QName getSubstitutionGroup() {
-		return this.substitutionGroup;
-	}
+    public QName getSubstitutionGroup() {
+        return this.substitutionGroup;
+    }
 
-	public List<XmlElementDefinition> getSubstitutionList() {
-		return this.substitutionList;
-	}
+    public List<XmlElementDefinition> getSubstitutionList() {
+        return this.substitutionList;
+    }
 
-	public void setSubstitutionList(List<XmlElementDefinition> substitutionList) {
-		this.substitutionList = substitutionList;
-	}
+    public void setSubstitutionList(List<XmlElementDefinition> substitutionList) {
+        this.substitutionList = substitutionList;
+    }
 
-	public XmlContentModel getContentModel()
+    public XmlContentModel getContentModel()
     {
         final QName contentModelName = getContentModelName();
         
@@ -177,10 +177,10 @@ public class XmlElementDefinition extends XmlContentModel
     }
     
     protected boolean sameElementName(QName qname) {
-    	if (this.elementName.equals( qname )) {
-    		return true;
-    	}
-    	return false;
+        if (this.elementName.equals( qname )) {
+            return true;
+        }
+        return false;
     }
     
     @Override
@@ -215,7 +215,7 @@ public class XmlElementDefinition extends XmlContentModel
         if ( isAbstract() ) 
         {
             buf.append( indent );
-        	buf.append( "    abstract=\"true\" "); //$NON-NLS-1$
+            buf.append( "    abstract=\"true\" "); //$NON-NLS-1$
             buf.append( '\n' );
         }
         
@@ -258,7 +258,7 @@ public class XmlElementDefinition extends XmlContentModel
             return this.contentModelName;
         }
         
-		public void setContentModelName( final QName contentModelName )
+        public void setContentModelName( final QName contentModelName )
         {
             this.contentModelName = contentModelName;
         }
@@ -269,20 +269,20 @@ public class XmlElementDefinition extends XmlContentModel
         }
 
         public final boolean isAbstract() {
-			return this.isAbstract;
-		}
+            return this.isAbstract;
+        }
 
-		public final void setAbstract(boolean isAbstract) {
-			this.isAbstract = isAbstract;
-		}
+        public final void setAbstract(boolean isAbstract) {
+            this.isAbstract = isAbstract;
+        }
 
-		public final QName getSubstitutionGroup() {
-			return this.substitutionGroup;
-		}
+        public final QName getSubstitutionGroup() {
+            return this.substitutionGroup;
+        }
 
-		public final void setSubstitutionGroup(QName substitutionGroup) {
-			this.substitutionGroup = substitutionGroup;
-		}
+        public final void setSubstitutionGroup(QName substitutionGroup) {
+            this.substitutionGroup = substitutionGroup;
+        }
 
         @Override
         public XmlContentModel create( final XmlDocumentSchema schema )

@@ -29,74 +29,74 @@ import org.apache.tools.ant.Task;
 
 public final class SapphireAntTask
 
-	extends Task
+    extends Task
 
 {
-	private File src = null;
-	private File dest = null;
+    private File src = null;
+    private File dest = null;
 
-	public void setSrc( final File src )
-	{
-		this.src = src;
-	}
+    public void setSrc( final File src )
+    {
+        this.src = src;
+    }
 
-	public void setDest( final File dest )
-	{
-		this.dest = dest;
-	}
+    public void setDest( final File dest )
+    {
+        this.dest = dest;
+    }
 
-	public void execute()
-	{
-		if( this.src == null )
-		{
-			throw new BuildException( "Attribute src not set!" );
-		}
+    public void execute()
+    {
+        if( this.src == null )
+        {
+            throw new BuildException( "Attribute src not set!" );
+        }
 
-		if( this.dest == null )
-		{
-			throw new BuildException( "Attribute dest not set!" );
-		}
+        if( this.dest == null )
+        {
+            throw new BuildException( "Attribute dest not set!" );
+        }
 
-		final Set<File> files = new HashSet<File>();
-		gatherSourceFiles( this.src, files );
+        final Set<File> files = new HashSet<File>();
+        gatherSourceFiles( this.src, files );
 
         for( File sourceFile : files )
         {
             try
             {
-            	final String resourceFileContent = StringResourcesExtractor.extract( sourceFile );
+                final String resourceFileContent = StringResourcesExtractor.extract( sourceFile );
 
-            	if( resourceFileContent != null )
-            	{
-	                File resourceFile = new File( this.dest, getRelativePath( sourceFile.getParentFile(), this.src ) );
-	                resourceFile = new File( resourceFile, getNameWithoutExtension( sourceFile ) + ".properties" );
+                if( resourceFileContent != null )
+                {
+                    File resourceFile = new File( this.dest, getRelativePath( sourceFile.getParentFile(), this.src ) );
+                    resourceFile = new File( resourceFile, getNameWithoutExtension( sourceFile ) + ".properties" );
 
-	                resourceFile.getParentFile().mkdirs();
+                    resourceFile.getParentFile().mkdirs();
 
-	                final OutputStream out = new FileOutputStream( resourceFile );
+                    final OutputStream out = new FileOutputStream( resourceFile );
 
-	                try
-	                {
-	                	final Writer writer = new OutputStreamWriter( out );
-	                	writer.write( resourceFileContent );
-	                	writer.flush();
-	                }
-	                finally
-	                {
-	                	try
-	                	{
-	                		out.close();
-	                	}
-	                	catch( IOException e ) {}
-	                }
-            	}
+                    try
+                    {
+                        final Writer writer = new OutputStreamWriter( out );
+                        writer.write( resourceFileContent );
+                        writer.flush();
+                    }
+                    finally
+                    {
+                        try
+                        {
+                            out.close();
+                        }
+                        catch( IOException e ) {}
+                    }
+                }
             }
             catch( Exception e )
             {
-            	throw new BuildException( e );
+                throw new BuildException( e );
             }
         }
-	}
+    }
 
     private static void gatherSourceFiles( final File directory,
                                            final Set<File> files )

@@ -38,7 +38,7 @@ public interface IHelpGallery
     extends IModelElement
 
 {
-	ModelElementType TYPE = new ModelElementType( IHelpGallery.class );
+    ModelElementType TYPE = new ModelElementType( IHelpGallery.class );
 
     // *** Simple ***
 
@@ -49,8 +49,8 @@ public interface IHelpGallery
     @Documentation
     ( 
         content = "Content help for simple integer. Option to [b]show in bold.[/b]" +
-        		"[br/]" +
-        		" Please note text in [b]  bold tag  [/b]   are trimmed.",
+                "[br/]" +
+                " Please note text in [b]  bold tag  [/b]   are trimmed.",
         mergeStrategy=DocumentationMergeStrategy.APPEND,
         topics = 
         {
@@ -98,19 +98,19 @@ public interface IHelpGallery
     @Label( standard = "code" )
     @XmlBinding( path = "code" )
     @Documentation( content = "Content help containing code tag which preserves the spaces." +
-    		"[pbr/]" +
-    		"[code]" +
-			"<actions>\n" +
-			"    <action-group>\n" +
-			"        <action>\n" +
-			"            <class>MyAction1</class>\n" +
-			"        </action>\n" +
-			"        <action>\n" +
-			"            <class>MyAction2</class>\n" +
-			"        </action>\n" +
-			"    </action-group>\n" +
-			"</actions>" +
-    		"[/code]" )
+            "[pbr/]" +
+            "[code]" +
+            "<actions>\n" +
+            "    <action-group>\n" +
+            "        <action>\n" +
+            "            <class>MyAction1</class>\n" +
+            "        </action>\n" +
+            "        <action>\n" +
+            "            <class>MyAction2</class>\n" +
+            "        </action>\n" +
+            "    </action-group>\n" +
+            "</actions>" +
+            "[/code]" )
 
     ValueProperty PROP_CODE = new ValueProperty( TYPE, "Code" );
 
@@ -123,11 +123,11 @@ public interface IHelpGallery
     @Label( standard = "simple choice" )
     @XmlBinding( path = "simple-choice" )
     @Documentation( content = " Content help for simple choice " +
-    			"[ul]" +
-    			"[li]yes[/li]" +
-    			"[li]maybe[/li]" +
-    			"[li]no[/li]" +
-    			"[/ul]" )
+                "[ul]" +
+                "[li]yes[/li]" +
+                "[li]maybe[/li]" +
+                "[li]no[/li]" +
+                "[/ul]" )
 
     ValueProperty PROP_SIMPLE_CHOICE = new ValueProperty( TYPE, "SimpleChoice" );
 

@@ -25,27 +25,27 @@ import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProv
 
 public class SapphireMoveBendpointFeature extends DefaultMoveBendpointFeature 
 {
-	public SapphireMoveBendpointFeature(IFeatureProvider fp)
-	{
-		super(fp);
-	}
-	
-	@Override
-	public boolean moveBendpoint(IMoveBendpointContext context) 
-	{
-		boolean ret = false;
-		super.moveBendpoint(context);
-		
-		FreeFormConnection freeFormConnection = context.getConnection();
-		Object bo = getBusinessObjectForPictogramElement(freeFormConnection);
-		if (bo instanceof DiagramConnectionPart)
-		{
-			DiagramGeometryWrapper dg = 
-				((SapphireDiagramFeatureProvider)getFeatureProvider()).getDiagramGeometry();
-			ret = dg.updateConnectionBendpoint((DiagramConnectionPart)bo, 
-					context.getBendpointIndex(), context.getX(), context.getY());
-		}		
-		return ret;
-	}
-	
+    public SapphireMoveBendpointFeature(IFeatureProvider fp)
+    {
+        super(fp);
+    }
+    
+    @Override
+    public boolean moveBendpoint(IMoveBendpointContext context) 
+    {
+        boolean ret = false;
+        super.moveBendpoint(context);
+        
+        FreeFormConnection freeFormConnection = context.getConnection();
+        Object bo = getBusinessObjectForPictogramElement(freeFormConnection);
+        if (bo instanceof DiagramConnectionPart)
+        {
+            DiagramGeometryWrapper dg = 
+                ((SapphireDiagramFeatureProvider)getFeatureProvider()).getDiagramGeometry();
+            ret = dg.updateConnectionBendpoint((DiagramConnectionPart)bo, 
+                    context.getBendpointIndex(), context.getX(), context.getY());
+        }        
+        return ret;
+    }
+    
 }

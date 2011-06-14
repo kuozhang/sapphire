@@ -25,22 +25,22 @@ import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProv
 
 public class SapphireMoveNodeFeature extends DefaultMoveShapeFeature 
 {
-	public SapphireMoveNodeFeature(IFeatureProvider fp)
-	{
-		super(fp);
-	}
-	
-	@Override
-	protected void internalMove(IMoveShapeContext context) 
-	{
-		super.internalMove(context);
- 		PictogramElement pe = context.getPictogramElement();
- 		Object bo = getBusinessObjectForPictogramElement(pe);
- 		if (bo instanceof DiagramNodePart)
- 		{
-			DiagramGeometryWrapper dg = 
-				((SapphireDiagramFeatureProvider)getFeatureProvider()).getDiagramGeometry();
-			dg.updateNode((DiagramNodePart)bo, context.getX(), context.getY());
- 		}
-	}
+    public SapphireMoveNodeFeature(IFeatureProvider fp)
+    {
+        super(fp);
+    }
+    
+    @Override
+    protected void internalMove(IMoveShapeContext context) 
+    {
+        super.internalMove(context);
+         PictogramElement pe = context.getPictogramElement();
+         Object bo = getBusinessObjectForPictogramElement(pe);
+         if (bo instanceof DiagramNodePart)
+         {
+            DiagramGeometryWrapper dg = 
+                ((SapphireDiagramFeatureProvider)getFeatureProvider()).getDiagramGeometry();
+            dg.updateNode((DiagramNodePart)bo, context.getX(), context.getY());
+         }
+    }
 }

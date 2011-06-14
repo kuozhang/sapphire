@@ -32,30 +32,30 @@ import org.eclipse.sapphire.samples.map.internal.DestinationReferenceService;
 
 public interface IRoute extends IModelElement 
 {
-	ModelElementType TYPE = new ModelElementType( IRoute.class );
-	
-	// *** FromDestination ***
-	
-	@Reference( target = IDestination.class )
-	@Service( impl = DestinationReferenceService.class )
-	@XmlBinding( path = "from-destination")
-	@Required
-	@Label(standard = "from destination")
+    ModelElementType TYPE = new ModelElementType( IRoute.class );
+    
+    // *** FromDestination ***
+    
+    @Reference( target = IDestination.class )
+    @Service( impl = DestinationReferenceService.class )
+    @XmlBinding( path = "from-destination")
+    @Required
+    @Label(standard = "from destination")
 
-	ValueProperty PROP_FROM_DESTINATION = new ValueProperty( TYPE, "FromDestination" );
+    ValueProperty PROP_FROM_DESTINATION = new ValueProperty( TYPE, "FromDestination" );
 
     ReferenceValue<String,IDestination> getFromDestination();
     void setFromDestination( String name );
-	
-	// *** ToDestination ***
-	
-	@Reference( target = IDestination.class )
-	@Service( impl = DestinationReferenceService.class )
-	@XmlBinding( path = "to-destination")
-	@Required
-	@Label(standard = "to destination")
+    
+    // *** ToDestination ***
+    
+    @Reference( target = IDestination.class )
+    @Service( impl = DestinationReferenceService.class )
+    @XmlBinding( path = "to-destination")
+    @Required
+    @Label(standard = "to destination")
 
-	ValueProperty PROP_TO_DESTINATION = new ValueProperty( TYPE, "ToDestination" );
+    ValueProperty PROP_TO_DESTINATION = new ValueProperty( TYPE, "ToDestination" );
 
     ReferenceValue<String,IDestination> getToDestination();
     void setToDestination( String name );

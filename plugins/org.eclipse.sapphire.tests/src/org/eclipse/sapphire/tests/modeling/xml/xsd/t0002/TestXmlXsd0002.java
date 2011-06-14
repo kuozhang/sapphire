@@ -38,8 +38,8 @@ public final class TestXmlXsd0002
 
     extends SapphireTestCase
 {   
-	private final static String SCHEMA_LOCATION = "http://www.eclipse.org/sapphire/tests/xml/xsd/0002";
-	
+    private final static String SCHEMA_LOCATION = "http://www.eclipse.org/sapphire/tests/xml/xsd/0002";
+    
     private TestXmlXsd0002( final String name )
     {
         super( name );

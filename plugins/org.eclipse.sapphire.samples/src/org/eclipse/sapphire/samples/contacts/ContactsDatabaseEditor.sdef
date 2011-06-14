@@ -225,8 +225,8 @@
             <label>send contact</label>
             <initial-focus>To</initial-focus>
             <content>
-            	<label>Send contact information via e-mail.</label>
-            	<spacer/>
+                <label>Send contact information via e-mail.</label>
+                <spacer/>
                 <property-editor>To</property-editor>
                 <html>
                     <content>${ MessageBody }</content>

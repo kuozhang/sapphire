@@ -17,5 +17,5 @@ package org.eclipse.sapphire.ui.swt.graphiti.providers;
 
 public interface SapphireDiagramPropertyKeys 
 {
-	public static final String NODE_IMAGE_ID = "nodeImageId";
+    public static final String NODE_IMAGE_ID = "nodeImageId";
 }

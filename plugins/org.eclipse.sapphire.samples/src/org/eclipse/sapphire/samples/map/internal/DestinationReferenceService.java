@@ -22,22 +22,22 @@ import org.eclipse.sapphire.samples.map.IMap;
 
 public class DestinationReferenceService extends ReferenceService 
 {
-	@Override
-	public Object resolve(String reference) 
-	{
-		if (reference != null)
-		{
-			IMap map = element().nearest(IMap.class);
-			ModelElementList<IDestination> dests = map.getDestinations();
-			for (IDestination dest : dests)
-			{
-				if (reference.equals(dest.getName().getContent()))
-				{
-					return dest;
-				}
-			}
-		}
-		return null;
-	}
+    @Override
+    public Object resolve(String reference) 
+    {
+        if (reference != null)
+        {
+            IMap map = element().nearest(IMap.class);
+            ModelElementList<IDestination> dests = map.getDestinations();
+            for (IDestination dest : dests)
+            {
+                if (reference.equals(dest.getName().getContent()))
+                {
+                    return dest;
+                }
+            }
+        }
+        return null;
+    }
 
 }

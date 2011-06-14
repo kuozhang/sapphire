@@ -23,5 +23,5 @@ public enum ImplicitConnectionWiringStrategy
     @Label( standard = "sequential" )
     @EnumSerialization( primary = "sequential" )
     
-	SEQUENTIAL
+    SEQUENTIAL
 }

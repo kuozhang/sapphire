@@ -35,23 +35,23 @@ import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 @GenerateImpl
 
 public interface IDiagramEditorPageDef 
-	
-	extends IEditorPageDef, IPropertiesViewContributorDef
-	
+    
+    extends IEditorPageDef, IPropertiesViewContributorDef
+    
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramEditorPageDef.class);
-	
-	// *** GridDefinition ***
-	
-	@Type( base = IDiagramGridDef.class )
-	@XmlBinding( path = "grid")
-	
-	ImpliedElementProperty PROP_GRID_DEFINITION = new ImpliedElementProperty( TYPE, "GridDefinition" );
+    ModelElementType TYPE = new ModelElementType( IDiagramEditorPageDef.class);
+    
+    // *** GridDefinition ***
+    
+    @Type( base = IDiagramGridDef.class )
+    @XmlBinding( path = "grid")
+    
+    ImpliedElementProperty PROP_GRID_DEFINITION = new ImpliedElementProperty( TYPE, "GridDefinition" );
 
-	IDiagramGridDef getGridDefinition();	
-	
-	// *** SideBySideLayoutStorage ***
-	
+    IDiagramGridDef getGridDefinition();    
+    
+    // *** SideBySideLayoutStorage ***
+    
     @Type( base = Boolean.class )
     @XmlBinding( path = "side-by-side-layout-storage" )
     @DefaultValue( text = "false" )
@@ -62,7 +62,7 @@ public interface IDiagramEditorPageDef
     Value<Boolean> isSideBySideLayoutStorage();
     void setSideBySideLayoutStorage( String value );
     void setSideBySideLayoutStorage( Boolean value );
-	
+    
     // *** Property ***
     
     @Label( standard = "property" )
@@ -72,8 +72,8 @@ public interface IDiagramEditorPageDef
     
     Value<String> getProperty();
     void setProperty( String property );
-	
-	// *** DiagramNodeDefs ***
+    
+    // *** DiagramNodeDefs ***
     
     @Type( base = IDiagramNodeDef.class )
     @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "node", type = IDiagramNodeDef.class ) )
@@ -82,7 +82,7 @@ public interface IDiagramEditorPageDef
     
     ModelElementList<IDiagramNodeDef> getDiagramNodeDefs();
     
-	// *** DiagramConnectionDefs ***
+    // *** DiagramConnectionDefs ***
     
     @Type( base = IDiagramConnectionDef.class )
     @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "connection", type = IDiagramConnectionDef.class ) )
@@ -90,8 +90,8 @@ public interface IDiagramEditorPageDef
     ListProperty PROP_DIAGRAM_CONNECTION_DEFS = new ListProperty( TYPE, "DiagramConnectionDefs" );
     
     ModelElementList<IDiagramConnectionDef> getDiagramConnectionDefs();
-	
-	// *** DiagramConnectionBindingDefs ***
+    
+    // *** DiagramConnectionBindingDefs ***
     
     @Type( base = IDiagramExplicitConnectionBindingDef.class )
     @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "connection-binding", type = IDiagramExplicitConnectionBindingDef.class ) )
@@ -100,7 +100,7 @@ public interface IDiagramEditorPageDef
     
     ModelElementList<IDiagramExplicitConnectionBindingDef> getDiagramConnectionBindingDefs();
     
-	// *** ImplicitConnectionBindingDefs ***
+    // *** ImplicitConnectionBindingDefs ***
     
     @Type( base = IDiagramImplicitConnectionBindingDef.class )
     @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "implicit-connection-binding", type = IDiagramImplicitConnectionBindingDef.class ) )
@@ -109,7 +109,7 @@ public interface IDiagramEditorPageDef
     
     ModelElementList<IDiagramImplicitConnectionBindingDef> getImplicitConnectionBindingDefs();
     
-	// *** DiagramImageDecorators ***
+    // *** DiagramImageDecorators ***
     
     @Type( base = IDiagramImageChoice.class )
     @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "image-decorator", type = IDiagramImageChoice.class ) )

@@ -25,36 +25,36 @@ import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProv
 
 public class SapphireActionCustomFeature extends AbstractCustomFeature 
 {
-	private SapphireActionHandler sapphireActionHandler;
-	
-	public SapphireActionCustomFeature(IFeatureProvider fp, SapphireActionHandler sapphireActionHandler)
-	{
-		super(fp);
-		this.sapphireActionHandler = sapphireActionHandler;
-	}
+    private SapphireActionHandler sapphireActionHandler;
+    
+    public SapphireActionCustomFeature(IFeatureProvider fp, SapphireActionHandler sapphireActionHandler)
+    {
+        super(fp);
+        this.sapphireActionHandler = sapphireActionHandler;
+    }
 
-	@Override
-	public String getName() 
-	{
-		return this.sapphireActionHandler.getLabel();
-	}
+    @Override
+    public String getName() 
+    {
+        return this.sapphireActionHandler.getLabel();
+    }
 
-	@Override
-	public boolean canExecute(ICustomContext context) 
-	{
-		return true;
-	}
-	
-	public void execute(ICustomContext context) 
-	{
-		SapphireRenderingContext sapphireContext = 
-				((SapphireDiagramFeatureProvider)this.getFeatureProvider()).getRenderingContext(this.sapphireActionHandler.getPart());
-		this.sapphireActionHandler.execute(sapphireContext);
-	}
+    @Override
+    public boolean canExecute(ICustomContext context) 
+    {
+        return true;
+    }
+    
+    public void execute(ICustomContext context) 
+    {
+        SapphireRenderingContext sapphireContext = 
+                ((SapphireDiagramFeatureProvider)this.getFeatureProvider()).getRenderingContext(this.sapphireActionHandler.getPart());
+        this.sapphireActionHandler.execute(sapphireContext);
+    }
 
-	@Override
-	public boolean hasDoneChanges() 
-	{
-		return ((SapphireDiagramActionHandler)this.sapphireActionHandler).hasDoneModelChanges();
-	}	
+    @Override
+    public boolean hasDoneChanges() 
+    {
+        return ((SapphireDiagramActionHandler)this.sapphireActionHandler).hasDoneModelChanges();
+    }    
 }

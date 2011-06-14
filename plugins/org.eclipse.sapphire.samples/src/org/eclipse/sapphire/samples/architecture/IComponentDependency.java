@@ -36,17 +36,17 @@ public interface IComponentDependency
     extends IModelElement
     
 {
-	ModelElementType TYPE = new ModelElementType( IComponentDependency.class );
-	
+    ModelElementType TYPE = new ModelElementType( IComponentDependency.class );
+    
     // *** Name ***
     
-	@Reference( target = IComponent.class )
-	@Service( impl = ComponentReferenceService.class )
-	@Required
-	@PossibleValues( property = "/Components/Name" )
-	@XmlBinding( path = "name" )
+    @Reference( target = IComponent.class )
+    @Service( impl = ComponentReferenceService.class )
+    @Required
+    @PossibleValues( property = "/Components/Name" )
+    @XmlBinding( path = "name" )
 
-	ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+    ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
 
     ReferenceValue<String,IComponent> getName();
     void setName( String value );

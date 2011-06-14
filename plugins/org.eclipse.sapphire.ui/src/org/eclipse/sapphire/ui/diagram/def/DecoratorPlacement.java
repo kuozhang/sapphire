@@ -21,14 +21,14 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 public enum DecoratorPlacement 
 
 {
-	@Label( standard = "image" )
-	@EnumSerialization( primary = "image" )
-	
-	IMAGE,
-	
-	@Label( standard = "label" )
-	@EnumSerialization( primary = "label" )
-	
-	LABEL;
+    @Label( standard = "image" )
+    @EnumSerialization( primary = "image" )
+    
+    IMAGE,
+    
+    @Label( standard = "label" )
+    @EnumSerialization( primary = "label" )
+    
+    LABEL;
 
 }

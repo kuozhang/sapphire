@@ -28,21 +28,21 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface IDiagramConnectionEndpointDef 
 
-	extends IModelElement 
-	
+    extends IModelElement 
+    
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramConnectionEndpointDef.class );
-	
-	// *** Type ***
-	
-	@Type( base = ConnectionEndpointType.class )
-	@DefaultValue( text = "none" )
-	@XmlBinding( path = "type" )
-	
-	ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
-	
-	Value<ConnectionEndpointType> getType();
-	void setType( String value );
-	void setType( ConnectionEndpointType value );
-	
+    ModelElementType TYPE = new ModelElementType( IDiagramConnectionEndpointDef.class );
+    
+    // *** Type ***
+    
+    @Type( base = ConnectionEndpointType.class )
+    @DefaultValue( text = "none" )
+    @XmlBinding( path = "type" )
+    
+    ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
+    
+    Value<ConnectionEndpointType> getType();
+    void setType( String value );
+    void setType( ConnectionEndpointType value );
+    
 }

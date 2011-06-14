@@ -23,42 +23,42 @@ import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
 
 public class ToggleDiagramGridActionHandler extends SapphireDiagramActionHandler 
 {
-	private SapphireDiagramEditor diagramEditor;
-	
-	@Override
-	public boolean canExecute(Object obj) 
-	{		
-		return true;
-	}
+    private SapphireDiagramEditor diagramEditor;
+    
+    @Override
+    public boolean canExecute(Object obj) 
+    {        
+        return true;
+    }
 
-	public void setDiagramEditor(SapphireDiagramEditor diagramEditor)
-	{
-		this.diagramEditor = diagramEditor;
-	}
-	
-	@Override
-	public boolean isChecked()
-	{
-		if (this.diagramEditor != null)
-		{
-			return this.diagramEditor.isGridVisible();
-		}
-		return false;
-	}
-	
-	@Override
-	protected Object run(SapphireRenderingContext context) 
-	{
-		if (this.diagramEditor != null)
-		{
-			GraphicalViewer diagramViewer = this.diagramEditor.getGraphicalViewer();
-			boolean visible = !diagramEditor.isGridVisible();
-			diagramViewer.setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, new Boolean(visible));
-			diagramViewer.setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, new Boolean(visible));
-			
-			diagramEditor.setGridVisible(visible);
-		}
-		return null;
-	}
+    public void setDiagramEditor(SapphireDiagramEditor diagramEditor)
+    {
+        this.diagramEditor = diagramEditor;
+    }
+    
+    @Override
+    public boolean isChecked()
+    {
+        if (this.diagramEditor != null)
+        {
+            return this.diagramEditor.isGridVisible();
+        }
+        return false;
+    }
+    
+    @Override
+    protected Object run(SapphireRenderingContext context) 
+    {
+        if (this.diagramEditor != null)
+        {
+            GraphicalViewer diagramViewer = this.diagramEditor.getGraphicalViewer();
+            boolean visible = !diagramEditor.isGridVisible();
+            diagramViewer.setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, new Boolean(visible));
+            diagramViewer.setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, new Boolean(visible));
+            
+            diagramEditor.setGridVisible(visible);
+        }
+        return null;
+    }
 
 }

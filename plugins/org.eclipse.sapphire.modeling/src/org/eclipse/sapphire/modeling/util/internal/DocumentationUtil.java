@@ -61,14 +61,14 @@ public class DocumentationUtil {
     }
 
     private static void format(final StringBuilder buf, final DocumentationPart part, int index, FormatFlags flags) {
-    	boolean collapseSpaces = flags.collapseSpaces;
+        boolean collapseSpaces = flags.collapseSpaces;
         if (part instanceof TextPart) {
-        	final String str = ((TextPart) part).getText();
-        	final boolean endsWithSpace = endsWithSpaces(str);
-        	final boolean startsWithSpace = startsWithSpaces(str);
-        	if (startsWithSpace && buf.toString().endsWith(BOLD_END)) {
-        		buf.append(' ');
-        	}
+            final String str = ((TextPart) part).getText();
+            final boolean endsWithSpace = endsWithSpaces(str);
+            final boolean startsWithSpace = startsWithSpaces(str);
+            if (startsWithSpace && buf.toString().endsWith(BOLD_END)) {
+                buf.append(' ');
+            }
             buf.append(collapseSpaces ? StandardValueNormalizationService.collapse(str) : str);
             flags.endsInSpace = endsWithSpace;
         } else if (part instanceof LineBreakPart) {
@@ -89,14 +89,14 @@ public class DocumentationUtil {
             buf.append(NEW_LINE_2);
 
             for (ListItem item : ((ListPart) part).getItems()) {
-            	format(buf, item, -1, flags);
+                format(buf, item, -1, flags);
             }
         } else if (part instanceof ListItem) {
             buf.append(index == -1 ? "*" : index);
             buf.append("  ");
 
             for (DocumentationPart child : ((ListItem) part).getChildren()) {
-            	format(buf, child, -1, flags);
+                format(buf, child, -1, flags);
             }
 
             buf.append(NEW_LINE);
@@ -104,32 +104,32 @@ public class DocumentationUtil {
         } else if (part instanceof BoldPart) {
             BoldPart boldPart = (BoldPart)part;
             if (boldPart.isOpen()) {
-            	if (flags.endsInSpace) {
-            		buf.append(' ');
-            	}
+                if (flags.endsInSpace) {
+                    buf.append(' ');
+                }
                 buf.append(BOLD_BEGIN);
             } else {
                 buf.append(BOLD_END);
             }
         } else if (part instanceof CodePart) {
-        	CodePart codePart = (CodePart)part;
+            CodePart codePart = (CodePart)part;
             if (codePart.isOpen()) {
-            	flags.collapseSpaces = false;
+                flags.collapseSpaces = false;
             } else {
-            	flags.collapseSpaces = true;
+                flags.collapseSpaces = true;
             }
         } else if (part instanceof DocumentationContent) {
             for (DocumentationPart child : ((DocumentationContent) part).getChildren()) {
-            	format(buf, child, -1, flags);
+                format(buf, child, -1, flags);
             }
         }
     }
     
     private static class FormatFlags {
-    	boolean collapseSpaces = true;
-    	boolean endsInSpace = false;
-    	
-    	FormatFlags() {
-    	}
+        boolean collapseSpaces = true;
+        boolean endsInSpace = false;
+        
+        FormatFlags() {
+        }
     }
 }

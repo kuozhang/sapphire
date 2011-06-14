@@ -23,22 +23,22 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 public class DiagramNodeAddActionHandlerFactory
 
-	extends SapphireActionHandlerFactory 
-	
+    extends SapphireActionHandlerFactory 
+    
 {
 
-	@Override
-	public List<SapphireActionHandler> create() 
-	{
+    @Override
+    public List<SapphireActionHandler> create() 
+    {
         final List<SapphireActionHandler> handlers = new ArrayList<SapphireActionHandler>();
         
         final SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart) getPart();
         for (final DiagramNodeTemplate nodeTemplate : diagramPart.getNodeTemplates())
         {
-        	final DiagramNodeAddActionHandler addNodeHandler = new DiagramNodeAddActionHandler(nodeTemplate);
-        	handlers.add(addNodeHandler);
+            final DiagramNodeAddActionHandler addNodeHandler = new DiagramNodeAddActionHandler(nodeTemplate);
+            handlers.add(addNodeHandler);
         }
-		return handlers;
-	}
+        return handlers;
+    }
 
 }

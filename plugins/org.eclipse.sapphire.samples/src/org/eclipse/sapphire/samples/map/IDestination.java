@@ -32,8 +32,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface IDestination extends IModelElement 
 {
-	ModelElementType TYPE = new ModelElementType( IDestination.class );
-	
+    ModelElementType TYPE = new ModelElementType( IDestination.class );
+    
     // *** Name ***
     
     @XmlBinding( path = "name" )
@@ -49,11 +49,11 @@ public interface IDestination extends IModelElement
     
     @Type( base = IRailwayDestination.class )
     @XmlListBinding( path = "railway-destinations", 
-    		mappings = @XmlListBinding.Mapping( element = "railway-destination", type = IRailwayDestination.class ) )
+            mappings = @XmlListBinding.Mapping( element = "railway-destination", type = IRailwayDestination.class ) )
     
     ListProperty PROP_RAILWAY_ROUTES = new ListProperty( TYPE, "RailwayRoutes" );
     
     ModelElementList<IRailwayDestination> getRailwayRoutes();
     
-	
+    
 }

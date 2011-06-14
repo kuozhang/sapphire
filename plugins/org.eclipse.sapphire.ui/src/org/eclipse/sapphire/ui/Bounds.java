@@ -17,33 +17,33 @@ package org.eclipse.sapphire.ui;
 
 public final class Bounds extends Point
 {
-	private int width;
-	private int height;
-	
-	public Bounds(int x, int y, int width, int height)
-	{
-		super(x, y);
-		this.width = width;
-		this.height = height;
-	}
-	
-	public int getWidth()
-	{
-		return this.width;
-	}
-	
-	public void setWidth(int w)
-	{
-		this.width = w;
-	}
-	
-	public int getHeight()
-	{
-		return this.height;
-	}
-	
-	public void setHeight(int h)
-	{
-		this.height = h;
-	}
+    private int width;
+    private int height;
+    
+    public Bounds(int x, int y, int width, int height)
+    {
+        super(x, y);
+        this.width = width;
+        this.height = height;
+    }
+    
+    public int getWidth()
+    {
+        return this.width;
+    }
+    
+    public void setWidth(int w)
+    {
+        this.width = w;
+    }
+    
+    public int getHeight()
+    {
+        return this.height;
+    }
+    
+    public void setHeight(int h)
+    {
+        this.height = h;
+    }
 }

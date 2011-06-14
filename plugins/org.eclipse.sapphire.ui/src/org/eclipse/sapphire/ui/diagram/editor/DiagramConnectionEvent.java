@@ -19,8 +19,8 @@ import org.eclipse.sapphire.ui.SapphirePartEvent;
 
 public class DiagramConnectionEvent extends SapphirePartEvent 
 {
-	 public DiagramConnectionEvent(final DiagramConnectionPart part)
-	 {
-		 super(part);
-	 }
+     public DiagramConnectionEvent(final DiagramConnectionPart part)
+     {
+         super(part);
+     }
 }

@@ -32,17 +32,17 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramGridDef;
 
 public interface IDiagramGeometry extends IModelElement 
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramGeometry.class );
-	
-	// *** GridDefinition ***
-	
-	@Type( base = IDiagramGridDef.class )
-	@XmlBinding( path = "grid")
-	
-	ImpliedElementProperty PROP_GRID_DEFINITION = new ImpliedElementProperty( TYPE, "GridDefinition" );
+    ModelElementType TYPE = new ModelElementType( IDiagramGeometry.class );
+    
+    // *** GridDefinition ***
+    
+    @Type( base = IDiagramGridDef.class )
+    @XmlBinding( path = "grid")
+    
+    ImpliedElementProperty PROP_GRID_DEFINITION = new ImpliedElementProperty( TYPE, "GridDefinition" );
 
-	IDiagramGridDef getGridDefinition();	
-	
+    IDiagramGridDef getGridDefinition();    
+    
     // *** DiagramNodeGeometries ***
 
     @Type( base = IDiagramNodeGeometry.class )
@@ -52,7 +52,7 @@ public interface IDiagramGeometry extends IModelElement
     ListProperty PROP_DIAGRAM_NODE_GEOMETRIES = new ListProperty( TYPE, "DiagramNodeGeometries" );
     
     ModelElementList<IDiagramNodeGeometry> getDiagramNodeGeometries();
-	
+    
     // *** DiagramConnectionGeometries ***
 
     @Type( base = IDiagramConnectionGeometry.class )

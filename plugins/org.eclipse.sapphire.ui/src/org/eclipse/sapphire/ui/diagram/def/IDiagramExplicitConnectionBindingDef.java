@@ -28,11 +28,11 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface IDiagramExplicitConnectionBindingDef 
 
-	extends IDiagramConnectionBindingDef 
-	
+    extends IDiagramConnectionBindingDef 
+    
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramExplicitConnectionBindingDef.class );
-	
+    ModelElementType TYPE = new ModelElementType( IDiagramExplicitConnectionBindingDef.class );
+    
     // *** Endpoint1 ***
     
     @Type( base = IDiagramConnectionEndpointBindingDef.class )
@@ -50,6 +50,6 @@ public interface IDiagramExplicitConnectionBindingDef
     ElementProperty PROP_ENDPOINT_2 = new ElementProperty( TYPE, "Endpoint2" );
     
     ModelElementHandle<IDiagramConnectionEndpointBindingDef> getEndpoint2();
-	
+    
 
 }

@@ -408,13 +408,13 @@ public abstract class SapphirePopup extends Window {
 
     @Override
     public boolean close() {
-		// If already closed, there is nothing to do.
-		// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=127505
-		if (getShell() == null || getShell().isDisposed()) {
-			return true;
-		}
+        // If already closed, there is nothing to do.
+        // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=127505
+        if (getShell() == null || getShell().isDisposed()) {
+            return true;
+        }
 
-		if (this.lastUsedRegion != null) {
+        if (this.lastUsedRegion != null) {
             this.lastUsedRegion.dispose();
         }
         if (this.lastUsedBgImage != null && !this.lastUsedBgImage.isDisposed()) {
@@ -422,9 +422,9 @@ public abstract class SapphirePopup extends Window {
         }
 
         if (this.parentDeactivateListener != null) {
-			getShell().getParent().removeListener(SWT.Deactivate, this.parentDeactivateListener);
-			this.parentDeactivateListener = null;
-		}
+            getShell().getParent().removeListener(SWT.Deactivate, this.parentDeactivateListener);
+            this.parentDeactivateListener = null;
+        }
         return super.close();
     }
 

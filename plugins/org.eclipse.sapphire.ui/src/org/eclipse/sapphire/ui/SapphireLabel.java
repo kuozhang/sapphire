@@ -63,7 +63,7 @@ public final class SapphireLabel
             {
                 public void run()
                 {
-                	refreshLabel();
+                    refreshLabel();
                 }
             }
         );
@@ -114,7 +114,7 @@ public final class SapphireLabel
     
             buf.append( displayDescription );
             if (!displayDescription.endsWith(" ")) {
-            	buf.append(" ");
+                buf.append(" ");
             }
             buf.append( "<a href=\"action\" nowrap=\"true\">");
             buf.append( Resources.moreDetails );
@@ -149,8 +149,8 @@ public final class SapphireLabel
             } 
             else 
             {
-            	System.out.println("not in displayBounds: ");
-            	position = cursor;
+                System.out.println("not in displayBounds: ");
+                position = cursor;
                 //position = new Point( location.x, location.y + bounds.height + 2 );
             }
             
@@ -162,15 +162,15 @@ public final class SapphireLabel
     
     private static final class Resources
     
-	    extends NLS
-	
-	{
-	    public static String moreDetails;
-	    
-	    static
-	    {
-	        initializeMessages( SapphireLabel.class.getName(), Resources.class );
-	    }
+        extends NLS
+    
+    {
+        public static String moreDetails;
+        
+        static
+        {
+            initializeMessages( SapphireLabel.class.getName(), Resources.class );
+        }
 }
 
 }

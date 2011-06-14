@@ -22,28 +22,28 @@ import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
  */
 
 public class DiagramShowInSourceActionHandler extends
-		SapphireDiagramActionHandler 
+        SapphireDiagramActionHandler 
 {
-	
-	@Override
-	public boolean canExecute(Object obj) 
-	{
-		return true;
-	}
+    
+    @Override
+    public boolean canExecute(Object obj) 
+    {
+        return true;
+    }
 
-	@Override
-	protected Object run(SapphireRenderingContext context) 
-	{
-		ISapphirePart part = context.getPart();
-		IModelElement element = part.getModelElement();
-		element.adapt( SourceEditorService.class ).show( element, null );
-		return null;
-	}
+    @Override
+    protected Object run(SapphireRenderingContext context) 
+    {
+        ISapphirePart part = context.getPart();
+        IModelElement element = part.getModelElement();
+        element.adapt( SourceEditorService.class ).show( element, null );
+        return null;
+    }
 
-	@Override
-	public boolean hasDoneModelChanges() 
-	{
-		return false;
-	}
-	
+    @Override
+    public boolean hasDoneModelChanges() 
+    {
+        return false;
+    }
+    
 }

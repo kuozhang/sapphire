@@ -29,34 +29,34 @@ public class FunctionUtil
 {
     public static ValueProperty getFunctionProperty(IModelElement modelElement, FunctionResult functionResult)
     {
-    	if (functionResult.function() instanceof PropertyAccessFunction)
-    	{
-    		if (functionResult.operand(0).value() instanceof String)
-    		{
-    			String propName = (String)functionResult.operand(0).value();
-    	        final ModelElementType type = modelElement.getModelElementType();
-    	        final ModelProperty property = type.getProperty(propName);
-    	        
-    	        if( isWritableValueProperty( property ) )
-    			{
-    				return (ValueProperty)property;
-    			}
-    		}
-    	}
-    	else 
-    	{
-    		List<FunctionResult> subFuncs = functionResult.operands();
-    		for (FunctionResult subFunc : subFuncs)
-    		{
-    			ValueProperty property = getFunctionProperty(modelElement, subFunc);
-    			
-    			if( isWritableValueProperty( property ) )
-    			{
-    				return property;
-    			}
-    		}
-    	}
-    	return null;
+        if (functionResult.function() instanceof PropertyAccessFunction)
+        {
+            if (functionResult.operand(0).value() instanceof String)
+            {
+                String propName = (String)functionResult.operand(0).value();
+                final ModelElementType type = modelElement.getModelElementType();
+                final ModelProperty property = type.getProperty(propName);
+                
+                if( isWritableValueProperty( property ) )
+                {
+                    return (ValueProperty)property;
+                }
+            }
+        }
+        else 
+        {
+            List<FunctionResult> subFuncs = functionResult.operands();
+            for (FunctionResult subFunc : subFuncs)
+            {
+                ValueProperty property = getFunctionProperty(modelElement, subFunc);
+                
+                if( isWritableValueProperty( property ) )
+                {
+                    return property;
+                }
+            }
+        }
+        return null;
     }
     
     private static boolean isWritableValueProperty( final ModelProperty property )

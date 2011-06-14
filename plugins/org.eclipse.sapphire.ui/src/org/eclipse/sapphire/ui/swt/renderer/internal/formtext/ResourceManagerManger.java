@@ -29,30 +29,30 @@ import org.eclipse.swt.widgets.Display;
 
 @SuppressWarnings(value = { "unqualified-field-access", "unchecked", "rawtypes" })
 public class ResourceManagerManger {
-	
-	private HashMap resourceManagers;
+    
+    private HashMap resourceManagers;
 
-	public LocalResourceManager getResourceManager(Display display) {
-		if (resourceManagers == null) {
-			resourceManagers = new HashMap();
-		}
-		LocalResourceManager resources = (LocalResourceManager)resourceManagers.get(display);
-		if (resources == null) {
-			pruneResourceManagers();
-			resources = new LocalResourceManager(JFaceResources.getResources(display));
-			resourceManagers.put(display, resources);
-		}
-		return resources;
-	}
+    public LocalResourceManager getResourceManager(Display display) {
+        if (resourceManagers == null) {
+            resourceManagers = new HashMap();
+        }
+        LocalResourceManager resources = (LocalResourceManager)resourceManagers.get(display);
+        if (resources == null) {
+            pruneResourceManagers();
+            resources = new LocalResourceManager(JFaceResources.getResources(display));
+            resourceManagers.put(display, resources);
+        }
+        return resources;
+    }
 
-	private void pruneResourceManagers() {
-		Set displays = resourceManagers.keySet();
-		for (Iterator iter = displays.iterator(); iter.hasNext();) {
-			Display display = (Display)iter.next();
-			if (display.isDisposed()) {
-				resourceManagers.remove(display);
-				iter = displays.iterator();
-			}
-		}
-	}
+    private void pruneResourceManagers() {
+        Set displays = resourceManagers.keySet();
+        for (Iterator iter = displays.iterator(); iter.hasNext();) {
+            Display display = (Display)iter.next();
+            if (display.isDisposed()) {
+                resourceManagers.remove(display);
+                iter = displays.iterator();
+            }
+        }
+    }
 }

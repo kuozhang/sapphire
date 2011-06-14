@@ -25,42 +25,42 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 
 public class DiagramNodeAddActionHandler extends SapphireDiagramActionHandler 
 {
-	private DiagramNodeTemplate nodeTemplate;
-	
-	public DiagramNodeAddActionHandler(DiagramNodeTemplate nodeTemplate)
-	{
-		this.nodeTemplate = nodeTemplate;
-	}
-	
+    private DiagramNodeTemplate nodeTemplate;
+    
+    public DiagramNodeAddActionHandler(DiagramNodeTemplate nodeTemplate)
+    {
+        this.nodeTemplate = nodeTemplate;
+    }
+    
     @Override
     public void init( final SapphireAction action,
                       final ISapphireActionHandlerDef def )
     {
-    	super.init(action, def);
-		if (this.nodeTemplate.getToolPaletteLabel() != null)
-		{
-			setLabel(this.nodeTemplate.getToolPaletteLabel());
-		}
-		final ImageDescriptor typeSpecificAddImage = toImageDescriptor(this.nodeTemplate.getNodeType().image());
-		if (typeSpecificAddImage != null)
-		{
-			addImage(typeSpecificAddImage);
-		}
+        super.init(action, def);
+        if (this.nodeTemplate.getToolPaletteLabel() != null)
+        {
+            setLabel(this.nodeTemplate.getToolPaletteLabel());
+        }
+        final ImageDescriptor typeSpecificAddImage = toImageDescriptor(this.nodeTemplate.getNodeType().image());
+        if (typeSpecificAddImage != null)
+        {
+            addImage(typeSpecificAddImage);
+        }
     }
     
-	@Override
-	public boolean canExecute(Object obj) 
-	{
-		return true;
-	}
+    @Override
+    public boolean canExecute(Object obj) 
+    {
+        return true;
+    }
 
-	@Override
-	protected Object run(SapphireRenderingContext context) 
-	{
-		this.nodeTemplate.removeModelLister();
-		DiagramNodePart nodePart = this.nodeTemplate.createNewDiagramNode();
-		this.nodeTemplate.addModelListener();
-		return nodePart;
-	}	
+    @Override
+    protected Object run(SapphireRenderingContext context) 
+    {
+        this.nodeTemplate.removeModelLister();
+        DiagramNodePart nodePart = this.nodeTemplate.createNewDiagramNode();
+        this.nodeTemplate.addModelListener();
+        return nodePart;
+    }    
 
 }

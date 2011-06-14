@@ -27,8 +27,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface IBendPoint extends IModelElement 
 {
-	ModelElementType TYPE = new ModelElementType( IBendPoint.class );
-	
+    ModelElementType TYPE = new ModelElementType( IBendPoint.class );
+    
     // *** X ***
     
     @Type( base = Integer.class )
@@ -38,7 +38,7 @@ public interface IBendPoint extends IModelElement
     
     Value<Integer> getX();
     void setX(Integer value);
-	void setX(String value);
+    void setX(String value);
 
     // *** Y ***
     
@@ -49,6 +49,6 @@ public interface IBendPoint extends IModelElement
     
     Value<Integer> getY();
     void setY(Integer value);
-	void setY(String value);
-	
+    void setY(String value);
+    
 }

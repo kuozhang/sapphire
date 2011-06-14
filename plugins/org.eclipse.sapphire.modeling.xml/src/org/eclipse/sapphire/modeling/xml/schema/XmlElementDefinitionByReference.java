@@ -85,48 +85,48 @@ public final class XmlElementDefinitionByReference extends XmlElementDefinition
     }
     
     private XmlElementDefinition getElementInGroup(final QName childElementName) {
-		final XmlElementDefinition definition = getSchema().getElement(getName().getLocalPart());
-		// First check to see if this reference is abstract
-		if (definition != null && definition.isAbstract()) {
-			// Then see if the childElement specify the substitutionGroup
-			List<XmlElementDefinition> list = definition.getSubstitutionList();
-	        if (list != null && list.size() > 0) {
-	        	for (XmlElementDefinition subGroup : list) {
-	        		if (subGroup.getName().equals(childElementName)) {
-	        			return subGroup;
-	        		}
-	        	}
-	        }
-		}
-		return null;
+        final XmlElementDefinition definition = getSchema().getElement(getName().getLocalPart());
+        // First check to see if this reference is abstract
+        if (definition != null && definition.isAbstract()) {
+            // Then see if the childElement specify the substitutionGroup
+            List<XmlElementDefinition> list = definition.getSubstitutionList();
+            if (list != null && list.size() > 0) {
+                for (XmlElementDefinition subGroup : list) {
+                    if (subGroup.getName().equals(childElementName)) {
+                        return subGroup;
+                    }
+                }
+            }
+        }
+        return null;
     }
     
     @Override
-	public XmlContentModel findChildElementContentModel(QName childElementName) {
-		final XmlContentModel model = super.findChildElementContentModel(childElementName);
-		if (model == null) {
-			XmlElementDefinition subGroup = getElementInGroup(childElementName);
-			if (subGroup != null) {
-    			return subGroup.getContentModel();
-			}
-		}
-		return model;
-	}
+    public XmlContentModel findChildElementContentModel(QName childElementName) {
+        final XmlContentModel model = super.findChildElementContentModel(childElementName);
+        if (model == null) {
+            XmlElementDefinition subGroup = getElementInGroup(childElementName);
+            if (subGroup != null) {
+                return subGroup.getContentModel();
+            }
+        }
+        return model;
+    }
 
-	@Override
-	protected boolean sameElementName(QName qname) {
-		boolean isSame = super.sameElementName(qname);
-		
-		if (!isSame) {
-			XmlElementDefinition subGroup = getElementInGroup(qname);
-			if (subGroup != null) {
-    			return true;
-			}
-		}
-		return isSame;
-	}
+    @Override
+    protected boolean sameElementName(QName qname) {
+        boolean isSame = super.sameElementName(qname);
+        
+        if (!isSame) {
+            XmlElementDefinition subGroup = getElementInGroup(qname);
+            if (subGroup != null) {
+                return true;
+            }
+        }
+        return isSame;
+    }
 
-	public static final class Factory extends XmlElementDefinition.Factory
+    public static final class Factory extends XmlElementDefinition.Factory
     {
         @Override
         public QName getContentModelName()
