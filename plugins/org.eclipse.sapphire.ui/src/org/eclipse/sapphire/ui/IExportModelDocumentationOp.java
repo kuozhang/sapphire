@@ -36,6 +36,18 @@ public interface IExportModelDocumentationOp
 {
     ModelElementType TYPE = new ModelElementType( IExportModelDocumentationOp.class );
     
+    // *** CreateFinishedDocument ***
+    
+    @Type( base = Boolean.class )
+    @Label( standard = "create finished document" )
+    @DefaultValue( text = "true" )
+    
+    ValueProperty PROP_CREATE_FINISHED_DOCUMENT = new ValueProperty( TYPE, "CreateFinishedDocument" );
+    
+    Value<Boolean> getCreateFinishedDocument();
+    void setCreateFinishedDocument( String value );
+    void setCreateFinishedDocument( Boolean value );
+    
     // *** DocumentTitle ***
     
     @Label( standard = "document title" )

@@ -55,26 +55,32 @@ public final class ExportModelDocumentationOpMethods
         final StringWriter stringWriter = new StringWriter();
         final PrintWriter out = new PrintWriter( stringWriter );
         
-        out.println( "<html>" );
-        out.println();
-        out.println( "<head>" );
-        out.println( "  <title>" + op.getDocumentTitle().getContent() + "</title>" );
-        
-        if( op.getEmbedDefaultStyle().getContent() )
+        if( op.getCreateFinishedDocument().getContent() )
         {
-            out.println( style() );
+            out.println( "<html>" );
+            out.println();
+            out.println( "<head>" );
+            out.println( "  <title>" + op.getDocumentTitle().getContent() + "</title>" );
+            
+            if( op.getEmbedDefaultStyle().getContent() )
+            {
+                out.println( style() );
+            }
+            
+            out.println( "</head>" );
+            out.println();
+            out.println( "<body>" );
         }
-        
-        out.println( "</head>" );
-        out.println();
-        out.println( "<body>" );
         
         execute( type, out );
         
-        out.println( "<br/><br/>" );
-        out.println( "</body>" );
-        out.println();
-        out.println( "</head>" );
+        if( op.getCreateFinishedDocument().getContent() )
+        {
+            out.println( "<br/><br/>" );
+            out.println( "</body>" );
+            out.println();
+            out.println( "</head>" );
+        }
         
         out.flush();
         

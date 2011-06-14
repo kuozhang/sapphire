@@ -113,6 +113,7 @@ public class DynamicContentProducer implements IHelpContentProducer
     private static String exportModelDocumentation( final ModelElementType type )
     {
         final IExportModelDocumentationOp op = IExportModelDocumentationOp.TYPE.instantiate();
+        op.setCreateFinishedDocument( false );
         return op.execute( type, new NullProgressMonitor() );
     }
 
