@@ -11,6 +11,16 @@ li{  font: 14px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;}
 h2{  font: 20px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;  border-bottom: 1px solid #000000;  padding-bottom: 2px;}
 h3{  font: 16px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;  border-bottom: 1px solid #000000;  padding-bottom: 2px;}
 
+div.copyright
+{
+  font: 12px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+  text-align: center;
+  border-top: 1px solid #000000;
+  padding-top: 5px;
+  margin-top: 50px;
+  margin-bottom: 100px;
+}
+
 .help_breadcrumbs 
 {
     font: message-box;
