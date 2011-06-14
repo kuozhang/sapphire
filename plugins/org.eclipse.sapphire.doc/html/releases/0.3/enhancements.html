@@ -1,0 +1,1166 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2011 Oracle and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Greg Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>Enhancements in Sapphire 0.3</title>
+  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>Enhancements in 0.3</h1>
+
+<ol>
+  <li><a href="#el">Expression Language</a></li>
+  <ol type="A">
+    <li><a href="#el-general">General Improvements</a></li>
+    <li><a href="#list-function">List Function</a></li>
+    <li><a href="#in-operator">IN Operator</a></li>
+    <li><a href="#el-type-casts">Custom Type Casts</a></li>
+  </ol>
+  <li><a href="#modeling">Modeling</a></li>
+  <ol type="A">
+    <li><a href="#ref">ReferenceValue Improvements</a></li>
+    <li><a href="#folding">Folding XML Element Binding</a></li>
+    <li><a href="#relative">Relative Path Support Improvements</a></li>
+    <li><a href="#image-handling">Image Handling</a></li>
+    <li><a href="#value-label-image-services">Value Label and Image Services</a></li>
+    <li><a href="#required-annotation">Required Annotation</a></li>
+    <li><a href="#whitespace-handling">Whitespace Handling and Value Normalization</a></li>
+    <li><a href="#clear-on-disable">Clear Property on Disable</a></li>
+    <li><a href="#java-base-type">More Control Over Java Type Constraint Required Base Type</a></li>
+  </ol>
+  <li><a href="#ui">UI</a></li>
+  <ol type="A">
+    <li><a href="#html">HTML Content Presentation</a></li>
+    <li><a href="#related-content">Related Content</a></li>
+    <li><a href="#action-label-el">Expressions in Action Labels</a></li>
+    <li><a href="#checkbox-layouts">Checkbox Layouts</a></li>
+    <li><a href="#properties-view">Properties View</a></li>
+    <li><a href="#image-el">Image Expressions</a></li>
+    <li><a href="#ancestor-access">Ancestor Access</a></li>
+    <li><a href="#with">Improved With Directive Presentation</a></li>
+    <li><a href="#master-details-element-properties">Element Properties in Master Details Content Outline</a></li>
+    <li><a href="#action-style-hint">Action Style Hint</a></li>
+    <li><a href="#page-header-image">Page Header Image</a></li>
+    <li><a href="#checkbox-list-for-enum">Checkbox List as Default Enum List Presentation</a></li>
+    <li><a href="#collapsible-sections">Collapsible Sections</a></li>
+  </ol>
+</ol>
+ 
+<h2><a name="el"><a name="el-general">Expression Language Improvements</a></a></h2>
+
+<p>Index into any list or array using array notation.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>${ Contacts[ 0 ].Name }</code></pre>
+
+<p>Retrieve the size of any collection or array using Size property.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>${ Contacts.Size }</code></pre>
+
+<p>Take advantage of actual conditional evaluation of the conditional operator. In the 0.2 release,
+the conditional operator would always evaluate both alternatives, which made it impossible to use
+it in cases where evaluating the unused alternative results in an error.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, evaluating the true alternative when the size of the contacts list is zero would
+produce an error.</p>
+
+<pre class="source-code"><code>${ Contacts.Size == 1 ? Contacts[ 0 ].Name : "multiple contacts" }</code></pre>
+
+<p>The expression language in the 0.2 release supported navigating down the model hierarchy
+using Foo.Bar.Xyz syntax, but in certain cases it is useful to navigate up the model hierarchy. To
+support these scenarios, Parent and Root functions have been added.</p>
+
+<p style="margin-left: 20px;"><b>Examples</b></p>
+
+<pre class="source-code"><code>${ Parent().Name == "John" }
+${ Parent().Parent().Name == "John" }
+${ Root().Name == "John" }
+</code></pre>
+
+<h2><a name="list-function">List Function</a></h2>
+
+<p>Construct a list from arbitrary number of operands using List function.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>${ List( 'TRIANGLE', 'RECTANGLE', 'SQUARE' ) }</code></pre>
+
+<h2><a name="in-operator">IN Operator</a></h2>
+
+<p>The new IN operator allows for a compact check to see if a given value is represented in a collection of values. The
+comparison semantics are the same as the '==' operator. </p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>${ ShapeType IN List( 'TRIANGLE', 'RECTANGLE', 'SQUARE' ) }</code></pre>
+
+<p style="margin-left: 20px;">The IN operator is largely semantically equivalent to multiple equality comparisons joined 
+together with an OR operator.</p>
+
+<pre class="source-code"><code>${ ShapeType == 'TRIANGLE' || ShapeType == 'RECTANGLE' || ShapeType == 'SQUARE' }</code></pre>
+
+<h2><a name="el-type-casts">Custom Type Casts</a></h2>
+
+<p>Contribute custom type casts to handle data type conversion in expressions. Custom type casts are
+registered in sapphire-extension.xml file.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;extension></font>
+    &lt;type-cast>
+        &lt;source>java.lang.String&lt;/source>
+        &lt;target>org.example.FooBar&lt;/target>
+        &lt;impl>org.example.StringToFooBarTypeCast&lt;/impl>
+    &lt;/type-cast>
+<font color="#888888">&lt;/extension></font></code></pre>
+
+<pre class="source-code"><code>public class StringToFooBarTypeCast extends TypeCast
+{
+    @Override
+    public Object evaluate( final FunctionContext context,
+                            final Function requestor,
+                            final Object value,
+                            final Class&lt;?> target )
+    {
+        return new FooBar( (String) value );
+    }
+}</code></pre>
+
+<h2><a name="modeling"><a name="ref">ReferenceValue Improvements</a></a></h2>
+
+<p>In the past releases, the reference value properties were assumed to always use string as the reference
+type. The developer could only specify the reference target type. In this release, you can use a type other
+than a string for the reference.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">Use string as reference type, similar to what was possible in past releases.<p>
+
+<pre class="source-code"><code>@Reference( target = JavaType.class )
+
+ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );
+
+ReferenceValue&lt;String,JavaType> getImplClass();
+void setImplClass( String value );</code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">Use a non-string type as reference type.<p>
+
+<pre class="source-code"><code>@Type( base = JavaTypeName.class )
+@Reference( target = JavaType.class )
+
+ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );
+
+ReferenceValue&lt;JavaTypeName,JavaType> getImplClass();
+void setImplClass( String value );
+void setImplClass( JavaTypeName value );
+</code></pre>
+
+<h2><a name="folding">Folding XML Element Binding</a></h2>
+
+<p>In certain cases, while a given XML element can have a number of child
+elements, one of the child elements occurs by itself with high frequency. In
+these cases, it useful to reduce the verbosity of XML by folding the child
+element into the parent.</p>
+
+<p>Using the folding binding, it is possible to have the same value property
+bind to "xyz" string in both of the following examples. If a child element
+is added, first form will automatically transform into the second. Similarly,
+if all child element except the folding one are removed, the second form
+will automatically transform into the first.</p>
+
+<pre class="source-code"><code>&lt;root>xyz&lt;/root></code></pre>
+
+<pre class="source-code"><code>&lt;root>
+  &lt;a>xyz&lt;/a>
+  ...
+&lt;/root></code></pre>
+
+<p>To use this feature, specify XML binding as follows:</p>
+
+<pre class="source-code"><code>@CustomXmlValueBinding( impl = FoldingXmlValueBindingImpl.class, params = "a" )</code></pre>
+
+<p>Set params attribute to the name of the folding element. Take care not to
+apply this binding to more than one child element in a given parent.</p>
+
+<h2><a name="relative">Relative Path Support Improvements</a></h2>
+
+<p>Similar to the existing @WorkspaceRelativePath annotation, you can now use 
+@ProjectRelativePath annotation to support paths relative to the
+root of the context project. Use this annotation in conjunction with @MustExist, @ValidFileSystemResourceType
+and @ValidFileExtensions annotations to gain validation, browse dialog and jump action (ctrl+click on path 
+to open file). For this feature to work, the model must be based on a resource contained in a project.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>// *** WorkspaceRelativePath ***
+
+@Type( base = Path.class )
+@WorkspaceRelativePath
+@MustExist
+
+ValueProperty PROP_WORKSPACE_RELATIVE_PATH = new ValueProperty( TYPE, "WorkspaceRelativePath" );
+
+Value&lt;Path> getWorkspaceRelativePath();
+void setWorkspaceRelativePath( String value );
+void setWorkspaceRelativePath( Path value );
+
+// *** ProjectRelativePath ***
+
+@Type( base = Path.class )
+@ProjectRelativePath
+@MustExist
+
+ValueProperty PROP_PROJECT_RELATIVE_PATH = new ValueProperty( TYPE, "ProjectRelativePath" );
+
+Value&lt;Path> getProjectRelativePath();
+void setProjectRelativePath( String value );
+void setProjectRelativePath( Path value );</code></pre>
+
+<p>Relative path support now can handle both enclosed paths and those that use parent navigation "../"
+to reach outside. Override RelativePathService.enclosed() method as necessary. The default implementation
+returns true.</p>
+
+<p>A common scenario for relative paths that reach outside the root is where the paths in the model should be
+relative to the location where the model is stored. Use the new @ModelRelativePath annotation to handle
+this case.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>// *** RelativePath ***
+
+@Type( base = Path.class )
+@ModelRelativePath
+@MustExist
+
+ValueProperty PROP_RELATIVE_PATH = new ValueProperty( TYPE, "RelativePath" );
+
+Value&lt;Path> getRelativePath();
+void setRelativePath( String value );
+void setRelativePath( Path value );</code></pre>
+
+<p>The service implementation backing @ModelRelativePath may be instructive for those looking to implement
+a custom relative path service.</p>
+
+<pre class="source-code"><code>public class ModelRelativePathService extends RelativePathService
+{
+    public List&lt;Path> roots()
+    {
+        final File file = element().adapt( File.class );
+        
+        if( file == null )
+        {
+            return Collections.emptyList();
+        }
+        else
+        {
+            return Collections.singletonList( new Path( file.getParent() ) );
+        }
+    }
+
+    public boolean enclosed()
+    {
+        return false;
+    }
+}</code></pre>
+
+<p>The new RelativePathService also exposes convertToRelative() and convertToAbsolute() methods. While the
+default implementation should be sufficient for most cases, the conversion methods can be overridden to
+support custom requirements. Some examples of such requirements include leading slash in front of a relative
+path and path variables.</p>
+
+<h2><a name="image-handling">Image Handling</a></h2>
+
+<p>The @Image annotation now resolves images straight from the class loader of the annotated type. When specifying an 
+image, either use full path from class loader root (with '/' as the segment separator) or just the image file name
+if the image is located in the same package as the annotated type.</p>
+ 
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following declarations are equivalent.</p>
+
+<pre class="source-code"><code><font color="#888888">package org.eclipse.sapphire.samples.contacts;
+
+...</font>
+
+@Image( path = "Contact.png" )
+<font color="#888888">@GenerateImpl
+
+public interface IContact extends IModelElement
+{
+    ...
+}</font></code></pre>
+
+<pre class="source-code"><code><font color="#888888">package org.eclipse.sapphire.samples.contacts;
+
+...</font>
+
+@Image( path = "org/eclipse/sapphire/samples/contacts/Contact.png" )
+<font color="#888888">@GenerateImpl
+
+public interface IContact extends IModelElement
+{
+    ...
+}</font></code></pre>
+
+<p>The API for model element image provider has been changed to unify it with the model element services
+API and to support notification of image changes.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">This following code is taken from the calendar sample. The event attendee
+image varies based on whether or not attendee is found in the contacts directory.</p>
+
+<pre class="source-code"><code>@Image( path = "org/eclipse/sapphire/samples/contacts/Contact.png" )
+@Service( impl = AttendeeImageService.class )
+
+public interface IAttendee extends IModelElement
+{
+    ...
+}
+
+...
+
+public class AttendeeImageService extends ImageService
+{
+    private static final ImageData IMG_PERSON 
+        = ImageData.readFromClassLoader( IContact.class, "Contact.png" );
+
+    private static final ImageData IMG_PERSON_FADED 
+        = ImageData.readFromClassLoader( IContact.class, "ContactFaded.png" );
+
+    private ModelPropertyListener listener;
+
+    @Override
+    public void init( IModelElement element, String[] params )
+    {
+        super.init( element, params );
+        
+        this.listener = new ModelPropertyListener()
+        {
+            @Override
+            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            {
+                notifyListeners( new ImageChangedEvent( AttendeeImageProviderService.this ) );
+            }
+        };
+        
+        element.addListener( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
+    }
+
+    @Override
+    public ImageData provide()
+    {
+        if( ( (IAttendee) element() ).isInContactsDatabase().getContent() )
+        {
+            return IMG_PERSON;
+        }
+        else
+        {
+            return IMG_PERSON_FADED;
+        }
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        element().removeListener( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
+    }
+}</code></pre>
+
+<p>Use @Image annotation on enumeration items. The images will be shown where appropriate, such when a
+list of enumeration values is presented using a checkbox list.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public enum DispatcherEvent
+{
+    @Label( standard = "forward" )
+    @Image( path = "CircleBlue.png" )
+
+    FORWARD,
+
+    @Label( standard = "include" )
+    @Image( path = "CircleCyan.png" )
+
+    INCLUDE,
+
+    @Label( standard = "request" )
+    @Image( path = "CircleGreen.png" )
+
+    REQUEST,
+
+    @Label( standard = "error" )
+    @Image( path = "CircleRed.png" )
+
+    ERROR
+}
+
+public interface IDispatcherEventRef extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( IDispatcherEventRef.class );
+
+    // *** DispatcherEvent ***
+
+    @Type( base = DispatcherEvent.class )
+    @Required
+    @NoDuplicates
+
+    ValueProperty PROP_DISPATCHER_EVENT = new ValueProperty( TYPE, "DispatcherEvent" );
+
+    Value&lt;DispatcherEvent> getDispatcherEvent();
+    void setDispatcherEvent( String value );
+    void setDispatcherEvent( DispatcherEvent value );
+}
+
+public interface IFilterMapping extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( IFilterMapping .class );
+
+    // *** DispatcherEvents ***
+
+    @Type( base = IDispatcherEventRef.class )
+
+    ListProperty PROP_DISPATCHER_EVENTS = new ListProperty( TYPE, "DispatcherEvents" );
+
+    ModelElementList&lt;IDispatcherEventRef> getDispatcherEvents();
+
+    ...
+
+}</code></pre>
+
+<p style="margin-left: 20px;"><img src="images/checkbox-list-with-images.png"/></p>
+
+<h2><a name="value-label-image-services">Value Label and Image Services</a></h2>
+
+<p>Provide custom labels and images for values. These will be used where possible when presenting the
+value to the user. Some examples include list property editor, checkbox list property editor, slush bucket 
+property editor and possible values browse dialog.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class ColorValueLabelService extends ValueLabelService
+{
+    @Override
+    public String provide( String value )
+    {
+        if( value != null )
+        {
+            if( value.equals( "red" ) )
+            {
+                return "Red [FF0000]";
+            }
+            else if( value.equals( "orange" ) )
+            {
+                return "Orange [FF8A00]";
+            }
+            else if( value.equals( "yellow" ) )
+            {
+                return "Yellow [FFF200]";
+            }
+            else if( value.equals( "green" ) )
+            {
+                return "Green [00BC00]";
+            }
+            else if( value.equals( "blue" ) )
+            {
+                return "Blue [0000FF]";
+            }
+            else if( value.equals( "violet" ) )
+            {
+                return "Violet [8A00FF]";
+            }
+        }
+        
+        return value;
+    }
+}
+
+public class ColorValueImageService extends ValueImageService
+{
+    private final Map&lt;String,ImageData> images = new HashMap&lt;String,ImageData>();
+
+    @Override
+    public ImageData provide( String value )
+    {
+        ImageData image = this.images.get( value );
+        
+        if( image == null )
+        {
+            String imageResourceName = null;
+            
+            if( value != null )
+            {
+                if( value.equals( "red" ) )
+                {
+                    imageResourceName = "SquareRed.png";
+                }
+                else if( value.equals( "orange" ) )
+                {
+                    imageResourceName = "SquareOrange.png";
+                }
+                else if( value.equals( "yellow" ) )
+                {
+                    imageResourceName = "SquareYellow.png";
+                }
+                else if( value.equals( "green" ) )
+                {
+                    imageResourceName = "SquareGreen.png";
+                }
+                else if( value.equals( "blue" ) )
+                {
+                    imageResourceName = "SquareBlue.png";
+                }
+                else if( value.equals( "violet" ) )
+                {
+                    imageResourceName = "SquareViolet.png";
+                }
+            }
+            
+            if( imageResourceName != null )
+            {
+                final String imageResourcePath = "org/eclipse/sapphire/samples/" + imageResourceName;
+                image = readFromClassLoader( ColorValueImageService.class, imageResourcePath );
+            }
+        }
+        
+        return image;
+    }
+}
+
+public interface IColor extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( IColor.class );
+
+    // *** Code ***
+
+    @Label( standard = "color code" )
+    @NoDuplicates
+    @PossibleValues( values = { "red", "orange", "yellow", "green", "blue", "violet" }, invalidValueMessage = "{0} is not a valid color." )
+    @Services( { @Service( impl = ColorValueLabelService.class ), @Service( impl = ColorValueImageService.class ) } )
+
+    ValueProperty PROP_CODE = new ValueProperty( TYPE, "Code" );
+
+    Value&lt;String> getCode();
+    void setCode( String value );
+}
+
+public interface ICustomModel extends IModelElement
+{
+    ...
+
+    // *** Colors ***
+
+    @Type( base = IColor.class )
+    @Label( standard = "colors" )
+
+    ListProperty PROP_COLORS = new ListProperty( TYPE, "Colors" );
+
+    ModelElementList&lt;IColor> getColors();
+}</code></pre>
+
+<p style="margin-left: 20px;"><img src="images/checkbox-list-with-images.png"/></p>
+
+<h2><a name="required-annotation">Required Annotation</a></h2>
+
+<p>Use @Required (formerly @NonNullValue) on both value properties and element properties. If a required property
+is not set, a validation error will be shown.</p>
+
+<p style="margin-left: 20px;"><b>Examples</b></p>
+
+<pre class="source-code"><code>@Required
+
+ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+
+Value&lt;String> getName();
+void setName( String name );</code></pre>
+
+<pre class="source-code"><code>@Type( base = IOccupation.class, possible = { IJobOccupation.class, IStudentOccupation.class, IHomemakerOccupation.class } )
+@Required
+  
+ElementProperty PROP_PRIMARY_OCCUPATION = new ElementProperty( TYPE, "PrimaryOccupation" );
+
+ModelElementHandle&lt;IOccupation> getPrimaryOccupation();</code></pre>
+
+<h2><a name="whitespace-handling">Whitespace Handling and Value Normalization</a></h2>
+
+<p>Use the new @Whitespace annotation on value properties to control exactly how whitespace 
+in property values is normalized. By default, leading and trailing whitespace is removed.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">Preserve all whitespace, including leading and trailing.</p>
+
+<pre class="source-code"><code>@Whitespace( trim = false )
+
+ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
+
+Value&lt;String> getText();
+void setName( String value );</code></pre>
+
+<p style="margin-left: 20px;">Remove leading and trailing whitespace. Further, replace all sequences
+of one or more whitespace characters with a single space character.</p>
+
+<pre class="source-code"><code>@Whitespace( trim = true, collapse = true )
+
+ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
+
+Value&lt;String> getText();
+void setName( String value );</code></pre>
+
+<p>Implement custom value normalization via ValueNormalizationService.</p> 
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>@Service( impl = CustomValueNormalizationService.class )
+
+ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
+
+Value&lt;String> getText();
+void setName( String value );</code></pre>
+
+<pre class="source-code"><code>public class CustomValueNormalizationService extends ValueNormalizationService
+{
+    public String normalize( String str )
+    {
+        ...
+    }
+}</code></pre>
+
+<p>Extend StandardValueNormalizationService to add custom normalization logic to what is provided by the system.</p> 
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>@Whitespace( trim = true, collapse = true )
+@Service( impl = CustomValueNormalizationService.class )
+
+ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
+
+Value&lt;String> getText();
+void setName( String value );</code></pre>
+
+<pre class="source-code"><code>public class CustomValueNormalizationService extends StandardValueNormalizationService
+{
+    public String normalize( String str )
+    {
+        str = super.normalize( str );
+        
+        ...
+    }
+}</code></pre>
+
+<h2><a name="clear-on-disable">Clear Property on Disable</a></h2>
+
+<p>Use the new @ClearOnDisable annotation to specify that the property value should be cleared when the
+property transitions from enabled to disabled state. This can be useful for pruning unnecessary data from the
+model and persistent storage, but can make it more difficult for users to return to the prior state as data is erased.</p> 
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>@Type( base = Integer.class )
+@Enablement( expr = "${ ShapeType IN List( 'CIRCLE', 'PENTAGON', 'HEXAGON', 'HEPTAGON', 'OCTAGON' ) }" )
+@ClearOnDisable
+
+ValueProperty PROP_RADIUS = new ValueProperty( TYPE, "Radius" );
+
+Value&lt;Integer> getRadius();
+void setRadius( String value );
+void setRadius( Integer value );</code></pre>
+
+<p><b>WARNING:</b> Avoid using the @ClearOnDisable annotation with expressions that are not atomic in evaluation
+as the property enablement can briefly go through <nobr>true->false->true</nobr> sequence causing inappropriate property clearing.</p>
+
+<p>Consider the following two enablement expressions:</p>
+
+<pre class="source-code"><code>${ ShapeType IN List( 'TRIANGLE', 'RECTANGLE', 'SQUARE' ) }
+${ ShapeType == 'TRIANGLE' || ShapeType == 'RECTANGLE' || ShapeType == 'SQUARE' }</code></pre>
+
+<p>While these two expressions are semantically equivalent, when ShapeType changes, the first expression is re-evaluates 
+once while the second expressions is re-evaluated three times. Depending on the starting and ending value of ShapeType,
+the enablement state can briefly go through <nobr>true->false->true</nobr> sequence. Normally, this is not an issue and would not
+be observable, but @ClearOnDisable feature is specifically designed to trigger clearing on enablement's <nobr>true->false</nobr> 
+transition.</p> 
+
+<h2><a name="java-base-type">More Control Over Java Type Constraint Required Base Type</a></h2>
+
+<p>When specifying @JavaTypeConstraint, one can list zero or more base types that the type must extend or implement. Prior to 0.3
+release, the semantics were always such that the type must extend or implement all of the specified types. This is still the
+default behavior, but you can now override it to specify that the type only need to extend or implement one of the specified types.</p>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = JavaTypeName.class )
+@Reference( target = JavaType.class )
+@JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = { "java.util.List", "java.util.Map" }</font>, behavior = JavaTypeConstraintBehavior.AT_LEAST_ONE <font color="#888888">)
+@MustExist
+@Required
+
+ValueProperty PROP_CLASS = new ValueProperty( TYPE, "Class" );
+
+ReferenceValue&lt;JavaTypeName,JavaType> getClass();
+void setClass( String value );
+void setClass( JavaTypeName value );</font></code></pre> 
+
+<h2><a name="html">HTML Content Presentation</a></h2>
+
+<p>It is hard to beat the simplicity and flexibility of HTML for presenting formatted
+text content. Now it is even easier to weave in a bit of HTML into a Sapphire UI. The new
+HTML part can display static HTML content embedded in an sdef file, content retrieved
+from a URL or content retrieved from the model.</p>
+
+<p>Frequently, it is easier to specify HTML content in the form of a fragment rather than a
+finished document. Sapphire will automatically turn a fragment into a legal document and apply
+default style that is designed to match the look of surrounding UI elements.</p>
+
+<pre class="source-code"><code>&lt;html>
+  &lt;fragment>true&lt;/fragment>
+  &lt;content>
+    Here is the list of ${ Name }'s favorite colors:&amp;lt;br/>&amp;lt;br/>
+    &amp;lt;ol>
+      &amp;lt;li>Red&amp;lt;/li>
+      &amp;lt;li>Orange&amp;lt;/li>
+      &amp;lt;li>Blue&amp;lt;/li>
+    &amp;lt;/ol>
+  &lt;/content>
+&lt;/html></code></pre>
+
+<p>Note how HTML tags have to be escaped in order to not be treated as part of the XML
+markup of the sdef file. Also note that you are able to use expressions in the body of the
+content to enhance the content with data from the model or external sources.</p>
+
+<h2><a name="related-content">Related Content</a></h2>
+
+<p>It is now possible to put related content to the right of a property
+editor.</p> 
+
+<p>The space for related content is carved out from the space reserved for
+the main property editor. As such, it is bound by the height of that property editor, but
+multiple parts can be added to related content as long as vertical space allows. This
+can happen if the main property editor is a table or a multi-line text box.</p>
+
+<p>Horizontal space between the main property editor and related content is divided by 
+an adjustable splitter. You get to set the initial width allocation for the related 
+content in the sdef file. The default is 40, which stands for 40% of available space.</p>  
+
+<p>Use related content to display two property editors on one line. This pattern is especially
+powerful when the relationship of two properties is such that a single label will suffice.</p>
+
+<p style="margin-left: 20px;"><img src="images/related-content-1.png"/></p>
+
+<p>Display more than two parts on one line by nesting related content inside related content. 
+Use sparingly.</p>
+
+<p style="margin-left: 20px;"><img src="images/related-content-2.png"/></p>
+
+<p>Related content isn't limited to property editors. Any part can be placed into related
+content. This is particularly useful when the main property editor spans more than one
+vertical line, such as a list property editor or a multi-line text box. In this example,
+related content is used to display explanatory text.</p>
+
+<p style="margin-left: 20px;"><img src="images/related-content-3.png"/></p>
+
+<p>Multiple parts can be placed into related content. They will be arranged vertically.</p>
+
+<p style="margin-left: 20px;"><img src="images/related-content-4.png"/></p>
+
+<h2><a name="action-label-el">Expressions in Action Labels</a></h2>
+
+<p>Labels for actions and action handlers can now be specified using expressions. This is currently
+mostly useful for action labels, where you can reference active handlers while composing the label.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">This following is the actual label definition for the Sapphire.Add action. It is designed to include
+handler label in the action label when there is only one handler.</p>
+
+<pre class="source-code"><code>${ Handlers.Size == 1 ? Concat( "add ", Handlers[ 0 ].Label ) : "add" }</code></pre>
+
+<h2><a name="checkbox-layouts">Checkbox Layouts</a></h2>
+
+<p>More control over the presentation of the boolean property is possible with the new "checkbox.layout"
+property editor hint. The various values for this hint are explained in this screen capture from
+the gallery sample:</p>
+
+<p style="margin-left: 20px;"><img src="images/checkbox.png"/></p>
+
+<h2><a name="properties-view">Properties View</a></h2>
+
+<p>You can now easily contribute content to the properties view based on the current context in a Sapphire
+form or diagram editor page. The following contexts can currently host properties view content:</p>
+
+<ul>
+  <li>Diagram Editor Page</li>
+  <li>Diagram Node</li>
+  <li>Diagram Connection</li>
+  <li>Master Details Content Outline Node</li>
+</ul>
+
+<p>Multiple pages of content can be defined for the properties view. The pages are accessible via tabs on
+the left side of the properties view. The content of properties view pages is defined and rendered by Sapphire.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this screen capture, the architecture sample is shown with focus on one
+of the components. The details of the component are shown in the properties view.</p>
+
+<p style="margin-left: 20px;"><img src="images/properties-view-1.png"/></p>
+
+<p>If no content is contributed to the properties view for a given context,
+the view will state as much.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;"><img src="images/properties-view-2.png"/></p>
+
+<p>You can also specify an image to be used for a content page. This not only makes it easier for users to
+visually differentiate pages, but the system will also add a problem badge if any of the page's
+content has validation problems.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;"><img src="images/properties-view-3.png"/></p>
+
+<p>Define the properties view contribution right in the sdef file as part of the definition of the
+context part.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;node>
+    ...</font>
+    &lt;properties-view>
+        &lt;page>
+            &lt;label>general&lt;/label>
+            &lt;content>
+                &lt;property-editor>Name&lt;/property-editor>
+                &lt;property-editor>Description&lt;/property-editor>
+            &lt;/content>
+        &lt;/page>
+        &lt;page>
+            &lt;label>dependencies&lt;/label>
+            &lt;image>Dependencies.png&lt;/image>
+            &lt;content>
+                &lt;property-editor>Dependencies&lt;/property-editor>
+            &lt;/content>
+        &lt;/page>
+    &lt;/properties-view>
+<font color="#888888">&lt;/node></font></code></pre>
+
+<h2><a name="image-el">Image Expressions</a></h2>
+
+<p>Use expressions to specify images for content outline nodes and other parts. This allows the image
+to vary based on a condition, such as a property value.</p>
+
+<P>When specifying an image in an expression, either use full path from class loader root (with '/' as the segment separator) or
+import the package where the image is located.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example from the architecture sample, parent node image is defined
+statically, while child node image varies based on the number dependencies.<p>
+
+<pre class="source-code"><code>&lt;import>
+    &lt;package>org.eclipse.sapphire.samples.architecture&lt;/package>
+&lt;/import>
+
+<font color="#888888">...
+
+&lt;node>
+    &lt;label>components&lt;/label></font>
+    &lt;image>Components.png&lt;/image>
+    <font color="#888888">&lt;node-list>
+        &lt;property>Components&lt;/property>
+        &lt;node-template>
+            &lt;model-element-type>IComponent&lt;/model-element-type>
+            &lt;label>${ Name == null ? "&amp;lt;component&amp;gt;" : Name }&lt;/label></font>
+            &lt;image>${ Dependencies.Size == 0 ? "ComponentLeaf.png" : "Component.png" }&lt;/image>
+            <font color="#888888">...
+        &lt;/node-template>
+    &lt;/node-list>
+    ...
+&lt;/node></font></code></pre>
+
+<h2><a name="ancestor-access">Ancestor Access</a></h2>
+
+<p>Use ancestor access path syntax (leading "/" for root and ".." for parent) when specifying a property
+editor or using the with directive. The path used in a property editor definition must end with a property name,
+while the path used in a with directive can end with an element or an element property name.</p>
+
+<p style="margin-left: 20px;"><b>Examples</b></p>
+
+<p style="margin-left: 20px;">Edit property Text of the context element.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>Text<font color="#888888">&lt;/property-editor></font></code></pre>
+
+<p style="margin-left: 20px;">Edit property Text of the parent of the context element.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>../Text<font color="#888888">&lt;/property-editor></font></code></pre>
+
+<p style="margin-left: 20px;">Edit property Text of the grandparent of the context element.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>../../Text<font color="#888888">&lt;/property-editor></font></code></pre>
+
+<p style="margin-left: 20px;">Edit property Text of the root element.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>/Text<font color="#888888">&lt;/property-editor></font></code></pre>
+
+<p style="margin-left: 20px;">Shift context to the element held by Child property.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;with>
+    &lt;path></font>Child<font color="#888888">&lt;/path>
+    &lt;default-panel>
+        &lt;content>
+            ...
+        &lt;/content>
+    &lt;/default-panel>
+&lt;/with></font></code></pre>
+
+<p style="margin-left: 20px;">Shift context to the parent element.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;with>
+    &lt;path></font>..<font color="#888888">&lt;/path>
+    &lt;default-panel>
+        &lt;content>
+            ...
+        &lt;/content>
+    &lt;/default-panel>
+&lt;/with></font></code></pre>
+
+<p style="margin-left: 20px;">Shift context to the grandparent element.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;with>
+    &lt;path></font>../..<font color="#888888">&lt;/path>
+    &lt;default-panel>
+        &lt;content>
+            ...
+        &lt;/content>
+    &lt;/default-panel>
+&lt;/with></font></code></pre>
+
+<h2><a name="with">Improved With Directive Presentation</a></h2>
+
+<p>The presentation of the with directive has been enhanced to better support the case where an element
+property has a large number of possible types. The presentation will now use a drop down list instead of
+radio buttons if there are more than three possible types. You can also use the new style hint to suggest
+the desired presentation.</p>
+
+<p>The new hint name is "style" and it has three possible values for the with directive: "checkbox", "radio.buttons"
+and "drop.down.list". If a particular style is not appropriate for the situation, the hint will be ignored. For
+instance, selecting "checkbox" style for an element property with more than one possible type is not valid.</p>
+
+<p style="margin-left: 20px;"><b>Examples</b></p>
+
+<p style="margin-left: 20px;">Default presentation when the element property has one possible type.</p>
+
+<p style="margin-left: 20px;"><img src="images/with-1.png"/></p>
+
+<p style="margin-left: 20px;">The same property as above, but with style hint set to "radio.buttons".</p>
+
+<p style="margin-left: 20px;"><img src="images/with-2.png"/></p>
+
+<p style="margin-left: 20px;">Default presentation when the element property has three possible types.</p>
+
+<p style="margin-left: 20px;"><img src="images/with-3.png"/></p>
+
+<p style="margin-left: 20px;">The same property as above, but with style hint set to "drop.down.list".</p>
+
+<p style="margin-left: 20px;"><img src="images/with-4.png"/></p>
+
+<h2><a name="master-details-element-properties">Element Properties in Master Details Content Outline</a></h2>
+
+<p>The master details editor page has been made more flexible by allowing nodes in the content outline based
+on element properties. The syntax and semantics are identical to how list properties are handled.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>&lt;node-factory>
+    &lt;property>Heterogeneous&lt;/property>
+    &lt;case>
+        &lt;model-element-type>IChildElementWithInteger&lt;/model-element-type>
+        &lt;label>${ StringValue == null ? "&amp;lt;child-with-integer&amp;gt;" : StringValue }&lt;/label>
+        &lt;section>
+            &lt;label>child element with integer&lt;/label>
+            &lt;content>
+                &lt;property-editor>StringValue&lt;/property-editor>
+                &lt;property-editor>IntegerValue&lt;/property-editor>
+            &lt;/content>
+        &lt;/section>
+    &lt;/case>
+    &lt;case>
+        &lt;model-element-type>IChildElementWithEnum&lt;/model-element-type>
+        &lt;label>${ StringValue == null ? "&amp;lt;child-with-enum&amp;gt;" : StringValue }&lt;/label>
+        &lt;section>
+            &lt;label>child element with enum&lt;/label>
+            &lt;content>
+                &lt;property-editor>StringValue&lt;/property-editor>
+                &lt;property-editor>EnumValue&lt;/property-editor>
+            &lt;/content>
+        &lt;/section>
+    &lt;/case>
+    &lt;case>
+        &lt;model-element-type>IChildElement&lt;/model-element-type>
+        &lt;label>${ StringValue == null ? "&amp;lt;child&amp;gt;" : StringValue }&lt;/label>
+        &lt;section>
+            &lt;label>child element&lt;/label>
+            &lt;content>
+                &lt;property-editor>StringValue&lt;/property-editor>
+            &lt;/content>
+        &lt;/section>
+    &lt;/case>
+&lt;/node-factory></code></pre>
+
+<h2><a name="action-style-hint">Action Style Hint</a></h2>
+
+<p>Use action style hint to control how actions are presented. The style hint will be respected if feasible.</p>
+
+<table>
+<tr><td>image</td><td>Only image is presented.</td></tr>
+<tr><td>image+text</td><td>Text will be presented to the right of the image.</td></tr>
+<tr><td>text</td><td>Only text is presented.</td></tr>
+</table>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following example is taken from the gallery sample.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;action&gt;
+    &lt;id&gt;Sapphire.Gallery.Open.Homepage&lt;/id&gt;
+    &lt;label&gt;Sapphire Homepage&lt;/label&gt;
+    &lt;image&gt;Web.png&lt;/image&gt;
+    &lt;description&gt;Open Sapphire project homepage&lt;/description&gt;
+    &lt;context&gt;Sapphire.EditorPage&lt;/context&gt;</font>
+    &lt;hint&gt;
+        &lt;name>style&lt;/name&gt;
+        &lt;value>image+text&lt;/value&gt;
+    &lt;/hint&gt;
+<font color="#888888">&lt;/action&gt;</font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/action-style.png"/></p>
+
+<h2><a name="page-header-image">Page Header Image</a></h2>
+
+<p>Specify an image to appear on the left side of the editor page header.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following example is taken from the gallery sample.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;editor-page>
+    ...</font>
+    &lt;page-header-image>SapphireFile.png&lt;/page-header-image>
+    <font color="#888888">...
+&lt;/editor-page></font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/page-header-image.png"/></p>
+
+<h2><a name="checkbox-list-for-enum">Checkbox List as Default Enum List Presentation</a></h2>
+
+<p>The checkbox list property editor is now the default presentation for enum lists. An enum list
+is defined as follows:</p>
+
+<ol>
+  <li>A list property with exactly one possible child element type.</li>
+  <li>The child element type has exactly one property and it is a value property.</li>
+  <li>The value property is of enum type and has @NoDuplicates annotation.</li>
+</ol>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public enum DispatcherEvent
+{
+    FORWARD,
+    INCLUDE,
+    REQUEST,
+    ERROR
+}
+
+public interface IDispatcherEventRef extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( IDispatcherEventRef.class );
+
+    // *** DispatcherEvent ***
+
+    @Type( base = DispatcherEvent.class )
+    @Required
+    @NoDuplicates
+
+    ValueProperty PROP_DISPATCHER_EVENT = new ValueProperty( TYPE, "DispatcherEvent" );
+
+    Value&lt;DispatcherEvent> getDispatcherEvent();
+    void setDispatcherEvent( String value );
+    void setDispatcherEvent( DispatcherEvent value );
+}
+
+public interface IFilterMapping extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( IFilterMapping .class );
+
+    // *** DispatcherEvents ***
+
+    @Type( base = IDispatcherEventRef.class )
+
+    ListProperty PROP_DISPATCHER_EVENTS = new ListProperty( TYPE, "DispatcherEvents" );
+
+    ModelElementList&lt;IDispatcherEventRef> getDispatcherEvents();
+
+    ...
+
+}</code></pre>
+
+<p style="margin-left: 20px;"><img src="images/checkbox-list-with-no-images.png"/></p>
+
+<h2><a name="collapsible-sections">Collapsible Sections</a></h2>
+
+<p>Define collapsible sections. This is one approach for handling too much content to fit on the 
+screen. Another, typically more effective, approach is to break up content between more nodes in 
+the content outline. A collapsible section can be defined to be showed initially in the collapsed
+state. This can be effective for very infrequently used content.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;section>
+    &lt;label>collapsible section&lt;/label>
+    &lt;content>
+        &lt;label>A section can be collapsible... [snip]&lt;/label>
+        &lt;spacer>&lt;/spacer>
+        &lt;property-editor>Text&lt;/property-editor>
+        &lt;property-editor>ThreeChoiceAnswer&lt;/property-editor>
+    &lt;/content></font>
+    &lt;collapsible>true&lt;/collapsible>
+<font color="#888888">&lt;/section>
+&lt;section>
+    &lt;label>collapsed initially section&lt;/label>
+    &lt;content>
+        &lt;label>A collapsible section can be specified to be showed collapsed initially.&lt;/label>
+        &lt;spacer>&lt;/spacer>
+        &lt;property-editor>Text&lt;/property-editor>
+        &lt;property-editor>ThreeChoiceAnswer&lt;/property-editor>
+    &lt;/content></font>
+    &lt;collapsible>true&lt;/collapsible>
+    &lt;collapsed-initially>true&lt;/collapsed-initially>
+<font color="#888888">&lt;/section></font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/collapsible-sections.png"/></p>
+
+<br/><br/>
+
+</body>
+
+</html>

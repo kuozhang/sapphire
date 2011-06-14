@@ -12,7 +12,6 @@
 package org.eclipse.sapphire.samples.ezbug;
 
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
@@ -34,7 +33,7 @@ import org.eclipse.sapphire.samples.ezbug.internal.FileBugReportOpMethods;
 
 public interface IFileBugReportOp
 
-    extends IModelElement, IExecutableModelElement
+    extends IExecutableModelElement
     
 {
     ModelElementType TYPE = new ModelElementType( IFileBugReportOp.class );

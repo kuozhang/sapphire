@@ -84,9 +84,9 @@ public class DynamicContentProducer implements IHelpContentProducer
                 content = loadResource( "html/el/index.html" );
                 content = content.replace( "##functions##", functions );
             }
-            else if( href.equals( "html/ui/actions/index.html" ) )
+            else if( href.equals( "html/actions/index.html" ) )
             {
-                content = loadResource( "html/ui/actions/index.html" );
+                content = loadResource( "html/actions/index.html" );
 
                 final String docAction = exportModelDocumentation( ISapphireActionDef.TYPE );
                 content = content.replace( "##action-details##", docAction );

@@ -253,7 +253,7 @@ public abstract class PropertyEditorRenderer
         {
             final boolean expandVertically = this.part.getRenderingHint( HINT_EXPAND_VERTICALLY, false );
             final int heightHint = this.part.getRenderingHint( ISapphirePartDef.HINT_HEIGHT, 10 ) * 15;
-            gd = ( expandVertically ? gdfill() : gdhhint( gdhfill(), heightHint ) );
+            gd = gdhhint( ( expandVertically ? gdfill() : gdhfill() ), heightHint );
         }
         else
         {

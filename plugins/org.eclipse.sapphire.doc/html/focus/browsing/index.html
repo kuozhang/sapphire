@@ -16,7 +16,7 @@ of possible values can be large.</p>
 
 <p>In Sapphire, developers are not creating and wiring up individual UI widgets. This makes it
 possible to implement the browse button pattern at a higher level of abstraction. If a browse
-handler is active for a property, a browse button will be automatically created. The framework
+action handler is active for a property, a browse button will be automatically created. The framework
 will even register a keyboard shortcut (Ctrl+L, 'L' is for locate) which can be used to open the 
 browse dialog while focus is on the text field.</p>
 
@@ -40,9 +40,9 @@ have "jar" or "zip" extension. Such a property could be declared as follows:</p>
 @ValidFileSystemResourceType( FileSystemResourceType.FILE )
 @ValidFileExtensions( { "jar", "zip" } )
 @MustExist
-    
+
 ValueProperty PROP_ABSOLUTE_FILE_PATH = new ValueProperty( TYPE, "AbsoluteFilePath" );
-    
+
 Value&lt;Path> getAbsoluteFilePath();
 void setAbsoluteFilePath( String value );
 void setAbsoluteFilePath( Path value );</code></pre>
@@ -57,7 +57,7 @@ browse dialog pre-filtered to only show jar and zip files.</p>
 and change @ValidFileSystemResourceType.</p>
 
 <p>Or maybe you are writing an extension to Eclipse IDE and your property needs to hold a 
-workspace path instead of an absolute path... Just replace @AbsolutePath with @EclipseWorkspacePath
+workspace path instead of an absolute path... Just replace @AbsolutePath with @WorkspaceRelativePath
 in the above example. The validation will change to use Eclipse resources API and the native
 browse dialog will be replaced with the standard Eclipse workspace resources dialog.</p>
 
@@ -70,19 +70,18 @@ RelativePathService that returns all possible roots...</p>
 @ValidFileSystemResourceType( FileSystemResourceType.FILE )
 @ValidFileExtensions( "dll" )
 @MustExist
-    
+
 ValueProperty PROP_RELATIVE_FILE_PATH = new ValueProperty( TYPE, "RelativeFilePath" );
-    
+
 Value&lt;Path> getRelativeFilePath();
 void setRelativeFilePath( String value );
 void setRelativeFilePath( Path value );</code></pre>
 
-<pre class="source-code"><code>public final class CustomRelativePathService extends RelativePathService
+<pre class="source-code"><code>public class CustomRelativePathService extends RelativePathService
 {
-    @Override
     public List&lt;Path> roots()
     {
-        final List&lt;Path> roots = new ArrayList&lt;Path>();
+        List&lt;Path> roots = new ArrayList&lt;Path>();
         
         roots.add( new Path( "c:/Windows" ) );
         roots.add( new Path( "c:/Program Files" ) );
@@ -101,25 +100,21 @@ is being built for searches for the specified file in a set of defined locations
 
 <h2>String Values</h2>
 
-<p>Another common scenario is the case where the value must come from a list possible values not
+<p>Another common scenario is the case where the value must come from a list of possible values not
 necessarily tied to something specific like file system resources. For instance, consider the case
 where a property must reference an entity name from the set of entities defined elsewhere.</p>
 
-<p>Sapphire provides a set of three annotations to simplify these scenarios. The annotations are 
-@PossibleValuesProvider, @PossibleValues and @PossibleValuesFromModel. Of the three annotations,
-the first one is the most generic one. It lets the developer implement a class that computes the
-set of possible values at runtime...</p>
+<p>Simply implement a PossibleValueService and attach it to the property...</p>
 
-<pre class="source-code"><code>@PossibleValuesProvider( impl = CityNameValuesProvider.class )
-    
+<pre class="source-code"><code>@Service( impl = CityNamePossibleValuesService.class )
+
 ValueProperty PROP_CITY = new ValueProperty( TYPE, "City" );
-    
+
 Value&lt;String> getCity();
 void setCity( String value );</code></pre>
 
 <pre class="source-code"><code>public class CityNameValuesProvider extends PossibleValuesProviderImpl
 {
-    @Override
     protected abstract void fillPossibleValues( SortedSet<String> values )
     {
         // Your logic goes here.
@@ -128,23 +123,24 @@ void setCity( String value );</code></pre>
 
 <p>If you find that in your scenario the set of possible values is static you can use the @PossibleValues
 annotation instead. This annotation lets you specify the set of possible values right in the annotation instead
-of implementing a custom values provider.</p>
+of implementing a custom service.</p>
 
 <p>Or maybe your scenario calls for a property to draw its possible values from another property in the model.
-The @PossibleValuesFromModel annotation has you covered. It lets you specify a path through the model where
+The @PossibleValues annotation still has you covered. It lets you specify a path through the model where
 possible values should be harvested.</p>
 
-<pre class="source-code"><code>@PossibleValuesFromModel( path = "/Contacts/Name", caseSensitive = false ) 
-    
+<pre class="source-code"><code>@PossibleValues( property = "/Contacts/Name", caseSensitive = false ) 
+
 ValueProperty PROP_ASSISTANT = new ValueProperty( TYPE, "Assistant" );
-    
+
 Value&lt;String> getAssistant();
 void setAssistant( String value );</code></pre>
 
-<p>Regardless of which of the three annotations you use, you will get validation that will check that the
+<p>Regardless of whether you use @PossibleValues annotation or implement a custom PossibleValuesService, 
+you will get validation that will check that the
 specified value is in the set of possible values. Additional attributes are available on all three of
 these annotations that let you customize the validation. For instance, you can change the problem severity to
-warning or even disable validation completely. You can even specify whether the comparison should be
+a warning or even disable validation completely. You can even specify whether the comparison should be
 case sensitive. On the UI front, you will get browse button wired to the standard list item selection
 dialog.</p>
 
@@ -154,7 +150,7 @@ dialog.</p>
 
 <p>Sapphire even integrates with JDT to support properties that reference classes or interfaces visible 
 to a given Java project. The developer uses the supplied JavaTypeName class as the type for a value
-property and then tunes the semantics using @JavaTypeConstraints and @MustExist annotations. Sapphire
+property and then tunes the semantics using @JavaTypeConstraint and @MustExist annotations. Sapphire
 takes care of the rest. You get validation for type existence, kind of type (interface, class, etc.) and
 even whether type derives from another type. On the UI side, you get a browse button wired to JDT's
 type selection dialog.</p>
@@ -163,12 +159,13 @@ type selection dialog.</p>
 must extend AbstractList class while also implementing Cloneable interface.</p>
 
 <pre class="source-code"><code>@Type( base = JavaTypeName.class )
-@JavaTypeConstraints( kind = JavaTypeKind.CLASS, type = { "java.util.AbstractList", "java.lang.Cloneable" } )
+@Reference( target = JavaType.class )
+@JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = { "java.util.AbstractList", "java.lang.Cloneable" } )
 @MustExist
-    
+
 ValueProperty PROP_CUSTOM_LIST_CLASS = new ValueProperty( TYPE, "CustomListClass" );
-    
-Value&lt;JavaTypeName> getCustomListClass();
+
+ReferenceValue&lt;JavaTypeName,JavaType> getCustomListClass();
 void setCustomListClass( String value );
 void setCustomListClass( JavaTypeName value );</code></pre>
 
@@ -177,17 +174,18 @@ void setCustomListClass( JavaTypeName value );</code></pre>
 <h2>Completely Custom</h2>
 
 <p>Sapphire browse handling support is extensible to support cases that do not fit one of the above
-molds. To do this, you create a custom class that extends BrowseHandler. You can then register your
-browse handler globally (to activate under a condition that you specify) or locally for a specific
+molds. To do this, you create a custom class that extends SapphireActionHandler. You can then register your
+browse action handler globally (to activate under a condition that you specify) or locally for a specific
 property editor in the UI definition. The second case is more common.</p>
 
 <p>Here is an example:</p> 
 
 <pre class="source-code"><code>&lt;property-editor>
   &lt;property>Photo&lt;/property>
-  &lt;browse-handler>
-    &lt;class>PhotosCatalogBrowseHandler&lt;/class>
-  &lt;/browse-handler>
+  &lt;action-handler>
+    &lt;action>Sapphire.Browse&lt;/action>
+    &lt;impl>PhotosCatalogBrowseActionHandler&lt;/impl>
+  &lt;/action-handler>
 &lt;/property-handler></code></pre>
 
 <h2>Multi-Way</h2>
@@ -209,32 +207,35 @@ options. Here are a few examples from Eclipse itself.</p>
 <img src="images/multi-way-3.png"/>
 
 <p>Sapphire adopts the convention of using a drop-down menu from the browse button when multiple
-browse handlers are active concurrently. Here is what that looks like:</p> 
+browse action handlers are active concurrently. Here is what that looks like:</p> 
 
 <img src="images/multi-way-sapphire.png"/>
 
 <p>Currently, there are no model annotations that can fully describe the complex semantics of
-such scenarios. The developer must register the browse handlers in the UI definition. Validation
+such scenarios. The developer must register the browse action handlers in the UI definition. Validation
 should be done in a custom validator class attached via @Validator annotation.</p>
 
-<p>Here is the UI definition from the above screen capture. All the system-provided browse handlers
+<p>Here is the UI definition from the above screen capture. All the system-provided browse action handlers
 that activate when certain annotations are used are also available for direct reference from
 the UI definitions as can be seen in this example.</p>
 
 <pre class="source-code"><code>&lt;property-editor>
   &lt;property>MultiOptionPath&lt;/property>
-  &lt;browse-handler>
-    &lt;class>AbsoluteFilePathValueBrowseHandler&lt;/class>
+  &lt;action-handler>
+    &lt;action>Sapphire.Browse&lt;/action>
+    &lt;impl>AbsoluteFilePathBrowseActionHandler&lt;/impl>
     &lt;param>
       &lt;name>extensions&lt;/name>
       &lt;value>jar,zip&lt;/value>
     &lt;/param>
-  &lt;/browse-handler>
-  &lt;browse-handler>
-    &lt;class>AbsoluteFolderPathValueBrowseHandler&lt;/class>
-  &lt;/browse-handler>
-  &lt;browse-handler>
-    &lt;class>EclipseWorkspacePathValueBrowseHandler&lt;/class>
+  &lt;/action-handler>
+  &lt;action-handler>
+    &lt;action>Sapphire.Browse&lt;/action>
+    &lt;impl>AbsoluteFolderPathBrowseActionHandler&lt;/impl>
+  &lt;/action-handler>
+  &lt;action-handler>
+    &lt;action>Sapphire.Browse&lt;/action>
+    &lt;impl>WorkspaceRelativePathBrowseActionHandler&lt;/impl>
     &lt;param>
       &lt;name>extensions&lt;/name>
       &lt;value>jar,zip&lt;/value>
@@ -243,8 +244,10 @@ the UI definitions as can be seen in this example.</p>
       &lt;name>leading-slash&lt;/name>
       &lt;value>true&lt;/value>
     &lt;/param>
-  &lt;/browse-handler>
+  &lt;/action-handler>
 &lt;/property-editor></code></pre>
+
+<br/><br/>
 
 </body>
 

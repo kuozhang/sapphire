@@ -176,7 +176,7 @@ public class DefaultValuePropertyEditorRenderer
         this.textField = new Text( nestedComposite, style );
         this.textField.setLayoutData( gdfill() );
         this.context.adapt( this.textField );
-        decorator.addEditorControl( this.textField );
+        decorator.addEditorControl( this.textField, true );
         
         final TextOverlayPainter.Controller textOverlayPainterController;
         

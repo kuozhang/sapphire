@@ -22,7 +22,7 @@ import org.eclipse.sapphire.samples.zipcodes.ZipCodesDatabase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class StateCodeValuesProvider
+public final class ZipCodePossibleValuesService
 
     extends PossibleValuesService
     
@@ -32,16 +32,16 @@ public final class StateCodeValuesProvider
     {
         final IAddress address = (IAddress) element();
         
-        final String zipCode = address.getZipCode().getText();
+        final String state = address.getState().getText();
         final String city = address.getCity().getText();
         
-        values.addAll( ZipCodesDatabase.getStateCodes( zipCode, city ) );
+        values.addAll( ZipCodesDatabase.getZipCodes( state, city ) );
     }
 
     @Override
     public String getInvalidValueMessage( final String invalidValue )
     {
-        return NLS.bind( "\"{0}\" is not a valid state postal code for the specified city and ZIP code.", invalidValue );
+        return NLS.bind( "\"{0}\" is not a valid ZIP code for the specified city and state.", invalidValue );
     }
 
     @Override

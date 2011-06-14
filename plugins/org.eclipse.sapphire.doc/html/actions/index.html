@@ -2,7 +2,7 @@
 
 <head>
   <title>Actions</title>
-  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
 </head>
 
 <body>
@@ -116,7 +116,7 @@ file in the specified folder. Activating one of these handlers sets the property
 <pre class="source-code"><code>public class KeyFolderBrowseHandlerFactory extends SapphireActionHandlerFactory
 {
     private File folder;
-    
+
     @Override
     public void init( SapphireAction action, ISapphireActionHandlerFactoryDef def )
     {
@@ -139,7 +139,7 @@ file in the specified folder. Activating one of these handlers sets the property
         
         return handlers;
     }
-    
+
     private static class Handler extends SapphireBrowseActionHandler
     {
         private final File file;
@@ -231,6 +231,10 @@ and the UI part displays all actions contributed to a context at the appropriate
     <th>Typical Presentation</th>
   </tr>
   <tr>
+    <td>Sapphire.ActionLink</td>
+    <td>Hyperlink specified by the action link part.</td>
+  </tr>
+  <tr>
     <td>Sapphire.EditorPage</td>
     <td>Buttons in the editor page header.</td>
   </tr>
@@ -261,6 +265,22 @@ and the UI part displays all actions contributed to a context at the appropriate
   <tr>
     <td>Sapphire.ValuePropertyEditor</td>
     <td>Buttons next to the property editor.</td>
+  </tr>
+  <tr>
+    <td>Sapphire.Diagram.Editor</td>
+    <td>Menu items in the diagram editor's context menu.</td>
+  </tr>
+  <tr>
+    <td>Sapphire.Diagram.Node</td>
+    <td>Menu items in the diagram node's context menu.</td>
+  </tr>
+  <tr>
+    <td>Sapphire.Diagram.Connection</td>
+    <td>Menu items in the diagram connection's context menu.</td>
+  </tr>
+  <tr>
+    <td>Sapphire.WithDirective</td>
+    <td>Key binding in the with directive.</td>
   </tr>
 </table>
 

@@ -188,7 +188,7 @@ Eclipse's IStatus object.</p>
 <pre class="source-code"><code><font color="#888888">public class CustomPossibleValuesService extends PossibleValuesService
 {
     ...
-    
+
     public</font> int <font color="#888888">getInvalidValueSeverity( String value ) 
     {
         if( ... )
@@ -208,7 +208,7 @@ Eclipse's IStatus object.</p>
 <pre class="source-code"><code><font color="#888888">public class CustomPossibleValuesService extends PossibleValuesService
 {
     ...
-    
+
     public</font> Status.Severity <font color="#888888">getInvalidValueSeverity( String value ) 
     {
         if( ... )
@@ -233,9 +233,9 @@ Eclipse's IStatus object.</p>
 @WorkspaceRelativePath
 @ValidFileSystemResourceType( FileSystemResourceType.FILE )
 @ValidFileExtensions( "xml" )
-    
+
 ValueProperty PROP_LOCATION = new ValueProperty( TYPE, "Location" );
-    
+
 Value&lt;</font>IPath<font color="#888888">&gt; getLocation();
 void setLocation( String location );
 void setLocation( </font>IPath<font color="#888888"> location );</font></code></pre>
@@ -249,9 +249,9 @@ void setLocation( </font>IPath<font color="#888888"> location );</font></code></
 @WorkspaceRelativePath
 @ValidFileSystemResourceType( FileSystemResourceType.FILE )
 @ValidFileExtensions( "xml" )
-    
+
 ValueProperty PROP_LOCATION = new ValueProperty( TYPE, "Location" );
-    
+
 Value&lt;</font>Path<font color="#888888">&gt; getLocation();
 void setLocation( String location );
 void setLocation( </font>Path<font color="#888888"> location );</font></code></pre>
@@ -553,7 +553,7 @@ system or at the level of an individual property using the @Service annotation.<
     {
         ...
     }
-    
+
     public IStatus validate( Value&lt;?> value )
     {
         ...
@@ -570,7 +570,7 @@ system or at the level of an individual property using the @Service annotation.<
     {
         ...
     }
-    
+
     public Status validate()
     {
         final Value&lt;?> value = target();
@@ -635,7 +635,7 @@ system or at the level of an individual property using the @Service annotation.<
 
         ...
     }
-    
+
     @Override
     public boolean isEnabled() 
     {
@@ -655,14 +655,14 @@ system or at the level of an individual property using the @Service annotation.<
 
         ...
     }
-    
+
     @Override
     public boolean state()
     {
         refresh();
         return super.state();
     }
-    
+
     @Override
     protected boolean compute() 
     {
@@ -717,9 +717,9 @@ and content assist support.</p>
 <pre class="source-code"><code><font color="#888888">@Type( base = JavaTypeName.class )</font>
 @JavaTypeConstraint<u>s</u>( ... )
 <font color="#888888">@MustExist
-    
+
 ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );</font>
-    
+
 Value&lt;JavaTypeName> <font color="#888888">getImplClass();
 void setImplClass( String value );
 void setImplClass( JavaTypeName value );</font>
@@ -730,9 +730,9 @@ void setImplClass( JavaTypeName value );</font>
 @Reference( target = JavaType.class )
 @JavaTypeConstraint( ... )
 <font color="#888888">@MustExist
-    
+
 ValueProperty PROP_IMPL_CLASS = new ValueProperty( TYPE, "ImplClass" );</font>
-    
+
 ReferenceValue&lt;JavaTypeName,JavaType> <font color="#888888">getImplClass();
 void setImplClass( String value );
 void setImplClass( JavaTypeName value );</font>
@@ -1067,9 +1067,9 @@ public class AttendeeImageService extends ImageService
 
     private static final ImageData IMG_PERSON_FADED 
         = ImageData.readFromClassLoader( IContact.class, "ContactFaded.png" );
-    
+
     private ModelPropertyListener listener;
-    
+
     @Override
     public void init( IModelElement element, String[] params )
     {

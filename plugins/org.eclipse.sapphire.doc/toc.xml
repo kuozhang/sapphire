@@ -14,33 +14,33 @@
  ******************************************************************************
 -->
 
-<toc label="Sapphire Developer Guide">
+<toc label="Sapphire Developer Guide" topic="html/index.html">
   <topic href="html/introduction/index.html" label="Introduction"/>
   <topic href="html/focus/browsing/index.html" label="Focus on Browsing"/>
   <topic href="html/focus/localization/index.html" label="Focus on Localization"/>
-  <topic href="html/modeling/index.html" label="Modeling Framework">
-    <topic label="XML">
-      <topic href="html/modeling/xml/binding/index.html" label="Binding"/>
-    </topic>
-  </topic>
-  <topic href="html/ui/index.html" label="User Interface Framework">
-    <topic href="html/ui/actions/index.html" label="Actions"/>
+  <topic href="html/xml/binding/index.html" label="XML Binding">
   </topic>
   <topic href="html/el/index.html" label="Expression Language">
   </topic>
-  <topic label="Extension System">
+  <topic href="html/actions/index.html" label="Actions">
+  </topic>
+  <topic href="html/extensions/index.html" label="Extension System">
      <topic href="html/extensions/existing.html" label="Existing Extensions">
      </topic>
      <topic href="html/extensions/contributing.html" label="Contributing Extensions">
      </topic>
   </topic>
   <topic href="html/releases/index.html" label="Releases">
-    <topic href="html/releases/0.2/index.html" label="0.2">
-      <topic href="html/releases/0.2/migration.html" label="Migration Guide"/>
-    </topic>
     <topic href="html/releases/0.3/index.html" label="0.3">
+       <topic href="html/releases/0.3/enhancements.html" label="Enhancements">
+       </topic>
        <topic href="html/releases/0.3/migration.html" label="Migration Guide">
        </topic>
+    </topic>
+    <topic href="html/releases/0.2/index.html" label="0.2">
+       <topic href="html/releases/0.2/enhancements.html" label="Enhancements">
+       </topic>
+      <topic href="html/releases/0.2/migration.html" label="Migration Guide"/>
     </topic>
   </topic>
 </toc>

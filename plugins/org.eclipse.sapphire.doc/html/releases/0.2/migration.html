@@ -193,7 +193,7 @@ public class CustomImpl extends ReferenceService
   <tr>
     <td>
 <pre class="source-code"><code><font color="#888888">@Type( base = IAddress.class )</font>
-    
+
 ElementProperty <font color="#888888">PROP_ADDRESS = new </font>ElementProperty<font color="#888888">( TYPE, "Address" );</font>
 
 <font color="#888888">IAddress getAddress();</font>
@@ -210,7 +210,7 @@ ElementProperty <font color="#888888">PROP_ADDRESS = new </font>ElementProperty<
     <td>
 <pre class="source-code"><code><font color="#888888">@Type( base = IAddress.class )</font>
 @XmlBinding( path = "address" )
-    
+
 ImpliedElementProperty <font color="#888888">PROP_ADDRESS = new </font>ImpliedElementProperty<font color="#888888">( TYPE, "Address" );</font>
 
 <font color="#888888">IAddress getAddress();</font>
@@ -229,7 +229,7 @@ ImpliedElementProperty <font color="#888888">PROP_ADDRESS = new </font>ImpliedEl
     <td>
 <pre class="source-code"><code><font color="#888888">@Type( base = IAssistant.class )
 @XmlBinding( path = "assistant" )
-    
+
 ElementProperty PROP_ASSISTANT = new ElementProperty( TYPE, "Assistant" );</font>
 
 IAssistant <font color="#888888">getAssistant();</font>
@@ -238,7 +238,7 @@ IAssistant getAssistant( boolean createIfNecessary );</code></pre>
     <td>
 <pre class="source-code"><code><font color="#888888">@Type( base = IAssistant.class )
 @XmlBinding( path = "assistant" )
-    
+
 ElementProperty PROP_ASSISTANT = new ElementProperty( TYPE, "Assistant" );</font>
 
 ModelElementHandle&lt;IAssistant> <font color="#888888">getAssistant();</font></code></pre>
@@ -316,12 +316,12 @@ contained in a list) rather than the list property. It can be used any place whe
     <td>
 <pre class="source-code"><code>@DependsOn( "*/Name" )
 @Validator( impl = UniqueValueValidator.class )
-    
+
 <font color="#888888">ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );</font></code></pre>
     </td>
     <td>
 <pre class="source-code"><code>@NoDuplicates
-    
+
 <font color="#888888">ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );</font></code></pre>
     </td>
   </tr>
@@ -331,7 +331,7 @@ contained in a list) rather than the list property. It can be used any place whe
 @NoDuplicates
                              
 <font color="#888888">ListProperty PROP_CONNECTIONS = new ListProperty( TYPE, "Connections" );
-    
+
 ModelElementList&lt;IConnection> getConnections();
 
 ...
@@ -340,7 +340,7 @@ public interface IConnection extends IModelElement
 {</font>
     @DependsOn( "*/Name" )
     @Validator( impl = UniqueValueValidator.class )
-    
+
     <font color="#888888">ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
 }</font></code></pre>
     </td>
@@ -348,7 +348,7 @@ public interface IConnection extends IModelElement
 <pre class="source-code"><code><font color="#888888">@Type( base = IConnection.class )</font>
                              
 <font color="#888888">ListProperty PROP_CONNECTIONS = new ListProperty( TYPE, "Connections" );
-    
+
 ModelElementList&lt;IConnection> getConnections();
 
 ...
@@ -356,7 +356,7 @@ ModelElementList&lt;IConnection> getConnections();
 public interface IConnection extends IModelElement
 {</font>
     @NoDuplicates
-    
+
     <font color="#888888">ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
 }</font></code></pre>
     </td>
@@ -631,13 +631,13 @@ refreshing on dependent property changes.</p>
     {
         return true;
     }
-    
+
     @Override
     public int getPriority()
     {
         return 0;
     }
-    
+
     @Override
     public boolean canLocateJumpTarget( SapphirePart part,
                                         SapphireRenderingContext context,
@@ -682,7 +682,7 @@ refreshing on dependent property changes.</p>
         // If all relevant resources are other properties in the same model, skip
         // overriding this method and override initDependencies method instead.
     }
-    
+
     @Override
     protected void initDependencies( List&lt;String> dependencies )
     {
@@ -901,14 +901,14 @@ migration:</p>
 <pre class="source-code"><code>&lt;taskdef 
   resource="org/eclipse/sapphire/ui/build/antlib.xml"
   classpathref="sapphire.classpath"/>
-    
+
 &lt;sapphire.extract-string-resources src="sdef" dest=".resources/sdef"/></code></pre>
     </td>
     <td>
 <pre class="source-code"><code>&lt;taskdef 
   resource="org/eclipse/sapphire/sdk/build/antlib.xml"
   classpathref="sapphire.classpath"/>
-    
+
 &lt;sapphire src="." dest=".resources"/></code></pre>
     </td>
   </tr>

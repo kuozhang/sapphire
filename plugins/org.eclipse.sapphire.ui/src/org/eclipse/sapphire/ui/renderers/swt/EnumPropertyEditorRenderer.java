@@ -197,7 +197,7 @@ public final class EnumPropertyEditorRenderer
         }
     
         this.control.setData( DATA_BINDING, this.binding );
-        decorator.addEditorControl( this.control );
+        decorator.addEditorControl( this.control, true );
     
         addControl( this.control );
     }

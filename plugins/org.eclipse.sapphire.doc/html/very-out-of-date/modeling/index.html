@@ -97,9 +97,9 @@ import org.eclipse.sapphire.modeling.values.*;
 public interface IContactName extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IContactName.class );
-    
+
     // *** FirstName ***
-    
+
     @Label( standard = "first name" )
     @Required
 
@@ -107,9 +107,9 @@ public interface IContactName extends IModelElement
 
     StringValue getFirstName();
     void setFirstName( String firstName );
-    
+
     // *** MiddleName ***
-    
+
     @Label( standard = "middle name" )
 
     ValueProperty PROP_MIDDLE_NAME = new ValueProperty( TYPE, "MiddleName" );
@@ -118,7 +118,7 @@ public interface IContactName extends IModelElement
     void setMiddleName( String middleName );
 
     // *** LastName ***
-    
+
     @Label( standard = "last name" )
     @Required
 
@@ -150,21 +150,21 @@ public class ContactsDatabaseFactory
 {
     // This is the most important method in any factory. It allows the client to create
     // a model instance using any model store implementation.
-    
+
     public static IContactsDatabase load( final ModelStore modelStore )
     {
         return new ContactsDatabase( modelStore );
     }
-    
+
     // You may also want to add a few convenience methods so that the clients don't
     // have to know how to instantiate some of the more common model stores.
-    
+
     public static IContactsDatabase load( final File file )
     {
         final FileModelStore modelStore = new FileModelStore( file );
         return load( modelStore );
     }
-    
+
     public static IContactsDatabase load( final IFile file )
     {
         final EclipseFileModelStore modelStore = new EclipseFileModelStore( file );
@@ -251,7 +251,7 @@ like.</p>
 
     // This is the method that you have to implement in order to create
     // a custom value implementation.
-    
+
     protected abstract T parse( String str )
 }</code></pre>
 
@@ -348,7 +348,7 @@ exists.</p>
 <p>Removable element properties are defined as follows:</p>
 
 <pre class="source-code"><code>static final ClassProperty PROP_ADDRESS = new ClassProperty( TYPE, "Address", IAddress.class );
-    
+
 IAddress getAddress(); // defaults createIfNecessary to false
 IAddress getAddress( boolean createIfNecessary );</code></pre>
 
@@ -356,7 +356,7 @@ IAddress getAddress( boolean createIfNecessary );</code></pre>
 definition would then look as follows:</p>
 
 <pre class="source-code"><code>static final ClassProperty PROP_ADDRESS = new ClassProperty( TYPE, "Address", IAddress.class );
-    
+
 IAddress getAddress(); // never returns null</code></pre>
 
 <p>Note that for legacy reasons the property class is called "ClassProperty". It will likely
@@ -924,7 +924,7 @@ public class CharsetNamesValuesProvider extends ValuesProviderImpl
         
         return list;
     }
-    
+
     public String getInvalidValueMessage( Object modelElement, String invalidValue )
     {
         return "\"" + invalidValue + "\" is not a valid character set name.";
@@ -1162,7 +1162,7 @@ public class AreaCodeBinding extends ValuePropertyCustomXmlBindingImpl
         pn.areaCode = value;
         pnModelElement.setChildElementText( el, "number", pn.toString(), true );
     }
-    
+
     private static class ParsedPhoneNumber
     {
         public String areaCode;

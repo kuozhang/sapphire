@@ -97,6 +97,7 @@ public final class PropertyEditorAssistDecorator
     private final ModelProperty property;
     private final SapphireRenderingContext context;
     private final Label control;
+    private Control primary;
     private final Collection<String> contributorsToSuppress;
     private final Collection<Class<?>> additionalContributors;
     private PropertyEditorAssistContext assistContext;
@@ -278,6 +279,12 @@ public final class PropertyEditorAssistDecorator
     
     public void addEditorControl( final Control control )
     {
+        addEditorControl( control, false );
+    }
+    
+    public void addEditorControl( final Control control,
+                                  final boolean primary )
+    {
         if( control instanceof Composite )
         {
             for( Control child : ( (Composite) control ).getChildren() )
@@ -287,6 +294,11 @@ public final class PropertyEditorAssistDecorator
         }
         
         control.addMouseTrackListener( this.mouseTrackListener );
+        
+        if( primary )
+        {
+            this.primary = control;
+        }
     }
     
     public void removeEditorControl( final Control control )
@@ -300,18 +312,34 @@ public final class PropertyEditorAssistDecorator
         }
         
         control.removeMouseTrackListener( this.mouseTrackListener );
+        
+        if( this.primary == control )
+        {
+            this.primary = null;
+        }
     }
 
     private void openAssistDialog()
     {
         if( this.assistContext != null && ! this.assistContext.isEmpty() )
         {
-            final Rectangle bounds = this.control.getBounds();
-            Point position = this.control.getParent().toDisplay( new Point( bounds.x, bounds.y ) );
-            position = new Point( position.x + bounds.width + 4, position.y + 2 );
+            final Rectangle decoratorControlBounds = this.control.getBounds();
+            final Rectangle primaryControlBounds = ( this.primary == null ? null : this.primary.getBounds() );
             
-            final PropertyEditorAssistDialog dialog 
-                = new PropertyEditorAssistDialog( shell(), position, this.assistContext );
+            Point position;
+            
+            if( primaryControlBounds != null && primaryControlBounds.height < 50 )
+            {
+                position = new Point( primaryControlBounds.x, primaryControlBounds.y + primaryControlBounds.height + 1 );
+                position = this.primary.getParent().toDisplay( position );
+            }
+            else
+            {
+                position = new Point( decoratorControlBounds.x + decoratorControlBounds.width + 2, decoratorControlBounds.y + 2 );
+                position = this.control.getParent().toDisplay( position );
+            }
+            
+            final PropertyEditorAssistDialog dialog = new PropertyEditorAssistDialog( shell(), position, this.assistContext );
             
             dialog.open();
         }

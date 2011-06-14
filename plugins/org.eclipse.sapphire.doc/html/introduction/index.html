@@ -33,7 +33,7 @@ in UI that is inconsistent, brittle and difficult to maintain.</p>
 
 <h2>First, The Model</h2>
 
-<p>Sapphire includes a simple modeling framework that is tuned to the needs of the Sapphire UI
+<p>Sapphire includes a modeling framework that is tuned to the needs of the Sapphire UI
 framework and is designed to be easy to learn. It is also optimized for iterative development.
 A Sapphire model is defined by writing Java interfaces and using annotations to attach metadata.
 An annotation processor that is part of Sapphire SDK then generates the implementation classes.
@@ -45,14 +45,14 @@ them. All model authoring and consumption happens through the interfaces.</p>
 <p>In this article we will walk through a Sapphire sample called EzBug. The sample is based
 around a scenario of building a bug reporting system. Let's start by looking at IBugReport.</p>
 
-<pre class="source-code"><code>@GenerateXmlBinding
+<pre class="source-code"><code>@GenerateImpl
 
-public interface IBugReport extends IModelElementForXml, IRemovable
+public interface IBugReport extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IBugReport.class );
-    
+
     // *** CustomerId ***
-    
+
     @XmlBinding( path = "customer" )
     @Label( standard = "customer ID" )
 
@@ -62,7 +62,7 @@ public interface IBugReport extends IModelElementForXml, IRemovable
     void setCustomerId( String value );
 
     // *** Title ***
-    
+
     @XmlBinding( path = "title" )
     @Label( standard = "title" )
     @Required
@@ -71,9 +71,9 @@ public interface IBugReport extends IModelElementForXml, IRemovable
 
     Value&lt;String> getTitle();
     void setTitle( String value );
-    
+
     // *** Details ***
-    
+
     @XmlBinding( path = "details" )
     @Label( standard = "details" )
     @LongString
@@ -83,41 +83,41 @@ public interface IBugReport extends IModelElementForXml, IRemovable
 
     Value&lt;String> getDetails();
     void setDetails( String value );
-    
+
     // *** ProductVersion ***
 
     @Type( base = ProductVersion.class )
     @XmlBinding( path = "version" )
     @Label( standard = "version" )
-    @DefaultValue( "2.5" )
+    @DefaultValue( text = "2.5" )
 
     ValueProperty PROP_PRODUCT_VERSION = new ValueProperty( TYPE, "ProductVersion" );
 
     Value&lt;ProductVersion> getProductVersion();
     void setProductVersion( String value );
     void setProductVersion( ProductVersion value );
-    
+
     // *** ProductStage ***
 
     @Type( base = ProductStage.class )
     @XmlBinding( path = "stage" )
     @Label( standard = "stage" )
-    @DefaultValue( "final" )
+    @DefaultValue( text = "final" )
 
     ValueProperty PROP_PRODUCT_STAGE = new ValueProperty( TYPE, "ProductStage" );
 
     Value&lt;ProductStage> getProductStage();
     void setProductStage( String value );
     void setProductStage( ProductStage value );
-    
+
     // *** Hardware ***
 
     @Type( base = IHardwareItem.class )
     @XmlListBinding( mappings = { @XmlListBinding.Mapping( element = "hardware-item", type = IHardwareItem.class ) } )
     @Label( standard = "hardware" )
-    
+
     ListProperty PROP_HARDWARE = new ListProperty( TYPE, "Hardware" );
-    
+
     ModelElementList&lt;IHardwareItem> getHardware();
 }</code></pre>
 
@@ -128,25 +128,26 @@ model element is stored in the interface. There are no external files. When this
 compiled, Java persists these annotation in the .class file and Sapphire is able to read them
 at runtime.</p>
 
-<p>Sapphire has three types of properties: value, element and list. Value properties hold simple data,
+<p>Sapphire has four types of properties: value, element, list and transient. Value properties hold simple data,
 such as strings, integers, enums, etc. Any object that is immutable and can be serialized to a string can
 be stored in a value property. An element property holds a reference to another model element. You can
-specify whether this nested model element should always exist or if it should be possible to create and 
+specify whether this nested model element should always exist (implied element property) or if it should be possible to create and 
 delete it. A list property holds zero or more model elements. A list can be homogeneous (only holds one
-type of elements) or heterogeneous (holds elements of various specified types).</p>
+type of elements) or heterogeneous (holds elements of various specified types). A transient property holds an
+arbitrary object reference that does not need to be persisted to permanent storage.</p>
 
 <p>Using a combination of list and element properties, it is possible to create an arbitrary model hierarchy. In the
 above listing, there is one list property. It is homogeneous and references IHardwareItem element type. Let's
 look at that type next.</p>
 
-<pre class="source-code"><code>@GenerateXmlBinding
+<pre class="source-code"><code>@GenerateImpl
 
-public interface IHardwareItem extends IModelElementForXml, IRemovable
+public interface IHardwareItem extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IHardwareItem.class );
-    
+
     // *** Type ***
-    
+
     @Type( base = HardwareType.class )
     @XmlBinding( path = "type" )
     @Label( standard = "type" )
@@ -157,9 +158,9 @@ public interface IHardwareItem extends IModelElementForXml, IRemovable
     Value&lt;HardwareType> getType();
     void setType( String value );
     void setType( HardwareType value );
-    
+
     // *** Make ***
-    
+
     @XmlBinding( path = "make" )
     @Label( standard = "make" )
     @Required
@@ -168,9 +169,9 @@ public interface IHardwareItem extends IModelElementForXml, IRemovable
 
     Value&lt;String> getMake();
     void setMake( String value );
-    
+
     // *** ItemModel ***
-    
+
     @XmlBinding( path = "model" )
     @Label( standard = "model" )
 
@@ -180,7 +181,7 @@ public interface IHardwareItem extends IModelElementForXml, IRemovable
     void setItemModel( String value );
 
     // *** Description ***
-    
+
     @XmlBinding( path = "description" )
     @Label( standard = "description" )
     @LongString
@@ -196,25 +197,24 @@ is just a collection of Java interfaces that are annotated in a certain way and 
 
 <p>A bug report is contained in IFileBugReportOp, which serves as the top level type in the model.</p>
 
-<pre class="source-code"><code>@GenerateXmlBindingModelImpl
+<pre class="source-code"><code>@GenerateImpl
 @RootXmlBinding( elementName = "report" )
 
-public interface IFileBugReportOp extends IModelForXml, IExecutableModelElement
+public interface IFileBugReportOp extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IFileBugReportOp.class );
-    
+
     // *** BugReport ***
-    
+
     @Type( base = IBugReport.class )
     @Label( standard = "bug report" )
     @XmlBinding( path = "bug" )
-    
-    ElementProperty PROP_BUG_REPORT = new ElementProperty( TYPE, "BugReport" );
-    
+
+    ImpliedElementProperty PROP_BUG_REPORT = new ImpliedElementProperty( TYPE, "BugReport" );
+
     IBugReport getBugReport();
-    IBugReport getBugReport( boolean createIfNecessary );
 }</code></pre>
- 
+
 
 <p>Let's now look at the last bit of code that goes with this model, which is the enums.</p> 
 
@@ -225,29 +225,29 @@ public enum HardwareType
     @Label( standard = "CPU" )
 
     CPU,
-    
+
     @Label( standard = "main board" )
     @EnumSerialization( primary = "Main Board" )
-    
+
     MAIN_BOARD,
 
     @Label( standard = "RAM" )
-    
+
     RAM,
-    
+
     @Label( standard = "video controller" )
     @EnumSerialization( primary = "Video Controller" )
-    
+
     VIDEO_CONTROLLER,
 
     @Label( standard = "storage" )
     @EnumSerialization( primary = "Storage" )
-    
+
     STORAGE,
-    
+
     @Label( standard = "other" )
     @EnumSerialization( primary = "Other" )
-    
+
     OTHER
 }
 
@@ -257,15 +257,15 @@ public enum HardwareType
 public enum ProductStage
 {
     @Label( standard = "alpha" )
-    
+
     ALPHA,
 
     @Label( standard = "beta" )
-    
+
     BETA,
 
     @Label( standard = "final" )
-    
+
     FINAL
 }
 
@@ -276,37 +276,37 @@ public enum ProductVersion
 {
     @Label( standard = "1.0" )
     @EnumSerialization( primary = "1.0" )
-    
+
     V_1_0,
-    
+
     @Label( standard = "1.5" )
     @EnumSerialization( primary = "1.5" )
 
     V_1_5,
-    
+
     @Label( standard = "1.6" )
     @EnumSerialization( primary = "1.6" )
-    
+
     V_1_6,
-    
+
     @Label( standard = "2.0" )
     @EnumSerialization( primary = "2.0" )
-    
+
     V_2_0,
-    
+
     @Label( standard = "2.3" )
     @EnumSerialization( primary = "2.3" )
-    
+
     V_2_3,
-    
+
     @Label( standard = "2.4" )
     @EnumSerialization( primary = "2.4" )
-    
+
     V_2_4,
-    
+
     @Label( standard = "2.5" )
     @EnumSerialization( primary = "2.5" )
-    
+
     V_2_5
 }</code></pre>
 
@@ -323,99 +323,102 @@ arranging the properties on the screen. This is done via an XML file.</p>
 
 <pre class="source-code"><code>&lt;definition>
 
-  &lt;import>
-    &lt;bundle>org.eclipse.sapphire.samples&lt;/bundle>
-    &lt;package>org.eclipse.sapphire.samples.ezbug&lt;/package>
-  &lt;/import>
-  
-  &lt;composite>
-    &lt;id>bug.report&lt;/id>
-    &lt;content>
-      &lt;property-editor>CustomerId&lt;/property-editor>
-      &lt;property-editor>Title&lt;/property-editor>
-      &lt;property-editor>
-        &lt;property>Details&lt;/property>
-        &lt;hint>
-          &lt;name>expand.vertically&lt;/name>
-          &lt;value>true&lt;/value>
-        &lt;/hint>
-      &lt;/property-editor>
-      &lt;property-editor>ProductVersion&lt;/property-editor>
-      &lt;property-editor>ProductStage&lt;/property-editor>
-      &lt;property-editor>
-        &lt;property>Hardware&lt;/property>
-        &lt;child-property>
-          &lt;name>Type&lt;/name>
-        &lt;/child-property>
-        &lt;child-property>
-          &lt;name>Make&lt;/name>
-        &lt;/child-property>
-        &lt;child-property>
-          &lt;name>ItemModel&lt;/name>
-        &lt;/child-property>
-      &lt;/property-editor>
-      &lt;composite>
-        &lt;indent>true&lt;/indent>
+    &lt;import>
+        &lt;package>org.eclipse.sapphire.samples.ezbug&lt;/package>
+    &lt;/import>
+    
+    &lt;composite>
+        &lt;id>bug.report&lt;/id>
+        &lt;documentation>
+            &lt;title>EzBug&lt;/title>
+            &lt;content>This would be the help content for the EzBug system.&lt;/content>
+        &lt;/documentation>
         &lt;content>
-          &lt;separator>
-            &lt;label>Details&lt;/label>
-          &lt;/separator>
-          &lt;switching-panel>
-            &lt;list-selection-controller>
-              &lt;property>Hardware&lt;/property>
-            &lt;/list-selection-controller>
-            &lt;panel>
-              &lt;key>IHardwareItem&lt;/key>
-              &lt;content>
-                &lt;property-editor>
-                  &lt;property>Description&lt;/property>
-                  &lt;hint>
-                    &lt;name>show.label.above&lt;/name>
+            &lt;property-editor>CustomerId&lt;/property-editor>
+            &lt;property-editor>Title&lt;/property-editor>
+            &lt;property-editor>
+                &lt;property>Details&lt;/property>
+                &lt;hint>
+                    &lt;name>expand.vertically&lt;/name>
                     &lt;value>true&lt;/value>
-                  &lt;/hint>
-                  &lt;hint>
-                    &lt;name>height&lt;/name>
-                    &lt;value>5&lt;/value>
-                  &lt;/hint>
-                &lt;/property-editor>
-              &lt;/content>
-            &lt;/panel>
-            &lt;default-panel>
-              &lt;content>
-                &lt;label>Select a hardware item above to view or edit additional parameters.&lt;/label>
-              &lt;/content>
-            &lt;/default-panel>
-          &lt;/switching-panel>
+                &lt;/hint>
+            &lt;/property-editor>
+            &lt;property-editor>ProductVersion&lt;/property-editor>
+            &lt;property-editor>ProductStage&lt;/property-editor>
+            &lt;property-editor>
+                &lt;property>Hardware&lt;/property>
+                &lt;child-property>
+                    &lt;property>Type&lt;/property>
+                &lt;/child-property>
+                &lt;child-property>
+                    &lt;property>Make&lt;/property>
+                &lt;/child-property>
+                &lt;child-property>
+                    &lt;property>ItemModel&lt;/property>
+                &lt;/child-property>
+            &lt;/property-editor>
+            &lt;composite>
+                &lt;indent>true&lt;/indent>
+                &lt;content>
+                    &lt;separator>
+                        &lt;label>details&lt;/label>
+                    &lt;/separator>
+                    &lt;switching-panel>
+                        &lt;list-selection-controller>
+                            &lt;property>Hardware&lt;/property>
+                        &lt;/list-selection-controller>
+                        &lt;panel>
+                            &lt;key>IHardwareItem&lt;/key>
+                            &lt;content>
+                                &lt;property-editor>
+                                    &lt;property>Description&lt;/property>
+                                    &lt;hint>
+                                        &lt;name>show.label.above&lt;/name>
+                                        &lt;value>true&lt;/value>
+                                    &lt;/hint>
+                                    &lt;hint>
+                                        &lt;name>height&lt;/name>
+                                        &lt;value>5&lt;/value>
+                                    &lt;/hint>
+                                &lt;/property-editor>
+                            &lt;/content>
+                        &lt;/panel>
+                        &lt;default-panel>
+                            &lt;content>
+                                &lt;label>Select a hardware item above to view or edit additional parameters.&lt;/label>
+                            &lt;/content>
+                        &lt;/default-panel>
+                    &lt;/switching-panel>
+                &lt;/content>
+            &lt;/composite>
         &lt;/content>
-      &lt;/composite>
-    &lt;/content>
-    &lt;hint>
-      &lt;name>expand.vertically&lt;/name>
-      &lt;value>true&lt;/value>
-    &lt;/hint>
-    &lt;hint>
-      &lt;name>width&lt;/name>
-      &lt;value>600&lt;/value>
-    &lt;/hint>
-    &lt;hint>
-      &lt;name>height&lt;/name>
-      &lt;value>500&lt;/value>
-    &lt;/hint>
-  &lt;/composite>
+        &lt;hint>
+            &lt;name>expand.vertically&lt;/name>
+            &lt;value>true&lt;/value>
+        &lt;/hint>
+        &lt;hint>
+            &lt;name>width&lt;/name>
+            &lt;value>600&lt;/value>
+        &lt;/hint>
+        &lt;hint>
+            &lt;name>height&lt;/name>
+            &lt;value>500&lt;/value>
+        &lt;/hint>
+    &lt;/composite>
 
-  &lt;dialog>
-    &lt;id>bug.report.dialog&lt;/id>
-    &lt;label>Create Bug Report (Sapphire Sample)&lt;/label>
-    &lt;initial-focus>Title&lt;/initial-focus>
-    &lt;content>
-      &lt;include>bug.report&lt;/include>
-    &lt;/content>
-    &lt;hint>
-      &lt;name>expand.vertically&lt;/name>
-      &lt;value>true&lt;/value>
-    &lt;/hint>
-  &lt;/dialog>
-  
+    &lt;dialog>
+        &lt;id>bug.report.dialog&lt;/id>
+        &lt;label>create bug report (sapphire sample)&lt;/label>
+        &lt;initial-focus>Title&lt;/initial-focus>
+        &lt;content>
+            &lt;include>bug.report&lt;/include>
+        &lt;/content>
+        &lt;hint>
+            &lt;name>expand.vertically&lt;/name>
+            &lt;value>true&lt;/value>
+        &lt;/hint>
+    &lt;/dialog>
+
 &lt;/definition></code></pre>
 
 <p>A Sapphire UI definition is a hierarchy of parts. At the lowest level we have the property editor and a few other basic
@@ -426,12 +429,12 @@ externally from Java code.</p>
 
 <p>Next we will write a little bit of Java code to open the dialog that we defined.</p>
 
-<pre class="source-code"><code>final IFileBugReportOp op = new FileBugReportOp( new ModelStoreForXml( new ByteArrayModelStore() ) );
-final IBugReport report = op.getBugReport( true );
+<pre class="source-code"><code>IFileBugReportOp op = IFileBugReportOp.TYPE.instantiate();
+IBugReport report = op.getBugReport();
 
-final SapphireDialog dialog 
+SapphireDialog dialog 
     = new SapphireDialog( shell, report, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef!bug.report.dialog" );
-        
+
 if( dialog.open() == Dialog.OK )
 {
     // Do something. User input is found in the bug report model.
@@ -457,14 +460,14 @@ Our model is not really an operation yet. We can create and populate a bug repor
 with it.</p>
 
 <p>Any Sapphire model element can be turned into an operation by adding an execute method. We will do that
-now with IFileBugReportOp. In particular, IFileBugReportOp will be changed to also extend IExecutableModelElement
+now with IFileBugReportOp. In particular, IFileBugReportOp will be changed to extend IExecutableModelElement
 and will acquire the following method definition:</p>
 
 <pre class="source-code"><code>// *** Method: execute ***
-    
+
 @DelegateImplementation( FileBugReportOpMethods.class )
-    
-IStatus execute( IProgressMonitor monitor );</code></pre>
+
+Status execute( ProgressMonitor monitor );</code></pre>
 
 <p>Note how the execute method is specified. We don't want to modify the generated code to implement it, so we use
 delegation instead. The @DelegateImplementation annotation can be used to delegate any method on a model
@@ -473,11 +476,11 @@ hookup.</p>
 
 <pre class="source-code"><code>public class FileBugReportOpMethods
 {
-    public static final IStatus execute( IFileBugReportOp context, IProgressMonitor monitor )
+    public static final Status execute( IFileBugReportOp context, ProgressMonitor monitor )
     {
         // Do something here.
-        
-        return Status.OK_STATUS;
+
+        return Status.createOkStatus();
     }
 }</code></pre>
 
@@ -487,39 +490,40 @@ hookup.</p>
 <p>Now that we have completed the bug reporting operation, we can return to the UI definition file and add the following:</p>
 
 <pre class="source-code"><code>&lt;wizard>
-  &lt;id>wizard&lt;/id>
-  &lt;label>Create Bug Report (Sapphire Sample)&lt;/label>
-  &lt;page>
-    &lt;id>main.page&lt;/id>
-    &lt;label>Create Bug Report&lt;/label>
-    &lt;description>Create and submit a bug report.&lt;/description>
-    &lt;initial-focus>Title&lt;/initial-focus>
-    &lt;content>
-      &lt;with>
-        &lt;property>BugReport&lt;/property>
+    &lt;id>wizard&lt;/id>
+    &lt;label>create bug report (sapphire sample)&lt;/label>
+    &lt;page>
+        &lt;id>main.page&lt;/id>
+        &lt;label>create bug report&lt;/label>
+        &lt;description>Create and submit a bug report.&lt;/description>
+        &lt;initial-focus>Title&lt;/initial-focus>
         &lt;content>
-          &lt;include>bug.report&lt;/include>
+            &lt;with>
+                &lt;path>BugReport&lt;/path>
+                &lt;default-panel>
+                    &lt;content>
+                        &lt;include>bug.report&lt;/include>
+                    &lt;/content>
+                &lt;/default-panel>
+            &lt;/with>
         &lt;/content>
-      &lt;/with>
-    &lt;/content>
-    &lt;hint>
-      &lt;name>expand.vertically&lt;/name>
-      &lt;value>true&lt;/value>
-    &lt;/hint>
-  &lt;/page>
+        &lt;hint>
+            &lt;name>expand.vertically&lt;/name>
+            &lt;value>true&lt;/value>
+        &lt;/hint>
+    &lt;/page>
 &lt;/wizard></code></pre>
 
 <p>The above defines a one page wizard by re-using the composite definition created earlier. Now back to Java
 to use the wizard...</p>
 
-<pre class="source-code"><code>final IFileBugReportOp op = new FileBugReportOp( new ModelStoreForXml( new ByteArrayModelStore() ) );
-op.getBugReport( true );  // Force creation of the bug report.
+<pre class="source-code"><code>IFileBugReportOp op = IFileBugReportOp.TYPE.instantiate();
 
-final SapphireWizard&lt;IFileBugReportOp> wizard 
+SapphireWizard&lt;IFileBugReportOp> wizard 
     = new SapphireWizard&lt;IFileBugReportOp>( op, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef!wizard" );
-        
-final WizardDialog dialog = new WizardDialog( shell, wizard );
-        
+
+WizardDialog dialog = new WizardDialog( shell, wizard );
+
 dialog.open();</code></pre>
 
 <p>SapphireWizard will invoke the operation's execute method when the wizard is finished. That means we don't have
@@ -533,7 +537,7 @@ the operation and references the correct UI definition.</p>
 <p>Let's run it...</p>
 
 <img src="images/wizard.png"/>
- 
+
 <h2>One More Step</h2>
 
 <p>Now that we have a system for submitting bug reports, it would be nice to have a way to maintain a collection of these reports.
@@ -542,21 +546,21 @@ Even better if we can re-use some of our existing code to do this. Back to the m
 <p>The first step is to create IBugDatabase type which will hold a collection of bug reports. By now you should
 have a pretty good idea of what that will look like.</p>
 
-<pre class="source-code"><code>@GenerateXmlBindingModelImpl
+<pre class="source-code"><code>@GenerateImpl
 @RootXmlBinding( elementName = "bug-database" )
 
-public interface IBugDatabase extends IModelForXml
+public interface IBugDatabase extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IBugDatabase.class );
 
     // *** BugReports ***
-    
+
     @Type( base = IBugReport.class )
     @Label( standard = "bug report" )
     @XmlListBinding( mappings = { @XmlListBinding.Mapping( element = "bug", type = IBugReport.class ) } )
-    
+
     ListProperty PROP_BUG_REPORTS = new ListProperty( TYPE, "BugReports" );
-    
+
     ModelElementList&lt;IBugReport> getBugReports();
 }</code></pre>
 
@@ -571,43 +575,41 @@ only supports one editor page layout, but it is a very flexible layout that work
 of content on the left and a series of sections on the right that change depending on the selection in the outline.</p>
 
 <pre class="source-code"><code>&lt;editor-page>
-  &lt;id>editor.page&lt;/id>
-  &lt;page-header-text>Bug Database (Sapphire Sample)&lt;/page-header-text>
-  &lt;initial-selection>Bug Reports&lt;/initial-selection>
-  &lt;root-node>
-    &lt;node>
-      &lt;label>Bug Reports&lt;/label>
-      &lt;section>
-        &lt;description>Use this editor to manage your bug database.&lt;/description>
-        &lt;content>
-          &lt;action-link>
-            &lt;action-id>node:add&lt;/action-id>
-            &lt;label>Add a bug report&lt;/label>
-          &lt;/action-link>
-        &lt;/content>
-      &lt;/section>
-      &lt;node-list>
-        &lt;property>BugReports&lt;/property>
-        &lt;node-template>
-          &lt;dynamic-label>
-            &lt;property>Title&lt;/property>
-            &lt;null-value-label>&amp;lt;bug&amp;gt;&lt;/null-value-label>
-          &lt;/dynamic-label>
-          &lt;section>
-            &lt;label>Bug Report&lt;/label>
-            &lt;content>
-              &lt;include>bug.report&lt;/include>
-            &lt;/content>
-          &lt;/section>
-        &lt;/node-template>
-      &lt;/node-list>
-    &lt;/node>
-  &lt;/root-node>
+    &lt;id>editor.page&lt;/id>
+    &lt;page-header-text>bug database (sapphire sample)&lt;/page-header-text>
+    &lt;initial-selection>bug reports&lt;/initial-selection>
+    &lt;root-node>
+        &lt;node>
+            &lt;label>bug reports&lt;/label>
+            &lt;section>
+                &lt;content>
+                    &lt;label>Use this editor to manage your bug database.&lt;/label>
+                    &lt;spacer/>
+                    &lt;action-link>
+                        &lt;action-id>Sapphire.Add&lt;/action-id>
+                        &lt;label>add a bug report&lt;/label>
+                    &lt;/action-link>
+                &lt;/content>
+            &lt;/section>
+            &lt;node-factory>
+                &lt;property>BugReports&lt;/property>
+                &lt;case>
+                    &lt;label>${ Title == null ? "&lt;bug&gt;" : Title }&lt;/label>
+                    &lt;section>
+                        &lt;label>bug report&lt;/label>
+                        &lt;content>
+                            &lt;include>bug.report&lt;/include>
+                        &lt;/content>
+                    &lt;/section>
+                &lt;/case>
+            &lt;/node-factory>
+        &lt;/node>
+    &lt;/root-node>
 &lt;/editor-page></code></pre>
 
 <p>You can see that the definition centers around the outline. The definition traverses the model as the
 outline is defined with sections attached to various nodes acquiring the context model element from their node.
-The outline can nest arbitrarily deep and you can even define recursive structures by externalizing
+The outline can nest arbitrarily deep and you can even define recursive structures by factoring out
 node definitions, assigning ids to them and then referencing those definitions similarly to how this
 sample references an existing composite definition.</p>
 
@@ -620,13 +622,9 @@ file and you want to have an editor page rendered by Sapphire along with an XML 
     public BugDatabaseEditor()
     {
         super( "org.eclipse.sapphire.samples" );
-        setEditorDefinitionPath( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef/editor.page" );
-    }
 
-    @Override
-    protected IModel createModel( final ModelStore modelStore )
-    {
-        return new BugDatabase( (ModelStoreForXml) modelStore );
+        setRootModelElementType( IBugDatabase.TYPE );
+        setEditorDefinitionPath( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef/editor.page" );
     }
 }</code></pre>
 
@@ -635,22 +633,22 @@ all of these options is outside the scope of this article. For simplicity we wil
 choice for files named "bugs.xml".</p>
 
 <pre class="source-code"><code>&lt;extension point="org.eclipse.ui.editors">
-  &lt;editor
-    class="org.eclipse.sapphire.samples.ezbug.ui.BugDatabaseEditor"
-    default="true"
-    filenames="bugs.xml"
-    id="org.eclipse.sapphire.samples.ezbug.ui.BugDatabaseEditor"
-    name="Bug Database Editor (Sapphire Sample)"/>
+    &lt;editor
+        class="org.eclipse.sapphire.samples.ezbug.ui.BugDatabaseEditor"
+        default="true"
+        filenames="bugs.xml"
+        id="org.eclipse.sapphire.samples.ezbug.ui.BugDatabaseEditor"
+        name="Bug Database Editor (Sapphire Sample)"/>
 &lt;/extension></code></pre>
 
 <p>That's it. We are done creating the editor. After launching Eclipse and creating a bug.xml file, you should
 see an editor that looks like this:</p>
 
-<img src="images/editor.png"/>
+<p style="margin-left: 20px;"><img src="images/editor.png"/></p>
 
 <p>Sapphire really shines in complex cases like this where form UI is sitting on top a source file that users
 might edit by hand. In the above screen capture, what happened is that the user manually entered "BETA2" for the
-product stage in the source view. There is a problem marker next to the property editor and the yellow 
+product stage in the source view. There is a problem marker next to the property editor and the blue 
 assistance popup is accessible by clicking on that marker. The problem message is displayed along with additional
 information about the property and available actions. The "Show in source" action, for instance, will immediately
 jump to the editor's source page and highlight the text region associated with this property. This is very
@@ -664,12 +662,7 @@ code. All of the code presented in this article can be written by a developer wi
 Sapphire experience in an hour or two. How long would it take you to create something comparable using 
 your current method of choice?</p>
 
-<p>I hope that this article has piqued your interest in Sapphire. Oracle is committed to bringing this technology
-to the open source community. We have <a href="http://www.eclipse.org/proposals/sapphire/">proposed a project</a> at 
-the Eclipse Foundation. If you are interested, you should post a message on 
-<a href="http://www.eclipse.org/forums/eclipse.sapphire">the project's forum</a>. Introduce yourself 
-and describe your interest. We are actively seeking both consumers of this technologies as well as potential 
-partners to come join the effort and help us take this technology in the directions that we have not yet anticipated.</p>  
+<br/><br/>
 
 </body>
 
