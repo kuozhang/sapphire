@@ -37,7 +37,6 @@
     <plugin download-size="0" id="org.eclipse.sapphire.osgi.fragment.source" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.platform.source" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.samples.source" install-size="0" unpack="false" version="0.0.0"/>
-    <plugin download-size="0" id="org.eclipse.sapphire.samples.jee.source" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.sdk.source" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.sdk.build.processor.source" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.tests.source" install-size="0" unpack="false" version="0.0.0"/>

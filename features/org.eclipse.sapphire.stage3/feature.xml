@@ -26,7 +26,6 @@
     <includes id="org.eclipse.sapphire.java.jdt" version="0.0.0"/>
     <includes id="org.eclipse.sapphire.sdk" version="0.0.0"/>
     <includes id="org.eclipse.sapphire.samples" version="0.0.0"/>
-    <includes id="org.eclipse.sapphire.samples.jee" version="0.0.0"/>
     <includes id="org.eclipse.sapphire.tests" version="0.0.0"/>
     <includes id="org.eclipse.sapphire.source" version="0.0.0"/>
 
