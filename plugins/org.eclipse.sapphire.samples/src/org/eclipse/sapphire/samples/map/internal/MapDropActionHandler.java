@@ -20,12 +20,15 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.samples.map.IDestination;
 import org.eclipse.sapphire.samples.map.IMap;
+import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramDropActionHandler;
+import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
 
 /**
  * Action handler for Sapphire.Drop action for the map editor. The implementation reads city names
@@ -34,24 +37,16 @@ import org.eclipse.sapphire.ui.diagram.SapphireDiagramDropActionHandler;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MapDropActionHandler extends SapphireDiagramDropActionHandler
+public final class MapDropActionHandler extends SapphireDiagramActionHandler
 {
     @Override
     protected Object run( final SapphireRenderingContext context )
     {
-        // This never gets called.
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean canExecute( final Object obj )
-    {
-        return true;
-    }
-
-    @Override
-    public IModelElement newModelElement( final Object obj )
-    {
+    	DiagramRenderingContext diagramCtx = (DiagramRenderingContext)context;
+    	SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)diagramCtx.getPart();
+    	
+    	Object obj = diagramCtx.getObject();
+    	Point currentMousePos = diagramCtx.getCurrentMouseLocation();
         if( obj instanceof IFile )
         {
             final List<String> cities = new ArrayList<String>();
@@ -95,20 +90,36 @@ public final class MapDropActionHandler extends SapphireDiagramDropActionHandler
                     catch( IOException e ) {}
                 }
             }
-
-            // TODO: Support more than one city.
             
             if( ! cities.isEmpty() )
             {
                 final IMap map = (IMap) getModelElement();
-                final IDestination city = map.getDestinations().addNewElement();
-                city.setName( cities.get( 0 ) );
-                
-                return city;
+                List<DiagramNodePart> cityParts = new ArrayList<DiagramNodePart>();
+                int x = currentMousePos.getX();
+                int y = currentMousePos.getY();
+                for (String cityName : cities)
+                {
+	                final IDestination city = map.getDestinations().addNewElement();
+	                city.setName( cityName );
+	                DiagramNodePart cityPart = diagramPart.getDiagramNodePart(city);
+	                if (cityPart != null)
+	                {
+	                	cityPart.setNodePosition(x, y);
+	                	cityParts.add(cityPart);
+	                	x += 50;
+	                	y += 50;
+	                }
+                }
+                return cityParts;
             }
         }
-        
         return null;
+    }
+
+    @Override
+    public boolean canExecute( final Object obj )
+    {
+        return true;
     }
     
 }
