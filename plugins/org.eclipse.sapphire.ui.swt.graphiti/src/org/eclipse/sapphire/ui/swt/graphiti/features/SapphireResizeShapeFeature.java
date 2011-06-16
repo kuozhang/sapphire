@@ -25,32 +25,51 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 
 public class SapphireResizeShapeFeature extends DefaultResizeShapeFeature 
 {
-    public SapphireResizeShapeFeature(IFeatureProvider fp)
-    {
-        super(fp);
-    }
-    
-    @Override
-    public boolean canResizeShape(IResizeShapeContext context) 
-    {
-        PictogramElement pe = context.getPictogramElement();
-         Object bo = getBusinessObjectForPictogramElement(pe);
-         if (bo instanceof DiagramNodePart)
-         {
-             DiagramNodePart nodePart = (DiagramNodePart)bo;
-             return nodePart.canResizeShape();
-         }
-         return super.canResizeShape(context);
-    }
-    
-    @Override
-    public IResizeConfiguration getResizeConfiguration(IResizeShapeContext context) 
-    {
-        if (!canResizeShape(context))
-        {
-            return new NoResizeConfiguration();
-        }
-        return new DefaultResizeConfiguration();
-    }
-    
+	public SapphireResizeShapeFeature(IFeatureProvider fp)
+	{
+		super(fp);
+	}
+	
+	@Override
+	public boolean canResizeShape(IResizeShapeContext context) 
+	{
+		PictogramElement pe = context.getPictogramElement();
+ 		Object bo = getBusinessObjectForPictogramElement(pe);
+ 		if (bo instanceof DiagramNodePart)
+ 		{
+ 			DiagramNodePart nodePart = (DiagramNodePart)bo;
+ 			return nodePart.canResizeShape();
+ 		}
+ 		return super.canResizeShape(context);
+	}
+	
+	@Override
+	public void resizeShape(IResizeShapeContext context) 
+	{
+		super.resizeShape(context);
+		
+ 		PictogramElement pe = context.getPictogramElement();
+ 		Object bo = getBusinessObjectForPictogramElement(pe);
+ 		if (bo instanceof DiagramNodePart)
+ 		{
+			int x = context.getX();
+			int y = context.getY();
+			int width = context.getWidth();
+			int height = context.getHeight();
+			DiagramNodePart nodePart = (DiagramNodePart)bo;
+			nodePart.setNodeBounds(x, y, width, height);
+ 		}
+	}
+	
+	
+	@Override
+	public IResizeConfiguration getResizeConfiguration(IResizeShapeContext context) 
+	{
+		if (!canResizeShape(context))
+		{
+			return new NoResizeConfiguration();
+		}
+		return new DefaultResizeConfiguration();
+	}
+	
 }

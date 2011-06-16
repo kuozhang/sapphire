@@ -16,8 +16,7 @@ import org.eclipse.graphiti.features.context.IAddBendpointContext;
 import org.eclipse.graphiti.features.impl.DefaultAddBendpointFeature;
 import org.eclipse.graphiti.mm.pictograms.FreeFormConnection;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.swt.graphiti.editor.DiagramGeometryWrapper;
-import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProvider;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -25,24 +24,34 @@ import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProv
 
 public class SapphireAddBendpointFeature extends DefaultAddBendpointFeature 
 {
-    public SapphireAddBendpointFeature(IFeatureProvider fp)
-    {
-        super(fp);
-    }
-    
-    @Override
-    public void addBendpoint(IAddBendpointContext context) 
-    {
-        super.addBendpoint(context);
-        
-        FreeFormConnection freeFormConnection = context.getConnection();
-        Object bo = getBusinessObjectForPictogramElement(freeFormConnection);
-        if (bo instanceof DiagramConnectionPart)
-        {
-            DiagramGeometryWrapper dg = 
-                ((SapphireDiagramFeatureProvider)getFeatureProvider()).getDiagramGeometry();
-            dg.addConnectionBendpoint((DiagramConnectionPart)bo, 
-                    context.getBendpointIndex(), context.getX(), context.getY());
-        }        
-    }    
+	public SapphireAddBendpointFeature(IFeatureProvider fp)
+	{
+		super(fp);
+	}
+	
+	@Override
+	public boolean canAddBendpoint(IAddBendpointContext context) 
+	{
+		FreeFormConnection freeFormConnection = context.getConnection();
+		Object bo = getBusinessObjectForPictogramElement(freeFormConnection);
+		if (bo instanceof DiagramImplicitConnectionPart)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public void addBendpoint(IAddBendpointContext context) 
+	{
+		super.addBendpoint(context);
+		
+		FreeFormConnection freeFormConnection = context.getConnection();
+		Object bo = getBusinessObjectForPictogramElement(freeFormConnection);
+		if (bo instanceof DiagramConnectionPart && !(bo instanceof DiagramImplicitConnectionPart))
+		{
+			DiagramConnectionPart connPart = (DiagramConnectionPart)bo;
+			connPart.addBendpoint(context.getBendpointIndex(), context.getX(), context.getY());
+		}		
+	}	
 }

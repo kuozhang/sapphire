@@ -30,11 +30,9 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramDropActionHandler;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
@@ -57,25 +55,26 @@ public class DiagramNodeTemplate extends SapphirePart
         public void handleNodeDelete(final DiagramNodePart nodePart)
         {            
         }
+        public void handleNodeMove(final DiagramNodeEvent event)
+        {        	
+        }
     }
     
-    private SapphireDiagramEditorPagePart diagramEditor;
-    private IDiagramNodeDef definition;
-    private IModelElement modelElement;    
-    private String propertyName;
-    private ListProperty modelProperty;
-    private JavaType modelElementType;
-    private String toolPaletteLabel;
-    private String toolPaletteDesc;
-    private DiagramEmbeddedConnectionTemplate embeddedConnTemplate;
-    private ModelPropertyListener modelPropertyListener;
-    private SapphireDiagramPartListener nodePartListener;
-    private Set<Listener> listeners;    
-    private List<DiagramNodePart> diagramNodes;
-    private SapphireAction dropAction;
-    private SapphireDiagramDropActionHandler dropActionHandler;
-        
-    @Override
+	private SapphireDiagramEditorPagePart diagramEditor;
+	private IDiagramNodeDef definition;
+	private IModelElement modelElement;	
+	private String propertyName;
+	private ListProperty modelProperty;
+	private JavaType modelElementType;
+	private String toolPaletteLabel;
+	private String toolPaletteDesc;
+	private DiagramEmbeddedConnectionTemplate embeddedConnTemplate;
+	private ModelPropertyListener modelPropertyListener;
+	private SapphireDiagramPartListener nodePartListener;
+	private Set<Listener> listeners;	
+	private List<DiagramNodePart> diagramNodes;
+	    
+	@Override
     public void init()
     {
         this.diagramEditor = (SapphireDiagramEditorPagePart)getParentPart();
@@ -104,14 +103,19 @@ public class DiagramNodeTemplate extends SapphirePart
         
         this.nodePartListener = new SapphireDiagramPartListener() 
         {
-            @Override
-             public void handleNodeUpdateEvent(final DiagramNodeEvent event)
-             {
-                 notifyNodeUpdate((DiagramNodePart)event.getPart());
-             }            
-        };
-        
-        ModelElementList<?> list = this.modelElement.read(this.modelProperty);
+        	@Override
+        	public void handleNodeUpdateEvent(final DiagramNodeEvent event)
+        	{
+        		notifyNodeUpdate((DiagramNodePart)event.getPart());
+        	}        	
+        	@Override
+	    	public void handleNodeMoveEvent(final DiagramNodeEvent event)
+	       	{
+        		notifyNodeMoveEvent(event);
+	       	}        	
+		};
+		
+    	ModelElementList<?> list = this.modelElement.read(this.modelProperty);
         for( IModelElement listEntryModelElement : list )
         {
             if (this.modelElementType == null)
@@ -127,10 +131,6 @@ public class DiagramNodeTemplate extends SapphirePart
                 }
             }
         }
-
-        // handle drop action
-        this.dropAction = getAction("Sapphire.Drop");
-        this.dropActionHandler = (SapphireDiagramDropActionHandler)this.dropAction.getFirstActiveHandler();
 
         // Add model property listener
         this.modelPropertyListener = new ModelPropertyListener()
@@ -202,26 +202,26 @@ public class DiagramNodeTemplate extends SapphirePart
     
     public DiagramNodePart createNewDiagramNode()
     {
-        IModelElement newElement = null;
-        ModelElementList<?> list = this.modelElement.read(this.modelProperty);
-        if (this.modelElementType == null)
-        {
-            newElement = list.addNewElement();
-        }
-        else
-        {
-            final Class cl = this.modelElementType.artifact();
-            if (cl != null)
-            {
-                newElement = list.addNewElement(cl);
-            }
-            else
-            {
-                newElement = list.addNewElement();
-            }
-        }
-        DiagramNodePart newNode = createNewNodePart(newElement);
-        return newNode;
+    	IModelElement newElement = null;
+		ModelElementList<?> list = this.modelElement.read(this.modelProperty);
+		if (this.modelElementType == null)
+		{
+			newElement = list.addNewElement();
+		}
+		else
+		{
+			final Class cl = this.modelElementType.artifact();
+			if (cl != null)
+			{
+				newElement = list.addNewElement(cl);
+			}
+			else
+			{
+				newElement = list.addNewElement();
+			}
+		}
+		DiagramNodePart newNodePart = getNodePart(newElement);
+    	return newNodePart;
     }
     
     public ModelProperty getModelProperty()
@@ -266,90 +266,76 @@ public class DiagramNodeTemplate extends SapphirePart
     {
         this.listeners.remove( listener );
     }
-    
-    public SapphireDiagramDropActionHandler getDropActionHandler()
-    {
-        return this.dropActionHandler;
-    }
-    
-    @Override
-    public void render(SapphireRenderingContext context)
-    {
-        throw new UnsupportedOperationException();
-    }    
+    	
+	@Override
+	public void render(SapphireRenderingContext context)
+	{
+		throw new UnsupportedOperationException();
+	}	
     
     private void handleModelPropertyChange(final ModelPropertyChangeEvent event)
     {
-        final IModelElement element = event.getModelElement();
-        final ModelProperty property = event.getProperty();
-        ModelElementList<?> tempList = (ModelElementList<?>)element.read(property);
-        
-        // filter the list property with specified element type
-        List<IModelElement> newList = new ArrayList<IModelElement>();
-        newList = new ArrayList<IModelElement>();        
-        for (IModelElement ele : tempList)
-        {
-            if (this.modelElementType == null)
-            {
-                newList.add(ele);
-            }
-            else
-            {
-                final Class<?> cl = this.modelElementType.artifact();
-                if( cl == null || cl.isAssignableFrom( ele.getClass()))
-                {
-                    newList.add(ele);
-                }
-            }
-        }
-    
-        if (newList.size() != getDiagramNodes().size())
-        {
-            List<DiagramNodePart> nodeParts = getDiagramNodes();
-            List<IModelElement> oldList = new ArrayList<IModelElement>(nodeParts.size());
-            for (DiagramNodePart nodePart : nodeParts)
-            {
-                oldList.add(nodePart.getLocalModelElement());
-            }
-            
-            if (newList.size() > oldList.size())
-            {
-                // new nodes are added outside of the diagram editor
-                List<IModelElement> newNodes = ListUtil.ListDiff(newList, oldList);
-                for (IModelElement newNode : newNodes)
-                {
-                    // If new model element is added through palette, we don't need to 
-                    // add its graphical representation to the diagram since the create
-                    // feature takes care of that. If the new model element is added through
-                    // other means (form editor or source editor, we need to add the PE to the
-                    // diagram
-                    DiagramNodePart nodePart = getNodePart(newNode);
-                    if (nodePart == null)
-                    {
-                        nodePart = createNewNodePart(newNode);
-                        notifyNodeAdd(nodePart);
-                    }
-                }
-            }
-            else if (newList.size() < oldList.size())
-            {
-                // nodes are deleted
-                List<IModelElement> deletedNodes = ListUtil.ListDiff(newList, oldList);
-                for (IModelElement deletedNode : deletedNodes)
-                {
-                    DiagramNodePart nodePart = getNodePart(deletedNode);
-                    if (nodePart != null)
-                    {
-                        notifyNodeDelete(nodePart);
-                        nodePart.dispose();
-                        this.diagramNodes.remove(nodePart);
-                    }
-                }
-            }
-        }
+    	final IModelElement element = event.getModelElement();
+    	final ModelProperty property = event.getProperty();
+    	ModelElementList<?> tempList = (ModelElementList<?>)element.read(property);
+    	
+    	// filter the list property with specified element type
+    	List<IModelElement> newList = new ArrayList<IModelElement>();
+		newList = new ArrayList<IModelElement>();    	
+    	for (IModelElement ele : tempList)
+    	{
+    		if (this.modelElementType == null)
+    		{
+    			newList.add(ele);
+    		}
+    		else
+    		{
+        		final Class<?> cl = this.modelElementType.artifact();
+        		if( cl == null || cl.isAssignableFrom( ele.getClass()))
+        		{
+        			newList.add(ele);
+        		}
+    		}
+    	}
+	
+    	if (newList.size() != getDiagramNodes().size())
+    	{
+    		List<DiagramNodePart> nodeParts = getDiagramNodes();
+    		List<IModelElement> oldList = new ArrayList<IModelElement>(nodeParts.size());
+    		for (DiagramNodePart nodePart : nodeParts)
+    		{
+    			oldList.add(nodePart.getLocalModelElement());
+    		}
+    		
+	    	if (newList.size() > oldList.size())
+	    	{
+	    		// new nodes are added outside of the diagram editor
+	    		List<IModelElement> newNodes = ListUtil.ListDiff(newList, oldList);
+	    		for (IModelElement newNode : newNodes)
+	    		{
+    		    	DiagramNodePart nodePart = createNewNodePart(newNode);
+    		    	notifyNodeAdd(nodePart);
+	    		}
+	    	}
+	    	else if (newList.size() < oldList.size())
+	    	{
+	    		// nodes are deleted
+	    		List<IModelElement> deletedNodes = ListUtil.ListDiff(newList, oldList);
+	    		for (IModelElement deletedNode : deletedNodes)
+	    		{
+	    			DiagramNodePart nodePart = getNodePart(deletedNode);
+	    			if (nodePart != null)
+	    			{
+	    				notifyNodeDelete(nodePart);
+    					nodePart.dispose();
+    					this.diagramNodes.remove(nodePart);
+	    			}
+	    		}
+	    	}
+    	}
     }
     
-    private DiagramNodePart getNodePart(IModelElement element)
+    public DiagramNodePart getNodePart(IModelElement element)
     {
         List<DiagramNodePart> nodeParts = getDiagramNodes();
         for (DiagramNodePart nodePart : nodeParts)
@@ -419,6 +405,14 @@ public class DiagramNodeTemplate extends SapphirePart
         for( Listener listener : this.listeners )
         {
             listener.handleNodeDelete(nodePart);
-        }                
-    }
+        }				
+	}
+
+	private void notifyNodeMoveEvent(DiagramNodeEvent event)
+	{
+		for( Listener listener : this.listeners )
+        {
+            listener.handleNodeMove(event);
+        }				
+	}
 }

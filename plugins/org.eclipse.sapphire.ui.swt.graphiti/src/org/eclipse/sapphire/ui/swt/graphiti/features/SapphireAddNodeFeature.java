@@ -31,15 +31,14 @@ import org.eclipse.graphiti.ui.services.GraphitiUi;
 import org.eclipse.graphiti.util.ColorConstant;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.Point;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramDropActionHandler;
+import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.ImagePlacement;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
-import org.eclipse.sapphire.ui.swt.graphiti.editor.DiagramGeometryWrapper;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProvider;
 import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramPropertyKeys;
@@ -55,50 +54,53 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
     public static final int DEFAULT_NODE_WIDTH = 100;
     public static final int DEFAULT_NODE_HEIGHT = 30;
     private static final int DEFAULT_TEXT_HEIGHT = 20;
-    private DiagramNodeTemplate nodeTemplate;
     
-    public SapphireAddNodeFeature(IFeatureProvider fp, DiagramNodeTemplate nodeTemplate)
+    public SapphireAddNodeFeature(IFeatureProvider fp)
     {
-        super(fp);
-        this.nodeTemplate = nodeTemplate;
+    	super(fp);
     }
     
-    public boolean canAdd(IAddContext context) 
-    {
-        Object newObj = context.getNewObject();
-        if (newObj instanceof DiagramNodePart)
-        {
-            return true;
-        }
-        else if (context.getTargetContainer() instanceof Diagram)
-        {
-            SapphireDiagramDropActionHandler dropHandler = this.nodeTemplate.getDropActionHandler();
-            if (dropHandler != null && dropHandler.canExecute(newObj))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+	public boolean canAdd(IAddContext context) 
+	{
+		Object newObj = context.getNewObject();
+		if (newObj instanceof DiagramNodePart)
+		{
+			return true;
+		}
+		else if (context.getTargetContainer() instanceof Diagram)
+		{
+			SapphireAction dropAction = ((SapphireDiagramEditor)getDiagramEditor()).getPart().getAction("Sapphire.Drop");
+			SapphireDiagramActionHandler dropHandler = (SapphireDiagramActionHandler)dropAction.getFirstActiveHandler();
+			
+			if (dropHandler != null && dropHandler.canExecute(newObj))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
-    public PictogramElement add(IAddContext context)
-    {
-        Object newObj = context.getNewObject();
-        DiagramNodePart nodePart = null;
-        if (newObj instanceof DiagramNodePart)
-        {
-            nodePart = (DiagramNodePart)context.getNewObject();
-        }
-        else 
-        {
-            SapphireDiagramDropActionHandler dropHandler = this.nodeTemplate.getDropActionHandler();
-            this.nodeTemplate.removeModelLister();
-            IModelElement element = dropHandler.newModelElement(newObj);
-            nodePart = this.nodeTemplate.createNewNodePart(element);
-            this.nodeTemplate.addModelListener();            
-        }
-        final Diagram targetDiagram = (Diagram) context.getTargetContainer();
-        
+	public PictogramElement add(IAddContext context)
+	{
+		Object newObj = context.getNewObject();
+		DiagramNodePart nodePart = null;
+		if (newObj instanceof DiagramNodePart)
+		{
+			nodePart = (DiagramNodePart)context.getNewObject();
+		}
+		else 
+		{
+			SapphireDiagramEditorPagePart diagramPart = ((SapphireDiagramEditor)getDiagramEditor()).getPart();
+			SapphireAction dropAction = diagramPart.getAction("Sapphire.Drop");
+			SapphireDiagramActionHandler dropHandler = (SapphireDiagramActionHandler)dropAction.getFirstActiveHandler();
+			DiagramRenderingContext diagramCtx = ((SapphireDiagramFeatureProvider)getFeatureProvider()).getRenderingContext(diagramPart);
+			diagramCtx.setCurrentMouseLocation(context.getX(), context.getY());
+			diagramCtx.setObject(newObj);
+			dropHandler.execute(diagramCtx);
+			return null;
+		}
+		final Diagram targetDiagram = (Diagram) context.getTargetContainer();
+		
         // define a default size for the shape
         IDiagramNodeDef nodeDef = (IDiagramNodeDef)nodePart.getDefinition();
         int width = getNodeWidth(nodePart, context.getWidth());
@@ -107,8 +109,11 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
         int ltX, ltY;
         if (context.getX() != -1 && context.getY() != -1)
         {
-            ltX = context.getX() - (width >> 1);
-            ltY = context.getY() - (height >> 1);
+        	// comment out changes for dropping nodes at center position
+//        	ltX = context.getX() - (width >> 1);
+//        	ltY = context.getY() - (height >> 1);
+        	ltX = context.getX();
+        	ltY = context.getY();
         }
         else
         {
@@ -222,9 +227,7 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
         peCreateService.createChopboxAnchor(containerShape);
         
         // Save the node bounds
-        DiagramGeometryWrapper diagramGeometry = 
-            ((SapphireDiagramFeatureProvider)getFeatureProvider()).getDiagramGeometry();
-        diagramGeometry.addNode(nodePart, ltX, ltY, width, height);
+        nodePart.setNodeBounds(ltX, ltY, width, height);
         
         // Create a rendering context for the node
         DiagramRenderingContext renderingCtx = new DiagramRenderingContext(

@@ -11,54 +11,43 @@
 
 package org.eclipse.sapphire.ui.swt.graphiti.actions;
 
-import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.gef.SnapToGrid;
+import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
+import org.eclipse.sapphire.ui.def.SapphireActionType;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
-import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
 public class ToggleDiagramGridActionHandler extends SapphireDiagramActionHandler 
-{
-    private SapphireDiagramEditor diagramEditor;
-    
+{		
     @Override
-    public boolean canExecute(Object obj) 
-    {        
-        return true;
-    }
-
-    public void setDiagramEditor(SapphireDiagramEditor diagramEditor)
+    public void init( final SapphireAction action,
+                      final ISapphireActionHandlerDef def )
     {
-        this.diagramEditor = diagramEditor;
-    }
-    
-    @Override
-    public boolean isChecked()
-    {
-        if (this.diagramEditor != null)
-        {
-            return this.diagramEditor.isGridVisible();
-        }
-        return false;
+    	super.init(action, def);
+    	if (action.getType() == SapphireActionType.TOGGLE)
+    	{
+    		SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)this.getPart();
+    		setChecked(diagramPart.isGridVisible());
+    	}
     }
     
-    @Override
-    protected Object run(SapphireRenderingContext context) 
-    {
-        if (this.diagramEditor != null)
-        {
-            GraphicalViewer diagramViewer = this.diagramEditor.getGraphicalViewer();
-            boolean visible = !diagramEditor.isGridVisible();
-            diagramViewer.setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, new Boolean(visible));
-            diagramViewer.setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, new Boolean(visible));
-            
-            diagramEditor.setGridVisible(visible);
-        }
-        return null;
-    }
-
+	@Override
+	public boolean canExecute(Object obj) 
+	{		
+		return true;
+	}
+		
+	@Override
+	protected Object run(SapphireRenderingContext context) 
+	{
+		SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)this.getPart();
+		boolean visible = !diagramPart.isGridVisible();
+		diagramPart.setGridVisible(visible);
+		return null;
+	}
 }

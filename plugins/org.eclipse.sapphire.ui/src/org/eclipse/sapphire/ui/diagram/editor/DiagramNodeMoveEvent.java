@@ -9,18 +9,26 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram;
+package org.eclipse.sapphire.ui.diagram.editor;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.ui.Point;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public abstract class SapphireDiagramDropActionHandler
-
-    extends SapphireDiagramActionHandler 
-        
+public class DiagramNodeMoveEvent extends DiagramNodeEvent 
 {
-    public abstract IModelElement newModelElement(Object obj);
+	private Point newPosition;
+	
+	public DiagramNodeMoveEvent(final DiagramNodePart nodePart, final Point nodePosition)
+	{
+		super(nodePart);
+		this.newPosition = new Point(nodePosition.getX(), nodePosition.getY());
+	}
+	
+	public Point getNewPosition()
+	{
+		return this.newPosition;
+	}
 }

@@ -42,16 +42,15 @@ import org.eclipse.graphiti.features.impl.IIndependenceSolver;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
-import org.eclipse.graphiti.mm.pictograms.FreeFormConnection;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramDropActionHandler;
+import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
@@ -80,173 +79,158 @@ import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireUpdateNodeFeature;
 
 public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider 
 {
-    
-    public SapphireDiagramFeatureProvider(IDiagramTypeProvider dtp, IIndependenceSolver solver)
-    {
-        super(dtp);
-        this.setIndependenceSolver(solver);
-    }
-        
-    public DiagramGeometryWrapper getDiagramGeometry()
-    {
-        SapphireDiagramEditor diagramEditor = getDiagramEditor();
-        return diagramEditor.getDiagramGeometry();
-    }
-    
-    @Override
-    public IAddFeature getAddFeature(IAddContext context) 
-    {
-        Object obj = context.getNewObject();
-        if (obj instanceof DiagramNodePart)
-        {
-            return new SapphireAddNodeFeature(this, ((DiagramNodePart)obj).getDiagramNodeTemplate());
-        }
-        else if (obj instanceof DiagramConnectionPart)
-        {
-            return new SapphireAddConnectionFeature(this);
-        }
-        else if (context.getTargetContainer() instanceof Diagram)
-        {
-            List<DiagramNodeTemplate> nodeTemplates = getDiagramPart().getNodeTemplates();
-            for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
-            {
-                SapphireDiagramDropActionHandler dropHandler = nodeTemplate.getDropActionHandler();
-                if (dropHandler != null && dropHandler.canExecute(obj))
-                {
-                    return new SapphireAddNodeFeature(this, nodeTemplate);
-                }
-            }    
-        }
-        return super.getAddFeature(context);
-    }
-    
-    @Override
-    public ICreateFeature[] getCreateFeatures() 
-    {
-        List<DiagramNodeTemplate> nodeTemplates = getDiagramPart().getNodeTemplates();
-        ICreateFeature[] features = new ICreateFeature[nodeTemplates.size()];
-        int i = 0;
-        for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
-        {
-            SapphireCreateNodeFeature createNodeFeature = 
-                new SapphireCreateNodeFeature(this, nodeTemplate);
-            features[i++] = createNodeFeature;
-        }
-        return features;
-    }    
-    
-    @Override
-    public IDeleteFeature getDeleteFeature(IDeleteContext context) 
-    {
-        return new SapphireDeleteFeature(this);
-    }
-    
-    @Override
-    public IRemoveFeature getRemoveFeature(IRemoveContext context) 
-    {
-        return new SapphireRemoveFeature(this);
-    }
-    
-    @Override
+	
+	public SapphireDiagramFeatureProvider(IDiagramTypeProvider dtp, IIndependenceSolver solver)
+	{
+		super(dtp);
+		this.setIndependenceSolver(solver);
+	}
+		
+	public DiagramGeometryWrapper getDiagramGeometry()
+	{
+		SapphireDiagramEditor diagramEditor = getDiagramEditor();
+		return diagramEditor.getDiagramGeometry();
+	}
+	
+	@Override
+	public IAddFeature getAddFeature(IAddContext context) 
+	{
+		Object obj = context.getNewObject();
+		if (obj instanceof DiagramNodePart)
+		{
+			return new SapphireAddNodeFeature(this);
+		}
+		else if (obj instanceof DiagramConnectionPart)
+		{
+			return new SapphireAddConnectionFeature(this);
+		}
+		else if (context.getTargetContainer() instanceof Diagram)
+		{
+			// There should be only one drop action handler per diagram page and it should handle
+			// different drop objects
+			SapphireAction dropAction = getDiagramPart().getAction("Sapphire.Drop");
+			SapphireDiagramActionHandler dropHandler = (SapphireDiagramActionHandler)dropAction.getFirstActiveHandler();
+			if (dropHandler != null && dropHandler.canExecute(obj))
+			{
+				return new SapphireAddNodeFeature(this);
+			}
+		}
+		return super.getAddFeature(context);
+	}
+	
+	@Override
+	public ICreateFeature[] getCreateFeatures() 
+	{
+		List<DiagramNodeTemplate> nodeTemplates = getDiagramPart().getNodeTemplates();
+		ICreateFeature[] features = new ICreateFeature[nodeTemplates.size()];
+		int i = 0;
+		for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
+		{
+			SapphireCreateNodeFeature createNodeFeature = 
+				new SapphireCreateNodeFeature(this, nodeTemplate);
+			features[i++] = createNodeFeature;
+		}
+		return features;
+	}	
+	
+	@Override
+	public IDeleteFeature getDeleteFeature(IDeleteContext context) 
+	{
+		return new SapphireDeleteFeature(this);
+	}
+	
+	@Override
+	public IRemoveFeature getRemoveFeature(IRemoveContext context) 
+	{
+		return new SapphireRemoveFeature(this);
+	}
+	
+	@Override
     public ICreateConnectionFeature[] getCreateConnectionFeatures() 
-    {
-        SapphireDiagramEditorPagePart diagramPart = getDiagramPart();
-        List<IDiagramConnectionDef> connectionDefs = diagramPart.getDiagramConnectionDefs();
-        List<ICreateConnectionFeature> features = 
-            new ArrayList<ICreateConnectionFeature>(connectionDefs.size());
-        for (IDiagramConnectionDef connectionDef : connectionDefs)
-        {    
-            if (connectionDef.isImplicitConnection().getContent())
-            {
-                break;
-            }
-            String tpLabel = connectionDef.getToolPaletteLabel().getContent();
-            if (tpLabel != null)
-            {
-                tpLabel = IDiagramConnectionDef.PROP_TOOL_PALETTE_LABEL.getLocalizationService().text(
-                                tpLabel, CapitalizationType.TITLE_STYLE, false);
-            }
-            String tpDesc = connectionDef.getToolPaletteDesc().getContent();
-            if (tpDesc != null)
-            {
-                tpDesc = IDiagramConnectionDef.PROP_TOOL_PALETTE_DESC.getLocalizationService().text(
-                                tpDesc, CapitalizationType.TITLE_STYLE, false);
-            }
-            
-            SapphireCreateConnectionFeature createConnectionFeature = 
-                new SapphireCreateConnectionFeature(this, diagramPart, connectionDef, tpLabel, tpDesc);
-            features.add(createConnectionFeature);
-        }
-        
-        return features.toArray(new ICreateConnectionFeature[0]);
-    }
-    
-    @Override
-    public IDirectEditingFeature getDirectEditingFeature(IDirectEditingContext context) 
-    {
-        PictogramElement pe = context.getPictogramElement();
-        Object bo = getBusinessObjectForPictogramElement((PictogramElement) pe.eContainer());
-        if (bo instanceof DiagramNodePart)
-        {
-            return new SapphireDirectEditNodeFeature(this);
-        }
-        else if (bo instanceof DiagramConnectionPart)
-        {
-            return new SapphireDirectEditConnectionFeature(this);
-        }
-        return super.getDirectEditingFeature(context);        
-    }
-    
-    @Override
-    public IUpdateFeature getUpdateFeature(IUpdateContext context) 
-    {
-        PictogramElement pe = context.getPictogramElement();
-        if (pe instanceof ContainerShape) 
-        {
-            Object bo = getBusinessObjectForPictogramElement(pe);
-            if (bo instanceof DiagramNodePart) 
-            {
-                return new SapphireUpdateNodeFeature(this);
-            }
-        }
-        else if (pe instanceof Connection)
-        {
-            Object bo = getBusinessObjectForPictogramElement(pe);
-            if (bo instanceof DiagramConnectionPart)
-            {
-                return new SapphireUpdateConnectionFeature(this);
-            }
-        }
-        return super.getUpdateFeature(context);
-    }
-    
-    @Override
-    public IAddBendpointFeature getAddBendpointFeature(IAddBendpointContext context) 
-    {
-        // don't allow any edits to the implicit connection
-        FreeFormConnection freeFormConnection = context.getConnection();
-        Object bo = getBusinessObjectForPictogramElement(freeFormConnection);
-        if (!(bo instanceof DiagramImplicitConnectionPart))
-        {
-            IAddBendpointFeature ret = new SapphireAddBendpointFeature(this);
-            return ret;
-        }
-        return null;
-    }
-    
-    @Override
-    public IRemoveBendpointFeature getRemoveBendpointFeature(IRemoveBendpointContext context) 
-    {
-        // don't allow any edits to the implicit connection
-        FreeFormConnection freeFormConnection = context.getConnection();
-        Object bo = getBusinessObjectForPictogramElement(freeFormConnection);
-        if (!(bo instanceof DiagramImplicitConnectionPart))
-        {
-            IRemoveBendpointFeature ret = new SapphireRemoveBendpointFeature(this);
-            return ret;
-        }
-        return null;
-    }
+	{
+		SapphireDiagramEditorPagePart diagramPart = getDiagramPart();
+		List<IDiagramConnectionDef> connectionDefs = diagramPart.getDiagramConnectionDefs();
+		List<ICreateConnectionFeature> features = 
+			new ArrayList<ICreateConnectionFeature>(connectionDefs.size());
+		for (IDiagramConnectionDef connectionDef : connectionDefs)
+		{	
+			if (connectionDef.isImplicitConnection().getContent())
+			{
+				break;
+			}
+			String tpLabel = connectionDef.getToolPaletteLabel().getContent();
+			if (tpLabel != null)
+			{
+				tpLabel = IDiagramConnectionDef.PROP_TOOL_PALETTE_LABEL.getLocalizationService().text(
+								tpLabel, CapitalizationType.TITLE_STYLE, false);
+			}
+			String tpDesc = connectionDef.getToolPaletteDesc().getContent();
+			if (tpDesc != null)
+			{
+				tpDesc = IDiagramConnectionDef.PROP_TOOL_PALETTE_DESC.getLocalizationService().text(
+								tpDesc, CapitalizationType.TITLE_STYLE, false);
+			}
+			
+			SapphireCreateConnectionFeature createConnectionFeature = 
+				new SapphireCreateConnectionFeature(this, diagramPart, connectionDef, tpLabel, tpDesc);
+			features.add(createConnectionFeature);
+		}
+		
+		return features.toArray(new ICreateConnectionFeature[0]);
+	}
+	
+	@Override
+	public IDirectEditingFeature getDirectEditingFeature(IDirectEditingContext context) 
+	{
+		PictogramElement pe = context.getPictogramElement();
+		Object bo = getBusinessObjectForPictogramElement((PictogramElement) pe.eContainer());
+		if (bo instanceof DiagramNodePart)
+		{
+			return new SapphireDirectEditNodeFeature(this);
+		}
+		else if (bo instanceof DiagramConnectionPart)
+		{
+			return new SapphireDirectEditConnectionFeature(this);
+		}
+		return super.getDirectEditingFeature(context);		
+	}
+	
+	@Override
+	public IUpdateFeature getUpdateFeature(IUpdateContext context) 
+	{
+		PictogramElement pe = context.getPictogramElement();
+		if (pe instanceof ContainerShape) 
+		{
+			Object bo = getBusinessObjectForPictogramElement(pe);
+			if (bo instanceof DiagramNodePart) 
+			{
+				return new SapphireUpdateNodeFeature(this);
+			}
+		}
+		else if (pe instanceof Connection)
+		{
+			Object bo = getBusinessObjectForPictogramElement(pe);
+			if (bo instanceof DiagramConnectionPart)
+			{
+				return new SapphireUpdateConnectionFeature(this);
+			}
+		}
+		return super.getUpdateFeature(context);
+	}
+	
+	@Override
+	public IAddBendpointFeature getAddBendpointFeature(IAddBendpointContext context) 
+	{
+		IAddBendpointFeature ret = new SapphireAddBendpointFeature(this);
+		return ret;
+	}
+	
+	@Override
+	public IRemoveBendpointFeature getRemoveBendpointFeature(IRemoveBendpointContext context) 
+	{
+		IRemoveBendpointFeature ret = new SapphireRemoveBendpointFeature(this);
+		return ret;
+	}
 
     @Override
     public IMoveBendpointFeature getMoveBendpointFeature(IMoveBendpointContext context) 
@@ -260,55 +244,44 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
     {
         return new SapphireMoveNodeFeature(this);
     }
-    
-    @Override
-    public IResizeShapeFeature getResizeShapeFeature(IResizeShapeContext context) 
-    {
-        IResizeShapeFeature ret = new SapphireResizeShapeFeature(this);
-        return ret;
-    }
-    
-    /**
-     * When a PE is removed from the diagram, we need to remove the corresponding
-     * key from the solver and the saved node position/connection bendpoints from
-     * the cached diagram geometry
-     * @param bo
-     */
-    public void remove(Object bo)
-    {
-        ((SapphireDiagramSolver)this.getIndependenceSolver()).removeBO(bo);
-        
-        DiagramGeometryWrapper gw = getDiagramGeometry();
-        if (bo instanceof DiagramNodePart)
-        {
-            gw.removeNode((DiagramNodePart)bo);
-        }
-        else if (bo instanceof DiagramConnectionPart)
-        {
-            gw.removeConnectionBendpoints((DiagramConnectionPart)bo);
-        }
-    }
-    
-    public void addRenderingContext(SapphirePart part, DiagramRenderingContext ctx)
-    {
-        ((SapphireDiagramSolver)this.getIndependenceSolver()).addRendingContext(part, ctx);
-    }
-    
-    public DiagramRenderingContext getRenderingContext(ISapphirePart part)
-    {
-        return ((SapphireDiagramSolver)this.getIndependenceSolver()).getRenderingContext(part);
-    }
-    
-    private SapphireDiagramEditor getDiagramEditor()
-    {
-        SapphireDiagramEditor diagramEditor = (SapphireDiagramEditor)getDiagramTypeProvider().getDiagramEditor();
-        return diagramEditor;
-    }
-    
-    private SapphireDiagramEditorPagePart getDiagramPart()
-    {
-        SapphireDiagramEditor diagramEditor = getDiagramEditor();
-        return diagramEditor.getPart();
-    }
-        
+        	
+	@Override
+	public IResizeShapeFeature getResizeShapeFeature(IResizeShapeContext context) 
+	{
+		IResizeShapeFeature ret = new SapphireResizeShapeFeature(this);
+		return ret;
+	}
+	
+	/**
+	 * When a PE is removed from the diagram, we need to remove the corresponding
+	 * key from the solver
+	 * @param bo
+	 */
+	public void remove(Object bo)
+	{
+		((SapphireDiagramSolver)this.getIndependenceSolver()).removeBO(bo);
+	}
+	
+	public void addRenderingContext(SapphirePart part, DiagramRenderingContext ctx)
+	{
+		((SapphireDiagramSolver)this.getIndependenceSolver()).addRendingContext(part, ctx);
+	}
+	
+	public DiagramRenderingContext getRenderingContext(ISapphirePart part)
+	{
+		return ((SapphireDiagramSolver)this.getIndependenceSolver()).getRenderingContext(part);
+	}
+	
+	private SapphireDiagramEditor getDiagramEditor()
+	{
+		SapphireDiagramEditor diagramEditor = (SapphireDiagramEditor)getDiagramTypeProvider().getDiagramEditor();
+		return diagramEditor;
+	}
+	
+	private SapphireDiagramEditorPagePart getDiagramPart()
+	{
+		SapphireDiagramEditor diagramEditor = getDiagramEditor();
+		return diagramEditor.getPart();
+	}
+	    
 }

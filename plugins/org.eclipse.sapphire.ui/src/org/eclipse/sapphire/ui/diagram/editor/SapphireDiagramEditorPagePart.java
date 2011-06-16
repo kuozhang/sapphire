@@ -147,11 +147,30 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         refreshPropertiesViewContribution();
     }
 
+    public IModelElement getLocalModelElement()
+    {
+        return this.modelElement;
+    }    
+    
     public boolean isGridVisible()
     {
         return this.showGrid;
     }
         
+    public void syncGridStateWithDiagramLayout(boolean gridVisible)
+    {
+    	this.showGrid = gridVisible;
+    }
+    
+    public void setGridVisible(boolean visible)
+    {
+    	if (visible != this.showGrid)
+    	{
+    		this.showGrid = visible;
+    		notifyGridStateChange();
+    	}
+    }
+    
     public List<IDiagramImageChoice> getImageDecorators()
     {
         return this.diagramPageDef.getDiagramImageDecorators();
@@ -282,70 +301,82 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         }
     }
 
-    private void notifyNodeUpdate(DiagramNodePart nodePart)
-    {
-        Set<SapphirePartListener> listeners = this.getListeners();
-        for(SapphirePartListener listener : listeners)
-        {
-            if (listener instanceof SapphireDiagramPartListener)
-            {
-                DiagramNodeEvent nue = new DiagramNodeEvent(nodePart);
-                ((SapphireDiagramPartListener)listener).handleNodeUpdateEvent(nue);
-            }
-        }        
-    }
-    
-    private void notifyNodeAdd(DiagramNodePart nodePart)
-    {
-        Set<SapphirePartListener> listeners = this.getListeners();
-        for(SapphirePartListener listener : listeners)
-        {
-            if (listener instanceof SapphireDiagramPartListener)
-            {
-                DiagramNodeEvent nue = new DiagramNodeEvent(nodePart);
-                ((SapphireDiagramPartListener)listener).handleNodeAddEvent(nue);
-            }
-        }
-    }
-    
-    private void notifyNodeDelete(DiagramNodePart nodePart)
-    {
-        Set<SapphirePartListener> listeners = this.getListeners();
-        for(SapphirePartListener listener : listeners)
-        {
-            if (listener instanceof SapphireDiagramPartListener)
-            {
-                DiagramNodeEvent nue = new DiagramNodeEvent(nodePart);
-                ((SapphireDiagramPartListener)listener).handleNodeDeleteEvent(nue);
-            }
-        }
-    }
-    
-    private void notifyConnectionUpdate(DiagramConnectionPart connPart)
-    {
-        Set<SapphirePartListener> listeners = this.getListeners();
-        for(SapphirePartListener listener : listeners)
-        {
-            if (listener instanceof SapphireDiagramPartListener)
-            {
-                DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
-                ((SapphireDiagramPartListener)listener).handleConnectionUpdateEvent(cue);
-            }
-        }        
-    }
-    
-    private void notifyConnectionEndpointUpdate(DiagramConnectionPart connPart)
-    {
-        Set<SapphirePartListener> listeners = this.getListeners();
-        for(SapphirePartListener listener : listeners)
-        {
-            if (listener instanceof SapphireDiagramPartListener)
-            {
-                DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
-                ((SapphireDiagramPartListener)listener).handleConnectionEndpointEvent(cue);
-            }
-        }        
-    }
+	private void notifyNodeUpdate(DiagramNodePart nodePart)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramNodeEvent nue = new DiagramNodeEvent(nodePart);
+				((SapphireDiagramPartListener)listener).handleNodeUpdateEvent(nue);
+			}
+		}		
+	}
+	
+	private void notifyNodeAdd(DiagramNodePart nodePart)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramNodeEvent nue = new DiagramNodeEvent(nodePart);
+				((SapphireDiagramPartListener)listener).handleNodeAddEvent(nue);
+			}
+		}
+	}
+	
+	private void notifyNodeDelete(DiagramNodePart nodePart)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramNodeEvent nue = new DiagramNodeEvent(nodePart);
+				((SapphireDiagramPartListener)listener).handleNodeDeleteEvent(nue);
+			}
+		}
+	}
+	
+	private void notifyNodeMove(DiagramNodeEvent event)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				((SapphireDiagramPartListener)listener).handleNodeMoveEvent(event);
+			}
+		}
+	}
+
+	private void notifyConnectionUpdate(DiagramConnectionPart connPart)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
+				((SapphireDiagramPartListener)listener).handleConnectionUpdateEvent(cue);
+			}
+		}		
+	}
+	
+	private void notifyConnectionEndpointUpdate(DiagramConnectionPart connPart)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
+				((SapphireDiagramPartListener)listener).handleConnectionEndpointEvent(cue);
+			}
+		}		
+	}
 
     private void notifyConnectionAdd(DiagramConnectionPart connPart)
     {
@@ -360,25 +391,39 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         }        
     }
 
-    private void notifyConnectionDelete(DiagramConnectionPart connPart)
-    {
-        Set<SapphirePartListener> listeners = this.getListeners();
-        for(SapphirePartListener listener : listeners)
-        {
-            if (listener instanceof SapphireDiagramPartListener)
-            {
-                DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
-                ((SapphireDiagramPartListener)listener).handleConnectionDeleteEvent(cue);
-            }
-        }        
-    }
-    
-    // --------------------------------------------------------------------
-    // Inner classes
-    //---------------------------------------------------------------------
-    
-    private class NodeTemplateListener extends DiagramNodeTemplate.Listener
-    {
+	private void notifyConnectionDelete(DiagramConnectionPart connPart)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
+				((SapphireDiagramPartListener)listener).handleConnectionDeleteEvent(cue);
+			}
+		}		
+	}
+	
+	private void notifyGridStateChange()
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramPageEvent pageEvent = new DiagramPageEvent(this);
+				((SapphireDiagramPartListener)listener).handleGridStateChangeEvent(pageEvent);
+			}
+		}		
+		
+	}
+	
+	// --------------------------------------------------------------------
+	// Inner classes
+	//---------------------------------------------------------------------
+	
+	private class NodeTemplateListener extends DiagramNodeTemplate.Listener
+	{
         @Override
         public void handleNodeUpdate(final DiagramNodePart nodePart)
         {
@@ -394,12 +439,18 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         @Override
         public void handleNodeDelete(final DiagramNodePart nodePart)
         {
-            notifyNodeDelete(nodePart);
-        }        
-    }
-    
-    private class ConnectionTemplateListener extends DiagramConnectionTemplate.Listener
-    {
+        	notifyNodeDelete(nodePart);
+        }		
+
+        @Override
+        public void handleNodeMove(final DiagramNodeEvent event)
+        {
+        	notifyNodeMove(event);
+        }		
+	}
+	
+	private class ConnectionTemplateListener extends DiagramConnectionTemplate.Listener
+	{
         @Override
         public void handleConnectionUpdate(final DiagramConnectionPart connPart)
         {

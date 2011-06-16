@@ -179,7 +179,8 @@
     <action>
         <id>Sapphire.Diagram.ToggleGrid</id>
         <context>Sapphire.Diagram.Editor</context>
-        <label>grid</label>
+        <label>show grid</label>
+        <type>toggle</type>
         <description>Show or hide the grid</description>       
     </action>
     <action>
@@ -310,12 +311,6 @@
         <context>Sapphire.EditorPage.Outline.Node</context>
         <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeAddActionHandlerCondition</condition>
     </action-handler-factory>
-    <action-handler-factory>
-        <action>Sapphire.Add</action>
-        <impl>org.eclipse.sapphire.ui.diagram.actions.DiagramNodeAddActionHandlerFactory</impl>
-        <description>Creates an add action handler for every node type.</description>
-        <context>Sapphire.Diagram.Editor</context>
-    </action-handler-factory>    
     <value-serialization-service>
         <type>org.eclipse.sapphire.ui.Color</type>
         <impl>org.eclipse.sapphire.ui.internal.ColorSerializationService</impl>

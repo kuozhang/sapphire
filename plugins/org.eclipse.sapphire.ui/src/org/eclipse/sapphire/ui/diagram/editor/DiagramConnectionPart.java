@@ -14,7 +14,9 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -31,10 +33,9 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
+import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
-import org.eclipse.sapphire.ui.SapphireAction;
-import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
@@ -54,38 +55,39 @@ public class DiagramConnectionPart
     implements IPropertiesViewContributorPart
     
 {
-    protected DiagramConnectionTemplate connectionTemplate;
-    protected IDiagramExplicitConnectionBindingDef bindingDef;
-    protected IDiagramConnectionDef definition;
-    protected IModelElement modelElement;
-    protected ModelPath endpoint1Path;
-    protected ModelPath endpoint2Path;
-    private IDiagramConnectionEndpointBindingDef endpoint1Def;
-    private IDiagramConnectionEndpointBindingDef endpoint2Def;
-    private IModelElement srcNodeModel;
-    private IModelElement targetNodeModel;
-    private FunctionResult endpoint1FunctionResult;
-    private FunctionResult endpoint2FunctionResult;
-    private ModelProperty endpoint1Property;
-    private ModelProperty endpoint2Property;
-    protected FunctionResult labelFunctionResult;
-    protected ValueProperty labelProperty;
-    protected FunctionResult idFunctionResult;
-    protected ModelPropertyListener modelPropertyListener;
-    private PropertiesViewContributionManager propertiesViewContributionManager;
-    
-    public DiagramConnectionPart() {}
-    
-    public DiagramConnectionPart(IDiagramExplicitConnectionBindingDef bindingDef, ModelPath endpoint1Path, ModelPath endpoint2Path)
-    {                
-        this.bindingDef = bindingDef;
-        this.endpoint1Path = endpoint1Path;
-        this.endpoint2Path = endpoint2Path;
-    }
-    
-    protected void initLabelId()
-    {
-        this.connectionTemplate = (DiagramConnectionTemplate)getParentPart();
+	protected DiagramConnectionTemplate connectionTemplate;
+	protected IDiagramExplicitConnectionBindingDef bindingDef;
+	protected IDiagramConnectionDef definition;
+	protected IModelElement modelElement;
+	protected ModelPath endpoint1Path;
+	protected ModelPath endpoint2Path;
+	private IDiagramConnectionEndpointBindingDef endpoint1Def;
+	private IDiagramConnectionEndpointBindingDef endpoint2Def;
+	private IModelElement srcNodeModel;
+	private IModelElement targetNodeModel;
+	private FunctionResult endpoint1FunctionResult;
+	private FunctionResult endpoint2FunctionResult;
+	private ModelProperty endpoint1Property;
+	private ModelProperty endpoint2Property;
+	protected FunctionResult labelFunctionResult;
+	protected ValueProperty labelProperty;
+	protected FunctionResult idFunctionResult;
+	protected ModelPropertyListener modelPropertyListener;
+	private PropertiesViewContributionManager propertiesViewContributionManager;
+	private List<Point> bendpoints = new ArrayList<Point>();
+	
+	public DiagramConnectionPart() {}
+	
+	public DiagramConnectionPart(IDiagramExplicitConnectionBindingDef bindingDef, ModelPath endpoint1Path, ModelPath endpoint2Path)
+	{				
+		this.bindingDef = bindingDef;
+		this.endpoint1Path = endpoint1Path;
+		this.endpoint2Path = endpoint2Path;
+	}
+	
+	protected void initLabelId()
+	{
+    	this.connectionTemplate = (DiagramConnectionTemplate)getParentPart();
         
         this.definition = (IDiagramConnectionDef)super.definition;
         this.modelElement = getModelElement();
@@ -547,5 +549,27 @@ public class DiagramConnectionPart
         
         return this.propertiesViewContributionManager.getPropertiesViewContribution();
     }
+	
+    public void addBendpoint(int index, int x, int y)
+    {
+    	this.bendpoints.add(index, new Point(x, y));
+    }
     
+    public void removeBendpoint(int index)
+    {
+    	this.bendpoints.remove(index);
+    }
+    
+    public void updateBenpoint(int index, int x, int y)
+    {
+    	if (index < this.bendpoints.size())
+    	{
+    		this.bendpoints.set(index, new Point(x, y));
+    	}
+    }
+    
+    public List<Point> getConnectionBendpoints()
+    {
+    	return this.bendpoints;
+    }
 }

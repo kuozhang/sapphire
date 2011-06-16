@@ -39,30 +39,25 @@ public class SapphireCreateNodeFeature extends AbstractCreateFeature
         return context.getTargetContainer() instanceof Diagram;
     }
 
-    public Object[] create(ICreateContext context) 
-    {
-        // In general the model property listener in the node template should handle 
-        // the addition of new element. But the passed in context contains x, y, width and
-        // height of the new node, we are bypassing the listener mechanism here.
-        this.nodeTemplate.removeModelLister();
-        DiagramNodePart nodePart = this.nodeTemplate.createNewDiagramNode();
-        this.nodeTemplate.addModelListener();
-        
-        addGraphicalRepresentation(context, nodePart);
-        // activate direct editing after object creation
-        getFeatureProvider().getDirectEditingInfo().setActive(true);
-        
-        return new Object[] { nodePart };
-    }
-    
-    @Override
-    public String getCreateImageId()
-    {
-        IDiagramImageChoice image = this.nodeTemplate.getToolPaletteImage();
-        if (image != null)
-        {
-            return image.getImageId().getContent();
-        }
-        return super.getCreateImageId();
-    }
+	public Object[] create(ICreateContext context) 
+	{
+		DiagramNodePart nodePart = this.nodeTemplate.createNewDiagramNode();
+		nodePart.setNodePosition(context.getX(), context.getY());
+
+		// activate direct editing after object creation
+		getFeatureProvider().getDirectEditingInfo().setActive(true);
+		
+		return new Object[] { nodePart };
+	}
+	
+	@Override
+	public String getCreateImageId()
+	{
+		IDiagramImageChoice image = this.nodeTemplate.getToolPaletteImage();
+		if (image != null)
+		{
+			return image.getImageId().getContent();
+		}
+		return super.getCreateImageId();
+	}
 }

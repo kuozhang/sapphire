@@ -24,7 +24,9 @@ import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
+import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -48,21 +50,24 @@ public class DiagramNodePart
     implements IPropertiesViewContributorPart
     
 {
-    private static final String DEFAULT_ACTION_ID = "Sapphire.Diagram.Node.Default";
-    
-    private DiagramNodeTemplate nodeTemplate;
-    private IDiagramNodeDef definition;
-    private IModelElement modelElement;
-    private FunctionResult labelFunctionResult;
-    private FunctionResult idFunctionResult;
-    private FunctionResult imageFunctionResult;
-    private List<FunctionResult> imageDecoratorFunctionResults;
-    private ValueProperty labelProperty;
-    private SapphireAction defaultAction;
-    private SapphireActionHandler defaultActionHandler;
-    private ModelPropertyListener modelPropertyListener;
-    private PropertiesViewContributionManager propertiesViewContributionManager; 
-        
+	private static final String DEFAULT_ACTION_ID = "Sapphire.Diagram.Node.Default";
+	
+	private DiagramNodeTemplate nodeTemplate;
+	private IDiagramNodeDef definition;
+	private IModelElement modelElement;
+	private FunctionResult labelFunctionResult;
+	private FunctionResult idFunctionResult;
+	private FunctionResult imageFunctionResult;
+	private List<FunctionResult> imageDecoratorFunctionResults;
+	private ValueProperty labelProperty;
+	private SapphireAction defaultAction;
+	private SapphireActionHandler defaultActionHandler;
+	private ModelPropertyListener modelPropertyListener;
+	private PropertiesViewContributionManager propertiesViewContributionManager; 
+	private Point leftTopPos = new Point(-1, -1);
+	private int nodeWidth = -1;
+	private int nodeHeight = -1;
+		
     @Override
     protected void init()
     {
@@ -300,49 +305,81 @@ public class DiagramNodePart
             id = (String) this.idFunctionResult.value();
         }
                 
-        return id;        
-    }
-    
-    public boolean canResizeShape()
-    {
-        return this.definition.isResizable().getContent();
-    }
-    
-    public int getNodeWidth()
-    {
-        if (this.definition.getWidth().getContent() != null)
-        {
-            return this.definition.getWidth().getContent();
-        }
-        return 0;
-    }
-    
-    public int getNodeHeight()
-    {
-        if (this.definition.getHeight().getContent() != null)
-        {
-            return this.definition.getHeight().getContent();
-        }
-        return 0;
-    }
+        return id;		
+	}
+	
+	public boolean canResizeShape()
+	{
+		return this.definition.isResizable().getContent();
+	}
+	
+	public int getNodeWidth()
+	{
+		if (this.nodeWidth == -1)
+		{
+			if (this.definition.getWidth().getContent() != null)
+			{
+				return this.definition.getWidth().getContent();
+			}
+			else
+			{
+				return -1;
+			}
+		}
+		else
+		{
+			return this.nodeWidth;
+		}
+	}
+		
+	public int getNodeHeight()
+	{
+		if (this.nodeHeight == -1)
+		{
+			if (this.definition.getHeight().getContent() != null)
+			{
+				return this.definition.getHeight().getContent();
+			}
+			else
+			{
+				return -1;
+			}
+		}
+		else
+		{
+			return this.nodeHeight;
+		}
+	}
 
-    public int getHorizontalSpacing()
-    {
-        if (this.definition.getHorizontalSpacing().getContent() != null)
-        {
-            return this.definition.getHorizontalSpacing().getContent();
-        }
-        return 0;
-    }
-    
-    public int getVerticalSpacing()
-    {
-        if (this.definition.getVerticalSpacing().getContent() != null)
-        {
-            return this.definition.getVerticalSpacing().getContent();
-        }
-        return 0;
-    }
+	public void setNodeBounds(int x, int y, int width, int height)
+	{
+		setNodePosition(x, y);
+		this.nodeWidth = width;
+		this.nodeHeight = height;
+	}
+	
+	public Bounds getNodeBounds()
+	{
+		return new Bounds(this.leftTopPos.getX(), this.leftTopPos.getY(), this.nodeWidth, this.nodeHeight);
+	}
+	
+	public int getHorizontalSpacing()
+	{
+		if (this.definition.getHorizontalSpacing().getContent() != null)
+		{
+			return this.definition.getHorizontalSpacing().getContent();
+		}
+		return 0;
+	}
+	
+	public int getVerticalSpacing()
+	{
+		if (this.definition.getVerticalSpacing().getContent() != null)
+		{
+			return this.definition.getVerticalSpacing().getContent();
+		}
+		return 0;
+	}
 
     public String getImageId()
     {
@@ -396,33 +433,61 @@ public class DiagramNodePart
         return 0;
     }
 
-    public int getLabelHeight()
-    {
-        if (this.definition.getLabel().element().getHeight().getContent() != null)
-        {
-            return this.definition.getLabel().element().getHeight().getContent();
-        }
-        return 0;
-    }
-    
-    public IDiagramNodeProblemDecoratorDef getProblemIndicatorDef()
-    {
-        return this.definition.getProblemDecorator();
-    }
-        
-    private void notifyNodeUpdate()
-    {
-        Set<SapphirePartListener> listeners = this.getListeners();
-        for(SapphirePartListener listener : listeners)
-        {
-            if (listener instanceof SapphireDiagramPartListener)
-            {
-                DiagramNodeEvent nue = new DiagramNodeEvent(this);
-                ((SapphireDiagramPartListener)listener).handleNodeUpdateEvent(nue);
-            }
-        }
-    }
-    
+	public int getLabelHeight()
+	{
+		if (this.definition.getLabel().element().getHeight().getContent() != null)
+		{
+			return this.definition.getLabel().element().getHeight().getContent();
+		}
+		return 0;
+	}
+	
+	public IDiagramNodeProblemDecoratorDef getProblemIndicatorDef()
+	{
+		return this.definition.getProblemDecorator();
+	}
+		
+	public void setNodePosition(int x, int y)
+	{
+		if (this.leftTopPos.getX() != x || this.leftTopPos.getY() != y)
+		{
+			this.leftTopPos.setX(x); 
+			this.leftTopPos.setY(y);
+			notifyNodeMove();
+		}
+	}
+	
+	public Point getNodePosition()
+	{
+		return this.leftTopPos;
+	}
+		
+	private void notifyNodeUpdate()
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramNodeEvent nue = new DiagramNodeEvent(this);
+				((SapphireDiagramPartListener)listener).handleNodeUpdateEvent(nue);
+			}
+		}
+	}
+	
+	private void notifyNodeMove()
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramNodeEvent ne = new DiagramNodeEvent(this);
+				((SapphireDiagramPartListener)listener).handleNodeMoveEvent(ne);
+			}
+		}		
+	}
+	
     public PropertiesViewContributionPart getPropertiesViewContribution()
     {
         if( this.propertiesViewContributionManager == null )

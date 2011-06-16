@@ -19,4 +19,10 @@
         <impl>org.eclipse.sapphire.ui.swt.graphiti.actions.ToggleDiagramGridActionHandler</impl>
         <description>Show/Hide diagram grid</description>
     </action-handler>
+    <action-handler-factory>
+        <action>Sapphire.Add</action>
+        <impl>org.eclipse.sapphire.ui.swt.graphiti.actions.DiagramNodeAddActionHandlerFactory</impl>
+        <description>Creates an add action handler for every node type.</description>
+        <context>Sapphire.Diagram.Editor</context>
+    </action-handler-factory>    
 </extension>

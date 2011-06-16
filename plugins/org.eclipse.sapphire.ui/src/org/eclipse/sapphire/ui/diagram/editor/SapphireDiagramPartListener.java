@@ -34,6 +34,11 @@ public abstract class SapphireDiagramPartListener extends SapphirePartListener
         // The default implementation doesn't do anything.
     }
 
+    public void handleNodeMoveEvent(final DiagramNodeEvent event)
+    {
+    	// The default implementation doesn't do anything.
+    }
+    
     public void handleConnectionUpdateEvent(final DiagramConnectionEvent event)
     {
         // The default implementation doesn't do anything.
@@ -52,5 +57,10 @@ public abstract class SapphireDiagramPartListener extends SapphirePartListener
     public void handleConnectionDeleteEvent(final DiagramConnectionEvent event)
     {
         // The default implementation doesn't do anything.
+    }
+    
+    public void handleGridStateChangeEvent(final DiagramPageEvent event)
+    {
+    	// The default implementation doesn't do anything.
     }
 }
