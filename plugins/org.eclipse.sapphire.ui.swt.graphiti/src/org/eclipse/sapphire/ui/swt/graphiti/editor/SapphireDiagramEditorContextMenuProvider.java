@@ -38,7 +38,6 @@ import org.eclipse.sapphire.ui.swt.graphiti.actions.SapphireActionHandlerDelegat
 public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvider
 {
 	private static final String DIAGRAM_NODE_DEFAULT_ACTION = "Sapphire.Diagram.Node.Default";
-	private static final String DIAGRAM_GRID_ACTION = "Sapphire.Diagram.ToggleGrid";
 	
 	private SapphireDiagramEditor sapphireDiagramEditor;
 	
@@ -84,7 +83,7 @@ public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvide
 
 	private void addActionToContextMenu(IMenuManager menuMgr, final SapphireAction action)
 	{
-		if (action.getActiveHandlers().size() == 1 || action.getId().equals(DIAGRAM_GRID_ACTION))
+		if (action.getActiveHandlers().size() == 1)
 		{
 			final SapphireActionHandler actionHandler = action.getActiveHandlers().get(0);
 			

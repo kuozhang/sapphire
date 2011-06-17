@@ -15,7 +15,7 @@
 
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
     <action-handler>
-        <action>Sapphire.Diagram.ToggleGrid</action>
+        <action>Sapphire.Diagram.Grid.Toggle</action>
         <impl>org.eclipse.sapphire.ui.swt.graphiti.actions.ToggleDiagramGridActionHandler</impl>
         <description>Show/Hide diagram grid</description>
     </action-handler>

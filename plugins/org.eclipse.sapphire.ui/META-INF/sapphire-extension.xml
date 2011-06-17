@@ -177,7 +177,7 @@
         <location>before:Sapphire.Help</location>
     </action>
     <action>
-        <id>Sapphire.Diagram.ToggleGrid</id>
+        <id>Sapphire.Diagram.Grid.Toggle</id>
         <context>Sapphire.Diagram.Editor</context>
         <label>show grid</label>
         <type>toggle</type>
