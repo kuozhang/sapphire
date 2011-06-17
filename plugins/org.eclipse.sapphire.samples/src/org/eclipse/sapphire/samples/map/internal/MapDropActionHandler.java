@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - [348673] Problem with drop action handler API
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.map.internal;
@@ -46,7 +47,7 @@ public final class MapDropActionHandler extends SapphireDiagramActionHandler
     	SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)diagramCtx.getPart();
     	
     	Object obj = diagramCtx.getObject();
-    	Point currentMousePos = diagramCtx.getCurrentMouseLocation();
+    	
         if( obj instanceof IFile )
         {
             final List<String> cities = new ArrayList<String>();
@@ -94,6 +95,7 @@ public final class MapDropActionHandler extends SapphireDiagramActionHandler
             if( ! cities.isEmpty() )
             {
                 final IMap map = (IMap) getModelElement();
+                final Point currentMousePos = diagramCtx.getCurrentMouseLocation();
                 List<DiagramNodePart> cityParts = new ArrayList<DiagramNodePart>();
                 int x = currentMousePos.getX();
                 int y = currentMousePos.getY();
