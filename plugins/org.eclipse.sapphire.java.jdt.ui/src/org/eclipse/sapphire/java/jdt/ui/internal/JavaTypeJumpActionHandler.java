@@ -111,20 +111,25 @@ public final class JavaTypeJumpActionHandler
         {
             return null;
         }
+        
+        final String name = fullyQualifiedType.replace( '$', '.' );
 
         IType type = null;
+        
         try
         {
-            type = javaProject.findType( fullyQualifiedType );
-            if ( type != null && ( !type.exists() || type.isAnonymous() ) )
+            type = javaProject.findType( name );
+            
+            if( type != null && ( ! type.exists() || type.isAnonymous() ) )
             {
                 type = null;
             }
         }
-        catch ( JavaModelException ce )
+        catch( JavaModelException e )
         {
-            SapphireUiFrameworkPlugin.log( ce );
+            SapphireUiFrameworkPlugin.log( e );
         }
+        
         return type;
     }
 
