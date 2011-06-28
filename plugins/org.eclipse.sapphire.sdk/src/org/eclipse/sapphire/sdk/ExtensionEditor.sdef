@@ -39,7 +39,7 @@
                 <node-factory>
                     <property>ModelElementServices</property>
                     <case>
-                        <label>${ TypeClass == null ? "&lt;service&gt;" : LastSegment( TypeClass, '.' ) }</label>
+                        <label>${ Id == null ? &quot;&lt;service&gt;&quot; : Id }</label>
                         <section>
                             <label>model element service</label>
                             <content>
@@ -74,7 +74,7 @@
                 <node-factory>
                     <property>ModelPropertyServices</property>
                     <case>
-                        <label>${ TypeClass == null ? "&lt;service&gt;" : LastSegment( TypeClass, '.' ) }</label>
+                        <label>${ Id == null ? &quot;&lt;service&gt;&quot; : Id }</label>
                         <section>
                             <label>model property service</label>
                             <content>
