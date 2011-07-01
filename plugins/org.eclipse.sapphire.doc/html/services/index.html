@@ -65,23 +65,52 @@ implementation. See if you can match facts in the screen capture to service impl
 
 <p style="margin-left: 20px;"><img src="images/FactsService.png"/></p>
 
-<p>Adopters can provide custom implementations.</p>
+<p>Adopters can provide custom FactService implementations either globally using Sapphire extension system or 
+at the property level using @Service annotation.</p>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
 
-<p style="margin-left: 20px;">A simple facts service that is triggered by @Required property annotation.</p>
+<p style="margin-left: 20px;">A simple global FactsService implementation that is triggered by a hypothetical 
+@Since property annotation.</p>
 
-<pre class="source-code"><code>public class RequiredPropertyFactsService extends FactsService
+<pre class="source-code"><code>public class SinceVersionFactsService extends FactsService
 {
     @Override
-    protected void facts( List<String> facts )
+    protected void facts( List facts )
     {
-        if( property().hasAnnotation( Required.class ) )
+        Since since = property().getAnnotation( Since.class );
+        facts.add( "Since version " + since.version() + "." );
+    }
+
+    public static class Factory extends ModelPropertyServiceFactory
+    {
+        @Override
+        public boolean applicable( IModelElement element,
+                                   ModelProperty property,
+                                   Class&lt;? extends ModelPropertyService> service )
         {
-            facts.add( "Must be specified." );
+            return property.hasAnnotation( Since.class );
+        }
+
+        @Override
+        public ModelPropertyService create( IModelElement element,
+                                            ModelProperty property,
+                                            Class&lt;? extends ModelPropertyService> service )
+        {
+            return new SinceVersionFactsService();
         }
     }
 }</code></pre>
+
+<p style="margin-left: 20px;">The service implementation is registered in META-INF/sapphire-extension.xml file.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension"></font>
+    &lt;model-property-service>
+        &lt;id>Example.SinceVersionFactsService&lt;/id>
+        &lt;type>org.eclipse.sapphire.services.FactsService&lt;/type>
+        &lt;factory>example.SinceVersionFactsService$Factory&lt;/factory>
+    &lt;/model-property-service>
+<font color="#888888">&lt;/extension></font></code></pre>
 
 <p>Facts can also be statically specified for a given property by using @Fact annotation. Use @Facts
 annotation to specify multiple facts. The facts contained in these annotations are surfaced by an
@@ -90,20 +119,20 @@ included FactsService implementation (id:Sapphire.FactsService.Static).</p>
 <p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code><font color="#888888">// *** ExampleOne ***</font>
-    
+
 @Fact( statement = "Important fact.")
-    
+
 <font color="#888888">ValueProperty PROP_EXAMPLE_ONE = new ValueProperty( TYPE, "ExampleOne" );
-    
+
 Value&lt;String> getExampleOne();
 void setExampleOne( String value );
 
 // *** ExampleMultiple ***</font>
-    
+
 @Facts( { @Fact( statement = "First important fact." ), @Fact( statement = "Second important fact." ) } )
-    
+
 <font color="#888888">ValueProperty PROP_EXAMPLE_MULTIPLE = new ValueProperty( TYPE, "ExampleMultiple" );
-    
+
 Value&lt;String> getExampleMultiple();
 void setExampleMultiple( String value );</font></code></pre>
 
