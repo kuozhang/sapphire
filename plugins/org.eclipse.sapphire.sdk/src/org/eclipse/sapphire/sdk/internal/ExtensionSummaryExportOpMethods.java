@@ -24,17 +24,17 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.modeling.util.Filter;
 import org.eclipse.sapphire.sdk.extensibility.IExtensionSummaryExportOp;
 import org.eclipse.sapphire.sdk.extensibility.IExtensionSummarySectionColumnDef;
 import org.eclipse.sapphire.sdk.extensibility.IExtensionSummarySectionDef;
@@ -60,7 +60,7 @@ public final class ExtensionSummaryExportOpMethods
     
     public static String execute( final IExtensionSummaryExportOp op,
                                   final List<ISapphireExtensionDef> extensions,
-                                  final IProgressMonitor monitor )
+                                  final Filter<IModelElement> filter )
     {
         // Write the summary document.
         
@@ -129,35 +129,35 @@ public final class ExtensionSummaryExportOpMethods
             
             if( extensionType.equals( ISapphireExtensionDef.PROP_MODEL_ELEMENT_SERVICES.getName() ) )
             {
-                sectionWriter = new ModelElementServicesSectionWriter( out, extensions, def );
+                sectionWriter = new ModelElementServicesSectionWriter( out, extensions, filter, def );
             }
             else if( extensionType.endsWith( ISapphireExtensionDef.PROP_MODEL_PROPERTY_SERVICES.getName() ) )
             {
-                sectionWriter = new ModelPropertyServicesSectionWriter( out, extensions, def );
+                sectionWriter = new ModelPropertyServicesSectionWriter( out, extensions, filter, def );
             }
             else if( extensionType.endsWith( ISapphireExtensionDef.PROP_VALUE_SERIALIZATION_SERVICES.getName() ) )
             {
-                sectionWriter = new ValueSerializationServicesSectionWriter( out, extensions, def );
+                sectionWriter = new ValueSerializationServicesSectionWriter( out, extensions, filter, def );
             }
             else if( extensionType.endsWith( ISapphireExtensionDef.PROP_FUNCTIONS.getName() ) )
             {
-                sectionWriter = new FunctionsSectionWriter( out, extensions, def );
+                sectionWriter = new FunctionsSectionWriter( out, extensions, filter, def );
             }
             else if( extensionType.endsWith( ISapphireExtensionDef.PROP_TYPE_CASTS.getName() ) )
             {
-                sectionWriter = new TypeCastsSectionWriter( out, extensions, def );
+                sectionWriter = new TypeCastsSectionWriter( out, extensions, filter, def );
             }
             else if( extensionType.endsWith( ISapphireExtensionDef.PROP_ACTIONS.getName() ) )
             {
-                sectionWriter = new ActionsSectionWriter( out, extensions, def );
+                sectionWriter = new ActionsSectionWriter( out, extensions, filter, def );
             }
             else if( extensionType.endsWith( ISapphireExtensionDef.PROP_ACTION_HANDLERS.getName() ) )
             {
-                sectionWriter = new ActionHandlersSectionWriter( out, extensions, def );
+                sectionWriter = new ActionHandlersSectionWriter( out, extensions, filter, def );
             }
             else if( extensionType.endsWith( ISapphireExtensionDef.PROP_ACTION_HANDLER_FACTORIES.getName() ) )
             {
-                sectionWriter = new ActionHandlerFactoriesSectionWriter( out, extensions, def );
+                sectionWriter = new ActionHandlerFactoriesSectionWriter( out, extensions, filter, def );
             }
             else
             {
@@ -185,9 +185,10 @@ public final class ExtensionSummaryExportOpMethods
     {
         public ModelElementServicesSectionWriter( final PrintWriter out,
                                                   final List<ISapphireExtensionDef> extensions,
+                                                  final Filter<IModelElement> filter,
                                                   final IExtensionSummarySectionDef def )
         {
-            super( out, extensions, def );
+            super( out, extensions, filter, def );
         }
         
         @Override
@@ -204,9 +205,10 @@ public final class ExtensionSummaryExportOpMethods
     {
         public ModelPropertyServicesSectionWriter( final PrintWriter out,
                                                    final List<ISapphireExtensionDef> extensions,
+                                                   final Filter<IModelElement> filter,
                                                    final IExtensionSummarySectionDef def )
         {
-            super( out, extensions, def );
+            super( out, extensions, filter, def );
         }
         
         @Override
@@ -223,9 +225,10 @@ public final class ExtensionSummaryExportOpMethods
     {
         public ValueSerializationServicesSectionWriter( final PrintWriter out,
                                                         final List<ISapphireExtensionDef> extensions,
+                                                        final Filter<IModelElement> filter,
                                                         final IExtensionSummarySectionDef def )
         {
-            super( out, extensions, def );
+            super( out, extensions, filter, def );
         }
         
         @Override
@@ -242,9 +245,10 @@ public final class ExtensionSummaryExportOpMethods
     {
         public FunctionsSectionWriter( final PrintWriter out,
                                        final List<ISapphireExtensionDef> extensions,
+                                       final Filter<IModelElement> filter,
                                        final IExtensionSummarySectionDef def )
         {
-            super( out, extensions, def );
+            super( out, extensions, filter, def );
         }
         
         @Override
@@ -282,9 +286,10 @@ public final class ExtensionSummaryExportOpMethods
     {
         public TypeCastsSectionWriter( final PrintWriter out,
                                        final List<ISapphireExtensionDef> extensions,
+                                       final Filter<IModelElement> filter,
                                        final IExtensionSummarySectionDef def )
         {
-            super( out, extensions, def );
+            super( out, extensions, filter, def );
         }
         
         @Override
@@ -323,9 +328,10 @@ public final class ExtensionSummaryExportOpMethods
     {
         public ActionsSectionWriter( final PrintWriter out,
                                      final List<ISapphireExtensionDef> extensions,
+                                     final Filter<IModelElement> filter,
                                      final IExtensionSummarySectionDef def )
         {
-            super( out, extensions, def );
+            super( out, extensions, filter, def );
         }
         
         @Override
@@ -388,9 +394,10 @@ public final class ExtensionSummaryExportOpMethods
     {
         public ActionHandlersSectionWriter( final PrintWriter out,
                                             final List<ISapphireExtensionDef> extensions,
+                                            final Filter<IModelElement> filter,
                                             final IExtensionSummarySectionDef def )
         {
-            super( out, extensions, def );
+            super( out, extensions, filter, def );
         }
         
         @Override
@@ -435,9 +442,10 @@ public final class ExtensionSummaryExportOpMethods
     {
         public ActionHandlerFactoriesSectionWriter( final PrintWriter out,
                                                     final List<ISapphireExtensionDef> extensions,
+                                                    final Filter<IModelElement> filter,
                                                     final IExtensionSummarySectionDef def )
         {
-            super( out, extensions, def );
+            super( out, extensions, filter, def );
         }
         
         @Override
@@ -481,14 +489,17 @@ public final class ExtensionSummaryExportOpMethods
     {
         private final PrintWriter out;
         private final List<ISapphireExtensionDef> extensions;
+        private final Filter<IModelElement> filter;
         private final IExtensionSummarySectionDef def;
         
         public SectionWriter( final PrintWriter out,
                               final List<ISapphireExtensionDef> extensions,
+                              final Filter<IModelElement> filter,
                               final IExtensionSummarySectionDef def )
         {
             this.out = out;
             this.extensions = extensions;
+            this.filter = filter;
             this.def = def;
         }
         
@@ -499,9 +510,25 @@ public final class ExtensionSummaryExportOpMethods
             
             final List<IModelElement> extElements = new ArrayList<IModelElement>();
             
-            for( ISapphireExtensionDef extension : this.extensions )
+            if( this.filter == null )
             {
-                extElements.addAll( extension.read( extTypeListProperty ) );
+                for( ISapphireExtensionDef extension : this.extensions )
+                {
+                    extElements.addAll( extension.read( extTypeListProperty ) );
+                }
+            }
+            else
+            {
+                for( ISapphireExtensionDef extension : this.extensions )
+                {
+                    for( IModelElement extElement : extension.read( extTypeListProperty ) )
+                    {
+                        if( this.filter.check( extElement ) )
+                        {
+                            extElements.add( extElement );
+                        }
+                    }
+                }
             }
             
             if( ! extElements.isEmpty() )

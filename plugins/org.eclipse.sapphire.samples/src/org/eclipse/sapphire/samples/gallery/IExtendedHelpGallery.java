@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [350340] Eliminate DocumentationProvider annotation in favor of service approach
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.gallery;
@@ -41,15 +42,14 @@ public interface IExtendedHelpGallery
     @Documentation
     ( 
         content = "Content help for extended simple integer",
-        mergeStrategy=DocumentationMergeStrategy.APPEND,
+        mergeStrategy = DocumentationMergeStrategy.APPEND,
         topics = 
         {
-            @Topic( label = "another wikipedia integer entry", href = "http://en.wikipedia.org/wiki/Integer")
+            @Topic( label = "another wikipedia integer entry", url = "http://en.wikipedia.org/wiki/Integer" )
         }
     )
 
     ValueProperty PROP_SIMPLE = new ValueProperty( TYPE, IHelpGallery.PROP_SIMPLE );
-
     
     // *** Positive ***
     

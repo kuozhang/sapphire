@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [350340] Eliminate DocumentationProvider annotation in favor of service approach
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.annotations;
@@ -18,17 +19,20 @@ package org.eclipse.sapphire.modeling.annotations;
 public enum DocumentationMergeStrategy
 {
     /**
-     * All parent properties' content help will be prepended 
+     * Indicates that documentation content should be prepended to parent property's documentation content. 
      */
+    
     PREPEND,
 
     /**
-     * All parent properties' content help will be appended 
+     * Indicates that documentation content should be appended to parent property's documentation content.
      */
+    
     APPEND,
     
     /**
-     * Display the first properties' content help - parent contenct help will be disregarded
+     * Indicates that documentation content should replace parent property's documentation content.
      */
+    
     REPLACE
 }

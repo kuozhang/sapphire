@@ -24,16 +24,20 @@ import java.util.Locale;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.help.IHelpContentProducer;
 import org.eclipse.sapphire.modeling.ExtensionsLocator;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.UrlResourceStore;
+import org.eclipse.sapphire.modeling.util.Filter;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.sdk.extensibility.IExtensionSummaryExportOp;
 import org.eclipse.sapphire.sdk.extensibility.IExtensionSummarySectionColumnDef;
 import org.eclipse.sapphire.sdk.extensibility.IExtensionSummarySectionDef;
 import org.eclipse.sapphire.sdk.extensibility.IFunctionDef;
+import org.eclipse.sapphire.sdk.extensibility.IModelPropertyServiceDef;
 import org.eclipse.sapphire.sdk.extensibility.ISapphireExtensionDef;
+import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.ui.IExportModelDocumentationOp;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
@@ -62,9 +66,9 @@ public class DynamicContentProducer implements IHelpContentProducer
                 final IExtensionSummaryExportOp op = IExtensionSummaryExportOp.TYPE.instantiate();
                 op.setDocumentBodyTitle( "Sapphire Extensions" );
 
-                content = op.execute( getExtensions(), new NullProgressMonitor() );
+                content = op.execute( getExtensions(), null );
             }
-            if( href.equals( "html/el/index.html" ) )
+            else if( href.equals( "html/el/index.html" ) )
             {
                 final IExtensionSummaryExportOp op = IExtensionSummaryExportOp.TYPE.instantiate();
                 op.setCreateFinishedDocument( false );
@@ -79,10 +83,52 @@ public class DynamicContentProducer implements IHelpContentProducer
                 final IExtensionSummarySectionColumnDef descColumn = section.getColumns().addNewElement();
                 descColumn.setName( IFunctionDef.PROP_DESCRIPTION.getName() );
 
-                final String functions = op.execute( getExtensions(), new NullProgressMonitor() );
+                final String functions = op.execute( getExtensions(), null );
 
                 content = loadResource( "html/el/index.html" );
                 content = content.replace( "##functions##", functions );
+            }
+            else if( href.equals( "html/services/index.html" ) )
+            {
+                final IExtensionSummaryExportOp op = IExtensionSummaryExportOp.TYPE.instantiate();
+                op.setCreateFinishedDocument( false );
+
+                final IExtensionSummarySectionDef section = op.getSections().addNewElement();
+                section.setExtensionType( ISapphireExtensionDef.PROP_MODEL_PROPERTY_SERVICES.getName() );
+                section.setIncludeSectionHeader( false );
+
+                final IExtensionSummarySectionColumnDef idColumn = section.getColumns().addNewElement();
+                idColumn.setName( IModelPropertyServiceDef.PROP_ID.getName() );
+
+                final IExtensionSummarySectionColumnDef descColumn = section.getColumns().addNewElement();
+                descColumn.setName( IModelPropertyServiceDef.PROP_DESCRIPTION.getName() );
+                
+                final Filter<IModelElement> filter = new Filter<IModelElement>()
+                {
+                    @Override
+                    public boolean check( final IModelElement element )
+                    {
+                        if( element instanceof IModelPropertyServiceDef )
+                        {
+                            final IModelPropertyServiceDef def = (IModelPropertyServiceDef) element;
+                            final String id = def.getId().getText();
+                            final String type = def.getTypeClass().getText();
+                            
+                            if( id != null && id.startsWith( "Sapphire." ) && 
+                                type != null && type.equals( FactsService.class.getName() ) )
+                            {
+                                return true;
+                            }
+                        }
+
+                        return false;
+                    }
+                };
+
+                final String functions = op.execute( getExtensions(), filter );
+
+                content = loadResource( "html/services/index.html" );
+                content = content.replace( "##facts-servicess##", functions );
             }
             else if( href.equals( "html/actions/index.html" ) )
             {

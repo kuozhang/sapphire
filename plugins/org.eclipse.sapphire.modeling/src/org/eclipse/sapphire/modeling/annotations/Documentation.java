@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [350340] Eliminate DocumentationProvider annotation in favor of service approach
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.annotations;
@@ -74,9 +75,10 @@ public @interface Documentation
          *         </ul>
          *         </p>
          * 
+         * @since 0.4
          * @return the URL (as a string) associated with the resource
          */
-        String href();
+        String url();
 
     }
     

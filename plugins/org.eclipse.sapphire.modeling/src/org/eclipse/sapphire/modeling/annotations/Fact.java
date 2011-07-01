@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Ling Hao - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.annotations;
@@ -17,16 +17,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @since 0.4
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Retention( RetentionPolicy.RUNTIME )
-@Target( { ElementType.FIELD, ElementType.TYPE } )
+@Target( { ElementType.TYPE, ElementType.FIELD } )
 
-public @interface DocumentationProvider
+public @interface Fact
 {
-
-    Class<? extends DocumentationProviderImpl> impl();
-    String[] params() default {};
-    
+    String statement();
 }

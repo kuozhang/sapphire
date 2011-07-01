@@ -13,7 +13,6 @@ package org.eclipse.sapphire.sdk.extensibility;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -26,6 +25,7 @@ import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.util.Filter;
 import org.eclipse.sapphire.sdk.internal.ExtensionSummaryExportOpMethods;
 
 /**
@@ -95,12 +95,16 @@ public interface IExtensionSummaryExportOp
     ListProperty PROP_SECTIONS = new ListProperty( TYPE, "Sections" );
     
     ModelElementList<IExtensionSummarySectionDef> getSections();
-
+    
     // *** Method: execute ***
     
     @DelegateImplementation( ExtensionSummaryExportOpMethods.class )
     
+    /**
+     * @since 0.4
+     */
+    
     String execute( List<ISapphireExtensionDef> extensions,
-                    IProgressMonitor monitor );
+                    Filter<IModelElement> filter );
     
 }

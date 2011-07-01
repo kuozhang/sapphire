@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [350340] Eliminate DocumentationProvider annotation in favor of service approach
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.gallery;
@@ -19,13 +20,13 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Documentation.Topic;
 import org.eclipse.sapphire.modeling.annotations.DocumentationMergeStrategy;
-import org.eclipse.sapphire.modeling.annotations.DocumentationProvider;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.samples.gallery.internal.PositiveIntegerDocumentationProvider;
+import org.eclipse.sapphire.samples.gallery.internal.PositiveIntegerDocumentationService;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -54,8 +55,8 @@ public interface IHelpGallery
         mergeStrategy=DocumentationMergeStrategy.APPEND,
         topics = 
         {
-            @Topic( label = "wikipedia integer", href = "http://en.wikipedia.org/wiki/Integer"),
-            @Topic( label = "wikipedia integer (computer science)", href = "http://en.wikipedia.org/wiki/Integer_%28computer_science%29")
+            @Topic( label = "wikipedia integer", url = "http://en.wikipedia.org/wiki/Integer" ),
+            @Topic( label = "wikipedia integer (computer science)", url = "http://en.wikipedia.org/wiki/Integer_%28computer_science%29" )
         }
     )
 
@@ -70,8 +71,8 @@ public interface IHelpGallery
     @Type( base = Integer.class )
     @Label( standard = "positive" )
     @NumericRange( min = "0" )
+    @Service( impl = PositiveIntegerDocumentationService.class )
     @XmlBinding( path = "positive" )
-    @DocumentationProvider( impl = PositiveIntegerDocumentationProvider.class )
 
     ValueProperty PROP_POSITIVE = new ValueProperty( TYPE, "Positive" );
 

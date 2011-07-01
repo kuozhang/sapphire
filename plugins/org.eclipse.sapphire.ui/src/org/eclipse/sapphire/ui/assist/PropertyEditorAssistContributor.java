@@ -18,8 +18,7 @@ package org.eclipse.sapphire.ui.assist;
 public abstract class PropertyEditorAssistContributor
 {
     public static final String ID_INFO_SECTION_CONTRIBUTOR = "System.InfoSectionContributor";
-    public static final String ID_DEFAULT_VALUE_CONTRIBUTOR = "System.DefaultValueContributor";
-    public static final String ID_MIN_MAX_INFO_CONTRIBUTOR = "System.MinMaxInfoContributor";
+    public static final String ID_FACTS_CONTRIBUTOR = "System.FactsContributor";
     public static final String ID_PROBLEMS_SECTION_CONTRIBUTOR = "System.ProblemsSectionContributor";
     public static final String ID_PROBLEMS_CONTRIBUTOR = "System.ProblemsContributor";
     public static final String ID_ACTIONS_SECTION_CONTRIBUTOR = "System.ActionsSectionContributor";
@@ -27,8 +26,7 @@ public abstract class PropertyEditorAssistContributor
     public static final String ID_SHOW_IN_SOURCE_ACTION_CONTRIBUTOR = "System.ShowInSourceActionContributor";
 
     public static final int PRIORITY_INFO_SECTION_CONTRIBUTOR = 100;
-    public static final int PRIORITY_DEFAULT_VALUE_CONTRIBUTOR = 110;
-    public static final int PRIORITY_MIN_MAX_INFO_CONTRIBUTOR = 115;
+    public static final int PRIORITY_FACTS_CONTRIBUTOR = 110;
     public static final int PRIORITY_PROBLEMS_SECTION_CONTRIBUTOR = 200;
     public static final int PRIORITY_PROBLEMS_CONTRIBUTOR = 210;
     public static final int PRIORITY_ACTIONS_SECTION_CONTRIBUTOR = 300;

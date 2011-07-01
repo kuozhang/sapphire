@@ -1,0 +1,116 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2011 Oracle and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>Sapphire Services</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>Services</h1>
+
+<p>Many aspects of Sapphire can be extended by third parties.</p>
+
+<ul>
+  <li><a href="#FactsAggregationService">FactsAggregationService</a></li>
+  <li><a href="#FactsService">FactsService</a></li>
+</ul>
+
+
+<a name="FactsAggregationService"><h2>FactsAggregationService</h2></a>
+
+<p>The FactsAggregationService combines the data from all applicable facts services in order to produce 
+a single list of facts. A fact is a short statement describing property semantics.</p>
+
+<p>An implementation of this service is provided with Sapphire. This service is not intended to
+be implemented by adopters. See <a href="#FactsService">FactsService</a> to contribute facts.</p>
+
+
+<a name="FactsService"><h2>FactsService</h2></a>
+
+<p>When a property is described to a user in documentation one does it with a series of short statements that
+define its semantics, such as "must be specified" or "maximum value is 100". When a property is
+described to Sapphire one does it with a series of annotations, such as @Required or
+@NumericRange. This duplicate specification is a maintenance problem.</p>
+
+<p>A FactsService provides a means to dynamically derive statements about property's semantics
+based on property's metadata. The derived facts can then be presented to the user as part of documentation,
+property editor information popup and in other relevant places.</p>
+
+<p>A single facts service can produce multiple facts and multiple facts services can be active 
+concurrently for a given property. See <a href="#FactsAggregationService">FactsAggregationService</a> for 
+an easier way to consume all facts.</p>
+
+<p>Sapphire includes a number of FactsService implementations.</p> 
+
+##facts-servicess##
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">This screen capture shows user experience with some of the provided FactsService 
+implementation. See if you can match facts in the screen capture to service implementations above.</p>
+
+<p style="margin-left: 20px;"><img src="images/FactsService.png"/></p>
+
+<p>Adopters can provide custom implementations.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">A simple facts service that is triggered by @Required property annotation.</p>
+
+<pre class="source-code"><code>public class RequiredPropertyFactsService extends FactsService
+{
+    @Override
+    protected void facts( List<String> facts )
+    {
+        if( property().hasAnnotation( Required.class ) )
+        {
+            facts.add( "Must be specified." );
+        }
+    }
+}</code></pre>
+
+<p>Facts can also be statically specified for a given property by using @Fact annotation. Use @Facts
+annotation to specify multiple facts. The facts contained in these annotations are surfaced by an
+included FactsService implementation (id:Sapphire.FactsService.Static).</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">// *** ExampleOne ***</font>
+    
+@Fact( statement = "Important fact.")
+    
+<font color="#888888">ValueProperty PROP_EXAMPLE_ONE = new ValueProperty( TYPE, "ExampleOne" );
+    
+Value&lt;String> getExampleOne();
+void setExampleOne( String value );
+
+// *** ExampleMultiple ***</font>
+    
+@Facts( { @Fact( statement = "First important fact." ), @Fact( statement = "Second important fact." ) } )
+    
+<font color="#888888">ValueProperty PROP_EXAMPLE_MULTIPLE = new ValueProperty( TYPE, "ExampleMultiple" );
+    
+Value&lt;String> getExampleMultiple();
+void setExampleMultiple( String value );</font></code></pre>
+
+
+<div class="copyright">Copyright (c) 2011 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

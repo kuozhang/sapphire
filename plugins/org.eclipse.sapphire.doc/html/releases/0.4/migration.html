@@ -1,0 +1,175 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2011 Oracle and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>Migration Guide for Sapphire 0.4</title>
+  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+  <style type="text/css">
+    pre.source-code 
+    {
+      font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace; 
+      color: #000000;
+      background-color: #ffffff;
+      font-size: 12px;
+      border: 0px;
+      line-height: 14px;
+      padding: 5px;
+      margin-left: 0px;
+      margin-right: 0px;
+      overflow: auto
+    }
+</style></head>
+
+<body>
+
+<h1>Migration Guide for 0.4</h1>
+
+<p>This documents covers code changes that need to be made by Sapphire adopters as part of migrating 
+to 0.4 release. Only changes from the previous release are covered.</p>
+
+<p>Table of Contents</p>
+
+<ol>
+  <li><a href="#documentation">Documentation</a></li>
+</ol>
+
+<h2><a name="documentation">Documentation</a></h2>
+
+<p>The "href" attribute of the @Documentation.Topic has been renamed to "url" for consistency with
+other API.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Documentation
+( 
+    content = "Sample 32-bit integer property.",
+    topics = 
+    {
+        @Topic( label = "wikipedia",</font> href <font color="#888888">= "http://en.wikipedia.org/wiki/Integer" )
+    }
+)
+
+ValueProperty PROP_INTEGER = new ValueProperty( TYPE, "Integer" );
+
+Value<Integer> getInteger();
+void setInteger( String val );
+void setInteger( Integer val );</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Documentation
+( 
+    content = "Sample 32-bit integer property.",
+    topics = 
+    {
+        @Topic( label = "wikipedia",</font> url <font color="#888888">= "http://en.wikipedia.org/wiki/Integer" )
+    }
+)
+
+ValueProperty PROP_INTEGER = new ValueProperty( TYPE, "Integer" );
+
+Value<Integer> getInteger();
+void setInteger( String val );
+void setInteger( Integer val );</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+<p>The method for attaching custom code to produce documentation content has changed to align with Sapphire services architecture
+and for general API consistency.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>public class IntegerDocumentationProvider extends DocumentationProviderImpl 
+{
+    @Override
+    public DocumentationData getDocumentationData() 
+    {
+        return new DocumentationData() 
+        {
+            @Override
+            public String getContent() 
+            {
+                return "Sample 32-bit integer property.";
+            }
+
+            @Override
+            public List&lt;DocumentationResource> getTopics() 
+            {
+                final DocumentationResource resource 
+                    = new DocumentationResource( "wikipedia", "http://en.wikipedia.org/wiki/Integer" );
+                    
+                return Collections.singletonList( resource );
+            }
+        };
+    }
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>public class IntegerDocumentationService extends ModelPropertyDocumentationService 
+{
+    @Override
+    public String content()
+    {
+        return "Sample 32-bit integer property.";
+    }
+
+    @Override
+    public List&lt;Topic> topics()
+    {
+        final Topic topic = new Topic( "wikipedia", "http://en.wikipedia.org/wiki/Integer" );
+        return Collections.singletonList( topic );
+    }
+}</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@DocumentationProvider( impl = IntegerDocumentationProvider.class )
+
+<font color="#888888">ValueProperty PROP_INTEGER = new ValueProperty( TYPE, "Integer" );
+
+Value<Integer> getInteger();
+void setInteger( String val );
+void setInteger( Integer val );</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@Service( impl = IntegerDocumentationService.class )
+
+<font color="#888888">ValueProperty PROP_INTEGER = new ValueProperty( TYPE, "Integer" );
+
+Value<Integer> getInteger();
+void setInteger( String val );
+void setInteger( Integer val );</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<div class="copyright">Copyright (c) 2011 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

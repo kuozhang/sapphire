@@ -20,6 +20,7 @@ import org.eclipse.sapphire.tests.java.t0001.TestJava0001;
 import org.eclipse.sapphire.tests.java.t0002.TestJava0002;
 import org.eclipse.sapphire.tests.java.t0003.TestJava0003;
 import org.eclipse.sapphire.tests.java.t0004.TestJava0004;
+import org.eclipse.sapphire.tests.java.t0005.TestJava0005;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -45,6 +46,7 @@ public final class JavaTestSuite
         suite.addTest( TestJava0002.suite() );
         suite.addTest( TestJava0003.suite() );
         suite.addTest( TestJava0004.suite() );
+        suite.addTest( TestJava0005.suite() );
         
         suite.addTest( JavaJdtTestSuite.suite() );
         

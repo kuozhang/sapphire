@@ -1,0 +1,57 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2011 Oracle and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>Enhancements in Sapphire 0.4</title>
+  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>Enhancements in 0.4</h1>
+
+<ol>
+  <li><a href="#Services">Services</a></li>
+  <ol type="A">
+    <li><a href="#FactsService">FactsService</a></li>
+  </ol>
+</ol>
+ 
+<h2><a name="Services"><a name="FactsService">FactsService</a></a></h2>
+
+<p>When a property is described to a user in documentation one does it with a series of short statements that
+define its semantics, such as "must be specified" or "maximum value is 100". When a property is
+described to Sapphire one does it with a series of annotations, such as @Required or
+@NumericRange. This duplicate specification is a maintenance problem.</p>
+
+<p>A FactsService provides a means to dynamically derive statements about property's semantics
+based on property's metadata. The derived facts can then be presented to the user as part of documentation,
+property editor information popup and in other relevant places.</p>
+
+<p style="margin-left: 20px;"><img src="images/FactsService.png"/></p>
+
+<p>The concept of deriving facts from metadata has existed in limited capacity in past releases.
+New for 0.4 is formalization of this system via FactsService API that allows adopters to participate
+in generation of facts on equal footing with the framework. Also new for 0.4 is a much longer list
+of annotations that generate corresponding facts.</p>
+
+<p><a href="../../services/index.html#FactsService">See Documentation</a></p>
+
+<div class="copyright">Copyright (c) 2011 Oracle and Others<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

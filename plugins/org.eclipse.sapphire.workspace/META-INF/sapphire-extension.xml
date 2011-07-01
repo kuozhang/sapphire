@@ -29,4 +29,16 @@
         <factory>org.eclipse.sapphire.workspace.internal.ProjectRelativePathValidationService$Factory</factory>
         <id>Sapphire.ModelPropertyValidationService.ProjectRelativePath</id>
     </model-property-service>
+    <model-property-service>
+        <description>Creates fact statements about property's relative to the project path requirement by using semantical information specified by @ProjectRelativePath annotation.</description>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+        <factory>org.eclipse.sapphire.workspace.internal.ProjectRelativePathFactsService$Factory</factory>
+        <id>Sapphire.FactsService.ProjectRelativePath</id>
+    </model-property-service>
+    <model-property-service>
+        <description>Creates fact statements about property's relative to the workspace path requirement by using semantical information specified by @WorkspaceRelativePath annotation.</description>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+        <factory>org.eclipse.sapphire.workspace.internal.WorkspaceRelativePathFactsService$Factory</factory>
+        <id>Sapphire.FactsService.WorkspaceRelativePath</id>
+    </model-property-service>
 </extension>

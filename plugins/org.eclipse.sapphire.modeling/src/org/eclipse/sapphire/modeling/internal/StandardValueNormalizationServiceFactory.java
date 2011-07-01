@@ -40,10 +40,7 @@ public final class StandardValueNormalizationServiceFactory
                                         final ModelProperty property,
                                         final Class<? extends ModelPropertyService> service )
     {
-        final StandardValueNormalizationService svc = new StandardValueNormalizationService();
-        svc.init( element, property, new String[ 0 ] );
-        
-        return svc;
+        return new StandardValueNormalizationService();
     }
     
 }

@@ -85,11 +85,11 @@ public interface IModelElementServiceDef
     @Reference( target = JavaType.class )
     @Label( standard = "service type class" )
     @Required
-    @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS, JavaTypeKind.INTERFACE }, type = "org.eclipse.sapphire.modeling.ModelElementService" )
+    @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS }, type = "org.eclipse.sapphire.modeling.ModelElementService" )
     @MustExist
     @XmlBinding( path = "type" )
     
-    @Documentation( content = "The type of service that the factory can create. Must extend ModelElementService." )
+    @Documentation( content = "The type of service that the factory can create." )
 
     ValueProperty PROP_TYPE_CLASS = new ValueProperty( TYPE, "TypeClass" );
     
@@ -107,7 +107,7 @@ public interface IModelElementServiceDef
     @MustExist
     @XmlBinding( path = "factory" )
     
-    @Documentation( content = "The factory that can create a service of the specified type. Must extend ModelElementServiceFactory." )
+    @Documentation( content = "The factory that can create a service of the specified type." )
 
     ValueProperty PROP_FACTORY_CLASS = new ValueProperty( TYPE, "FactoryClass" );
     

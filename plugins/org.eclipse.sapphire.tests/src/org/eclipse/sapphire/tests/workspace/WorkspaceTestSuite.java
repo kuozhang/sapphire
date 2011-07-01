@@ -16,6 +16,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.tests.workspace.t0001.TestWorkspace0001;
+import org.eclipse.sapphire.tests.workspace.t0002.TestWorkspace0002;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -38,6 +39,7 @@ public final class WorkspaceTestSuite
         suite.setName( "Workspace" );
 
         suite.addTest( TestWorkspace0001.suite() );
+        suite.addTest( TestWorkspace0002.suite() );
         
         return suite;
     }

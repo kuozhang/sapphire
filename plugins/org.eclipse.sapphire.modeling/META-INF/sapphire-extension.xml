@@ -131,6 +131,87 @@
         <id>Sapphire.ValueImageService.Enum</id>
         <overrides>Sapphire.ValueImageService.Default</overrides>
     </model-property-service>
+    <model-element-service>
+        <type>org.eclipse.sapphire.services.ModelElementDocumentationService</type>
+        <factory>org.eclipse.sapphire.services.internal.StandardModelElementDocumentationService$Factory</factory>
+        <id>Sapphire.ModelElementDocumentationService.Standard</id>
+    </model-element-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.services.ModelPropertyDocumentationService</type>
+        <factory>org.eclipse.sapphire.services.internal.StandardModelPropertyDocumentationService$Factory</factory>
+        <id>Sapphire.ModelPropertyDocumentationService.Standard</id>
+    </model-property-service>
+    <model-property-service>
+        <description>Creates fact statements about property by using static content specified in @Fact and @Facts annotations.</description>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+        <factory>org.eclipse.sapphire.services.internal.StaticFactsService$Factory</factory>
+        <id>Sapphire.FactsService.Static</id>
+    </model-property-service>
+    <model-property-service>
+        <description>Creates fact statements about property's default value by using semantical information specified by DefaultValueService and @DefaultValue annotation.</description>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+        <factory>org.eclipse.sapphire.services.internal.DefaultValueFactsService$Factory</factory>
+        <id>Sapphire.FactsService.DefaultValue</id>
+    </model-property-service>
+    <model-property-service>
+        <description>Creates fact statements about numeric value property's range by using semantical information specified by @NumericRange annotation.</description>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+        <factory>org.eclipse.sapphire.services.internal.NumericRangeFactsService$Factory</factory>
+        <id>Sapphire.FactsService.NumericRange</id>
+    </model-property-service>
+    <model-property-service>
+        <description>Creates fact statements about property's optionality by using semantical information specified by @Required annotation.</description>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+        <factory>org.eclipse.sapphire.services.internal.RequiredPropertyFactsService$Factory</factory>
+        <id>Sapphire.FactsService.Required</id>
+    </model-property-service>
+    <model-property-service>
+        <description>Creates fact statements about property's read-only state by using semantical information specified by @ReadOnly annotation.</description>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+        <factory>org.eclipse.sapphire.services.internal.ReadOnlyPropertyFactsService$Factory</factory>
+        <id>Sapphire.FactsService.ReadOnly</id>
+    </model-property-service>
+    <model-property-service>
+        <description>Creates fact statements about list property's count constraint by using semantical information specified by @CountConstraint annotation.</description>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+        <factory>org.eclipse.sapphire.services.internal.CountConstraintFactsService$Factory</factory>
+        <id>Sapphire.FactsService.CountConstraint</id>
+    </model-property-service>
+    <model-property-service>
+        <description>Creates fact statements about property's absolute path requirement by using semantical information specified by @AbsolutePath annotation.</description>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+        <factory>org.eclipse.sapphire.services.internal.AbsolutePathFactsService$Factory</factory>
+        <id>Sapphire.FactsService.AbsolutePath</id>
+    </model-property-service>
+    <model-property-service>
+        <description>Creates fact statements about existence requirement on the entity referenced by property's value by using semantical information specified by @MustExist annotation.</description>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+        <factory>org.eclipse.sapphire.services.internal.MustExistFactsService$Factory</factory>
+        <id>Sapphire.FactsService.MustExist</id>
+    </model-property-service>
+    <model-property-service>
+        <description>Creates fact statements about value property's uniqueness constraint by using semantical information specified by @NoDuplicates annotation.</description>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+        <factory>org.eclipse.sapphire.services.internal.NoDuplicatesFactsService$Factory</factory>
+        <id>Sapphire.FactsService.NoDuplicates</id>
+    </model-property-service>
+    <model-property-service>
+        <description>Creates fact statements about valid file extensions for property's value by using semantical information specified by @ValidFileExtensions annotation.</description>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+        <factory>org.eclipse.sapphire.services.internal.ValidFileExtensionsFactsService$Factory</factory>
+        <id>Sapphire.FactsService.ValidFileExtensions</id>
+    </model-property-service>
+    <model-property-service>
+        <description>Creates fact statements about valid file system resource type (file or folder) for property's value by using semantical information specified by @ValidFileSystemResourceType annotation.</description>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+        <factory>org.eclipse.sapphire.services.internal.ValidFileSystemResourceTypeFactsService$Factory</factory>
+        <id>Sapphire.FactsService.ValidFileSystemResourceType</id>
+    </model-property-service>
+    <model-property-service>
+        <type>org.eclipse.sapphire.services.FactsAggregationService</type>
+        <factory>org.eclipse.sapphire.services.internal.FactsAggregationServiceFactory</factory>
+        <id>Sapphire.FactsAggregationService</id>
+    </model-property-service>
     <value-serialization-service>
         <type>java.lang.Enum</type>
         <impl>org.eclipse.sapphire.modeling.serialization.internal.EnumSerializationService</impl>

@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.modeling.validation.internal;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
@@ -33,7 +34,7 @@ public final class UniqueValueValidationServiceFactory
                                final ModelProperty property,
                                final Class<? extends ModelPropertyService> service )
     {
-        return ( property instanceof ValueProperty && property.hasAnnotation( NoDuplicates.class ) );
+        return ( property instanceof ValueProperty && property.hasAnnotation( NoDuplicates.class ) && element.parent() instanceof ModelElementList );
     }
 
     @Override

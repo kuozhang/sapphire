@@ -14,7 +14,6 @@ package org.eclipse.sapphire.sdk.internal;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.sdk.extensibility.IExtensionSummaryExportOp;
 import org.eclipse.sapphire.sdk.extensibility.ISapphireExtensionDef;
@@ -64,7 +63,7 @@ public final class SapphireExtensionEditor
         {
             final List<ISapphireExtensionDef> extensions = Collections.singletonList( (ISapphireExtensionDef) getModelElement() );
             final IExtensionSummaryExportOp op = IExtensionSummaryExportOp.TYPE.instantiate();
-            final String text = op.execute( extensions, new NullProgressMonitor() );
+            final String text = op.execute( extensions, null );
             
             this.browser.setText( text );
         }

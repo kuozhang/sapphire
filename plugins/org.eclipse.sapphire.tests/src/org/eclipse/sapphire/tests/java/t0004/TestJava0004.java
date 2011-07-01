@@ -14,9 +14,6 @@ package org.eclipse.sapphire.tests.java.t0004;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.java.JavaTypeConstraint;
-import org.eclipse.sapphire.java.JavaTypeConstraintBehavior;
-import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 

@@ -222,4 +222,14 @@ public interface IWebAppConfig extends IModelElement, IDescribable
     
     IJspConfig getJspConfig();
     
+    // *** SecurityConstraints ***
+    
+    @Type( base = ISecurityConstraint.class )
+    @Label( standard = "security constraints" )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "security-constraint", type = ISecurityConstraint.class ) )
+    
+    ListProperty PROP_SECURITY_CONSTRAINTS = new ListProperty( TYPE, "SecurityConstraints" );
+    
+    ModelElementList<ISecurityConstraint> getSecurityConstraints();
+    
 }

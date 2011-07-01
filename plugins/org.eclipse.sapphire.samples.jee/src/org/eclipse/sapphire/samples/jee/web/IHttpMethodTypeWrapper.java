@@ -26,25 +26,25 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "dispatcher event" )
+@Label( standard = "HTTP method type" )
 @GenerateImpl
 
-public interface IDispatcherEventRef extends IModelElement
+public interface IHttpMethodTypeWrapper extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IDispatcherEventRef.class );
+    ModelElementType TYPE = new ModelElementType( IHttpMethodTypeWrapper.class );
     
-    // *** DispatcherEvent ***
+    // *** HttpMethodType ***
     
-    @Type( base = DispatcherEvent.class )
-    @Label( standard = "dispatcher event" )
+    @Type( base = HttpMethodType.class )
+    @Label( standard = "HTTP method type" )
     @Required
     @NoDuplicates
     @XmlBinding( path = "" )
     
-    ValueProperty PROP_DISPATCHER_EVENT = new ValueProperty( TYPE, "DispatcherEvent" );
+    ValueProperty PROP_HTTP_METHOD_TYPE = new ValueProperty( TYPE, "HttpMethodType" );
     
-    Value<DispatcherEvent> getDispatcherEvent();
-    void setDispatcherEvent( String value );
-    void setDispatcherEvent( DispatcherEvent value );
+    Value<HttpMethodType> getHttpMethodType();
+    void setHttpMethodType( String value );
+    void setHttpMethodType( HttpMethodType value );
 
 }

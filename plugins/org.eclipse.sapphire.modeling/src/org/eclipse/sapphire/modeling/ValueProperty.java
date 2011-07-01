@@ -180,7 +180,7 @@ public final class ValueProperty
         
         if( hasAnnotation( NoDuplicates.class ) )
         {
-            dependencies.add( new ModelPath( "*/" + getName() ) );
+            dependencies.add( new ModelPath( "#/" + getName() ) );
         }
         
         return dependencies;

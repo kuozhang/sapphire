@@ -75,8 +75,7 @@ public final class PropertyEditorAssistDecorator
     static
     {
         SYSTEM_CONTRIBUTORS.add( new InfoSectionAssistContributor() );
-        SYSTEM_CONTRIBUTORS.add( new DefaultValueInfoAssistContributor() );
-        SYSTEM_CONTRIBUTORS.add( new MinMaxInfoAssistContributor() );
+        SYSTEM_CONTRIBUTORS.add( new FactsAssistContributor() );
         SYSTEM_CONTRIBUTORS.add( new ProblemsSectionAssistContributor() );
         SYSTEM_CONTRIBUTORS.add( new ActionsSectionAssistContributor() );
         SYSTEM_CONTRIBUTORS.add( new ResetActionsAssistContributor() );

@@ -16,6 +16,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
@@ -67,6 +68,7 @@ public interface IIntegerValueGallery
     @NumericRange( min = "5", max = "7000" )
     @DefaultValue( text = "1000" )
     @XmlBinding( path = "range-constrained-with-default" )
+    @Documentation( content = "test" )
 
     ValueProperty PROP_RANGE_CONSTRAINED_WITH_DEFAULT = new ValueProperty( TYPE, "RangeConstrainedWithDefault" );
 

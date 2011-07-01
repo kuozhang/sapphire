@@ -116,10 +116,10 @@ public interface IFilterMapping extends IModelElement
 
     // *** DispatcherEvents ***
     
-    @Type( base = IDispatcherEventRef.class )
+    @Type( base = IDispatcherEventWrapper.class )
     @Label( standard = "dispatcher events" )
     @CountConstraint( max = 4 )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "dispatcher", type = IDispatcherEventRef.class ) )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "dispatcher", type = IDispatcherEventWrapper.class ) )
     
     @Documentation
     (
@@ -143,6 +143,6 @@ public interface IFilterMapping extends IModelElement
     
     ListProperty PROP_DISPATCHER_EVENTS = new ListProperty( TYPE, "DispatcherEvents" );
     
-    ModelElementList<IDispatcherEventRef> getDispatcherEvents();
+    ModelElementList<IDispatcherEventWrapper> getDispatcherEvents();
     
 }

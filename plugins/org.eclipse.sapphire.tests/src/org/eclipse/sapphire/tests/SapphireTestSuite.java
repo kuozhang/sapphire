@@ -17,6 +17,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.tests.java.JavaTestSuite;
 import org.eclipse.sapphire.tests.modeling.SapphireModelingFrameworkTests;
+import org.eclipse.sapphire.tests.services.ServicesTestSuite;
 import org.eclipse.sapphire.tests.ui.UiTestSuite;
 import org.eclipse.sapphire.tests.workspace.WorkspaceTestSuite;
 
@@ -44,6 +45,7 @@ public final class SapphireTestSuite
         suite.addTest( JavaTestSuite.suite() );
         suite.addTest( UiTestSuite.suite() );
         suite.addTest( WorkspaceTestSuite.suite() );
+        suite.addTest( ServicesTestSuite.suite() );
         
         return suite;
     }

@@ -52,7 +52,7 @@ public interface IJspPropertyGroup extends IModelElement, IDescribable
         content = "The set of URL patterns define the group of JSP pages that these properties should " +
                   "affect. A URL pattern must follow the rules specified in Section 11.2 of the Servlet API " +
                   "Specification. This pattern is assumed to be in URL-decoded form and must not contain " +
-                  "CR (#xD) or LF (#xA). The container must preserve all other characters include " +
+                  "CR (#xD) or LF (#xA). The container must preserve all other characters including " +
                   "whitespace."
     )
     

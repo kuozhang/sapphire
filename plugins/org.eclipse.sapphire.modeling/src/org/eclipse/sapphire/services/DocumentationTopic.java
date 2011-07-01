@@ -9,32 +9,32 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.annotations;
+package org.eclipse.sapphire.services;
 
 /**
+ * @since 0.4
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class DocumentationResource
+public class DocumentationTopic
 {
     private final String label;
     private final String url;
     
-    public DocumentationResource( final String label,
-                                  final String url )
+    public DocumentationTopic( final String label,
+                               final String url )
     {
         this.label = label;
         this.url = url;
     }
     
-    public String getLabel()
+    public String label()
     {
         return this.label;
     }
     
-    public String getUrl()
+    public String url()
     {
         return this.url;
     }
-
 }

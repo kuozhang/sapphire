@@ -25,6 +25,12 @@
         <factory>org.eclipse.sapphire.java.internal.JavaTypeValidationService$Factory</factory>
         <id>Sapphire.Java.TypeValidationService</id>
     </model-property-service>
+    <model-property-service>
+        <description>Creates fact statements about Java type property's constraints by using semantical information specified by @JavaTypeConstraints annotation.</description>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+        <factory>org.eclipse.sapphire.java.internal.JavaTypeConstraintFactsService$Factory</factory>
+        <id>Sapphire.FactsService.JavaTypeConstraint</id>
+    </model-property-service>
     <value-serialization-service>
         <type>org.eclipse.sapphire.java.JavaTypeName</type>
         <impl>org.eclipse.sapphire.java.internal.JavaTypeNameSerializationService</impl>
