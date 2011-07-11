@@ -14,11 +14,14 @@ package org.eclipse.sapphire.sdk.build.processor.internal;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -271,55 +274,72 @@ public final class GenerateImplProcessor
                 
                 if( delegateImplementationAnnotation != null )
                 {
-                    final MethodModel m = elImplClass.addMethod( method.getSimpleName() );
-                    m.setReturnType( toTypeReference( method.getReturnType() ) );
+                    final String methodName = method.getSimpleName();
+                    final TypeReference methodReturnType = toTypeReference( method.getReturnType() );
+                    final List<TypeReference> methodParametersList = new ArrayList<TypeReference>();
+                    final Map<String,TypeReference> methodParametersMap = new LinkedHashMap<String,TypeReference>();
                     
                     for( ParameterDeclaration param : method.getParameters() )
                     {
-                        final MethodParameterModel p = new MethodParameterModel();
-                        p.setName( param.getSimpleName() );
-                        p.setType( toTypeReference( param.getType() ) );
-                        m.addParameter( p );
+                        final TypeReference type = toTypeReference( param.getType() );
+                        methodParametersList.add( type );
+                        methodParametersMap.put( param.getSimpleName(), type );
                     }
                     
-                    TypeReference delegate = null;
+                    final String n = elImplClass.getName().getSimpleName();
                     
-                    try
+                    if( ! elImplClass.hasMethod( methodName, methodParametersList ) )
                     {
-                        delegateImplementationAnnotation.value();
+                        final MethodModel m = elImplClass.addMethod( methodName );
+                        m.setReturnType( methodReturnType );
+                        
+                        for( Map.Entry<String,TypeReference> param : methodParametersMap.entrySet() )
+                        {
+                            final MethodParameterModel p = new MethodParameterModel();
+                            p.setName( param.getKey() );
+                            p.setType( param.getValue() );
+                            m.addParameter( p );
+                        }
+                        
+                        TypeReference delegate = null;
+                        
+                        try
+                        {
+                            delegateImplementationAnnotation.value();
+                        }
+                        catch( MirroredTypeException e )
+                        {
+                            final ClassDeclaration typeMirror = ( (ClassType) e.getTypeMirror() ).getDeclaration();
+                            delegate = new TypeReference( typeMirror.getQualifiedName() );
+                        }
+                        
+                        final Body mb = m.getBody();
+                        
+                        mb.append( "synchronized( root() )" );
+                        mb.openBlock();
+                        
+                        final StringBuilder buf = new StringBuilder();
+                        
+                        if( m.getReturnType() != TypeReference.VOID_TYPE )
+                        {
+                            buf.append( "return " );
+                        }
+                        
+                        buf.append( delegate.getSimpleName() ).append( '.' ).append( m.getName() ).append( "( this" );
+                        
+                        for( MethodParameterModel param : m.getParameters() )
+                        {
+                            buf.append( ", " );
+                            buf.append( param.getName() );
+                        }
+                        
+                        buf.append( " );" );
+    
+                        mb.append( buf.toString() );
+                        mb.closeBlock();
+                        
+                        elImplClass.addImport( delegate );
                     }
-                    catch( MirroredTypeException e )
-                    {
-                        final ClassDeclaration typeMirror = ( (ClassType) e.getTypeMirror() ).getDeclaration();
-                        delegate = new TypeReference( typeMirror.getQualifiedName() );
-                    }
-                    
-                    final Body mb = m.getBody();
-                    
-                    mb.append( "synchronized( root() )" );
-                    mb.openBlock();
-                    
-                    final StringBuilder buf = new StringBuilder();
-                    
-                    if( m.getReturnType() != TypeReference.VOID_TYPE )
-                    {
-                        buf.append( "return " );
-                    }
-                    
-                    buf.append( delegate.getSimpleName() ).append( '.' ).append( m.getName() ).append( "( this" );
-                    
-                    for( MethodParameterModel param : m.getParameters() )
-                    {
-                        buf.append( ", " );
-                        buf.append( param.getName() );
-                    }
-                    
-                    buf.append( " );" );
-
-                    mb.append( buf.toString() );
-                    mb.closeBlock();
-                    
-                    elImplClass.addImport( delegate );
                 }
             }
         };
@@ -1219,6 +1239,11 @@ public final class GenerateImplProcessor
     {
         visited.add( interfaceDeclaration );
         
+        for( MethodDeclaration method : interfaceDeclaration.getMethods() )
+        {
+            visitor.visit( method );
+        }
+        
         for( InterfaceType superInterface : interfaceDeclaration.getSuperinterfaces() )
         {
             final InterfaceDeclaration superInterfaceDeclaration = superInterface.getDeclaration();
@@ -1227,11 +1252,6 @@ public final class GenerateImplProcessor
             {
                 visitAllMethods( superInterfaceDeclaration, visitor, visited );
             }
-        }
-        
-        for( MethodDeclaration method : interfaceDeclaration.getMethods() )
-        {
-            visitor.visit( method );
         }
     }
 

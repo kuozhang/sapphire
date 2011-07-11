@@ -249,6 +249,44 @@ public final class ClassModel
         return staticInitializer;
     }
     
+    public List<MethodModel> getMethods()
+    {
+        return this.methods;
+    }
+    
+    public boolean hasMethod( final String name,
+                              final List<TypeReference> params )
+    {
+        final int paramCount = params.size();
+        
+        for( MethodModel m : this.methods )
+        {
+            final List<MethodParameterModel> p = m.getParameters();
+            final String mName = m.getName();
+                    
+            if( mName != null && mName.equals( name ) && p.size() == paramCount )
+            {
+                boolean match = true;
+                
+                for( int i = 0; i < paramCount; i++ )
+                {
+                    if( ! p.get( i ).getType().equals( params.get( i ) ) )
+                    {
+                        match = false;
+                        break;
+                    }
+                }
+                
+                if( match )
+                {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
     public void addMethod( final MethodModel method )
     {
         this.methods.add( method );
