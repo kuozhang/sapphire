@@ -486,6 +486,7 @@
                     <section>
                         <label>Wizard Page</label>
                         <content>
+                            <property-editor>Id</property-editor>
                             <property-editor>Label</property-editor>
                             <property-editor>Description</property-editor>
                             <property-editor>Image</property-editor>

@@ -17,6 +17,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -35,6 +36,12 @@ public interface ISapphireWizardPageDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireWizardPageDef.class );
+    
+    // *** Id ***
+    
+    @Required
+    
+    ValueProperty PROP_ID = new ValueProperty( TYPE, ISapphirePartDef.PROP_ID );
     
     // *** Label ***
     
