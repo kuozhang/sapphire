@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui.swt.renderer.actions;
 
+import java.io.File;
+
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Path;
@@ -60,7 +62,17 @@ public final class AbsoluteFolderPathBrowseActionHandler
         
         if( path != null )
         {
-            dialog.setFilterPath( path.toOSString() );
+            File f = new File( path.toOSString() );
+            
+            while( f != null && ! f.exists() )
+            {
+                f = f.getParentFile();
+            }
+            
+            if( f != null )
+            {
+                dialog.setFilterPath( f.getAbsolutePath() );
+            }
         }
         
         return dialog.open();
