@@ -30,7 +30,7 @@ import org.eclipse.ui.PlatformUI;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class AbsoluteFolderPathBrowseActionHandler 
+public class AbsoluteFolderPathBrowseActionHandler 
 
     extends SapphireBrowseActionHandler
     
