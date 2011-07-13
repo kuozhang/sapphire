@@ -18,38 +18,39 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.ValidFileExtensions;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
+import org.eclipse.sapphire.services.FileExtensionsService;
 
 /**
  * Creates fact statements about valid file extensions for property's value by using semantical 
- * information specified by @ValidFileExtensions annotation.
+ * information specified by @FileExtensions annotation.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ValidFileExtensionsFactsService extends FactsService
+public final class FileExtensionsFactsService extends FactsService
 {
     @Override
     protected void facts( final List<String> facts )
     {
-        final ValidFileExtensions a = property().getAnnotation( ValidFileExtensions.class );
-        final String[] extensions = a.value();
+        final FileExtensionsService service = element().service( property(), FileExtensionsService.class );
+        final List<String> extensions = service.extensions();
+        final int count = extensions.size();
         
-        if( extensions.length > 0 )
+        if( count > 0 )
         {
-            if( extensions.length == 1 )
+            if( count == 1 )
             {
-                facts.add( NLS.bind( Resources.statementForOne, extensions[ 0 ] ) );
+                facts.add( NLS.bind( Resources.statementForOne, extensions.get( 0 ) ) );
             }
-            else if( extensions.length == 2 )
+            else if( count == 2 )
             {
-                facts.add( NLS.bind( Resources.statementForTwo, extensions[ 0 ], extensions[ 1 ] ) );
+                facts.add( NLS.bind( Resources.statementForTwo, extensions.get( 0 ), extensions.get( 1 ) ) );
             }
-            else if( extensions.length == 3 )
+            else if( count == 3 )
             {
-                facts.add( NLS.bind( Resources.statementForThree, extensions[ 0 ], extensions[ 1 ], extensions[ 2 ] ) );
+                facts.add( NLS.bind( Resources.statementForThree, extensions.get( 0 ), extensions.get( 1 ), extensions.get( 2 ) ) );
             }
             else
             {
@@ -79,7 +80,7 @@ public final class ValidFileExtensionsFactsService extends FactsService
                                    final ModelProperty property,
                                    final Class<? extends ModelPropertyService> service )
         {
-            return ( property instanceof ValueProperty && property.hasAnnotation( ValidFileExtensions.class ) );
+            return ( property instanceof ValueProperty && element.service( property, FileExtensionsService.class ) != null );
         }
     
         @Override
@@ -87,7 +88,7 @@ public final class ValidFileExtensionsFactsService extends FactsService
                                             final ModelProperty property,
                                             final Class<? extends ModelPropertyService> service )
         {
-            return new ValidFileExtensionsFactsService();
+            return new FileExtensionsFactsService();
         }
     }
     
@@ -100,7 +101,7 @@ public final class ValidFileExtensionsFactsService extends FactsService
         
         static
         {
-            initializeMessages( ValidFileExtensionsFactsService.class.getName(), Resources.class );
+            initializeMessages( FileExtensionsFactsService.class.getName(), Resources.class );
         }
     }
     

@@ -42,10 +42,11 @@ to 0.4 release. Only changes from the previous release are covered.</p>
 <p>Table of Contents</p>
 
 <ol>
-  <li><a href="#documentation">Documentation</a></li>
+  <li><a href="#Documentation">Documentation</a></li>
+  <li><a href="#ValidFileExtensions">ValidFileExtensions</a></li>
 </ol>
 
-<h2><a name="documentation">Documentation</a></h2>
+<h2><a name="Documentation">Documentation</a></h2>
 
 <p>The "href" attribute of the @Documentation.Topic has been renamed to "url" for consistency with
 other API.</p>
@@ -166,6 +167,43 @@ void setInteger( Integer val );</font></code></pre>
   </tr>
 </table>
 
+<h2><a name="ValidFileExtensions">ValidFileExtensions</a></h2>
+
+<p>The @ValidFileExtensions annotation has been replaced with @FileExtensions annotation that supports Sapphire
+expression language.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Type( base = Path.class )
+@ValidFileSystemResourceType( FileSystemResourceType.FILE )</font>
+@ValidFileExtensions( { "png", "gif", "jpeg" } )
+    
+<font color="#888888">ValueProperty PROP_FILE_PATH = new ValueProperty( TYPE, "FilePath" );
+    
+Value&lt;Path> getFilePath();
+void setFilePath( String value );
+void setFilePath( Path value );</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Type( base = Path.class )
+@ValidFileSystemResourceType( FileSystemResourceType.FILE )</font>
+@FileExtensions( expr = "png,gif,jpeg" )
+    
+<font color="#888888">ValueProperty PROP_FILE_PATH = new ValueProperty( TYPE, "FilePath" );
+    
+Value&lt;Path> getFilePath();
+void setFilePath( String value );
+void setFilePath( Path value );</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+<p><a href="../../services/index.html#FileExtensionsService">See Documentation</a></p>
 
 <div class="copyright">Copyright (c) 2011 Oracle<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>

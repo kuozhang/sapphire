@@ -39,7 +39,7 @@ public final class TestServices0001 extends SapphireTestCase
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "Services0001" );
+        suite.setName( "TestServices0001" );
 
         suite.addTest( new TestServices0001( "testNoFacts" ) );
         suite.addTest( new TestServices0001( "testDefaultValue" ) );
@@ -55,10 +55,10 @@ public final class TestServices0001 extends SapphireTestCase
         suite.addTest( new TestServices0001( "testMustExist" ) );
         suite.addTest( new TestServices0001( "testMustExistAbsolutePath" ) );
         suite.addTest( new TestServices0001( "testNoDuplicates" ) );
-        suite.addTest( new TestServices0001( "testValidFileExtensionsOne" ) );
-        suite.addTest( new TestServices0001( "testValidFileExtensionsTwo" ) );
-        suite.addTest( new TestServices0001( "testValidFileExtensionsThree" ) );
-        suite.addTest( new TestServices0001( "testValidFileExtensionsMany" ) );
+        suite.addTest( new TestServices0001( "testFileExtensionsOne" ) );
+        suite.addTest( new TestServices0001( "testFileExtensionsTwo" ) );
+        suite.addTest( new TestServices0001( "testFileExtensionsThree" ) );
+        suite.addTest( new TestServices0001( "testFileExtensionsMany" ) );
         suite.addTest( new TestServices0001( "testValidFileSystemResourceTypeFile" ) );
         suite.addTest( new TestServices0001( "testValidFileSystemResourceTypeFolder" ) );
         suite.addTest( new TestServices0001( "testStatic" ) );
@@ -149,24 +149,24 @@ public final class TestServices0001 extends SapphireTestCase
         test( child, ITestNoDuplicatesChildElement.PROP_NO_DUPLICATES, "Must be unique." );
     }
 
-    public void testValidFileExtensionsOne() throws Exception
+    public void testFileExtensionsOne() throws Exception
     {
-        test( ITestRootElement.PROP_VALID_FILE_EXTENSIONS_ONE, "Must have \"xml\" file extension." );
+        test( ITestRootElement.PROP_FILE_EXTENSIONS_ONE, "Must have \"xml\" file extension." );
     }
     
-    public void testValidFileExtensionsTwo() throws Exception
+    public void testFileExtensionsTwo() throws Exception
     {
-        test( ITestRootElement.PROP_VALID_FILE_EXTENSIONS_TWO, "Must have either \"xml\" or \"java\" file extension." );
+        test( ITestRootElement.PROP_FILE_EXTENSIONS_TWO, "Must have either \"xml\" or \"java\" file extension." );
     }
     
-    public void testValidFileExtensionsThree() throws Exception
+    public void testFileExtensionsThree() throws Exception
     {
-        test( ITestRootElement.PROP_VALID_FILE_EXTENSIONS_THREE, "Must have either \"xml\", \"java\" or \"jsp\" file extension." );
+        test( ITestRootElement.PROP_FILE_EXTENSIONS_THREE, "Must have either \"xml\", \"java\" or \"jsp\" file extension." );
     }
     
-    public void testValidFileExtensionsMany() throws Exception
+    public void testFileExtensionsMany() throws Exception
     {
-        test( ITestRootElement.PROP_VALID_FILE_EXTENSIONS_MANY, "Must have one of these file extensions: \"xml\", \"java\", \"jsp\", \"jspx\"." );
+        test( ITestRootElement.PROP_FILE_EXTENSIONS_MANY, "Must have one of these file extensions: \"xml\", \"java\", \"jsp\", \"jspx\"." );
     }
 
     public void testValidFileSystemResourceTypeFile() throws Exception

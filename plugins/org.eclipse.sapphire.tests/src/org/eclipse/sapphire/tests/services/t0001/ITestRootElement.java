@@ -25,6 +25,7 @@ import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Fact;
 import org.eclipse.sapphire.modeling.annotations.Facts;
+import org.eclipse.sapphire.modeling.annotations.FileExtensions;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
@@ -32,7 +33,6 @@ import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.annotations.ValidFileExtensions;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.tests.IEmptyModelElement;
 
@@ -199,49 +199,49 @@ public interface ITestRootElement extends IModelElement
     
     ModelElementList<ITestNoDuplicatesChildElement> getNoDuplicates();
     
-    // *** ValidFileExtensionsOne ***
+    // *** FileExtensionsOne ***
     
     @Type( base = Path.class )
-    @ValidFileExtensions( "xml" )
+    @FileExtensions( expr = "xml" )
     
-    ValueProperty PROP_VALID_FILE_EXTENSIONS_ONE = new ValueProperty( TYPE, "ValidFileExtensionsOne" );
+    ValueProperty PROP_FILE_EXTENSIONS_ONE = new ValueProperty( TYPE, "FileExtensionsOne" );
     
-    Value<Path> getValidFileExtensionsOne();
-    void setValidFileExtensionsOne( String value );
-    void setValidFileExtensionsOne( Path value );
+    Value<Path> getFileExtensionsOne();
+    void setFileExtensionsOne( String value );
+    void setFileExtensionsOne( Path value );
     
-    // *** ValidFileExtensionsTwo ***
+    // *** FileExtensionsTwo ***
     
     @Type( base = Path.class )
-    @ValidFileExtensions( { "xml", "java" } )
+    @FileExtensions( expr = "xml,java" )
 
-    ValueProperty PROP_VALID_FILE_EXTENSIONS_TWO = new ValueProperty( TYPE, "ValidFileExtensionsTwo" );
+    ValueProperty PROP_FILE_EXTENSIONS_TWO = new ValueProperty( TYPE, "FileExtensionsTwo" );
     
-    Value<Path> getValidFileExtensionsTwo();
-    void setValidFileExtensionsTwo( String value );
-    void setValidFileExtensionsTwo( Path value );
+    Value<Path> getFileExtensionsTwo();
+    void setFileExtensionsTwo( String value );
+    void setFileExtensionsTwo( Path value );
     
-    // *** ValidFileExtensionsThree ***
-    
-    @Type( base = Path.class )
-    @ValidFileExtensions( { "xml", "java", "jsp" } )
-
-    ValueProperty PROP_VALID_FILE_EXTENSIONS_THREE = new ValueProperty( TYPE, "ValidFileExtensionsThree" );
-    
-    Value<Path> getValidFileExtensionsThree();
-    void setValidFileExtensionsThree( String value );
-    void setValidFileExtensionsThree( Path value );
-    
-    // *** ValidFileExtensionsMany ***
+    // *** FileExtensionsThree ***
     
     @Type( base = Path.class )
-    @ValidFileExtensions( { "xml", "java", "jsp", "jspx" } )
+    @FileExtensions( expr = "xml,java,jsp" )
 
-    ValueProperty PROP_VALID_FILE_EXTENSIONS_MANY = new ValueProperty( TYPE, "ValidFileExtensionsMany" );
+    ValueProperty PROP_FILE_EXTENSIONS_THREE = new ValueProperty( TYPE, "FileExtensionsThree" );
     
-    Value<Path> getValidFileExtensionsMany();
-    void setValidFileExtensionsMany( String value );
-    void setValidFileExtensionsMany( Path value );
+    Value<Path> getFileExtensionsThree();
+    void setFileExtensionsThree( String value );
+    void setFileExtensionsThree( Path value );
+    
+    // *** FileExtensionsMany ***
+    
+    @Type( base = Path.class )
+    @FileExtensions( expr = "xml,java,jsp,jspx" )
+
+    ValueProperty PROP_FILE_EXTENSIONS_MANY = new ValueProperty( TYPE, "FileExtensionsMany" );
+    
+    Value<Path> getFileExtensionsMany();
+    void setFileExtensionsMany( String value );
+    void setFileExtensionsMany( Path value );
     
     // *** ValidFileSystemResourceTypeFile ***
     

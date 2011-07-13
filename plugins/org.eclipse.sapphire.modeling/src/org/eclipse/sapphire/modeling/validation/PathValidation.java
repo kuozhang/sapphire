@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling.validation;
 
+import java.util.List;
+
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
 
@@ -21,9 +23,11 @@ import org.eclipse.sapphire.modeling.util.NLS;
 public final class PathValidation
 {
     public static final Status validateExtensions( final String fileName,
-                                                   final String[] validFileExtensions )
+                                                   final List<String> validFileExtensions )
     {
-        if( validFileExtensions != null && validFileExtensions.length > 0 )
+        final int count = ( validFileExtensions == null ? 0 : validFileExtensions.size() );
+        
+        if( count > 0 )
         {
             final String trimmedFileName = fileName.trim();
             final int lastdot = trimmedFileName.lastIndexOf( '.' );
@@ -56,13 +60,13 @@ public final class PathValidation
             {
                 final String message;
                 
-                if( validFileExtensions.length == 1 )
+                if( count == 1 )
                 {
-                    message = NLS.bind( Resources.invalidFileExtensionOne, trimmedFileName, validFileExtensions[ 0 ] );
+                    message = NLS.bind( Resources.invalidFileExtensionOne, trimmedFileName, validFileExtensions.get( 0 ) );
                 }
-                else if( validFileExtensions.length == 2 )
+                else if( count == 2 )
                 {
-                    message = NLS.bind( Resources.invalidFileExtensionOne, trimmedFileName, validFileExtensions[ 0 ], validFileExtensions[ 1 ] );
+                    message = NLS.bind( Resources.invalidFileExtensionOne, trimmedFileName, validFileExtensions.get( 0 ), validFileExtensions.get( 1 ) );
                 }
                 else
                 {

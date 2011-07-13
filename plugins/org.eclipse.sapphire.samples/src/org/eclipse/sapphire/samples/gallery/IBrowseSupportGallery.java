@@ -20,13 +20,13 @@ import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.AbsolutePath;
+import org.eclipse.sapphire.modeling.annotations.FileExtensions;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.annotations.ValidFileExtensions;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -53,7 +53,7 @@ public interface IBrowseSupportGallery
     @Label( standard = "absolute file path" )
     @AbsolutePath
     @ValidFileSystemResourceType( FileSystemResourceType.FILE )
-    @ValidFileExtensions( { "jar", "zip" } )
+    @FileExtensions( expr = "jar,zip" )
     @MustExist
     @XmlBinding( path = "absolute-file-path" )
     
@@ -84,7 +84,7 @@ public interface IBrowseSupportGallery
     @Label( standard = "relative file path" )
     @Service( impl = CustomRelativePathService.class )
     @ValidFileSystemResourceType( FileSystemResourceType.FILE )
-    @ValidFileExtensions( "dll" )
+    @FileExtensions( expr = "dll" )
     @MustExist
     @XmlBinding( path = "relative-file-path" )
     

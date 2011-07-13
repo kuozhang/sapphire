@@ -196,10 +196,10 @@
         <id>Sapphire.FactsService.NoDuplicates</id>
     </model-property-service>
     <model-property-service>
-        <description>Creates fact statements about valid file extensions for property's value by using semantical information specified by @ValidFileExtensions annotation.</description>
+        <description>Creates fact statements about valid file extensions for property's value by using semantical information specified by @FileExtensions annotation.</description>
         <type>org.eclipse.sapphire.services.FactsService</type>
-        <factory>org.eclipse.sapphire.services.internal.ValidFileExtensionsFactsService$Factory</factory>
-        <id>Sapphire.FactsService.ValidFileExtensions</id>
+        <factory>org.eclipse.sapphire.services.internal.FileExtensionsFactsService$Factory</factory>
+        <id>Sapphire.FactsService.FileExtensions</id>
     </model-property-service>
     <model-property-service>
         <description>Creates fact statements about valid file system resource type (file or folder) for property's value by using semantical information specified by @ValidFileSystemResourceType annotation.</description>
@@ -211,6 +211,12 @@
         <type>org.eclipse.sapphire.services.FactsAggregationService</type>
         <factory>org.eclipse.sapphire.services.internal.FactsAggregationServiceFactory</factory>
         <id>Sapphire.FactsAggregationService</id>
+    </model-property-service>
+    <model-property-service>
+        <description>Implementation of FileExtensionsService that derives its behavior from @FileExtensions annotation.</description>
+        <type>org.eclipse.sapphire.services.FileExtensionsService</type>
+        <factory>org.eclipse.sapphire.services.internal.DeclarativeFileExtensionsService$Factory</factory>
+        <id>Sapphire.FileExtensionsService.Declarative</id>
     </model-property-service>
     <value-serialization-service>
         <type>java.lang.Enum</type>

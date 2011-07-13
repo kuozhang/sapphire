@@ -27,6 +27,7 @@
 <ul>
   <li><a href="#FactsAggregationService">FactsAggregationService</a></li>
   <li><a href="#FactsService">FactsService</a></li>
+  <li><a href="#FileExtensionsService">FileExtensionsService</a></li>  
 </ul>
 
 
@@ -135,6 +136,82 @@ void setExampleOne( String value );
 
 Value&lt;String> getExampleMultiple();
 void setExampleMultiple( String value );</font></code></pre>
+
+
+<a name="FileExtensionsService"><h2>FileExtensionsService</h2></a>
+
+<p>The FileExtensionsService produces the list of file extensions that are allowed for a path value 
+property.</p>
+
+<p>Although custom implementations are supported, in most cases the supplied implementation that
+is configured via @FileExtensions annotation should be sufficient. In many cases, specifying
+file extensions is as simple as listing them with a comma in between.</p> 
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = Path.class )
+@AbsolutePath
+@MustExist
+@ValidFileSystemResourceType( FileSystemResourceType.FILE )</font>
+@FileExtensions( expr = "jar,zip" )
+    
+<font color="#888888">ValueProperty PROP_FILE_PATH = new ValueProperty( TYPE, "FilePath" );
+    
+Value&lt;Path> getFilePath();
+void setFilePath( String value );
+void setFilePath( Path value );</font></code></pre>
+
+<p>File extensions can also be specified via an expression that takes into
+account values of other properties.</p>
+
+<p style="margin-left: 20px;"><b>Examples</b></p>
+
+<pre class="source-code"><code>@FileExtensions( expr = "${ Extension }" )</code></pre>
+
+<pre class="source-code"><code>@FileExtensions( expr = "${ LossyFormat ? "jpeg,jpg" : "png,gif" }" )</code></pre>
+
+<p>If declarative approach is not sufficient, a custom FileExtensionsService implementation can
+be supplied.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class CustomFileExtensionsService extends FileExtensionsService
+{
+    @Override
+    public void initFileExtensionsService( IModelElement element,
+                                           ModelProperty property,
+                                           String[] params )
+    {
+        // Optionally register listeners to invoke refresh method when the list of extensions
+        // may need to be updated.
+    }
+
+    @Override
+    protected void compute( List&lt;String> extensions )
+    {
+        // Compute the list of extensions.
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        // Remove any listeners that were added during initialization.
+    }
+}</code></pre>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = Path.class )
+@AbsolutePath
+@MustExist
+@ValidFileSystemResourceType( FileSystemResourceType.FILE )</font>
+@Service( impl = CustomFileExtensionsService.class )
+    
+<font color="#888888">ValueProperty PROP_FILE_PATH = new ValueProperty( TYPE, "FilePath" );
+    
+Value&lt;Path> getFilePath();
+void setFilePath( String value );
+void setFilePath( Path value );</font></code></pre>
 
 
 <div class="copyright">Copyright (c) 2011 Oracle<br/>
