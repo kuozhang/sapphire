@@ -65,9 +65,9 @@ of FileExtensionsService.</p>
 @MustExist
 @ValidFileSystemResourceType( FileSystemResourceType.FILE )</font>
 @FileExtensions( expr = "${ LossyFormat ? "jpeg,jpg" : "png,gif" }" )
-    
+
 <font color="#888888">ValueProperty PROP_FILE_PATH = new ValueProperty( TYPE, "FilePath" );
-    
+
 Value&lt;Path> getFilePath();
 void setFilePath( String value );
 void setFilePath( Path value );</font></code></pre>
@@ -105,9 +105,9 @@ void setFilePath( Path value );</font></code></pre>
 @MustExist
 @ValidFileSystemResourceType( FileSystemResourceType.FILE )</font>
 @Service( impl = CustomFileExtensionsService.class )
-    
+
 <font color="#888888">ValueProperty PROP_FILE_PATH = new ValueProperty( TYPE, "FilePath" );
-    
+
 Value&lt;Path> getFilePath();
 void setFilePath( String value );
 void setFilePath( Path value );</font></code></pre>
