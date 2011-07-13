@@ -11,6 +11,9 @@
 
 package org.eclipse.sapphire.modeling.validation;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
@@ -19,9 +22,9 @@ import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
-import org.eclipse.sapphire.modeling.annotations.ValidFileExtensions;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.services.FileExtensionsService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -34,7 +37,7 @@ public abstract class PathValidationService
 {
     protected boolean resourceMustExist;
     protected FileSystemResourceType validResourceType;
-    private String[] validFileExtensions;
+    private List<String> validFileExtensions;
     
     @Override
     public void init( final IModelElement element,
@@ -48,15 +51,15 @@ public abstract class PathValidationService
         final ValidFileSystemResourceType validResourceTypeAnnotation = property.getAnnotation( ValidFileSystemResourceType.class );
         this.validResourceType = ( validResourceTypeAnnotation != null ? validResourceTypeAnnotation.value() : null );
         
-        final ValidFileExtensions validFileExtensionsAnnotation = property.getAnnotation( ValidFileExtensions.class );
+        final FileExtensionsService fileExtensionsService = element.service( property, FileExtensionsService.class );
         
-        if( validFileExtensionsAnnotation != null )
+        if( fileExtensionsService != null )
         {
-            this.validFileExtensions = validFileExtensionsAnnotation.value();
+            this.validFileExtensions = fileExtensionsService.extensions();
         }
         else
         {
-            this.validFileExtensions = null;
+            this.validFileExtensions = Collections.emptyList();
         }
     }
     

@@ -9,24 +9,34 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.annotations;
+package org.eclipse.sapphire.tests.services;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+import org.eclipse.sapphire.tests.services.t0002.TestServices0002;
 
 /**
- * Deprecated and will be removed in the next major release. Use @FileExtensions instead.
- * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Retention( RetentionPolicy.RUNTIME )
-@Target( ElementType.FIELD )
-@Deprecated
-
-public @interface ValidFileExtensions
+public final class ServicesTestSuite extends TestCase
 {
-    String[] value();
+    private ServicesTestSuite( final String name )
+    {
+        super( name );
+    }
+    
+    public static Test suite()
+    {
+        final TestSuite suite = new TestSuite();
+        
+        suite.setName( "Services" );
+
+        suite.addTest( TestServices0002.suite() );
+        
+        return suite;
+    }
+    
 }

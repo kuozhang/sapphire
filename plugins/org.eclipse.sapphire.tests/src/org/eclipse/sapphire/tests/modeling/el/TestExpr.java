@@ -13,6 +13,7 @@ package org.eclipse.sapphire.tests.modeling.el;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
@@ -37,7 +38,14 @@ public abstract class TestExpr
                                                 final String expr,
                                                 final Object expected )
     {
-        final FunctionResult result = ExpressionLanguageParser.parse( expr ).evaluate( context );
+        testForExpectedValue( context, ExpressionLanguageParser.parse( expr ), expected );
+    }
+    
+    protected static void testForExpectedValue( final FunctionContext context,
+                                                final Function expr,
+                                                final Object expected )
+    {
+        final FunctionResult result = expr.evaluate( context );
         
         try
         {

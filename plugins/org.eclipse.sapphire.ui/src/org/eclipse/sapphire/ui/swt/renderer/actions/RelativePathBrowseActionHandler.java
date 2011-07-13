@@ -38,14 +38,15 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.RelativePathService;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
-import org.eclipse.sapphire.modeling.annotations.ValidFileExtensions;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
+import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -97,6 +98,7 @@ public class RelativePathBrowseActionHandler
         setLabel( Resources.label );
         addImage( PlatformUI.getWorkbench().getSharedImages().getImageDescriptor( ISharedImages.IMG_OBJ_FILE ) );
         
+        final IModelElement element = getModelElement();
         final ValueProperty property = getProperty();
         
         this.type = null;
@@ -125,8 +127,6 @@ public class RelativePathBrowseActionHandler
             }
         }
 
-        this.extensions = Collections.emptyList();
-        
         final String paramExtensions = def.getParam( PARAM_EXTENSIONS );
         
         if( paramExtensions != null )
@@ -145,22 +145,17 @@ public class RelativePathBrowseActionHandler
         }
         else
         {
-            final ValidFileExtensions validFileExtensionsAnnotation = property.getAnnotation( ValidFileExtensions.class );
+            final FileExtensionsService fileExtensionsService = element.service( property, FileExtensionsService.class );
             
-            if( validFileExtensionsAnnotation != null )
+            if( fileExtensionsService != null )
             {
-                this.extensions = new ArrayList<String>();
-                
-                for( String extension : validFileExtensionsAnnotation.value() )
-                {
-                    extension = extension.trim();
-                    
-                    if( extension.length() > 0 )
-                    {
-                        this.extensions.add( extension );
-                    }
-                }
+                this.extensions = fileExtensionsService.extensions();
             }
+        }
+        
+        if( this.extensions == null )
+        {
+            this.extensions = Collections.emptyList();
         }
 
         final String paramLeadingSlash = def.getParam( PARAM_LEADING_SLASH );

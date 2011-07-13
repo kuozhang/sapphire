@@ -15,9 +15,11 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.sapphire.modeling.LoggingService;
@@ -253,6 +255,53 @@ public abstract class FunctionResult
                 res = ( res == null ? "" : res );
                 return (X) res;
             }
+            else if( obj instanceof List || obj instanceof Set )
+            {
+                final StringBuilder res = new StringBuilder();
+                boolean first = true;
+                
+                for( Object entry : ( (Collection) obj ) )
+                {
+                    if( first )
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        res.append( ',' );
+                    }
+                    
+                    final String str = cast( entry, String.class );
+                    
+                    if( str != null )
+                    {
+                        res.append( str );
+                    }
+                }
+                
+                return (X) res.toString();
+            }
+            else if( obj.getClass().isArray() )
+            {
+                final StringBuilder res = new StringBuilder();
+                
+                for( int i = 0, n = Array.getLength( obj ); i < n; i++ )
+                {
+                    if( i > 0 )
+                    {
+                        res.append( ',' );
+                    }
+                    
+                    final String str = cast( Array.get( obj, i ), String.class );
+                    
+                    if( str != null )
+                    {
+                        res.append( str );
+                    }
+                }
+                
+                return (X) res.toString();
+            }
             else
             {
                 return (X) obj.toString();
@@ -481,6 +530,19 @@ public abstract class FunctionResult
                 }
                 
                 return (X) list;
+            }
+            else if( obj instanceof String )
+            {
+                final String str = (String) obj;
+                
+                if( str.length() == 0 )
+                {
+                    return (X) Collections.emptyList();
+                }
+                else
+                {
+                    return (X) Arrays.asList( ( (String) obj ).split( "\\," ) );
+                }
             }
             else
             {

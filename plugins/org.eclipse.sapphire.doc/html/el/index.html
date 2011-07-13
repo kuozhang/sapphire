@@ -490,6 +490,8 @@ Extension System</a>.</p>
   <li>If A is <code>String</code>, return A.</li>
   <li>If A is <code>null</code>, return <code>""</code>.</li>
   <li>If A is <code>Enum</code>, return <code>A.name()</code>.</li>
+  <li>If A is <code>array</code>, <code>List</code> or <code>Set</code>, return concatenation of
+    items separated by a comma (,) character.</li> 
   <li>Otherwise, return <code>A.toString()</code>.</li>
 </ul>
 
@@ -558,6 +560,21 @@ Extension System</a>.</p>
   <li>If A is <code>""</code>, return <code>null</code>.</li>
   <li>If A is a <code>String</code>, return <code>Enum.valueOf( T.getClass(), A )</code>.</li>
   <li>Otherwise, error.</li>
+</ul>
+
+<h3>Coerce A to List</h3>
+
+<ul>
+  <li>If A is <code>null</code>, return <code>null</code>.</li>
+  <li>If A is <code>List</code>, return A.</li>
+  <li>If A is <code>Collection</code>, return list of collection items.</li>
+  <li>If A is <code>array</code>, return list of array items.</li>
+  <li>If A is <code>String</code>, then:</li>
+  <ul>
+    <li>If A is <code>""</code>, return empty list.</li>
+    <li>Otherwise, break A into segments on comma (,) character and return list of these segments.</li>
+  </ul>
+  <li>Otherwise, return singleton list containing A.</li>
 </ul>
 
 <h3>Coerce A to Any Other Type T</h3>

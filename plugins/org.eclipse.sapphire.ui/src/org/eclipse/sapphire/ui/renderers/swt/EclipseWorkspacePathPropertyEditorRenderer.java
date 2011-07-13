@@ -20,7 +20,6 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -38,9 +37,9 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
-import org.eclipse.sapphire.modeling.annotations.ValidFileExtensions;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
+import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
@@ -74,6 +73,7 @@ public final class EclipseWorkspacePathPropertyEditorRenderer
     protected void createContents( final Composite parent )
     {
         final SapphirePropertyEditor part = getPart();
+        final IModelElement element = part.getLocalModelElement();
         final ModelProperty property = part.getProperty();
         
         final boolean showLabelAbove = part.getRenderingHint( HINT_SHOW_LABEL_ABOVE, false );
@@ -107,11 +107,11 @@ public final class EclipseWorkspacePathPropertyEditorRenderer
                 treeViewer.addFilter( new ContainersOnlyViewerFilter() );
             }
             
-            final ValidFileExtensions validFileExtensionsAnnotation = property.getAnnotation( ValidFileExtensions.class );
+            final FileExtensionsService fileExtensionsService = element.service( property, FileExtensionsService.class );
             
-            if( validFileExtensionsAnnotation != null )
+            if( fileExtensionsService != null )
             {
-                final List<String> extensions = Arrays.asList( validFileExtensionsAnnotation.value() );
+                final List<String> extensions = fileExtensionsService.extensions();
                 treeViewer.addFilter( new ExtensionBasedViewerFilter( extensions ) );
             }
         }

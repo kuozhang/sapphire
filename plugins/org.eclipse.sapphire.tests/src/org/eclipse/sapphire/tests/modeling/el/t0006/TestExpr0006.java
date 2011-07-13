@@ -54,6 +54,9 @@ public final class TestExpr0006
 
         testForExpectedValue( context, "${ 'a' IN List( 'x', 'y', 'z' ) }", false );
         
+        testForExpectedValue( context, "${ 'y' IN 'x,y,z' }", true );
+        testForExpectedValue( context, "${ 'a' IN 'x,y,z' }", false );
+        
         testForExpectedValue( context, "${ null IN null }", false );
         testForExpectedValue( context, "${ 'x' IN null }", false );
         testForExpectedValue( context, "${ null IN List( 'x' ) }", false );

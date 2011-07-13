@@ -51,7 +51,7 @@ have "jar" or "zip" extension. Such a property could be declared as follows:</p>
 <pre class="source-code"><code>@Type( base = Path.class )
 @AbsolutePath
 @ValidFileSystemResourceType( FileSystemResourceType.FILE )
-@ValidFileExtensions( { "jar", "zip" } )
+@FileExtensions( expr = "jar,zip" )
 @MustExist
 
 ValueProperty PROP_ABSOLUTE_FILE_PATH = new ValueProperty( TYPE, "AbsoluteFilePath" );
@@ -66,7 +66,7 @@ that it has the appropriate extension. That happens in the model layer. The UI f
 see these annotations and supply a browse button wired to open the operating system's native file 
 browse dialog pre-filtered to only show jar and zip files.</p>
 
-<p>Similar support is available for absolute folder paths. Just remove @ValidFileExtensions
+<p>Similar support is available for absolute folder paths. Just remove @FileExtensions
 and change @ValidFileSystemResourceType.</p>
 
 <p>Or maybe you are writing an extension to Eclipse IDE and your property needs to hold a 
@@ -81,7 +81,7 @@ RelativePathService that returns all possible roots...</p>
 <pre class="source-code"><code>@Type( base = Path.class )
 @Service( impl = CustomRelativePathService.class )
 @ValidFileSystemResourceType( FileSystemResourceType.FILE )
-@ValidFileExtensions( "dll" )
+@FileExtensions( expr = "dll" )
 @MustExist
 
 ValueProperty PROP_RELATIVE_FILE_PATH = new ValueProperty( TYPE, "RelativeFilePath" );

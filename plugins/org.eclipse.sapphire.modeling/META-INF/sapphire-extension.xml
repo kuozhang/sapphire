@@ -131,6 +131,12 @@
         <id>Sapphire.ValueImageService.Enum</id>
         <overrides>Sapphire.ValueImageService.Default</overrides>
     </model-property-service>
+    <model-property-service>
+        <description>Implementation of FileExtensionsService that derives its behavior from @FileExtensions annotation.</description>
+        <type>org.eclipse.sapphire.services.FileExtensionsService</type>
+        <factory>org.eclipse.sapphire.services.internal.DeclarativeFileExtensionsService$Factory</factory>
+        <id>Sapphire.FileExtensionsService.Declarative</id>
+    </model-property-service>
     <value-serialization-service>
         <type>java.lang.Enum</type>
         <impl>org.eclipse.sapphire.modeling.serialization.internal.EnumSerializationService</impl>

@@ -17,16 +17,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Deprecated and will be removed in the next major release. Use @FileExtensions instead.
- * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Retention( RetentionPolicy.RUNTIME )
 @Target( ElementType.FIELD )
-@Deprecated
 
-public @interface ValidFileExtensions
+public @interface FileExtensions
 {
-    String[] value();
+    String expr();
 }

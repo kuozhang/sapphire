@@ -9,24 +9,23 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.annotations;
+package org.eclipse.sapphire.tests.services.t0002;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.List;
+
+import org.eclipse.sapphire.services.FileExtensionsService;
 
 /**
- * Deprecated and will be removed in the next major release. Use @FileExtensions instead.
- * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Retention( RetentionPolicy.RUNTIME )
-@Target( ElementType.FIELD )
-@Deprecated
-
-public @interface ValidFileExtensions
+public final class CustomFileExtensionsService extends FileExtensionsService
 {
-    String[] value();
+    @Override
+    protected void compute( final List<String> extensions )
+    {
+        extensions.add( "avi" );
+        extensions.add( "mpeg" );
+    }
+    
 }

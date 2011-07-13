@@ -1,0 +1,122 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2011 Oracle and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>Enhancements in Sapphire 0.3.1</title>
+  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>Enhancements in 0.3.1</h1>
+
+<ol>
+  <li><a href="#ExpressionLanguage">Expression Language</a></li>
+  <ol type="A">
+    <li><a href="#CastBetweenCollectionsAndStrings">Cast Between Collections and Strings</a></li>
+  </ol>
+  <li><a href="#Services">Services</a></li>
+  <ol type="A">
+    <li><a href="#FileExtensionsService">FileExtensionsService</a></li>
+  </ol>
+</ol>
+ 
+<h2><a name="ExpressionLanguage"><a name="CastBetweenCollectionsAndStrings">Cast Between Collections and Strings</a></a></h2>
+
+<p>Transparently cast between collections and strings. The following rules have been added:</p>
+
+<ul>
+  <li>String to List</li>
+  <li>List to String</li>
+  <li>Set to String</li>
+  <li>Array to String</li>
+</ul>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two expressions are equivalent.</p>
+
+<pre class="source-code"><code>${ "z" IN List( "x", "y", "z" ) }
+${ "z" IN "x,y,z" }</code></pre>
+
+<p><a href="../../el/index.html#conversion">See Documentation</a></p>
+
+<h2><a name="Services"><a name="FileExtensionsService">FileExtensionsService</a></a></h2>
+
+<p>Specify file extensions with expression language capable @FileExtensions annotation or with a completely custom implementation
+of FileExtensionsService.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = Path.class )
+@AbsolutePath
+@MustExist
+@ValidFileSystemResourceType( FileSystemResourceType.FILE )</font>
+@FileExtensions( expr = "${ LossyFormat ? "jpeg,jpg" : "png,gif" }" )
+    
+<font color="#888888">ValueProperty PROP_FILE_PATH = new ValueProperty( TYPE, "FilePath" );
+    
+Value&lt;Path> getFilePath();
+void setFilePath( String value );
+void setFilePath( Path value );</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class CustomFileExtensionsService extends FileExtensionsService
+{
+    @Override
+    public void initFileExtensionsService( IModelElement element,
+                                           ModelProperty property,
+                                           String[] params )
+    {
+        // Optionally register listeners to invoke refresh method when the list of extensions
+        // may need to be updated.
+    }
+
+    @Override
+    protected void compute( List&lt;String> extensions )
+    {
+        // Compute the list of extensions.
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        // Remove any listeners that were added during initialization.
+    }
+}</code></pre>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = Path.class )
+@AbsolutePath
+@MustExist
+@ValidFileSystemResourceType( FileSystemResourceType.FILE )</font>
+@Service( impl = CustomFileExtensionsService.class )
+    
+<font color="#888888">ValueProperty PROP_FILE_PATH = new ValueProperty( TYPE, "FilePath" );
+    
+Value&lt;Path> getFilePath();
+void setFilePath( String value );
+void setFilePath( Path value );</font></code></pre>
+
+<p><a href="../../services/index.html#FileExtensionsService">See Documentation</a></p>
+
+<div class="copyright">Copyright (c) 2011 Oracle and Others<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

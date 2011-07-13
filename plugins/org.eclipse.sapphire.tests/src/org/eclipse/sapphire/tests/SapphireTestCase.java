@@ -16,7 +16,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -104,4 +106,9 @@ public abstract class SapphireTestCase
         return Arrays.asList( items );
     }
     
+    protected static <T> Set<T> set( final T... items )
+    {
+        return new LinkedHashSet<T>( Arrays.asList( items ) );
+    }
+
 }
