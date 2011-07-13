@@ -30,6 +30,8 @@
      <topic href="html/extensions/contributing.html" label="Contributing Extensions">
      </topic>
   </topic>
+  <topic href="html/services/index.html" label="Services">
+  </topic>
   <topic href="html/releases/index.html" label="Releases">
     <topic href="html/releases/0.3.1/index.html" label="0.3.1">
        <topic href="html/releases/0.3.1/enhancements.html" label="Enhancements">
