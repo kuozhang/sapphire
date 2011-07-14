@@ -29,6 +29,7 @@
   </ol>
   <li><a href="#Services">Services</a></li>
   <ol type="A">
+    <li><a href="#DependenciesService">DependenciesService</a></li>
     <li><a href="#FileExtensionsService">FileExtensionsService</a></li>
   </ol>
 </ol>
@@ -53,7 +54,41 @@ ${ "z" IN "x,y,z" }</code></pre>
 
 <p><a href="../../el/index.html#conversion">See Documentation</a></p>
 
-<h2><a name="Services"><a name="FileExtensionsService">FileExtensionsService</a></a></h2>
+<h2><a name="Services"><a name="DependenciesService">DependenciesService</a></a></h2>
+
+<p>Use services infrastructure to specify dependencies between properties. Existing annotations such as @DependsOn and @NoDuplicates
+are now backed by DependenciesService implementations.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>@DependsOn( "Name" )
+
+<font color="#888888">ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
+
+Value&lt;String> getId();
+void setId( String value );</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class CustomDependenciesService extends DependenciesService
+{
+    @Override
+    protected void compute( Set&lt;ModelPath> dependencies )
+    {
+        // Compute the list of extensions.
+    }
+}</code></pre>
+
+<pre class="source-code"><code>@Service( impl = CustomDependenciesService.class )
+
+<font color="#888888">ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+
+Value&lt;String> getName();
+void setName( String value );</font></code></pre>
+
+<p><a href="../../services/index.html#DependenciesService">See Documentation</a></p>
+
+<h2><a name="FileExtensionsService">FileExtensionsService</a></h2>
 
 <p>Specify file extensions with expression language capable @FileExtensions annotation or with a completely custom implementation
 of FileExtensionsService.</p>

@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.sapphire.modeling.annotations.DerivedValue;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -171,19 +170,6 @@ public final class ValueProperty
         }
         
         return result;
-    }
-    
-    @Override
-    protected Set<ModelPath> initDependencies()
-    {
-        final Set<ModelPath> dependencies = super.initDependencies();
-        
-        if( hasAnnotation( NoDuplicates.class ) )
-        {
-            dependencies.add( new ModelPath( "*/" + getName() ) );
-        }
-        
-        return dependencies;
     }
     
 }

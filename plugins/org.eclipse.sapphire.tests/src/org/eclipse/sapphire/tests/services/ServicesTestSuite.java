@@ -16,6 +16,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.tests.services.t0002.TestServices0002;
+import org.eclipse.sapphire.tests.services.t0003.TestServices0003;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -35,6 +36,7 @@ public final class ServicesTestSuite extends TestCase
         suite.setName( "Services" );
 
         suite.addTest( TestServices0002.suite() );
+        suite.addTest( TestServices0003.suite() );
         
         return suite;
     }

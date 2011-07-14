@@ -18,13 +18,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.PropertyListeners;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -55,7 +53,6 @@ public abstract class ModelProperty
     private final Map<Class<? extends Annotation>,Annotation> annotations;
     private Set<ModelPropertyListener> listeners;
     private Set<ModelPropertyListener> listenersReadOnly;
-    private Set<ModelPath> dependencies;
     
     public ModelProperty( final ModelElementType modelElementType,
                           final String propertyName,
@@ -66,7 +63,6 @@ public abstract class ModelProperty
             this.modelElementType = modelElementType;
             this.propertyName = propertyName;
             this.baseProperty = baseProperty;
-            this.dependencies = null;
             this.annotations = new HashMap<Class<? extends Annotation>,Annotation>();
             
             gatherAnnotations();
@@ -369,51 +365,6 @@ public abstract class ModelProperty
         {
             return null;
         }
-    }
-    
-    public final Set<ModelPath> getDependencies()
-    {
-        if( this.dependencies == null )
-        {
-            this.dependencies = Collections.unmodifiableSet( initDependencies() );
-        }
-        
-        return this.dependencies;
-    }
-    
-    protected Set<ModelPath> initDependencies()
-    {
-        final Set<String> dependenciesAsStrings = new HashSet<String>();
-        
-        final DependsOn dependsOnAnnotation = getAnnotation( DependsOn.class );
-        
-        if( dependsOnAnnotation != null )
-        {
-            for( String dependsOnPropertyRef : dependsOnAnnotation.value() )
-            {
-                dependenciesAsStrings.add( dependsOnPropertyRef );
-            }
-        }
-        
-        final Set<ModelPath> dependencies = new HashSet<ModelPath>();
-        
-        for( String str : dependenciesAsStrings )
-        {
-            ModelPath path = null;
-            
-            try
-            {
-                path = new ModelPath( str );
-            }
-            catch( ModelPath.MalformedPathException e )
-            {
-                LoggingService.log( e );
-            }
-            
-            dependencies.add( path );
-        }
-        
-        return dependencies;
     }
     
     @Override

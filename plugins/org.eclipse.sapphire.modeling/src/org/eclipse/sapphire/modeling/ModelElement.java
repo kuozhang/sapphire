@@ -36,6 +36,7 @@ import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem.ModelElementServiceFactoryProxy;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem.ModelPropertyServiceFactoryProxy;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.services.DependenciesAggregationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -75,12 +76,12 @@ public abstract class ModelElement
         
         resource.init( this );
         
-        final Map<ModelProperty,ModelPropertyListener> refreshListeners
-            = new HashMap<ModelProperty,ModelPropertyListener>();
+        final Map<ModelProperty,ModelPropertyListener> listenerByProperty = new HashMap<ModelProperty,ModelPropertyListener>();
+        final Map<ModelProperty,Set<ModelPath>> dependenciesByProperty = new HashMap<ModelProperty,Set<ModelPath>>();
         
         for( final ModelProperty property : type.getProperties() )
         {
-            final Set<ModelPath> dependencies = property.getDependencies();
+            final Set<ModelPath> dependencies = service( property, DependenciesAggregationService.class ).dependencies();
             
             if( ! dependencies.isEmpty() )
             {
@@ -93,11 +94,12 @@ public abstract class ModelElement
                     }
                 };
                 
-                refreshListeners.put( property, listener );
+                listenerByProperty.put( property, listener );
+                dependenciesByProperty.put( property, dependencies );
     
-                for( ModelPath depPath : dependencies )
+                for( ModelPath dependency : dependencies )
                 {
-                    addListener( listener, depPath );
+                    addListener( listener, dependency );
                 }
             }
             
@@ -184,21 +186,21 @@ public abstract class ModelElement
             }
         }
         
-        if( ! refreshListeners.isEmpty() )
+        if( ! listenerByProperty.isEmpty() )
         {
             final ModelElementListener disposeListener = new ModelElementListener()
             {
                 @Override
                 public void handleElementDisposedEvent( final ModelElementDisposedEvent event )
                 {
-                    for( Map.Entry<ModelProperty,ModelPropertyListener> entry : refreshListeners.entrySet() )
+                    for( Map.Entry<ModelProperty,ModelPropertyListener> entry : listenerByProperty.entrySet() )
                     {
                         final ModelProperty property = entry.getKey();
                         final ModelPropertyListener listener = entry.getValue();
                         
-                        for( ModelPath depPath : property.getDependencies() )
+                        for( ModelPath dependency : dependenciesByProperty.get( property ) )
                         {
-                            removeListener( listener, depPath );
+                            removeListener( listener, dependency );
                         }
                     }
                 }
