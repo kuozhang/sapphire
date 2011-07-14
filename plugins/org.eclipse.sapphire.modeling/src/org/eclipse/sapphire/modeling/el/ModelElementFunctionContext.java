@@ -64,7 +64,7 @@ public class ModelElementFunctionContext
             
             if( property != null )
             {
-                final Function f = new ModelPropertyBasedFunction( el, property )
+                final Function f = new ReadPropertyFunction( el, property )
                 {
                     @Override
                     protected Object evaluate()
@@ -91,7 +91,7 @@ public class ModelElementFunctionContext
             
             if( name.equalsIgnoreCase( "Size" ) )
             {
-                final Function f = new ModelPropertyBasedFunction( list.parent(), list.getParentProperty() )
+                final Function f = new ReadPropertyFunction( list.parent(), list.getParentProperty() )
                 {
                     @Override
                     protected Object evaluate()
@@ -110,7 +110,7 @@ public class ModelElementFunctionContext
                 {
                     final int index = Integer.parseInt( name );
                     
-                    final Function f = new ModelPropertyBasedFunction( list.parent(), list.getParentProperty() )
+                    final Function f = new ReadPropertyFunction( list.parent(), list.getParentProperty() )
                     {
                         @Override
                         protected Object evaluate()
@@ -148,13 +148,13 @@ public class ModelElementFunctionContext
         return this.localizationService;
     }
     
-    private static abstract class ModelPropertyBasedFunction extends Function
+    private static abstract class ReadPropertyFunction extends Function
     {
         protected final IModelElement element;
         protected final ModelProperty property;
         
-        public ModelPropertyBasedFunction( final IModelElement element,
-                                           final ModelProperty property )
+        public ReadPropertyFunction( final IModelElement element,
+                                     final ModelProperty property )
         {
             this.element = element;
             this.property = property;
@@ -196,7 +196,7 @@ public class ModelElementFunctionContext
                 @Override
                 protected Object evaluate()
                 {
-                    return ModelPropertyBasedFunction.this.evaluate();
+                    return ReadPropertyFunction.this.evaluate();
                 }
                 
                 @Override

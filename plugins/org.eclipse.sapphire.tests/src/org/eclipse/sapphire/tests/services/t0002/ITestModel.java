@@ -89,7 +89,7 @@ public interface ITestModel extends IModelElement
     
     @Type( base = Path.class )
     @ValidFileSystemResourceType( FileSystemResourceType.FILE )
-    @Service( impl = CustomFileExtensionsService.class )
+    @FileExtensions( expr = "${ Parent().LossyCompression ? 'jpeg' : 'png,gif' }" )
     @AbsolutePath
     
     ValueProperty PROP_FILE_PATH_5 = new ValueProperty( TYPE, "FilePath5" );
@@ -97,6 +97,19 @@ public interface ITestModel extends IModelElement
     Value<Path> getFilePath5();
     void setFilePath5( String value );
     void setFilePath5( Path value );
+    
+    // *** FilePath6 ***
+    
+    @Type( base = Path.class )
+    @ValidFileSystemResourceType( FileSystemResourceType.FILE )
+    @Service( impl = CustomFileExtensionsService.class )
+    @AbsolutePath
+    
+    ValueProperty PROP_FILE_PATH_6 = new ValueProperty( TYPE, "FilePath6" );
+    
+    Value<Path> getFilePath6();
+    void setFilePath6( String value );
+    void setFilePath6( Path value );
     
     // *** LossyCompression ***
     
