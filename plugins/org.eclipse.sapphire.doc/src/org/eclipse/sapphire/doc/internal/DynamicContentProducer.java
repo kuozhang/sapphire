@@ -88,7 +88,7 @@ public class DynamicContentProducer implements IHelpContentProducer
                 content = loadResource( "html/el/index.html" );
                 content = content.replace( "##functions##", functions );
             }
-            else if( href.equals( "html/services/index.html" ) )
+            else if( href.startsWith( "html/services/index.html" ) )
             {
                 final IExtensionSummaryExportOp op = IExtensionSummaryExportOp.TYPE.instantiate();
                 op.setCreateFinishedDocument( false );

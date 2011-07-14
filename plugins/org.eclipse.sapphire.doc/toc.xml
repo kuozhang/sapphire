@@ -31,6 +31,16 @@
      </topic>
   </topic>
   <topic href="html/services/index.html" label="Services">
+     <topic href="html/services/index.html#FactsAggregationService" label="FactsAggregationService">
+     </topic>
+     <topic href="html/services/index.html#FactsService" label="FactsService">
+     </topic>
+     <topic href="html/services/index.html#DependenciesAggregationService" label="DependenciesAggregationService">
+     </topic>
+     <topic href="html/services/index.html#DependenciesService" label="DependenciesService">
+     </topic>
+     <topic href="html/services/index.html#FileExtensionsService" label="FileExtensionsService">
+     </topic>
   </topic>
   <topic href="html/releases/index.html" label="Releases">
     <topic href="html/releases/0.4/index.html" label="0.4">

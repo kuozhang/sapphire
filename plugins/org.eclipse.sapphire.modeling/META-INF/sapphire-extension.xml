@@ -218,6 +218,24 @@
         <factory>org.eclipse.sapphire.services.internal.DeclarativeFileExtensionsService$Factory</factory>
         <id>Sapphire.FileExtensionsService.Declarative</id>
     </model-property-service>
+    <model-property-service>
+        <description>Implementation of DependenciesService that exposes dependencies specified by the @DependsOn annotation.</description>
+        <type>org.eclipse.sapphire.services.DependenciesService</type>
+        <factory>org.eclipse.sapphire.services.internal.DeclarativeDependenciesService$Factory</factory>
+        <id>Sapphire.DependenciesService.Declarative</id>
+    </model-property-service>
+    <model-property-service>
+        <description>Implementation of DependenciesService that exposes implied dependencies specified by the @NoDuplicates annotation.</description>
+        <type>org.eclipse.sapphire.services.DependenciesService</type>
+        <factory>org.eclipse.sapphire.services.internal.UniqueValueDependenciesService$Factory</factory>
+        <id>Sapphire.DependenciesService.UniqueValue</id>
+    </model-property-service>
+    <model-property-service>
+        <description>Aggregates the data from all applicable dependencies services in order to produce a single set of dependencies. An implementation of this service is provided with Sapphire. This service is not intended to be implemented by adopters.</description>
+        <type>org.eclipse.sapphire.services.DependenciesAggregationService</type>
+        <factory>org.eclipse.sapphire.services.internal.DependenciesAggregationServiceFactory</factory>
+        <id>Sapphire.DependenciesAggregationService</id>
+    </model-property-service>
     <value-serialization-service>
         <type>java.lang.Enum</type>
         <impl>org.eclipse.sapphire.modeling.serialization.internal.EnumSerializationService</impl>
