@@ -22,6 +22,8 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 
@@ -34,9 +36,35 @@ public abstract class SapphireTestCase
     extends TestCase
     
 {
+    private IProject project;
+    
     protected SapphireTestCase( final String name )
     {
         super( name );
+    }
+    
+    protected final IProject project() throws Exception
+    {
+        if( this.project == null )
+        {
+            final String name = getClass().getName() + "." + getName();
+            this.project = ResourcesPlugin.getWorkspace().getRoot().getProject( name );
+            this.project.create( null );
+            this.project.open( null );
+        }
+        
+        return this.project;
+    }
+    
+    @Override
+    protected void tearDown() throws Exception
+    {
+        super.tearDown();
+        
+        if( this.project != null )
+        {
+            this.project.delete( true, null );
+        }
     }
     
     protected final InputStream loadResourceAsStream( final String name )

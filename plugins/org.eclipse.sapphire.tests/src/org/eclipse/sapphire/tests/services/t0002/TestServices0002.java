@@ -11,9 +11,14 @@
 
 package org.eclipse.sapphire.tests.services.t0002;
 
+import java.io.ByteArrayInputStream;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
@@ -44,6 +49,7 @@ public final class TestServices0002
         suite.addTest( new TestServices0002( "testMultipleFileExtensions" ) );
         suite.addTest( new TestServices0002( "testFileExtensionsExpr" ) );
         suite.addTest( new TestServices0002( "testCustomFileExtensionsService" ) );
+        suite.addTest( new TestServices0002( "testValidation" ) );
         
         return suite;
     }
@@ -62,7 +68,7 @@ public final class TestServices0002
         final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_2, FileExtensionsService.class );
         
         assertNotNull( service );
-        assertEquals( service.extensions(), list( "png" ) );
+        assertEquals( list( "png" ), service.extensions() );
     }
 
     public void testMultipleFileExtensions() throws Exception
@@ -71,7 +77,7 @@ public final class TestServices0002
         final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_3, FileExtensionsService.class );
         
         assertNotNull( service );
-        assertEquals( service.extensions(), list( "png", "gif", "jpeg" ) );
+        assertEquals( list( "png", "gif", "jpeg" ), service.extensions() );
     }
     
     public void testFileExtensionsExpr() throws Exception
@@ -82,10 +88,10 @@ public final class TestServices0002
         assertNotNull( service );
         
         model.setLossyCompression( true );
-        assertEquals( service.extensions(), list( "jpeg" ) );
+        assertEquals( list( "jpeg" ), service.extensions() );
 
         model.setLossyCompression( false );
-        assertEquals( service.extensions(), list( "png", "gif" ) );
+        assertEquals( list( "png", "gif" ), service.extensions() );
     }
     
     public void testCustomFileExtensionsService() throws Exception
@@ -94,7 +100,46 @@ public final class TestServices0002
         final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_5, FileExtensionsService.class );
         
         assertNotNull( service );
-        assertEquals( service.extensions(), list( "avi", "mpeg" ) );
+        assertEquals( list( "avi", "mpeg" ), service.extensions() );
+    }
+    
+    public void testValidation() throws Exception
+    {
+        final ITestModel model = ITestModel.TYPE.instantiate();
+        final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_4, FileExtensionsService.class );
+        
+        final IProject project = project();
+        
+        final IFile txtFile = project.getFile( "file.txt" );
+        final String txtFilePath = txtFile.getLocation().toOSString();
+        txtFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, new NullProgressMonitor() );
+        
+        final IFile jpegFile = project.getFile( "file.jpeg" );
+        final String jpegFilePath = jpegFile.getLocation().toOSString();
+        jpegFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, new NullProgressMonitor() );
+        
+        final IFile pngFile = project.getFile( "file.png" );
+        final String pngFilePath = pngFile.getLocation().toOSString();
+        pngFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, new NullProgressMonitor() );
+        
+        assertNotNull( service );
+        
+        model.setLossyCompression( true );
+        assertEquals( list( "jpeg" ), service.extensions() );
+        
+        model.setFilePath4( txtFilePath );
+        assertValidationError( model.getFilePath4(), "File \"file.txt\" has an invalid extension. Only \"jpeg\" extension is allowed." );
+        
+        model.setFilePath4( jpegFilePath );
+        assertValidationOk( model.getFilePath4() );
+
+        model.setLossyCompression( false );
+        assertEquals( list( "png", "gif" ), service.extensions() );
+
+        assertValidationError( model.getFilePath4(), "File \"file.jpeg\" has an invalid extension. Only extensions \"png\" and \"gif\" are allowed." );
+
+        model.setFilePath4( pngFilePath );
+        assertValidationOk( model.getFilePath4() );
     }
     
 }

@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.modeling.validation;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.sapphire.modeling.Status;
@@ -66,7 +67,7 @@ public final class PathValidation
                 }
                 else if( count == 2 )
                 {
-                    message = NLS.bind( Resources.invalidFileExtensionOne, trimmedFileName, validFileExtensions.get( 0 ), validFileExtensions.get( 1 ) );
+                    message = NLS.bind( Resources.invalidFileExtensionTwo, trimmedFileName, validFileExtensions.get( 0 ), validFileExtensions.get( 1 ) );
                 }
                 else
                 {
@@ -92,7 +93,7 @@ public final class PathValidation
         return Status.createOkStatus();
     }
     
-    protected static final class Resources extends NLS
+    private static final class Resources extends NLS
     {
         public static String invalidFileExtensionOne;
         public static String invalidFileExtensionTwo;
