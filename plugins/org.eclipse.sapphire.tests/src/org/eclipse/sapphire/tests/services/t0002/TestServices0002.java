@@ -47,7 +47,10 @@ public final class TestServices0002
         suite.addTest( new TestServices0002( "testNoFileExtensionsService" ) );
         suite.addTest( new TestServices0002( "testSingleFileExtension" ) );
         suite.addTest( new TestServices0002( "testMultipleFileExtensions" ) );
-        suite.addTest( new TestServices0002( "testFileExtensionsExpr" ) );
+        suite.addTest( new TestServices0002( "testFileExtensionsExpr1" ) );
+        suite.addTest( new TestServices0002( "testFileExtensionsExpr2" ) );
+        suite.addTest( new TestServices0002( "testFileExtensionsExpr3" ) );
+        suite.addTest( new TestServices0002( "testFileExtensionsExpr4" ) );
         suite.addTest( new TestServices0002( "testCustomFileExtensionsService" ) );
         suite.addTest( new TestServices0002( "testLegacy" ) );
         suite.addTest( new TestServices0002( "testValidation" ) );
@@ -81,7 +84,7 @@ public final class TestServices0002
         assertEquals( list( "png", "gif", "jpeg" ), service.extensions() );
     }
     
-    public void testFileExtensionsExpr() throws Exception
+    public void testFileExtensionsExpr1() throws Exception
     {
         final ITestModel model = ITestModel.TYPE.instantiate();
         final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_4, FileExtensionsService.class );
@@ -95,10 +98,55 @@ public final class TestServices0002
         assertEquals( list( "png", "gif" ), service.extensions() );
     }
     
+    public void testFileExtensionsExpr2() throws Exception
+    {
+        final ITestModelRoot root = ITestModelRoot.TYPE.instantiate();
+        final ITestModel model = root.getList().addNewElement();
+        final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_5, FileExtensionsService.class );
+        
+        assertNotNull( service );
+        
+        root.setLossyCompression( true );
+        assertEquals( list( "jpeg" ), service.extensions() );
+
+        root.setLossyCompression( false );
+        assertEquals( list( "png", "gif" ), service.extensions() );
+    }
+    
+    public void testFileExtensionsExpr3() throws Exception
+    {
+        final ITestModelRoot root = ITestModelRoot.TYPE.instantiate();
+        final ITestModel model = root.getElement().element( true );
+        final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_5, FileExtensionsService.class );
+        
+        assertNotNull( service );
+        
+        root.setLossyCompression( true );
+        assertEquals( list( "jpeg" ), service.extensions() );
+
+        root.setLossyCompression( false );
+        assertEquals( list( "png", "gif" ), service.extensions() );
+    }
+
+    public void testFileExtensionsExpr4() throws Exception
+    {
+        final ITestModelRoot root = ITestModelRoot.TYPE.instantiate();
+        final ITestModel model = root.getElementImplied();
+        final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_5, FileExtensionsService.class );
+        
+        assertNotNull( service );
+        
+        root.setLossyCompression( true );
+        assertEquals( list( "jpeg" ), service.extensions() );
+
+        root.setLossyCompression( false );
+        assertEquals( list( "png", "gif" ), service.extensions() );
+    }
+
     public void testCustomFileExtensionsService() throws Exception
     {
         final ITestModel model = ITestModel.TYPE.instantiate();
-        final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_5, FileExtensionsService.class );
+        final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_6, FileExtensionsService.class );
         
         assertNotNull( service );
         assertEquals( list( "avi", "mpeg" ), service.extensions() );
@@ -107,7 +155,7 @@ public final class TestServices0002
     public void testLegacy() throws Exception
     {
         final ITestModel model = ITestModel.TYPE.instantiate();
-        final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_6, FileExtensionsService.class );
+        final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_7, FileExtensionsService.class );
         
         assertNotNull( service );
         assertEquals( list( "png", "gif", "jpeg" ), service.extensions() );
