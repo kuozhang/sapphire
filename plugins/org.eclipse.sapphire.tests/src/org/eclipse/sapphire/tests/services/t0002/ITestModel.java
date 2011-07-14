@@ -29,7 +29,6 @@ import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
  */
 
 @GenerateImpl
-@SuppressWarnings( "deprecation" )
 
 public interface ITestModel extends IModelElement
 {
