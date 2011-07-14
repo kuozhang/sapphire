@@ -11,11 +11,9 @@
 
 package org.eclipse.sapphire.modeling.validation;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Status;
@@ -37,7 +35,7 @@ public abstract class PathValidationService
 {
     protected boolean resourceMustExist;
     protected FileSystemResourceType validResourceType;
-    private List<String> validFileExtensions;
+    private FileExtensionsService fileExtensionsService;
     
     @Override
     public void init( final IModelElement element,
@@ -51,25 +49,37 @@ public abstract class PathValidationService
         final ValidFileSystemResourceType validResourceTypeAnnotation = property.getAnnotation( ValidFileSystemResourceType.class );
         this.validResourceType = ( validResourceTypeAnnotation != null ? validResourceTypeAnnotation.value() : null );
         
-        final FileExtensionsService fileExtensionsService = element.service( property, FileExtensionsService.class );
+        this.fileExtensionsService = element.service( property, FileExtensionsService.class );
         
-        if( fileExtensionsService != null )
+        if( this.fileExtensionsService != null )
         {
-            this.validFileExtensions = fileExtensionsService.extensions();
-        }
-        else
-        {
-            this.validFileExtensions = Collections.emptyList();
+            this.fileExtensionsService.addListener
+            (
+                new ModelPropertyService.Listener()
+                {
+                    @Override
+                    public void handleEvent( final Event event )
+                    {
+                        if( event instanceof FileExtensionsService.FileExtensionsChangedEvent )
+                        {
+                            element.refresh( property );
+                        }
+                    }
+                }
+            );
         }
     }
     
     protected final Status validateExtensions( final Path path )
     {
-        final String fileName = path.lastSegment();
-        
-        if( fileName != null )
+        if( this.fileExtensionsService != null )
         {
-            return PathValidation.validateExtensions( fileName, this.validFileExtensions );
+            final String fileName = path.lastSegment();
+            
+            if( fileName != null )
+            {
+                return PathValidation.validateExtensions( fileName, this.fileExtensionsService.extensions() );
+            }
         }
         
         return Status.createOkStatus();

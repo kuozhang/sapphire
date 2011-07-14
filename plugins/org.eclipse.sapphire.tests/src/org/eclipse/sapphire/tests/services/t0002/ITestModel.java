@@ -16,6 +16,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.AbsolutePath;
 import org.eclipse.sapphire.modeling.annotations.FileExtensions;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
@@ -39,6 +40,7 @@ public interface ITestModel extends IModelElement
     
     @Type( base = Path.class )
     @ValidFileSystemResourceType( FileSystemResourceType.FILE )
+    @AbsolutePath
     
     ValueProperty PROP_FILE_PATH_1 = new ValueProperty( TYPE, "FilePath1" );
     
@@ -51,6 +53,7 @@ public interface ITestModel extends IModelElement
     @Type( base = Path.class )
     @ValidFileSystemResourceType( FileSystemResourceType.FILE )
     @FileExtensions( expr = "png" )
+    @AbsolutePath
     
     ValueProperty PROP_FILE_PATH_2 = new ValueProperty( TYPE, "FilePath2" );
     
@@ -63,6 +66,7 @@ public interface ITestModel extends IModelElement
     @Type( base = Path.class )
     @ValidFileSystemResourceType( FileSystemResourceType.FILE )
     @FileExtensions( expr = "png,gif,jpeg" )
+    @AbsolutePath
     
     ValueProperty PROP_FILE_PATH_3 = new ValueProperty( TYPE, "FilePath3" );
     
@@ -75,6 +79,7 @@ public interface ITestModel extends IModelElement
     @Type( base = Path.class )
     @ValidFileSystemResourceType( FileSystemResourceType.FILE )
     @FileExtensions( expr = "${ LossyCompression ? 'jpeg' : 'png,gif' }" )
+    @AbsolutePath
     
     ValueProperty PROP_FILE_PATH_4 = new ValueProperty( TYPE, "FilePath4" );
     
@@ -87,6 +92,7 @@ public interface ITestModel extends IModelElement
     @Type( base = Path.class )
     @ValidFileSystemResourceType( FileSystemResourceType.FILE )
     @Service( impl = CustomFileExtensionsService.class )
+    @AbsolutePath
     
     ValueProperty PROP_FILE_PATH_5 = new ValueProperty( TYPE, "FilePath5" );
     
@@ -99,6 +105,7 @@ public interface ITestModel extends IModelElement
     @Type( base = Path.class )
     @ValidFileSystemResourceType( FileSystemResourceType.FILE )
     @ValidFileExtensions( { "png", "gif", "jpeg" } )
+    @AbsolutePath
     
     ValueProperty PROP_FILE_PATH_6 = new ValueProperty( TYPE, "FilePath6" );
     
