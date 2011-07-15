@@ -12,7 +12,6 @@
 package org.eclipse.sapphire.ui.swt.renderer.actions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.osgi.util.NLS;
@@ -43,7 +42,8 @@ public class AbsoluteFilePathBrowseActionHandler
     public static final String ID = "Sapphire.Browse.File.Absolute";
     public static final String PARAM_EXTENSIONS = "extensions";
     
-    public List<String> extensions;
+    private FileExtensionsService fileExtensionService;
+    private List<String> staticFileExtensionsList;
     
     @Override
     public void init( final SapphireAction action,
@@ -58,35 +58,25 @@ public class AbsoluteFilePathBrowseActionHandler
         final IModelElement element = getModelElement();
         final ModelProperty property = getProperty();
         
-        final String paramExtensions = def.getParam( PARAM_EXTENSIONS );
+        final String staticFileExtensions = def.getParam( PARAM_EXTENSIONS );
         
-        if( paramExtensions != null )
+        if( staticFileExtensions == null )
         {
-            this.extensions = new ArrayList<String>();
+            this.fileExtensionService = element.service( property, FileExtensionsService.class );
+        }
+        else
+        {
+            this.staticFileExtensionsList = new ArrayList<String>();
             
-            for( String extension : paramExtensions.split( "," ) )
+            for( String extension : staticFileExtensions.split( "," ) )
             {
                 extension = extension.trim();
                 
                 if( extension.length() > 0 )
                 {
-                    this.extensions.add( extension );
+                    this.staticFileExtensionsList.add( extension );
                 }
             }
-        }
-        else
-        {
-            final FileExtensionsService fileExtensionsService = element.service( property, FileExtensionsService.class );
-            
-            if( fileExtensionsService != null )
-            {
-                this.extensions = fileExtensionsService.extensions();
-            }
-        }
-        
-        if( this.extensions == null )
-        {
-            this.extensions = Collections.emptyList();
         }
     }
     
@@ -107,11 +97,22 @@ public class AbsoluteFilePathBrowseActionHandler
             dialog.setFileName( path.lastSegment() );
         }
         
-        if( ! this.extensions.isEmpty() )
+        final List<String> extensions;
+        
+        if( this.fileExtensionService == null )
+        {
+            extensions = this.staticFileExtensionsList;
+        }
+        else
+        {
+            extensions = this.fileExtensionService.extensions();
+        }
+        
+        if( ! extensions.isEmpty() )
         {
             final StringBuilder buf = new StringBuilder();
             
-            for( String extension : this.extensions )
+            for( String extension : extensions )
             {
                 if( buf.length() > 0 )
                 {

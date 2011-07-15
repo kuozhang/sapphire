@@ -20,8 +20,6 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 
-import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -35,6 +33,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.ModelService.Event;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
@@ -46,6 +45,8 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler.ContainersOnlyViewerFilter;
 import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler.ExtensionBasedViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -111,8 +112,35 @@ public final class EclipseWorkspacePathPropertyEditorRenderer
             
             if( fileExtensionsService != null )
             {
-                final List<String> extensions = fileExtensionsService.extensions();
-                treeViewer.addFilter( new ExtensionBasedViewerFilter( extensions ) );
+                final ExtensionBasedViewerFilter filter = new ExtensionBasedViewerFilter( fileExtensionsService.extensions() );
+                
+                treeViewer.addFilter( filter );
+                
+                final FileExtensionsService.Listener listener = new FileExtensionsService.Listener()
+                {
+                    @Override
+                    public void handleEvent( final Event event )
+                    {
+                        if( event instanceof FileExtensionsService.FileExtensionsChangedEvent )
+                        {
+                            filter.change( fileExtensionsService.extensions() );
+                            treeViewer.refresh();
+                        }
+                    }
+                };
+                
+                fileExtensionsService.addListener( listener );
+                
+                tree.addDisposeListener
+                (
+                    new DisposeListener()
+                    {
+                        public void widgetDisposed( final DisposeEvent event )
+                        {
+                            fileExtensionsService.removeListener( listener );
+                        }
+                    }
+                );
             }
         }
         
