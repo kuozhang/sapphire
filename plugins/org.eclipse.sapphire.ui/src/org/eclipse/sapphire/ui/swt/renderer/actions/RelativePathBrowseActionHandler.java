@@ -84,7 +84,8 @@ public class RelativePathBrowseActionHandler
     public static final String PARAM_EXTENSIONS = "extensions";
     public static final String PARAM_LEADING_SLASH = "leading-slash";
     
-    private List<String> extensions;
+    private FileExtensionsService fileExtensionService;
+    private List<String> staticFileExtensionsList;
     private FileSystemResourceType type;
     private boolean includeLeadingSlash;
     
@@ -127,35 +128,25 @@ public class RelativePathBrowseActionHandler
             }
         }
 
-        final String paramExtensions = def.getParam( PARAM_EXTENSIONS );
+        final String staticFileExtensions = def.getParam( PARAM_EXTENSIONS );
         
-        if( paramExtensions != null )
+        if( staticFileExtensions == null )
         {
-            this.extensions = new ArrayList<String>();
+            this.fileExtensionService = element.service( property, FileExtensionsService.class );
+        }
+        else
+        {
+            this.staticFileExtensionsList = new ArrayList<String>();
             
-            for( String extension : paramExtensions.split( "," ) )
+            for( String extension : staticFileExtensions.split( "," ) )
             {
                 extension = extension.trim();
                 
                 if( extension.length() > 0 )
                 {
-                    this.extensions.add( extension );
+                    this.staticFileExtensionsList.add( extension );
                 }
             }
-        }
-        else
-        {
-            final FileExtensionsService fileExtensionsService = element.service( property, FileExtensionsService.class );
-            
-            if( fileExtensionsService != null )
-            {
-                this.extensions = fileExtensionsService.extensions();
-            }
-        }
-        
-        if( this.extensions == null )
-        {
-            this.extensions = Collections.emptyList();
         }
 
         final String paramLeadingSlash = def.getParam( PARAM_LEADING_SLASH );
@@ -176,6 +167,17 @@ public class RelativePathBrowseActionHandler
         final ValueProperty property = getProperty();
         final List<Path> roots = getBasePaths();
         String selectedAbsolutePath = null;
+        
+        final List<String> extensions;
+        
+        if( this.fileExtensionService == null )
+        {
+            extensions = this.staticFileExtensionsList;
+        }
+        else
+        {
+            extensions = this.fileExtensionService.extensions();
+        }
         
         if( enclosed() )
         {
@@ -240,9 +242,9 @@ public class RelativePathBrowseActionHandler
                 dialog.addFilter( new ContainersOnlyViewerFilter() );
             }
             
-            if( ! this.extensions.isEmpty() )
+            if( ! extensions.isEmpty() )
             {
-                dialog.addFilter( new ExtensionBasedViewerFilter( this.extensions ) );
+                dialog.addFilter( new ExtensionBasedViewerFilter( extensions ) );
             }
             
             if( dialog.open() == Window.OK )
@@ -297,11 +299,11 @@ public class RelativePathBrowseActionHandler
                 dialog.setFilterPath( roots.get( 0 ).toOSString() );
             }
             
-            if( ! this.extensions.isEmpty() )
+            if( ! extensions.isEmpty() )
             {
                 final StringBuilder buf = new StringBuilder();
                 
-                for( String extension : this.extensions )
+                for( String extension : extensions )
                 {
                     if( buf.length() > 0 )
                     {
@@ -428,11 +430,16 @@ public class RelativePathBrowseActionHandler
         extends ViewerFilter
         
     {
-        private final List<String> extensions;
+        private List<String> extensions;
         
         public ExtensionBasedViewerFilter( final List<String> extensions )
         {
-            this.extensions = extensions;
+            change( extensions );
+        }
+        
+        public void change( final List<String> extensions )
+        {
+            this.extensions = new ArrayList<String>( extensions );
         }
 
         public boolean select( final Viewer viewer, 
