@@ -26,6 +26,7 @@
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
     <li><a href="#CastBetweenCollectionsAndStrings">Cast Between Collections and Strings</a></li>
+    <li><a href="#InstanceOf">InstanceOf Function</a></li>
   </ol>
   <li><a href="#Services">Services</a></li>
   <ol type="A">
@@ -53,6 +54,16 @@
 ${ "z" IN "x,y,z" }</code></pre>
 
 <p><a href="../../el/index.html#conversion">See Documentation</a></p>
+
+<h2><a name="InstanceOf">InstanceOf Function</a></h2>
+
+<p>Determines if an object is of specified type. The object to be checked is the first operand and the
+type is the second operand. The type must be a fully-qualified Java class name.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>${ InstanceOf( 12345, "java.lang.Number" ) }
+${ InstanceOf( SampleProperty, "org.eclipse.sapphire.samples.ISampleModelElement" ) }</code></pre>
 
 <h2><a name="Services"><a name="DependenciesService">DependenciesService</a></a></h2>
 
