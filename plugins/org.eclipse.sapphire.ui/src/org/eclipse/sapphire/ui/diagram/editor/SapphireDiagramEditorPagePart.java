@@ -299,6 +299,10 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         {
             connTemplate.dispose();
         }
+        for (DiagramImplicitConnectionTemplate connTemplate : this.implicitConnectionTemplates)
+        {
+            connTemplate.dispose();
+        }
     }
 
 	private void notifyNodeUpdate(DiagramNodePart nodePart)

@@ -14,7 +14,10 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -59,6 +62,7 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
     private List<DiagramImplicitConnectionPart> implicitConnections;
     private ModelPropertyListener modelPropertyListener;
     private Set<Listener> templateListeners;
+    private Map<IModelElement, FunctionResult> listEntryFunctionMap;
         
     public DiagramImplicitConnectionTemplate(IDiagramImplicitConnectionBindingDef bindingDef)
     {
@@ -69,6 +73,7 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
     public void init()
     {
         this.diagramEditor = (SapphireDiagramEditorPagePart)getParentPart();
+        this.listEntryFunctionMap = new HashMap<IModelElement, FunctionResult>();
         this.modelElement = getModelElement();
         this.definition = (IDiagramConnectionDef)super.definition;
         this.propertyName = this.bindingDef.getProperty().getContent();
@@ -90,7 +95,7 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
             @Override
             public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
             {
-                handleModelPropertyChange( event );
+                refreshImplicitConnections();
             }
         };
         addModelListener();
@@ -115,7 +120,7 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
         this.modelElement.removeListener(this.modelPropertyListener, this.allDescendentsPath);
     }
     
-    private void handleModelPropertyChange(final ModelPropertyChangeEvent event)
+    private void refreshImplicitConnections()
     {
         List<IModelElement> newFilteredList = getFilteredModelElementList();
         
@@ -220,26 +225,28 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
         {
             isRightType = false;
             // apply the condition
-            FunctionResult fr = initExpression
-            ( 
-                entryModelElement,
-                this.bindingDef.getCondition().getContent(), 
-                String.class,
-                null,
-                new Runnable()
-                {
-                    public void run()
-                    {
-                    }    
-                }
-            );
+            FunctionResult fr = this.listEntryFunctionMap.get(entryModelElement);
+            if (fr == null)
+            {
+	            fr = initExpression
+	            ( 
+	                entryModelElement,
+	                this.bindingDef.getCondition().getContent(), 
+	                String.class,
+	                null,
+	                new Runnable()
+	                {
+	                    public void run()
+	                    {
+	                    	refreshImplicitConnections();
+	                    }    
+	                }
+	            );
+	            this.listEntryFunctionMap.put(entryModelElement, fr);
+            }
             if (fr != null && ((String)fr.value()).equals("true"))
             {
-                isRightType = true;
-            }
-            if (fr != null)
-            {
-                fr.dispose();
+                isRightType = true;                
             }
         }
         return isRightType;
@@ -277,4 +284,18 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
         }        
     }
     
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        Iterator<IModelElement> it = this.listEntryFunctionMap.keySet().iterator();
+        while (it.hasNext())
+        {
+        	FunctionResult fr = this.listEntryFunctionMap.get(it.next());
+        	if (fr != null)
+        	{
+        		fr.dispose();
+        	}
+        }
+    }    
 }
