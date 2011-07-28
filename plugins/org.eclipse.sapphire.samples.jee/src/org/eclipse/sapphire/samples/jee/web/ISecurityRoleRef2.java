@@ -15,9 +15,9 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -25,40 +25,23 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "MIME type mapping" )
-
-@Documentation
-(
-    content = "MIME type mappings tell the container how to set the content type when serving files with unrecognized " +
-              "extensions."
-)
-
+@Label( standard = "security role reference" )
 @GenerateImpl
 
-public interface IMimeTypeMapping extends IModelElement
+public interface ISecurityRoleRef2 extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IMimeTypeMapping.class );
-    
-    // *** FileExtension ***
-    
-    @Label( standard = "file extension" )
-    @Required
-    @XmlBinding( path = "extension" )
-    
-    ValueProperty PROP_FILE_EXTENSION = new ValueProperty( TYPE, "FileExtension" );
-    
-    Value<String> getFileExtension();
-    void setFileExtension( String value );
-    
-    // *** MimeType ***
-    
-    @Label(standard = "MIME Type")
-    @Required
-    @XmlBinding( path = "mime-type" )
-    
-    ValueProperty PROP_MIME_TYPE = new ValueProperty( TYPE, "MimeType" );
-    
-    Value<String> getMimeType();
-    void setMimeType( String value );
+    ModelElementType TYPE = new ModelElementType( ISecurityRoleRef2.class );
 
+    // *** Role ***
+    
+    @Label( standard = "role" )
+    @Required
+    @PossibleValues( property = "/SecurityRoles/Name" )
+    @XmlBinding( path = "" )
+    
+    ValueProperty PROP_ROLE = new ValueProperty( TYPE, "Role" );
+    
+    Value<String> getRole();
+    void setRole( String value );
+    
 }

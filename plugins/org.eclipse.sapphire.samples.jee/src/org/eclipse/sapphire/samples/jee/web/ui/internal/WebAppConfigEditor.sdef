@@ -37,10 +37,8 @@
                         <content>
                             <property-editor>
                                 <property>ContextParams</property>
-                                <hint>
-                                    <name>show.label</name>
-                                    <value>false</value>
-                                </hint>
+                                <show-label>false</show-label>
+                                <span>true</span>
                                 <child-property>Name</child-property>
                                 <child-property>Value</child-property>
                             </property-editor>
@@ -53,10 +51,7 @@
                                     <content>
                                         <property-editor>
                                             <property>Description</property>
-                                            <hint>
-                                                <name>show.label.above</name>
-                                                <value>true</value>
-                                            </hint>
+                                            <span>true</span>
                                         </property-editor>
                                     </content>
                                 </panel>
@@ -68,16 +63,30 @@
                     <label>MIME types</label>
                     <section>
                         <content>
-                            <label>MIME type mappings tell the server how to set the content type when serving files with unrecognized extensions.</label>
+                            <label>MIME type mappings tell the container how to set the content type when serving files with unrecognized extensions.</label>
                             <spacer></spacer>
                             <property-editor>
                                 <property>MimeTypeMappings</property>
                                 <child-property>FileExtension</child-property>
                                 <child-property>MimeType</child-property>
-                                <hint>
-                                    <name>show.label</name>
-                                    <value>false</value>
-                                </hint>
+                                <show-label>false</show-label>
+                                <span>true</span>
+                            </property-editor>
+                        </content>
+                    </section>
+                </node>
+                <node>
+                    <label>locale encodings</label>
+                    <section>
+                        <content>
+                            <label>Locale encoding mappings tell the container how to set the character encoding when a servlet specifies a particular locale.</label>
+                            <spacer></spacer>
+                            <property-editor>
+                                <property>LocaleEncodingMappings</property>
+                                <span>true</span>
+                                <show-label>false</show-label>
+                                <child-property>Locale</child-property>
+                                <child-property>Encoding</child-property>
                             </property-editor>
                         </content>
                     </section>
@@ -90,10 +99,8 @@
                             <spacer></spacer>
                             <property-editor>
                                 <property>WelcomeFiles</property>
-                                <hint>
-                                    <name>show.label</name>
-                                    <value>false</value>
-                                </hint>
+                                <show-label>false</show-label>
+                                <span>true</span>
                             </property-editor>
                         </content>
                     </section>
@@ -298,10 +305,7 @@
                                     <property-editor>LoadOnStartup</property-editor>
                                     <property-editor>
                                         <property>StartupPriority</property>
-                                        <hint>
-                                            <name>margin.left</name>
-                                            <value>1u</value>
-                                        </hint>
+                                        <margin-left>20</margin-left>
                                     </property-editor>
                                 </content>
                             </section>
@@ -315,10 +319,8 @@
                                             <child-property>Role</child-property>
                                             <child-property>RoleLink</child-property>
                                             <child-property>Description</child-property>
-                                            <hint>
-                                                <name>show.label</name>
-                                                <value>false</value>
-                                            </hint>
+                                            <show-label>false</show-label>
+                                            <span>true</span>
                                             <hint>
                                                 <name>column.widths</name>
                                                 <value>100:20,100:20,100:60</value>
@@ -333,15 +335,12 @@
                                             <path>RunAsRole</path>
                                             <label>Specify run-as role</label>
                                             <panel>
-                                                <key>IRunAsRole</key>
+                                                <key>IRunAsSecurityRole</key>
                                                 <content>
                                                     <property-editor>Role</property-editor>
                                                     <property-editor>
                                                         <property>Description</property>
-                                                        <hint>
-                                                            <name>height</name>
-                                                            <value>5</value>
-                                                        </hint>
+                                                        <height>75</height>
                                                     </property-editor>
                                                 </content>
                                             </panel>
@@ -359,10 +358,8 @@
                         <content>
                             <property-editor>
                                 <property>ServletMappings</property>
-                                <hint>
-                                    <name>show.label</name>
-                                    <value>false</value>
-                                </hint>
+                                <show-label>false</show-label>
+                                <span>true</span>
                                 <child-property>
                                     <property>Servlet</property>
                                     <action-handler>
@@ -426,13 +423,10 @@
                                 <content>
                                     <property-editor>
                                         <property>UrlPatterns</property>
+                                        <height>120</height>
                                         <hint>
                                             <name>show.header</name>
                                             <value>false</value>
-                                        </hint>
-                                        <hint>
-                                            <name>height</name>
-                                            <value>8</value>
                                         </hint>
                                     </property-editor>
                                     <property-editor>PageEncoding</property-editor>
@@ -464,17 +458,12 @@
                                 <content>
                                     <property-editor>
                                         <property>Preludes</property>
-                                        <hint>
-                                            <name>show.label</name>
-                                            <value>false</value>
-                                        </hint>
+                                        <show-label>false</show-label>
+                                        <span>true</span>
+                                        <height>120</height>
                                         <hint>
                                             <name>show.header</name>
                                             <value>false</value>
-                                        </hint>
-                                        <hint>
-                                            <name>height</name>
-                                            <value>8</value>
                                         </hint>
                                     </property-editor>
                                 </content>
@@ -484,17 +473,12 @@
                                 <content>
                                     <property-editor>
                                         <property>Codas</property>
-                                        <hint>
-                                            <name>show.label</name>
-                                            <value>false</value>
-                                        </hint>
+                                        <show-label>false</show-label>
+                                        <span>true</span>
+                                        <height>120</height>
                                         <hint>
                                             <name>show.header</name>
                                             <value>false</value>
-                                        </hint>
-                                        <hint>
-                                            <name>height</name>
-                                            <value>8</value>
                                         </hint>
                                     </property-editor>
                                 </content>
@@ -523,6 +507,50 @@
             <node>
                 <label>security</label>
                 <node>
+                    <label>roles</label>
+                    <section>
+                        <content>
+                            <label>Define security roles.</label>
+                            <spacer></spacer>
+                            <action-link>
+                                <label>Add a security role</label>
+                                <action-id>Sapphire.Add</action-id>
+                            </action-link>
+                        </content>
+                        <label>security roles</label>
+                    </section>
+                    <node-factory>
+                        <property>SecurityRoles</property>
+                        <case>
+                            <model-element-type>ISecurityRole</model-element-type>
+                            <label>${ Name == null ? &quot;&lt;role&gt;&quot; : Name }</label>
+                            <section>
+                                <label>security role</label>
+                                <content>
+                                    <property-editor>Name</property-editor>
+                                    <property-editor>Description</property-editor>
+                                </content>
+                            </section>
+                        </case>
+                    </node-factory>
+                </node>
+                <section>
+                    <label>authentication</label>
+                    <content>
+                        <with>
+                            <path>AuthenticationConfig</path>
+                            <default-panel>
+                                <content>
+                                    <property-editor>AuthenticationMethod</property-editor>
+                                    <property-editor>RealmName</property-editor>
+                                    <property-editor>FormLoginPage</property-editor>
+                                    <property-editor>FormErrorPage</property-editor>
+                                </content>
+                            </default-panel>
+                        </with>
+                    </content>
+                </section>
+                <node>
                     <label>constraints</label>
                     <node-factory>
                         <property>SecurityConstraints</property>
@@ -533,6 +561,29 @@
                                 <label>security constraint</label>
                                 <content>
                                     <property-editor>Name</property-editor>
+                                    <property-editor>
+                                        <property>TransportGuarantee</property>
+                                        <hint>
+                                            <name>prefer.combo</name>
+                                            <value>true</value>
+                                        </hint>
+                                    </property-editor>
+                                    <property-editor>
+                                        <property>RolesSpecificationMethod</property>
+                                        <hint>
+                                            <name>prefer.combo</name>
+                                            <value>true</value>
+                                        </hint>
+                                        <label>roles</label>
+                                    </property-editor>
+                                    <property-editor>
+                                        <property>Roles</property>
+                                        <hint>
+                                            <name>show.header</name>
+                                            <value>false</value>
+                                        </hint>
+                                        <show-label>false</show-label>
+                                    </property-editor>
                                 </content>
                             </section>
                             <node-factory>
@@ -546,10 +597,7 @@
                                             <property-editor>Name</property-editor>
                                             <property-editor>
                                                 <property>Description</property>
-                                                <hint>
-                                                    <name>height</name>
-                                                    <value>5</value>
-                                                </hint>
+                                                <height>75</height>
                                             </property-editor>
                                             <property-editor>
                                                 <property>UrlPatterns</property>

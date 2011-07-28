@@ -41,6 +41,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 import org.eclipse.sapphire.samples.jee.IDescribable;
 import org.eclipse.sapphire.samples.jee.IParam;
+import org.eclipse.sapphire.samples.jee.IRunAsSecurityRole;
 import org.eclipse.sapphire.samples.jee.web.internal.ServletTypeBinding;
 
 /**
@@ -191,13 +192,13 @@ public interface IServlet extends IModelElement, IDescribable
     
     // *** RunAsRole ***
     
-    @Type( base = IRunAsRole.class )
+    @Type( base = IRunAsSecurityRole.class )
     @Label( standard = "run-as role" )
-    @XmlElementBinding( mappings = @XmlElementBinding.Mapping( element = "run-as", type = IRunAsRole.class ) )
+    @XmlElementBinding( mappings = @XmlElementBinding.Mapping( element = "run-as", type = IRunAsSecurityRole.class ) )
     
     ElementProperty PROP_RUN_AS_ROLE = new ElementProperty( TYPE, "RunAsRole" );
     
-    ModelElementHandle<IRunAsRole> getRunAsRole();
+    ModelElementHandle<IRunAsSecurityRole> getRunAsRole();
     
     // *** SecurityRoles ***
     

@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.jee.web;
+package org.eclipse.sapphire.samples.jee;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -26,29 +26,28 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "run-as role" )
+@Label( standard = "security role" )
+@GenerateImpl
 
 @Documentation
 (
-    content = "Specifies the security role to be used for the execution of a component."
+    content = "Defines a security role. The definition consists of a name and an optional description."
 )
 
-@GenerateImpl
-
-public interface IRunAsRole extends IModelElement
+public interface ISecurityRole extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IRunAsRole.class );
+    ModelElementType TYPE = new ModelElementType( ISecurityRole.class );
 
-    // *** Role ***
+    // *** Name ***
     
-    @Label( standard = "role" )
+    @Label( standard = "name" )
     @Required
     @XmlBinding( path = "role-name" )
     
-    ValueProperty PROP_ROLE = new ValueProperty( TYPE, "Role" );
+    ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
     
-    Value<String> getRole();
-    void setRole( String value );
+    Value<String> getName();
+    void setName( String value );
     
     // *** Description ***
     

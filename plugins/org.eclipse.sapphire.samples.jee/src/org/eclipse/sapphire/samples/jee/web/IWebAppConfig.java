@@ -28,6 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 import org.eclipse.sapphire.samples.jee.IDescribable;
 import org.eclipse.sapphire.samples.jee.IParam;
+import org.eclipse.sapphire.samples.jee.ISecurityRole;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -161,13 +162,30 @@ public interface IWebAppConfig extends IModelElement, IDescribable
     
     @Documentation
     (
-        content = "MIME type mappings tell the server how to set the content type when serving files with unrecognized " +
+        content = "MIME type mappings tell the container how to set the content type when serving files with unrecognized " +
                   "extensions."
     )
 
     ListProperty PROP_MIME_TYPE_MAPPINGS = new ListProperty( TYPE, "MimeTypeMappings" );
     
     ModelElementList<IMimeTypeMapping> getMimeTypeMappings();
+    
+    // *** LocaleEncodingMappings ***
+    
+    @Type( base = ILocaleEncodingMapping.class )
+    @Label( standard = "locale encoding mappings" )
+    @XmlListBinding( path = "locale-encoding-mapping-list", mappings = @XmlListBinding.Mapping( element = "locale-encoding-mapping", type = ILocaleEncodingMapping.class ) )
+    
+    @Documentation
+    (
+        content = "Locale encoding mappings tell the container how to set the character encoding when a servlet " +
+                  "specifies a particular locale in the ServletResponse.setLocale() call. If the web application " +
+                  "does not specify a locale encoding mapping, the mapping is container dependent"
+    )
+    
+    ListProperty PROP_LOCALE_ENCODING_MAPPINGS = new ListProperty( TYPE, "LocaleEncodingMappings" );
+    
+    ModelElementList<ILocaleEncodingMapping> getLocaleEncodingMappings();
     
     // *** WelcomeFiles ***
     
@@ -222,6 +240,16 @@ public interface IWebAppConfig extends IModelElement, IDescribable
     
     IJspConfig getJspConfig();
     
+    // *** SecurityRoles ***
+    
+    @Type( base = ISecurityRole.class )
+    @Label( standard = "security roles" )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "security-role", type = ISecurityRole.class ) )
+    
+    ListProperty PROP_SECURITY_ROLES = new ListProperty( TYPE, "SecurityRoles" );
+    
+    ModelElementList<ISecurityRole> getSecurityRoles();
+    
     // *** SecurityConstraints ***
     
     @Type( base = ISecurityConstraint.class )
@@ -231,5 +259,15 @@ public interface IWebAppConfig extends IModelElement, IDescribable
     ListProperty PROP_SECURITY_CONSTRAINTS = new ListProperty( TYPE, "SecurityConstraints" );
     
     ModelElementList<ISecurityConstraint> getSecurityConstraints();
+    
+    // *** AuthenticationConfig ***
+    
+    @Type( base = IAuthenticationConfig.class )
+    @Label( standard = "authentication configuration" )
+    @XmlBinding( path = "login-config" )
+    
+    ImpliedElementProperty PROP_AUTHENTICATION_CONFIG = new ImpliedElementProperty( TYPE, "AuthenticationConfig" );
+    
+    IAuthenticationConfig getAuthenticationConfig();
     
 }
