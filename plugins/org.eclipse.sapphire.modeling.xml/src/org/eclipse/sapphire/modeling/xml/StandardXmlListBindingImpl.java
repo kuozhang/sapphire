@@ -70,7 +70,7 @@ public class StandardXmlListBindingImpl
         
         if( annotation == null )
         {
-            this.path = new XmlPath( property.getName(), ( (XmlResource) element.resource() ).getXmlNamespaceResolver() );
+            this.path = new XmlPath( property.getName(), xmlNamespaceResolver );
             
             final List<ModelElementType> types = property.getAllPossibleTypes();
             
