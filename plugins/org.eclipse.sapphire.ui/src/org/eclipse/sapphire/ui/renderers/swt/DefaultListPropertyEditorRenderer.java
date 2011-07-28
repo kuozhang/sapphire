@@ -933,7 +933,12 @@ public class DefaultListPropertyEditorRenderer
             throw new IllegalArgumentException();
         }
         
-        update( this.rows.get( element ) );
+        final TableRow row = this.rows.get( element );
+        
+        if( row != null )
+        {
+            update( row );
+        }
     }
 
     private void update( final TableRow row )

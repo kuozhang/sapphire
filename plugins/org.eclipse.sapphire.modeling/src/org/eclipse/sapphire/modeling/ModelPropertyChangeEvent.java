@@ -17,17 +17,27 @@ package org.eclipse.sapphire.modeling;
 
 public final class ModelPropertyChangeEvent
 {
-    private final IModelElement modelElement;
+    private final IModelElement element;
     private final ModelProperty property;
     private final boolean oldEnablementState;
     private final boolean newEnablementState;
     
-    public ModelPropertyChangeEvent( final IModelElement modelElement,
+    public ModelPropertyChangeEvent( final IModelElement element,
                                      final ModelProperty property,
                                      final Boolean oldEnablementState,
                                      final boolean newEnablementState )
     {
-        this.modelElement = modelElement;
+        if( element == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        this.element = element;
         this.property = property;
         this.oldEnablementState = ( oldEnablementState == null ? newEnablementState : oldEnablementState );
         this.newEnablementState = newEnablementState;
@@ -35,7 +45,7 @@ public final class ModelPropertyChangeEvent
     
     public IModelElement getModelElement()
     {
-        return this.modelElement;
+        return this.element;
     }
     
     public ModelProperty getProperty()
