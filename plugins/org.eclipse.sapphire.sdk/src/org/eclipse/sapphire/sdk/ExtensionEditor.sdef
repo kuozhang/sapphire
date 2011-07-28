@@ -48,10 +48,7 @@
                                 <property-editor>FactoryClass</property-editor>
                                 <property-editor>
                                     <property>Description</property>
-                                    <hint>
-                                        <name>height</name>
-                                        <value>5</value>
-                                    </hint>
+                                    <height>75</height>
                                 </property-editor>
                                 <property-editor>Overrides</property-editor>
                             </content>
@@ -83,10 +80,7 @@
                                 <property-editor>FactoryClass</property-editor>
                                 <property-editor>
                                     <property>Description</property>
-                                    <hint>
-                                        <name>height</name>
-                                        <value>5</value>
-                                    </hint>
+                                    <height>75</height>
                                 </property-editor>
                                 <property-editor>Overrides</property-editor>
                             </content>
@@ -117,10 +111,7 @@
                                 <property-editor>ImplClass</property-editor>
                                 <property-editor>
                                     <property>Description</property>
-                                    <hint>
-                                        <name>height</name>
-                                        <value>5</value>
-                                    </hint>
+                                    <height>75</height>
                                 </property-editor>
                             </content>
                         </section>
@@ -150,10 +141,7 @@
                                 <property-editor>ImplClass</property-editor>
                                 <property-editor>
                                     <property>Description</property>
-                                    <hint>
-                                        <name>height</name>
-                                        <value>5</value>
-                                    </hint>
+                                    <height>75</height>
                                 </property-editor>
                             </content>
                         </section>
@@ -182,10 +170,7 @@
                                 <property-editor>Implementation</property-editor>
                                 <property-editor>
                                     <property>Description</property>
-                                    <hint>
-                                        <name>height</name>
-                                        <value>5</value>
-                                    </hint>
+                                    <height>75</height>
                                 </property-editor>
                             </content>
                         </section>

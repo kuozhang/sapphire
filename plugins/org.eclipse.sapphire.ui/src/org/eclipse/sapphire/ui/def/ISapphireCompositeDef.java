@@ -16,6 +16,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
+import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Service;
@@ -52,6 +53,42 @@ public interface ISapphireCompositeDef
     void setIndent( String value );
     void setIndent( Boolean value );
     
+    // *** Width ***
+    
+    @Type( base = Integer.class )
+    @Label( standard = "width" )
+    @XmlBinding( path = "width" )
+    
+    @Documentation
+    (
+        content = "Specifies the preferred width (in pixels) for the composite. The width preference " +
+                  "will be respected to the extent that it is feasible."
+    )
+    
+    ValueProperty PROP_WIDTH = new ValueProperty( TYPE, "Width" );
+    
+    Value<Integer> getWidth();
+    void setWidth( String value );
+    void setWidth( Integer value );
+    
+    // *** Height ***
+    
+    @Type( base = Integer.class )
+    @Label( standard = "height" )
+    @XmlBinding( path = "height" )
+    
+    @Documentation
+    (
+        content = "Specifies the preferred height (in pixels) for the composite. The height preference " +
+                  "will be respected to the extent that it is feasible."
+    )
+    
+    ValueProperty PROP_HEIGHT = new ValueProperty( TYPE, "Height" );
+    
+    Value<Integer> getHeight();
+    void setHeight( String value );
+    void setHeight( Integer value );
+
     // *** ScrollVertically ***
     
     @Type( base = Boolean.class )

@@ -45,10 +45,7 @@
                         <property-editor>Images</property-editor>
                         <property-editor>
                             <property>Description</property>
-                            <hint>
-                                <name>height</name>
-                                <value>5</value>
-                            </hint>
+                            <height>75</height>
                         </property-editor>
                     </content>
                 </section>
@@ -57,10 +54,8 @@
                     <content>
                         <property-editor>
                             <property>Hints</property>
-                            <hint>
-                                <name>show.label</name>
-                                <value>false</value>
-                            </hint>
+                            <show-label>false</show-label>
+                            <span>true</span>
                         </property-editor>
                     </content>
                 </section>
@@ -108,10 +103,7 @@
                         <property-editor>Images</property-editor>
                         <property-editor>
                             <property>Description</property>
-                            <hint>
-                                <name>height</name>
-                                <value>5</value>
-                            </hint>
+                            <height>75</height>
                         </property-editor>
                         <property-editor>ImplClass</property-editor>
                         <property-editor>Params</property-editor>
@@ -157,10 +149,7 @@
                         <property-editor>Action</property-editor>
                         <property-editor>
                             <property>Description</property>
-                            <hint>
-                                <name>height</name>
-                                <value>5</value>
-                            </hint>
+                            <height>75</height>
                         </property-editor>
                         <property-editor>ImplClass</property-editor>
                         <property-editor>Params</property-editor>

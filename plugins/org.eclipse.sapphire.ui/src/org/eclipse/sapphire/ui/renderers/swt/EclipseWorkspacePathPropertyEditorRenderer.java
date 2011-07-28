@@ -12,13 +12,9 @@
 package org.eclipse.sapphire.ui.renderers.swt;
 
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_EXPAND_VERTICALLY;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL_ABOVE;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -41,13 +37,11 @@ import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler.ContainersOnlyViewerFilter;
 import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler.ExtensionBasedViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
@@ -77,18 +71,13 @@ public final class EclipseWorkspacePathPropertyEditorRenderer
         final IModelElement element = part.getLocalModelElement();
         final ModelProperty property = part.getProperty();
         
-        final boolean showLabelAbove = part.getRenderingHint( HINT_SHOW_LABEL_ABOVE, false );
-        final int baseIndent = part.getLeftMarginHint() + 9;
-        final boolean expandVertically = part.getRenderingHint( HINT_EXPAND_VERTICALLY, false );
-        final int heightHint = part.getRenderingHint( ISapphirePartDef.HINT_HEIGHT, 10 ) * 15;
-        
-        final Text textField = (Text) super.createContents( parent, true );
+        final Composite mainComposite = createMainComposite( parent );
+        mainComposite.setLayout( glayout( 2, 0, 0 ) );
 
-        final DrillDownComposite drillDown = new DrillDownComposite( parent, SWT.BORDER );
-        
-        GridData gd = ( expandVertically ? gdfill() : gdhhint( gdhfill(), heightHint ) );
-        gd = gdhindent( gdhspan( gd, showLabelAbove ? 2 : 1 ), baseIndent );
-        drillDown.setLayoutData( gd );
+        final Text textField = (Text) super.createContents( mainComposite, true );
+
+        final DrillDownComposite drillDown = new DrillDownComposite( mainComposite, SWT.BORDER );
+        drillDown.setLayoutData( gdhspan( gdfill(), 2 ) );
 
         final TreeViewer treeViewer = new TreeViewer( drillDown, SWT.NONE );
         final Tree tree = treeViewer.getTree();

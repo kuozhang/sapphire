@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.IModelParticle;
@@ -71,8 +72,6 @@ public final class SapphirePropertyEditor
     public static final String DATA_BINDING = "binding";
     public static final String DATA_PROPERTY = "property";
     
-    public static final String HINT_SHOW_LABEL = "show.label";
-    public static final String HINT_SHOW_LABEL_ABOVE = "show.label.above";
     public static final String HINT_SHOW_HEADER = "show.header";
     public static final String HINT_AUX_TEXT = "aux.text";
     public static final String HINT_AUX_TEXT_PROVIDER = "aux.text.provider";
@@ -84,7 +83,6 @@ public final class SapphirePropertyEditor
     public static final String HINT_SUPPRESS_ASSIST_CONTRIBUTORS = "suppress.assist.contributors";
     public static final String HINT_LISTENERS = "listeners";
     public static final String HINT_COLUMN_WIDTHS = "column.widths";
-    public static final String HINT_MARGIN_LEFT = "margin.left";
     public static final String HINT_PREFER_COMBO = "prefer.combo";
     public static final String HINT_PREFER_RADIO_BUTTONS = "prefer.radio.buttons";
     public static final String HINT_PREFER_VERTICAL_RADIO_BUTTONS = "prefer.vertical.radio.buttons";
@@ -219,9 +217,7 @@ public final class SapphirePropertyEditor
             final String valueString = hint.getValue().getText();
             Object parsedValue = valueString;
             
-            if( name.equals( HINT_SHOW_LABEL ) ||
-                name.equals( HINT_SHOW_LABEL_ABOVE ) ||
-                name.equals( HINT_SHOW_HEADER ) ||
+            if( name.equals( HINT_SHOW_HEADER ) ||
                 name.equals( HINT_BORDER ) ||
                 name.equals( HINT_BROWSE_ONLY ) ||
                 name.equals( HINT_PREFER_COMBO ) ||
@@ -231,18 +227,6 @@ public final class SapphirePropertyEditor
                 name.equals( HINT_READ_ONLY ) )
             {
                 parsedValue = Boolean.parseBoolean( valueString );
-            }
-            else if( name.equals( ISapphirePartDef.HINT_HEIGHT ) ||
-                     name.equals( ISapphirePartDef.HINT_WIDTH ) )
-            {
-                try
-                {
-                    parsedValue = Integer.parseInt( valueString );
-                }
-                catch( NumberFormatException e )
-                {
-                    SapphireUiFrameworkPlugin.log( e );
-                }
             }
             else if( name.startsWith( HINT_FACTORY ) ||
                      name.startsWith( HINT_AUX_TEXT_PROVIDER ) )
@@ -276,6 +260,12 @@ public final class SapphirePropertyEditor
         {
             this.relatedContentParts.add( create( this, this.element, relatedContentPartDef, this.params ) );
         }
+    }
+    
+    @Override
+    public ISapphirePropertyEditorDef getDefinition()
+    {
+        return (ISapphirePropertyEditorDef) super.getDefinition();
     }
     
     public IModelElement getLocalModelElement()
@@ -354,6 +344,55 @@ public final class SapphirePropertyEditor
         return propertyEditor;
     }
     
+    public String getLabel( final CapitalizationType capitalizationType,
+                            final boolean includeMnemonic )
+    {
+        final Value<String> labelFromDef = getDefinition().getLabel();
+        
+        if( labelFromDef.getText( false ) != null )
+        {
+            return labelFromDef.getLocalizedText( false, capitalizationType, includeMnemonic );
+        }
+        else
+        {
+            return this.property.getLabel( false, capitalizationType, includeMnemonic );
+        }
+    }
+    
+    public boolean getShowLabel()
+    {
+        return getDefinition().getShowLabel().getContent();
+    }
+    
+    public boolean getSpanBothColumns()
+    {
+        return getDefinition().getSpanBothColumns().getContent();
+    }
+    
+    public int getWidth( final int defaultValue )
+    {
+        final Integer width = getDefinition().getWidth().getContent();
+        return ( width == null || width < 1 ? defaultValue : width );
+    }
+    
+    public int getHeight( final int defaultValue )
+    {
+        final Integer height = getDefinition().getHeight().getContent();
+        return ( height == null || height < 1 ? defaultValue : height );
+    }
+    
+    public int getMarginLeft()
+    {
+        int marginLeft = getDefinition().getMarginLeft().getContent();
+        
+        if( marginLeft < 0 )
+        {
+            marginLeft = 0;
+        }
+        
+        return marginLeft;
+    }
+
     @SuppressWarnings( "unchecked" )
     
     public <T> T getRenderingHint( final String name,
@@ -370,42 +409,6 @@ public final class SapphirePropertyEditor
         return hintValue == null ? defaultValue : (Boolean) hintValue;
     }
     
-    public int getLeftMarginHint()
-    {
-        String leftMarginHintStr = getRenderingHint( HINT_MARGIN_LEFT, null );
-        int leftMarginHint = 0;
-        
-        if( leftMarginHintStr != null )
-        {
-            leftMarginHintStr = leftMarginHintStr.trim();
-            final int length = leftMarginHintStr.length();
-            
-            if( leftMarginHintStr.endsWith( "px" ) && length > 2 )
-            {
-                try
-                {
-                    leftMarginHint = Integer.parseInt( leftMarginHintStr.substring( 0, length - 2 ) );
-                }
-                catch( NumberFormatException e ) {}
-            }
-            else if( leftMarginHintStr.endsWith( "u" ) && length > 1 )
-            {
-                try
-                {
-                    leftMarginHint = Integer.parseInt( leftMarginHintStr.substring( 0, length - 1 ) ) * 20;
-                }
-                catch( NumberFormatException e ) {}
-            }
-        }
-        
-        if( leftMarginHint < 0 )
-        {
-            leftMarginHint = 0;
-        }
-        
-        return leftMarginHint;
-    }
-    
     public List<SapphirePart> getRelatedContent()
     {
         return this.relatedContentPartsReadOnly;
@@ -413,7 +416,7 @@ public final class SapphirePropertyEditor
     
     public int getRelatedContentWidth()
     {
-        final Value<Integer> relatedContentWidth = ( (ISapphirePropertyEditorDef) getDefinition() ).getRelatedContentWidth();
+        final Value<Integer> relatedContentWidth = getDefinition().getRelatedContentWidth();
         
         if( relatedContentWidth.validate().ok() )
         {

@@ -20,18 +20,11 @@ import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_MOVE_UP;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.createFilterByActionId;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_COLUMN_WIDTHS;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_EXPAND_VERTICALLY;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_READ_ONLY;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_HEADER;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL_ABOVE;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.RELATED_CONTROLS;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
@@ -101,8 +94,6 @@ import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
-import org.eclipse.sapphire.ui.internal.EnhancedComposite;
 import org.eclipse.sapphire.ui.internal.ReadOnlyComboBoxCellEditor;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
 import org.eclipse.sapphire.ui.swt.renderer.HyperlinkTable;
@@ -121,12 +112,10 @@ import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
@@ -176,10 +165,6 @@ public class DefaultListPropertyEditorRenderer
         final SapphirePropertyEditor part = getPart();
         final ListProperty property = (ListProperty) part.getProperty();
         final boolean isReadOnly = ( property.isReadOnly() || part.getRenderingHint( HINT_READ_ONLY, false ) );
-
-        final boolean showLabelAbove = part.getRenderingHint( HINT_SHOW_LABEL_ABOVE, false );
-        final boolean showLabelInline = part.getRenderingHint( HINT_SHOW_LABEL, ( suppressLabel ? false : ! showLabelAbove ) );
-        final int leftMargin = ( ignoreLeftMarginHint ? 0 : part.getLeftMarginHint() );
         final boolean showHeader = part.getRenderingHint( HINT_SHOW_HEADER, true );
         
         final SapphireActionGroup actions = getActions();
@@ -193,52 +178,47 @@ public class DefaultListPropertyEditorRenderer
         menuActionsPresentation.addFilter( createFilterByActionId( ACTION_ASSIST ) );
         menuActionsPresentation.addFilter( createFilterByActionId( ACTION_JUMP ) );
         
-        final Label label;
+        final Composite mainComposite = createMainComposite
+        (
+            parent,
+            new CreateMainCompositeDelegate( part )
+            {
+                @Override
+                public boolean getShowLabel()
+                {
+                    return ( suppressLabel ? false : super.getShowLabel() );
+                }
 
-        if( showLabelInline || showLabelAbove )
-        {
-            final String labelText = property.getLabel( false, CapitalizationType.FIRST_WORD_ONLY, true ) + ":";
-            label = new Label( parent, SWT.NONE );
-            label.setLayoutData( gdhindent( gdhspan( gdvalign( gd(), SWT.TOP ), showLabelAbove ? 2 : 1 ), leftMargin + 9 ) );
-            label.setText( labelText );
-            this.context.adapt( label );
-        }
-        else
-        {
-            label = null;
-        }
+                @Override
+                public int getLeftMargin()
+                {
+                    return ( ignoreLeftMarginHint ? 0 : super.getLeftMargin() );
+                }
+            }
+        );
         
-        final boolean expandVertically = part.getRenderingHint( HINT_EXPAND_VERTICALLY, false );
-        final int heightHint = part.getRenderingHint( ISapphirePartDef.HINT_HEIGHT, 10 ) * 15;
+        mainComposite.setLayout( glayout( ( isReadOnly ? 1 : 2 ), 0, 0, 0, 0 ) );
         
-        GridData gd = ( expandVertically ? gdfill() : gdhhint( gdhfill(), heightHint ) );
-        gd = gdhindent( gdhspan( gd, showLabelInline ? 1 : 2 ), showLabelInline ? 0 : leftMargin );
-        
-        final Composite tableComposite = new EnhancedComposite( parent, SWT.NONE );
-        tableComposite.setLayoutData( gd );
-        tableComposite.setLayout( glayout( ( isReadOnly ? 1 : 2 ), 0, 0, 0, 0 ) );
-        this.context.adapt( tableComposite );
-        
-        final Composite innerComposite;
+        final Composite tableComposite;
         
         if( this.decorator == null )
         {
-            innerComposite = new Composite( tableComposite, SWT.NULL );
-            innerComposite.setLayoutData( gdfill() );
-            innerComposite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
-            this.context.adapt( innerComposite );
+            tableComposite = new Composite( mainComposite, SWT.NULL );
+            tableComposite.setLayoutData( gdfill() );
+            tableComposite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
+            this.context.adapt( tableComposite );
             
-            this.decorator = createDecorator( innerComposite );
+            this.decorator = createDecorator( tableComposite );
             this.decorator.control().setLayoutData( gdvalign( gd(), SWT.TOP ) );
 
-            this.decorator.addEditorControl( innerComposite );
+            this.decorator.addEditorControl( tableComposite );
         }
         else
         {
-            innerComposite = tableComposite;
+            tableComposite = mainComposite;
         }
         
-        this.decorator.addEditorControl( tableComposite );
+        this.decorator.addEditorControl( mainComposite );
         
         final List<ValueProperty> columnProperties = new ArrayList<ValueProperty>();
         
@@ -256,7 +236,7 @@ public class DefaultListPropertyEditorRenderer
         // https://bugs.eclipse.org/bugs/show_bug.cgi?id=215997
         //
         
-        final Composite tableParentComposite = new Composite( innerComposite, SWT.NULL );
+        final Composite tableParentComposite = new Composite( tableComposite, SWT.NULL );
         tableParentComposite.setLayoutData( gdwhint( gdfill(), 1 ) );
         final TableColumnLayout tableColumnLayout = new TableColumnLayout();
         tableParentComposite.setLayout( tableColumnLayout );
@@ -268,11 +248,6 @@ public class DefaultListPropertyEditorRenderer
         
         final List<Control> relatedControls = new ArrayList<Control>();
         this.table.setData( RELATED_CONTROLS, relatedControls );
-        
-        if( label != null )
-        {
-            relatedControls.add( label );
-        }
         
         this.table.addListener
         (
@@ -682,7 +657,7 @@ public class DefaultListPropertyEditorRenderer
                 moveDownAction.addListener( moveActionHandlerListener );
             }
             
-            final ToolBar toolbar = new ToolBar( tableComposite, SWT.FLAT | SWT.VERTICAL );
+            final ToolBar toolbar = new ToolBar( mainComposite, SWT.FLAT | SWT.VERTICAL );
             toolbar.setLayoutData( gdvfill() );
             toolBarActionsPresentation.setToolBar( toolbar );
             toolBarActionsPresentation.render();
@@ -744,6 +719,12 @@ public class DefaultListPropertyEditorRenderer
         addControl( this.table );
         
         return this.table;
+    }
+    
+    @Override
+    protected boolean canExpandVertically()
+    {
+        return true;
     }
     
     public final PropertyEditorAssistDecorator getDecorator()

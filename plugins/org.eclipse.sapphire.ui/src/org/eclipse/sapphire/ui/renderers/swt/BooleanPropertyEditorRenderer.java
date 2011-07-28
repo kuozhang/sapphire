@@ -12,12 +12,12 @@
 package org.eclipse.sapphire.ui.renderers.swt;
 
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Value;
@@ -33,7 +33,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -82,38 +82,42 @@ public final class BooleanPropertyEditorRenderer
             checkboxLayout = CheckboxLayout.TRAILING_LABEL;
         }
         
-        String label = property.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, true );
+        final Composite composite = createMainComposite
+        (
+            parent,
+            new CreateMainCompositeDelegate( part )
+            {
+                @Override
+                public boolean getShowLabel()
+                {
+                    if( checkboxLayout == CheckboxLayout.TRAILING_LABEL || checkboxLayout == CheckboxLayout.TRAILING_LABEL_INDENTED )
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return super.getShowLabel();
+                    }
+                }
+                
+                @Override
+                public boolean getSpanBothColumns()
+                {
+                    if( checkboxLayout == CheckboxLayout.TRAILING_LABEL )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return super.getSpanBothColumns();
+                    }
+                }
+            }
+        );
         
-        if( property.hasAnnotation( Deprecated.class ) )
-        {
-            label = label + " " + Resources.deprecatedLabelText;
-        }
+        final boolean isDeprecated = property.hasAnnotation( Deprecated.class );
         
-        if( checkboxLayout == CheckboxLayout.LEADING_LABEL )
-        {
-            final Label lbl = new Label( parent, SWT.NONE );
-            lbl.setLayoutData( gdhindent( gd(), part.getLeftMarginHint() + 9 ) );
-            lbl.setText( label + ":" );
-            addControl( lbl );
-        }
-        else if( checkboxLayout == CheckboxLayout.TRAILING_LABEL )
-        {
-            setSpanBothColumns( true );
-        }
-        else if( checkboxLayout == CheckboxLayout.TRAILING_LABEL_INDENTED )
-        {
-            final Label lbl = new Label( parent, SWT.NONE );
-            lbl.setLayoutData( gd() );
-            lbl.setText( "" );
-            addControl( lbl );
-        }
-        else
-        {
-            throw new IllegalStateException();
-        }
-        
-        final Composite composite = createMainComposite( parent );
-        composite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
+        composite.setLayout( glspacing( glayout( ( isDeprecated ? 3 : 2 ), 0, 0 ), 2 ) );
 
         final PropertyEditorAssistDecorator decorator = createDecorator( composite ); 
         decorator.control().setLayoutData( gdvalign( gd(), SWT.CENTER ) );
@@ -124,7 +128,13 @@ public final class BooleanPropertyEditorRenderer
         
         if( checkboxLayout != CheckboxLayout.LEADING_LABEL )
         {
-            this.checkbox.setText( label );
+            this.checkbox.setText( part.getLabel( CapitalizationType.FIRST_WORD_ONLY, true ) );
+        }
+        
+        if( isDeprecated )
+        {
+            final Control deprecationMarker = createDeprecationMarker( composite );
+            deprecationMarker.setLayoutData( gdhindent( gdhfill(), 3 ) );
         }
         
         this.checkbox.getAccessible().addAccessibleListener
@@ -195,10 +205,7 @@ public final class BooleanPropertyEditorRenderer
         this.checkbox.setFocus();
     }
 
-    public static final class Factory
-    
-        extends PropertyEditorRendererFactory
-        
+    public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
         public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
@@ -222,17 +229,4 @@ public final class BooleanPropertyEditorRenderer
         TRAILING_LABEL_INDENTED
     }
 
-    private static final class Resources
-    
-        extends NLS
-    
-    {
-        public static String deprecatedLabelText;
-        
-        static
-        {
-            initializeMessages( BooleanPropertyEditorRenderer.class.getName(), Resources.class );
-        }
-    }
-    
 }

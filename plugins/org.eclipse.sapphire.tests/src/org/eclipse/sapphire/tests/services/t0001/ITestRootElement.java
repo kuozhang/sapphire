@@ -265,6 +265,15 @@ public interface ITestRootElement extends IModelElement
     void setValidFileSystemResourceTypeFolder( String value );
     void setValidFileSystemResourceTypeFolder( Path value );
     
+    // *** Deprecated ***
+    
+    @Deprecated
+    
+    ValueProperty PROP_DEPRECATED = new ValueProperty( TYPE, "Deprecated" );
+    
+    Value<String> getDeprecated();
+    void setDeprecated( String value );
+    
     // *** StaticFact ***
     
     @Fact( statement = "First static fact.")

@@ -12,21 +12,15 @@
 package org.eclipse.sapphire.ui.renderers.swt;
 
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.RELATED_CONTROLS;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
@@ -36,15 +30,12 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
-import org.eclipse.sapphire.ui.internal.EnhancedComposite;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.ToolBar;
 
@@ -69,27 +60,10 @@ public abstract class AbstractSlushBucketPropertyEditorRenderer
         final SapphirePropertyEditor part = getPart();
         final ListProperty property = (ListProperty) part.getProperty();
 
-        final int heightHint = part.getRenderingHint( ISapphirePartDef.HINT_HEIGHT, 10 ) * 15;
-        final boolean showLabelInline = part.getRenderingHint( HINT_SHOW_LABEL, true );
-        final int leftMargin = part.getLeftMarginHint();
-        
-        Label label = null;
-        
-        if( showLabelInline )
-        {
-            final String labelText = property.getLabel( false, CapitalizationType.FIRST_WORD_ONLY, true ) + ":";
-            label = new Label( parent, SWT.NONE );
-            label.setLayoutData( gdhindent( gdvalign( gd(), SWT.TOP ), leftMargin + 9 ) );
-            label.setText( labelText );
-            this.context.adapt( label );
-        }
-        
-        final Composite rootComposite = new EnhancedComposite( parent, SWT.NONE );
-        rootComposite.setLayoutData( gdhindent( gdhspan( gdhhint( gdhfill(), heightHint ), showLabelInline ? 1 : 2 ), showLabelInline ? 0 : leftMargin ) );
-        rootComposite.setLayout( new FillLayout( SWT.HORIZONTAL ) );
-        this.context.adapt( rootComposite );
+        final Composite mainComposite = createMainComposite( parent );
+        mainComposite.setLayout( new FillLayout( SWT.HORIZONTAL ) );
 
-        final Composite sourceTableComposite = new Composite( rootComposite, SWT.NONE );
+        final Composite sourceTableComposite = new Composite( mainComposite, SWT.NONE );
         sourceTableComposite.setLayout( glspacing( glayout( 3, 0, 0 ), 0 ) );
         this.context.adapt( sourceTableComposite );
         
@@ -117,11 +91,11 @@ public abstract class AbstractSlushBucketPropertyEditorRenderer
         toolbar.setLayoutData( gd() );
         this.context.adapt( toolbar );
         
-        final Composite tableComposite = new Composite( rootComposite, SWT.NONE );
+        final Composite tableComposite = new Composite( mainComposite, SWT.NONE );
         tableComposite.setLayout( glayout( 2, 0, 0 ) );
         this.context.adapt( tableComposite );
         
-        decorator.addEditorControl( rootComposite );
+        decorator.addEditorControl( mainComposite );
         decorator.addEditorControl( sourceTableComposite );
         decorator.addEditorControl( decoratorComposite );
         decorator.addEditorControl( sourceTable );
@@ -168,11 +142,6 @@ public abstract class AbstractSlushBucketPropertyEditorRenderer
         
         relatedControls.add( sourceTable );
         relatedControls.add( toolbar );
-        
-        if( label != null )
-        {
-            relatedControls.add( label );
-        }
         
         ( (AbstractBinding) mainTable.getData( DATA_BINDING ) ).updateTargetAttributes();
         

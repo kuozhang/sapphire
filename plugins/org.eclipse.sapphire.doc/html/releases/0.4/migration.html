@@ -43,6 +43,7 @@ to 0.4 release. Only changes from the previous release are covered.</p>
 
 <ol>
   <li><a href="#Documentation">Documentation</a></li>
+  <li><a href="#Hints">Hints</a></li>
   <li><a href="#ValidFileExtensions">ValidFileExtensions</a></li>
 </ol>
 
@@ -163,6 +164,131 @@ void setInteger( Integer val );</font></code></pre>
 Value<Integer> getInteger();
 void setInteger( String val );
 void setInteger( Integer val );</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+<h2><a name="Hints">Hints</a></h2>
+
+<p>Some of the hints used to customize behavior in the UI definitions have been turned into explicit
+properties.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;hint>
+        &lt;name>show.label&lt;/name>
+        &lt;value>false&lt;/value>
+    &lt;/hint>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;show-label>false&lt;/show-label>
+    &lt;span>true&lt;/span>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;hint>
+        &lt;name>show.label.above&lt;/name>
+        &lt;value>true&lt;/value>
+    &lt;/hint>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;span>true&lt;/span>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;hint>
+        &lt;name>width&lt;/name>
+        &lt;value>100&lt;/value>
+    &lt;/hint>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;width>100&lt;/width>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;hint>
+        &lt;name>height&lt;/name>
+        &lt;value>5&lt;/value>
+    &lt;/hint>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;height>75&lt;/height>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+
+      <p>Multiply the old height hint value by 15 to get the same effect. Only do this conversion
+      for the height hint and only for property editors.</p>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;composite></font>
+    &lt;hint>
+        &lt;name>width&lt;/name>
+        &lt;value>100&lt;/value>
+    &lt;/hint>
+<font color="#888888">&lt;/composite></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;composite></font>
+    &lt;width>100&lt;/width>
+<font color="#888888">&lt;/composite></font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;composite></font>
+    &lt;hint>
+        &lt;name>height&lt;/name>
+        &lt;value>100&lt;/value>
+    &lt;/hint>
+<font color="#888888">&lt;/composite></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;composite></font>
+    &lt;height>100&lt;/height>
+<font color="#888888">&lt;/composite></font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;hint>
+        &lt;name>margin.left&lt;/name>
+        &lt;value>1u&lt;/value>
+    &lt;/hint>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;margin-left>20&lt;/margin-left>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+
+      <p>The margin.left hint supported two suffixes to designate units. The "px" suffix
+      designated pixels, while "u" suffix designated units of 20 pixels. The new property
+      takes a number of pixels with no units suffix.</p>
     </td>
   </tr>
 </table>

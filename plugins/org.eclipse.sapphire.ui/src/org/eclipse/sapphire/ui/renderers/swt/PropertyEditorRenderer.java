@@ -48,7 +48,6 @@ import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.AuxTextProvider;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
@@ -78,7 +77,6 @@ public abstract class PropertyEditorRenderer
     private Label auxTextControl;
     private AuxTextProvider auxTextProvider;
     private final Set<Control> controls;
-    private boolean spanBothColumns;
     
     protected AbstractBinding binding;
     
@@ -93,7 +91,6 @@ public abstract class PropertyEditorRenderer
         this.context = context;
         this.part = part;
         this.controls = new HashSet<Control>();
-        this.spanBothColumns = false;
         this.actions = part.getActions( part.getActionContext() );
         this.actionPresentationManager = new SapphireActionPresentationManager( this.context, this.actions );
         this.actionPresentationManager.setLabel( NLS.bind( Resources.actionsContextLabel, this.part.getProperty().getLabel( true, CapitalizationType.NO_CAPS, false ) ) );
@@ -140,16 +137,6 @@ public abstract class PropertyEditorRenderer
         return false;
     }
     
-    protected final boolean getSpanBothColumns()
-    {
-        return this.spanBothColumns;
-    }
-    
-    protected final void setSpanBothColumns( final boolean spanBothColumns )
-    {
-        this.spanBothColumns = spanBothColumns;
-    }
-    
     public final void create( final Composite parent )
     {
         createContents( parent );
@@ -173,7 +160,9 @@ public abstract class PropertyEditorRenderer
         
         if( auxText != null || this.auxTextProvider != null )
         {
-            if( ! this.spanBothColumns )
+            final boolean spanBothColumns = this.part.getSpanBothColumns();
+            
+            if( ! spanBothColumns )
             {
                 final Label placeholder = new Label( parent, SWT.NONE );
                 placeholder.setLayoutData( gd() );
@@ -181,10 +170,10 @@ public abstract class PropertyEditorRenderer
                 this.context.adapt( placeholder );
             }
             
-            final int hindent = this.part.getLeftMarginHint() + 9;
+            final int hindent = this.part.getMarginLeft() + 9;
             
             this.auxTextControl = new Label( parent, SWT.WRAP );
-            this.auxTextControl.setLayoutData( gdwhint( gdhindent( gdhspan( gdhfill(), this.spanBothColumns ? 2 : 1 ), hindent ), 10 ) );
+            this.auxTextControl.setLayoutData( gdwhint( gdhindent( gdhspan( gdhfill(), spanBothColumns ? 2 : 1 ), hindent ), 10 ) );
             this.auxTextControl.setForeground( parent.getDisplay().getSystemColor( SWT.COLOR_DARK_GRAY ) );
             
             reflowOnResize( this.auxTextControl );
@@ -244,28 +233,84 @@ public abstract class PropertyEditorRenderer
     
     protected final Composite createMainComposite( final Composite parent )
     {
+        return createMainComposite( parent, new CreateMainCompositeDelegate( this.part ) );
+    }
+    
+    protected static class CreateMainCompositeDelegate
+    {
+        private final SapphirePropertyEditor part;
+        
+        public CreateMainCompositeDelegate( final SapphirePropertyEditor part )
+        {
+            this.part = part;
+        }
+        
+        public boolean getShowLabel()
+        {
+            return this.part.getShowLabel();
+        }
+        
+        public String getLabel( final CapitalizationType capitalizationType,
+                                final boolean includeMnemonic )
+        {
+            return this.part.getLabel( capitalizationType, includeMnemonic );
+        }
+        
+        public int getLeftMargin()
+        {
+            return this.part.getMarginLeft();
+        }
+        
+        public boolean getSpanBothColumns()
+        {
+            return this.part.getSpanBothColumns();
+        }
+    }
+    
+    protected final Composite createMainComposite( final Composite parent,
+                                                   final CreateMainCompositeDelegate delegate )
+    {
+        final boolean showLabel = delegate.getShowLabel();
+        final int leftMargin = delegate.getLeftMargin();
+        final boolean spanBothColumns = delegate.getSpanBothColumns();
+        final boolean singleLinePart = this.part.isSingleLinePart();
         final List<SapphirePart> relatedContentParts = this.part.getRelatedContent();
         final int count = relatedContentParts.size();
+        
+        if( showLabel )
+        {
+            final Label label = new Label( parent, SWT.NONE );
+            label.setText( delegate.getLabel( CapitalizationType.FIRST_WORD_ONLY, true ) + ":" );
+            label.setLayoutData( gdhindent( gdhspan( gdvalign( gd(), singleLinePart ? SWT.CENTER : SWT.TOP ), spanBothColumns ? 2 : 1 ), leftMargin + 9 ) );
+            this.context.adapt( label );
+            addControl( label );
+        }
+        else if( ! spanBothColumns )
+        {
+            final Label spacer = new Label( parent, SWT.NONE );
+            spacer.setLayoutData( gd() );
+            spacer.setText( MiscUtil.EMPTY_STRING );
+            this.context.adapt( spacer );
+        }
         
         GridData gd;
         
         if( canExpandVertically() )
         {
             final boolean expandVertically = this.part.getRenderingHint( HINT_EXPAND_VERTICALLY, false );
-            final int heightHint = this.part.getRenderingHint( ISapphirePartDef.HINT_HEIGHT, 10 ) * 15;
-            gd = gdhhint( ( expandVertically ? gdfill() : gdhfill() ), heightHint );
+            gd = gdhhint( ( expandVertically ? gdfill() : gdhfill() ), this.part.getHeight( 150 ) );
         }
         else
         {
             gd = gdhfill();
         }
         
-        if( this.spanBothColumns )
+        if( spanBothColumns )
         {
-            gd = gdhindent( gdhspan( gd, 2 ), this.part.getLeftMarginHint() );
+            gd = gdhindent( gdhspan( gd, 2 ), leftMargin );
         }
         
-        gd = gdwhint( gd, 200 );
+        gd = gdwhint( gd, this.part.getWidth( 200 ) );
         
         final Composite composite = new Composite( parent, SWT.NONE );
         composite.setLayoutData( gd );
@@ -369,6 +414,17 @@ public abstract class PropertyEditorRenderer
         return this.decorator;
     }
     
+    protected final Control createDeprecationMarker( final Composite parent )
+    {
+        final Label label = new Label( parent, SWT.NONE );
+        label.setText( Resources.deprecatedLabelText );
+        this.context.adapt( label );
+        addControl( label );
+        label.setForeground( parent.getDisplay().getSystemColor( SWT.COLOR_DARK_GRAY ) );
+        
+        return label;
+    }
+    
     protected final void addControl( final Control control )
     {
         final IModelElement element = getModelElement();
@@ -462,10 +518,11 @@ public abstract class PropertyEditorRenderer
         
         this.onDisposeOperations.clear();
     }
-
+    
     private static final class Resources extends NLS
     {
         public static String actionsContextLabel;
+        public static String deprecatedLabelText;
     
         static
         {

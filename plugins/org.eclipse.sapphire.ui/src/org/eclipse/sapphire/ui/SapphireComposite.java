@@ -47,6 +47,12 @@ public class SapphireComposite
     
 {
     @Override
+    public ISapphireCompositeDef getDefinition()
+    {
+        return (ISapphireCompositeDef) super.getDefinition();
+    }
+
+    @Override
     public final void render( final SapphireRenderingContext context )
     {
         final SapphireRenderingContext ctxt;
@@ -118,10 +124,10 @@ public class SapphireComposite
         final boolean expandVertically 
             = this.definition.getHint( ISapphirePartDef.HINT_EXPAND_VERTICALLY, false );
         
-        final int widthHint = this.definition.getHint( ISapphirePartDef.HINT_WIDTH, -1 );
-        final int heightHint = this.definition.getHint( ISapphirePartDef.HINT_HEIGHT, -1 );
+        final int width = getWidth( -1 );
+        final int height = getHeight( -1 );
         
-        final GridData gd = gdwhint( gdhhint( gdhspan( ( expandVertically ? gdfill() : gdhfill() ), ( indent ? 1 : 2 ) ), heightHint ), widthHint );
+        final GridData gd = gdwhint( gdhhint( gdhspan( ( expandVertically ? gdfill() : gdhfill() ), ( indent ? 1 : 2 ) ), height ), width );
         
         final int marginLeft = def.getMarginLeft().getContent();
         final int marginRight = def.getMarginRight().getContent();
@@ -243,6 +249,18 @@ public class SapphireComposite
     protected Composite createOuterComposite( final SapphireRenderingContext context )
     {
         return context.getComposite();
+    }
+    
+    public int getWidth( final int defaultValue )
+    {
+        final Integer width = getDefinition().getWidth().getContent();
+        return ( width == null || width < 1 ? defaultValue : width );
+    }
+    
+    public int getHeight( final int defaultValue )
+    {
+        final Integer height = getDefinition().getHeight().getContent();
+        return ( height == null || height < 1 ? defaultValue : height );
     }
     
     public boolean getPreferFormStyle()

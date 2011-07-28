@@ -101,10 +101,8 @@
                                     <child-property>
                                         <property>LocalNumber</property>
                                     </child-property>
-                                    <hint>
-                                        <name>show.label</name>
-                                        <value>false</value>
-                                    </hint>
+                                    <show-label>false</show-label>
+                                    <span>true</span>
                                     <hint>
                                         <name>column.widths</name>
                                         <value>100,100,100:1</value>
@@ -126,10 +124,8 @@
                                                 <impl>WebSiteUrlBrowseHandler</impl>
                                             </action-handler>
                                         </child-property>
-                                        <hint>
-                                            <name>show.label</name>
-                                            <value>false</value>
-                                        </hint>
+                                        <show-label>false</show-label>
+                                        <span>true</span>
                                     </property-editor>
                                 </content>
                             </section>
@@ -171,10 +167,8 @@
                                 <content>
                                     <property-editor>
                                         <property>Connections</property>
-                                        <hint>
-                                            <name>show.label</name>
-                                            <value>false</value>
-                                        </hint>
+                                        <show-label>false</show-label>
+                                        <span>true</span>
                                     </property-editor>
                                 </content>
                             </section>

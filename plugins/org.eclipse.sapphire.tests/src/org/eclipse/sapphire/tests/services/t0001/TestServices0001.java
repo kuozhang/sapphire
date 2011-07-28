@@ -61,6 +61,7 @@ public final class TestServices0001 extends SapphireTestCase
         suite.addTest( new TestServices0001( "testFileExtensionsMany" ) );
         suite.addTest( new TestServices0001( "testValidFileSystemResourceTypeFile" ) );
         suite.addTest( new TestServices0001( "testValidFileSystemResourceTypeFolder" ) );
+        suite.addTest( new TestServices0001( "testDeprecated" ) );
         suite.addTest( new TestServices0001( "testStatic" ) );
         
         return suite;
@@ -177,6 +178,13 @@ public final class TestServices0001 extends SapphireTestCase
     public void testValidFileSystemResourceTypeFolder() throws Exception
     {
         test( ITestRootElement.PROP_VALID_FILE_SYSTEM_RESOURCE_TYPE_FOLDER, "Must be a folder." );
+    }
+    
+    @SuppressWarnings( "deprecation" )
+    
+    public void testDeprecated() throws Exception
+    {
+        test( ITestRootElement.PROP_DEPRECATED, "Deprecated." );
     }
     
     public void testStatic() throws Exception

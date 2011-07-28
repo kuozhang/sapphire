@@ -11,16 +11,13 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
-import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -36,7 +33,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Text;
 
@@ -67,9 +63,6 @@ public final class ScalePropertyEditorRenderer
         final SapphirePropertyEditor part = getPart();
         final ValueProperty property = (ValueProperty) part.getProperty();
 
-        final boolean showLabel = part.getRenderingHint( HINT_SHOW_LABEL, true );
-        final int baseIndent = part.getLeftMarginHint();
-        
         final NumericRange rangeAnnotation = property.getAnnotation( NumericRange.class );
         
         try
@@ -94,20 +87,6 @@ public final class ScalePropertyEditorRenderer
         {
             this.offset = 0;
         }
-        
-        if( showLabel )
-        {
-            final String labelText = property.getLabel( false, CapitalizationType.FIRST_WORD_ONLY, true );
-
-            final Label label = new Label( parent, SWT.NONE );
-            label.setLayoutData( gdhindent( gd(), baseIndent + 9 ) );
-            label.setText( labelText + ":" );
-            this.context.adapt( label );
-            
-            addControl( label );
-        }
-        
-        setSpanBothColumns( ! showLabel );
         
         final Composite composite = createMainComposite( parent );
         composite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );

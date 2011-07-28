@@ -208,6 +208,12 @@
         <id>Sapphire.FactsService.ValidFileSystemResourceType</id>
     </model-property-service>
     <model-property-service>
+        <description>Creates fact statements about property's deprecated state by using semantical information specified by @Deprecated annotation.</description>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+        <factory>org.eclipse.sapphire.services.internal.DeprecatedPropertyFactsService$Factory</factory>
+        <id>Sapphire.FactsService.Deprecated</id>
+    </model-property-service>
+    <model-property-service>
         <type>org.eclipse.sapphire.services.FactsAggregationService</type>
         <factory>org.eclipse.sapphire.services.internal.FactsAggregationServiceFactory</factory>
         <id>Sapphire.FactsAggregationService</id>

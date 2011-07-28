@@ -20,14 +20,10 @@ import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_BORDER;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_BROWSE_ONLY;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_LISTENERS;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_READ_ONLY;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL_ABOVE;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.RELATED_CONTROLS;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
@@ -37,8 +33,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -63,7 +57,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 
@@ -129,23 +122,7 @@ public class DefaultValuePropertyEditorRenderer
         );
         
         final boolean isActionsToolBarNeeded = toolBarActionsPresentation.hasActions();
-        
         final boolean isBrowseOnly = part.getRenderingHint( HINT_BROWSE_ONLY, false );
-        final boolean showLabelAbove = part.getRenderingHint( HINT_SHOW_LABEL_ABOVE, false );
-        final boolean showLabelInline = part.getRenderingHint( HINT_SHOW_LABEL, ! showLabelAbove );
-        Label label = null;
-        
-        final int baseIndent = part.getLeftMarginHint() + 9;
-        
-        if( showLabelInline || showLabelAbove )
-        {
-            label = new Label( parent, SWT.NONE );
-            label.setText( property.getLabel( false, CapitalizationType.FIRST_WORD_ONLY, true ) + ":" );
-            label.setLayoutData( gdhindent( gdhspan( gdvalign( gd(), isLongString ? SWT.TOP : SWT.CENTER ), showLabelAbove ? 2 : 1 ), baseIndent ) );
-            this.context.adapt( label );
-        }
-        
-        setSpanBothColumns( ! showLabelInline );
         
         final Composite textFieldParent = createMainComposite( parent );
         
@@ -237,8 +214,6 @@ public class DefaultValuePropertyEditorRenderer
         final List<Control> relatedControls = new ArrayList<Control>();
         this.textField.setData( RELATED_CONTROLS, relatedControls );
         
-        relatedControls.add( label );
-        
         final SapphireActionHandler.Listener actionHandlerListener = new SapphireActionHandler.Listener()
         {
             @Override
@@ -279,11 +254,8 @@ public class DefaultValuePropertyEditorRenderer
         
         if( isDeprecated )
         {
-            final Text deprecatedLabel = new Text( textFieldParent, SWT.READ_ONLY );
-            deprecatedLabel.setLayoutData( gd() );
-            deprecatedLabel.setText( Resources.deprecatedLabelText );
-            this.context.adapt( deprecatedLabel );
-            deprecatedLabel.setForeground( parent.getDisplay().getSystemColor( SWT.COLOR_DARK_GRAY ) );
+            final Control deprecationMarker = createDeprecationMarker( textFieldParent );
+            deprecationMarker.setLayoutData( gd() );
         }
         
         this.binding = new TextFieldBinding( getPart(), this.context, this.textField );
@@ -355,10 +327,7 @@ public class DefaultValuePropertyEditorRenderer
         this.textField.setFocus();
     }
 
-    public static final class Factory
-    
-        extends PropertyEditorRendererFactory
-        
+    public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
         public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
@@ -371,19 +340,6 @@ public class DefaultValuePropertyEditorRenderer
                                               final SapphirePropertyEditor part )
         {
             return new DefaultValuePropertyEditorRenderer( context, part );
-        }
-    }
-    
-    private static final class Resources
-    
-        extends NLS
-    
-    {
-        public static String deprecatedLabelText;
-        
-        static
-        {
-            initializeMessages( DefaultValuePropertyEditorRenderer.class.getName(), Resources.class );
         }
     }
     

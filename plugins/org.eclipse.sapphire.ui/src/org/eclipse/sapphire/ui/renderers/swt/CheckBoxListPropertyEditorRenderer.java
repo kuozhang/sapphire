@@ -12,12 +12,8 @@
 package org.eclipse.sapphire.ui.renderers.swt;
 
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_HEADER;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL_ABOVE;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
@@ -74,7 +70,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -133,23 +128,6 @@ public class CheckBoxListPropertyEditorRenderer
         final PossibleValuesService possibleValuesService = element.service( this.memberProperty, PossibleValuesService.class );
         
         // Create Controls
-        
-        final boolean showLabelAbove = part.getRenderingHint( HINT_SHOW_LABEL_ABOVE, false );
-        final boolean showLabelInline = part.getRenderingHint( HINT_SHOW_LABEL, ! showLabelAbove );
-        
-        Label label = null;
-        
-        final int baseIndent = part.getLeftMarginHint() + 9;
-        
-        if( showLabelInline || showLabelAbove )
-        {
-            label = new Label( parent, SWT.NONE );
-            label.setText( listProperty.getLabel( false, CapitalizationType.FIRST_WORD_ONLY, true ) + ":" );
-            label.setLayoutData( gdhindent( gdhspan( gdvalign( gd(), SWT.TOP ), showLabelAbove ? 2 : 1 ), baseIndent ) );
-            this.context.adapt( label );
-        }
-        
-        setSpanBothColumns( ! showLabelInline );
         
         final Composite mainComposite = createMainComposite( parent );
         mainComposite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );

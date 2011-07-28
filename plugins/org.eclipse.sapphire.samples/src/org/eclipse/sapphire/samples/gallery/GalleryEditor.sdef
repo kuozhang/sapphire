@@ -261,10 +261,8 @@
                                             <name>prefer.vertical.radio.buttons</name>
                                             <value>true</value>
                                         </hint>
-                                        <hint>
-                                            <name>show.label</name>
-                                            <value>false</value>
-                                        </hint>
+                                        <show-label>false</show-label>
+                                        <span>true</span>
                                     </property-editor>
                                 </content>
                             </group>
@@ -278,10 +276,8 @@
                                             <name>prefer.vertical.radio.buttons</name>
                                             <value>true</value>
                                         </hint>
-                                        <hint>
-                                            <name>show.label</name>
-                                            <value>false</value>
-                                        </hint>
+                                        <show-label>false</show-label>
+                                        <span>true</span>
                                         <hint>
                                             <name>aux.text.yes</name>
                                             <value>Shows agreement or acceptance.</value>
@@ -406,10 +402,8 @@
                                     <content>
                                         <property-editor>
                                             <property>Preserved</property>
-                                            <hint>
-                                                <name>show.label</name>
-                                                <value>false</value>
-                                            </hint>
+                                            <show-label>false</show-label>
+                                            <span>true</span>
                                             <related-content>
                                                 <html>
                                                     <fragment></fragment>
@@ -420,10 +414,8 @@
                                         </property-editor>
                                         <property-editor>
                                             <property>Trimmed</property>
-                                            <hint>
-                                                <name>show.label</name>
-                                                <value>false</value>
-                                            </hint>
+                                            <show-label>false</show-label>
+                                            <span>true</span>
                                             <related-content>
                                                 <html>
                                                     <fragment></fragment>
@@ -434,10 +426,8 @@
                                         </property-editor>
                                         <property-editor>
                                             <property>Collapsed</property>
-                                            <hint>
-                                                <name>show.label</name>
-                                                <value>false</value>
-                                            </hint>
+                                            <show-label>false</show-label>
+                                            <span>true</span>
                                             <related-content>
                                                 <html>
                                                     <fragment></fragment>
@@ -606,10 +596,8 @@
                         <content>
                             <property-editor>
                                 <property>Homogeneous</property>
-                                <hint>
-                                    <name>show.label</name>
-                                    <value>false</value>
-                                </hint>
+                                <show-label>false</show-label>
+                                <span>true</span>
                             </property-editor>
                         </content>
                     </section>
@@ -682,10 +670,8 @@
                         <content>
                             <property-editor>
                                 <property>Heterogeneous</property>
-                                <hint>
-                                    <name>show.label</name>
-                                    <value>false</value>
-                                </hint>
+                                <show-label>false</show-label>
+                                <span>true</span>
                             </property-editor>
                             <separator>
                                 <label>details</label>
@@ -773,10 +759,8 @@
                             </label>
                             <property-editor>
                                 <property>MultiSelectString</property>
-                                <hint>
-                                    <name>show.label</name>
-                                    <value>false</value>
-                                </hint>
+                                <show-label>false</show-label>
+                                <span>true</span>
                             </property-editor>
                             <spacer />
                             <label>
@@ -785,10 +769,8 @@
                                 the org.eclipse.sapphire.ui.renderers.swt package.</label>
                             <property-editor>
                                 <property>MultiSelectString</property>
-                                <hint>
-                                    <name>show.label</name>
-                                    <value>false</value>
-                                </hint>
+                                <show-label>false</show-label>
+                                <span>true</span>
                                 <hint>
                                     <name>factory</name>
                                     <value>CheckBoxListPropertyEditorRenderer$Factory</value>
@@ -798,10 +780,8 @@
                             <label>A common variant of a multi-select list is an enum list. In this case, the PossibleValueService is implied by the enum. The checkbox list is the default presentation for enum lists.</label>
                             <property-editor>
                                 <property>MultiSelectEnum</property>
-                                <hint>
-                                    <name>show.label</name>
-                                    <value>false</value>
-                                </hint>
+                                <show-label>false</show-label>
+                                <span>true</span>
                                 <hint>
                                     <name>show.header</name>
                                     <value>false</value>
@@ -1419,10 +1399,8 @@
                             <related-content>
                                 <property-editor>
                                     <property>MeasurementUnits</property>
-                                    <hint>
-                                        <name>show.label</name>
-                                        <value>false</value>
-                                    </hint>
+                                    <show-label>false</show-label>
+                                    <span>true</span>
                                 </property-editor>
                             </related-content>
                         </property-editor>
@@ -1436,10 +1414,8 @@
                             <related-content>
                                 <property-editor>
                                     <property>MeasurementUnits</property>
-                                    <hint>
-                                        <name>show.label</name>
-                                        <value>false</value>
-                                    </hint>
+                                    <show-label>false</show-label>
+                                    <span>true</span>
                                     <related-content-width>30</related-content-width>
                                     <related-content>
                                         <property-editor>MeasurementOfArea</property-editor>
@@ -1456,10 +1432,7 @@
                         <spacer />
                         <property-editor>
                             <property>Description</property>
-                            <hint>
-                                <name>height</name>
-                                <value>15</value>
-                            </hint>
+                            <height>250</height>
                             <related-content>
                                 <html>
                                     <content>

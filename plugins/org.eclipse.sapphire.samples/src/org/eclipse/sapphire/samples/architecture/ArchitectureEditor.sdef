@@ -38,10 +38,8 @@
                         <content>
                             <property-editor>
                                 <property>Description</property>
-                                <hint>
-                                    <name>show.label</name>
-                                    <value>false</value>
-                                </hint>
+                                <show-label>false</show-label>
+                                <span>true</span>
                                 <hint>
                                     <name>expand.vertically</name>
                                     <value>true</value>
@@ -74,10 +72,8 @@
                             <property>Dependencies</property>
                             <child-property>Name</child-property>
                             <child-property>Description</child-property>
-                            <hint>
-                                <name>show.label</name>
-                                <value>false</value>
-                            </hint>
+                            <show-label>false</show-label>
+                            <span>true</span>
                             <hint>
                                 <name>expand.vertically</name>
                                 <value>true</value>
@@ -105,10 +101,8 @@
                 <content>
                     <property-editor>
                         <property>Description</property>
-                        <hint>
-                            <name>show.label</name>
-                            <value>false</value>
-                        </hint>
+                        <show-label>false</show-label>
+                        <span>true</span>
                         <hint>
                             <name>expand.vertically</name>
                             <value>true</value>
@@ -168,10 +162,8 @@
                                         <property>Dependencies</property>
                                         <child-property>Name</child-property>
                                         <child-property>Description</child-property>
-                                        <hint>
-                                            <name>show.label</name>
-                                            <value>false</value>
-                                        </hint>
+                                        <show-label>false</show-label>
+                                        <span>true</span>
                                         <hint>
                                             <name>expand.vertically</name>
                                             <value>true</value>

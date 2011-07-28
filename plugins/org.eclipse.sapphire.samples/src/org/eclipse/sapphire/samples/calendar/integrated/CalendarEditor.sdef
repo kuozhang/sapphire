@@ -49,10 +49,8 @@
                                 <content>
                                     <property-editor>
                                         <property>Attachments</property>
-                                        <hint>
-                                            <name>show.label</name>
-                                            <value>false</value>
-                                        </hint>
+                                        <show-label>false</show-label>
+                                        <span>true</span>
                                     </property-editor>
                                 </content>
                             </section>
@@ -72,10 +70,8 @@
                             <content>
                                 <property-editor>
                                     <property>Attendees</property>
-                                    <hint>
-                                        <name>show.label</name>
-                                        <value>false</value>
-                                    </hint>
+                                    <show-label>false</show-label>
+                                    <span>true</span>
                                     <child-property>
                                         <property>Name</property>
                                         <action-handler>

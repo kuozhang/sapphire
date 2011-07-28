@@ -16,8 +16,6 @@ package org.eclipse.sapphire.ui.renderers.swt;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_ASSIST;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_DELETE;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_JUMP;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL_ABOVE;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
@@ -52,7 +50,6 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
-import org.eclipse.sapphire.ui.internal.EnhancedComposite;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
@@ -76,7 +73,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class CompactListPropertyEditorRenderer
+public final class CompactListPropertyEditorRenderer
 
     extends ListPropertyEditorRenderer
     
@@ -86,7 +83,7 @@ public class CompactListPropertyEditorRenderer
     private Runnable refreshOperation;
     
     ValueProperty memberProperty;
-    private Composite innerComposite;
+    private Composite mainComposite;
     private Composite textComposite;
     private List<TextBinding> textBindings = new ArrayList<TextBinding>();
     private SapphireFormText addText;
@@ -103,22 +100,13 @@ public class CompactListPropertyEditorRenderer
     @Override
     protected void createContents( final Composite parent )
     {
-        createContents( parent, false, false );
-    }
-    
-    protected Control createContents( final Composite parent,
-                                      final boolean suppressLabel,
-                                      final boolean ignoreLeftMarginHint )
-    {
         final SapphirePropertyEditor part = getPart();
         final ListProperty property = (ListProperty) part.getProperty();
         // TODO support readonly
         //final boolean isReadOnly = ( property.isReadOnly() || part.getRenderingHint( HINT_READ_ONLY, false ) );
 
-        final boolean showLabelAbove = part.getRenderingHint( HINT_SHOW_LABEL_ABOVE, false );
-        final boolean showLabelInline = part.getRenderingHint( HINT_SHOW_LABEL, ( suppressLabel ? false : ! showLabelAbove ) );
-        final int leftMargin = ( ignoreLeftMarginHint ? 0 : part.getLeftMarginHint() );
         final List<ModelProperty> allMemberProperties = property.getType().getProperties();
+        
         if( allMemberProperties.size() == 1 )
         {
             final ModelProperty prop = allMemberProperties.get( 0 );
@@ -137,24 +125,8 @@ public class CompactListPropertyEditorRenderer
             throw new IllegalStateException();
         }
         
-        if( showLabelInline || showLabelAbove )
-        {
-            final String labelText = property.getLabel( false, CapitalizationType.FIRST_WORD_ONLY, true ) + ":";
-            this.label = new Label( parent, SWT.NONE );
-            this.label.setLayoutData( gdvindent( gdhindent( gdhspan( gdvalign( gd(), SWT.TOP ), showLabelAbove ? 2 : 1 ), leftMargin + 9 ), 4) );
-            this.label.setText( labelText );
-            this.context.adapt( this.label );
-            addControl( this.label );
-        }
-        else
-        {
-            this.label = null;
-        }
-        
-        this.innerComposite = new EnhancedComposite( parent, SWT.NONE );
-        this.innerComposite.setLayoutData( gdhindent( gdhspan( gdhfill(), showLabelInline ? 1 : 2 ), showLabelInline ? 0 : leftMargin ) );
-        this.innerComposite.setLayout( glayout( 2, 0, 0, 2, 2 ) );
-        this.context.adapt(this.innerComposite);
+        this.mainComposite = createMainComposite( parent );
+        this.mainComposite.setLayout( glayout( 2, 0, 0, 2, 2 ) );
 
         addControls( 1 );
 
@@ -164,7 +136,7 @@ public class CompactListPropertyEditorRenderer
             
             public void run()
             {
-                if( CompactListPropertyEditorRenderer.this.innerComposite.isDisposed() )
+                if( CompactListPropertyEditorRenderer.this.mainComposite.isDisposed() )
                 {
                     return;
                 }
@@ -187,7 +159,7 @@ public class CompactListPropertyEditorRenderer
             }
         };
         
-        this.binding = new AbstractBinding( getPart(), this.context, this.innerComposite )
+        this.binding = new AbstractBinding( getPart(), this.context, this.mainComposite )
         {
             @Override
             protected void doUpdateModel()
@@ -205,8 +177,6 @@ public class CompactListPropertyEditorRenderer
                 CompactListPropertyEditorRenderer.this.refreshOperation.run();
             }
         };
-                
-        return this.innerComposite;
     }
     
     private void addControls(int count) {
@@ -217,12 +187,12 @@ public class CompactListPropertyEditorRenderer
         for (int i = 0; i < this.textBindings.size(); i++) {
             this.textBindings.get(i).removeListener();
         }
-        for (Control child : this.innerComposite.getChildren()) {
+        for (Control child : this.mainComposite.getChildren()) {
             child.dispose();
         }
         this.textBindings.clear();
 
-        this.textComposite = new Composite( this.innerComposite, SWT.NONE );
+        this.textComposite = new Composite( this.mainComposite, SWT.NONE );
         this.textComposite.setLayoutData( gdhspan( gdfill(), 2 ) );
         this.textComposite.setLayout( glspacing( glayout( 3, 0, 0 ), 2, 4 ) );
         
@@ -251,7 +221,7 @@ public class CompactListPropertyEditorRenderer
             decorator.addEditorControl(binding.getToolbar());
         }
 
-        this.addText = new SapphireFormText( this.innerComposite, SWT.NONE );
+        this.addText = new SapphireFormText( this.mainComposite, SWT.NONE );
         this.addText.setLayoutData( gdhindent( gdvalign( gdhfill(), SWT.CENTER ), 10 ) );
         this.context.adapt( this.addText );
         

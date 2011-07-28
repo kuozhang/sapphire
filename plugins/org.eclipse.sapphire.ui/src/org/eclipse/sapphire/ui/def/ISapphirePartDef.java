@@ -41,8 +41,6 @@ public interface ISapphirePartDef
     
     String HINT_EXPAND_VERTICALLY = "expand.vertically";
     String HINT_HIDE_IF_DISABLED = "hide.if.disabled";
-    String HINT_WIDTH = "width";
-    String HINT_HEIGHT = "height";
     String HINT_PREFER_FORM_STYLE = "prefer.form.style";
     String HINT_STYLE = "style";
     

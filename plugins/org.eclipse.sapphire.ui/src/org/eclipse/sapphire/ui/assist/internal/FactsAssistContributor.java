@@ -13,7 +13,11 @@
 package org.eclipse.sapphire.ui.assist.internal;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.FactsAggregationService;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
@@ -40,6 +44,32 @@ public final class FactsAssistContributor
     {
         final IModelElement element = context.getModelElement();
         final ModelProperty property = context.getProperty();
+        
+        boolean contribute = false;
+        
+        if( property instanceof ValueProperty )
+        {
+            final Value<?> val = element.read( (ValueProperty) property );
+
+            if( val.getText( false ) != null )
+            {
+                contribute = true;
+            }
+        }
+        else if( property instanceof ListProperty )
+        {
+            final ModelElementList<?> list = element.read( (ListProperty) property );
+            
+            if( list.size() > 0 )
+            {
+                contribute = true;
+            }
+        }
+        
+        if( ! contribute )
+        {
+            return;
+        }
         
         for( String fact : element.service( property, FactsAggregationService.class ).facts() )
         {

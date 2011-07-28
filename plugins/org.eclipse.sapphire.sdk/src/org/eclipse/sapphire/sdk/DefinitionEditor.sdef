@@ -120,10 +120,7 @@
             <property-editor>Title</property-editor>
             <property-editor>
                 <property>Content</property>
-                <hint>
-                    <name>height</name>
-                    <value>15</value>
-                </hint>
+                <height>250</height>
                 <related-content>
                     <html>
                         <content>
@@ -223,14 +220,17 @@
     <form>
         <id>CompositePresentation</id>
         <content>
+            <property-editor>Width</property-editor>
+            <property-editor>Height</property-editor>
+            <spacer></spacer>
             <property-editor>MarginWidth</property-editor>
             <property-editor>MarginHeight</property-editor>
-            <spacer/>
+            <spacer />
             <property-editor>MarginLeft</property-editor>
             <property-editor>MarginRight</property-editor>
             <property-editor>MarginTop</property-editor>
             <property-editor>MarginBottom</property-editor>
-            <spacer/>
+            <spacer />
             <property-editor>
                 <property>Indent</property>
                 <hint>
@@ -268,7 +268,6 @@
                 <content>
                     <include>PartId</include>
                     <property-editor>Property</property-editor>
-                    <property-editor>Hints</property-editor>
                     <property-editor>Listeners</property-editor>
                 </content>
             </section>
@@ -314,6 +313,32 @@
             </node>
             <node-include>ActionsOverallNode</node-include>
             <node-include>DocumentationNode</node-include>
+            <section>
+                <label>customization</label>
+                <content>
+                    <property-editor>
+                        <property>SpanBothColumns</property>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                    </property-editor>
+                    <property-editor>Width</property-editor>
+                    <property-editor>Height</property-editor>
+                    <property-editor>MarginLeft</property-editor>
+                    <spacer></spacer>
+                    <property-editor>
+                        <property>ShowLabel</property>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                    </property-editor>
+                    <property-editor>Label</property-editor>
+                    <spacer></spacer>
+                    <property-editor>Hints</property-editor>
+                </content>
+            </section>
         </case>
         
         <case>
@@ -379,10 +404,8 @@
                 <content>
                     <property-editor>
                         <property>ContentSourceType</property>
-                        <hint>
-                            <name>show.label</name>
-                            <value>false</value>
-                        </hint>
+                        <show-label>false</show-label>
+                        <span>true</span>
                     </property-editor>
                     <separator/>
                     <switching-panel>
@@ -394,10 +417,8 @@
                             <content>
                                 <property-editor>
                                     <property>Content</property>
-                                    <hint>
-                                        <name>show.label</name>
-                                        <value>false</value>
-                                    </hint>
+                                    <show-label>false</show-label>
+                                    <span>true</span>
                                 </property-editor>
                                 <property-editor>Fragment</property-editor>
                             </content>
@@ -704,10 +725,8 @@
                 <content>
                     <property-editor>
                         <property>Hints</property>
-                        <hint>
-                            <name>show.label</name>
-                            <value>false</value>
-                        </hint>
+                        <show-label>false</show-label>
+                        <span>true</span>
                     </property-editor>
                 </content>
             </section>
@@ -1474,10 +1493,8 @@
                             <content>
                                 <property-editor>
                                     <property>ModelElementTypes</property>
-                                    <hint>
-                                        <name>show.label</name>
-                                        <value>false</value>
-                                    </hint>
+                                    <show-label>false</show-label>
+                                    <span>true</span>
                                 </property-editor>
                             </content>
                         </section>
@@ -1486,10 +1503,8 @@
                             <content>
                                 <property-editor>
                                     <property>Condition</property>
-                                    <hint>
-                                        <name>show.label</name>
-                                        <value>false</value>
-                                    </hint>
+                                    <show-label>false</show-label>
+                                    <span>true</span>
                                 </property-editor>
                             </content>
                         </section>
@@ -1498,10 +1513,8 @@
                             <content>
                                 <property-editor>
                                     <property>ConnectionWiringStrategy</property>
-                                    <hint>
-                                        <name>show.label</name>
-                                        <value>false</value>
-                                    </hint>
+                                    <show-label>false</show-label>
+                                    <span>true</span>
                                 </property-editor>
                             </content>
                         </section>

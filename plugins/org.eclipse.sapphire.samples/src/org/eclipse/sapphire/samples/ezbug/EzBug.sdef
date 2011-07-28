@@ -64,14 +64,8 @@
                             <content>
                                 <property-editor>
                                     <property>Description</property>
-                                    <hint>
-                                        <name>show.label.above</name>
-                                        <value>true</value>
-                                    </hint>
-                                    <hint>
-                                        <name>height</name>
-                                        <value>5</value>
-                                    </hint>
+                                    <span>true</span>
+                                    <height>75</height>
                                 </property-editor>
                             </content>
                         </panel>
@@ -88,14 +82,8 @@
             <name>expand.vertically</name>
             <value>true</value>
         </hint>
-        <hint>
-            <name>width</name>
-            <value>600</value>
-        </hint>
-        <hint>
-            <name>height</name>
-            <value>500</value>
-        </hint>
+        <width>600</width>
+        <height>500</height>
     </composite>
 
     <composite>

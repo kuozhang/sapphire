@@ -102,7 +102,7 @@ public final class NamedValuesPropertyEditorRenderer
         
         this.rootComposite.setLayout( glayout( 1, 0, 0 ) );
         
-        final int baseIndent = part.getLeftMarginHint();
+        final int baseIndent = part.getMarginLeft();
         this.rootComposite.setLayoutData( gdvindent( gdhindent( gdhspan( gdhfill(), 2 ), baseIndent ), 5 ) );
         
         final NamedValues namedValuesAnnotation = property.getAnnotation( NamedValues.class );
