@@ -75,6 +75,7 @@ public class DiagramConnectionPart
 	protected ModelPropertyListener modelPropertyListener;
 	private PropertiesViewContributionManager propertiesViewContributionManager;
 	private List<Point> bendpoints = new ArrayList<Point>();
+	private Point labelPosition;
 	
 	public DiagramConnectionPart() {}
 	
@@ -256,12 +257,7 @@ public class DiagramConnectionPart
         {
             id = (String) this.idFunctionResult.value();
         }
-        
-        if( id == null )
-        {
-            id = "#null#";
-        }
-        
+                
         return id;
     }
     
@@ -560,7 +556,7 @@ public class DiagramConnectionPart
     	this.bendpoints.remove(index);
     }
     
-    public void updateBenpoint(int index, int x, int y)
+    public void updateBendpoint(int index, int x, int y)
     {
     	if (index < this.bendpoints.size())
     	{
@@ -571,5 +567,23 @@ public class DiagramConnectionPart
     public List<Point> getConnectionBendpoints()
     {
     	return this.bendpoints;
+    }
+
+    public Point getLabelPosition()
+    {
+    	return this.labelPosition;
+    }
+    
+    public void setLabelPosition(int x, int y)
+    {
+    	if (this.labelPosition == null)
+    	{
+    		this.labelPosition = new Point(x, y);
+    	}
+    	else
+    	{
+    		this.labelPosition.setX(x);
+    		this.labelPosition.setY(y);
+    	}
     }
 }

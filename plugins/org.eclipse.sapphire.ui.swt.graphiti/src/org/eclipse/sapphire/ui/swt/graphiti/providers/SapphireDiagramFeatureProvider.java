@@ -23,6 +23,7 @@ import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IDeleteFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IMoveBendpointFeature;
+import org.eclipse.graphiti.features.IMoveConnectionDecoratorFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IRemoveBendpointFeature;
 import org.eclipse.graphiti.features.IRemoveFeature;
@@ -33,6 +34,7 @@ import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.context.IDeleteContext;
 import org.eclipse.graphiti.features.context.IDirectEditingContext;
 import org.eclipse.graphiti.features.context.IMoveBendpointContext;
+import org.eclipse.graphiti.features.context.IMoveConnectionDecoratorContext;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.features.context.IRemoveBendpointContext;
 import org.eclipse.graphiti.features.context.IRemoveContext;
@@ -66,6 +68,7 @@ import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireDeleteFeature;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireDirectEditConnectionFeature;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireDirectEditNodeFeature;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireMoveBendpointFeature;
+import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireMoveConnectionDecoratorFeature;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireMoveNodeFeature;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireRemoveBendpointFeature;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireRemoveFeature;
@@ -249,6 +252,13 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 	public IResizeShapeFeature getResizeShapeFeature(IResizeShapeContext context) 
 	{
 		IResizeShapeFeature ret = new SapphireResizeShapeFeature(this);
+		return ret;
+	}
+	
+	@Override
+	public IMoveConnectionDecoratorFeature getMoveConnectionDecoratorFeature(IMoveConnectionDecoratorContext context) 
+	{
+		IMoveConnectionDecoratorFeature ret = new SapphireMoveConnectionDecoratorFeature(this);
 		return ret;
 	}
 	

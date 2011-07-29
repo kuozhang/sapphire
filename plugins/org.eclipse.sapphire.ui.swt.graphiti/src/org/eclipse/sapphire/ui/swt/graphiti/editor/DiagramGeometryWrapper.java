@@ -100,17 +100,23 @@ public class DiagramGeometryWrapper
 				nodePart.setNodeBounds(x, y, width, height);
 				
 				ModelElementList<IDiagramConnectionGeometry> connList = node.getEmbeddedConnectionGeometries();
-				for (IDiagramConnectionGeometry connBend : connList)
+				for (IDiagramConnectionGeometry connGeometry : connList)
 				{
-					String connId = connBend.getConnectionId().getContent();
+					String connId = connGeometry.getConnectionId().getContent();
 					DiagramConnectionPart connPart = IdUtil.getConnectionPart(nodePart, connId);
 					if (connPart != null)
 					{
-						ModelElementList<IBendPoint> bps = connBend.getConnectionBendpoints();
+						ModelElementList<IBendPoint> bps = connGeometry.getConnectionBendpoints();
 						int index = 0;
 						for (IBendPoint pt : bps)
 						{
 							connPart.addBendpoint(index++, pt.getX().getContent(), pt.getY().getContent());
+						}
+						
+						if (connGeometry.getLabelX().getContent() != null && connGeometry.getLabelY().getContent() != null)
+						{
+							connPart.setLabelPosition(connGeometry.getLabelX().getContent(), 
+									connGeometry.getLabelY().getContent());
 						}
 					}			
 				}
@@ -119,18 +125,24 @@ public class DiagramGeometryWrapper
 		}
 		
 		ModelElementList<IDiagramConnectionGeometry> connList = this.geometryModel.getDiagramConnectionGeometries();
-		for (IDiagramConnectionGeometry connBend : connList)
+		for (IDiagramConnectionGeometry connGeometry : connList)
 		{
-			String connId = connBend.getConnectionId().getContent();
+			String connId = connGeometry.getConnectionId().getContent();
 			DiagramConnectionPart connPart = IdUtil.getConnectionPart(this.diagramPart, connId);
 			if (connPart != null)
 			{
-				ModelElementList<IBendPoint> bps = connBend.getConnectionBendpoints();
+				ModelElementList<IBendPoint> bps = connGeometry.getConnectionBendpoints();
 				int index = 0;
 				for (IBendPoint pt : bps)
 				{
 					connPart.addBendpoint(index++, pt.getX().getContent(), pt.getY().getContent());
 				}
+				if (connGeometry.getLabelX().getContent() != null && connGeometry.getLabelY().getContent() != null)
+				{
+					connPart.setLabelPosition(connGeometry.getLabelX().getContent(), 
+							connGeometry.getLabelY().getContent());
+				}
+				
 			}			
 		}
 	}
@@ -139,7 +151,7 @@ public class DiagramGeometryWrapper
 	{		
 		this.geometryModel.getGridDefinition().setVisible(this.diagramPart.isGridVisible());		
 		addNodeBoundsToModel();
-		addConnectionBendpointsToModel();
+		addConnectionsToModel();
 		this.geometryModel.resource().save();
 	}
 
@@ -170,10 +182,11 @@ public class DiagramGeometryWrapper
 					List<DiagramConnectionPart> connParts = embeddedConnTemplate.getDiagramConnections(nodePart.getLocalModelElement());
 					for (DiagramConnectionPart connPart : connParts)
 					{
+						String connId = IdUtil.computeConnectionId(connPart);
+						IDiagramConnectionGeometry conn = null;
 						if (connPart.getConnectionBendpoints().size() > 0)
 						{
-							String connId = IdUtil.computeConnectionId(connPart);
-							IDiagramConnectionGeometry conn = diagramNode.getEmbeddedConnectionGeometries().addNewElement();
+							conn = diagramNode.getEmbeddedConnectionGeometries().addNewElement();
 							conn.setConnectionId(connId);
 							for (Point pt : connPart.getConnectionBendpoints())
 							{
@@ -181,24 +194,36 @@ public class DiagramGeometryWrapper
 								pt2.setX(pt.getX());
 								pt2.setY(pt.getY());
 							}
-						}						
+						}
+						if (connPart.getLabel() != null && connPart.getLabelPosition() != null)
+						{
+							if (conn == null)
+							{
+								conn = diagramNode.getEmbeddedConnectionGeometries().addNewElement();
+								conn.setConnectionId(connId);
+							}
+							conn.setLabelX(connPart.getLabelPosition().getX());
+							conn.setLabelY(connPart.getLabelPosition().getY());
+						}
+						
 					}
 				}
 			}
 		}
 	}
 	
-	private void addConnectionBendpointsToModel()
+	private void addConnectionsToModel()
 	{
 		this.geometryModel.getDiagramConnectionGeometries().clear();
 		for (DiagramConnectionTemplate connTemplate : this.diagramPart.getConnectionTemplates())
 		{
 			for (DiagramConnectionPart connPart : connTemplate.getDiagramConnections(null))
 			{
+				String id = IdUtil.computeConnectionId(connPart);
+				IDiagramConnectionGeometry conn = null;
 				if (connPart.getConnectionBendpoints().size() > 0)
-				{
-					String id = IdUtil.computeConnectionId(connPart);
-					IDiagramConnectionGeometry conn = this.geometryModel.getDiagramConnectionGeometries().addNewElement();
+				{					
+					conn = this.geometryModel.getDiagramConnectionGeometries().addNewElement();
 					conn.setConnectionId(id);
 					for (Point pt : connPart.getConnectionBendpoints())
 					{
@@ -206,6 +231,16 @@ public class DiagramGeometryWrapper
 						pt2.setX(pt.getX());
 						pt2.setY(pt.getY());
 					}					
+				}
+				if (connPart.getLabel() != null && connPart.getLabelPosition() != null)
+				{
+					if (conn == null)
+					{
+						conn = this.geometryModel.getDiagramConnectionGeometries().addNewElement();
+						conn.setConnectionId(id);
+					}
+					conn.setLabelX(connPart.getLabelPosition().getX());
+					conn.setLabelY(connPart.getLabelPosition().getY());
 				}
 			}
 		}
