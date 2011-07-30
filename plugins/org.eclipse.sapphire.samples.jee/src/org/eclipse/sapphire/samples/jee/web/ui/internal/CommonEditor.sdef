@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2011 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<definition>
+    <import>
+        <package>org.eclipse.sapphire.samples.jee</package>
+        <package>org.eclipse.sapphire.samples.jee.jndi</package>
+    </import>
+    <node>
+        <id>EnvironmentRefs</id>
+        <label>environment references</label>
+        <node-factory>
+            <property>EnvironmentRefs</property>
+            <case>
+                <model-element-type>IEnvironmentEntry</model-element-type>
+                <section>
+                    <label>environment entry</label>
+                    <content>
+                        <property-editor>Name</property-editor>
+                        <property-editor>Type</property-editor>
+                        <property-editor>Value</property-editor>
+                        <property-editor>Description</property-editor>
+                    </content>
+                </section>
+                <label>${ Name == null ? &quot;&lt;env-entry&gt;&quot; : Name }</label>
+            </case>
+            <case>
+                <model-element-type>IEjbRemoteRef</model-element-type>
+                <section>
+                    <label>EJB reference</label>
+                    <content>
+                        <property-editor>Name</property-editor>
+                        <property-editor>Type</property-editor>
+                        <property-editor>HomeInterface</property-editor>
+                        <property-editor>BeanInterface</property-editor>
+                        <property-editor>Link</property-editor>
+                        <property-editor>Description</property-editor>
+                    </content>
+                </section>
+                <label>${ Name == null ? &quot;&lt;ejb-ref&gt;&quot; : Name }</label>
+            </case>
+            <case>
+                <model-element-type>IEjbLocalRef</model-element-type>
+                <label>${ Name == null ? &quot;&lt;ejb-local-ref&gt;&quot; : Name }</label>
+                <section>
+                    <label>local EJB reference</label>
+                    <content>
+                        <property-editor>Name</property-editor>
+                        <property-editor>Type</property-editor>
+                        <property-editor>HomeInterface</property-editor>
+                        <property-editor>BeanInterface</property-editor>
+                        <property-editor>Link</property-editor>
+                        <property-editor>Description</property-editor>
+                    </content>
+                </section>
+            </case>
+        </node-factory>
+        <section>
+            <content>
+                <label>The environment entries provide means to parameterize a component. Unlike some other means of parameterization, the deployer can change the values without modifying the contents of the component archive.</label>
+                <spacer></spacer>
+                <action-link>
+                    <label>Add an environment entry</label>
+                    <action-id>Sapphire.Add</action-id>
+                    <action-handler-id>Sapphire.Add.IEnvironmentEntry</action-handler-id>
+                </action-link>
+                <spacer></spacer>
+                <label>The EJB references provide means for a component to locate needed beans via JNDI. The deployer ensures the availability of appropriate beans at runtime guided by the constraints specified by the developer in an EJB reference.</label>
+                <spacer></spacer>
+                <action-link>
+                    <label>Add an EJB reference</label>
+                    <action-id>Sapphire.Add</action-id>
+                    <action-handler-id>Sapphire.Add.IEjbRemoteRef</action-handler-id>
+                </action-link>
+                <action-link>
+                    <label>Add a local EJB reference</label>
+                    <action-id>Sapphire.Add</action-id>
+                    <action-handler-id>Sapphire.Add.IEjbLocalRef</action-handler-id>
+                </action-link>
+            </content>
+        </section>
+    </node>
+</definition>

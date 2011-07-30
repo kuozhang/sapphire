@@ -29,6 +29,10 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 import org.eclipse.sapphire.samples.jee.IDescribable;
 import org.eclipse.sapphire.samples.jee.IParam;
 import org.eclipse.sapphire.samples.jee.ISecurityRole;
+import org.eclipse.sapphire.samples.jee.jndi.IEjbLocalRef;
+import org.eclipse.sapphire.samples.jee.jndi.IEjbRemoteRef;
+import org.eclipse.sapphire.samples.jee.jndi.IEnvironmentEntry;
+import org.eclipse.sapphire.samples.jee.jndi.IEnvironmentRef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -269,5 +273,34 @@ public interface IWebAppConfig extends IModelElement, IDescribable
     ImpliedElementProperty PROP_AUTHENTICATION_CONFIG = new ImpliedElementProperty( TYPE, "AuthenticationConfig" );
     
     IAuthenticationConfig getAuthenticationConfig();
+    
+    // *** EnvironmentRefs ***
+    
+    @Type
+    (
+        base = IEnvironmentRef.class,
+        possible = 
+        {
+            IEnvironmentEntry.class, 
+            IEjbRemoteRef.class,
+            IEjbLocalRef.class
+        }
+    )
+    
+    @Label( standard = "environment references" )
+    
+    @XmlListBinding
+    (
+        mappings = 
+        {
+            @XmlListBinding.Mapping( element = "env-entry", type = IEnvironmentEntry.class ),
+            @XmlListBinding.Mapping( element = "ejb-ref", type = IEjbRemoteRef.class ),
+            @XmlListBinding.Mapping( element = "ejb-local-ref", type = IEjbLocalRef.class )
+        }
+    )
+    
+    ListProperty PROP_ENVIRONMENT_REFS = new ListProperty( TYPE, "EnvironmentRefs" );
+    
+    ModelElementList<IEnvironmentRef> getEnvironmentRefs();
     
 }

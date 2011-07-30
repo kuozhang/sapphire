@@ -18,6 +18,7 @@
         <package>org.eclipse.sapphire.samples.jee</package>
         <package>org.eclipse.sapphire.samples.jee.web</package>
         <package>org.eclipse.sapphire.samples.jee.web.ui.internal</package>
+        <definition>org/eclipse/sapphire/samples/jee/web/ui/internal/CommonEditor.sdef</definition>
     </import>
     <editor-page>
         <id>EditorPage</id>
@@ -632,7 +633,7 @@
                     </node-factory>
                     <section>
                         <content>
-                            <label>Security constraints are applied to collections web resources to limit how those resources are accessed.</label>
+                            <label>Security constraints are applied to collections of web resources to limit how those resources are accessed.</label>
                             <spacer></spacer>
                             <action-link>
                                 <label>Add a security constraint</label>
@@ -643,6 +644,7 @@
                     </section>
                 </node>
             </node>
+            <node-include>EnvironmentRefs</node-include>
         </root-node>
         <page-name>configuration</page-name>
     </editor-page>
