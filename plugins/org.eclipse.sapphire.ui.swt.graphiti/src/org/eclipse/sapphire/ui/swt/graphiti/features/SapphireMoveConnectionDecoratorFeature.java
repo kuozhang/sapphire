@@ -17,6 +17,10 @@ import org.eclipse.graphiti.features.impl.DefaultMoveConnectionDecoratorFeature;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 
+/**
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ */
+
 public class SapphireMoveConnectionDecoratorFeature extends
 		DefaultMoveConnectionDecoratorFeature 
 {

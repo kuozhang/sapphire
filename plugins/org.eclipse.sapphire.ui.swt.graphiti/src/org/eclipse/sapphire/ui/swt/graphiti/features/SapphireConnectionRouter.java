@@ -25,6 +25,10 @@ import org.eclipse.graphiti.mm.pictograms.FreeFormConnection;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.ILayoutService;
 
+/**
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ */
+
 public class SapphireConnectionRouter 
 {
 	private static SapphireConnectionRouter instance;
