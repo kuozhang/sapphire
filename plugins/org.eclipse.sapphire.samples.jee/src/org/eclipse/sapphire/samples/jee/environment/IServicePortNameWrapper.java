@@ -9,39 +9,37 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.jee.jndi;
+package org.eclipse.sapphire.samples.jee.environment;
 
-import org.eclipse.sapphire.java.JavaTypeConstraint;
-import org.eclipse.sapphire.java.JavaTypeKind;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "EJB remote reference" )
+@Label( standard = "service port name" )
 @GenerateImpl
 
-public interface IEjbRemoteRef extends IEjbRef
+public interface IServicePortNameWrapper extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IEjbRemoteRef.class );
+    ModelElementType TYPE = new ModelElementType( IServicePortNameWrapper.class );
     
-    // *** HomeInterface ***
+    // *** Name ***
     
-    @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE, type = "javax.ejb.EJBHome" )
-    @XmlBinding( path = "home" )
+    @Label( standard = "name" )
+    @Required
+    @XmlBinding( path = "" )
     
-    ValueProperty PROP_HOME_INTERFACE = new ValueProperty( TYPE, IEjbRef.PROP_HOME_INTERFACE );
+    ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
     
-    // *** BeanInterface ***
-    
-    @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE, type = "javax.ejb.EJBObject" )
-    @XmlBinding( path = "remote" )
-    
-    ValueProperty PROP_BEAN_INTERFACE = new ValueProperty( TYPE, IEjbRef.PROP_BEAN_INTERFACE );
-    
+    Value<String> getName();
+    void setName( String value );
+
 }

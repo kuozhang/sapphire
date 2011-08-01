@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.jee.jndi;
+package org.eclipse.sapphire.samples.jee.environment;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
@@ -18,7 +18,6 @@ import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.EnumSerialization;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -147,16 +146,5 @@ public interface IEnvironmentEntry extends IEnvironmentRef
     
     Value<String> getValue();
     void setValue( String value );
-    
-    // *** Description ***
-    
-    @Label( standard = "description" )
-    @LongString
-    @XmlBinding( path = "description" )
-    
-    ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );
-    
-    Value<String> getDescription();
-    void setDescription( String value );
     
 }

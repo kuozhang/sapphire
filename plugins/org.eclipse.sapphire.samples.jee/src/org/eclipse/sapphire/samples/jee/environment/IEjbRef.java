@@ -9,11 +9,9 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.jee.jndi;
+package org.eclipse.sapphire.samples.jee.environment;
 
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.java.JavaTypeConstraint;
-import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
@@ -22,7 +20,6 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.EnumSerialization;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -94,8 +91,6 @@ public interface IEjbRef extends IEnvironmentRef
     @Label( standard = "home interface" )
     @Required
     @MustExist
-    @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE, type = "javax.ejb.EJBHome" )
-    @XmlBinding( path = "home" )
     
     ValueProperty PROP_HOME_INTERFACE = new ValueProperty( TYPE, "HomeInterface" );
     
@@ -110,8 +105,6 @@ public interface IEjbRef extends IEnvironmentRef
     @Label( standard = "bean interface" )
     @Required
     @MustExist
-    @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE, type = "javax.ejb.EJBObject" )
-    @XmlBinding( path = "remote" )
     
     ValueProperty PROP_BEAN_INTERFACE = new ValueProperty( TYPE, "BeanInterface" );
     
@@ -143,16 +136,5 @@ public interface IEjbRef extends IEnvironmentRef
     
     Value<String> getLink();
     void setLink( String value );
-    
-    // *** Description ***
-    
-    @Label( standard = "description" )
-    @LongString
-    @XmlBinding( path = "description" )
-    
-    ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );
-    
-    Value<String> getDescription();
-    void setDescription( String value );
     
 }

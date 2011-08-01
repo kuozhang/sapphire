@@ -9,35 +9,37 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.jee.jndi;
+package org.eclipse.sapphire.samples.jee.environment;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "environment reference" )
+@Label( standard = "SOAP role" )
+@GenerateImpl
 
-public interface IEnvironmentRef extends IModelElement
+public interface ISoapRoleWrapper extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IEnvironmentRef.class );
+    ModelElementType TYPE = new ModelElementType( ISoapRoleWrapper.class );
     
     // *** Name ***
     
     @Label( standard = "name" )
     @Required
-    @NoDuplicates
-
+    @XmlBinding( path = "" )
+    
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
     
     Value<String> getName();
     void setName( String value );
-    
+
 }

@@ -16,11 +16,11 @@
 <definition>
     <import>
         <package>org.eclipse.sapphire.samples.jee</package>
-        <package>org.eclipse.sapphire.samples.jee.jndi</package>
+        <package>org.eclipse.sapphire.samples.jee.environment</package>
     </import>
     <node>
         <id>EnvironmentRefs</id>
-        <label>environment references</label>
+        <label>environment</label>
         <node-factory>
             <property>EnvironmentRefs</property>
             <case>
@@ -66,6 +66,121 @@
                     </content>
                 </section>
             </case>
+            <case>
+                <model-element-type>IResourceRef</model-element-type>
+                <label>${ Name == null ? &quot;&lt;resource-ref&gt;&quot; : Name }</label>
+                <section>
+                    <label>resource reference</label>
+                    <content>
+                        <property-editor>Name</property-editor>
+                        <property-editor>Type</property-editor>
+                        <property-editor>
+                            <property>AuthenticationMethod</property>
+                            <hint>
+                                <name>prefer.combo</name>
+                                <value>true</value>
+                            </hint>
+                        </property-editor>
+                        <property-editor>
+                            <property>Shared</property>
+                            <hint>
+                                <name>checkbox.layout</name>
+                                <value>leading.label</value>
+                            </hint>
+                        </property-editor>
+                        <property-editor>Description</property-editor>
+                    </content>
+                </section>
+            </case>
+            <case>
+                <model-element-type>IResourceEnvironmentRef</model-element-type>
+                <label>${ Name == null ? &quot;&lt;resource-env-ref&gt;&quot; : Name }</label>
+                <section>
+                    <label>resource environment reference</label>
+                    <content>
+                        <property-editor>Name</property-editor>
+                        <property-editor>Type</property-editor>
+                        <property-editor>Description</property-editor>
+                    </content>
+                </section>
+            </case>
+            <case>
+                <model-element-type>IMessageDestinationRef</model-element-type>
+                <label>${ Name == null ? &quot;&lt;message-destination-ref&gt;&quot; : Name }</label>
+                <section>
+                    <label>message destination reference</label>
+                    <content>
+                        <property-editor>Name</property-editor>
+                        <property-editor>Type</property-editor>
+                        <property-editor>
+                            <property>Usage</property>
+                            <hint>
+                                <name>prefer.combo</name>
+                                <value>true</value>
+                            </hint>
+                        </property-editor>
+                        <property-editor>Link</property-editor>
+                        <property-editor>Description</property-editor>
+                    </content>
+                </section>
+            </case>
+            <case>
+                <model-element-type>IServiceRef</model-element-type>
+                <label>${ Name == null ? &quot;&lt;service-ref&gt;&quot; : Name }</label>
+                <section>
+                    <label>service reference</label>
+                    <content>
+                        <property-editor>Name</property-editor>
+                        <property-editor>Type</property-editor>
+                        <property-editor>WsdlFile</property-editor>
+                        <property-editor>JaxRpcMappingFile</property-editor>
+                        <property-editor>ServiceName</property-editor>
+                        <property-editor>
+                            <property>Ports</property>
+                            <child-property>Type</child-property>
+                            <child-property>Link</child-property>
+                        </property-editor>
+                        <property-editor>Description</property-editor>
+                    </content>
+                </section>
+                <node>
+                    <label>handlers</label>
+                    <section>
+                        <label>service handlers</label>
+                        <content>
+                            <label>A service handler processes SOAP message header traffic during a remote call to a web service.</label>
+                            <spacer></spacer>
+                            <action-link>
+                                <label>Add a service handler</label>
+                                <action-id>Sapphire.Add</action-id>
+                            </action-link>
+                        </content>
+                    </section>
+                    <node-factory>
+                        <property>Handlers</property>
+                        <case>
+                            <model-element-type>IServiceHandler</model-element-type>
+                            <label>${ Name == null ? &quot;&lt;service-ref&gt;&quot; : Name }</label>
+                            <section>
+                                <label>service handler</label>
+                                <content>
+                                    <property-editor>Name</property-editor>
+                                    <property-editor>Implementation</property-editor>
+                                    <property-editor>
+                                        <property>InitParams</property>
+                                        <child-property>Name</child-property>
+                                        <child-property>Value</child-property>
+                                        <child-property>Description</child-property>
+                                    </property-editor>
+                                    <property-editor>SoapHeaders</property-editor>
+                                    <property-editor>SoapRoles</property-editor>
+                                    <property-editor>Ports</property-editor>
+                                </content>
+                            </section>
+                        </case>
+                    </node-factory>
+                </node>
+            </case>
         </node-factory>
         <section>
             <content>
@@ -88,6 +203,38 @@
                     <label>Add a local EJB reference</label>
                     <action-id>Sapphire.Add</action-id>
                     <action-handler-id>Sapphire.Add.IEjbLocalRef</action-handler-id>
+                </action-link>
+                <spacer></spacer>
+                <label>A resource reference provides means for a component to access objects that are created on demand by a resource factory. A resource can be a database connection, a message queue, etc.</label>
+                <spacer></spacer>
+                <action-link>
+                    <label>Add a resource reference</label>
+                    <action-id>Sapphire.Add</action-id>
+                    <action-handler-id>Sapphire.Add.IResourceRef</action-handler-id>
+                </action-link>
+                <spacer></spacer>
+                <label>A resource environment reference provides means for a component to access administered objects in the component's environment.</label>
+                <spacer></spacer>
+                <action-link>
+                    <label>Add a resource environment reference</label>
+                    <action-id>Sapphire.Add</action-id>
+                    <action-handler-id>Sapphire.Add.IResourceEnvironmentRef</action-handler-id>
+                </action-link>
+                <spacer></spacer>
+                <label>A message destination reference provides means for a component to locate a message destination via JNDI.</label>
+                <spacer></spacer>
+                <action-link>
+                    <label>Add a message destination reference</label>
+                    <action-id>Sapphire.Add</action-id>
+                    <action-handler-id>Sapphire.Add.IMessageDestinationRef</action-handler-id>
+                </action-link>
+                <spacer></spacer>
+                <label>A service reference provides means for a component to locate a web service via JNDI.</label>
+                <spacer></spacer>
+                <action-link>
+                    <label>Add a service reference</label>
+                    <action-id>Sapphire.Add</action-id>
+                    <action-handler-id>Sapphire.Add.IServiceRef</action-handler-id>
                 </action-link>
             </content>
         </section>
