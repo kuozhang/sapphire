@@ -488,7 +488,7 @@ Fragment-Host: @{Bundle}
       <if>
         <istrue value="${.verify.author.failed}"/>
         <then>
-          <fail message="Found one or more files with @author tag."/>
+          <fail message="Found one or more files with missing @author tag."/>
         </then>
       </if>
       <var name=".file.content" unset="true"/>
