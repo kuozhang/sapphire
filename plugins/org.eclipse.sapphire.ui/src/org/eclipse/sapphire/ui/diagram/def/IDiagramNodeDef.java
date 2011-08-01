@@ -64,7 +64,6 @@ public interface IDiagramNodeDef
     
     @Type( base = Function.class )
     @Label( standard = "instance ID" )
-    @Required
     @XmlBinding( path = "instance-id" )
     
     ValueProperty PROP_INSTANCE_ID = new ValueProperty( TYPE, "InstanceId" );

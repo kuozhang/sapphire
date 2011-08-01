@@ -43,6 +43,28 @@ public interface IDiagramConnectionGeometry extends IModelElement
     Value<String> getConnectionId();
     void setConnectionId( String name );
 
+    // *** LabelX ***
+    
+    @Type( base = Integer.class )
+    @XmlBinding( path = "labelPosition/@x" )
+    
+    ValueProperty PROP_LABEL_X = new ValueProperty( TYPE, "LabelX");
+    
+    Value<Integer> getLabelX();
+    void setLabelX(Integer value);
+    void setLabelX(String value);
+
+    // *** LabelY ***
+    
+    @Type( base = Integer.class )
+    @XmlBinding( path = "labelPosition/@y" )
+
+    ValueProperty PROP_LabelY = new ValueProperty( TYPE, "LabelY");
+    
+    Value<Integer> getLabelY();
+    void setLabelY(Integer value);
+    void setLabelY(String value);
+    
     // *** ConnectionBendpoints***
 
     @Type( base = IBendPoint.class )

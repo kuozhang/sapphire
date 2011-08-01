@@ -52,7 +52,7 @@ public class SapphireMoveBendpointFeature extends DefaultMoveBendpointFeature
 		if (bo instanceof DiagramConnectionPart && !(bo instanceof DiagramImplicitConnectionPart))
 		{
 			DiagramConnectionPart connPart = (DiagramConnectionPart)bo;
-			connPart.updateBenpoint(context.getBendpointIndex(), context.getX(), context.getY());
+			connPart.updateBendpoint(context.getBendpointIndex(), context.getX(), context.getY());
 		}		
 		return ret;
 	}

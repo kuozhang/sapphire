@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.swt.graphiti.features;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IRemoveContext;
 import org.eclipse.graphiti.features.impl.DefaultRemoveFeature;
+import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProvider;
 
@@ -33,9 +34,14 @@ public class SapphireRemoveFeature extends DefaultRemoveFeature
     {
         PictogramElement pe = context.getPictogramElement();
         SapphireDiagramFeatureProvider sfp = (SapphireDiagramFeatureProvider)getFeatureProvider();
-        final Object bo = sfp.getBusinessObjectForPictogramElement(pe);
-        
+        final Object bo = sfp.getBusinessObjectForPictogramElement(pe);        
         sfp.remove(bo);
-     }
-
+        
+    	if (pe instanceof Connection)
+    	{
+    		SapphireConnectionRouter.getInstance().removeConnectionFromCache((Connection)pe);
+    	}
+        
+    }
+    
 }
