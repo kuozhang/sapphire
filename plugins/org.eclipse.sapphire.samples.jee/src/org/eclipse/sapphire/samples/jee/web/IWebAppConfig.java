@@ -25,7 +25,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
-import org.eclipse.sapphire.samples.jee.IDescribable;
+import org.eclipse.sapphire.samples.jee.IDescribableExt;
 import org.eclipse.sapphire.samples.jee.IParam;
 import org.eclipse.sapphire.samples.jee.ISecurityRole;
 import org.eclipse.sapphire.samples.jee.environment.IEnvironmentConsumer;
@@ -39,7 +39,7 @@ import org.eclipse.sapphire.samples.jee.environment.IEnvironmentConsumer;
 
 // TODO: Tool message-destination element. How is different from message-destination-ref. Is the second form newer? Are both relevant?
 
-public interface IWebAppConfig extends IDescribable, IEnvironmentConsumer
+public interface IWebAppConfig extends IDescribableExt, IEnvironmentConsumer
 {
     ModelElementType TYPE = new ModelElementType( IWebAppConfig.class );
     

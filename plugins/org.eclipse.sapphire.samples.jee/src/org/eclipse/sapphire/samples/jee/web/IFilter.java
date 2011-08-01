@@ -31,7 +31,7 @@ import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.samples.jee.IDescribable;
+import org.eclipse.sapphire.samples.jee.IDescribableExt;
 import org.eclipse.sapphire.samples.jee.IParam;
 
 /**
@@ -40,7 +40,7 @@ import org.eclipse.sapphire.samples.jee.IParam;
 
 @GenerateImpl
 
-public interface IFilter extends IModelElement, IDescribable
+public interface IFilter extends IModelElement, IDescribableExt
 {
     ModelElementType TYPE = new ModelElementType( IFilter.class );
     

@@ -15,7 +15,6 @@ import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -32,6 +31,7 @@ import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.samples.jee.IDescribableExt;
 import org.eclipse.sapphire.samples.jee.IParam;
 
 /**
@@ -46,7 +46,7 @@ import org.eclipse.sapphire.samples.jee.IParam;
     content = "A service handler processes SOAP message header traffic during a remote call to a web service."
 )
 
-public interface IServiceHandler extends IModelElement
+public interface IServiceHandler extends IDescribableExt
 {
     ModelElementType TYPE = new ModelElementType( IServiceHandler.class );
     

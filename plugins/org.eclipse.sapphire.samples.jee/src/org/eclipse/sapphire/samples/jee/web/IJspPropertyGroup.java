@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.samples.jee.IDescribable;
+import org.eclipse.sapphire.samples.jee.IDescribableExt;
 import org.eclipse.sapphire.samples.jee.internal.InvertingBooleanXmlValueBinding;
 
 /**
@@ -36,7 +36,7 @@ import org.eclipse.sapphire.samples.jee.internal.InvertingBooleanXmlValueBinding
 @Label( standard = "JSP property group" )
 @GenerateImpl
 
-public interface IJspPropertyGroup extends IModelElement, IDescribable
+public interface IJspPropertyGroup extends IModelElement, IDescribableExt
 {
     ModelElementType TYPE = new ModelElementType( IJspPropertyGroup.class );
     

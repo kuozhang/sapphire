@@ -19,6 +19,19 @@
         <package>org.eclipse.sapphire.samples.jee.environment</package>
     </import>
     <node>
+        <id>DescriptionNode</id>
+        <label>description</label>
+        <section>
+            <content>
+                <property-editor>DisplayName</property-editor>
+                <property-editor>Description</property-editor>
+                <property-editor>SmallIcon</property-editor>
+                <property-editor>LargeIcon</property-editor>
+            </content>
+        </section>
+        <image>Documentation.gif</image>
+    </node>
+    <node>
         <id>EnvironmentRefs</id>
         <label>environment</label>
         <node-factory>
@@ -177,9 +190,11 @@
                                     <property-editor>Ports</property-editor>
                                 </content>
                             </section>
+                            <node-include>DescriptionNode</node-include>
                         </case>
                     </node-factory>
                 </node>
+                <node-include>DescriptionNode</node-include>
             </case>
         </node-factory>
         <section>

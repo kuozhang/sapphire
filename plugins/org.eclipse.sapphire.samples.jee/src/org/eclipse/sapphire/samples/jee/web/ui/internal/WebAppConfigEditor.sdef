@@ -648,17 +648,4 @@
         </root-node>
         <page-name>configuration</page-name>
     </editor-page>
-    <node>
-        <id>DescriptionNode</id>
-        <label>description</label>
-        <section>
-            <content>
-                <property-editor>DisplayName</property-editor>
-                <property-editor>Description</property-editor>
-                <property-editor>SmallIcon</property-editor>
-                <property-editor>LargeIcon</property-editor>
-            </content>
-        </section>
-        <image>Documentation.gif</image>
-    </node>
 </definition>

@@ -11,15 +11,13 @@
 
 package org.eclipse.sapphire.samples.jee.environment;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.Required;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.samples.jee.IDescribable;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,7 +25,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @Label( standard = "environment reference" )
 
-public interface IEnvironmentRef extends IModelElement
+public interface IEnvironmentRef extends IDescribable
 {
     ModelElementType TYPE = new ModelElementType( IEnvironmentRef.class );
     
@@ -41,16 +39,5 @@ public interface IEnvironmentRef extends IModelElement
     
     Value<String> getName();
     void setName( String value );
-    
-    // *** Description ***
-    
-    @Label( standard = "description" )
-    @LongString
-    @XmlBinding( path = "description" )
-    
-    ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );
-    
-    Value<String> getDescription();
-    void setDescription( String value );
     
 }

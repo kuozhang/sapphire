@@ -39,7 +39,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
-import org.eclipse.sapphire.samples.jee.IDescribable;
+import org.eclipse.sapphire.samples.jee.IDescribableExt;
 import org.eclipse.sapphire.samples.jee.IParam;
 import org.eclipse.sapphire.samples.jee.IRunAsSecurityRole;
 import org.eclipse.sapphire.samples.jee.web.internal.ServletTypeBinding;
@@ -51,7 +51,7 @@ import org.eclipse.sapphire.samples.jee.web.internal.ServletTypeBinding;
 @Label( standard = "servlet" )
 @GenerateImpl
 
-public interface IServlet extends IModelElement, IDescribable
+public interface IServlet extends IModelElement, IDescribableExt
 {
     ModelElementType TYPE = new ModelElementType( IServlet.class );
     

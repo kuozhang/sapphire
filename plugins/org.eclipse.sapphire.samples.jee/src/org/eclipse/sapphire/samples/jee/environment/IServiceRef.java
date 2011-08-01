@@ -34,6 +34,7 @@ import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.samples.jee.IDescribableExt;
 import org.eclipse.sapphire.samples.jee.web.internal.LeadingSlashValidationService;
 import org.eclipse.sapphire.samples.jee.web.internal.WebContentRelativePathService;
 
@@ -49,9 +50,7 @@ import org.eclipse.sapphire.samples.jee.web.internal.WebContentRelativePathServi
     content = "A service reference provides means for a component to locate a web service via JNDI."
 )
 
-// TODO: IServiceRef and IServicePortRef should extend IDescribable
-
-public interface IServiceRef extends IEnvironmentRef
+public interface IServiceRef extends IEnvironmentRef, IDescribableExt
 {
     ModelElementType TYPE = new ModelElementType( IServiceRef.class );
     
