@@ -30,8 +30,8 @@ import org.eclipse.sapphire.modeling.xml.XmlNode;
 import org.eclipse.sapphire.modeling.xml.XmlPath;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
-import org.eclipse.sapphire.samples.jee.web.ISecurityConstraint;
-import org.eclipse.sapphire.samples.jee.web.ISecurityRoleRef2;
+import org.eclipse.sapphire.samples.jee.web.SecurityConstraint;
+import org.eclipse.sapphire.samples.jee.web.SecurityRoleRef2;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -76,16 +76,16 @@ public final class SecurityConstraintServices
                 {
                     if( elRoleNameCount == 1 && elRoleNameList.get( 0 ).getText().equals( ANY_ROLE_WILDCARD ) && ! hasMetaComment )
                     {
-                        return this.valueSerializationService.encode( ISecurityConstraint.RolesSpecificationMethod.ANY );
+                        return this.valueSerializationService.encode( SecurityConstraint.RolesSpecificationMethod.ANY );
                     }
                     else
                     {
-                        return this.valueSerializationService.encode( ISecurityConstraint.RolesSpecificationMethod.LISTED );
+                        return this.valueSerializationService.encode( SecurityConstraint.RolesSpecificationMethod.LISTED );
                     }
                 }
                 else if( hasMetaComment )
                 {
-                    return this.valueSerializationService.encode( ISecurityConstraint.RolesSpecificationMethod.LISTED );
+                    return this.valueSerializationService.encode( SecurityConstraint.RolesSpecificationMethod.LISTED );
                 }
             }
             
@@ -95,17 +95,17 @@ public final class SecurityConstraintServices
         @Override
         public void write( final String value )
         {
-            ISecurityConstraint.RolesSpecificationMethod method 
-                = (ISecurityConstraint.RolesSpecificationMethod) this.valueSerializationService.decode( value );
+            SecurityConstraint.RolesSpecificationMethod method 
+                = (SecurityConstraint.RolesSpecificationMethod) this.valueSerializationService.decode( value );
             
             if( method == null )
             {
-                method = ISecurityConstraint.RolesSpecificationMethod.NONE;
+                method = SecurityConstraint.RolesSpecificationMethod.NONE;
             }
             
             final XmlElement elSecurityConstraint = xml();
 
-            if( method == ISecurityConstraint.RolesSpecificationMethod.NONE )
+            if( method == SecurityConstraint.RolesSpecificationMethod.NONE )
             {
                 final XmlElement elAuthConstraint = elSecurityConstraint.getChildElement( EL_AUTH_CONSTRAINT, false );
                 
@@ -118,7 +118,7 @@ public final class SecurityConstraintServices
             {
                 final XmlElement elAuthConstraint = elSecurityConstraint.getChildElement( EL_AUTH_CONSTRAINT, true );
                 
-                if( method == ISecurityConstraint.RolesSpecificationMethod.ANY )
+                if( method == SecurityConstraint.RolesSpecificationMethod.ANY )
                 {
                     boolean wroteWildcard = false;
                     
@@ -187,7 +187,7 @@ public final class SecurityConstraintServices
             final XmlNamespaceResolver xmlNamespaceResolver = ( (XmlResource) element.resource() ).getXmlNamespaceResolver();
             
             this.path = new XmlPath( EL_AUTH_CONSTRAINT, xmlNamespaceResolver );
-            this.modelElementTypes = new ModelElementType[] { ISecurityRoleRef2.TYPE };
+            this.modelElementTypes = new ModelElementType[] { SecurityRoleRef2.TYPE };
             this.xmlElementNames = new QName[] { createQualifiedName( EL_ROLE_NAME, xmlNamespaceResolver ) };
         }
 

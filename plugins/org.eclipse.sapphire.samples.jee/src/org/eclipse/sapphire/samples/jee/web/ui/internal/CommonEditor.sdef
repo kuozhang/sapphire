@@ -37,7 +37,7 @@
         <node-factory>
             <property>EnvironmentRefs</property>
             <case>
-                <model-element-type>IEnvironmentEntry</model-element-type>
+                <model-element-type>EnvironmentEntry</model-element-type>
                 <section>
                     <label>environment entry</label>
                     <content>
@@ -50,7 +50,7 @@
                 <label>${ Name == null ? &quot;&lt;env-entry&gt;&quot; : Name }</label>
             </case>
             <case>
-                <model-element-type>IEjbRemoteRef</model-element-type>
+                <model-element-type>EjbRemoteRef</model-element-type>
                 <section>
                     <label>EJB reference</label>
                     <content>
@@ -65,7 +65,7 @@
                 <label>${ Name == null ? &quot;&lt;ejb-ref&gt;&quot; : Name }</label>
             </case>
             <case>
-                <model-element-type>IEjbLocalRef</model-element-type>
+                <model-element-type>EjbLocalRef</model-element-type>
                 <label>${ Name == null ? &quot;&lt;ejb-local-ref&gt;&quot; : Name }</label>
                 <section>
                     <label>local EJB reference</label>
@@ -80,7 +80,7 @@
                 </section>
             </case>
             <case>
-                <model-element-type>IResourceRef</model-element-type>
+                <model-element-type>ResourceRef</model-element-type>
                 <label>${ Name == null ? &quot;&lt;resource-ref&gt;&quot; : Name }</label>
                 <section>
                     <label>resource reference</label>
@@ -106,7 +106,7 @@
                 </section>
             </case>
             <case>
-                <model-element-type>IResourceEnvironmentRef</model-element-type>
+                <model-element-type>ResourceEnvironmentRef</model-element-type>
                 <label>${ Name == null ? &quot;&lt;resource-env-ref&gt;&quot; : Name }</label>
                 <section>
                     <label>resource environment reference</label>
@@ -118,7 +118,7 @@
                 </section>
             </case>
             <case>
-                <model-element-type>IMessageDestinationRef</model-element-type>
+                <model-element-type>MessageDestinationRef</model-element-type>
                 <label>${ Name == null ? &quot;&lt;message-destination-ref&gt;&quot; : Name }</label>
                 <section>
                     <label>message destination reference</label>
@@ -138,7 +138,7 @@
                 </section>
             </case>
             <case>
-                <model-element-type>IServiceRef</model-element-type>
+                <model-element-type>ServiceRef</model-element-type>
                 <label>${ Name == null ? &quot;&lt;service-ref&gt;&quot; : Name }</label>
                 <section>
                     <label>service reference</label>
@@ -172,7 +172,7 @@
                     <node-factory>
                         <property>Handlers</property>
                         <case>
-                            <model-element-type>IServiceHandler</model-element-type>
+                            <model-element-type>ServiceHandler</model-element-type>
                             <label>${ Name == null ? &quot;&lt;service-ref&gt;&quot; : Name }</label>
                             <section>
                                 <label>service handler</label>
@@ -204,7 +204,7 @@
                 <action-link>
                     <label>Add an environment entry</label>
                     <action-id>Sapphire.Add</action-id>
-                    <action-handler-id>Sapphire.Add.IEnvironmentEntry</action-handler-id>
+                    <action-handler-id>Sapphire.Add.EnvironmentEntry</action-handler-id>
                 </action-link>
                 <spacer></spacer>
                 <label>The EJB references provide means for a component to locate needed beans via JNDI. The deployer ensures the availability of appropriate beans at runtime guided by the constraints specified by the developer in an EJB reference.</label>
@@ -212,12 +212,12 @@
                 <action-link>
                     <label>Add an EJB reference</label>
                     <action-id>Sapphire.Add</action-id>
-                    <action-handler-id>Sapphire.Add.IEjbRemoteRef</action-handler-id>
+                    <action-handler-id>Sapphire.Add.EjbRemoteRef</action-handler-id>
                 </action-link>
                 <action-link>
                     <label>Add a local EJB reference</label>
                     <action-id>Sapphire.Add</action-id>
-                    <action-handler-id>Sapphire.Add.IEjbLocalRef</action-handler-id>
+                    <action-handler-id>Sapphire.Add.EjbLocalRef</action-handler-id>
                 </action-link>
                 <spacer></spacer>
                 <label>A resource reference provides means for a component to access objects that are created on demand by a resource factory. A resource can be a database connection, a message queue, etc.</label>
@@ -225,7 +225,7 @@
                 <action-link>
                     <label>Add a resource reference</label>
                     <action-id>Sapphire.Add</action-id>
-                    <action-handler-id>Sapphire.Add.IResourceRef</action-handler-id>
+                    <action-handler-id>Sapphire.Add.ResourceRef</action-handler-id>
                 </action-link>
                 <spacer></spacer>
                 <label>A resource environment reference provides means for a component to access administered objects in the component's environment.</label>
@@ -233,7 +233,7 @@
                 <action-link>
                     <label>Add a resource environment reference</label>
                     <action-id>Sapphire.Add</action-id>
-                    <action-handler-id>Sapphire.Add.IResourceEnvironmentRef</action-handler-id>
+                    <action-handler-id>Sapphire.Add.ResourceEnvironmentRef</action-handler-id>
                 </action-link>
                 <spacer></spacer>
                 <label>A message destination reference provides means for a component to locate a message destination via JNDI.</label>
@@ -241,7 +241,7 @@
                 <action-link>
                     <label>Add a message destination reference</label>
                     <action-id>Sapphire.Add</action-id>
-                    <action-handler-id>Sapphire.Add.IMessageDestinationRef</action-handler-id>
+                    <action-handler-id>Sapphire.Add.MessageDestinationRef</action-handler-id>
                 </action-link>
                 <spacer></spacer>
                 <label>A service reference provides means for a component to locate a web service via JNDI.</label>
@@ -249,7 +249,7 @@
                 <action-link>
                     <label>Add a service reference</label>
                     <action-id>Sapphire.Add</action-id>
-                    <action-handler-id>Sapphire.Add.IServiceRef</action-handler-id>
+                    <action-handler-id>Sapphire.Add.ServiceRef</action-handler-id>
                 </action-link>
             </content>
         </section>

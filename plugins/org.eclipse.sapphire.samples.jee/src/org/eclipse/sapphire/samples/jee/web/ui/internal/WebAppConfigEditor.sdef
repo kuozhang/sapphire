@@ -48,7 +48,7 @@
                                     <property>ContextParams</property>
                                 </list-selection-controller>
                                 <panel>
-                                    <key>IParam</key>
+                                    <key>Param</key>
                                     <content>
                                         <property-editor>
                                             <property>Description</property>
@@ -121,7 +121,7 @@
                     <node-factory>
                         <property>ErrorPages</property>
                         <case>
-                            <model-element-type>IErrorPage</model-element-type>
+                            <model-element-type>ErrorPage</model-element-type>
                             <label>${ Type == 'HTTP_ERROR_CODE' ? ( HttpErrorCode == null ? &quot;&lt;error-page&gt;&quot; : Concat( &quot;HTTP &quot;, HttpErrorCode ) ) : ( JavaExceptionType == null ? &quot;&lt;error-page&gt;&quot; : LastSegment( JavaExceptionType, &quot;.&quot; ) ) }</label>
                             <section>
                                 <label>error page</label>
@@ -160,7 +160,7 @@
                     <node-factory>
                         <property>Filters</property>
                         <case>
-                            <model-element-type>IFilter</model-element-type>
+                            <model-element-type>Filter</model-element-type>
                             <label>${ Name == null ? &quot;&lt;filter&gt;&quot; : Name }</label>
                             <section>
                                 <content>
@@ -195,7 +195,7 @@
                     <node-factory>
                         <property>FilterMappings</property>
                         <case>
-                            <model-element-type>IFilterMapping</model-element-type>
+                            <model-element-type>FilterMapping</model-element-type>
                             <label>${ Filter == null ? &quot;&lt;filter&gt;&quot; : Filter } - ${ Type == 'SERVLET' ? ( Servlet == null ? &quot;&lt;servlet&gt;&quot; : Servlet ) : ( UrlPattern == null ? &quot;&lt;url-pattern&gt;&quot; : UrlPattern ) }</label>
                             <section>
                                 <label>filter mapping</label>
@@ -244,7 +244,7 @@
                 <node-factory>
                     <property>Listeners</property>
                     <case>
-                        <model-element-type>IListener</model-element-type>
+                        <model-element-type>Listener</model-element-type>
                         <section>
                             <label>listener</label>
                             <content>
@@ -279,7 +279,7 @@
                     <node-factory>
                         <property>Servlets</property>
                         <case>
-                            <model-element-type>IServlet</model-element-type>
+                            <model-element-type>Servlet</model-element-type>
                             <label>${ Name == null ? &quot;&lt;servlet&gt;&quot; : Name }</label>
                             <section>
                                 <label>servlet definition</label>
@@ -336,7 +336,7 @@
                                             <path>RunAsRole</path>
                                             <label>Specify run-as role</label>
                                             <panel>
-                                                <key>IRunAsSecurityRole</key>
+                                                <key>RunAsSecurityRole</key>
                                                 <content>
                                                     <property-editor>Role</property-editor>
                                                     <property-editor>
@@ -390,7 +390,7 @@
                     <node-factory>
                         <property>TagLibraries</property>
                         <case>
-                            <model-element-type>ITagLibrary</model-element-type>
+                            <model-element-type>TagLibrary</model-element-type>
                             <label>${ Uri == null ? &quot;&lt;tag-library&gt;&quot; : Uri }</label>
                             <section>
                                 <label>Tag Library</label>
@@ -417,7 +417,7 @@
                     <node-factory>
                         <property>PropertyGroups</property>
                         <case>
-                            <model-element-type>IJspPropertyGroup</model-element-type>
+                            <model-element-type>JspPropertyGroup</model-element-type>
                             <label>${ UrlPatterns.Size == 0 ? &quot;&lt;property-group&gt;&quot; : ( UrlPatterns[ 0 ].UrlPattern == null ? &quot;&lt;property-group&gt;&quot; : UrlPatterns[ 0 ].UrlPattern ) }</label>
                             <section>
                                 <label>JSP Property Group</label>
@@ -523,7 +523,7 @@
                     <node-factory>
                         <property>SecurityRoles</property>
                         <case>
-                            <model-element-type>ISecurityRole</model-element-type>
+                            <model-element-type>SecurityRole</model-element-type>
                             <label>${ Name == null ? &quot;&lt;role&gt;&quot; : Name }</label>
                             <section>
                                 <label>security role</label>
@@ -556,7 +556,7 @@
                     <node-factory>
                         <property>SecurityConstraints</property>
                         <case>
-                            <model-element-type>ISecurityConstraint</model-element-type>
+                            <model-element-type>SecurityConstraint</model-element-type>
                             <label>${ Name == null ? &quot;&lt;constraint&gt;&quot; : Name }</label>
                             <section>
                                 <label>security constraint</label>
@@ -590,7 +590,7 @@
                             <node-factory>
                                 <property>WebResourceCollections</property>
                                 <case>
-                                    <model-element-type>IWebResourceCollection</model-element-type>
+                                    <model-element-type>WebResourceCollection</model-element-type>
                                     <label>${ Name == null ? &quot;&lt;resource-collection&gt;&quot; : Name }</label>
                                     <section>
                                         <label>web resource collection</label>

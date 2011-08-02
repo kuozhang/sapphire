@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.samples.jee.web.ui.internal;
 
-import org.eclipse.sapphire.samples.jee.web.IWebAppConfig;
+import org.eclipse.sapphire.samples.jee.web.WebAppConfig;
 import org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml;
 
 /**
@@ -27,7 +27,7 @@ public final class WebAppConfigEditor
     {
         super( "org.eclipse.sapphire.samples.jee" );
         
-        setRootModelElementType( IWebAppConfig.TYPE );
+        setRootModelElementType( WebAppConfig.TYPE );
         setEditorDefinitionPath( "org.eclipse.sapphire.samples.jee/org/eclipse/sapphire/samples/jee/web/ui/internal/WebAppConfigEditor.sdef/EditorPage" );
     }
     
