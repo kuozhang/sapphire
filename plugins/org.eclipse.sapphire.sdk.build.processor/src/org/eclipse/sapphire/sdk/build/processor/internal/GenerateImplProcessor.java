@@ -190,19 +190,32 @@ public final class GenerateImplProcessor
                           final ClassModel elImplClass,
                           final InterfaceDeclaration elInterface )
     {
-        final String simpleName = elInterface.getSimpleName().substring( 1 );
-        final String defaultPackageName = elInterface.getPackage().getQualifiedName() + ".internal";
-        
         final GenerateImpl generateImplAnnotation = elInterface.getAnnotation( GenerateImpl.class );
         
-        String packageName = generateImplAnnotation.packageName();
+        String implPackageName = generateImplAnnotation.packageName();
         
-        if( packageName.length() == 0 )
+        if( implPackageName.length() == 0 )
         {
-            packageName = defaultPackageName;
+            implPackageName = elInterface.getPackage().getQualifiedName() + ".internal";
+        }
+        
+        String implClassName = generateImplAnnotation.className();
+        
+        if( implClassName.length() == 0 )
+        {
+            final String typeClassName = elInterface.getSimpleName();
+            
+            if( typeClassName.charAt( 0 ) == 'I' && typeClassName.length() > 1 && Character.isUpperCase( typeClassName.charAt( 1 ) ) )
+            {
+                implClassName = typeClassName.substring( 1 );
+            }
+            else
+            {
+                implClassName = typeClassName + "Impl";
+            }
         }
 
-        elImplClass.setName( new TypeReference( packageName, simpleName ) );
+        elImplClass.setName( new TypeReference( implPackageName, implClassName ) );
         elImplClass.addInterface( new TypeReference( elInterface.getQualifiedName() ) );
         elImplClass.setBaseClass( new TypeReference( ModelElement.class.getName() ) );
         
@@ -285,8 +298,6 @@ public final class GenerateImplProcessor
                         methodParametersList.add( type );
                         methodParametersMap.put( param.getSimpleName(), type );
                     }
-                    
-                    final String n = elImplClass.getName().getSimpleName();
                     
                     if( ! elImplClass.hasMethod( methodName, methodParametersList ) )
                     {

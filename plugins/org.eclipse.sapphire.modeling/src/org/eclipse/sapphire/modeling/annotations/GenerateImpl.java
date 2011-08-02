@@ -26,4 +26,5 @@ import java.lang.annotation.Target;
 public @interface GenerateImpl
 {
     String packageName() default "";
+    String className() default "";
 }

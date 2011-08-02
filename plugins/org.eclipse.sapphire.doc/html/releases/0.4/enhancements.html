@@ -27,6 +27,10 @@
   <ol type="A">
     <li><a href="#FactsService">FactsService</a></li>
   </ol>
+  <li><a href="#Miscellaneous">Miscellaneous</a></li>
+  <ol type="A">
+    <a href="#ModelElementTypeWithoutPrefix">Optional 'I' Prefix</a>
+  </ol>
 </ol>
  
 <h2><a name="Services"><a name="FactsService">FactsService</a></a></h2>
@@ -48,6 +52,21 @@ in generation of facts on equal footing with the framework. Also new for 0.4 is 
 of annotations that generate corresponding facts.</p>
 
 <p><a href="../../services/index.html#FactsService">See Documentation</a></p>
+
+<h2><a name="Miscellaneous"><a name="ModelElementTypeWithoutPrefix">Optional 'I' Prefix</a></a></h2>
+
+<p>Sapphire adopters are no longer required to utilize the convention of prefixing 'I' in front of interface names
+when defining model elements. The @GenerateImpl annotation has a new className attribute for explicitly controlling
+the implementation class name. The default implementation class name is now defined as follows:</p>
+
+<pre class="source-code"><code>if( using 'I' prefix convention )
+{
+    default implementation class name is typeClassName.substring( 1 )
+}
+else
+{
+    default implementation class name is typeClassName + "Impl"
+}</code></pre>
 
 <div class="copyright">Copyright (c) 2011 Oracle and Others<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>

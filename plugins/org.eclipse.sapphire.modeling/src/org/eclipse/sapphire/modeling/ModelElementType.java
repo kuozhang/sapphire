@@ -121,16 +121,30 @@ public final class ModelElementType
                 
                 if( generateImplAnnotation != null )
                 {
-                    String implPackage = generateImplAnnotation.packageName();
+                    String implPackageName = generateImplAnnotation.packageName();
                     
-                    if( implPackage.length() == 0 )
+                    if( implPackageName.length() == 0 )
                     {
-                        implPackage = this.modelElementClass.getPackage().getName() + ".internal";
+                        implPackageName = this.modelElementClass.getPackage().getName() + ".internal";
                     }
                     
-                    final String implClassName = this.modelElementClass.getSimpleName().substring( 1 );
+                    String implClassName = generateImplAnnotation.className();
                     
-                    final String implClassQualifiedName = implPackage + "." + implClassName;
+                    if( implClassName.length() == 0 )
+                    {
+                        final String typeClassName = this.modelElementClass.getSimpleName();
+                        
+                        if( typeClassName.charAt( 0 ) == 'I' && typeClassName.length() > 1 && Character.isUpperCase( typeClassName.charAt( 1 ) ) )
+                        {
+                            implClassName = typeClassName.substring( 1 );
+                        }
+                        else
+                        {
+                            implClassName = typeClassName + "Impl";
+                        }
+                    }
+                    
+                    final String implClassQualifiedName = implPackageName + "." + implClassName;
                     
                     try
                     {
