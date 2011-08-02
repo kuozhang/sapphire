@@ -109,8 +109,8 @@ public class DiagramDeleteActionHandler extends SapphireDiagramActionHandler
         {
             for (DiagramConnectionPart connPart : embeddedConn.getDiagramConnections(null))
             {
-                if (connPart.getEndpoint1().equals(nodeModel) || 
-                        connPart.getEndpoint2().equals(nodeModel))
+                if ((connPart.getEndpoint1() != null && connPart.getEndpoint1().equals(nodeModel)) || 
+                        (connPart.getEndpoint2() != null && connPart.getEndpoint2().equals(nodeModel)))
                 {
                     deleteConnection(connPart);
                 }
@@ -122,8 +122,8 @@ public class DiagramDeleteActionHandler extends SapphireDiagramActionHandler
         {
             for (DiagramConnectionPart connPart : connTemplate.getDiagramConnections(null))
             {
-                if (connPart.getEndpoint1().equals(nodeModel) || 
-                        connPart.getEndpoint2().equals(nodeModel))
+                if ((connPart.getEndpoint1() != null && connPart.getEndpoint1().equals(nodeModel)) || 
+                        (connPart.getEndpoint2() != null && connPart.getEndpoint2().equals(nodeModel)))
                 {
                     if (!(connPart instanceof DiagramImplicitConnectionPart))
                     {
