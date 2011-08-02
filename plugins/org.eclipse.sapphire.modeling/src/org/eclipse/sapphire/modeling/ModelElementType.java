@@ -117,35 +117,10 @@ public final class ModelElementType
             {
                 this.implClassLoaded = true;
                 
-                final GenerateImpl generateImplAnnotation = getAnnotation( GenerateImpl.class );
+                final String implClassQualifiedName = getImplClassName( this.modelElementClass );
                 
-                if( generateImplAnnotation != null )
+                if( implClassQualifiedName != null )
                 {
-                    String implPackageName = generateImplAnnotation.packageName();
-                    
-                    if( implPackageName.length() == 0 )
-                    {
-                        implPackageName = this.modelElementClass.getPackage().getName() + ".internal";
-                    }
-                    
-                    String implClassName = generateImplAnnotation.className();
-                    
-                    if( implClassName.length() == 0 )
-                    {
-                        final String typeClassName = this.modelElementClass.getSimpleName();
-                        
-                        if( typeClassName.charAt( 0 ) == 'I' && typeClassName.length() > 1 && Character.isUpperCase( typeClassName.charAt( 1 ) ) )
-                        {
-                            implClassName = typeClassName.substring( 1 );
-                        }
-                        else
-                        {
-                            implClassName = typeClassName + "Impl";
-                        }
-                    }
-                    
-                    final String implClassQualifiedName = implPackageName + "." + implClassName;
-                    
                     try
                     {
                         this.implClass = this.modelElementClass.getClassLoader().loadClass( implClassQualifiedName );
@@ -175,6 +150,113 @@ public final class ModelElementType
             
             return this.implClass;
         }
+    }
+
+    public static String getImplClassName( final Class<?> elementTypeClass )
+    {
+        if( elementTypeClass == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return getImplClassName( elementTypeClass.getName(), elementTypeClass.getAnnotation( GenerateImpl.class ) );
+    }
+    
+    public static String getImplClassName( final String elementTypeClassName,
+                                           final GenerateImpl generateImplAnnotation )
+    {
+        if( elementTypeClassName == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( generateImplAnnotation != null )
+        {
+            return getImplClassName( elementTypeClassName, generateImplAnnotation.packageName(), generateImplAnnotation.className() );
+        }
+        
+        return null;
+    }
+    
+    public static String getImplClassName( final String elementTypeClassName,
+                                           final String preferredImplPackageName,
+                                           final String preferredImplClassName )
+    {
+        if( elementTypeClassName == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        final StringBuilder implClassQualifiedName = new StringBuilder();
+        
+        String elementTypePackageName = null;
+        final int lastDotSeparator = elementTypeClassName.lastIndexOf( '.' );
+        
+        if( lastDotSeparator != -1 )
+        {
+            elementTypePackageName = elementTypeClassName.substring( 0, lastDotSeparator );
+        }
+        
+        if( preferredImplPackageName == null || preferredImplPackageName.length() == 0 )
+        {
+            if( elementTypePackageName != null )
+            {
+                implClassQualifiedName.append( elementTypePackageName );
+                implClassQualifiedName.append( '.' );
+            }
+            
+            implClassQualifiedName.append( "internal" );
+        }
+        else
+        {
+            implClassQualifiedName.append( preferredImplPackageName );
+        }
+        
+        implClassQualifiedName.append( '.' );
+        
+        if( preferredImplClassName == null || preferredImplClassName.length() == 0 )
+        {
+            final String fullTypeClassName;
+            
+            if( elementTypePackageName == null )
+            {
+                fullTypeClassName = elementTypeClassName;
+            }
+            else
+            {
+                fullTypeClassName = elementTypeClassName.substring( elementTypePackageName.length() + 1 );
+            }
+            
+            final int lastSeparator = fullTypeClassName.lastIndexOf( '$' );
+            final String simpleTypeClassName;
+            
+            if( lastSeparator == -1 )
+            {
+                simpleTypeClassName = fullTypeClassName;
+            }
+            else
+            {
+                final int simpleTypeClassNameStart = lastSeparator + 1;
+                implClassQualifiedName.append( fullTypeClassName.substring( 0, simpleTypeClassNameStart ) );
+                simpleTypeClassName = fullTypeClassName.substring( simpleTypeClassNameStart );
+            }
+            
+            if( simpleTypeClassName.charAt( 0 ) == 'I' && simpleTypeClassName.length() > 1 && Character.isUpperCase( simpleTypeClassName.charAt( 1 ) ) )
+            {
+                implClassQualifiedName.append( simpleTypeClassName.substring( 1 ) );
+            }
+            else
+            {
+                implClassQualifiedName.append( simpleTypeClassName );
+                implClassQualifiedName.append( "Impl" );
+            }
+        }
+        else
+        {
+            implClassQualifiedName.append( preferredImplClassName );
+        }
+        
+        return implClassQualifiedName.toString();
     }
     
     @SuppressWarnings( "unchecked" )

@@ -23,12 +23,12 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class Misc0003Test
+public final class TestModelingMisc0003
 
     extends SapphireTestCase
     
 {
-    private Misc0003Test( final String name )
+    private TestModelingMisc0003( final String name )
     {
         super( name );
     }
@@ -37,9 +37,9 @@ public final class Misc0003Test
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "Misc0003" );
+        suite.setName( "TestModelingMisc0003" );
 
-        suite.addTest( new Misc0003Test( "test" ) );
+        suite.addTest( new TestModelingMisc0003( "test" ) );
         
         return suite;
     }

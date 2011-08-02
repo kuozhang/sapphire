@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.misc.t0001;
+package org.eclipse.sapphire.tests.modeling.misc.t0005;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -17,17 +17,17 @@ import junit.framework.TestSuite;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
- * Tests reporting of failure to instantiate model element.
+ * Tests overriding of delegated methods.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestMisc0001
+public final class TestModelingMisc0005
 
     extends SapphireTestCase
     
 {
-    private TestMisc0001( final String name )
+    private TestModelingMisc0005( final String name )
     {
         super( name );
     }
@@ -36,24 +36,22 @@ public final class TestMisc0001
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "Misc0001" );
+        suite.setName( "TestModelingMisc0005" );
 
-        suite.addTest( new TestMisc0001( "test" ) );
+        suite.addTest( new TestModelingMisc0005( "test" ) );
         
         return suite;
     }
     
     public void test() throws Exception
     {
-        try
-        {
-            ITestMisc0001.TYPE.instantiate();
-            fail( "Did not catch the expected exception." );
-        }
-        catch( Exception e )
-        {
-            assertEquals( e.getMessage(), "ITestMisc0001 : Could not instantiate implementation class." );
-        }
+        final ITestModelBase base = ITestModelBase.TYPE.instantiate();
+        
+        assertEquals( 1, base.test() );
+        
+        final ITestModelExtender extender = ITestModelExtender.TYPE.instantiate();
+        
+        assertEquals( 2, extender.test() );
     }
 
 }

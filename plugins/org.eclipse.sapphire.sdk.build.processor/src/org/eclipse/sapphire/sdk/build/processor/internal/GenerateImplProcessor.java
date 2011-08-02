@@ -36,6 +36,7 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElement;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Resource;
@@ -191,31 +192,9 @@ public final class GenerateImplProcessor
                           final InterfaceDeclaration elInterface )
     {
         final GenerateImpl generateImplAnnotation = elInterface.getAnnotation( GenerateImpl.class );
+        final String implClassQualifiedName = ModelElementType.getImplClassName( getQualifiedName( elInterface ), generateImplAnnotation );
         
-        String implPackageName = generateImplAnnotation.packageName();
-        
-        if( implPackageName.length() == 0 )
-        {
-            implPackageName = elInterface.getPackage().getQualifiedName() + ".internal";
-        }
-        
-        String implClassName = generateImplAnnotation.className();
-        
-        if( implClassName.length() == 0 )
-        {
-            final String typeClassName = elInterface.getSimpleName();
-            
-            if( typeClassName.charAt( 0 ) == 'I' && typeClassName.length() > 1 && Character.isUpperCase( typeClassName.charAt( 1 ) ) )
-            {
-                implClassName = typeClassName.substring( 1 );
-            }
-            else
-            {
-                implClassName = typeClassName + "Impl";
-            }
-        }
-
-        elImplClass.setName( new TypeReference( implPackageName, implClassName ) );
+        elImplClass.setName( new TypeReference( implClassQualifiedName ) );
         elImplClass.addInterface( new TypeReference( elInterface.getQualifiedName() ) );
         elImplClass.setBaseClass( new TypeReference( ModelElement.class.getName() ) );
         
@@ -1571,6 +1550,25 @@ public final class GenerateImplProcessor
         {
             return new TypeReference( ( (TypeDeclaration) typeMirror ).getQualifiedName() );
         }
+    }
+    
+    private static String getQualifiedName( final TypeDeclaration type )
+    {
+        final StringBuilder qname = new StringBuilder();
+        final String pkg = type.getPackage().getQualifiedName();
+        
+        if( pkg.length() > 0 )
+        {
+            qname.append( pkg );
+            qname.append( '.' );
+            qname.append( type.getQualifiedName().substring( pkg.length() + 1 ).replace( '.', '$' ) );
+        }
+        else
+        {
+            qname.append( type.getQualifiedName().replace( '.', '$' ) );
+        }
+        
+        return qname.toString();
     }
     
     private interface Visitor<T>

@@ -15,22 +15,23 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.tests.modeling.misc.t0001.TestMisc0001;
-import org.eclipse.sapphire.tests.modeling.misc.t0002.TestMisc0002;
-import org.eclipse.sapphire.tests.modeling.misc.t0003.Misc0003Test;
-import org.eclipse.sapphire.tests.modeling.misc.t0004.Misc0004Test;
-import org.eclipse.sapphire.tests.modeling.misc.t0005.Misc0005Test;
+import org.eclipse.sapphire.tests.modeling.misc.t0001.TestModelingMisc0001;
+import org.eclipse.sapphire.tests.modeling.misc.t0002.TestModelingMisc0002;
+import org.eclipse.sapphire.tests.modeling.misc.t0003.TestModelingMisc0003;
+import org.eclipse.sapphire.tests.modeling.misc.t0004.TestModelingMisc0004;
+import org.eclipse.sapphire.tests.modeling.misc.t0005.TestModelingMisc0005;
+import org.eclipse.sapphire.tests.modeling.misc.t0006.TestModelingMisc0006;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MiscTestSuite
+public final class SuiteModelingMisc
 
     extends TestCase
     
 {
-    private MiscTestSuite( final String name )
+    private SuiteModelingMisc( final String name )
     {
         super( name );
     }
@@ -39,13 +40,14 @@ public final class MiscTestSuite
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "Misc" );
+        suite.setName( "SuiteModelingMisc" );
 
-        suite.addTest( TestMisc0001.suite() );
-        suite.addTest( TestMisc0002.suite() );
-        suite.addTest( Misc0003Test.suite() );
-        suite.addTest( Misc0004Test.suite() );
-        suite.addTest( Misc0005Test.suite() );
+        suite.addTest( TestModelingMisc0001.suite() );
+        suite.addTest( TestModelingMisc0002.suite() );
+        suite.addTest( TestModelingMisc0003.suite() );
+        suite.addTest( TestModelingMisc0004.suite() );
+        suite.addTest( TestModelingMisc0005.suite() );
+        suite.addTest( TestModelingMisc0006.suite() );
         
         return suite;
     }

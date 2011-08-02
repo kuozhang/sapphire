@@ -25,12 +25,12 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestMisc0002
+public final class TestModelingMisc0002
 
     extends SapphireTestCase
     
 {
-    private TestMisc0002( final String name )
+    private TestModelingMisc0002( final String name )
     {
         super( name );
     }
@@ -39,16 +39,16 @@ public final class TestMisc0002
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "Misc0002" );
+        suite.setName( "TestModelingMisc0002" );
 
-        suite.addTest( new TestMisc0002( "testNoItems" ) );
-        suite.addTest( new TestMisc0002( "testOneItem" ) );
-        suite.addTest( new TestMisc0002( "testMultipleUnrelatedItems" ) );
-        suite.addTest( new TestMisc0002( "testSimpleDependency" ) );
-        suite.addTest( new TestMisc0002( "testMultiLevelDependency" ) );
-        suite.addTest( new TestMisc0002( "testCycleBreaking1" ) );
-        suite.addTest( new TestMisc0002( "testCycleBreaking2" ) );
-        suite.addTest( new TestMisc0002( "testCycleBreaking3" ) );
+        suite.addTest( new TestModelingMisc0002( "testNoItems" ) );
+        suite.addTest( new TestModelingMisc0002( "testOneItem" ) );
+        suite.addTest( new TestModelingMisc0002( "testMultipleUnrelatedItems" ) );
+        suite.addTest( new TestModelingMisc0002( "testSimpleDependency" ) );
+        suite.addTest( new TestModelingMisc0002( "testMultiLevelDependency" ) );
+        suite.addTest( new TestModelingMisc0002( "testCycleBreaking1" ) );
+        suite.addTest( new TestModelingMisc0002( "testCycleBreaking2" ) );
+        suite.addTest( new TestModelingMisc0002( "testCycleBreaking3" ) );
         
         return suite;
     }

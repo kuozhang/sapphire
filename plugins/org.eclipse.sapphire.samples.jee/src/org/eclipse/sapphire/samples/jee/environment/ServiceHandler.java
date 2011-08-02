@@ -15,6 +15,7 @@ import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -95,9 +96,28 @@ public interface ServiceHandler extends DescribableExt
 
     // *** SoapHeaders ***
     
-    @Type( base = SoapHeaderWrapper.class )
+    @Label( standard = "SOAP header" )
+    @GenerateImpl
+
+    public interface SoapHeader extends IModelElement
+    {
+        ModelElementType TYPE = new ModelElementType( SoapHeader.class );
+        
+        // *** Name ***
+        
+        @Label( standard = "name" )
+        @Required
+        @XmlBinding( path = "" )
+        
+        ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+        
+        Value<String> getName();
+        void setName( String value );
+    }
+    
+    @Type( base = SoapHeader.class )
     @Label( standard = "SOAP headers" )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "soap-header", type = SoapHeaderWrapper.class ) )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "soap-header", type = SoapHeader.class ) )
     
     @Documentation
     (
@@ -106,13 +126,32 @@ public interface ServiceHandler extends DescribableExt
     
     ListProperty PROP_SOAP_HEADERS = new ListProperty( TYPE, "SoapHeaders" );
     
-    ModelElementList<SoapHeaderWrapper> getSoapHeaders();
+    ModelElementList<SoapHeader> getSoapHeaders();
     
     // *** SoapRoles ***
     
-    @Type( base = SoapRoleWrapper.class )
+    @Label( standard = "SOAP role" )
+    @GenerateImpl
+
+    public interface SoapRole extends IModelElement
+    {
+        ModelElementType TYPE = new ModelElementType( SoapRole.class );
+        
+        // *** Name ***
+        
+        @Label( standard = "name" )
+        @Required
+        @XmlBinding( path = "" )
+        
+        ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+        
+        Value<String> getName();
+        void setName( String value );
+    }
+    
+    @Type( base = SoapRole.class )
     @Label( standard = "SOAP roles" )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "soap-role", type = SoapRoleWrapper.class ) )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "soap-role", type = SoapRole.class ) )
     
     @Documentation
     (
@@ -121,13 +160,32 @@ public interface ServiceHandler extends DescribableExt
     
     ListProperty PROP_SOAP_ROLES = new ListProperty( TYPE, "SoapRoles" );
     
-    ModelElementList<SoapRoleWrapper> getSoapRoles();
+    ModelElementList<SoapRole> getSoapRoles();
     
     // *** Ports ***
     
-    @Type( base = ServicePortNameWrapper.class )
+    @Label( standard = "service port" )
+    @GenerateImpl
+
+    interface Port extends IModelElement
+    {
+        ModelElementType TYPE = new ModelElementType( Port.class );
+        
+        // *** Name ***
+        
+        @Label( standard = "name" )
+        @Required
+        @XmlBinding( path = "" )
+        
+        ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+        
+        Value<String> getName();
+        void setName( String value );
+    }
+    
+    @Type( base = Port.class )
     @Label( standard = "ports" )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "port-name", type = ServicePortNameWrapper.class ) )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "port-name", type = Port.class ) )
     
     @Documentation
     (
@@ -137,6 +195,6 @@ public interface ServiceHandler extends DescribableExt
     
     ListProperty PROP_PORTS = new ListProperty( TYPE, "Ports" );
     
-    ModelElementList<ServicePortNameWrapper> getPorts();
+    ModelElementList<Port> getPorts();
     
 }
