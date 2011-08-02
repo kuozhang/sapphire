@@ -19,6 +19,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.sun.mirror.apt.AnnotationProcessorEnvironment;
+import com.sun.mirror.declaration.ClassDeclaration;
+import com.sun.mirror.declaration.InterfaceDeclaration;
+import com.sun.mirror.declaration.TypeDeclaration;
+import com.sun.mirror.type.ClassType;
+import com.sun.mirror.type.InterfaceType;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -28,6 +35,7 @@ public final class ClassModel
     extends BaseModel
     
 {
+    private final AnnotationProcessorEnvironment env;
     private TypeReference name;
     private Set<TypeReference> imports;
     private TypeReference baseClass;
@@ -38,8 +46,9 @@ public final class ClassModel
     private List<MethodModel> methods;
     private boolean invalid;
     
-    public ClassModel()
+    public ClassModel( final AnnotationProcessorEnvironment env )
     {
+        this.env = env;
         this.imports = new HashSet<TypeReference>();
         this.interfaces = new HashSet<TypeReference>();
         this.isAbstract = false;
@@ -68,14 +77,20 @@ public final class ClassModel
         final Set<TypeReference> result = new TreeSet<TypeReference>();
         result.addAll( this.imports );
         
+        final Set<String> pkgToIgnore = new HashSet<String>();
+        pkgToIgnore.add( "java.lang" );
+        pkgToIgnore.add( this.name.getPackage() );
+        
         if( this.baseClass != null )
         {
             this.baseClass.contributeNecessaryImports( result );
+            gatherPackagesToIgnore( pkgToIgnore, this.baseClass );
         }
         
         for( TypeReference intr : this.interfaces )
         {
             intr.contributeNecessaryImports( result );
+            gatherPackagesToIgnore( pkgToIgnore, intr );
         }
         
         for( FieldModel field : this.fields )
@@ -111,7 +126,7 @@ public final class ClassModel
                 {
                     keep = false;
                 }
-                else if( pkg.equals( this.name.getPackage() ) || pkg.equals( "java.lang" ) )
+                else if( pkgToIgnore.contains( pkg ) )
                 {
                     keep = false;
                 }
@@ -126,6 +141,53 @@ public final class ClassModel
         return result;
     }
     
+    private void gatherPackagesToIgnore( final Set<String> pkgToIgnore,
+                                         final TypeReference typeref )
+    {
+        final String name = typeref.getQualifiedName();
+        
+        pkgToIgnore.add( name );
+        
+        final TypeDeclaration type = this.env.getTypeDeclaration( name );
+        
+        if( type != null )
+        {
+            gatherPackagesToIgnore( pkgToIgnore, type );
+        }
+    }
+
+    private void gatherPackagesToIgnore( final Set<String> pkgToIgnore,
+                                         final TypeDeclaration type )
+    {
+        for( InterfaceType intr : type.getSuperinterfaces() )
+        {
+            final InterfaceDeclaration intrDecl = intr.getDeclaration();
+            
+            if( intrDecl != null )
+            {
+                pkgToIgnore.add( intrDecl.getQualifiedName() );
+                gatherPackagesToIgnore( pkgToIgnore, intrDecl );
+            }
+        }
+        
+        if( type instanceof ClassDeclaration )
+        {
+            final ClassDeclaration classDecl = (ClassDeclaration) type;
+            final ClassType baseClass = classDecl.getSuperclass();
+            
+            if( baseClass != null )
+            {
+                final ClassDeclaration baseClassDecl = baseClass.getDeclaration();
+                
+                if( baseClassDecl != null )
+                {
+                    pkgToIgnore.add( baseClassDecl.getQualifiedName() );
+                    gatherPackagesToIgnore( pkgToIgnore, baseClassDecl );
+                }
+            }
+        }
+    }
+
     public void addImport( final TypeReference type )
     {
         type.contributeNecessaryImports( this.imports );

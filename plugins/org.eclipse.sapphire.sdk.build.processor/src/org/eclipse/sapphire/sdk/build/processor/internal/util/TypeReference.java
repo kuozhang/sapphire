@@ -40,7 +40,6 @@ public class TypeReference
     public static final TypeReference BOOLEAN_TYPE = PRIMITIVE_TYPES.get( PrimitiveType.Kind.BOOLEAN );
     public static final TypeReference WILDCARD_TYPE_PARAM = new TypeReference( "?" ); //$NON-NLS-1$
     
-    
     private final String qualifiedName;
     private final String simpleName;
     private final String packageName;

@@ -115,7 +115,7 @@ public final class GenerateImplProcessor
             }
             
             final InterfaceDeclaration interfaceDeclaration = (InterfaceDeclaration) annotatedEntity;
-            final ClassModel implClassModel = new ClassModel();
+            final ClassModel implClassModel = new ClassModel( env );
             
             process( env.getMessager(), implClassModel, interfaceDeclaration );
             
