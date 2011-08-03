@@ -161,7 +161,16 @@ public final class PropertyEditorAssistDecorator
             @Override
             public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
             {
-                refresh();
+                Display.getCurrent().asyncExec
+                (
+                    new Runnable()
+                    {
+                        public void run()
+                        {
+                            refresh();
+                        }
+                    }
+                );
             }
         };
         
