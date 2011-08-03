@@ -36,6 +36,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.ResolvePathResult;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
@@ -465,6 +466,23 @@ public final class SapphireWithDirective
         final ISapphireUiDef rootdef = this.definition.nearest( ISapphireUiDef.class );
         final Class<?> cl = rootdef.resolveClass( pageKeyString );
         return ClassBasedKey.create( cl );
+    }
+    
+    @Override
+    protected Status computeValidationState()
+    {
+        Status state = super.computeValidationState();
+        
+        if( this.property != null )
+        {
+            final Status.CompositeStatusFactory factory = Status.factoryForComposite();
+            factory.merge( this.element.read( this.property ).validate( false ) );
+            factory.merge( state );
+            
+            state = factory.create();
+        }
+        
+        return state;
     }
 
     private void updateCurrentPage( final boolean force )
