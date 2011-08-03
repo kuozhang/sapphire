@@ -85,9 +85,11 @@ public interface ISapphireIfElseDirectiveDef
             ISapphireActionLinkDef.class,
             ISapphireCustomPartDef.class,
             ISapphireStaticTextFieldDef.class,
-            ISapphireWithDirectiveDef.class,
             ISapphirePageBookExtDef.class,
-            ISapphireTabGroupDef.class
+            ISapphireTabGroupDef.class,
+            ISapphireHtmlPanelDef.class,
+            IFormPartInclude.class,
+            IFormDef.class
         }
     )
                       
@@ -107,9 +109,11 @@ public interface ISapphireIfElseDirectiveDef
             @XmlListBinding.Mapping( element = "action-link", type = ISapphireActionLinkDef.class ),
             @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
             @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
-            @XmlListBinding.Mapping( element = "element-property-composite", type = ISapphireWithDirectiveDef.class ),
             @XmlListBinding.Mapping( element = "switching-panel", type = ISapphirePageBookExtDef.class ),
-            @XmlListBinding.Mapping( element = "tab-group", type = ISapphireTabGroupDef.class )
+            @XmlListBinding.Mapping( element = "tab-group", type = ISapphireTabGroupDef.class ),
+            @XmlListBinding.Mapping( element = "html", type = ISapphireHtmlPanelDef.class ),
+            @XmlListBinding.Mapping( element = "include", type = IFormPartInclude.class ),
+            @XmlListBinding.Mapping( element = "form", type = IFormDef.class )
         }
     )
                              
@@ -135,9 +139,11 @@ public interface ISapphireIfElseDirectiveDef
             ISapphireActionLinkDef.class,
             ISapphireCustomPartDef.class,
             ISapphireStaticTextFieldDef.class,
-            ISapphireWithDirectiveDef.class,
             ISapphirePageBookExtDef.class,
-            ISapphireTabGroupDef.class
+            ISapphireTabGroupDef.class,
+            ISapphireHtmlPanelDef.class,
+            IFormPartInclude.class,
+            IFormDef.class
         }
     )
                       
@@ -157,9 +163,11 @@ public interface ISapphireIfElseDirectiveDef
             @XmlListBinding.Mapping( element = "action-link", type = ISapphireActionLinkDef.class ),
             @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
             @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
-            @XmlListBinding.Mapping( element = "element-property-composite", type = ISapphireWithDirectiveDef.class ),
             @XmlListBinding.Mapping( element = "switching-panel", type = ISapphirePageBookExtDef.class ),
-            @XmlListBinding.Mapping( element = "tab-group", type = ISapphireTabGroupDef.class )
+            @XmlListBinding.Mapping( element = "tab-group", type = ISapphireTabGroupDef.class ),
+            @XmlListBinding.Mapping( element = "html", type = ISapphireHtmlPanelDef.class ),
+            @XmlListBinding.Mapping( element = "include", type = IFormPartInclude.class ),
+            @XmlListBinding.Mapping( element = "form", type = IFormDef.class )
         }
     )
                              
