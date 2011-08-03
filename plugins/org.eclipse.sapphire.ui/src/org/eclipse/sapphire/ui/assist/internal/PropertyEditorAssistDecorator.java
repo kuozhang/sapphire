@@ -160,7 +160,7 @@ public final class PropertyEditorAssistDecorator
             @Override
             public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
             {
-                Display.getCurrent().asyncExec
+                Display.getDefault().asyncExec
                 (
                     new Runnable()
                     {

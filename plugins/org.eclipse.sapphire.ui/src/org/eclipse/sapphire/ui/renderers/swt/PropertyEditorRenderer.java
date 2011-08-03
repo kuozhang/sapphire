@@ -58,6 +58,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -195,7 +196,16 @@ public abstract class PropertyEditorRenderer
             @Override
             public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
             {
-                PropertyEditorRenderer.this.handlePropertyChangedEvent();
+                Display.getDefault().asyncExec
+                (
+                    new Runnable()
+                    {
+                        public void run()
+                        {
+                            PropertyEditorRenderer.this.handlePropertyChangedEvent();
+                        }
+                    }
+                );
             }
         };
 
