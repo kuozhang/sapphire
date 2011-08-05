@@ -404,9 +404,9 @@ public class DiagramConnectionTemplate extends SapphirePart
                     }
                     else
                     {
-                        val = (String)element.read(this.endpoint1Property);
+                        val = (String)valObj;
                     }
-                    if (val.equals(endpoint1Value))
+                    if (val != null && val.equals(endpoint1Value))
                     {
                         srcElement = element;
                         break;
