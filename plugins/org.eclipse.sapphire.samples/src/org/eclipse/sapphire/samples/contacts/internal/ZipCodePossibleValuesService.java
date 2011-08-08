@@ -14,23 +14,20 @@ package org.eclipse.sapphire.samples.contacts.internal;
 import java.util.SortedSet;
 
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.samples.contacts.IAddress;
 import org.eclipse.sapphire.samples.zipcodes.ZipCodesDatabase;
+import org.eclipse.sapphire.services.PossibleValuesService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ZipCodePossibleValuesService
-
-    extends PossibleValuesService
-    
+public final class ZipCodePossibleValuesService extends PossibleValuesService
 {
     @Override
     protected void fillPossibleValues( final SortedSet<String> values )
     {
-        final IAddress address = (IAddress) element();
+        final IAddress address = context( IAddress.class );
         
         final String state = address.getState().getText();
         final String city = address.getCity().getText();

@@ -17,8 +17,8 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.serialization.ValueSerialization;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.samples.gallery.internal.RectangleSerializationService;
 
@@ -28,10 +28,7 @@ import org.eclipse.sapphire.samples.gallery.internal.RectangleSerializationServi
 
 @GenerateImpl
 
-public interface ICustomValueGallery
-
-    extends IModelElement
-    
+public interface ICustomValueGallery extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( ICustomValueGallery.class );
     
@@ -39,7 +36,7 @@ public interface ICustomValueGallery
     
     @Type( base = Rectangle.class )
     @Label( standard = "rectangle" )
-    @ValueSerialization( service = RectangleSerializationService.class )
+    @Service( impl = RectangleSerializationService.class )
     @XmlBinding( path = "rectangle" )
     
     ValueProperty PROP_RECTANGLE = new ValueProperty( TYPE, "Rectangle" );

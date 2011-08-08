@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import org.eclipse.sapphire.modeling.ReferenceService;
+import org.eclipse.sapphire.services.ReferenceService;
 import org.eclipse.sapphire.ui.def.IFormPartDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
@@ -27,8 +27,7 @@ public final class FormPartIncludeReferenceService
     @Override
     public Object resolve( final String reference )
     {
-        final ISapphireUiDef rootdef = element().nearest( ISapphireUiDef.class );
-        return rootdef.getPartDef( reference, true, IFormPartDef.class );
+        return context( ISapphireUiDef.class ).getPartDef( reference, true, IFormPartDef.class );
     }
     
 }

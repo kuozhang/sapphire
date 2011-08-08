@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ValueImageService;
+import org.eclipse.sapphire.services.ValueImageService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

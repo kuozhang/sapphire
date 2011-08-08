@@ -12,7 +12,6 @@
 
 package org.eclipse.sapphire.modeling.util.internal;
 
-import org.eclipse.sapphire.modeling.StandardValueNormalizationService;
 import org.eclipse.sapphire.modeling.docsys.BoldPart;
 import org.eclipse.sapphire.modeling.docsys.CodePart;
 import org.eclipse.sapphire.modeling.docsys.DocumentationContent;
@@ -24,6 +23,7 @@ import org.eclipse.sapphire.modeling.docsys.OrderedListPart;
 import org.eclipse.sapphire.modeling.docsys.ParagraphBreakPart;
 import org.eclipse.sapphire.modeling.docsys.TextPart;
 import org.eclipse.sapphire.modeling.docsys.UnorderedListPart;
+import org.eclipse.sapphire.services.StandardValueNormalizationService;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>

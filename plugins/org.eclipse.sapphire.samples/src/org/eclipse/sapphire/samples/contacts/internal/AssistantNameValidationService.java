@@ -18,10 +18,7 @@ import org.eclipse.sapphire.modeling.Status;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class AssistantNameValidationService
-
-    extends ConnectionNameValidationService
-    
+public final class AssistantNameValidationService extends ConnectionNameValidationService
 {
     protected Status createErrorStatus()
     {

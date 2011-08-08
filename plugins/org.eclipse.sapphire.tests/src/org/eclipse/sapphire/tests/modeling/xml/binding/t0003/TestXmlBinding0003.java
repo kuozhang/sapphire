@@ -39,7 +39,7 @@ public final class TestXmlBinding0003
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "XmlBinding0003" );
+        suite.setName( "TestXmlBinding0003" );
 
         suite.addTest( new TestXmlBinding0003( "test" ) );
         
@@ -51,20 +51,20 @@ public final class TestXmlBinding0003
         final ByteArrayResourceStore byteArrayResourceStore = new ByteArrayResourceStore();
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( byteArrayResourceStore );
         
-        final ITestXmlBinding0003A a = ITestXmlBinding0003A.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
+        final TestXmlBinding0003A a = TestXmlBinding0003A.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         a.setAa( "aa" );
         
-        final ITestXmlBinding0003AB ab = a.getAb().element( true );
+        final TestXmlBinding0003AB ab = a.getAb().element( true );
         ab.setAba( "aba" );
         
-        final ITestXmlBinding0003AC ac = a.getAc().addNewElement();
+        final TestXmlBinding0003AC ac = a.getAc().addNewElement();
         ac.setAca( "aca" );
         ac.setAcb( "acb" );
         
-        final ITestXmlBinding0003ACC acc = ac.getAcc().element( true );
+        final TestXmlBinding0003ACC acc = ac.getAcc().element( true );
         acc.setAcca( "acca" );
         
-        final ITestXmlBinding0003ACD acd = ac.getAcd().addNewElement();
+        final TestXmlBinding0003ACD acd = ac.getAcd().addNewElement();
         acd.setAcda( "acda" );
         
         a.resource().save();

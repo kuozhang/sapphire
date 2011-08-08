@@ -15,8 +15,8 @@ import java.io.File;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.RelativePathService;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.services.RelativePathService;
 import org.eclipse.sapphire.ui.SapphireJumpActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;

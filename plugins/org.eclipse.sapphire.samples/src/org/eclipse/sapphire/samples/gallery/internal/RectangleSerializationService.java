@@ -11,17 +11,14 @@
 
 package org.eclipse.sapphire.samples.gallery.internal;
 
-import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 import org.eclipse.sapphire.samples.gallery.Rectangle;
+import org.eclipse.sapphire.services.ValueSerializationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class RectangleSerializationService
-
-    extends ValueSerializationService
-    
+public final class RectangleSerializationService extends ValueSerializationService
 {
     @Override
     protected Object decodeFromString( final String value )

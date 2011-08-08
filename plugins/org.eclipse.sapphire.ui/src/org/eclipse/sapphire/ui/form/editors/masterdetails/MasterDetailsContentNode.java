@@ -25,15 +25,12 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ImageService;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelService;
-import org.eclipse.sapphire.modeling.ModelService.Event;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
@@ -41,6 +38,8 @@ import org.eclipse.sapphire.modeling.el.FunctionException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.services.ImageService;
+import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
@@ -387,26 +386,23 @@ public final class MasterDetailsContentNode
                     {
                         return new FunctionResult( this, context )
                         {
-                            private ModelService.Listener listener;
+                            private Service.Listener listener;
                             
                             @Override
                             protected void init()
                             {
                                 super.init();
                                 
-                                this.listener = new ModelService.Listener()
+                                this.listener = new Service.Listener()
                                 {
                                     @Override
-                                    public void handleEvent( final Event event )
+                                    public void handle( final Service.Event event )
                                     {
-                                        if( event instanceof ImageService.ImageChangedEvent )
-                                        {
-                                            refresh();
-                                        }
+                                        refresh();
                                     }
                                 };
                                 
-                                imageService.addListener( this.listener );
+                                imageService.attach( this.listener );
                             }
 
                             @Override
@@ -422,7 +418,7 @@ public final class MasterDetailsContentNode
                                 
                                 if( this.listener != null )
                                 {
-                                    imageService.removeListener( this.listener );
+                                    imageService.detach( this.listener );
                                 }
                             }
                         };

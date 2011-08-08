@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestRootElement>
+    <ValuePropertyA>aaaa</ValuePropertyA>
+    <ValuePropertyB>bbbb</ValuePropertyB>
+    <ListPropertyA>
+        <TestChildElementA>
+            <ValuePropertyA>cccc</ValuePropertyA>
+        </TestChildElementA>
+        <TestChildElementB>
+            <ValuePropertyB>dddd</ValuePropertyB>
+        </TestChildElementB>
+        <TestChildElementA>
+            <ValuePropertyA>eeee</ValuePropertyA>
+        </TestChildElementA>
+    </ListPropertyA>
+    <ElementPropertyA>
+        <TestChildElementB>
+            <ValuePropertyB>ffff</ValuePropertyB>
+        </TestChildElementB>
+    </ElementPropertyA>
+</TestRootElement>

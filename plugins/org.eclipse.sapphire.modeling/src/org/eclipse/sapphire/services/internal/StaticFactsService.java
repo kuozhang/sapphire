@@ -14,15 +14,15 @@ package org.eclipse.sapphire.services.internal;
 import java.util.List;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Fact;
 import org.eclipse.sapphire.modeling.annotations.Facts;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.services.FactsService;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Creates fact statements about property by using static content specified in @Fact and @Facts annotations.
@@ -35,7 +35,7 @@ public final class StaticFactsService extends FactsService
     @Override
     protected void facts( final List<String> facts )
     {
-        final ModelProperty property = property();
+        final ModelProperty property = context( ModelProperty.class );
         
         final Fact factAnnotation = property.getAnnotation( Fact.class );
         
@@ -58,24 +58,23 @@ public final class StaticFactsService extends FactsService
     private void facts( final List<String> facts,
                         final Fact fact )
     {
-        final LocalizationService localization = property().getLocalizationService();
+        final LocalizationService localization = context( ModelProperty.class ).getLocalizationService();
         facts.add( localization.text( fact.statement(), CapitalizationType.NO_CAPS, true ) );
     }
     
-    public static final class Factory extends ModelPropertyServiceFactory
+    public static final class Factory extends ServiceFactory
     {
         @Override
-        public boolean applicable( final IModelElement element,
-                                   final ModelProperty property,
-                                   final Class<? extends ModelPropertyService> service )
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
         {
-            return ( property instanceof ValueProperty && ( property.hasAnnotation( Fact.class ) || property.hasAnnotation( Facts.class ) ) );
+            final ValueProperty property = context.find( ValueProperty.class );
+            return ( property != null && ( property.hasAnnotation( Fact.class ) || property.hasAnnotation( Facts.class ) ) );
         }
     
         @Override
-        public ModelPropertyService create( final IModelElement element,
-                                            final ModelProperty property,
-                                            final Class<? extends ModelPropertyService> service )
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
         {
             return new StaticFactsService();
         }

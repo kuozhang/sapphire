@@ -46,7 +46,7 @@ public final class TestModelingMisc0003
     
     public void test() throws Exception
     {
-        final IMisc0003TestRootElement element = IMisc0003TestRootElement.TYPE.instantiate();
+        final Misc0003TestRootElement element = Misc0003TestRootElement.TYPE.instantiate();
         
         // String Value Property
         

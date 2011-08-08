@@ -21,15 +21,15 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
-import org.eclipse.sapphire.modeling.annotations.DerivedValue;
+import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.samples.contacts.internal.SendContactOpContentProvider;
+import org.eclipse.sapphire.samples.contacts.internal.SendContactOpMessageBodyDerivedValueService;
 import org.eclipse.sapphire.samples.contacts.internal.SendContactOpMethods;
-import org.eclipse.sapphire.samples.contacts.internal.SendContactToPossibleValuesProvider;
+import org.eclipse.sapphire.samples.contacts.internal.SendContactToPossibleValuesService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -37,10 +37,7 @@ import org.eclipse.sapphire.samples.contacts.internal.SendContactToPossibleValue
 
 @GenerateImpl
 
-public interface ISendContactOp 
-
-    extends IExecutableModelElement
-    
+public interface ISendContactOp extends IExecutableModelElement
 {
     ModelElementType TYPE = new ModelElementType(ISendContactOp.class);
     
@@ -57,7 +54,7 @@ public interface ISendContactOp
 
     @Label( standard = "to", full = "message destination" )
     @Required
-    @Service( impl = SendContactToPossibleValuesProvider.class )
+    @Service( impl = SendContactToPossibleValuesService.class )
     
     ValueProperty PROP_TO = new ValueProperty( TYPE, "To" );
 
@@ -67,8 +64,9 @@ public interface ISendContactOp
     // *** MessageBody ***
     
     @Label( standard = "message body" )
-    @DerivedValue( service = SendContactOpContentProvider.class )
+    @Derived
     @DependsOn( "Contact" )
+    @Service( impl = SendContactOpMessageBodyDerivedValueService.class )
     
     ValueProperty PROP_MESSAGE_BODY = new ValueProperty( TYPE, "MessageBody" );
     

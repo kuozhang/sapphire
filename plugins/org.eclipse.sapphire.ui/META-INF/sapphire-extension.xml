@@ -14,13 +14,20 @@
 -->
 
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
-    <model-property-service>
-        <type>org.eclipse.sapphire.modeling.ReferenceService</type>
+    <service>
+        <type>org.eclipse.sapphire.services.ReferenceService</type>
+        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.ui.def.internal.JavaTypeReferenceServiceForSdef$Factory</factory>
         <id>Sapphire.UI.Definition.Java.TypeReferenceService</id>
         <overrides>Sapphire.Java.TypeReferenceService</overrides>
         <overrides>Sapphire.Java.JDT.TypeReferenceService</overrides>
-    </model-property-service>
+    </service>
+    <service>
+        <id>Sapphire.ValueSerializationService.Color</id>
+        <type>org.eclipse.sapphire.services.ValueSerializationService</type>
+        <context>Sapphire.Property.Instance</context>
+        <factory>org.eclipse.sapphire.ui.internal.ColorSerializationService$Factory</factory>
+    </service>
     <action>
         <id>Sapphire.Add</id>
         <context>Sapphire.ListPropertyEditor</context>
@@ -311,10 +318,6 @@
         <context>Sapphire.EditorPage.Outline.Node</context>
         <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeAddActionHandlerCondition</condition>
     </action-handler-factory>
-    <value-serialization-service>
-        <type>org.eclipse.sapphire.ui.Color</type>
-        <impl>org.eclipse.sapphire.ui.internal.ColorSerializationService</impl>
-    </value-serialization-service>
     <type-cast>
         <source>java.lang.String</source>
         <target>org.eclipse.sapphire.modeling.ImageData</target>

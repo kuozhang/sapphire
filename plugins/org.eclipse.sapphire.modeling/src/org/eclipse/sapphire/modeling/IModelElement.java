@@ -15,6 +15,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.services.Service;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -130,11 +132,11 @@ public interface IModelElement
      * @return the service or <code>null</code> if not available
      */
     
-    <S extends ModelElementService> S service( Class<S> serviceType );
-    <S extends ModelElementService> List<S> services( Class<S> serviceType );
+    <S extends Service> S service( Class<S> serviceType );
+    <S extends Service> List<S> services( Class<S> serviceType );
     
-    <S extends ModelPropertyService> S service( ModelProperty property, Class<S> serviceType );
-    <S extends ModelPropertyService> List<S> services( ModelProperty property, Class<S> serviceType );
+    <S extends Service> S service( ModelProperty property, Class<S> serviceType );
+    <S extends Service> List<S> services( ModelProperty property, Class<S> serviceType );
     
     boolean isPropertyEnabled( ModelProperty property );
     

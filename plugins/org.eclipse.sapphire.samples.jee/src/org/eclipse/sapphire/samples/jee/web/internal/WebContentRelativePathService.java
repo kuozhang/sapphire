@@ -17,9 +17,10 @@ import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.RelativePathService;
 import org.eclipse.sapphire.platform.PathBridge;
+import org.eclipse.sapphire.services.RelativePathService;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 
@@ -32,7 +33,7 @@ public final class WebContentRelativePathService extends RelativePathService
     @Override
     public List<Path> roots()
     {
-        final IProject project = element().adapt( IProject.class );
+        final IProject project = context( IModelElement.class ).adapt( IProject.class );
         
         if( project != null )
         {

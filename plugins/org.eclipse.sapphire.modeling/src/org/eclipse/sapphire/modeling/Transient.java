@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.modeling;
 
 import org.eclipse.sapphire.modeling.util.MiscUtil;
+import org.eclipse.sapphire.services.ValidationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -48,7 +49,7 @@ public class Transient<T>
         {
             final Status.CompositeStatusFactory factory = Status.factoryForComposite();
             
-            for( ModelPropertyValidationService<?> svc : parent().services( this.property, ModelPropertyValidationService.class ) )
+            for( ValidationService svc : parent().services( this.property, ValidationService.class ) )
             {
                 try
                 {

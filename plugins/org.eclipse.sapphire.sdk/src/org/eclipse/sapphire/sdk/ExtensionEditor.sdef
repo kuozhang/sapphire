@@ -25,94 +25,33 @@
         <initial-selection>Model Element Services</initial-selection>
         <root-node>
             <node>
-                <label>model element services</label>
+                <label>services</label>
                 <section>
                     <content>
-                        <label>Define services for model elements.</label>
+                        <label>Define services.</label>
                         <spacer/>
                         <action-link>
                             <action-id>Sapphire.Add</action-id>
-                            <label>Add a model element service</label>
+                            <label>Add a service</label>
                         </action-link>
                     </content>
                 </section>
                 <node-factory>
-                    <property>ModelElementServices</property>
+                    <property>Services</property>
                     <case>
                         <label>${ Id == null ? &quot;&lt;service&gt;&quot; : Id }</label>
                         <section>
-                            <label>model element service</label>
+                            <label>service</label>
                             <content>
                                 <property-editor>Id</property-editor>
-                                <property-editor>TypeClass</property-editor>
-                                <property-editor>FactoryClass</property-editor>
+                                <property-editor>Type</property-editor>
+                                <property-editor>Factory</property-editor>
                                 <property-editor>
                                     <property>Description</property>
                                     <height>75</height>
                                 </property-editor>
+                                <property-editor>Context</property-editor>
                                 <property-editor>Overrides</property-editor>
-                            </content>
-                        </section>
-                    </case>
-                </node-factory>
-            </node>
-            <node>
-                <label>model property services</label>
-                <section>
-                    <content>
-                        <label>Define services for model properties.</label>
-                        <spacer/>
-                        <action-link>
-                            <action-id>Sapphire.Add</action-id>
-                            <label>Add a model property service</label>
-                        </action-link>
-                    </content>
-                </section>
-                <node-factory>
-                    <property>ModelPropertyServices</property>
-                    <case>
-                        <label>${ Id == null ? &quot;&lt;service&gt;&quot; : Id }</label>
-                        <section>
-                            <label>model property service</label>
-                            <content>
-                                <property-editor>Id</property-editor>
-                                <property-editor>TypeClass</property-editor>
-                                <property-editor>FactoryClass</property-editor>
-                                <property-editor>
-                                    <property>Description</property>
-                                    <height>75</height>
-                                </property-editor>
-                                <property-editor>Overrides</property-editor>
-                            </content>
-                        </section>
-                    </case>
-                </node-factory>
-            </node>
-            <node>
-                <label>value serialization services</label>
-                <section>
-                    <content>
-                        <label>Define value serialization services.</label>
-                        <spacer/>
-                        <action-link>
-                            <action-id>Sapphire.Add</action-id>
-                            <label>Add a value serialization service</label>
-                        </action-link>
-                    </content>
-                </section>
-                <node-factory>
-                    <property>ValueSerializationServices</property>
-                    <case>
-                        <label>${ TypeClass == null ? "&lt;service&gt;" : LastSegment( TypeClass, '.' ) }</label>
-                        <section>
-                            <label>value serialization service</label>
-                            <content>
-                                <property-editor>TypeClass</property-editor>
-                                <property-editor>ImplClass</property-editor>
-                                <property-editor>
-                                    <property>Description</property>
-                                    <height>75</height>
-                                </property-editor>
                             </content>
                         </section>
                     </case>

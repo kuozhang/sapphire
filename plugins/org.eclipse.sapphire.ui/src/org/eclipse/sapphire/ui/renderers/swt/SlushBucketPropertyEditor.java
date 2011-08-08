@@ -43,11 +43,10 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelService;
-import org.eclipse.sapphire.modeling.ModelService.Event;
-import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
+import org.eclipse.sapphire.services.PossibleValuesService;
+import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
@@ -250,19 +249,16 @@ public final class SlushBucketPropertyEditor
             }
         );
         
-        this.possibleValuesServiceListener = new ModelService.Listener()
+        this.possibleValuesServiceListener = new Service.Listener()
         {
             @Override
-            public void handleEvent( final Event event )
+            public void handle( final Service.Event event )
             {
-                if( event instanceof PossibleValuesService.PossibleValuesChangedEvent )
-                {
-                    SlushBucketPropertyEditor.this.sourceTableViewer.refresh();
-                }
+                SlushBucketPropertyEditor.this.sourceTableViewer.refresh();
             }
         };
         
-        this.possibleValuesService.addListener( this.possibleValuesServiceListener );
+        this.possibleValuesService.attach( this.possibleValuesServiceListener );
         
         this.sourceTableViewer.setInput( new Object() );
         
@@ -274,7 +270,7 @@ public final class SlushBucketPropertyEditor
                 {
                     if( SlushBucketPropertyEditor.this.possibleValuesService != null )
                     {
-                        SlushBucketPropertyEditor.this.possibleValuesService.removeListener( SlushBucketPropertyEditor.this.possibleValuesServiceListener );
+                        SlushBucketPropertyEditor.this.possibleValuesService.detach( SlushBucketPropertyEditor.this.possibleValuesServiceListener );
                     }
                 }
             }

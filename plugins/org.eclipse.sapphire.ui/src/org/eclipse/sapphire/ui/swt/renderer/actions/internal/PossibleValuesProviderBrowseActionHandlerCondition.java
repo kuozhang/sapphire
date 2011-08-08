@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 
-import org.eclipse.sapphire.modeling.PossibleValuesService;
+import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
 

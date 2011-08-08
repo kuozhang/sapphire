@@ -29,12 +29,12 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelService.Event;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.services.FileExtensionsService;
+import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler.ContainersOnlyViewerFilter;
@@ -105,20 +105,17 @@ public final class EclipseWorkspacePathPropertyEditorRenderer
                 
                 treeViewer.addFilter( filter );
                 
-                final FileExtensionsService.Listener listener = new FileExtensionsService.Listener()
+                final Service.Listener listener = new Service.Listener()
                 {
                     @Override
-                    public void handleEvent( final Event event )
+                    public void handle( final Service.Event event )
                     {
-                        if( event instanceof FileExtensionsService.FileExtensionsChangedEvent )
-                        {
-                            filter.change( fileExtensionsService.extensions() );
-                            treeViewer.refresh();
-                        }
+                        filter.change( fileExtensionsService.extensions() );
+                        treeViewer.refresh();
                     }
                 };
                 
-                fileExtensionsService.addListener( listener );
+                fileExtensionsService.attach( listener );
                 
                 tree.addDisposeListener
                 (
@@ -126,7 +123,7 @@ public final class EclipseWorkspacePathPropertyEditorRenderer
                     {
                         public void widgetDisposed( final DisposeEvent event )
                         {
-                            fileExtensionsService.removeListener( listener );
+                            fileExtensionsService.detach( listener );
                         }
                     }
                 );

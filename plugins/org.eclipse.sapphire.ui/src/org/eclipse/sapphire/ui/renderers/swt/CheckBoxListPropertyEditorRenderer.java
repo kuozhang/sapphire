@@ -43,21 +43,20 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ImageService;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelService;
-import org.eclipse.sapphire.modeling.ModelService.Event;
-import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.ValueImageService;
-import org.eclipse.sapphire.modeling.ValueLabelService;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.services.ImageService;
+import org.eclipse.sapphire.services.PossibleValuesService;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ValueImageService;
+import org.eclipse.sapphire.services.ValueLabelService;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -78,10 +77,7 @@ import org.eclipse.swt.widgets.TableItem;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class CheckBoxListPropertyEditorRenderer
-
-    extends ListPropertyEditorRenderer
-    
+public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRenderer
 {
     private Table table;
     private CheckboxTableViewer tableViewer;
@@ -440,7 +436,7 @@ public class CheckBoxListPropertyEditorRenderer
         private ValueLabelService valueLabelService;
         private ValueImageService valueImageService;
         private ImageService elementImageService;
-        private ModelService.Listener listener;
+        private Service.Listener listener;
         
         public Entry( final String value,
                       final IModelElement element )
@@ -454,15 +450,12 @@ public class CheckBoxListPropertyEditorRenderer
             this.valueLabelService = parent.service( CheckBoxListPropertyEditorRenderer.this.memberProperty, ValueLabelService.class );
             this.valueImageService = parent.service( CheckBoxListPropertyEditorRenderer.this.memberProperty, ValueImageService.class );
             
-            this.listener = new ModelService.Listener()
+            this.listener = new Service.Listener()
             {
                 @Override
-                public void handleEvent( final Event event )
+                public void handle( final Service.Event event )
                 {
-                    if( event instanceof ImageService.ImageChangedEvent )
-                    {
-                        CheckBoxListPropertyEditorRenderer.this.tableViewer.update( Entry.this, null );
-                    }
+                    CheckBoxListPropertyEditorRenderer.this.tableViewer.update( Entry.this, null );
                 }
             };
             
@@ -472,7 +465,7 @@ public class CheckBoxListPropertyEditorRenderer
                 
                 if( this.elementImageService != null )
                 {
-                    this.elementImageService.addListener( this.listener );
+                    this.elementImageService.attach( this.listener );
                 }
             }
         }
@@ -575,14 +568,14 @@ public class CheckBoxListPropertyEditorRenderer
                 
                 if( this.elementImageService != null )
                 {
-                    this.elementImageService.addListener( this.listener );
+                    this.elementImageService.attach( this.listener );
                 }
             }
             else
             {
                 if( this.elementImageService != null )
                 {
-                    this.elementImageService.removeListener( this.listener );
+                    this.elementImageService.detach( this.listener );
                     this.elementImageService = null;
                 }
                 
@@ -600,7 +593,7 @@ public class CheckBoxListPropertyEditorRenderer
         {
             if( this.elementImageService != null )
             {
-                this.elementImageService.removeListener( this.listener );
+                this.elementImageService.detach( this.listener );
             }
         }
     }

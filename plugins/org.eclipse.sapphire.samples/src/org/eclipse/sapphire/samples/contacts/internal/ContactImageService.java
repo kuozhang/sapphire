@@ -13,19 +13,17 @@ package org.eclipse.sapphire.samples.contacts.internal;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ImageService;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.samples.contacts.IContact;
+import org.eclipse.sapphire.services.ImageService;
+import org.eclipse.sapphire.services.Service;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ContactImageService
-
-    extends ImageService
-    
+public final class ContactImageService extends ImageService
 {
     private static final ImageData IMG_PERSON = ImageData.readFromClassLoader( IContact.class, "Contact.png" );
     private static final ImageData IMG_PERSON_FADED = ImageData.readFromClassLoader( IContact.class, "ContactFaded.png" );
@@ -33,27 +31,26 @@ public final class ContactImageService
     private ModelPropertyListener listener;
     
     @Override
-    public void init( final IModelElement element,
-                      final String[] params )
+    protected void init()
     {
-        super.init( element, params );
+        super.init();
         
         this.listener = new ModelPropertyListener()
         {
             @Override
             public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
             {
-                notifyListeners( new ImageChangedEvent( ContactImageService.this ) );
+                ContactImageService.this.notify( new Service.Event( ContactImageService.this ) );
             }
         };
         
-        element.addListener( this.listener, IContact.PROP_E_MAIL.getName() );
+        context( IModelElement.class ).addListener( this.listener, IContact.PROP_E_MAIL.getName() );
     }
 
     @Override
     public ImageData provide()
     {
-        if( ( (IContact) element() ).getEMail().getContent() == null )
+        if( context( IContact.class ).getEMail().getContent() == null )
         {
             return IMG_PERSON_FADED;
         }
@@ -68,7 +65,7 @@ public final class ContactImageService
     {
         super.dispose();
         
-        element().removeListener( this.listener, IContact.PROP_E_MAIL.getName() );
+        context( IModelElement.class ).removeListener( this.listener, IContact.PROP_E_MAIL.getName() );
     }
     
 }

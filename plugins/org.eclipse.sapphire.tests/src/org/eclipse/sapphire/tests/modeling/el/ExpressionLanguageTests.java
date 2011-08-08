@@ -1111,9 +1111,9 @@ public final class ExpressionLanguageTests
     private void properties( final String expr,
                              final Object expected )
     {
-        final ITestModelElement root = ITestModelElement.TYPE.instantiate();
-        final ITestModelElement child = root.getFooBar().element( true );
-        final ITestModelElement grandchild = child.getFooBar().element( true );
+        final TestElement root = TestElement.TYPE.instantiate();
+        final TestElement child = root.getFooBar().element( true );
+        final TestElement grandchild = child.getFooBar().element( true );
         
         root.setIntegerProp( 1 );
         root.setStringProp( "ABC" );

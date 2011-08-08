@@ -17,7 +17,7 @@ package org.eclipse.sapphire.tests.modeling.misc.t0005;
 
 public final class TestModelBaseMethods
 {
-    public static int test( final ITestModelBase model )
+    public static int test( final TestModelBase model )
     {
         return 1;
     }

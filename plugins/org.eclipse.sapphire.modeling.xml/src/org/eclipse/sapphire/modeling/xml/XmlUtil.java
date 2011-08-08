@@ -19,6 +19,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchemasCache;
 import org.w3c.dom.Attr;
@@ -181,6 +182,18 @@ public final class XmlUtil
         final String namespace = node.getNamespaceURI();
         final String localName = node.getLocalName();
         return new QName( namespace, localName );
+    }
+    
+    public static String createDefaultElementName( final ModelElementType type )
+    {
+        String xmlElementName = type.getSimpleName();
+        
+        if( xmlElementName.charAt( 0 ) == 'I' && xmlElementName.length() > 1 && Character.isUpperCase( xmlElementName.charAt( 1 ) ) )
+        {
+            xmlElementName = xmlElementName.substring( 1 );
+        }
+        
+        return xmlElementName;
     }
     
     public static boolean equal( final QName a,

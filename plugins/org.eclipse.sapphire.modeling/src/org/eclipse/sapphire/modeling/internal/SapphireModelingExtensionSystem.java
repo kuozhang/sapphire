@@ -27,18 +27,14 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.sapphire.modeling.ExtensionsLocator;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelElementService;
-import org.eclipse.sapphire.modeling.ModelElementServiceFactory;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.TypeCast;
-import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
+import org.eclipse.sapphire.services.ServiceFactoryProxy;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -53,9 +49,7 @@ import org.xml.sax.InputSource;
 
 public final class SapphireModelingExtensionSystem
 {
-    private static final String EL_VALUE_SERIALIZATION_SERVICE = "value-serialization-service";
-    private static final String EL_MODEL_ELEMENT_SERVICE = "model-element-service";
-    private static final String EL_MODEL_PROPERTY_SERVICE = "model-property-service";
+    private static final String EL_SERVICE = "service";
     private static final String EL_FUNCTION = "function";
     private static final String EL_NAME = "name";
     private static final String EL_TYPE = "type";
@@ -63,49 +57,20 @@ public final class SapphireModelingExtensionSystem
     private static final String EL_IMPL = "impl";
     private static final String EL_ID = "id";
     private static final String EL_OVERRIDES = "overrides";
+    private static final String EL_CONTEXT = "context";
     private static final String EL_SOURCE = "source";
     private static final String EL_TARGET = "target";
     private static final String EL_TYPE_CAST = "type-cast";
 
     private static boolean initialized = false;
-    private static List<ModelElementServiceFactoryProxy> modelElementServiceFactories;
-    private static List<ModelPropertyServiceFactoryProxy> modelPropertyServiceFactories;
-    private static List<ValueSerializationServiceFactory> valueSerializerFactories;
+    private static List<ServiceFactoryProxy> serviceFactories;
     private static Map<String,FunctionFactory> functionFactories;
     private static List<TypeCast> typeCasts;
 
-    public static List<ModelElementServiceFactoryProxy> getModelElementServices()
+    public static List<ServiceFactoryProxy> getServiceFactories()
     {
         initialize();
-        return modelElementServiceFactories;
-    }
-
-    public static List<ModelPropertyServiceFactoryProxy> getModelPropertyServices()
-    {
-        initialize();
-        return modelPropertyServiceFactories;
-    }
-
-    public static ValueSerializationService createValueSerializer( final IModelElement element,
-                                                                   final ValueProperty property,
-                                                                   final Class<?> type )
-    {
-        initialize();
-
-        for( ValueSerializationServiceFactory factory : valueSerializerFactories )
-        {
-            if( factory.applicable( type ) )
-            {
-                final ValueSerializationService instance = factory.create( element, property );
-                
-                if( instance != null )
-                {
-                    return instance;
-                }
-            }
-        }
-
-        return null;
+        return serviceFactories;
     }
 
     public static Function createFunction( final String name,
@@ -134,9 +99,7 @@ public final class SapphireModelingExtensionSystem
         if( ! initialized )
         {
             initialized = true;
-            modelElementServiceFactories = new ArrayList<ModelElementServiceFactoryProxy>();
-            modelPropertyServiceFactories = new ArrayList<ModelPropertyServiceFactoryProxy>();
-            valueSerializerFactories = new ArrayList<ValueSerializationServiceFactory>();
+            serviceFactories = new ArrayList<ServiceFactoryProxy>();
             functionFactories = new HashMap<String,FunctionFactory>();
             typeCasts = new ArrayList<TypeCast>();
 
@@ -159,30 +122,22 @@ public final class SapphireModelingExtensionSystem
 
                             try
                             {
-                                if( elname.equals( EL_VALUE_SERIALIZATION_SERVICE ) )
-                                {
-                                    final Class<?> valueType = handle.findClass( text( child( el, EL_TYPE ) ) );
-                                    final Class<? extends ValueSerializationService> serializerClass = handle.findClass( text( child( el, EL_IMPL ) ) );
-
-                                    valueSerializerFactories.add( new ValueSerializationServiceFactory( valueType, serializerClass ) );
-                                }
-                                else if( elname.equals( EL_MODEL_ELEMENT_SERVICE ) )
+                                if( elname.equals( EL_SERVICE ) )
                                 {
                                     final String id = text( child( el, EL_ID ) );
-                                    final Class<? extends ModelElementService> serviceType = handle.findClass( text( child( el, EL_TYPE ) ) );
-                                    final Class<? extends ModelElementServiceFactory> serviceFactory = handle.findClass( text( child( el, EL_FACTORY ) ) );
+                                    final Class<? extends Service> serviceType = handle.findClass( text( child( el, EL_TYPE ) ) );
+                                    final Class<? extends ServiceFactory> serviceFactory = handle.findClass( text( child( el, EL_FACTORY ) ) );
+                                    final String context = text( child( el, EL_CONTEXT ) );
                                     final Set<String> overrides = parseOverrides( el );
-
-                                    modelElementServiceFactories.add( new ModelElementServiceFactoryProxy( id, serviceType, serviceFactory, overrides ) );
-                                }
-                                else if( elname.equals( EL_MODEL_PROPERTY_SERVICE ) )
-                                {
-                                    final String id = text( child( el, EL_ID ) );
-                                    final Class<? extends ModelPropertyService> serviceType = handle.findClass( text( child( el, EL_TYPE ) ) );
-                                    final Class<? extends ModelPropertyServiceFactory> serviceFactory = handle.findClass( text( child( el, EL_FACTORY ) ) );
-                                    final Set<String> overrides = parseOverrides( el );
-
-                                    modelPropertyServiceFactories.add( new ModelPropertyServiceFactoryProxy( id, serviceType, serviceFactory, overrides ) );
+                                    
+                                    if( serviceType == null || serviceFactory == null )
+                                    {
+                                        // TODO: Report this.
+                                    }
+                                    else
+                                    {
+                                        serviceFactories.add( new ServiceFactoryProxyImpl( id, serviceType, serviceFactory, context, overrides ) );
+                                    }
                                 }
                                 else if( elname.equals( EL_FUNCTION ) )
                                 {
@@ -336,74 +291,78 @@ public final class SapphireModelingExtensionSystem
         private static final long serialVersionUID = 1L;
     }
 
-    public static final class ModelElementServiceFactoryProxy
-
-        extends ModelElementServiceFactory
-
+    private static final class ServiceFactoryProxyImpl extends ServiceFactoryProxy
     {
         private final String id;
-        private final Class<? extends ModelElementService> type;
-        private final Class<? extends ModelElementServiceFactory> factoryClass;
-        private final Set<String> overrides;
-        private ModelElementServiceFactory factoryInstance;
+        private final Class<? extends Service> type;
+        private final Class<? extends ServiceFactory> factoryClass;
+        private ServiceFactory factoryInstance;
         private boolean factoryInstantiationFailed;
+        private final String context;
+        private final Set<String> overrides;
 
-        public ModelElementServiceFactoryProxy( final String id,
-                                                final Class<? extends ModelElementService> type,
-                                                final Class<? extends ModelElementServiceFactory> factoryClass,
-                                                final Set<String> overrides )
+        public ServiceFactoryProxyImpl( final String id,
+                                        final Class<? extends Service> type,
+                                        final Class<? extends ServiceFactory> factoryClass,
+                                        final String context,
+                                        final Set<String> overrides )
         {
             this.id = id;
             this.type = type;
             this.factoryClass = factoryClass;
+            this.context = context;
             this.overrides = overrides;
         }
         
+        @Override
         public String id()
         {
             return this.id;
         }
 
         @Override
-        public boolean applicable( final IModelElement element,
-                                   final Class<? extends ModelElementService> service )
+        public Class<? extends Service> type()
         {
-            boolean result = false;
-
-            if( service.isAssignableFrom( this.type ) )
-            {
-                final ModelElementServiceFactory factory = factory();
-
-                if( factory != null )
-                {
-                    result = factory.applicable( element, service );
-                }
-            }
-
-            return result;
+            return this.type;
         }
-        
+
+        @Override
         public Set<String> overrides()
         {
             return this.overrides;
         }
 
         @Override
-        public ModelElementService create( final IModelElement element,
-                                           final Class<? extends ModelElementService> service )
+        protected boolean applicableHandOff( final ServiceContext context,
+                                             final Class<? extends Service> service )
         {
-            ModelElementService result = null;
-            final ModelElementServiceFactory factory = factory();
-
-            if( factory != null )
+            boolean result = false;
+            final ServiceFactory factory = factory();
+            
+            if( factory != null && context.type().equals( this.context ) )
             {
-                result = factory.create( element, service );
+                result = factory.applicable( context, service );
             }
-
+            
             return result;
         }
 
-        private synchronized ModelElementServiceFactory factory()
+        @Override
+        protected Service createHandOff( final ServiceContext context,
+                                         final Class<? extends Service> service )
+        {
+            Service result = null;
+            final ServiceFactory factory = factory();
+            
+            if( factory != null )
+            {
+                result = factory.create( context, service );
+            }
+            
+            return result;
+        }
+        
+        private synchronized ServiceFactory factory()
         {
             if( this.factoryInstance == null && ! this.factoryInstantiationFailed )
             {
@@ -419,143 +378,6 @@ public final class SapphireModelingExtensionSystem
             }
 
             return this.factoryInstance;
-        }
-    }
-
-    public static final class ModelPropertyServiceFactoryProxy
-
-        extends ModelPropertyServiceFactory
-
-    {
-        private final String id;
-        private final Class<? extends ModelPropertyService> type;
-        private final Class<? extends ModelPropertyServiceFactory> factoryClass;
-        private final Set<String> overrides;
-        private ModelPropertyServiceFactory factoryInstance;
-        private boolean factoryInstantiationFailed;
-
-        public ModelPropertyServiceFactoryProxy( final String id,
-                                                 final Class<? extends ModelPropertyService> type,
-                                                 final Class<? extends ModelPropertyServiceFactory> factoryClass,
-                                                 final Set<String> overrides )
-        {
-            this.id = id;
-            this.type = type;
-            this.factoryClass = factoryClass;
-            this.overrides = overrides;
-        }
-        
-        public String id()
-        {
-            return this.id;
-        }
-
-        @Override
-        public boolean applicable( final IModelElement element,
-                                   final ModelProperty property,
-                                   final Class<? extends ModelPropertyService> service )
-        {
-            boolean result = false;
-
-            if( service.isAssignableFrom( this.type ) )
-            {
-                final ModelPropertyServiceFactory factory = factory();
-
-                if( factory != null )
-                {
-                    result = factory.applicable( element, property, service );
-                }
-            }
-
-            return result;
-        }
-
-        public Set<String> overrides()
-        {
-            return this.overrides;
-        }
-
-        @Override
-        public ModelPropertyService create( final IModelElement element,
-                                            final ModelProperty property,
-                                            final Class<? extends ModelPropertyService> service )
-        {
-            ModelPropertyService result = null;
-            final ModelPropertyServiceFactory factory = factory();
-
-            if( factory != null )
-            {
-                result = factory.create( element, property, service );
-            }
-
-            return result;
-        }
-
-        private synchronized ModelPropertyServiceFactory factory()
-        {
-            if( this.factoryInstance == null && ! this.factoryInstantiationFailed )
-            {
-                try
-                {
-                    this.factoryInstance = this.factoryClass.newInstance();
-                }
-                catch( Exception e )
-                {
-                    LoggingService.log( e );
-                    this.factoryInstantiationFailed = true;
-                }
-            }
-
-            return this.factoryInstance;
-        }
-    }
-
-    private static final class ValueSerializationServiceFactory
-    {
-        private final Class<?> type;
-        private final Class<? extends ValueSerializationService> serializerClass;
-        private boolean serializerInstantiationFailed;
-
-        public ValueSerializationServiceFactory( final Class<?> type,
-                                                 final Class<? extends ValueSerializationService> serializerClass )
-        {
-            this.type = type;
-            this.serializerClass = serializerClass;
-        }
-
-        public boolean applicable( final Class<?> type )
-        {
-            boolean result = false;
-
-            if( this.type.isAssignableFrom( type ) )
-            {
-                result = true;
-            }
-
-            return result;
-        }
-
-        public ValueSerializationService create( final IModelElement element,
-                                                 final ValueProperty property )
-        {
-            ValueSerializationService serializer = null;
-
-            if( ! this.serializerInstantiationFailed )
-            {
-                try
-                {
-                    serializer = this.serializerClass.newInstance();
-                    serializer.init( element, property, new String[ 0 ] );
-                }
-                catch( Exception e )
-                {
-                    LoggingService.log( e );
-                    serializer = null;
-                    this.serializerInstantiationFailed = true;
-                }
-            }
-
-            return serializer;
         }
     }
 

@@ -51,7 +51,7 @@ public final class TestXmlDtd0003
         final ByteArrayResourceStore byteArrayResourceStore = new ByteArrayResourceStore();
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( byteArrayResourceStore );
 
-        final ITestElement root = ITestElement.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
+        final TestElement root = TestElement.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         root.getCcc().addNewElement().setText( "111" );
         root.getBbb().addNewElement().setText( "222" );
         root.getAaa().addNewElement().setText( "333" );

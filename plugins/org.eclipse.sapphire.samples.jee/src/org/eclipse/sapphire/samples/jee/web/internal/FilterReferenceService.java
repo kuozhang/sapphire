@@ -13,9 +13,9 @@ package org.eclipse.sapphire.samples.jee.web.internal;
 
 import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 
-import org.eclipse.sapphire.modeling.ReferenceService;
 import org.eclipse.sapphire.samples.jee.web.Filter;
 import org.eclipse.sapphire.samples.jee.web.WebAppConfig;
+import org.eclipse.sapphire.services.ReferenceService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -26,7 +26,7 @@ public final class FilterReferenceService extends ReferenceService
     @Override
     public Object resolve( final String reference )
     {
-        final WebAppConfig config = nearest( WebAppConfig.class );
+        final WebAppConfig config = context( WebAppConfig.class );
         
         if( config != null )
         {

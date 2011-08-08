@@ -14,29 +14,36 @@
 -->
 
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <model-property-service>
+    <service>
         <description>Resolves Java types visible to the class loader that contains a given model element type interface.</description>
-        <type>org.eclipse.sapphire.modeling.ReferenceService</type>
+        <type>org.eclipse.sapphire.services.ReferenceService</type>
+        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.java.internal.StandardJavaTypeReferenceService$Factory</factory>
         <id>Sapphire.Java.TypeReferenceService</id>
-    </model-property-service>
-    <model-property-service>
-        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
+    </service>
+    <service>
+        <type>org.eclipse.sapphire.services.ValidationService</type>
+        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.java.internal.JavaTypeValidationService$Factory</factory>
         <id>Sapphire.Java.TypeValidationService</id>
-    </model-property-service>
-    <model-property-service>
+    </service>
+    <service>
         <description>Creates fact statements about Java type property's constraints by using semantical information specified by @JavaTypeConstraints annotation.</description>
         <type>org.eclipse.sapphire.services.FactsService</type>
+        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.java.internal.JavaTypeConstraintFactsService$Factory</factory>
         <id>Sapphire.FactsService.JavaTypeConstraint</id>
-    </model-property-service>
-    <value-serialization-service>
-        <type>org.eclipse.sapphire.java.JavaTypeName</type>
-        <impl>org.eclipse.sapphire.java.internal.JavaTypeNameSerializationService</impl>
-    </value-serialization-service>
-    <value-serialization-service>
-        <type>org.eclipse.sapphire.java.JavaPackageName</type>
-        <impl>org.eclipse.sapphire.java.internal.JavaPackageNameSerializationService</impl>
-    </value-serialization-service>
+    </service>
+    <service>
+        <id>Sapphire.ValueSerializationService.JavaTypeName</id>
+        <type>org.eclipse.sapphire.services.ValueSerializationService</type>
+        <context>Sapphire.Property.Instance</context>
+        <factory>org.eclipse.sapphire.java.internal.JavaTypeNameSerializationService$Factory</factory>
+    </service>
+    <service>
+        <id>Sapphire.ValueSerializationService.JavaPackageName</id>
+        <type>org.eclipse.sapphire.services.ValueSerializationService</type>
+        <context>Sapphire.Property.Instance</context>
+        <factory>org.eclipse.sapphire.java.internal.JavaPackageNameSerializationService$Factory</factory>
+    </service>
 </extension>

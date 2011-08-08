@@ -15,8 +15,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.RelativePathService;
+import org.eclipse.sapphire.services.RelativePathService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,7 +28,7 @@ public final class EventAttachmentLocalCopyRelativePathService extends RelativeP
     @Override
     public List<Path> roots()
     {
-        final IFile file = element().adapt( IFile.class );
+        final IFile file = context( IModelElement.class ).adapt( IFile.class );
             
         if( file != null )
         {

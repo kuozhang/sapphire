@@ -40,7 +40,7 @@ public final class TestXmlBinding0008
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "XmlBinding0008" );
+        suite.setName( "TestXmlBinding0008" );
 
         suite.addTest( new TestXmlBinding0008( "test" ) );
         
@@ -52,8 +52,8 @@ public final class TestXmlBinding0008
         final ByteArrayResourceStore byteArrayResourceStore = new ByteArrayResourceStore();
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( byteArrayResourceStore );
 
-        final ITestModelRoot root = ITestModelRoot.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
-        final ITestModelChild child = root.getChild();
+        final TestModelRoot root = TestModelRoot.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
+        final TestModelChild child = root.getChild();
         
         child.setAaa( "111" );
         child.setBbb( "222" );

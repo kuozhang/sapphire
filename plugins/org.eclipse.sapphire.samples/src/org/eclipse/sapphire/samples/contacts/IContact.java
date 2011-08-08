@@ -35,7 +35,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.samples.contacts.internal.ConnectionsListController;
-import org.eclipse.sapphire.samples.contacts.internal.ContactCategoryValuesProvider;
+import org.eclipse.sapphire.samples.contacts.internal.ContactCategoryPossibleValueService;
 import org.eclipse.sapphire.samples.contacts.internal.ContactImageService;
 import org.eclipse.sapphire.samples.contacts.internal.ContactMethods;
 
@@ -67,7 +67,7 @@ public interface IContact extends IModelElement
     
     @Label( standard = "category" )
     @DefaultValue( text = "Personal" )
-    @Service( impl = ContactCategoryValuesProvider.class )
+    @Service( impl = ContactCategoryPossibleValueService.class )
     @XmlBinding( path = "%category" )
     @Documentation( content = "This would be the help content for the category property." )
 

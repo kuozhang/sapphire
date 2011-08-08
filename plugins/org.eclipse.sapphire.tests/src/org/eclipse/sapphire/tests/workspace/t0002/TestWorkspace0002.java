@@ -49,18 +49,18 @@ public final class TestWorkspace0002 extends SapphireTestCase
     
     public void testProjectRelativePath() throws Exception
     {
-        test( ITestRootElement.PROP_PROJECT_RELATIVE_PATH, "Must be a project relative path." );
+        test( TestRootElement.PROP_PROJECT_RELATIVE_PATH, "Must be a project relative path." );
     }
 
     public void testWorkspaceRelativePath() throws Exception
     {
-        test( ITestRootElement.PROP_WORKSPACE_RELATIVE_PATH, "Must be a workspace relative path." );
+        test( TestRootElement.PROP_WORKSPACE_RELATIVE_PATH, "Must be a workspace relative path." );
     }
 
     private static void test( final ModelProperty property,
                               final String... factsExpected )
     {
-        test( ITestRootElement.TYPE.instantiate(), property, factsExpected );
+        test( TestRootElement.TYPE.instantiate(), property, factsExpected );
     }
     
     private static void test( final IModelElement element,

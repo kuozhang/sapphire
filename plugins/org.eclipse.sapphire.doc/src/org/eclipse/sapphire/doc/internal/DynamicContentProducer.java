@@ -31,12 +31,12 @@ import org.eclipse.sapphire.modeling.UrlResourceStore;
 import org.eclipse.sapphire.modeling.util.Filter;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
-import org.eclipse.sapphire.sdk.extensibility.IExtensionSummaryExportOp;
-import org.eclipse.sapphire.sdk.extensibility.IExtensionSummarySectionColumnDef;
-import org.eclipse.sapphire.sdk.extensibility.IExtensionSummarySectionDef;
-import org.eclipse.sapphire.sdk.extensibility.IFunctionDef;
-import org.eclipse.sapphire.sdk.extensibility.IModelPropertyServiceDef;
-import org.eclipse.sapphire.sdk.extensibility.ISapphireExtensionDef;
+import org.eclipse.sapphire.sdk.extensibility.ExtensionSummaryExportOp;
+import org.eclipse.sapphire.sdk.extensibility.ExtensionSummarySectionColumnDef;
+import org.eclipse.sapphire.sdk.extensibility.ExtensionSummarySectionDef;
+import org.eclipse.sapphire.sdk.extensibility.FunctionDef;
+import org.eclipse.sapphire.sdk.extensibility.SapphireExtensionDef;
+import org.eclipse.sapphire.sdk.extensibility.ServiceDef;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.ui.IExportModelDocumentationOp;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
@@ -51,7 +51,7 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 public class DynamicContentProducer implements IHelpContentProducer
 {
-    private List<ISapphireExtensionDef> extensions;
+    private List<SapphireExtensionDef> extensions;
 
     public InputStream getInputStream( final String pluginID,
                                        final String href,
@@ -63,25 +63,25 @@ public class DynamicContentProducer implements IHelpContentProducer
         {
             if( href.equals( "html/extensions/existing.html" ) )
             {
-                final IExtensionSummaryExportOp op = IExtensionSummaryExportOp.TYPE.instantiate();
+                final ExtensionSummaryExportOp op = ExtensionSummaryExportOp.TYPE.instantiate();
                 op.setDocumentBodyTitle( "Sapphire Extensions" );
 
                 content = op.execute( getExtensions(), null );
             }
             else if( href.equals( "html/el/index.html" ) )
             {
-                final IExtensionSummaryExportOp op = IExtensionSummaryExportOp.TYPE.instantiate();
+                final ExtensionSummaryExportOp op = ExtensionSummaryExportOp.TYPE.instantiate();
                 op.setCreateFinishedDocument( false );
 
-                final IExtensionSummarySectionDef section = op.getSections().addNewElement();
-                section.setExtensionType( ISapphireExtensionDef.PROP_FUNCTIONS.getName() );
+                final ExtensionSummarySectionDef section = op.getSections().addNewElement();
+                section.setExtensionType( SapphireExtensionDef.PROP_FUNCTIONS.getName() );
                 section.setIncludeSectionHeader( false );
 
-                final IExtensionSummarySectionColumnDef nameColumn = section.getColumns().addNewElement();
-                nameColumn.setName( IFunctionDef.PROP_NAME.getName() );
+                final ExtensionSummarySectionColumnDef nameColumn = section.getColumns().addNewElement();
+                nameColumn.setName( FunctionDef.PROP_NAME.getName() );
 
-                final IExtensionSummarySectionColumnDef descColumn = section.getColumns().addNewElement();
-                descColumn.setName( IFunctionDef.PROP_DESCRIPTION.getName() );
+                final ExtensionSummarySectionColumnDef descColumn = section.getColumns().addNewElement();
+                descColumn.setName( FunctionDef.PROP_DESCRIPTION.getName() );
 
                 final String functions = op.execute( getExtensions(), null );
 
@@ -90,29 +90,29 @@ public class DynamicContentProducer implements IHelpContentProducer
             }
             else if( href.startsWith( "html/services/index.html" ) )
             {
-                final IExtensionSummaryExportOp op = IExtensionSummaryExportOp.TYPE.instantiate();
+                final ExtensionSummaryExportOp op = ExtensionSummaryExportOp.TYPE.instantiate();
                 op.setCreateFinishedDocument( false );
 
-                final IExtensionSummarySectionDef section = op.getSections().addNewElement();
-                section.setExtensionType( ISapphireExtensionDef.PROP_MODEL_PROPERTY_SERVICES.getName() );
+                final ExtensionSummarySectionDef section = op.getSections().addNewElement();
+                section.setExtensionType( SapphireExtensionDef.PROP_SERVICES.getName() );
                 section.setIncludeSectionHeader( false );
 
-                final IExtensionSummarySectionColumnDef idColumn = section.getColumns().addNewElement();
-                idColumn.setName( IModelPropertyServiceDef.PROP_ID.getName() );
+                final ExtensionSummarySectionColumnDef idColumn = section.getColumns().addNewElement();
+                idColumn.setName( ServiceDef.PROP_ID.getName() );
 
-                final IExtensionSummarySectionColumnDef descColumn = section.getColumns().addNewElement();
-                descColumn.setName( IModelPropertyServiceDef.PROP_DESCRIPTION.getName() );
+                final ExtensionSummarySectionColumnDef descColumn = section.getColumns().addNewElement();
+                descColumn.setName( ServiceDef.PROP_DESCRIPTION.getName() );
                 
                 final Filter<IModelElement> filter = new Filter<IModelElement>()
                 {
                     @Override
                     public boolean check( final IModelElement element )
                     {
-                        if( element instanceof IModelPropertyServiceDef )
+                        if( element instanceof ServiceDef )
                         {
-                            final IModelPropertyServiceDef def = (IModelPropertyServiceDef) element;
+                            final ServiceDef def = (ServiceDef) element;
                             final String id = def.getId().getText();
-                            final String type = def.getTypeClass().getText();
+                            final String type = def.getType().getText();
                             
                             if( id != null && id.startsWith( "Sapphire." ) && 
                                 type != null && type.equals( FactsService.class.getName() ) )
@@ -199,11 +199,11 @@ public class DynamicContentProducer implements IHelpContentProducer
         }
     }
 
-    private synchronized List<ISapphireExtensionDef> getExtensions()
+    private synchronized List<SapphireExtensionDef> getExtensions()
     {
         if( extensions == null )
         {
-            final List<ISapphireExtensionDef> list = new ArrayList<ISapphireExtensionDef>();
+            final List<SapphireExtensionDef> list = new ArrayList<SapphireExtensionDef>();
 
             for( ExtensionsLocator.Handle handle : ExtensionsLocator.instance().find() )
             {
@@ -211,7 +211,7 @@ public class DynamicContentProducer implements IHelpContentProducer
                 {
                     final XmlResourceStore store = new XmlResourceStore( new UrlResourceStore( handle.extension() ) );
                     final RootXmlResource resource = new RootXmlResource( store );
-                    final ISapphireExtensionDef extension = ISapphireExtensionDef.TYPE.instantiate( resource );
+                    final SapphireExtensionDef extension = SapphireExtensionDef.TYPE.instantiate( resource );
                     list.add( extension );
                 }
                 catch( ResourceStoreException e )

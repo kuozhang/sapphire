@@ -51,8 +51,6 @@ public final class XmlBindingTests
         suite.addTest( new XmlBindingTests( "testValueProperties1" ) );
         suite.addTest( new XmlBindingTests( "testValueProperties2" ) );
         suite.addTest( new XmlBindingTests( "testValueProperties3" ) );
-        suite.addTest( new XmlBindingTests( "testDefaultBindingWrite" ) );
-        suite.addTest( new XmlBindingTests( "testDefaultBindingRead" ) );
         suite.addTest( XmlBindingTestSuite.suite() );
         suite.addTest( XmlDtdTestSuite.suite() );
         suite.addTest( XmlXsdTestSuite.suite() );
@@ -64,7 +62,7 @@ public final class XmlBindingTests
     {
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
-        final IXmlBindingTestModel model = IXmlBindingTestModel.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
+        final XmlBindingTestModel model = XmlBindingTestModel.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         
         testValueProperties( resourceStore, model, loadResource( "testValueProperties1.txt" ) );
     }
@@ -73,7 +71,7 @@ public final class XmlBindingTests
     {
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
-        final IXmlBindingTestModelAltB model = IXmlBindingTestModelAltB.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
+        final XmlBindingTestModelAltB model = XmlBindingTestModelAltB.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         
         testValueProperties( resourceStore, model, loadResource( "testValueProperties2.txt" ) );
     }
@@ -82,13 +80,13 @@ public final class XmlBindingTests
     {
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
-        final IXmlBindingTestModelAltC model = IXmlBindingTestModelAltC.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
+        final XmlBindingTestModelAltC model = XmlBindingTestModelAltC.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         
         testValueProperties( resourceStore, model, loadResource( "testValueProperties3.txt" ) );
     }
 
     private void testValueProperties( final ByteArrayResourceStore resourceStore,
-                                      final IXmlBindingTestModel model,
+                                      final XmlBindingTestModel model,
                                       final String expected )
     
         throws Exception
@@ -129,63 +127,6 @@ public final class XmlBindingTests
         final String result = new String( resourceStore.getContents(), "UTF-8" );
         
         assertEqualsIgnoreNewLineDiffs( expected, result );
-    }
-    
-    public void testDefaultBindingWrite() throws Exception
-    {
-        final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
-        final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
-        final IDefaultXmlBindingTestModel model = IDefaultXmlBindingTestModel.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
-        
-        model.resource().setCorruptedResourceExceptionInterceptor
-        (
-             new CorruptedResourceExceptionInterceptor()
-             {
-                @Override
-                public boolean shouldAttemptRepair()
-                {
-                    return true;
-                }
-             }
-        );
-        
-        model.setValuePropertyA( "aaaa" );
-        model.setValuePropertyB( "bbbb" );
-        
-        final IDefaultXmlBindingTestModelChildA listChild1 = (IDefaultXmlBindingTestModelChildA) model.getListPropertyA().addNewElement( IDefaultXmlBindingTestModelChildA.TYPE );
-        listChild1.setValuePropertyA( "cccc" );
-        
-        final IDefaultXmlBindingTestModelChildB listChild2 = (IDefaultXmlBindingTestModelChildB) model.getListPropertyA().addNewElement( IDefaultXmlBindingTestModelChildB.TYPE );
-        listChild2.setValuePropertyB( "dddd" );
-        
-        final IDefaultXmlBindingTestModelChildA listChild3 = (IDefaultXmlBindingTestModelChildA) model.getListPropertyA().addNewElement( IDefaultXmlBindingTestModelChildA.TYPE );
-        listChild3.setValuePropertyA( "eeee" );
-        
-        final IDefaultXmlBindingTestModelChildB elementChild = (IDefaultXmlBindingTestModelChildB) model.getElementPropertyA().element( true, IDefaultXmlBindingTestModelChildB.TYPE );
-        elementChild.setValuePropertyB( "ffff" );
-        
-        model.resource().save();
-        
-        final String result = new String( resourceStore.getContents(), "UTF-8" );
-        
-        assertEqualsIgnoreNewLineDiffs( loadResource( "testDefaultBinding.txt" ), result );
-    }
-    
-    public void testDefaultBindingRead() throws Exception
-    {
-        final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore( loadResourceAsStream( "testDefaultBinding.txt" ) );
-        final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
-        final IDefaultXmlBindingTestModel model = IDefaultXmlBindingTestModel.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
-        
-        assertEquals( "aaaa", model.getValuePropertyA().getText() );
-        assertEquals( "bbbb", model.getValuePropertyB().getText() );
-        
-        assertEquals( 3, model.getListPropertyA().size() );
-        assertEquals( "cccc", ( (IDefaultXmlBindingTestModelChildA) model.getListPropertyA().get( 0 ) ).getValuePropertyA().getText() );
-        assertEquals( "dddd", ( (IDefaultXmlBindingTestModelChildB) model.getListPropertyA().get( 1 ) ).getValuePropertyB().getText() );
-        assertEquals( "eeee", ( (IDefaultXmlBindingTestModelChildA) model.getListPropertyA().get( 2 ) ).getValuePropertyA().getText() );
-        
-        assertEquals( "ffff", ( (IDefaultXmlBindingTestModelChildB) model.getElementPropertyA().element( false ) ).getValuePropertyB().getText() );
     }
     
     private InputStream loadResourceAsStream( final String name )

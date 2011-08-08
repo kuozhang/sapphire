@@ -12,9 +12,9 @@
 package org.eclipse.sapphire.samples.map.internal;
 
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ReferenceService;
 import org.eclipse.sapphire.samples.map.IDestination;
 import org.eclipse.sapphire.samples.map.IMap;
+import org.eclipse.sapphire.services.ReferenceService;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -27,7 +27,7 @@ public class DestinationReferenceService extends ReferenceService
     {
         if (reference != null)
         {
-            IMap map = element().nearest(IMap.class);
+            IMap map = context( IMap.class );
             ModelElementList<IDestination> dests = map.getDestinations();
             for (IDestination dest : dests)
             {

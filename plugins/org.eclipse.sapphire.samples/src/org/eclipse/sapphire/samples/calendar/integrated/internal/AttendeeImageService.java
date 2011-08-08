@@ -13,20 +13,18 @@ package org.eclipse.sapphire.samples.calendar.integrated.internal;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ImageService;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.samples.contacts.IContact;
+import org.eclipse.sapphire.services.ImageService;
+import org.eclipse.sapphire.services.Service;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class AttendeeImageService
-
-    extends ImageService
-    
+public final class AttendeeImageService extends ImageService
 {
     private static final ImageData IMG_PERSON = ImageData.readFromClassLoader( IContact.class, "Contact.png" );
     private static final ImageData IMG_PERSON_FADED = ImageData.readFromClassLoader( IContact.class, "ContactFaded.png" );
@@ -34,27 +32,26 @@ public final class AttendeeImageService
     private ModelPropertyListener listener;
     
     @Override
-    public void init( final IModelElement element,
-                      final String[] params )
+    protected void init()
     {
-        super.init( element, params );
+        super.init();
         
         this.listener = new ModelPropertyListener()
         {
             @Override
             public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
             {
-                notifyListeners( new ImageChangedEvent( AttendeeImageService.this ) );
+                AttendeeImageService.this.notify( new Service.Event( AttendeeImageService.this ) );
             }
         };
         
-        element.addListener( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
+        context( IModelElement.class ).addListener( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
     }
 
     @Override
     public ImageData provide()
     {
-        if( ( (IAttendee) element() ).isInContactsDatabase().getContent() )
+        if( context( IAttendee.class ).isInContactsDatabase().getContent() )
         {
             return IMG_PERSON;
         }
@@ -69,7 +66,7 @@ public final class AttendeeImageService
     {
         super.dispose();
         
-        element().removeListener( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
+        context( IModelElement.class ).removeListener( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
     }
     
 }

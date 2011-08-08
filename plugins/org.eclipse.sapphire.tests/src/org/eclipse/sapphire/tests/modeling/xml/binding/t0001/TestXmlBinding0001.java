@@ -38,7 +38,7 @@ public final class TestXmlBinding0001
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "XmlBinding0001" );
+        suite.setName( "TestXmlBinding0001" );
 
         suite.addTest( new TestXmlBinding0001( "test" ) );
         
@@ -48,7 +48,7 @@ public final class TestXmlBinding0001
     public void test() throws Exception
     {
         final XmlResourceStore xmlResourceStore = new XmlResourceStore();
-        final ITestXmlBinding0001ModelElement element = ITestXmlBinding0001ModelElement.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
+        final TestXmlBinding0001ModelElement element = TestXmlBinding0001ModelElement.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         
         try
         {
@@ -57,7 +57,7 @@ public final class TestXmlBinding0001
         }
         catch( Exception e )
         {
-            assertEquals( e.getMessage(), "ITestXmlBinding0001ModelElement.TestProperty : Element name must be specified in @XmlElementBinding.Mapping annotation." );
+            assertEquals( e.getMessage(), "TestXmlBinding0001ModelElement.TestProperty : Element name must be specified in @XmlElementBinding.Mapping annotation." );
         }
     }
 

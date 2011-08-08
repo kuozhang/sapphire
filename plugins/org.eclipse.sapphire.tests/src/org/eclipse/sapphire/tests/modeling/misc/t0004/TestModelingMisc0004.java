@@ -47,7 +47,7 @@ public final class TestModelingMisc0004
     
     public void testWritable() throws Exception
     {
-        final IMisc0004TestElementWritable element = IMisc0004TestElementWritable.TYPE.instantiate();
+        final Misc0004TestElementWritable element = Misc0004TestElementWritable.TYPE.instantiate();
         
         element.setText( "abc" );
         assertEquals( "abc", element.getText().getContent() );
@@ -61,7 +61,7 @@ public final class TestModelingMisc0004
 
     public void testReadOnly() throws Exception
     {
-        final IMisc0004TestElementReadOnly element = IMisc0004TestElementReadOnly.TYPE.instantiate();
+        final Misc0004TestElementReadOnly element = Misc0004TestElementReadOnly.TYPE.instantiate();
 
         boolean caughtExpectedException = false;
         

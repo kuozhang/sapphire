@@ -11,17 +11,18 @@
 
 package org.eclipse.sapphire.samples.gallery.internal;
 
-import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.samples.gallery.Circle;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
+import org.eclipse.sapphire.services.ValueSerializationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class CircleSerializationService
-
-    extends ValueSerializationService
-    
+public final class CircleSerializationService extends ValueSerializationService
 {
     @Override
     protected Object decodeFromString( final String value )
@@ -70,6 +71,24 @@ public final class CircleSerializationService
         }
         
         return null;
+    }
+    
+    public static final class Factory extends ServiceFactory
+    {
+        @Override
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
+        {
+            final ValueProperty property = context.find( ValueProperty.class ); 
+            return ( property != null && property.isOfType( Circle.class ) );
+        }
+    
+        @Override
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
+        {
+            return new CircleSerializationService();
+        }
     }
 
 }

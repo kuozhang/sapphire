@@ -57,58 +57,58 @@ public final class TestJava0005 extends SapphireTestCase
     
     public void testKindOne() throws Exception
     {
-        test( ITestRootElement.PROP_KIND_ONE, "Must be a concrete class." );
+        test( TestRootElement.PROP_KIND_ONE, "Must be a concrete class." );
     }
 
     public void testKindTwo() throws Exception
     {
-        test( ITestRootElement.PROP_KIND_TWO, "Must be a concrete class or an abstract class." );
+        test( TestRootElement.PROP_KIND_TWO, "Must be a concrete class or an abstract class." );
     }
     
     public void testKindThree() throws Exception
     {
-        test( ITestRootElement.PROP_KIND_THREE, "Must be a concrete class, an abstract class or an interface." );
+        test( TestRootElement.PROP_KIND_THREE, "Must be a concrete class, an abstract class or an interface." );
     }
     
     public void testKindFour() throws Exception
     {
-        test( ITestRootElement.PROP_KIND_FOUR, "Must be a concrete class, an abstract class, an interface or an annotation." );
+        test( TestRootElement.PROP_KIND_FOUR, "Must be a concrete class, an abstract class, an interface or an annotation." );
     }
 
     public void testTypeOne() throws Exception
     {
-        test( ITestRootElement.PROP_TYPE_ONE, "Must implement or extend java.util.List." );
+        test( TestRootElement.PROP_TYPE_ONE, "Must implement or extend java.util.List." );
     }
     
     public void testTypeOneOf() throws Exception
     {
-        test( ITestRootElement.PROP_TYPE_ONE_OF, "Must implement or extend one of: java.util.List, java.util.Set, java.util.Map." );
+        test( TestRootElement.PROP_TYPE_ONE_OF, "Must implement or extend one of: java.util.List, java.util.Set, java.util.Map." );
     }
     
     public void testTypeAll() throws Exception
     {
-        test( ITestRootElement.PROP_TYPE_ALL, "Must implement or extend all: java.util.List, java.lang.Comparable, java.lang.Cloneable." );
+        test( TestRootElement.PROP_TYPE_ALL, "Must implement or extend all: java.util.List, java.lang.Comparable, java.lang.Cloneable." );
     }
 
     public void testCombo1() throws Exception
     {
-        test( ITestRootElement.PROP_COMBO_1, "Must be a concrete class.", "Must implement java.util.List." );
+        test( TestRootElement.PROP_COMBO_1, "Must be a concrete class.", "Must implement java.util.List." );
     }
     
     public void testCombo2() throws Exception
     {
-        test( ITestRootElement.PROP_COMBO_2, "Must be a concrete class.", "Must extend java.util.AbstractList." );
+        test( TestRootElement.PROP_COMBO_2, "Must be a concrete class.", "Must extend java.util.AbstractList." );
     }
     
     public void testCombo3() throws Exception
     {
-        test( ITestRootElement.PROP_COMBO_3, "Must be a concrete class, an abstract class or an interface.", "Must implement or extend java.util.List." );
+        test( TestRootElement.PROP_COMBO_3, "Must be a concrete class, an abstract class or an interface.", "Must implement or extend java.util.List." );
     }
     
     private static void test( final ModelProperty property,
                               final String... factsExpected )
     {
-        test( ITestRootElement.TYPE.instantiate(), property, factsExpected );
+        test( TestRootElement.TYPE.instantiate(), property, factsExpected );
     }
     
     private static void test( final IModelElement element,

@@ -45,11 +45,11 @@ public final class TestModelingMisc0005
     
     public void test() throws Exception
     {
-        final ITestModelBase base = ITestModelBase.TYPE.instantiate();
+        final TestModelBase base = TestModelBase.TYPE.instantiate();
         
         assertEquals( 1, base.test() );
         
-        final ITestModelExtender extender = ITestModelExtender.TYPE.instantiate();
+        final TestModelExtender extender = TestModelExtender.TYPE.instantiate();
         
         assertEquals( 2, extender.test() );
     }

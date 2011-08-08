@@ -11,24 +11,23 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
-import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.samples.contacts.IContact;
+import org.eclipse.sapphire.services.ValidationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ConnectionNameValidationService
-
-    extends ModelPropertyValidationService<Value<?>>
-    
+public abstract class ConnectionNameValidationService extends ValidationService
 {
     @Override
     public Status validate()
     {
-        final Value<?> value = target();
+        final Value<?> value = context( IModelElement.class ).read( context( ValueProperty.class ) );
         final String assistantName = value.getText();
         final String contactName = value.nearest( IContact.class ).getName().getText();
         

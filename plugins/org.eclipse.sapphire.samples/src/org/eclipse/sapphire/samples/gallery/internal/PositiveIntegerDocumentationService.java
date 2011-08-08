@@ -16,13 +16,13 @@ package org.eclipse.sapphire.samples.gallery.internal;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.sapphire.services.ModelPropertyDocumentationService;
+import org.eclipse.sapphire.services.DocumentationService;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class PositiveIntegerDocumentationService extends ModelPropertyDocumentationService 
+public class PositiveIntegerDocumentationService extends DocumentationService 
 {
     @Override
     public String content()

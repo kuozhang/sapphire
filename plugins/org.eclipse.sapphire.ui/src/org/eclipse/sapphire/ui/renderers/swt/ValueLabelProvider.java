@@ -17,10 +17,10 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ValueImageService;
-import org.eclipse.sapphire.modeling.ValueLabelService;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.services.ValueImageService;
+import org.eclipse.sapphire.services.ValueLabelService;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.swt.graphics.Image;
 

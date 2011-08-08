@@ -13,6 +13,7 @@ package org.eclipse.sapphire.modeling.xml;
 
 import static org.eclipse.sapphire.modeling.util.MiscUtil.indexOf;
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.contains;
+import static org.eclipse.sapphire.modeling.xml.XmlUtil.createDefaultElementName;
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.createQualifiedName;
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.equal;
 
@@ -87,7 +88,8 @@ public final class StandardXmlElementBindingImpl
                     
                     for( int i = 0; i < this.modelElementTypes.length; i++ )
                     {
-                        this.xmlElementNames[ i ] = createQualifiedName( this.modelElementTypes[ i ].getSimpleName().substring( 1 ), xmlNamespaceResolver );
+                        final String xmlElementName = createDefaultElementName( this.modelElementTypes[ i ] );
+                        this.xmlElementNames[ i ] = createQualifiedName( xmlElementName, xmlNamespaceResolver );
                     }
                 }
             }

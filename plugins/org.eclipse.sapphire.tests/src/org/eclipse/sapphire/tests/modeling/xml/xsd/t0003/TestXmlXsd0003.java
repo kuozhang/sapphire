@@ -81,16 +81,16 @@ public final class TestXmlXsd0003
     public void testInsertOrder() throws Exception
     {
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
-        final ITestXmlXsd0003Element model = ITestXmlXsd0003Element.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( resourceStore ) ) );
+        final TestXmlXsd0003Element model = TestXmlXsd0003Element.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( resourceStore ) ) );
         
         model.setCcc( "ccc" );
         model.setBbb( "bbb" );
-        ITestXmlXsd0003Circle circle=  model.getCircle();
+        TestXmlXsd0003Circle circle=  model.getCircle();
         circle.setCircle3( "333");
         circle.setCircle2( "222");
         circle.setCircle1( "111");
         model.setAaa( "aaa" );
-        ITestXmlXsd0003Square square =  model.getSquare();
+        TestXmlXsd0003Square square =  model.getSquare();
         square.setSquare3( "333");
         square.setSquare2( "222");
         square.setSquare1( "111");

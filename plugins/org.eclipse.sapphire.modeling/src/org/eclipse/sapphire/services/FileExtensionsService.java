@@ -15,39 +15,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelService;
 
 /**
  * Produces the list of file extensions that are allowed for a path value property. Most frequently specified
  * via @FileExtensions annotation.
  * 
- * @since 0.3.1
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class FileExtensionsService extends ModelPropertyService
+public abstract class FileExtensionsService extends Service
 {
     private List<String> extensions = Collections.emptyList();
     
     @Override
-    public final void init( final IModelElement element,
-                            final ModelProperty property,
-                            final String[] params )
+    protected final void init()
     {
-        super.init( element, property, params );
-        
-        initFileExtensionsService( element, property, params );
-        
+        initFileExtensionsService();
         refresh( false );
     }
 
-    protected void initFileExtensionsService( final IModelElement element,
-                                              final ModelProperty property,
-                                              final String[] params )
+    protected void initFileExtensionsService()
     {
     }
     
@@ -84,7 +72,7 @@ public abstract class FileExtensionsService extends ModelPropertyService
             
             if( notifyListeners )
             {
-                notifyListeners( new FileExtensionsChangedEvent( this ) );
+                notify( new Event( this ) );
             }
         }
     }
@@ -107,14 +95,6 @@ public abstract class FileExtensionsService extends ModelPropertyService
         }
         
         return Collections.unmodifiableList( clean );
-    }
-    
-    public static class FileExtensionsChangedEvent extends Event
-    {
-        public FileExtensionsChangedEvent( final ModelService service )
-        {
-            super( service );
-        }
     }
     
 }

@@ -19,7 +19,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.java.jdt.JavaJdtTestHelper;
-import org.eclipse.sapphire.tests.java.t0004.ITestElement;
+import org.eclipse.sapphire.tests.java.t0004.TestElement;
 import org.eclipse.sapphire.tests.java.t0004.TestJava0004;
 import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
 
@@ -66,11 +66,11 @@ public final class TestJavaJdt0004
         return suite;
     }
     
-    protected ITestElement createTestElement() throws Exception
+    protected TestElement createTestElement() throws Exception
     {
         final IJavaProject project = this.helper.getJavaProject();
         final IFile file = project.getProject().getFile( "foobar.xml" );
-        return ITestElement.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( new WorkspaceFileResourceStore( file ) ) ) );
+        return TestElement.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( new WorkspaceFileResourceStore( file ) ) ) );
     }
     
     @Override

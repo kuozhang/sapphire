@@ -14,14 +14,14 @@ package org.eclipse.sapphire.services.internal;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.services.DependenciesService;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Implementation of DependenciesService that exposes dependencies specified by the @DependsOn annotation.
@@ -36,7 +36,7 @@ public final class DeclarativeDependenciesService extends DependenciesService
     {
         final Set<String> dependenciesAsStrings = new HashSet<String>();
         
-        final DependsOn dependsOnAnnotation = property().getAnnotation( DependsOn.class );
+        final DependsOn dependsOnAnnotation = context( ModelProperty.class ).getAnnotation( DependsOn.class );
         
         if( dependsOnAnnotation != null )
         {
@@ -63,20 +63,18 @@ public final class DeclarativeDependenciesService extends DependenciesService
         }
     }
 
-    public static final class Factory extends ModelPropertyServiceFactory
+    public static final class Factory extends ServiceFactory
     {
         @Override
-        public boolean applicable( final IModelElement element,
-                                   final ModelProperty property,
-                                   final Class<? extends ModelPropertyService> service )
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
         {
-            return property.hasAnnotation( DependsOn.class );
+            return context.find( ModelProperty.class ).hasAnnotation( DependsOn.class );
         }
 
         @Override
-        public ModelPropertyService create( final IModelElement element,
-                                            final ModelProperty property,
-                                            final Class<? extends ModelPropertyService> service )
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
         {
             return new DeclarativeDependenciesService();
         }

@@ -14,17 +14,18 @@ package org.eclipse.sapphire.ui.internal;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
+import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
+import org.eclipse.sapphire.services.ValueSerializationService;
 import org.eclipse.sapphire.ui.Color;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class ColorSerializationService 
-        
-    extends ValueSerializationService 
-    
+public final class ColorSerializationService extends ValueSerializationService 
 {
     private static Map<String, Color> namedColors;
     
@@ -102,5 +103,24 @@ public class ColorSerializationService
             return buf.toString();
         }
         return null;
-    }    
+    }
+    
+    public static final class Factory extends ServiceFactory
+    {
+        @Override
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
+        {
+            final ValueProperty property = context.find( ValueProperty.class ); 
+            return ( property != null && property.isOfType( Color.class ) );
+        }
+    
+        @Override
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
+        {
+            return new ColorSerializationService();
+        }
+    }
+
 }

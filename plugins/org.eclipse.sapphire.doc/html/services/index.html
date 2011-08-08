@@ -137,20 +137,18 @@ at the property level using @Service annotation.</p>
         facts.add( "Since version " + since.version() + "." );
     }
 
-    public static class Factory extends ModelPropertyServiceFactory
+    public static class Factory extends ServiceFactory
     {
         @Override
-        public boolean applicable( IModelElement element,
-                                   ModelProperty property,
-                                   Class&lt;? extends ModelPropertyService> service )
+        public boolean applicable( ServiceContext context,
+                                   Class&lt;? extends Service> service )
         {
-            return property.hasAnnotation( Since.class );
+            return context.find( ModelProperty.class ).hasAnnotation( Since.class );
         }
 
         @Override
-        public ModelPropertyService create( IModelElement element,
-                                            ModelProperty property,
-                                            Class&lt;? extends ModelPropertyService> service )
+        public Service create( ServiceContext context,
+                               Class&lt;? extends Service> service )
         {
             return new SinceVersionFactsService();
         }
@@ -160,11 +158,12 @@ at the property level using @Service annotation.</p>
 <p style="margin-left: 20px;">The service implementation is registered in META-INF/sapphire-extension.xml file.</p>
 
 <pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension"></font>
-    &lt;model-property-service>
+    &lt;service>
         &lt;id>Example.SinceVersionFactsService&lt;/id>
         &lt;type>org.eclipse.sapphire.services.FactsService&lt;/type>
+        &lt;context>Sapphire.Property.Instance&lt;/context>
         &lt;factory>example.SinceVersionFactsService$Factory&lt;/factory>
-    &lt;/model-property-service>
+    &lt;/service>
 <font color="#888888">&lt;/extension></font></code></pre>
 
 <p>Facts can also be statically specified for a given property by using @Fact annotation. Use @Facts
@@ -232,9 +231,7 @@ be supplied.</p>
 <pre class="source-code"><code>public class CustomFileExtensionsService extends FileExtensionsService
 {
     @Override
-    public void initFileExtensionsService( IModelElement element,
-                                           ModelProperty property,
-                                           String[] params )
+    protected void initFileExtensionsService()
     {
         // Optionally register listeners to invoke refresh method when the list of extensions
         // may need to be updated.

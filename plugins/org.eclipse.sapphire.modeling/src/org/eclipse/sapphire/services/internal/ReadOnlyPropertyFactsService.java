@@ -13,13 +13,13 @@ package org.eclipse.sapphire.services.internal;
 
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Creates fact statements about property's read-only state by using semantical information 
@@ -36,20 +36,18 @@ public final class ReadOnlyPropertyFactsService extends FactsService
         facts.add( Resources.statement );
     }
     
-    public static final class Factory extends ModelPropertyServiceFactory
+    public static final class Factory extends ServiceFactory
     {
         @Override
-        public boolean applicable( final IModelElement element,
-                                   final ModelProperty property,
-                                   final Class<? extends ModelPropertyService> service )
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
         {
-            return property.hasAnnotation( ReadOnly.class );
+            return context.find( ModelProperty.class ).hasAnnotation( ReadOnly.class );
         }
     
         @Override
-        public ModelPropertyService create( final IModelElement element,
-                                            final ModelProperty property,
-                                            final Class<? extends ModelPropertyService> service )
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
         {
             return new ReadOnlyPropertyFactsService();
         }

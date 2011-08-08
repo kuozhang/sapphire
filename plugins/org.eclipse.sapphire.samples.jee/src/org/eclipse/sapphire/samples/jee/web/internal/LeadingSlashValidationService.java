@@ -11,22 +11,22 @@
 
 package org.eclipse.sapphire.samples.jee.web.internal;
 
-import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
-import org.eclipse.sapphire.modeling.Path;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.services.ValidationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class LeadingSlashValidationService extends ModelPropertyValidationService<Value<Path>>
+public final class LeadingSlashValidationService extends ValidationService
 {
     @Override
     public Status validate()
     {
-        final String text = target().getText( false );
+        final String text = context( IModelElement.class ).read( context( ValueProperty.class ) ).getText( false );
         
         if( text != null && ! text.startsWith( "/" ) )
         {

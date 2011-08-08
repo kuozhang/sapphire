@@ -11,23 +11,19 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import org.eclipse.sapphire.modeling.DefaultValueService;
+import org.eclipse.sapphire.services.DefaultValueService;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class CompositeMarginTopBottomDefaultValueProvider
-
-    extends DefaultValueService
-    
+public class CompositeMarginTopBottomDefaultValueProvider extends DefaultValueService
 {
     @Override
     public String getDefaultValue()
     {
-        final ISapphireCompositeDef def = (ISapphireCompositeDef) element();
-        return def.getMarginHeight().getText();
+        return context( ISapphireCompositeDef.class ).getMarginHeight().getText();
     }
     
 }

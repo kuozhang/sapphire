@@ -59,16 +59,16 @@ public final class TestServices0002
     
     public void testNoFileExtensionsService() throws Exception
     {
-        final ITestModel model = ITestModel.TYPE.instantiate();
-        final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_1, FileExtensionsService.class );
+        final TestModel model = TestModel.TYPE.instantiate();
+        final FileExtensionsService service = model.service( TestModel.PROP_FILE_PATH_1, FileExtensionsService.class );
         
         assertNull( service );
     }
 
     public void testSingleFileExtension() throws Exception
     {
-        final ITestModel model = ITestModel.TYPE.instantiate();
-        final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_2, FileExtensionsService.class );
+        final TestModel model = TestModel.TYPE.instantiate();
+        final FileExtensionsService service = model.service( TestModel.PROP_FILE_PATH_2, FileExtensionsService.class );
         
         assertNotNull( service );
         assertEquals( list( "png" ), service.extensions() );
@@ -76,8 +76,8 @@ public final class TestServices0002
 
     public void testMultipleFileExtensions() throws Exception
     {
-        final ITestModel model = ITestModel.TYPE.instantiate();
-        final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_3, FileExtensionsService.class );
+        final TestModel model = TestModel.TYPE.instantiate();
+        final FileExtensionsService service = model.service( TestModel.PROP_FILE_PATH_3, FileExtensionsService.class );
         
         assertNotNull( service );
         assertEquals( list( "png", "gif", "jpeg" ), service.extensions() );
@@ -85,8 +85,8 @@ public final class TestServices0002
     
     public void testFileExtensionsExpr1() throws Exception
     {
-        final ITestModel model = ITestModel.TYPE.instantiate();
-        final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_4, FileExtensionsService.class );
+        final TestModel model = TestModel.TYPE.instantiate();
+        final FileExtensionsService service = model.service( TestModel.PROP_FILE_PATH_4, FileExtensionsService.class );
         
         assertNotNull( service );
         
@@ -99,9 +99,9 @@ public final class TestServices0002
     
     public void testFileExtensionsExpr2() throws Exception
     {
-        final ITestModelRoot root = ITestModelRoot.TYPE.instantiate();
-        final ITestModel model = root.getList().addNewElement();
-        final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_5, FileExtensionsService.class );
+        final TestModelRoot root = TestModelRoot.TYPE.instantiate();
+        final TestModel model = root.getList().addNewElement();
+        final FileExtensionsService service = model.service( TestModel.PROP_FILE_PATH_5, FileExtensionsService.class );
         
         assertNotNull( service );
         
@@ -114,9 +114,9 @@ public final class TestServices0002
     
     public void testFileExtensionsExpr3() throws Exception
     {
-        final ITestModelRoot root = ITestModelRoot.TYPE.instantiate();
-        final ITestModel model = root.getElement().element( true );
-        final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_5, FileExtensionsService.class );
+        final TestModelRoot root = TestModelRoot.TYPE.instantiate();
+        final TestModel model = root.getElement().element( true );
+        final FileExtensionsService service = model.service( TestModel.PROP_FILE_PATH_5, FileExtensionsService.class );
         
         assertNotNull( service );
         
@@ -129,9 +129,9 @@ public final class TestServices0002
 
     public void testFileExtensionsExpr4() throws Exception
     {
-        final ITestModelRoot root = ITestModelRoot.TYPE.instantiate();
-        final ITestModel model = root.getElementImplied();
-        final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_5, FileExtensionsService.class );
+        final TestModelRoot root = TestModelRoot.TYPE.instantiate();
+        final TestModel model = root.getElementImplied();
+        final FileExtensionsService service = model.service( TestModel.PROP_FILE_PATH_5, FileExtensionsService.class );
         
         assertNotNull( service );
         
@@ -144,8 +144,8 @@ public final class TestServices0002
 
     public void testCustomFileExtensionsService() throws Exception
     {
-        final ITestModel model = ITestModel.TYPE.instantiate();
-        final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_6, FileExtensionsService.class );
+        final TestModel model = TestModel.TYPE.instantiate();
+        final FileExtensionsService service = model.service( TestModel.PROP_FILE_PATH_6, FileExtensionsService.class );
         
         assertNotNull( service );
         assertEquals( list( "avi", "mpeg" ), service.extensions() );
@@ -153,8 +153,8 @@ public final class TestServices0002
     
     public void testValidation() throws Exception
     {
-        final ITestModel model = ITestModel.TYPE.instantiate();
-        final FileExtensionsService service = model.service( ITestModel.PROP_FILE_PATH_4, FileExtensionsService.class );
+        final TestModel model = TestModel.TYPE.instantiate();
+        final FileExtensionsService service = model.service( TestModel.PROP_FILE_PATH_4, FileExtensionsService.class );
         
         final IProject project = project();
         

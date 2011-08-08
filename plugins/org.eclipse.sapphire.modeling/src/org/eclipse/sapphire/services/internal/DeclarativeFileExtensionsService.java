@@ -17,8 +17,6 @@ import java.util.List;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.FileExtensions;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
@@ -28,6 +26,9 @@ import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.services.FileExtensionsService;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Implementation of FileExtensionsService that derives its behavior from @FileExtensions annotation.
@@ -40,11 +41,9 @@ public final class DeclarativeFileExtensionsService extends FileExtensionsServic
     private FunctionResult functionResult;
     
     @Override
-    public void initFileExtensionsService( final IModelElement element,
-                                           final ModelProperty property,
-                                           final String[] params )
+    protected void initFileExtensionsService()
     {
-        final FileExtensions fileExtensionsAnnotation = property.getAnnotation( FileExtensions.class );
+        final FileExtensions fileExtensionsAnnotation = context( ModelProperty.class ).getAnnotation( FileExtensions.class );
         
         Function function = null;
         
@@ -62,7 +61,7 @@ public final class DeclarativeFileExtensionsService extends FileExtensionsServic
         {
             function = FailSafeFunction.create( function, Literal.create( List.class ), Literal.create( Collections.emptyList() ) );
             
-            this.functionResult = function.evaluate( new ModelElementFunctionContext( element ) );
+            this.functionResult = function.evaluate( new ModelElementFunctionContext( context( IModelElement.class ) ) );
             
             this.functionResult.addListener
             (
@@ -108,20 +107,19 @@ public final class DeclarativeFileExtensionsService extends FileExtensionsServic
         }
     }
     
-    public static final class Factory extends ModelPropertyServiceFactory
+    public static final class Factory extends ServiceFactory
     {
         @Override
-        public boolean applicable( final IModelElement element,
-                                   final ModelProperty property,
-                                   final Class<? extends ModelPropertyService> service )
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
         {
-            return property instanceof ValueProperty && property.hasAnnotation( FileExtensions.class );
+            final ValueProperty property = context.find( ValueProperty.class );
+            return property != null && property.hasAnnotation( FileExtensions.class );
         }
 
         @Override
-        public ModelPropertyService create( final IModelElement element,
-                                            final ModelProperty property,
-                                            final Class<? extends ModelPropertyService> service )
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
         {
             return new DeclarativeFileExtensionsService();
         }

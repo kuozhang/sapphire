@@ -38,7 +38,7 @@ public final class TestXmlBinding0004
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "XmlBinding0004" );
+        suite.setName( "TestXmlBinding0004" );
 
         suite.addTest( new TestXmlBinding0004( "test" ) );
         
@@ -48,7 +48,7 @@ public final class TestXmlBinding0004
     public void test() throws Exception
     {
         final XmlResourceStore xmlResourceStore = new XmlResourceStore();
-        final ITestXmlBinding0004 element = ITestXmlBinding0004.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
+        final TestElement element = TestElement.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         
         try
         {
@@ -57,7 +57,7 @@ public final class TestXmlBinding0004
         }
         catch( Exception e )
         {
-            assertEquals( e.getMessage(), "ITestXmlBinding0004.TestProperty : Could not resolve namespace for foo:abc node name." );
+            assertEquals( e.getMessage(), "TestElement.TestProperty : Could not resolve namespace for foo:abc node name." );
         }
     }
 

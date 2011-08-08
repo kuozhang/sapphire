@@ -15,8 +15,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
+import org.eclipse.sapphire.modeling.ModelProperty;
 
 /**
  * Aggregates the data from all applicable dependencies services in order to produce a single set of dependencies.
@@ -24,17 +25,16 @@ import org.eclipse.sapphire.modeling.ModelPropertyService;
  * <p>An implementation of this service is provided with Sapphire. This service is not intended to
  * be implemented by adopters.</p>
  * 
- * @since 0.3.1
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class DependenciesAggregationService extends ModelPropertyService
+public final class DependenciesAggregationService extends Service
 {
     public final Set<ModelPath> dependencies()
     {
         final Set<ModelPath> dependencies = new HashSet<ModelPath>();
         
-        for( DependenciesService ds : element().services( property(), DependenciesService.class ) )
+        for( DependenciesService ds : context( IModelElement.class ).services( context( ModelProperty.class ), DependenciesService.class ) )
         {
             dependencies.addAll( ds.dependencies() );
         }

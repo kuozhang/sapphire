@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.sdk.extensibility.internal;
 
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ReferenceService;
+import org.eclipse.sapphire.services.ReferenceService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

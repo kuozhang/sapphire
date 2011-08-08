@@ -14,8 +14,10 @@
 -->
 
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <value-serialization-service>
-        <type>org.eclipse.sapphire.samples.gallery.Circle</type>
-        <impl>org.eclipse.sapphire.samples.gallery.internal.CircleSerializationService</impl>
-    </value-serialization-service>
+    <service>
+        <id>Sample.ValueSerializationService.Circle</id>
+        <type>org.eclipse.sapphire.services.ValueSerializationService</type>
+        <context>Sapphire.Property.Instance</context>
+        <factory>org.eclipse.sapphire.samples.gallery.internal.CircleSerializationService$Factory</factory>
+    </service>
 </extension>

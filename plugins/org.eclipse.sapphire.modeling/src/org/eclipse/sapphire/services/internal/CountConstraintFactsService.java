@@ -13,14 +13,14 @@ package org.eclipse.sapphire.services.internal;
 
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Creates fact statements about list property's count constraint by using semantical information 
@@ -34,7 +34,7 @@ public final class CountConstraintFactsService extends FactsService
     @Override
     protected void facts( final List<String> facts )
     {
-        final CountConstraint constraint = property().getAnnotation( CountConstraint.class );
+        final CountConstraint constraint = context( ModelProperty.class ).getAnnotation( CountConstraint.class );
         final int min = constraint.min();
         final int max = constraint.max();
         
@@ -53,14 +53,15 @@ public final class CountConstraintFactsService extends FactsService
         }
     }
     
-    public static final class Factory extends ModelPropertyServiceFactory
+    public static final class Factory extends ServiceFactory
     {
         @Override
-        public boolean applicable( final IModelElement element,
-                                   final ModelProperty property,
-                                   final Class<? extends ModelPropertyService> service )
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
         {
-            if( property instanceof ListProperty )
+            final ListProperty property = context.find( ListProperty.class );
+            
+            if( property != null )
             {
                 final CountConstraint constraint = property.getAnnotation( CountConstraint.class );
                 return ( constraint != null && ( constraint.min() > 0 || constraint.max() < Integer.MAX_VALUE ) );
@@ -70,9 +71,8 @@ public final class CountConstraintFactsService extends FactsService
         }
     
         @Override
-        public ModelPropertyService create( final IModelElement element,
-                                            final ModelProperty property,
-                                            final Class<? extends ModelPropertyService> service )
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
         {
             return new CountConstraintFactsService();
         }

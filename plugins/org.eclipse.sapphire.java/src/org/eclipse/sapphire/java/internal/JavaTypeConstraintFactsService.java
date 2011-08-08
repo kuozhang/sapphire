@@ -20,13 +20,13 @@ import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
-import org.eclipse.sapphire.modeling.ReferenceService;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
+import org.eclipse.sapphire.services.ReferenceService;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Creates fact statements about Java type property's constraints by using semantical information 
@@ -40,7 +40,10 @@ public final class JavaTypeConstraintFactsService extends FactsService
     @Override
     protected void facts( final List<String> facts )
     {
-        final JavaTypeConstraint a = property().getAnnotation( JavaTypeConstraint.class );
+        final IModelElement element = context( IModelElement.class );
+        final ValueProperty property = context( ValueProperty.class );
+        
+        final JavaTypeConstraint a = property.getAnnotation( JavaTypeConstraint.class );
         final JavaTypeKind[] kinds = a.kind();
         
         if( kinds.length > 0 && kinds.length < 5 )
@@ -72,7 +75,7 @@ public final class JavaTypeConstraintFactsService extends FactsService
                 final String typeName = types[ 0 ];
                 String verb = Resources.verbImplementOrExtend;
                 
-                final ReferenceService referenceService = element().service( property(), ReferenceService.class );
+                final ReferenceService referenceService = element.service( property, ReferenceService.class );
                 
                 if( referenceService != null && referenceService instanceof JavaTypeReferenceService )
                 {
@@ -171,20 +174,19 @@ public final class JavaTypeConstraintFactsService extends FactsService
         }
     }
     
-    public static final class Factory extends ModelPropertyServiceFactory
+    public static final class Factory extends ServiceFactory
     {
         @Override
-        public boolean applicable( final IModelElement element,
-                                   final ModelProperty property,
-                                   final Class<? extends ModelPropertyService> service )
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
         {
-            return ( property instanceof ValueProperty && property.hasAnnotation( JavaTypeConstraint.class ) );
+            final ValueProperty property = context.find( ValueProperty.class );
+            return ( property != null && property.hasAnnotation( JavaTypeConstraint.class ) );
         }
     
         @Override
-        public ModelPropertyService create( final IModelElement element,
-                                            final ModelProperty property,
-                                            final Class<? extends ModelPropertyService> service )
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
         {
             return new JavaTypeConstraintFactsService();
         }

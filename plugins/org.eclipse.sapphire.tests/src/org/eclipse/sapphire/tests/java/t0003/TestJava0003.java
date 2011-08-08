@@ -54,7 +54,7 @@ public final class TestJava0003
     
     public void testTopLevel()
     {
-        final ITestElement element = ITestElement.TYPE.instantiate();
+        final TestElement element = TestElement.TYPE.instantiate();
         element.setSomeClass( PACKAGE_NAME + ".TestClass" );
         
         final JavaType type = element.getSomeClass().resolve();
@@ -64,7 +64,7 @@ public final class TestJava0003
 
     public void testInner()
     {
-        final ITestElement element = ITestElement.TYPE.instantiate();
+        final TestElement element = TestElement.TYPE.instantiate();
         element.setSomeClass( PACKAGE_NAME + ".TestClass$Inner" );
         
         final JavaType type = element.getSomeClass().resolve();
@@ -109,7 +109,7 @@ public final class TestJava0003
             }
         };
         
-        final ITestElement element = ITestElement.TYPE.instantiate( resource );
+        final TestElement element = TestElement.TYPE.instantiate( resource );
         
         JavaType type;
         

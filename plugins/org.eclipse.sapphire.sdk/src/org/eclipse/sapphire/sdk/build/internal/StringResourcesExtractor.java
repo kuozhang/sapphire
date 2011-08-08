@@ -33,7 +33,7 @@ import org.eclipse.sapphire.modeling.el.PropertyAccessFunction;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
-import org.eclipse.sapphire.sdk.extensibility.ISapphireExtensionDef;
+import org.eclipse.sapphire.sdk.extensibility.SapphireExtensionDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
 /**
@@ -74,7 +74,7 @@ public final class StringResourcesExtractor
         }
         else
         {
-            type = ISapphireExtensionDef.TYPE;
+            type = SapphireExtensionDef.TYPE;
             
         }
         

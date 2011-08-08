@@ -15,12 +15,13 @@ import java.util.List;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.FileExtensionsService;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Creates fact statements about valid file extensions for property's value by using semantical 
@@ -34,7 +35,7 @@ public final class FileExtensionsFactsService extends FactsService
     @Override
     protected void facts( final List<String> facts )
     {
-        final FileExtensionsService service = element().service( property(), FileExtensionsService.class );
+        final FileExtensionsService service = context( IModelElement.class ).service( context( ModelProperty.class ), FileExtensionsService.class );
         final List<String> extensions = service.extensions();
         final int count = extensions.size();
         
@@ -73,20 +74,19 @@ public final class FileExtensionsFactsService extends FactsService
         }
     }
     
-    public static final class Factory extends ModelPropertyServiceFactory
+    public static final class Factory extends ServiceFactory
     {
         @Override
-        public boolean applicable( final IModelElement element,
-                                   final ModelProperty property,
-                                   final Class<? extends ModelPropertyService> service )
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
         {
-            return ( property instanceof ValueProperty && element.service( property, FileExtensionsService.class ) != null );
+            final ValueProperty property = context.find( ValueProperty.class );
+            return ( property != null && context.find( IModelElement.class ).service( property, FileExtensionsService.class ) != null );
         }
     
         @Override
-        public ModelPropertyService create( final IModelElement element,
-                                            final ModelProperty property,
-                                            final Class<? extends ModelPropertyService> service )
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
         {
             return new FileExtensionsFactsService();
         }

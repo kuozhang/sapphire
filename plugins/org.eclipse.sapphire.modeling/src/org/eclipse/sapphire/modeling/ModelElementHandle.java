@@ -13,6 +13,8 @@ package org.eclipse.sapphire.modeling;
 
 import java.util.List;
 
+import org.eclipse.sapphire.services.ValidationService;
+
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -260,7 +262,7 @@ public final class ModelElementHandle<T extends IModelElement>
         
         if( enabled() )
         {
-            for( ModelPropertyValidationService<?> svc : parent().services( this.property, ModelPropertyValidationService.class ) )
+            for( ValidationService svc : parent().services( this.property, ValidationService.class ) )
             {
                 Status st = null;
                 

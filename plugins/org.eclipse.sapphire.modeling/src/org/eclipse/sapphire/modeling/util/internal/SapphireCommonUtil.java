@@ -15,7 +15,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.DefaultValueService;
 import org.eclipse.sapphire.modeling.EnumValueType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ValueKeyword;
@@ -23,6 +22,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NamedValues;
 import org.eclipse.sapphire.modeling.annotations.NamedValues.NamedValue;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.services.DefaultValueService;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>

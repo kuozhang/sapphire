@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 import org.eclipse.sapphire.modeling.xml.StandardXmlNamespaceResolver;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlNode;
 import org.eclipse.sapphire.modeling.xml.XmlPath;
 import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
+import org.eclipse.sapphire.services.ValueSerializationService;
 import org.eclipse.sapphire.ui.def.HtmlContentSourceType;
 import org.eclipse.sapphire.ui.def.ISapphireHtmlPanelDef;
 

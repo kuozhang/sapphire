@@ -14,31 +14,36 @@
 -->
 
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <model-property-service>
-        <type>org.eclipse.sapphire.modeling.RelativePathService</type>
+    <service>
+        <type>org.eclipse.sapphire.services.RelativePathService</type>
+        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.workspace.internal.ProjectRelativePathService$Factory</factory>
         <id>Sapphire.RelativePathService.Project</id>
-    </model-property-service>
-    <model-property-service>
-        <type>org.eclipse.sapphire.modeling.RelativePathService</type>
+    </service>
+    <service>
+        <type>org.eclipse.sapphire.services.RelativePathService</type>
+        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.workspace.internal.WorkspaceRelativePathService$Factory</factory>
         <id>Sapphire.RelativePathService.Workspace</id>
-    </model-property-service>
-    <model-property-service>
-        <type>org.eclipse.sapphire.modeling.ModelPropertyValidationService</type>
+    </service>
+    <service>
+        <type>org.eclipse.sapphire.services.ValidationService</type>
+        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.workspace.internal.ProjectRelativePathValidationService$Factory</factory>
-        <id>Sapphire.ModelPropertyValidationService.ProjectRelativePath</id>
-    </model-property-service>
-    <model-property-service>
+        <id>Sapphire.ValidationService.ProjectRelativePath</id>
+    </service>
+    <service>
         <description>Creates fact statements about property's relative to the project path requirement by using semantical information specified by @ProjectRelativePath annotation.</description>
         <type>org.eclipse.sapphire.services.FactsService</type>
+        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.workspace.internal.ProjectRelativePathFactsService$Factory</factory>
         <id>Sapphire.FactsService.ProjectRelativePath</id>
-    </model-property-service>
-    <model-property-service>
+    </service>
+    <service>
         <description>Creates fact statements about property's relative to the workspace path requirement by using semantical information specified by @WorkspaceRelativePath annotation.</description>
         <type>org.eclipse.sapphire.services.FactsService</type>
+        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.workspace.internal.WorkspaceRelativePathFactsService$Factory</factory>
         <id>Sapphire.FactsService.WorkspaceRelativePath</id>
-    </model-property-service>
+    </service>
 </extension>

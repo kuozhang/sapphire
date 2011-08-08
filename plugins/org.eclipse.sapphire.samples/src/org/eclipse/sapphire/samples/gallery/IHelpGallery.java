@@ -34,10 +34,7 @@ import org.eclipse.sapphire.samples.gallery.internal.PositiveIntegerDocumentatio
 
 @GenerateImpl
 
-public interface IHelpGallery
-
-    extends IModelElement
-
+public interface IHelpGallery extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IHelpGallery.class );
 

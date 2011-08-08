@@ -72,7 +72,7 @@ public final class TestXmlXsd0001
     public void testInsertOrder() throws Exception
     {
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
-        final ITestXmlXsd0001ModelRoot model = ITestXmlXsd0001ModelRoot.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( resourceStore ) ) );
+        final TestXmlXsd0001ModelRoot model = TestXmlXsd0001ModelRoot.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( resourceStore ) ) );
         
         model.setDdd( "ddd" );
         model.setCcc( "ccc" );

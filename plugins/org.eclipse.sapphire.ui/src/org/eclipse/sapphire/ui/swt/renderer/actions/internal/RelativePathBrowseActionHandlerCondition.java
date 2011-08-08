@@ -14,8 +14,8 @@ package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.RelativePathService;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.services.RelativePathService;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
 

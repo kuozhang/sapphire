@@ -82,12 +82,12 @@ public final class TestXmlXsd0002
     public void testInsertOrder() throws Exception
     {
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
-        final ITestXmlXsd0002ModelRoot model = ITestXmlXsd0002ModelRoot.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( resourceStore ) ) );
+        final TestXmlXsd0002ModelRoot model = TestXmlXsd0002ModelRoot.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( resourceStore ) ) );
         
         model.setCcc( "ccc" );
         model.setAaa( "aaa" );
         
-        ITestXmlXsd0002Element2b element2b = model.getElement2();
+        TestXmlXsd0002Element2b element2b = model.getElement2();
         element2b.setCcc2( "ccc2" );
         element2b.setBbb2( "bbb2" );
         element2b.setAaa2( "aaa2" );

@@ -44,7 +44,7 @@ public final class SerializationTests
     
     public void testEnumSerialization1() throws Exception
     {
-        final ISerializationTestsModel model = ISerializationTestsModel.TYPE.instantiate();
+        final SerializationTestsModel model = SerializationTestsModel.TYPE.instantiate();
 
         model.setEnumProperty1( "YES" );
         assertEquals( ThreeChoiceAnswer.YES, model.getEnumProperty1().getContent() );
@@ -91,7 +91,7 @@ public final class SerializationTests
     
     public void testEnumSerialization2() throws Exception
     {
-        final ISerializationTestsModel model = ISerializationTestsModel.TYPE.instantiate();
+        final SerializationTestsModel model = SerializationTestsModel.TYPE.instantiate();
         
         model.setEnumProperty2( "YES" );
         assertEquals( ThreeChoiceAnswerCustomized.YES, model.getEnumProperty2().getContent() );
@@ -153,7 +153,7 @@ public final class SerializationTests
     
     public void testEnumSerialization3() throws Exception
     {
-        final ISerializationTestsModel model = ISerializationTestsModel.TYPE.instantiate();
+        final SerializationTestsModel model = SerializationTestsModel.TYPE.instantiate();
         
         model.setEnumProperty3( "1" );
         assertEquals( ThreeChoiceAnswer.YES, model.getEnumProperty3().getContent() );

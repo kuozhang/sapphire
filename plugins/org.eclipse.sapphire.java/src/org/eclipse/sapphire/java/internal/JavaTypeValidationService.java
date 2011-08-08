@@ -18,24 +18,21 @@ import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
-import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
+import org.eclipse.sapphire.services.ValidationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class JavaTypeValidationService
-
-    extends ModelPropertyValidationService<ReferenceValue<JavaTypeName,JavaType>>
-
+public final class JavaTypeValidationService extends ValidationService
 {
     private ValueProperty property;
     private boolean isClassOk;
@@ -47,13 +44,11 @@ public final class JavaTypeValidationService
     private JavaTypeConstraintBehavior behavior;
     
     @Override
-    public void init( final IModelElement element,
-                      final ModelProperty property,
-                      final String[] params )
+    protected void init()
     {
-        super.init( element, property, params );
+        super.init();
 
-        this.property = (ValueProperty) property;
+        this.property = context( ValueProperty.class );
         
         final JavaTypeConstraint javaTypeConstraintAnnotation = this.property.getAnnotation( JavaTypeConstraint.class );
         
@@ -90,12 +85,12 @@ public final class JavaTypeValidationService
     @Override
     public Status validate()
     {
-        final ReferenceValue<JavaTypeName,JavaType> value = target();
+        final ReferenceValue<?,?> value = (ReferenceValue<?,?>) context( IModelElement.class ).read( this.property );
         final String val = value.getText( false );
         
         if( val != null )
         {
-            final JavaType type = value.resolve();
+            final JavaType type = (JavaType) value.resolve();
             
             if( type == null )
             {
@@ -220,14 +215,15 @@ public final class JavaTypeValidationService
     }
     
     
-    public static final class Factory extends ModelPropertyServiceFactory
+    public static final class Factory extends ServiceFactory
     {
         @Override
-        public boolean applicable( final IModelElement element,
-                                   final ModelProperty property,
-                                   final Class<? extends ModelPropertyService> service )
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
         {
-            if( property instanceof ValueProperty && property.getTypeClass() == JavaTypeName.class )
+            final ValueProperty property = context.find( ValueProperty.class );
+            
+            if( property != null && property.getTypeClass() == JavaTypeName.class )
             {
                 final Reference referenceAnnotation = property.getAnnotation( Reference.class );
                 
@@ -241,9 +237,8 @@ public final class JavaTypeValidationService
         }
 
         @Override
-        public ModelPropertyService create( final IModelElement element,
-                                            final ModelProperty property,
-                                            final Class<? extends ModelPropertyService> service )
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
         {
             return new JavaTypeValidationService();
         }

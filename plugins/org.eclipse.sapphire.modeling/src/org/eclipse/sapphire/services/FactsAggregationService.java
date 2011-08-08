@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.ModelPropertyService;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelProperty;
 
 /**
  * Aggregates the data from all applicable facts services in order to produce a single list of facts. A fact
@@ -24,17 +25,16 @@ import org.eclipse.sapphire.modeling.ModelPropertyService;
  * <p>An implementation of this service is provided with Sapphire. This service is not intended to
  * be implemented by adopters.</p>
  * 
- * @since 0.4
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class FactsAggregationService extends ModelPropertyService
+public final class FactsAggregationService extends Service
 {
     public final List<String> facts()
     {
         final List<String> facts = new ArrayList<String>();
         
-        for( FactsService fs : element().services( property(), FactsService.class ) )
+        for( FactsService fs : context( IModelElement.class ).services( context( ModelProperty.class ), FactsService.class ) )
         {
             facts.addAll( fs.facts() );
         }

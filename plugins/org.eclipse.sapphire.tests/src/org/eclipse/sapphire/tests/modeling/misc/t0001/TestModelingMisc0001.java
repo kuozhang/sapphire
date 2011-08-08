@@ -47,12 +47,12 @@ public final class TestModelingMisc0001
     {
         try
         {
-            ITestMisc0001.TYPE.instantiate();
+            TestMisc0001.TYPE.instantiate();
             fail( "Did not catch the expected exception." );
         }
         catch( Exception e )
         {
-            assertEquals( e.getMessage(), "ITestMisc0001 : Could not instantiate implementation class." );
+            assertEquals( e.getMessage(), "TestMisc0001 : Could not instantiate implementation class." );
         }
     }
 

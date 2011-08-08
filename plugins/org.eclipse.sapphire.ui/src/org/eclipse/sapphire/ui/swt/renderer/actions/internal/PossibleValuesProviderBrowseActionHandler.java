@@ -14,8 +14,8 @@ package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 import java.util.Collection;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.PossibleValuesService;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;

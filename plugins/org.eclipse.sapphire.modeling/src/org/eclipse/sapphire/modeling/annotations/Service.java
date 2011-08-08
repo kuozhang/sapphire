@@ -16,8 +16,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.eclipse.sapphire.modeling.ModelService;
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -27,7 +25,13 @@ import org.eclipse.sapphire.modeling.ModelService;
 
 public @interface Service
 {
-    Class<? extends ModelService> impl();
-    String[] params() default {};
+    Class<? extends org.eclipse.sapphire.services.Service> impl();
+    Param[] params() default {};
     String[] overrides() default {};
+    
+    @interface Param
+    {
+        String name();
+        String value();
+    }
 }

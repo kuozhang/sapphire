@@ -55,62 +55,62 @@ public final class TestServices0003
     
     public void testNoDuplicatesStandalone() throws Exception
     {
-        final ITestModelItem item = ITestModelItem.TYPE.instantiate();
-        final Set<ModelPath> dependencies = item.service( ITestModelItem.PROP_NAME, DependenciesAggregationService.class ).dependencies();
+        final TestModelItem item = TestModelItem.TYPE.instantiate();
+        final Set<ModelPath> dependencies = item.service( TestModelItem.PROP_NAME, DependenciesAggregationService.class ).dependencies();
         
         assertEquals( set(), dependencies );
     }
     
     public void testNoDuplicatesInElementProperty() throws Exception
     {
-        final ITestModel model = ITestModel.TYPE.instantiate();
-        final ITestModelItem item = model.getItem().element( true );
-        final Set<ModelPath> dependencies = item.service( ITestModelItem.PROP_NAME, DependenciesAggregationService.class ).dependencies();
+        final TestModel model = TestModel.TYPE.instantiate();
+        final TestModelItem item = model.getItem().element( true );
+        final Set<ModelPath> dependencies = item.service( TestModelItem.PROP_NAME, DependenciesAggregationService.class ).dependencies();
         
         assertEquals( set(), dependencies );
     }
     
     public void testNoDuplicatesInImpliedElementProperty() throws Exception
     {
-        final ITestModel model = ITestModel.TYPE.instantiate();
-        final ITestModelItem item = model.getItemImplied();
-        final Set<ModelPath> dependencies = item.service( ITestModelItem.PROP_NAME, DependenciesAggregationService.class ).dependencies();
+        final TestModel model = TestModel.TYPE.instantiate();
+        final TestModelItem item = model.getItemImplied();
+        final Set<ModelPath> dependencies = item.service( TestModelItem.PROP_NAME, DependenciesAggregationService.class ).dependencies();
         
         assertEquals( set(), dependencies );
     }
     
     public void testNoDuplicatesInListProperty() throws Exception
     {
-        final ITestModel model = ITestModel.TYPE.instantiate();
-        final ITestModelItem item = model.getItems().addNewElement();
-        final Set<ModelPath> dependencies = item.service( ITestModelItem.PROP_NAME, DependenciesAggregationService.class ).dependencies();
+        final TestModel model = TestModel.TYPE.instantiate();
+        final TestModelItem item = model.getItems().addNewElement();
+        final Set<ModelPath> dependencies = item.service( TestModelItem.PROP_NAME, DependenciesAggregationService.class ).dependencies();
         
         assertEquals( set( new ModelPath( "#/Name" ) ), dependencies );
     }
     
     public void testNoDuplicatesAndDependsOn() throws Exception
     {
-        final ITestModel model = ITestModel.TYPE.instantiate();
-        final ITestModelItem item = model.getItems().addNewElement();
-        final Set<ModelPath> dependencies = item.service( ITestModelItem.PROP_ID, DependenciesAggregationService.class ).dependencies();
+        final TestModel model = TestModel.TYPE.instantiate();
+        final TestModelItem item = model.getItems().addNewElement();
+        final Set<ModelPath> dependencies = item.service( TestModelItem.PROP_ID, DependenciesAggregationService.class ).dependencies();
         
         assertEquals( set( new ModelPath( "Name" ), new ModelPath( "#/Id" ) ), dependencies );
     }
     
     public void testCustom1() throws Exception
     {
-        final ITestModel model = ITestModel.TYPE.instantiate();
-        final ITestModelItem item = model.getItems().addNewElement();
-        final Set<ModelPath> dependencies = item.service( ITestModelItem.PROP_CUSTOM_1, DependenciesAggregationService.class ).dependencies();
+        final TestModel model = TestModel.TYPE.instantiate();
+        final TestModelItem item = model.getItems().addNewElement();
+        final Set<ModelPath> dependencies = item.service( TestModelItem.PROP_CUSTOM_1, DependenciesAggregationService.class ).dependencies();
         
         assertEquals( set( new ModelPath( "Name" ), new ModelPath( "Id" ) ), dependencies );
     }
     
     public void testCustom2() throws Exception
     {
-        final ITestModel model = ITestModel.TYPE.instantiate();
-        final ITestModelItem item = model.getItems().addNewElement();
-        final Set<ModelPath> dependencies = item.service( ITestModelItem.PROP_CUSTOM_2, DependenciesAggregationService.class ).dependencies();
+        final TestModel model = TestModel.TYPE.instantiate();
+        final TestModelItem item = model.getItems().addNewElement();
+        final Set<ModelPath> dependencies = item.service( TestModelItem.PROP_CUSTOM_2, DependenciesAggregationService.class ).dependencies();
         
         assertEquals( set( new ModelPath( "Name" ), new ModelPath( "Id" ), new ModelPath( "Custom1" ) ), dependencies );
     }

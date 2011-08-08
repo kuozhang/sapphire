@@ -22,7 +22,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Resource;
-import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 import org.eclipse.sapphire.modeling.xml.StandardXmlListBindingImpl;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlNamespaceResolver;
@@ -32,6 +31,7 @@ import org.eclipse.sapphire.modeling.xml.XmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
 import org.eclipse.sapphire.samples.jee.web.SecurityConstraint;
 import org.eclipse.sapphire.samples.jee.web.SecurityRoleRef2;
+import org.eclipse.sapphire.services.ValueSerializationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

@@ -18,6 +18,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.eclipse.sapphire.services.ValidationService;
+
 
 @SuppressWarnings( "unchecked" )
 
@@ -199,7 +201,7 @@ public final class ModelElementList<T extends IModelElement>
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         
-        for( ModelPropertyValidationService<?> svc : parent().services( this.property, ModelPropertyValidationService.class ) )
+        for( ValidationService svc : parent().services( this.property, ValidationService.class ) )
         {
             try
             {

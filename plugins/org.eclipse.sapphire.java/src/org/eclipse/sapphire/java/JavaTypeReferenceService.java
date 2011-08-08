@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.java;
 
-import org.eclipse.sapphire.modeling.ReferenceService;
+import org.eclipse.sapphire.services.ReferenceService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

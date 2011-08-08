@@ -69,133 +69,133 @@ public final class TestServices0001 extends SapphireTestCase
     
     public void testNoFacts() throws Exception
     {
-        test( ITestRootElement.PROP_NO_FACTS );
+        test( TestRootElement.PROP_NO_FACTS );
     }
 
     public void testDefaultValue() throws Exception
     {
-        test( ITestRootElement.PROP_DEFAULT_VALUE, "Default value is \"123\"." );
+        test( TestRootElement.PROP_DEFAULT_VALUE, "Default value is \"123\"." );
     }
 
     public void testNumericRangeMin() throws Exception
     {
-        test( ITestRootElement.PROP_NUMERIC_RANGE_MIN, "Minimum value is 1." );
+        test( TestRootElement.PROP_NUMERIC_RANGE_MIN, "Minimum value is 1." );
     }
     
     public void testNumericRangeMax() throws Exception
     {
-        test( ITestRootElement.PROP_NUMERIC_RANGE_MAX, "Maximum value is 100." );
+        test( TestRootElement.PROP_NUMERIC_RANGE_MAX, "Maximum value is 100." );
     }
 
     public void testNumericRangeMinMax() throws Exception
     {
-        test( ITestRootElement.PROP_NUMERIC_RANGE_MIN_MAX, "Minimum value is 1.", "Maximum value is 100." );
+        test( TestRootElement.PROP_NUMERIC_RANGE_MIN_MAX, "Minimum value is 1.", "Maximum value is 100." );
     }
 
     public void testRequiredValue() throws Exception
     {
-        test( ITestRootElement.PROP_REQUIRED_VALUE, "Must be specified." );
+        test( TestRootElement.PROP_REQUIRED_VALUE, "Must be specified." );
     }
     
     public void testRequiredElement() throws Exception
     {
-        test( ITestRootElement.PROP_REQUIRED_ELEMENT, "Must be specified." );
+        test( TestRootElement.PROP_REQUIRED_ELEMENT, "Must be specified." );
     }
     
     public void testReadOnly() throws Exception
     {
-        test( ITestRootElement.PROP_READ_ONLY, "Cannot be modified." );
+        test( TestRootElement.PROP_READ_ONLY, "Cannot be modified." );
     }
     
     public void testCountConstraintAtLeastOne() throws Exception
     {
-        test( ITestRootElement.PROP_COUNT_CONSTRAINT_AT_LEAST_ONE, "Must have at least one." );
+        test( TestRootElement.PROP_COUNT_CONSTRAINT_AT_LEAST_ONE, "Must have at least one." );
     }
     
     public void testCountConstraintMin() throws Exception
     {
-        test( ITestRootElement.PROP_COUNT_CONSTRAINT_MIN, "Must have at least 2 items." );
+        test( TestRootElement.PROP_COUNT_CONSTRAINT_MIN, "Must have at least 2 items." );
     }
     
     public void testCountConstraintMax() throws Exception
     {
-        test( ITestRootElement.PROP_COUNT_CONSTRAINT_MAX, "Must have at most 200 items." );
+        test( TestRootElement.PROP_COUNT_CONSTRAINT_MAX, "Must have at most 200 items." );
     }
     
     public void testCountConstraintMinMax() throws Exception
     {
-        test( ITestRootElement.PROP_COUNT_CONSTRAINT_MIN_MAX, "Must have at least 2 items.", "Must have at most 200 items." );
+        test( TestRootElement.PROP_COUNT_CONSTRAINT_MIN_MAX, "Must have at least 2 items.", "Must have at most 200 items." );
     }
     
     public void testAbsolutePath() throws Exception
     {
-        test( ITestRootElement.PROP_ABSOLUTE_PATH, "Must be an absolute path." );
+        test( TestRootElement.PROP_ABSOLUTE_PATH, "Must be an absolute path." );
     }
 
     public void testMustExist() throws Exception
     {
-        test( ITestRootElement.PROP_MUST_EXIST, "Must exist." );
+        test( TestRootElement.PROP_MUST_EXIST, "Must exist." );
     }
     
     public void testMustExistAbsolutePath() throws Exception
     {
-        test( ITestRootElement.PROP_MUST_EXIST_ABSOLUTE_PATH, "Must be an absolute path.", "Must exist." );
+        test( TestRootElement.PROP_MUST_EXIST_ABSOLUTE_PATH, "Must be an absolute path.", "Must exist." );
     }
     
     public void testNoDuplicates() throws Exception
     {
-        final ITestRootElement root = ITestRootElement.TYPE.instantiate();
-        final ITestNoDuplicatesChildElement child = root.getNoDuplicates().addNewElement();
+        final TestRootElement root = TestRootElement.TYPE.instantiate();
+        final TestNoDuplicatesChildElement child = root.getNoDuplicates().addNewElement();
                 
-        test( child, ITestNoDuplicatesChildElement.PROP_NO_DUPLICATES, "Must be unique." );
+        test( child, TestNoDuplicatesChildElement.PROP_NO_DUPLICATES, "Must be unique." );
     }
 
     public void testFileExtensionsOne() throws Exception
     {
-        test( ITestRootElement.PROP_FILE_EXTENSIONS_ONE, "Must have \"xml\" file extension." );
+        test( TestRootElement.PROP_FILE_EXTENSIONS_ONE, "Must have \"xml\" file extension." );
     }
     
     public void testFileExtensionsTwo() throws Exception
     {
-        test( ITestRootElement.PROP_FILE_EXTENSIONS_TWO, "Must have either \"xml\" or \"java\" file extension." );
+        test( TestRootElement.PROP_FILE_EXTENSIONS_TWO, "Must have either \"xml\" or \"java\" file extension." );
     }
     
     public void testFileExtensionsThree() throws Exception
     {
-        test( ITestRootElement.PROP_FILE_EXTENSIONS_THREE, "Must have either \"xml\", \"java\" or \"jsp\" file extension." );
+        test( TestRootElement.PROP_FILE_EXTENSIONS_THREE, "Must have either \"xml\", \"java\" or \"jsp\" file extension." );
     }
     
     public void testFileExtensionsMany() throws Exception
     {
-        test( ITestRootElement.PROP_FILE_EXTENSIONS_MANY, "Must have one of these file extensions: \"xml\", \"java\", \"jsp\", \"jspx\"." );
+        test( TestRootElement.PROP_FILE_EXTENSIONS_MANY, "Must have one of these file extensions: \"xml\", \"java\", \"jsp\", \"jspx\"." );
     }
 
     public void testValidFileSystemResourceTypeFile() throws Exception
     {
-        test( ITestRootElement.PROP_VALID_FILE_SYSTEM_RESOURCE_TYPE_FILE, "Must be a file." );
+        test( TestRootElement.PROP_VALID_FILE_SYSTEM_RESOURCE_TYPE_FILE, "Must be a file." );
     }
     
     public void testValidFileSystemResourceTypeFolder() throws Exception
     {
-        test( ITestRootElement.PROP_VALID_FILE_SYSTEM_RESOURCE_TYPE_FOLDER, "Must be a folder." );
+        test( TestRootElement.PROP_VALID_FILE_SYSTEM_RESOURCE_TYPE_FOLDER, "Must be a folder." );
     }
     
     @SuppressWarnings( "deprecation" )
     
     public void testDeprecated() throws Exception
     {
-        test( ITestRootElement.PROP_DEPRECATED, "Deprecated." );
+        test( TestRootElement.PROP_DEPRECATED, "Deprecated." );
     }
     
     public void testStatic() throws Exception
     {
-        test( ITestRootElement.PROP_STATIC_FACT, "First static fact.", "Second static fact.", "Third static fact." );
+        test( TestRootElement.PROP_STATIC_FACT, "First static fact.", "Second static fact.", "Third static fact." );
     }
 
     private static void test( final ModelProperty property,
                               final String... factsExpected )
     {
-        test( ITestRootElement.TYPE.instantiate(), property, factsExpected );
+        test( TestRootElement.TYPE.instantiate(), property, factsExpected );
     }
     
     private static void test( final IModelElement element,

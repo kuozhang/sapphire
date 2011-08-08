@@ -14,12 +14,13 @@
 -->
 
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
-    <model-property-service>
-        <type>org.eclipse.sapphire.modeling.ReferenceService</type>
-        <factory>org.eclipse.sapphire.sdk.internal.SdkJavaTypeReferenceServiceForSdef$Factory</factory>
+    <service>
         <id>Sapphire.SDK.UI.Definition.Java.TypeReferenceService</id>
+        <type>org.eclipse.sapphire.services.ReferenceService</type>
+        <context>Sapphire.Property.Instance</context>
+        <factory>org.eclipse.sapphire.sdk.internal.SdkJavaTypeReferenceServiceForSdef$Factory</factory>
         <overrides>Sapphire.Java.TypeReferenceService</overrides>
         <overrides>Sapphire.Java.JDT.TypeReferenceService</overrides>
         <overrides>Sapphire.UI.Definition.Java.TypeReferenceService</overrides>
-    </model-property-service>
+    </service>
 </extension>

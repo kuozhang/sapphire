@@ -17,11 +17,11 @@ import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
 import org.eclipse.sapphire.modeling.ClassLocator;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -76,14 +76,15 @@ public final class StandardJavaTypeReferenceService
         return null;
     }
     
-    public static final class Factory extends ModelPropertyServiceFactory
+    public static final class Factory extends ServiceFactory
     {
         @Override
-        public boolean applicable( final IModelElement element,
-                                   final ModelProperty property,
-                                   final Class<? extends ModelPropertyService> service )
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
         {
-            if( property instanceof ValueProperty && property.getTypeClass() == JavaTypeName.class )
+            final ValueProperty property = context.find( ValueProperty.class );
+            
+            if( property != null && property.getTypeClass() == JavaTypeName.class )
             {
                 final Reference referenceAnnotation = property.getAnnotation( Reference.class );
                 
@@ -97,10 +98,10 @@ public final class StandardJavaTypeReferenceService
         }
 
         @Override
-        public ModelPropertyService create( final IModelElement element,
-                                            final ModelProperty property,
-                                            final Class<? extends ModelPropertyService> service )
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
         {
+            final IModelElement element = context.find( IModelElement.class );
             final ClassLocator classLocator = element.adapt( ClassLocator.class );
             
             if( classLocator != null )

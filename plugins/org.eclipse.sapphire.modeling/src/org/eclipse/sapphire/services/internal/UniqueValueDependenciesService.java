@@ -17,11 +17,12 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.services.DependenciesService;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Implementation of DependenciesService that exposes implied dependencies specified by the @NoDuplicates annotation.
@@ -34,23 +35,22 @@ public final class UniqueValueDependenciesService extends DependenciesService
     @Override
     protected void compute( final Set<ModelPath> dependencies )
     {
-        dependencies.add( new ModelPath( "*/" + property().getName() ) );
+        dependencies.add( new ModelPath( "*/" + context( ModelProperty.class ).getName() ) );
     }
 
-    public static final class Factory extends ModelPropertyServiceFactory
+    public static final class Factory extends ServiceFactory
     {
         @Override
-        public boolean applicable( final IModelElement element,
-                                   final ModelProperty property,
-                                   final Class<? extends ModelPropertyService> service )
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
         {
-            return property instanceof ValueProperty && property.hasAnnotation( NoDuplicates.class ) && element.parent() instanceof ModelElementList;
+            final ValueProperty property = context.find( ValueProperty.class );
+            return ( property != null && property.hasAnnotation( NoDuplicates.class ) && context.find( IModelElement.class ).parent() instanceof ModelElementList );
         }
 
         @Override
-        public ModelPropertyService create( final IModelElement element,
-                                            final ModelProperty property,
-                                            final Class<? extends ModelPropertyService> service )
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
         {
             return new UniqueValueDependenciesService();
         }

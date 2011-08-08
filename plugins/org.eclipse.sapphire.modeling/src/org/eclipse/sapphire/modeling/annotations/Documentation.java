@@ -75,7 +75,6 @@ public @interface Documentation
          *         </ul>
          *         </p>
          * 
-         * @since 0.4
          * @return the URL (as a string) associated with the resource
          */
         String url();

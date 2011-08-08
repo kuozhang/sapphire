@@ -14,7 +14,6 @@ package org.eclipse.sapphire.modeling.util;
 /**
  * Generic filter interface that can be parameterized for different item types.
  * 
- * @since 0.4
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 

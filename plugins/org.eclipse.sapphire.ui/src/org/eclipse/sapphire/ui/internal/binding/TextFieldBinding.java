@@ -15,8 +15,8 @@ import static org.eclipse.sapphire.modeling.util.MiscUtil.EMPTY_STRING;
 import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 
 import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueNormalizationService;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.services.ValueNormalizationService;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;

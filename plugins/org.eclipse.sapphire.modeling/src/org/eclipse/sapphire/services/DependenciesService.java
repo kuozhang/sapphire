@@ -15,40 +15,30 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
 
 /**
  * Produces the set of model paths that point to parts of the model that the property depends on. Most frequently
  * specified via @DependsOn annotation.
  * 
- * @since 0.3.1
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class DependenciesService extends ModelPropertyService
+public abstract class DependenciesService extends Service
 {
     private Set<ModelPath> dependencies;
     
     @Override
-    public final void init( final IModelElement element,
-                            final ModelProperty property,
-                            final String[] params )
+    protected final void init()
     {
-        super.init( element, property, params );
-        
-        initDependenciesService( element, property, params );
+        initDependenciesService();
         
         final Set<ModelPath> dependencies = new HashSet<ModelPath>();
         compute( dependencies );
         this.dependencies = Collections.unmodifiableSet( dependencies );
     }
 
-    protected void initDependenciesService( final IModelElement element,
-                                            final ModelProperty property,
-                                            final String[] params )
+    protected void initDependenciesService()
     {
     }
     

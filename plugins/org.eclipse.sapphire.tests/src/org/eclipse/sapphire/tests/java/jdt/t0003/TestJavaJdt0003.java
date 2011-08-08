@@ -56,7 +56,7 @@ public final class TestJavaJdt0003
         writeJavaSourceFile( "foo.bar", "TestClass", "public class TestClass {}" );
         
         final IFile file = project.getProject().getFile( "foobar.xml" );
-        final ITestElement element = ITestElement.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( new WorkspaceFileResourceStore( file ) ) ) );
+        final TestElement element = TestElement.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( new WorkspaceFileResourceStore( file ) ) ) );
         element.setSomeClass( "foo.bar.TestClass" );
         
         final JavaType type = element.getSomeClass().resolve();
@@ -70,7 +70,7 @@ public final class TestJavaJdt0003
         writeJavaSourceFile( "foo.bar", "TestClass", "public class TestClass { public static class Inner {} }" );
         
         final IFile file = project.getProject().getFile( "foobar.xml" );
-        final ITestElement element = ITestElement.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( new WorkspaceFileResourceStore( file ) ) ) );
+        final TestElement element = TestElement.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( new WorkspaceFileResourceStore( file ) ) ) );
         element.setSomeClass( "foo.bar.TestClass$Inner" );
         
         final JavaType type = element.getSomeClass().resolve();

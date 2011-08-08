@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
+import org.eclipse.sapphire.services.ValueSerializationService;
 import org.eclipse.sapphire.ui.def.SapphireKeySequence;
 
 /**

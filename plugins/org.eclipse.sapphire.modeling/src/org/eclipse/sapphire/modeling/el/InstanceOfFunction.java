@@ -19,7 +19,6 @@ import org.eclipse.sapphire.modeling.Value;
  * Determines if an object is of specified type. The object to be checked is the first operand and the
  * type is the second operand. The type must be a fully-qualified Java class name.
  * 
- * @since 0.3.1
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 

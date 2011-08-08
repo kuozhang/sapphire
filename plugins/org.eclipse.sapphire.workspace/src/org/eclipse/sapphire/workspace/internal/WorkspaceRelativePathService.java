@@ -15,13 +15,12 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.RelativePathService;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.services.RelativePathService;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.workspace.WorkspaceRelativePath;
 
 /**
@@ -36,20 +35,19 @@ public final class WorkspaceRelativePathService extends RelativePathService
         return Collections.singletonList( new Path( ResourcesPlugin.getWorkspace().getRoot().getLocation().toPortableString() ) );
     }
     
-    public static final class Factory extends ModelPropertyServiceFactory
+    public static final class Factory extends ServiceFactory
     {
         @Override
-        public boolean applicable( final IModelElement element,
-                                   final ModelProperty property,
-                                   final Class<? extends ModelPropertyService> service )
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
         {
-            return ( property instanceof ValueProperty && Path.class.isAssignableFrom( property.getTypeClass() ) && property.hasAnnotation( WorkspaceRelativePath.class ) );
+            final ValueProperty property = context.find( ValueProperty.class );
+            return ( property != null && Path.class.isAssignableFrom( property.getTypeClass() ) && property.hasAnnotation( WorkspaceRelativePath.class ) );
         }
 
         @Override
-        public ModelPropertyService create( final IModelElement element,
-                                            final ModelProperty property,
-                                            final Class<? extends ModelPropertyService> service )
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
         {
             return new WorkspaceRelativePathService();
         }

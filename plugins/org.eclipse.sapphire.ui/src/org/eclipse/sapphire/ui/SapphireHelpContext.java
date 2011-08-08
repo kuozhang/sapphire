@@ -23,9 +23,7 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.util.internal.DocumentationUtil;
-import org.eclipse.sapphire.services.DocumentationTopic;
-import org.eclipse.sapphire.services.ModelElementDocumentationService;
-import org.eclipse.sapphire.services.ModelPropertyDocumentationService;
+import org.eclipse.sapphire.services.DocumentationService;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -42,10 +40,10 @@ public final class SapphireHelpContext implements IContext, IContext2
     {
         String title = null;
         final StringBuilder content = new StringBuilder();
-        final List<DocumentationTopic> topics = new ArrayList<DocumentationTopic>();
+        final List<DocumentationService.Topic> topics = new ArrayList<DocumentationService.Topic>();
         
-        final ModelPropertyDocumentationService propDocService = element.service( property, ModelPropertyDocumentationService.class );
-        final ModelElementDocumentationService elDocService = element.service( ModelElementDocumentationService.class );
+        final DocumentationService propDocService = element.service( property, DocumentationService.class );
+        final DocumentationService elDocService = element.service( DocumentationService.class );
         
         content.append( "[br/]" );
         
@@ -81,7 +79,7 @@ public final class SapphireHelpContext implements IContext, IContext2
         
         this.topics = new ArrayList<IHelpResource>( topics.size() );
         
-        for( final DocumentationTopic topic : topics )
+        for( final DocumentationService.Topic topic : topics )
         {
             final IHelpResource hres = new IHelpResource()
             {

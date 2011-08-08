@@ -11,25 +11,22 @@
 
 package org.eclipse.sapphire.samples.architecture.internal;
 
-import org.eclipse.sapphire.modeling.ReferenceService;
 import org.eclipse.sapphire.samples.architecture.IArchitecture;
 import org.eclipse.sapphire.samples.architecture.IComponent;
+import org.eclipse.sapphire.services.ReferenceService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ComponentReferenceService 
-
-    extends ReferenceService
-    
+public final class ComponentReferenceService extends ReferenceService
 {
     @Override
     public Object resolve( final String reference ) 
     {
         if( reference != null )
         {
-            final IArchitecture arch = element().nearest( IArchitecture.class );
+            final IArchitecture arch = context( IArchitecture.class );
             
             for( IComponent component : arch.getComponents() )
             {

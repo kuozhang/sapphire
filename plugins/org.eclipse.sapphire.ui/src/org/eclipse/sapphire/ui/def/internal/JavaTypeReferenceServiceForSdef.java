@@ -16,12 +16,11 @@ import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
 import org.eclipse.sapphire.modeling.ClassLocator;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.ui.def.IPackageReference;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
@@ -29,15 +28,12 @@ import org.eclipse.sapphire.ui.def.ISapphireUiDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class JavaTypeReferenceServiceForSdef
-
-    extends JavaTypeReferenceService
-    
+public final class JavaTypeReferenceServiceForSdef extends JavaTypeReferenceService
 {
     @Override
     public JavaType resolve( final String name )
     {
-        final ISapphireUiDef sdef = element().nearest( ISapphireUiDef.class );
+        final ISapphireUiDef sdef = context( ISapphireUiDef.class );
         final ClassLocator locator = sdef.adapt( ClassLocator.class );
         
         if( locator != null )
@@ -62,14 +58,15 @@ public final class JavaTypeReferenceServiceForSdef
         return null;
     }
     
-    public static final class Factory extends ModelPropertyServiceFactory
+    public static final class Factory extends ServiceFactory
     {
         @Override
-        public boolean applicable( final IModelElement element,
-                                   final ModelProperty property,
-                                   final Class<? extends ModelPropertyService> service )
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
         {
-            if( property instanceof ValueProperty && property.getTypeClass() == JavaTypeName.class && element.nearest( ISapphireUiDef.class ) != null )
+            final ValueProperty property = context.find( ValueProperty.class );
+            
+            if( property != null && property.getTypeClass() == JavaTypeName.class && context.find( ISapphireUiDef.class ) != null )
             {
                 final Reference referenceAnnotation = property.getAnnotation( Reference.class );
                 
@@ -83,9 +80,8 @@ public final class JavaTypeReferenceServiceForSdef
         }
 
         @Override
-        public ModelPropertyService create( final IModelElement element,
-                                            final ModelProperty property,
-                                            final Class<? extends ModelPropertyService> service )
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
         {
             return new JavaTypeReferenceServiceForSdef();
         }

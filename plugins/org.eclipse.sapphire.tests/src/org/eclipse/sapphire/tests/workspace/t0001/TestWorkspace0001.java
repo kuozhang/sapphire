@@ -85,8 +85,8 @@ public final class TestWorkspace0001
     
     public void testWorkspaceRelativePath() throws Exception
     {
-        final ValueProperty property = ITestElement.PROP_WORKSPACE_RELATIVE_PATH;
-        final ITestElement element = ITestElement.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( new WorkspaceFileResourceStore( this.aa ) ) ) );
+        final ValueProperty property = TestElement.PROP_WORKSPACE_RELATIVE_PATH;
+        final TestElement element = TestElement.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( new WorkspaceFileResourceStore( this.aa ) ) ) );
         
         testValidationOk( element, property, this.a.getFullPath() );
         testValidationOk( element, property, this.aa.getFullPath() );
@@ -101,9 +101,9 @@ public final class TestWorkspace0001
     
     public void testProjectRelativePath() throws Exception
     {
-        final ValueProperty property = ITestElement.PROP_PROJECT_RELATIVE_PATH;
+        final ValueProperty property = TestElement.PROP_PROJECT_RELATIVE_PATH;
         
-        ITestElement element = ITestElement.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( new WorkspaceFileResourceStore( this.aa ) ) ) );
+        TestElement element = TestElement.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( new WorkspaceFileResourceStore( this.aa ) ) ) );
         
         testValidationOk( element, property, this.aa.getProjectRelativePath() );
         testValidationOk( element, property, this.ab.getProjectRelativePath() );
@@ -116,12 +116,12 @@ public final class TestWorkspace0001
         testValidationError( element, property, this.ab.getFullPath() );
         testValidationError( element, property, this.baaaaa.getProjectRelativePath() );
         
-        element = ITestElement.TYPE.instantiate();
+        element = TestElement.TYPE.instantiate();
         
         testValidationError( element, property, this.aa.getProjectRelativePath(), "No context project found." );
     }
     
-    private void testValidationOk( final ITestElement element,
+    private void testValidationOk( final TestElement element,
                                    final ValueProperty property,
                                    final IPath path )
     {
@@ -129,14 +129,14 @@ public final class TestWorkspace0001
         assertValidationOk( element.read( property ) );
     }
     
-    private void testValidationError( final ITestElement element,
+    private void testValidationError( final TestElement element,
                                       final ValueProperty property,
                                       final IPath path )
     {
         testValidationError( element, property, path, "File or folder \"" + path.toPortableString() + "\" does not exist." );
     }
 
-    private void testValidationError( final ITestElement element,
+    private void testValidationError( final TestElement element,
                                       final ValueProperty property,
                                       final IPath path,
                                       final String expectedErrorMessage )

@@ -13,15 +13,15 @@ package org.eclipse.sapphire.services.internal;
 
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Creates fact statements about valid file system resource type (file or folder) for property's value 
@@ -35,7 +35,7 @@ public final class ValidFileSystemResourceTypeFactsService extends FactsService
     @Override
     protected void facts( final List<String> facts )
     {
-        final ValidFileSystemResourceType a = property().getAnnotation( ValidFileSystemResourceType.class );
+        final ValidFileSystemResourceType a = context( ModelProperty.class ).getAnnotation( ValidFileSystemResourceType.class );
         final FileSystemResourceType type = a.value();
         
         if( type == FileSystemResourceType.FILE )
@@ -52,20 +52,19 @@ public final class ValidFileSystemResourceTypeFactsService extends FactsService
         }
     }
     
-    public static final class Factory extends ModelPropertyServiceFactory
+    public static final class Factory extends ServiceFactory
     {
         @Override
-        public boolean applicable( final IModelElement element,
-                                   final ModelProperty property,
-                                   final Class<? extends ModelPropertyService> service )
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
         {
-            return ( property instanceof ValueProperty && property.hasAnnotation( ValidFileSystemResourceType.class ) );
+            final ValueProperty property = context.find( ValueProperty.class );
+            return ( property != null && property.hasAnnotation( ValidFileSystemResourceType.class ) );
         }
     
         @Override
-        public ModelPropertyService create( final IModelElement element,
-                                            final ModelProperty property,
-                                            final Class<? extends ModelPropertyService> service )
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
         {
             return new ValidFileSystemResourceTypeFactsService();
         }

@@ -13,29 +13,30 @@ package org.eclipse.sapphire.workspace.internal;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
-import org.eclipse.sapphire.modeling.ModelPropertyValidationService;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
+import org.eclipse.sapphire.services.ValidationService;
 import org.eclipse.sapphire.workspace.ProjectRelativePath;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ProjectRelativePathValidationService extends ModelPropertyValidationService<Value<Path>>
+public final class ProjectRelativePathValidationService extends ValidationService
 {
     @Override
     public Status validate()
     {
-        if( target().getText() != null )
+        final IModelElement element = context( IModelElement.class );
+        
+        if( element.read( context( ValueProperty.class ) ).getText() != null )
         {
-            final IProject project = adapt( IProject.class );
+            final IProject project = element.adapt( IProject.class );
             
             if( project == null )
             {
@@ -46,20 +47,19 @@ public final class ProjectRelativePathValidationService extends ModelPropertyVal
         return Status.createOkStatus();
     }
         
-    public static final class Factory extends ModelPropertyServiceFactory
+    public static final class Factory extends ServiceFactory
     {
         @Override
-        public boolean applicable( final IModelElement element,
-                                   final ModelProperty property,
-                                   final Class<? extends ModelPropertyService> service )
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
         {
-            return ( property instanceof ValueProperty && Path.class.isAssignableFrom( property.getTypeClass() ) && property.hasAnnotation( ProjectRelativePath.class ) );
+            final ValueProperty property = context.find( ValueProperty.class );
+            return ( property != null && Path.class.isAssignableFrom( property.getTypeClass() ) && property.hasAnnotation( ProjectRelativePath.class ) );
         }
 
         @Override
-        public ModelPropertyService create( final IModelElement element,
-                                            final ModelProperty property,
-                                            final Class<? extends ModelPropertyService> service )
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
         {
             return new ProjectRelativePathValidationService();
         }

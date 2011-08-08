@@ -67,7 +67,7 @@ public final class TestExpr0008
 
     public void testValueProperty()
     {
-        final ITestModelRoot root = ITestModelRoot.TYPE.instantiate();
+        final TestModelRoot root = TestModelRoot.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( root );
 
         root.setInteger( 123 );
@@ -77,20 +77,20 @@ public final class TestExpr0008
     
     public void testElementProperty()
     {
-        final ITestModelRoot root = ITestModelRoot.TYPE.instantiate();
+        final TestModelRoot root = TestModelRoot.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( root );
 
-        root.getElement().element( true, ITestModelElementA.TYPE );
+        root.getElement().element( true, TestModelElementA.TYPE );
         
-        testForExpectedValue( context, "${ InstanceOf( Element, 'org.eclipse.sapphire.tests.modeling.el.t0008.ITestModelElementA' ) }", true );
+        testForExpectedValue( context, "${ InstanceOf( Element, 'org.eclipse.sapphire.tests.modeling.el.t0008.TestModelElementA' ) }", true );
 
-        root.getElement().element( true, ITestModelElementB.TYPE );
+        root.getElement().element( true, TestModelElementB.TYPE );
         
-        testForExpectedValue( context, "${ InstanceOf( Element, 'org.eclipse.sapphire.tests.modeling.el.t0008.ITestModelElementB' ) }", true );
+        testForExpectedValue( context, "${ InstanceOf( Element, 'org.eclipse.sapphire.tests.modeling.el.t0008.TestModelElementB' ) }", true );
         
         root.getElement().remove();
         
-        testForExpectedValue( context, "${ InstanceOf( Element, 'org.eclipse.sapphire.tests.modeling.el.t0008.ITestModelElementB' ) }", false );
+        testForExpectedValue( context, "${ InstanceOf( Element, 'org.eclipse.sapphire.tests.modeling.el.t0008.TestModelElementB' ) }", false );
     }
 
     public void testNull1()

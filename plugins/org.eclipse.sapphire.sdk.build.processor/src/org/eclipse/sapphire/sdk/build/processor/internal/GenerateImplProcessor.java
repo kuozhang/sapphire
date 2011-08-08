@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.sapphire.modeling.DerivedValueService;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
@@ -43,15 +42,13 @@ import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.Transient;
 import org.eclipse.sapphire.modeling.TransientProperty;
 import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueNormalizationService;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
-import org.eclipse.sapphire.modeling.annotations.DerivedValue;
+import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.AccessModifier;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.Body;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.ClassModel;
@@ -61,6 +58,9 @@ import org.eclipse.sapphire.sdk.build.processor.internal.util.MethodModel;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.MethodParameterModel;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.TypeReference;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.WildcardTypeReference;
+import org.eclipse.sapphire.services.DerivedValueService;
+import org.eclipse.sapphire.services.ValueNormalizationService;
+import org.eclipse.sapphire.services.ValueSerializationMasterService;
 
 import com.sun.mirror.apt.AnnotationProcessorEnvironment;
 import com.sun.mirror.apt.Messager;
@@ -482,7 +482,7 @@ public final class GenerateImplProcessor
             wrapperType = ( new TypeReference( Value.class ) ).parameterize( baseType );
         }
         
-        final boolean hasDerivedValueProviderAnnotation = ( propField.getAnnotation( DerivedValue.class ) != null );
+        final boolean hasDerivedValueProviderAnnotation = ( propField.getAnnotation( Derived.class ) != null );
         
         // Determine the getter method name.
         
@@ -651,10 +651,10 @@ public final class GenerateImplProcessor
                 
                 final Body stb = setterForTyped.getBody();
 
-                stb.append( "#1( value != null ? service( #2, ValueSerializationService.class ).encode( value ) : null );", 
+                stb.append( "#1( value != null ? service( #2, ValueSerializationMasterService.class ).encode( value ) : null );", 
                             setterMethodName, propField.name );
                 
-                implClassModel.addImport( ValueSerializationService.class );
+                implClassModel.addImport( ValueSerializationMasterService.class );
             }
             
             contributeValueWriteMethodBlock( implClassModel, propField );

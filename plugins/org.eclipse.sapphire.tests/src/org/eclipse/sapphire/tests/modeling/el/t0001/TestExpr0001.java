@@ -47,11 +47,11 @@ public final class TestExpr0001
     
     public void testParentFunction()
     {
-        final ITestExpr0001ModelElement r = ITestExpr0001ModelElement.TYPE.instantiate();
-        final ITestExpr0001ModelElement r_e = r.getElement().element( true );
-        final ITestExpr0001ModelElement r_l = r.getList().addNewElement();
-        final ITestExpr0001ModelElement r_e_l = r_e.getList().addNewElement();
-        final ITestExpr0001ModelElement r_l_e = r_l.getElement().element( true );
+        final TestExpr0001ModelElement r = TestExpr0001ModelElement.TYPE.instantiate();
+        final TestExpr0001ModelElement r_e = r.getElement().element( true );
+        final TestExpr0001ModelElement r_l = r.getList().addNewElement();
+        final TestExpr0001ModelElement r_e_l = r_e.getList().addNewElement();
+        final TestExpr0001ModelElement r_l_e = r_l.getElement().element( true );
 
         testForExpectedValue( r_e, "${ Parent() }", r );
         testForExpectedValue( r_l, "${ Parent() }", r );
@@ -65,11 +65,11 @@ public final class TestExpr0001
 
     public void testRootFunction()
     {
-        final ITestExpr0001ModelElement r = ITestExpr0001ModelElement.TYPE.instantiate( new RootXmlResource() );
-        final ITestExpr0001ModelElement r_e = r.getElement().element( true );
-        final ITestExpr0001ModelElement r_l = r.getList().addNewElement();
-        final ITestExpr0001ModelElement r_e_l = r_e.getList().addNewElement();
-        final ITestExpr0001ModelElement r_l_e = r_l.getElement().element( true );
+        final TestExpr0001ModelElement r = TestExpr0001ModelElement.TYPE.instantiate( new RootXmlResource() );
+        final TestExpr0001ModelElement r_e = r.getElement().element( true );
+        final TestExpr0001ModelElement r_l = r.getList().addNewElement();
+        final TestExpr0001ModelElement r_e_l = r_e.getList().addNewElement();
+        final TestExpr0001ModelElement r_l_e = r_l.getElement().element( true );
 
         testForExpectedValue( r_e, "${ Root() }", r );
         testForExpectedValue( r_l, "${ Root() }", r );

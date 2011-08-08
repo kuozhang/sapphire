@@ -11,13 +11,15 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
+import static org.eclipse.sapphire.modeling.xml.XmlUtil.createDefaultElementName;
+
 import java.util.Locale;
 
 import org.eclipse.sapphire.modeling.CorruptedResourceException;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlRootBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
@@ -97,7 +99,7 @@ public class RootXmlResource
         
         if( this.rootElementController == null )
         {
-            this.rootElementController = new StandardRootElementController( modelElementType.getSimpleName().substring( 1 ) );
+            this.rootElementController = new StandardRootElementController( createDefaultElementName( modelElementType ) );
         }
         
         this.rootElementController.init( this );

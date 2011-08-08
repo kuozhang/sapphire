@@ -15,8 +15,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.sapphire.sdk.extensibility.IExtensionSummaryExportOp;
-import org.eclipse.sapphire.sdk.extensibility.ISapphireExtensionDef;
+import org.eclipse.sapphire.sdk.extensibility.ExtensionSummaryExportOp;
+import org.eclipse.sapphire.sdk.extensibility.SapphireExtensionDef;
 import org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -37,7 +37,7 @@ public final class SapphireExtensionEditor
     {
         super( "org.eclipse.sapphire.sdk" );
         
-        setRootModelElementType( ISapphireExtensionDef.TYPE );
+        setRootModelElementType( SapphireExtensionDef.TYPE );
         setEditorDefinitionPath( "org.eclipse.sapphire.sdk/org/eclipse/sapphire/sdk/ExtensionEditor.sdef/main" );
     }
 
@@ -61,8 +61,8 @@ public final class SapphireExtensionEditor
     {
         if( newPageIndex == 2 )
         {
-            final List<ISapphireExtensionDef> extensions = Collections.singletonList( (ISapphireExtensionDef) getModelElement() );
-            final IExtensionSummaryExportOp op = IExtensionSummaryExportOp.TYPE.instantiate();
+            final List<SapphireExtensionDef> extensions = Collections.singletonList( (SapphireExtensionDef) getModelElement() );
+            final ExtensionSummaryExportOp op = ExtensionSummaryExportOp.TYPE.instantiate();
             final String text = op.execute( extensions, null );
             
             this.browser.setText( text );

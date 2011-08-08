@@ -73,18 +73,18 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EnumValueType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ImageService;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelService;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.FixedOrderList;
-import org.eclipse.sapphire.modeling.serialization.ValueSerializationService;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
+import org.eclipse.sapphire.services.ImageService;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ValueSerializationService;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -127,10 +127,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class DefaultListPropertyEditorRenderer
-
-    extends ListPropertyEditorRenderer
-    
+public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRenderer
 {
     public static final String DATA_SELECTION_PROVIDER = "selection.provider";
     
@@ -1821,7 +1818,7 @@ public class DefaultListPropertyEditorRenderer
     {
         private final IModelElement element;
         private final ImageService imageService;
-        private final ModelService.Listener listener;
+        private final Service.Listener listener;
         
         public TableRow( final IModelElement element )
         {
@@ -1834,19 +1831,16 @@ public class DefaultListPropertyEditorRenderer
             }
             else
             {
-                this.listener = new ModelService.Listener()
+                this.listener = new Service.Listener()
                 {
                     @Override
-                    public void handleEvent( final ModelService.Event event )
+                    public void handle( final Service.Event event )
                     {
-                        if( event instanceof ImageService.ImageChangedEvent )
-                        {
-                            update( TableRow.this );
-                        }
+                        update( TableRow.this );
                     }
                 };
                 
-                this.imageService.addListener( this.listener );
+                this.imageService.attach( this.listener );
             }
         }
         
@@ -1871,7 +1865,7 @@ public class DefaultListPropertyEditorRenderer
         {
             if( this.imageService != null )
             {
-                this.imageService.removeListener( this.listener );
+                this.imageService.detach( this.listener );
             }
         }
     }

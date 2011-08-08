@@ -11,30 +11,27 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyService;
-import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
 import org.eclipse.sapphire.services.FactsAggregationService;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class FactsAggregationServiceFactory extends ModelPropertyServiceFactory
+public final class FactsAggregationServiceFactory extends ServiceFactory
 {
     @Override
-    public boolean applicable( final IModelElement element,
-                               final ModelProperty property,
-                               final Class<? extends ModelPropertyService> service )
+    public boolean applicable( final ServiceContext context,
+                               final Class<? extends Service> service )
     {
         return true;
     }
 
     @Override
-    public ModelPropertyService create( final IModelElement element,
-                                        final ModelProperty property,
-                                        final Class<? extends ModelPropertyService> service )
+    public Service create( final ServiceContext context,
+                           final Class<? extends Service> service )
     {
         return new FactsAggregationService();
     }

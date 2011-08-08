@@ -28,7 +28,7 @@ public class TestJava0004
     extends SapphireTestCase
     
 {
-    private ITestElement element;
+    private TestElement element;
     
     protected TestJava0004( final String name )
     {
@@ -66,14 +66,14 @@ public class TestJava0004
         this.element = createTestElement();
     }
     
-    protected ITestElement createTestElement() throws Exception
+    protected TestElement createTestElement() throws Exception
     {
-        return ITestElement.TYPE.instantiate();
+        return TestElement.TYPE.instantiate();
     }
     
     public void testOptionalAnyType()
     {
-        final ValueProperty property = ITestElement.PROP_OPTIONAL_ANY_TYPE;
+        final ValueProperty property = TestElement.PROP_OPTIONAL_ANY_TYPE;
         
         test( property, "foo.bar.FooBar" );
         test( property, "java.util.ArrayList" );
@@ -90,7 +90,7 @@ public class TestJava0004
 
     public void testRequiredClass1()
     {
-        final ValueProperty property = ITestElement.PROP_REQUIRED_CLASS_1;
+        final ValueProperty property = TestElement.PROP_REQUIRED_CLASS_1;
         
         test( property, "foo.bar.FooBar", "Could not resolve required class 1 \"foo.bar.FooBar\"." );
         test( property, "java.util.ArrayList" );
@@ -107,7 +107,7 @@ public class TestJava0004
 
     public void testRequiredClass2()
     {
-        final ValueProperty property = ITestElement.PROP_REQUIRED_CLASS_2;
+        final ValueProperty property = TestElement.PROP_REQUIRED_CLASS_2;
         
         test( property, "foo.bar.FooBar", "Could not resolve required class 2 \"foo.bar.FooBar\"." );
         test( property, "java.util.ArrayList" );
@@ -125,7 +125,7 @@ public class TestJava0004
 
     public void testRequiredClass3()
     {
-        final ValueProperty property = ITestElement.PROP_REQUIRED_CLASS_3;
+        final ValueProperty property = TestElement.PROP_REQUIRED_CLASS_3;
         
         test( property, "foo.bar.FooBar", "Could not resolve required class 3 \"foo.bar.FooBar\"." );
         test( property, "java.util.ArrayList" );
@@ -143,7 +143,7 @@ public class TestJava0004
 
     public void testRequiredClass4()
     {
-        final ValueProperty property = ITestElement.PROP_REQUIRED_CLASS_4;
+        final ValueProperty property = TestElement.PROP_REQUIRED_CLASS_4;
         
         test( property, "foo.bar.FooBar", "Could not resolve required class 4 \"foo.bar.FooBar\"." );
         test( property, "java.util.ArrayList" );
@@ -161,7 +161,7 @@ public class TestJava0004
 
     public void testRequiredClass5()
     {
-        final ValueProperty property = ITestElement.PROP_REQUIRED_CLASS_5;
+        final ValueProperty property = TestElement.PROP_REQUIRED_CLASS_5;
         
         test( property, "foo.bar.FooBar", "Could not resolve required class 5 \"foo.bar.FooBar\"." );
         test( property, "java.util.ArrayList" );
@@ -179,7 +179,7 @@ public class TestJava0004
 
     public void testRequiredClass6()
     {
-        final ValueProperty property = ITestElement.PROP_REQUIRED_CLASS_6;
+        final ValueProperty property = TestElement.PROP_REQUIRED_CLASS_6;
         
         test( property, "foo.bar.FooBar", "Could not resolve required class 6 \"foo.bar.FooBar\"." );
         test( property, "java.util.ArrayList" );
@@ -198,7 +198,7 @@ public class TestJava0004
 
     public void testRequiredInterface1()
     {
-        final ValueProperty property = ITestElement.PROP_REQUIRED_INTERFACE_1;
+        final ValueProperty property = TestElement.PROP_REQUIRED_INTERFACE_1;
         
         test( property, "foo.bar.FooBar", "Could not resolve required interface 1 \"foo.bar.FooBar\"." );
         test( property, "java.util.ArrayList", "Type java.util.ArrayList is a class, which is not allowed for required interface 1." );
@@ -216,7 +216,7 @@ public class TestJava0004
 
     public void testRequiredInterface2()
     {
-        final ValueProperty property = ITestElement.PROP_REQUIRED_INTERFACE_2;
+        final ValueProperty property = TestElement.PROP_REQUIRED_INTERFACE_2;
         
         test( property, "foo.bar.FooBar", "Could not resolve required interface 2 \"foo.bar.FooBar\"." );
         test( property, "java.util.ArrayList", "Type java.util.ArrayList is a class, which is not allowed for required interface 2." );
@@ -235,7 +235,7 @@ public class TestJava0004
 
     public void testRequiredInterface3()
     {
-        final ValueProperty property = ITestElement.PROP_REQUIRED_INTERFACE_3;
+        final ValueProperty property = TestElement.PROP_REQUIRED_INTERFACE_3;
         
         test( property, "foo.bar.FooBar", "Could not resolve required interface 3 \"foo.bar.FooBar\"." );
         test( property, "java.util.ArrayList", "Type java.util.ArrayList is a class, which is not allowed for required interface 3." );
@@ -254,7 +254,7 @@ public class TestJava0004
 
     public void testRequiredAnnotation1()
     {
-        final ValueProperty property = ITestElement.PROP_REQUIRED_ANNOTATION_1;
+        final ValueProperty property = TestElement.PROP_REQUIRED_ANNOTATION_1;
         
         test( property, "foo.bar.FooBar", "Could not resolve required annotation 1 \"foo.bar.FooBar\"." );
         test( property, "java.util.ArrayList", "Type java.util.ArrayList is a class, which is not allowed for required annotation 1." );
@@ -273,7 +273,7 @@ public class TestJava0004
 
     public void testRequiredEnum1()
     {
-        final ValueProperty property = ITestElement.PROP_REQUIRED_ENUM_1;
+        final ValueProperty property = TestElement.PROP_REQUIRED_ENUM_1;
         
         test( property, "foo.bar.FooBar", "Could not resolve required enum 1 \"foo.bar.FooBar\"." );
         test( property, "java.util.ArrayList", "Type java.util.ArrayList is a class, which is not allowed for required enum 1." );
@@ -292,7 +292,7 @@ public class TestJava0004
 
     public void testRequiredMixedType1()
     {
-        final ValueProperty property = ITestElement.PROP_REQUIRED_MIXED_TYPE_1;
+        final ValueProperty property = TestElement.PROP_REQUIRED_MIXED_TYPE_1;
         
         test( property, "foo.bar.FooBar", "Could not resolve required mixed type 1 \"foo.bar.FooBar\"." );
         test( property, "java.util.ArrayList" );
@@ -311,7 +311,7 @@ public class TestJava0004
 
     public void testRequiredMixedType2()
     {
-        final ValueProperty property = ITestElement.PROP_REQUIRED_MIXED_TYPE_2;
+        final ValueProperty property = TestElement.PROP_REQUIRED_MIXED_TYPE_2;
         
         test( property, "foo.bar.FooBar", "Could not resolve required mixed type 2 \"foo.bar.FooBar\"." );
         test( property, "java.util.ArrayList" );

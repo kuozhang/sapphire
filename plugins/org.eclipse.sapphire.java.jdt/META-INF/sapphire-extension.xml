@@ -14,11 +14,12 @@
 -->
 
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <model-property-service>
+    <service>
         <description>Resolves Java types visible to the Java project that the model is loaded from.</description>
-        <type>org.eclipse.sapphire.modeling.ReferenceService</type>
+        <type>org.eclipse.sapphire.services.ReferenceService</type>
+        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.java.jdt.internal.JdtJavaTypeReferenceService$Factory</factory>
         <id>Sapphire.Java.JDT.TypeReferenceService</id>
         <overrides>Sapphire.Java.TypeReferenceService</overrides>
-    </model-property-service>
+    </service>
 </extension>

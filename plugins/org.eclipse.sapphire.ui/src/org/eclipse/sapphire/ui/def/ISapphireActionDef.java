@@ -24,8 +24,8 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.serialization.ValueSerialization;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.internal.KeySequenceValueSerializationService;
@@ -87,8 +87,8 @@ public interface ISapphireActionDef
     // *** KeyBinding ***
     
     @Type( base = SapphireKeySequence.class )
-    @ValueSerialization( service = KeySequenceValueSerializationService.class )
     @Label( standard = "key binding" )
+    @Service( impl = KeySequenceValueSerializationService.class )
     @XmlBinding( path = "key-binding" )
     
     @Documentation( content = "A key binding defines how an action is accessed via the keyboard as a sequence " +

@@ -31,10 +31,7 @@ import org.eclipse.sapphire.samples.gallery.internal.ColorValueLabelService;
 
 @GenerateImpl
 
-public interface IMultiSelectListGalleryStringItem
-
-    extends IModelElement
-    
+public interface IMultiSelectListGalleryStringItem extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IMultiSelectListGalleryStringItem.class );
     
