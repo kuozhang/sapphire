@@ -21,6 +21,7 @@ import java.util.Set;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
@@ -84,11 +85,36 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         
         for (IDiagramNodeDef nodeDef : nodeDefs)
         {
-            DiagramNodeTemplate nodeTemplate = new DiagramNodeTemplate();
-            nodeTemplate.init(this, this.modelElement, nodeDef, Collections.<String,String>emptyMap());
-            this.nodeTemplates.add(nodeTemplate);
-            nodeTemplate.addTemplateListener(this.nodeTemplateListener);
-            
+        	boolean visible = true;
+        	if (nodeDef.getVisibleWhen().getContent() != null)
+        	{
+	        	// Support "visible-when" expression
+	            FunctionResult visibleWhen = initExpression
+	            ( 
+	                this.modelElement,
+	                nodeDef.getVisibleWhen().getContent(),
+	                String.class,
+	                null,
+	                new Runnable()
+	                {
+	                    public void run()
+	                    {                        
+	                    }
+	                }
+	            );
+	        	
+	            if (visibleWhen.value() != null && ((String)visibleWhen.value()).equals("false"))
+	            {
+	            	visible = false;
+	            }
+        	}
+        	if (visible)
+        	{
+	            DiagramNodeTemplate nodeTemplate = new DiagramNodeTemplate();
+	            nodeTemplate.init(this, this.modelElement, nodeDef, Collections.<String,String>emptyMap());
+	            this.nodeTemplates.add(nodeTemplate);
+	            nodeTemplate.addTemplateListener(this.nodeTemplateListener);
+        	}
         }
         
         // Need to initialize the embedded connections after all the diagram node parts are created
