@@ -103,9 +103,13 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 	                }
 	            );
 	        	
-	            if (visibleWhen.value() != null && ((String)visibleWhen.value()).equals("false"))
+	            if (visibleWhen != null && visibleWhen.value() != null && ((String)visibleWhen.value()).equals("false"))
 	            {
-	            	visible = false;
+	                visible = false;
+	            }
+	            if (visibleWhen != null)
+	            {
+	                visibleWhen.dispose();
 	            }
         	}
         	if (visible)
