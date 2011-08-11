@@ -30,6 +30,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -168,6 +169,8 @@ public class SapphireDiagramEditor extends DiagramEditor
 				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, 
 						new Boolean(diagramPart.isGridVisible()));
 				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, 
+						new Boolean(diagramPart.isGridVisible()));
+				getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED,
 						new Boolean(diagramPart.isGridVisible()));
 				gridVisibilityChanged = true;
 				firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY); 

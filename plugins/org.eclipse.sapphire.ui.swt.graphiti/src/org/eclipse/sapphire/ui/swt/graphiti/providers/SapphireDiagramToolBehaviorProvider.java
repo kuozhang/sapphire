@@ -47,6 +47,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeProblemDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.ProblemDecoratorSize;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireDoubleClickNodeFeature;
 
 /**
@@ -232,6 +233,14 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
         }
         return super.getToolTip(ga);        
     }
+    
+	@Override
+	public boolean isShowGuides()
+	{
+		SapphireDiagramEditor diagramEditor = 
+				(SapphireDiagramEditor)this.getDiagramTypeProvider().getDiagramEditor();
+		return diagramEditor.getPart().isGridVisible();
+	}
     
     private void addNodeProblemDecorator(PictogramElement pe, DiagramNodePart nodePart, List<IDecorator> decoratorList)
     {
