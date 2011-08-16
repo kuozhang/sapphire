@@ -11,6 +11,9 @@
 
 package org.eclipse.sapphire.samples.gallery.internal;
 
+import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -26,13 +29,9 @@ import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PrefixActionHandlerForList
-
-    extends SapphirePropertyEditorActionHandler
-    
+public final class PrefixActionHandlerForList extends SapphirePropertyEditorActionHandler
 {
     private String prefix;
-    private ModelPropertyListener listener;
     
     @Override
     public void init( final SapphireAction action,
@@ -42,7 +41,9 @@ public final class PrefixActionHandlerForList
         
         this.prefix = def.getParam( "prefix" ) + " ";
         
-        this.listener = new ModelPropertyListener()
+        final IModelElement element = getModelElement();
+        
+        final ModelPropertyListener listener = new ModelPropertyListener()
         {
             @Override
             public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
@@ -52,10 +53,27 @@ public final class PrefixActionHandlerForList
             }
         };
         
-        getModelElement().addListener( this.listener, getProperty().getName() + "/*" );
+        final String path = getProperty().getName() + "/*";
+        
+        element.addListener( listener, path );
         
         refreshEnabledState();
         refreshCheckedState();
+        
+        attach
+        (
+            new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    if( event instanceof DisposeEvent )
+                    {
+                        element.removeListener( listener, path );                        
+                    }
+                }
+            }
+        );
     }
     
     @Override
@@ -125,14 +143,6 @@ public final class PrefixActionHandlerForList
         }
         
         setChecked( checked );
-    }
-
-    @Override
-    public void dispose()
-    {
-        super.dispose();
-        
-        getModelElement().removeListener( this.listener, getProperty().getName() + "/*" );
     }
     
 }

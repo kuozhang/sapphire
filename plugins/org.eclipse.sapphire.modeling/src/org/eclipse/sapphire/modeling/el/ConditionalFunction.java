@@ -14,6 +14,8 @@ package org.eclipse.sapphire.modeling.el;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 
 /**
@@ -61,7 +63,7 @@ public final class ConditionalFunction
         {
             private Boolean lastConditionValue;
             private FunctionResult lastActiveBranch;
-            private FunctionResult.Listener listener;
+            private Listener listener;
             
             @Override
             protected void init()
@@ -71,7 +73,7 @@ public final class ConditionalFunction
                 this.listener = new Listener()
                 {
                     @Override
-                    public void handleValueChanged()
+                    public void handle( final Event event )
                     {
                         refresh();
                     }
@@ -103,19 +105,38 @@ public final class ConditionalFunction
                 {
                     this.lastConditionValue = conditionValue;
                     
+                    final FunctionResult res;
+                    
                     if( conditionValue == true )
                     {
-                        this.lastActiveBranch = function().operand( 1 ).evaluate( context );
+                        res = function().operand( 1 ).evaluate( context );
                     }
                     else
                     {
-                        this.lastActiveBranch = function().operand( 2 ).evaluate( context );
+                        res = function().operand( 2 ).evaluate( context );
                     }
                     
-                    this.lastActiveBranch.addListener( this.listener );
+                    if( this.lastActiveBranch != null )
+                    {
+                        throw new IllegalStateException();
+                    }
+                    
+                    this.lastActiveBranch = res;
+                    this.lastActiveBranch.attach( this.listener );
                 }
 
                 return this.lastActiveBranch.value();
+            }
+
+            @Override
+            public void dispose()
+            {
+                super.dispose();
+                
+                if( this.lastActiveBranch != null )
+                {
+                    this.lastActiveBranch.dispose();
+                }
             }
         };
     }

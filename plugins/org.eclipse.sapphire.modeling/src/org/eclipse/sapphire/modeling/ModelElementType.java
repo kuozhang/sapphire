@@ -26,15 +26,15 @@ import org.eclipse.sapphire.modeling.internal.MemoryResource;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.LocalizationSystem;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.internal.ElementMetaModelServiceContext;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ModelElementType 
-    
-    extends ModelMetadataItem
-    
+public final class ModelElementType extends ModelMetadataItem
 {
     private final Class<?> modelElementClass;
     private Class<?> implClass = null;
@@ -44,6 +44,7 @@ public final class ModelElementType
     private final LocalizationService localizationService;
     private ImageData image;
     private boolean imageInitialized;
+    private ServiceContext serviceContext;
     
     public ModelElementType( final Class<?> modelElementClass )
     {
@@ -403,6 +404,27 @@ public final class ModelElementType
         }
         
         return this.image;
+    }
+    
+    public <S extends Service> S service( final Class<S> serviceType )
+    {
+        final List<S> services = services( serviceType );
+        return ( services.isEmpty() ? null : services.get( 0 ) );
+    }
+
+    public <S extends Service> List<S> services( final Class<S> serviceType )
+    {
+        return services().services( serviceType );
+    }
+
+    public synchronized ServiceContext services()
+    {
+        if( this.serviceContext == null )
+        {
+            this.serviceContext = new ElementMetaModelServiceContext( this );
+        }
+        
+        return this.serviceContext;
     }
 
     protected static abstract class ModelPropertyInitListener

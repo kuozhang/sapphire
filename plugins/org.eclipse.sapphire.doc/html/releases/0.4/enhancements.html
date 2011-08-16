@@ -26,12 +26,14 @@
   <li><a href="#Services">Services</a></li>
   <ol type="A">
     <li><a href="#FactsService">FactsService</a></li>
+    <li><a href="#PossibleTypesService">PossibleTypesService</a></li>
   </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
     <a href="#ModelElementTypeWithoutPrefix">Optional 'I' Prefix</a>
   </ol>
 </ol>
+
  
 <h2><a name="Services"><a name="FactsService">FactsService</a></a></h2>
 
@@ -53,6 +55,17 @@ of annotations that generate corresponding facts.</p>
 
 <p><a href="../../services/index.html#FactsService">See Documentation</a></p>
 
+
+<h2><a name="PossibleTypesService">PossibleTypesService</a></h2>
+
+<p>The set of possible types for a list or an element property is usually static and as such can be
+specified using @Type annotation. However, when the model needs to be extensible or the set of possible
+types needs to vary due to runtime conditions, a custom PossibleTypesService implementation can now
+be supplied.</p>
+
+<p><a href="../../services/index.html#PossibleTypesService">See Documentation</a></p>
+
+
 <h2><a name="Miscellaneous"><a name="ModelElementTypeWithoutPrefix">Optional 'I' Prefix</a></a></h2>
 
 <p>Sapphire adopters are no longer required to utilize the convention of prefixing 'I' in front of interface names
@@ -70,6 +83,7 @@ else
 
 <div class="copyright">Copyright (c) 2011 Oracle and Others<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
 
 </body>
 

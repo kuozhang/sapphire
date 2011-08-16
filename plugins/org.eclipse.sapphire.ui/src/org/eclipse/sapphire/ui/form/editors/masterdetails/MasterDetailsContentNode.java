@@ -20,6 +20,8 @@ import java.util.Set;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementProperty;
@@ -39,7 +41,6 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.services.ImageService;
-import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
@@ -386,17 +387,17 @@ public final class MasterDetailsContentNode
                     {
                         return new FunctionResult( this, context )
                         {
-                            private Service.Listener listener;
+                            private Listener listener;
                             
                             @Override
                             protected void init()
                             {
                                 super.init();
                                 
-                                this.listener = new Service.Listener()
+                                this.listener = new Listener()
                                 {
                                     @Override
-                                    public void handle( final Service.Event event )
+                                    public void handle( final Event event )
                                     {
                                         refresh();
                                     }

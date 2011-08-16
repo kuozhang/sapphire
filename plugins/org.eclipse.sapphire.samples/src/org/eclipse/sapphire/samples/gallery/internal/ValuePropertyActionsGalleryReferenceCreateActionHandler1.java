@@ -11,6 +11,9 @@
 
 package org.eclipse.sapphire.samples.gallery.internal;
 
+import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
@@ -25,20 +28,15 @@ import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ValuePropertyActionsGalleryReferenceCreateActionHandler1
-
-    extends ValuePropertyActionsGalleryReferenceCreateActionHandlerBase
-    
+public final class ValuePropertyActionsGalleryReferenceCreateActionHandler1 extends ValuePropertyActionsGalleryReferenceCreateActionHandlerBase
 {
-    private ModelPropertyListener listener;
-    
     @Override
     public void init( final SapphireAction action,
                       final ISapphireActionHandlerDef def )
     {
         super.init( action, def );
         
-        this.listener = new ModelPropertyListener()
+        final ModelPropertyListener listener = new ModelPropertyListener()
         {
             @Override
             public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
@@ -48,11 +46,29 @@ public final class ValuePropertyActionsGalleryReferenceCreateActionHandler1
         };
         
         final IModelElement element = getModelElement();
+        final IValuePropertyActionsGallery gallery = element.nearest( IValuePropertyActionsGallery.class );
+        final String propertyName = getProperty().getName();
         
-        element.nearest( IValuePropertyActionsGallery.class ).addListener( this.listener, "Entities/*" );
-        element.addListener( this.listener, getProperty().getName() );
+        gallery.addListener( listener, "Entities/*" );
+        element.addListener( listener, propertyName );
         
         refreshActionState();
+        
+        attach
+        (
+            new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    if( event instanceof DisposeEvent )
+                    {
+                        gallery.removeListener( listener, "Entities/*" );
+                        element.addListener( listener, propertyName );
+                    }
+                }
+            }
+        );
     }
     
     private void refreshActionState()
@@ -79,17 +95,6 @@ public final class ValuePropertyActionsGalleryReferenceCreateActionHandler1
         }
         
         return null;
-    }
-
-    @Override
-    public void dispose()
-    {
-        super.dispose();
-        
-        final IModelElement element = getModelElement();
-        
-        element.nearest( IValuePropertyActionsGallery.class ).removeListener( this.listener, "Entities/*" );
-        element.addListener( this.listener, getProperty().getName() );
     }
     
 }

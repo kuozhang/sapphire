@@ -11,6 +11,9 @@
 
 package org.eclipse.sapphire.samples.calendar.ui;
 
+import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
@@ -25,20 +28,17 @@ import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ShowContactDetailsActionHandler
-
-    extends SapphireActionHandler
-    
+public final class ShowContactDetailsActionHandler extends SapphireActionHandler
 {
-    private ModelPropertyListener listener;
-    
     @Override
     public void init( final SapphireAction action,
                       final ISapphireActionHandlerDef def )
     {
         super.init( action, def );
         
-        this.listener = new ModelPropertyListener()
+        final IModelElement element = getModelElement();
+        
+        final ModelPropertyListener listener = new ModelPropertyListener()
         {
             @Override
             public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
@@ -47,9 +47,24 @@ public final class ShowContactDetailsActionHandler
             }
         };
         
-        getModelElement().addListener( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
+        element.addListener( listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
         
         refreshEnablementState();
+        
+        attach
+        (
+            new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    if( event instanceof DisposeEvent )
+                    {
+                        element.removeListener( listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
+                    }
+                }
+            }
+        );
     }
     
     protected void refreshEnablementState()
@@ -67,14 +82,6 @@ public final class ShowContactDetailsActionHandler
         ContactDetailsJumpHandler.jump( editor, modelElement );
         
         return null;
-    }
-
-    @Override
-    public void dispose()
-    {
-        super.dispose();
-        
-        getModelElement().removeListener( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
     }
     
 }

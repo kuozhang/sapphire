@@ -24,6 +24,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Value;
@@ -33,6 +35,9 @@ import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphireActionHandler.PostExecuteEvent;
+import org.eclipse.sapphire.ui.SapphireActionHandler.PreExecuteEvent;
+import org.eclipse.sapphire.ui.SapphireActionSystemPart.EnablementChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.renderers.swt.DefaultListPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireHotSpotsActionPresentation.ControlHotSpot;
@@ -187,10 +192,10 @@ public final class SapphireTextCellEditor
             }
         );
         
-        final SapphireActionHandler.Listener actionHandlerListener = new SapphireActionHandler.Listener()
+        final Listener actionHandlerListener = new Listener()
         {
             @Override
-            public void handleEvent( final SapphireActionHandler.Event event )
+            public void handle( final Event event )
             {
                 handleActionHandlerEvent( event );
             }
@@ -200,7 +205,7 @@ public final class SapphireTextCellEditor
         {
             for( SapphireActionHandler handler : action.getActiveHandlers() )
             {
-                handler.addListener( actionHandlerListener );
+                handler.attach( actionHandlerListener );
             }
         }
         
@@ -218,15 +223,13 @@ public final class SapphireTextCellEditor
         return this.topComposite;
     }
 
-    private void handleActionHandlerEvent( final SapphireActionHandler.Event event )
+    private void handleActionHandlerEvent( final Event event )
     {
-        final String type = event.getType();
-        
-        if( type.equals( SapphireActionHandler.EVENT_PRE_EXECUTE ) )
+        if( event instanceof PreExecuteEvent )
         {
             this.disableFocusLostHandler = true;
         }
-        else if( type.equals( SapphireActionHandler.EVENT_POST_EXECUTE ) )
+        else if( event instanceof PostExecuteEvent )
         {
             if( ! this.text.isDisposed() )
             {
@@ -378,14 +381,14 @@ public final class SapphireTextCellEditor
                     }
                 };
                 
-                action.addListener
+                action.attach
                 (
-                    new SapphireAction.Listener()
+                    new Listener()
                     {
                         @Override
-                        public void handleEvent( final SapphireAction.Event event )
+                        public void handle( final Event event )
                         {
-                            if( event.getType().equals( SapphireAction.EVENT_ENABLEMENT_STATE_CHANGED ) )
+                            if( event instanceof EnablementChangedEvent )
                             {
                                 updateActionEnablementStateOp.run();
                             }

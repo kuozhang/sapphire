@@ -42,6 +42,7 @@ public final class SapphireActionGroup
     {
         this.part = part;
         this.context = context;
+        
         this.actions = new CopyOnWriteArrayList<SapphireAction>();
         
         final ISapphirePartDef partDef = this.part.getDefinition();
@@ -236,12 +237,7 @@ public final class SapphireActionGroup
                         {
                             final SapphireActionHandlerFactory factory = (SapphireActionHandlerFactory) implClass.newInstance();
                             factory.init( action, def );
-                            
-                            for( SapphireActionHandler handler : factory.create() )
-                            {
-                                handler.init( action, null );
-                                action.addHandler( handler );
-                            }
+                            action.addHandlerFactory( factory );
                         }
                     }
                 }

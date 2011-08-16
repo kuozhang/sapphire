@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -40,6 +42,7 @@ import org.eclipse.sapphire.modeling.annotations.SensitiveData;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphireActionHandler.PostExecuteEvent;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFilter;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -214,12 +217,12 @@ public class DefaultValuePropertyEditorRenderer
         final List<Control> relatedControls = new ArrayList<Control>();
         this.textField.setData( RELATED_CONTROLS, relatedControls );
         
-        final SapphireActionHandler.Listener actionHandlerListener = new SapphireActionHandler.Listener()
+        final Listener actionHandlerListener = new Listener()
         {
             @Override
-            public void handleEvent( final SapphireActionHandler.Event event )
+            public void handle( final Event event )
             {
-                if( event.getType().equals( SapphireActionHandler.EVENT_POST_EXECUTE ) )
+                if( event instanceof PostExecuteEvent )
                 {
                     if( ! DefaultValuePropertyEditorRenderer.this.textField.isDisposed() )
                     {
@@ -236,7 +239,7 @@ public class DefaultValuePropertyEditorRenderer
             {
                 for( SapphireActionHandler handler : action.getActiveHandlers() )
                 {
-                    handler.addListener( actionHandlerListener );
+                    handler.attach( actionHandlerListener );
                 }
             }
         }

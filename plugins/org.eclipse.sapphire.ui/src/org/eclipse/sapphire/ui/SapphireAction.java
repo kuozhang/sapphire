@@ -13,12 +13,18 @@
 package org.eclipse.sapphire.ui;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
@@ -35,22 +41,14 @@ import org.eclipse.sapphire.ui.util.TopologicalSorter;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireAction
-
-    extends SapphireActionSystemPart
-    
+public final class SapphireAction extends SapphireActionSystemPart
 {
-    public static final String EVENT_TYPE_CHANGED = "type";
-    public static final String EVENT_GROUP_CHANGED = "group";
-    public static final String EVENT_KEY_BINDING_CHANGED = "key-binding";
-    public static final String EVENT_HANDLERS_CHANGED = "handlers";
-    public static final String EVENT_FILTERS_CHANGED = "filters";
-    
     private SapphireActionGroup parent;
     private SapphireActionType type;
     private String group;
     private SapphireKeySequence keyBinding;
     private final List<SapphireActionHandler> handlers = new CopyOnWriteArrayList<SapphireActionHandler>();
+    private final Map<SapphireActionHandlerFactory,List<SapphireActionHandler>> handlerFactories = new LinkedHashMap<SapphireActionHandlerFactory,List<SapphireActionHandler>>();
     private final List<SapphireActionHandlerFilter> filters = new CopyOnWriteArrayList<SapphireActionHandlerFilter>();
     private final Listener handlerListener;
     private Map<String,Object> hints;
@@ -60,34 +58,56 @@ public final class SapphireAction
         this.handlerListener = new Listener()
         {
             @Override
-            public void handleEvent( final Event event )
+            public void handle( final Event event )
             {
-                final String type = event.getType();
-                
-                if( type.equals( EVENT_ENABLEMENT_STATE_CHANGED ) )
+                if( event instanceof EnablementChangedEvent )
                 {
                     refreshEnablementState();
                 }
-                else if( type.equals( EVENT_CHECKED_STATE_CHANGED ) )
+                else if( event instanceof CheckedStateChangedEvent )
                 {
                     refreshCheckedState();
                 }
             }
         };
         
-        addListener
+        attach
         (
             new Listener()
             {
                 @Override
-                public void handleEvent( final Event event )
+                public void handle( final Event event )
                 {
-                    final String type = event.getType();
-                    
-                    if( type.equals( EVENT_HANDLERS_CHANGED ) || type.equals( EVENT_FILTERS_CHANGED ) )
+                    if( event instanceof HandlersChangedEvent || event instanceof FiltersChangedEvent )
                     {
                         refreshEnablementState();
                         refreshCheckedState();
+                    }
+                    else if( event instanceof DisposeEvent )
+                    {
+                        for( SapphireActionHandler handler : SapphireAction.this.handlers )
+                        {
+                            try
+                            {
+                                handler.dispose();
+                            }
+                            catch( Exception e )
+                            {
+                                SapphireUiFrameworkPlugin.log( e );
+                            }
+                        }
+                        
+                        for( SapphireActionHandlerFactory factory : SapphireAction.this.handlerFactories.keySet() )
+                        {
+                            try
+                            {
+                                factory.dispose();
+                            }
+                            catch( Exception e )
+                            {
+                                SapphireUiFrameworkPlugin.log( e );
+                            }
+                        }
                     }
                 }
             }
@@ -150,26 +170,26 @@ public final class SapphireAction
                         {
                             return new FunctionResult( this, context )
                             {
-                                private SapphireAction.Listener listener;
+                                private Listener listener;
                                 
                                 @Override
                                 protected void init()
                                 {
                                     super.init();
                                     
-                                    this.listener = new SapphireAction.Listener()
+                                    this.listener = new Listener()
                                     {
                                         @Override
-                                        public void handleEvent( final Event event )
+                                        public void handle( final Event event )
                                         {
-                                            if( event.getType().equals( EVENT_HANDLERS_CHANGED ) )
+                                            if( event instanceof HandlersChangedEvent )
                                             {
                                                 refresh();
                                             }
                                         }
                                     };
                                     
-                                    SapphireAction.this.addListener( this.listener );
+                                    SapphireAction.this.attach( this.listener );
                                 }
 
                                 @Override
@@ -182,7 +202,7 @@ public final class SapphireAction
                                 public void dispose()
                                 {
                                     super.dispose();
-                                    SapphireAction.this.removeListener( this.listener );
+                                    SapphireAction.this.detach( this.listener );
                                 }
                             };
                         }
@@ -241,7 +261,7 @@ public final class SapphireAction
             this.type = type;
         }
         
-        notifyListeners( new Event( EVENT_TYPE_CHANGED ) );
+        broadcast( new TypeChangedEvent() );
     }
     
     public String getGroup()
@@ -259,7 +279,7 @@ public final class SapphireAction
             this.group = group;
         }
         
-        notifyListeners( new Event( EVENT_GROUP_CHANGED ) );
+        broadcast( new GroupChangedEvent() );
     }
 
     public SapphireKeySequence getKeyBinding()
@@ -277,77 +297,203 @@ public final class SapphireAction
             this.keyBinding = keyBinding;
         }
         
-        notifyListeners( new Event( EVENT_KEY_BINDING_CHANGED ) );
+        broadcast( new KeyBindingChangedEvent() );
     }
     
     public void addHandler( final SapphireActionHandler handler )
     {
-        handler.addListener( this.handlerListener );
+        handler.attach( this.handlerListener );
         this.handlers.add( handler );
-        notifyListeners( new Event( EVENT_HANDLERS_CHANGED ) );
+        broadcast( new HandlersChangedEvent() );
     }
     
     public void removeHandler( final SapphireActionHandler handler )
     {
-        handler.removeListener( this.handlerListener );
+        handler.detach( this.handlerListener );
         this.handlers.remove( handler );
-        notifyListeners( new Event( EVENT_HANDLERS_CHANGED ) );
+        broadcast( new HandlersChangedEvent() );
+    }
+    
+    public void removeHandlers( final Collection<SapphireActionHandler> handlers )
+    {
+        for( SapphireActionHandler handler : handlers )
+        {
+            handler.detach( this.handlerListener );
+            this.handlers.remove( handler );
+        }
+        
+        broadcast( new HandlersChangedEvent() );
+    }
+    
+    public void addHandlerFactory( final SapphireActionHandlerFactory factory )
+    {
+        synchronized( this )
+        {
+            if( this.handlerFactories.containsKey( factory ) )
+            {
+                throw new IllegalArgumentException();
+            }
+            
+            final List<SapphireActionHandler> handlers = new ArrayList<SapphireActionHandler>();
+            
+            for( SapphireActionHandler handler : factory.create() )
+            {
+                handler.init( this, null );
+                handler.attach( this.handlerListener );
+                handlers.add( handler );
+            }
+            
+            factory.attach
+            (
+                new Listener()
+                {
+                    @Override
+                    public void handle( final Event event )
+                    {
+                        refreshHandlerFactory( factory );
+                    }
+                }
+            );
+            
+            this.handlerFactories.put( factory, handlers );
+        }
+        
+        broadcast( new HandlersChangedEvent() );
+    }
+    
+    public void removeHandlerFactory( final SapphireActionHandlerFactory factory )
+    {
+        boolean changed = false;
+        
+        synchronized( this )
+        {
+            final List<SapphireActionHandler> handlers = this.handlerFactories.remove( factory );
+            
+            if( handlers != null )
+            {
+                for( SapphireActionHandler handler : handlers )
+                {
+                    try
+                    {
+                        handler.dispose();
+                    }
+                    catch( Exception e )
+                    {
+                        LoggingService.log( e );
+                    }
+                }
+                
+                changed = true;
+            }
+        }
+        
+        if( changed )
+        {
+            broadcast( new HandlersChangedEvent() );
+        }
+    }
+    
+    private void refreshHandlerFactory( final SapphireActionHandlerFactory factory )
+    {
+        synchronized( this )
+        {
+            final List<SapphireActionHandler> handlers = this.handlerFactories.get( factory );
+            
+            if( handlers == null )
+            {
+                throw new IllegalStateException();
+            }
+            
+            for( SapphireActionHandler handler : handlers )
+            {
+                try
+                {
+                    handler.dispose();
+                }
+                catch( Exception e )
+                {
+                    LoggingService.log( e );
+                }
+            }
+            
+            handlers.clear();
+            
+            for( SapphireActionHandler handler : factory.create() )
+            {
+                handler.init( this, null );
+                handlers.add( handler );
+            }
+        }
+        
+        broadcast( new HandlersChangedEvent() );
     }
     
     public List<SapphireActionHandler> getActiveHandlers()
     {
-        final TopologicalSorter<SapphireActionHandler> sorter = new TopologicalSorter<SapphireActionHandler>();
-        
-        for( SapphireActionHandler handler : this.handlers )
+        synchronized( this )
         {
-            boolean ok = true;
+            final List<SapphireActionHandler> handlers = new ArrayList<SapphireActionHandler>();
             
-            List<SapphireActionHandlerFilter> failedFilters = null;
+            handlers.addAll( this.handlers );
             
-            for( SapphireActionHandlerFilter filter : this.filters )
+            for( List<SapphireActionHandler> factoryHandlers : this.handlerFactories.values() )
             {
-                try
+                handlers.addAll( factoryHandlers );
+            }
+            
+            final TopologicalSorter<SapphireActionHandler> sorter = new TopologicalSorter<SapphireActionHandler>();
+            
+            for( SapphireActionHandler handler : handlers )
+            {
+                boolean ok = true;
+                
+                List<SapphireActionHandlerFilter> failedFilters = null;
+                
+                for( SapphireActionHandlerFilter filter : this.filters )
                 {
-                    ok = filter.check( handler );
-                }
-                catch( Exception e )
-                {
-                    SapphireUiFrameworkPlugin.log( e );
-                    
-                    // Filters are booted on first failure to keep malfunctioning filters from
-                    // flooding the log, etc.
-                    
-                    if( failedFilters == null )
+                    try
                     {
-                        failedFilters = new ArrayList<SapphireActionHandlerFilter>();
+                        ok = filter.check( handler );
+                    }
+                    catch( Exception e )
+                    {
+                        SapphireUiFrameworkPlugin.log( e );
+                        
+                        // Filters are booted on first failure to keep malfunctioning filters from
+                        // flooding the log, etc.
+                        
+                        if( failedFilters == null )
+                        {
+                            failedFilters = new ArrayList<SapphireActionHandlerFilter>();
+                        }
+                        
+                        failedFilters.add( filter );
                     }
                     
-                    failedFilters.add( filter );
+                    if( ! ok )
+                    {
+                        break;
+                    }
                 }
                 
-                if( ! ok )
+                if( failedFilters != null )
                 {
-                    break;
+                    this.filters.removeAll( failedFilters );
+                }
+                
+                if( ok )
+                {
+                    final TopologicalSorter.Entity handlerEntity = sorter.entity( handler.getId(), handler );
+                    
+                    for( SapphireActionLocationHint locationHint : handler.getLocationHints() )
+                    {
+                        handlerEntity.constraint( locationHint.toString() );
+                    }
                 }
             }
             
-            if( failedFilters != null )
-            {
-                this.filters.removeAll( failedFilters );
-            }
-            
-            if( ok )
-            {
-                final TopologicalSorter.Entity handlerEntity = sorter.entity( handler.getId(), handler );
-                
-                for( SapphireActionLocationHint locationHint : handler.getLocationHints() )
-                {
-                    handlerEntity.constraint( locationHint.toString() );
-                }
-            }
+            return Collections.unmodifiableList( sorter.sort() );
         }
-        
-        return Collections.unmodifiableList( sorter.sort() );
     }
     
     public SapphireActionHandler getFirstActiveHandler()
@@ -364,13 +510,13 @@ public final class SapphireAction
     public void addFilter( final SapphireActionHandlerFilter filter )
     {
         this.filters.add( filter );
-        notifyListeners( new Event( EVENT_FILTERS_CHANGED ) );
+        broadcast( new FiltersChangedEvent() );
     }
     
     public void removeFilter( final SapphireActionHandlerFilter filter )
     {
         this.filters.remove( filter );
-        notifyListeners( new Event( EVENT_FILTERS_CHANGED ) );
+        broadcast( new FiltersChangedEvent() );
     }
     
     private void refreshEnablementState()
@@ -402,19 +548,10 @@ public final class SapphireAction
         setChecked( checked );
     }
     
-    public void dispose()
-    {
-        for( SapphireActionHandler handler : this.handlers )
-        {
-            try
-            {
-                handler.dispose();
-            }
-            catch( Exception e )
-            {
-                SapphireUiFrameworkPlugin.log( e );
-            }
-        }
-    }
+    public static final class TypeChangedEvent extends Event {}
+    public static final class GroupChangedEvent extends Event {}
+    public static final class KeyBindingChangedEvent extends Event {}
+    public static final class HandlersChangedEvent extends Event {}
+    public static final class FiltersChangedEvent extends Event {}
     
 }

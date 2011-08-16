@@ -40,8 +40,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 import org.eclipse.sapphire.samples.jee.DescribableExt;
-import org.eclipse.sapphire.samples.jee.RunAsSecurityRole;
 import org.eclipse.sapphire.samples.jee.Param;
+import org.eclipse.sapphire.samples.jee.RunAsSecurityRole;
 import org.eclipse.sapphire.samples.jee.web.internal.ServletTypeBinding;
 
 /**

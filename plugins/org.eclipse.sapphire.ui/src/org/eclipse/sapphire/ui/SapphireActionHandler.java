@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui;
 
+import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
@@ -20,14 +21,8 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphireActionHandler
-
-    extends SapphireActionSystemPart
-    
+public abstract class SapphireActionHandler extends SapphireActionSystemPart
 {
-    public static final String EVENT_PRE_EXECUTE = "pre-execute";
-    public static final String EVENT_POST_EXECUTE = "post-execute";
-    
     private SapphireAction action;
 
     public void init( final SapphireAction action,
@@ -80,7 +75,7 @@ public abstract class SapphireActionHandler
             setChecked( ! isChecked() );
         }
         
-        notifyListeners( new Event( EVENT_PRE_EXECUTE ) );
+        broadcast( new PreExecuteEvent() );
         
         Object result = null;
         
@@ -93,22 +88,21 @@ public abstract class SapphireActionHandler
             SapphireUiFrameworkPlugin.log( e );
         }
         
-        notifyListeners( new PostExecuteEvent( result ) );
+        broadcast( new PostExecuteEvent( result ) );
     }
     
     protected abstract Object run( SapphireRenderingContext context );
     
-    public void dispose()
+    public static class PreExecuteEvent extends Event
     {
     }
-    
+
     public static class PostExecuteEvent extends Event
     {
         private final Object result;
         
         public PostExecuteEvent( final Object result )
         {
-            super( EVENT_POST_EXECUTE );
             this.result = result;
         }
         

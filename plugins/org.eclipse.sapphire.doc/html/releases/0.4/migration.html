@@ -46,6 +46,8 @@ to 0.4 release. Only changes from the previous release are covered.</p>
   <li><a href="#Hints">Hints</a></li>
   <li><a href="#ValidFileExtensions">ValidFileExtensions</a></li>
   <li><a href="#Services">Services</a></li>
+  <li><a href="#PossibleTypes">Possible Types</a></li>
+  <li><a href="#ActionHandlerDispose">Action Handler Dispose</a></li>
 </ol>
 
 <h2><a name="Documentation">Documentation</a></h2>
@@ -767,9 +769,9 @@ void setSample( Circle value );</font></code></pre>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code>ModelService<font color="#888888">.Listener listener = new </font>ModelService<font color="#888888">.Listener()
+<pre class="source-code"><code>ModelService.Listener <font color="#888888">listener = new </font>ModelService.Listener<font color="#888888">()
 {
-    public void</font> handleEvent<font color="#888888">(</font> ModelService<font color="#888888">.Event event )
+    public void</font> handleEvent<font color="#888888">(</font> ModelService.Event <font color="#888888">event )
     {
         ...
     }
@@ -785,13 +787,13 @@ service.</font>removeListener<font color="#888888">( listener );
 
 while inside service
 {</font>
-    notifyListeners<font color="#888888">( new</font> ModelService<font color="#888888">.Event( this ) );
+    notifyListeners<font color="#888888">( new</font> ModelService.Event<font color="#888888">( this ) );
 }</font></code></pre>
     </td>
     <td>
-<pre class="source-code"><code>Service<font color="#888888">.Listener listener = new </font>Service<font color="#888888">.Listener()
+<pre class="source-code"><code>Listener <font color="#888888">listener = new </font>Listener<font color="#888888">()
 {
-    public void</font> handle<font color="#888888">(</font> Service<font color="#888888">.Event event )
+    public void</font> handle<font color="#888888">(</font> Event <font color="#888888">event )
     {
         ...
     }
@@ -807,7 +809,7 @@ service.</font>detach<font color="#888888">( listener );
 
 while inside service
 {</font>
-    notify<font color="#888888">( new</font> Service<font color="#888888">.Event( this ) );
+    notify<font color="#888888">( new</font> Event<font color="#888888">( this ) );
 }</font></code></pre>
     </td>
   </tr>
@@ -881,6 +883,97 @@ while inside service
     <td><code><font color="#888888">org.eclipse.sapphire.</font>services<font color="#888888">.UniqueValueValidationService</font></code></td>
   </tr>
 </table>
+
+
+<h2><a name="PossibleTypes">Possible Types</a></h2>
+
+<p>The set of possible types for a list or an element property is no longer restricted to be static. As such, previous API for
+retrieving possible types for a property has been replaced with a more flexible service API.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>List&lt;ModelElementType> types = property.getAllPossibleTypes();</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>SortedSet&lt;ModelElementType> types = element.service( property, PossibleTypesService.class ).types();</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>List&lt;Class&lt;?>> types = property.getAllPossibleTypeClasses();</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>List&lt;Class&lt;?>> types = new ArrayList&lt;Class&lt;?>>();
+
+for( ModelElementType type : element.service( property, PossibleTypesService.class ).types() )
+{
+    types.add( type.getModelElementClass() );
+}</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ActionHandlerDispose">Action Handler Dispose</a></h2>
+
+<p>The pattern of overriding the dispose method on SapphireActionHandler has been replaced with a dispose event. This
+architecture eliminates resource leaks caused by failing to call super.dispose() when overriding the dispose method.</p>  
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleActionHandler extends SapphireActionHandler
+{
+    ...</font>
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        // Dispose logic goes here.
+    }
+<font color="#888888">}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleActionHandler extends SapphireActionHandler
+{
+    ...</font>
+
+    @Override
+    public void init( SapphireAction action, ISapphireActionHandlerDef def )
+    {
+        super.init( action, def );
+
+        attach
+        (
+            new Listener()
+            {
+                @Override
+                public void handle( Event event )
+                {
+                    if( event instanceof DisposeEvent )
+                    {
+                        // Dispose logic goes here.
+                    }
+                }
+            }
+        );
+    }
+<font color="#888888">}</font></code></pre>
+    </td>
+  </tr>
+</table>
+
 
 <div class="copyright">Copyright (c) 2011 Oracle<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>

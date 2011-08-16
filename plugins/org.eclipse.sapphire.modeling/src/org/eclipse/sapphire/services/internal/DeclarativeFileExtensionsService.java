@@ -14,6 +14,8 @@ package org.eclipse.sapphire.services.internal;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -63,12 +65,12 @@ public final class DeclarativeFileExtensionsService extends FileExtensionsServic
             
             this.functionResult = function.evaluate( new ModelElementFunctionContext( context( IModelElement.class ) ) );
             
-            this.functionResult.addListener
+            this.functionResult.attach
             (
-                new FunctionResult.Listener()
+                new Listener()
                 {
                     @Override
-                    public void handleValueChanged()
+                    public void handle( final Event event )
                     {
                         refresh();
                     }

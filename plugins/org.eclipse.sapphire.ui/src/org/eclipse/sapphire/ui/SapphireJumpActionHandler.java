@@ -14,6 +14,9 @@ package org.eclipse.sapphire.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
@@ -24,12 +27,8 @@ import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphireJumpActionHandler
-
-    extends SapphirePropertyEditorActionHandler
-    
+public abstract class SapphireJumpActionHandler extends SapphirePropertyEditorActionHandler
 {
-    private ModelPropertyListener listener;
     private List<String> dependencies;
     
     @Override
@@ -41,7 +40,7 @@ public abstract class SapphireJumpActionHandler
         this.dependencies = new ArrayList<String>();
         initDependencies( this.dependencies );
         
-        this.listener = new ModelPropertyListener()
+        final ModelPropertyListener listener = new ModelPropertyListener()
         {
             @Override
             public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
@@ -54,10 +53,30 @@ public abstract class SapphireJumpActionHandler
         
         for( String dependency : this.dependencies )
         {
-            element.addListener( this.listener, dependency );
+            element.addListener( listener, dependency );
         }
         
         refreshEnablementState();
+        
+        attach
+        (
+            new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    if( event instanceof DisposeEvent )
+                    {
+                        final IModelElement element = getModelElement();
+                        
+                        for( String dependency : SapphireJumpActionHandler.this.dependencies )
+                        {
+                            element.removeListener( listener, dependency );
+                        }
+                    }
+                }
+            }
+        );
     }
 
     protected void initDependencies( final List<String> dependencies )
@@ -70,18 +89,5 @@ public abstract class SapphireJumpActionHandler
     {
         return (ValueProperty) super.getProperty();
     }
-    
-    @Override
-    public void dispose()
-    {
-        super.dispose();
-        
-        final IModelElement element = getModelElement();
-        
-        for( String dependency : this.dependencies )
-        {
-            element.removeListener( this.listener, dependency );
-        }
-    }
-    
+   
 }

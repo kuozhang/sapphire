@@ -51,7 +51,7 @@ public abstract class FileExtensionsService extends Service
         refresh( true );
     }
     
-    protected final void refresh( final boolean notifyListeners )
+    private final void refresh( final boolean notifyListeners )
     {
         List<String> extensions = new ArrayList<String>();
         
@@ -72,7 +72,7 @@ public abstract class FileExtensionsService extends Service
             
             if( notifyListeners )
             {
-                notify( new Event( this ) );
+                broadcast();
             }
         }
     }

@@ -19,6 +19,7 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.TransientProperty;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.services.ServiceContext;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -28,10 +29,11 @@ public abstract class PropertyServiceContext extends AnnotationsAwareServiceCont
 {
     private final ModelProperty property;
     
-    public PropertyServiceContext( final String contextType,
+    public PropertyServiceContext( final String type,
+                                   final ServiceContext parent,
                                    final ModelProperty property )
     {
-        super( contextType );
+        super( type, parent );
         
         this.property = property;
     }

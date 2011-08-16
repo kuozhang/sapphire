@@ -12,11 +12,11 @@ package org.eclipse.sapphire.ui.swt.graphiti.actions;
 import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireActionSystemPart;
-import org.eclipse.sapphire.ui.SapphireActionSystemPart.Event;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
@@ -71,10 +71,10 @@ public class SapphireActionHandlerDelegate extends Action
 	@Override
 	public void run() 
 	{
-		this.sapphireActionHandler.addListener(new SapphireActionSystemPart.Listener() 
+		this.sapphireActionHandler.attach(new Listener() 
 		{			
 			@Override
-			public void handleEvent(Event event) 
+			public void handle(Event event) 
 			{
 				if (event instanceof SapphireActionHandler.PostExecuteEvent)
 				{

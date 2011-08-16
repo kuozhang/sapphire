@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.ValidationService;
 
 
@@ -34,6 +35,7 @@ public final class ModelElementList<T extends IModelElement>
 
 {
     private final ListProperty property;
+    private final PossibleTypesService possibleTypesService;
     private ListBindingImpl binding;
     private List<IModelElement> data;
     private Status valres;
@@ -45,6 +47,7 @@ public final class ModelElementList<T extends IModelElement>
         super( parent, parent.resource() );
         
         this.property = property;
+        this.possibleTypesService = parent.service( property, PossibleTypesService.class );
         this.data = Collections.emptyList();
         this.valres = null;
         
@@ -237,7 +240,7 @@ public final class ModelElementList<T extends IModelElement>
     
     public T addNewElement()
     {
-        return addNewElement( this.property.getAllPossibleTypes().get( 0 ) );
+        return addNewElement( this.possibleTypesService.types().first() );
     }
     
     public T addNewElement( final ModelElementType type )

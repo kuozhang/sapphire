@@ -17,11 +17,16 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFilter;
+import org.eclipse.sapphire.ui.SapphireActionSystemPart.EnablementChangedEvent;
+import org.eclipse.sapphire.ui.SapphireActionSystemPart.ImagesChangedEvent;
+import org.eclipse.sapphire.ui.SapphireActionSystemPart.LabelChangedEvent;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -219,29 +224,27 @@ public abstract class SapphireActionPresentation
             }
         );
             
-        final SapphireActionHandler.Listener handlerListener = new SapphireActionHandler.Listener()
+        final Listener handlerListener = new Listener()
         {
             @Override
-            public void handleEvent( final SapphireActionHandler.Event event )
+            public void handle( final Event event )
             {
-                final String type = event.getType();
-                
-                if( type.equals( SapphireActionHandler.EVENT_LABEL_CHANGED ) )
+                if( event instanceof LabelChangedEvent )
                 {
                     menuItem.setText( LabelTransformer.transform( handler.getLabel(), CapitalizationType.TITLE_STYLE, false ) );
                 }
-                else if( type.equals( SapphireActionHandler.EVENT_IMAGES_CHANGED ) )
+                else if( event instanceof ImagesChangedEvent )
                 {
                     setMenuItemImage( menuItem, handler );
                 }
-                else if( type.equals( SapphireActionHandler.EVENT_ENABLEMENT_STATE_CHANGED ) )
+                else if( event instanceof EnablementChangedEvent )
                 {
                     menuItem.setEnabled( handler.isEnabled() );
                 }
             }
         };
         
-        handler.addListener( handlerListener );
+        handler.attach( handlerListener );
         
         menuItem.addDisposeListener
         (
@@ -249,7 +252,7 @@ public abstract class SapphireActionPresentation
             {
                 public void widgetDisposed( final DisposeEvent event ) 
                 {
-                    handler.removeListener( handlerListener );
+                    handler.detach( handlerListener );
                 }
             }
         );

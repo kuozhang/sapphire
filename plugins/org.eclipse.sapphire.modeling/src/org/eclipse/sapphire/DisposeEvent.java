@@ -9,19 +9,13 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
-
-import org.eclipse.sapphire.modeling.ModelProperty;
+package org.eclipse.sapphire;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PropertyMetaModelServiceContext extends PropertyServiceContext
+public class DisposeEvent extends Event
 {
-    public PropertyMetaModelServiceContext( final ModelProperty property )
-    {
-        super( ID_PROPERTY_METAMODEL, null, property );
-    }
     
 }

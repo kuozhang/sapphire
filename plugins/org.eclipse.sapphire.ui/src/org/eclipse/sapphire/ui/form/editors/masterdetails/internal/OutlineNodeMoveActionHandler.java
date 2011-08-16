@@ -11,6 +11,10 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
+import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementListener;
@@ -26,14 +30,9 @@ import org.eclipse.swt.widgets.Display;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class OutlineNodeMoveActionHandler
-
-    extends SapphireActionHandler
-    
+public abstract class OutlineNodeMoveActionHandler extends SapphireActionHandler
 {
-    private ModelElementListener listPropertyListener = null;
     private MasterDetailsContentOutline contentTree = null;
-    private MasterDetailsContentOutline.Listener contentTreeListener = null;
     
     @Override
     public void init( final SapphireAction action,
@@ -43,7 +42,7 @@ public abstract class OutlineNodeMoveActionHandler
 
         this.contentTree = ( (MasterDetailsContentNode) getPart() ).getContentTree();
         
-        this.contentTreeListener = new MasterDetailsContentOutline.Listener()
+        final MasterDetailsContentOutline.Listener contentTreeListener = new MasterDetailsContentOutline.Listener()
         {
             @Override
             public void handleFilterChange( String newFilterText )
@@ -52,7 +51,7 @@ public abstract class OutlineNodeMoveActionHandler
             }
         };
         
-        this.contentTree.addListener( this.contentTreeListener );
+        this.contentTree.addListener( contentTreeListener );
         
         final Runnable op = new Runnable()
         {
@@ -62,9 +61,10 @@ public abstract class OutlineNodeMoveActionHandler
             }
         };
         
+        final IModelElement parent = getPart().getParentPart().getModelElement();
         final ListProperty property = getList().getParentProperty();
         
-        this.listPropertyListener = new ModelElementListener()
+        final ModelElementListener listPropertyListener = new ModelElementListener()
         {
             @Override
             public void propertyChanged( final ModelPropertyChangeEvent event )
@@ -76,9 +76,25 @@ public abstract class OutlineNodeMoveActionHandler
             }
         };
         
-        getPart().getParentPart().getModelElement().addListener( this.listPropertyListener );
+        parent.addListener( listPropertyListener );
         
         refreshEnabledState();
+        
+        attach
+        (
+            new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    if( event instanceof DisposeEvent )
+                    {
+                        parent.removeListener( listPropertyListener );
+                        OutlineNodeMoveActionHandler.this.contentTree.removeListener( contentTreeListener );
+                    }
+                }
+            }
+        );
     }
     
     protected final ModelElementList<?> getList()
@@ -94,19 +110,6 @@ public abstract class OutlineNodeMoveActionHandler
     protected boolean computeEnabledState()
     {
         return ( this.contentTree != null && this.contentTree.getFilterText().length() == 0 );
-    }
-
-    @Override
-    public void dispose()
-    {
-        super.dispose();
-        
-        getPart().getParentPart().getModelElement().removeListener( this.listPropertyListener );
-        
-        if( this.contentTree != null )
-        {
-            this.contentTree.removeListener( this.contentTreeListener );
-        }
     }
 
 }

@@ -15,10 +15,7 @@ package org.eclipse.sapphire.services;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class EnablementService
-
-    extends Service
-    
+public abstract class EnablementService extends Service
 {
     private boolean state = false;
     
@@ -55,7 +52,7 @@ public abstract class EnablementService
             
             if( notifyListeners )
             {
-                notify( new Event( this ) );
+                broadcast();
             }
         }
     }

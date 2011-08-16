@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.services;
 
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ListenerContext;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -25,7 +25,7 @@ public abstract class Service
 {
     private ServiceContext context;
     private Map<String,String> params;
-    private final List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
+    private final ListenerContext listeners = new ListenerContext();
     
     public final void init( final ServiceContext context,
                             final Map<String,String> params )
@@ -58,61 +58,26 @@ public abstract class Service
     
     public final void attach( final Listener listener )
     {
-        if( listener == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        this.listeners.add( listener );
+        this.listeners.attach( listener );
     }
     
     public final void detach( final Listener listener )
     {
-        if( listener == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        this.listeners.remove( listener );
+        this.listeners.detach( listener );
     }
     
-    protected final void notify( final Event event )
+    protected final void broadcast( final Event event )
     {
-        for( Listener listener : this.listeners )
-        {
-            try
-            {
-                listener.handle( event );
-            }
-            catch( Exception e )
-            {
-                LoggingService.log( e );
-            }
-        }
+        this.listeners.broadcast( event );
+    }
+    
+    protected final void broadcast()
+    {
+        this.listeners.broadcast();
     }
     
     public void dispose()
     {
-    }
-    
-    public static class Event
-    {
-        private final Service service;
-        
-        public Event( final Service service )
-        {
-            this.service = service;
-        }
-        
-        public Service service()
-        {
-            return this.service;
-        }
-    }
-    
-    public static abstract class Listener
-    {
-        public abstract void handle( Event event );
     }
     
 }

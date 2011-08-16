@@ -19,6 +19,10 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -30,7 +34,6 @@ import org.eclipse.sapphire.ui.def.ISapphireActionLocationHint;
 import org.eclipse.sapphire.ui.def.ISapphireActionLocationHintAfter;
 import org.eclipse.sapphire.ui.def.ISapphireActionLocationHintBefore;
 import org.eclipse.sapphire.ui.def.ISapphireActionSystemPartDef;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -38,13 +41,6 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 public abstract class SapphireActionSystemPart
 {
-    public static final String EVENT_ID_CHANGED = "id";
-    public static final String EVENT_LABEL_CHANGED = "label";
-    public static final String EVENT_IMAGES_CHANGED = "image";
-    public static final String EVENT_LOCATION_HINTS_CHANGED = "location-hints";
-    public static final String EVENT_ENABLEMENT_STATE_CHANGED = "enablement";
-    public static final String EVENT_CHECKED_STATE_CHANGED = "checked";
-    
     private final FunctionContext functionContext;
     private String id;
     private FunctionResult labelFunctionResult;
@@ -53,7 +49,7 @@ public abstract class SapphireActionSystemPart
     private final List<SapphireActionLocationHint> locationHintsReadOnly = Collections.unmodifiableList( this.locationHints );
     private boolean enabled;
     private boolean checked;
-    private final List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
+    private final ListenerContext listeners = new ListenerContext();
     
     public SapphireActionSystemPart()
     {
@@ -70,14 +66,14 @@ public abstract class SapphireActionSystemPart
             
             this.labelFunctionResult = labelFunction.evaluate( this.functionContext );
             
-            this.labelFunctionResult.addListener
+            this.labelFunctionResult.attach
             (
-                new FunctionResult.Listener()
+                new Listener()
                 {
                     @Override
-                    public void handleValueChanged()
+                    public void handle( final Event event )
                     {
-                        notifyListeners( new Event( EVENT_LABEL_CHANGED ) );
+                        broadcast( new LabelChangedEvent() );
                     }
                 }
             );
@@ -150,7 +146,7 @@ public abstract class SapphireActionSystemPart
             this.id = id;
         }
         
-        notifyListeners( new Event( EVENT_ID_CHANGED ) );
+        broadcast( new IdChangedEvent() );
     }
 
     public final String getLabel()
@@ -168,7 +164,7 @@ public abstract class SapphireActionSystemPart
             this.labelFunctionResult = Literal.create( label ).evaluate( this.functionContext );
         }
         
-        notifyListeners( new Event( EVENT_LABEL_CHANGED ) );
+        broadcast( new LabelChangedEvent() );
     }
     
     public final ImageDescriptor getImage( final int size )
@@ -192,7 +188,7 @@ public abstract class SapphireActionSystemPart
         }
         
         this.images.add( image );
-        notifyListeners( new Event( EVENT_IMAGES_CHANGED ) );
+        broadcast( new ImagesChangedEvent() );
     }
     
     public final void removeImage( final ImageDescriptor image )
@@ -203,7 +199,7 @@ public abstract class SapphireActionSystemPart
         }
         
         this.images.remove( image );
-        notifyListeners( new Event( EVENT_IMAGES_CHANGED ) );
+        broadcast( new ImagesChangedEvent() );
     }
     
     public final List<SapphireActionLocationHint> getLocationHints()
@@ -219,7 +215,7 @@ public abstract class SapphireActionSystemPart
         }
 
         this.locationHints.add( locationHint );
-        notifyListeners( new Event( EVENT_LOCATION_HINTS_CHANGED ) );
+        broadcast( new LocationHintsChangedEvent() );
     }
 
     public final void removeLocationHint( final String locationHint )
@@ -230,7 +226,7 @@ public abstract class SapphireActionSystemPart
         }
 
         this.locationHints.remove( locationHint );
-        notifyListeners( new Event( EVENT_LOCATION_HINTS_CHANGED ) );
+        broadcast( new LocationHintsChangedEvent() );
     }
     
     public final boolean isEnabled()
@@ -256,7 +252,7 @@ public abstract class SapphireActionSystemPart
         
         if( changed )
         {
-            notifyListeners( new Event( EVENT_ENABLEMENT_STATE_CHANGED ) );
+            broadcast( new EnablementChangedEvent() );
         }
     }
     
@@ -283,53 +279,40 @@ public abstract class SapphireActionSystemPart
         
         if( changed )
         {
-            notifyListeners( new Event( EVENT_CHECKED_STATE_CHANGED ) );
+            broadcast( new CheckedStateChangedEvent() );
         }
     }
     
-    public final void addListener( final Listener listener )
+    public final void attach( final Listener listener )
     {
-        this.listeners.add( listener );
+        this.listeners.attach( listener );
     }
     
-    public final void removeListener( final Listener listener )
+    public final void detach( final Listener listener )
     {
-        this.listeners.remove( listener );
+        this.listeners.detach( listener );
     }
     
-    protected final void notifyListeners( final Event event )
+    protected final void broadcast( final Event event )
     {
-        for( Listener listener : this.listeners )
+        this.listeners.broadcast( event );
+    }
+    
+    public final void dispose()
+    {
+        if( this.labelFunctionResult != null )
         {
-            try
-            {
-                listener.handleEvent( event );
-            }
-            catch( Exception e )
-            {
-                SapphireUiFrameworkPlugin.log( e );
-            }
-        }
-    }
-    
-    public static abstract class Listener
-    {
-        public abstract void handleEvent( final Event event );
-    }
-    
-    public static class Event
-    {
-        private final String type;
-        
-        public Event( final String type )
-        {
-            this.type = type;
+            this.labelFunctionResult.dispose();
         }
         
-        public String getType()
-        {
-            return this.type;
-        }
+        broadcast( new DisposeEvent() );
     }
+    
+    public static final class IdChangedEvent extends Event {}
+    public static final class LabelChangedEvent extends Event {}
+    public static final class ImagesChangedEvent extends Event {}
+    public static final class LocationHintsChangedEvent extends Event {}
+    public static final class EnablementChangedEvent extends Event {}
+    public static final class CheckedStateChangedEvent extends Event {}
     
 }

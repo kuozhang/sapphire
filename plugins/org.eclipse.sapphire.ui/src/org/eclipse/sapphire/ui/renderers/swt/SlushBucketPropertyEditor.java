@@ -36,6 +36,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -45,8 +47,8 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
+import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.PossibleValuesService;
-import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
@@ -79,7 +81,7 @@ public final class SlushBucketPropertyEditor
     private ModelElementType memberType;
     private ValueProperty memberProperty;
     private PossibleValuesService possibleValuesService;
-    private PossibleValuesService.Listener possibleValuesServiceListener;
+    private Listener possibleValuesServiceListener;
     private TableViewer sourceTableViewer;
     private Table sourceTable;
     private MoveRightActionHandler moveRightActionHandler;
@@ -249,10 +251,10 @@ public final class SlushBucketPropertyEditor
             }
         );
         
-        this.possibleValuesServiceListener = new Service.Listener()
+        this.possibleValuesServiceListener = new Listener()
         {
             @Override
-            public void handle( final Service.Event event )
+            public void handle( final Event event )
             {
                 SlushBucketPropertyEditor.this.sourceTableViewer.refresh();
             }
@@ -376,9 +378,10 @@ public final class SlushBucketPropertyEditor
             
             if( property instanceof ListProperty )
             {
+                final IModelElement element = propertyEditorPart.getLocalModelElement();
                 final ListProperty listProperty = (ListProperty) property;
                 
-                if( listProperty.getAllPossibleTypes().size() == 1 )
+                if( element.service( listProperty, PossibleTypesService.class ).types().size() == 1 )
                 {
                     final ModelElementType memberType = listProperty.getType();
                     final List<ModelProperty> properties = memberType.getProperties();

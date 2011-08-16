@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 
 /**
@@ -76,17 +78,17 @@ public final class PropertyAccessFunction
             private Object lastElement;
             private String lastPropertyName;
             private FunctionResult lastPropertyValueResult;
-            private FunctionResult.Listener lastPropertyValueListener;
+            private Listener lastPropertyValueListener;
             
             @Override
             protected void init()
             {
                 super.init();
                 
-                this.lastPropertyValueListener = new FunctionResult.Listener()
+                this.lastPropertyValueListener = new Listener()
                 {
                     @Override
-                    public void handleValueChanged()
+                    public void handle( final Event event )
                     {
                         refresh();
                     }
@@ -126,10 +128,10 @@ public final class PropertyAccessFunction
                     this.lastElement = element;
                     this.lastPropertyName = property;
                     this.lastPropertyValueResult = context().property( element, property );
-                    this.lastPropertyValueResult.addListener( this.lastPropertyValueListener );
+                    this.lastPropertyValueResult.attach( this.lastPropertyValueListener );
                 }
                 
-                return ( this.lastPropertyValueResult == null ? null : this.lastPropertyValueResult.evaluate() );
+                return ( this.lastPropertyValueResult == null ? null : this.lastPropertyValueResult.value() );
             }
             
             @Override

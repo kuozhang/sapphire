@@ -23,6 +23,8 @@ import java.util.Set;
 import org.eclipse.help.IContext;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
@@ -183,12 +185,12 @@ public abstract class SapphirePart
         
         final FunctionResult fr = f.evaluate( context );
         
-        fr.addListener
+        fr.attach
         (
-            new FunctionResult.Listener()
+            new Listener()
             {
                 @Override
-                public void handleValueChanged()
+                public void handle( final Event event )
                 {
                     final Runnable notifyOfUpdateOperation = new Runnable()
                     {

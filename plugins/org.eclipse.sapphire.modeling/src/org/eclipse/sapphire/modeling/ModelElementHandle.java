@@ -11,8 +11,9 @@
 
 package org.eclipse.sapphire.modeling;
 
-import java.util.List;
+import java.util.SortedSet;
 
+import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.ValidationService;
 
 
@@ -24,6 +25,7 @@ public final class ModelElementHandle<T extends IModelElement>
 {
     private final IModelElement parent;
     private final ElementProperty property;
+    private final PossibleTypesService possibleTypesService;
     private final ElementBindingImpl binding;
     private final ModelPropertyListener listener;
     private T element;
@@ -35,6 +37,7 @@ public final class ModelElementHandle<T extends IModelElement>
     {
         this.parent = parent;
         this.property = property;
+        this.possibleTypesService = parent.service( property, PossibleTypesService.class );
         this.binding = parent.resource().binding( property );
         
         this.listener = new ModelPropertyListener()
@@ -71,14 +74,14 @@ public final class ModelElementHandle<T extends IModelElement>
     {
         if( createIfNecessary )
         {
-            final List<ModelElementType> types = this.property.getAllPossibleTypes();
+            final SortedSet<ModelElementType> possible = this.possibleTypesService.types();
             
-            if( types.size() > 1 )
+            if( possible.size() > 1 )
             {
                 throw new IllegalArgumentException();
             }
             
-            return element( true, types.get( 0 ) );
+            return element( true, possible.first() );
         }
         
         return element( false, null );
@@ -87,7 +90,9 @@ public final class ModelElementHandle<T extends IModelElement>
     public T element( final boolean createIfNecessary,
                       final ModelElementType type )
     {
-        if( type != null && ! this.property.getAllPossibleTypes().contains( type ) )
+        final SortedSet<ModelElementType> possible = this.possibleTypesService.types();
+        
+        if( type != null && ! possible.contains( type ) )
         {
             throw new IllegalArgumentException();
         }
@@ -100,14 +105,12 @@ public final class ModelElementHandle<T extends IModelElement>
             
             if( t == null )
             {
-                final List<ModelElementType> types = this.property.getAllPossibleTypes();
-                
-                if( types.size() > 1 )
+                if( possible.size() > 1 )
                 {
                     throw new IllegalArgumentException();
                 }
                 
-                t = types.get( 0 );
+                t = possible.first();
             }
             
             synchronized( this )

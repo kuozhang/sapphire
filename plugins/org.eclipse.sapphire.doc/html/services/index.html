@@ -29,7 +29,8 @@
   <li><a href="#DependenciesService">DependenciesService</a></li>
   <li><a href="#FactsAggregationService">FactsAggregationService</a></li>
   <li><a href="#FactsService">FactsService</a></li>
-  <li><a href="#FileExtensionsService">FileExtensionsService</a></li>  
+  <li><a href="#FileExtensionsService">FileExtensionsService</a></li>
+  <li><a href="#PossibleTypesService">PossibleTypesService</a></li>  
 </ul>
 
 
@@ -263,6 +264,62 @@ be supplied.</p>
 Value&lt;Path> getFilePath();
 void setFilePath( String value );
 void setFilePath( Path value );</font></code></pre>
+
+
+<a name="PossibleTypesService"><h2>PossibleTypesService</h2></a>
+
+<p>The PossibleTypesService enumerates the possible child element types for a list or an element property. Each 
+returned type is required to derive from the property's base type.</p>
+
+<p>In majority of situations, the set of possible types is static and should be configured using @Type annotation.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = Shape.class,</font> possible = { Circle.class, Triangle.class, Rectangle.class } <font color="#888888">)
+    
+ListProperty PROP_SHAPES = new ListProperty( TYPE, "Shapes" );
+    
+ModelElementList&lt;Shape> getShapes();</font></code></pre>
+
+<p>When the set of possible types varies due to model extensibility or runtime conditions, a custom implementation
+of PossibleTypesService can be provided.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class ShapesPossibleTypesService extends PossibleTypesService
+{
+    @Override
+    protected void initPossibleTypesService()
+    {
+        // Optionally register listeners to invoke refresh method when the list of possible types
+        // may need to be updated.
+    }
+
+    @Override
+    protected void types( SortedSet&lt;ModelElementType> types )
+    {
+        // Compute the list of possible types.
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        // Remove any listeners that were added during initialization.
+    }
+}</code></pre>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = Shape.class )</font>
+@Service( impl = ShapesPossibleTypesService.class )
+    
+<code><font color="#888888">ListProperty PROP_SHAPES = new ListProperty( TYPE, "Shapes" );
+    
+ModelElementList&lt;Shape> getShapes();</font></code></pre>
+
+<p>If the set of possible types is not specified via @Type annotation or via a custom PossibleTypesService
+implementation, the set of possible types is defined to be a singleton set composed of the property's base
+type.</p>
 
 
 <div class="copyright">Copyright (c) 2011 Oracle<br/>

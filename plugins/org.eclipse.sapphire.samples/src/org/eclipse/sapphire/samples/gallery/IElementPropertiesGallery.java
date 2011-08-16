@@ -65,6 +65,15 @@ public interface IElementPropertiesGallery
     
     ModelElementHandle<IChildElement> getHeterogeneous();
     
+    // *** CustomPossibleTypes ***
+    
+    @Type( base = ElementPropertyCustomGallery.class )
+    @XmlBinding( path = "custom-possible-types" )
+    
+    ImpliedElementProperty PROP_CUSTOM_POSSIBLE_TYPES = new ImpliedElementProperty( TYPE, "CustomPossibleTypes" );
+    
+    ElementPropertyCustomGallery getCustomPossibleTypes();
+    
     // *** Implied ***
     
     @Type( base = IChildElementWithInteger.class )

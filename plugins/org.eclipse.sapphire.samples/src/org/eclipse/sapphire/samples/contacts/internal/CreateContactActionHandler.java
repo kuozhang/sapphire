@@ -11,6 +11,9 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
+import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
@@ -27,12 +30,8 @@ import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class CreateContactActionHandler
-
-    extends SapphireActionHandler
-    
+public final class CreateContactActionHandler extends SapphireActionHandler
 {
-    private ModelPropertyListener listener;
     private ValueProperty property;
     
     @Override
@@ -43,7 +42,7 @@ public final class CreateContactActionHandler
         
         this.property = (ValueProperty) ( (SapphirePropertyEditor) action.getPart() ).getProperty();
         
-        this.listener = new ModelPropertyListener()
+        final ModelPropertyListener listener = new ModelPropertyListener()
         {
             @Override
             public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
@@ -54,10 +53,26 @@ public final class CreateContactActionHandler
         
         final IModelElement element = getModelElement();
         
-        element.nearest( IContactsDatabase.class ).addListener( this.listener, "Contacts/Name" );
-        element.addListener( this.listener, this.property.getName() );
+        element.nearest( IContactsDatabase.class ).addListener( listener, "Contacts/Name" );
+        element.addListener( listener, this.property.getName() );
         
         refreshEnablementState();
+        
+        attach
+        (
+            new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    if( event instanceof DisposeEvent )
+                    {
+                        element.nearest( IContactsDatabase.class ).removeListener( listener, "Contacts/Name" );
+                        element.removeListener( listener, CreateContactActionHandler.this.property.getName() );
+                    }
+                }
+            }
+        );
     }
     
     private void refreshEnablementState()
@@ -100,17 +115,6 @@ public final class CreateContactActionHandler
         newContact.setName( name );
         
         return null;
-    }
-    
-    @Override
-    public void dispose()
-    {
-        super.dispose();
-        
-        final IModelElement element = getModelElement();
-        
-        element.nearest( IContactsDatabase.class ).removeListener( this.listener, "Contacts/Name" );
-        element.removeListener( this.listener, this.property.getName() );
     }
     
 }

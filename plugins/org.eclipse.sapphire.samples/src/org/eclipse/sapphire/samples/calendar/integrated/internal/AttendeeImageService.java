@@ -18,7 +18,6 @@ import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.samples.contacts.IContact;
 import org.eclipse.sapphire.services.ImageService;
-import org.eclipse.sapphire.services.Service;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -41,7 +40,7 @@ public final class AttendeeImageService extends ImageService
             @Override
             public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
             {
-                AttendeeImageService.this.notify( new Service.Event( AttendeeImageService.this ) );
+                broadcast();
             }
         };
         

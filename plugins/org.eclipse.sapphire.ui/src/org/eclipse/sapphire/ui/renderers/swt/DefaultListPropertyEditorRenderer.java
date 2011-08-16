@@ -83,11 +83,12 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.FixedOrderList;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.services.ImageService;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.ValueSerializationService;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphireActionHandler.PostExecuteEvent;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
@@ -160,6 +161,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                                       final boolean ignoreLeftMarginHint )
     {
         final SapphirePropertyEditor part = getPart();
+        final IModelElement element = part.getLocalModelElement();
         final ListProperty property = (ListProperty) part.getProperty();
         final boolean isReadOnly = ( property.isReadOnly() || part.getRenderingHint( HINT_READ_ONLY, false ) );
         final boolean showHeader = part.getRenderingHint( HINT_SHOW_HEADER, true );
@@ -516,38 +518,21 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             if( this.exposeAddAction )
             {
                 final SapphireAction addAction = actions.getAction( ACTION_ADD );
+                final List<SapphireActionHandler> addActionHandlers = new ArrayList<SapphireActionHandler>();
                 
-                for( ModelElementType memberType : getProperty().getAllPossibleTypes() )
-                {
-                    final SapphireActionHandler addActionHandler = new AddActionHandler( memberType );
-                    addActionHandler.init( addAction, null );
-                    addAction.addHandler( addActionHandler );
-                    
-                    addOnDisposeOperation
-                    (
-                        new Runnable()
-                        {
-                            public void run()
-                            {
-                                addAction.removeHandler( addActionHandler );
-                            }
-                        }
-                    );
-                }
-                
-                final SapphireActionHandler.Listener addActionHandlerListener = new SapphireActionHandler.Listener()
+                final org.eclipse.sapphire.Listener addActionHandlerListener = new org.eclipse.sapphire.Listener()
                 {
                     @Override
-                    public void handleEvent( final SapphireActionHandler.Event event )
+                    public void handle( final org.eclipse.sapphire.Event event )
                     {
-                        if( event.getType().equals( SapphireActionHandler.EVENT_POST_EXECUTE ) )
+                        if( event instanceof PostExecuteEvent )
                         {
                             if( DefaultListPropertyEditorRenderer.this.table.isDisposed() )
                             {
                                 return;
                             }
                             
-                            final IModelElement newListElement = (IModelElement) ( (SapphireActionHandler.PostExecuteEvent) event ).getResult();
+                            final IModelElement newListElement = (IModelElement) ( (PostExecuteEvent) event ).getResult();
         
                             if( newListElement != null )
                             {
@@ -562,11 +547,61 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                         }
                     }
                 };
+                
+                final PossibleTypesService possibleTypesService = element.service( property, PossibleTypesService.class );
 
-                for( SapphireActionHandler addActionHandler : addAction.getActiveHandlers() )
+                final Runnable refreshAddActionHandlersOp = new Runnable()
                 {
-                    addActionHandler.addListener( addActionHandlerListener );
-                }
+                    public void run()
+                    {
+                        addAction.removeHandlers( addActionHandlers );
+                        
+                        for( SapphireActionHandler addActionHandler : addActionHandlers )
+                        {
+                            addActionHandler.dispose();
+                        }
+                        
+                        for( ModelElementType memberType : possibleTypesService.types() )
+                        {
+                            final SapphireActionHandler addActionHandler = new AddActionHandler( memberType );
+                            addActionHandler.init( addAction, null );
+                            addActionHandler.attach( addActionHandlerListener );
+                            addActionHandlers.add( addActionHandler );
+                            addAction.addHandler( addActionHandler );
+                        }
+                    }
+                };
+                
+                refreshAddActionHandlersOp.run();
+                
+                final org.eclipse.sapphire.Listener possibleTypesServiceListener = new org.eclipse.sapphire.Listener()
+                {
+                    @Override
+                    public void handle( final org.eclipse.sapphire.Event event )
+                    {
+                        refreshAddActionHandlersOp.run();
+                    }
+                };
+                
+                possibleTypesService.attach( possibleTypesServiceListener );
+                
+                addOnDisposeOperation
+                (
+                    new Runnable()
+                    {
+                        public void run()
+                        {
+                            addAction.removeHandlers( addActionHandlers );
+                            
+                            for( SapphireActionHandler addActionHandler : addActionHandlers )
+                            {
+                                addActionHandler.dispose();
+                            }
+                            
+                            possibleTypesService.detach( possibleTypesServiceListener );
+                        }
+                    }
+                );
             }
             
             if( this.exposeDeleteAction )
@@ -622,12 +657,12 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                     }
                 );
 
-                final SapphireActionHandler.Listener moveActionHandlerListener = new SapphireActionHandler.Listener()
+                final org.eclipse.sapphire.Listener moveActionHandlerListener = new org.eclipse.sapphire.Listener()
                 {
                     @Override
-                    public void handleEvent( final SapphireActionHandler.Event event )
+                    public void handle( final org.eclipse.sapphire.Event event )
                     {
-                        if( event.getType().equals( SapphireActionHandler.EVENT_POST_EXECUTE ) )
+                        if( event instanceof PostExecuteEvent )
                         {
                             DefaultListPropertyEditorRenderer.this.refreshOperation.run();
                             
@@ -650,8 +685,8 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                     }
                 };
                 
-                moveUpAction.addListener( moveActionHandlerListener );
-                moveDownAction.addListener( moveActionHandlerListener );
+                moveUpAction.attach( moveActionHandlerListener );
+                moveDownAction.attach( moveActionHandlerListener );
             }
             
             final ToolBar toolbar = new ToolBar( mainComposite, SWT.FLAT | SWT.VERTICAL );
@@ -1818,7 +1853,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     {
         private final IModelElement element;
         private final ImageService imageService;
-        private final Service.Listener listener;
+        private final org.eclipse.sapphire.Listener listener;
         
         public TableRow( final IModelElement element )
         {
@@ -1831,10 +1866,10 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             }
             else
             {
-                this.listener = new Service.Listener()
+                this.listener = new org.eclipse.sapphire.Listener()
                 {
                     @Override
-                    public void handle( final Service.Event event )
+                    public void handle( final org.eclipse.sapphire.Event event )
                     {
                         update( TableRow.this );
                     }

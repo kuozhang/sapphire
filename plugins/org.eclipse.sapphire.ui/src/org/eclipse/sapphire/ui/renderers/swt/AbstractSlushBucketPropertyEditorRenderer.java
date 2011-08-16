@@ -21,7 +21,6 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -43,10 +42,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class AbstractSlushBucketPropertyEditorRenderer
-
-    extends DefaultListPropertyEditorRenderer
-    
+public abstract class AbstractSlushBucketPropertyEditorRenderer extends DefaultListPropertyEditorRenderer
 {
     public AbstractSlushBucketPropertyEditorRenderer( final SapphireRenderingContext context,
                                                       final SapphirePropertyEditor part )
@@ -58,7 +54,6 @@ public abstract class AbstractSlushBucketPropertyEditorRenderer
     protected void createContents( final Composite parent )
     {
         final SapphirePropertyEditor part = getPart();
-        final ListProperty property = (ListProperty) part.getProperty();
 
         final Composite mainComposite = createMainComposite( parent );
         mainComposite.setLayout( new FillLayout( SWT.HORIZONTAL ) );

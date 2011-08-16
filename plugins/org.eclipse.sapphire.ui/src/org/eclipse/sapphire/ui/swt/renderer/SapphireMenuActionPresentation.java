@@ -15,13 +15,20 @@ import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 
 import java.util.List;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireAction.HandlersChangedEvent;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphireActionSystemPart.CheckedStateChangedEvent;
+import org.eclipse.sapphire.ui.SapphireActionSystemPart.EnablementChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
@@ -56,6 +63,11 @@ public final class SapphireMenuActionPresentation
     public void render()
     {
         final SapphireRenderingContext context = getManager().getContext();
+        
+        for( MenuItem item : this.menu.getItems() )
+        {
+            item.dispose();
+        }
         
         boolean first = true;
         String lastGroup = null;
@@ -152,29 +164,41 @@ public final class SapphireMenuActionPresentation
                 }
             };
             
-            action.addListener
-            (
-                new SapphireAction.Listener()
+            updateActionEnablementStateOp.run();
+            updateActionCheckedStateOp.run();
+
+            final Listener listener = new Listener()
+            {
+                @Override
+                public void handle( final Event event )
                 {
-                    @Override
-                    public void handleEvent( final SapphireAction.Event event )
+                    if( event instanceof EnablementChangedEvent )
                     {
-                        final String type = event.getType();
-                        
-                        if( type.equals( SapphireAction.EVENT_ENABLEMENT_STATE_CHANGED ) )
-                        {
-                            updateActionEnablementStateOp.run();
-                        }
-                        else if( type.equals( SapphireAction.EVENT_CHECKED_STATE_CHANGED ) )
-                        {
-                            updateActionCheckedStateOp.run();
-                        }
+                        updateActionEnablementStateOp.run();
+                    }
+                    else if( event instanceof CheckedStateChangedEvent )
+                    {
+                        updateActionCheckedStateOp.run();
+                    }
+                    else if( event instanceof HandlersChangedEvent )
+                    {
+                        render();
+                    }
+                }
+            };
+
+            action.attach( listener );
+            
+            menuItem.addDisposeListener
+            (
+                new DisposeListener()
+                {
+                    public void widgetDisposed( final DisposeEvent event )
+                    {
+                        action.detach( listener );
                     }
                 }
             );
-            
-            updateActionEnablementStateOp.run();
-            updateActionCheckedStateOp.run();
         }
     }
     

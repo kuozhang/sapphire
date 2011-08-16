@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.samples.gallery;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -90,6 +91,15 @@ public interface IListPropertiesGallery
     ListProperty PROP_HETEROGENEOUS = new ListProperty( TYPE, "Heterogeneous" );
     
     ModelElementList<IChildElement> getHeterogeneous();
+    
+    // *** CustomPossibleTypes ***
+    
+    @Type( base = ListPropertyCustomGallery.class )
+    @XmlBinding( path = "custom-possible-types" )
+    
+    ImpliedElementProperty PROP_CUSTOM_POSSIBLE_TYPES = new ImpliedElementProperty( TYPE, "CustomPossibleTypes" );
+    
+    ListPropertyCustomGallery getCustomPossibleTypes();
     
     // *** MultiSelectString ***
     

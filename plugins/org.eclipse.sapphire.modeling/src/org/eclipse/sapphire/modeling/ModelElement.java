@@ -21,6 +21,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.ModelPath.AllDescendentsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.AllSiblingsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ModelRootSegment;
@@ -108,10 +110,10 @@ public abstract class ModelElement
                 {
                     possibleValuesProvider.attach
                     (
-                        new Service.Listener()
+                        new Listener()
                         {
                             @Override
-                            public void handle( final Service.Event event )
+                            public void handle( final Event event )
                             {
                                 refresh( property );
                             }
@@ -561,10 +563,10 @@ public abstract class ModelElement
             {
                 for( final ModelProperty prop : this.type.getProperties() )
                 {
-                    final Service.Listener enablementServiceListener = new Service.Listener()
+                    final Listener enablementServiceListener = new Listener()
                     {
                         @Override
-                        public void handle( final Service.Event event )
+                        public void handle( final Event event )
                         {
                             refreshPropertyEnablement( prop, true );
                         }

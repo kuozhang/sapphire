@@ -32,17 +32,25 @@ public class ServiceContext
     public static final String ID_PROPERTY_METAMODEL = "Sapphire.Property.MetaModel";
     
     private final String type;
+    private final ServiceContext parent;
     private final Map<Class<? extends Service>,List<Service>> services = new HashMap<Class<? extends Service>,List<Service>>();
     private boolean disposed = false;
     
-    public ServiceContext( final String type )
+    public ServiceContext( final String type,
+                           final ServiceContext parent )
     {
         this.type = type;
+        this.parent = parent;
     }
 
     public final String type()
     {
         return this.type;
+    }
+    
+    public final ServiceContext parent()
+    {
+        return this.parent;
     }
     
     public <T> T find( final Class<T> type )
@@ -165,6 +173,11 @@ public class ServiceContext
             }
             
             this.services.put( serviceType, services );
+        }
+        
+        if( services.isEmpty() && this.parent != null )
+        {
+            services = (List<Service>) this.parent.services( serviceType );
         }
         
         return (List<S>) services;

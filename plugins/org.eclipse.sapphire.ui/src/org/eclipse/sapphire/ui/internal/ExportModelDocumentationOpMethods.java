@@ -37,6 +37,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
+import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.IExportModelDocumentationOp;
 import org.osgi.framework.Bundle;
 
@@ -231,7 +232,7 @@ public final class ExportModelDocumentationOpMethods
             {
                 boolean skip = false;
                 
-                final ModelElementType childType = property.getAllPossibleTypes().get( 0 );
+                final ModelElementType childType = property.service( PossibleTypesService.class ).types().first();
                 final List<ModelProperty> childTypeProperties = childType.getProperties();
                 
                 if( childTypeProperties.size() == 1 )
@@ -264,7 +265,7 @@ public final class ExportModelDocumentationOpMethods
                 if( ! skip )
                 {
                     out.println( "<br/><br/>" );
-                    execute( property.getAllPossibleTypes().get( 0 ), out );
+                    execute( childType, out );
                     out.println( "<br/>" );
                 }
             }

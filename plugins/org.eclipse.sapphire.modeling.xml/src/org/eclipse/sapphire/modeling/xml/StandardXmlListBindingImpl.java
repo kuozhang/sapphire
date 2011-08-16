@@ -20,26 +20,31 @@ import static org.eclipse.sapphire.modeling.xml.XmlUtil.equal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.SortedSet;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LayeredListBindingImpl;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Resource;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.services.PossibleTypesService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class StandardXmlListBindingImpl
-
-    extends LayeredListBindingImpl
-
+public class StandardXmlListBindingImpl extends LayeredListBindingImpl
 {
+    private PossibleTypesService possibleTypesService;
+    private Listener possibleTypesServiceListener;
     protected XmlPath path;
     protected QName[] xmlElementNames;
     protected ModelElementType[] modelElementTypes;
@@ -50,6 +55,27 @@ public class StandardXmlListBindingImpl
                       final String[] params )
     {
         super.init( element, property, params );
+        
+        this.possibleTypesService = element.service( property, PossibleTypesService.class );
+        
+        this.possibleTypesServiceListener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
+            {
+                try
+                {
+                    initBindingMetadata( element, property, params );
+                }
+                catch( Exception e )
+                {
+                    final String msg = NLS.bind( Resources.failure, element.getModelElementType().getSimpleName(), property.getName(), e.getMessage() );
+                    LoggingService.log( Status.createErrorStatus( msg ) );
+                }
+            }
+        };
+        
+        this.possibleTypesService.attach( this.possibleTypesServiceListener );
         
         try
         {
@@ -69,13 +95,13 @@ public class StandardXmlListBindingImpl
         final XmlListBinding annotation = property.getAnnotation( XmlListBinding.class );
         final XmlNamespaceResolver xmlNamespaceResolver = ( (XmlResource) element.resource() ).getXmlNamespaceResolver();
         
+        final SortedSet<ModelElementType> possible = this.possibleTypesService.types();
+        this.modelElementTypes = possible.toArray( new ModelElementType[ possible.size() ] );
+
         if( annotation == null )
         {
             this.path = new XmlPath( property.getName(), xmlNamespaceResolver );
             
-            final List<ModelElementType> types = property.getAllPossibleTypes();
-            
-            this.modelElementTypes = types.toArray( new ModelElementType[ types.size() ] );
             this.xmlElementNames = new QName[ this.modelElementTypes.length ];
             
             for( int i = 0; i < this.modelElementTypes.length; i++ )
@@ -92,23 +118,32 @@ public class StandardXmlListBindingImpl
             }
             
             final XmlListBinding.Mapping[] mappings = annotation.mappings();
+            this.xmlElementNames = new QName[ this.modelElementTypes.length ];
             
-            this.xmlElementNames = new QName[ mappings.length ];
-            this.modelElementTypes = new ModelElementType[ mappings.length ];
-            
-            for( int i = 0; i < mappings.length; i++ )
+            for( int i = 0; i < this.modelElementTypes.length; i++ )
             {
-                final XmlListBinding.Mapping mapping = mappings[ i ];
-                
-                final String mappingElementName = mapping.element().trim();
-                
-                if( mappingElementName.length() == 0 )
+                final ModelElementType type = this.modelElementTypes[ i ];
+                        
+                for( XmlListBinding.Mapping mapping : mappings )
                 {
-                    throw new RuntimeException( Resources.mustSpecifyElementNameMsg );
+                    if( mapping.type() == type.getModelElementClass() )
+                    {
+                        final String mappingElementName = mapping.element().trim();
+                        
+                        if( mappingElementName.length() == 0 )
+                        {
+                            throw new RuntimeException( Resources.mustSpecifyElementNameMsg );
+                        }
+
+                        this.xmlElementNames[ i ] = createQualifiedName( mappingElementName, xmlNamespaceResolver );
+                    }
+                    
+                    if( this.xmlElementNames[ i ] == null )
+                    {
+                        final String xmlElementName = createDefaultElementName( type );
+                        this.xmlElementNames[ i ] = createQualifiedName( xmlElementName, xmlNamespaceResolver );
+                    }
                 }
-                
-                this.xmlElementNames[ i ] = createQualifiedName( mappingElementName, xmlNamespaceResolver );
-                this.modelElementTypes[ i ] = ModelElementType.getModelElementType( mapping.type() );
             }
         }
     }
@@ -233,6 +268,17 @@ public class StandardXmlListBindingImpl
         return resource.getXmlElement( createIfNecessary );
     }
     
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        if( this.possibleTypesService != null )
+        {
+            this.possibleTypesService.detach( this.possibleTypesServiceListener );
+        }
+    }
+
     private static final class Resources extends NLS
     {
         public static String failure;

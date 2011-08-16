@@ -209,6 +209,7 @@ public final class HyperlinkTable
         };
         
         final SapphireAction jumpAction = actions.getAction( SapphireActionSystem.ACTION_JUMP );
+        jumpActionHandler.init( jumpAction, null );
         jumpAction.addHandler( jumpActionHandler );
         
         this.table.addDisposeListener

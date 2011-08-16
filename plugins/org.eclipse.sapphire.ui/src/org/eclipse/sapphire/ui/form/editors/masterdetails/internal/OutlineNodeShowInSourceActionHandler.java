@@ -11,6 +11,9 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
+import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
@@ -27,20 +30,15 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNo
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class OutlineNodeShowInSourceActionHandler
-
-    extends SapphireActionHandler
-    
+public final class OutlineNodeShowInSourceActionHandler extends SapphireActionHandler
 {
-    private ModelElementListener listener;
-    
     @Override
     public void init( final SapphireAction action, 
                       final ISapphireActionHandlerDef def ) 
     {
         super.init( action, def );
         
-        this.listener = new ModelElementListener()
+        final ModelElementListener listener = new ModelElementListener()
         {
             @Override
             public void propertyChanged( final ModelPropertyChangeEvent event )
@@ -49,9 +47,26 @@ public final class OutlineNodeShowInSourceActionHandler
             }
         };
         
-        ( (MasterDetailsContentNode) getPart() ).getLocalModelElement().addListener( this.listener );
+        final IModelElement element = ( (MasterDetailsContentNode) getPart() ).getLocalModelElement();
+        
+        element.addListener( listener );
 
         refreshEnablementState();
+        
+        attach
+        (
+            new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    if( event instanceof DisposeEvent )
+                    {
+                        element.removeListener( listener );
+                    }
+                }
+            }
+        );
     }
 
     private void refreshEnablementState()
@@ -72,14 +87,6 @@ public final class OutlineNodeShowInSourceActionHandler
         element.adapt( SourceEditorService.class ).show( element, null );
         
         return null;
-    }
-    
-    @Override
-    public void dispose() 
-    {
-        super.dispose();
-        
-        ( (MasterDetailsContentNode) getPart() ).getLocalModelElement().removeListener( this.listener );
     }
     
 }

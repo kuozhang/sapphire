@@ -22,8 +22,12 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.ui.SapphireActionSystemPart.Event;
+import org.eclipse.sapphire.modeling.util.MutableReference;
+import org.eclipse.sapphire.ui.SapphireAction.HandlersChangedEvent;
+import org.eclipse.sapphire.ui.SapphireActionSystemPart.EnablementChangedEvent;
 import org.eclipse.sapphire.ui.def.ISapphireActionLinkDef;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.swt.SWT;
@@ -39,10 +43,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireActionLink
-
-    extends SapphirePart
-    
+public final class SapphireActionLink extends SapphirePart
 {
     public void render( final SapphireRenderingContext context )
     {
@@ -95,44 +96,15 @@ public final class SapphireActionLink
         
         if( action != null )
         {
-            text.addHyperlinkListener
-            (
-                new HyperlinkAdapter()
-                {
-                    @Override
-                    public void linkActivated( final HyperlinkEvent event )
-                    {
-                        SapphireActionHandler handler = null;
-                        
-                        if( actionHandlerId == null )
-                        {
-                            handler = action.getFirstActiveHandler();
-                        }
-                        else
-                        {
-                            for( SapphireActionHandler h : action.getActiveHandlers() )
-                            {
-                                if( h.getId().equalsIgnoreCase( actionHandlerId ) )
-                                {
-                                    handler = h;
-                                    break;
-                                }
-                            }
-                        }
-                        
-                        if( handler != null )
-                        {
-                            handler.execute( context );
-                        }
-                    }
-                }
-            );
+            final MutableReference<SapphireActionHandler> actionHandlerRef = new MutableReference<SapphireActionHandler>();
+            final MutableReference<Listener> actionHandlerListenerRef = new MutableReference<Listener>();
             
-            final Runnable updateActionEnablementStateOp = new Runnable()
+            final Runnable refreshEnablementStateOp = new Runnable()
             {
                 public void run()
                 {
-                    final boolean enabled = action.isEnabled();
+                    final SapphireActionHandler actionHandler = actionHandlerRef.get();
+                    final boolean enabled = ( actionHandler != null && actionHandler.isEnabled() );
                     
                     if( imageLabel != null )
                     {
@@ -142,22 +114,86 @@ public final class SapphireActionLink
                     text.setEnabled( enabled );
                 }
             };
+
+            final Runnable resolveHandlerOp = new Runnable()
+            {
+                public void run()
+                {
+                    SapphireActionHandler actionHandler = actionHandlerRef.get();
+                    
+                    if( actionHandler != null )
+                    {
+                        final Listener actionHandlerListener = actionHandlerListenerRef.get();
+                        
+                        if( actionHandlerListener != null )
+                        {
+                            actionHandler.detach( actionHandlerListener );
+                        }
+                        
+                        actionHandler = null;
+                    }
+                    
+                    if( actionHandlerId == null )
+                    {
+                        actionHandler = action.getFirstActiveHandler();
+                    }
+                    else
+                    {
+                        for( SapphireActionHandler h : action.getActiveHandlers() )
+                        {
+                            if( h.getId().equalsIgnoreCase( actionHandlerId ) )
+                            {
+                                actionHandler = h;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    actionHandlerRef.set( actionHandler );
+
+                    if( actionHandler != null )
+                    {
+                        Listener actionHandlerListener = actionHandlerListenerRef.get();
+                        
+                        if( actionHandlerListener == null )
+                        {
+                            actionHandlerListener = new Listener()
+                            {
+                                @Override
+                                public void handle( final Event event )
+                                {
+                                    if( event instanceof EnablementChangedEvent )
+                                    {
+                                        refreshEnablementStateOp.run();
+                                    }
+                                }
+                            };
+                            
+                            actionHandlerListenerRef.set( actionHandlerListener );
+                        }
+                        
+                        actionHandler.attach( actionHandlerListener );
+                    }
+                    
+                    refreshEnablementStateOp.run();
+                }
+            };
             
-            final SapphireAction.Listener actionListener = new SapphireAction.Listener()
+            resolveHandlerOp.run();
+            
+            final Listener actionListener = new Listener()
             {
                 @Override
-                public void handleEvent( final Event event )
+                public void handle( final Event event )
                 {
-                    if( event.getType().equals( SapphireAction.EVENT_ENABLEMENT_STATE_CHANGED ) )
+                    if( event instanceof HandlersChangedEvent )
                     {
-                        updateActionEnablementStateOp.run();
+                        resolveHandlerOp.run();
                     }
                 }
             };
             
-            action.addListener( actionListener );
-            
-            updateActionEnablementStateOp.run();
+            action.attach( actionListener );
             
             text.addDisposeListener
             (
@@ -165,7 +201,32 @@ public final class SapphireActionLink
                 {
                     public void widgetDisposed( final DisposeEvent event )
                     {
-                        action.removeListener( actionListener );
+                        action.detach( actionListener );
+                        
+                        final SapphireActionHandler actionHandler = actionHandlerRef.get();
+                        final Listener actionHandlerListener = actionHandlerListenerRef.get();
+                        
+                        if( actionHandler != null && actionHandlerListener != null )
+                        {
+                            actionHandler.detach( actionHandlerListener );
+                        }
+                    }
+                }
+            );
+            
+            text.addHyperlinkListener
+            (
+                new HyperlinkAdapter()
+                {
+                    @Override
+                    public void linkActivated( final HyperlinkEvent event )
+                    {
+                        final SapphireActionHandler handler = actionHandlerRef.get();
+                        
+                        if( handler != null )
+                        {
+                            handler.execute( context );
+                        }
                     }
                 }
             );

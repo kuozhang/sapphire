@@ -27,15 +27,15 @@ import org.eclipse.sapphire.modeling.annotations.PropertyListeners;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.internal.PropertyMetaModelServiceContext;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ModelProperty 
-
-    extends ModelMetadataItem
-    
+public abstract class ModelProperty extends ModelMetadataItem
 {
     public static final String PROPERTY_FIELD_PREFIX = "PROP_"; //$NON-NLS-1$
     
@@ -45,14 +45,11 @@ public abstract class ModelProperty
 
     private final Class<?> typeClass;
     private final ModelElementType type;
-    private final List<Class<?>> allPossibleTypeClasses;
-    private final List<Class<?>> allPossibleTypeClassesReadOnly;
-    private final List<ModelElementType> allPossibleTypes;
-    private final List<ModelElementType> allPossibleTypesReadOnly;
     
     private final Map<Class<? extends Annotation>,Annotation> annotations;
     private Set<ModelPropertyListener> listeners;
     private Set<ModelPropertyListener> listenersReadOnly;
+    private ServiceContext serviceContext;
     
     public ModelProperty( final ModelElementType modelElementType,
                           final String propertyName,
@@ -99,8 +96,6 @@ public abstract class ModelProperty
                 if( this instanceof ValueProperty )
                 {
                     this.typeClass = String.class;
-                    this.allPossibleTypeClasses = Collections.<Class<?>>singletonList( this.typeClass );
-                    this.allPossibleTypeClassesReadOnly = this.allPossibleTypeClasses;
                 }
                 else
                 {
@@ -114,23 +109,6 @@ public abstract class ModelProperty
             else
             {
                 this.typeClass = typeAnnotation.base();
-
-                if( typeAnnotation.possible().length == 0 )
-                {
-                    this.allPossibleTypeClasses = Collections.<Class<?>>singletonList( this.typeClass );
-                    this.allPossibleTypeClassesReadOnly = this.allPossibleTypeClasses;
-                }
-                else
-                {
-                    this.allPossibleTypeClasses = new ArrayList<Class<?>>();
-                    
-                    for( Class<?> cl : typeAnnotation.possible() )
-                    {
-                        this.allPossibleTypeClasses.add( cl );
-                    }
-                    
-                    this.allPossibleTypeClassesReadOnly = Collections.unmodifiableList( this.allPossibleTypeClasses );
-                }
             }
         }
         catch( RuntimeException e )
@@ -139,32 +117,13 @@ public abstract class ModelProperty
             throw e;
         }
         
-        if( ( this instanceof ValueProperty ) || ( this instanceof TransientProperty ) )
+        if( this instanceof ValueProperty || this instanceof TransientProperty )
         {
             this.type = null;
-            this.allPossibleTypes = Collections.emptyList();
-            this.allPossibleTypesReadOnly = Collections.emptyList();
         }
         else
         {
             this.type = ModelElementType.getModelElementType( this.typeClass );
-            
-            if( this.allPossibleTypeClasses.size() == 1 )
-            {
-                this.allPossibleTypes = Collections.singletonList( ModelElementType.getModelElementType( this.typeClass ) );
-                this.allPossibleTypesReadOnly = this.allPossibleTypes;
-            }
-            else
-            {
-                this.allPossibleTypes = new ArrayList<ModelElementType>();
-                
-                for( Class<?> cl : this.allPossibleTypeClasses )
-                {
-                    this.allPossibleTypes.add( ModelElementType.getModelElementType( cl ) );
-                }
-                
-                this.allPossibleTypesReadOnly = Collections.unmodifiableList( this.allPossibleTypes );
-            }
         }
         
         this.modelElementType.addProperty( this );
@@ -188,16 +147,6 @@ public abstract class ModelProperty
     public final ModelElementType getType()
     {
         return this.type;
-    }
-    
-    public final List<Class<?>> getAllPossibleTypeClasses()
-    {
-        return this.allPossibleTypeClassesReadOnly;
-    }
-    
-    public final List<ModelElementType> getAllPossibleTypes()
-    {
-        return this.allPossibleTypesReadOnly;
     }
     
     public final boolean isOfType( final Class<?> type )
@@ -365,6 +314,28 @@ public abstract class ModelProperty
         {
             return null;
         }
+    }
+    
+    
+    public <S extends Service> S service( final Class<S> serviceType )
+    {
+        final List<S> services = services( serviceType );
+        return ( services.isEmpty() ? null : services.get( 0 ) );
+    }
+
+    public <S extends Service> List<S> services( final Class<S> serviceType )
+    {
+        return services().services( serviceType );
+    }
+
+    public synchronized ServiceContext services()
+    {
+        if( this.serviceContext == null )
+        {
+            this.serviceContext = new PropertyMetaModelServiceContext( this );
+        }
+        
+        return this.serviceContext;
     }
     
     @Override

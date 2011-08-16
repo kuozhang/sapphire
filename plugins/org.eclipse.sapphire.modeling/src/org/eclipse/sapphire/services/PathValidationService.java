@@ -13,6 +13,8 @@ package org.eclipse.sapphire.services;
 
 import java.util.List;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Path;
@@ -51,7 +53,7 @@ public abstract class PathValidationService extends ValidationService
         {
             this.fileExtensionsService.attach
             (
-                new Service.Listener()
+                new Listener()
                 {
                     @Override
                     public void handle( final Event event )

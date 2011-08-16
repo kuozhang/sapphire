@@ -11,6 +11,9 @@
 
 package org.eclipse.sapphire.ui;
 
+import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
@@ -45,6 +48,21 @@ public abstract class SapphirePropertyEditorActionHandler
         getModelElement().addListener( this.listener, getProperty().getName() );
         
         refreshEnablementState();
+        
+        attach
+        (
+            new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    if( event instanceof DisposeEvent )
+                    {
+                        getModelElement().removeListener( SapphirePropertyEditorActionHandler.this.listener, getProperty().getName() );
+                    }
+                }
+            }
+        );
     }
 
     public ModelProperty getProperty()
@@ -60,14 +78,6 @@ public abstract class SapphirePropertyEditorActionHandler
     protected boolean computeEnablementState()
     {
         return getModelElement().isPropertyEnabled( getProperty() );
-    }
-    
-    @Override
-    public void dispose()
-    {
-        super.dispose();
-        
-        getModelElement().removeListener( this.listener, getProperty().getName() );
     }
     
 }

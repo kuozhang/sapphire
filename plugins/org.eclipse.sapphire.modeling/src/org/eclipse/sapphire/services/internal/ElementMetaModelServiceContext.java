@@ -21,7 +21,7 @@ public final class ElementMetaModelServiceContext extends ElementServiceContext
 {
     public ElementMetaModelServiceContext( final ModelElementType elementMetaModel )
     {
-        super( ID_ELEMENT_METAMODEL, elementMetaModel );
+        super( ID_ELEMENT_METAMODEL, null, elementMetaModel );
     }
     
 }

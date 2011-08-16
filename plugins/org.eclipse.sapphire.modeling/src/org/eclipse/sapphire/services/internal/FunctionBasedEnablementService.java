@@ -14,6 +14,8 @@ package org.eclipse.sapphire.services.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -42,10 +44,10 @@ public final class FunctionBasedEnablementService extends EnablementService
     {
         final ModelElementFunctionContext fnContext = new ModelElementFunctionContext( context( IModelElement.class ) );
         
-        final FunctionResult.Listener functionResultListener = new FunctionResult.Listener()
+        final Listener functionResultListener = new Listener()
         {
             @Override
-            public void handleValueChanged()
+            public void handle( final Event event )
             {
                 refresh();
             }
@@ -71,7 +73,7 @@ public final class FunctionBasedEnablementService extends EnablementService
                 
                 final FunctionResult functionResult = function.evaluate( fnContext );
                 
-                functionResult.addListener( functionResultListener );
+                functionResult.attach( functionResultListener );
                 this.functionResults.add( functionResult );
             }
         }

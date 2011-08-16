@@ -14,9 +14,14 @@ package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescriptor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.modeling.ElementProperty;
@@ -28,11 +33,13 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFactory;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
+import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFactoryDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentOutline;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPagePart;
@@ -42,27 +49,56 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class OutlineNodeAddActionHandlerFactory
-
-    extends SapphireActionHandlerFactory
-    
+public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHandlerFactory
 {
     public static final String ID_BASE = "Sapphire.Add.";
     
+    private Map<ModelProperty,PossibleTypesService> propertyToPossibleTypesServiceMap;
+    private Listener possibleTypesServiceListener;
+    
+    @Override
+    public void init( final SapphireAction action,
+                      final ISapphireActionHandlerFactoryDef def )
+    {
+        super.init( action, def );
+        
+        this.possibleTypesServiceListener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
+            {
+                broadcast( new Event() );
+            }
+        };
+        
+        this.propertyToPossibleTypesServiceMap = new HashMap<ModelProperty,PossibleTypesService>();
+        
+        final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
+        final IModelElement element = node.getLocalModelElement();
+        
+        for( final ModelProperty property : node.getChildNodeFactoryProperties() )
+        {
+            final PossibleTypesService possibleTypesService = element.service( property, PossibleTypesService.class );
+            possibleTypesService.attach( this.possibleTypesServiceListener );
+            this.propertyToPossibleTypesServiceMap.put( property, possibleTypesService );
+        }
+    }
+
     @Override
     public List<SapphireActionHandler> create()
     {
         final List<SapphireActionHandler> handlers = new ArrayList<SapphireActionHandler>();
         
-        final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
-        
-        for( final ModelProperty property : node.getChildNodeFactoryProperties() )
+        for( final Map.Entry<ModelProperty,PossibleTypesService> entry : this.propertyToPossibleTypesServiceMap.entrySet() )
         {
+            final ModelProperty property = entry.getKey();
+            final PossibleTypesService possibleTypesService = entry.getValue();
+
             if( property instanceof ListProperty )
             {
                 final ListProperty prop = (ListProperty) property;
                 
-                for( final ModelElementType memberType : prop.getAllPossibleTypes() )
+                for( final ModelElementType memberType : possibleTypesService.types() )
                 {
                     final ListPropertyActionHandler handler = new ListPropertyActionHandler( prop, memberType );
                     handlers.add( handler );
@@ -72,7 +108,7 @@ public final class OutlineNodeAddActionHandlerFactory
             {
                 final ElementProperty prop = (ElementProperty) property;
                 
-                for( final ModelElementType memberType : prop.getAllPossibleTypes() )
+                for( final ModelElementType memberType : possibleTypesService.types() )
                 {
                     final ElementPropertyActionHandler handler = new ElementPropertyActionHandler( prop, memberType );
                     handlers.add( handler );
@@ -86,13 +122,23 @@ public final class OutlineNodeAddActionHandlerFactory
         
         return handlers;
     }
+    
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        for( final PossibleTypesService possibleTypesService : this.propertyToPossibleTypesServiceMap.values() )
+        {
+            possibleTypesService.detach( this.possibleTypesServiceListener );
+        }
+    }
 
     private static abstract class AbstractActionHandler extends SapphireActionHandler
     {
         private final ModelProperty property;
         private final ModelElementType type;
         private MasterDetailsContentOutline contentTree;
-        private MasterDetailsContentOutline.Listener contentTreeListener;
         
         public AbstractActionHandler( final ModelProperty property,
                                       final ModelElementType type )
@@ -119,7 +165,7 @@ public final class OutlineNodeAddActionHandlerFactory
             
             this.contentTree = ( (MasterDetailsContentNode) getPart() ).getContentTree();
             
-            this.contentTreeListener = new MasterDetailsContentOutline.Listener()
+            final MasterDetailsContentOutline.Listener contentTreeListener = new MasterDetailsContentOutline.Listener()
             {
                 @Override
                 public void handleFilterChange( String newFilterText )
@@ -128,9 +174,24 @@ public final class OutlineNodeAddActionHandlerFactory
                 }
             };
             
-            this.contentTree.addListener( this.contentTreeListener );
+            this.contentTree.addListener( contentTreeListener );
             
             refreshEnablementState();
+            
+            attach
+            (
+                new Listener()
+                {
+                    @Override
+                    public void handle( final Event event )
+                    {
+                        if( event instanceof DisposeEvent )
+                        {
+                            AbstractActionHandler.this.contentTree.removeListener( contentTreeListener );
+                        }
+                    }
+                }
+            );
         }
     
         protected final void refreshEnablementState()
@@ -195,17 +256,6 @@ public final class OutlineNodeAddActionHandlerFactory
         protected abstract IModelElement create( IModelElement element,
                                                  ModelProperty property,
                                                  ModelElementType type );
-        
-        @Override
-        public void dispose()
-        {
-            super.dispose();
-            
-            if( this.contentTree != null )
-            {
-                this.contentTree.removeListener( this.contentTreeListener );
-            }
-        }
     }
     
     private static final class ListPropertyActionHandler extends AbstractActionHandler
@@ -227,8 +277,6 @@ public final class OutlineNodeAddActionHandlerFactory
 
     private static final class ElementPropertyActionHandler extends AbstractActionHandler
     {
-        private ModelPropertyListener listener;
-        
         public ElementPropertyActionHandler( final ElementProperty property,
                                              final ModelElementType type )
         {
@@ -241,7 +289,7 @@ public final class OutlineNodeAddActionHandlerFactory
         {
             super.init( action, def );
             
-            this.listener = new ModelPropertyListener()
+            final ModelPropertyListener listener = new ModelPropertyListener()
             {
                 @Override
                 public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
@@ -251,7 +299,22 @@ public final class OutlineNodeAddActionHandlerFactory
             };
             
             final IModelElement element = ( (MasterDetailsContentNode) getPart() ).getLocalModelElement();
-            element.addListener( this.listener, property().getName() );
+            element.addListener( listener, property().getName() );
+            
+            attach
+            (
+                new Listener()
+                {
+                    @Override
+                    public void handle( final Event event )
+                    {
+                        if( event instanceof DisposeEvent )
+                        {
+                            element.removeListener( listener, property().getName() );
+                        }
+                    }
+                }
+            );
         }
 
         @Override
@@ -281,18 +344,6 @@ public final class OutlineNodeAddActionHandlerFactory
             }
             
             return state;
-        }
-
-        @Override
-        public void dispose()
-        {
-            super.dispose();
-            
-            if( this.listener != null )
-            {
-                final IModelElement element = ( (MasterDetailsContentNode) getPart() ).getLocalModelElement();
-                element.removeListener( this.listener, property().getName() );
-            }
         }
     }
 

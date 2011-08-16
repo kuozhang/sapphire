@@ -27,6 +27,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Value;
@@ -34,7 +36,6 @@ import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.services.FileExtensionsService;
-import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler.ContainersOnlyViewerFilter;
@@ -105,10 +106,10 @@ public final class EclipseWorkspacePathPropertyEditorRenderer
                 
                 treeViewer.addFilter( filter );
                 
-                final Service.Listener listener = new Service.Listener()
+                final Listener listener = new Listener()
                 {
                     @Override
-                    public void handle( final Service.Event event )
+                    public void handle( final Event event )
                     {
                         filter.change( fileExtensionsService.extensions() );
                         treeViewer.refresh();

@@ -13,6 +13,9 @@ package org.eclipse.sapphire.ui;
 
 import java.util.List;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFactoryDef;
 
@@ -23,6 +26,7 @@ import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFactoryDef;
 public abstract class SapphireActionHandlerFactory
 {
     private SapphireAction action;
+    private final ListenerContext listeners = new ListenerContext();
 
     public void init( final SapphireAction action,
                       final ISapphireActionHandlerFactoryDef def )
@@ -51,5 +55,24 @@ public abstract class SapphireActionHandlerFactory
     }
 
     public abstract List<SapphireActionHandler> create();
+    
+    public final void attach( final Listener listener )
+    {
+        this.listeners.attach( listener );
+    }
+    
+    public final void detach( final Listener listener )
+    {
+        this.listeners.detach( listener );
+    }
+    
+    protected final void broadcast( final Event event )
+    {
+        this.listeners.broadcast( event );
+    }
+    
+    public void dispose()
+    {
+    }
     
 }

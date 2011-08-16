@@ -213,7 +213,7 @@ public final class PossibleValuesServiceFactory
             if( ! this.values.equals( newValues ) )
             {
                 this.values = Collections.unmodifiableSet( newValues );
-                notify( new Event( this ) );
+                broadcast();
             }
         }
     }

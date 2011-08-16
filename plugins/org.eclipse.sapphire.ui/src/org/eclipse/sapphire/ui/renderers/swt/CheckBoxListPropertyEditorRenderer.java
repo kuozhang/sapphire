@@ -40,6 +40,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
@@ -53,8 +55,8 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.services.ImageService;
+import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.PossibleValuesService;
-import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ValueImageService;
 import org.eclipse.sapphire.services.ValueLabelService;
 import org.eclipse.sapphire.ui.SapphireImageCache;
@@ -436,7 +438,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         private ValueLabelService valueLabelService;
         private ValueImageService valueImageService;
         private ImageService elementImageService;
-        private Service.Listener listener;
+        private Listener listener;
         
         public Entry( final String value,
                       final IModelElement element )
@@ -450,10 +452,10 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
             this.valueLabelService = parent.service( CheckBoxListPropertyEditorRenderer.this.memberProperty, ValueLabelService.class );
             this.valueImageService = parent.service( CheckBoxListPropertyEditorRenderer.this.memberProperty, ValueImageService.class );
             
-            this.listener = new Service.Listener()
+            this.listener = new Listener()
             {
                 @Override
-                public void handle( final Service.Event event )
+                public void handle( final Event event )
                 {
                     CheckBoxListPropertyEditorRenderer.this.tableViewer.update( Entry.this, null );
                 }
@@ -619,13 +621,14 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         @Override
         public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
         {
+            final IModelElement element = propertyEditorDefinition.getLocalModelElement();
             final ModelProperty property = propertyEditorDefinition.getProperty();
             
             if( property instanceof ListProperty )
             {
                 final ListProperty listProperty = (ListProperty) property;
                 
-                if( listProperty.getAllPossibleTypes().size() == 1 )
+                if( element.service( listProperty, PossibleTypesService.class ).types().size() == 1 )
                 {
                     final ModelElementType memberType = listProperty.getType();
                     final List<ModelProperty> properties = memberType.getProperties();

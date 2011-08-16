@@ -20,9 +20,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
@@ -37,7 +38,7 @@ public abstract class FunctionResult
     private final Function function;
     private final FunctionContext context;
     private final List<FunctionResult> operands;
-    private final List<Listener> listeners;
+    private final ListenerContext listeners;
     private Object value;
     private Status status;
     
@@ -46,7 +47,7 @@ public abstract class FunctionResult
     {
         this.function = function;
         this.context = context;
-        this.listeners = new CopyOnWriteArrayList<Listener>();
+        this.listeners = new ListenerContext();
         this.operands = Collections.unmodifiableList( initOperands() );
 
         if( ! this.operands.isEmpty() )
@@ -54,7 +55,7 @@ public abstract class FunctionResult
             final Listener listener = new Listener()
             {
                 @Override
-                public void handleValueChanged()
+                public void handle( final Event event )
                 {
                     refresh();
                 }
@@ -62,7 +63,7 @@ public abstract class FunctionResult
             
             for( FunctionResult operand : this.operands )
             {
-                operand.addListener( listener );
+                operand.attach( listener );
             }
         }
         
@@ -188,33 +189,18 @@ public abstract class FunctionResult
         {
             this.value = newValue;
             this.status = newStatus;
-            notifyListeners();
+            this.listeners.broadcast();
         }
     }
     
-    public final void addListener( final Listener listener )
+    public final void attach( final Listener listener )
     {
-        this.listeners.add( listener );
+        this.listeners.attach( listener );
     }
     
-    public final void removeListener( final Listener listener )
+    public final void detach( final Listener listener )
     {
-        this.listeners.remove( listener );
-    }
-    
-    private final void notifyListeners()
-    {
-        for( Listener listener : this.listeners )
-        {
-            try
-            {
-                listener.handleValueChanged();
-            }
-            catch( Exception e )
-            {
-                LoggingService.log( e );
-            }
-        }
+        this.listeners.detach( listener );
     }
     
     public void dispose()
@@ -657,11 +643,6 @@ public abstract class FunctionResult
         {
             return a.equals( b );
         }
-    }
-
-    public static abstract class Listener
-    {
-        public abstract void handleValueChanged();
     }
     
     private static final class Resources extends NLS

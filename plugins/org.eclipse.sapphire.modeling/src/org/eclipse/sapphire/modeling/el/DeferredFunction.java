@@ -13,6 +13,9 @@ package org.eclipse.sapphire.modeling.el;
 
 import java.util.List;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -49,7 +52,6 @@ public final class DeferredFunction
         return new FunctionResult( this, context )
         {
             private FunctionResult baseResult;
-            private FunctionResult.Listener listener;
             
             @Override
             protected void init()
@@ -59,16 +61,16 @@ public final class DeferredFunction
                 final Function function = context().function( name(), DeferredFunction.this.operands() );
                 this.baseResult = function.evaluate( context() );
                 
-                this.listener = new FunctionResult.Listener()
+                final Listener listener = new Listener()
                 {
                     @Override
-                    public void handleValueChanged()
+                    public void handle( final Event event )
                     {
                         refresh();
                     }
                 };
                 
-                this.baseResult.addListener( this.listener );
+                this.baseResult.attach( listener );
             }
 
             @Override
@@ -81,7 +83,7 @@ public final class DeferredFunction
             public void dispose()
             {
                 super.dispose();
-                this.baseResult.removeListener( this.listener );
+                this.baseResult.dispose();
             }
         };
     }

@@ -16,12 +16,17 @@ import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 
 import java.util.List;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphireActionSystemPart.CheckedStateChangedEvent;
+import org.eclipse.sapphire.ui.SapphireActionSystemPart.EnablementChangedEvent;
+import org.eclipse.sapphire.ui.SapphireActionSystemPart.LabelChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
@@ -41,10 +46,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireToolBarActionPresentation
-
-    extends SapphireHotSpotsActionPresentation
-    
+public final class SapphireToolBarActionPresentation extends SapphireHotSpotsActionPresentation
 {
     private ToolBar toolbar;
     
@@ -89,7 +91,6 @@ public final class SapphireToolBarActionPresentation
             first = false;
             lastGroup = group;
             
-            final List<SapphireActionHandler> handlers = action.getActiveHandlers();
             final ToolItem toolItem;
             final SelectionListener toolItemListener;
             
@@ -104,6 +105,8 @@ public final class SapphireToolBarActionPresentation
                     @Override
                     public void widgetSelected( final SelectionEvent event )
                     {
+                        final List<SapphireActionHandler> handlers = action.getActiveHandlers();
+                        
                         if( handlers.size() == 1 )
                         {
                             handlers.get( 0 ).execute( context );
@@ -124,7 +127,7 @@ public final class SapphireToolBarActionPresentation
                     @Override
                     public void widgetSelected( final SelectionEvent event )
                     {
-                        handlers.get( 0 ).execute( context );
+                        action.getActiveHandlers().get( 0 ).execute( context );
                     }
                 };
             }
@@ -133,7 +136,7 @@ public final class SapphireToolBarActionPresentation
                 throw new IllegalStateException();
             }
             
-            String hint = action.getRenderingHint( ISapphirePartDef.HINT_STYLE, ISapphireActionDef.HINT_VALUE_STYLE_IMAGE );
+            final String hint = action.getRenderingHint( ISapphirePartDef.HINT_STYLE, ISapphireActionDef.HINT_VALUE_STYLE_IMAGE );
             
             if( ISapphireActionDef.HINT_VALUE_STYLE_IMAGE.equals( hint ) || 
                 ISapphireActionDef.HINT_VALUE_STYLE_IMAGE_TEXT.equals( hint ) )
@@ -141,15 +144,25 @@ public final class SapphireToolBarActionPresentation
                 toolItem.setImage( context.getImageCache().getImage( action.getImage( 16 ) ) );
             }
             
-            if( ISapphireActionDef.HINT_VALUE_STYLE_IMAGE_TEXT.equals( hint ) ||
-                ISapphireActionDef.HINT_VALUE_STYLE_TEXT.equals( hint ) )
-            {
-                toolItem.setText( LabelTransformer.transform( action.getLabel(), CapitalizationType.TITLE_STYLE, true ) );
-            }
-            
-            toolItem.setToolTipText( LabelTransformer.transform( action.getLabel(), CapitalizationType.TITLE_STYLE, false ) );
             toolItem.setData( action );
             toolItem.addSelectionListener( toolItemListener );
+            
+            final Runnable updateActionLabelOp = new Runnable()
+            {
+                public void run()
+                {
+                    if( ! toolItem.isDisposed() )
+                    {
+                        if( ISapphireActionDef.HINT_VALUE_STYLE_IMAGE_TEXT.equals( hint ) ||
+                            ISapphireActionDef.HINT_VALUE_STYLE_TEXT.equals( hint ) )
+                        {
+                            toolItem.setText( LabelTransformer.transform( action.getLabel(), CapitalizationType.TITLE_STYLE, true ) );
+                        }
+                        
+                        toolItem.setToolTipText( LabelTransformer.transform( action.getLabel(), CapitalizationType.TITLE_STYLE, false ) );
+                    }
+                }
+            };
             
             final Runnable updateActionEnablementStateOp = new Runnable()
             {
@@ -173,20 +186,22 @@ public final class SapphireToolBarActionPresentation
                 }
             };
             
-            action.addListener
+            action.attach
             (
-                new SapphireAction.Listener()
+                new Listener()
                 {
                     @Override
-                    public void handleEvent( final SapphireAction.Event event )
+                    public void handle( final Event event )
                     {
-                        final String type = event.getType();
-                        
-                        if( type.equals( SapphireAction.EVENT_ENABLEMENT_STATE_CHANGED ) )
+                        if( event instanceof LabelChangedEvent )
+                        {
+                            updateActionLabelOp.run();
+                        }
+                        if( event instanceof EnablementChangedEvent )
                         {
                             updateActionEnablementStateOp.run();
                         }
-                        else if( type.equals( SapphireAction.EVENT_CHECKED_STATE_CHANGED ) )
+                        else if( event instanceof CheckedStateChangedEvent )
                         {
                             updateActionCheckedStateOp.run();
                         }
@@ -194,6 +209,7 @@ public final class SapphireToolBarActionPresentation
                 }
             );
             
+            updateActionLabelOp.run();
             updateActionEnablementStateOp.run();
             updateActionCheckedStateOp.run();
         }

@@ -32,9 +32,10 @@ import org.eclipse.sapphire.services.ServiceFactoryProxy;
 
 public abstract class AnnotationsAwareServiceContext extends ServiceContext
 {
-    public AnnotationsAwareServiceContext( final String contextType )
+    public AnnotationsAwareServiceContext( final String type,
+                                           final ServiceContext parent )
     {
-        super( contextType );
+        super( type, parent );
     }
     
     @Override

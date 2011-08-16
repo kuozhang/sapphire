@@ -14,6 +14,7 @@ package org.eclipse.sapphire.services.internal;
 import java.lang.annotation.Annotation;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.services.ServiceContext;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -24,9 +25,10 @@ public abstract class ElementServiceContext extends AnnotationsAwareServiceConte
     private final ModelElementType elementMetaModel;
     
     public ElementServiceContext( final String contextType,
+                                  final ServiceContext parent,
                                   final ModelElementType elementMetaModel )
     {
-        super( contextType );
+        super( contextType, parent );
         
         this.elementMetaModel = elementMetaModel;
     }

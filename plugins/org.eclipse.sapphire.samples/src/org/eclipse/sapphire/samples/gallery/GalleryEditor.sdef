@@ -486,17 +486,17 @@
                             <with>
                                 <path>Heterogeneous</path>
                                 <panel>
-                                    <key>IChildElementWithInteger</key>
-                                    <content>
-                                        <property-editor>StringValue</property-editor>
-                                        <property-editor>IntegerValue</property-editor>
-                                    </content>
-                                </panel>
-                                <panel>
                                     <key>IChildElementWithEnum</key>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                         <property-editor>EnumValue</property-editor>
+                                    </content>
+                                </panel>
+                                <panel>
+                                    <key>IChildElementWithInteger</key>
+                                    <content>
+                                        <property-editor>StringValue</property-editor>
+                                        <property-editor>IntegerValue</property-editor>
                                     </content>
                                 </panel>
                                 <panel>
@@ -511,17 +511,6 @@
                     <node-factory>
                         <property>Heterogeneous</property>
                         <case>
-                            <model-element-type>IChildElementWithInteger</model-element-type>
-                            <section>
-                                <content>
-                                    <property-editor>StringValue</property-editor>
-                                    <property-editor>IntegerValue</property-editor>
-                                </content>
-                                <label>child element with integer</label>
-                            </section>
-                            <label>${ StringValue == null ? &quot;&lt;child-with-integer&gt;&quot; : StringValue }</label>
-                        </case>
-                        <case>
                             <model-element-type>IChildElementWithEnum</model-element-type>
                             <section>
                                 <content>
@@ -531,6 +520,17 @@
                                 <label>child element with enum</label>
                             </section>
                             <label>${ StringValue == null ? &quot;&lt;child-with-enum&gt;&quot; : StringValue }</label>
+                        </case>
+                        <case>
+                            <model-element-type>IChildElementWithInteger</model-element-type>
+                            <section>
+                                <content>
+                                    <property-editor>StringValue</property-editor>
+                                    <property-editor>IntegerValue</property-editor>
+                                </content>
+                                <label>child element with integer</label>
+                            </section>
+                            <label>${ StringValue == null ? &quot;&lt;child-with-integer&gt;&quot; : StringValue }</label>
                         </case>
                         <case>
                             <model-element-type>IChildElement</model-element-type>
@@ -543,6 +543,79 @@
                             <label>${ StringValue == null ? &quot;&lt;child&gt;&quot; : StringValue }</label>
                         </case>
                     </node-factory>
+                </node>
+                <node>
+                    <label>custom PossibleTypesService</label>
+                    <section>
+                        <content>
+                            <label>A heterogeneous element property has multiple possible child element types that can vary at runtime.</label>
+                            <spacer></spacer>
+                            <label>Use the following properties to experiment with varying possible element types.</label>
+                            <spacer></spacer>
+                            <property-editor>AllowChildElementWithEnum</property-editor>
+                            <property-editor>AllowChildElementWithInteger</property-editor>
+                            <spacer></spacer>
+                            <with>
+                                <path>Element</path>
+                                <panel>
+                                    <key>IChildElementWithEnum</key>
+                                    <content>
+                                        <property-editor>StringValue</property-editor>
+                                        <property-editor>EnumValue</property-editor>
+                                    </content>
+                                </panel>
+                                <panel>
+                                    <key>IChildElementWithInteger</key>
+                                    <content>
+                                        <property-editor>StringValue</property-editor>
+                                        <property-editor>IntegerValue</property-editor>
+                                    </content>
+                                </panel>
+                                <panel>
+                                    <key>IChildElement</key>
+                                    <content>
+                                        <property-editor>StringValue</property-editor>
+                                    </content>
+                                </panel>
+                            </with>
+                        </content>
+                    </section>
+                    <node-factory>
+                        <property>Element</property>
+                        <case>
+                            <model-element-type>IChildElementWithEnum</model-element-type>
+                            <section>
+                                <content>
+                                    <property-editor>StringValue</property-editor>
+                                    <property-editor>EnumValue</property-editor>
+                                </content>
+                                <label>child element with enum</label>
+                            </section>
+                            <label>${ StringValue == null ? &quot;&lt;child-with-enum&gt;&quot; : StringValue }</label>
+                        </case>
+                        <case>
+                            <model-element-type>IChildElementWithInteger</model-element-type>
+                            <section>
+                                <content>
+                                    <property-editor>StringValue</property-editor>
+                                    <property-editor>IntegerValue</property-editor>
+                                </content>
+                                <label>child element with integer</label>
+                            </section>
+                            <label>${ StringValue == null ? &quot;&lt;child-with-integer&gt;&quot; : StringValue }</label>
+                        </case>
+                        <case>
+                            <model-element-type>IChildElement</model-element-type>
+                            <section>
+                                <content>
+                                    <property-editor>StringValue</property-editor>
+                                </content>
+                                <label>child element</label>
+                            </section>
+                            <label>${ StringValue == null ? &quot;&lt;child&gt;&quot; : StringValue }</label>
+                        </case>
+                    </node-factory>
+                    <property>CustomPossibleTypes</property>
                 </node>
                 <section>
                     <label>element properties</label>
@@ -651,13 +724,13 @@
                             </action-link>
                             <action-link>
                                 <action-id>Sapphire.Add</action-id>
-                                <action-handler-id>Sapphire.Add.IChildElementWithInteger</action-handler-id>
-                                <label>add a child element with integer</label>
+                                <action-handler-id>Sapphire.Add.IChildElementWithEnum</action-handler-id>
+                                <label>add a child element with enum</label>
                             </action-link>
                             <action-link>
                                 <action-id>Sapphire.Add</action-id>
-                                <action-handler-id>Sapphire.Add.IChildElementWithEnum</action-handler-id>
-                                <label>add a child element with enum</label>
+                                <action-handler-id>Sapphire.Add.IChildElementWithInteger</action-handler-id>
+                                <label>add a child element with integer</label>
                             </action-link>
                             <spacer></spacer>
                             <label>Use the following property to experiment with enabling and disabling the lists.</label>
@@ -681,17 +754,17 @@
                                     <property>Heterogeneous</property>
                                 </list-selection-controller>
                                 <panel>
-                                    <key>IChildElementWithInteger</key>
-                                    <content>
-                                        <property-editor>StringValue</property-editor>
-                                        <property-editor>IntegerValue</property-editor>
-                                    </content>
-                                </panel>
-                                <panel>
                                     <key>IChildElementWithEnum</key>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                         <property-editor>EnumValue</property-editor>
+                                    </content>
+                                </panel>
+                                <panel>
+                                    <key>IChildElementWithInteger</key>
+                                    <content>
+                                        <property-editor>StringValue</property-editor>
+                                        <property-editor>IntegerValue</property-editor>
                                     </content>
                                 </panel>
                                 <panel>
@@ -745,6 +818,115 @@
                     </node-factory>
                 </node>
                 <node>
+                    <label>Custom PossibleTypesService</label>
+                    <property>CustomPossibleTypes</property>
+                    <node-factory>
+                        <property>List</property>
+                        <case>
+                            <model-element-type>IChildElementWithInteger</model-element-type>
+                            <label>${ StringValue == null ? &quot;&lt;child-with-integer&gt;&quot; : StringValue }</label>
+                            <section>
+                                <label>child element with integer</label>
+                                <content>
+                                    <property-editor>StringValue</property-editor>
+                                    <property-editor>IntegerValue</property-editor>
+                                </content>
+                            </section>
+                        </case>
+                        <case>
+                            <model-element-type>IChildElementWithEnum</model-element-type>
+                            <label>${ StringValue == null ? &quot;&lt;child-with-enum&gt;&quot; : StringValue }</label>
+                            <section>
+                                <label>child element with enum</label>
+                                <content>
+                                    <property-editor>StringValue</property-editor>
+                                    <property-editor>EnumValue</property-editor>
+                                </content>
+                            </section>
+                        </case>
+                        <case>
+                            <model-element-type>IChildElement</model-element-type>
+                            <label>${ StringValue == null ? &quot;&lt;child&gt;&quot; : StringValue }</label>
+                            <section>
+                                <label>child element</label>
+                                <content>
+                                    <property-editor>StringValue</property-editor>
+                                </content>
+                            </section>
+                        </case>
+                    </node-factory>
+                    <section>
+                        <content>
+                            <label>A list with multiple possible element types that can vary at runtime.</label>
+                            <spacer />
+                            <action-link>
+                                <action-id>Sapphire.Add</action-id>
+                                <action-handler-id>Sapphire.Add.IChildElement</action-handler-id>
+                                <label>add a basic child element</label>
+                            </action-link>
+                            <action-link>
+                                <action-id>Sapphire.Add</action-id>
+                                <action-handler-id>Sapphire.Add.IChildElementWithEnum</action-handler-id>
+                                <label>add a child element with enum</label>
+                            </action-link>
+                            <action-link>
+                                <action-id>Sapphire.Add</action-id>
+                                <action-handler-id>Sapphire.Add.IChildElementWithInteger</action-handler-id>
+                                <label>add a child element with integer</label>
+                            </action-link>
+                            <spacer></spacer>
+                            <label>Use the following properties to experiment with varying possible element types.</label>
+                            <spacer></spacer>
+                            <property-editor>AllowChildElementWithEnum</property-editor>
+                            <property-editor>AllowChildElementWithInteger</property-editor>
+                        </content>
+                    </section>
+                    <section>
+                        <label>list</label>
+                        <content>
+                            <property-editor>
+                                <property>List</property>
+                                <show-label>false</show-label>
+                                <span>true</span>
+                            </property-editor>
+                            <separator>
+                                <label>details</label>
+                            </separator>
+                            <switching-panel>
+                                <list-selection-controller>
+                                    <property>List</property>
+                                </list-selection-controller>
+                                <panel>
+                                    <key>IChildElementWithEnum</key>
+                                    <content>
+                                        <property-editor>StringValue</property-editor>
+                                        <property-editor>EnumValue</property-editor>
+                                    </content>
+                                </panel>
+                                <panel>
+                                    <key>IChildElementWithInteger</key>
+                                    <content>
+                                        <property-editor>StringValue</property-editor>
+                                        <property-editor>IntegerValue</property-editor>
+                                    </content>
+                                </panel>
+                                <panel>
+                                    <key>IChildElement</key>
+                                    <content>
+                                        <property-editor>StringValue</property-editor>
+                                    </content>
+                                </panel>
+                                <default-panel>
+                                    <content>
+                                        <label>Select a list item above to view or edit additional parameters.</label>
+                                    </content>
+                                </default-panel>
+                            </switching-panel>
+                        </content>
+                    </section>
+                </node>
+                <property>ListPropertiesGallery</property>
+                <node>
                     <label>multi-select</label>
                     <section>
                         <content>
@@ -790,7 +972,6 @@
                         </content>
                     </section>
                 </node>
-                <property>ListPropertiesGallery</property>
             </node>
             <node>
                 <label>enablement</label>

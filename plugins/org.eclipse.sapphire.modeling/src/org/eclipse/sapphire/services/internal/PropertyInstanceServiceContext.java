@@ -26,7 +26,7 @@ public final class PropertyInstanceServiceContext extends PropertyServiceContext
     public PropertyInstanceServiceContext( final IModelElement element,
                                            final ModelProperty property )
     {
-        super( ID_PROPERTY_INSTANCE, property );
+        super( ID_PROPERTY_INSTANCE, property.services(), property );
         
         this.element = element;
     }

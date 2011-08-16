@@ -21,10 +21,7 @@ import java.util.List;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ConcatFunction
-
-    extends Function
-
+public final class ConcatFunction extends Function
 {
     public static ConcatFunction create( final List<Function> operands )
     {

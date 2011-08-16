@@ -57,7 +57,7 @@ public final class TestXmlBinding0001
         }
         catch( Exception e )
         {
-            assertEquals( e.getMessage(), "TestXmlBinding0001ModelElement.TestProperty : Element name must be specified in @XmlElementBinding.Mapping annotation." );
+            assertEquals( "TestXmlBinding0001ModelElement.TestProperty : Element name must be specified in @XmlElementBinding.Mapping annotation.", e.getMessage() );
         }
     }
 

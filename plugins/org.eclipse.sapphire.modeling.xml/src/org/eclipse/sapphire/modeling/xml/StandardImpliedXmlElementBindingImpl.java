@@ -19,6 +19,7 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
+import org.eclipse.sapphire.services.PossibleTypesService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -39,7 +40,7 @@ public final class StandardImpliedXmlElementBindingImpl
     {
         super.init( element, property, params );
         
-        if( property.getAllPossibleTypes().size() > 1 )
+        if( element.service( property, PossibleTypesService.class ).types().size() > 1 )
         {
             throw new IllegalStateException();
         }
