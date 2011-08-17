@@ -23,6 +23,7 @@ public abstract class PropertyEditorAssistContributor
     public static final String ID_PROBLEMS_CONTRIBUTOR = "System.ProblemsContributor";
     public static final String ID_ACTIONS_SECTION_CONTRIBUTOR = "System.ActionsSectionContributor";
     public static final String ID_RESET_ACTIONS_CONTRIBUTOR = "System.ResetActionsContributor";
+    public static final String ID_RESTORE_INITIAL_VALUE_ACTIONS_CONTRIBUTOR = "System.RestoreInitialValueActionsContributor";
     public static final String ID_SHOW_IN_SOURCE_ACTION_CONTRIBUTOR = "System.ShowInSourceActionContributor";
 
     public static final int PRIORITY_INFO_SECTION_CONTRIBUTOR = 100;
@@ -31,6 +32,7 @@ public abstract class PropertyEditorAssistContributor
     public static final int PRIORITY_PROBLEMS_CONTRIBUTOR = 210;
     public static final int PRIORITY_ACTIONS_SECTION_CONTRIBUTOR = 300;
     public static final int PRIORITY_RESET_ACTIONS_CONTRIBUTOR = 310;
+    public static final int PRIORITY_RESTORE_INITIAL_VALUE_ACTIONS_CONTRIBUTOR = 315;
     public static final int PRIORITY_SHOW_IN_SOURCE_ACTION_CONTRIBUTOR = 320;
     
     public static final String SECTION_ID_INFO = "info";

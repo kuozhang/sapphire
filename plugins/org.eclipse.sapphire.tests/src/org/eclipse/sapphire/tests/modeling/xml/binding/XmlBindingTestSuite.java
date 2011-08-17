@@ -24,6 +24,7 @@ import org.eclipse.sapphire.tests.modeling.xml.binding.t0006.TestXmlBinding0006;
 import org.eclipse.sapphire.tests.modeling.xml.binding.t0007.TestXmlBinding0007;
 import org.eclipse.sapphire.tests.modeling.xml.binding.t0008.TestXmlBinding0008;
 import org.eclipse.sapphire.tests.modeling.xml.binding.t0009.TestXmlBinding0009;
+import org.eclipse.sapphire.tests.modeling.xml.binding.t0010.TestXmlBinding0010;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -54,6 +55,7 @@ public final class XmlBindingTestSuite
         suite.addTest( TestXmlBinding0007.suite() );
         suite.addTest( TestXmlBinding0008.suite() );
         suite.addTest( TestXmlBinding0009.suite() );
+        suite.addTest( TestXmlBinding0010.suite() );
         
         return suite;
     }

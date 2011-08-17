@@ -30,6 +30,7 @@
   <li><a href="#FactsAggregationService">FactsAggregationService</a></li>
   <li><a href="#FactsService">FactsService</a></li>
   <li><a href="#FileExtensionsService">FileExtensionsService</a></li>
+  <li><a href="#InitialValueService">InitialValueService</a></li>
   <li><a href="#PossibleTypesService">PossibleTypesService</a></li>  
 </ul>
 
@@ -264,6 +265,62 @@ be supplied.</p>
 Value&lt;Path> getFilePath();
 void setFilePath( String value );
 void setFilePath( Path value );</font></code></pre>
+
+
+<a name="InitialValueService"><h2>InitialValueService</h2></a>
+
+<p>The InitialValueService produces a value to assign to a property when the containing model element is
+created.</p>
+
+<p>The concept of an initial value is different from a default value. The initial value is explicitly
+assigned to the property during containing model element's creation. This includes writing to the backing resource
+(such as an XML document). In comparison, the default value is used when null is read for a property from the 
+backing resource. As such, the default value is only visible to model consumers (such as the user interface), 
+while the initial value is persisted.</p> 
+
+<p>Whether you use an initial value or a default value is frequently dictated by the requirements of the 
+backing resource. As an example, let's consider an XML document that stores phone numbers. In this XML document, 
+the phone number element has a type child element which contains a value like home, mobile, work, etc.
+Let's further say that semantically, we wish to use mobile phone number type unless specified differently.
+Now, if the XML schema dictates that the phone number type element is required, we would need to specify 
+"mobile" as the initial value. If the phone number type element is optional, it would be better to specify
+"mobile" as the default value.</p>
+
+<p>In many situations, the initial value is static and should be configured using @InitialValue annotation.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">@Required
+@PossibleValues( values = { "home", "mobile", "work", "other" }, invalidValueSeverity = Status.Severity.OK )</font>
+@InitialValue( text = "mobile" )
+    
+<font color="#888888">ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
+    
+Value&lt;String> getType();
+void setType( String type );</font></code></pre>
+
+<p>When the initial value varies due to runtime conditions, a custom implementation of InitialValueService can 
+be provided.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class PhoneTypeInitialValueService extends InitialValueService
+{
+    @Override
+    public String text()
+    {
+        // Compute the initial value.
+    }
+}</code></pre>
+
+<pre class="source-code"><code><font color="#888888">@Required
+@PossibleValues( values = { "home", "mobile", "work", "other" }, invalidValueSeverity = Status.Severity.OK )</font>
+@Service( impl = PhoneTypeInitialValueService.class )
+    
+<font color="#888888">ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
+    
+Value&lt;String> getType();
+void setType( String type );</font></code></pre>
 
 
 <a name="PossibleTypesService"><h2>PossibleTypesService</h2></a>

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Kamesh Sampath - [354276] Support initial values for properties
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling;
@@ -26,6 +27,7 @@ import org.eclipse.sapphire.modeling.internal.MemoryResource;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.LocalizationSystem;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.services.InitialValueService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.internal.ElementMetaModelServiceContext;
@@ -270,15 +272,33 @@ public final class ModelElementType extends ModelMetadataItem
         
         if( this.implClassConstructor != null )
         {
+            T element;
+            
             try
             {
-                return (T) this.implClassConstructor.newInstance( parent, parentProperty, resource );
+                element = (T) this.implClassConstructor.newInstance( parent, parentProperty, resource );
             }
             catch( Exception e )
             {
                 final String msg = NLS.bind( Resources.cannotInstantiate, getSimpleName() );
                 throw new RuntimeException( msg, e );
             }
+
+            for( ModelProperty property : this.properties ) 
+            {
+                if( property instanceof ValueProperty ) 
+                {
+                    final InitialValueService initialValueService = element.service( property, InitialValueService.class );
+                    
+                    if( initialValueService != null ) 
+                    {
+                        element.write( (ValueProperty) property, initialValueService.text() );
+                    }
+
+                }
+            }
+            
+            return element;                
         }
         
         final String msg = NLS.bind( Resources.cannotInstantiate, getSimpleName() );

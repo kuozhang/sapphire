@@ -27,6 +27,13 @@
         <id>Sapphire.DefaultValueService</id>
     </service>
     <service>
+        <id>Sapphire.InitialValueService.Standard</id>
+        <type>org.eclipse.sapphire.services.InitialValueService</type>
+        <factory>org.eclipse.sapphire.services.internal.StandardInitialValueService$Factory</factory>
+        <description>Implementation of InitialValueService that draws the initial value from @InitialValue annotation.</description>
+        <context>Sapphire.Property.Instance</context>
+    </service>
+    <service>
         <type>org.eclipse.sapphire.services.PossibleValuesService</type>
         <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.PossibleValuesServiceFactory</factory>
@@ -173,6 +180,13 @@
         <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.DefaultValueFactsService$Factory</factory>
         <id>Sapphire.FactsService.DefaultValue</id>
+    </service>
+    <service>
+        <id>Sapphire.FactsService.InitialValue</id>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+        <factory>org.eclipse.sapphire.services.internal.InitialValueFactsService$Factory</factory>
+        <context>Sapphire.Property.Instance</context>
+        <description>Creates fact statements about property's initial value by using semantical information specified by InitialValueService and @InitialValue annotation.</description>
     </service>
     <service>
         <description>Creates fact statements about numeric value property's range by using semantical information specified by @NumericRange annotation.</description>

@@ -30,63 +30,74 @@ import org.eclipse.sapphire.services.DefaultValueService;
 
 public class SapphireCommonUtil {
     
-    public final static String getDefaultValueLabel( final IModelElement modelElement, 
+    public final static String getDefaultValueLabel( final IModelElement element, 
                                                      final ValueProperty property ) 
     {
-        String defaultValue = modelElement.service( property, DefaultValueService.class ).getDefaultValue();
+        final String defaultValue = element.service( property, DefaultValueService.class ).getDefaultValue();
         
         if( defaultValue != null )
         {
-            if( property.isOfType( Enum.class ) )
+            return getValueLabel( element, property, defaultValue );
+        }
+        
+        return null;
+    }
+    
+    public final static String getValueLabel( final IModelElement element, 
+                                              final ValueProperty property,
+                                              final String value ) 
+    {
+        String valueLabel = value;
+        
+        if( property.isOfType( Enum.class ) )
+        {
+            final EnumValueType enumValueType = new EnumValueType( property.getTypeClass() );
+            
+            for( Enum<?> item : enumValueType.getItems() )
             {
-                final EnumValueType enumValueType = new EnumValueType( property.getTypeClass() );
-                
-                for( Enum<?> item : enumValueType.getItems() )
+                if( item.toString().equals( value ) )
                 {
-                    if( item.toString().equals( defaultValue ) )
+                    valueLabel = enumValueType.getLabel( item, true, CapitalizationType.NO_CAPS, false );
+                    break;
+                }
+            }
+        }
+        else
+        {
+            final ValueKeyword keyword = property.getKeyword( value );
+            
+            if( keyword != null )
+            {
+                valueLabel = keyword.toDisplayString();
+            }
+            else if( property.hasAnnotation( NamedValues.class ) ) 
+            {
+                final LocalizationService localization = property.getLocalizationService();
+                
+                for( NamedValue x : property.getAnnotation( NamedValues.class ).namedValues() )
+                {
+                    if( value.equals( x.value() ) ) 
                     {
-                        defaultValue = enumValueType.getLabel( item, true, CapitalizationType.NO_CAPS, false );
+                        String namedValueLabel = localization.text( x.label(), CapitalizationType.NO_CAPS, false );
+                        valueLabel = namedValueLabel + " (" + x.value() + ")";
                         break;
                     }
                 }
             }
-            else
-            {
-                final ValueKeyword keyword = property.getKeyword( defaultValue );
-                
-                if( keyword != null )
-                {
-                    defaultValue = keyword.toDisplayString();
-                }
-                else if( property.hasAnnotation( NamedValues.class ) ) 
-                {
-                    final LocalizationService localization = property.getLocalizationService();
-                    
-                    for( NamedValue x : property.getAnnotation( NamedValues.class ).namedValues() )
-                    {
-                        if( defaultValue.equals( x.value() ) ) 
-                        {
-                            String namedValueLabel = localization.text( x.label(), CapitalizationType.NO_CAPS, false );
-                            defaultValue = namedValueLabel + " (" + x.value() + ")";
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            if( ! ( property.isOfType( Integer.class ) ||
-                    property.isOfType( Long.class ) ||
-                    property.isOfType( Float.class ) ||
-                    property.isOfType( Double.class ) ||
-                    property.isOfType( BigInteger.class ) ||
-                    property.isOfType( BigDecimal.class ) ||
-                    property.isOfType( Boolean.class ) ) )
-            {
-                defaultValue = "\"" + defaultValue + "\"";
-            }
         }
         
-        return defaultValue;
+        if( ! ( property.isOfType( Integer.class ) ||
+                property.isOfType( Long.class ) ||
+                property.isOfType( Float.class ) ||
+                property.isOfType( Double.class ) ||
+                property.isOfType( BigInteger.class ) ||
+                property.isOfType( BigDecimal.class ) ||
+                property.isOfType( Boolean.class ) ) )
+        {
+            valueLabel = "\"" + value + "\"";
+        }
+        
+        return valueLabel;
     }
 
     public static final String normalizeForDisplay(final ValueProperty property, final String value) {

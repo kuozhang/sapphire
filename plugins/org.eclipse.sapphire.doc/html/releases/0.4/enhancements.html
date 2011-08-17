@@ -26,6 +26,7 @@
   <li><a href="#Services">Services</a></li>
   <ol type="A">
     <li><a href="#FactsService">FactsService</a></li>
+    <li><a href="#InitialValueService">InitialValueService and @InitialValue</a></li>
     <li><a href="#PossibleTypesService">PossibleTypesService</a></li>
   </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
@@ -54,6 +55,28 @@ in generation of facts on equal footing with the framework. Also new for 0.4 is 
 of annotations that generate corresponding facts.</p>
 
 <p><a href="../../services/index.html#FactsService">See Documentation</a></p>
+
+
+<h2><a name="InitialValueService">InitialValueService and @InitialValue</a></h2>
+
+<p>The InitialValueService produces a value to assign to a property when the containing model element is
+created.</p>
+
+<p>The concept of an initial value is different from a default value. The initial value is explicitly
+assigned to the property during containing model element's creation. This includes writing to the backing resource
+(such as an XML document). In comparison, the default value is used when null is read for a property from the 
+backing resource. As such, the default value is only visible to model consumers (such as the user interface), 
+while the initial value is persisted.</p> 
+
+<p>Whether you use an initial value or a default value is frequently dictated by the requirements of the 
+backing resource. As an example, let's consider an XML document that stores phone numbers. In this XML document, 
+the phone number element has a type child element which contains a value like home, mobile, work, etc.
+Let's further say that semantically, we wish to use mobile phone number type unless specified differently.
+Now, if the XML schema dictates that the phone number type element is required, we would need to specify 
+"mobile" as the initial value. If the phone number type element is optional, it would be better to specify
+"mobile" as the default value.</p>
+
+<p><a href="../../services/index.html#InitialValueService">See Documentation</a></p>
 
 
 <h2><a name="PossibleTypesService">PossibleTypesService</a></h2>

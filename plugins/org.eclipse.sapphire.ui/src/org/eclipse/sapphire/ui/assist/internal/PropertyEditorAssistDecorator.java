@@ -79,6 +79,7 @@ public final class PropertyEditorAssistDecorator
         SYSTEM_CONTRIBUTORS.add( new ProblemsSectionAssistContributor() );
         SYSTEM_CONTRIBUTORS.add( new ActionsSectionAssistContributor() );
         SYSTEM_CONTRIBUTORS.add( new ResetActionsAssistContributor() );
+        SYSTEM_CONTRIBUTORS.add( new RestoreInitialValueActionsAssistContributor() );
         SYSTEM_CONTRIBUTORS.add( new ShowInSourceActionAssistContributor() );
     }
     

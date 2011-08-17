@@ -442,6 +442,42 @@
                         </content>
                     </section>
                 </node>
+                <node>
+                    <label>default value</label>
+                    <section>
+                        <content>
+                            <with>
+                                <path>DefaultValueGallery</path>
+                                <default-panel>
+                                    <content>
+                                        <label>The default value is used when null is read from the backing resource, such as an XML document.</label>
+                                        <spacer></spacer>
+                                        <property-editor>String</property-editor>
+                                    </content>
+                                </default-panel>
+                            </with>
+                        </content>
+                    </section>
+                    <property>ValuePropertiesGallery</property>
+                </node>
+                <node>
+                    <label>initial value</label>
+                    <section>
+                        <content>
+                            <with>
+                                <path>InitialValueGallery</path>
+                                <default-panel>
+                                    <content>
+                                        <label>The initial value is assigned when the containing model element is created. Since the initial value is explicitly assigned to the property, it is written to the backing resource, such as an XML document.</label>
+                                        <spacer></spacer>
+                                        <property-editor>String</property-editor>
+                                    </content>
+                                </default-panel>
+                            </with>
+                        </content>
+                    </section>
+                    <property>ValuePropertiesGallery</property>
+                </node>
             </node>
             <node>
                 <label>element properties</label>

@@ -16,6 +16,7 @@ import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -23,10 +24,7 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 
 @GenerateImpl
 
-public interface IValuePropertiesGallery
-
-    extends IModelElement
-
+public interface IValuePropertiesGallery extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IValuePropertiesGallery.class );
     
@@ -37,5 +35,23 @@ public interface IValuePropertiesGallery
     ImpliedElementProperty PROP_WHITESPACE_HANDLING_GALLERY = new ImpliedElementProperty( TYPE, "WhitespaceHandlingGallery" );
     
     IWhitespaceHandlingGallery getWhitespaceHandlingGallery();
+    
+    // *** DefaultValueGallery ***
+    
+    @Type( base = DefaultValueGallery.class )
+    @XmlBinding( path = "default-value" )
+
+    ImpliedElementProperty PROP_DEFAULT_VALUE_GALLERY = new ImpliedElementProperty( TYPE, "DefaultValueGallery" );
+    
+    DefaultValueGallery getDefaultValueGallery();
+    
+    // *** InitialValueGallery ***
+    
+    @Type( base = InitialValueGallery.class )
+    @XmlBinding( path = "initial-value" )
+
+    ImpliedElementProperty PROP_INITIAL_VALUE_GALLERY = new ImpliedElementProperty( TYPE, "InitialValueGallery" );
+    
+    InitialValueGallery getInitialValueGallery();
     
 }
