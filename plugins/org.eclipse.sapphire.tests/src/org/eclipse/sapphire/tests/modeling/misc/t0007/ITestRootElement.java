@@ -9,16 +9,14 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.gallery;
+package org.eclipse.sapphire.tests.modeling.misc.t0007;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
-import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -26,22 +24,16 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface IChildElement
-
-    extends IModelElement
-    
+public interface ITestRootElement extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IChildElement.class );
+    ModelElementType TYPE = new ModelElementType( ITestRootElement.class );
     
-    // *** StringValue ***
+    // *** Children ***
     
-    @Label( standard = "string value" )
-    @XmlBinding( path = "string" )
-    @NoDuplicates
+    @Type( base = ITestChildElement.class )
     
-    ValueProperty PROP_STRING_VALUE = new ValueProperty( TYPE, "StringValue" );
+    ListProperty PROP_CHILDREN = new ListProperty( TYPE, "Children" );
     
-    Value<String> getStringValue();
-    void setStringValue( String value );
-
+    ModelElementList<ITestChildElement> getChildren();
+    
 }

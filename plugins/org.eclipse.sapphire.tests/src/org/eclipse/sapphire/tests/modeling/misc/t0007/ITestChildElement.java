@@ -9,16 +9,14 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.gallery;
+package org.eclipse.sapphire.tests.modeling.misc.t0007;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
-import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -26,22 +24,17 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface IChildElement
-
-    extends IModelElement
-    
+public interface ITestChildElement extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IChildElement.class );
+    ModelElementType TYPE = new ModelElementType( ITestChildElement.class );
     
-    // *** StringValue ***
+    // *** Id ***
     
-    @Label( standard = "string value" )
-    @XmlBinding( path = "string" )
     @NoDuplicates
     
-    ValueProperty PROP_STRING_VALUE = new ValueProperty( TYPE, "StringValue" );
+    ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
     
-    Value<String> getStringValue();
-    void setStringValue( String value );
-
+    Value<String> getId();
+    void setId( String value );
+    
 }
