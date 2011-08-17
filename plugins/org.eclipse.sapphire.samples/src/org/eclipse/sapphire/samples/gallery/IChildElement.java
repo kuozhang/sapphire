@@ -17,7 +17,6 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -37,7 +36,6 @@ public interface IChildElement
     
     @Label( standard = "string value" )
     @XmlBinding( path = "string" )
-    @NoDuplicates
     
     ValueProperty PROP_STRING_VALUE = new ValueProperty( TYPE, "StringValue" );
     
