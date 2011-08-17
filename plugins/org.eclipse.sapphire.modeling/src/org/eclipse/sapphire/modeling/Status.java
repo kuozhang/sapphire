@@ -294,14 +294,17 @@ public final class Status
                 
                 if( sev != Severity.OK )
                 {
-                    if( sev.code() > this.severity.code() )
+                    if( ! this.children.contains( status ) )
                     {
-                        this.severity = sev;
-                        this.message = status.message();
-                        this.exception = status.exception();
+                        if( sev.code() > this.severity.code() )
+                        {
+                            this.severity = sev;
+                            this.message = status.message();
+                            this.exception = status.exception();
+                        }
+                        
+                        this.children.add( status );
                     }
-                    
-                    this.children.add( status );
                 }
             }
             
