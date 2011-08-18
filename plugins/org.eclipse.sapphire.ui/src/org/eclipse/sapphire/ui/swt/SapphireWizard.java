@@ -41,10 +41,7 @@ import org.eclipse.ui.ide.IDE;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class SapphireWizard<M extends IExecutableModelElement>
-
-    extends Wizard
-    
+public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
 {
     private final M element;
     private final SapphireWizardPart part;
