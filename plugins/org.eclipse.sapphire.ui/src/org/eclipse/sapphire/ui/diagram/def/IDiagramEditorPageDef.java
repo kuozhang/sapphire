@@ -50,6 +50,19 @@ public interface IDiagramEditorPageDef
 
     IDiagramGridDef getGridDefinition();    
     
+    // *** ShowGuides ***
+    
+    @Type( base = Boolean.class )
+    @XmlBinding( path = "show-guides" )
+    @DefaultValue( text = "false" )
+    @Label( standard = "show guides")
+    
+    ValueProperty PROP_SHOW_GUIDES = new ValueProperty(TYPE, "ShowGuides");
+    
+    Value<Boolean> isShowGuides();
+    void setShowGuides( String value );
+    void setShowGuides( Boolean value );
+
     // *** SideBySideLayoutStorage ***
     
     @Type( base = Boolean.class )

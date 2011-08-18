@@ -63,4 +63,9 @@ public abstract class SapphireDiagramPartListener extends SapphirePartListener
     {
     	// The default implementation doesn't do anything.
     }
+
+    public void handleGuideStateChangeEvent(final DiagramPageEvent event)
+    {
+    	// The default implementation doesn't do anything.
+    }
 }

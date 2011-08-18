@@ -99,6 +99,7 @@ public class SapphireDiagramEditor extends DiagramEditor
     private static int yInc = 0;
     private List<SapphirePart> selectedParts = null;
     private boolean gridVisibilityChanged = false;
+    private boolean guidesVisibilityChanged = false;
     
     public SapphireDiagramEditor(final IModelElement rootModelElement, final IPath pageDefinitionLocation)
     {
@@ -170,9 +171,16 @@ public class SapphireDiagramEditor extends DiagramEditor
 						new Boolean(diagramPart.isGridVisible()));
 				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, 
 						new Boolean(diagramPart.isGridVisible()));
-				getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED,
-						new Boolean(diagramPart.isGridVisible()));
 				gridVisibilityChanged = true;
+				firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY); 
+			}
+			
+			@Override
+			public void handleGuideStateChangeEvent(final DiagramPageEvent event)
+			{
+				getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED,
+						new Boolean(diagramPart.isShowGuides()));
+				guidesVisibilityChanged = true;
 				firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY); 
 			}
 			
@@ -201,7 +209,7 @@ public class SapphireDiagramEditor extends DiagramEditor
 	public boolean isDirty()
 	{
 		boolean dirty = super.isDirty();
-		dirty |= this.gridVisibilityChanged;
+		dirty |= this.gridVisibilityChanged | this.guidesVisibilityChanged;
 		return dirty;
 	}
 	
@@ -345,6 +353,10 @@ public class SapphireDiagramEditor extends DiagramEditor
 		{
 			this.diagramPart.syncGridStateWithDiagramLayout(this.diagramGeometry.isGridVisible());
 		}
+		if (this.diagramGeometry.isShowGuidesPropertySet())
+		{
+			this.diagramPart.syncGuideStateWithDiagramLayout(this.diagramGeometry.isShowGuides());
+		}
 	}
 	
 	@Override
@@ -359,6 +371,13 @@ public class SapphireDiagramEditor extends DiagramEditor
 			getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, this.diagramPart.isGridVisible());
 			getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, this.diagramPart.isGridVisible());			
 		}
+		
+		boolean isShowGuidesInViewer = (Boolean) getGraphicalViewer()
+				.getProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED);
+		if (this.diagramPart.isShowGuides() != isShowGuidesInViewer)
+		{
+			getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, this.diagramPart.isShowGuides());
+		}
 		doSave(null);
 	}
 		
@@ -370,6 +389,7 @@ public class SapphireDiagramEditor extends DiagramEditor
 		{
 			getDiagramGeometry().write();
 			this.gridVisibilityChanged = false;
+			this.guidesVisibilityChanged = false;
 			firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);
 		}
         catch( Exception e )

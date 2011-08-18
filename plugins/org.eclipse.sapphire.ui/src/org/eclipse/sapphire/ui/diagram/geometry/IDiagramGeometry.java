@@ -16,7 +16,11 @@ import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -42,6 +46,19 @@ public interface IDiagramGeometry extends IModelElement
     ImpliedElementProperty PROP_GRID_DEFINITION = new ImpliedElementProperty( TYPE, "GridDefinition" );
 
     IDiagramGridDef getGridDefinition();    
+    
+    // *** ShowGuides ***
+    
+    @Type( base = Boolean.class )
+    @XmlBinding( path = "show-guides" )
+    @DefaultValue( text = "false" )
+    @Label( standard = "show guides")
+    
+    ValueProperty PROP_SHOW_GUIDES = new ValueProperty(TYPE, "ShowGuides");
+    
+    Value<Boolean> isShowGuides();
+    void setShowGuides( String value );
+    void setShowGuides( Boolean value );
     
     // *** DiagramNodeGeometries ***
 
