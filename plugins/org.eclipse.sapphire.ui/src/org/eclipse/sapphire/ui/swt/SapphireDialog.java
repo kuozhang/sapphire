@@ -39,10 +39,7 @@ import org.eclipse.swt.widgets.Shell;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class SapphireDialog
-
-    extends Dialog
-    
+public class SapphireDialog extends Dialog
 {
     private final SapphireDialogPart part;
     private final boolean preferFormStyle;
