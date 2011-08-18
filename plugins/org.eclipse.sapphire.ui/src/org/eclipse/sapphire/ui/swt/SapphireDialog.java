@@ -17,13 +17,18 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import java.util.Collections;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.SapphireDialogPart;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ISapphireDialogDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -41,6 +46,7 @@ public class SapphireDialog
 {
     private final SapphireDialogPart part;
     private final boolean preferFormStyle;
+    private Button okButton;
     
     public SapphireDialog( final Shell shell,
                            final IModelElement modelElement,
@@ -123,6 +129,33 @@ public class SapphireDialog
             composite.setBackground( Display.getCurrent().getSystemColor( SWT.COLOR_WHITE ) );
         }
         
+        this.okButton = getButton( IDialogConstants.OK_ID );
+        
+        final SapphirePartListener listener = new SapphirePartListener()
+        {
+            @Override
+            public void handleValidateStateChange( final Status oldValidateState,
+                                                   final Status newValidationState )
+            {
+                updateOkButtonEnablement();
+            }
+        };
+        
+        this.part.addListener( listener );
+        
+        this.okButton.addDisposeListener
+        (
+            new DisposeListener()
+            {
+                public void widgetDisposed( final DisposeEvent event )
+                {
+                    SapphireDialog.this.part.removeListener( listener );
+                }
+            }
+        );
+        
+        updateOkButtonEnablement();
+        
         return composite;
     }
     
@@ -146,6 +179,20 @@ public class SapphireDialog
     protected boolean isResizable()
     {
         return true;
+    }
+    
+    private void updateOkButtonEnablement()
+    {
+        if( ! this.okButton.isDisposed() )
+        {
+            final boolean expected = ( this.part.getValidationState().severity() != Status.Severity.ERROR );
+            final boolean actual = this.okButton.isEnabled();
+            
+            if( expected != actual )
+            {
+                this.okButton.setEnabled( expected );
+            }
+        }
     }
     
 }
