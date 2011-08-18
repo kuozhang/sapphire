@@ -38,15 +38,23 @@ public class MutableReference<T>
     
     public T get() 
     { 
-        return this.value;
+        synchronized( this )
+        {
+            return this.value;
+        }
     }
     
     public void set( final T value ) 
     { 
-        final T oldValue = this.value;
-        this.value = value; 
+        final T oldValue;
         
-        notifyListeners( oldValue, this.value );
+        synchronized( this )
+        {
+            oldValue = this.value;
+            this.value = value;
+        }
+        
+        notifyListeners( oldValue, value );
     }
     
     public void addListener( final Listener listener )

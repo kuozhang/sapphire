@@ -20,6 +20,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.ui.DelayedTasksExecutor;
 import org.eclipse.sapphire.ui.SapphireDialogPart;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
@@ -178,6 +179,13 @@ public class SapphireDialog extends Dialog
         return true;
     }
     
+    @Override
+    protected void okPressed()
+    {
+        DelayedTasksExecutor.sweep();
+        super.okPressed();
+    }
+
     private void updateOkButtonEnablement()
     {
         if( ! this.okButton.isDisposed() )
