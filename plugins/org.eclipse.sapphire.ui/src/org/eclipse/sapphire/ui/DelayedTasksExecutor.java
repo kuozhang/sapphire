@@ -16,6 +16,7 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.eclipse.sapphire.modeling.util.MutableReference;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.swt.widgets.Display;
 
@@ -35,6 +36,12 @@ public final class DelayedTasksExecutor
     private static WorkerThread workerThread = null;
     
     public static void schedule( final Task task )
+    {
+        schedule( task, false );
+    }
+    
+    private static void schedule( final Task task,
+                                  final boolean doNotDelay )
     {
         synchronized( tasks )
         {
@@ -59,12 +66,71 @@ public final class DelayedTasksExecutor
                 tasks.add( task );
             }
             
-            timeOfLastAddition = System.currentTimeMillis();
+            timeOfLastAddition = ( doNotDelay ? 0 : System.currentTimeMillis() );
             
             if( workerThread == null || ! workerThread.isAlive() )
             {
                 workerThread = new WorkerThread();
                 workerThread.start();
+            }
+            else
+            {
+                if( doNotDelay )
+                {
+                    workerThread.interrupt();
+                }
+            }
+        }
+    }
+    
+    public static void sweep()
+    {
+        final MutableReference<Boolean> sweeperCompletionResult = new MutableReference<Boolean>( false );
+        
+        final Task sweeper = new Task()
+        {
+            @Override
+            public int getPriority()
+            {
+                return Integer.MIN_VALUE;
+            }
+
+            public void run()
+            {
+                synchronized( sweeperCompletionResult )
+                {
+                    sweeperCompletionResult.set( true );
+                    sweeperCompletionResult.notifyAll();
+                }
+            }
+        };
+        
+        schedule( sweeper, true );
+        
+        final Display display = Display.getDefault();
+        
+        if( display.getThread() == Thread.currentThread() )
+        {
+            while( sweeperCompletionResult.get() == false )
+            {
+                if( ! display.readAndDispatch() )
+                {
+                    display.sleep();
+                }
+            }
+        }
+        else
+        {
+            synchronized( sweeperCompletionResult )
+            {
+                try
+                {
+                    synchronized( sweeperCompletionResult )
+                    {
+                        sweeperCompletionResult.wait();
+                    }
+                }
+                catch( InterruptedException e ) {}
             }
         }
     }
@@ -92,10 +158,7 @@ public final class DelayedTasksExecutor
         }
     }
     
-    public static abstract class Task
-    
-        implements Runnable
-        
+    public static abstract class Task implements Runnable
     {
         public int getPriority()
         {
@@ -108,10 +171,7 @@ public final class DelayedTasksExecutor
         }
     }
     
-    private static final class TaskPriorityComparator 
-    
-        implements Comparator<Task>
-    
+    private static final class TaskPriorityComparator implements Comparator<Task>
     {
         public int compare( final Task t1,
                             final Task t2 )
@@ -120,10 +180,7 @@ public final class DelayedTasksExecutor
         }
     }
     
-    private static final class WorkerThread
-    
-        extends Thread
-        
+    private static final class WorkerThread extends Thread
     {
         private long timeOfLastWork = System.currentTimeMillis();
         

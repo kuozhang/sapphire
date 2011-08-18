@@ -22,6 +22,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.ui.DelayedTasksExecutor;
 import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
 import org.eclipse.sapphire.ui.SapphirePartEvent;
 import org.eclipse.sapphire.ui.SapphirePartListener;
@@ -97,6 +98,8 @@ public class SapphireWizard<M extends IExecutableModelElement>
     @Override
     public final boolean performFinish()
     {
+        DelayedTasksExecutor.sweep();
+        
         final Status[] result = new Status[ 1 ];
         
         final IRunnableWithProgress runnable = new IRunnableWithProgress()
