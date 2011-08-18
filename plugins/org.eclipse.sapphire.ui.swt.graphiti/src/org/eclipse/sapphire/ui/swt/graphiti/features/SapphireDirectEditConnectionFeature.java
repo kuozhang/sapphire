@@ -73,4 +73,10 @@ public class SapphireDirectEditConnectionFeature extends AbstractDirectEditingFe
         }
     }
 
+	@Override
+	public boolean stretchFieldToFitText() 
+	{
+		return true;
+	}
+    
 }
