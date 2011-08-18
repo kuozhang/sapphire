@@ -56,6 +56,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     private SapphirePart selection;
     private ImplicitConnectionTemplateListener implicitConnTemplateListener;
     private boolean showGrid;
+    private boolean showGuides;
         
     @Override
     protected void init()
@@ -74,6 +75,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         }
         
         this.showGrid = this.diagramPageDef.getGridDefinition().isVisible().getContent();
+        this.showGuides = this.diagramPageDef.isShowGuides().getContent();
         
         this.nodeTemplateListener = new NodeTemplateListener();
         this.connTemplateListener = new ConnectionTemplateListener();
@@ -201,6 +203,25 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	}
     }
     
+    public boolean isShowGuides()
+    {
+    	return this.showGuides;
+    }
+    
+    public void setShowGuides(boolean showGuides)
+    {
+    	if (this.showGuides != showGuides)
+    	{
+    		this.showGuides = showGuides;
+    		notifyGuideStateChange();
+    	}
+    }
+    
+    public void syncGuideStateWithDiagramLayout(boolean showGuides)
+    {
+    	this.showGuides = showGuides;
+    }
+
     public List<IDiagramImageChoice> getImageDecorators()
     {
         return this.diagramPageDef.getDiagramImageDecorators();
@@ -449,7 +470,19 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 				((SapphireDiagramPartListener)listener).handleGridStateChangeEvent(pageEvent);
 			}
 		}		
-		
+	}
+	
+	private void notifyGuideStateChange()
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramPageEvent pageEvent = new DiagramPageEvent(this);
+				((SapphireDiagramPartListener)listener).handleGuideStateChangeEvent(pageEvent);
+			}
+		}		
 	}
 	
 	// --------------------------------------------------------------------

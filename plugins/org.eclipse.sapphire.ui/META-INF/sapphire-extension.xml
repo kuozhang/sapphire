@@ -191,6 +191,13 @@
         <description>Show or hide the grid</description>       
     </action>
     <action>
+        <id>Sapphire.Diagram.Guides.Toggle</id>
+        <context>Sapphire.Diagram.Editor</context>
+        <label>show guides</label>
+        <type>toggle</type>
+        <description>Show or hide the guides</description>       
+    </action>
+    <action>
         <id>Sapphire.Diagram.Node.Default</id>
         <context>Sapphire.Diagram.Node</context>
         <label>default action</label>
