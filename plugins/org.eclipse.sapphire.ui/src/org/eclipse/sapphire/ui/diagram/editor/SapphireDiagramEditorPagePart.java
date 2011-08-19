@@ -75,7 +75,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         }
         
         this.showGrid = this.diagramPageDef.getGridDefinition().isVisible().getContent();
-        this.showGuides = this.diagramPageDef.isShowGuides().getContent();
+        this.showGuides = this.diagramPageDef.getGuidesDefinition().isVisible().getContent();
         
         this.nodeTemplateListener = new NodeTemplateListener();
         this.connTemplateListener = new ConnectionTemplateListener();

@@ -1082,6 +1082,15 @@
                             </content>
                         </panel>
                     </with>
+                    <with>
+                        <path>GuidesDefinition</path>
+                        <panel>
+                            <key>IDiagramGuidesDef</key>
+                            <content>
+                                <property-editor>Visible</property-editor>
+                            </content>
+                        </panel>
+                    </with>
                     <property-editor>SideBySideLayoutStorage</property-editor>
                 </content>
             </section>
