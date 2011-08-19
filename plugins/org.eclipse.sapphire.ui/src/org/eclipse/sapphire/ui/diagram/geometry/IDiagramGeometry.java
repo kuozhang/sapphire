@@ -26,6 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramGridDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramGuidesDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -47,18 +48,14 @@ public interface IDiagramGeometry extends IModelElement
 
     IDiagramGridDef getGridDefinition();    
     
-    // *** ShowGuides ***
+    // *** GuidesDefinition ***
     
-    @Type( base = Boolean.class )
-    @XmlBinding( path = "show-guides" )
-    @DefaultValue( text = "false" )
-    @Label( standard = "show guides")
+    @Type( base = IDiagramGuidesDef.class )
+    @XmlBinding( path = "guides")
     
-    ValueProperty PROP_SHOW_GUIDES = new ValueProperty(TYPE, "ShowGuides");
-    
-    Value<Boolean> isShowGuides();
-    void setShowGuides( String value );
-    void setShowGuides( Boolean value );
+    ImpliedElementProperty PROP_GUIDES_DEFINITION = new ImpliedElementProperty( TYPE, "GuidesDefinition" );
+
+    IDiagramGuidesDef getGuidesDefinition();    
     
     // *** DiagramNodeGeometries ***
 

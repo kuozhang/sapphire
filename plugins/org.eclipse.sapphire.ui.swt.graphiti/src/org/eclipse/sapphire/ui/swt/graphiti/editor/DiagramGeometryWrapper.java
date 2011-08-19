@@ -82,17 +82,17 @@ public class DiagramGeometryWrapper
 		
 	public boolean isShowGuidesPropertySet()
 	{
-		return this.geometryModel.isShowGuides().getContent(false) != null;
+		return this.geometryModel.getGuidesDefinition().isVisible().getContent(false) != null;
 	}
 	
 	public boolean isShowGuides()
 	{
-		return this.geometryModel.isShowGuides().getContent();
+		return this.geometryModel.getGuidesDefinition().isVisible().getContent();
 	}
 	
 	public void setShowGuides(boolean visible)
 	{
-		this.geometryModel.setShowGuides(visible);
+		this.geometryModel.getGuidesDefinition().setVisible(visible);
 	}
 
 	public void read() throws ResourceStoreException, CoreException
@@ -165,7 +165,7 @@ public class DiagramGeometryWrapper
 	public void write() throws ResourceStoreException
 	{		
 		this.geometryModel.getGridDefinition().setVisible(this.diagramPart.isGridVisible());
-		this.geometryModel.setShowGuides(this.diagramPart.isShowGuides());
+		this.geometryModel.getGuidesDefinition().setVisible(this.diagramPart.isShowGuides());
 		addNodeBoundsToModel();
 		addConnectionsToModel();
 		this.geometryModel.resource().save();
