@@ -15,8 +15,9 @@ import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementListener;
+import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -38,18 +39,18 @@ public final class OutlineNodeShowInSourceActionHandler extends SapphireActionHa
     {
         super.init( action, def );
         
-        final ModelElementListener listener = new ModelElementListener()
+        final IModelElement element = ( (MasterDetailsContentNode) getPart() ).getLocalModelElement();
+        
+        final ModelPropertyListener listener = new ModelPropertyListener()
         {
             @Override
-            public void propertyChanged( final ModelPropertyChangeEvent event )
+            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
             {
                 refreshEnablementState();
             }
         };
         
-        final IModelElement element = ( (MasterDetailsContentNode) getPart() ).getLocalModelElement();
-        
-        element.addListener( listener );
+        element.addListener( listener, ModelPath.ALL_DESCENDENTS );
 
         refreshEnablementState();
         
@@ -62,7 +63,7 @@ public final class OutlineNodeShowInSourceActionHandler extends SapphireActionHa
                 {
                     if( event instanceof DisposeEvent )
                     {
-                        element.removeListener( listener );
+                        element.removeListener( listener, ModelPath.ALL_DESCENDENTS );
                     }
                 }
             }
@@ -88,5 +89,5 @@ public final class OutlineNodeShowInSourceActionHandler extends SapphireActionHa
         
         return null;
     }
-    
+   
 }

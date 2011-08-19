@@ -28,13 +28,12 @@ public final class ModelPath
     private static final AllSiblingsSegment ALL_SIBLINGS_SEGMENT = new AllSiblingsSegment();
     private static final AllDescendentsSegment ALL_DESCENDENTS_SEGMENT = new AllDescendentsSegment();
     
+    public static final ModelPath ALL_DESCENDENTS = new ModelPath( "*" );
+    
     private final List<Segment> segments;
     private final int offset;
 
-    public ModelPath( final String path )
-    
-        throws MalformedPathException
-        
+    public ModelPath( final String path ) throws MalformedPathException
     {
         this( parse( path ), 0 );
     }

@@ -20,10 +20,7 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNo
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class OutlineNodeShowInSourceActionHandlerCondition 
-
-    extends SapphireCondition
-    
+public final class OutlineNodeShowInSourceActionHandlerCondition extends SapphireCondition
 {
     @Override
     protected boolean evaluate()
