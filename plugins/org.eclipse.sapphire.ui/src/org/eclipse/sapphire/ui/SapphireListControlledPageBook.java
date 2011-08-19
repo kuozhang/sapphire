@@ -17,32 +17,25 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.util.MutableReference;
 import org.eclipse.sapphire.ui.def.ISapphirePageBookExtDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.renderers.swt.DefaultListPropertyEditorRenderer;
+import org.eclipse.sapphire.ui.swt.SapphireControl;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireListControlledPageBook
-
-    extends SapphirePageBook
-    
+public final class SapphireListControlledPageBook extends SapphirePageBook
 {
-    private ListProperty property;
-    
-    @Override
-    protected void init()
-    {
-        super.init();
-        
-        this.property = (ListProperty) resolve( ( (ISapphirePageBookExtDef) this.definition ).getControlProperty().getContent() );
-    }
-
     @Override
     protected Object parsePageKey( final String pageKeyString )
     {
@@ -56,7 +49,10 @@ public final class SapphireListControlledPageBook
     {
         super.render( context );
         
-        final Table table = SapphirePropertyEditor.findControlForProperty( context.getComposite(), this.property, Table.class );
+        final IModelElement element = getModelElement();
+        final ListProperty property = (ListProperty) resolve( ( (ISapphirePageBookExtDef) this.definition ).getControlProperty().getContent() );
+        
+        final Table table = findControlForProperty( context.getComposite(), element, property, Table.class );
         
         final ISelectionProvider selectionProvider 
             = (ISelectionProvider) table.getData( DefaultListPropertyEditorRenderer.DATA_SELECTION_PROVIDER );
@@ -80,7 +76,7 @@ public final class SapphireListControlledPageBook
                     }
                     else
                     {
-                        newModelElement = getModelElement();
+                        newModelElement = element;
                         newPageKey = null;
                     }
                     
@@ -102,7 +98,58 @@ public final class SapphireListControlledPageBook
             }
         );
         
-        changePage( getModelElement(), (String) null );
+        changePage( element, (String) null );
+    }
+    
+    private static <T> T findControlForProperty( final Control context,
+                                                 final IModelElement element,
+                                                 final ModelProperty property,
+                                                 final Class<T> type )
+    {
+        Control root = context;
+        
+        while( ! ( root instanceof Section || root instanceof SapphireControl ) )
+        {
+            final Control parent = root.getParent();
+            
+            if( parent instanceof Shell )
+            {
+                break;
+            }
+            
+            root = parent;
+        }
+        
+        return findControlForPropertyHelper( root, element, property, type );
+    }
+    
+    @SuppressWarnings( "unchecked" )
+    
+    private static <T> T findControlForPropertyHelper( final Control context,
+                                                       final IModelElement element,
+                                                       final ModelProperty property,
+                                                       final Class<T> type )
+    {
+        if( context.getData( SapphirePropertyEditor.DATA_ELEMENT ) == element && 
+            context.getData( SapphirePropertyEditor.DATA_PROPERTY ) == property && 
+            type.isAssignableFrom( context.getClass() ) )
+        {
+            return (T) context;
+        }
+        else if( context instanceof Composite )
+        {
+            for( Control child : ( (Composite) context ).getChildren() )
+            {
+                final T control = findControlForPropertyHelper( child, element, property, type );
+                
+                if( control != null )
+                {
+                    return control;
+                }
+            }
+        }
+        
+        return null;
     }
 
 }

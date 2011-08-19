@@ -388,6 +388,7 @@ public abstract class PropertyEditorRenderer
         
         control.setEnabled( element.isPropertyEnabled( property ) );
         control.setData( SapphirePropertyEditor.DATA_PROPERTY, property );
+        control.setData( SapphirePropertyEditor.DATA_ELEMENT, element );
         
         control.addDisposeListener
         (

@@ -51,25 +51,18 @@ import org.eclipse.sapphire.ui.renderers.swt.NamedValuesPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorRendererFactory;
 import org.eclipse.sapphire.ui.renderers.swt.SlushBucketPropertyEditor;
-import org.eclipse.sapphire.ui.swt.SapphireControl;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphirePropertyEditor
-
-    extends SapphirePart
-    
+public final class SapphirePropertyEditor extends SapphirePart
 {
     public static final String RELATED_CONTROLS = "related-controls";
     public static final String BROWSE_BUTTON = "browse-button";
     public static final String DATA_BINDING = "binding";
     public static final String DATA_PROPERTY = "property";
+    public static final String DATA_ELEMENT = "element";
     
     public static final String HINT_SHOW_LABEL = "show.label";
     public static final String HINT_SHOW_LABEL_ABOVE = "show.label.above";
@@ -490,53 +483,6 @@ public final class SapphirePropertyEditor
         }
         
         return Status.createOkStatus();
-    }
-    
-    public static <T> T findControlForProperty( final Control context,
-                                                final ModelProperty property,
-                                                final Class<T> type )
-    {
-        Control root = context;
-        
-        while( ! ( root instanceof Section || root instanceof SapphireControl ) )
-        {
-            final Control parent = root.getParent();
-            
-            if( parent instanceof Shell )
-            {
-                break;
-            }
-            
-            root = parent;
-        }
-        
-        return findControlForPropertyHelper( root, property, type );
-    }
-    
-    @SuppressWarnings( "unchecked" )
-    
-    private static <T> T findControlForPropertyHelper( final Control context,
-                                                       final ModelProperty property,
-                                                       final Class<T> type )
-    {
-        if( context.getData( DATA_PROPERTY ) == property && type.isAssignableFrom( context.getClass() ) )
-        {
-            return (T) context;
-        }
-        else if( context instanceof Composite )
-        {
-            for( Control child : ( (Composite) context ).getChildren() )
-            {
-                final T control = findControlForPropertyHelper( child, property, type );
-                
-                if( control != null )
-                {
-                    return control;
-                }
-            }
-        }
-        
-        return null;
     }
     
     @Override
