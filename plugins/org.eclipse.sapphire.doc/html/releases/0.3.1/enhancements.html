@@ -33,7 +33,10 @@
     <li><a href="#DependenciesService">DependenciesService</a></li>
     <li><a href="#FileExtensionsService">FileExtensionsService</a></li>
   </ol>
-  <li><a href="#DiagramGuidesControl">Diagram Guides Control</a></li>
+  <li><a href="#DiagramEditor">Diagram Editor</a></li>
+  <ol type="A">
+    <li><a href="#DiagramGuidesToggle">Guides Toggle</a></li>
+  </ol>
 </ol>
  
 <h2><a name="ExpressionLanguage"><a name="CastBetweenCollectionsAndStrings">Cast Between Collections and Strings</a></a></h2>
@@ -161,9 +164,18 @@ void setFilePath( Path value );</font></code></pre>
 
 <p><a href="../../services/index.html#FileExtensionsService">See Documentation</a></p>
 
-<h2><a name="DiagramGuidesControl">Diagram Guides Control</a></h2>
+<h2><a name="DiagramEditor"><a name="DiagramGuidesToggle">Diagram Guides Toggle</a></a></h2>
 
-<p>User can control the guides on Sapphire Diagram pages through diagram context menu and through diagram page definition file.</p>
+<p>The alignment guides can be toggled by the user via a context menu and the default state can be
+specified by the developer in the diagram definition.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;diagram-page></font>
+    &lt;guides>
+        &lt;visible>true&lt;/visible>
+    &lt;/guides>        
+<font color="#888888">&lt;/diagram-page></font></code></pre>
 
 
 <div class="copyright">Copyright (c) 2011 Oracle and Others<br/>
