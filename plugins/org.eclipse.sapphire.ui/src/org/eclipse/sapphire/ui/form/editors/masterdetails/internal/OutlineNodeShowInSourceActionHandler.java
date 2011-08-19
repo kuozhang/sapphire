@@ -12,8 +12,9 @@
 package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementListener;
+import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -27,12 +28,10 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNo
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class OutlineNodeShowInSourceActionHandler
-
-    extends SapphireActionHandler
-    
+public final class OutlineNodeShowInSourceActionHandler extends SapphireActionHandler
 {
-    private ModelElementListener listener;
+    private IModelElement element;
+    private ModelPropertyListener listener;
     
     @Override
     public void init( final SapphireAction action, 
@@ -40,16 +39,18 @@ public final class OutlineNodeShowInSourceActionHandler
     {
         super.init( action, def );
         
-        this.listener = new ModelElementListener()
+        this.element = ( (MasterDetailsContentNode) getPart() ).getLocalModelElement();
+        
+        this.listener = new ModelPropertyListener()
         {
             @Override
-            public void propertyChanged( final ModelPropertyChangeEvent event )
+            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
             {
                 refreshEnablementState();
             }
         };
         
-        ( (MasterDetailsContentNode) getPart() ).getLocalModelElement().addListener( this.listener );
+        this.element.addListener( this.listener, ModelPath.ALL_DESCENDENTS );
 
         refreshEnablementState();
     }
@@ -79,7 +80,7 @@ public final class OutlineNodeShowInSourceActionHandler
     {
         super.dispose();
         
-        ( (MasterDetailsContentNode) getPart() ).getLocalModelElement().removeListener( this.listener );
+        this.element.removeListener( this.listener, ModelPath.ALL_DESCENDENTS );
     }
     
 }
