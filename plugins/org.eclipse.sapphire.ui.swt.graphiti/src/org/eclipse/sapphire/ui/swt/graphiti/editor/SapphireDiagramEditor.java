@@ -98,8 +98,7 @@ public class SapphireDiagramEditor extends DiagramEditor
     private static int xInc = 100;
     private static int yInc = 0;
     private List<SapphirePart> selectedParts = null;
-    private boolean gridVisibilityChanged = false;
-    private boolean guidesVisibilityChanged = false;
+    private boolean editorIsDirty = false;
     
     public SapphireDiagramEditor(final IModelElement rootModelElement, final IPath pageDefinitionLocation)
     {
@@ -164,15 +163,34 @@ public class SapphireDiagramEditor extends DiagramEditor
 				removeConnection((DiagramConnectionPart)event.getPart());
 			}
 			
-			@Override
+		    public void handleConnectionAddBendpointEvent(final DiagramConnectionEvent event)
+		    {
+		    	markEditorDirty();
+		    }
+
+		    public void handleConnectionRemoveBendpointEvent(final DiagramConnectionEvent event)
+		    {
+		    	markEditorDirty();
+		    }
+
+		    public void handleConnectionMoveBendpointEvent(final DiagramConnectionEvent event)
+		    {
+		    	markEditorDirty();
+		    }
+			
+		    public void handleConnectionMoveLabelEvent(final DiagramConnectionEvent event)
+		    {
+		    	markEditorDirty();
+		    }
+
+		    @Override
 			public void handleGridStateChangeEvent(final DiagramPageEvent event)
 			{
 				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, 
 						new Boolean(diagramPart.isGridVisible()));
 				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, 
 						new Boolean(diagramPart.isGridVisible()));
-				gridVisibilityChanged = true;
-				firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY); 
+				markEditorDirty();
 			}
 			
 			@Override
@@ -180,8 +198,7 @@ public class SapphireDiagramEditor extends DiagramEditor
 			{
 				getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED,
 						new Boolean(diagramPart.isShowGuides()));
-				guidesVisibilityChanged = true;
-				firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY); 
+				markEditorDirty();
 			}
 			
 		};
@@ -208,9 +225,8 @@ public class SapphireDiagramEditor extends DiagramEditor
 	@Override
 	public boolean isDirty()
 	{
-		boolean dirty = super.isDirty();
-		dirty |= this.gridVisibilityChanged | this.guidesVisibilityChanged;
-		return dirty;
+		// Bug 355282 - Sapphire Diagram's dirty state should be determined on model changes and layout changes 
+		return this.editorIsDirty;
 	}
 	
 	@Override
@@ -388,8 +404,7 @@ public class SapphireDiagramEditor extends DiagramEditor
 		try
 		{
 			getDiagramGeometry().write();
-			this.gridVisibilityChanged = false;
-			this.guidesVisibilityChanged = false;
+			this.editorIsDirty = false;
 			firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);
 		}
         catch( Exception e )
@@ -645,6 +660,7 @@ public class SapphireDiagramEditor extends DiagramEditor
 					refresh();
 				}				
 			});
+			
 		}		
 	}
 	
@@ -687,6 +703,7 @@ public class SapphireDiagramEditor extends DiagramEditor
 		ContainerShape nodeShape = getContainerShape(nodePart);	
 		if (nodeShape == null)
 			return;
+		markEditorDirty();
 		
 		int oldX = nodeShape.getGraphicsAlgorithm().getX();
 		int oldY = nodeShape.getGraphicsAlgorithm().getY();
@@ -715,6 +732,7 @@ public class SapphireDiagramEditor extends DiagramEditor
 					}
 				});
 			}
+			
 		}
 	}
 	
@@ -785,7 +803,14 @@ public class SapphireDiagramEditor extends DiagramEditor
                         addFeature.add(addContext);
                     }
                 });
-            }            
+            }
+            markEditorDirty();
         }                         
     }
+	
+	private void markEditorDirty()
+	{
+		this.editorIsDirty = true;
+		firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);
+	}
 }

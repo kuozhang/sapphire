@@ -459,6 +459,58 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 		}		
 	}
 	
+	private void notifyConnectionAddBendpoint(DiagramConnectionPart connPart)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
+				((SapphireDiagramPartListener)listener).handleConnectionAddBendpointEvent(cue);
+			}
+		}		
+	}
+
+	private void notifyConnectionRemoveBendpoint(DiagramConnectionPart connPart)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
+				((SapphireDiagramPartListener)listener).handleConnectionRemoveBendpointEvent(cue);
+			}
+		}		
+	}
+
+	private void notifyConnectionMoveBendpoint(DiagramConnectionPart connPart)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
+				((SapphireDiagramPartListener)listener).handleConnectionMoveBendpointEvent(cue);
+			}
+		}		
+	}
+	
+	private void notifyConnectionMoveLabel(DiagramConnectionPart connPart)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
+				((SapphireDiagramPartListener)listener).handleConnectionMoveLabelEvent(cue);
+			}
+		}		
+	}
+
 	private void notifyGridStateChange()
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
@@ -542,7 +594,30 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
             notifyConnectionDelete(connPart);
         }
         
-    }
+        @Override
+        public void handleAddBendpoint(final DiagramConnectionPart connPart)
+        {
+            notifyConnectionAddBendpoint(connPart);
+        }
+
+        @Override
+        public void handleRemoveBendpoint(final DiagramConnectionPart connPart)
+        {
+            notifyConnectionRemoveBendpoint(connPart);
+        }
+
+        @Override
+        public void handleMoveBendpoint(final DiagramConnectionPart connPart)
+        {
+            notifyConnectionMoveBendpoint(connPart);
+        }
+
+        @Override
+        public void handleMoveLabel(final DiagramConnectionPart connPart)
+        {
+            notifyConnectionMoveLabel(connPart);
+        }
+	}
     
     private class ImplicitConnectionTemplateListener extends DiagramImplicitConnectionTemplate.Listener
     {
