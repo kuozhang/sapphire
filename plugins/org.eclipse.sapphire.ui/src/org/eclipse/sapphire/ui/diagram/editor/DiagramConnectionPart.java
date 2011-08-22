@@ -536,6 +536,58 @@ public class DiagramConnectionPart
         }
     }
     
+    protected void notifyAddBendpoint()
+    {
+        Set<SapphirePartListener> listeners = this.getListeners();
+        for(SapphirePartListener listener : listeners)
+        {
+            if (listener instanceof SapphireDiagramPartListener)
+            {
+                DiagramConnectionEvent cue = new DiagramConnectionEvent(this);
+                ((SapphireDiagramPartListener)listener).handleConnectionAddBendpointEvent(cue);
+            }
+        }    	
+    }
+    
+    protected void notifyRemoveBendpoint()
+    {
+        Set<SapphirePartListener> listeners = this.getListeners();
+        for(SapphirePartListener listener : listeners)
+        {
+            if (listener instanceof SapphireDiagramPartListener)
+            {
+                DiagramConnectionEvent cue = new DiagramConnectionEvent(this);
+                ((SapphireDiagramPartListener)listener).handleConnectionRemoveBendpointEvent(cue);
+            }
+        }    	
+    }
+
+    protected void notifyMoveBendpoint()
+    {
+        Set<SapphirePartListener> listeners = this.getListeners();
+        for(SapphirePartListener listener : listeners)
+        {
+            if (listener instanceof SapphireDiagramPartListener)
+            {
+                DiagramConnectionEvent cue = new DiagramConnectionEvent(this);
+                ((SapphireDiagramPartListener)listener).handleConnectionMoveBendpointEvent(cue);
+            }
+        }    	
+    }
+
+    protected void notifyMoveConnectionLabel()
+    {
+        Set<SapphirePartListener> listeners = this.getListeners();
+        for(SapphirePartListener listener : listeners)
+        {
+            if (listener instanceof SapphireDiagramPartListener)
+            {
+                DiagramConnectionEvent cue = new DiagramConnectionEvent(this);
+                ((SapphireDiagramPartListener)listener).handleConnectionMoveLabelEvent(cue);
+            }
+        }    	
+    }
+    
     public PropertiesViewContributionPart getPropertiesViewContribution()
     {
         if( this.propertiesViewContributionManager == null )
@@ -549,11 +601,13 @@ public class DiagramConnectionPart
     public void addBendpoint(int index, int x, int y)
     {
     	this.bendpoints.add(index, new Point(x, y));
+    	notifyAddBendpoint();
     }
     
     public void removeBendpoint(int index)
     {
     	this.bendpoints.remove(index);
+    	notifyRemoveBendpoint();
     }
     
     public void updateBendpoint(int index, int x, int y)
@@ -562,6 +616,7 @@ public class DiagramConnectionPart
     	{
     		this.bendpoints.set(index, new Point(x, y));
     	}
+    	notifyMoveBendpoint();
     }
     
     public List<Point> getConnectionBendpoints()
@@ -585,5 +640,6 @@ public class DiagramConnectionPart
     		this.labelPosition.setX(x);
     		this.labelPosition.setY(y);
     	}
+    	notifyMoveConnectionLabel();
     }
 }

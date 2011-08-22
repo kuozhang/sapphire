@@ -65,6 +65,19 @@ public class DiagramConnectionTemplate extends SapphirePart
         public void handleConnectionDelete(final DiagramConnectionPart connPart)
         {            
         }
+        public void handleAddBendpoint(final DiagramConnectionPart connPart)
+        {        	
+        }
+        public void handleRemoveBendpoint(final DiagramConnectionPart connPart)
+        {        	
+        }
+        public void handleMoveBendpoint(final DiagramConnectionPart connPart)
+        {        	
+        }
+        public void handleMoveLabel(final DiagramConnectionPart connPart)
+        {        	
+        }
+        
     }
     
     protected SapphireDiagramEditorPagePart diagramEditor;
@@ -109,15 +122,35 @@ public class DiagramConnectionTemplate extends SapphirePart
         this.connPartListener = new SapphireDiagramPartListener() 
         {
             @Override
-                public void handleConnectionUpdateEvent(final DiagramConnectionEvent event)
-                {
-                    notifyConnectionUpdate((DiagramConnectionPart)event.getPart());
-                }  
-             @Override
-                public void handleConnectionEndpointEvent(final DiagramConnectionEvent event)
-                {
-                    notifyConnectionEndpointUpdate((DiagramConnectionPart)event.getPart());
-                }            
+            public void handleConnectionUpdateEvent(final DiagramConnectionEvent event)
+            {
+                notifyConnectionUpdate((DiagramConnectionPart)event.getPart());
+            }  
+            @Override
+            public void handleConnectionEndpointEvent(final DiagramConnectionEvent event)
+            {
+                notifyConnectionEndpointUpdate((DiagramConnectionPart)event.getPart());
+            }            
+            @Override
+            public void handleConnectionAddBendpointEvent(final DiagramConnectionEvent event)
+            {
+                notifyAddBendpoint((DiagramConnectionPart)event.getPart());
+            }            
+            @Override
+            public void handleConnectionRemoveBendpointEvent(final DiagramConnectionEvent event)
+            {
+                notifyRemoveBendpoint((DiagramConnectionPart)event.getPart());
+            }            
+            @Override
+            public void handleConnectionMoveBendpointEvent(final DiagramConnectionEvent event)
+            {
+                notifyMoveBendpoint((DiagramConnectionPart)event.getPart());
+            }            
+            @Override
+            public void handleConnectionMoveLabelEvent(final DiagramConnectionEvent event)
+            {
+                notifyMoveLabel((DiagramConnectionPart)event.getPart());
+            }            
             
         };
         
@@ -660,6 +693,38 @@ public class DiagramConnectionTemplate extends SapphirePart
         }        
     }
     
+    protected void notifyAddBendpoint(DiagramConnectionPart connPart)
+    {
+        for( Listener listener : this.templateListeners )
+        {
+            listener.handleAddBendpoint(connPart);
+        }        
+    }
+
+    protected void notifyRemoveBendpoint(DiagramConnectionPart connPart)
+    {
+        for( Listener listener : this.templateListeners )
+        {
+            listener.handleRemoveBendpoint(connPart);
+        }        
+    }
+    
+    protected void notifyMoveBendpoint(DiagramConnectionPart connPart)
+    {
+        for( Listener listener : this.templateListeners )
+        {
+            listener.handleMoveBendpoint(connPart);
+        }        
+    }
+    
+    protected void notifyMoveLabel(DiagramConnectionPart connPart)
+    {
+        for( Listener listener : this.templateListeners )
+        {
+            listener.handleMoveLabel(connPart);
+        }        
+    }
+
     // ******************************************************************
     // Inner classes
     //*******************************************************************
