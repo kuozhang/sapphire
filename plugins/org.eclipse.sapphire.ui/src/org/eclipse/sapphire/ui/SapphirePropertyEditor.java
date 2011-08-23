@@ -560,6 +560,11 @@ public final class SapphirePropertyEditor extends SapphirePart
         
         return false;
     }
+    
+    public boolean isReadOnly()
+    {
+        return ( this.property.isReadOnly() || getRenderingHint( HINT_READ_ONLY, false ) );        
+    }
 
     @Override
     public void dispose()

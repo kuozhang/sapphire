@@ -65,14 +65,14 @@ public final class PropertyEditorAssistContext
     
     public boolean isPropertyEditorReadOnly()
     {
-        boolean readonly = this.property.isReadOnly();
-        
-        if( ! readonly )
+        if( this.part instanceof SapphirePropertyEditor )
         {
-            readonly = this.part.getDefinition().getHint( SapphirePropertyEditor.HINT_READ_ONLY, false );
+            return ( (SapphirePropertyEditor) this.part ).isReadOnly();
         }
-        
-        return readonly;
+        else
+        {
+            return this.property.isReadOnly();
+        }
     }
     
     public SapphireRenderingContext getUiContext()
