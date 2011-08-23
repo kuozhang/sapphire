@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [355432] Dtd parser error
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml.dtd;
@@ -50,10 +51,11 @@ public final class DtdParser
             
             if( ! parser.entities.isEmpty() )
             {
-                for( Map.Entry<String,String> entity : parser.entities.entrySet() )
-                {
-                    content = content.replace( "%" + entity.getKey() + ";", entity.getValue() );
-                }
+            	String substitutedContent = substituteEntity(content, parser.entities);
+            	while (!content.equals(substitutedContent)) {
+            		content = substitutedContent;
+                	substitutedContent = substituteEntity(content, parser.entities);
+            	}
                 
                 parser = new DtdParserImpl( new StringReader( content ) );
                 parser.Start();
@@ -68,6 +70,15 @@ public final class DtdParser
             
             return ( new XmlDocumentSchema.Factory() ).create();
         }
+    }
+
+    private static String substituteEntity(String content, Map<String,String> entities) 
+    {
+        for( Map.Entry<String,String> entity : entities.entrySet() )
+        {
+            content = content.replace( "%" + entity.getKey() + ";", entity.getValue() );
+        }
+        return content;
     }
 
     public static XmlDocumentSchema parseFromUrl( final String baseLocation,
