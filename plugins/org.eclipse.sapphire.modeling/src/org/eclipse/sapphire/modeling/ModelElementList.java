@@ -18,12 +18,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-
-@SuppressWarnings( "unchecked" )
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
+
+@SuppressWarnings( "unchecked" )
 
 public final class ModelElementList<T extends IModelElement>
 
@@ -32,6 +31,7 @@ public final class ModelElementList<T extends IModelElement>
 
 {
     private final ListProperty property;
+    private final boolean readonly;
     private ListBindingImpl binding;
     private List<IModelElement> data;
     private Status valres;
@@ -43,6 +43,7 @@ public final class ModelElementList<T extends IModelElement>
         super( parent, parent.resource() );
         
         this.property = property;
+        this.readonly = property.isReadOnly();
         this.data = Collections.emptyList();
         this.valres = null;
         
@@ -235,11 +236,15 @@ public final class ModelElementList<T extends IModelElement>
     
     public T addNewElement()
     {
+        ensureNotReadOnly();
+        
         return addNewElement( this.property.getAllPossibleTypes().get( 0 ) );
     }
     
     public T addNewElement( final ModelElementType type )
     {
+        ensureNotReadOnly();
+        
         T newElement = null;
         
         synchronized( this )
@@ -263,6 +268,8 @@ public final class ModelElementList<T extends IModelElement>
     
     public <C extends IModelElement> C addNewElement( final Class<C> cl )
     {
+        ensureNotReadOnly();
+        
         final ModelElementType type = ModelElementType.getModelElementType( cl );
         
         if( type == null )
@@ -275,6 +282,8 @@ public final class ModelElementList<T extends IModelElement>
     
     public void moveUp( final T modelElement )
     {
+        ensureNotReadOnly();
+        
         synchronized( this )
         {
             final int index = indexOf( modelElement );
@@ -294,6 +303,8 @@ public final class ModelElementList<T extends IModelElement>
     
     public void moveDown( final T modelElement )
     {
+        ensureNotReadOnly();
+        
         synchronized( this )
         {
             final int index = indexOf( modelElement );
@@ -314,6 +325,8 @@ public final class ModelElementList<T extends IModelElement>
     public void swap( final T a,
                       final T b )
     {
+        ensureNotReadOnly();
+        
         synchronized( this )
         {
             if( this.data.indexOf( a ) == -1 || this.data.indexOf( b ) == -1 )
@@ -328,6 +341,8 @@ public final class ModelElementList<T extends IModelElement>
 
     public synchronized boolean remove( final Object object )
     {
+        ensureNotReadOnly();
+        
         if( contains( object ) )
         {
             final Resource resource = ( (IModelElement) object ).resource();
@@ -342,6 +357,8 @@ public final class ModelElementList<T extends IModelElement>
 
     public synchronized T remove( final int index )
     {
+        ensureNotReadOnly();
+        
         final IModelElement element = this.data.get( index );
         remove( element );
         return (T) element;
@@ -349,6 +366,8 @@ public final class ModelElementList<T extends IModelElement>
 
     public synchronized boolean removeAll( final Collection<?> collection )
     {
+        ensureNotReadOnly();
+        
         boolean changed = false;
         
         for( Object object : collection )
@@ -361,6 +380,8 @@ public final class ModelElementList<T extends IModelElement>
 
     public synchronized boolean retainAll( final Collection<?> collection )
     {
+        ensureNotReadOnly();
+        
         boolean changed = false;
         
         for( IModelElement element : this )
@@ -376,6 +397,8 @@ public final class ModelElementList<T extends IModelElement>
 
     public synchronized void clear()
     {
+        ensureNotReadOnly();
+        
         for( IModelElement element : this )
         {
             remove( element );
@@ -474,6 +497,14 @@ public final class ModelElementList<T extends IModelElement>
                   final T element )
     {
         throw new UnsupportedOperationException();
+    }
+    
+    private void ensureNotReadOnly()
+    {
+        if( this.readonly )
+        {
+            throw new UnsupportedOperationException();
+        }
     }
     
     private static class Itr<T> implements Iterator<T>
