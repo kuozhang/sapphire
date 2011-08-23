@@ -20,10 +20,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class StandardXmlNamespaceResolver
-
-    extends XmlNamespaceResolver
-    
+public class StandardXmlNamespaceResolver extends XmlNamespaceResolver
 {
     private final ModelElementType type;
     
@@ -58,13 +55,13 @@ public class StandardXmlNamespaceResolver
             }
         }
 
-        final XmlRootBinding rootXmlBindingAnnotation = this.type.getAnnotation( XmlRootBinding.class );
+        final XmlRootBinding xmlRootBindingAnnotation = this.type.getAnnotation( XmlRootBinding.class );
         
-        if( rootXmlBindingAnnotation != null )
+        if( xmlRootBindingAnnotation != null )
         {
-            if( rootXmlBindingAnnotation.defaultPrefix().equals( prefix ) )
+            if( xmlRootBindingAnnotation.defaultPrefix().equals( prefix ) )
             {
-                return rootXmlBindingAnnotation.namespace();
+                return xmlRootBindingAnnotation.namespace();
             }
         }
         

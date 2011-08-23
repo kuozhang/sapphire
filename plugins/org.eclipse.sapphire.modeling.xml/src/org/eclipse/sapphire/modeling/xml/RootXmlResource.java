@@ -15,9 +15,9 @@ import java.util.Locale;
 
 import org.eclipse.sapphire.modeling.CorruptedResourceException;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlRootBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
@@ -31,10 +31,7 @@ import org.w3c.dom.ProcessingInstruction;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class RootXmlResource
-
-    extends XmlResource
-    
+public class RootXmlResource extends XmlResource
 {
     private static final String PI_XML_TARGET = "xml";
     private static final String PI_XML_DATA = "version=\"1.0\" encoding=\"UTF-8\"";
@@ -69,24 +66,24 @@ public class RootXmlResource
 
         final ModelElementType modelElementType = modelElement.getModelElementType();
         
-        final XmlRootBinding rootXmlBindingAnnotation = modelElementType.getAnnotation( XmlRootBinding.class );
+        final XmlRootBinding xmlRootBindingAnnotation = modelElementType.getAnnotation( XmlRootBinding.class );
         
-        if( rootXmlBindingAnnotation != null )
+        if( xmlRootBindingAnnotation != null )
         {
             this.rootElementController 
-                = new StandardRootElementController( rootXmlBindingAnnotation.namespace(), rootXmlBindingAnnotation.schemaLocation(), 
-                                                     rootXmlBindingAnnotation.defaultPrefix(), rootXmlBindingAnnotation.elementName() );
+                = new StandardRootElementController( xmlRootBindingAnnotation.namespace(), xmlRootBindingAnnotation.schemaLocation(), 
+                                                     xmlRootBindingAnnotation.defaultPrefix(), xmlRootBindingAnnotation.elementName() );
         }
         
         if( this.rootElementController == null )
         {
-            final CustomXmlRootBinding customRootXmlBindingAnnotation = modelElementType.getAnnotation( CustomXmlRootBinding.class );
+            final CustomXmlRootBinding customXmlRootBindingAnnotation = modelElementType.getAnnotation( CustomXmlRootBinding.class );
             
-            if( customRootXmlBindingAnnotation != null )
+            if( customXmlRootBindingAnnotation != null )
             {
                 try
                 {
-                    this.rootElementController = customRootXmlBindingAnnotation.value().newInstance();
+                    this.rootElementController = customXmlRootBindingAnnotation.value().newInstance();
                 }
                 catch( Exception e )
                 {
