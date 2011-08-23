@@ -164,6 +164,14 @@
         <impl>org.eclipse.sapphire.modeling.serialization.internal.BooleanSerializationService</impl>
     </value-serialization-service>
     <value-serialization-service>
+        <type>java.lang.Byte</type>
+        <impl>org.eclipse.sapphire.modeling.serialization.internal.ByteSerializationService</impl>
+    </value-serialization-service>
+    <value-serialization-service>
+        <type>java.lang.Short</type>
+        <impl>org.eclipse.sapphire.modeling.serialization.internal.ShortSerializationService</impl>
+    </value-serialization-service>
+    <value-serialization-service>
         <type>java.lang.Integer</type>
         <impl>org.eclipse.sapphire.modeling.serialization.internal.IntegerSerializationService</impl>
     </value-serialization-service>
