@@ -21,7 +21,6 @@ import static org.eclipse.sapphire.ui.SapphireActionSystem.createFilterByActionI
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_COLUMN_WIDTHS;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_EXPAND_VERTICALLY;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_READ_ONLY;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_HEADER;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_LABEL_ABOVE;
@@ -138,10 +137,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class DefaultListPropertyEditorRenderer
-
-    extends ListPropertyEditorRenderer
-    
+public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRenderer
 {
     public static final String DATA_SELECTION_PROVIDER = "selection.provider";
     
@@ -175,7 +171,7 @@ public class DefaultListPropertyEditorRenderer
     {
         final SapphirePropertyEditor part = getPart();
         final ListProperty property = (ListProperty) part.getProperty();
-        final boolean isReadOnly = ( property.isReadOnly() || part.getRenderingHint( HINT_READ_ONLY, false ) );
+        final boolean isReadOnly = part.isReadOnly();
 
         final boolean showLabelAbove = part.getRenderingHint( HINT_SHOW_LABEL_ABOVE, false );
         final boolean showLabelInline = part.getRenderingHint( HINT_SHOW_LABEL, ( suppressLabel ? false : ! showLabelAbove ) );
@@ -964,11 +960,8 @@ public class DefaultListPropertyEditorRenderer
         
         this.tableViewer.update( row, null );
     }
-
-    public static final class Factory
     
-        extends PropertyEditorRendererFactory
-        
+    public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
         public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
@@ -984,10 +977,7 @@ public class DefaultListPropertyEditorRenderer
         }
     }
 
-    private class DefaultColumnLabelProvider
-    
-        extends ColumnLabelProvider
-        
+    private class DefaultColumnLabelProvider extends ColumnLabelProvider
     {
         private final ColumnHandler columnHandler;
         private final ValueLabelProvider valueLabelProvider;
@@ -1065,10 +1055,7 @@ public class DefaultListPropertyEditorRenderer
         }
     }
     
-    private static abstract class AbstractColumnEditingSupport
-    
-        extends EditingSupport
-        
+    private static abstract class AbstractColumnEditingSupport extends EditingSupport
     {
         protected final ColumnHandler columnHandler;
         
@@ -1082,14 +1069,27 @@ public class DefaultListPropertyEditorRenderer
         @Override
         public boolean canEdit( final Object obj )
         {
+            final IModelElement element = ( (TableRow) obj ).element();
             final ValueProperty property = this.columnHandler.getProperty();
-            return ( ! property.isReadOnly() && ( (TableRow) obj ).element().isPropertyEnabled( property ) );
+            
+            boolean canEdit;
+            
+            if( element.isPropertyEnabled( property ) )
+            {
+                final SapphirePropertyEditor propertyEditor = this.columnHandler.getListPropertyEditor().getChildPropertyEditor( element, property );
+                canEdit = ( ! propertyEditor.isReadOnly() );
+            }
+            else
+            {
+                canEdit = false;
+            }
+            
+            return canEdit;
         }
         
         public abstract CellEditor getCellEditor( Object element );
         public abstract Object getValue( Object element );
         public abstract void setValue( Object element, Object value );
-
     }
     
     private class ColumnHandler
@@ -1310,10 +1310,7 @@ public class DefaultListPropertyEditorRenderer
         }
     }
     
-    private final class EnumPropertyColumnHandler
-    
-        extends ColumnHandler
-        
+    private final class EnumPropertyColumnHandler extends ColumnHandler
     {
         private final EnumValueType annotatedEnumeration;
         private final Enum<?>[] enumValues;
@@ -1567,10 +1564,7 @@ public class DefaultListPropertyEditorRenderer
         }
     }
     
-    private static final class TableSorter
-    
-        extends ViewerComparator
-        
+    private static final class TableSorter extends ViewerComparator
     {
         private final ColumnHandler columnHandler;
         private final int direction;
@@ -1598,10 +1592,7 @@ public class DefaultListPropertyEditorRenderer
         }
     }
     
-    private final class AddActionHandler
-    
-        extends SapphirePropertyEditorActionHandler
-        
+    private final class AddActionHandler extends SapphirePropertyEditorActionHandler
     {
         private final ModelElementType type;
         
@@ -1633,10 +1624,7 @@ public class DefaultListPropertyEditorRenderer
         }
     }
     
-    private abstract class SelectionBasedActionHandler
-
-        extends SapphirePropertyEditorActionHandler
-        
+    private abstract class SelectionBasedActionHandler extends SapphirePropertyEditorActionHandler
     {
         public SelectionBasedActionHandler()
         {
@@ -1653,10 +1641,7 @@ public class DefaultListPropertyEditorRenderer
         }
     }
     
-    private final class DeleteActionHandler
-
-        extends SelectionBasedActionHandler
-        
+    private final class DeleteActionHandler extends SelectionBasedActionHandler
     {
         @Override
         protected final Object run( final SapphireRenderingContext context )
@@ -1695,10 +1680,7 @@ public class DefaultListPropertyEditorRenderer
         }
     }
 
-    private final class MoveUpActionHandler
-
-        extends SelectionBasedActionHandler
-        
+    private final class MoveUpActionHandler extends SelectionBasedActionHandler
     {
         @Override
         protected boolean computeEnablementState()
@@ -1727,10 +1709,7 @@ public class DefaultListPropertyEditorRenderer
         }
     }
     
-    private final class MoveDownActionHandler
-
-        extends SelectionBasedActionHandler
-        
+    private final class MoveDownActionHandler extends SelectionBasedActionHandler
     {
         @Override
         protected boolean computeEnablementState()
@@ -1760,10 +1739,7 @@ public class DefaultListPropertyEditorRenderer
         }
     }
     
-    public static final class SelectionProvider
-    
-        implements ISelectionProvider
-        
+    public static final class SelectionProvider implements ISelectionProvider
     {
         private final TableViewer tableViewer;
         private final Set<ISelectionChangedListener> listeners;
