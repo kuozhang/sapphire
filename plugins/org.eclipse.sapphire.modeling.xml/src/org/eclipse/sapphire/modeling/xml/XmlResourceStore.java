@@ -53,10 +53,7 @@ import org.xml.sax.SAXParseException;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class XmlResourceStore
-
-    extends ResourceStore
-    
+public class XmlResourceStore extends ResourceStore
 {
     private static final String UTF8_ENCODING = "UTF-8";
     
@@ -112,18 +109,17 @@ public class XmlResourceStore
         this( new ByteArrayResourceStore( contents ) );
     }
     
-    public XmlResourceStore( final InputStream contents )
-    
-        throws ResourceStoreException
-        
+    public XmlResourceStore( final String contents )
     {
         this( new ByteArrayResourceStore( contents ) );
     }
     
-    public XmlResourceStore( final File file )
+    public XmlResourceStore( final InputStream contents ) throws ResourceStoreException
+    {
+        this( new ByteArrayResourceStore( contents ) );
+    }
     
-        throws ResourceStoreException
-        
+    public XmlResourceStore( final File file ) throws ResourceStoreException
     {
         this( new FileResourceStore( file ) );
     }
@@ -162,10 +158,7 @@ public class XmlResourceStore
     }
     
     @Override
-    public void save()
-    
-        throws ResourceStoreException
-        
+    public void save() throws ResourceStoreException
     {
         validateSave();
         
@@ -314,8 +307,7 @@ public class XmlResourceStore
     {
         try
         {
-            final DocumentBuilderFactory factory 
-                = DocumentBuilderFactory.newInstance();
+            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             
             factory.setValidating( false );
             factory.setNamespaceAware( true );

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <children>
+        <child>a</child>
+        <child>b</child>
+    </children>
+    <children-read-only>
+        <child>a</child>
+        <child>b</child>
+    </children-read-only>
+</root>
