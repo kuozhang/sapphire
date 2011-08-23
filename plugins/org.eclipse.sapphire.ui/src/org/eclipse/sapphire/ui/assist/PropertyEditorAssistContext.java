@@ -18,6 +18,7 @@ import java.util.Map;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.swt.widgets.Shell;
 
@@ -60,6 +61,18 @@ public final class PropertyEditorAssistContext
     public ModelProperty getProperty()
     {
         return this.property;
+    }
+    
+    public boolean isPropertyEditorReadOnly()
+    {
+        boolean readonly = this.property.isReadOnly();
+        
+        if( ! readonly )
+        {
+            readonly = this.part.getDefinition().getHint( SapphirePropertyEditor.HINT_READ_ONLY, false );
+        }
+        
+        return readonly;
     }
     
     public SapphireRenderingContext getUiContext()

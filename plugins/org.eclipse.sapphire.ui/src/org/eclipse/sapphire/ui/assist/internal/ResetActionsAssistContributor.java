@@ -32,10 +32,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ResetActionsAssistContributor
-
-    extends PropertyEditorAssistContributor
-    
+public final class ResetActionsAssistContributor extends PropertyEditorAssistContributor
 {
     public ResetActionsAssistContributor()
     {
@@ -49,7 +46,7 @@ public final class ResetActionsAssistContributor
         final IModelElement element = context.getModelElement();
         final ModelProperty prop = context.getProperty();
         
-        if( prop.isReadOnly() )
+        if( context.isPropertyEditorReadOnly() )
         {
             return;
         }
