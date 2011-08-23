@@ -306,6 +306,18 @@
         <factory>org.eclipse.sapphire.services.internal.BooleanSerializationService$Factory</factory>
     </service>
     <service>
+        <id>Sapphire.ValueSerializationService.Byte</id>
+        <type>org.eclipse.sapphire.services.ValueSerializationService</type>
+        <context>Sapphire.Property.Instance</context>
+        <factory>org.eclipse.sapphire.services.internal.ByteSerializationService$Factory</factory>
+    </service>
+    <service>
+        <id>Sapphire.ValueSerializationService.Short</id>
+        <type>org.eclipse.sapphire.services.ValueSerializationService</type>
+        <context>Sapphire.Property.Instance</context>
+        <factory>org.eclipse.sapphire.services.internal.ShortSerializationService$Factory</factory>
+    </service>
+    <service>
         <id>Sapphire.ValueSerializationService.Integer</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
         <context>Sapphire.Property.Instance</context>
