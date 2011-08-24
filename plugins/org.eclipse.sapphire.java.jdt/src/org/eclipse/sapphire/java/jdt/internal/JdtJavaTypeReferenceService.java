@@ -13,6 +13,8 @@ package org.eclipse.sapphire.java.jdt.internal;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.ElementChangedEvent;
+import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
@@ -32,21 +34,38 @@ import org.eclipse.sapphire.services.ServiceFactory;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class JdtJavaTypeReferenceService
-
-    extends JavaTypeReferenceService
-    
+public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
 {
     private final IJavaProject project;
+    private IElementChangedListener listener;
     
     public JdtJavaTypeReferenceService( final IProject project )
     {
-        this.project = JavaCore.create( project );
+        this( JavaCore.create( project ) );
     }
 
     public JdtJavaTypeReferenceService( final IJavaProject project )
     {
         this.project = project;
+    }
+    
+    @Override
+    protected void init()
+    {
+        super.init();
+        
+        final IModelElement element = context( IModelElement.class );
+        final ValueProperty property = context( ValueProperty.class );
+        
+        this.listener = new IElementChangedListener()
+        {
+            public void elementChanged( final ElementChangedEvent event )
+            {
+                element.refresh( property );
+            }
+        };
+        
+        JavaCore.addElementChangedListener( this.listener, ElementChangedEvent.POST_CHANGE );
     }
 
     @Override
@@ -75,6 +94,14 @@ public final class JdtJavaTypeReferenceService
         return null;
     }
     
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        JavaCore.removeElementChangedListener( this.listener );
+    }
+
     public static final class Factory extends ServiceFactory
     {
         @Override

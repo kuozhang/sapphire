@@ -34,6 +34,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -229,18 +230,32 @@ public abstract class SapphireActionPresentation
             @Override
             public void handle( final Event event )
             {
-                if( event instanceof LabelChangedEvent )
+                final Runnable op = new Runnable()
                 {
-                    menuItem.setText( LabelTransformer.transform( handler.getLabel(), CapitalizationType.TITLE_STYLE, false ) );
-                }
-                else if( event instanceof ImagesChangedEvent )
-                {
-                    setMenuItemImage( menuItem, handler );
-                }
-                else if( event instanceof EnablementChangedEvent )
-                {
-                    menuItem.setEnabled( handler.isEnabled() );
-                }
+                    public void run()
+                    {
+                        if( Display.getCurrent() == null )
+                        {
+                            Display.getDefault().asyncExec( this );
+                            return;
+                        }
+                        
+                        if( event instanceof LabelChangedEvent )
+                        {
+                            menuItem.setText( LabelTransformer.transform( handler.getLabel(), CapitalizationType.TITLE_STYLE, false ) );
+                        }
+                        else if( event instanceof ImagesChangedEvent )
+                        {
+                            setMenuItemImage( menuItem, handler );
+                        }
+                        else if( event instanceof EnablementChangedEvent )
+                        {
+                            menuItem.setEnabled( handler.isEnabled() );
+                        }
+                    }
+                };
+                
+                op.run();
             }
         };
         
