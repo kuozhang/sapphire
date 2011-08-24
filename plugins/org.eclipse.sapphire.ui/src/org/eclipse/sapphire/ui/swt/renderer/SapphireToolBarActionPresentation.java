@@ -33,6 +33,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -155,6 +156,12 @@ public final class SapphireToolBarActionPresentation
             {
                 public void run()
                 {
+                    if( Display.getCurrent() == null )
+                    {
+                        Display.getDefault().asyncExec( this );
+                        return;
+                    }
+                    
                     if( ! toolItem.isDisposed() )
                     {
                         toolItem.setEnabled( action.isEnabled() );
@@ -166,6 +173,12 @@ public final class SapphireToolBarActionPresentation
             {
                 public void run()
                 {
+                    if( Display.getCurrent() == null )
+                    {
+                        Display.getDefault().asyncExec( this );
+                        return;
+                    }
+                    
                     if( ! toolItem.isDisposed() )
                     {
                         toolItem.setSelection( action.isChecked() );

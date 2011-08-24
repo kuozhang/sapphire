@@ -28,4 +28,36 @@
         <description>Opens the specified Java type using Eclipse Java Editor. Activates if the property is a reference value property from JavaTypeName to JavaType.</description>
         <condition>org.eclipse.sapphire.java.jdt.ui.internal.JavaTypeJumpActionHandlerCondition</condition>
     </action-handler>
+    <action-handler>
+        <action>Sapphire.Create</action>
+        <id>Sapphire.Create.Java.Class</id>
+        <label>create class</label>
+        <description>Creates the specified Java type and opens the created type using Eclipse Java Editor. Activates if the property is a reference value property from JavaTypeName to JavaType, has a @JavaTypeConstraint and specifies CLASS or ABSTRACT_CLASS among type kinds.</description>
+        <condition>org.eclipse.sapphire.java.jdt.ui.internal.JavaTypeCreateClassActionHandler$Condition</condition>
+        <impl>org.eclipse.sapphire.java.jdt.ui.internal.JavaTypeCreateClassActionHandler</impl>
+    </action-handler>
+    <action-handler>
+        <action>Sapphire.Create</action>
+        <id>Sapphire.Create.Java.Interface</id>
+        <label>create interface</label>
+        <description>Creates the specified Java type and opens the created type using Eclipse Java Editor. Activates if the property is a reference value property from JavaTypeName to JavaType, has a @JavaTypeConstraint and specifies INTERFACE among type kinds.</description>
+        <condition>org.eclipse.sapphire.java.jdt.ui.internal.JavaTypeCreateInterfaceActionHandler$Condition</condition>
+        <impl>org.eclipse.sapphire.java.jdt.ui.internal.JavaTypeCreateInterfaceActionHandler</impl>
+    </action-handler>
+    <action-handler>
+        <action>Sapphire.Create</action>
+        <id>Sapphire.Create.Java.Enum</id>
+        <label>create enumeration</label>
+        <description>Creates the specified Java type and opens the created type using Eclipse Java Editor. Activates if the property is a reference value property from JavaTypeName to JavaType, has a @JavaTypeConstraint and specifies ENUM among type kinds.</description>
+        <condition>org.eclipse.sapphire.java.jdt.ui.internal.JavaTypeCreateEnumActionHandler$Condition</condition>
+        <impl>org.eclipse.sapphire.java.jdt.ui.internal.JavaTypeCreateEnumActionHandler</impl>
+    </action-handler>
+    <action-handler>
+        <action>Sapphire.Create</action>
+        <id>Sapphire.Create.Java.Annotation</id>
+        <label>create annotation</label>
+        <description>Creates the specified Java type and opens the created type using Eclipse Java Editor. Activates if the property is a reference value property from JavaTypeName to JavaType, has a @JavaTypeConstraint and specifies ANNOTATION among type kinds.</description>
+        <condition>org.eclipse.sapphire.java.jdt.ui.internal.JavaTypeCreateAnnotationActionHandler$Condition</condition>
+        <impl>org.eclipse.sapphire.java.jdt.ui.internal.JavaTypeCreateAnnotationActionHandler</impl>
+    </action-handler>
 </extension>

@@ -29,6 +29,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -224,20 +225,34 @@ public abstract class SapphireActionPresentation
             @Override
             public void handleEvent( final SapphireActionHandler.Event event )
             {
-                final String type = event.getType();
+                final Runnable op = new Runnable()
+                {
+                    public void run()
+                    {
+                        if( Display.getCurrent() == null )
+                        {
+                            Display.getDefault().asyncExec( this );
+                            return;
+                        }
+                        
+                        final String type = event.getType();
+                        
+                        if( type.equals( SapphireActionHandler.EVENT_LABEL_CHANGED ) )
+                        {
+                            menuItem.setText( LabelTransformer.transform( handler.getLabel(), CapitalizationType.TITLE_STYLE, false ) );
+                        }
+                        else if( type.equals( SapphireActionHandler.EVENT_IMAGES_CHANGED ) )
+                        {
+                            setMenuItemImage( menuItem, handler );
+                        }
+                        else if( type.equals( SapphireActionHandler.EVENT_ENABLEMENT_STATE_CHANGED ) )
+                        {
+                            menuItem.setEnabled( handler.isEnabled() );
+                        }
+                    }
+                };
                 
-                if( type.equals( SapphireActionHandler.EVENT_LABEL_CHANGED ) )
-                {
-                    menuItem.setText( LabelTransformer.transform( handler.getLabel(), CapitalizationType.TITLE_STYLE, false ) );
-                }
-                else if( type.equals( SapphireActionHandler.EVENT_IMAGES_CHANGED ) )
-                {
-                    setMenuItemImage( menuItem, handler );
-                }
-                else if( type.equals( SapphireActionHandler.EVENT_ENABLEMENT_STATE_CHANGED ) )
-                {
-                    menuItem.setEnabled( handler.isEnabled() );
-                }
+                op.run();
             }
         };
         

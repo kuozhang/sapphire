@@ -51,6 +51,7 @@ import org.eclipse.sapphire.ui.renderers.swt.NamedValuesPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorRendererFactory;
 import org.eclipse.sapphire.ui.renderers.swt.SlushBucketPropertyEditor;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -164,7 +165,21 @@ public final class SapphirePropertyEditor extends SapphirePart
             @Override
             public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
             {
-                updateValidationState();
+                final Runnable op = new Runnable()
+                {
+                    public void run()
+                    {
+                        if( Display.getCurrent() == null )
+                        {
+                            Display.getDefault().asyncExec( this );
+                            return;
+                        }
+                        
+                        updateValidationState();
+                    }
+                };
+                
+                op.run();
             }
         };
         
