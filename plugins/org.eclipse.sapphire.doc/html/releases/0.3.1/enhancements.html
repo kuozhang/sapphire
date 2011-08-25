@@ -37,6 +37,10 @@
   <ol type="A">
     <li><a href="#DiagramGuidesToggle">Guides Toggle</a></li>
   </ol>
+  <li><a href="#JavaDeveloperToolsSupport">Java Developer Tools Support</a></li>
+  <ol type="A">
+    <li><a href="#CreateAction">Create Action</a></li>
+  </ol>
 </ol>
  
 <h2><a name="ExpressionLanguage"><a name="CastBetweenCollectionsAndStrings">Cast Between Collections and Strings</a></a></h2>
@@ -176,6 +180,37 @@ specified by the developer in the diagram definition.</p>
         &lt;visible>true&lt;/visible>
     &lt;/guides>        
 <font color="#888888">&lt;/diagram-page></font></code></pre>
+
+<h2><a name="JavaDeveloperToolsSupport"><a name="CreateAction">Java Type Create Action</a></a></h2>
+
+<p>The Java type support has been further improved with addition of an action that can create a new
+Java type if the specified type name cannot be resolved.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>@Type( base = JavaTypeName.class )
+@Reference( target = JavaType.class )
+@Label( standard = "filter" )
+@JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.INTERFACE }, type = "java.io.FileFilter" )
+@MustExist
+@Required
+
+ValueProperty PROP_FILTER = new ValueProperty( TYPE, "Filter" );
+
+ReferenceValue&lt;JavaTypeName,JavaType> getFilter();
+void setFilter( String value );
+void setFilter( JavaTypeName value );</code></pre>
+
+<p style="margin-left: 20px;">Since @JavaTypeConstraint annotation in this example specifies that the property can reference either a class or an interface,
+the user is presented with a choice after clicking on the create button.</p>
+
+<p style="margin-left: 20px;"><img src="images/JavaCreateAction-1.png"/></p>
+
+<p style="margin-left: 20px;">Once the appropriate option is selected, the new type is created and opened in the Java editor. The created
+type derives from the type specified in @JavaTypeConstraint annotation and is formatted according to user's
+format preferences.</p>
+
+<p style="margin-left: 20px;"><img src="images/JavaCreateAction-2.png"/></p>
 
 
 <div class="copyright">Copyright (c) 2011 Oracle and Others<br/>

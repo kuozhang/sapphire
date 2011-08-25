@@ -1,0 +1,103 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2011 Oracle and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>Working with Java Types</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>Working with Java Types</h1>
+
+<p>When implementing Eclipse tooling that works with Java projects, a frequent requirement is to
+deliver models and UI that reference Java types (classes, interfaces, enums and annotations). 
+Implementing this from scratch, even using the excellent API provided by JDT is a challenge. Fortunately,
+Sapphire's JDT integration makes this quite easy.</p>
+
+<p>The first step is the model.</p>
+
+<pre class="source-code"><code>@Type( base = JavaTypeName.class )
+@Reference( target = JavaType.class )
+@Label( standard = "filter" )
+@JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.INTERFACE }, type = "java.io.FileFilter" )
+@MustExist
+@Required
+
+ValueProperty PROP_FILTER = new ValueProperty( TYPE, "Filter" );
+
+ReferenceValue&lt;JavaTypeName,JavaType> getFilter();
+void setFilter( String value );
+void setFilter( JavaTypeName value );</code></pre>
+
+<p>Here we utilize reference value construct which states
+that the property holds a JavaTypeName which is resolvable to a JavaType. The resolution is provided
+by the framework and works as long as the model is loaded in the context of a Java project.</p>
+
+<p>The @JavaTypeConstraint specifies that the referenced type must be a class or an interface and that
+it must derive from java.io.FileFilter type.</p>
+
+<p>The @MustExist annotation specifies that the named type must be present in the project.</p>
+
+<p>The @Required annotation specifies that the property must have a value (null is not ok).</p>
+
+<p>The next step is the UI definition. Here we create an editor section with a single property editor, 
+but the property editor is, of course, not limited to editor sections. It can be used in any form context.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;section>
+    &lt;content></font>
+        &lt;property-editor>Filter&lt;/property-editor>
+    <font color="#888888">&lt;/content>
+&lt;/section></font></code></pre>
+
+<p>That is all that is necessary to define a model property that references a Java type and to present that
+property in the UI. Once this example is executed, you will see a property editor that is composed of 
+a label, a text box, two action buttons and a validation feedback marker.</p>
+ 
+<p style="margin-left: 20px;"><img src="images/Capture-1.png"/></p>
+
+<p>Clicking on the validation feedback marker shows the problem message along with wealth of semantic
+information about the property.</p>
+
+<p style="margin-left: 20px;"><img src="images/Capture-2.png"/></p>
+
+<p>The browse button provides the means to select from among existing Java types using JDT's type selection
+dialog. The framework automatically constraints the contents of the dialog based on @JavaTypeConstraint annotation.<p>
+
+<p style="margin-left: 20px;"><img src="images/Capture-3.png"/></p>
+
+<p style="margin-left: 20px;"><img src="images/Capture-4.png"/></p>
+
+<p>The create button provides the means to define a new Java type if the specified type name cannot be resolved.</p>
+
+<p style="margin-left: 20px;"><img src="images/Capture-5.png"/></p>
+
+<p>Since @JavaTypeConstraint annotation in this example specifies that the property can reference either a class or an interface,
+the user is presented with a choice after clicking on the create button.</p>
+
+<p style="margin-left: 20px;"><img src="images/Capture-6.png"/></p>
+
+<p>Once the appropriate option is selected, the new type is created and opened in the Java editor. The created
+type derives from the type specified in @JavaTypeConstraint annotation and is formatted according to user's
+format preferences.</p>
+
+<p style="margin-left: 20px;"><img src="images/Capture-7.png"/></p>
+
+<div class="copyright">Copyright (c) 2011 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

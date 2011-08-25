@@ -24,6 +24,8 @@
   </topic>
   <topic href="html/actions/index.html" label="Actions">
   </topic>
+  <topic href="html/java/index.html" label="Working with Java Types">
+  </topic>
   <topic href="html/extensions/index.html" label="Extension System">
      <topic href="html/extensions/existing.html" label="Existing Extensions">
      </topic>
