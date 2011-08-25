@@ -49,6 +49,7 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.AccessModifier;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.Body;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.ClassModel;
@@ -87,10 +88,7 @@ import com.sun.mirror.util.SourcePosition;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class GenerateImplProcessor 
-
-    extends SapphireAnnotationsProcessor
-    
+public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
 {
     private static final String DATA_READ_METHOD = "read.method";
     private static final String DATA_WRITE_VALUE_METHOD = "write.value.method";
@@ -612,7 +610,7 @@ public final class GenerateImplProcessor
             
             sb.append( "synchronized( root() )\n" +
                        "{\n" +
-                       "    if( value != null && value.equals( \"\" ) )\n" +
+                       "    if( value != null && value.equals( MiscUtil.EMPTY_STRING ) )\n" +
                        "    {\n" +
                        "        value = null;\n" + 
                        "    }\n" +
@@ -629,6 +627,8 @@ public final class GenerateImplProcessor
                        "    }\n" +
                        "}\n",
                        propField.name, variableName );
+            
+            implClassModel.addImport( MiscUtil.class );
             
             if( ! baseType.getQualifiedName().equals( String.class.getName() ) )
             {
