@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Accenture Services Pvt Ltd.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Kamesh Sampath - [355457] Improve DTD doctype specification in XML binding
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml;
@@ -22,7 +23,9 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlRootBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlDocumentType;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
+import org.eclipse.sapphire.modeling.xml.internal.DocumentTypeRootElementController;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -31,6 +34,7 @@ import org.w3c.dom.ProcessingInstruction;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a>
  */
 
 public class RootXmlResource extends XmlResource
@@ -69,12 +73,25 @@ public class RootXmlResource extends XmlResource
         final ModelElementType modelElementType = modelElement.getModelElementType();
         
         final XmlRootBinding xmlRootBindingAnnotation = modelElementType.getAnnotation( XmlRootBinding.class );
-        
+
         if( xmlRootBindingAnnotation != null )
         {
-            this.rootElementController 
-                = new StandardRootElementController( xmlRootBindingAnnotation.namespace(), xmlRootBindingAnnotation.schemaLocation(), 
-                                                     xmlRootBindingAnnotation.defaultPrefix(), xmlRootBindingAnnotation.elementName() );
+            final String rootElementName = xmlRootBindingAnnotation.elementName();
+            final XmlDocumentType xmlDocumentTypeAnnotation = modelElementType.getAnnotation( XmlDocumentType.class );
+            
+            if( xmlDocumentTypeAnnotation != null && xmlDocumentTypeAnnotation.publicId().length() != 0 && 
+                xmlDocumentTypeAnnotation.systemId().length() != 0 )
+            {
+                this.rootElementController = new DocumentTypeRootElementController( rootElementName );
+            }
+            else
+            {
+                final String namespace = xmlRootBindingAnnotation.namespace();
+                final String schemaLocation = xmlRootBindingAnnotation.schemaLocation();
+                final String defaultPrefix = xmlRootBindingAnnotation.defaultPrefix();
+                
+                this.rootElementController = new StandardRootElementController( namespace, schemaLocation, defaultPrefix, rootElementName );
+            }
         }
         
         if( this.rootElementController == null )
@@ -158,22 +175,13 @@ public class RootXmlResource extends XmlResource
         return this.rootXmlElement;
     }
     
-    /**
-     * @throws ResourceStoreException  
-     */
-
     @Override
-    
-    public void save() 
-    
-        throws ResourceStoreException
-        
+    public void save() throws ResourceStoreException
     {
         this.store.save();
     }
 
     @Override
-    
     public <A> A adapt( final Class<A> adapterType )
     {
         A adapter = this.store.adapt( adapterType );
