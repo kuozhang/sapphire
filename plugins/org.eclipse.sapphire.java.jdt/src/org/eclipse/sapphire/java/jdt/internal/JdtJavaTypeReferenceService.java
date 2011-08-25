@@ -59,7 +59,19 @@ public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
         {
             public void elementChanged( final ElementChangedEvent event )
             {
-                element.refresh( property );
+                final IProject project = JdtJavaTypeReferenceService.this.project.getProject();
+                
+                if( ! project.exists() )
+                {
+                    // Project has been deleted, but the model has not yet been disposed. Might as well remove
+                    // the listener at this point.
+                    
+                    JavaCore.removeElementChangedListener( this );
+                }
+                else if( project.isAccessible() )
+                {
+                    element.refresh( property );
+                }
             }
         };
         
