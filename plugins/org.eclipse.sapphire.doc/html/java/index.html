@@ -23,7 +23,7 @@
 <h1>Working with Java Types</h1>
 
 <p>When implementing Eclipse tooling that works with Java projects, a frequent requirement is to
-deliver models and UI that reference Java types (classes, interfaces, enums and annotations). 
+deliver models and UI that reference Java types (classes, interfaces, enumerations and annotations). 
 Implementing this from scratch, even using the excellent API provided by JDT is a challenge. Fortunately,
 Sapphire's JDT integration makes this quite easy.</p>
 
@@ -46,7 +46,7 @@ void setFilter( JavaTypeName value );</code></pre>
 that the property holds a JavaTypeName which is resolvable to a JavaType. The resolution is provided
 by the framework and works as long as the model is loaded in the context of a Java project.</p>
 
-<p>The @JavaTypeConstraint specifies that the referenced type must be a class or an interface and that
+<p>The @JavaTypeConstraint annotation specifies that the referenced type must be a class or an interface and that
 it must derive from java.io.FileFilter type.</p>
 
 <p>The @MustExist annotation specifies that the named type must be present in the project.</p>
