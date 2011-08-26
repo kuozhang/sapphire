@@ -28,6 +28,7 @@ public class SapphireDiagramEditorInput extends DiagramEditorInput
 {
     private Diagram diagram;
     private IFile layoutFile;
+    private boolean noExistingLayout;
     
     public SapphireDiagramEditorInput(Diagram diagram, String diagramUriString,
             TransactionalEditingDomain domain, String providerId,
@@ -87,6 +88,15 @@ public class SapphireDiagramEditorInput extends DiagramEditorInput
         this.layoutFile = file;
     }
     
+    public boolean noExistingLayout()
+    {
+    	return this.noExistingLayout;
+    }
+    
+    public void setNoExistingLayout(boolean value)
+    {
+    	this.noExistingLayout = value;
+    }
     
     public static SapphireDiagramEditorInput createEditorInput(Diagram diagram, 
             TransactionalEditingDomain domain, String providerId, boolean disposeEditingDomain) 

@@ -57,6 +57,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.Bounds;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
@@ -74,6 +75,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProvider;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
@@ -393,6 +395,18 @@ public class SapphireDiagramEditor extends DiagramEditor
 		if (this.diagramPart.isShowGuides() != isShowGuidesInViewer)
 		{
 			getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, this.diagramPart.isShowGuides());
+		}
+		// If the layout file doesn't exist, we'll apply auto layout
+		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput)getEditorInput();
+		if (diagramInput.noExistingLayout())
+		{
+			SapphireActionHandler layoutHandler = this.diagramPart.getAction("Sapphire.Diagram.GraphLayout").getFirstActiveHandler();
+			if (layoutHandler != null)
+			{
+				SapphireDiagramFeatureProvider fp = (SapphireDiagramFeatureProvider)getDiagramTypeProvider().getFeatureProvider();
+				DiagramRenderingContext ctx = fp.getRenderingContext(diagramPart);
+				layoutHandler.execute(ctx);
+			}
 		}
 		doSave(null);
 	}

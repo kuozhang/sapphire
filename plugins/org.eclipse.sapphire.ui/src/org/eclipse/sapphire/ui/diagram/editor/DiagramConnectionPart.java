@@ -610,6 +610,12 @@ public class DiagramConnectionPart
     	notifyRemoveBendpoint();
     }
     
+    public void removeAllBendpoints()
+    {
+    	this.bendpoints.clear();
+    	notifyRemoveBendpoint();
+    }
+    
     public void updateBendpoint(int index, int x, int y)
     {
     	if (index < this.bendpoints.size())

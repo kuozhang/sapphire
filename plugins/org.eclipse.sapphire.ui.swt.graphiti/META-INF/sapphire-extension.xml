@@ -24,6 +24,14 @@
         <impl>org.eclipse.sapphire.ui.swt.graphiti.actions.ToggleDiagramGuidesActionHandler</impl>
         <description>Show/Hide guides</description>
     </action-handler>
+    <action-handler>
+        <action>Sapphire.Diagram.GraphLayout.Horizontal</action>
+        <impl>org.eclipse.sapphire.ui.swt.graphiti.actions.HorizontalGraphLayoutActionHandler</impl>
+    </action-handler>
+    <action-handler>
+        <action>Sapphire.Diagram.GraphLayout.Vertical</action>
+        <impl>org.eclipse.sapphire.ui.swt.graphiti.actions.VerticalGraphLayoutActionHandler</impl>
+    </action-handler>
     <action-handler-factory>
         <action>Sapphire.Add</action>
         <impl>org.eclipse.sapphire.ui.swt.graphiti.actions.DiagramNodeAddActionHandlerFactory</impl>

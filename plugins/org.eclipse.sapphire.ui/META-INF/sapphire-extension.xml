@@ -191,6 +191,18 @@
         <description>Show or hide the guides</description>       
     </action>
     <action>
+        <id>Sapphire.Diagram.GraphLayout.Horizontal</id>
+        <context>Sapphire.Diagram.Editor</context>
+        <label>auto layout diagram horizontally</label>
+        <description>Apply graph auto layout to diagram horizontally</description>       
+    </action>
+    <action>
+        <id>Sapphire.Diagram.GraphLayout.Vertical</id>
+        <context>Sapphire.Diagram.Editor</context>
+        <label>auto layout diagram vertically</label>
+        <description>Apply graph auto layout to diagram vertically</description>       
+    </action>
+    <action>
         <id>Sapphire.Diagram.Node.Default</id>
         <context>Sapphire.Diagram.Node</context>
         <label>default action</label>
