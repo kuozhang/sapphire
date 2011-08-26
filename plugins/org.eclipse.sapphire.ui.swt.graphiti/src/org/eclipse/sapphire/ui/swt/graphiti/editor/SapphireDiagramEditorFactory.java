@@ -98,10 +98,12 @@ public class SapphireDiagramEditorFactory
         }
         
         // create diagram layout file if it doesn't exist
+        boolean existingLayout = true;
         IFile layoutFile = layoutFolder.getFile(fileName + ".layout");
         if (!layoutFile.exists())
         {
             layoutFile.create(new ByteArrayInputStream(new byte[0]), true, null);
+            existingLayout = false;
         }
         
         // We don't need to persist Graphiti diagram. But due to limitations on Graphiti's
@@ -163,6 +165,7 @@ public class SapphireDiagramEditorFactory
             final SapphireDiagramEditorInput diagramEditorInput = 
                 SapphireDiagramEditorInput.createEditorInput(diagram, domain, providerId, false);
             diagramEditorInput.setLayoutFile(layoutFile);
+            diagramEditorInput.setNoExistingLayout(!existingLayout);
             return diagramEditorInput;
         }
         else

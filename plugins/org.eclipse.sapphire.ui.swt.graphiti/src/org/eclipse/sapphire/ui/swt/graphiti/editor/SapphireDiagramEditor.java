@@ -24,14 +24,17 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
+import org.eclipse.graphiti.DiagramScrollingBehavior;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
@@ -52,11 +55,15 @@ import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.ui.editor.DiagramEditor;
+import org.eclipse.graphiti.ui.internal.editor.GFScrollingGraphicalViewer;
+import org.eclipse.graphiti.ui.internal.editor.GraphitiScrollingGraphicalViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.Bounds;
+import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
@@ -74,7 +81,13 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.graphiti.providers.SapphireDiagramFeatureProvider;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -206,6 +219,42 @@ public class SapphireDiagramEditor extends DiagramEditor
 		this.diagramPart.addListener(this.diagramPartListener);
 	}
 	
+    @Override
+	protected void createGraphicalViewer(Composite parent) 
+    {
+    	Canvas main = new Canvas( parent, SWT.NONE );
+        GridLayout gl = new GridLayout( 1, false );
+        gl.verticalSpacing = 0;
+        gl.horizontalSpacing = 0;
+        gl.marginWidth = 0;
+        gl.marginHeight = 0;        
+        gl.marginBottom = 0;
+        gl.marginLeft = 0;
+        gl.marginRight = 0;
+        gl.marginTop = 0;
+        main.setLayout( gl );
+        main.setBackground(ColorConstants.white);
+        
+        Canvas toolbarCanvas = new Canvas( main, SWT.NONE );
+        GridData gd = new GridData();
+        gd.horizontalAlignment = SWT.FILL;
+        gd.heightHint = 22;
+        toolbarCanvas.setLayoutData(gd);        
+    	
+		GraphicalViewer viewer;
+		if (getDiagramScrollingBehavior() == DiagramScrollingBehavior.SCROLLBARS_ALWAYS_VISIBLE) {
+			viewer = new GFScrollingGraphicalViewer(this);
+			((GFScrollingGraphicalViewer) viewer).createGFControl(main);
+		} else {
+			viewer = new GraphitiScrollingGraphicalViewer(this);
+			viewer.createControl(main);
+		}
+		setGraphicalViewer(viewer);
+		configureGraphicalViewer();
+		hookGraphicalViewer();
+		initializeGraphicalViewer();
+	}
+
 	public SapphireDiagramEditorPagePart getPart()
 	{
 		return this.diagramPart;
@@ -393,6 +442,22 @@ public class SapphireDiagramEditor extends DiagramEditor
 		if (this.diagramPart.isShowGuides() != isShowGuidesInViewer)
 		{
 			getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, this.diagramPart.isShowGuides());
+		}
+		// If the layout file doesn't exist, we'll apply auto layout
+		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput)getEditorInput();
+		if (diagramInput.noExistingLayout())
+		{
+			SapphireAction layoutAction = this.diagramPart.getAction("Sapphire.Diagram.GraphLayout.Horizontal");
+			if (layoutAction != null)
+			{
+				SapphireActionHandler layoutHandler = this.diagramPart.getAction("Sapphire.Diagram.GraphLayout.Horizontal").getFirstActiveHandler();
+				if (layoutHandler != null)
+				{
+					SapphireDiagramFeatureProvider fp = (SapphireDiagramFeatureProvider)getDiagramTypeProvider().getFeatureProvider();
+					DiagramRenderingContext ctx = fp.getRenderingContext(diagramPart);
+					layoutHandler.execute(ctx);
+				}
+			}
 		}
 		doSave(null);
 	}
