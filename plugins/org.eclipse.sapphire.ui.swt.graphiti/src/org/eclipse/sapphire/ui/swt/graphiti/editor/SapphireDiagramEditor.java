@@ -57,6 +57,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.Bounds;
+import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
@@ -400,12 +401,16 @@ public class SapphireDiagramEditor extends DiagramEditor
 		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput)getEditorInput();
 		if (diagramInput.noExistingLayout())
 		{
-			SapphireActionHandler layoutHandler = this.diagramPart.getAction("Sapphire.Diagram.GraphLayout").getFirstActiveHandler();
-			if (layoutHandler != null)
+			SapphireAction layoutAction = this.diagramPart.getAction("Sapphire.Diagram.GraphLayout.Horizontal");
+			if (layoutAction != null)
 			{
-				SapphireDiagramFeatureProvider fp = (SapphireDiagramFeatureProvider)getDiagramTypeProvider().getFeatureProvider();
-				DiagramRenderingContext ctx = fp.getRenderingContext(diagramPart);
-				layoutHandler.execute(ctx);
+				SapphireActionHandler layoutHandler = this.diagramPart.getAction("Sapphire.Diagram.GraphLayout.Horizontal").getFirstActiveHandler();
+				if (layoutHandler != null)
+				{
+					SapphireDiagramFeatureProvider fp = (SapphireDiagramFeatureProvider)getDiagramTypeProvider().getFeatureProvider();
+					DiagramRenderingContext ctx = fp.getRenderingContext(diagramPart);
+					layoutHandler.execute(ctx);
+				}
 			}
 		}
 		doSave(null);
