@@ -76,7 +76,7 @@ public final class TestModelingMisc0009 extends SapphireTestCase
         assertEquals( 7, d.getHours() );
         assertEquals( 50, d.getMinutes() );
         
-        element.setDate1( ( new SimpleDateFormat( "yyyy-MM-dd" ) ).parse( "2011-08-26" ) );
+        element.setDate1( ( new SimpleDateFormat( "yyyy-MM-ddZ" ) ).parse( "2011-08-26-0700" ) );
         
         assertEquals( "2011-08-26T00:00:00.000-0700", element.getDate1().getText() );
     }
@@ -108,7 +108,7 @@ public final class TestModelingMisc0009 extends SapphireTestCase
         
         assertNull( d );
         
-        element.setDate2( ( new SimpleDateFormat( "yyyy-MM-dd" ) ).parse( "2011-08-26" ) );
+        element.setDate2( ( new SimpleDateFormat( "yyyy-MM-ddZ" ) ).parse( "2011-08-26-0700" ) );
         
         assertEquals( "2011.08.26", element.getDate2().getText() );
     }
@@ -140,7 +140,7 @@ public final class TestModelingMisc0009 extends SapphireTestCase
         
         assertNull( d );
         
-        element.setDate3( ( new SimpleDateFormat( "yyyy-MM-dd" ) ).parse( "2011-08-26" ) );
+        element.setDate3( ( new SimpleDateFormat( "yyyy-MM-ddZ" ) ).parse( "2011-08-26-0700" ) );
         
         assertEquals( "26.08.2011", element.getDate3().getText() );
     }
