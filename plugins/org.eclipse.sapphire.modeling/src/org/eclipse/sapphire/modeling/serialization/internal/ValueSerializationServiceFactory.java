@@ -12,10 +12,10 @@
 package org.eclipse.sapphire.modeling.serialization.internal;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyService;
 import org.eclipse.sapphire.modeling.ModelPropertyServiceFactory;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
@@ -107,7 +107,28 @@ public final class ValueSerializationServiceFactory
             serializer = DEFAULT_SERIALIZER;
         }
         
-        return serializer;
+        final ValueSerializationService finalSerializer = serializer;
+        
+        // The serializer is wrapped before being returned because when a service is returned from
+        // the factory, its init method is called, which will cause double initialization and can
+        // override the params coming from @ValueSerialization annotation.
+        
+        final ValueSerializationService wrapper = new ValueSerializationService()
+        {
+            @Override
+            public String encode( final Object value )
+            {
+                return finalSerializer.encode( value );
+            }
+            
+            @Override
+            protected Object decodeFromString( final String value )
+            {
+                return finalSerializer.decode( value );
+            }
+        };
+        
+        return wrapper;
     }
     
     private static final class Resources extends NLS

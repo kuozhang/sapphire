@@ -196,16 +196,16 @@
         <impl>org.eclipse.sapphire.modeling.serialization.internal.BigDecimalSerializationService</impl>
     </value-serialization-service>
     <value-serialization-service>
+        <type>java.util.Date</type>
+        <impl>org.eclipse.sapphire.modeling.serialization.DateSerializationService</impl>
+    </value-serialization-service>
+    <value-serialization-service>
         <type>java.net.URL</type>
         <impl>org.eclipse.sapphire.modeling.serialization.internal.UrlSerializationService</impl>
     </value-serialization-service>
     <value-serialization-service>
         <impl>org.eclipse.sapphire.modeling.serialization.internal.PathSerializationService</impl>
         <type>org.eclipse.sapphire.modeling.Path</type>
-    </value-serialization-service>
-    <value-serialization-service>
-        <type>org.eclipse.sapphire.modeling.el.Function</type>
-        <impl>org.eclipse.sapphire.modeling.el.internal.FunctionSerializationService</impl>
     </value-serialization-service>
     <function>
         <name>Concat</name>
@@ -242,4 +242,8 @@
         <impl>org.eclipse.sapphire.modeling.el.InstanceOfFunction</impl>
         <description>Determines if an object is of specified type. The object to be checked is the first operand and the type is the second operand. The type must be a fully-qualified Java class name.</description>
     </function>
+    <value-serialization-service>
+        <type>org.eclipse.sapphire.modeling.el.Function</type>
+        <impl>org.eclipse.sapphire.modeling.el.internal.FunctionSerializationService</impl>
+    </value-serialization-service>
 </extension>
