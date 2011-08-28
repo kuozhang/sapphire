@@ -105,7 +105,7 @@
     <catalogContribution>
       <system
         systemId="TestXmlDtd0003.dtd"
-        uri="src/org/eclipse/sapphire/tests/modeling/xml/dtd/t0003/TestDtd.dtd"/>
+        uri="schemas/xml/dtd/0003.dtd"/>
     </catalogContribution>
   </extension>
 
