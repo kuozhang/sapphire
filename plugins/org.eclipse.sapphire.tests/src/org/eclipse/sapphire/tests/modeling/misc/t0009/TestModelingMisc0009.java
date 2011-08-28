@@ -78,7 +78,7 @@ public final class TestModelingMisc0009 extends SapphireTestCase
         
         element.setDate1( ( new SimpleDateFormat( "yyyy-MM-ddZ" ) ).parse( "2011-08-26-0700" ) );
         
-        assertEquals( "2011-08-26T00:00:00.000-0700", element.getDate1().getText() );
+        assertTrue( element.getDate1().getText().startsWith( "2011-08-26T00:00:00.000-" ) );
     }
 
     @SuppressWarnings( "deprecation" )
