@@ -36,7 +36,7 @@ public final class TestModelingMisc0009 extends SapphireTestCase
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "TestModelingMisc0008" );
+        suite.setName( "TestModelingMisc0009" );
 
         suite.addTest( new TestModelingMisc0009( "testDate1" ) );
         suite.addTest( new TestModelingMisc0009( "testDate2" ) );
