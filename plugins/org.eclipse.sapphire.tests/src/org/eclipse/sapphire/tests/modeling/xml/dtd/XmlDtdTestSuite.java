@@ -23,10 +23,7 @@ import org.eclipse.sapphire.tests.modeling.xml.dtd.t0003.TestXmlDtd0003;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class XmlDtdTestSuite
-
-    extends TestCase
-    
+public final class XmlDtdTestSuite extends TestCase
 {
     private XmlDtdTestSuite( final String name )
     {
@@ -37,7 +34,7 @@ public final class XmlDtdTestSuite
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "XmlDtd" );
+        suite.setName( "XmlDtdTestSuite" );
 
         suite.addTest( TestXmlDtd0001.suite() );
         suite.addTest( TestXmlDtd0002.suite() );

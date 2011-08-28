@@ -24,10 +24,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestXmlDtd0001
-
-    extends SapphireTestCase
-    
+public final class TestXmlDtd0001 extends SapphireTestCase
 {
     private TestXmlDtd0001( final String name )
     {
@@ -38,7 +35,7 @@ public final class TestXmlDtd0001
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "XmlDtd0001" );
+        suite.setName( "TestXmlDtd0001" );
 
         suite.addTest( new TestXmlDtd0001( "test" ) );
         

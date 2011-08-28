@@ -37,7 +37,7 @@ public final class TestXmlDtd0003 extends SapphireTestCase
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "XmlDtd0003" );
+        suite.setName( "TestXmlDtd0003" );
 
         suite.addTest( new TestXmlDtd0003( "testPublic" ) );
         suite.addTest( new TestXmlDtd0003( "testSystem" ) );
