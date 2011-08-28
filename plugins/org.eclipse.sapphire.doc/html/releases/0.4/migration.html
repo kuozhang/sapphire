@@ -813,6 +813,42 @@ while inside service
 }</font></code></pre>
     </td>
   </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Type( base = Date.class )</font>
+
+@ValueSerialization
+(
+    service = DateSerializationService.class, 
+    params = { "yyyy.MM.dd", "MM/dd/yyyy" }
+)
+
+<font color="#888888">ValueProperty PROP_DATE = new ValueProperty( TYPE, "Date" );
+
+Value<Date> getDate();
+void setDate( String value );
+void setDate( Date value );</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Type( base = Date.class )</font>
+
+@Service
+(
+    impl = DateSerializationService.class, 
+    params =
+    { 
+        @Service.Param( name = "format-1", value = "yyyy.MM.dd" ), 
+        @Service.Param( name = "format-2", value = "MM/dd/yyyy" )
+    }
+)
+
+<font color="#888888">ValueProperty PROP_DATE = new ValueProperty( TYPE, "Date" );
+
+Value<Date> getDate();
+void setDate( String value );
+void setDate( Date value );</font></code></pre>
+    </td>
+  </tr>
 </table>
 
 <p>All core services have been consolidated in a single package. Some of them were renamed in the process.</p>
@@ -869,6 +905,10 @@ while inside service
   <tr>
     <td><code><font color="#888888">org.eclipse.sapphire.</font>modeling<font color="#888888">.ValueNormalizationService</font></code></td>
     <td><code><font color="#888888">org.eclipse.sapphire.</font>services<font color="#888888">.ValueNormalizationService</font></code></td>
+  </tr>
+  <tr>
+    <td><code><font color="#888888">org.eclipse.sapphire.</font>modeling.serialization<font color="#888888">.DateSerializationService</font></code></td>
+    <td><code><font color="#888888">org.eclipse.sapphire.</font>services<font color="#888888">.DateSerializationService</font></code></td>
   </tr>
   <tr>
     <td><code><font color="#888888">org.eclipse.sapphire.</font>modeling.serialization<font color="#888888">.ValueSerializationService</font></code></td>
