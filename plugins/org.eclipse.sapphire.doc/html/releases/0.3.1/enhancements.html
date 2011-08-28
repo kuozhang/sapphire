@@ -42,6 +42,10 @@
   <ol type="A">
     <li><a href="#CreateAction">Create Action</a></li>
   </ol>
+  <li><a href="#Miscellaneous">Miscellaneous</a></li>
+  <ol type="A">
+    <li><a href="#ByteShortDate">Byte, Short and Date Values</a></li>
+  </ol>
 </ol>
  
 <h2><a name="ExpressionLanguage"><a name="CastBetweenCollectionsAndStrings">Cast Between Collections and Strings</a></a></h2>
@@ -182,11 +186,10 @@ specified by the developer in the diagram definition.</p>
     &lt;/guides>        
 <font color="#888888">&lt;/diagram-page></font></code></pre>
 
-<h2><a name="DiagramEditor"><a name="DiagramAutoLayout">Diagram Auto Layout</a></a></h2>
+<h2><a name="DiagramAutoLayout">Diagram Auto Layout</a></h2>
 
-<p>There are two more diagram context menus to assist diagram auto layout: auto layout horizontally and auto layout vertically. 
-When the Sapphire diagram editor is opened, if it can't find the corresponding layout file, it'll attempt to do a horizontal auto layout.
-</p>
+<p>There are two more diagram context menus to assist diagram auto layout: auto layout horizontally and auto layout vertically.
+When the Sapphire diagram editor is opened, if it can't find the corresponding layout file, it'll attempt to do a horizontal auto layout.</p>
 
 <h2><a name="JavaDeveloperToolsSupport"><a name="CreateAction">Java Type Create Action</a></a></h2>
 
@@ -219,6 +222,71 @@ format preferences.</p>
 
 <p style="margin-left: 20px;"><img src="images/JavaCreateAction-2.png"/></p>
 
+<h2><a name="Miscellaneous"><a name="ByteShortDate">Byte, Short and Date Values</a></a></h2>
+
+<p>Use Byte, Short and Date types for value properties without writing a custom serialization service. The serialization
+service for Date is configurable and can be subclassed to meet the date format requirements.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, the framework's default Date serialization logic is used.</p>
+
+<pre class="source-code"><code>@Type( base = Date.class )
+
+ValueProperty PROP_DATE = new ValueProperty( TYPE, "Date" );
+
+Value&lt;Date> getDate();
+void setDate( String value );
+void setDate( JavaTypeName value );</code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, the framework's DateSerializationService implementation is used,
+but is configured with specific formats.</p>
+
+<pre class="source-code"><code>@Type( base = Date.class )
+@ValueSerialization( service = DateSerializationService.class, params = { "yyyy.MM.dd", "MM/dd/yyyy" } )
+
+ValueProperty PROP_DATE = new ValueProperty( TYPE, "Date" );
+
+Value&lt;Date> getDate();
+void setDate( String value );
+void setDate( JavaTypeName value );</code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, the framework's DateSerializationService is subclassed to
+create a custom serialization service..</p>
+
+<pre class="source-code"><code>public class CustomDateSerializationService extends DateSerializationService
+{
+    private final static List&lt;DateFormat> FORMATS;
+    
+    static 
+    {
+        final List&lt;DateFormat> formats = new ArrayList&lt;DateFormat>();
+        formats.add( new SimpleDateFormat( "dd.MM.yyyy" ) );
+        formats.add( new SimpleDateFormat( "yyyy/MM/dd" ) );
+        
+        FORMATS = Collections.unmodifiableList(formats);
+    };
+
+    @Override
+    public List&lt;? extends DateFormat> formats()
+    {
+        return FORMATS;
+    }
+    
+}</code></pre>
+
+<pre class="source-code"><code>@Type( base = Date.class )
+@ValueSerialization( service = CustomDateSerializationService.class )
+
+ValueProperty PROP_DATE = new ValueProperty( TYPE, "Date" );
+
+Value&lt;Date> getDate();
+void setDate( String value );
+void setDate( JavaTypeName value );</code></pre>
 
 <div class="copyright">Copyright (c) 2011 Oracle and Others<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>

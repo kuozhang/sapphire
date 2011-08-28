@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.services;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.sapphire.Event;
@@ -31,7 +33,23 @@ public abstract class Service
                             final Map<String,String> params )
     {
         this.context = context;
-        this.params = params;
+        
+        final int paramsCount = params.size();
+        
+        if( paramsCount == 0 )
+        {
+            this.params = Collections.emptyMap();
+        }
+        else if( paramsCount == 1 )
+        {
+            final Map.Entry<String,String> entry = params.entrySet().iterator().next();
+            this.params = Collections.singletonMap( entry.getKey(), entry.getValue() );
+        }
+        else
+        {
+            this.params = new HashMap<String,String>( params );
+            this.params = Collections.unmodifiableMap( this.params );
+        }
         
         init();
     }
@@ -49,6 +67,11 @@ public abstract class Service
     protected final <T> T context( final Class<T> type )
     {
         return this.context.find( type );
+    }
+    
+    protected final Map<String,String> params()
+    {
+        return this.params;
     }
     
     protected final String param( final String name )

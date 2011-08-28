@@ -354,6 +354,12 @@
         <factory>org.eclipse.sapphire.services.internal.BigDecimalSerializationService$Factory</factory>
     </service>
     <service>
+        <id>Sapphire.ValueSerializationService.Date</id>
+        <type>org.eclipse.sapphire.services.ValueSerializationService</type>
+        <context>Sapphire.Property.Instance</context>
+        <factory>org.eclipse.sapphire.services.internal.DateSerializationServiceFactory</factory>
+    </service>
+    <service>
         <id>Sapphire.ValueSerializationService.Url</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
         <context>Sapphire.Property.Instance</context>
