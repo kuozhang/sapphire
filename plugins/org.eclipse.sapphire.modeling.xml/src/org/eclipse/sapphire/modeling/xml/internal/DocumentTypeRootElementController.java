@@ -47,19 +47,14 @@ public final class DocumentTypeRootElementController extends RootElementControll
         
         if( doctypeAnnotation != null ) 
         {
-            this.systemId = doctypeAnnotation.systemId();
+            this.systemId = normalizeToNull( doctypeAnnotation.systemId() );
             
-            if( this.systemId.length() == 0 )
+            if( this.systemId == null )
             {
-                this.systemId = null;
+                throw new IllegalStateException();
             }
             
-            this.publicId = doctypeAnnotation.publicId();
-            
-            if( this.publicId.length() == 0 )
-            {
-                this.publicId = null;
-            }
+            this.publicId = normalizeToNull( doctypeAnnotation.publicId() );
         }
     }
 
@@ -69,13 +64,8 @@ public final class DocumentTypeRootElementController extends RootElementControll
         DocumentType doctype = null;
 
         if (this.publicId != null ) {
-            if (this.systemId != null) {
-                doctype = document.getImplementation().createDocumentType(
-                        this.rootElementName, this.publicId, this.systemId);
-            } else {
-                doctype = document.getImplementation().createDocumentType(
-                        this.rootElementName, this.publicId, null);
-            }
+            doctype = document.getImplementation().createDocumentType(
+                    this.rootElementName, this.publicId, this.systemId);
         } else {
             doctype = document.getImplementation().createDocumentType(
                     this.rootElementName, null, this.systemId);
@@ -94,11 +84,36 @@ public final class DocumentTypeRootElementController extends RootElementControll
     }
 
     @Override
-    public boolean checkRootElement() {
-        Document document = resource().root().getDomDocument();
+    public boolean checkRootElement() 
+    {
+        final Document document = resource().root().getDomDocument();
         final Element root = document.getDocumentElement();
-        String localName = root.getLocalName();
-        return equal(localName, this.rootElementName);
+        
+        if( equal( root.getLocalName(), this.rootElementName ) )
+        {
+            final DocumentType documentType = document.getDoctype();
+            
+            if( documentType != null &&
+                this.systemId.equals( documentType.getSystemId() ) &&
+                equal( this.publicId, normalizeToNull( documentType.getPublicId() ) ) )
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    private static String normalizeToNull( final String value )
+    {
+        String result = value;
+        
+        if( value != null && value.length() == 0 )
+        {
+            result = null;
+        }
+        
+        return result;
     }
 
 }

@@ -79,8 +79,7 @@ public class RootXmlResource extends XmlResource
             final String rootElementName = xmlRootBindingAnnotation.elementName();
             final XmlDocumentType xmlDocumentTypeAnnotation = modelElementType.getAnnotation( XmlDocumentType.class );
             
-            if( xmlDocumentTypeAnnotation != null && xmlDocumentTypeAnnotation.publicId().length() != 0 && 
-                xmlDocumentTypeAnnotation.systemId().length() != 0 )
+            if( xmlDocumentTypeAnnotation != null && xmlDocumentTypeAnnotation.systemId().length() != 0 )
             {
                 this.rootElementController = new DocumentTypeRootElementController( rootElementName );
             }

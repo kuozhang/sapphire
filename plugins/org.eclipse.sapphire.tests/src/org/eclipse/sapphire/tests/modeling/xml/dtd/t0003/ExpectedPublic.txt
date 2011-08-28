@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE root PUBLIC "-//Sapphire//DTD Country 1.0.0//EN" "TestXmlDtd0003.dtd">
+<root>
+    <aaa>333</aaa>
+    <aaa>666</aaa>
+    <bbb>222</bbb>
+    <bbb>555</bbb>
+    <ccc>111</ccc>
+    <ccc>444</ccc>
+</root>

@@ -28,12 +28,13 @@ import java.lang.annotation.Target;
 public @interface XmlDocumentType {
 
     /**
-     * The public Id that will be used in &lt;!DOCTYPE rootElelemtName PUBLIC publicId &gt;
+     * The public Id that will be used in &lt;!DOCTYPE rootElelemtName PUBLIC publicId systemId &gt;
      */
     String publicId() default "";
 
     /**
-     * The system Id that will be used in &lt;!DOCTYPE rootElelemtName PUBLIC publicId systemId &gt;
+     * The system Id that will be used in &lt;!DOCTYPE rootElelemtName SYSTEM systemId &gt; or 
+     * &lt;!DOCTYPE rootElelemtName PUBLIC publicId systemId &gt;
      */
-    String systemId() default "";
+    String systemId();
 }
