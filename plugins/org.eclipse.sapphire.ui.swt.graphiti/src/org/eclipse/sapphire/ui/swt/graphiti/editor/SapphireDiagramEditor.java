@@ -401,10 +401,10 @@ public class SapphireDiagramEditor extends DiagramEditor
 		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput)getEditorInput();
 		if (diagramInput.noExistingLayout())
 		{
-			SapphireAction layoutAction = this.diagramPart.getAction("Sapphire.Diagram.GraphLayout.Horizontal");
+			SapphireAction layoutAction = this.diagramPart.getAction("Sapphire.Diagram.Layout");
 			if (layoutAction != null)
 			{
-				SapphireActionHandler layoutHandler = this.diagramPart.getAction("Sapphire.Diagram.GraphLayout.Horizontal").getFirstActiveHandler();
+				SapphireActionHandler layoutHandler = layoutAction.getFirstActiveHandler();
 				if (layoutHandler != null)
 				{
 					SapphireDiagramFeatureProvider fp = (SapphireDiagramFeatureProvider)getDiagramTypeProvider().getFeatureProvider();
