@@ -25,17 +25,21 @@
         <description>Show/Hide guides</description>
     </action-handler>
     <action-handler>
-        <action>Sapphire.Diagram.GraphLayout.Horizontal</action>
+        <action>Sapphire.Diagram.Layout</action>
         <impl>org.eclipse.sapphire.ui.swt.graphiti.actions.HorizontalGraphLayoutActionHandler</impl>
-    </action-handler>
+        <label>layout horizontally</label>
+        <context>Sapphire.Diagram.Editor</context>
+    </action-handler>    
     <action-handler>
-        <action>Sapphire.Diagram.GraphLayout.Vertical</action>
+        <action>Sapphire.Diagram.Layout</action>
         <impl>org.eclipse.sapphire.ui.swt.graphiti.actions.VerticalGraphLayoutActionHandler</impl>
-    </action-handler>
+        <label>layout vertically</label>
+        <context>Sapphire.Diagram.Editor</context>
+    </action-handler>    
     <action-handler-factory>
         <action>Sapphire.Add</action>
         <impl>org.eclipse.sapphire.ui.swt.graphiti.actions.DiagramNodeAddActionHandlerFactory</impl>
         <description>Creates an add action handler for every node type.</description>
         <context>Sapphire.Diagram.Editor</context>
-    </action-handler-factory>    
+    </action-handler-factory>  
 </extension>
