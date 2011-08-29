@@ -859,7 +859,6 @@ Fragment-Host: @{Bundle}
 
           <property file="${releng.dir}/repositories-@{name}.properties" prefix="."/>
 
-          <var name="eclipse.platform.version.@{name}" value="${.eclipse.platform.version}"/>
           <var name="eclipse.platform.build.@{name}" value="${.eclipse.platform.build}"/>
 
           <if>
@@ -889,7 +888,6 @@ Fragment-Host: @{Bundle}
             </then>
           </if>
 
-          <var name=".eclipse.platform.version" unset="true"/>
           <var name=".eclipse.platform.build" unset="true"/>
           <var name=".p2.repositories" unset="true"/>
           <var name=".legacy.packages" unset="true"/>
@@ -907,11 +905,9 @@ Fragment-Host: @{Bundle}
     <sequential>
 
       <load-configuration name="@{name}"/>
-      <propertycopy property=".eclipse.platform.version" from="eclipse.platform.version.@{name}" override="true"/>
       <propertycopy property=".eclipse.platform.build" from="eclipse.platform.build.@{name}" override="true"/>
       <propertycopy property=".repositories" from="repositories.@{name}" override="true"/>
       <body/>
-      <var name=".eclipse.platform.version" unset="true"/>
       <var name=".eclipse.platform.build" unset="true"/>
       <var name=".repositories" unset="true"/>
 
@@ -1203,7 +1199,7 @@ Fragment-Host: @{Bundle}
             <var name=".format" value="tar.gz"/>
           </else>
         </if>
-        <with-download-from-eclipse file="/eclipse/downloads/drops/${.eclipse.platform.build}/eclipse-platform-${.eclipse.platform.version}-@{platform}.${.format}">
+        <with-download-from-eclipse file="${.eclipse.platform.build}-@{platform}.${.format}">
           <if>
             <equals arg1="${.format}" arg2="zip"/>
             <then>

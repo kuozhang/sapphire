@@ -39,7 +39,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.SubActionBars;
-import org.eclipse.ui.internal.PartSite;
 import org.eclipse.ui.internal.PopupMenuExtender;
 import org.eclipse.ui.internal.services.INestable;
 import org.eclipse.ui.internal.services.IServiceLocatorCreator;
@@ -409,10 +408,11 @@ public final class SapphireEditorContentOutline
             this.serviceLocator = (ServiceLocator) slc.createServiceLocator(
                     parentViewSite, null, new IDisposable(){
                         public void dispose() {
-                            final Control control = ((PartSite)parentViewSite).getPane().getControl();
+                            // TODO: Commented out due to Eclipse 4.2 incompatibility
+                            /*final Control control = ((PartSite)parentViewSite).getPane().getControl();
                             if (control != null && !control.isDisposed()) {
                                 ((PartSite)parentViewSite).getPane().doHide();
-                            }
+                            }*/
                         }
                     });
             initializeDefaultServices();
