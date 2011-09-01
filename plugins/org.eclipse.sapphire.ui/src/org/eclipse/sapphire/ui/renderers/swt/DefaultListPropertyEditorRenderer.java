@@ -501,19 +501,19 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         this.tableViewer.setContentProvider( contentProvider );
         this.tableViewer.setInput( contentProvider );
         
+        this.table.addTraverseListener
+        (
+            new TraverseListener()
+            {
+                public void keyTraversed( final TraverseEvent event )
+                {
+                    handleTableTraverseEvent( event );
+                }
+            }
+        );
+        
         if( ! isReadOnly )
         {
-            this.table.addTraverseListener
-            (
-                new TraverseListener()
-                {
-                    public void keyTraversed( final TraverseEvent event )
-                    {
-                        handleTableTraverseEvent( event );
-                    }
-                }
-            );
-            
             if( this.exposeAddAction )
             {
                 final SapphireAction addAction = actions.getAction( ACTION_ADD );
