@@ -197,6 +197,17 @@ properties.</p>
 <font color="#888888">&lt;/property-editor></font></code></pre>
     </td>
   </tr>
+</table>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;([ \t]*)&lt;hint>\s*&lt;name>\s*show.label\s*&lt;/name>\s*&lt;value>\s*false\s*&lt;/value>\s*&lt;/hint></nobr><br/>
+<nobr>Replace: &nbsp;\1&lt;show-label>false&lt;/show-label>\n\1&lt;span>true&lt;/span></nobr></p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
   <tr>
     <td>
 <pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
@@ -212,6 +223,17 @@ properties.</p>
 <font color="#888888">&lt;/property-editor></font></code></pre>
     </td>
   </tr>
+</table>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;([ \t]*)&lt;hint>\s*&lt;name>\s*show.label.above\s*&lt;/name>\s*&lt;value>\s*true\s*&lt;/value>\s*&lt;/hint></nobr><br/>
+<nobr>Replace: &nbsp;\1&lt;span>true&lt;/span></nobr></p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
   <tr>
     <td>
 <pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
@@ -226,6 +248,32 @@ properties.</p>
     &lt;width>100&lt;/width>
 <font color="#888888">&lt;/property-editor></font></code></pre>
     </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;composite></font>
+    &lt;hint>
+        &lt;name>width&lt;/name>
+        &lt;value>100&lt;/value>
+    &lt;/hint>
+<font color="#888888">&lt;/composite></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;composite></font>
+    &lt;width>100&lt;/width>
+<font color="#888888">&lt;/composite></font></code></pre>
+    </td>
+  </tr>
+</table>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;([ \t]*)&lt;hint>\s*&lt;name>\s*width\s*&lt;/name>\s*&lt;value>\s*([0-9]*)\s*&lt;/value>\s*&lt;/hint></nobr><br/>
+<nobr>Replace: &nbsp;\1&lt;width>\2&lt;/width></nobr></p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
   </tr>
   <tr>
     <td>
@@ -249,21 +297,6 @@ properties.</p>
     <td>
 <pre class="source-code"><code><font color="#888888">&lt;composite></font>
     &lt;hint>
-        &lt;name>width&lt;/name>
-        &lt;value>100&lt;/value>
-    &lt;/hint>
-<font color="#888888">&lt;/composite></font></code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code><font color="#888888">&lt;composite></font>
-    &lt;width>100&lt;/width>
-<font color="#888888">&lt;/composite></font></code></pre>
-    </td>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code><font color="#888888">&lt;composite></font>
-    &lt;hint>
         &lt;name>height&lt;/name>
         &lt;value>100&lt;/value>
     &lt;/hint>
@@ -274,6 +307,17 @@ properties.</p>
     &lt;height>100&lt;/height>
 <font color="#888888">&lt;/composite></font></code></pre>
     </td>
+  </tr>
+</table>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;([ \t]*)&lt;hint>\s*&lt;name>\s*height\s*&lt;/name>\s*&lt;value>\s*([0-9]*)\s*&lt;/value>\s*&lt;/hint></nobr><br/>
+<nobr>Replace: &nbsp;\1&lt;height>\2&lt;/height></nobr></p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
   </tr>
   <tr>
     <td>
@@ -295,6 +339,10 @@ properties.</p>
     </td>
   </tr>
 </table>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;([ \t]*)&lt;hint>\s*&lt;name>\s*margin.left\s*&lt;/name>\s*&lt;value>\s*([0-9a-z]*)\s*&lt;/value>\s*&lt;/hint></nobr><br/>
+<nobr>Replace: &nbsp;\1&lt;margin-left>\2&lt;/margin-left></nobr></p>
 
 <h2><a name="ValidFileExtensions">ValidFileExtensions</a></h2>
 
@@ -677,24 +725,24 @@ void setSample( Circle value );</font></code></pre>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">public class CustomValidationService extends ValidationService<Value<?>>
-{
+<pre class="source-code"><code><font color="#888888">public class CustomValidationService extends</font> ModelPropertyValidationService&lt;Value&lt;String>>
+<font color="#888888">{
     @Override
     public Status validate()
     {
-        final Value<?> value = </font>target()<font color="#888888">;
+        final Value&lt;String> value = </font>target()<font color="#888888">;
 
         ...
     }
 }</font></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">public class CustomValidationService extends ValidationService
-{
+<pre class="source-code"><code><font color="#888888">public class CustomValidationService extends</font> ValidationService
+<font color="#888888">{
     @Override
     public Status validate()
     {
-        final Value<?> value = </font>context( IModelElement.class ).read( context( ValueProperty.class ) )<font color="#888888">;
+        final Value&lt;String> value = </font>context( IModelElement.class ).read( context( ValueProperty.class ) )<font color="#888888">;
 
         ...
     }
@@ -787,8 +835,8 @@ service.</font>removeListener<font color="#888888">( listener );
 
 while inside service
 {</font>
-    notifyListeners<font color="#888888">( new</font> ModelService.Event<font color="#888888">( this ) );
-}</font></code></pre>
+    notifyListeners( new ModelService.Event( this ) );
+<font color="#888888">}</font></code></pre>
     </td>
     <td>
 <pre class="source-code"><code>Listener <font color="#888888">listener = new </font>Listener<font color="#888888">()
@@ -809,8 +857,8 @@ service.</font>detach<font color="#888888">( listener );
 
 while inside service
 {</font>
-    notify<font color="#888888">( new</font> Event<font color="#888888">( this ) );
-}</font></code></pre>
+    broadcast();
+}<font color="#888888"></font></code></pre>
     </td>
   </tr>
   <tr>
@@ -847,6 +895,28 @@ void setDate( Date value );</font></code></pre>
 Value<Date> getDate();
 void setDate( String value );
 void setDate( Date value );</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomValidationService extends UniqueValueValidationService</font>&lt;String>
+<font color="#888888">{
+    @Override
+    protected boolean isUniqueValue( Value&lt;</font>String<font color="#888888">> value )
+    {
+        ...
+    }
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomValidationService extends UniqueValueValidationService
+{
+    @Override
+    protected boolean isUniqueValue( Value&lt;</font>?<font color="#888888">> value )
+    {
+        ...
+    }
+}</font></code></pre>
     </td>
   </tr>
 </table>
