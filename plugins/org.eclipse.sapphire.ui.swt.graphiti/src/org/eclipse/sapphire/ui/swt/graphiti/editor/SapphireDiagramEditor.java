@@ -809,21 +809,24 @@ public class SapphireDiagramEditor extends DiagramEditor
             DiagramNodePart targetNodePart = getPart().getDiagramNodePart(connPart.getEndpoint2());
             ContainerShape srcNode = getContainerShape(srcNodePart);
             ContainerShape targetNode = getContainerShape(targetNodePart);
-            final AddConnectionContext addContext = 
-                    new AddConnectionContext(srcNode.getAnchors().get(0), targetNode.getAnchors().get(0));
-            addContext.setNewObject(connPart);
-            final IAddFeature addFeature = fp.getAddFeature(addContext);
-            if (addFeature != null) 
+            if (srcNode != null && targetNode != null)
             {
-                ted.getCommandStack().execute(new RecordingCommand(ted) 
-                {
-                    protected void doExecute() 
-                    {                                    
-                        addFeature.add(addContext);
-                    }
-                });
+	            final AddConnectionContext addContext = 
+	                    new AddConnectionContext(srcNode.getAnchors().get(0), targetNode.getAnchors().get(0));
+	            addContext.setNewObject(connPart);
+	            final IAddFeature addFeature = fp.getAddFeature(addContext);
+	            if (addFeature != null) 
+	            {
+	                ted.getCommandStack().execute(new RecordingCommand(ted) 
+	                {
+	                    protected void doExecute() 
+	                    {                                    
+	                        addFeature.add(addContext);
+	                    }
+	                });
+	            }
+	            markEditorDirty();
             }
-            markEditorDirty();
         }                         
     }
 	
