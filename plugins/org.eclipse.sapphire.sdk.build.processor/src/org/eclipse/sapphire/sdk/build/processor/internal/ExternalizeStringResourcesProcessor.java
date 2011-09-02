@@ -76,7 +76,7 @@ public final class ExternalizeStringResourcesProcessor
                 }
                 
                 final String pkg = type.getPackage().getQualifiedName();
-                final String relpath = type.getSimpleName() + ".properties"; //$NON-NLS-1$
+                final String relpath = generateFileName( type );
                 
                 PrintWriter pw = null;
                 
@@ -108,6 +108,21 @@ public final class ExternalizeStringResourcesProcessor
         }
     }
     
+    private static String generateFileName( final TypeDeclaration type )
+    {
+        final String qname = type.getQualifiedName();
+        final String pkg = type.getPackage().getQualifiedName();
+        
+        if( pkg.length() == 0 )
+        {
+            return qname; 
+        }
+        else
+        {
+            return qname.substring( pkg.length() + 1 ).replace( '.', '$' ) + ".properties";
+        }
+    }
+
     private static Set<TypeDeclaration> getAnnotatedTypes( final AnnotationProcessorEnvironment env )
     {
         final Set<TypeDeclaration> annotatedTypes = new HashSet<TypeDeclaration>(); 

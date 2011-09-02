@@ -32,7 +32,6 @@
   </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
-    <li><a href="#ModelElementTypeWithoutPrefix">Optional 'I' Prefix</a></li>
     <li><a href="#XmlDocumentType">@XmlDocumentType Annotation</a></li>
   </ol>
 </ol>
@@ -91,22 +90,7 @@ be supplied.</p>
 <p><a href="../../services/index.html#PossibleTypesService">See Documentation</a></p>
 
 
-<h2><a name="Miscellaneous"><a name="ModelElementTypeWithoutPrefix">Optional 'I' Prefix</a></a></h2>
-
-<p>Sapphire adopters are no longer required to utilize the convention of prefixing 'I' in front of interface names
-when defining model elements. The @GenerateImpl annotation has a new className attribute for explicitly controlling
-the implementation class name. The default implementation class name is now defined as follows:</p>
-
-<pre class="source-code"><code>if( using 'I' prefix convention )
-{
-    default implementation class name is typeClassName.substring( 1 )
-}
-else
-{
-    default implementation class name is typeClassName + "Impl"
-}</code></pre>
-
-<h2><a name="XmlDocumentType">@XmlDocumentType Annotation</a></a></h2>
+<h2><a name="Miscellaneous"><a name="XmlDocumentType">@XmlDocumentType Annotation</a></a></h2>
 
 <p>The new @XmlDocumentType annotation can be used when working with DTD-based documents to easily specify systemId or
 publicId/systemId pair. Sapphire XML binding will manage the XML DOCTYPE declaration.</p>

@@ -19,23 +19,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.sun.mirror.apt.AnnotationProcessorEnvironment;
-import com.sun.mirror.declaration.ClassDeclaration;
-import com.sun.mirror.declaration.InterfaceDeclaration;
-import com.sun.mirror.declaration.TypeDeclaration;
-import com.sun.mirror.type.ClassType;
-import com.sun.mirror.type.InterfaceType;
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ClassModel
-
-    extends BaseModel
-    
+public final class ClassModel extends BaseModel
 {
-    private final AnnotationProcessorEnvironment env;
     private TypeReference name;
     private Set<TypeReference> imports;
     private TypeReference baseClass;
@@ -46,9 +35,8 @@ public final class ClassModel
     private List<MethodModel> methods;
     private boolean invalid;
     
-    public ClassModel( final AnnotationProcessorEnvironment env )
+    public ClassModel()
     {
-        this.env = env;
         this.imports = new HashSet<TypeReference>();
         this.interfaces = new HashSet<TypeReference>();
         this.isAbstract = false;
@@ -84,13 +72,11 @@ public final class ClassModel
         if( this.baseClass != null )
         {
             this.baseClass.contributeNecessaryImports( result );
-            gatherPackagesToIgnore( pkgToIgnore, this.baseClass );
         }
         
         for( TypeReference intr : this.interfaces )
         {
             intr.contributeNecessaryImports( result );
-            gatherPackagesToIgnore( pkgToIgnore, intr );
         }
         
         for( FieldModel field : this.fields )
@@ -141,53 +127,6 @@ public final class ClassModel
         return result;
     }
     
-    private void gatherPackagesToIgnore( final Set<String> pkgToIgnore,
-                                         final TypeReference typeref )
-    {
-        final String name = typeref.getQualifiedName();
-        
-        pkgToIgnore.add( name );
-        
-        final TypeDeclaration type = this.env.getTypeDeclaration( name );
-        
-        if( type != null )
-        {
-            gatherPackagesToIgnore( pkgToIgnore, type );
-        }
-    }
-
-    private void gatherPackagesToIgnore( final Set<String> pkgToIgnore,
-                                         final TypeDeclaration type )
-    {
-        for( InterfaceType intr : type.getSuperinterfaces() )
-        {
-            final InterfaceDeclaration intrDecl = intr.getDeclaration();
-            
-            if( intrDecl != null )
-            {
-                pkgToIgnore.add( intrDecl.getQualifiedName() );
-                gatherPackagesToIgnore( pkgToIgnore, intrDecl );
-            }
-        }
-        
-        if( type instanceof ClassDeclaration )
-        {
-            final ClassDeclaration classDecl = (ClassDeclaration) type;
-            final ClassType baseClass = classDecl.getSuperclass();
-            
-            if( baseClass != null )
-            {
-                final ClassDeclaration baseClassDecl = baseClass.getDeclaration();
-                
-                if( baseClassDecl != null )
-                {
-                    pkgToIgnore.add( baseClassDecl.getQualifiedName() );
-                    gatherPackagesToIgnore( pkgToIgnore, baseClassDecl );
-                }
-            }
-        }
-    }
-
     public void addImport( final TypeReference type )
     {
         type.contributeNecessaryImports( this.imports );
@@ -416,6 +355,9 @@ public final class ClassModel
             pw.println();
         }
 
+        pw.print( "@SuppressWarnings( \"all\" )" );
+        pw.println();
+        pw.println();
         pw.printf( "public %s class ", ( this.isAbstract ? "abstract" : "final" ) );
         pw.print( this.name.getSimpleName() );
         pw.println();

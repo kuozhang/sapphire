@@ -114,7 +114,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
             }
             
             final InterfaceDeclaration interfaceDeclaration = (InterfaceDeclaration) annotatedEntity;
-            final ClassModel implClassModel = new ClassModel( env );
+            final ClassModel implClassModel = new ClassModel();
             
             process( env.getMessager(), implClassModel, interfaceDeclaration );
             

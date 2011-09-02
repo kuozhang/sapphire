@@ -45,6 +45,7 @@
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
     <li><a href="#ByteShortDate">Byte, Short and Date Values</a></li>
+    <li><a href="#ModelElementTypeWithoutPrefix">Optional 'I' Prefix</a></li>
   </ol>
 </ol>
  
@@ -287,6 +288,23 @@ ValueProperty PROP_DATE = new ValueProperty( TYPE, "Date" );
 Value&lt;Date> getDate();
 void setDate( String value );
 void setDate( JavaTypeName value );</code></pre>
+
+<h2><a name="ModelElementTypeWithoutPrefix">Optional 'I' Prefix</a></h2>
+
+<p>Sapphire adopters are no longer required to utilize the convention of prefixing 'I' in front of interface names
+when defining model elements. The @GenerateImpl annotation has a new className attribute for explicitly controlling
+the implementation class name. The default implementation class name is now defined as follows:</p>
+
+<pre class="source-code"><code>if( using 'I' prefix convention )
+{
+    default implementation class name is typeClassName.substring( 1 )
+}
+else
+{
+    default implementation class name is typeClassName + "Impl"
+}</code></pre>
+
+
 
 <div class="copyright">Copyright (c) 2011 Oracle and Others<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
