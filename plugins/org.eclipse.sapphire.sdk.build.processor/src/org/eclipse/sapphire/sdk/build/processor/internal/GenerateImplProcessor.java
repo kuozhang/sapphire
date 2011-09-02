@@ -36,6 +36,7 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElement;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Resource;
@@ -188,19 +189,10 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                           final ClassModel elImplClass,
                           final InterfaceDeclaration elInterface )
     {
-        final String simpleName = elInterface.getSimpleName().substring( 1 );
-        final String defaultPackageName = elInterface.getPackage().getQualifiedName() + ".internal";
-        
         final GenerateImpl generateImplAnnotation = elInterface.getAnnotation( GenerateImpl.class );
-        
-        String packageName = generateImplAnnotation.packageName();
-        
-        if( packageName.length() == 0 )
-        {
-            packageName = defaultPackageName;
-        }
+        final String implClassQualifiedName = ModelElementType.getImplClassName( getQualifiedName( elInterface ), generateImplAnnotation );
 
-        elImplClass.setName( new TypeReference( packageName, simpleName ) );
+        elImplClass.setName( new TypeReference( implClassQualifiedName ) );
         elImplClass.addInterface( new TypeReference( elInterface.getQualifiedName() ) );
         elImplClass.setBaseClass( new TypeReference( ModelElement.class.getName() ) );
         
@@ -1558,6 +1550,25 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         {
             return new TypeReference( ( (TypeDeclaration) typeMirror ).getQualifiedName() );
         }
+    }
+    
+    private static String getQualifiedName( final TypeDeclaration type )
+    {
+        final StringBuilder qname = new StringBuilder();
+        final String pkg = type.getPackage().getQualifiedName();
+        
+        if( pkg.length() > 0 )
+        {
+            qname.append( pkg );
+            qname.append( '.' );
+            qname.append( type.getQualifiedName().substring( pkg.length() + 1 ).replace( '.', '$' ) );
+        }
+        else
+        {
+            qname.append( type.getQualifiedName().replace( '.', '$' ) );
+        }
+        
+        return qname.toString();
     }
     
     private interface Visitor<T>

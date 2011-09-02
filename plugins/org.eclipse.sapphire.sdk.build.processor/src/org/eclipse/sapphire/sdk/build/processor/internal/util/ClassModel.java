@@ -23,10 +23,7 @@ import java.util.TreeSet;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ClassModel
-
-    extends BaseModel
-    
+public final class ClassModel extends BaseModel
 {
     private TypeReference name;
     private Set<TypeReference> imports;
@@ -67,6 +64,10 @@ public final class ClassModel
     {
         final Set<TypeReference> result = new TreeSet<TypeReference>();
         result.addAll( this.imports );
+        
+        final Set<String> pkgToIgnore = new HashSet<String>();
+        pkgToIgnore.add( "java.lang" );
+        pkgToIgnore.add( this.name.getPackage() );
         
         if( this.baseClass != null )
         {
@@ -111,7 +112,7 @@ public final class ClassModel
                 {
                     keep = false;
                 }
-                else if( pkg.equals( this.name.getPackage() ) || pkg.equals( "java.lang" ) )
+                else if( pkgToIgnore.contains( pkg ) )
                 {
                     keep = false;
                 }
@@ -354,6 +355,9 @@ public final class ClassModel
             pw.println();
         }
 
+        pw.print( "@SuppressWarnings( \"all\" )" );
+        pw.println();
+        pw.println();
         pw.printf( "public %s class ", ( this.isAbstract ? "abstract" : "final" ) );
         pw.print( this.name.getSimpleName() );
         pw.println();

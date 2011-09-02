@@ -9,22 +9,20 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.annotations;
+package org.eclipse.sapphire.tests.modeling.misc.t0006;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Retention( RetentionPolicy.RUNTIME )
-@Target( ElementType.TYPE )
+@GenerateImpl
 
-public @interface GenerateImpl
+public interface ILevel1 extends IModelElement
 {
-    String packageName() default "";
-    String className() default "";
+    ModelElementType TYPE = new ModelElementType( ILevel1.class );
+
 }
