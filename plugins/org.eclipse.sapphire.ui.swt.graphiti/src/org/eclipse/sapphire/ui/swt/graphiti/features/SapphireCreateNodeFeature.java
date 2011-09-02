@@ -17,6 +17,7 @@ import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 
@@ -24,7 +25,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class SapphireCreateNodeFeature extends AbstractCreateFeature 
+public class SapphireCreateNodeFeature extends AbstractCreateFeature implements SapphireCreateFeature
 {
     private DiagramNodeTemplate nodeTemplate;
     
@@ -59,5 +60,29 @@ public class SapphireCreateNodeFeature extends AbstractCreateFeature
 			return image.getImageId().getContent();
 		}
 		return super.getCreateImageId();
+	}
+
+	public IDiagramNodeDef getNodeDef()
+	{
+		return this.nodeTemplate.getDefinition();
+	}
+	
+	public int compareTo(SapphireCreateFeature o) 
+	{
+		if (!(o instanceof SapphireCreateNodeFeature || o instanceof SapphireCreateConnectionFeature))
+		{
+			throw new IllegalArgumentException();
+		}
+		String createName = getCreateName();
+		String otherName = null;
+		if (o instanceof SapphireCreateNodeFeature)
+		{
+			otherName = ((SapphireCreateNodeFeature)o).getCreateName();
+		}
+		else if (o instanceof SapphireCreateNodeFeature)
+		{
+			otherName = ((SapphireCreateNodeFeature)o).getCreateName();
+		}
+		return createName.compareTo(otherName);
 	}
 }

@@ -33,7 +33,7 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class SapphireCreateConnectionFeature extends AbstractCreateConnectionFeature 
+public class SapphireCreateConnectionFeature extends AbstractCreateConnectionFeature implements SapphireCreateFeature
 {
     private SapphireDiagramEditorPagePart diagramPart;
     private IDiagramConnectionDef connDef;
@@ -135,6 +135,30 @@ public class SapphireCreateConnectionFeature extends AbstractCreateConnectionFea
         }
         return null;
     }
+    
+    public IDiagramConnectionDef getConnectionDef()
+    {
+    	return this.connDef;
+    }
+    
+	public int compareTo(SapphireCreateFeature o) 
+	{
+		if (!(o instanceof SapphireCreateNodeFeature || o instanceof SapphireCreateConnectionFeature))
+		{
+			throw new IllegalArgumentException();
+		}
+		String createName = getCreateName();
+		String otherName = null;
+		if (o instanceof SapphireCreateNodeFeature)
+		{
+			otherName = ((SapphireCreateNodeFeature)o).getCreateName();
+		}
+		else if (o instanceof SapphireCreateNodeFeature)
+		{
+			otherName = ((SapphireCreateNodeFeature)o).getCreateName();
+		}
+		return createName.compareTo(otherName);
+	}
     
     /**
      * Returns the SapphirePart belonging to the anchor, or null if not available.

@@ -95,6 +95,18 @@ public interface IDiagramConnectionDef
     
     ModelElementHandle<IDiagramImageChoice> getToolPaletteImage();
     
+    // *** ToolPaletteLocation ***
+
+    @Type( base = PaletteLocation.class )
+    @XmlBinding( path = "tool-palette-location" )    
+    @DefaultValue( text = "connection" )
+    
+    ValueProperty PROP_TOOL_PALETTE_LOCATION = new ValueProperty( TYPE, "ToolPaletteLocation" );
+    
+    Value<PaletteLocation> getToolPaletteLocation();
+    void setToolPaletteLocation( String value );
+    void setToolPaletteLocation( PaletteLocation value );    
+    
     // *** Endpoint1 ***
     
     @Type( base = IDiagramConnectionEndpointDef.class )

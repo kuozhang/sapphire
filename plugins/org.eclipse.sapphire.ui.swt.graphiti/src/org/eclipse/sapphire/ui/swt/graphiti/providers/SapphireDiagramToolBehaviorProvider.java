@@ -14,10 +14,13 @@
 package org.eclipse.sapphire.ui.swt.graphiti.providers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
+import org.eclipse.graphiti.features.ICreateConnectionFeature;
+import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IDoubleClickContext;
 import org.eclipse.graphiti.features.context.IPictogramElementContext;
@@ -29,25 +32,36 @@ import org.eclipse.graphiti.mm.pictograms.ConnectionDecorator;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
+import org.eclipse.graphiti.palette.IPaletteCompartmentEntry;
+import org.eclipse.graphiti.palette.impl.ConnectionCreationToolEntry;
+import org.eclipse.graphiti.palette.impl.ObjectCreationToolEntry;
+import org.eclipse.graphiti.palette.impl.PaletteCompartmentEntry;
 import org.eclipse.graphiti.platform.IPlatformImageConstants;
 import org.eclipse.graphiti.tb.DefaultToolBehaviorProvider;
 import org.eclipse.graphiti.tb.IContextButtonPadData;
 import org.eclipse.graphiti.tb.IDecorator;
 import org.eclipse.graphiti.tb.ImageDecorator;
 import org.eclipse.graphiti.ui.services.GraphitiUi;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.def.VerticalAlignment;
 import org.eclipse.sapphire.ui.diagram.def.DecoratorPlacement;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramDecoratorDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeProblemDecoratorDef;
+import org.eclipse.sapphire.ui.diagram.def.PaletteLocation;
 import org.eclipse.sapphire.ui.diagram.def.ProblemDecoratorSize;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
+import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireCreateConnectionFeature;
+import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireCreateFeature;
+import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireCreateNodeFeature;
 import org.eclipse.sapphire.ui.swt.graphiti.features.SapphireDoubleClickNodeFeature;
 
 /**
@@ -146,6 +160,107 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 //        return data;
     }
         
+	/**
+	 * Creates a connection and an object compartment.
+	 * Adds all connection creation features and creation features. Connection 
+	 * creation features and node creation features are added to the compartments
+	 * according to what's specified in the connection/node definition.
+	 * The features are sorted using their creation names
+	 * 
+	 * @return the palette entries
+	 */
+	@Override
+	public IPaletteCompartmentEntry[] getPalette() 
+	{
+		SapphireDiagramEditor diagramEditor = (SapphireDiagramEditor)this.getDiagramTypeProvider().getDiagramEditor();
+		IDiagramEditorPageDef pageDef = (IDiagramEditorPageDef)diagramEditor.getPart().getDefinition();
+		
+		List<IPaletteCompartmentEntry> compartments = new ArrayList<IPaletteCompartmentEntry>();
+
+		IFeatureProvider featureProvider = getFeatureProvider();
+		ICreateConnectionFeature[] createConnectionFeatures = featureProvider.getCreateConnectionFeatures();
+		ICreateFeature[] createFeatures = featureProvider.getCreateFeatures();
+		
+		List<SapphireCreateFeature> connectionFeatures = new ArrayList<SapphireCreateFeature>();
+		List<SapphireCreateFeature> nodeFeatures = new ArrayList<SapphireCreateFeature>();
+		
+		if (createConnectionFeatures.length > 0) 
+		{
+			for (ICreateConnectionFeature createConnectionFeature : createConnectionFeatures) 
+			{
+				SapphireCreateConnectionFeature sapphireConnFeature = (SapphireCreateConnectionFeature)createConnectionFeature;
+				PaletteLocation paletteLoc = sapphireConnFeature.getConnectionDef().getToolPaletteLocation().getContent();
+				if (paletteLoc == PaletteLocation.CONNECTION)
+				{
+					connectionFeatures.add(sapphireConnFeature);
+				}
+				else 
+				{
+					nodeFeatures.add(sapphireConnFeature);
+				}
+			}
+		}
+
+		for (ICreateFeature createFeature : createFeatures) 
+		{
+			SapphireCreateNodeFeature sapphireNodeFeature = (SapphireCreateNodeFeature)createFeature;
+			PaletteLocation paletteLoc = sapphireNodeFeature.getNodeDef().getToolPaletteLocation().getContent();
+			if (paletteLoc == PaletteLocation.CONNECTION)
+			{
+				connectionFeatures.add(sapphireNodeFeature);
+			}
+			else 
+			{
+				nodeFeatures.add(sapphireNodeFeature);
+			}
+		}
+
+		SapphireCreateFeature[] connArr = connectionFeatures.toArray(new SapphireCreateFeature[connectionFeatures.size()]);
+		Arrays.sort(connArr);
+		SapphireCreateFeature[] nodeArr = nodeFeatures.toArray(new SapphireCreateFeature[nodeFeatures.size()]);
+		Arrays.sort(nodeArr);
+		
+		String text = pageDef.getPaletteDefinition().getConnectionsGroupLabel().getContent();
+		String connGroupLabel = LabelTransformer.transform(text, CapitalizationType.TITLE_STYLE, false);
+		PaletteCompartmentEntry connEntry = new PaletteCompartmentEntry(connGroupLabel, null);
+		compartments.add(connEntry);
+		
+		text = pageDef.getPaletteDefinition().getNodesGroupLabel().getContent();
+		String nodeGroupLabel = LabelTransformer.transform(text, CapitalizationType.TITLE_STYLE, false);
+		PaletteCompartmentEntry nodeEntry = new PaletteCompartmentEntry(nodeGroupLabel, null);
+		compartments.add(nodeEntry);
+		
+		addToolsToCompartmentEntry(connArr, connEntry);
+		addToolsToCompartmentEntry(nodeArr, nodeEntry);
+		IPaletteCompartmentEntry[] res = compartments.toArray(new IPaletteCompartmentEntry[compartments.size()]);
+		return res;
+	}
+    
+	private void addToolsToCompartmentEntry(SapphireCreateFeature[] createFeatures, PaletteCompartmentEntry entry)
+	{
+		for (SapphireCreateFeature createFeature : createFeatures)
+		{
+			if (createFeature instanceof SapphireCreateConnectionFeature)
+			{
+				SapphireCreateConnectionFeature feature = (SapphireCreateConnectionFeature)createFeature;
+				ConnectionCreationToolEntry ccTool = new ConnectionCreationToolEntry(feature.getCreateName(),
+									feature.getCreateDescription(), feature.getCreateImageId(),
+									feature.getCreateLargeImageId());
+				ccTool.addCreateConnectionFeature(feature);
+				entry.addToolEntry(ccTool);				
+			}
+			else if (createFeature instanceof SapphireCreateNodeFeature)
+			{
+				SapphireCreateNodeFeature feature = (SapphireCreateNodeFeature)createFeature;
+				ObjectCreationToolEntry objectCreationToolEntry = new ObjectCreationToolEntry(feature.getCreateName(),
+									feature.getCreateDescription(), feature.getCreateImageId(), 
+									feature.getCreateLargeImageId(), feature);
+
+				entry.addToolEntry(objectCreationToolEntry);				
+			}
+		}		
+	}
+	
     @Override
     public ICustomFeature getDoubleClickFeature(IDoubleClickContext context) 
     {
