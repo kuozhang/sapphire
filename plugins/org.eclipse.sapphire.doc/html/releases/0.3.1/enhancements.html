@@ -37,6 +37,8 @@
   <ol type="A">
     <li><a href="#DiagramGuidesToggle">Guides Toggle</a></li>
     <li><a href="#DiagramAutoLayout">Diagram Auto Layout</a></li>
+    <li><a href="#DiagramPalette">Diagram Tool Palette</a></li>
+    <li><a href="#DiagramToolLocation">Diagram Tool location in the Palette</a></li>
   </ol>
   <li><a href="#JavaDeveloperToolsSupport">Java Developer Tools Support</a></li>
   <ol type="A">
@@ -191,6 +193,31 @@ specified by the developer in the diagram definition.</p>
 
 <p>There are two more diagram context menus to assist diagram auto layout: auto layout horizontally and auto layout vertically.
 When the Sapphire diagram editor is opened, if it can't find the corresponding layout file, it'll attempt to do a horizontal auto layout.</p>
+
+<h2><a name="DiagramPalette">Diagram Tool Palette</a></a></h2>
+
+<p>The diagram tool palette compartment labels for connections group and nodes group can be customized 
+in the diagram definition.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;diagram-page></font>
+    &lt;palette>
+        &lt;connections-group-label>my connections&lt;/connections-group-label>
+        &lt;nodes-group-label>my nodes&lt;/nodes-group-label>
+    &lt;/palette>        
+<font color="#888888">&lt;/diagram-page></font></code></pre>
+
+<h2><a name="DiagramToolLocation">Diagram Tool Location in the Palette</a></a></h2>
+
+<p>User can control which compartment of the tool palette to place each node or connection creation tool in the node 
+or connection definition.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;node></font>
+    &lt;tool-palette-location>connection&lt;/tool-palette-location>
+<font color="#888888">&lt;/node></font></code></pre>
 
 <h2><a name="JavaDeveloperToolsSupport"><a name="CreateAction">Java Type Create Action</a></a></h2>
 

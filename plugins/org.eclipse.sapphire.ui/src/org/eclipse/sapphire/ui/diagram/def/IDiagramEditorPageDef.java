@@ -57,8 +57,8 @@ public interface IDiagramEditorPageDef
     
     ImpliedElementProperty PROP_GUIDES_DEFINITION = new ImpliedElementProperty( TYPE, "GuidesDefinition" );
 
-    IDiagramGuidesDef getGuidesDefinition();    
-
+    IDiagramGuidesDef getGuidesDefinition(); 
+    
     // *** SideBySideLayoutStorage ***
     
     @Type( base = Boolean.class )
@@ -71,6 +71,15 @@ public interface IDiagramEditorPageDef
     Value<Boolean> isSideBySideLayoutStorage();
     void setSideBySideLayoutStorage( String value );
     void setSideBySideLayoutStorage( Boolean value );
+    
+    // *** PaletteDefinition ***
+    
+    @Type( base = IDiagramPaletteDef.class )
+    @XmlBinding( path = "palette")
+    
+    ImpliedElementProperty PROP_PALETTE_DEFINITION = new ImpliedElementProperty( TYPE, "PaletteDefinition" );
+
+    IDiagramPaletteDef getPaletteDefinition(); 
     
     // *** Property ***
     
