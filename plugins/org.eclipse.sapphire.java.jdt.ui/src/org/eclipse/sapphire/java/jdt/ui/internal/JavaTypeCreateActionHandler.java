@@ -11,12 +11,15 @@
 
 package org.eclipse.sapphire.java.jdt.ui.internal;
 
+import static java.lang.Math.min;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -26,11 +29,21 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ASTParser;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.core.dom.NodeFinder;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.actions.FormatAllAction;
 import org.eclipse.jdt.ui.actions.OrganizeImportsAction;
+import org.eclipse.jdt.ui.actions.OverrideMethodsAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
@@ -88,8 +101,12 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
         
         if( javaTypeConstraintAnnotation != null )
         {
-            for( String typeName : javaTypeConstraintAnnotation.type() )
+            final String[] types = javaTypeConstraintAnnotation.type();
+            
+            for( int i = 0, n = ( javaTypeConstraintAnnotation.behavior() == JavaTypeConstraintBehavior.ALL ? types.length : min( 1, types.length ) ); i < n; i++ )
             {
+                final String typeName = types[ i ];
+                
                 try
                 {
                     final IType type = jproj.findType( typeName );
@@ -153,14 +170,31 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
             return null;
         }
         
+        final JavaTypeName javaTypeName = javaTypeNameValue.getContent();
+        
+        if( javaTypeName.pkg() == null )
+        {
+            if( ! MessageDialog.openConfirm( context.getShell(), Resources.discourageDialogTitle, Resources.discourageDefaultPackage ) )
+            {
+                return null;
+            }
+        }
+        
+        if( ! Character.isUpperCase( javaTypeName.local().charAt( 0 ) ) )
+        {
+            if( ! MessageDialog.openConfirm( context.getShell(), Resources.discourageDialogTitle, Resources.discourageLowerCase ) )
+            {
+                return null;
+            }
+        }
+        
         final IRunnableWithProgress op = new IRunnableWithProgress()
         {
             public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
             {
-                monitor.beginTask( "", 6 );
+                monitor.beginTask( "", 7 );
                 
                 final JavaTypeKind kind = JavaTypeCreateActionHandler.this.kind;
-                final JavaTypeName javaTypeName = javaTypeNameValue.getContent();
                 
                 final StringBuilder buf = new StringBuilder();
                 
@@ -267,6 +301,32 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
                     
                     monitor.worked( 1 );
                     
+                    if( kind == JavaTypeKind.CLASS )
+                    {
+                        final IType type = cu.getType( javaTypeName.local() );
+
+                        final ASTParser parser = ASTParser.newParser( AST.JLS3 );
+                        parser.setResolveBindings( true );
+                        parser.setSource( cu );
+                        
+                        final CompilationUnit ast = (CompilationUnit) parser.createAST( null );
+                        
+                        ASTNode node = NodeFinder.perform( ast, type.getNameRange() );
+                        
+                        while( ! ( node instanceof AbstractTypeDeclaration ) )
+                        {
+                            node = node.getParent();
+                        }
+                        
+                        final ITypeBinding typeBinding = ( (AbstractTypeDeclaration) node ).resolveBinding();
+                        
+                        final IWorkspaceRunnable op = OverrideMethodsAction.createRunnable( ast, typeBinding, null, -1, false );
+                        
+                        op.run( null );
+                    }
+                    
+                    monitor.worked( 1 );
+                    
                     final OrganizeImportsAction organizeImportsAction = new OrganizeImportsAction( site );
                     organizeImportsAction.run( cu );
                     
@@ -362,12 +422,12 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
         
         if( collision )
         {
-            return type.qualified();
+            return type.qualified().replace( '$', '.' );
         }
         else
         {
             imports.add( type );
-            return type.local();
+            return type.local().replace( '$', '.' );
         }
     }
     
@@ -384,12 +444,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
                 
                 if( referenceAnnotation != null && referenceAnnotation.target() == JavaType.class )
                 {
-                    final JavaTypeConstraint javaTypeConstraint = property.getAnnotation( JavaTypeConstraint.class );
-                    
-                    if( javaTypeConstraint != null && javaTypeConstraint.behavior() == JavaTypeConstraintBehavior.ALL )
-                    {
-                        return evaluate( javaTypeConstraint );
-                    }
+                    return evaluate( property.getAnnotation( JavaTypeConstraint.class ) );
                 }
             }
             
@@ -397,6 +452,18 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
         }
         
         protected abstract boolean evaluate( JavaTypeConstraint javaTypeConstraint );
-    }    
+    }
 
+    private static final class Resources extends NLS 
+    {
+        public static String discourageDialogTitle;
+        public static String discourageDefaultPackage;
+        public static String discourageLowerCase;
+
+        static 
+        {
+            initializeMessages( JavaTypeCreateActionHandler.class.getName(), Resources.class );
+        }
+    }
+    
 }

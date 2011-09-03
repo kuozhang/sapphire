@@ -30,15 +30,22 @@ public final class JavaTypeCreateEnumActionHandler extends JavaTypeCreateActionH
         @Override
         protected boolean evaluate( final JavaTypeConstraint javaTypeConstraint )
         {
-            for( JavaTypeKind kind : javaTypeConstraint.kind() )
+            if( javaTypeConstraint == null )
             {
-                if( kind == JavaTypeKind.ENUM )
-                {
-                    return true;
-                }
+                return true;
             }
-            
-            return false;
+            else
+            {
+                for( JavaTypeKind kind : javaTypeConstraint.kind() )
+                {
+                    if( kind == JavaTypeKind.ENUM )
+                    {
+                        return true;
+                    }
+                }
+                
+                return false;
+            }
         }
     }    
 
