@@ -30,15 +30,22 @@ public final class JavaTypeCreateAnnotationActionHandler extends JavaTypeCreateA
         @Override
         protected boolean evaluate( final JavaTypeConstraint javaTypeConstraint )
         {
-            for( JavaTypeKind kind : javaTypeConstraint.kind() )
+            if( javaTypeConstraint == null )
             {
-                if( kind == JavaTypeKind.ANNOTATION )
-                {
-                    return true;
-                }
+                return true;
             }
-            
-            return false;
+            else
+            {
+                for( JavaTypeKind kind : javaTypeConstraint.kind() )
+                {
+                    if( kind == JavaTypeKind.ANNOTATION )
+                    {
+                        return true;
+                    }
+                }
+                
+                return false;
+            }
         }
     }    
 

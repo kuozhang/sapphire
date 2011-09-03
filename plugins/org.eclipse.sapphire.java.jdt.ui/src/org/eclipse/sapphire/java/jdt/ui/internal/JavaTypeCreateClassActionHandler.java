@@ -30,15 +30,22 @@ public final class JavaTypeCreateClassActionHandler extends JavaTypeCreateAction
         @Override
         protected boolean evaluate( final JavaTypeConstraint javaTypeConstraint )
         {
-            for( JavaTypeKind kind : javaTypeConstraint.kind() )
+            if( javaTypeConstraint == null )
             {
-                if( kind == JavaTypeKind.CLASS || kind == JavaTypeKind.ABSTRACT_CLASS )
-                {
-                    return true;
-                }
+                return true;
             }
-            
-            return false;
+            else
+            {
+                for( JavaTypeKind kind : javaTypeConstraint.kind() )
+                {
+                    if( kind == JavaTypeKind.CLASS || kind == JavaTypeKind.ABSTRACT_CLASS )
+                    {
+                        return true;
+                    }
+                }
+                
+                return false;
+            }
         }
     }    
 
