@@ -12,11 +12,11 @@
 package org.eclipse.sapphire.ui.assist.internal;
 
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.SourceEditorService;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
@@ -57,18 +57,21 @@ public final class ShowInSourceActionAssistContributor
         
         if( prop instanceof ValueProperty )
         {
-            final Value<?> val = element.read( (ValueProperty) prop );
-
-            if( val.getText( false ) != null )
+            if( element.read( (ValueProperty) prop ).getText( false ) != null )
             {
                 contribute = true;
             }
         }
         else if( prop instanceof ListProperty )
         {
-            final ModelElementList<?> list = element.read( (ListProperty) prop );
-            
-            if( list.size() > 0 )
+            if( element.read( (ListProperty) prop ).size() > 0 )
+            {
+                contribute = true;
+            }
+        }
+        else if( prop instanceof ElementProperty && ! ( prop instanceof ImpliedElementProperty ) )
+        {
+            if( element.read( (ElementProperty) prop ).element() != null )
             {
                 contribute = true;
             }
