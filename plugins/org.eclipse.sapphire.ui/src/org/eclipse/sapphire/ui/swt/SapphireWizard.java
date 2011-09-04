@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
+import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
 import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
@@ -84,7 +85,7 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
     }
     
     @Override
-    public final void addPages()
+    public void addPages()
     {
         for( SapphireWizardPagePart pagePart : this.part.getPages() )
         {
@@ -103,7 +104,7 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
         {
             public void run( final IProgressMonitor monitor ) throws InvocationTargetException
             {
-                result[ 0 ] = SapphireWizard.this.element.execute( ProgressMonitorBridge.create( monitor ) );
+                result[ 0 ] = performFinish( ProgressMonitorBridge.create( monitor ) );
             }
         };
         
@@ -135,6 +136,11 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
             
             return false;
         }
+    }
+    
+    protected Status performFinish( final ProgressMonitor monitor )
+    {
+        return this.element.execute( monitor );
     }
     
     protected void performPostFinish()
