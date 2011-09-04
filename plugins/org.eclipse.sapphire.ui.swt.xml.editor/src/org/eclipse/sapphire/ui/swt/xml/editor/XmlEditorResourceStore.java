@@ -30,8 +30,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
+import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.IModelParticle;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementDisposedEvent;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -629,17 +631,17 @@ public class XmlEditorResourceStore
             getEditor().showPage( sourceView );
         }
         
-        private List<XmlNode> getXmlNodes( final IModelElement modelElement,
+        private List<XmlNode> getXmlNodes( final IModelElement element,
                                            final ModelProperty property )
         {
             if( property instanceof ListProperty )
             {
-                final ModelElementList<?> list = modelElement.read( (ListProperty) property );
-                final List<XmlNode> xmlNodes = new ArrayList<XmlNode>();
+                final ModelElementList<?> list = element.read( (ListProperty) property );
+                final List<XmlNode> xmlNodes = new ArrayList<XmlNode>( list.size() );
                 
-                for( IModelElement element : list )
+                for( IModelElement entry : list )
                 {
-                    final Resource resource = element.resource();
+                    final Resource resource = entry.resource();
                     
                     if( resource instanceof XmlResource )
                     {
@@ -654,9 +656,28 @@ public class XmlEditorResourceStore
                 
                 return xmlNodes;
             }
+            else if( property instanceof ElementProperty && ! ( property instanceof ImpliedElementProperty ) )
+            {
+                final IModelElement child = element.read( (ElementProperty) property ).element();
+                
+                if( child != null )
+                {
+                    final Resource resource = child.resource();
+                    
+                    if( resource instanceof XmlResource )
+                    {
+                        final XmlNode xmlNode = ( (XmlResource) resource ).getXmlElement();
+                        
+                        if( xmlNode != null )
+                        {
+                            return Collections.singletonList( xmlNode );
+                        }
+                    }
+                }
+            }
             else
             {
-                final Resource resource = modelElement.resource();
+                final Resource resource = element.resource();
                 
                 if( resource instanceof XmlResource )
                 {
@@ -668,9 +689,9 @@ public class XmlEditorResourceStore
                         return Collections.singletonList( xmlNode );
                     }
                 }
-                
-                return Collections.emptyList();
             }
+            
+            return Collections.emptyList();
         }
     }
     
