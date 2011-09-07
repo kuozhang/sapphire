@@ -23,12 +23,14 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.Color;
 import org.eclipse.sapphire.ui.LineStyle;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.diagram.def.internal.PaletteCompartmentIdService;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -97,15 +99,14 @@ public interface IDiagramConnectionDef
     
     // *** ToolPaletteCompartmentId ***
 
-    @Type( base = PaletteCompartmentId.class )
     @XmlBinding( path = "tool-palette-compartment" )    
     @DefaultValue( text = "connections" )
+    @Service( impl = PaletteCompartmentIdService.class )
     
     ValueProperty PROP_TOOL_PALETTE_COMPARTMENT_ID = new ValueProperty( TYPE, "ToolPaletteCompartmentId" );
     
-    Value<PaletteCompartmentId> getToolPaletteCompartmentId();
+    Value<String> getToolPaletteCompartmentId();
     void setToolPaletteCompartmentId( String value );
-    void setToolPaletteCompartmentId( PaletteCompartmentId value );    
     
     // *** Endpoint1 ***
     

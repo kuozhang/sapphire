@@ -5,29 +5,26 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- * Contributors:
- *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.def;
+package org.eclipse.sapphire.ui.diagram.def.internal;
 
-import org.eclipse.sapphire.modeling.annotations.EnumSerialization;
-import org.eclipse.sapphire.modeling.annotations.Label;
+import java.util.SortedSet;
+
+import org.eclipse.sapphire.modeling.PossibleValuesService;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public enum PaletteCompartmentId 
+public class PaletteCompartmentIdService extends PossibleValuesService 
 {
-    @Label( standard = "connections" )
-    @EnumSerialization( primary = "connections" )
-    
-    CONNECTIONS,
-    
-    @Label( standard = "nodes" )
-    @EnumSerialization( primary = "nodes" )
-    
-    NODES
-    
+
+	@Override
+	protected void fillPossibleValues(SortedSet<String> values) 
+	{
+		values.add("connections");
+		values.add("nodes");
+	}
+
 }
