@@ -54,7 +54,8 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeProblemDecoratorDef;
-import org.eclipse.sapphire.ui.diagram.def.PaletteLocation;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramPaletteCompartmentDef;
+import org.eclipse.sapphire.ui.diagram.def.PaletteCompartmentId;
 import org.eclipse.sapphire.ui.diagram.def.ProblemDecoratorSize;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -189,8 +190,8 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 			for (ICreateConnectionFeature createConnectionFeature : createConnectionFeatures) 
 			{
 				SapphireCreateConnectionFeature sapphireConnFeature = (SapphireCreateConnectionFeature)createConnectionFeature;
-				PaletteLocation paletteLoc = sapphireConnFeature.getConnectionDef().getToolPaletteLocation().getContent();
-				if (paletteLoc == PaletteLocation.CONNECTION)
+				PaletteCompartmentId paletteLoc = sapphireConnFeature.getConnectionDef().getToolPaletteCompartmentId().getContent();
+				if (paletteLoc == PaletteCompartmentId.CONNECTIONS)
 				{
 					connectionFeatures.add(sapphireConnFeature);
 				}
@@ -204,8 +205,8 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 		for (ICreateFeature createFeature : createFeatures) 
 		{
 			SapphireCreateNodeFeature sapphireNodeFeature = (SapphireCreateNodeFeature)createFeature;
-			PaletteLocation paletteLoc = sapphireNodeFeature.getNodeDef().getToolPaletteLocation().getContent();
-			if (paletteLoc == PaletteLocation.CONNECTION)
+			PaletteCompartmentId paletteLoc = sapphireNodeFeature.getNodeDef().getToolPaletteCompartmentId().getContent();
+			if (paletteLoc == PaletteCompartmentId.CONNECTIONS)
 			{
 				connectionFeatures.add(sapphireNodeFeature);
 			}
@@ -220,12 +221,12 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 		SapphireCreateFeature[] nodeArr = nodeFeatures.toArray(new SapphireCreateFeature[nodeFeatures.size()]);
 		Arrays.sort(nodeArr);
 		
-		String text = pageDef.getPaletteDefinition().getConnectionsGroupLabel().getContent();
+		String text = getPaletteCompartmentLabel(pageDef, PaletteCompartmentId.CONNECTIONS);
 		String connGroupLabel = LabelTransformer.transform(text, CapitalizationType.TITLE_STYLE, false);
 		PaletteCompartmentEntry connEntry = new PaletteCompartmentEntry(connGroupLabel, null);
 		compartments.add(connEntry);
 		
-		text = pageDef.getPaletteDefinition().getNodesGroupLabel().getContent();
+		text = getPaletteCompartmentLabel(pageDef, PaletteCompartmentId.NODES);
 		String nodeGroupLabel = LabelTransformer.transform(text, CapitalizationType.TITLE_STYLE, false);
 		PaletteCompartmentEntry nodeEntry = new PaletteCompartmentEntry(nodeGroupLabel, null);
 		compartments.add(nodeEntry);
@@ -236,6 +237,32 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 		return res;
 	}
     
+	private String getPaletteCompartmentLabel(IDiagramEditorPageDef pageDef, PaletteCompartmentId compartmentId)
+	{
+		String label = null;
+		for (IDiagramPaletteCompartmentDef compartmentDef : pageDef.getDiagramPaletteDefs())
+		{
+			PaletteCompartmentId id = compartmentDef.getCompartmentId().getContent();
+			if (id == compartmentId)
+			{
+				label = compartmentDef.getCompartmentLabel().getContent();
+				break;
+			}
+		}
+		if (label == null)
+		{
+			if (compartmentId == PaletteCompartmentId.CONNECTIONS)
+			{
+				label = "connections";
+			}
+			else
+			{
+				label = "objects";
+			}
+		}
+		return label;
+	}
+	
 	private void addToolsToCompartmentEntry(SapphireCreateFeature[] createFeatures, PaletteCompartmentEntry entry)
 	{
 		for (SapphireCreateFeature createFeature : createFeatures)

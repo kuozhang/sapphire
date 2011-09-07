@@ -13,9 +13,9 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -24,33 +24,32 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface IDiagramPaletteDef 
+public interface IDiagramPaletteCompartmentDef 
 
 	extends IModelElement 
 	
 {
-	ModelElementType TYPE = new ModelElementType( IDiagramPaletteDef.class );
+	ModelElementType TYPE = new ModelElementType( IDiagramPaletteCompartmentDef.class );
 	
-    // *** ConnectionsGroupLabel ***
+	// *** CompartmentId ***
 
-    @Label( standard = "connections group label" )
-    @XmlBinding( path = "connections-group-label" )
-    @DefaultValue( text = "connections" )
+    @Type( base = PaletteCompartmentId.class )
+    @XmlBinding( path = "id" )    
     
-    ValueProperty PROP_CONNECTIONS_GROUP_LABEL = new ValueProperty( TYPE, "ConnectionsGroupLabel" );
+    ValueProperty PROP_COMPARTMENT_ID = new ValueProperty( TYPE, "CompartmentId" );
     
-    Value<String> getConnectionsGroupLabel();
-    void setConnectionsGroupLabel( String label );
+    Value<PaletteCompartmentId> getCompartmentId();
+    void setCompartmentId( String value );
+    void setCompartmentId( PaletteCompartmentId value );    
+		
+    // *** CompartmentLabel ***
 
-    // *** NodesGroupLabel ***
-
-    @Label( standard = "nodes group label" )
-    @XmlBinding( path = "nodes-group-label" )
-    @DefaultValue( text = "objects" )
+    @Label( standard = "label" )
+    @XmlBinding( path = "label" )
     
-    ValueProperty PROP_NODES_GROUP_LABEL = new ValueProperty( TYPE, "NodesGroupLabel" );
+    ValueProperty PROP_COMPARTMENT_LABEL = new ValueProperty( TYPE, "CompartmentLabel" );
     
-    Value<String> getNodesGroupLabel();
-    void setNodesGroupLabel( String label );
+    Value<String> getCompartmentLabel();
+    void setCompartmentLabel( String label );
 	
 }

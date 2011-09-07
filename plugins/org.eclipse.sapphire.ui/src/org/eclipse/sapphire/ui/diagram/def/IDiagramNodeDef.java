@@ -105,17 +105,17 @@ public interface IDiagramNodeDef
     
     ModelElementHandle<IDiagramImageChoice> getToolPaletteImage();
         
-    // *** ToolPaletteLocation ***
+    // *** ToolPaletteCompartmentId ***
 
-    @Type( base = PaletteLocation.class )
-    @XmlBinding( path = "tool-palette-location" )    
-    @DefaultValue( text = "node" )
+    @Type( base = PaletteCompartmentId.class )
+    @XmlBinding( path = "tool-palette-compartment" )    
+    @DefaultValue( text = "nodes" )
     
-    ValueProperty PROP_TOOL_PALETTE_LOCATION = new ValueProperty( TYPE, "ToolPaletteLocation" );
+    ValueProperty PROP_TOOL_PALETTE_COMPARTMENT_ID = new ValueProperty( TYPE, "ToolPaletteCompartmentId" );
     
-    Value<PaletteLocation> getToolPaletteLocation();
-    void setToolPaletteLocation( String value );
-    void setToolPaletteLocation( PaletteLocation value );    
+    Value<PaletteCompartmentId> getToolPaletteCompartmentId();
+    void setToolPaletteCompartmentId( String value );
+    void setToolPaletteCompartmentId( PaletteCompartmentId value );    
     
     // *** Property ***
     

@@ -18,16 +18,16 @@ import org.eclipse.sapphire.modeling.annotations.Label;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public enum PaletteLocation 
+public enum PaletteCompartmentId 
 {
-    @Label( standard = "connection" )
-    @EnumSerialization( primary = "connection" )
+    @Label( standard = "connections" )
+    @EnumSerialization( primary = "connections" )
     
-    CONNECTION,
+    CONNECTIONS,
     
-    @Label( standard = "node" )
-    @EnumSerialization( primary = "node" )
+    @Label( standard = "nodes" )
+    @EnumSerialization( primary = "nodes" )
     
-    NODE
+    NODES
     
 }
