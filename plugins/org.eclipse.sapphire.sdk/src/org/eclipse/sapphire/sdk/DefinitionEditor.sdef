@@ -1092,16 +1092,13 @@
                         </panel>
                     </with>
                     <property-editor>SideBySideLayoutStorage</property-editor>
-                    <with>
-                        <path>IDiagramPaletteDef</path>
-                        <panel>
-                            <key>IDiagramPaletteDef</key>
-                            <content>
-                                <property-editor>ConnectionsGroupLabel</property-editor>
-                                <property-editor>NodesGroupLabel</property-editor>
-                            </content>
-                        </panel>
-                    </with>
+                    <property-editor>
+                        <property>DiagramPaletteDefs</property>
+                        <hint>
+                            <name>height</name>
+                            <value>5</value>
+                        </hint>
+                    </property-editor>
                 </content>
             </section>
             <use-model-element-image></use-model-element-image>
@@ -1117,7 +1114,7 @@
                                 <property-editor>InstanceId</property-editor>
                                 <property-editor>ToolPaletteLabel</property-editor>
                                 <property-editor>ToolPaletteDesc</property-editor>
-                                <property-editor>ToolPaletteLocation</property-editor>
+                                <property-editor>ToolPaletteCompartmentId</property-editor>
                                 <with>
                                     <path>ToolPaletteImage</path>
                                     <label>Add Tool Palette Image</label>
@@ -1360,7 +1357,7 @@
                                 <property-editor>Id</property-editor>
                                 <property-editor>ToolPaletteLabel</property-editor>
                                 <property-editor>ToolPaletteDesc</property-editor>
-                                <property-editor>ToolPaletteLocation</property-editor>
+                                <property-editor>ToolPaletteCompartmentId</property-editor>
                                 <with>
                                     <path>ToolPaletteImage</path>
                                     <label>Add Tool Palette Image</label>

@@ -72,14 +72,17 @@ public interface IDiagramEditorPageDef
     void setSideBySideLayoutStorage( String value );
     void setSideBySideLayoutStorage( Boolean value );
     
-    // *** PaletteDefinition ***
+    // *** DiagramPaletteDefs ***
     
-    @Type( base = IDiagramPaletteDef.class )
-    @XmlBinding( path = "palette")
+    @Type( base = IDiagramPaletteCompartmentDef.class )
+    @Label( standard = "palette compartments")
     
-    ImpliedElementProperty PROP_PALETTE_DEFINITION = new ImpliedElementProperty( TYPE, "PaletteDefinition" );
-
-    IDiagramPaletteDef getPaletteDefinition(); 
+    @XmlListBinding( path = "palette", 
+    				mappings = @XmlListBinding.Mapping( element = "compartment", type = IDiagramPaletteCompartmentDef.class ) )
+                             
+    ListProperty PROP_DIAGRAM_PALETTE_DEFS = new ListProperty( TYPE, "DiagramPaletteDefs" );
+    
+    ModelElementList<IDiagramPaletteCompartmentDef> getDiagramPaletteDefs();
     
     // *** Property ***
     
