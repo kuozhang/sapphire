@@ -15,8 +15,10 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.ui.diagram.def.internal.PaletteCompartmentIdService;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -31,25 +33,27 @@ public interface IDiagramPaletteCompartmentDef
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramPaletteCompartmentDef.class );
 	
-	// *** CompartmentId ***
+	// *** Id ***
 
-    @Type( base = PaletteCompartmentId.class )
-    @XmlBinding( path = "id" )    
+    @XmlBinding( path = "id" )
+    @Label( standard = "id" )
+    @Required
+    @Service( impl = PaletteCompartmentIdService.class )
     
-    ValueProperty PROP_COMPARTMENT_ID = new ValueProperty( TYPE, "CompartmentId" );
+    ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
     
-    Value<PaletteCompartmentId> getCompartmentId();
-    void setCompartmentId( String value );
-    void setCompartmentId( PaletteCompartmentId value );    
+    Value<String> getId();
+    void setId( String value );
 		
-    // *** CompartmentLabel ***
+    // *** Label ***
 
     @Label( standard = "label" )
     @XmlBinding( path = "label" )
+    @Required
     
-    ValueProperty PROP_COMPARTMENT_LABEL = new ValueProperty( TYPE, "CompartmentLabel" );
+    ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
     
-    Value<String> getCompartmentLabel();
-    void setCompartmentLabel( String label );
+    Value<String> getLabel();
+    void setLabel( String label );
 	
 }

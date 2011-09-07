@@ -42,6 +42,7 @@ import org.eclipse.graphiti.tb.IContextButtonPadData;
 import org.eclipse.graphiti.tb.IDecorator;
 import org.eclipse.graphiti.tb.ImageDecorator;
 import org.eclipse.graphiti.ui.services.GraphitiUi;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
@@ -55,7 +56,6 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeProblemDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramPaletteCompartmentDef;
-import org.eclipse.sapphire.ui.diagram.def.PaletteCompartmentId;
 import org.eclipse.sapphire.ui.diagram.def.ProblemDecoratorSize;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -75,6 +75,9 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
     private static final int SMALL_ERROR_DECORATOR_HEIGHT = 8;
     private static final int LARGE_ERROR_DECORATOR_WIDTH = 16;
     private static final int LARGE_ERROR_DECORATOR_HEIGHT = 16;
+    
+    private static final String CONNECTION_ID = "connections";
+    private static final String NODE_ID = "nodes";
     
     public SapphireDiagramToolBehaviorProvider(IDiagramTypeProvider dtp) 
     {
@@ -190,8 +193,8 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 			for (ICreateConnectionFeature createConnectionFeature : createConnectionFeatures) 
 			{
 				SapphireCreateConnectionFeature sapphireConnFeature = (SapphireCreateConnectionFeature)createConnectionFeature;
-				PaletteCompartmentId paletteLoc = sapphireConnFeature.getConnectionDef().getToolPaletteCompartmentId().getContent();
-				if (paletteLoc == PaletteCompartmentId.CONNECTIONS)
+				String paletteCompartmentId = sapphireConnFeature.getConnectionDef().getToolPaletteCompartmentId().getContent();
+				if (paletteCompartmentId.equals(CONNECTION_ID))
 				{
 					connectionFeatures.add(sapphireConnFeature);
 				}
@@ -205,8 +208,8 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 		for (ICreateFeature createFeature : createFeatures) 
 		{
 			SapphireCreateNodeFeature sapphireNodeFeature = (SapphireCreateNodeFeature)createFeature;
-			PaletteCompartmentId paletteLoc = sapphireNodeFeature.getNodeDef().getToolPaletteCompartmentId().getContent();
-			if (paletteLoc == PaletteCompartmentId.CONNECTIONS)
+			String paletteCompartmentId = sapphireNodeFeature.getNodeDef().getToolPaletteCompartmentId().getContent();
+			if (paletteCompartmentId.equals(CONNECTION_ID))
 			{
 				connectionFeatures.add(sapphireNodeFeature);
 			}
@@ -221,12 +224,12 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 		SapphireCreateFeature[] nodeArr = nodeFeatures.toArray(new SapphireCreateFeature[nodeFeatures.size()]);
 		Arrays.sort(nodeArr);
 		
-		String text = getPaletteCompartmentLabel(pageDef, PaletteCompartmentId.CONNECTIONS);
+		String text = getPaletteCompartmentLabel(pageDef, CONNECTION_ID);
 		String connGroupLabel = LabelTransformer.transform(text, CapitalizationType.TITLE_STYLE, false);
 		PaletteCompartmentEntry connEntry = new PaletteCompartmentEntry(connGroupLabel, null);
 		compartments.add(connEntry);
 		
-		text = getPaletteCompartmentLabel(pageDef, PaletteCompartmentId.NODES);
+		text = getPaletteCompartmentLabel(pageDef, NODE_ID);
 		String nodeGroupLabel = LabelTransformer.transform(text, CapitalizationType.TITLE_STYLE, false);
 		PaletteCompartmentEntry nodeEntry = new PaletteCompartmentEntry(nodeGroupLabel, null);
 		compartments.add(nodeEntry);
@@ -237,27 +240,27 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 		return res;
 	}
     
-	private String getPaletteCompartmentLabel(IDiagramEditorPageDef pageDef, PaletteCompartmentId compartmentId)
+	private String getPaletteCompartmentLabel(IDiagramEditorPageDef pageDef, String compartmentId)
 	{
 		String label = null;
 		for (IDiagramPaletteCompartmentDef compartmentDef : pageDef.getDiagramPaletteDefs())
 		{
-			PaletteCompartmentId id = compartmentDef.getCompartmentId().getContent();
-			if (id == compartmentId)
+			String id = compartmentDef.getId().getContent();
+			if (id.equals(compartmentId))
 			{
-				label = compartmentDef.getCompartmentLabel().getContent();
+				label = compartmentDef.getLabel().getContent();
 				break;
 			}
 		}
 		if (label == null)
 		{
-			if (compartmentId == PaletteCompartmentId.CONNECTIONS)
+			if (compartmentId.equals(CONNECTION_ID))
 			{
-				label = "connections";
+				label = Resources.connCompartmentLabel;
 			}
 			else
 			{
-				label = "objects";
+				label = Resources.nodeCompartmentLabel;
 			}
 		}
 		return label;
@@ -519,5 +522,17 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
         }
         return new Point(0, 0);
     }
+    
+	private static final class Resources extends NLS
+	{
+		public static String connCompartmentLabel;
+		public static String nodeCompartmentLabel;
+		
+	    static
+	    {
+	        initializeMessages( SapphireDiagramToolBehaviorProvider.class.getName(), Resources.class );
+	    }
+		
+	}
     
 }

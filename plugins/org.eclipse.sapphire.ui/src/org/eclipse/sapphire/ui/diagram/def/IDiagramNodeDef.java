@@ -32,6 +32,7 @@ import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -39,6 +40,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.diagram.def.internal.PaletteCompartmentIdService;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -100,6 +102,7 @@ public interface IDiagramNodeDef
 
     @Type( base = IDiagramImageChoice.class )
     @XmlBinding( path = "tool-palette-image" )
+    @Label( standard = "tool palette image" )
 
     ElementProperty PROP_TOOL_PALETTE_IMAGE = new ElementProperty( TYPE, "ToolPaletteImage" );
     
@@ -107,15 +110,14 @@ public interface IDiagramNodeDef
         
     // *** ToolPaletteCompartmentId ***
 
-    @Type( base = PaletteCompartmentId.class )
     @XmlBinding( path = "tool-palette-compartment" )    
     @DefaultValue( text = "nodes" )
+    @Service( impl = PaletteCompartmentIdService.class )
     
     ValueProperty PROP_TOOL_PALETTE_COMPARTMENT_ID = new ValueProperty( TYPE, "ToolPaletteCompartmentId" );
     
-    Value<PaletteCompartmentId> getToolPaletteCompartmentId();
+    Value<String> getToolPaletteCompartmentId();
     void setToolPaletteCompartmentId( String value );
-    void setToolPaletteCompartmentId( PaletteCompartmentId value );    
     
     // *** Property ***
     

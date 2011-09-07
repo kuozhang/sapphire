@@ -1111,11 +1111,16 @@
                         </panel>
                     </with>
                     <property-editor>SideBySideLayoutStorage</property-editor>
+                </content>
+            </section>
+            <section>
+                <label>palette</label>
+                <content>
                     <property-editor>
                         <property>DiagramPaletteDefs</property>
                         <hint>
                             <name>height</name>
-                            <value>5</value>
+                            <value>6</value>
                         </hint>
                     </property-editor>
                 </content>
