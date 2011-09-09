@@ -110,6 +110,7 @@ public interface IDiagramNodeDef
         
     // *** ToolPaletteCompartmentId ***
 
+    @Label( standard = "tool palette compartment ID" )
     @XmlBinding( path = "tool-palette-compartment" )    
     @DefaultValue( text = "nodes" )
     @Service( impl = PaletteCompartmentIdService.class )
