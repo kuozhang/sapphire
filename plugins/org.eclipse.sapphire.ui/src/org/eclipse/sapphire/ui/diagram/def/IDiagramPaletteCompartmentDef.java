@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - initial implementation
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.def;
