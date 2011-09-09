@@ -65,7 +65,7 @@ public final class ModelElementList<T extends IModelElement>
     public final void init( final ListBindingImpl binding )
     {
         this.binding = binding;
-        refresh( true );
+        refresh();
     }
 
     @Override
@@ -90,11 +90,6 @@ public final class ModelElementList<T extends IModelElement>
     }
 
     public boolean refresh()
-    {
-        return refresh( false );
-    }
-    
-    private boolean refresh( final boolean isInitialRefresh )
     {
         if( this.binding == null )
         {
@@ -191,12 +186,12 @@ public final class ModelElementList<T extends IModelElement>
             }
         }
         
-        if( changed && ! isInitialRefresh )
+        if( changed )
         {
             parent().notifyPropertyChangeListeners( this.property );
         }
         
-        refreshValidationResult( ! isInitialRefresh );
+        refreshValidationResult( true );
         
         return changed;
     }
