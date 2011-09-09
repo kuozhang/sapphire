@@ -99,6 +99,7 @@ public interface IDiagramConnectionDef
     
     // *** ToolPaletteCompartmentId ***
 
+    @Label( standard = "tool palette compartment ID" )
     @XmlBinding( path = "tool-palette-compartment" )    
     @DefaultValue( text = "connections" )
     @Service( impl = PaletteCompartmentIdService.class )

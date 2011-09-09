@@ -26,17 +26,14 @@ import org.eclipse.sapphire.ui.diagram.def.internal.PaletteCompartmentIdService;
 
 @GenerateImpl
 
-public interface IDiagramPaletteCompartmentDef 
-
-	extends IModelElement 
-	
+public interface IDiagramPaletteCompartmentDef extends IModelElement 
 {
 	ModelElementType TYPE = new ModelElementType( IDiagramPaletteCompartmentDef.class );
 	
 	// *** Id ***
 
     @XmlBinding( path = "id" )
-    @Label( standard = "id" )
+    @Label( standard = "ID" )
     @Required
     @Service( impl = PaletteCompartmentIdService.class )
     

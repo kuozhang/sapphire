@@ -30,8 +30,8 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
-import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -110,6 +110,7 @@ public interface IDiagramNodeDef
         
     // *** ToolPaletteCompartmentId ***
 
+    @Label( standard = "tool palette compartment ID" )
     @XmlBinding( path = "tool-palette-compartment" )    
     @DefaultValue( text = "nodes" )
     @Service( impl = PaletteCompartmentIdService.class )
