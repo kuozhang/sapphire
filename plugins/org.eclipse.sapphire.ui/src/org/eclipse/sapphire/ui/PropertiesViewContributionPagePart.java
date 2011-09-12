@@ -14,19 +14,18 @@ package org.eclipse.sapphire.ui;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.ui.def.IPropertiesViewContributionPageDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PropertiesViewContributionPagePart
-
-    extends SapphirePartContainer
-    
+public final class PropertiesViewContributionPagePart extends SapphirePartContainer
 {
     private FunctionResult labelFunctionResult;
     private ImageManager imageManager;
+    private FunctionResult visibleWhenFunctionResult;
 
     @Override
     protected void init()
@@ -52,6 +51,21 @@ public final class PropertiesViewContributionPagePart
         );
         
         this.imageManager = new ImageManager( element, def.getImage().getContent() );
+
+        this.visibleWhenFunctionResult = initExpression
+        (
+            element,
+            def.getVisibleWhen().getContent(), 
+            Boolean.class,
+            Literal.create( Boolean.TRUE ),
+            new Runnable()
+            {
+                public void run()
+                {
+                    notifyListeners( new VisibilityChangedEvent( PropertiesViewContributionPagePart.this ) );
+                }
+            }
+        );
     }
 
     @Override
@@ -70,14 +84,29 @@ public final class PropertiesViewContributionPagePart
         return this.imageManager.getImage();
     }
 
+    public boolean visible()
+    {
+        return (Boolean) this.visibleWhenFunctionResult.value();
+    }
+    
     @Override
     public void dispose()
     {
         super.dispose();
         
+        if( this.labelFunctionResult != null )
+        {
+            this.labelFunctionResult.dispose();
+        }
+        
         if( this.imageManager != null )
         {
             this.imageManager.dispose();
+        }
+        
+        if( this.visibleWhenFunctionResult != null )
+        {
+            this.visibleWhenFunctionResult.dispose();
         }
     }
     

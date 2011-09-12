@@ -85,6 +85,20 @@
                         </property-editor>
                     </content>
                 </page>
+                <page>
+                    <label>provider</label>
+                    <visible-when>${ Root().DetailLevel GE 2 }</visible-when>
+                    <content>
+                        <property-editor>Provider</property-editor>
+                        <property-editor>
+                            <property>Copyright</property>
+                            <hint>
+                                <name>expand.vertically</name>
+                                <value>true</value>
+                            </hint>
+                        </property-editor>
+                    </content>
+                </page>
             </properties-view>
         </node>
         <page-header-text>architecture</page-header-text>
@@ -97,8 +111,9 @@
         </connection>
         <properties-view>
             <page>
-                <label>description</label>
+                <label>general</label>
                 <content>
+                    <property-editor>DetailLevel</property-editor>
                     <property-editor>
                         <property>Description</property>
                         <show-label>false</show-label>
@@ -175,10 +190,31 @@
                                     </property-editor>
                                 </content>
                             </page>
+                            <page>
+                                <label>provider</label>
+                                <visible-when>${ Root().DetailLevel GE 2 }</visible-when>
+                                <content>
+                                    <property-editor>Provider</property-editor>
+                                    <property-editor>
+                                        <property>Copyright</property>
+                                        <hint>
+                                            <name>expand.vertically</name>
+                                            <value>true</value>
+                                        </hint>
+                                    </property-editor>
+                                </content>
+                            </page>
                         </properties-view>
                         <image>${ Dependencies.Size == 0 ? &quot;ComponentLeaf.png&quot; : &quot;Component.png&quot; }</image>
                     </case>
                 </node-factory>
+                <section>
+                    <label>architecture</label>
+                    <content>
+                        <property-editor>DetailLevel</property-editor>
+                    </content>
+                </section>
+                <image>Components.png</image>
                 <section>
                     <content>
                         <label>Define components.</label>
@@ -189,7 +225,6 @@
                         </action-link>
                     </content>
                 </section>
-                <image>Components.png</image>
             </node>
         </root-node>
         <initial-selection>Components</initial-selection>

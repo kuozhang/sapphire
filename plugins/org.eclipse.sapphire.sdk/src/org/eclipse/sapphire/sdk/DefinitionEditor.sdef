@@ -1580,6 +1580,7 @@
                     <content>
                         <property-editor>Label</property-editor>
                         <property-editor>Image</property-editor>
+                        <property-editor>VisibleWhen</property-editor>
                     </content>
                 </section>
                 <node-include>

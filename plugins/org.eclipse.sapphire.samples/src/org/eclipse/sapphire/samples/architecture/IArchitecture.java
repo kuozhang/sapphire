@@ -17,8 +17,11 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
+import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -31,10 +34,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 @GenerateImpl
 @XmlRootBinding( elementName = "architecture" )
 
-public interface IArchitecture
-
-    extends IModelElement
-    
+public interface IArchitecture extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IArchitecture.class );
     
@@ -56,5 +56,18 @@ public interface IArchitecture
     ListProperty PROP_COMPONENTS = new ListProperty( TYPE, "Components" );
     
     ModelElementList<IComponent> getComponents();
+    
+    // *** DetailLevel ***
+    
+    @Type( base = Integer.class )
+    @Label( standard = "detail level" )
+    @DefaultValue( text = "1" )
+    @NumericRange( min = "1" )
+    
+    ValueProperty PROP_DETAIL_LEVEL = new ValueProperty( TYPE, "DetailLevel" );
+    
+    Value<Integer> getDetailLevel();
+    void setDetailLevel( String value );
+    void setDetailLevel( Integer value );
     
 }

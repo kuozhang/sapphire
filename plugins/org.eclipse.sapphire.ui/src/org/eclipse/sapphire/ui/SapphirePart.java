@@ -70,10 +70,7 @@ import org.eclipse.swt.widgets.Display;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphirePart
-
-    implements ISapphirePart
-    
+public abstract class SapphirePart implements ISapphirePart
 {
     private ISapphirePart parent;
     private IModelElement modelElement;
@@ -719,6 +716,14 @@ public abstract class SapphirePart
     public static final class ImageChangedEvent extends SapphirePartEvent
     {
         public ImageChangedEvent( final SapphirePart part )
+        {
+            super( part );
+        }
+    }
+    
+    public static final class VisibilityChangedEvent extends SapphirePartEvent
+    {
+        public VisibilityChangedEvent( final SapphirePart part )
         {
             super( part );
         }

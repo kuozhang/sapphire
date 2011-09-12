@@ -678,6 +678,18 @@ public class TabbedPropertyList
         }
         notifyListeners(SWT.Selection, new Event());
     }
+    
+    public void select( final Item item )
+    {
+        for( int i = 0; i < this.elements.length; i++ )
+        {
+            if( this.elements[ i ].getTabItem() == item )
+            {
+                select( i );
+                break;
+            }
+        }
+    }
 
     /**
      * Deselects all the elements in the list.

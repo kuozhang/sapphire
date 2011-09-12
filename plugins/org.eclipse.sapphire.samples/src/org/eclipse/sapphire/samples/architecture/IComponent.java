@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -29,10 +30,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @GenerateImpl
 
-public interface IComponent
-
-    extends IModelElement
-    
+public interface IComponent extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IComponent.class );
     
@@ -63,5 +61,26 @@ public interface IComponent
     ListProperty PROP_DEPENDENCIES = new ListProperty( TYPE, "Dependencies" );
     
     ModelElementList<IComponentDependency> getDependencies();
+    
+    // *** Provider ***
+    
+    @Label( standard = "provider" )
+    @XmlBinding( path = "provider" )
+    
+    ValueProperty PROP_PROVIDER = new ValueProperty( TYPE, "Provider" );
+    
+    Value<String> getProvider();
+    void setProvider( String value );
+    
+    // *** Copyright ***
+    
+    @Label( standard = "copyright" )
+    @LongString
+    @XmlBinding( path = "copyright" )
+    
+    ValueProperty PROP_COPYRIGHT = new ValueProperty( TYPE, "Copyright" );
+    
+    Value<String> getCopyright();
+    void setCopyright( String value );
 
 }

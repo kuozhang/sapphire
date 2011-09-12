@@ -47,6 +47,7 @@
   <ol type="A">
     <li><a href="#ByteShortDate">Byte, Short and Date Values</a></li>
     <li><a href="#ModelElementTypeWithoutPrefix">Optional 'I' Prefix</a></li>
+    <li><a href="#VisibleWhenForPropertiesViewPages">Visible When Condition for Properties View Pages</a></li>
   </ol>
 </ol>
  
@@ -334,7 +335,19 @@ else
     default implementation class name is typeClassName + "Impl"
 }</code></pre>
 
+<h2><a name="VisibleWhenForPropertiesViewPages">Visible When Condition for Properties View Pages</a></h2>
 
+<p>Use Sapphire Expression Language to specify when contributed properties view pages should be shown.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;properties-view>
+    &lt;page>
+        &lt;label>provider&lt;/label></font>
+        &lt;visible-when>${ Root().DetailLevel GE 2 }&lt;/visible-when>
+        <font color="#888888">&lt;content>
+            ...
+        &lt;/content>
+    &lt;/page>
+&lt;/properties-view></font></code></pre>
 
 <div class="copyright">Copyright (c) 2011 Oracle and Others<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
