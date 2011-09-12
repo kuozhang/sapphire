@@ -17,7 +17,10 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
@@ -153,79 +156,91 @@ public final class SapphirePropertySheetPage
             
             final LocalizationService localizationService = this.part.getDefinition().adapt( LocalizationService.class );
             final List<PropertiesViewContributionPagePart> pages = this.part.getPages();
-            final int pageCount = pages.size();
-            final Object[] elements = new Object[ pageCount ];
+            final List<TabbedPropertyList.Item> elements = new ArrayList<TabbedPropertyList.Item>( pages.size() );
             final TabbedPropertyList list = tabbedPropertiesComposite.getList();
             
-            for( int i = 0; i < pageCount; i++ )
+            final Map<PropertiesViewContributionPagePart,TabbedPropertyList.Item> partToTabbedPropertyListItem 
+                = new HashMap<PropertiesViewContributionPagePart,TabbedPropertyList.Item>();
+            
+            for( final PropertiesViewContributionPagePart page : pages )
             {
-                final int index = i;
-                final PropertiesViewContributionPagePart page = pages.get( index );
-                final MutableReference<ImageDescriptor> imageDescriptor = new MutableReference<ImageDescriptor>();
-                final MutableReference<Image> image = new MutableReference<Image>();
-                
-                elements[ index ] = new TabbedPropertyList.Item()
+                if( page.visible() )
                 {
-                    public String getText()
+                    final MutableReference<ImageDescriptor> imageDescriptor = new MutableReference<ImageDescriptor>();
+                    final MutableReference<Image> image = new MutableReference<Image>();
+                    
+                    final TabbedPropertyList.Item item = new TabbedPropertyList.Item()
                     {
-                        return localizationService.transform( page.getLabel(), CapitalizationType.TITLE_STYLE, false );
-                    }
-
-                    public Image getImage()
-                    {
-                        final ImageDescriptor oldImageDescriptor = imageDescriptor.get();
-                        final ImageDescriptor newImageDescriptor = page.getImage();
-                        
-                        if( newImageDescriptor != oldImageDescriptor )
+                        public String getText()
                         {
-                            if( oldImageDescriptor != null )
+                            return localizationService.transform( page.getLabel(), CapitalizationType.TITLE_STYLE, false );
+                        }
+    
+                        public Image getImage()
+                        {
+                            final ImageDescriptor oldImageDescriptor = imageDescriptor.get();
+                            final ImageDescriptor newImageDescriptor = page.getImage();
+                            
+                            if( newImageDescriptor != oldImageDescriptor )
                             {
-                                image.get().dispose();
+                                if( oldImageDescriptor != null )
+                                {
+                                    image.get().dispose();
+                                }
+                                
+                                imageDescriptor.set( newImageDescriptor );
+                                image.set( newImageDescriptor.createImage() );
                             }
                             
-                            imageDescriptor.set( newImageDescriptor );
-                            image.set( newImageDescriptor.createImage() );
+                            return image.get();
                         }
-                        
-                        return image.get();
-                    }
-
-                    public boolean isIndented()
-                    {
-                        return false;
-                    }
-                };
-                
-                final SapphirePartListener listener = new SapphirePartListener()
-                {
-                    @Override
-                    public void handleEvent( final SapphirePartEvent event )
-                    {
-                        if( event instanceof PropertiesViewContributionPagePart.LabelChangedEvent ||
-                            event instanceof PropertiesViewContributionPagePart.ImageChangedEvent )
+    
+                        public boolean isIndented()
                         {
-                            list.update( index );
+                            return false;
                         }
-                    }
-                };
-                
-                page.addListener( listener );
-                
-                tabbedPropertiesComposite.addDisposeListener
-                (
-                    new DisposeListener()
+                    };
+                    
+                    elements.add( item );
+                    partToTabbedPropertyListItem.put( page, item );
+                    
+                    final int index = elements.size() - 1;
+                    
+                    final SapphirePartListener listener = new SapphirePartListener()
                     {
-                        public void widgetDisposed( final DisposeEvent event )
+                        @Override
+                        public void handleEvent( final SapphirePartEvent event )
                         {
-                            page.removeListener( listener );
+                            if( event instanceof PropertiesViewContributionPagePart.LabelChangedEvent ||
+                                event instanceof PropertiesViewContributionPagePart.ImageChangedEvent )
+                            {
+                                list.update( index );
+                            }
+                            else if( event instanceof PropertiesViewContributionPagePart.VisibilityChangedEvent )
+                            {
+                                refresh();
+                            }
                         }
-                    }
-                );
+                    };
+                    
+                    page.addListener( listener );
+                    
+                    tabbedPropertiesComposite.addDisposeListener
+                    (
+                        new DisposeListener()
+                        {
+                            public void widgetDisposed( final DisposeEvent event )
+                            {
+                                page.removeListener( listener );
+                            }
+                        }
+                    );
+                }
             }
 
-            list.setElements( elements );
+            list.setElements( elements.toArray( new Object[ elements.size() ] ) );
 
-            final Composite[] pageComposites = new Composite[ pageCount ];
+            final Composite[] pageComposites = new Composite[ elements.size() ];
             
             list.addListener
             (
@@ -234,14 +249,14 @@ public final class SapphirePropertySheetPage
                 {
                     public void handleEvent( final Event event )
                     {
-                        final int oldSelection = SapphirePropertySheetPage.this.part.getSelectedPageIndex();
-                        final int newSelection = list.getSelectionIndex();
+                        final int oldSelectionIndex = elements.indexOf( partToTabbedPropertyListItem.get( SapphirePropertySheetPage.this.part.getSelectedPage() ) );
+                        final int newSelectionIndex = list.getSelectionIndex();
                         
-                        Composite newPageComposite = pageComposites[ newSelection ];
+                        Composite newPageComposite = pageComposites[ newSelectionIndex ];
                         
-                        if( newSelection != oldSelection || newPageComposite == null )
+                        if( newSelectionIndex != oldSelectionIndex || newPageComposite == null )
                         {
-                            final Composite oldPageComposite = pageComposites[ oldSelection ];
+                            final Composite oldPageComposite = ( oldSelectionIndex != -1 ? pageComposites[ oldSelectionIndex ] : null );
                             
                             if( oldPageComposite != null )
                             {
@@ -250,7 +265,7 @@ public final class SapphirePropertySheetPage
                                     
                             if( newPageComposite == null )
                             {
-                                final PropertiesViewContributionPagePart pagePart = pages.get( newSelection );
+                                final PropertiesViewContributionPagePart pagePart = pages.get( newSelectionIndex );
                                 
                                 newPageComposite = new Composite( tabbedPropertiesComposite.getTabComposite(), SWT.NO_FOCUS );
                                 newPageComposite.setBackground( SapphirePropertySheetPage.this.backgroundColor );
@@ -276,7 +291,9 @@ public final class SapphirePropertySheetPage
                                 
                                 pagePart.render( context );
 
-                                pageComposites[ newSelection ] = newPageComposite;
+                                pageComposites[ newSelectionIndex ] = newPageComposite;
+                                
+                                SapphirePropertySheetPage.this.part.setSelectedPage( pagePart );
                             }
                             
                             newPageComposite.moveAbove( null );
@@ -285,13 +302,18 @@ public final class SapphirePropertySheetPage
                             tabbedPropertiesComposite.resizeScrolledComposite( newPageComposite );
                             newPageComposite.getParent().layout( true, true );
                         }
-                        
-                        SapphirePropertySheetPage.this.part.setSelectedPageIndex( newSelection );
                     }
                 }
             );
             
-            list.select( this.part.getSelectedPageIndex() );
+            TabbedPropertyList.Item initialSelectedItem = partToTabbedPropertyListItem.get( this.part.getSelectedPage() );
+            
+            if( initialSelectedItem == null )
+            {
+                initialSelectedItem = elements.get( 0 );
+            }
+            
+            list.select( initialSelectedItem );
         }
         
         this.composite.layout( true, true );

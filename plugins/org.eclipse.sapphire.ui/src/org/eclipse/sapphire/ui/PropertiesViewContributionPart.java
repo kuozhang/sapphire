@@ -24,14 +24,11 @@ import org.eclipse.sapphire.ui.def.IPropertiesViewContributionPageDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PropertiesViewContributionPart
-
-    extends SapphirePart
-    
+public final class PropertiesViewContributionPart extends SapphirePart
 {
     private List<PropertiesViewContributionPagePart> pages;
     private List<PropertiesViewContributionPagePart> pagesReadOnly;
-    private int selectedPageIndex;
+    private PropertiesViewContributionPagePart selectedPage;
     
     @Override
     protected void init()
@@ -63,7 +60,7 @@ public final class PropertiesViewContributionPart
             pagePart.addListener( pagePartListener );
         }
         
-        this.selectedPageIndex = 0;
+        this.selectedPage = this.pages.get( 0 );
     }
     
     public List<PropertiesViewContributionPagePart> getPages()
@@ -71,14 +68,14 @@ public final class PropertiesViewContributionPart
         return this.pagesReadOnly;
     }
     
-    public int getSelectedPageIndex()
+    public PropertiesViewContributionPagePart getSelectedPage()
     {
-        return this.selectedPageIndex;
+        return this.selectedPage;
     }
     
-    public void setSelectedPageIndex( final int selectedPageIndex )
+    public void setSelectedPage( final PropertiesViewContributionPagePart selectedPage )
     {
-        this.selectedPageIndex = selectedPageIndex;
+        this.selectedPage = selectedPage;
     }
 
     @Override

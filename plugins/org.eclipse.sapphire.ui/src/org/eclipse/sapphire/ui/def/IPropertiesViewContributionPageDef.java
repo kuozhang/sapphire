@@ -28,10 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 @Label( standard = "properties view contribution page" )
 @GenerateImpl
 
-public interface IPropertiesViewContributionPageDef
-
-    extends IFormDef
-    
+public interface IPropertiesViewContributionPageDef extends IFormDef
 {
     ModelElementType TYPE = new ModelElementType( IPropertiesViewContributionPageDef.class );
 
@@ -59,5 +56,17 @@ public interface IPropertiesViewContributionPageDef
     Value<Function> getImage();
     void setImage( String value );
     void setImage( Function value );
+    
+    // *** VisibleWhen ***
+    
+    @Type( base = Function.class )
+    @Label( standard = "visible when" )
+    @XmlBinding( path = "visible-when" )
+    
+    ValueProperty PROP_VISIBLE_WHEN = new ValueProperty( TYPE, "VisibleWhen" );
+    
+    Value<Function> getVisibleWhen();
+    void setVisibleWhen( String value );
+    void setVisibleWhen( Function value );        
     
 }

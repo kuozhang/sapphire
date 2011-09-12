@@ -722,6 +722,14 @@ public abstract class SapphirePart
         }
     }
     
+    public static final class VisibilityChangedEvent extends SapphirePartEvent
+    {
+        public VisibilityChangedEvent( final SapphirePart part )
+        {
+            super( part );
+        }
+    }
+    
     public static final SapphirePart create( final SapphirePart parent,
                                              final IModelElement modelElement,
                                              final ISapphirePartDef definition,
