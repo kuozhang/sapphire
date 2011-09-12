@@ -68,10 +68,7 @@ import org.eclipse.swt.widgets.Display;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphirePart
-
-    implements ISapphirePart
-    
+public abstract class SapphirePart implements ISapphirePart
 {
     private ISapphirePart parent;
     private IModelElement modelElement;

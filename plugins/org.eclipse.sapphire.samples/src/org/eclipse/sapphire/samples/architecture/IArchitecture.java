@@ -34,10 +34,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 @GenerateImpl
 @XmlRootBinding( elementName = "architecture" )
 
-public interface IArchitecture
-
-    extends IModelElement
-    
+public interface IArchitecture extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IArchitecture.class );
     

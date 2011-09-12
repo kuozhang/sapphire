@@ -59,10 +59,7 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphirePropertySheetPage
-
-    implements IPropertySheetPage
-    
+public final class SapphirePropertySheetPage implements IPropertySheetPage
 {
     private PropertiesViewContributionPart part;
     private Composite composite;

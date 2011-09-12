@@ -30,10 +30,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @GenerateImpl
 
-public interface IComponent
-
-    extends IModelElement
-    
+public interface IComponent extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IComponent.class );
     
