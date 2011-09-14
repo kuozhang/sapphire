@@ -20,10 +20,7 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphireActionHandler
-
-    extends SapphireActionSystemPart
-    
+public abstract class SapphireActionHandler extends SapphireActionSystemPart
 {
     public static final String EVENT_PRE_EXECUTE = "pre-execute";
     public static final String EVENT_POST_EXECUTE = "post-execute";
@@ -68,7 +65,7 @@ public abstract class SapphireActionHandler
         return this.action.getContext();
     }
     
-    public final IModelElement getModelElement()
+    public IModelElement getModelElement()
     {
         return getPart().getModelElement();
     }
