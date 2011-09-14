@@ -87,12 +87,7 @@ public class DiagramNodeTemplate extends SapphirePart
             this.toolPaletteLabel = tpLabelProperty.getLocalizationService().text(
                             this.definition.getToolPaletteLabel().getContent(), CapitalizationType.TITLE_STYLE, false);
         }        
-        if (this.definition.getToolPaletteDesc().getContent() != null)
-        {
-            ValueProperty tpDescProperty = IDiagramNodeDef.PROP_TOOL_PALETTE_LABEL;
-            this.toolPaletteDesc = tpDescProperty.getLocalizationService().text(
-                            this.definition.getToolPaletteDesc().getContent(), CapitalizationType.TITLE_STYLE, false);
-        }
+        this.toolPaletteDesc = this.definition.getToolPaletteDesc().getContent();
         
         this.diagramNodes = new ArrayList<DiagramNodePart>();
         this.listeners = new CopyOnWriteArraySet<Listener>();
