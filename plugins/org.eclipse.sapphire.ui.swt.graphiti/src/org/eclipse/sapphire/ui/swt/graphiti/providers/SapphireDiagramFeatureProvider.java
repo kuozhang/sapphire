@@ -168,11 +168,6 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 								tpLabel, CapitalizationType.TITLE_STYLE, false);
 			}
 			String tpDesc = connectionDef.getToolPaletteDesc().getContent();
-			if (tpDesc != null)
-			{
-				tpDesc = IDiagramConnectionDef.PROP_TOOL_PALETTE_DESC.getLocalizationService().text(
-								tpDesc, CapitalizationType.TITLE_STYLE, false);
-			}
 			
 			SapphireCreateConnectionFeature createConnectionFeature = 
 				new SapphireCreateConnectionFeature(this, diagramPart, connectionDef, tpLabel, tpDesc);
