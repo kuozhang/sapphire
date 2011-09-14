@@ -153,9 +153,9 @@ public class SapphireCreateConnectionFeature extends AbstractCreateConnectionFea
 		{
 			otherName = ((SapphireCreateNodeFeature)o).getCreateName();
 		}
-		else if (o instanceof SapphireCreateNodeFeature)
+		else if (o instanceof SapphireCreateConnectionFeature)
 		{
-			otherName = ((SapphireCreateNodeFeature)o).getCreateName();
+			otherName = ((SapphireCreateConnectionFeature)o).getCreateName();
 		}
 		return createName.compareTo(otherName);
 	}
