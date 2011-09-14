@@ -63,7 +63,7 @@ public abstract class SapphireActionHandler extends SapphireActionSystemPart
         return this.action.getContext();
     }
     
-    public final IModelElement getModelElement()
+    public IModelElement getModelElement()
     {
         return getPart().getModelElement();
     }

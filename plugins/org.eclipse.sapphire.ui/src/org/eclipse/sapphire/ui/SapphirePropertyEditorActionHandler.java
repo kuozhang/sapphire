@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui;
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
@@ -23,10 +24,7 @@ import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphirePropertyEditorActionHandler
-
-    extends SapphireActionHandler
-    
+public abstract class SapphirePropertyEditorActionHandler extends SapphireActionHandler
 {
     private ModelPropertyListener listener;
     
@@ -63,6 +61,12 @@ public abstract class SapphirePropertyEditorActionHandler
                 }
             }
         );
+    }
+    
+    @Override
+    public final IModelElement getModelElement()
+    {
+        return ( (SapphirePropertyEditor) getPart() ).getLocalModelElement();
     }
 
     public ModelProperty getProperty()
