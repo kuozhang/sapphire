@@ -102,4 +102,8 @@ public abstract class ResourceStore
         return SourceLanguageLocalizationService.INSTANCE;
     }
     
+    public void dispose()
+    {
+    }
+    
 }
