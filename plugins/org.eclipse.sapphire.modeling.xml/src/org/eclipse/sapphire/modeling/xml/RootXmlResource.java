@@ -191,6 +191,13 @@ public class RootXmlResource extends XmlResource
     }
     
     @Override
+    public void dispose()
+    {
+        super.dispose();
+        this.store.dispose();
+    }
+
+    @Override
     protected LocalizationService initLocalizationService( final Locale locale )
     {
         return this.store.getLocalizationService( locale );

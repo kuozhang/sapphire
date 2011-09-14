@@ -73,10 +73,7 @@ import org.w3c.dom.NodeList;
 
 @SuppressWarnings( "restriction" )
 
-public class XmlEditorResourceStore
-
-    extends XmlResourceStore
-    
+public class XmlEditorResourceStore extends XmlResourceStore
 {
     private SapphireEditor sapphireEditor;
     private StructuredTextEditor sourceEditor;
@@ -309,6 +306,13 @@ public class XmlEditorResourceStore
         }
     }
     
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        this.scrubber.dispose();
+    }
+
     private void handleElementDisposed( final IModelElement element )
     {
         final Resource resource = element.resource();
@@ -384,10 +388,7 @@ public class XmlEditorResourceStore
         }
     }
     
-    protected static final class RefreshElementTask
-    
-        extends DelayedTasksExecutor.Task
-        
+    protected static final class RefreshElementTask extends DelayedTasksExecutor.Task
     {
         private final List<IModelElement> elements;
         
@@ -422,10 +423,7 @@ public class XmlEditorResourceStore
         }
     }
 
-    protected static final class RefreshPropertyTask
-    
-        extends DelayedTasksExecutor.Task
-        
+    protected static final class RefreshPropertyTask extends DelayedTasksExecutor.Task
     {
         private final IModelElement element;
         private final ModelProperty property;
@@ -461,10 +459,7 @@ public class XmlEditorResourceStore
         }
     }
 
-    private final class Scrubber
-    
-        extends Thread
-        
+    private final class Scrubber extends Thread
     {
         private boolean stopRequested = false;
         
@@ -474,14 +469,14 @@ public class XmlEditorResourceStore
             
             while( true )
             {
+                try
+                {
+                    sleep( 10000 );
+                }
+                catch( InterruptedException e ) {}
+                
                 synchronized( this )
                 {
-                    try
-                    {
-                        sleep( 10000 );
-                    }
-                    catch( InterruptedException e ) {}
-                    
                     if( this.stopRequested == true )
                     {
                         return;
@@ -512,11 +507,10 @@ public class XmlEditorResourceStore
             }
         }
         
-        @SuppressWarnings( "unused" )
-        
         public synchronized void dispose()
         {
             this.stopRequested = true;
+            interrupt();
         }
     }
     
