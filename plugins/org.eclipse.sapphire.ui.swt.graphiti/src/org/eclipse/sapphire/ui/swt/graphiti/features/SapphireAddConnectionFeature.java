@@ -124,7 +124,10 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
         else
         {
         	Point labelPos = getTextLocation(connection);
-        	gaService.setLocation(text, labelPos.x, labelPos.y);
+        	if (labelPos != null)
+        	{
+        		gaService.setLocation(text, labelPos.x, labelPos.y);
+        	}
         }
         
         // add static graphical decorators (composition and navigable)
@@ -237,19 +240,23 @@ public class SapphireAddConnectionFeature extends AbstractAddFeature
 		
 		Point endPoint = new Point(endLocation.getX(), endLocation.getY());
 		Point midPoint = GraphitiUiInternal.getGefService().getConnectionPointAt(conn, 0.5);
-		int deltaX, deltaY;
-		
-		if (Math.signum(endPoint.x - midPoint.x) == Math.signum(endPoint.y - midPoint.y))
+		if (midPoint != null)
 		{
-			deltaX = 3;
-			deltaY = -10;
+			int deltaX, deltaY;
+			
+			if (Math.signum(endPoint.x - midPoint.x) == Math.signum(endPoint.y - midPoint.y))
+			{
+				deltaX = 3;
+				deltaY = -10;
+			}
+			else
+			{
+				deltaX = 3;
+				deltaY = 0;
+			}
+	    	return new Point(deltaX, deltaY);
 		}
-		else
-		{
-			deltaX = 3;
-			deltaY = 0;
-		}
-    	return new Point(deltaX, deltaY);
+		return null;
     }
     
 }
