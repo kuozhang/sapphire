@@ -1,16 +1,15 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle, Tasktop Technologies and Others
+ * Copyright (c) 2011 Tasktop Technologies, Oracle and Others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Benjamin Pasero - initial implementation in Mylyn
- *    Tasktop Technologies - initial implementation in Mylyn
- *    Ling Hao - adaptation to Sapphire and ongoing maintenance
- *     
- * The class was started using code from Mylyn's AbstractNotificationPopup.
+ *    Benjamin Pasero - initial implementation in Mylyn as AbstractNotificationPopup
+ *    Tasktop Technologies - initial implementation in Mylyn as AbstractNotificationPopup
+ *    Ling Hao - adaptation to Sapphire requirements
+ *    Konstantin Komissarchik - [357714] Display validation messages for content outline nodes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt;
@@ -42,8 +41,8 @@ import org.eclipse.ui.forms.IFormColors;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public abstract class SapphirePopup extends Window {
-
+public abstract class SapphirePopup extends Window 
+{
     private FormColors colors;
 
     private Shell shell;
@@ -244,8 +243,20 @@ public abstract class SapphirePopup extends Window {
         this.listenToParentDeactivate = false;
 
         // open the window
-        this.shell.open();
-        getFocusControl().setFocus();
+        
+        final Control initialFocusControl = getFocusControl();
+        
+        if( initialFocusControl == null )
+        {
+            // Opening the shell in this way ensures that it does not take focus from the active shell.
+            
+            this.shell.setVisible( true );
+        }
+        else
+        {
+            this.shell.open();
+            initialFocusControl.setFocus();
+        }
 
         return Window.OK;
     }

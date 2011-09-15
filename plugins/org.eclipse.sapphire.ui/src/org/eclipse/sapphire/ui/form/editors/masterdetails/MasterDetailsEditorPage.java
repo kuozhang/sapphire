@@ -7,11 +7,12 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
+ *    Ling Hao - [329114] rewrite context help binding feature
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails;
 
+import static org.eclipse.sapphire.modeling.util.MiscUtil.escapeForXml;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_OUTLINE_HIDE;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.CONTEXT_EDITOR_PAGE;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.CONTEXT_EDITOR_PAGE_OUTLINE;
@@ -55,8 +56,10 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.util.MutableReference;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
@@ -67,6 +70,7 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SapphireEditorFormPage;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
+import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartEvent;
 import org.eclipse.sapphire.ui.SapphirePartListener;
@@ -82,6 +86,7 @@ import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEditorPageDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.state.IMasterDetailsEditorPageState;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.SapphireToolTip;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireMenuActionPresentation;
@@ -97,11 +102,13 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Menu;
@@ -112,9 +119,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IPartListener2;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.forms.DetailsPart;
@@ -141,10 +146,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MasterDetailsEditorPage 
-
-    extends SapphireEditorFormPage
-    
+public final class MasterDetailsEditorPage extends SapphireEditorFormPage
 {
     private IMasterDetailsEditorPageDef definition;
     private RootSection mainSection;
@@ -345,7 +347,7 @@ public final class MasterDetailsEditorPage
                 final SapphireFormText text = new SapphireFormText( msgAndShowStackTraceLinkComposite, SWT.NONE );
                 text.setLayoutData( gdhfill() );
                 text.setText( "<form><li style=\"image\" value=\"error\">" + e.getMessage() + "</li></form>", true, false );
-                text.setImage( "error", PlatformUI.getWorkbench().getSharedImages().getImage( ISharedImages.IMG_OBJS_ERROR_TSK ) );
+                text.setImage( "error", ImageData.createFromClassLoader( SapphireImageCache.class, "Error.png" ) );
                 text.setBackground( bgcolor );
 
                 final SapphireFormText showStackTraceLink = new SapphireFormText( msgAndShowStackTraceLinkComposite, SWT.NONE );
@@ -572,6 +574,7 @@ public final class MasterDetailsEditorPage
         
         final ContentOutlineFilteredTree filteredTree = new ContentOutlineFilteredTree( parent, treeStyle, contentTree );
         final TreeViewer treeViewer = filteredTree.getViewer();
+        final Tree tree = treeViewer.getTree();
         
         final ITreeContentProvider contentProvider = new ITreeContentProvider()
         {
@@ -635,13 +638,137 @@ public final class MasterDetailsEditorPage
                 
                 return image;
             }
-            
+
             @Override
             public void dispose()
             {
                 for( Image image : this.images.values() )
                 {
                     image.dispose();
+                }
+            }
+        };
+        
+        new SapphireToolTip( tree ) 
+        {
+            protected Object getToolTipArea( final Event event ) 
+            {
+                return treeViewer.getCell( new Point( event.x, event.y ) );
+            }
+
+            protected boolean shouldCreateToolTip(Event event) 
+            {
+                if( ! super.shouldCreateToolTip( event ) ) 
+                {
+                    return false;
+                }
+
+                setShift( new Point( 0, 20 ) );
+                tree.setToolTipText( "" );
+                
+                boolean res = false;
+                
+                final MasterDetailsContentNode node = getNode( event );
+                
+                if( node != null )
+                {
+                    res = ! node.getValidationState().ok();
+                }
+
+                return res;
+            }
+            
+            private MasterDetailsContentNode getNode( final Event event )
+            {
+                final TreeItem item = tree.getItem( new Point(event.x, event.y) );
+
+                if( item == null )
+                {
+                    return null;
+                }
+                else
+                {
+                    return (MasterDetailsContentNode) item.getData();
+                }
+            }
+
+            protected void afterHideToolTip(Event event) {
+                super.afterHideToolTip(event);
+                // Clear the restored value else this could be a source of a leak
+                if (event != null && event.widget != treeViewer.getControl()) {
+                    treeViewer.getControl().setFocus();
+                }
+            }
+
+            @Override
+            protected void createContent( final Event event,
+                                          final Composite parent )
+            {
+                final MasterDetailsContentNode node = getNode( event );
+                
+                parent.setLayout( glayout( 1 ) );
+                
+                SapphireFormText text = new SapphireFormText( parent, SWT.NO_FOCUS );
+                text.setLayoutData( gdfill() );
+                
+                final org.eclipse.sapphire.modeling.Status validation = node.getValidationState();
+                final List<org.eclipse.sapphire.modeling.Status> items;
+                
+                if( validation.children().isEmpty() )
+                {
+                    items = Collections.singletonList( validation );
+                }
+                else
+                {
+                    items = validation.children();
+                }
+                
+                final StringBuffer buffer = new StringBuffer();
+                buffer.append( "<form>" );
+                
+                final int count = items.size();
+                int i = 0;
+                
+                for( org.eclipse.sapphire.modeling.Status item : items )
+                {
+                    final String imageKey = ( item.severity() == org.eclipse.sapphire.modeling.Status.Severity.ERROR ? "error" : "warning" );
+                    buffer.append( "<li style=\"image\" value=\"" + imageKey + "\">" + escapeForXml( item.message() ) + "</li>" );
+                    
+                    i++;
+                    
+                    if( count > 10 && i == 9 )
+                    {
+                        break;
+                    }
+                }
+                
+                if( count > 10 )
+                {
+                    final String msg = NLS.bind( Resources.problemsOverflowMessage, numberToString( count - 9 ) );
+                    final String imageKey = ( validation.severity() == org.eclipse.sapphire.modeling.Status.Severity.ERROR ? "error" : "warning" );
+                    buffer.append( "<br/><li style=\"image\" value=\"" + imageKey + "\">" + msg + "</li>" );
+                }
+                
+                buffer.append( "</form>" );
+                
+                text.setText( buffer.toString(), true, false );
+                text.setImage( "error", ImageData.createFromClassLoader( SapphireImageCache.class, "Error.png" ) );
+                text.setImage( "warning", ImageData.createFromClassLoader( SapphireImageCache.class, "Warning.png" ) );
+            }
+            
+            private String numberToString( final int number )
+            {
+                switch( number )
+                {
+                    case 2  : return Resources.two;
+                    case 3  : return Resources.three;
+                    case 4  : return Resources.four;
+                    case 5  : return Resources.five;
+                    case 6  : return Resources.six;
+                    case 7  : return Resources.seven;
+                    case 8  : return Resources.eight;
+                    case 9  : return Resources.nine;
+                    default : return String.valueOf( number );
                 }
             }
         };
@@ -785,8 +912,6 @@ public final class MasterDetailsEditorPage
                 }
             }
         );
-        
-        final Tree tree = treeViewer.getTree();
         
         final ContentOutlineActionSupport actionSupport = new ContentOutlineActionSupport( contentTree, tree );
         
@@ -1425,4 +1550,22 @@ public final class MasterDetailsEditorPage
         }
     }
 
+    private static final class Resources extends NLS
+    {
+        public static String problemsOverflowMessage;
+        public static String two;
+        public static String three;
+        public static String four;
+        public static String five;
+        public static String six;
+        public static String seven;
+        public static String eight;
+        public static String nine;
+        
+        static
+        {
+            initializeMessages( MasterDetailsEditorPage.class.getName(), Resources.class );
+        }
+    }
+    
 }

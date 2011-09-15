@@ -174,4 +174,41 @@ public class MiscUtil
         }
     }
     
+    public static String escapeForXml( final String string )
+    {
+        final StringBuilder result = new StringBuilder();
+        
+        for( int i = 0, n = string.length(); i < n; i++ )
+        {
+            final char ch = string.charAt( i );
+            
+            if( ch == '<' )
+            {
+                result.append( "&lt;" );
+            }
+            else if( ch == '>' )
+            {
+                result.append( "&gt;" );
+            }
+            else if( ch == '&' )
+            {
+                result.append( "&amp;" );
+            }
+            else if( ch == '"' )
+            {
+                result.append( "&quot;" );
+            }
+            else if( ch == '\'' )
+            {
+                result.append( "&apos;" );
+            }
+            else
+            {
+                result.append( ch );
+            }
+        }
+        
+        return result.toString();
+    }
+    
 }
