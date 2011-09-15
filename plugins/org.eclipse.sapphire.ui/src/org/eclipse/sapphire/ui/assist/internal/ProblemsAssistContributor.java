@@ -11,23 +11,19 @@
 
 package org.eclipse.sapphire.ui.assist.internal;
 
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ProblemsAssistContributor
-
-    extends PropertyEditorAssistContributor
-    
+public final class ProblemsAssistContributor extends PropertyEditorAssistContributor
 {
     private final Status status;
     
@@ -59,24 +55,24 @@ public final class ProblemsAssistContributor
     {
         final Status.Severity valResultSeverity = status.severity();
         String imageKey = null;
-        Image image = null;
+        ImageData image = null;
         
         if( valResultSeverity == Status.Severity.ERROR )
         {
             imageKey = "error";
-            image = PlatformUI.getWorkbench().getSharedImages().getImage( ISharedImages.IMG_OBJS_ERROR_TSK );
+            image = ImageData.createFromClassLoader( SapphireImageCache.class, "Error.png" );
         }
         else if( valResultSeverity == Status.Severity.WARNING )
         {
             imageKey = "error";
-            image = PlatformUI.getWorkbench().getSharedImages().getImage( ISharedImages.IMG_OBJS_WARN_TSK );
+            image = ImageData.createFromClassLoader( SapphireImageCache.class, "Warning.png" );
         }
         
         if( imageKey != null )
         {
             final PropertyEditorAssistContribution contribution = new PropertyEditorAssistContribution();
             contribution.setText( "<li style=\"image\" value=\"" + imageKey + "\">" + escapeForXml( status.message() ) + "</li>" );
-            contribution.setImage( imageKey, image );
+            contribution.setImage( imageKey, context.getUiContext().getImageCache().getImage( image ) );
             
             final PropertyEditorAssistSection section = context.getSection( SECTION_ID_PROBLEMS );
             section.addContribution( contribution );

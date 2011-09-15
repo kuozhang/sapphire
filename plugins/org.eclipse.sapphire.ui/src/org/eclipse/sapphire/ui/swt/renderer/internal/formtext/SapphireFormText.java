@@ -1,23 +1,30 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2010 IBM Corporation and others.
+ * Copyright (c) 2011 IBM Corporation, Oracle and Others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Martin Donnelly (m2a3@eircom.net) - patch (see Bugzilla #145997) 
- *     Ling Hao - Fix for Bug 284393
+ *    IBM Corporation - initial implementation in Eclipse Form UI as FormText
+ *    Martin Donnelly (m2a3@eircom.net) - [145997] FormText::computeTextSize returns incorrect date for horizontal size
+ *    Ling Hao - adaptation to Sapphire requirements 
+ *    Ling Hao - [284393] Allow FormText to be transparent
+ *    Konstantin Komissarchik - [357714] Display validation messages for content outline nodes
  *******************************************************************************/
+
 package org.eclipse.sapphire.ui.swt.renderer.internal.formtext;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.accessibility.ACC;
@@ -160,9 +167,9 @@ import org.eclipse.ui.internal.forms.Messages;
  * 
  * @see FormToolkit
  * @see TableWrapLayout
- * @since 3.0
  * @author IBM Corporation
  */
+
 @SuppressWarnings(value = { "unqualified-field-access", "unchecked", "rawtypes", "restriction" })
 public class SapphireFormText extends Canvas {
     /**
@@ -209,6 +216,8 @@ public class SapphireFormText extends Canvas {
     private boolean inSelection = false;
 
     private SelectionData selData;
+    
+    private final List<Image> imagesToDispose = new ArrayList<Image>();
 
     private static final String INTERNAL_MENU = "__internal_menu__"; //$NON-NLS-1$
 
@@ -342,7 +351,7 @@ public class SapphireFormText extends Canvas {
             }
         }
     }
-
+    
     /**
      * Contructs a new form text widget in the provided parent and using the
      * styles.
@@ -361,8 +370,7 @@ public class SapphireFormText extends Canvas {
         model = new FormTextModel();
         addDisposeListener(new DisposeListener() {
             public void widgetDisposed(DisposeEvent e) {
-                model.dispose();
-                disposeResourceTable(true);
+                handleDisposeEvent();
             }
         });
         addPaintListener(new PaintListener() {
@@ -554,6 +562,20 @@ public class SapphireFormText extends Canvas {
      */
     public void setImage(String key, Image image) {
         resourceTable.put("i." + key, image); //$NON-NLS-1$
+    }
+    
+    public void setImage( final String key, 
+                          final ImageDescriptor imageDescriptor )
+    {
+        final Image image = imageDescriptor.createImage();
+        this.imagesToDispose.add( image );
+        setImage( key, image );
+    }
+    
+    public void setImage( final String key,
+                          final ImageData imageData )
+    {
+        setImage( key, SwtRendererUtil.toImageDescriptor( imageData ) );
     }
 
     /**
@@ -1410,6 +1432,17 @@ public class SapphireFormText extends Canvas {
                 else
                     setCursor(null);
             }
+        }
+    }
+
+    private final void handleDisposeEvent()
+    {
+        this.model.dispose();
+        disposeResourceTable( true );
+        
+        for( Image image : this.imagesToDispose )
+        {
+            image.dispose();
         }
     }
 

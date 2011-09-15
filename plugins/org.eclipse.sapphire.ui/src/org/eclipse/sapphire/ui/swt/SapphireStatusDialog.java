@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt;
@@ -33,6 +33,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.ui.SapphireImageCache;
+import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -54,10 +56,7 @@ import org.eclipse.ui.PlatformUI;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireStatusDialog
-
-    extends Dialog
-    
+public final class SapphireStatusDialog extends Dialog
 {
     private final Status status;
     private TreeViewer treeViewer;
@@ -177,6 +176,9 @@ public final class SapphireStatusDialog
         
         final ILabelProvider labelProvider = new ILabelProvider()
         {
+            private Image errorImage;
+            private Image warningImage;
+            
             public String getText( final Object element )
             {
                 return ( (Status) element ).message();
@@ -186,12 +188,32 @@ public final class SapphireStatusDialog
             {
                 if( ( (Status) element ).severity() == Status.Severity.ERROR )
                 {
-                    return sharedImages.getImage( ISharedImages.IMG_OBJS_ERROR_TSK );
+                    return getErrorImage();
                 }
                 else
                 {
-                    return sharedImages.getImage( ISharedImages.IMG_OBJS_WARN_TSK );
+                    return getWarningImage();
                 }
+            }
+            
+            private Image getErrorImage()
+            {
+                if( this.errorImage == null )
+                {
+                    this.errorImage = SwtRendererUtil.createImageDescriptor( SapphireImageCache.class, "Error.png" ).createImage();
+                }
+                
+                return this.errorImage;
+            }
+            
+            private Image getWarningImage()
+            {
+                if( this.warningImage == null )
+                {
+                    this.warningImage = SwtRendererUtil.createImageDescriptor( SapphireImageCache.class, "Warning.png" ).createImage();
+                }
+                
+                return this.warningImage;
             }
 
             public void addListener( final ILabelProviderListener listener )
@@ -210,6 +232,15 @@ public final class SapphireStatusDialog
 
             public void dispose()
             {
+                if( this.errorImage != null )
+                {
+                    this.errorImage.dispose();
+                }
+                
+                if( this.warningImage != null )
+                {
+                    this.warningImage.dispose();
+                }
             }
         };
         
