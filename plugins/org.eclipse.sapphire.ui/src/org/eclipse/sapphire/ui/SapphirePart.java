@@ -260,25 +260,8 @@ public abstract class SapphirePart implements ISapphirePart
     public final void updateValidationState()
     {
         final Status newValidationState = computeValidationState();
-        boolean updateNeeded = false;
         
-        if( this.validationState != newValidationState )
-        {
-            if( this.validationState == null || newValidationState == null )
-            {
-                updateNeeded = true;
-            }
-            else
-            {
-                if( this.validationState.severity() != newValidationState.severity() ||
-                    ! this.validationState.message().equals( newValidationState.message() ) )
-                {
-                    updateNeeded = true;
-                }
-            }
-        }
-        
-        if( updateNeeded )
+        if( this.validationState == null || newValidationState == null || ! this.validationState.equals( newValidationState ) )
         {
             final Status oldValidationState = this.validationState;
             this.validationState = newValidationState;

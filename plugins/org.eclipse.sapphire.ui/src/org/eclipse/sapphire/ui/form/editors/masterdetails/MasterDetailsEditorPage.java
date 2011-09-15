@@ -712,16 +712,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
                 text.setLayoutData( gdfill() );
                 
                 final org.eclipse.sapphire.modeling.Status validation = node.getValidationState();
-                final List<org.eclipse.sapphire.modeling.Status> items;
-                
-                if( validation.children().isEmpty() )
-                {
-                    items = Collections.singletonList( validation );
-                }
-                else
-                {
-                    items = validation.children();
-                }
+                final List<org.eclipse.sapphire.modeling.Status> items = gather( validation );
                 
                 final StringBuffer buffer = new StringBuffer();
                 buffer.append( "<form>" );
@@ -769,6 +760,29 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
                     case 8  : return Resources.eight;
                     case 9  : return Resources.nine;
                     default : return String.valueOf( number );
+                }
+            }
+            
+            private List<org.eclipse.sapphire.modeling.Status> gather( final org.eclipse.sapphire.modeling.Status status )
+            {
+                final List<org.eclipse.sapphire.modeling.Status> items = new ArrayList<org.eclipse.sapphire.modeling.Status>();
+                gather( status, items );
+                return items;
+            }
+            
+            private void gather( final org.eclipse.sapphire.modeling.Status status,
+                                 final List<org.eclipse.sapphire.modeling.Status> items )
+            {
+                if( status.children().isEmpty() )
+                {
+                    items.add( status );
+                }
+                else
+                {
+                    for( org.eclipse.sapphire.modeling.Status child : status.children() )
+                    {
+                        gather( child, items );
+                    }
                 }
             }
         };
