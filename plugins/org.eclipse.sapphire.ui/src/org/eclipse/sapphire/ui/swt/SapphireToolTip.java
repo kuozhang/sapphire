@@ -32,6 +32,8 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * This class gives implementors to provide customized tooltips for any control.
+ * 
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public abstract class SapphireToolTip
