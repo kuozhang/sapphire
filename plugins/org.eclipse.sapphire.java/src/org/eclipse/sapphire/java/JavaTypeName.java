@@ -18,6 +18,7 @@ package org.eclipse.sapphire.java;
 public final class JavaTypeName extends JavaQualifiedName
 {
     private final String pkg;
+    private final String full;
     private final String simple;
     
     public JavaTypeName( final String name )
@@ -29,12 +30,23 @@ public final class JavaTypeName extends JavaQualifiedName
         if( lastDot == -1 )
         {
             this.pkg = null;
-            this.simple = name;
+            this.full = name;
         }
         else
         {
             this.pkg = name.substring( 0, lastDot );
-            this.simple = name.substring( lastDot + 1 );
+            this.full = name.substring( lastDot + 1 );
+        }
+        
+        final int lastDollar = this.full.lastIndexOf( '$' );
+        
+        if( lastDollar == -1 )
+        {
+            this.simple = this.full;
+        }
+        else
+        {
+            this.simple = this.full.substring( lastDollar + 1 );
         }
     }
     
@@ -43,9 +55,14 @@ public final class JavaTypeName extends JavaQualifiedName
         return this.pkg;
     }
     
-    public String local()
+    public String simple()
     {
         return this.simple;
+    }
+    
+    public String full()
+    {
+        return this.full;
     }
     
     public String qualified()
