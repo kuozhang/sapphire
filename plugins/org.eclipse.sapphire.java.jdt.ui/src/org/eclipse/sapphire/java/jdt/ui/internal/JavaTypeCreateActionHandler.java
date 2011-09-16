@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -37,6 +38,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.NodeFinder;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.jdt.ui.actions.AddUnimplementedConstructorsAction;
 import org.eclipse.jdt.ui.actions.FormatAllAction;
 import org.eclipse.jdt.ui.actions.OrganizeImportsAction;
 import org.eclipse.jdt.ui.actions.OverrideMethodsAction;
@@ -107,7 +109,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
                 
                 try
                 {
-                    final IType type = jproj.findType( typeName );
+                    final IType type = jproj.findType( typeName.replace( '$', '.' ) );
                     
                     if( type != null && type.exists() )
                     {
@@ -163,7 +165,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
             }
         }
         
-        if( ! Character.isUpperCase( javaTypeName.local().charAt( 0 ) ) )
+        if( ! Character.isUpperCase( javaTypeName.simple().charAt( 0 ) ) )
         {
             if( ! MessageDialog.openConfirm( context.getShell(), Resources.discourageDialogTitle, Resources.discourageLowerCase ) )
             {
@@ -215,7 +217,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
                     for( JavaTypeName t : imports )
                     {
                         buf.append( "import " );
-                        buf.append( t.qualified() );
+                        buf.append( t.qualified().replace( '$', '.' ) );
                         buf.append( ";\n" );
                     }
                     
@@ -233,7 +235,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
                 }
                 
                 buf.append( ' ' );
-                buf.append( javaTypeName.local() );
+                buf.append( javaTypeName.simple() );
                 
                 if( base != null )
                 {
@@ -273,7 +275,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
                 {
                     final IPackageFragmentRoot src = src( jproj );
                     final IPackageFragment pkg = src.createPackageFragment( ( javaTypeName.pkg() == null ? "" : javaTypeName.pkg() ), true, null );
-                    final ICompilationUnit cu = pkg.createCompilationUnit( javaTypeName.local() + ".java", buf.toString(), true, null );
+                    final ICompilationUnit cu = pkg.createCompilationUnit( javaTypeName.simple() + ".java", buf.toString(), true, null );
                     
                     cu.save( null, true );
                     
@@ -286,7 +288,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
                     
                     if( kind == JavaTypeKind.CLASS )
                     {
-                        final IType type = cu.getType( javaTypeName.local() );
+                        final IType type = cu.getType( javaTypeName.simple() );
 
                         final ASTParser parser = ASTParser.newParser( AST.JLS3 );
                         parser.setResolveBindings( true );
@@ -303,9 +305,15 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
                         
                         final ITypeBinding typeBinding = ( (AbstractTypeDeclaration) node ).resolveBinding();
                         
-                        final IWorkspaceRunnable op = OverrideMethodsAction.createRunnable( ast, typeBinding, null, -1, false );
+                        final IWorkspaceRunnable overrideMethodsOp 
+                            = OverrideMethodsAction.createRunnable( ast, typeBinding, null, -1, false );
                         
-                        op.run( null );
+                        overrideMethodsOp.run( null );
+                        
+                        final IWorkspaceRunnable addUnimplementedConstructorsOp 
+                            = AddUnimplementedConstructorsAction.createRunnable( ast, typeBinding, null, 0, false, Flags.AccPublic, false );
+                        
+                        addUnimplementedConstructorsOp.run( null );
                     }
                     
                     monitor.worked( 1 );
@@ -404,7 +412,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
         
         for( JavaTypeName n : imports )
         {
-            if( n.local().equals( type.local() ) )
+            if( n.simple().equals( type.simple() ) )
             {
                 collision = true;
                 break;
@@ -418,7 +426,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
         else
         {
             imports.add( type );
-            return type.local().replace( '$', '.' );
+            return type.simple();
         }
     }
     
