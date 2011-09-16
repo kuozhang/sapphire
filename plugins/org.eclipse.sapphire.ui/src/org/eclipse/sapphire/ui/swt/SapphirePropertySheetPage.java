@@ -153,6 +153,7 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
             
             final LocalizationService localizationService = this.part.getDefinition().adapt( LocalizationService.class );
             final List<PropertiesViewContributionPagePart> pages = this.part.getPages();
+            final List<PropertiesViewContributionPagePart> visiblePages = new ArrayList<PropertiesViewContributionPagePart>();
             final List<TabbedPropertyList.Item> elements = new ArrayList<TabbedPropertyList.Item>( pages.size() );
             final TabbedPropertyList list = tabbedPropertiesComposite.getList();
             
@@ -161,8 +162,12 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
             
             for( final PropertiesViewContributionPagePart page : pages )
             {
+                final int index;
+                
                 if( page.visible() )
                 {
+                    visiblePages.add( page );
+                    
                     final MutableReference<ImageDescriptor> imageDescriptor = new MutableReference<ImageDescriptor>();
                     final MutableReference<Image> image = new MutableReference<Image>();
                     
@@ -201,38 +206,45 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
                     elements.add( item );
                     partToTabbedPropertyListItem.put( page, item );
                     
-                    final int index = elements.size() - 1;
-                    
-                    final SapphirePartListener listener = new SapphirePartListener()
+                    index = elements.size() - 1;
+                }
+                else
+                {
+                    index = -1;
+                }
+
+                final SapphirePartListener listener = new SapphirePartListener()
+                {
+                    @Override
+                    public void handleEvent( final SapphirePartEvent event )
                     {
-                        @Override
-                        public void handleEvent( final SapphirePartEvent event )
+                        if( event instanceof PropertiesViewContributionPagePart.LabelChangedEvent ||
+                            event instanceof PropertiesViewContributionPagePart.ImageChangedEvent )
                         {
-                            if( event instanceof PropertiesViewContributionPagePart.LabelChangedEvent ||
-                                event instanceof PropertiesViewContributionPagePart.ImageChangedEvent )
+                            if( index != -1 )
                             {
                                 list.update( index );
                             }
-                            else if( event instanceof PropertiesViewContributionPagePart.VisibilityChangedEvent )
-                            {
-                                refresh();
-                            }
                         }
-                    };
-                    
-                    page.addListener( listener );
-                    
-                    tabbedPropertiesComposite.addDisposeListener
-                    (
-                        new DisposeListener()
+                        else if( event instanceof PropertiesViewContributionPagePart.VisibilityChangedEvent )
                         {
-                            public void widgetDisposed( final DisposeEvent event )
-                            {
-                                page.removeListener( listener );
-                            }
+                            refresh();
                         }
-                    );
-                }
+                    }
+                };
+                
+                page.addListener( listener );
+                
+                tabbedPropertiesComposite.addDisposeListener
+                (
+                    new DisposeListener()
+                    {
+                        public void widgetDisposed( final DisposeEvent event )
+                        {
+                            page.removeListener( listener );
+                        }
+                    }
+                );
             }
 
             list.setElements( elements.toArray( new Object[ elements.size() ] ) );
@@ -260,10 +272,11 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
                                 oldPageComposite.setVisible( false );
                             }
                                     
+                            final PropertiesViewContributionPagePart pagePart = visiblePages.get( newSelectionIndex );
+                            SapphirePropertySheetPage.this.part.setSelectedPage( pagePart );
+                            
                             if( newPageComposite == null )
                             {
-                                final PropertiesViewContributionPagePart pagePart = pages.get( newSelectionIndex );
-                                
                                 newPageComposite = new Composite( tabbedPropertiesComposite.getTabComposite(), SWT.NO_FOCUS );
                                 newPageComposite.setBackground( SapphirePropertySheetPage.this.backgroundColor );
                                 newPageComposite.setVisible( false );
@@ -289,8 +302,6 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
                                 pagePart.render( context );
 
                                 pageComposites[ newSelectionIndex ] = newPageComposite;
-                                
-                                SapphirePropertySheetPage.this.part.setSelectedPage( pagePart );
                             }
                             
                             newPageComposite.moveAbove( null );
