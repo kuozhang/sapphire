@@ -38,6 +38,7 @@
     <li><a href="#DiagramGuidesToggle">Guides Toggle</a></li>
     <li><a href="#DiagramAutoLayout">Diagram Auto Layout</a></li>
     <li><a href="#DiagramPalette">Diagram Tool Palette Customization</a></li>
+    <li><a href="#DiagramNodeFilter">Diagram Node Filtering</a></li>
   </ol>
   <li><a href="#JavaDeveloperToolsSupport">Java Developer Tools Support</a></li>
   <ol type="A">
@@ -222,6 +223,16 @@ or connection definition.</p>
 
 <pre class="source-code"><code><font color="#888888">&lt;node></font>
     &lt;tool-palette-compartment>connections&lt;/tool-palette-compartment>
+<font color="#888888">&lt;/node></font></code></pre>
+
+<h2><a name="DiagramNodeFilter">Diagram Node Filtering</a></a></h2>
+
+<p>Sometimes it's necessary to support diagram editing in different modes. Certain nodes are only applicable
+in certain modes. A "visible-when" expression has been added to the diagram node definition. The diagram 
+tool palette will not display nodes whose "visible-when" property evaluates to "false"</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;node></font>
+    &lt;visible-when>${MyExpression}&lt;/visible-when>
 <font color="#888888">&lt;/node></font></code></pre>
 
 <h2><a name="JavaDeveloperToolsSupport"><a name="CreateAction">Java Type Create Action</a></a></h2>
