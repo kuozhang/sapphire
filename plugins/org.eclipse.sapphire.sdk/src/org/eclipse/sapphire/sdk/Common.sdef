@@ -131,7 +131,7 @@
         <label>${ Params.Extension ? "action handler factories" : "handler factories" }</label>
         <section>
             <content>
-                <spacer>${ Params.Extension ? "Define action handler factories that should be available globally in the system." : "Define action handler factories." }</spacer>
+                <label>${ Params.Extension ? "Define action handler factories that should be available globally in the system." : "Define action handler factories." }</label>
                 <spacer/>
                 <action-link>
                     <action-id>Sapphire.Add</action-id>
