@@ -310,6 +310,10 @@ public class DiagramNodeTemplate extends SapphirePart
 	    		{
     		    	DiagramNodePart nodePart = createNewNodePart(newNode);
     		    	notifyNodeAdd(nodePart);
+    		    	if (this.embeddedConnTemplate != null)
+    		    	{
+    		    		this.embeddedConnTemplate.refreshConnections(newNode);
+    		    	}
 	    		}
 	    	}
 	    	else if (newList.size() < oldList.size())
