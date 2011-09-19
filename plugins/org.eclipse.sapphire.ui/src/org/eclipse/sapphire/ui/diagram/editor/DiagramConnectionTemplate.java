@@ -599,6 +599,7 @@ public class DiagramConnectionTemplate extends SapphirePart
                 for (IModelElement newConnParent : newConnParents)
                 {
                     newConnParent.addListener(this.modelPropertyListener, head.getPropertyName());
+                    newConnParent.notifyPropertyChangeListeners(this.connListProperty);
                 }
             }
             else if (newList.size() < oldList.size())
