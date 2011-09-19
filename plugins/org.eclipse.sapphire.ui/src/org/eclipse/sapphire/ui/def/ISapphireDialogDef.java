@@ -16,6 +16,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -26,10 +27,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 @Label( standard = "dialog" )
 @GenerateImpl
 
-public interface ISapphireDialogDef
-
-    extends ISapphireCompositeDef
-    
+public interface ISapphireDialogDef extends ISapphireCompositeDef
 {
     ModelElementType TYPE = new ModelElementType( ISapphireDialogDef.class );
     
@@ -37,6 +35,7 @@ public interface ISapphireDialogDef
     
     @Label( standard = "label" )
     @Localizable
+    @Required
     @XmlBinding( path = "label" )
     
     ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
