@@ -450,6 +450,26 @@ public class SapphireDiagramEditor extends DiagramEditor
 		int y = defaultY;
 		defaultX += xInc;
 		defaultY += yInc;
+		// Make sure the new position is 10 x 10 pixels away from existing nodes.
+		List<Shape> containerShapes = getDiagramTypeProvider().getDiagram().getChildren();
+		boolean overlap = true;
+		do
+		{
+			overlap = false;
+			for (Shape shape : containerShapes)
+			{
+				int nodeX = shape.getGraphicsAlgorithm().getX();
+				int nodeY = shape.getGraphicsAlgorithm().getY();
+				if (Math.abs(nodeX - x) <= 10 && Math.abs(nodeY - y) <= 10)
+				{
+					overlap = true;
+					x += 10;
+					y += 10;
+					break;
+				}
+			}
+		} while (overlap);
+		
 		return new org.eclipse.sapphire.ui.Point(x, y);
 	}
 	
