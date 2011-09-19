@@ -370,6 +370,7 @@
                     <property-editor>ActionHandlerId</property-editor>
                 </content>
             </section>
+            <node-include>ActionsOverallNode</node-include>
         </case>
         
         <case>
