@@ -1120,6 +1120,7 @@
                             <content>
                                 <property-editor>Id</property-editor>
                                 <property-editor>InstanceId</property-editor>
+                                <property-editor>VisibleWhen</property-editor>
                                 <property-editor>ToolPaletteLabel</property-editor>
                                 <property-editor>ToolPaletteDesc</property-editor>
                                 <property-editor>ToolPaletteCompartmentId</property-editor>
