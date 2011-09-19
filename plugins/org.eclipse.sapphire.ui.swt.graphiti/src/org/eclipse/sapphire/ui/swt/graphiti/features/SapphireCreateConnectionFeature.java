@@ -160,6 +160,11 @@ public class SapphireCreateConnectionFeature extends AbstractCreateConnectionFea
 		return createName.compareTo(otherName);
 	}
     
+	public String getPaletteCompartmentId()
+	{
+		return getConnectionDef().getToolPaletteCompartmentId().getContent();
+	}
+	
     /**
      * Returns the SapphirePart belonging to the anchor, or null if not available.
      */

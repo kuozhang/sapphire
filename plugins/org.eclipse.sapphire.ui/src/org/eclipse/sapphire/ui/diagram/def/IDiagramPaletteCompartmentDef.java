@@ -18,9 +18,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
-import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.diagram.def.internal.PaletteCompartmentIdService;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -37,7 +35,6 @@ public interface IDiagramPaletteCompartmentDef extends IModelElement
     @XmlBinding( path = "id" )
     @Label( standard = "ID" )
     @Required
-    @Service( impl = PaletteCompartmentIdService.class )
     
     ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
     

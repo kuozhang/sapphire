@@ -112,7 +112,7 @@ public interface IDiagramNodeDef
 
     @Label( standard = "tool palette compartment ID" )
     @XmlBinding( path = "tool-palette-compartment" )    
-    @DefaultValue( text = "nodes" )
+    @DefaultValue( text = "Sapphire.Diagram.Palette.Nodes" )
     @Service( impl = PaletteCompartmentIdService.class )
     
     ValueProperty PROP_TOOL_PALETTE_COMPARTMENT_ID = new ValueProperty( TYPE, "ToolPaletteCompartmentId" );

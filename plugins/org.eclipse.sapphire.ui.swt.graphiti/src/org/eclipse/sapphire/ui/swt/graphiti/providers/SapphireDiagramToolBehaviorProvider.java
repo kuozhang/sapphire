@@ -15,7 +15,9 @@ package org.eclipse.sapphire.ui.swt.graphiti.providers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
@@ -43,14 +45,14 @@ import org.eclipse.graphiti.tb.IDecorator;
 import org.eclipse.graphiti.tb.ImageDecorator;
 import org.eclipse.graphiti.ui.services.GraphitiUi;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.def.VerticalAlignment;
 import org.eclipse.sapphire.ui.diagram.def.DecoratorPlacement;
+import org.eclipse.sapphire.ui.diagram.def.DiagramPaletteCompartmentConstants;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageDecoratorDef;
@@ -176,96 +178,116 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 	@Override
 	public IPaletteCompartmentEntry[] getPalette() 
 	{
+		Map<IPaletteCompartmentEntry, List<SapphireCreateFeature>> compartmentFeatureMap = 
+				new HashMap<IPaletteCompartmentEntry, List<SapphireCreateFeature>>();
+		
 		SapphireDiagramEditor diagramEditor = (SapphireDiagramEditor)this.getDiagramTypeProvider().getDiagramEditor();
 		IDiagramEditorPageDef pageDef = (IDiagramEditorPageDef)diagramEditor.getPart().getDefinition();
 		
 		List<IPaletteCompartmentEntry> compartments = new ArrayList<IPaletteCompartmentEntry>();
+		ModelElementList<IDiagramPaletteCompartmentDef> compartmentDefs = pageDef.getDiagramPaletteDefs();
+		if (compartmentDefs.size() == 0)
+		{
+			SapphirePaletteCompartmentEntry connEntry = new SapphirePaletteCompartmentEntry(
+								DiagramPaletteCompartmentConstants.CONNECTIONS_COMPARTMENT_LABEL, 
+								DiagramPaletteCompartmentConstants.CONNECTIONS_COMPARTMENT_ID,
+								null);
+			compartments.add(connEntry);
+			SapphirePaletteCompartmentEntry nodeEntry = new SapphirePaletteCompartmentEntry(
+					DiagramPaletteCompartmentConstants.NODES_COMPARTMENT_LABEL, 
+					DiagramPaletteCompartmentConstants.NODES_COMPARTMENT_ID,
+					null);
+			compartments.add(nodeEntry);
+		}
+		else
+		{
+			for (IDiagramPaletteCompartmentDef compartmentDef : compartmentDefs)
+			{
+				SapphirePaletteCompartmentEntry entry = new SapphirePaletteCompartmentEntry(
+								compartmentDef.getLabel().getContent(),
+								compartmentDef.getId().getContent(),
+								null);
+				compartments.add(entry);
+			}
+		}
 
 		IFeatureProvider featureProvider = getFeatureProvider();
 		ICreateConnectionFeature[] createConnectionFeatures = featureProvider.getCreateConnectionFeatures();
 		ICreateFeature[] createFeatures = featureProvider.getCreateFeatures();
-		
-		List<SapphireCreateFeature> connectionFeatures = new ArrayList<SapphireCreateFeature>();
-		List<SapphireCreateFeature> nodeFeatures = new ArrayList<SapphireCreateFeature>();
-		
+				
+		// Loop through all create connection features and figure out their corresponding compartments
 		if (createConnectionFeatures.length > 0) 
 		{
 			for (ICreateConnectionFeature createConnectionFeature : createConnectionFeatures) 
 			{
 				SapphireCreateConnectionFeature sapphireConnFeature = (SapphireCreateConnectionFeature)createConnectionFeature;
-				String paletteCompartmentId = sapphireConnFeature.getConnectionDef().getToolPaletteCompartmentId().getContent();
-				if (paletteCompartmentId.equals(CONNECTION_ID))
+				IPaletteCompartmentEntry compartment = getPaletteCompartmentEntry(sapphireConnFeature, compartments);
+				if (compartment == null)
 				{
-					connectionFeatures.add(sapphireConnFeature);
+					throw new IllegalArgumentException(NLS.bind(Resources.invalidCompartmentIdMsg,
+								sapphireConnFeature.getPaletteCompartmentId()));
 				}
-				else 
-				{
-					nodeFeatures.add(sapphireConnFeature);
-				}
+				addFeatureToCompartmentMap(sapphireConnFeature, compartment, compartmentFeatureMap);
 			}
 		}
-
+		
+		// Loop through all create node features and figure out their corresponding compartments
 		for (ICreateFeature createFeature : createFeatures) 
 		{
 			SapphireCreateNodeFeature sapphireNodeFeature = (SapphireCreateNodeFeature)createFeature;
-			String paletteCompartmentId = sapphireNodeFeature.getNodeDef().getToolPaletteCompartmentId().getContent();
-			if (paletteCompartmentId.equals(CONNECTION_ID))
+			IPaletteCompartmentEntry compartment = getPaletteCompartmentEntry(sapphireNodeFeature, compartments);
+			if (compartment == null)
 			{
-				connectionFeatures.add(sapphireNodeFeature);
+				throw new IllegalArgumentException(NLS.bind(Resources.invalidCompartmentIdMsg,
+							sapphireNodeFeature.getPaletteCompartmentId()));
 			}
-			else 
-			{
-				nodeFeatures.add(sapphireNodeFeature);
-			}
+			addFeatureToCompartmentMap(sapphireNodeFeature, compartment, compartmentFeatureMap);			
 		}
 
-		SapphireCreateFeature[] connArr = connectionFeatures.toArray(new SapphireCreateFeature[connectionFeatures.size()]);
-		Arrays.sort(connArr);
-		SapphireCreateFeature[] nodeArr = nodeFeatures.toArray(new SapphireCreateFeature[nodeFeatures.size()]);
-		Arrays.sort(nodeArr);
-		
-		String text = getPaletteCompartmentLabel(pageDef, CONNECTION_ID);
-		String connGroupLabel = LabelTransformer.transform(text, CapitalizationType.TITLE_STYLE, false);
-		PaletteCompartmentEntry connEntry = new PaletteCompartmentEntry(connGroupLabel, null);
-		compartments.add(connEntry);
-		
-		text = getPaletteCompartmentLabel(pageDef, NODE_ID);
-		String nodeGroupLabel = LabelTransformer.transform(text, CapitalizationType.TITLE_STYLE, false);
-		PaletteCompartmentEntry nodeEntry = new PaletteCompartmentEntry(nodeGroupLabel, null);
-		compartments.add(nodeEntry);
-		
-		addToolsToCompartmentEntry(connArr, connEntry);
-		addToolsToCompartmentEntry(nodeArr, nodeEntry);
+		// Sort each compartments using feature labels
+		for (IPaletteCompartmentEntry compartmentEntry : compartmentFeatureMap.keySet())
+		{
+			List<SapphireCreateFeature> createFeatureList = compartmentFeatureMap.get(compartmentEntry);
+			SapphireCreateFeature[] featureArr = createFeatureList.toArray(new SapphireCreateFeature[createFeatureList.size()]);
+			Arrays.sort(featureArr);
+			addToolsToCompartmentEntry(featureArr, (PaletteCompartmentEntry)compartmentEntry);
+		}
 		IPaletteCompartmentEntry[] res = compartments.toArray(new IPaletteCompartmentEntry[compartments.size()]);
 		return res;
 	}
-    
-	private String getPaletteCompartmentLabel(IDiagramEditorPageDef pageDef, String compartmentId)
+    	
+	private IPaletteCompartmentEntry getPaletteCompartmentEntry(SapphireCreateFeature createFeature, 
+							List<IPaletteCompartmentEntry> compartments)
 	{
-		String label = null;
-		for (IDiagramPaletteCompartmentDef compartmentDef : pageDef.getDiagramPaletteDefs())
+		IPaletteCompartmentEntry foundCompartment = null;
+		String compartmentId = createFeature.getPaletteCompartmentId();
+		if (compartmentId != null)
 		{
-			String id = compartmentDef.getId().getContent();
-			if (id.equals(compartmentId))
+			for (IPaletteCompartmentEntry compartment : compartments)
 			{
-				label = compartmentDef.getLabel().getContent();
-				break;
+				String compartmentId2 = ((SapphirePaletteCompartmentEntry)compartment).getPaletteEntryId();
+				if (compartmentId.equals(compartmentId2))
+				{
+					foundCompartment = compartment;
+					break;
+				}
 			}
 		}
-		if (label == null)
-		{
-			if (compartmentId.equals(CONNECTION_ID))
-			{
-				label = Resources.connCompartmentLabel;
-			}
-			else
-			{
-				label = Resources.nodeCompartmentLabel;
-			}
-		}
-		return label;
+		return foundCompartment;
 	}
 	
+	private void addFeatureToCompartmentMap(SapphireCreateFeature createFeature,
+			IPaletteCompartmentEntry compartment,
+			Map<IPaletteCompartmentEntry, List<SapphireCreateFeature>> compartmentFeatureMap )
+	{
+		if (!compartmentFeatureMap.containsKey(compartment))
+		{
+			compartmentFeatureMap.put(compartment, new ArrayList<SapphireCreateFeature>());
+		}
+		List<SapphireCreateFeature> list = compartmentFeatureMap.get(compartment);
+		list.add(createFeature);
+	}
+		
 	private void addToolsToCompartmentEntry(SapphireCreateFeature[] createFeatures, PaletteCompartmentEntry entry)
 	{
 		for (SapphireCreateFeature createFeature : createFeatures)
@@ -525,8 +547,7 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
     
 	private static final class Resources extends NLS
 	{
-		public static String connCompartmentLabel;
-		public static String nodeCompartmentLabel;
+		public static String invalidCompartmentIdMsg;
 		
 	    static
 	    {

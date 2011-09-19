@@ -7,13 +7,26 @@
  *
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.graphiti.features;
+package org.eclipse.sapphire.ui.swt.graphiti.providers;
+
+import org.eclipse.graphiti.palette.impl.PaletteCompartmentEntry;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public interface SapphireCreateFeature extends Comparable<SapphireCreateFeature> 
+public class SapphirePaletteCompartmentEntry extends PaletteCompartmentEntry 
 {
-	String getPaletteCompartmentId();
+	private String paletteEntryId;
+	
+	public SapphirePaletteCompartmentEntry(String label, String id, String iconId) 
+	{
+		super(label, iconId);
+		this.paletteEntryId = id;
+	}
+	
+	public String getPaletteEntryId()
+	{
+		return this.paletteEntryId;
+	}
 }
