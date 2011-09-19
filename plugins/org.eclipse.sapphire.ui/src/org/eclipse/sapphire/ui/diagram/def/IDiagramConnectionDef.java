@@ -101,7 +101,7 @@ public interface IDiagramConnectionDef
 
     @Label( standard = "tool palette compartment ID" )
     @XmlBinding( path = "tool-palette-compartment" )    
-    @DefaultValue( text = "connections" )
+    @DefaultValue( text = "Sapphire.Diagram.Palette.Connections" )
     @Service( impl = PaletteCompartmentIdService.class )
     
     ValueProperty PROP_TOOL_PALETTE_COMPARTMENT_ID = new ValueProperty( TYPE, "ToolPaletteCompartmentId" );

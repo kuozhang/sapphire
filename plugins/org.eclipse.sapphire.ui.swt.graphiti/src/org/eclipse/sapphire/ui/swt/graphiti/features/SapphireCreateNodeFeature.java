@@ -85,4 +85,9 @@ public class SapphireCreateNodeFeature extends AbstractCreateFeature implements 
 		}
 		return createName.compareTo(otherName);
 	}
+	
+	public String getPaletteCompartmentId()
+	{
+		return getNodeDef().getToolPaletteCompartmentId().getContent();
+	}
 }
