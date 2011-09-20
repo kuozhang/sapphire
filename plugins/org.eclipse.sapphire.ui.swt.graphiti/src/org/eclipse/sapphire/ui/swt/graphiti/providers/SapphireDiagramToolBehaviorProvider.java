@@ -78,9 +78,6 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
     private static final int LARGE_ERROR_DECORATOR_WIDTH = 16;
     private static final int LARGE_ERROR_DECORATOR_HEIGHT = 16;
     
-    private static final String CONNECTION_ID = "connections";
-    private static final String NODE_ID = "nodes";
-    
     public SapphireDiagramToolBehaviorProvider(IDiagramTypeProvider dtp) 
     {
         super(dtp);
@@ -185,7 +182,7 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 		IDiagramEditorPageDef pageDef = (IDiagramEditorPageDef)diagramEditor.getPart().getDefinition();
 		
 		List<IPaletteCompartmentEntry> compartments = new ArrayList<IPaletteCompartmentEntry>();
-		ModelElementList<IDiagramPaletteCompartmentDef> compartmentDefs = pageDef.getDiagramPaletteDefs();
+		ModelElementList<IDiagramPaletteCompartmentDef> compartmentDefs = pageDef.getPaletteCompartments();
 		if (compartmentDefs.size() == 0)
 		{
 			SapphirePaletteCompartmentEntry connEntry = new SapphirePaletteCompartmentEntry(

@@ -88,6 +88,6 @@ public class SapphireCreateNodeFeature extends AbstractCreateFeature implements 
 	
 	public String getPaletteCompartmentId()
 	{
-		return getNodeDef().getToolPaletteCompartmentId().getContent();
+		return getNodeDef().getToolPaletteCompartment().getContent();
 	}
 }
