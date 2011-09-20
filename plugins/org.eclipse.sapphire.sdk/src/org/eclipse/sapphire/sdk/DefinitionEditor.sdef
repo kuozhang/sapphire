@@ -1099,13 +1099,13 @@
                 </content>
             </section>
             <section>
-                <label>palette</label>
+                <label>palette compartments</label>
                 <content>
                     <property-editor>
-                        <property>DiagramPaletteDefs</property>
+                        <property>PaletteCompartments</property>
                         <hint>
-                            <name>height</name>
-                            <value>6</value>
+                            <name>show.label</name>
+                            <value>false</value>
                         </hint>
                     </property-editor>
                 </content>
@@ -1122,21 +1122,6 @@
                                 <property-editor>Id</property-editor>
                                 <property-editor>InstanceId</property-editor>
                                 <property-editor>VisibleWhen</property-editor>
-                                <property-editor>ToolPaletteLabel</property-editor>
-                                <property-editor>ToolPaletteDesc</property-editor>
-                                <property-editor>ToolPaletteCompartmentId</property-editor>
-                                <with>
-                                    <path>ToolPaletteImage</path>
-                                    <label>Add Tool Palette Image</label>
-                                    <panel>
-                                        <key>IDiagramImageChoice</key>
-                                        <content>
-                                            <property-editor>ImageId</property-editor>
-                                            <property-editor>ImagePath</property-editor>
-                                        </content>
-                                    </panel>
-                                </with>
-                                <separator></separator>
                                 <property-editor>Property</property-editor>
                                 <property-editor>ElementType</property-editor>
                                 <spacer></spacer>
@@ -1151,6 +1136,32 @@
                                 <spacer></spacer>
                                 <property-editor>HorizontalSpacing</property-editor>
                                 <property-editor>VerticalSpacing</property-editor>
+                            </content>
+                        </section>
+                        <section>
+                            <label>tool palette</label>
+                            <content>
+                                <property-editor>ToolPaletteCompartment</property-editor>
+                                <property-editor>ToolPaletteLabel</property-editor>
+                                <property-editor>
+                                    <property>ToolPaletteDescription</property>
+                                    <hint>
+                                        <name>height</name>
+                                        <value>6</value>
+                                    </hint>
+                                </property-editor>
+                                <spacer/>
+                                <with>
+                                    <path>ToolPaletteImage</path>
+                                    <label>specify tool palette item image</label>
+                                    <panel>
+                                        <key>IDiagramImageChoice</key>
+                                        <content>
+                                            <property-editor>ImageId</property-editor>
+                                            <property-editor>ImagePath</property-editor>
+                                        </content>
+                                    </panel>
+                                </with>
                             </content>
                         </section>
                         <label>${ ToolPaletteLabel == null ? &quot;&lt;node&gt;&quot; : ToolPaletteLabel }</label>
@@ -1365,12 +1376,27 @@
                             <label>connection</label>
                             <content>
                                 <property-editor>Id</property-editor>
+                                <property-editor>LineStyle</property-editor>
+                                <property-editor>LineColor</property-editor>
+                                <property-editor>LineWidth</property-editor>
+                            </content>
+                        </section>
+                        <section>
+                            <label>tool palette</label>
+                            <content>
+                                <property-editor>ToolPaletteCompartment</property-editor>
                                 <property-editor>ToolPaletteLabel</property-editor>
-                                <property-editor>ToolPaletteDesc</property-editor>
-                                <property-editor>ToolPaletteCompartmentId</property-editor>
+                                <property-editor>
+                                    <property>ToolPaletteDescription</property>
+                                    <hint>
+                                        <name>height</name>
+                                        <value>6</value>
+                                    </hint>
+                                </property-editor>
+                                <spacer/>
                                 <with>
                                     <path>ToolPaletteImage</path>
-                                    <label>Add Tool Palette Image</label>
+                                    <label>specify tool palette item image</label>
                                     <panel>
                                         <key>IDiagramImageChoice</key>
                                         <content>
@@ -1379,10 +1405,6 @@
                                         </content>
                                     </panel>
                                 </with>
-                                <separator></separator>
-                                <property-editor>LineStyle</property-editor>
-                                <property-editor>LineColor</property-editor>
-                                <property-editor>LineWidth</property-editor>
                             </content>
                         </section>
                         <section>

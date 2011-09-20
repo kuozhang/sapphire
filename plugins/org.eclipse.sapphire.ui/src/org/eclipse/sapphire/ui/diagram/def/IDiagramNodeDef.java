@@ -40,7 +40,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
-import org.eclipse.sapphire.ui.diagram.def.internal.PaletteCompartmentIdService;
+import org.eclipse.sapphire.ui.diagram.def.internal.ToolPaletteCompartmentPossibleValuesService;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -76,7 +76,7 @@ public interface IDiagramNodeDef
         
     // *** ToolPaletteLabel ***
     
-    @Label( standard = "tool palette label" )
+    @Label( standard = "tool palette item label" )
     @Required
     @Localizable
     @XmlBinding( path = "tool-palette-label" )
@@ -86,39 +86,39 @@ public interface IDiagramNodeDef
     Value<String> getToolPaletteLabel();
     void setToolPaletteLabel( String paletteLabel );
     
-    // *** ToolPaletteDesc ***
+    // *** ToolPaletteDescription ***
     
-    @Label( standard = "tool palette description" )
+    @Label( standard = "tool palette item description" )
     @LongString
     @Localizable
     @XmlBinding( path = "tool-palette-desc" )
     
-    ValueProperty PROP_TOOL_PALETTE_DESC = new ValueProperty( TYPE, "ToolPaletteDesc" );
+    ValueProperty PROP_TOOL_PALETTE_DESCRIPTION = new ValueProperty( TYPE, "ToolPaletteDescription" );
     
-    Value<String> getToolPaletteDesc();
-    void setToolPaletteDesc( String paletteDesc );
+    Value<String> getToolPaletteDescription();
+    void setToolPaletteDescription( String paletteDesc );
     
     // *** ToolPaletteImage ***
 
     @Type( base = IDiagramImageChoice.class )
+    @Label( standard = "tool palette item image" )
     @XmlBinding( path = "tool-palette-image" )
-    @Label( standard = "tool palette image" )
 
     ElementProperty PROP_TOOL_PALETTE_IMAGE = new ElementProperty( TYPE, "ToolPaletteImage" );
     
     ModelElementHandle<IDiagramImageChoice> getToolPaletteImage();
         
-    // *** ToolPaletteCompartmentId ***
+    // *** ToolPaletteCompartment ***
 
-    @Label( standard = "tool palette compartment ID" )
+    @Label( standard = "tool palette compartment" )
     @XmlBinding( path = "tool-palette-compartment" )    
     @DefaultValue( text = "Sapphire.Diagram.Palette.Nodes" )
-    @Service( impl = PaletteCompartmentIdService.class )
+    @Service( impl = ToolPaletteCompartmentPossibleValuesService.class )
     
-    ValueProperty PROP_TOOL_PALETTE_COMPARTMENT_ID = new ValueProperty( TYPE, "ToolPaletteCompartmentId" );
+    ValueProperty PROP_TOOL_PALETTE_COMPARTMENT = new ValueProperty( TYPE, "ToolPaletteCompartment" );
     
-    Value<String> getToolPaletteCompartmentId();
-    void setToolPaletteCompartmentId( String value );
+    Value<String> getToolPaletteCompartment();
+    void setToolPaletteCompartment( String value );
     
     // *** Property ***
     

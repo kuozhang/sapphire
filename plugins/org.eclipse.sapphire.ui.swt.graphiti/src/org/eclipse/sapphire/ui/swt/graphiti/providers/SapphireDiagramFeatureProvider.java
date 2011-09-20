@@ -167,7 +167,7 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 				tpLabel = IDiagramConnectionDef.PROP_TOOL_PALETTE_LABEL.getLocalizationService().text(
 								tpLabel, CapitalizationType.TITLE_STYLE, false);
 			}
-			String tpDesc = connectionDef.getToolPaletteDesc().getContent();
+			String tpDesc = connectionDef.getToolPaletteDescription().getContent();
 			
 			SapphireCreateConnectionFeature createConnectionFeature = 
 				new SapphireCreateConnectionFeature(this, diagramPart, connectionDef, tpLabel, tpDesc);

@@ -21,24 +21,23 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramPaletteCompartmentDef;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class PaletteCompartmentIdService extends PossibleValuesService 
+public class ToolPaletteCompartmentPossibleValuesService extends PossibleValuesService 
 {
-
 	@Override
 	protected void fillPossibleValues(SortedSet<String> values) 
 	{
 		IDiagramEditorPageDef diagramPageDef = this.element().nearest(IDiagramEditorPageDef.class);
-		ModelElementList<IDiagramPaletteCompartmentDef> paletteDefs = diagramPageDef.getDiagramPaletteDefs();
-		if (paletteDefs.size() == 0)
+		ModelElementList<IDiagramPaletteCompartmentDef> compartments = diagramPageDef.getPaletteCompartments();
+		if (compartments.size() == 0)
 		{
 			values.add(DiagramPaletteCompartmentConstants.NODES_COMPARTMENT_ID);
 			values.add(DiagramPaletteCompartmentConstants.CONNECTIONS_COMPARTMENT_ID);
 		}
 		else
 		{
-			for (IDiagramPaletteCompartmentDef compartmentDef : paletteDefs)
+			for (IDiagramPaletteCompartmentDef compartment : compartments)
 			{
-				values.add(compartmentDef.getId().getContent());
+				values.add(compartment.getId().getContent());
 			}
 		}
 	}

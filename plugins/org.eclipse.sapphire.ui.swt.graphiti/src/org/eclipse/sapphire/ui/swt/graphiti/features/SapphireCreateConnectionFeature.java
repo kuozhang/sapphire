@@ -162,7 +162,7 @@ public class SapphireCreateConnectionFeature extends AbstractCreateConnectionFea
     
 	public String getPaletteCompartmentId()
 	{
-		return getConnectionDef().getToolPaletteCompartmentId().getContent();
+		return getConnectionDef().getToolPaletteCompartment().getContent();
 	}
 	
     /**
