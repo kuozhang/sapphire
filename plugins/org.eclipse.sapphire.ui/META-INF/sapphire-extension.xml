@@ -200,7 +200,7 @@
     <action>
         <id>Sapphire.Diagram.Layout</id>
         <context>Sapphire.Diagram.Editor</context>
-        <label>layout diagram </label>
+        <label>layout</label>
         <description>Apply auto layout to diagram</description>       
     </action>
     <action>
