@@ -73,42 +73,46 @@ public class SapphireDirectEditNodeFeature extends AbstractDirectEditingFeature
         PictogramElement pe = context.getPictogramElement();
                 
         if (pe.eContainer() instanceof Shape)
-        {
+        {        	
             DiagramNodePart nodePart = (DiagramNodePart)getBusinessObjectForPictogramElement(pe);
             nodePart.setLabel(value);
             IModelElement nodeElement = nodePart.getLocalModelElement();
-            Shape nodeShape = (Shape)pe.eContainer();
+            Shape nodeShape = (Shape)(pe.eContainer());
             
-            // go through all the connections associated with this bo and update them
-            for (Iterator<Anchor> iter = nodeShape.getAnchors().iterator(); iter.hasNext();) 
+            // nodePart.setLabel() could trigger the deleting of the node being edited
+            if (nodeShape != null)
             {
-                Anchor anchor = iter.next();
-                for (Iterator<Connection> iterator = Graphiti.getPeService().getAllConnections(anchor).iterator(); iterator.hasNext();) 
-                {
-                    Connection connection = iterator.next();
-                    Object bo = getBusinessObjectForPictogramElement(connection);
-                    if (bo instanceof DiagramConnectionPart && !(bo instanceof DiagramImplicitConnectionPart))
-                    {
-                        DiagramConnectionPart connectionPart = (DiagramConnectionPart)bo;
-                        IModelElement endpoint1 = connectionPart.getEndpoint1();
-                        IModelElement endpoint2 = connectionPart.getEndpoint2();
-                        if (endpoint1.equals(nodeElement) || endpoint2.equals(nodeElement))
-                        {
-                            connectionPart.removeModelListener();
-                            connectionPart.getDiagramConnectionTemplate().removeModelListener();
-                            if (endpoint1.equals(nodeElement))
-                            {
-                                connectionPart.resetEndpoint1();
-                            }
-                            else if (endpoint2.equals(nodeElement))
-                            {
-                                connectionPart.resetEndpoint2();
-                            }
-                            connectionPart.addModelListener();
-                            connectionPart.getDiagramConnectionTemplate().addModelListener();
-                        }
-                    }
-                }
+	            // go through all the connections associated with this bo and update them
+	            for (Iterator<Anchor> iter = nodeShape.getAnchors().iterator(); iter.hasNext();) 
+	            {
+	                Anchor anchor = iter.next();
+	                for (Iterator<Connection> iterator = Graphiti.getPeService().getAllConnections(anchor).iterator(); iterator.hasNext();) 
+	                {
+	                    Connection connection = iterator.next();
+	                    Object bo = getBusinessObjectForPictogramElement(connection);
+	                    if (bo instanceof DiagramConnectionPart && !(bo instanceof DiagramImplicitConnectionPart))
+	                    {
+	                        DiagramConnectionPart connectionPart = (DiagramConnectionPart)bo;
+	                        IModelElement endpoint1 = connectionPart.getEndpoint1();
+	                        IModelElement endpoint2 = connectionPart.getEndpoint2();
+	                        if (endpoint1.equals(nodeElement) || endpoint2.equals(nodeElement))
+	                        {
+	                            connectionPart.removeModelListener();
+	                            connectionPart.getDiagramConnectionTemplate().removeModelListener();
+	                            if (endpoint1.equals(nodeElement))
+	                            {
+	                                connectionPart.resetEndpoint1();
+	                            }
+	                            else if (endpoint2.equals(nodeElement))
+	                            {
+	                                connectionPart.resetEndpoint2();
+	                            }
+	                            connectionPart.addModelListener();
+	                            connectionPart.getDiagramConnectionTemplate().addModelListener();
+	                        }
+	                    }
+	                }
+	            }
             }            
         }
                 
