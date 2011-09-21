@@ -219,10 +219,11 @@ public final class MasterDetailsContentNode
         
         addListener( validationStateListener );
         
-        // Sections
+        // Sections and Child Nodes
         
         this.sections = new ArrayList<SapphireSection>();
         this.sectionsReadOnly = Collections.unmodifiableList( this.sections );
+        this.rawChildren = new ArrayList<Object>();
         
         for( ISapphireSectionDef secdef : this.definition.getSections() )
         {
@@ -232,10 +233,6 @@ public final class MasterDetailsContentNode
             
             this.sections.add( section );
         }
-        
-        // Child Nodes
-        
-        this.rawChildren = new ArrayList<Object>();
         
         for( IMasterDetailsContentNodeChildDef entry : this.definition.getChildNodes() )
         {
