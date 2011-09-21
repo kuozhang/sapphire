@@ -17,6 +17,8 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import org.eclipse.help.IContext;
+import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.jface.wizard.IWizardContainer2;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
@@ -81,7 +83,21 @@ public class SapphireWizardPage
         innerComposite.setLayout( glayout( 2, 0, 0 ) );
         innerComposite.setLayoutData( gdfill() );
         
-        final SapphireRenderingContext context = new SapphireRenderingContext( this.part, innerComposite );
+        final SapphireRenderingContext context = new SapphireRenderingContext( this.part, innerComposite )
+        {
+            @Override
+            public void layout()
+            {
+                super.layout();
+                
+                final IWizardContainer container = getContainer();
+                
+                if( container instanceof IWizardContainer2 )
+                {
+                    ( (IWizardContainer2) container ).updateSize();
+                }
+            }
+        };
         
         this.part.render( context );
         

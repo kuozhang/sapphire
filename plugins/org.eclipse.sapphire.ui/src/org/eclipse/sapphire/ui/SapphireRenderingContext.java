@@ -88,25 +88,32 @@ public class SapphireRenderingContext
     
     public void layout()
     {
-        Composite composite = this.composite;
-        
-        while( composite != null )
+        if( this.parent == null )
         {
-            if( composite instanceof SharedScrolledComposite )
+            Composite composite = this.composite;
+            
+            while( composite != null )
             {
-                composite.getShell().layout( true, true );
-                ( (SharedScrolledComposite) composite ).reflow( true );
-                return;
+                if( composite instanceof SharedScrolledComposite )
+                {
+                    composite.getShell().layout( true, true );
+                    ( (SharedScrolledComposite) composite ).reflow( true );
+                    return;
+                }
+                else if( composite instanceof Shell )
+                {
+                    composite.layout( true, true );
+                    return;
+                }
+                else
+                {
+                    composite = composite.getParent();
+                }
             }
-            else if( composite instanceof Shell )
-            {
-                composite.layout( true, true );
-                return;
-            }
-            else
-            {
-                composite = composite.getParent();
-            }
+        }
+        else
+        {
+            this.parent.layout();
         }
     }
     
