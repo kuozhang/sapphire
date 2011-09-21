@@ -630,15 +630,18 @@ public final class MasterDetailsContentNode
     
     public boolean isChildNodeFactoryProperty( final ModelProperty property )
     {
-        for( Object object : this.rawChildren )
+        if( this.rawChildren != null )
         {
-            if( object instanceof NodeFactory )
+            for( Object object : this.rawChildren )
             {
-                final NodeFactory factory = (NodeFactory) object;
-                
-                if( factory.visible() && factory.property() == property )
+                if( object instanceof NodeFactory )
                 {
-                    return true;
+                    final NodeFactory factory = (NodeFactory) object;
+                    
+                    if( factory.visible() && factory.property() == property )
+                    {
+                        return true;
+                    }
                 }
             }
         }
