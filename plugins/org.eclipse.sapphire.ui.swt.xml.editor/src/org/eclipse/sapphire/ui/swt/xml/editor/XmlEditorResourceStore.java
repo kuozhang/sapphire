@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -297,7 +298,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
             
             if( elements == null )
             {
-                elements = new ArrayList<IModelElement>( 1 );
+                elements = new CopyOnWriteArrayList<IModelElement>();
                 this.nodeToModelElementsMap.put( xmlNode, elements );
             }
             
