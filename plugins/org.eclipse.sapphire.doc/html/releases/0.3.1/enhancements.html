@@ -199,8 +199,7 @@ found, horizontal layout will be used.</p>
 
 <h2><a name="DiagramPalette">Diagram Tool Palette Customization</a></a></h2>
 
-<p>The diagram tool palette compartment labels for connections group and nodes group can be customized 
-in the diagram definition.</p>
+<p>The diagram tool palette compartments can be customized in the diagram definition.</p>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
 
@@ -225,6 +224,11 @@ or connection definition.</p>
 <pre class="source-code"><code><font color="#888888">&lt;node></font>
     &lt;tool-palette-compartment>connections&lt;/tool-palette-compartment>
 <font color="#888888">&lt;/node></font></code></pre>
+
+<p>If no compartments are defined in diagram page definition, there'll be two default compartments:
+one for connections and one for nodes. The default compartment label for connections is "Connections"
+and the default id is "Sapphire.Diagram.Palette.Connections". The default compartment label for nodes
+is "Objects" and the default id is "Sapphire.Diagram.Palette.Nodes".</p>
 
 <h2><a name="VisibleWhenForDiagramNodes">Visible When Condition for Diagram Nodes</a></a></h2>
 
