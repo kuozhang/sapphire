@@ -21,6 +21,7 @@ import java.util.Set;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
@@ -354,6 +355,18 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         {
             connTemplate.dispose();
         }
+    }
+    
+    public DiagramNodeTemplate getNodeTemplate(ModelProperty modelProperty)
+    {
+    	for (DiagramNodeTemplate nodeTemplate : this.nodeTemplates)
+    	{
+    		if (nodeTemplate.getModelProperty() == modelProperty)
+    		{
+    			return nodeTemplate;
+    		}
+    	}
+    	return null;
     }
 
 	private void notifyNodeUpdate(DiagramNodePart nodePart)

@@ -58,11 +58,12 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
     private ModelPath allDescendentsPath;
     private ListProperty modelProperty;
     private List<Class<?>> modelElementTypes;
-    private List<IModelElement> filteredElementList;
     private List<DiagramImplicitConnectionPart> implicitConnections;
     private ModelPropertyListener modelPropertyListener;
     private Set<Listener> templateListeners;
     private Map<IModelElement, FunctionResult> listEntryFunctionMap;
+    private DiagramNodeTemplate nodeTemplate;
+    private NodeTemplateListener nodeTemplateListener;
         
     public DiagramImplicitConnectionTemplate(IDiagramImplicitConnectionBindingDef bindingDef)
     {
@@ -99,6 +100,20 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
             }
         };
         addModelListener();
+        
+        // Add node template listener. When the xml file is editing in the source
+        // tab or in external editor, we have no control over who receives model events
+        // first. Sometimes the model listener here is notified before the model listener
+        // in diagram node template is notified. In this case, dangling connection parts
+        // are created before node parts are created. So when new node part is created, we 
+        // need to notify connection template.
+        this.nodeTemplate = 
+        		this.diagramEditor.getNodeTemplate(this.modelProperty);
+        if (this.nodeTemplate != null)
+        {
+        	this.nodeTemplateListener = new NodeTemplateListener();
+        	this.nodeTemplate.addTemplateListener(this.nodeTemplateListener);
+        }
     }
     
     public SapphireDiagramEditorPagePart getDiagramEditorPart()
@@ -124,46 +139,24 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
     {
         List<IModelElement> newFilteredList = getFilteredModelElementList();
         
-        // compare the new element list with the old element list. If the size is different or
-        // the list order has changed, we need to refresh the implicit connections
-        boolean changed = false;
-        if (newFilteredList.size() == this.filteredElementList.size())
+        for (DiagramImplicitConnectionPart connPart : this.implicitConnections)
         {
-            for (int i = 0; i < newFilteredList.size(); i++)
-            {
-                IModelElement element1 = newFilteredList.get(i);
-                IModelElement element2 = this.filteredElementList.get(i);
-                if (element1 != element2)
-                {
-                    changed = true;
-                    break;
-                }
-            }
+            notifyConnectionDelete(connPart);
+            connPart.dispose();
         }
-        else
+        this.implicitConnections.clear();
+        for (int i = 0; i < newFilteredList.size() - 1; i++)
         {
-            changed = true;
-        }
-        
-        if (changed)
-        {
-            for (DiagramImplicitConnectionPart connPart : this.implicitConnections)
+            DiagramImplicitConnectionPart connPart = 
+                    createNewConnectionPart(newFilteredList.get(i), newFilteredList.get(i+1));
+            if (connPart.getEndpoint1() != null && connPart.getEndpoint2() != null &&
+            		this.diagramEditor.getDiagramNodePart(connPart.getEndpoint1()) != null &&
+            		this.diagramEditor.getDiagramNodePart(connPart.getEndpoint2()) != null)
             {
-                notifyConnectionDelete(connPart);
-                connPart.dispose();
-            }
-            this.implicitConnections.clear();
-            this.filteredElementList.clear();
-            this.filteredElementList = newFilteredList;
-            for (int i = 0; i < this.filteredElementList.size() - 1; i++)
-            {
-                DiagramImplicitConnectionPart connPart = 
-                        createNewConnectionPart(this.filteredElementList.get(i), this.filteredElementList.get(i+1));
                 this.implicitConnections.add(connPart);
-                notifyConnectionAdd(connPart);                
-            }    
-            
-        }
+                notifyConnectionAdd(connPart);
+            }
+        }            
     }
     
     public List<DiagramImplicitConnectionPart> getImplicitConnections()
@@ -173,13 +166,13 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
     
     private void initImplicitConnectionParts()
     {
-        this.filteredElementList = getFilteredModelElementList();
+    	List<IModelElement> newFilteredList = getFilteredModelElementList();
         
         this.implicitConnections = new ArrayList<DiagramImplicitConnectionPart>();
-        for (int i = 0; i < this.filteredElementList.size() - 1; i++)
+        for (int i = 0; i < newFilteredList.size() - 1; i++)
         {
             DiagramImplicitConnectionPart connPart = 
-                    createNewConnectionPart(this.filteredElementList.get(i), this.filteredElementList.get(i+1));
+                    createNewConnectionPart(newFilteredList.get(i), newFilteredList.get(i+1));
             this.implicitConnections.add(connPart);
         }    
         
@@ -297,5 +290,17 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
         		fr.dispose();
         	}
         }
-    }    
+    }
+    
+	private class NodeTemplateListener extends DiagramNodeTemplate.Listener
+	{
+        
+        @Override
+        public void handleNodeAdd(final DiagramNodePart nodePart)
+        {
+            refreshImplicitConnections();
+        }
+
+	}
+    
 }
