@@ -31,10 +31,7 @@ import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class CalendarResource
-
-    extends Resource
-    
+public final class CalendarResource extends Resource
 {
     private final org.eclipse.sapphire.samples.calendar.ICalendar base;
     private final IContactsDatabase contacts;
@@ -74,12 +71,23 @@ public final class CalendarResource
     
     public <A> A adapt( final Class<A> adapterType )
     {
+        A res;
+        
         if( adapterType == IContactsDatabase.class )
         {
-            return (A) this.contacts;
+            res = (A) this.contacts;
+        }
+        else
+        {
+            res = super.adapt( adapterType );
+            
+            if( res == null )
+            {
+                res = this.base.adapt( adapterType );
+            }
         }
         
-        return super.adapt( adapterType );
+        return res;
     }
     
     @Override

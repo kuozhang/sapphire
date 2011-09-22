@@ -26,10 +26,7 @@ import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class AttendeeResource
-
-    extends Resource
-    
+public final class AttendeeResource extends Resource
 {
     private final org.eclipse.sapphire.samples.calendar.IAttendee base;
     private final IContactsDatabase contacts;
@@ -199,4 +196,18 @@ public final class AttendeeResource
         return c;
     }
     
+
+    @Override
+    public <A> A adapt( final Class<A> adapterType )
+    {
+        A res = super.adapt( adapterType );
+        
+        if( res == null )
+        {
+            res = this.base.adapt( adapterType );
+        }
+        
+        return res;
+    }
+
 }

@@ -89,15 +89,16 @@ public final class HyperlinkTable
             {
                 IMAGE_OFFSET_PRIMARY_COLUMN = new Point( 0, 0 );
                 IMAGE_OFFSET_SECONDARY_COLUMN = new Point( 0, 0 );
+                TEXT_OFFSET_PRIMARY_COLUMN = new Point( 0, 2 );
+                TEXT_OFFSET_SECONDARY_COLUMN = new Point( -1, 2 );
             }
             else
             {
                 IMAGE_OFFSET_PRIMARY_COLUMN = new Point( 0, 1 );
                 IMAGE_OFFSET_SECONDARY_COLUMN = new Point( 0, 1 );
+                TEXT_OFFSET_PRIMARY_COLUMN = new Point( 0, 2 );
+                TEXT_OFFSET_SECONDARY_COLUMN = new Point( 0, 2 );
             }
-            
-            TEXT_OFFSET_PRIMARY_COLUMN = new Point( 0, 2 );
-            TEXT_OFFSET_SECONDARY_COLUMN = new Point( -1, 2 );
         }
         else
         {
