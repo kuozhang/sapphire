@@ -24,10 +24,7 @@ import org.eclipse.sapphire.samples.calendar.integrated.IEventAttachment;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EventAttachmentResource
-
-    extends Resource
-    
+public final class EventAttachmentResource extends Resource
 {
     private final org.eclipse.sapphire.samples.calendar.IEventAttachment base;
     
@@ -106,4 +103,18 @@ public final class EventAttachmentResource
         return null;
     }
     
+
+    @Override
+    public <A> A adapt( final Class<A> adapterType )
+    {
+        A res = super.adapt( adapterType );
+        
+        if( res == null )
+        {
+            res = this.base.adapt( adapterType );
+        }
+        
+        return res;
+    }
+
 }

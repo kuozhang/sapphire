@@ -133,6 +133,11 @@ public class RelativePathBrowseActionHandler
         if( staticFileExtensions == null )
         {
             this.fileExtensionService = element.service( property, FileExtensionsService.class );
+            
+            if( this.fileExtensionService == null )
+            {
+                this.staticFileExtensionsList = Collections.emptyList();
+            }
         }
         else
         {
