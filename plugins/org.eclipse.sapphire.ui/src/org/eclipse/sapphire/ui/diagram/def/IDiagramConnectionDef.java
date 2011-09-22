@@ -19,6 +19,8 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.DependsOn;
+import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -70,6 +72,7 @@ public interface IDiagramConnectionDef
     @Label( standard = "tool palette item label" )
     @Localizable
     @XmlBinding( path = "tool-palette-label" )
+    @Enablement( expr = "${!ImplicitConnection}" )
     
     ValueProperty PROP_TOOL_PALETTE_LABEL = new ValueProperty( TYPE, "ToolPaletteLabel" );
     
@@ -82,6 +85,7 @@ public interface IDiagramConnectionDef
     @Localizable
     @LongString
     @XmlBinding( path = "tool-palette-desc" )
+    @Enablement( expr = "${!ImplicitConnection}" )
     
     ValueProperty PROP_TOOL_PALETTE_DESCRIPTION = new ValueProperty( TYPE, "ToolPaletteDescription" );
     
@@ -93,6 +97,7 @@ public interface IDiagramConnectionDef
     @Type( base = IDiagramImageChoice.class )
     @Label( standard = "tool palette item image" )
     @XmlBinding( path = "tool-palette-image" )
+    @Enablement( expr = "${!ImplicitConnection}" )
 
     ElementProperty PROP_TOOL_PALETTE_IMAGE = new ElementProperty( TYPE, "ToolPaletteImage" );
     
@@ -104,6 +109,8 @@ public interface IDiagramConnectionDef
     @XmlBinding( path = "tool-palette-compartment" )    
     @DefaultValue( text = "Sapphire.Diagram.Palette.Connections" )
     @Service( impl = ToolPaletteCompartmentPossibleValuesService.class )
+    @DependsOn("../PaletteCompartments/Id")
+    @Enablement( expr = "${!ImplicitConnection}" )
     
     ValueProperty PROP_TOOL_PALETTE_COMPARTMENT = new ValueProperty( TYPE, "ToolPaletteCompartment" );
     

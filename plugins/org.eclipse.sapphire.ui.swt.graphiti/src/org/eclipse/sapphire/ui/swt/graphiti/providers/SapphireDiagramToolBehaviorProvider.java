@@ -44,10 +44,11 @@ import org.eclipse.graphiti.tb.IContextButtonPadData;
 import org.eclipse.graphiti.tb.IDecorator;
 import org.eclipse.graphiti.tb.ImageDecorator;
 import org.eclipse.graphiti.ui.services.GraphitiUi;
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.def.VerticalAlignment;
@@ -185,13 +186,17 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 		ModelElementList<IDiagramPaletteCompartmentDef> compartmentDefs = pageDef.getPaletteCompartments();
 		if (compartmentDefs.size() == 0)
 		{
+			String label = LabelTransformer.transform(DiagramPaletteCompartmentConstants.CONNECTIONS_COMPARTMENT_LABEL, 
+					CapitalizationType.TITLE_STYLE, true);
 			SapphirePaletteCompartmentEntry connEntry = new SapphirePaletteCompartmentEntry(
-								DiagramPaletteCompartmentConstants.CONNECTIONS_COMPARTMENT_LABEL, 
+								label,
 								DiagramPaletteCompartmentConstants.CONNECTIONS_COMPARTMENT_ID,
 								null);
 			compartments.add(connEntry);
+			String label2 = LabelTransformer.transform(DiagramPaletteCompartmentConstants.NODES_COMPARTMENT_LABEL, 
+					CapitalizationType.TITLE_STYLE, true);			
 			SapphirePaletteCompartmentEntry nodeEntry = new SapphirePaletteCompartmentEntry(
-					DiagramPaletteCompartmentConstants.NODES_COMPARTMENT_LABEL, 
+					label2, 
 					DiagramPaletteCompartmentConstants.NODES_COMPARTMENT_ID,
 					null);
 			compartments.add(nodeEntry);
@@ -200,8 +205,10 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 		{
 			for (IDiagramPaletteCompartmentDef compartmentDef : compartmentDefs)
 			{
+				String label = LabelTransformer.transform(compartmentDef.getLabel().getContent(), 
+						CapitalizationType.TITLE_STYLE, true);			
 				SapphirePaletteCompartmentEntry entry = new SapphirePaletteCompartmentEntry(
-								compartmentDef.getLabel().getContent(),
+								label,
 								compartmentDef.getId().getContent(),
 								null);
 				compartments.add(entry);
@@ -221,8 +228,7 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 				IPaletteCompartmentEntry compartment = getPaletteCompartmentEntry(sapphireConnFeature, compartments);
 				if (compartment == null)
 				{
-					throw new IllegalArgumentException(NLS.bind(Resources.invalidCompartmentIdMsg,
-								sapphireConnFeature.getPaletteCompartmentId()));
+					compartment = compartments.get(0);
 				}
 				addFeatureToCompartmentMap(sapphireConnFeature, compartment, compartmentFeatureMap);
 			}
@@ -235,8 +241,7 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 			IPaletteCompartmentEntry compartment = getPaletteCompartmentEntry(sapphireNodeFeature, compartments);
 			if (compartment == null)
 			{
-				throw new IllegalArgumentException(NLS.bind(Resources.invalidCompartmentIdMsg,
-							sapphireNodeFeature.getPaletteCompartmentId()));
+				compartment = compartments.get(0);
 			}
 			addFeatureToCompartmentMap(sapphireNodeFeature, compartment, compartmentFeatureMap);			
 		}
@@ -541,16 +546,5 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
         }
         return new Point(0, 0);
     }
-    
-	private static final class Resources extends NLS
-	{
-		public static String invalidCompartmentIdMsg;
-		
-	    static
-	    {
-	        initializeMessages( SapphireDiagramToolBehaviorProvider.class.getName(), Resources.class );
-	    }
-		
-	}
     
 }
