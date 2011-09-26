@@ -413,13 +413,16 @@ public class SapphireDiagramEditor extends DiagramEditor
 				}
 			}
 		}
-		doSave(null);
+		//doSave(null);
+		this.editorIsDirty = false;
+		firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);		
 	}
 		
 	@Override
 	public void doSave(final IProgressMonitor monitor )
 	{
-		super.doSave(monitor);
+		// No longer need to save EMF model since we only use in-memory emf model
+		//super.doSave(monitor);
 		try
 		{
 			getDiagramGeometry().write();
