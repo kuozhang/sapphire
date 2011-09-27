@@ -35,10 +35,7 @@ import org.eclipse.ui.PlatformUI;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class AbsoluteFilePathBrowseActionHandler 
-
-    extends SapphireBrowseActionHandler
-    
+public class AbsoluteFilePathBrowseActionHandler extends SapphireBrowseActionHandler
 {
     public static final String ID = "Sapphire.Browse.File.Absolute";
     public static final String PARAM_EXTENSIONS = "extensions";
