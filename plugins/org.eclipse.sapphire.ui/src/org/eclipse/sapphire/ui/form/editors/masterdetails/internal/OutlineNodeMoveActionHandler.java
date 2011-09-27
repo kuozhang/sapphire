@@ -61,7 +61,7 @@ public abstract class OutlineNodeMoveActionHandler extends SapphireActionHandler
             }
         };
         
-        final IModelElement parent = getPart().getParentPart().getModelElement();
+        final IModelElement parent = ( (MasterDetailsContentNode) getPart().getParentPart() ).getLocalModelElement();
         final ListProperty property = getList().getParentProperty();
         
         final ModelElementListener listPropertyListener = new ModelElementListener()
