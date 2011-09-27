@@ -305,15 +305,15 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
                         
                         final ITypeBinding typeBinding = ( (AbstractTypeDeclaration) node ).resolveBinding();
                         
+                        final IWorkspaceRunnable addUnimplementedConstructorsOp 
+                            = AddUnimplementedConstructorsAction.createRunnable( ast, typeBinding, null, -1, false, Flags.AccPublic, false );
+                        
+                        addUnimplementedConstructorsOp.run( null );
+                        
                         final IWorkspaceRunnable overrideMethodsOp 
                             = OverrideMethodsAction.createRunnable( ast, typeBinding, null, -1, false );
                         
                         overrideMethodsOp.run( null );
-                        
-                        final IWorkspaceRunnable addUnimplementedConstructorsOp 
-                            = AddUnimplementedConstructorsAction.createRunnable( ast, typeBinding, null, 0, false, Flags.AccPublic, false );
-                        
-                        addUnimplementedConstructorsOp.run( null );
                     }
                     
                     monitor.worked( 1 );
