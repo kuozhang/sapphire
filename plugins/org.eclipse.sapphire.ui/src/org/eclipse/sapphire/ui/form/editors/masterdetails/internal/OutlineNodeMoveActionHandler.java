@@ -26,10 +26,7 @@ import org.eclipse.swt.widgets.Display;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class OutlineNodeMoveActionHandler
-
-    extends SapphireActionHandler
-    
+public abstract class OutlineNodeMoveActionHandler extends SapphireActionHandler
 {
     private ModelElementListener listPropertyListener = null;
     private MasterDetailsContentOutline contentTree = null;
@@ -76,7 +73,8 @@ public abstract class OutlineNodeMoveActionHandler
             }
         };
         
-        getPart().getParentPart().getModelElement().addListener( this.listPropertyListener );
+        final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart().getParentPart();
+        node.getLocalModelElement().addListener( this.listPropertyListener );
         
         refreshEnabledState();
     }
@@ -101,7 +99,8 @@ public abstract class OutlineNodeMoveActionHandler
     {
         super.dispose();
         
-        getPart().getParentPart().getModelElement().removeListener( this.listPropertyListener );
+        final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart().getParentPart();
+        node.getLocalModelElement().removeListener( this.listPropertyListener );
         
         if( this.contentTree != null )
         {
