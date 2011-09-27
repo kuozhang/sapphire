@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.swt.renderer.actions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.osgi.util.NLS;
@@ -34,10 +35,7 @@ import org.eclipse.ui.PlatformUI;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class AbsoluteFilePathBrowseActionHandler 
-
-    extends SapphireBrowseActionHandler
-    
+public class AbsoluteFilePathBrowseActionHandler extends SapphireBrowseActionHandler
 {
     public static final String ID = "Sapphire.Browse.File.Absolute";
     public static final String PARAM_EXTENSIONS = "extensions";
@@ -63,6 +61,11 @@ public class AbsoluteFilePathBrowseActionHandler
         if( staticFileExtensions == null )
         {
             this.fileExtensionService = element.service( property, FileExtensionsService.class );
+            
+            if( this.fileExtensionService == null )
+            {
+                this.staticFileExtensionsList = Collections.emptyList();
+            }
         }
         else
         {
