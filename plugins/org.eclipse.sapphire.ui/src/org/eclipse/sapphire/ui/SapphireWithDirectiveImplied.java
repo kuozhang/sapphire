@@ -23,10 +23,7 @@ import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireWithDirectiveImplied
-
-    extends SapphirePartContainer
-    
+public final class SapphireWithDirectiveImplied extends SapphirePartContainer
 {
     private ModelPath path;
     private IModelElement element;

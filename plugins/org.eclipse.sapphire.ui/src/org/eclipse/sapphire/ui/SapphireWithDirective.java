@@ -39,6 +39,7 @@ import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.ResolvePathResult;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
