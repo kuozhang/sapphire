@@ -62,10 +62,7 @@ import org.eclipse.swt.widgets.Label;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireWithDirective
-
-    extends SapphirePageBook
-    
+public final class SapphireWithDirective extends SapphirePageBook
 {
     private ModelPath path;
     private IModelElement element;
