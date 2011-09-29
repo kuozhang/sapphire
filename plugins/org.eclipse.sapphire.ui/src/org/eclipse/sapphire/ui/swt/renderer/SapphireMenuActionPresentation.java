@@ -31,10 +31,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireMenuActionPresentation
-
-    extends SapphireHotSpotsActionPresentation
-    
+public final class SapphireMenuActionPresentation extends SapphireHotSpotsActionPresentation
 {
     private Menu menu;
     
@@ -127,8 +124,27 @@ public final class SapphireMenuActionPresentation
                 throw new IllegalStateException();
             }
 
-            menuItem.setText( LabelTransformer.transform( action.getLabel(), CapitalizationType.TITLE_STYLE, false ) );
-            menuItem.setImage( context.getImageCache().getImage( action.getImage( 16 ) ) );
+            final Runnable updateActionLabelOp = new Runnable()
+            {
+                public void run()
+                {
+                    if( ! menuItem.isDisposed() )
+                    {
+                        menuItem.setText( LabelTransformer.transform( action.getLabel(), CapitalizationType.TITLE_STYLE, false ) );
+                    }
+                }
+            };
+            
+            final Runnable updateActionImageOp = new Runnable()
+            {
+                public void run()
+                {
+                    if( ! menuItem.isDisposed() )
+                    {
+                        menuItem.setImage( context.getImageCache().getImage( action.getImage( 16 ) ) );
+                    }
+                }
+            };
             
             final Runnable updateActionEnablementStateOp = new Runnable()
             {
@@ -161,7 +177,15 @@ public final class SapphireMenuActionPresentation
                     {
                         final String type = event.getType();
                         
-                        if( type.equals( SapphireAction.EVENT_ENABLEMENT_STATE_CHANGED ) )
+                        if( type.equals( SapphireAction.EVENT_LABEL_CHANGED ) )
+                        {
+                            updateActionLabelOp.run();
+                        }
+                        else if( type.equals( SapphireAction.EVENT_IMAGES_CHANGED ) )
+                        {
+                            updateActionLabelOp.run();
+                        }
+                        else if( type.equals( SapphireAction.EVENT_ENABLEMENT_STATE_CHANGED ) )
                         {
                             updateActionEnablementStateOp.run();
                         }
@@ -173,6 +197,8 @@ public final class SapphireMenuActionPresentation
                 }
             );
             
+            updateActionLabelOp.run();
+            updateActionImageOp.run();
             updateActionEnablementStateOp.run();
             updateActionCheckedStateOp.run();
         }

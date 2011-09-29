@@ -45,7 +45,7 @@ public abstract class SapphireActionSystemPart
     public static final String EVENT_ENABLEMENT_STATE_CHANGED = "enablement";
     public static final String EVENT_CHECKED_STATE_CHANGED = "checked";
     
-    private final FunctionContext functionContext;
+    private FunctionContext functionContext;
     private String id;
     private FunctionResult labelFunctionResult;
     private final List<ImageDescriptor> images = new CopyOnWriteArrayList<ImageDescriptor>();
@@ -55,13 +55,10 @@ public abstract class SapphireActionSystemPart
     private boolean checked;
     private final List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
     
-    public SapphireActionSystemPart()
-    {
-        this.functionContext = initFunctionContext();
-    }
-    
     protected final void init( final ISapphireActionSystemPartDef def )
     {
+        this.functionContext = initFunctionContext();
+        
         if( def != null )
         {
             this.id = def.getId().getContent();
@@ -130,10 +127,7 @@ public abstract class SapphireActionSystemPart
         this.enabled = true;
     }
     
-    protected FunctionContext initFunctionContext()
-    {
-        return new FunctionContext();
-    }
+    protected abstract FunctionContext initFunctionContext();
     
     public final String getId()
     {

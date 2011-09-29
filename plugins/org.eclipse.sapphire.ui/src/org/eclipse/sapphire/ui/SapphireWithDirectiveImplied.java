@@ -68,6 +68,7 @@ public final class SapphireWithDirectiveImplied
         return this.path;
     }
     
+    @Override
     public IModelElement getLocalModelElement()
     {
         return this.element;

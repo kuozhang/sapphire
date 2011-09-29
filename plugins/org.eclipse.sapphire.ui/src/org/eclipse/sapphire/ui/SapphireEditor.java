@@ -106,6 +106,11 @@ public abstract class SapphireEditor
         return this.model;
     }
 
+    public final IModelElement getLocalModelElement()
+    {
+        return this.model;
+    }
+
     protected abstract IModelElement createModel();
     
     protected void adaptModel( final IModelElement model )

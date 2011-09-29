@@ -168,6 +168,7 @@ public class DiagramNodePart
         return this.nodeTemplate;
     }
     
+    @Override
     public IModelElement getLocalModelElement()
     {
         return this.modelElement;

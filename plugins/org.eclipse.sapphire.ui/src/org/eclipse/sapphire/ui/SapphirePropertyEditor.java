@@ -286,6 +286,7 @@ public final class SapphirePropertyEditor extends SapphirePart
         }
     }
     
+    @Override
     public IModelElement getLocalModelElement()
     {
         return this.element;

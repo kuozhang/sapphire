@@ -122,6 +122,7 @@ public final class SapphireWithDirective
         return this.path;
     }
     
+    @Override
     public IModelElement getLocalModelElement()
     {
         return this.element;

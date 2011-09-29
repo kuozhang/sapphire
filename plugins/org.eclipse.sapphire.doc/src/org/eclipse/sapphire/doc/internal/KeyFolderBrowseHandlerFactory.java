@@ -20,6 +20,7 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFactory;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFactoryDef;
 
 /**
@@ -60,6 +61,14 @@ public class KeyFolderBrowseHandlerFactory extends SapphireActionHandlerFactory
         public Handler( File file )
         {
             this.file = file;
+        }
+        
+        @Override
+        public void init( final SapphireAction action,
+                          final ISapphireActionHandlerDef def )
+        {
+            super.init( action, def );
+
             setLabel( this.file.getName() );
         }
 

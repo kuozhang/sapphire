@@ -28,6 +28,7 @@ public interface ISapphirePart
     ISapphirePart getParentPart();
     <T> T nearest( final Class<T> partType );
     IModelElement getModelElement();
+    IModelElement getLocalModelElement();
     Status getValidationState();
     IContext getDocumentationContext();
     SapphireImageCache getImageCache();

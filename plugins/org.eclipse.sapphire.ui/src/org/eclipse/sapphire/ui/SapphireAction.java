@@ -23,6 +23,8 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
+import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
@@ -35,10 +37,7 @@ import org.eclipse.sapphire.ui.util.TopologicalSorter;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireAction
-
-    extends SapphireActionSystemPart
-    
+public final class SapphireAction extends SapphireActionSystemPart
 {
     public static final String EVENT_TYPE_CHANGED = "type";
     public static final String EVENT_GROUP_CHANGED = "group";
@@ -52,11 +51,16 @@ public final class SapphireAction
     private SapphireKeySequence keyBinding;
     private final List<SapphireActionHandler> handlers = new CopyOnWriteArrayList<SapphireActionHandler>();
     private final List<SapphireActionHandlerFilter> filters = new CopyOnWriteArrayList<SapphireActionHandlerFilter>();
-    private final Listener handlerListener;
+    private Listener handlerListener;
     private Map<String,Object> hints;
     
-    public SapphireAction()
+    public void init( final SapphireActionGroup parent,
+                      final ISapphireActionDef def )
     {
+        this.parent = parent;
+        
+        super.init( def );
+        
         this.handlerListener = new Listener()
         {
             @Override
@@ -92,15 +96,7 @@ public final class SapphireAction
                 }
             }
         );
-    }
 
-    public void init( final SapphireActionGroup parent,
-                      final ISapphireActionDef def )
-    {
-        super.init( def );
-        
-        this.parent = parent;
-        
         if( def != null )
         {
             this.type = def.getType().getContent();
@@ -129,7 +125,9 @@ public final class SapphireAction
     @Override
     protected FunctionContext initFunctionContext()
     {
-        return new FunctionContext()
+        final ISapphirePart part = getPart();
+        
+        return new ModelElementFunctionContext( part.getLocalModelElement(), part.getDefinition().adapt( LocalizationService.class ) )
         {
             @Override
             public FunctionResult property( final Object element,

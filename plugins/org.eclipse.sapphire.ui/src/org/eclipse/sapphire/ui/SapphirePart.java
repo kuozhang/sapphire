@@ -240,6 +240,11 @@ public abstract class SapphirePart implements ISapphirePart
         return this.modelElement;
     }
     
+    public IModelElement getLocalModelElement()
+    {
+        return this.modelElement;
+    }
+    
     public final Map<String,String> getParams()
     {
         return Collections.unmodifiableMap( this.params );

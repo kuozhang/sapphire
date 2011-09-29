@@ -12,6 +12,9 @@
 package org.eclipse.sapphire.ui;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -30,9 +33,9 @@ public abstract class SapphireActionHandler extends SapphireActionSystemPart
     public void init( final SapphireAction action,
                       final ISapphireActionHandlerDef def )
     {
-        super.init( def );
-        
         this.action = action;
+        
+        super.init( def );
         
         if( getId() == null )
         {
@@ -48,6 +51,12 @@ public abstract class SapphireActionHandler extends SapphireActionSystemPart
         {
             setLabel( this.action.getLabel() );
         }
+    }
+    
+    protected final FunctionContext initFunctionContext()
+    {
+        final ISapphirePart part = getPart();
+        return new ModelElementFunctionContext( part.getLocalModelElement(), part.getDefinition().adapt( LocalizationService.class ) );
     }
     
     public final SapphireAction getAction()
