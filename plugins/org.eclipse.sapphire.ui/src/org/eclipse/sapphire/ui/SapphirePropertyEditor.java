@@ -276,6 +276,7 @@ public final class SapphirePropertyEditor extends SapphirePart
         return (ISapphirePropertyEditorDef) super.getDefinition();
     }
     
+    @Override
     public IModelElement getLocalModelElement()
     {
         return this.element;

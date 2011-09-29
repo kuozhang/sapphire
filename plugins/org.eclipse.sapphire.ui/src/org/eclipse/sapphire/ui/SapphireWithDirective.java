@@ -122,6 +122,7 @@ public final class SapphireWithDirective extends SapphirePageBook
         return this.path;
     }
     
+    @Override
     public IModelElement getLocalModelElement()
     {
         return this.element;

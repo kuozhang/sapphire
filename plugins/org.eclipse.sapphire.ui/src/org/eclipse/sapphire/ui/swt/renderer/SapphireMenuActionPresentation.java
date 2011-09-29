@@ -24,6 +24,8 @@ import org.eclipse.sapphire.ui.SapphireAction.HandlersChangedEvent;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart.CheckedStateChangedEvent;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart.EnablementChangedEvent;
+import org.eclipse.sapphire.ui.SapphireActionSystemPart.ImagesChangedEvent;
+import org.eclipse.sapphire.ui.SapphireActionSystemPart.LabelChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
 import org.eclipse.swt.SWT;
@@ -38,10 +40,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireMenuActionPresentation
-
-    extends SapphireHotSpotsActionPresentation
-    
+public final class SapphireMenuActionPresentation extends SapphireHotSpotsActionPresentation
 {
     private Menu menu;
     
@@ -139,8 +138,27 @@ public final class SapphireMenuActionPresentation
                 throw new IllegalStateException();
             }
 
-            menuItem.setText( LabelTransformer.transform( action.getLabel(), CapitalizationType.TITLE_STYLE, false ) );
-            menuItem.setImage( context.getImageCache().getImage( action.getImage( 16 ) ) );
+            final Runnable updateActionLabelOp = new Runnable()
+            {
+                public void run()
+                {
+                    if( ! menuItem.isDisposed() )
+                    {
+                        menuItem.setText( LabelTransformer.transform( action.getLabel(), CapitalizationType.TITLE_STYLE, false ) );
+                    }
+                }
+            };
+            
+            final Runnable updateActionImageOp = new Runnable()
+            {
+                public void run()
+                {
+                    if( ! menuItem.isDisposed() )
+                    {
+                        menuItem.setImage( context.getImageCache().getImage( action.getImage( 16 ) ) );
+                    }
+                }
+            };
             
             final Runnable updateActionEnablementStateOp = new Runnable()
             {
@@ -164,6 +182,8 @@ public final class SapphireMenuActionPresentation
                 }
             };
             
+            updateActionLabelOp.run();
+            updateActionImageOp.run();
             updateActionEnablementStateOp.run();
             updateActionCheckedStateOp.run();
 
@@ -172,7 +192,15 @@ public final class SapphireMenuActionPresentation
                 @Override
                 public void handle( final Event event )
                 {
-                    if( event instanceof EnablementChangedEvent )
+                    if( event instanceof LabelChangedEvent )
+                    {
+                        updateActionLabelOp.run();
+                    }
+                    else if( event instanceof ImagesChangedEvent )
+                    {
+                        updateActionImageOp.run();
+                    }
+                    else if( event instanceof EnablementChangedEvent )
                     {
                         updateActionEnablementStateOp.run();
                     }

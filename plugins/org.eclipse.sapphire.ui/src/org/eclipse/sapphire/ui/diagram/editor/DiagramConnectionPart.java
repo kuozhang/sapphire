@@ -194,6 +194,7 @@ public class DiagramConnectionPart
         return this.connectionTemplate;
     }
     
+    @Override
     public IModelElement getLocalModelElement()
     {
         return this.modelElement;

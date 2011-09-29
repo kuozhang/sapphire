@@ -29,6 +29,8 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
+import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
@@ -50,11 +52,16 @@ public final class SapphireAction extends SapphireActionSystemPart
     private final List<SapphireActionHandler> handlers = new CopyOnWriteArrayList<SapphireActionHandler>();
     private final Map<SapphireActionHandlerFactory,List<SapphireActionHandler>> handlerFactories = new LinkedHashMap<SapphireActionHandlerFactory,List<SapphireActionHandler>>();
     private final List<SapphireActionHandlerFilter> filters = new CopyOnWriteArrayList<SapphireActionHandlerFilter>();
-    private final Listener handlerListener;
+    private Listener handlerListener;
     private Map<String,Object> hints;
     
-    public SapphireAction()
+    public void init( final SapphireActionGroup parent,
+                      final ISapphireActionDef def )
     {
+        this.parent = parent;
+        
+        super.init( def );
+        
         this.handlerListener = new Listener()
         {
             @Override
@@ -112,15 +119,7 @@ public final class SapphireAction extends SapphireActionSystemPart
                 }
             }
         );
-    }
 
-    public void init( final SapphireActionGroup parent,
-                      final ISapphireActionDef def )
-    {
-        super.init( def );
-        
-        this.parent = parent;
-        
         if( def != null )
         {
             this.type = def.getType().getContent();
@@ -149,7 +148,9 @@ public final class SapphireAction extends SapphireActionSystemPart
     @Override
     protected FunctionContext initFunctionContext()
     {
-        return new FunctionContext()
+        final ISapphirePart part = getPart();
+        
+        return new ModelElementFunctionContext( part.getLocalModelElement(), part.getDefinition().adapt( LocalizationService.class ) )
         {
             @Override
             public FunctionResult property( final Object element,

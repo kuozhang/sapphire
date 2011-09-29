@@ -476,6 +476,7 @@ public final class MasterDetailsContentNode
         return false;
     }
 
+    @Override
     public IModelElement getLocalModelElement()
     {
         return this.modelElement;

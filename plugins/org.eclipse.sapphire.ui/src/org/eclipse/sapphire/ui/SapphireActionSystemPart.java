@@ -41,7 +41,7 @@ import org.eclipse.sapphire.ui.def.ISapphireActionSystemPartDef;
 
 public abstract class SapphireActionSystemPart
 {
-    private final FunctionContext functionContext;
+    private FunctionContext functionContext;
     private String id;
     private FunctionResult labelFunctionResult;
     private final List<ImageDescriptor> images = new CopyOnWriteArrayList<ImageDescriptor>();
@@ -51,13 +51,10 @@ public abstract class SapphireActionSystemPart
     private boolean checked;
     private final ListenerContext listeners = new ListenerContext();
     
-    public SapphireActionSystemPart()
-    {
-        this.functionContext = initFunctionContext();
-    }
-    
     protected final void init( final ISapphireActionSystemPartDef def )
     {
+        this.functionContext = initFunctionContext();
+        
         if( def != null )
         {
             this.id = def.getId().getContent();
@@ -126,10 +123,7 @@ public abstract class SapphireActionSystemPart
         this.enabled = true;
     }
     
-    protected FunctionContext initFunctionContext()
-    {
-        return new FunctionContext();
-    }
+    protected abstract FunctionContext initFunctionContext();
     
     public final String getId()
     {

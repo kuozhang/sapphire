@@ -180,6 +180,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         refreshPropertiesViewContribution();
     }
 
+    @Override
     public IModelElement getLocalModelElement()
     {
         return this.modelElement;

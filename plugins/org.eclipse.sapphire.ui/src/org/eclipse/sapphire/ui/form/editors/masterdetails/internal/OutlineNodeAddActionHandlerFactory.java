@@ -145,9 +145,6 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
         {
             this.property = property;
             this.type = type;
-            
-            setId( ID_BASE + type.getSimpleName() );
-            setLabel( type.getLabel( true, CapitalizationType.NO_CAPS, false ) );
         }
     
         @Override
@@ -155,6 +152,9 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
                           final ISapphireActionHandlerDef def )
         {
             super.init( action, def );
+            
+            setId( ID_BASE + this.type.getSimpleName() );
+            setLabel( this.type.getLabel( true, CapitalizationType.NO_CAPS, false ) );
             
             final ImageDescriptor typeSpecificAddImage = toImageDescriptor( this.type.image() );
             
