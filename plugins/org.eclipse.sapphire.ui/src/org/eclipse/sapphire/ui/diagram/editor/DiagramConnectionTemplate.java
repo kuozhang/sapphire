@@ -652,6 +652,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         List<DiagramConnectionPart> connParts = getDiagramConnections(null);
         for (DiagramConnectionPart connPart : connParts)
         {
+        	notifyConnectionDelete(connPart);
             connPart.dispose();
         }
     }

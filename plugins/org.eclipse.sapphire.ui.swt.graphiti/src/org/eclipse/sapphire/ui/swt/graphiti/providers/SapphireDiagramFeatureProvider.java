@@ -124,7 +124,7 @@ public class SapphireDiagramFeatureProvider extends DefaultFeatureProvider
 	@Override
 	public ICreateFeature[] getCreateFeatures() 
 	{
-		List<DiagramNodeTemplate> nodeTemplates = getDiagramPart().getNodeTemplates();
+		List<DiagramNodeTemplate> nodeTemplates = getDiagramPart().getVisibleNodeTemplates();
 		ICreateFeature[] features = new ICreateFeature[nodeTemplates.size()];
 		int i = 0;
 		for (DiagramNodeTemplate nodeTemplate : nodeTemplates)

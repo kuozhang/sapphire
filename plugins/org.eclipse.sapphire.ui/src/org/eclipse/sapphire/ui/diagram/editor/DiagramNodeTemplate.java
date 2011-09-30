@@ -369,6 +369,7 @@ public class DiagramNodeTemplate extends SapphirePart
         List<DiagramNodePart> nodeParts = getDiagramNodes();
         for (DiagramNodePart nodePart : nodeParts)
         {
+        	notifyNodeDelete(nodePart);
             nodePart.dispose();
         }
         
