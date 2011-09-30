@@ -227,7 +227,7 @@ public abstract class SapphireActionSystemPart
         notifyListeners( new Event( EVENT_LOCATION_HINTS_CHANGED ) );
     }
     
-    public final boolean isEnabled()
+    public boolean isEnabled()
     {
         synchronized( this )
         {
@@ -235,7 +235,7 @@ public abstract class SapphireActionSystemPart
         }
     }
     
-    public final void setEnabled( final boolean enabled )
+    public void setEnabled( final boolean enabled )
     {
         boolean changed = false;
         
@@ -262,7 +262,7 @@ public abstract class SapphireActionSystemPart
         }
     }
     
-    public final void setChecked( final boolean checked )
+    public void setChecked( final boolean checked )
     {
         boolean changed = false;
         

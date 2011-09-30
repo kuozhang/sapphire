@@ -19,6 +19,7 @@ import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
 
 /**
@@ -48,6 +49,14 @@ public class DiagramNodeAddActionHandler extends SapphireDiagramActionHandler
 		{
 			addImage(typeSpecificAddImage);
 		}
+    }
+    
+    @Override
+    public boolean isEnabled()
+    {
+    	SapphireDiagramEditorPagePart diagramPart = 
+    			(SapphireDiagramEditorPagePart)this.nodeTemplate.getParentPart();
+    	return diagramPart.isNodeTemplateVisible(this.nodeTemplate);
     }
     
 	@Override

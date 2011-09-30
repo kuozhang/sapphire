@@ -38,6 +38,7 @@ import org.eclipse.sapphire.ui.swt.graphiti.actions.SapphireActionHandlerDelegat
 public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvider
 {
 	private static final String DIAGRAM_NODE_DEFAULT_ACTION = "Sapphire.Diagram.Node.Default";
+	private static final String SAPPHIRE_ADD_ACTION = "Sapphire.Add";
 	
 	private SapphireDiagramEditor sapphireDiagramEditor;
 	
@@ -92,15 +93,19 @@ public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvide
 		}
 		else if (action.getActiveHandlers().size() > 1)
 		{
+			
 			String menuText = LabelTransformer.transform(action.getLabel(), CapitalizationType.TITLE_STYLE, true);
 			MenuManager addMenuMgr = new MenuManager(menuText, action.getImage(16), action.getId());
 			addMenuMgr.setParent(menuMgr);
 			menuMgr.add(addMenuMgr);
 			for (SapphireActionHandler handler : action.getActiveHandlers())
 			{
-				SapphireActionHandlerDelegate actionDelegate = 
-								new SapphireActionHandlerDelegate(this.sapphireDiagramEditor, handler);
-				addMenuMgr.add(actionDelegate);
+				if (!(action.getId().equals(SAPPHIRE_ADD_ACTION) && !handler.isEnabled()))
+				{
+					SapphireActionHandlerDelegate actionDelegate = 
+									new SapphireActionHandlerDelegate(this.sapphireDiagramEditor, handler);
+					addMenuMgr.add(actionDelegate);
+				}
 			}
 		}
 		
