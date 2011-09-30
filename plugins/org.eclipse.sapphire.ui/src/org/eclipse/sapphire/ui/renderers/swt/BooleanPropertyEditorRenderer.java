@@ -171,31 +171,34 @@ public final class BooleanPropertyEditorRenderer
     {
         super.handlePropertyChangedEvent();
         
-        final Value<Boolean> value = getPropertyValue();
-        
-        if( value != null )
+        if( ! this.checkbox.isDisposed() )
         {
-            final boolean existingValue = this.checkbox.getSelection();
-            final boolean newSimpleValue;
+            final Value<Boolean> value = getPropertyValue();
             
-            if( value.getText( false ) != null && value.getContent( false ) == null )
+            if( value != null )
             {
-                newSimpleValue = false;
+                final boolean existingValue = this.checkbox.getSelection();
+                final boolean newSimpleValue;
+                
+                if( value.getText( false ) != null && value.getContent( false ) == null )
+                {
+                    newSimpleValue = false;
+                }
+                else
+                {
+                    final Boolean newValue = value.getContent( true );
+                    newSimpleValue = ( newValue != null ? newValue.booleanValue() : false );
+                }
+                
+                if( newSimpleValue != existingValue )
+                {
+                    this.checkbox.setSelection( newSimpleValue );
+                }
             }
             else
             {
-                final Boolean newValue = value.getContent( true );
-                newSimpleValue = ( newValue != null ? newValue.booleanValue() : false );
+                this.checkbox.setSelection( false );
             }
-            
-            if( newSimpleValue != existingValue )
-            {
-                this.checkbox.setSelection( newSimpleValue );
-            }
-        }
-        else
-        {
-            this.checkbox.setSelection( false );
         }
     }
     
