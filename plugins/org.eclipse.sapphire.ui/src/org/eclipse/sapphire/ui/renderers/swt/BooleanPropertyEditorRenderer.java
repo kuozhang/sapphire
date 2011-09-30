@@ -39,10 +39,7 @@ import org.eclipse.swt.widgets.Control;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class BooleanPropertyEditorRenderer
-
-    extends ValuePropertyEditorRenderer
-    
+public final class BooleanPropertyEditorRenderer extends ValuePropertyEditorRenderer
 {
     private Button checkbox;
     
