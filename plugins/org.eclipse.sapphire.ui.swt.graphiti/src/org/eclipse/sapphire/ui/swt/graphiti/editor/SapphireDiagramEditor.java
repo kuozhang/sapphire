@@ -203,6 +203,12 @@ public class SapphireDiagramEditor extends DiagramEditor
 						new Boolean(diagramPart.isShowGuides()));
 				markEditorDirty();
 			}
+
+			@Override
+			public void handleDiagramUpdateEvent(final DiagramPageEvent event)
+			{
+				refreshPalette();
+			}
 			
 		};
 		
