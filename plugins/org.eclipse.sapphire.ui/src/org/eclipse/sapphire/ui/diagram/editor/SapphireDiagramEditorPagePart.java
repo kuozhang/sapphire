@@ -14,8 +14,10 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -47,8 +49,10 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 {
     private IModelElement modelElement;
     private IDiagramEditorPageDef diagramPageDef = null;
+    private List<IDiagramNodeDef> nodeDefs;
     private List<IDiagramConnectionDef> connectionDefs;
     private List<DiagramNodeTemplate> nodeTemplates;
+    private Map<DiagramNodeTemplate, FunctionResult> nodeTemplateFunctionResults;
     private List<DiagramConnectionTemplate> connectionTemplates;
     private List<DiagramImplicitConnectionTemplate> implicitConnectionTemplates;
     private NodeTemplateListener nodeTemplateListener;
@@ -68,7 +72,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         ImpliedElementProperty modelElementProperty = (ImpliedElementProperty)resolve(this.diagramPageDef.getProperty().getContent());
         if (modelElementProperty != null)
         {
-            this.modelElement = getModelElement().read(modelElementProperty);
+            this.modelElement = getModelElement().read(modelElementProperty);            
         }
         else
         {
@@ -83,16 +87,22 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         this.implicitConnTemplateListener = new ImplicitConnectionTemplateListener();
         
         this.nodeTemplates = new ArrayList<DiagramNodeTemplate>();
-        ModelElementList<IDiagramNodeDef> nodeDefs = this.diagramPageDef.getDiagramNodeDefs();
+        this.nodeTemplateFunctionResults = new HashMap<DiagramNodeTemplate, FunctionResult>();
+        this.nodeDefs = this.diagramPageDef.getDiagramNodeDefs();
         this.connectionDefs = this.diagramPageDef.getDiagramConnectionDefs();
         
-        for (IDiagramNodeDef nodeDef : nodeDefs)
+        for (final IDiagramNodeDef nodeDef : this.nodeDefs)
         {
-        	boolean visible = true;
+            DiagramNodeTemplate nodeTemplate = new DiagramNodeTemplate();
+            nodeTemplate.init(this, this.modelElement, nodeDef, Collections.<String,String>emptyMap());
+            this.nodeTemplates.add(nodeTemplate);
+            nodeTemplate.addTemplateListener(this.nodeTemplateListener);	            
+        	
+        	FunctionResult visibleWhen = null;
         	if (nodeDef.getVisibleWhen().getContent() != null)
         	{
 	        	// Support "visible-when" expression
-	            FunctionResult visibleWhen = initExpression
+	            visibleWhen = initExpression
 	            ( 
 	                this.modelElement,
 	                nodeDef.getVisibleWhen().getContent(),
@@ -101,27 +111,13 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 	                new Runnable()
 	                {
 	                    public void run()
-	                    {                        
+	                    {      
+	                    	refreshDiagramPalette();
 	                    }
 	                }
 	            );
-	        	
-	            if (visibleWhen != null && visibleWhen.value() != null && ((String)visibleWhen.value()).equals("false"))
-	            {
-	                visible = false;
-	            }
-	            if (visibleWhen != null)
-	            {
-	                visibleWhen.dispose();
-	            }
-        	}
-        	if (visible)
-        	{
-	            DiagramNodeTemplate nodeTemplate = new DiagramNodeTemplate();
-	            nodeTemplate.init(this, this.modelElement, nodeDef, Collections.<String,String>emptyMap());
-	            this.nodeTemplates.add(nodeTemplate);
-	            nodeTemplate.addTemplateListener(this.nodeTemplateListener);
-        	}
+	            this.nodeTemplateFunctionResults.put(nodeTemplate, visibleWhen);
+        	}        	
         }
         
         // Need to initialize the embedded connections after all the diagram node parts are created
@@ -234,6 +230,34 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         return this.nodeTemplates;
     }
     
+    public List<DiagramNodeTemplate> getVisibleNodeTemplates()
+    {
+    	List<DiagramNodeTemplate> visibleNodeTemplates = new ArrayList<DiagramNodeTemplate>();
+    	for (DiagramNodeTemplate nodeTemplate : getNodeTemplates())
+    	{
+    		if (isNodeTemplateVisible(nodeTemplate))
+    		{
+    			visibleNodeTemplates.add(nodeTemplate);
+    		}
+    	}
+    	return visibleNodeTemplates;
+    }
+    
+    public boolean isNodeTemplateVisible(DiagramNodeTemplate nodeTemplate)
+    {
+    	boolean visible = true;
+    	FunctionResult fr = this.nodeTemplateFunctionResults.get(nodeTemplate);
+    	if (fr != null)
+    	{
+    		String valStr = (String)fr.value();
+    		if (valStr != null && valStr.equals("false"))
+    		{
+    			visible = false;
+    		}
+    	}
+    	return visible;
+    }
+    
     public List<IDiagramConnectionDef> getDiagramConnectionDefs()
     {
         return this.connectionDefs;
@@ -320,6 +344,12 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         setPropertiesViewContribution( propertiesViewContribution );
     }
     
+    private void refreshDiagramPalette()
+    {
+    	notifyDiagramChange();
+    	refreshPropertiesViewContribution();
+    }
+    
     public DiagramNodePart getDiagramNodePart(IModelElement nodeElement)
     {
         if (nodeElement == null)
@@ -344,18 +374,31 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     public void dispose() 
     {
         super.dispose();
-        for (DiagramNodeTemplate nodeTemplate : this.nodeTemplates)
+        disposeParts();
+    }
+    
+    private void disposeParts()
+    {
+    	for (DiagramNodeTemplate nodeTemplate : this.nodeTemplates)
         {
+        	FunctionResult fr = this.nodeTemplateFunctionResults.get(nodeTemplate);
+        	if (fr != null)
+        	{
+        		fr.dispose();
+        	}        	
             nodeTemplate.dispose();
         }
+        this.nodeTemplates.clear();
         for (DiagramConnectionTemplate connTemplate : this.connectionTemplates)
         {
             connTemplate.dispose();
         }
+        this.connectionTemplates.clear();
         for (DiagramImplicitConnectionTemplate connTemplate : this.implicitConnectionTemplates)
         {
             connTemplate.dispose();
         }
+        this.implicitConnectionTemplates.clear();
     }
     
     public DiagramNodeTemplate getNodeTemplate(ModelProperty modelProperty)
@@ -369,8 +412,8 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	}
     	return null;
     }
-
-	private void notifyNodeUpdate(DiagramNodePart nodePart)
+    
+    private void notifyNodeUpdate(DiagramNodePart nodePart)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
@@ -547,6 +590,19 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 			{
 				DiagramPageEvent pageEvent = new DiagramPageEvent(this);
 				((SapphireDiagramPartListener)listener).handleGuideStateChangeEvent(pageEvent);
+			}
+		}		
+	}
+	
+	private void notifyDiagramChange()
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramPageEvent pageEvent = new DiagramPageEvent(this);
+				((SapphireDiagramPartListener)listener).handleDiagramUpdateEvent(pageEvent);
 			}
 		}		
 	}
