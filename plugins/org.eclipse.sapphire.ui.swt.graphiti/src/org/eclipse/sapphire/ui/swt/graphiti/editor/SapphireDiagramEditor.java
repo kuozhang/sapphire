@@ -550,37 +550,39 @@ public class SapphireDiagramEditor extends DiagramEditor
 		
 		for (DiagramNodeTemplate nodeTemplate : this.diagramPart.getNodeTemplates())
 		{
-			for (DiagramNodePart nodePart : nodeTemplate.getDiagramNodes())
+			if (this.diagramPart.isNodeTemplateVisible(nodeTemplate))
 			{
-				Bounds bounds = nodePart.getNodeBounds();
-				if (bounds.getX() == -1 || bounds.getY() == -1)
+				for (DiagramNodePart nodePart : nodeTemplate.getDiagramNodes())
 				{
-					org.eclipse.sapphire.ui.Point pt = getDefaultNodePosition();
-					bounds.setX(pt.getX());
-					bounds.setY(pt.getY());
+					Bounds bounds = nodePart.getNodeBounds();
+					if (bounds.getX() == -1 || bounds.getY() == -1)
+					{
+						org.eclipse.sapphire.ui.Point pt = getDefaultNodePosition();
+						bounds.setX(pt.getX());
+						bounds.setY(pt.getY());
+					}
+					AddContext ctx = new AddContext();
+					ctx.setNewObject(nodePart);
+					ctx.setTargetContainer(diagram);
+					
+					// Revert the change for bug 344175. Dropping a node using center position
+					// causes difficulties in merging code paths for adding node
+					// Need to convert the node left top coordinate into node middle point
+					// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=344175
+	//				int width = SapphireAddNodeFeature.getNodeWidth(nodePart, bounds.getWidth());
+	//				int height = SapphireAddNodeFeature.getNodeHeight(nodePart, bounds.getHeight());
+	//				int middleX = bounds.getX() + (width >> 1);
+	//				int middleY = bounds.getY() + (height >> 1);
+	//				ctx.setX(middleX);
+	//				ctx.setY(middleY);
+					ctx.setX(bounds.getX());
+					ctx.setY(bounds.getY());
+					ctx.setWidth(bounds.getWidth());
+					ctx.setHeight(bounds.getHeight());
+					IAddFeature ft = getDiagramTypeProvider().getFeatureProvider().getAddFeature(ctx);						
+					ft.add(ctx);						
 				}
-				AddContext ctx = new AddContext();
-				ctx.setNewObject(nodePart);
-				ctx.setTargetContainer(diagram);
-				
-				// Revert the change for bug 344175. Dropping a node using center position
-				// causes difficulties in merging code paths for adding node
-				// Need to convert the node left top coordinate into node middle point
-				// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=344175
-//				int width = SapphireAddNodeFeature.getNodeWidth(nodePart, bounds.getWidth());
-//				int height = SapphireAddNodeFeature.getNodeHeight(nodePart, bounds.getHeight());
-//				int middleX = bounds.getX() + (width >> 1);
-//				int middleY = bounds.getY() + (height >> 1);
-//				ctx.setX(middleX);
-//				ctx.setY(middleY);
-				ctx.setX(bounds.getX());
-				ctx.setY(bounds.getY());
-				ctx.setWidth(bounds.getWidth());
-				ctx.setHeight(bounds.getHeight());
-				IAddFeature ft = getDiagramTypeProvider().getFeatureProvider().getAddFeature(ctx);						
-				ft.add(ctx);						
-			}
-			
+			}			
 		}		
 	}
 	
@@ -732,18 +734,21 @@ public class SapphireDiagramEditor extends DiagramEditor
 		final TransactionalEditingDomain ted = TransactionUtil.getEditingDomain(diagram);
 		
 		PictogramElement pe = getContainerShape(nodePart);
-		final IRemoveContext rc = new RemoveContext(pe);
-		final IRemoveFeature removeFeature = fp.getRemoveFeature(rc);
-		if (removeFeature != null) 
+		if (pe != null)
 		{
-			ted.getCommandStack().execute(new RecordingCommand(ted) 
+			final IRemoveContext rc = new RemoveContext(pe);
+			final IRemoveFeature removeFeature = fp.getRemoveFeature(rc);
+			if (removeFeature != null) 
 			{
-				protected void doExecute() 
-				{			    					
-					removeFeature.remove(rc);
-				}
-			});
-		}		
+				ted.getCommandStack().execute(new RecordingCommand(ted) 
+				{
+					protected void doExecute() 
+					{			    					
+						removeFeature.remove(rc);
+					}
+				});
+			}
+		}
 	}
 	
 	private void moveNode(final DiagramNodePart nodePart)
@@ -828,36 +833,16 @@ public class SapphireDiagramEditor extends DiagramEditor
 	
 	private void addConnectionIfPossible(final DiagramConnectionPart connPart)
 	{
-		if (connPart.getEndpoint1() != null && connPart.getEndpoint2() != null)
+		final Diagram diagram = getDiagramTypeProvider().getDiagram();
+		final TransactionalEditingDomain ted = TransactionUtil.getEditingDomain(diagram);
+		ted.getCommandStack().execute(new RecordingCommand(ted) 
 		{
-			final IFeatureProvider fp = getDiagramTypeProvider().getFeatureProvider();
-			final Diagram diagram = getDiagramTypeProvider().getDiagram();
-			final TransactionalEditingDomain ted = TransactionUtil.getEditingDomain(diagram);
-
-            DiagramNodePart srcNodePart = getPart().getDiagramNodePart(connPart.getEndpoint1());
-            DiagramNodePart targetNodePart = getPart().getDiagramNodePart(connPart.getEndpoint2());
-            ContainerShape srcNode = getContainerShape(srcNodePart);
-            ContainerShape targetNode = getContainerShape(targetNodePart);
-            if (srcNode != null && targetNode != null)
-            {
-	            final AddConnectionContext addContext = 
-	                    new AddConnectionContext(srcNode.getAnchors().get(0), targetNode.getAnchors().get(0));
-	            addContext.setNewObject(connPart);
-	            final IAddFeature addFeature = fp.getAddFeature(addContext);
-	            if (addFeature != null) 
-	            {
-	                ted.getCommandStack().execute(new RecordingCommand(ted) 
-	                {
-	                    protected void doExecute() 
-	                    {                                    
-	                        addFeature.add(addContext);
-	                    }
-	                });
-	            }
-	            markEditorDirty();
-            }
-        }                         
-    }
+			protected void doExecute() 
+			{		
+				addConnection(connPart);
+			}
+		});
+	}
 	
 	private void markEditorDirty()
 	{
