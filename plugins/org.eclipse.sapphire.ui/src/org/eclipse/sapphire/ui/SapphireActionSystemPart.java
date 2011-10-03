@@ -223,7 +223,7 @@ public abstract class SapphireActionSystemPart
         broadcast( new LocationHintsChangedEvent() );
     }
     
-    public final boolean isEnabled()
+    public boolean isEnabled()
     {
         synchronized( this )
         {

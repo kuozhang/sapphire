@@ -135,7 +135,7 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
         this.modelElement.removeListener(this.modelPropertyListener, this.allDescendentsPath);
     }
     
-    private void refreshImplicitConnections()
+    public void refreshImplicitConnections()
     {
         List<IModelElement> newFilteredList = getFilteredModelElementList();
         

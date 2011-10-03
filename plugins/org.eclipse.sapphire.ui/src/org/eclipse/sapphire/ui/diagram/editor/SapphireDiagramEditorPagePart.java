@@ -93,7 +93,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         
         for (final IDiagramNodeDef nodeDef : this.nodeDefs)
         {
-            DiagramNodeTemplate nodeTemplate = new DiagramNodeTemplate();
+            final DiagramNodeTemplate nodeTemplate = new DiagramNodeTemplate();
             nodeTemplate.init(this, this.modelElement, nodeDef, Collections.<String,String>emptyMap());
             this.nodeTemplates.add(nodeTemplate);
             nodeTemplate.addTemplateListener(this.nodeTemplateListener);	            
@@ -112,7 +112,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 	                {
 	                    public void run()
 	                    {      
-	                    	refreshDiagramPalette();
+	                    	refreshDiagramPalette(nodeTemplate);
 	                    }
 	                }
 	            );
@@ -344,8 +344,32 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         setPropertiesViewContribution( propertiesViewContribution );
     }
     
-    private void refreshDiagramPalette()
+    private void refreshDiagramPalette(DiagramNodeTemplate nodeTemplate)
     {
+    	if (isNodeTemplateVisible(nodeTemplate))
+    	{
+    		// Restore all the connection PEs if they are associated with the 
+    		// nodes for the node template
+    		nodeTemplate.showAllNodeParts();
+        	List<DiagramConnectionTemplate> connTemplates = getConnectionTemplates();
+        	for (DiagramConnectionTemplate connTemplate : connTemplates)
+        	{
+        		connTemplate.showAllConnectionParts(nodeTemplate);
+        	}
+        	
+        	List<DiagramImplicitConnectionTemplate> implictConnTemplates = 
+        			getImplicitConnectionTemplates();
+        	for (DiagramImplicitConnectionTemplate implicitConnTemplate : implictConnTemplates)
+        	{
+        		implicitConnTemplate.refreshImplicitConnections();
+        	}
+    	}
+    	else
+    	{
+    		// The connection PEs associated with nodes are removed when the node PEs get removed.
+    		// So we don't need to explicitly remove those connection PEs
+    		nodeTemplate.hideAllNodeParts();
+    	}
     	notifyDiagramChange();
     	refreshPropertiesViewContribution();
     }

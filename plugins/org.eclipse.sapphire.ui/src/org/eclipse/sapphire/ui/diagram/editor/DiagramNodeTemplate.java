@@ -309,7 +309,10 @@ public class DiagramNodeTemplate extends SapphirePart
 	    		for (IModelElement newNode : newNodes)
 	    		{
     		    	DiagramNodePart nodePart = createNewNodePart(newNode);
-    		    	notifyNodeAdd(nodePart);
+    		    	if (this.diagramEditor.isNodeTemplateVisible(this))
+    		    	{
+    		    		notifyNodeAdd(nodePart);
+    		    	}
     		    	if (this.embeddedConnTemplate != null)
     		    	{
     		    		this.embeddedConnTemplate.refreshConnections(newNode);
@@ -361,18 +364,39 @@ public class DiagramNodeTemplate extends SapphirePart
         return newNode;        
     }
     
-    @Override
-    public void dispose()
+    public void hideAllNodeParts()
     {
-        removeModelLister();
-        
         List<DiagramNodePart> nodeParts = getDiagramNodes();
         for (DiagramNodePart nodePart : nodeParts)
         {
         	notifyNodeDelete(nodePart);
-            nodePart.dispose();
         }
-        
+    }
+    
+    public void showAllNodeParts()
+    {
+        List<DiagramNodePart> nodeParts = getDiagramNodes();
+        for (DiagramNodePart nodePart : nodeParts)
+        {
+        	notifyNodeAdd(nodePart);
+        }
+        if (this.embeddedConnTemplate != null)
+        {
+        	this.embeddedConnTemplate.showAllConnectionParts(this);
+        }
+    }
+    
+    @Override
+    public void dispose()
+    {
+        removeModelLister();
+        List<DiagramNodePart> nodeParts = getDiagramNodes();
+        for (DiagramNodePart nodePart : nodeParts)
+        {
+        	notifyNodeDelete(nodePart);
+            nodePart.dispose();            
+        }
+        this.diagramNodes.clear();
         if (this.embeddedConnTemplate != null)
         {
             this.embeddedConnTemplate.dispose();

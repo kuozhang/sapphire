@@ -69,20 +69,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         this.propertyName = this.bindingDef.getProperty().getContent();
         this.connListProperty = (ListProperty)nodeProperty.getType().getProperty(this.propertyName);
         
-        this.connPartListener = new SapphireDiagramPartListener() 
-        {
-            @Override
-                public void handleConnectionUpdateEvent(final DiagramConnectionEvent event)
-                {
-                    notifyConnectionUpdate((DiagramConnectionPart)event.getPart());
-                }  
-             @Override
-                public void handleConnectionEndpointEvent(final DiagramConnectionEvent event)
-                {
-                    notifyConnectionEndpointUpdate((DiagramConnectionPart)event.getPart());
-                }            
-            
-        };
+        this.connPartListener = new ConnectionPartListener();
         
         this.templateListeners = new CopyOnWriteArraySet<Listener>();
         
