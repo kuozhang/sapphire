@@ -857,20 +857,23 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     {
         super.handleListElementChangedEvent( event );
         
-        this.table.getDisplay().asyncExec
-        (
-            new Runnable()
-            {
-                public void run()
+        if( ! this.table.isDisposed() )
+        {
+            this.table.getDisplay().asyncExec
+            (
+                new Runnable()
                 {
-                    update( event.getModelElement() );
-                    
-                    // Cause the overall list editor decorator to be updated.
-                    
-                    DefaultListPropertyEditorRenderer.this.binding.updateTargetAttributes();
+                    public void run()
+                    {
+                        update( event.getModelElement() );
+                        
+                        // Cause the overall list editor decorator to be updated.
+                        
+                        DefaultListPropertyEditorRenderer.this.binding.updateTargetAttributes();
+                    }
                 }
-            }
-        );
+            );
+        }
     }
     
     protected void handleTableFocusGainedEvent()
