@@ -73,13 +73,17 @@ public class SapphireDirectEditNodeFeature extends AbstractDirectEditingFeature
         PictogramElement pe = context.getPictogramElement();
                 
         if (pe.eContainer() instanceof Shape)
-        {
+        {        	
             DiagramNodePart nodePart = (DiagramNodePart)getBusinessObjectForPictogramElement(pe);
-            nodePart.setLabel(value);
+            
             IModelElement nodeElement = nodePart.getLocalModelElement();
-            Shape nodeShape = (Shape)pe.eContainer();
-
-            // nodePart.setLabel() could trigger the deleting of the node being edited
+            Shape nodeShape = (Shape)(pe.eContainer());
+            if (nodeShape != null)
+            {
+            	removeConnectionPartsListers(nodeShape, nodeElement);
+            }
+            nodePart.setLabel(value);
+            
             if (nodeShape != null)
             {
 	            // go through all the connections associated with this bo and update them
@@ -97,8 +101,6 @@ public class SapphireDirectEditNodeFeature extends AbstractDirectEditingFeature
 	                        IModelElement endpoint2 = connectionPart.getEndpoint2();
 	                        if (endpoint1.equals(nodeElement) || endpoint2.equals(nodeElement))
 	                        {
-	                            connectionPart.removeModelListener();
-	                            connectionPart.getDiagramConnectionTemplate().removeModelListener();
 	                            if (endpoint1.equals(nodeElement))
 	                            {
 	                                connectionPart.resetEndpoint1();
@@ -106,14 +108,13 @@ public class SapphireDirectEditNodeFeature extends AbstractDirectEditingFeature
 	                            else if (endpoint2.equals(nodeElement))
 	                            {
 	                                connectionPart.resetEndpoint2();
-	                            }
-	                            connectionPart.addModelListener();
-	                            connectionPart.getDiagramConnectionTemplate().addModelListener();
+	                            }	                            
 	                        }
 	                    }
 	                }
 	            }
-            }
+	            addConnectionPartsListers(nodeShape, nodeElement);
+            }            
         }
                 
         // Explicitly update the shape to display the new value in the diagram
@@ -126,4 +127,51 @@ public class SapphireDirectEditNodeFeature extends AbstractDirectEditingFeature
 
     }
 
+    private void removeConnectionPartsListers(Shape nodeShape, IModelElement nodeElement)
+    {
+        for (Iterator<Anchor> iter = nodeShape.getAnchors().iterator(); iter.hasNext();) 
+        {
+            Anchor anchor = iter.next();
+            for (Iterator<Connection> iterator = Graphiti.getPeService().getAllConnections(anchor).iterator(); iterator.hasNext();) 
+            {
+                Connection connection = iterator.next();
+                Object bo = getBusinessObjectForPictogramElement(connection);
+                if (bo instanceof DiagramConnectionPart && !(bo instanceof DiagramImplicitConnectionPart))
+                {
+                    DiagramConnectionPart connectionPart = (DiagramConnectionPart)bo;
+                    IModelElement endpoint1 = connectionPart.getEndpoint1();
+                    IModelElement endpoint2 = connectionPart.getEndpoint2();
+                    if (endpoint1.equals(nodeElement) || endpoint2.equals(nodeElement))
+                    {
+                        connectionPart.removeModelListener();
+                        connectionPart.getDiagramConnectionTemplate().removeModelListener();
+                    }
+                }
+            }
+        }
+    }
+
+    private void addConnectionPartsListers(Shape nodeShape, IModelElement nodeElement)
+    {
+        for (Iterator<Anchor> iter = nodeShape.getAnchors().iterator(); iter.hasNext();) 
+        {
+            Anchor anchor = iter.next();
+            for (Iterator<Connection> iterator = Graphiti.getPeService().getAllConnections(anchor).iterator(); iterator.hasNext();) 
+            {
+                Connection connection = iterator.next();
+                Object bo = getBusinessObjectForPictogramElement(connection);
+                if (bo instanceof DiagramConnectionPart && !(bo instanceof DiagramImplicitConnectionPart))
+                {
+                    DiagramConnectionPart connectionPart = (DiagramConnectionPart)bo;
+                    IModelElement endpoint1 = connectionPart.getEndpoint1();
+                    IModelElement endpoint2 = connectionPart.getEndpoint2();
+                    if (endpoint1.equals(nodeElement) || endpoint2.equals(nodeElement))
+                    {
+                        connectionPart.addModelListener();
+                        connectionPart.getDiagramConnectionTemplate().addModelListener();
+                    }
+                }
+            }
+        }
+    }
 }

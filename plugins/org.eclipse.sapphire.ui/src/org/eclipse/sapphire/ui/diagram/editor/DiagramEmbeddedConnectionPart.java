@@ -15,6 +15,7 @@
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
@@ -31,6 +32,7 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
 {
     private IModelElement srcNodeModel;
     private IModelElement endpointModel;
+    private ModelElementListener endpointModelListener;
     private ModelPath endpointPath;
     private FunctionResult endpointFunctionResult;
     private IDiagramConnectionEndpointBindingDef endpointDef;
@@ -46,6 +48,15 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
     protected void init()
     {   
         initLabelId();
+        this.endpointModelListener = new ModelElementListener()
+        {
+            @Override
+            public void propertyChanged( final ModelPropertyChangeEvent event )
+            {
+            	handlEndpointModelPropertyChange( event );
+            }
+        };
+        
         this.endpointDef = this.bindingDef.getEndpoint2().element();
         this.endpointModel = resolveEndpoint(this.modelElement, this.endpointPath);
         if (this.endpointModel != null)
@@ -88,6 +99,20 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
         return this.endpointModel;
     }
 
+    @Override
+    protected void handlEndpointModelPropertyChange(final ModelPropertyChangeEvent event)
+    {
+    	if (this.endpointModel == null || event.getModelElement() == this.endpointModel)
+    	{
+    		IModelElement newTargetModel = resolveEndpoint(this.modelElement, this.endpointPath);
+    		if (newTargetModel != this.endpointModel)
+    		{
+    			handleEndpointChange();
+    			notifyConnectionEndpointUpdate(); 
+    		}    		
+    	}
+    }
+    
     @Override
     public void resetEndpoint1()
     {
@@ -140,6 +165,10 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
         }
         this.modelElement.addListener(this.modelPropertyListener, 
                                     this.endpointDef.getProperty().getContent());
+        if (this.endpointModel != null)
+        {
+        	this.endpointModel.addListener(this.endpointModelListener);
+        }
     }
     
     @Override
@@ -152,6 +181,10 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
         }
         this.modelElement.removeListener(this.modelPropertyListener, 
                                     this.endpointDef.getProperty().getContent());
+        if (this.endpointModel != null)
+        {
+        	this.endpointModel.removeListener(this.endpointModelListener);
+        }
     }
 
     @Override
