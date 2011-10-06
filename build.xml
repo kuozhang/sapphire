@@ -20,7 +20,8 @@
     *************************************************************************************************
   -->
 
-
+  <property environment="env"/>
+  
   <import file="releng/ant-library/library.xml"/>
   
   <property name="Signing.Library" value="sign-local.xml"/>
@@ -782,12 +783,63 @@
   </macrodef>
 
 
+  <macrodef name="init-download-from-eclipse">
+    <sequential>
+    
+      <!-- Set "downloads" property or SAPPHIRE_DOWNLOADS environment variable to share downloads folder. -->
+         
+      <if>
+        <not><isset property="downloads"/></not>
+        <then>
+          <if>
+            <isset property="env.SAPPHIRE_DOWNLOADS"/>
+            <then>
+              <var name="downloads" value="${env.SAPPHIRE_DOWNLOADS}"/>
+            </then>
+            <else>
+              <var name="downloads" value="${basedir}/downloads"/>
+            </else>
+          </if>
+        </then>
+      </if>
+      
+      <!-- Set "ignore.checksum.issues" property or SAPPHIRE_IGNORE_CHECKSUM_ISSUES environment variable to 
+           not fail build if eclipse.org download fails checksum verification. -->
+         
+      <if>
+        <not><isset property="ignore.checksum.issues"/></not>
+        <then>
+          <if>
+            <isset property="env.SAPPHIRE_IGNORE_CHECKSUM_ISSUES"/>
+            <then>
+              <var name="ignore.checksum.issues" value="${env.SAPPHIRE_IGNORE_CHECKSUM_ISSUES}"/>
+            </then>
+            <else>
+              <var name="ignore.checksum.issues" value="false"/>
+            </else>
+          </if>
+        </then>
+      </if>
+      
+      <!-- Lookup the set of downloads with known checksum issues that should be ignored. -->
+      
+      <if>
+        <not><isset property="ignore.checksum.issues.list"/></not>
+        <then>
+          <loadfile srcfile="${basedir}/releng/ignore-checksum-issues.txt" property="ignore.checksum.issues.list"/>
+        </then>
+      </if>
+
+    </sequential>
+  </macrodef>
+
+
   <macrodef name="download-from-eclipse">
     <attribute name="file"/>
     <attribute name="property"/>
     <sequential>
     
-      <property name="downloads" value="${basedir}/downloads"/>   <!-- Override to share downloads. -->
+      <init-download-from-eclipse/>
       
       <mkdir dir="${downloads}"/>
       
@@ -821,12 +873,24 @@
                   <!-- Verify the local file againsted the expected checksum. -->
                   
                   <checksum file="${downloads}/${.url.checksum}" property=".content.checksum.actual"/>
-                  
+                      
                   <if>
                     <equals arg1="${.content.checksum}" arg2="${.content.checksum.actual}"/>
                     <then>
                       <var name=".content.valid" value="true"/>
                     </then>
+                    <else>
+                      <echo message="Checksums did not match. Expected ${.content.checksum}. Got ${.content.checksum.actual}."/>
+                      <if>
+                        <or>
+                          <istrue value="${ignore.checksum.issues}"/>
+                          <contains string="${ignore.checksum.issues.list}" substring="@{file}"/>
+                        </or>
+                        <then>
+                          <var name=".content.valid" value="true"/>
+                        </then>
+                      </if>
+                    </else>
                   </if>
                   
                   <var name=".content.checksum" unset="true"/>
@@ -853,6 +917,8 @@
           <var name="@{property}" value="${downloads}/${.url.checksum}"/>
           <var name=".url.checksum" unset="true"/>
           <var name=".content.valid" unset="true"/>
+          <var name=".file" unset="true"/>
+          <var name=".archived" unset="true"/>
         </then>
         <else>
           <fail message="Failed to download @{file} from Eclipse Foundation."/>
@@ -863,6 +929,29 @@
   </macrodef>
   
   
+  <macrodef name="wipe-download-from-eclipse">
+    <attribute name="file"/>
+    <sequential>
+    
+      <init-download-from-eclipse/>
+      
+      <echo message="@{file}" file="${downloads}/url-checksum.txt"/>
+      <checksum file="${downloads}/url-checksum.txt" property=".url.checksum"/>
+      <delete file="${downloads}/url-checksum.txt"/>
+      
+      <delete file="${downloads}/${.url.checksum}"/>
+      
+    </sequential>
+  </macrodef>
+
+
+  <target name="wipe-download-from-eclipse" depends="init">
+  
+    <wipe-download-from-eclipse file="${file}"/>
+
+  </target>
+
+
   <macrodef name="with-download-from-eclipse">
     <attribute name="file"/>
     <element name="body" implicit="yes"/>
