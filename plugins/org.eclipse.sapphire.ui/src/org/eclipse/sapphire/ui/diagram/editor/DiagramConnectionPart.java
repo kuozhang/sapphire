@@ -22,6 +22,7 @@ import java.util.Set;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
@@ -59,12 +60,13 @@ public class DiagramConnectionPart
 	protected IDiagramExplicitConnectionBindingDef bindingDef;
 	protected IDiagramConnectionDef definition;
 	protected IModelElement modelElement;
-	protected ModelPath endpoint1Path;
-	protected ModelPath endpoint2Path;
+	private ModelPath endpoint1Path;
+	private ModelPath endpoint2Path;
 	private IDiagramConnectionEndpointBindingDef endpoint1Def;
 	private IDiagramConnectionEndpointBindingDef endpoint2Def;
 	private IModelElement srcNodeModel;
 	private IModelElement targetNodeModel;
+	private ModelElementListener endpointModelListener;
 	private FunctionResult endpoint1FunctionResult;
 	private FunctionResult endpoint2FunctionResult;
 	private ModelProperty endpoint1Property;
@@ -136,6 +138,15 @@ public class DiagramConnectionPart
     {
         initLabelId();
         
+        this.endpointModelListener = new ModelElementListener()
+        {
+            @Override
+            public void propertyChanged( final ModelPropertyChangeEvent event )
+            {
+            	handlEndpointModelPropertyChange( event );
+            }
+        };
+        
         this.endpoint1Def = this.bindingDef.getEndpoint1().element();        
         this.srcNodeModel = resolveEndpoint(this.modelElement, this.endpoint1Path);
         if (this.srcNodeModel != null)
@@ -152,7 +163,7 @@ public class DiagramConnectionPart
                     {
                     }
                 }
-            );
+            );            
         }
         
         this.endpoint2Def = this.bindingDef.getEndpoint2().element();
@@ -436,12 +447,56 @@ public class DiagramConnectionPart
     {
         this.modelElement.addListener(this.modelPropertyListener, this.endpoint1Path);
         this.modelElement.addListener(this.modelPropertyListener, this.endpoint2Path);
+        if (this.srcNodeModel != null)
+        {
+        	this.srcNodeModel.addListener(this.endpointModelListener);
+        }
+        if (this.targetNodeModel != null)
+        {
+        	this.targetNodeModel.addListener(this.endpointModelListener);
+        }
     }
     
     public void removeModelListener()
     {
         this.modelElement.removeListener(this.modelPropertyListener, this.endpoint1Path);
         this.modelElement.removeListener(this.modelPropertyListener, this.endpoint2Path);
+        if (this.srcNodeModel != null)
+        {
+        	this.srcNodeModel.removeListener(this.endpointModelListener);
+        }
+        if (this.targetNodeModel != null)
+        {
+        	this.targetNodeModel.removeListener(this.endpointModelListener);
+        }
+    }
+    
+    protected void handlEndpointModelPropertyChange(final ModelPropertyChangeEvent event)
+    {
+    	boolean endpointChanged = false;
+    	boolean sourceChange = false;
+    	if (this.srcNodeModel == null || event.getModelElement() == this.srcNodeModel)
+    	{
+    		IModelElement newSrcModel = resolveEndpoint(this.modelElement, this.endpoint1Path);
+    		if (newSrcModel != this.srcNodeModel)
+    		{
+    			endpointChanged = true;
+    			sourceChange = true;
+    		}
+    	}
+    	else if (this.targetNodeModel == null || event.getModelElement() == this.targetNodeModel)
+    	{
+    		IModelElement newTargetModel = resolveEndpoint(this.modelElement, this.endpoint2Path);
+    		if (newTargetModel != this.targetNodeModel)
+    		{
+    			endpointChanged = true;
+    		}    		
+    	}
+    	if (endpointChanged)
+    	{
+            handleEndpointChange(sourceChange);
+            notifyConnectionEndpointUpdate();    		
+    	}
     }
     
     protected void handleModelPropertyChange(final ModelPropertyChangeEvent event)
