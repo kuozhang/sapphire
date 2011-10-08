@@ -70,7 +70,16 @@ public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
                 }
                 else if( project.isAccessible() )
                 {
-                    element.refresh( property );
+                    final Thread thread = new Thread()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            element.refresh( property );
+                        }
+                    };
+                    
+                    thread.start();
                 }
             }
         };
