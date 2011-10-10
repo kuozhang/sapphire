@@ -1,12 +1,13 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation
+ *    Rob Cernich - [360369] Parameters not passed through to service
  ******************************************************************************/
 
 package org.eclipse.sapphire.services.internal;
@@ -100,7 +101,7 @@ public abstract class AnnotationsAwareServiceContext extends ServiceContext
             }
             else if( paramsInAnnotation.length == 1 )
             {
-                params = Collections.emptyMap();
+                params = Collections.singletonMap( paramsInAnnotation[ 0 ].name(), paramsInAnnotation[ 0 ].value() );
             }
             else
             {
