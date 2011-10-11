@@ -33,6 +33,7 @@
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
     <li><a href="#XmlDocumentType">@XmlDocumentType Annotation</a></li>
+    <li><a href="#Copy">Model Copy Method</a></li>
   </ol>
 </ol>
 
@@ -112,6 +113,33 @@ public interface Root extends IModelElement
 &lt;root>
     ...
 &lt;/root></code></pre>
+
+
+<h2><a name="Copy">Model Copy Method</a></h2>
+
+<p>Easily copy content of model elements using the new copy method. Copy a few model elements or the
+entire model. Even copy across different resource stores.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, the copy method is used to duplicate the entities held in a list
+property.</p>
+
+<pre class="source-code"><code>ModelElementList&lt;Entity> entities = model.getEntities();
+
+for( int i = 0, n = entities.size; i < n; i++ )
+{
+    final Entity original = entities.get( i );
+    final Entity duplicate = entities.addNewElement();
+    duplicate.copy( original );
+}</code></pre>
+
+<p style="margin-left: 20px;">Here, an entire model is copied to a memory resource. Perhaps the original model
+instance was loaded from disk via an XML resource.</p>
+
+<pre class="source-code"><code>Model original = ...
+Model duplicate = Model.TYPE.instantiate();
+duplicate.copy( original );</code></pre>
 
 
 <div class="copyright">Copyright (c) 2011 Oracle and Others<br/>

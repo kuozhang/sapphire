@@ -488,6 +488,62 @@ public abstract class ModelElement
         // The default implementation does not do anything.
     }
     
+    public final void copy( final IModelElement element )
+    {
+        if( this.type != element.getModelElementType() )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        for( ModelProperty property : this.type.getProperties() )
+        {
+            if( property instanceof ValueProperty )
+            {
+                final ValueProperty prop = (ValueProperty) property;
+                write( prop, element.read( prop ).getText( false ) );
+            }
+            else if( property instanceof ImpliedElementProperty )
+            {
+                final ImpliedElementProperty prop = (ImpliedElementProperty) property;
+                read( prop ).copy( element.read( prop ) );
+            }
+            else if( property instanceof ElementProperty )
+            {
+                final ElementProperty prop = (ElementProperty) property;
+                final IModelElement elementChild = element.read( prop ).element();
+                final ModelElementHandle<?> handle = read( prop );
+                
+                if( elementChild == null )
+                {
+                    handle.remove();
+                }
+                else
+                {
+                    final IModelElement thisChild = handle.element( true, elementChild.getModelElementType() );
+                    thisChild.copy( elementChild );
+                }
+            }
+            else if( property instanceof ListProperty )
+            {
+                final ListProperty prop = (ListProperty) property;
+                final ModelElementList<?> list = read( prop );
+                
+                list.clear();
+                
+                for( final IModelElement elementChild : element.read( prop ) )
+                {
+                    final IModelElement thisChild = list.addNewElement( elementChild.getModelElementType() );
+                    thisChild.copy( elementChild );
+                }
+            }
+            else if( property instanceof TransientProperty )
+            {
+                final TransientProperty prop = (TransientProperty) property;
+                write( prop, element.read( prop ).content() );
+            }
+        }
+    }
+    
     public final <S extends Service> S service( final Class<S> serviceType )
     {
         final List<S> services = services( serviceType );

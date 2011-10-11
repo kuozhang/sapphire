@@ -21,10 +21,7 @@ import org.eclipse.sapphire.services.Service;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface IModelElement
-
-    extends IModelParticle
-    
+public interface IModelElement extends IModelParticle
 {
     ModelElementType getModelElementType();
     ModelProperty getParentProperty();
@@ -121,6 +118,18 @@ public interface IModelElement
     
     void refresh( boolean force,
                   boolean deep );
+    
+    /**
+     * Copies the values of the provided element's properties to this element. This
+     * operation overwrites any previous values held by this element. The type of the
+     * provided element must be identical to the type of this element. 
+     * 
+     * @param element the element to copy
+     * @throws IllegalArgumentException if the type of the provided element does not
+     *   match the type of this element
+     */
+    
+    void copy( IModelElement element );
 
     /**
      * Retrieves the specified service for this model element. Not all services will 
