@@ -866,9 +866,17 @@ Fragment-Host: @{Bundle}
             <then>
               <for list="${.p2.repositories}" param="repo">
                 <sequential>
-                  <with-download-from-eclipse file="@{repo}">
-                    <load-repository-archive file="${.download}" property="repositories.@{name}"/>
-                  </with-download-from-eclipse>
+                  <if>
+                    <matches pattern="http.*" string="@{repo}"/>
+                    <then>
+                      <load-repository url="@{repo}" property="repositories.@{name}"/>
+                    </then>
+                    <else>
+                      <with-download-from-eclipse file="@{repo}">
+                        <load-repository-archive file="${.download}" property="repositories.@{name}"/>
+                      </with-download-from-eclipse>
+                    </else>
+                  </if>
                 </sequential>
               </for>
             </then>
