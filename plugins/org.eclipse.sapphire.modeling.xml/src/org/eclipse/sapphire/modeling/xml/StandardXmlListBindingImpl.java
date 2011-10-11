@@ -7,13 +7,13 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Rob Cernich - [360371] Allow subclasses to override default element naming in XML list binding
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml;
 
 import static org.eclipse.sapphire.modeling.util.MiscUtil.indexOf;
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.contains;
-import static org.eclipse.sapphire.modeling.xml.XmlUtil.createDefaultElementName;
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.createQualifiedName;
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.equal;
 
@@ -106,8 +106,7 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
             
             for( int i = 0; i < this.modelElementTypes.length; i++ )
             {
-                final String xmlElementName = createDefaultElementName( this.modelElementTypes[ i ] );
-                this.xmlElementNames[ i ] = createQualifiedName( xmlElementName, xmlNamespaceResolver );
+                this.xmlElementNames[ i ] = createDefaultElementName( this.modelElementTypes[ i ], xmlNamespaceResolver );
             }
         }
         else
@@ -137,17 +136,32 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
 
                         this.xmlElementNames[ i ] = createQualifiedName( mappingElementName, xmlNamespaceResolver );
                     }
-                    
-                    if( this.xmlElementNames[ i ] == null )
-                    {
-                        final String xmlElementName = createDefaultElementName( type );
-                        this.xmlElementNames[ i ] = createQualifiedName( xmlElementName, xmlNamespaceResolver );
-                    }
+                }
+                
+                if( this.xmlElementNames[ i ] == null )
+                {
+                    this.xmlElementNames[ i ] = createDefaultElementName( type, xmlNamespaceResolver );
                 }
             }
         }
     }
     
+    /**
+     * Creates the XML element name for a type that does not have an explicit mapping. This method can be
+     * overridden to provide custom behavior.
+     * 
+     * @param type the model element type
+     * @param xmlNamespaceResolver the resolver of XML namespace suffixes to declared namespaces
+     * @return the qualified XML element name for the given model element type
+     */
+    
+    protected QName createDefaultElementName( final ModelElementType type, 
+                                              final XmlNamespaceResolver xmlNamespaceResolver )
+    {
+        final String xmlElementName = XmlUtil.createDefaultElementName( type );
+        return createQualifiedName( xmlElementName, xmlNamespaceResolver );
+    }
+
     @Override
     public ModelElementType type( final Resource resource )
     {
