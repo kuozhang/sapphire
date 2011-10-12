@@ -127,6 +127,11 @@ public interface IContact extends IModelElement
     @Label( standard = "assistant" )
     @XmlBinding( path = "assistant" )
     
+    @Documentation
+    (
+        content = "The individual to whom the contact delegates certain tasks."
+    )
+    
     ElementProperty PROP_ASSISTANT = new ElementProperty( TYPE, "Assistant" );
 
     ModelElementHandle<IAssistant> getAssistant();
@@ -165,6 +170,11 @@ public interface IContact extends IModelElement
             @XmlElementBinding.Mapping( element = "student", type = IStudentOccupation.class ),
             @XmlElementBinding.Mapping( element = "homemaker", type = IHomemakerOccupation.class )
         }
+    )
+    
+    @Documentation
+    (
+        content = "The contact's primary occupation, such as a job."
     )
     
     ElementProperty PROP_PRIMARY_OCCUPATION = new ElementProperty( TYPE, "PrimaryOccupation" );

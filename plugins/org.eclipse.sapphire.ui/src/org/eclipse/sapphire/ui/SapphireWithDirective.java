@@ -218,6 +218,7 @@ public final class SapphireWithDirective extends SapphirePageBook
                         context.adapt( masterCheckBox );
                         decorator.addEditorControl( masterCheckBox );
                         actionPresentationKeyboard.attach( masterCheckBox );
+                        context.setHelp( masterCheckBox, element, property );
             
                         modelPropertyListener = new ModelPropertyListener()
                         {
@@ -228,11 +229,6 @@ public final class SapphireWithDirective extends SapphirePageBook
                                 
                                 masterCheckBox.setSelection( subModelElement != null );
                                 masterCheckBox.setEnabled( element.isPropertyEnabled( property ) );
-                                
-                                if( subModelElement != null )
-                                {
-                                    context.setHelp( masterCheckBox, subModelElement, property );
-                                }
                             }
                         };
                         
@@ -282,6 +278,7 @@ public final class SapphireWithDirective extends SapphirePageBook
                         final Button noneButton = radioButtonsGroup.addRadioButton( Resources.noneSelection );
                         decorator.addEditorControl( noneButton );
                         actionPresentationKeyboard.attach( noneButton );
+                        context.setHelp( noneButton, element, property );
                         
                         final Map<ModelElementType,Button> typeToButton = new HashMap<ModelElementType,Button>();
                         final Map<Button,ModelElementType> buttonToType = new HashMap<Button,ModelElementType>();
@@ -294,6 +291,7 @@ public final class SapphireWithDirective extends SapphirePageBook
                             buttonToType.put( button, type );
                             decorator.addEditorControl( button );
                             actionPresentationKeyboard.attach( button );
+                            context.setHelp( button, element, property );
                         }
                         
                         modelPropertyListener = new ModelPropertyListener()
@@ -368,6 +366,7 @@ public final class SapphireWithDirective extends SapphirePageBook
                         context.adapt( combo );
                         decorator.addEditorControl( combo );
                         actionPresentationKeyboard.attach( combo );
+                        context.setHelp( combo, element, property );
                         
                         combo.add( Resources.noneSelection );
                         
