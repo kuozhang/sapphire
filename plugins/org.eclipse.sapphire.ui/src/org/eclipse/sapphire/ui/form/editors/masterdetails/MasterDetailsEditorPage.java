@@ -543,9 +543,10 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
         }
         else if( control instanceof Button )
         {
-            int style = control.getStyle();
+            final Button button = (Button) control;
+            final int style = button.getStyle();
             
-            if( ( style & SWT.CHECK ) != 0 || (style & SWT.RADIO ) != 0 )
+            if( ( style & SWT.CHECK ) != 0 || ( ( style & SWT.RADIO ) != 0 && button.getSelection() == true ) )
             {
                 return control;
             }
