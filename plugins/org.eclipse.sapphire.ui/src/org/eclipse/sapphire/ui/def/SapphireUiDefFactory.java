@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.def;
 
 import java.net.URL;
 
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.ClassLocator;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ResourceLocator;
@@ -92,7 +93,7 @@ public final class SapphireUiDefFactory
     {
         ISapphireUiDef model;
         
-        if( writable )
+        if( writable || Sapphire.isDevMode() )
         {
             model = ISapphireUiDef.TYPE.instantiate( new RootXmlResource( resourceStore ) );
         }
