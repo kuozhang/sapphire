@@ -28,7 +28,7 @@
     </license>
 
     <requires>
-        <import feature="org.eclipse.sapphire.modeling" version="0.4.0"/>
+        <import feature="org.eclipse.sapphire" version="0.4.0"/>
         <import feature="org.eclipse.sapphire.modeling.xml" version="0.4.0"/>
         <import feature="org.eclipse.sapphire.java" version="0.4.0"/>
         <import feature="org.eclipse.sapphire.osgi" version="0.4.0"/>
