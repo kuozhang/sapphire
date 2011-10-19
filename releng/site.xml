@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.eclipse.sapphire.modeling_##version##.jar" id="org.eclipse.sapphire.modeling" version="##version##">
+   <feature url="features/org.eclipse.sapphire_##version##.jar" id="org.eclipse.sapphire" version="##version##">
       <category name="org.eclipse.sapphire"/>
    </feature>
    <feature url="features/org.eclipse.sapphire.modeling.xml_##version##.jar" id="org.eclipse.sapphire.modeling.xml" version="##version##">
