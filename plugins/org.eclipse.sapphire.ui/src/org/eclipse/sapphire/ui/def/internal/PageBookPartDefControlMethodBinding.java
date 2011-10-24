@@ -15,7 +15,7 @@ import org.eclipse.sapphire.modeling.xml.StandardXmlNamespaceResolver;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlPath;
 import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
-import org.eclipse.sapphire.ui.def.ISapphirePageBookExtDef;
+import org.eclipse.sapphire.ui.def.PageBookExtDef;
 import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
 
 /**
@@ -27,7 +27,7 @@ public final class PageBookPartDefControlMethodBinding
     extends XmlValueBindingImpl
 
 {
-    private static final StandardXmlNamespaceResolver NAMESPACE_RESOLVER = new StandardXmlNamespaceResolver( ISapphirePageBookExtDef.TYPE );
+    private static final StandardXmlNamespaceResolver NAMESPACE_RESOLVER = new StandardXmlNamespaceResolver( PageBookExtDef.TYPE );
     private static final XmlPath PATH_ENUM_CONTROLLER = new XmlPath( "enum-controller", NAMESPACE_RESOLVER );
     private static final XmlPath PATH_LIST_SELECTION_CONTROLLER = new XmlPath( "list-selection-controller", NAMESPACE_RESOLVER );
     

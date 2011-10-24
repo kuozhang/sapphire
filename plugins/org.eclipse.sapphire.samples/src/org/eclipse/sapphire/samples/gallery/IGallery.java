@@ -254,4 +254,13 @@ public interface IGallery
     
     IAncestorAccessGalleryLevel1 getAncestorAccessGallery();
     
+    // *** SplitFormGallery ***
+    
+    @Type( base = SplitFormGallery.class )
+    @XmlBinding( path = "split-form" )
+
+    ImpliedElementProperty PROP_SPLIT_FORM_GALLERY = new ImpliedElementProperty( TYPE, "SplitFormGallery" );
+    
+    SplitFormGallery getSplitFormGallery();
+    
 }

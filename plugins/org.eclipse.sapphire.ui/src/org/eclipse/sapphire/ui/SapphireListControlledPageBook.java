@@ -19,7 +19,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.util.MutableReference;
-import org.eclipse.sapphire.ui.def.ISapphirePageBookExtDef;
+import org.eclipse.sapphire.ui.def.PageBookExtDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.renderers.swt.DefaultListPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.swt.SapphireControl;
@@ -34,7 +34,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireListControlledPageBook extends SapphirePageBook
+public final class SapphireListControlledPageBook extends PageBookPart
 {
     @Override
     protected Object parsePageKey( final String pageKeyString )
@@ -50,7 +50,7 @@ public final class SapphireListControlledPageBook extends SapphirePageBook
         super.render( context );
         
         final IModelElement element = getModelElement();
-        final ListProperty property = (ListProperty) resolve( ( (ISapphirePageBookExtDef) this.definition ).getControlProperty().getContent() );
+        final ListProperty property = (ListProperty) resolve( ( (PageBookExtDef) this.definition ).getControlProperty().getContent() );
         
         final Table table = findControlForProperty( context.getComposite(), element, property, Table.class );
         

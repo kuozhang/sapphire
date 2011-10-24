@@ -121,13 +121,12 @@ public class SapphireComposite
             scrolledComposite = null;
         }
         
-        final boolean expandVertically 
-            = this.definition.getHint( ISapphirePartDef.HINT_EXPAND_VERTICALLY, false );
+        final boolean scaleVertically = def.getScaleVertically().getContent(); 
         
         final int width = getWidth( -1 );
         final int height = getHeight( -1 );
         
-        final GridData gd = gdwhint( gdhhint( gdhspan( ( expandVertically ? gdfill() : gdhfill() ), ( indent ? 1 : 2 ) ), height ), width );
+        final GridData gd = gdwhint( gdhhint( gdhspan( ( scaleVertically ? gdfill() : gdhfill() ), ( indent ? 1 : 2 ) ), height ), width );
         
         final int marginLeft = def.getMarginLeft().getContent();
         final int marginRight = def.getMarginRight().getContent();

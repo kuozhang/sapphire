@@ -351,7 +351,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
     }
 
     @Override
-    protected boolean canExpandVertically()
+    protected boolean canScaleVertically()
     {
         return true;
     }

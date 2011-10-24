@@ -30,6 +30,10 @@
     <li><a href="#InitialValueService">InitialValueService and @InitialValue</a></li>
     <li><a href="#PossibleTypesService">PossibleTypesService</a></li>
   </ol>
+  <li><a href="#UI">User Interface</a></li>
+  <ol type="A">
+    <li><a href="#SplitForm">Split Form</a></li>
+  </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
     <li><a href="#XmlDocumentType">@XmlDocumentType Annotation</a></li>
@@ -89,6 +93,83 @@ types needs to vary due to runtime conditions, a custom PossibleTypesService imp
 be supplied.</p>
 
 <p><a href="../../services/index.html#PossibleTypesService">See Documentation</a></p>
+
+
+<h2><a name="UI"><a name="SplitForm">Split Form</a></a></h2>
+
+<p>Use available screen real estate more efficiently by splitting a form into two or more sections. The
+sections can be arranged vertically or horizontally. The developer can specify the desired initial distribution of
+available space among the sections and the provided sashes allow the user to adjust the space allocation
+as necessary at runtime.</p> 
+
+<p>A split form can nest inside another split form. This is particularly useful when the two split forms 
+use different split orientation.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, a dialog is split vertically into two sections. The top section
+holds a list property editor while the bottom section holds the editor for the description property linked to
+the selection in the list property editor. The split form allows the user to control the amount of space allocated
+to the list property editor versus the description text field.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;dialog>
+    &lt;id>SplitFormDialog&lt;/id>
+    &lt;label>split form dialog&lt;/label>
+    &lt;width>600&lt;/width>
+    &lt;height>400&lt;/height>
+    &lt;scale-vertically>true&lt;/scale-vertically>
+    &lt;content></font>
+        &lt;split-form>
+            &lt;orientation>vertical&lt;/orientation>
+            &lt;scale-vertically>true&lt;/scale-vertically>
+            &lt;section>
+                &lt;weight>7&lt;/weight>
+                &lt;content><font color="#888888">
+                    &lt;property-editor>
+                        &lt;property>List1&lt;/property>
+                        &lt;span>true&lt;/span>
+                        &lt;show-label>false&lt;/show-label>
+                        &lt;child-property>Entity&lt;/child-property>
+                        &lt;child-property>Size&lt;/child-property>
+                        &lt;scale-vertically>true&lt;/scale-vertically>
+                    &lt;/property-editor></font>
+                &lt;/content>
+            &lt;/section>
+            &lt;section>
+                &lt;weight>3&lt;/weight>
+                &lt;content>
+                    <font color="#888888">&lt;separator>
+                        &lt;label>description&lt;/label>
+                    &lt;/separator>
+                    &lt;switching-panel>
+                        &lt;list-selection-controller>
+                            &lt;property>List1&lt;/property>
+                        &lt;/list-selection-controller>
+                        &lt;default-panel>
+                            &lt;content>
+                                &lt;label>Select an entry above to view or edit description.&lt;/label>
+                            &lt;/content>
+                        &lt;/default-panel>
+                        &lt;panel>
+                            &lt;key>SplitFormGalleryListEntry&lt;/key>
+                            &lt;content>
+                                &lt;property-editor>
+                                    &lt;property>Description&lt;/property>
+                                    &lt;span>true&lt;/span>
+                                    &lt;show-label>false&lt;/show-label>
+                                    &lt;scale-vertically>true&lt;/scale-vertically>
+                                &lt;/property-editor>
+                            &lt;/content>
+                        &lt;/panel>
+                        &lt;scale-vertically>true&lt;/scale-vertically>
+                    &lt;/switching-panel></font>
+                &lt;/content>
+            &lt;/section>
+        &lt;/split-form>
+    <font color="#888888">&lt;/content>
+&lt;/dialog></font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/SplitForm.png"/></p>
 
 
 <h2><a name="Miscellaneous"><a name="XmlDocumentType">@XmlDocumentType Annotation</a></a></h2>

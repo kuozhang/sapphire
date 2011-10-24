@@ -13,7 +13,6 @@ package org.eclipse.sapphire.ui.renderers.swt;
 
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_AUX_TEXT;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_AUX_TEXT_PROVIDER;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_EXPAND_VERTICALLY;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
@@ -133,7 +132,7 @@ public abstract class PropertyEditorRenderer
         return this.actionPresentationManager;
     }
     
-    protected boolean canExpandVertically()
+    protected boolean canScaleVertically()
     {
         return false;
     }
@@ -305,10 +304,10 @@ public abstract class PropertyEditorRenderer
         
         GridData gd;
         
-        if( canExpandVertically() )
+        if( canScaleVertically() )
         {
-            final boolean expandVertically = this.part.getRenderingHint( HINT_EXPAND_VERTICALLY, false );
-            gd = gdhhint( ( expandVertically ? gdfill() : gdhfill() ), this.part.getHeight( 150 ) );
+            final boolean scaleVertically = this.part.getScaleVertically();
+            gd = gdhhint( ( scaleVertically ? gdfill() : gdhfill() ), this.part.getHeight( 150 ) );
         }
         else
         {

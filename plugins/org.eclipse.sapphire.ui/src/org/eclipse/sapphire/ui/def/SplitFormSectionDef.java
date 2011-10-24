@@ -14,48 +14,36 @@ package org.eclipse.sapphire.ui.def;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Required;
-import org.eclipse.sapphire.modeling.localization.Localizable;
+import org.eclipse.sapphire.modeling.annotations.NumericRange;
+import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "static text field" )
+@Label( standard = "split form section" )
 @GenerateImpl
 
-public interface ISapphireStaticTextFieldDef
-
-    extends FormPartDef
-    
+public interface SplitFormSectionDef extends FormDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireStaticTextFieldDef.class );
- 
-    // *** Label ***
+    ModelElementType TYPE = new ModelElementType( SplitFormSectionDef.class );
     
-    @Label( standard = "label" )
-    @Required
-    @Localizable
-    @XmlBinding( path = "label" )
+    // *** Weight ***
     
-    ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
+    @Type( base = Integer.class )
+    @Label( standard = "weight" )
+    @DefaultValue( text = "1" )
+    @NumericRange( min = "1" )
+    @XmlBinding( path = "weight" )
     
-    Value<String> getLabel();
-    void setLabel( String label );
+    ValueProperty PROP_WEIGHT = new ValueProperty( TYPE, "Weight" );
     
-    // *** Text ***
-    
-    @Label( standard = "text" )
-    @Required
-    @Localizable
-    @XmlBinding( path = "text" )
-    
-    ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
-    
-    Value<String> getText();
-    void setText( String text );
+    Value<Integer> getWeight();
+    void setWeight( String value );
+    void setWeight( Integer value );
     
 }

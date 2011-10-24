@@ -319,7 +319,7 @@ public class DefaultValuePropertyEditorRenderer
     }
 
     @Override
-    protected boolean canExpandVertically()
+    protected boolean canScaleVertically()
     {
         return getProperty().hasAnnotation( LongString.class );
     }

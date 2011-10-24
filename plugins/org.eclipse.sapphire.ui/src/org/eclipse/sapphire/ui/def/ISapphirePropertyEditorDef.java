@@ -40,7 +40,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface ISapphirePropertyEditorDef
 
-    extends IFormPartDef
+    extends FormPartDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphirePropertyEditorDef.class );
@@ -89,9 +89,9 @@ public interface ISapphirePropertyEditorDef
             ISapphireActionLinkDef.class,
             ISapphireCustomPartDef.class,
             ISapphireStaticTextFieldDef.class,
-            ISapphirePageBookExtDef.class,
+            PageBookExtDef.class,
             ISapphireTabGroupDef.class,
-            ISapphireHtmlPanelDef.class
+            HtmlPanelDef.class
         }
     )
                       
@@ -111,9 +111,9 @@ public interface ISapphirePropertyEditorDef
             @XmlListBinding.Mapping( element = "action-link", type = ISapphireActionLinkDef.class ),
             @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
             @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
-            @XmlListBinding.Mapping( element = "switching-panel", type = ISapphirePageBookExtDef.class ),
+            @XmlListBinding.Mapping( element = "switching-panel", type = PageBookExtDef.class ),
             @XmlListBinding.Mapping( element = "tab-group", type = ISapphireTabGroupDef.class ),
-            @XmlListBinding.Mapping( element = "html", type = ISapphireHtmlPanelDef.class )
+            @XmlListBinding.Mapping( element = "html", type = HtmlPanelDef.class )
         }
     )
                              
@@ -218,7 +218,7 @@ public interface ISapphirePropertyEditorDef
     (
         content = "Specifies the preferred height (in pixels) for the body of the property editor. The height preference " +
                   "will be respected to the extent that it is feasible. In particular, the height preference is ignored " +
-                  "by property editors that cannot expand vertically."
+                  "by property editors that cannot scale vertically."
     )
     
     ValueProperty PROP_HEIGHT = new ValueProperty( TYPE, "Height" );

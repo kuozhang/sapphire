@@ -344,6 +344,55 @@ properties.</p>
 <nobr>Search: &nbsp;&nbsp;([ \t]*)&lt;hint>\s*&lt;name>\s*margin.left\s*&lt;/name>\s*&lt;value>\s*([0-9a-z]*)\s*&lt;/value>\s*&lt;/hint></nobr><br/>
 <nobr>Replace: &nbsp;\1&lt;margin-left>\2&lt;/margin-left></nobr></p>
 
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;hint>
+        &lt;name>expand.vertically&lt;/name>
+        &lt;value>true&lt;/value>
+    &lt;/hint>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;property-editor></font>
+    &lt;scale-vertically>true&lt;/scale-vertically>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+    </td>
+  </tr>
+</table>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;([ \t]*)&lt;hint>\s*&lt;name>\s*expand.vertically\s*&lt;/name>\s*&lt;value>\s*([a-z]*)\s*&lt;/value>\s*&lt;/hint></nobr><br/>
+<nobr>Replace: &nbsp;\1&lt;scale-vertically>\2&lt;/scale-vertically></nobr></p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;html></font>
+    &lt;expand-vertically/>
+<font color="#888888">&lt;/html></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;html></font>
+    &lt;scale-vertically>true&lt;/scale-vertically>
+<font color="#888888">&lt;/html></font></code></pre>
+    </td>
+  </tr>
+</table>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;&lt;expand-vertically */></nobr><br/>
+<nobr>Replace: &nbsp;&lt;scale-vertically>true&lt;/scale-vertically></nobr></p>
+
 <h2><a name="ValidFileExtensions">ValidFileExtensions</a></h2>
 
 <p>The @ValidFileExtensions annotation has been replaced with @FileExtensions annotation that supports Sapphire

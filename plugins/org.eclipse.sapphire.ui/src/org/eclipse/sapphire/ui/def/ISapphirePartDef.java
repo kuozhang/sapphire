@@ -32,14 +32,10 @@ import org.eclipse.sapphire.ui.def.internal.SapphirePartDefMethods;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface ISapphirePartDef
-
-    extends IModelElement
-    
+public interface ISapphirePartDef extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( ISapphirePartDef.class );
     
-    String HINT_EXPAND_VERTICALLY = "expand.vertically";
     String HINT_HIDE_IF_DISABLED = "hide.if.disabled";
     String HINT_PREFER_FORM_STYLE = "prefer.form.style";
     String HINT_STYLE = "style";

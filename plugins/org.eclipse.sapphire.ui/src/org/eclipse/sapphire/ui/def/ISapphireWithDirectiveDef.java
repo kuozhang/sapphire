@@ -29,7 +29,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface ISapphireWithDirectiveDef
 
-    extends ISapphirePageBookDef
+    extends PageBookDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireWithDirectiveDef.class );

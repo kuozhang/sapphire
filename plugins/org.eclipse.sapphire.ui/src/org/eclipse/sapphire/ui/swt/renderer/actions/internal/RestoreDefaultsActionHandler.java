@@ -45,7 +45,6 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireComposite;
 import org.eclipse.sapphire.ui.SapphireEnumControlledPageBook;
 import org.eclipse.sapphire.ui.SapphireIfElseDirective;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -169,7 +168,7 @@ public final class RestoreDefaultsActionHandler
         }
         else if( part instanceof SapphireEnumControlledPageBook )
         {
-            final SapphireComposite currentPage = ( (SapphireEnumControlledPageBook) part ).getCurrentPage();
+            final SapphirePartContainer currentPage = ( (SapphireEnumControlledPageBook) part ).getCurrentPage();
             
             if( currentPage != null )
             {

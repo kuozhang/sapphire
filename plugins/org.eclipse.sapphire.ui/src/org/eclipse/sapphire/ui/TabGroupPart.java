@@ -24,7 +24,6 @@ import java.util.Map;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.ISapphireTabDef;
 import org.eclipse.sapphire.ui.def.ISapphireTabGroupDef;
 import org.eclipse.swt.SWT;
@@ -55,7 +54,7 @@ public final class TabGroupPart
 
         this.pages = new ArrayList<TabGroupPagePart>();
         
-        for( ISapphireTabDef pageDef : ( (ISapphireTabGroupDef) this.definition ).getTabs() )
+        for( ISapphireTabDef pageDef : getDefinition().getTabs() )
         {
             final TabGroupPagePart pagePart = new TabGroupPagePart();
             pagePart.init( this, element, pageDef, this.params );
@@ -75,15 +74,20 @@ public final class TabGroupPart
             pagePart.addListener( tabPartListener );
         }
     }
+    
+    @Override
+    public ISapphireTabGroupDef getDefinition()
+    {
+        return (ISapphireTabGroupDef) super.getDefinition();
+    }
 
     @Override
     public void render( final SapphireRenderingContext context )
     {
-        final boolean expandVertically 
-            = ( Boolean.valueOf( this.definition.getHint( ISapphirePartDef.HINT_EXPAND_VERTICALLY ) ) == true );
+        final boolean scaleVertically = getDefinition().getScaleVertically().getContent();
     
         final TabFolder tabGroup = new TabFolder( context.getComposite(), SWT.TOP );
-        tabGroup.setLayoutData( gdhspan( ( expandVertically ? gdfill() : gdhfill() ), 2 ) );
+        tabGroup.setLayoutData( gdhspan( ( scaleVertically ? gdfill() : gdhfill() ), 2 ) );
         context.adapt( tabGroup );
         
         for( final TabGroupPagePart page : this.pages )

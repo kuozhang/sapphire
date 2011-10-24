@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.xml.XmlPath;
 import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
 import org.eclipse.sapphire.services.ValueSerializationService;
 import org.eclipse.sapphire.ui.def.HtmlContentSourceType;
-import org.eclipse.sapphire.ui.def.ISapphireHtmlPanelDef;
+import org.eclipse.sapphire.ui.def.HtmlPanelDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -29,7 +29,7 @@ public final class SapphireHtmlPanelDefSourceBinding
     extends XmlValueBindingImpl
     
 {
-    private static final StandardXmlNamespaceResolver NAMESPACE_RESOLVER = new StandardXmlNamespaceResolver( ISapphireHtmlPanelDef.TYPE );
+    private static final StandardXmlNamespaceResolver NAMESPACE_RESOLVER = new StandardXmlNamespaceResolver( HtmlPanelDef.TYPE );
     private static final XmlPath PATH_URL = new XmlPath( "url", NAMESPACE_RESOLVER );
     private static final XmlPath PATH_CONTENT = new XmlPath( "content", NAMESPACE_RESOLVER );
     
@@ -48,14 +48,14 @@ public final class SapphireHtmlPanelDefSourceBinding
             type = HtmlContentSourceType.EMBEDDED;
         }
         
-        return element().service( ISapphireHtmlPanelDef.PROP_CONTENT_SOURCE_TYPE, ValueSerializationService.class ).encode( type );
+        return element().service( HtmlPanelDef.PROP_CONTENT_SOURCE_TYPE, ValueSerializationService.class ).encode( type );
     }
 
     @Override
     public void write( final String value )
     {
         final XmlElement element = xml();
-        final HtmlContentSourceType type = (HtmlContentSourceType) element().service( ISapphireHtmlPanelDef.PROP_CONTENT_SOURCE_TYPE, ValueSerializationService.class ).decode( value );
+        final HtmlContentSourceType type = (HtmlContentSourceType) element().service( HtmlPanelDef.PROP_CONTENT_SOURCE_TYPE, ValueSerializationService.class ).decode( value );
         
         if( value == null )
         {

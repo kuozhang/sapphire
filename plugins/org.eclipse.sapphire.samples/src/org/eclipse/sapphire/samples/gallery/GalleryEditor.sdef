@@ -1671,7 +1671,7 @@
                                         &lt;/table>
                                     </content>
                                     <fragment />
-                                    <expand-vertically />
+                                    <scale-vertically>true</scale-vertically>
                                 </html>
                             </related-content>
                         </property-editor>
@@ -1903,6 +1903,113 @@
                     </node-factory>
                 </node>
             </node>
+            <node>
+                <label>split form</label>
+                <property>SplitFormGallery</property>
+                <section>
+                    <content>
+                        <label>Some descriptive text.</label>
+                        <spacer></spacer>
+                        <action-link>
+                            <label>Open split form dialog...</label>
+                            <action>
+                                <id>Sapphire.Samples.Gallery.OpenSplitFormDialog</id>
+                                <label>open split form dialog</label>
+                            </action>
+                            <action-handler>
+                                <action>Sapphire.Samples.Gallery.OpenSplitFormDialog</action>
+                                <id>Sapphire.Samples.Gallery.OpenSplitFormDialog</id>
+                                <impl>OpenSplitFormDialogActionHandler</impl>
+                            </action-handler>
+                            <action-id>Sapphire.Samples.Gallery.OpenSplitFormDialog</action-id>
+                        </action-link>
+                        <spacer></spacer>
+                        <split-form>
+                            <orientation>horizontal</orientation>
+                            <adjustable>true</adjustable>
+                            <section>
+                                <content>
+                                    <property-editor>String1</property-editor>
+                                    <property-editor>String2</property-editor>
+                                    <property-editor>
+                                        <property>List1</property>
+                                        <scale-vertically>true</scale-vertically>
+                                        <child-property>Entity</child-property>
+                                    </property-editor>
+                                    <composite>
+                                        <indent>true</indent>
+                                        <content>
+                                            <separator>
+                                                <label>description</label>
+                                            </separator>
+                                            <switching-panel>
+                                                <list-selection-controller>
+                                                    <property>List1</property>
+                                                </list-selection-controller>
+                                                <panel>
+                                                    <key>SplitFormGalleryListEntry</key>
+                                                    <content>
+                                                        <property-editor>
+                                                            <property>Description</property>
+                                                            <show-label>false</show-label>
+                                                            <span>true</span>
+                                                        </property-editor>
+                                                    </content>
+                                                </panel>
+                                                <default-panel>
+                                                    <content>
+                                                        <label>Select an entry above to view or edit description.</label>
+                                                    </content>
+                                                </default-panel>
+                                            </switching-panel>
+                                        </content>
+                                    </composite>
+                                </content>
+                                <weight>2</weight>
+                            </section>
+                            <section>
+                                <content>
+                                    <split-form>
+                                        <orientation>vertical</orientation>
+                                        <section>
+                                            <content>
+                                                <property-editor>
+                                                    <property>List2</property>
+                                                    <child-property>Entity</child-property>
+                                                    <child-property>Size</child-property>
+                                                    <scale-vertically>true</scale-vertically>
+                                                </property-editor>
+                                            </content>
+                                        </section>
+                                        <section>
+                                            <content>
+                                                <property-editor>
+                                                    <property>List3</property>
+                                                    <child-property>Entity</child-property>
+                                                    <child-property>Size</child-property>
+                                                    <scale-vertically>true</scale-vertically>
+                                                </property-editor>
+                                            </content>
+                                        </section>
+                                        <section>
+                                            <content>
+                                                <property-editor>
+                                                    <property>List4</property>
+                                                    <scale-vertically>true</scale-vertically>
+                                                    <child-property>Entity</child-property>
+                                                    <child-property>Size</child-property>
+                                                </property-editor>
+                                            </content>
+                                        </section>
+                                        <scale-vertically>true</scale-vertically>
+                                    </split-form>
+                                </content>
+                                <weight>3</weight>
+                            </section>
+                        </split-form>
+                    </content>
+                </section>
+            </node>
         </root-node>
         <action>
             <id>Sapphire.Gallery.Open.Homepage</id>
@@ -1922,5 +2029,61 @@
             <impl>OpenHomepageActionHandler</impl>
         </action-handler>
     </editor-page>
+    <dialog>
+        <id>SplitFormDialog</id>
+        <label>split form dialog</label>
+        <content>
+            <split-form>
+                <section>
+                    <content>
+                        <property-editor>
+                            <property>List1</property>
+                            <span>true</span>
+                            <show-label>false</show-label>
+                            <child-property>Entity</child-property>
+                            <child-property>Size</child-property>
+                            <scale-vertically>true</scale-vertically>
+                        </property-editor>
+                    </content>
+                    <weight>7</weight>
+                </section>
+                <section>
+                    <content>
+                        <separator>
+                            <label>description</label>
+                        </separator>
+                        <switching-panel>
+                            <list-selection-controller>
+                                <property>List1</property>
+                            </list-selection-controller>
+                            <default-panel>
+                                <content>
+                                    <label>Select an entry above to view or edit description.</label>
+                                </content>
+                            </default-panel>
+                            <panel>
+                                <key>SplitFormGalleryListEntry</key>
+                                <content>
+                                    <property-editor>
+                                        <property>Description</property>
+                                        <span>true</span>
+                                        <show-label>false</show-label>
+                                        <scale-vertically>true</scale-vertically>
+                                    </property-editor>
+                                </content>
+                            </panel>
+                            <scale-vertically>true</scale-vertically>
+                        </switching-panel>
+                    </content>
+                    <weight>3</weight>
+                </section>
+                <orientation>vertical</orientation>
+                <scale-vertically>true</scale-vertically>
+            </split-form>
+        </content>
+        <width>600</width>
+        <height>400</height>
+        <scale-vertically>true</scale-vertically>
+    </dialog>
     
 </definition>

@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui;
 
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
@@ -20,10 +21,10 @@ import java.util.Map;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
-import org.eclipse.sapphire.ui.def.ISapphirePageBookDef;
-import org.eclipse.sapphire.ui.def.ISapphirePageBookKeyMapping;
+import org.eclipse.sapphire.ui.def.FormDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
+import org.eclipse.sapphire.ui.def.PageBookDef;
+import org.eclipse.sapphire.ui.def.PageBookKeyMapping;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -34,14 +35,11 @@ import org.eclipse.swt.widgets.Control;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphirePageBook
-
-    extends SapphirePart
-    
+public abstract class PageBookPart extends FormPart
 {
-    private Map<Object,ISapphireCompositeDef> pageDefs;
-    private ISapphireCompositeDef defaultPageDef;
-    private SapphireComposite currentPage;
+    private Map<Object,FormDef> pageDefs;
+    private FormDef defaultPageDef;
+    private SapphirePartContainer currentPage;
     private boolean exposePageValidationState = false;
     private SapphirePartListener childPartListener = null;
     
@@ -50,11 +48,11 @@ public abstract class SapphirePageBook
     {
         super.init();
         
-        final ISapphirePageBookDef def = (ISapphirePageBookDef) this.definition;
+        final PageBookDef def = (PageBookDef) this.definition;
         
-        this.pageDefs = new LinkedHashMap<Object,ISapphireCompositeDef>();
+        this.pageDefs = new LinkedHashMap<Object,FormDef>();
         
-        for( ISapphirePageBookKeyMapping page : def.getPages() )
+        for( PageBookKeyMapping page : def.getPages() )
         {
             final Object key = parsePageKey( page.getKey().getText() );
             this.pageDefs.put( key, page );
@@ -68,17 +66,17 @@ public abstract class SapphirePageBook
         }
     }
     
-    protected ISapphireCompositeDef initDefaultPageDef()
+    protected FormDef initDefaultPageDef()
     {
         final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
-        return (ISapphireCompositeDef) root.getPartDefs().addNewElement( ISapphireCompositeDef.TYPE );
+        return (FormDef) root.getPartDefs().addNewElement( FormDef.TYPE );
     }
 
     @Override
     public void render( final SapphireRenderingContext context )
     {
         final Composite composite = new Composite( context.getComposite(), SWT.NONE );
-        composite.setLayoutData( gdhspan( gdhfill(), 2 ) );
+        composite.setLayoutData( gdhspan( ( getScaleVertically() ? gdfill() : gdhfill() ), 2 ) );
         composite.setLayout( glayout( 2, 0, 0 ) );
         context.adapt( composite );
         
@@ -92,9 +90,9 @@ public abstract class SapphirePageBook
                     control.dispose();
                 }
                 
-                if( SapphirePageBook.this.currentPage != null )
+                if( PageBookPart.this.currentPage != null )
                 {
-                    SapphirePageBook.this.currentPage.render( new SapphireRenderingContext( SapphirePageBook.this, context, composite ) );
+                    PageBookPart.this.currentPage.render( new SapphireRenderingContext( PageBookPart.this, context, composite ) );
                 }
                 
                 context.layout();
@@ -120,7 +118,7 @@ public abstract class SapphirePageBook
         }
     }
     
-    public final SapphireComposite getCurrentPage()
+    public final SapphirePartContainer getCurrentPage()
     {
         return this.currentPage;
     }
@@ -128,11 +126,11 @@ public abstract class SapphirePageBook
     protected final void changePage( final IModelElement modelElementForPage,
                                      final Object pageKey )
     {
-        ISapphireCompositeDef pageDef = this.defaultPageDef;
+        FormDef pageDef = this.defaultPageDef;
         
         if( pageKey != null )
         {
-            for( Map.Entry<Object,ISapphireCompositeDef> entry : this.pageDefs.entrySet() )
+            for( Map.Entry<Object,FormDef> entry : this.pageDefs.entrySet() )
             {
                 if( entry.getKey().equals( pageKey ) )
                 {
@@ -146,7 +144,7 @@ public abstract class SapphirePageBook
     }
 
     private void changePage( final IModelElement modelElementForPage,
-                             final ISapphireCompositeDef pageDef )
+                             final FormDef pageDef )
     {
         if( modelElementForPage == null )
         {
@@ -160,7 +158,7 @@ public abstract class SapphirePageBook
         
         if( pageDef != null )
         {
-            this.currentPage = (SapphireComposite) create( this, modelElementForPage, pageDef, this.params );
+            this.currentPage = (SapphirePartContainer) create( this, modelElementForPage, pageDef, this.params );
             
             if( this.childPartListener != null )
             {
@@ -190,7 +188,7 @@ public abstract class SapphirePageBook
     {
         if( this.exposePageValidationState == true )
         {
-            final SapphireComposite currentPage = getCurrentPage();
+            final SapphirePartContainer currentPage = getCurrentPage();
             
             if( currentPage != null )
             {

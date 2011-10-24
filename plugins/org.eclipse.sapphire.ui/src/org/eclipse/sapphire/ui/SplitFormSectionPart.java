@@ -7,27 +7,35 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.def.internal;
+package org.eclipse.sapphire.ui;
 
-import org.eclipse.sapphire.services.ReferenceService;
-import org.eclipse.sapphire.ui.def.FormPartDef;
-import org.eclipse.sapphire.ui.def.ISapphireUiDef;
+import org.eclipse.sapphire.ui.def.SplitFormSectionDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class FormPartIncludeReferenceService
-
-    extends ReferenceService
-    
+public final class SplitFormSectionPart extends SapphirePartContainer
 {
     @Override
-    public Object resolve( final String reference )
+    public SplitFormSectionDef getDefinition()
     {
-        return context( ISapphireUiDef.class ).getPartDef( reference, true, FormPartDef.class );
+        return (SplitFormSectionDef) super.getDefinition();
+    }
+    
+    public int getWeight()
+    {
+        int weight = getDefinition().getWeight().getContent();
+        
+        if( weight < 1 )
+        {
+            weight = 1;
+        }
+        
+        return weight;
     }
     
 }

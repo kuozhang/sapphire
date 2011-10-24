@@ -26,18 +26,15 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 @Label( standard = "form" )
 @GenerateImpl
 
-public interface IFormDef
-
-    extends IFormPartDef
-    
+public interface FormDef extends FormPartDef
 {
-    ModelElementType TYPE = new ModelElementType( IFormDef.class );
+    ModelElementType TYPE = new ModelElementType( FormDef.class );
     
     // *** Content ***
     
     @Type
     ( 
-        base = IFormPartDef.class,
+        base = FormPartDef.class,
         possible = 
         { 
             ISapphirePropertyEditorDef.class, 
@@ -51,11 +48,12 @@ public interface IFormDef
             ISapphireActionLinkDef.class,
             ISapphireCustomPartDef.class,
             ISapphireStaticTextFieldDef.class,
-            ISapphirePageBookExtDef.class,
+            PageBookExtDef.class,
             ISapphireTabGroupDef.class,
-            ISapphireHtmlPanelDef.class,
+            HtmlPanelDef.class,
             IFormPartInclude.class,
-            IFormDef.class
+            FormDef.class,
+            SplitFormDef.class
         }
     )
                       
@@ -75,16 +73,17 @@ public interface IFormDef
             @XmlListBinding.Mapping( element = "action-link", type = ISapphireActionLinkDef.class ),
             @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
             @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
-            @XmlListBinding.Mapping( element = "switching-panel", type = ISapphirePageBookExtDef.class ),
+            @XmlListBinding.Mapping( element = "switching-panel", type = PageBookExtDef.class ),
             @XmlListBinding.Mapping( element = "tab-group", type = ISapphireTabGroupDef.class ),
-            @XmlListBinding.Mapping( element = "html", type = ISapphireHtmlPanelDef.class ),
+            @XmlListBinding.Mapping( element = "html", type = HtmlPanelDef.class ),
             @XmlListBinding.Mapping( element = "include", type = IFormPartInclude.class ),
-            @XmlListBinding.Mapping( element = "form", type = IFormDef.class )
+            @XmlListBinding.Mapping( element = "form", type = FormDef.class ),
+            @XmlListBinding.Mapping( element = "split-form", type = SplitFormDef.class )
         }
     )
                              
     ListProperty PROP_CONTENT = new ListProperty( TYPE, "Content" );
     
-    ModelElementList<IFormPartDef> getContent();
+    ModelElementList<FormPartDef> getContent();
     
 }

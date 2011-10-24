@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 @Label( standard = "properties view contribution page" )
 @GenerateImpl
 
-public interface IPropertiesViewContributionPageDef extends IFormDef
+public interface IPropertiesViewContributionPageDef extends FormDef
 {
     ModelElementType TYPE = new ModelElementType( IPropertiesViewContributionPageDef.class );
 

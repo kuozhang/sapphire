@@ -26,22 +26,19 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @Label( standard = "page book" )
 
-public interface ISapphirePageBookDef
-
-    extends IFormPartDef
-    
+public interface PageBookDef extends FormPartDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphirePageBookDef.class );
+    ModelElementType TYPE = new ModelElementType( PageBookDef.class );
     
     // *** Pages ***
     
     @Label( standard = "pages" )
-    @Type( base = ISapphirePageBookKeyMapping.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "panel", type = ISapphirePageBookKeyMapping.class ) )
+    @Type( base = PageBookKeyMapping.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "panel", type = PageBookKeyMapping.class ) )
     
     ListProperty PROP_PAGES = new ListProperty( TYPE, "Pages" );
     
-    ModelElementList<ISapphirePageBookKeyMapping> getPages();
+    ModelElementList<PageBookKeyMapping> getPages();
 
     // *** DefaultPage ***
     

@@ -13,10 +13,14 @@ package org.eclipse.sapphire.ui;
 
 import static org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.resolvePath;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.ResolvePathResult;
-import org.eclipse.sapphire.ui.def.IFormDef;
+import org.eclipse.sapphire.ui.def.FormDef;
+import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
 
 /**
@@ -27,7 +31,7 @@ public final class SapphireWithDirectiveImplied extends SapphirePartContainer
 {
     private ModelPath path;
     private IModelElement element;
-    private IFormDef formdef;
+    private FormDef formdef;
     
     @Override
     protected void init()
@@ -54,10 +58,20 @@ public final class SapphireWithDirectiveImplied extends SapphirePartContainer
         
         super.init();
     }
-    
-    public IFormDef getFormDefinition()
+
+    @Override
+    protected List<SapphirePart> initChildParts()
     {
-        return this.formdef;
+        final IModelElement element = getLocalModelElement();
+        final List<SapphirePart> childParts = new ArrayList<SapphirePart>();
+        
+        for( ISapphirePartDef childPartDef : this.formdef.getContent() )
+        {
+            final SapphirePart childPart = create( this, element, childPartDef, this.params );
+            childParts.add( childPart );
+        }
+        
+        return childParts;
     }
     
     public ModelPath getPath()
@@ -67,12 +81,6 @@ public final class SapphireWithDirectiveImplied extends SapphirePartContainer
     
     @Override
     public IModelElement getLocalModelElement()
-    {
-        return this.element;
-    }
-
-    @Override
-    protected IModelElement getModelElementForChildParts()
     {
         return this.element;
     }

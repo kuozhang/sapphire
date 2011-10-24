@@ -17,7 +17,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.ui.def.ISapphirePageBookExtDef;
+import org.eclipse.sapphire.ui.def.PageBookExtDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
 /**
@@ -26,7 +26,7 @@ import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
 public final class SapphireEnumControlledPageBook
 
-    extends SapphirePageBook
+    extends PageBookPart
     
 {
     private ValueProperty property;
@@ -36,7 +36,7 @@ public final class SapphireEnumControlledPageBook
     {
         super.init();
         
-        this.property = (ValueProperty) resolve( ( (ISapphirePageBookExtDef) this.definition ).getControlProperty().getText() );
+        this.property = (ValueProperty) resolve( ( (PageBookExtDef) this.definition ).getControlProperty().getText() );
         
         setExposePageValidationState( true );
         updateCurrentPage();

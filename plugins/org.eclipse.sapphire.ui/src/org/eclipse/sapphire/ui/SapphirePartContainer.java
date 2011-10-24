@@ -18,86 +18,77 @@ import java.util.List;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.ui.def.IFormDef;
+import org.eclipse.sapphire.ui.def.FormDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class SapphirePartContainer
-
-    extends SapphirePart
-    
+public class SapphirePartContainer extends FormPart
 {
     private List<SapphirePart> childParts;
-    private List<SapphirePart> childPartsReadOnly;
     
     @Override
     protected void init()
     {
         super.init();
 
-        this.childParts = new ArrayList<SapphirePart>();
-        this.childPartsReadOnly = Collections.unmodifiableList( this.childParts );
-        
-        final IModelElement modelElementForChildParts = getModelElementForChildParts();
-        
-        if( modelElementForChildParts != null )
+        final List<SapphirePart> childPartsFromInit = initChildParts();
+        this.childParts = Collections.unmodifiableList( new ArrayList<SapphirePart>( childPartsFromInit ) );
+
+        final SapphirePartListener childPartListener = new SapphirePartListener()
         {
-            final SapphirePartListener childPartListener = new SapphirePartListener()
+            @Override
+            public void handleValidateStateChange( final Status oldValidateState,
+                                                   final Status newValidationState )
             {
-                @Override
-                public void handleValidateStateChange( final Status oldValidateState,
-                                                       final Status newValidationState )
-                {
-                    updateValidationState();
-                }
-            };
-    
-            final IFormDef def = getFormDefinition();
-            
-            for( ISapphirePartDef childPartDef : def.getContent() )
-            {
-                final SapphirePart childPart = create( this, modelElementForChildParts, childPartDef, this.params );
-                this.childParts.add( childPart );
-                childPart.addListener( childPartListener );
+                updateValidationState();
             }
+        };
+        
+        for( SapphirePart childPart : this.childParts )
+        {
+            childPart.addListener( childPartListener );
         }
         
         updateValidationState();
     }
     
-    public IFormDef getFormDefinition()
+    protected List<SapphirePart> initChildParts()
     {
-        return (IFormDef) this.definition;
+        final IModelElement element = getLocalModelElement();
+        final FormDef def = (FormDef) this.definition;
+        final List<SapphirePart> childParts = new ArrayList<SapphirePart>();
+        
+        for( ISapphirePartDef childPartDef : def.getContent() )
+        {
+            final SapphirePart childPart = create( this, element, childPartDef, this.params );
+            childParts.add( childPart );
+        }
+        
+        return childParts;
     }
     
-    protected IModelElement getModelElementForChildParts()
+    public List<? extends SapphirePart> getChildParts()
     {
-        return getModelElement();
-    }
-    
-    public List<SapphirePart> getChildParts()
-    {
-        return this.childPartsReadOnly;
+        return this.childParts;
     }
     
     public void render( final SapphireRenderingContext context )
     {
-        for( SapphirePart child : this.childParts )
+        for( SapphirePart child : getChildParts() )
         {
             child.render( context );
         }
     }
     
     @Override
-    
     protected Status computeValidationState()
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
 
-        for( SapphirePart child : this.childParts )
+        for( SapphirePart child : getChildParts() )
         {
             factory.add( child.getValidationState() );
         }
@@ -106,7 +97,6 @@ public class SapphirePartContainer
     }
     
     @Override
-    
     public boolean setFocus()
     {
         for( SapphirePart child : getChildParts() )
@@ -121,7 +111,6 @@ public class SapphirePartContainer
     }
 
     @Override
-    
     public boolean setFocus( final ModelPath path )
     {
         for( SapphirePart child : getChildParts() )
@@ -136,12 +125,11 @@ public class SapphirePartContainer
     }
 
     @Override
-    
     public void dispose()
     {
         super.dispose();
         
-        for( SapphirePart child : this.childParts )
+        for( SapphirePart child : getChildParts() )
         {
             child.dispose();
         }

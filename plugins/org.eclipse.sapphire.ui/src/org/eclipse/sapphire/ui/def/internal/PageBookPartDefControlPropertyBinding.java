@@ -15,7 +15,7 @@ import org.eclipse.sapphire.modeling.xml.StandardXmlNamespaceResolver;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlPath;
 import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
-import org.eclipse.sapphire.ui.def.ISapphirePageBookExtDef;
+import org.eclipse.sapphire.ui.def.PageBookExtDef;
 import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
 
 /**
@@ -27,7 +27,7 @@ public final class PageBookPartDefControlPropertyBinding
     extends XmlValueBindingImpl
     
 {
-    private static final StandardXmlNamespaceResolver NAMESPACE_RESOLVER = new StandardXmlNamespaceResolver( ISapphirePageBookExtDef.TYPE );
+    private static final StandardXmlNamespaceResolver NAMESPACE_RESOLVER = new StandardXmlNamespaceResolver( PageBookExtDef.TYPE );
     private static final XmlPath PATH_ENUM_CONTROLLER_PROPERTY = new XmlPath( "enum-controller/property", NAMESPACE_RESOLVER );
     private static final XmlPath PATH_LIST_SELECTION_CONTROLLER_PROPERTY = new XmlPath( "list-selection-controller/property", NAMESPACE_RESOLVER );
     
@@ -35,7 +35,7 @@ public final class PageBookPartDefControlPropertyBinding
     public String read()
     {
         final XmlElement el = xml( false );
-        final PageBookPartControlMethod method = ( (ISapphirePageBookExtDef) element() ).getControlMethod().getContent();
+        final PageBookPartControlMethod method = ( (PageBookExtDef) element() ).getControlMethod().getContent();
         
         if( method == PageBookPartControlMethod.ENUM_VALUE )
         {
@@ -52,7 +52,7 @@ public final class PageBookPartDefControlPropertyBinding
     @Override
     public void write( final String value )
     {
-        final PageBookPartControlMethod method = ( (ISapphirePageBookExtDef) element() ).getControlMethod().getContent();
+        final PageBookPartControlMethod method = ( (PageBookExtDef) element() ).getControlMethod().getContent();
         final XmlElement el = xml( true );
         
         if( method == PageBookPartControlMethod.ENUM_VALUE )

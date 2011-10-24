@@ -32,7 +32,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 public interface ISapphireActionLinkDef
 
-    extends IFormPartDef
+    extends FormPartDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireActionLinkDef.class );

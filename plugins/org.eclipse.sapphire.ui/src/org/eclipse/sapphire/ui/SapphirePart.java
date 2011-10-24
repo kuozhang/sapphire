@@ -41,16 +41,16 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.ui.def.FormDef;
 import org.eclipse.sapphire.ui.def.IFormPartInclude;
 import org.eclipse.sapphire.ui.def.ISapphireActionLinkDef;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphireCustomPartDef;
 import org.eclipse.sapphire.ui.def.ISapphireDialogDef;
 import org.eclipse.sapphire.ui.def.ISapphireGroupDef;
-import org.eclipse.sapphire.ui.def.ISapphireHtmlPanelDef;
+import org.eclipse.sapphire.ui.def.HtmlPanelDef;
 import org.eclipse.sapphire.ui.def.ISapphireIfElseDirectiveDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
-import org.eclipse.sapphire.ui.def.ISapphirePageBookExtDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartListenerDef;
@@ -61,7 +61,10 @@ import org.eclipse.sapphire.ui.def.ISapphireStaticTextFieldDef;
 import org.eclipse.sapphire.ui.def.ISapphireTabGroupDef;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
 import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
+import org.eclipse.sapphire.ui.def.PageBookExtDef;
 import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
+import org.eclipse.sapphire.ui.def.SplitFormDef;
+import org.eclipse.sapphire.ui.def.SplitFormSectionDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.widgets.Display;
@@ -789,9 +792,9 @@ public abstract class SapphirePart implements ISapphirePart
                 part = new SapphireWithDirective();
             }
         }
-        else if( definition instanceof ISapphirePageBookExtDef )
+        else if( definition instanceof PageBookExtDef )
         {
-            final ISapphirePageBookExtDef pageBookPartDef = (ISapphirePageBookExtDef) definition;
+            final PageBookExtDef pageBookPartDef = (PageBookExtDef) definition;
             
             if( pageBookPartDef.getControlMethod().getContent() == PageBookPartControlMethod.ENUM_VALUE )
             {
@@ -845,9 +848,21 @@ public abstract class SapphirePart implements ISapphirePart
         {
             part = new SapphireIfElseDirective();
         }
-        else if( definition instanceof ISapphireHtmlPanelDef )
+        else if( definition instanceof HtmlPanelDef )
         {
-            part = new SapphireHtmlPanel();
+            part = new HtmlPanelPart();
+        }
+        else if( definition instanceof SplitFormDef )
+        {
+            part = new SplitFormPart();
+        }
+        else if( definition instanceof SplitFormSectionDef )
+        {
+            part = new SplitFormSectionPart();
+        }
+        else if( definition instanceof FormDef )
+        {
+            part = new SapphirePartContainer();
         }
         
         if( part == null )

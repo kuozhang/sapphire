@@ -35,12 +35,9 @@ import org.eclipse.sapphire.ui.def.internal.SapphireHtmlPanelDefSourceBinding;
 @Label( standard = "HTML panel" )
 @GenerateImpl
 
-public interface ISapphireHtmlPanelDef
-
-    extends IFormPartDef
-    
+public interface HtmlPanelDef extends FormPartDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireHtmlPanelDef.class );
+    ModelElementType TYPE = new ModelElementType( HtmlPanelDef.class );
     
     // *** ContentSourceType ***
     
@@ -124,18 +121,5 @@ public interface ISapphireHtmlPanelDef
     Value<Integer> getHeight();
     void setHeight( String value );
     void setHeight( Integer value );
-    
-    // *** ExpandVertically ***
-    
-    @Type( base = Boolean.class )
-    @Label( standard = "expand vertically" )
-    @DefaultValue( text = "false" )
-    @XmlValueBinding( path = "expand-vertically", mapExistanceToValue = "true" )
-    
-    ValueProperty PROP_EXPAND_VERTICALLY = new ValueProperty( TYPE, "ExpandVertically" );
-    
-    Value<Boolean> getExpandVertically();
-    void setExpandVertically( String value );
-    void setExpandVertically( Boolean value );
     
 }

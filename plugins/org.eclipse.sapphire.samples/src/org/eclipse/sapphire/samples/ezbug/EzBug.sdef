@@ -30,10 +30,7 @@
             <property-editor>Title</property-editor>
             <property-editor>
                 <property>Details</property>
-                <hint>
-                    <name>expand.vertically</name>
-                    <value>true</value>
-                </hint>
+                <scale-vertically>true</scale-vertically>
             </property-editor>
             <property-editor>ProductVersion</property-editor>
             <property-editor>ProductStage</property-editor>
@@ -53,7 +50,7 @@
                 <indent>true</indent>
                 <content>
                     <separator>
-                        <label>details</label>
+                        <label>description</label>
                     </separator>
                     <switching-panel>
                         <list-selection-controller>
@@ -66,22 +63,20 @@
                                     <property>Description</property>
                                     <span>true</span>
                                     <height>75</height>
+                                    <show-label>false</show-label>
                                 </property-editor>
                             </content>
                         </panel>
                         <default-panel>
                             <content>
-                                <label>Select a hardware item above to view or edit additional parameters.</label>
+                                <label>Select a hardware item above to view or edit description.</label>
                             </content>
                         </default-panel>
                     </switching-panel>
                 </content>
             </composite>
         </content>
-        <hint>
-            <name>expand.vertically</name>
-            <value>true</value>
-        </hint>
+        <scale-vertically>true</scale-vertically>
         <width>600</width>
         <height>500</height>
     </composite>
@@ -91,10 +86,7 @@
         <content>
             <include>bug.report</include>
         </content>
-        <hint>
-            <name>expand.vertically</name>
-            <value>true</value>
-        </hint>
+        <scale-vertically>true</scale-vertically>
         <hint>
             <name>prefer.form.style</name>
             <value>true</value>
@@ -107,10 +99,7 @@
             <include>bug.report.form.style</include>
         </content>
         <scroll-vertically>true</scroll-vertically>
-        <hint>
-            <name>expand.vertically</name>
-            <value>true</value>
-        </hint>
+        <scale-vertically>true</scale-vertically>
         <hint>
             <name>prefer.form.style</name>
             <value>true</value>
@@ -124,10 +113,7 @@
         <content>
             <include>bug.report</include>
         </content>
-        <hint>
-            <name>expand.vertically</name>
-            <value>true</value>
-        </hint>
+        <scale-vertically>true</scale-vertically>
     </dialog>
 
     <dialog>
@@ -137,10 +123,7 @@
         <content>
             <include>bug.report</include>
         </content>
-        <hint>
-            <name>expand.vertically</name>
-            <value>true</value>
-        </hint>
+        <scale-vertically>true</scale-vertically>
         <hint>
             <name>prefer.form.style</name>
             <value>true</value>
@@ -165,10 +148,7 @@
                     </default-panel>
                 </with>
             </content>
-            <hint>
-                <name>expand.vertically</name>
-                <value>true</value>
-            </hint>
+            <scale-vertically>true</scale-vertically>
         </page>
     </wizard>
     

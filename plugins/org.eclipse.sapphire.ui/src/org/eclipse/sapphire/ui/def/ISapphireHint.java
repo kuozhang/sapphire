@@ -58,7 +58,6 @@ public interface ISapphireHint
             "browse.only",
             ISapphirePropertyEditorDef.HINT_CHECKBOX_LAYOUT,
             "column.widths",
-            ISapphirePartDef.HINT_EXPAND_VERTICALLY,
             "factory",
             ISapphirePartDef.HINT_HIDE_IF_DISABLED,
             "listeners",

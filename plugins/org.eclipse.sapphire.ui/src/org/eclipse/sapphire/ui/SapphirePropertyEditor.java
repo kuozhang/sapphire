@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Display;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphirePropertyEditor extends SapphirePart
+public final class SapphirePropertyEditor extends FormPart
 {
     public static final String RELATED_CONTROLS = "related-controls";
     public static final String BROWSE_BUTTON = "browse-button";
@@ -81,7 +81,6 @@ public final class SapphirePropertyEditor extends SapphirePart
     public static final String HINT_PREFER_RADIO_BUTTONS = "prefer.radio.buttons";
     public static final String HINT_PREFER_VERTICAL_RADIO_BUTTONS = "prefer.vertical.radio.buttons";
     public static final String HINT_FACTORY = "factory";
-    public static final String HINT_EXPAND_VERTICALLY = "expand.vertically";
     
     private static final List<PropertyEditorRendererFactory> FACTORIES = new ArrayList<PropertyEditorRendererFactory>();
     
@@ -231,7 +230,6 @@ public final class SapphirePropertyEditor extends SapphirePart
                 name.equals( HINT_PREFER_COMBO ) ||
                 name.equals( HINT_PREFER_RADIO_BUTTONS ) ||
                 name.equals( HINT_PREFER_VERTICAL_RADIO_BUTTONS ) ||
-                name.equals( HINT_EXPAND_VERTICALLY ) || 
                 name.equals( HINT_READ_ONLY ) )
             {
                 parsedValue = Boolean.parseBoolean( valueString );

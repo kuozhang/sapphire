@@ -14,34 +14,33 @@ package org.eclipse.sapphire.ui.def;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "page" )
 @GenerateImpl
 
-public interface ISapphirePageBookKeyMapping
-
-    extends ISapphireCompositeDef
-    
+public interface FormPartDef extends ISapphirePartDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphirePageBookKeyMapping.class );
+    ModelElementType TYPE = new ModelElementType( FormPartDef.class );
     
-    // *** Key ***
+    // *** ScaleVertically ***
     
-    @Label( standard = "key" )
-    @Required
-    @XmlBinding( path = "key" )
+    @Type( base = Boolean.class )
+    @Label( standard = "scale vertically" )
+    @DefaultValue( text = "false" )
+    @XmlBinding( path = "scale-vertically" )
     
-    ValueProperty PROP_KEY = new ValueProperty( TYPE, "Key" );
+    ValueProperty PROP_SCALE_VERTICALLY = new ValueProperty( TYPE, "ScaleVertically" );
     
-    Value<String> getKey();
-    void setKey( String key );
-
+    Value<Boolean> getScaleVertically();
+    void setScaleVertically( String value );
+    void setScaleVertically( Boolean value );
+    
 }

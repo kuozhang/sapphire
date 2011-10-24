@@ -753,7 +753,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     }
     
     @Override
-    protected boolean canExpandVertically()
+    protected boolean canScaleVertically()
     {
         return true;
     }

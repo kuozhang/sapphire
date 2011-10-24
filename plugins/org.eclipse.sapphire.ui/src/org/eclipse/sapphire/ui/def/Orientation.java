@@ -6,25 +6,28 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.EnumSerialization;
+import org.eclipse.sapphire.modeling.annotations.Label;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateImpl
-
-public interface IFormPartDef
-
-    extends ISapphirePartDef
-    
+public enum Orientation 
 {
-    ModelElementType TYPE = new ModelElementType( IFormPartDef.class );
+    @Label( standard = "vertical" )
+    @EnumSerialization( primary = "vertical" )
+    
+    VERTICAL,
+    
+    @Label( standard = "horizontal" )
+    @EnumSerialization( primary = "horizontal" )
+    
+    HORIZONTAL
     
 }

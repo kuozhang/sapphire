@@ -40,10 +40,7 @@
                                 <property>Description</property>
                                 <show-label>false</show-label>
                                 <span>true</span>
-                                <hint>
-                                    <name>expand.vertically</name>
-                                    <value>true</value>
-                                </hint>
+                                <scale-vertically>true</scale-vertically>
                             </property-editor>
                         </content>
                     </page>
@@ -57,10 +54,7 @@
                         <property-editor>Name</property-editor>
                         <property-editor>
                             <property>Description</property>
-                            <hint>
-                                <name>expand.vertically</name>
-                                <value>true</value>
-                            </hint>
+                            <scale-vertically>true</scale-vertically>
                         </property-editor>
                     </content>
                 </page>
@@ -74,10 +68,7 @@
                             <child-property>Description</child-property>
                             <show-label>false</show-label>
                             <span>true</span>
-                            <hint>
-                                <name>expand.vertically</name>
-                                <value>true</value>
-                            </hint>
+                            <scale-vertically>true</scale-vertically>
                             <hint>
                                 <name>column.widths</name>
                                 <value>100:30,100:70</value>
@@ -92,10 +83,7 @@
                         <property-editor>Provider</property-editor>
                         <property-editor>
                             <property>Copyright</property>
-                            <hint>
-                                <name>expand.vertically</name>
-                                <value>true</value>
-                            </hint>
+                            <scale-vertically>true</scale-vertically>
                         </property-editor>
                     </content>
                 </page>
@@ -118,10 +106,7 @@
                         <property>Description</property>
                         <show-label>false</show-label>
                         <span>true</span>
-                        <hint>
-                            <name>expand.vertically</name>
-                            <value>true</value>
-                        </hint>
+                        <scale-vertically>true</scale-vertically>
                     </property-editor>
                 </content>
             </page>
@@ -162,10 +147,7 @@
                                     <property-editor>Name</property-editor>
                                     <property-editor>
                                         <property>Description</property>
-                                        <hint>
-                                            <name>expand.vertically</name>
-                                            <value>true</value>
-                                        </hint>
+                                        <scale-vertically>true</scale-vertically>
                                     </property-editor>
                                 </content>
                             </page>
@@ -179,10 +161,7 @@
                                         <child-property>Description</child-property>
                                         <show-label>false</show-label>
                                         <span>true</span>
-                                        <hint>
-                                            <name>expand.vertically</name>
-                                            <value>true</value>
-                                        </hint>
+                                        <scale-vertically>true</scale-vertically>
                                         <hint>
                                             <name>column.widths</name>
                                             <value>100:30,100:70</value>
@@ -197,10 +176,7 @@
                                     <property-editor>Provider</property-editor>
                                     <property-editor>
                                         <property>Copyright</property>
-                                        <hint>
-                                            <name>expand.vertically</name>
-                                            <value>true</value>
-                                        </hint>
+                                        <scale-vertically>true</scale-vertically>
                                     </property-editor>
                                 </content>
                             </page>

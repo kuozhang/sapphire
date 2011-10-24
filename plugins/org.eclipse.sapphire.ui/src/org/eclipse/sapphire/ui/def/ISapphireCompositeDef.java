@@ -35,7 +35,7 @@ import org.eclipse.sapphire.ui.def.internal.CompositeMarginWidthHeightDefaultVal
 
 public interface ISapphireCompositeDef
 
-    extends IFormDef
+    extends FormDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireCompositeDef.class );

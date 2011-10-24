@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.el.ConcatFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.def.HtmlContentSourceType;
-import org.eclipse.sapphire.ui.def.ISapphireHtmlPanelDef;
+import org.eclipse.sapphire.ui.def.HtmlPanelDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.swt.SWT;
@@ -40,16 +40,13 @@ import org.eclipse.swt.layout.GridData;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireHtmlPanel
-
-    extends SapphirePart
-    
+public final class HtmlPanelPart extends FormPart
 {
-    private static final String FRAGMENT_STYLE = readTextResource( SapphireHtmlPanel.class, "FragmentStyle.css" );
+    private static final String FRAGMENT_STYLE = readTextResource( HtmlPanelPart.class, "FragmentStyle.css" );
     private static final String FRAGMENT_HEADER = "<html><head><style>" + FRAGMENT_STYLE + "</style></head><body>";
     private static final String FRAGMENT_FOOTER = "</body></html>";
     
-    private ISapphireHtmlPanelDef def;
+    private HtmlPanelDef def;
     private FunctionResult contentFunctionResult;
     private FunctionResult urlFunctionResult;
     
@@ -59,7 +56,7 @@ public final class SapphireHtmlPanel
         super.init();
         
         final IModelElement element = getModelElement();
-        this.def = (ISapphireHtmlPanelDef) this.definition;
+        this.def = (HtmlPanelDef) this.definition;
 
         if( this.def.getContentSourceType().getContent() == HtmlContentSourceType.EMBEDDED )
         {
@@ -177,10 +174,10 @@ public final class SapphireHtmlPanel
     @Override
     public void render( final SapphireRenderingContext context )
     {
-        final boolean expandVertically = this.def.getExpandVertically().getContent();
-        GridData gd = gdhindent( gdwhint( gdhspan( ( expandVertically ? gdfill() : gdhfill() ), 2 ), 100 ), 9 );
+        final boolean scaleVertically = getScaleVertically();
+        GridData gd = gdhindent( gdwhint( gdhspan( ( scaleVertically ? gdfill() : gdhfill() ), 2 ), 100 ), 9 );
         
-        if( ! expandVertically )
+        if( ! scaleVertically )
         {
             gd = gdhhint( gd, this.def.getHeight().getContent() );
         }
@@ -248,7 +245,7 @@ public final class SapphireHtmlPanel
 
         static 
         {
-            initializeMessages( SapphireHtmlPanel.class.getName(), Resources.class );
+            initializeMessages( HtmlPanelPart.class.getName(), Resources.class );
         }
     }
     

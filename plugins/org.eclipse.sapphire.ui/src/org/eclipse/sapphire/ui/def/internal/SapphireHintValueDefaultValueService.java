@@ -36,10 +36,6 @@ public final class SapphireHintValueDefaultValueService extends DefaultValueServ
             {
                 return String.valueOf( Boolean.FALSE );
             }
-            else if( hint.equals( ISapphirePartDef.HINT_EXPAND_VERTICALLY ) )
-            {
-                return String.valueOf( Boolean.FALSE );
-            }
             else if( hint.equals( ISapphirePropertyEditorDef.HINT_CHECKBOX_LAYOUT ) )
             {
                 return ISapphirePropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL;

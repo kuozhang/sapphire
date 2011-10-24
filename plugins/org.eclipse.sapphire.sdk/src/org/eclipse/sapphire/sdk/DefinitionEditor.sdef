@@ -143,7 +143,7 @@
                             &lt;/table>
                         </content>
                         <fragment/>
-                        <expand-vertically/>
+                        <scale-vertically>true</scale-vertically>
                     </html>
                 </related-content>
             </property-editor>
@@ -240,6 +240,13 @@
                 </hint>
             </property-editor>
             <property-editor>
+                <property>ScaleVertically</property>
+                <hint>
+                    <name>checkbox.layout</name>
+                    <value>leading.label</value>
+                </hint>
+            </property-editor>
+            <property-editor>
                 <property>ScrollVertically</property>
                 <hint>
                     <name>checkbox.layout</name>
@@ -317,6 +324,13 @@
             <section>
                 <label>customization</label>
                 <content>
+                    <property-editor>
+                        <property>ScaleVertically</property>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                    </property-editor>
                     <property-editor>
                         <property>SpanBothColumns</property>
                         <hint>
@@ -399,7 +413,7 @@
         </case>
         
         <case>
-            <model-element-type>ISapphireHtmlPanelDef</model-element-type>
+            <model-element-type>HtmlPanelDef</model-element-type>
             <label>HTML Panel</label>
             <use-model-element-image/>
             <section>
@@ -437,9 +451,20 @@
             <section>
                 <label>presentation</label>
                 <content>
-                    <property-editor>ExpandVertically</property-editor>
-                    <property-editor>ShowBorder</property-editor>
-                    <spacer/>
+                    <property-editor>
+                        <property>ScaleVertically</property>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                    </property-editor>
+                    <property-editor>
+                        <property>ShowBorder</property>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                    </property-editor>
                     <property-editor>Height</property-editor>
                 </content>
             </section>
@@ -629,7 +654,7 @@
         </case>
 
         <case>
-            <model-element-type>IFormDef</model-element-type>
+            <model-element-type>FormDef</model-element-type>
             <label>${ Id == null ? &quot;Form&quot; : Id }</label>
             <use-model-element-image/>
             <section>
@@ -665,9 +690,47 @@
         </case>
         
         <case>
+            <model-element-type>SplitFormDef</model-element-type>
+            <label>${ Id == null ? &quot;Split Form&quot; : Id }</label>
+            <section>
+                <content>
+                    <include>PartId</include>
+                    <property-editor>Orientation</property-editor>
+                    <property-editor>
+                        <property>ScaleVertically</property>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                    </property-editor>
+                </content>
+                <label>split form</label>
+            </section>
+            <node-factory>
+                <property>Sections</property>
+                <case>
+                    <model-element-type>SplitFormSectionDef</model-element-type>
+                    <label>Section</label>
+                    <node-include>
+                        <part>PartsNodeList</part>
+                        <param>
+                            <name>Property</name>
+                            <value>Content</value>
+                        </param>
+                    </node-include>
+                    <section>
+                        <content>
+                            <property-editor>Weight</property-editor>
+                        </content>
+                    </section>
+                </case>
+            </node-factory>
+        </case>
+
+        <case>
             <model-element-type>ISapphireWithDirectiveDef</model-element-type>
             <label>With</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <content>
                     <property-editor>Path</property-editor>
@@ -682,12 +745,6 @@
                         <label>Case</label>
                         <content>
                             <property-editor>Key</property-editor>
-                        </content>
-                    </section>
-                    <section>
-                        <label>presentation</label>
-                        <content>
-                            <include>CompositePresentation</include>
                         </content>
                     </section>
                     <node-include>
@@ -706,12 +763,6 @@
                     <label>default content</label>
                     <content>
                         <label>The content to show if none of the explicit cases match.</label>
-                    </content>
-                </section>
-                <section>
-                    <label>presentation</label>
-                    <content>
-                        <include>CompositePresentation</include>
                     </content>
                 </section>
                 <node-include>
@@ -735,13 +786,20 @@
         </case>
 
         <case>
-            <model-element-type>ISapphirePageBookExtDef</model-element-type>
+            <model-element-type>PageBookExtDef</model-element-type>
             <label>Page Book</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <content>
                     <property-editor>ControlMethod</property-editor>
                     <property-editor>ControlProperty</property-editor>
+                    <property-editor>
+                        <property>ScaleVertically</property>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                    </property-editor>
                 </content>
             </section>
             <node-factory>
@@ -752,12 +810,6 @@
                         <label>Case</label>
                         <content>
                             <property-editor>Key</property-editor>
-                        </content>
-                    </section>
-                    <section>
-                        <label>presentation</label>
-                        <content>
-                            <include>CompositePresentation</include>
                         </content>
                     </section>
                     <node-include>
@@ -778,12 +830,6 @@
                         <label>The content to show if none of the explicit cases match.</label>
                     </content>
                 </section>
-                <section>
-                    <label>presentation</label>
-                    <content>
-                        <include>CompositePresentation</include>
-                    </content>
-                </section>
                 <node-include>
                     <part>PartsNodeList</part>
                     <param>
@@ -797,7 +843,7 @@
         <case>
             <model-element-type>ISapphireTabGroupDef</model-element-type>
             <label>Tab Group</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <content>
                     <label>Present content organized into multipe tabbed panels.</label>
@@ -830,11 +876,11 @@
                 </case>
             </node-factory>
         </case>
-
+        
         <case>
             <model-element-type>ISapphireStaticTextFieldDef</model-element-type>
             <label>Static Text Field</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <content>
                     <property-editor>Label</property-editor>
@@ -847,7 +893,7 @@
         <case>
             <model-element-type>ISapphireCustomPartDef</model-element-type>
             <label>Custom Part</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <content>
                     <property-editor>ImplClass</property-editor>
@@ -859,7 +905,7 @@
         <case>
             <model-element-type>IMasterDetailsContentNodeDef</model-element-type>
             <label>${ Id == null ? ( Label == null ? "Content Outline Node" : Label ) : Id }</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <label>Content Outline Node</label>
                 <content>
@@ -942,11 +988,11 @@
             <node-include>PropertiesViewContributionNode</node-include>
             <node-include>DocumentationNode</node-include>
         </case>
-        
+
         <case>
             <model-element-type>IMasterDetailsContentNodeFactoryDef</model-element-type>
             <label>${ Id == null ? ( Property == null ? &quot;Content Outline Node Factory&quot; : Property ) : Id }</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <label>Content Outline Node Factory</label>
                 <content>
@@ -1042,11 +1088,11 @@
                 </case>
             </node-factory>
         </case>
-
+        
         <case>
             <model-element-type>IMasterDetailsContentNodeInclude</model-element-type>
             <label>${ Part == null ? &quot;Content Outline Node Include&quot; : Part }</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <label>content outline node list reference</label>
                 <content>
@@ -1059,7 +1105,7 @@
         <case>
             <model-element-type>IMasterDetailsEditorPageDef</model-element-type>
             <label>${ Id == null ? "Form Editor Page" : Id }</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <label>form editor page</label>
                 <content>
@@ -1085,7 +1131,6 @@
             <node-include>ActionsOverallNode</node-include>
             <node-include>DocumentationNode</node-include>
         </case>
-        
         <case>
             <model-element-type>IDiagramEditorPageDef</model-element-type>
             <label>${ Id == null ? &quot;Diagram Editor Page&quot; : Id }</label>
@@ -1163,7 +1208,7 @@
                                     <property>ToolPaletteDescription</property>
                                     <height>90</height>
                                 </property-editor>
-                                <spacer/>
+                                <spacer />
                                 <with>
                                     <path>ToolPaletteImage</path>
                                     <label>specify tool palette item image</label>
@@ -1403,7 +1448,7 @@
                                     <property>ToolPaletteDescription</property>
                                     <height>90</height>
                                 </property-editor>
-                                <spacer/>
+                                <spacer />
                                 <with>
                                     <path>ToolPaletteImage</path>
                                     <label>specify tool palette item image</label>

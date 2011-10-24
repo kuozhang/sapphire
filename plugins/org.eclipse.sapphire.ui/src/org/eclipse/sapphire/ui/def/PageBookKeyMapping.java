@@ -17,45 +17,28 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "static text field" )
+@Label( standard = "page" )
 @GenerateImpl
 
-public interface ISapphireStaticTextFieldDef
-
-    extends FormPartDef
-    
+public interface PageBookKeyMapping extends FormDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireStaticTextFieldDef.class );
- 
-    // *** Label ***
+    ModelElementType TYPE = new ModelElementType( PageBookKeyMapping.class );
     
-    @Label( standard = "label" )
+    // *** Key ***
+    
+    @Label( standard = "key" )
     @Required
-    @Localizable
-    @XmlBinding( path = "label" )
+    @XmlBinding( path = "key" )
     
-    ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
+    ValueProperty PROP_KEY = new ValueProperty( TYPE, "Key" );
     
-    Value<String> getLabel();
-    void setLabel( String label );
-    
-    // *** Text ***
-    
-    @Label( standard = "text" )
-    @Required
-    @Localizable
-    @XmlBinding( path = "text" )
-    
-    ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
-    
-    Value<String> getText();
-    void setText( String text );
-    
+    Value<String> getKey();
+    void setKey( String key );
+
 }

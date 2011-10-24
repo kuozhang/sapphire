@@ -225,13 +225,10 @@
                 <html>
                     <content>${ MessageBody }</content>
                     <show-border/>
-                    <expand-vertically/>
+                    <scale-vertically>true</scale-vertically>
                 </html>
             </content>
-            <hint>
-                <name>expand.vertically</name>
-                <value>true</value>
-            </hint>
+            <scale-vertically>true</scale-vertically>
         </page>
     </wizard>
     

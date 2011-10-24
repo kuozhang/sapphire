@@ -9,25 +9,26 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.def.internal;
+package org.eclipse.sapphire.ui;
 
-import org.eclipse.sapphire.services.ReferenceService;
 import org.eclipse.sapphire.ui.def.FormPartDef;
-import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class FormPartIncludeReferenceService
-
-    extends ReferenceService
-    
+public abstract class FormPart extends SapphirePart
 {
     @Override
-    public Object resolve( final String reference )
+    public FormPartDef getDefinition()
     {
-        return context( ISapphireUiDef.class ).getPartDef( reference, true, FormPartDef.class );
+        return (FormPartDef) super.getDefinition();
     }
+
+    public final boolean getScaleVertically()
+    {
+        return getDefinition().getScaleVertically().getContent();
+    }
+    
     
 }

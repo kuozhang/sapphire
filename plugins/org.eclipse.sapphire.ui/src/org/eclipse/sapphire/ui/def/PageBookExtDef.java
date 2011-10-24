@@ -29,12 +29,9 @@ import org.eclipse.sapphire.ui.def.internal.PageBookPartDefControlPropertyBindin
 @Label( standard = "page book" )
 @GenerateImpl
 
-public interface ISapphirePageBookExtDef
-
-    extends ISapphirePageBookDef
-    
+public interface PageBookExtDef extends PageBookDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphirePageBookExtDef.class );
+    ModelElementType TYPE = new ModelElementType( PageBookExtDef.class );
     
     // *** ControlMethod ***
     
