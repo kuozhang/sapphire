@@ -25,24 +25,17 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireIfElseDirective
-
-    extends SapphirePart
-    
+public final class IfThenElsePart extends SapphirePart
 {
     private ISapphireIfElseDirectiveDef def;
     private SapphireCondition condition;
-    private List<SapphirePart> thenContent;
-    private List<SapphirePart> thenContentReadOnly;
-    private List<SapphirePart> elseContent;
-    private List<SapphirePart> elseContentReadOnly;
+    private List<SapphirePart> currentBranchContent;
+    private List<SapphirePart> currentBranchContentReadOnly;
     
     @Override
     protected void init()
     {
         super.init();
-        
-        final IModelElement modelElement = getModelElement();
         
         this.def = (ISapphireIfElseDirectiveDef) this.definition;
         
@@ -73,44 +66,61 @@ public final class SapphireIfElseDirective
                         @Override
                         public void handleConditionChanged()
                         {
-                            updateValidationState();
-                            notifyStructureChangedEventListeners( new SapphirePartEvent( SapphireIfElseDirective.this ) );
+                            IfThenElsePart.this.handleConditionChanged();
                         }
                     }
                 );
             }
         }
         
-        this.thenContent = new ArrayList<SapphirePart>();
-        this.thenContentReadOnly = Collections.unmodifiableList( this.thenContent );
-        this.elseContent = new ArrayList<SapphirePart>();
-        this.elseContentReadOnly = Collections.unmodifiableList( this.elseContent );
-
-        final SapphirePartListener childPartListener = new SapphirePartListener()
-        {
-            @Override
-            public void handleValidateStateChange( final Status oldValidateState,
-                                                   final Status newValidationState )
-            {
-                updateValidationState();
-            }
-        };
+        this.currentBranchContent = new ArrayList<SapphirePart>();
+        this.currentBranchContentReadOnly = Collections.unmodifiableList( this.currentBranchContent );
+        
+        handleConditionChanged( true );
+    }
     
-        for( ISapphirePartDef childPartDef : this.def.getThenContent() )
+    private void handleConditionChanged()
+    {
+        handleConditionChanged( false );
+    }
+    
+    private void handleConditionChanged( final boolean initializing )
+    {
+        for( SapphirePart part : this.currentBranchContent )
         {
-            final SapphirePart childPart = create( this, modelElement, childPartDef, this.params );
-            this.thenContent.add( childPart );
-            childPart.addListener( childPartListener );
+            part.dispose();
         }
         
-        for( ISapphirePartDef childPartDef : this.def.getElseContent() )
+        this.currentBranchContent.clear();
+        
+        if( this.condition != null )
         {
-            final SapphirePart childPart = create( this, modelElement, childPartDef, this.params );
-            this.elseContent.add( childPart );
-            childPart.addListener( childPartListener );
+            final IModelElement element = getLocalModelElement();
+            
+            final SapphirePartListener childPartListener = new SapphirePartListener()
+            {
+                @Override
+                public void handleValidateStateChange( final Status oldValidateState,
+                                                       final Status newValidationState )
+                {
+                    updateValidationState();
+                }
+            };
+        
+            for( ISapphirePartDef childPartDef : ( this.condition.getConditionState() ? this.def.getThenContent() : this.def.getElseContent() ) )
+            {
+                final SapphirePart childPart = create( this, element, childPartDef, this.params );
+                this.currentBranchContent.add( childPart );
+                childPart.addListener( childPartListener );
+            }
         }
         
         updateValidationState();
+        
+        if( ! initializing )
+        {
+            notifyStructureChangedEventListeners( new SapphirePartEvent( IfThenElsePart.this ) );
+        }
     }
     
     public boolean getConditionState()
@@ -118,24 +128,16 @@ public final class SapphireIfElseDirective
         return ( this.condition != null ? this.condition.getConditionState() : false );
     }
     
-    public List<SapphirePart> getThenContent()
+    public List<SapphirePart> getCurrentBranchContent()
     {
-        return this.thenContentReadOnly;
-    }
-    
-    public List<SapphirePart> getElseContent()
-    {
-        return this.elseContentReadOnly;
+        return this.currentBranchContentReadOnly;
     }
     
     public void render( final SapphireRenderingContext context )
     {
-        if( this.condition != null )
+        for( SapphirePart child : this.currentBranchContent )
         {
-            for( SapphirePart child : ( this.condition.getConditionState() == true ? this.thenContent : this.elseContent ) )
-            {
-                child.render( context );
-            }
+            child.render( context );
         }
     }
     
@@ -144,12 +146,9 @@ public final class SapphireIfElseDirective
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
 
-        if( this.condition != null )
+        for( SapphirePart child : this.currentBranchContent )
         {
-            for( SapphirePart child : ( this.condition.getConditionState() == true ? this.thenContent : this.elseContent ) )
-            {
-                factory.add( child.getValidationState() );
-            }
+            factory.add( child.getValidationState() );
         }
         
         return factory.create();
@@ -160,12 +159,7 @@ public final class SapphireIfElseDirective
     {
         super.dispose();
         
-        for( SapphirePart child : this.thenContent )
-        {
-            child.dispose();
-        }
-
-        for( SapphirePart child : this.elseContent )
+        for( SapphirePart child : this.currentBranchContent )
         {
             child.dispose();
         }

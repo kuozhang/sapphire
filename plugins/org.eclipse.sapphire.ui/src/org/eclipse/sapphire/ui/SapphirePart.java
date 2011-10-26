@@ -846,7 +846,7 @@ public abstract class SapphirePart implements ISapphirePart
         }
         else if( definition instanceof ISapphireIfElseDirectiveDef )
         {
-            part = new SapphireIfElseDirective();
+            part = new IfThenElsePart();
         }
         else if( definition instanceof HtmlPanelDef )
         {

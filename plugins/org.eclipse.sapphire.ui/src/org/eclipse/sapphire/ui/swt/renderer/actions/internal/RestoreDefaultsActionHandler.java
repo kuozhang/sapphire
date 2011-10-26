@@ -44,9 +44,9 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.IfThenElsePart;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEnumControlledPageBook;
-import org.eclipse.sapphire.ui.SapphireIfElseDirective;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartContainer;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
@@ -64,10 +64,7 @@ import org.eclipse.swt.widgets.Table;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class RestoreDefaultsActionHandler 
-
-    extends SapphireActionHandler 
-    
+public final class RestoreDefaultsActionHandler extends SapphireActionHandler 
 {
     public static final String ID = "Sapphire.Restore.Defaults";
     
@@ -185,11 +182,11 @@ public final class RestoreDefaultsActionHandler
                 collectProperties( related, result );
             }
         }
-        else if( part instanceof SapphireIfElseDirective )
+        else if( part instanceof IfThenElsePart )
         {
-            final SapphireIfElseDirective ifelse = (SapphireIfElseDirective) part;
+            final IfThenElsePart ifelse = (IfThenElsePart) part;
             
-            for( ISapphirePart child : ( ifelse.getConditionState() == true ? ifelse.getThenContent() : ifelse.getElseContent() ) )
+            for( ISapphirePart child : ifelse.getCurrentBranchContent() )
             {
                 collectProperties( child, result );
             }
