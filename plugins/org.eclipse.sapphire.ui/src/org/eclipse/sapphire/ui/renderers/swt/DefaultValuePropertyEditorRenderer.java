@@ -1,12 +1,13 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Accenture Services Pvt Ltd.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *   Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *   Kamesh Sampath - [354199] Support content proposals in text field property editor
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.renderers.swt;
@@ -33,17 +34,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.jface.bindings.keys.KeyStroke;
+import org.eclipse.jface.bindings.keys.ParseException;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.IContentProposal;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.SensitiveData;
+import org.eclipse.sapphire.services.ContentProposal;
+import org.eclipse.sapphire.services.ContentProposalService;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandler.PostExecuteEvent;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFilter;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
@@ -58,6 +69,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
@@ -65,14 +77,31 @@ import org.eclipse.swt.widgets.ToolBar;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a>
  */
 
-public class DefaultValuePropertyEditorRenderer
-
-    extends ValuePropertyEditorRenderer
-    
+public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRenderer
 {
     private Text textField;
+    
+    private static final String CONTENT_ASSIST_KEY_STROKE_STRING = "Ctrl+Space";
+    private static final KeyStroke CONTENT_ASSIST_KEY_STROKE;
+    
+    static
+    {
+        KeyStroke keyStroke = null;
+        
+        try
+        {
+            keyStroke = KeyStroke.getInstance( CONTENT_ASSIST_KEY_STROKE_STRING );
+        }
+        catch( ParseException e )
+        {
+            SapphireUiFrameworkPlugin.log( e );
+        }
+        
+        CONTENT_ASSIST_KEY_STROKE = keyStroke;
+    }
 
     public DefaultValuePropertyEditorRenderer( final SapphireRenderingContext context,
                                                final SapphirePropertyEditor part )
@@ -255,6 +284,20 @@ public class DefaultValuePropertyEditorRenderer
             relatedControls.add( toolbar );
         }
         
+        final ContentProposalService contentProposalService = element.service( property, ContentProposalService.class );
+        
+        if( contentProposalService != null )
+        {
+            final ContentProposalProvider contentProposalProvider = new ContentProposalProvider( contentProposalService, part );
+            
+            final ContentProposalAdapter contentProposalAdapter 
+                = new ContentProposalAdapter( this.textField, new TextContentAdapter(), contentProposalProvider, CONTENT_ASSIST_KEY_STROKE, null );
+            
+            contentProposalAdapter.setPropagateKeys( true );
+            contentProposalAdapter.setLabelProvider( new ContentProposalLabelProvider() );
+            contentProposalAdapter.setProposalAcceptanceStyle( ContentProposalAdapter.PROPOSAL_REPLACE );
+        }
+        
         if( isDeprecated )
         {
             final Control deprecationMarker = createDeprecationMarker( textFieldParent );
@@ -343,6 +386,100 @@ public class DefaultValuePropertyEditorRenderer
                                               final SapphirePropertyEditor part )
         {
             return new DefaultValuePropertyEditorRenderer( context, part );
+        }
+    }
+    
+    private static final class ContentProposalProvider implements
+            IContentProposalProvider {
+        private ContentProposalService contentProposalService;
+
+        private ContentProposalService.Session session = null;
+        private SapphirePart sapphirePart;
+
+        public ContentProposalProvider(
+                ContentProposalService contentProposalService,
+                SapphirePart sapphirePart) {
+            this.contentProposalService = contentProposalService;
+            this.sapphirePart = sapphirePart;
+        }
+
+        public IContentProposal[] getProposals(String contents, int position) {
+            if (this.session == null) {
+                this.session = this.contentProposalService.session();
+            }
+
+            final String oldFilter = this.session.filter();
+            final int oldFilterLength = oldFilter.length();
+            final String newFilter = contents.substring( 0, position );
+
+            if( position < oldFilterLength || ! oldFilter.equals( newFilter ) ) 
+            {
+                this.session = this.contentProposalService.session();
+                
+                if( position > 0 )
+                {
+                    this.session.advance( newFilter );
+                }
+            } 
+            else if( position > oldFilterLength )
+            {
+                this.session.advance( newFilter.substring( oldFilterLength ) );
+            }
+
+            List<ContentProposal> filterProposals = this.session.proposals();
+            IContentProposal[] arrContentProposals = makeProposalArray(filterProposals);
+            return arrContentProposals;
+        }
+
+        private IContentProposal[] makeProposalArray(
+                List<ContentProposal> proposals) {
+            if (proposals != null) {
+                IContentProposal[] arrContentProposals = new IContentProposal[proposals
+                        .size()];
+                for (int i = 0; i < proposals.size(); i++) {
+                    ContentProposal contentProposalInfo = proposals.get(i);
+                    ImageContentProposal contentProposal = new ImageContentProposal(
+                            contentProposalInfo.content(),
+                            contentProposalInfo.label(),
+                            contentProposalInfo.description(),
+                            contentProposalInfo.content().length(),
+                            this.sapphirePart.getImageCache().getImage(
+                                    contentProposalInfo.image()));
+                    arrContentProposals[i] = contentProposal;
+                }
+                return arrContentProposals;
+            } else {
+                return new IContentProposal[0];
+            }
+        }
+    }
+
+    private static final class ContentProposalLabelProvider extends LabelProvider {
+    
+        @Override
+        public Image getImage(Object element) {
+    
+            return ((ImageContentProposal) element).getImage();
+        }
+    
+        @Override
+        public String getText(Object element) {
+            return ((ImageContentProposal) element).getLabel();
+        }
+    }
+
+    private static final class ImageContentProposal extends org.eclipse.jface.fieldassist.ContentProposal {
+    
+        private Image image;
+    
+        public ImageContentProposal(String content, String label,
+                String description, int cursorPosition, Image image) {
+            super(content, label, description, cursorPosition);
+            this.image = image;
+        }
+    
+        public Image getImage() {
+            return this.image;
         }
     }
     

@@ -1,6 +1,6 @@
 <!-- 
  ******************************************************************************
- * Copyright (c) 2011 Oracle and others
+ * Copyright (c) 2011 Oracle and Other Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,15 +20,14 @@
 </head>
 
 <body>
-
 <h1>Enhancements in 0.4</h1>
-
 <ol>
   <li><a href="#Services">Services</a></li>
   <ol type="A">
     <li><a href="#FactsService">FactsService</a></li>
     <li><a href="#InitialValueService">InitialValueService and @InitialValue</a></li>
     <li><a href="#PossibleTypesService">PossibleTypesService</a></li>
+    <li><a href="#ContentProposalService">ContentProposalService</a></li>
   </ol>
   <li><a href="#UI">User Interface</a></li>
   <ol type="A">
@@ -43,7 +42,6 @@
 
  
 <h2><a name="Services"><a name="FactsService">FactsService</a></a></h2>
-
 <p>When a property is described to a user in documentation one does it with a series of short statements that
 define its semantics, such as "must be specified" or "maximum value is 100". When a property is
 described to Sapphire one does it with a series of annotations, such as @Required or
@@ -93,6 +91,22 @@ types needs to vary due to runtime conditions, a custom PossibleTypesService imp
 be supplied.</p>
 
 <p><a href="../../services/index.html#PossibleTypesService">See Documentation</a></p>
+
+
+<h2><a name="ContentProposalService">ContentProposalService</a></h2>
+
+<p>The ContentProposalService provides a conduit for content assist in property editors. If a property
+has this service, content assist will be automatically enabled in the property editor. The manner in which
+content assist is presented is specific to the presentation, but usually involves a popup window with
+proposals, activated by some combination of key strokes (such as CTRL+SPACE).</p>
+
+<p>The framework provides an implementation of ContentProposalService for properties with @PossibleValues 
+annotation or a custom PossibleValuesService, but this service can also be implemented directly by
+adopters.</p> 
+
+<p style="margin-left: 20px;"><img src="images/ContentProposalService.png"/></p>
+
+<p><a href="../../services/index.html#ContentProposalService">See Documentation</a></p>
 
 
 <h2><a name="UI"><a name="SplitForm">Split Form</a></a></h2>
@@ -173,7 +187,6 @@ to the list property editor versus the description text field.</p>
 
 
 <h2><a name="Miscellaneous"><a name="XmlDocumentType">@XmlDocumentType Annotation</a></a></h2>
-
 <p>The new @XmlDocumentType annotation can be used when working with DTD-based documents to easily specify systemId or
 publicId/systemId pair. Sapphire XML binding will manage the XML DOCTYPE declaration.</p>
 

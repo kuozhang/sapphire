@@ -1,6 +1,6 @@
 <!-- 
  ******************************************************************************
- * Copyright (c) 2011 Oracle and others
+ * Copyright (c) 2011 Oracle
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@
 <p>Many aspects of Sapphire can be extended by third parties.</p>
 
 <ul>
+  <li><a href="#ContentProposalService">ContentProposalService</a></li>
   <li><a href="#DependenciesAggregationService">DependenciesAggregationService</a></li>
   <li><a href="#DependenciesService">DependenciesService</a></li>
   <li><a href="#FactsAggregationService">FactsAggregationService</a></li>
@@ -33,6 +34,20 @@
   <li><a href="#InitialValueService">InitialValueService</a></li>
   <li><a href="#PossibleTypesService">PossibleTypesService</a></li>  
 </ul>
+
+
+<a name="ContentProposalService"><h2>ContentProposalService</h2></a>
+
+<p>The ContentProposalService provides a conduit for content assist in property editors. If a property
+has this service, content assist will be automatically enabled in the property editor. The manner in which
+content assist is presented is specific to the presentation, but usually involves a popup window with
+proposals, activated by some combination of key strokes (such as CTRL+SPACE).</p>
+
+<p>The framework provides an implementation of ContentProposalService for properties with @PossibleValues 
+annotation or a custom PossibleValuesService, but this service can also be implemented directly by
+adopters.</p> 
+
+<p style="margin-left: 20px;"><img src="images/ContentProposalService.png"/></p>
 
 
 <a name="DependenciesAggregationService"><h2>DependenciesAggregationService</h2></a>
@@ -379,7 +394,7 @@ implementation, the set of possible types is defined to be a singleton set compo
 type.</p>
 
 
-<div class="copyright">Copyright (c) 2011 Oracle<br/>
+<div class="copyright">Copyright (c) 2011 Oracle and others<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
 
 </body>

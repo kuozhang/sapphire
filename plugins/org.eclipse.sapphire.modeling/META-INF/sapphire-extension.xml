@@ -419,4 +419,11 @@
         <description>Implementation of PossibleTypesService using information specified by @Type annotation.</description>
         <factory>org.eclipse.sapphire.services.internal.StandardPossibleTypesService$Factory</factory>
     </service>
+    <service>
+        <id>Sapphire.ContentProposalService.PossibleValues</id>
+        <type>org.eclipse.sapphire.services.ContentProposalService</type>
+        <factory>org.eclipse.sapphire.services.internal.PossibleValuesContentProposalService$Factory</factory>
+        <context>Sapphire.Property.Instance</context>
+        <description>Implementation of ContentProposalService based on PossibleValuesService.</description>
+    </service>
 </extension>
