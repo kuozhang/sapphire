@@ -268,7 +268,7 @@
         <property>@{Property}</property>
         
         <case>
-            <model-element-type>ISapphirePropertyEditorDef</model-element-type>
+            <model-element-type>PropertyEditorDef</model-element-type>
             <label>${ Id == null ? ( Property == null ? "Property Editor" : Property ) : Id }</label>
             <use-model-element-image/>
             <section>

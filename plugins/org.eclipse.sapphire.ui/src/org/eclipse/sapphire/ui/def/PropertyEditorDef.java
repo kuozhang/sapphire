@@ -14,9 +14,11 @@ package org.eclipse.sapphire.ui.def;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
@@ -29,6 +31,7 @@ import org.eclipse.sapphire.modeling.xml.FoldingXmlValueBindingImpl;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.ui.def.internal.PropertyEditorDefMethods;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -38,12 +41,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 @Image( path = "PropertyEditorDef.gif" )
 @GenerateImpl
 
-public interface ISapphirePropertyEditorDef
-
-    extends FormPartDef
-    
+public interface PropertyEditorDef extends FormPartDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphirePropertyEditorDef.class );
+    ModelElementType TYPE = new ModelElementType( PropertyEditorDef.class );
     
     String HINT_CHECKBOX_LAYOUT = "checkbox.layout";
     String HINT_VALUE_CHECKBOX_LAYOUT_LEADING_LABEL = "leading.label";
@@ -63,13 +63,19 @@ public interface ISapphirePropertyEditorDef
     
     // *** ChildProperties ***
     
-    @Type( base = ISapphirePropertyEditorDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "child-property", type = ISapphirePropertyEditorDef.class ) )
+    @Type( base = PropertyEditorDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "child-property", type = PropertyEditorDef.class ) )
     @Label( standard = "child properties" )
     
     ListProperty PROP_CHILD_PROPERTIES = new ListProperty( TYPE, "ChildProperties" );
     
-    ModelElementList<ISapphirePropertyEditorDef> getChildProperties();
+    ModelElementList<PropertyEditorDef> getChildProperties();
+    
+    // *** Method : getChildPropertyEditor ***
+    
+    @DelegateImplementation( PropertyEditorDefMethods.class )
+    
+    PropertyEditorDef getChildPropertyEditor( ModelProperty property );
     
     // *** RelatedContent ***
     
@@ -78,7 +84,7 @@ public interface ISapphirePropertyEditorDef
         base = ISapphirePartDef.class,
         possible = 
         { 
-            ISapphirePropertyEditorDef.class, 
+            PropertyEditorDef.class, 
             ISapphireSeparatorDef.class,
             ISapphireSpacerDef.class,
             ISapphireLabelDef.class,
@@ -100,7 +106,7 @@ public interface ISapphirePropertyEditorDef
         path = "related-content",
         mappings =
         {
-            @XmlListBinding.Mapping( element = "property-editor", type = ISapphirePropertyEditorDef.class ),
+            @XmlListBinding.Mapping( element = "property-editor", type = PropertyEditorDef.class ),
             @XmlListBinding.Mapping( element = "separator", type = ISapphireSeparatorDef.class ),
             @XmlListBinding.Mapping( element = "spacer", type = ISapphireSpacerDef.class ),
             @XmlListBinding.Mapping( element = "label", type = ISapphireLabelDef.class ),

@@ -94,6 +94,7 @@ import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
+import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.ReadOnlyComboBoxCellEditor;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
 import org.eclipse.sapphire.ui.swt.renderer.HyperlinkTable;
@@ -352,8 +353,10 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         
         for( final ValueProperty memberProperty : columnProperties )
         {
+            final PropertyEditorDef childPropertyEditorDef = part.getDefinition().getChildPropertyEditor( memberProperty );
+            
             final TableViewerColumn col2 = new TableViewerColumn( this.tableViewer, SWT.NONE );
-            col2.getColumn().setText( memberProperty.getLabel( false, CapitalizationType.TITLE_STYLE, false ) );
+            col2.getColumn().setText( SapphirePropertyEditor.getLabel( memberProperty, childPropertyEditorDef, CapitalizationType.TITLE_STYLE, false ) );
             
             ColumnWeightData columnWeightData = null;
             

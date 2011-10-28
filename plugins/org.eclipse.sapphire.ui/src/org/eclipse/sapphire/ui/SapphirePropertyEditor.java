@@ -40,8 +40,8 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
-import org.eclipse.sapphire.ui.def.ISapphirePropertyEditorDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
+import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.BooleanPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.CheckBoxListPropertyEditorRenderer;
@@ -111,7 +111,7 @@ public final class SapphirePropertyEditor extends FormPart
         super.init();
         
         final ISapphireUiDef rootdef = this.definition.nearest( ISapphireUiDef.class );
-        final ISapphirePropertyEditorDef propertyEditorPartDef = (ISapphirePropertyEditorDef) this.definition;
+        final PropertyEditorDef propertyEditorPartDef = (PropertyEditorDef) this.definition;
         
         final String pathString = propertyEditorPartDef.getProperty().getContent();
         final ModelPath path = new ModelPath( pathString );
@@ -199,7 +199,7 @@ public final class SapphirePropertyEditor extends FormPart
             }
             else
             {
-                for( ISapphirePropertyEditorDef childPropertyEditor : propertyEditorPartDef.getChildProperties() )
+                for( PropertyEditorDef childPropertyEditor : propertyEditorPartDef.getChildProperties() )
                 {
                     final String childPropertyName = childPropertyEditor.getProperty().getContent();
                     final ModelProperty childProperty = type.getProperty( childPropertyName );
@@ -269,9 +269,9 @@ public final class SapphirePropertyEditor extends FormPart
     }
     
     @Override
-    public ISapphirePropertyEditorDef getDefinition()
+    public PropertyEditorDef getDefinition()
     {
-        return (ISapphirePropertyEditorDef) super.getDefinition();
+        return (PropertyEditorDef) super.getDefinition();
     }
     
     @Override
@@ -320,50 +320,50 @@ public final class SapphirePropertyEditor extends FormPart
             );
         }
         
-        SapphirePropertyEditor propertyEditor = propertyEditorsForElement.get( property );
+        SapphirePropertyEditor childPropertyEditorPart = propertyEditorsForElement.get( property );
         
-        if( propertyEditor == null )
+        if( childPropertyEditorPart == null )
         {
-            final String propertyName = property.getName();
-            ISapphirePropertyEditorDef def = null;
+            final String childPropertyName = property.getName();
+            PropertyEditorDef childPropertyEditorDef = ( (PropertyEditorDef) this.definition ).getChildPropertyEditor( property );
             
-            for( ISapphirePropertyEditorDef x : ( (ISapphirePropertyEditorDef) this.definition ).getChildProperties() )
+            if( childPropertyEditorDef == null )
             {
-                if( propertyName.equals( x.getProperty().getText() ) )
-                {
-                    def = x;
-                    break;
-                }
+                childPropertyEditorDef = PropertyEditorDef.TYPE.instantiate();
+                childPropertyEditorDef.setProperty( childPropertyName );
             }
             
-            if( def == null )
-            {
-                def = ISapphirePropertyEditorDef.TYPE.instantiate();
-                def.setProperty( propertyName );
-            }
+            childPropertyEditorPart = new SapphirePropertyEditor();
+            childPropertyEditorPart.init( this, element, childPropertyEditorDef, this.params );
             
-            propertyEditor = new SapphirePropertyEditor();
-            propertyEditor.init( this, element, def, this.params );
-            
-            propertyEditorsForElement.put( property, propertyEditor );
+            propertyEditorsForElement.put( property, childPropertyEditorPart );
         }
         
-        return propertyEditor;
+        return childPropertyEditorPart;
     }
     
     public String getLabel( final CapitalizationType capitalizationType,
                             final boolean includeMnemonic )
     {
-        final Value<String> labelFromDef = getDefinition().getLabel();
+        return getLabel( this.property, getDefinition(), capitalizationType, includeMnemonic );
+    }
+    
+    public static String getLabel( final ModelProperty property,
+                                   final PropertyEditorDef propertyEditorDef,
+                                   final CapitalizationType capitalizationType,
+                                   final boolean includeMnemonic )
+    {
+        if( propertyEditorDef != null )
+        {
+            final Value<String> labelFromDef = propertyEditorDef.getLabel();
+            
+            if( labelFromDef.getText( false ) != null )
+            {
+                return labelFromDef.getLocalizedText( false, capitalizationType, includeMnemonic );
+            }
+        }
         
-        if( labelFromDef.getText( false ) != null )
-        {
-            return labelFromDef.getLocalizedText( false, capitalizationType, includeMnemonic );
-        }
-        else
-        {
-            return this.property.getLabel( false, capitalizationType, includeMnemonic );
-        }
+        return property.getLabel( false, capitalizationType, includeMnemonic );
     }
     
     public boolean getShowLabel()

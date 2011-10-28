@@ -56,7 +56,7 @@ public interface ISapphireHint
             "aux.text.provider",
             "border",
             "browse.only",
-            ISapphirePropertyEditorDef.HINT_CHECKBOX_LAYOUT,
+            PropertyEditorDef.HINT_CHECKBOX_LAYOUT,
             "column.widths",
             "factory",
             ISapphirePartDef.HINT_HIDE_IF_DISABLED,

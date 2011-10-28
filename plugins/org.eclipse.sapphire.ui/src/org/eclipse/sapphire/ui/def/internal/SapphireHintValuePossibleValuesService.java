@@ -20,7 +20,7 @@ import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
-import org.eclipse.sapphire.ui.def.ISapphirePropertyEditorDef;
+import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
 
 /**
@@ -41,11 +41,11 @@ public final class SapphireHintValuePossibleValuesService
         
         if( hint != null )
         {
-            if( hint.equals( ISapphirePropertyEditorDef.HINT_CHECKBOX_LAYOUT ) )
+            if( hint.equals( PropertyEditorDef.HINT_CHECKBOX_LAYOUT ) )
             {
-                values.add( ISapphirePropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_LEADING_LABEL );
-                values.add( ISapphirePropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL );
-                values.add( ISapphirePropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL_INDENTED );
+                values.add( PropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_LEADING_LABEL );
+                values.add( PropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL );
+                values.add( PropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL_INDENTED );
             }
             else if ( hint.equals( ISapphirePartDef.HINT_STYLE ) ) 
             {

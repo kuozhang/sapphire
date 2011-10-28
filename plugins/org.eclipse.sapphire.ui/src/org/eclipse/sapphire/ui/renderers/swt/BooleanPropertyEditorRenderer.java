@@ -25,7 +25,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
-import org.eclipse.sapphire.ui.def.ISapphirePropertyEditorDef;
+import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
@@ -56,21 +56,21 @@ public final class BooleanPropertyEditorRenderer extends ValuePropertyEditorRend
         final ValueProperty property = (ValueProperty) part.getProperty();
         
         final CheckboxLayout checkboxLayout;
-        final String checkboxLayoutHint = part.getDefinition().getHint( ISapphirePropertyEditorDef.HINT_CHECKBOX_LAYOUT );
+        final String checkboxLayoutHint = part.getDefinition().getHint( PropertyEditorDef.HINT_CHECKBOX_LAYOUT );
         
         if( checkboxLayoutHint == null )
         {
             checkboxLayout = CheckboxLayout.TRAILING_LABEL;
         }
-        else if( checkboxLayoutHint.equalsIgnoreCase( ISapphirePropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_LEADING_LABEL ) )
+        else if( checkboxLayoutHint.equalsIgnoreCase( PropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_LEADING_LABEL ) )
         {
             checkboxLayout = CheckboxLayout.LEADING_LABEL;
         }
-        else if( checkboxLayoutHint.equalsIgnoreCase( ISapphirePropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL ) )
+        else if( checkboxLayoutHint.equalsIgnoreCase( PropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL ) )
         {
             checkboxLayout = CheckboxLayout.TRAILING_LABEL;
         }
-        else if( checkboxLayoutHint.equalsIgnoreCase( ISapphirePropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL_INDENTED ) )
+        else if( checkboxLayoutHint.equalsIgnoreCase( PropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL_INDENTED ) )
         {
             checkboxLayout = CheckboxLayout.TRAILING_LABEL_INDENTED;
         }

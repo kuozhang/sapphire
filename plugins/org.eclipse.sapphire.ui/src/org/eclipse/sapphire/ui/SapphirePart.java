@@ -54,7 +54,7 @@ import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartListenerDef;
-import org.eclipse.sapphire.ui.def.ISapphirePropertyEditorDef;
+import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.def.ISapphireSeparatorDef;
 import org.eclipse.sapphire.ui.def.ISapphireSpacerDef;
 import org.eclipse.sapphire.ui.def.ISapphireStaticTextFieldDef;
@@ -734,7 +734,7 @@ public abstract class SapphirePart implements ISapphirePart
         Map<String,String> partParams = params;
         ISapphirePartDef def = definition;
         
-        if( definition instanceof ISapphirePropertyEditorDef )
+        if( definition instanceof PropertyEditorDef )
         {
             part = new SapphirePropertyEditor();
         }

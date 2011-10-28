@@ -87,7 +87,7 @@ public interface ISapphireUiDef
         base = ISapphirePartDef.class,
         possible = 
         { 
-            ISapphirePropertyEditorDef.class, 
+            PropertyEditorDef.class, 
             ISapphireSeparatorDef.class,
             ISapphireSpacerDef.class,
             ISapphireLabelDef.class,
@@ -116,7 +116,7 @@ public interface ISapphireUiDef
     ( 
         mappings =
         {
-            @XmlListBinding.Mapping( element = "property-editor", type = ISapphirePropertyEditorDef.class ),
+            @XmlListBinding.Mapping( element = "property-editor", type = PropertyEditorDef.class ),
             @XmlListBinding.Mapping( element = "separator", type = ISapphireSeparatorDef.class ),
             @XmlListBinding.Mapping( element = "spacer", type = ISapphireSpacerDef.class ),
             @XmlListBinding.Mapping( element = "label", type = ISapphireLabelDef.class ),
