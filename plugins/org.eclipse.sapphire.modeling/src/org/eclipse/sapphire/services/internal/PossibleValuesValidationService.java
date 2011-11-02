@@ -14,6 +14,8 @@ package org.eclipse.sapphire.services.internal;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.Status;
@@ -33,59 +35,83 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class PossibleValuesValidationService extends ValidationService
 {
+    private PossibleValuesService possibleValuesService;
+    private Listener possibleValuesServiceListener;
+    
+    @Override
+    protected void init()
+    {
+        super.init();
+        
+        final IModelElement element = context( IModelElement.class );
+        final ValueProperty property = context( ValueProperty.class );
+        
+        this.possibleValuesService = element.service( property, PossibleValuesService.class );
+        
+        if( this.possibleValuesService != null )
+        {
+            this.possibleValuesServiceListener = new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    broadcast();
+                }
+            };
+            
+            this.possibleValuesService.attach( this.possibleValuesServiceListener );
+        }
+    }
+
     @Override
     public Status validate()
     {
-        final Value<?> value = context( IModelElement.class ).read( context( ValueProperty.class ) );
-        final IModelElement modelElement = value.parent();
+        final IModelElement element = context( IModelElement.class );
+        final ValueProperty property = context( ValueProperty.class );
+        final Value<?> value = element.read( property );
         final String valueString = value.getText( true );
         
-        if( valueString != null )
+        if( valueString != null && this.possibleValuesService != null )
         {
-            final PossibleValuesService valuesProvider = modelElement.service( value.getProperty(), PossibleValuesService.class );
+            Collection<String> values = this.possibleValuesService.values();
             
-            if( valuesProvider != null )
+            for( String v : values )
             {
-                Collection<String> values = valuesProvider.values();
-                
+                if( v == null )
+                {
+                    final String msg = NLS.bind( Resources.possibleValuesServiceReturnedNull, this.possibleValuesService.getClass().getName() );
+                    LoggingService.log( Status.createErrorStatus( msg ) );
+                    
+                    values = Collections.emptyList();
+                }
+            }
+            
+            boolean found = false;
+            
+            if( this.possibleValuesService.isCaseSensitive() )
+            {
+                found = values.contains( valueString );
+            }
+            else
+            {
                 for( String v : values )
                 {
-                    if( v == null )
+                    if( v.equalsIgnoreCase( valueString ) )
                     {
-                        final String msg = NLS.bind( Resources.valuesProviderReturnedNull, valuesProvider.getClass().getName() );
-                        LoggingService.log( Status.createErrorStatus( msg ) );
-                        
-                        values = Collections.emptyList();
+                        found = true;
+                        break;
                     }
                 }
-                
-                boolean found = false;
-                
-                if( valuesProvider.isCaseSensitive() )
-                {
-                    found = values.contains( valueString );
-                }
-                else
-                {
-                    for( String v : values )
-                    {
-                        if( v.equalsIgnoreCase( valueString ) )
-                        {
-                            found = true;
-                            break;
-                        }
-                    }
-                }
+            }
 
-                if( ! found )
+            if( ! found )
+            {
+                final Status.Severity severity = this.possibleValuesService.getInvalidValueSeverity( valueString );
+                
+                if( severity != Status.Severity.OK )
                 {
-                    final Status.Severity severity = valuesProvider.getInvalidValueSeverity( valueString );
-                    
-                    if( severity != Status.Severity.OK )
-                    {
-                        final String message = valuesProvider.getInvalidValueMessage( valueString );
-                        return Status.createStatus( severity, message );
-                    }
+                    final String message = this.possibleValuesService.getInvalidValueMessage( valueString );
+                    return Status.createStatus( severity, message );
                 }
             }
         }
@@ -93,6 +119,17 @@ public final class PossibleValuesValidationService extends ValidationService
         return Status.createOkStatus();
     }
     
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        if( this.possibleValuesServiceListener != null )
+        {
+            this.possibleValuesService.detach( this.possibleValuesServiceListener );
+        }
+    }
+
     public static final class Factory extends ServiceFactory
     {
         @Override
@@ -124,7 +161,7 @@ public final class PossibleValuesValidationService extends ValidationService
 
     private static final class Resources extends NLS
     {
-        public static String valuesProviderReturnedNull;
+        public static String possibleValuesServiceReturnedNull;
         
         static
         {

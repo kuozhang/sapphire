@@ -32,9 +32,9 @@ import org.eclipse.sapphire.modeling.annotations.ClearOnDisable;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.DependenciesAggregationService;
 import org.eclipse.sapphire.services.EnablementService;
-import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ValidationService;
 import org.eclipse.sapphire.services.internal.ElementInstanceServiceContext;
 import org.eclipse.sapphire.services.internal.PropertyInstanceServiceContext;
 
@@ -101,27 +101,26 @@ public abstract class ModelElement
                     addListener( listener, dependency );
                 }
             }
+
+            Listener validationServiceListener = null;
             
-            if( property instanceof ValueProperty )
+            for( ValidationService validationService : services( property, ValidationService.class ) )
             {
-                final PossibleValuesService possibleValuesProvider = service( property, PossibleValuesService.class );
-                
-                if( possibleValuesProvider != null )
+                if( validationServiceListener == null )
                 {
-                    possibleValuesProvider.attach
-                    (
-                        new Listener()
+                    validationServiceListener = new Listener()
+                    {
+                        @Override
+                        public void handle( final Event event )
                         {
-                            @Override
-                            public void handle( final Event event )
-                            {
-                                refresh( property );
-                            }
+                            refresh( property );
                         }
-                    );
+                    };
                 }
+                
+                validationService.attach( validationServiceListener );
             }
-            
+
             if( property.hasAnnotation( ClearOnDisable.class ) )
             {
                 ModelPropertyListener listener = null;
