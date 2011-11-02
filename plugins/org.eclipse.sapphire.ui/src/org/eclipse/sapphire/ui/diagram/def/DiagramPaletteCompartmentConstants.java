@@ -9,7 +9,7 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>

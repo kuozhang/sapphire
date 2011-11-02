@@ -13,7 +13,7 @@ package org.eclipse.sapphire.samples.contacts.internal;
 
 import java.util.SortedSet;
 
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.samples.contacts.IAddress;
 import org.eclipse.sapphire.samples.zipcodes.ZipCodesDatabase;
 import org.eclipse.sapphire.services.PossibleValuesService;

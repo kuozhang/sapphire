@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.internal.binding;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.swt.widgets.Control;

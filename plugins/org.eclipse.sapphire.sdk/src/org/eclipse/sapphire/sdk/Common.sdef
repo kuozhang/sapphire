@@ -16,6 +16,7 @@
 
     <import>
         <package>org.eclipse.sapphire.sdk.internal</package>
+        <package>org.eclipse.sapphire.ui.renderers.swt</package>
     </import>
     
     <node>
@@ -166,4 +167,24 @@
         </node-factory>
     </node>
     
+    <composite>
+        <id>StandardFolderAndFileNameBlock</id>
+        <content>
+            <property-editor>
+                <property>Folder</property>
+                <hint>
+                    <name>factory</name>
+                    <value>EclipseWorkspacePathPropertyEditorRenderer$Factory</value>
+                </hint>
+                <span>true</span>
+                <scale-vertically>true</scale-vertically>
+            </property-editor>
+            <property-editor>FileName</property-editor>
+            <property-editor>OverwriteExistingFile</property-editor>
+        </content>
+        <scale-vertically>true</scale-vertically>
+        <width>400</width>
+        <height>300</height>
+    </composite>
+
 </definition>

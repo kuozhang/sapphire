@@ -139,5 +139,19 @@
             </node-include>
         </root-node>
     </editor-page>
+    <wizard>
+        <id>CreateExtensionManifestWizard</id>
+        <label>New Sapphire Extension Manifest</label>
+        <page>
+            <id>CreateExtensionManifestWizard.MainPage</id>
+            <label>Sapphire Extension Manifest</label>
+            <description>Create Sapphire extension manifest at specified location.</description>
+            <content>
+                <include>StandardFolderAndFileNameBlock</include>
+            </content>
+            <scale-vertically>true</scale-vertically>
+            <image>org/eclipse/sapphire/sdk/SapphireWizardBanner.png</image>
+        </page>
+    </wizard>
     
 </definition>

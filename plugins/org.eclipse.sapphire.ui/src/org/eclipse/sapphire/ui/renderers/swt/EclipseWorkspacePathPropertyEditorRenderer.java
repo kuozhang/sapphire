@@ -13,7 +13,6 @@ package org.eclipse.sapphire.ui.renderers.swt;
 
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import org.eclipse.core.resources.IFile;
@@ -54,10 +53,7 @@ import org.eclipse.ui.part.DrillDownComposite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EclipseWorkspacePathPropertyEditorRenderer
-
-    extends DefaultValuePropertyEditorRenderer
-    
+public final class EclipseWorkspacePathPropertyEditorRenderer extends DefaultValuePropertyEditorRenderer
 {
     public EclipseWorkspacePathPropertyEditorRenderer( final SapphireRenderingContext context,
                                                        final SapphirePropertyEditor part )
@@ -72,13 +68,25 @@ public final class EclipseWorkspacePathPropertyEditorRenderer
         final IModelElement element = part.getLocalModelElement();
         final ModelProperty property = part.getProperty();
         
-        final Composite mainComposite = createMainComposite( parent );
-        mainComposite.setLayout( glayout( 2, 0, 0 ) );
+        final Text textField = (Text) super.createContents( parent, true );
 
-        final Text textField = (Text) super.createContents( mainComposite, true );
+        final Composite drillDownParent = createMainComposite
+        ( 
+            parent,
+            new CreateMainCompositeDelegate( part )
+            {
+                @Override
+                public boolean getShowLabel()
+                {
+                    return false;
+                }
+            }
+        );
+        
+        drillDownParent.setLayout( glayout( 1, 9, 0, 0, 0 ) );
 
-        final DrillDownComposite drillDown = new DrillDownComposite( mainComposite, SWT.BORDER );
-        drillDown.setLayoutData( gdhspan( gdfill(), 2 ) );
+        final DrillDownComposite drillDown = new DrillDownComposite( drillDownParent, SWT.BORDER );
+        drillDown.setLayoutData( gdfill() );
 
         final TreeViewer treeViewer = new TreeViewer( drillDown, SWT.NONE );
         final Tree tree = treeViewer.getTree();
@@ -211,10 +219,13 @@ public final class EclipseWorkspacePathPropertyEditorRenderer
         }
     }
     
-    public static final class Factory
-    
-        extends PropertyEditorRendererFactory
-        
+    @Override
+    protected boolean canScaleVertically()
+    {
+        return true;
+    }
+
+    public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
         public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )

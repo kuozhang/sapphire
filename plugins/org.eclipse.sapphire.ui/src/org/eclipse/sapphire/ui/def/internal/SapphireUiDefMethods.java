@@ -14,9 +14,9 @@ package org.eclipse.sapphire.ui.def.internal;
 
 import java.lang.reflect.Field;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.ClassLocator;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.IDefinitionReference;
 import org.eclipse.sapphire.ui.def.IPackageReference;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;

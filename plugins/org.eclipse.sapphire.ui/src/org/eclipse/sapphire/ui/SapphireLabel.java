@@ -18,8 +18,8 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.reflowOnResize;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.swt.SapphireTextPopup;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;

@@ -31,13 +31,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -245,7 +245,7 @@ public abstract class PropertyEditorRenderer
         return createMainComposite( parent, new CreateMainCompositeDelegate( this.part ) );
     }
     
-    protected static class CreateMainCompositeDelegate
+    protected class CreateMainCompositeDelegate
     {
         private final SapphirePropertyEditor part;
         
@@ -273,6 +273,11 @@ public abstract class PropertyEditorRenderer
         public boolean getSpanBothColumns()
         {
             return this.part.getSpanBothColumns();
+        }
+        
+        public boolean canScaleVertically()
+        {
+            return PropertyEditorRenderer.this.canScaleVertically();
         }
     }
     
@@ -304,7 +309,7 @@ public abstract class PropertyEditorRenderer
         
         GridData gd;
         
-        if( canScaleVertically() )
+        if( delegate.canScaleVertically() )
         {
             final boolean scaleVertically = this.part.getScaleVertically();
             gd = gdhhint( ( scaleVertically ? gdfill() : gdhfill() ), this.part.getHeight( 150 ) );

@@ -12,10 +12,10 @@
 package org.eclipse.sapphire.ui.swt;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;

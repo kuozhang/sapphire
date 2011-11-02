@@ -63,5 +63,20 @@
   <extension point="org.eclipse.ui.editors.templates">
     <include file="templates/modeling/templates.xml" translations="templates/modeling/templates.properties" /> 
   </extension>
+  
+  <extension point="org.eclipse.ui.newWizards">
+	<category
+      id="Sapphire"
+      name="%WizardCategory">
+	</category>
+    <wizard
+      id="org.eclipse.sapphire.sdk.internal.CreateExtensionManifestWizard"
+      category="Sapphire"
+      class="org.eclipse.sapphire.sdk.internal.CreateExtensionManifestWizard"
+      name="%CreateExtensionManifestWizard.Name"
+      icon="org/eclipse/sapphire/sdk/SapphireCreateFileWizard.png">
+      <description>%CreateExtensionManifestWizard.Description</description>
+    </wizard>
+  </extension>
 
 </plugin>

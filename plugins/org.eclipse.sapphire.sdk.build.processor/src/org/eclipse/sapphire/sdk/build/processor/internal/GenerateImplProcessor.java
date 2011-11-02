@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
@@ -50,6 +49,7 @@ import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.AccessModifier;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.Body;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.ClassModel;

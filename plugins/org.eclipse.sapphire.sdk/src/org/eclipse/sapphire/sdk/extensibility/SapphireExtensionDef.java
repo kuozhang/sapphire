@@ -28,12 +28,11 @@ import org.eclipse.sapphire.ui.def.ISapphireUiExtensionDef;
 @GenerateImpl
 @XmlRootBinding( elementName = "extension", namespace = "http://www.eclipse.org/sapphire/xmlns/extension" )
 
-public interface SapphireExtensionDef
-
-    extends ISapphireUiExtensionDef
-    
+public interface SapphireExtensionDef extends ISapphireUiExtensionDef
 {
     ModelElementType TYPE = new ModelElementType( SapphireExtensionDef.class );
+    
+    String FILE_NAME = "sapphire-extension.xml";
 
     // *** Services ***
     

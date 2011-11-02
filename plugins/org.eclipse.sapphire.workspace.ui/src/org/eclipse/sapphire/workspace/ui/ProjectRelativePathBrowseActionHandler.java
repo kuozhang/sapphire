@@ -15,8 +15,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.Path;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler;

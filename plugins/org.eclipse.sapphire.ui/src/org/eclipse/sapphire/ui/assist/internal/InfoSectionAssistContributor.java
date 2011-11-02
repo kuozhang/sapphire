@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.assist.internal;
 
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;

@@ -653,11 +653,23 @@ public final class ExtensionSummaryExportOpMethods
                         try
                         {
                             final Reader reader = new InputStreamReader( in );
-                            final char[] chars = new char[ 1024 ];
                             
-                            for( int count = reader.read( chars ); count != -1; count = reader.read( chars ) )
+                            try
                             {
-                                buf.append( chars, 0, count );
+                                final char[] chars = new char[ 1024 ];
+                                
+                                for( int count = reader.read( chars ); count != -1; count = reader.read( chars ) )
+                                {
+                                    buf.append( chars, 0, count );
+                                }
+                            }
+                            finally
+                            {
+                                try
+                                {
+                                    reader.close();
+                                }
+                                catch( IOException e ) {}
                             }
                         }
                         finally

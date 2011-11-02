@@ -156,7 +156,18 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
         final boolean isActionsToolBarNeeded = toolBarActionsPresentation.hasActions();
         final boolean isBrowseOnly = part.getRenderingHint( HINT_BROWSE_ONLY, false );
         
-        final Composite textFieldParent = createMainComposite( parent );
+        final Composite textFieldParent = createMainComposite
+        (
+            parent,
+            new CreateMainCompositeDelegate( part )
+            {
+                @Override
+                public boolean canScaleVertically()
+                {
+                    return isLongString;
+                }
+            }
+        );
         
         this.context.adapt( textFieldParent );
 

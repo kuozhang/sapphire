@@ -12,8 +12,8 @@
 package org.eclipse.sapphire.ui;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 
 /**

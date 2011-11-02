@@ -14,7 +14,7 @@ package org.eclipse.sapphire.sdk.internal;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.sdk.extensibility.ExtensionSummaryExportOp;
 import org.eclipse.sapphire.sdk.extensibility.SapphireExtensionDef;
 import org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml;
@@ -38,7 +38,7 @@ public final class SapphireExtensionEditor
         super( "org.eclipse.sapphire.sdk" );
         
         setRootModelElementType( SapphireExtensionDef.TYPE );
-        setEditorDefinitionPath( "org.eclipse.sapphire.sdk/org/eclipse/sapphire/sdk/ExtensionEditor.sdef/main" );
+        setEditorDefinitionPath( "org.eclipse.sapphire.sdk/org/eclipse/sapphire/sdk/ExtensionManifest.sdef/main" );
     }
 
     @Override

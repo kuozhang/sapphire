@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * Topological sort implementation. Useful for sorting entities in dependency order or for

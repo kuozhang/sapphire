@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
