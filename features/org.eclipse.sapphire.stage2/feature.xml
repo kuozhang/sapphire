@@ -23,6 +23,9 @@
     <plugin download-size="0" id="org.eclipse.sapphire.osgi.fragment" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.ui" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.ui.swt.xml.editor" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.platform" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.workspace" install-size="0" unpack="false" version="0.0.0"/>
+    <plugin download-size="0" id="org.eclipse.sapphire.workspace.ui" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.sdk" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.sdk.build.processor" install-size="0" unpack="false" version="0.0.0"/>
 
