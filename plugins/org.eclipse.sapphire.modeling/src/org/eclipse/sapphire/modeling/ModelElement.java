@@ -29,6 +29,7 @@ import org.eclipse.sapphire.modeling.ModelPath.ModelRootSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.ModelPath.TypeFilterSegment;
 import org.eclipse.sapphire.modeling.annotations.ClearOnDisable;
+import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.DependenciesAggregationService;
 import org.eclipse.sapphire.services.EnablementService;
@@ -496,49 +497,52 @@ public abstract class ModelElement
         
         for( ModelProperty property : this.type.getProperties() )
         {
-            if( property instanceof ValueProperty )
+            if( ! property.isReadOnly() )
             {
-                final ValueProperty prop = (ValueProperty) property;
-                write( prop, element.read( prop ).getText( false ) );
-            }
-            else if( property instanceof ImpliedElementProperty )
-            {
-                final ImpliedElementProperty prop = (ImpliedElementProperty) property;
-                read( prop ).copy( element.read( prop ) );
-            }
-            else if( property instanceof ElementProperty )
-            {
-                final ElementProperty prop = (ElementProperty) property;
-                final IModelElement elementChild = element.read( prop ).element();
-                final ModelElementHandle<?> handle = read( prop );
-                
-                if( elementChild == null )
+                if( property instanceof ValueProperty )
                 {
-                    handle.remove();
+                    final ValueProperty prop = (ValueProperty) property;
+                    write( prop, element.read( prop ).getText( false ) );
                 }
-                else
+                else if( property instanceof ImpliedElementProperty )
                 {
-                    final IModelElement thisChild = handle.element( true, elementChild.getModelElementType() );
-                    thisChild.copy( elementChild );
+                    final ImpliedElementProperty prop = (ImpliedElementProperty) property;
+                    read( prop ).copy( element.read( prop ) );
                 }
-            }
-            else if( property instanceof ListProperty )
-            {
-                final ListProperty prop = (ListProperty) property;
-                final ModelElementList<?> list = read( prop );
-                
-                list.clear();
-                
-                for( final IModelElement elementChild : element.read( prop ) )
+                else if( property instanceof ElementProperty )
                 {
-                    final IModelElement thisChild = list.addNewElement( elementChild.getModelElementType() );
-                    thisChild.copy( elementChild );
+                    final ElementProperty prop = (ElementProperty) property;
+                    final IModelElement elementChild = element.read( prop ).element();
+                    final ModelElementHandle<?> handle = read( prop );
+                    
+                    if( elementChild == null )
+                    {
+                        handle.remove();
+                    }
+                    else
+                    {
+                        final IModelElement thisChild = handle.element( true, elementChild.getModelElementType() );
+                        thisChild.copy( elementChild );
+                    }
                 }
-            }
-            else if( property instanceof TransientProperty )
-            {
-                final TransientProperty prop = (TransientProperty) property;
-                write( prop, element.read( prop ).content() );
+                else if( property instanceof ListProperty )
+                {
+                    final ListProperty prop = (ListProperty) property;
+                    final ModelElementList<?> list = read( prop );
+                    
+                    list.clear();
+                    
+                    for( final IModelElement elementChild : element.read( prop ) )
+                    {
+                        final IModelElement thisChild = list.addNewElement( elementChild.getModelElementType() );
+                        thisChild.copy( elementChild );
+                    }
+                }
+                else if( property instanceof TransientProperty )
+                {
+                    final TransientProperty prop = (TransientProperty) property;
+                    write( prop, element.read( prop ).content() );
+                }
             }
         }
     }
