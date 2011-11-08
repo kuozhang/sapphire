@@ -200,8 +200,14 @@
               Feature="org.eclipse.sapphire.samples" 
               Repository="${build.dir}/repository"
               WorkArea="${build.dir}/test-translation"/>
-
+              
             <!-- Stage 7 -->
+            
+            <echo message="Performing repository verification..."/>
+            
+            <VerifyAboutHtml Repository="${build.dir}/repository"/>
+
+            <!-- Stage 8 -->
             
             <property-from-set property=".sapphire.feature">
               <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire.modeling_*.jar"/>
@@ -230,7 +236,7 @@
               </then>
             </if>
 
-            <!-- Stage 8 -->
+            <!-- Stage 9 -->
 
             <echo message="Packaging the repository..."/>
 
@@ -373,6 +379,12 @@ Bundle-Vendor: Eclipse.org - Sapphire
 Fragment-Host: @{Bundle}
 </echo>
 
+      <unzip src="${.bundle.file}" dest="@{WorkArea}/reversed">
+        <patternset>
+          <include name="about.html"/>
+        </patternset>
+      </unzip>
+
       <zip destfile="@{Repository}/plugins/@{Bundle}.nl_re_${.bundle.version}.jar" basedir="@{WorkArea}/reversed"/>
       
       <unzip src="${.feature.file}" dest="@{WorkArea}/feature"/>
@@ -494,6 +506,57 @@ Fragment-Host: @{Bundle}
       <var name=".file.content" unset="true"/>
       <var name=".file.relative" unset="true"/>
       <var name=".verify.author.failed" unset="true"/>
+    </sequential>
+  </macrodef>
+  
+  
+  <macrodef name="VerifyAboutHtml">
+    <attribute name="Repository"/>
+    <sequential>
+      <var name=".verify.about.html.failures" unset="true"/>
+      <for param="file">
+        <path>
+          <fileset dir="@{Repository}/plugins">
+            <include name="org.eclipse.sapphire*.jar"/>
+          </fileset>
+        </path>
+        <sequential>
+          <delete dir="${build.dir}/temp" quiet="true"/>
+          <mkdir dir="${build.dir}/temp"/>
+          <unzip src="@{file}" dest="${build.dir}/temp"/>
+          <if>
+            <not>
+              <available file="${build.dir}/temp/about.html"/>
+            </not>
+            <then>
+              <basename file="@{file}" property=".file.relative"/>
+              <if>
+                <isset property=".verify.about.html.failures"/>
+                <then>
+                  <var name=".verify.about.html.failures" value="${.verify.about.html.failures};${.file.relative}"/>
+                </then>
+                <else>
+                  <var name=".verify.about.html.failures" value="${.file.relative}"/>
+                </else>
+              </if>
+              <var name=".file.relative" unset="true"/>
+            </then>
+          </if>
+        </sequential>
+      </for>
+      <if>
+        <isset property=".verify.about.html.failures"/>
+        <then>
+          <echo message="Bundles missing about.html file:"/>
+          <for param="file" list="${.verify.about.html.failures}" delimiter=";">
+            <sequential>
+              <echo message="   @{file}"/>
+            </sequential>
+          </for>
+          <fail message="Found one or more bundles missing about.html file."/>
+        </then>
+      </if>
+      <var name=".verify.about.html.failures" unset="true"/>
     </sequential>
   </macrodef>
 
