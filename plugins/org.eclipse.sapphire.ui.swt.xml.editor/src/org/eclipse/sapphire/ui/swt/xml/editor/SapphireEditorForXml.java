@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Other Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [363258] Allow dynamic model types for SapphireEditorForXml
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.xml.editor;
@@ -26,10 +27,7 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphireEditorForXml
-
-    extends SapphireEditor
-    
+public abstract class SapphireEditorForXml extends SapphireEditor
 {
     private static final String PAGE_MAIN_FORM = "main.form";
     private static final String PAGE_MAIN_SOURCE = "main.source";
@@ -64,7 +62,7 @@ public abstract class SapphireEditorForXml
         this.rootModelElementType = rootModelElementType;
     }
     
-    protected final IModelElement createModel()
+    protected IModelElement createModel()
     {
         final XmlEditorResourceStore store = createResourceStore( this.sourceEditor );
         return this.rootModelElementType.instantiate( new RootXmlResource( store ) );
@@ -76,10 +74,7 @@ public abstract class SapphireEditorForXml
     }
     
     @Override
-    protected final void createSourcePages()
-    
-        throws PartInitException
-        
+    protected final void createSourcePages() throws PartInitException
     {
         this.sourceEditor = new StructuredTextEditor();
         this.sourceEditor.setEditorPart(this);
@@ -90,10 +85,7 @@ public abstract class SapphireEditorForXml
     }
     
     @Override
-    protected void createFormPages()
-    
-        throws PartInitException
-        
+    protected void createFormPages() throws PartInitException
     {
         this.mainPage = new MasterDetailsEditorPage( this, getModelElement(), new Path( getEditorDefinitionPath() ) );
         addPage( 0, this.mainPage );
