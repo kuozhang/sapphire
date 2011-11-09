@@ -89,7 +89,7 @@ public interface TestModel extends IModelElement
     
     @Type( base = Path.class )
     @ValidFileSystemResourceType( FileSystemResourceType.FILE )
-    @FileExtensions( expr = "${ Parent().LossyCompression ? 'jpeg' : 'png,gif' }" )
+    @FileExtensions( expr = "${ empty Parent() ? 'jpeg' : ( Parent().LossyCompression ? 'jpeg' : 'png,gif' ) }" )
     @AbsolutePath
     
     ValueProperty PROP_FILE_PATH_5 = new ValueProperty( TYPE, "FilePath5" );
