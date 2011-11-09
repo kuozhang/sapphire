@@ -49,39 +49,43 @@ public final class SapphireUiDefFactory
                                        final String path )
     {
         final ResourceLocator resourceLocator = context.adapt( ResourceLocator.class );
-        final URL url = resourceLocator.find( path );
         
-        if( url != null )
+        if( resourceLocator != null )
         {
-            final ClassLocator classLocator = context.adapt( ClassLocator.class );
+            final URL url = resourceLocator.find( path );
             
-            try
+            if( url != null )
             {
-                final UrlResourceStore resourceStore = new UrlResourceStore( url )
-                {
-                    @Override
-                    @SuppressWarnings( "unchecked" )
-                    
-                    public <A> A adapt( final Class<A> adapterType )
-                    {
-                        if( adapterType == ResourceLocator.class )
-                        {
-                            return (A) resourceLocator;
-                        }
-                        else if( adapterType == ClassLocator.class )
-                        {
-                            return (A) classLocator;
-                        }
-                        
-                        return super.adapt( adapterType );
-                    }
-                };
+                final ClassLocator classLocator = context.adapt( ClassLocator.class );
                 
-                return load( new XmlResourceStore( resourceStore ), false );
-            }
-            catch( ResourceStoreException e )
-            {
-                LoggingService.log( e );
+                try
+                {
+                    final UrlResourceStore resourceStore = new UrlResourceStore( url )
+                    {
+                        @Override
+                        @SuppressWarnings( "unchecked" )
+                        
+                        public <A> A adapt( final Class<A> adapterType )
+                        {
+                            if( adapterType == ResourceLocator.class )
+                            {
+                                return (A) resourceLocator;
+                            }
+                            else if( adapterType == ClassLocator.class )
+                            {
+                                return (A) classLocator;
+                            }
+                            
+                            return super.adapt( adapterType );
+                        }
+                    };
+                    
+                    return load( new XmlResourceStore( resourceStore ), false );
+                }
+                catch( ResourceStoreException e )
+                {
+                    LoggingService.log( e );
+                }
             }
         }
         
