@@ -9,27 +9,28 @@
  *    Ling Hao - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.gef.diagram.editor.policies;
+package org.eclipse.sapphire.ui.gef.diagram.editor.commands;
 
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editpolicies.ComponentEditPolicy;
-import org.eclipse.gef.requests.GroupRequest;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.gef.diagram.editor.commands.DeleteNodeCommand;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class NodeEditPolicy extends ComponentEditPolicy {
+public class LabelConnectionCommand extends Command {
+	
+	private DiagramConnectionPart part;
+	private String labelText;
 
-	@Override
-	protected Command createDeleteCommand(GroupRequest deleteRequest) {
-		Object child = getHost().getModel();
-		if (child instanceof DiagramNodePart) {
-			return new DeleteNodeCommand((DiagramNodePart)child);
-		}
-		return super.createDeleteCommand(deleteRequest);
+	public LabelConnectionCommand(DiagramConnectionPart part, String labelText) {
+		this.part = part;
+		this.labelText = labelText;
 	}
 
+	@Override
+	public void execute() {
+		part.setLabel(labelText);
+	}
+	
 }

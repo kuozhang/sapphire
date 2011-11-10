@@ -9,27 +9,29 @@
  *    Ling Hao - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.gef.diagram.editor.policies;
+package org.eclipse.sapphire.ui.gef.diagram.editor.commands;
 
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editpolicies.ComponentEditPolicy;
-import org.eclipse.gef.requests.GroupRequest;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.gef.diagram.editor.commands.DeleteNodeCommand;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class NodeEditPolicy extends ComponentEditPolicy {
+public class MoveConnectionLabelCommand extends Command {
+	
+	private DiagramConnectionPart part;
+	private Rectangle rectangle;
 
-	@Override
-	protected Command createDeleteCommand(GroupRequest deleteRequest) {
-		Object child = getHost().getModel();
-		if (child instanceof DiagramNodePart) {
-			return new DeleteNodeCommand((DiagramNodePart)child);
-		}
-		return super.createDeleteCommand(deleteRequest);
+	public MoveConnectionLabelCommand(DiagramConnectionPart part, Rectangle rectangle) {
+		this.part = part;
+		this.rectangle = rectangle;
 	}
 
+	@Override
+	public void execute() {
+		part.setLabelPosition(rectangle.x, rectangle.y);
+	}
+	
 }

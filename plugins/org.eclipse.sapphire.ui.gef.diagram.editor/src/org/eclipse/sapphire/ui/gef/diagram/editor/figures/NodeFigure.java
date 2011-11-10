@@ -44,11 +44,11 @@ public class NodeFigure extends RoundedRectangle {
     private boolean selected;
 	private boolean hasFocus;
 
-	public NodeFigure(final String text) {
+	public NodeFigure() {
 		this.setForegroundColor(SapphireDiagramEditorUtil.getColor(DEFAULT_NODE_FOREGROUND));
 		setLayoutManager(new XYLayout());
 
-		labelFigure = new Label("BB");
+		labelFigure = new Label();
 		labelFigure.setForegroundColor(SapphireDiagramEditorUtil.getColor(DEFAULT_TEXT_FOREGROUND));
 		this.add(labelFigure);
 

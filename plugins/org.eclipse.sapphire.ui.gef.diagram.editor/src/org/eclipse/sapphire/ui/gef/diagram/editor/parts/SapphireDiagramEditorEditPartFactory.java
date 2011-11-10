@@ -16,6 +16,7 @@ import org.eclipse.gef.EditPartFactory;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionLabel;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -53,6 +54,9 @@ public class SapphireDiagramEditorEditPartFactory implements EditPartFactory {
 		}
 		if (modelElement instanceof DiagramConnectionPart) {
 			return new DiagramConnectionEditPart();
+		}
+		if (modelElement instanceof DiagramConnectionLabel) {
+			return new DiagramConnectionLabelEditPart();
 		}
 		throw new RuntimeException("Can't create part for model element: "
 				+ ((modelElement != null) ? modelElement.getClass().getName()

@@ -16,14 +16,20 @@ import java.util.List;
 
 import org.eclipse.draw2d.AbsoluteBendpoint;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.Request;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
+import org.eclipse.gef.editpolicies.LayoutEditPolicy;
+import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
+import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionLabel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramConnectionBendpointEditPolicy;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramConnectionEndpointEditPolicy;
 
@@ -37,6 +43,8 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart {
 	protected void createEditPolicies() {
 		installEditPolicy(EditPolicy.CONNECTION_ENDPOINTS_ROLE, new DiagramConnectionEndpointEditPolicy());
 		installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE, new DiagramConnectionBendpointEditPolicy());
+
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new DiagramConnectionLayoutEditPolicy());
 	}
 
 	@Override
@@ -44,10 +52,6 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart {
 		PolylineConnection connection = (PolylineConnection) super.createFigure();
 		connection.setTargetDecoration(new PolygonDecoration());
 		updateStyle(connection);
-		
-		// add the label
-		Label label = new Label(getModelPart().getLabel());
-		connection.add(label, new SapphireMidpointLocator(connection, 0));
 		
 		return connection;
 	}
@@ -76,4 +80,33 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart {
 	protected void refreshVisuals() {
 		refreshBendpoints();
 	}
+
+	@Override
+	protected List getModelChildren() {
+		// add the label
+		List list = new ArrayList(1);
+		list.add(new DiagramConnectionLabel(getModelPart()));
+		return list;
+	}
+
+	
+	private class DiagramConnectionLayoutEditPolicy extends LayoutEditPolicy {
+
+		@Override
+		protected EditPolicy createChildEditPolicy(EditPart child) {
+			return new NonResizableEditPolicy();
+		}
+
+		@Override
+		protected Command getCreateCommand(CreateRequest request) {
+			return null;
+		}
+
+		@Override
+		protected Command getMoveChildrenCommand(Request request) {
+			return null;
+		}
+
+	}
+	
 }

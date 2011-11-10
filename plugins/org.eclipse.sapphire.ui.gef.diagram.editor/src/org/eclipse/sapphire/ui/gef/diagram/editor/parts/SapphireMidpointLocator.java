@@ -20,28 +20,41 @@ import org.eclipse.draw2d.geometry.Point;
  */
 
 public class SapphireMidpointLocator extends ConnectionLocator {
+	
+	int deltaX = 5;
+	int deltaY = -10;
 
-	private int index;
-
-	public SapphireMidpointLocator(Connection connection, int i) {
+	public SapphireMidpointLocator(Connection connection) {
 		super(connection);
-		index = i;
 	}
 
-	protected int getIndex() {
-		return index;
+	public SapphireMidpointLocator(Connection connection, int deltaX, int deltaY) {
+		super(connection);
+		this.deltaX = deltaX;
+		this.deltaY = deltaY;
 	}
 
 	@Override
 	protected Point getReferencePoint() {
 		Connection conn = getConnection();
 		Point midPoint = Point.SINGLETON;
-		Point p1 = conn.getPoints().getPoint(getIndex());
-		Point p2 = conn.getPoints().getPoint(getIndex() + 1);
-		conn.translateToAbsolute(p1);
-		conn.translateToAbsolute(p2);
-		midPoint.x = (p2.x - p1.x) / 2 + p1.x;
-		midPoint.y = (p2.y - p1.y) / 2 + p1.y;
+		int size = conn.getPoints().size();
+		if (size % 2 == 0) {
+			int index = (size / 2) - 1;
+			Point p1 = conn.getPoints().getPoint(index);
+			Point p2 = conn.getPoints().getPoint(index + 1);
+			conn.translateToAbsolute(p1);
+			conn.translateToAbsolute(p2);
+			midPoint.x = (p2.x - p1.x) / 2 + p1.x;
+			midPoint.y = (p2.y - p1.y) / 2 + p1.y;
+		} else {
+			int index = size / 2;
+			Point p1 = conn.getPoints().getPoint(index);
+			conn.translateToAbsolute(p1);
+			midPoint.x = p1.x;
+			midPoint.y = p1.y;
+		}
+		
 		
 //			int deltaX, deltaY;
 //
@@ -53,8 +66,8 @@ public class SapphireMidpointLocator extends ConnectionLocator {
 //				deltaY = 0;
 //			}
 		// TODO calculate better deltas
-		midPoint.x += 5;
-		midPoint.y += -10;
+		midPoint.x += deltaX;
+		midPoint.y += deltaY;
 
 		return midPoint;
 	}

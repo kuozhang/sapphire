@@ -24,6 +24,7 @@ import org.eclipse.draw2d.ShortestPathConnectionRouter;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
@@ -96,12 +97,28 @@ public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart
 		}
 		return null;
 	}
+	
+	public void handleNodeRemoved(DiagramNodePart part) {
+		removeChild(getEditPartForChild(part));
+	}
 
-    /**
+	private EditPart getEditPartForChild(Object child) {
+		return (EditPart) getViewer().getEditPartRegistry().get(child);
+	}
+
+	/**
 	 * EditPolicy for the Figure used by this edit part. Children of
 	 * XYLayoutEditPolicy can be used in Figures with XYLayout.
 	 */
 	private class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy {
+
+		@Override
+		protected Rectangle getCurrentConstraintFor(GraphicalEditPart child) {
+			if (child instanceof DiagramNodeEditPart) {
+				return super.getCurrentConstraintFor(child);
+			}
+			return null;
+		}
 
 		@Override
 		protected EditPolicy createChildEditPolicy(EditPart child) {

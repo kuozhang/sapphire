@@ -58,7 +58,7 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 
     @Override
 	protected IFigure createFigure() {
-		return new NodeFigure(getModelPart().getLabel());
+		return new NodeFigure();
 	}
 
 	@Override
@@ -169,6 +169,14 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 		Bounds nb = getModelPart().getNodeBounds();
 		Rectangle bounds = new Rectangle(nb.getX(), nb.getY(), DEFAULT_NODE_WIDTH, DEFAULT_NODE_HEIGHT);
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this,	getFigure(), bounds);
+	}
+	
+	public void handleSourceConnectionRemoved(DiagramConnectionPart part) {
+		this.refreshSourceConnections();
+	}
+	
+	public void handleTargetConnectionRemoved(DiagramConnectionPart part) {
+		this.refreshTargetConnections();
 	}
 
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
