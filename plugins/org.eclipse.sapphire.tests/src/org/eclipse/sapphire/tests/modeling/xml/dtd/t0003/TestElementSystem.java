@@ -1,5 +1,5 @@
 /******************************************************************************
- *  Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Accenture
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,20 +7,22 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation
+ *    Kamesh Sampath - [355751] General improvement of @XmlRootBinding API    
  ******************************************************************************/
 
 package org.eclipse.sapphire.tests.modeling.xml.dtd.t0003;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlDocumentType;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a>
  */
 
-@XmlRootBinding( elementName = "root" )
+@XmlBinding( path = "root" )
 @XmlDocumentType( systemId = "TestXmlDtd0003.dtd" )
 @GenerateImpl
 

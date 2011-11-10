@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml;
@@ -39,17 +39,12 @@ public abstract class XmlNamespaceResolver
             localName = name.substring( colon + 1 );
         }
         
-        String namespace = null;
-        
-        if( prefix.length() > 0 )
-        {
-            namespace = resolve( prefix );
+        String namespace = resolve( prefix );
             
-            if( namespace == null || namespace.length() == 0 )
-            {
-                final String msg = NLS.bind( Resources.couldNotResolveNamespace, name );
-                throw new IllegalArgumentException( msg );
-            }
+        if( prefix.length() != 0 && ( namespace == null || namespace.length() == 0 ) )
+        {
+            final String msg = NLS.bind( Resources.couldNotResolveNamespace, name );
+            throw new IllegalArgumentException( msg );
         }
         
         return new QName( namespace, localName, prefix );

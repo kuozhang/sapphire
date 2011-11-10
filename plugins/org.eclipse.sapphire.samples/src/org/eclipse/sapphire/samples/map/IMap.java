@@ -1,12 +1,13 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Accenture
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation
+ *    Kamesh Sampath - [355751] General improvement of @XmlRootBinding API    
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.map;
@@ -17,15 +18,16 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a>
  */
 
 @GenerateImpl
-@XmlRootBinding( elementName = "map")
+@XmlBinding( path = "map")
 
 public interface IMap extends IModelElement
 {

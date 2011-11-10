@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml.annotations;
@@ -23,8 +23,7 @@ import java.lang.annotation.Target;
 @Retention( RetentionPolicy.RUNTIME )
 @Target( ElementType.TYPE )
 
-public @interface XmlNamespace
+public @interface XmlSchemas
 {
-    String uri();
-    String prefix() default "";
+    XmlSchema[] value();
 }

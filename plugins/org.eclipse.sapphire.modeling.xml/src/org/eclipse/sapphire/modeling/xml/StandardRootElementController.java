@@ -6,29 +6,26 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml;
 
 import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 
+import java.util.Collections;
 import java.util.Map;
 
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchemasCache;
 import org.w3c.dom.Document;
-import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class StandardRootElementController
-
-    extends RootElementController
-    
+public class StandardRootElementController extends RootElementController
 {
     private final RootElementInfo info;
     
@@ -37,19 +34,38 @@ public class StandardRootElementController
         this.info = null;
     }
     
-    public StandardRootElementController( final String namespace,
-                                          final String schemaLocation,
-                                          final String defaultPrefix,
-                                          final String elementName )
-    {
-        this.info = new RootElementInfo( namespace, schemaLocation, defaultPrefix, elementName );
-    }
-
     public StandardRootElementController( final String elementName )
     {
-        this( null, null, null, elementName );
+        this( null, null, elementName, Collections.<String,String>emptyMap() );
     }
     
+    public StandardRootElementController( final String namespace,
+                                          final String defaultPrefix,
+                                          final String elementName,
+                                          final String schemaLocation )
+    {
+        final Map<String,String> schemas;
+        
+        if( schemaLocation == null || schemaLocation.length() == 0 )
+        {
+            schemas = Collections.emptyMap();
+        }
+        else
+        {
+            schemas = Collections.singletonMap( namespace, schemaLocation );
+        }
+        
+        this.info = new RootElementInfo( namespace, defaultPrefix, elementName, schemas );
+    }
+
+    public StandardRootElementController( final String namespace,
+                                          final String defaultPrefix,
+                                          final String elementName,
+                                          final Map<String,String> schemas )
+    {
+        this.info = new RootElementInfo( namespace, defaultPrefix, elementName, schemas );
+    }
+
     protected RootElementInfo getRootElementInfo()
     {
         return this.info;
@@ -69,12 +85,6 @@ public class StandardRootElementController
         if( rinfo.namespace == null )
         {
             root = document.createElementNS( null, rinfo.elementName );
-            
-            if( rinfo.schemaLocation != null && rinfo.schemaLocation.toLowerCase().endsWith( ".dtd" ) )
-            {
-                final DocumentType doctype = document.getImplementation().createDocumentType( rinfo.elementName, null, rinfo.schemaLocation );
-                document.insertBefore( doctype, root );
-            }
         }
         else
         {
@@ -91,14 +101,14 @@ public class StandardRootElementController
     
             root.setAttribute( XMLNS_COLON + XSI_NAMESPACE_PREFIX, XSI_NAMESPACE );
     
-            if( rinfo.schemaLocation != null )
+            final StringBuilder buf = new StringBuilder();
+            
+            for( String schemaLocation : rinfo.schemas.values() )
             {
-                final XmlDocumentSchema xmlDocumentSchema = XmlDocumentSchemasCache.getSchema( rinfo.schemaLocation );
+                final XmlDocumentSchema xmlDocumentSchema = XmlDocumentSchemasCache.getSchema( schemaLocation );
                 
                 if( xmlDocumentSchema != null )
                 {
-                    final StringBuilder buf = new StringBuilder();
-                    
                     for( Map.Entry<String,String> entry : xmlDocumentSchema.getSchemaLocations().entrySet() )
                     {
                         if( buf.length() > 0 )
@@ -110,12 +120,12 @@ public class StandardRootElementController
                         buf.append( ' ' );
                         buf.append( entry.getValue() );
                     }
-                    
-                    if( buf.length() > 0 )
-                    {
-                        root.setAttributeNS( XSI_NAMESPACE, XSI_SCHEMA_LOCATION_ATTR, buf.toString() );
-                    }
                 }
+            }
+            
+            if( buf.length() > 0 )
+            {
+                root.setAttributeNS( XSI_NAMESPACE, XSI_SCHEMA_LOCATION_ATTR, buf.toString() );
             }
         }
         
@@ -136,32 +146,31 @@ public class StandardRootElementController
         final String localName = root.getLocalName();
         final String namespace = root.getNamespaceURI();
         
-        return equal( localName, rinfo.elementName ) && 
-               equal( namespace, rinfo.namespace );
+        return equal( localName, rinfo.elementName ) && equal( namespace, rinfo.namespace );
     }
 
     protected static final class RootElementInfo
     {
         public final String namespace;
-        public final String schemaLocation;
         public final String defaultPrefix;
         public final String elementName;
+        public final Map<String,String> schemas;
         
         public RootElementInfo( final String namespace,
-                                final String schemaLocation,
                                 final String defaultPrefix,
-                                final String elementName )
+                                final String elementName,
+                                final Map<String,String> schemas )
         {
             this.namespace = normalizeToNull( namespace );
-            this.schemaLocation = normalizeToNull( schemaLocation );
             this.defaultPrefix = normalizeToNull( defaultPrefix );
             
-            if( elementName == null )
+            if( elementName == null || elementName.length() == 0 )
             {
                 throw new IllegalArgumentException();
             }
             
             this.elementName = elementName.trim();
+            this.schemas = schemas;
         }
         
         private static final String normalizeToNull( final String str )

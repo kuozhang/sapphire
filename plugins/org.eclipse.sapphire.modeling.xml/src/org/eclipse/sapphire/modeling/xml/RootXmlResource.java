@@ -1,20 +1,25 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle and Accenture Services Pvt Ltd.
+ * Copyright (c) 2011 Oracle and Accenture
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation
  *    Kamesh Sampath - [355457] Improve DTD doctype specification in XML binding
+ *    Kamesh Sampath - [355751] General improvement of @XmlRootBinding API
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml;
 
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.createDefaultElementName;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
 
 import org.eclipse.sapphire.modeling.CorruptedResourceException;
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -23,8 +28,10 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlRootBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlDocumentType;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlSchema;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlSchemas;
 import org.eclipse.sapphire.modeling.xml.internal.DocumentTypeRootElementController;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -72,40 +79,71 @@ public class RootXmlResource extends XmlResource
 
         final ModelElementType modelElementType = modelElement.getModelElementType();
         
-        final XmlRootBinding xmlRootBindingAnnotation = modelElementType.getAnnotation( XmlRootBinding.class );
-
-        if( xmlRootBindingAnnotation != null )
+        final CustomXmlRootBinding customXmlRootBindingAnnotation = modelElementType.getAnnotation( CustomXmlRootBinding.class );
+        
+        if( customXmlRootBindingAnnotation != null )
         {
-            final String rootElementName = xmlRootBindingAnnotation.elementName();
-            final XmlDocumentType xmlDocumentTypeAnnotation = modelElementType.getAnnotation( XmlDocumentType.class );
-            
-            if( xmlDocumentTypeAnnotation != null && xmlDocumentTypeAnnotation.systemId().length() != 0 )
+            try
             {
-                this.rootElementController = new DocumentTypeRootElementController( rootElementName );
+                this.rootElementController = customXmlRootBindingAnnotation.value().newInstance();
             }
-            else
+            catch( Exception e )
             {
-                final String namespace = xmlRootBindingAnnotation.namespace();
-                final String schemaLocation = xmlRootBindingAnnotation.schemaLocation();
-                final String defaultPrefix = xmlRootBindingAnnotation.defaultPrefix();
-                
-                this.rootElementController = new StandardRootElementController( namespace, schemaLocation, defaultPrefix, rootElementName );
+                LoggingService.log( e );
             }
         }
         
         if( this.rootElementController == null )
-        {
-            final CustomXmlRootBinding customXmlRootBindingAnnotation = modelElementType.getAnnotation( CustomXmlRootBinding.class );
-            
-            if( customXmlRootBindingAnnotation != null )
+        { 
+            final XmlBinding xmlBindingAnnotation = modelElementType.getAnnotation( XmlBinding.class );
+    
+            if( xmlBindingAnnotation != null && xmlBindingAnnotation.path().length() != 0 )
             {
-                try
+                final XmlPath path = new XmlPath( xmlBindingAnnotation.path(), getXmlNamespaceResolver() );
+                final QName qualifiedName = path.getSegment( 0 ).getQualifiedName();
+                final String localName = qualifiedName.getLocalPart();
+                final String prefix = qualifiedName.getPrefix();
+                final String namespace = qualifiedName.getNamespaceURI();
+                
+                final XmlDocumentType xmlDocumentTypeAnnotation = modelElementType.getAnnotation( XmlDocumentType.class );
+               
+                if( xmlDocumentTypeAnnotation != null && xmlDocumentTypeAnnotation.systemId().length() != 0 )
                 {
-                    this.rootElementController = customXmlRootBindingAnnotation.value().newInstance();
+                    this.rootElementController = new DocumentTypeRootElementController( localName );
                 }
-                catch( Exception e )
+                else
                 {
-                    LoggingService.log( e );
+                    final Map<String,String> schemas = new HashMap<String,String>();
+                    final XmlSchemas xmlSchemasAnnotation = modelElementType.getAnnotation( XmlSchemas.class );
+                    
+                    if( xmlSchemasAnnotation != null )
+                    {
+                        for( XmlSchema xmlSchemaAnnotation : xmlSchemasAnnotation.value() )
+                        {
+                            final String xmlSchemaNamespace = xmlSchemaAnnotation.namespace().trim();
+                            final String xmlSchemaLocation = xmlSchemaAnnotation.location().trim();
+                            
+                            if( xmlSchemaNamespace.length() != 0 && xmlSchemaLocation.length() != 0 )
+                            {
+                                schemas.put( xmlSchemaNamespace, xmlSchemaLocation );
+                            }
+                        }
+                    }
+                    
+                    final XmlSchema xmlSchemaAnnotation = modelElementType.getAnnotation( XmlSchema.class );
+                    
+                    if( xmlSchemaAnnotation != null )
+                    {
+                        final String xmlSchemaNamespace = xmlSchemaAnnotation.namespace().trim();
+                        final String xmlSchemaLocation = xmlSchemaAnnotation.location().trim();
+                        
+                        if( xmlSchemaNamespace.length() != 0 && xmlSchemaLocation.length() != 0 )
+                        {
+                            schemas.put( xmlSchemaNamespace, xmlSchemaLocation );
+                        }
+                    }
+                    
+                    this.rootElementController = new StandardRootElementController( namespace, prefix, localName, schemas );
                 }
             }
         }

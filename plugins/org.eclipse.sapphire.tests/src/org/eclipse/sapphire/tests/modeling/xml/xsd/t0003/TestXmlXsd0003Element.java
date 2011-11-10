@@ -1,12 +1,13 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Accenture
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Ling Hao - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation
+ *    Kamesh Sampath - [355751] General improvement of @XmlRootBinding API    
  ******************************************************************************/
 
 package org.eclipse.sapphire.tests.modeling.xml.xsd.t0003;
@@ -19,21 +20,18 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a>
  */
 
 @GenerateImpl
+@XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/xsd/0003" )
+@XmlBinding( path = "element" )
 
-@XmlRootBinding( namespace = "http://www.eclipse.org/sapphire/tests/xml/xsd/0003",
-                 elementName = "element" )
-
-public interface TestXmlXsd0003Element
-
-    extends IModelElement
-    
+public interface TestXmlXsd0003Element extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( TestXmlXsd0003Element.class );
     

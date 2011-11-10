@@ -1,13 +1,14 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Accenture
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation
  *    Ling Hao - [8447730] rewrite context help binding feature
+ *    Kamesh Sampath - [355751] General improvement of @XmlRootBinding API    
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.def;
@@ -20,20 +21,20 @@ import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a> 
  */
 
 @GenerateImpl
-@XmlRootBinding( elementName = "extension", namespace = "http://www.eclipse.org/sapphire/xmlns/extension" )
+@XmlNamespace( uri = "http://www.eclipse.org/sapphire/xmlns/extension" )
+@XmlBinding( path = "extension" )
 
-public interface ISapphireUiExtensionDef
-
-    extends IModelElement
-    
+public interface ISapphireUiExtensionDef extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( ISapphireUiExtensionDef.class );
     

@@ -1,12 +1,13 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Accenture
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation
+ *    Kamesh Sampath - [355751] General improvement of @XmlRootBinding API    
  ******************************************************************************/
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0003;
@@ -26,23 +27,25 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespaces;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a> 
  */
 
 @GenerateImpl
-@XmlRootBinding( namespace = "http://www.eclipse.org/sapphire/tests/xml/binding/0003/z", elementName = "a" )
 
 @XmlNamespaces
 (
     value = 
     {
+        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0003/x", prefix = "x" ),
         @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0003/y", prefix = "y" ),
-        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0003/x", prefix = "x" )
+        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0003/z", prefix = "" )
     }
 )
+
+@XmlBinding( path = "a" )
 
 public interface TestXmlBinding0003A extends IModelElement
 {
