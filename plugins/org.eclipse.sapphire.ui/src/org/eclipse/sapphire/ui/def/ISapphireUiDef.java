@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation
  *    Ling Hao - [329114] rewrite context help binding feature
  *    Shenxue Zhou - [330482] support diagram editing in Sapphire UI
- *    Kamesh Sampath - [355751] General improvement of @XmlRootBinding API    
+ *    Kamesh Sampath - [355751] General improvement of XML root binding API    
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.def;

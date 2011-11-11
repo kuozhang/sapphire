@@ -211,7 +211,7 @@ is just a collection of Java interfaces that are annotated in a certain way and 
 <p>A bug report is contained in IFileBugReportOp, which serves as the top level type in the model.</p>
 
 <pre class="source-code"><code>@GenerateImpl
-@XmlRootBinding( elementName = "report" )
+@XmlBinding( path = "report" )
 
 public interface IFileBugReportOp extends IModelElement
 {
@@ -536,7 +536,7 @@ Even better if we can re-use some of our existing code to do this. Back to the m
 have a pretty good idea of what that will look like.</p>
 
 <pre class="source-code"><code>@GenerateImpl
-@XmlRootBinding( elementName = "bug-database" )
+@XmlBinding( path = "bug-database" )
 
 public interface IBugDatabase extends IModelElement
 {

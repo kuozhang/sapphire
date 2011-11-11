@@ -1,6 +1,6 @@
 <!-- 
  ******************************************************************************
- * Copyright (c) 2011 Oracle and others
+ * Copyright (c) 2011 Oracle
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,6 +48,7 @@ to 0.4 release. Only changes from the previous release are covered.</p>
   <li><a href="#Services">Services</a></li>
   <li><a href="#PossibleTypes">Possible Types</a></li>
   <li><a href="#ActionHandlerDispose">Action Handler Dispose</a></li>
+  <li><a href="#XmlRootBinding">@XmlRootBinding</a></li>
 </ol>
 
 <h2><a name="Documentation">Documentation</a></h2>
@@ -1129,6 +1130,64 @@ architecture eliminates resource leaks caused by failing to call super.dispose()
         );
     }
 <font color="#888888">}</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="XmlRootBinding">@XmlRootBinding</a></h2>
+
+<p>The @XmlRootBinding annotation has been re-worked to reduce functional overlap with other annotations and to allow 
+the XML binding API to more easily adapt to different kinds of XML document type specification technologies. Scenarios
+previously handled by @XmlRootBinding annotation are now handled by different combinations of @XmlBinding, @XmlNamespace,
+@XmlSchema and @XmlDocumentType annotations.</p> 
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@XmlRootBinding( elementName = "root" )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@XmlBinding( path = "root" )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@XmlRootBinding
+(
+    elementName = "root",
+    namespace = "http://www.eclipse.org/sapphire/example"
+)</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@XmlNamespace( uri = "http://www.eclipse.org/sapphire/example" )
+@XmlBinding( path = "root" )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@XmlRootBinding
+(
+    elementName = "root",
+    namespace = "http://www.eclipse.org/sapphire/example",
+    schemaLocation = "http://www.eclipse.org/sapphire/example/1.0",
+    defaultPrefix = "e"
+)</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@XmlNamespace( uri = "http://www.eclipse.org/sapphire/example", prefix = "e" )
+
+@XmlSchema
+(
+    namespace = "http://www.eclipse.org/sapphire/example",
+    location = "http://www.eclipse.org/sapphire/example/1.0"
+)
+
+@XmlBinding( path = "e:root" )</code></pre>
     </td>
   </tr>
 </table>

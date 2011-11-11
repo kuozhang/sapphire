@@ -8,7 +8,7 @@
  * Contributors:
  *    Konstantin Komissarchik - initial implementation
  *    Kamesh Sampath - [355457] Improve DTD doctype specification in XML binding
- *    Kamesh Sampath - [355751] General improvement of @XmlRootBinding API
+ *    Kamesh Sampath - [355751] General improvement of XML root binding API
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml;

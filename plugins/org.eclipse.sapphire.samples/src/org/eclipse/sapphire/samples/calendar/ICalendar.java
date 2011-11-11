@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation
- *    Kamesh Sampath - [355751] General improvement of @XmlRootBinding API    
+ *    Kamesh Sampath - [355751] General improvement of XML root binding API    
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.calendar;
@@ -29,8 +29,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlSchema;
  */
 
 @GenerateImpl
-@XmlNamespace( uri="http://www.eclipse.org/sapphire/samples/calendar", prefix="cal" )
-@XmlSchema( namespace="http://www.eclipse.org/sapphire/samples/calendar", location="http://www.eclipse.org/sapphire/samples/calendar/1.0" )
+@XmlNamespace( uri = "http://www.eclipse.org/sapphire/samples/calendar", prefix = "cal" )
+@XmlSchema( namespace = "http://www.eclipse.org/sapphire/samples/calendar", location = "http://www.eclipse.org/sapphire/samples/calendar/1.0" )
 @XmlBinding( path = "cal:calendar" )
 
 public interface ICalendar extends IModelElement
