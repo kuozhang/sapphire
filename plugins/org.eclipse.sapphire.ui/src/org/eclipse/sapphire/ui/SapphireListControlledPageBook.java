@@ -28,7 +28,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -108,7 +107,7 @@ public final class SapphireListControlledPageBook extends PageBookPart
     {
         Control root = context;
         
-        while( ! ( root instanceof Section || root instanceof SapphireControl ) )
+        while( ! ( root instanceof SapphireControl ) )
         {
             final Control parent = root.getParent();
             

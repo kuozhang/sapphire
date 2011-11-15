@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle and others
+ * Copyright (c) 2011 Oracle, Liferay and Red Hat
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *    Ling Hao - [329115] support more details link for long descriptions
  *    Ling Hao - [329114] rewrite context help binding feature
  *    Greg Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar           
+ *    Rob Cernich - [360362] Allow creation of custom form editor pages
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -38,15 +39,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.widgets.TableWrapData;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Greg Amerson</a>
+ * @author <a href="mailto:rcernich@redhat.com">Rob Cernich</a> 
  */
 
-public final class SapphireSection
-
-    extends SapphireComposite
-    
+public final class SapphireSection extends SapphireComposite
 {
     private ISapphireSectionDef definition;
     private SapphireCondition visibleWhenCondition;
@@ -104,13 +106,11 @@ public final class SapphireSection
         
         refreshTitle();
         
-        final Composite outerComposite = new Composite( this.section, SWT.NONE );
-        outerComposite.setLayout( twlayout( 1, 0, 0, 0, 0 ) );
-        context.adapt( outerComposite );
+        this.section.setLayout( twlayout( 1, 0, 0, 0, 0 ) );
         
-        final Composite innerComposite = new Composite( outerComposite, SWT.NONE );
+        final Composite innerComposite = new Composite( this.section, SWT.NONE );
         innerComposite.setLayout( glayout( 2, 0, 0, 0, 0 ) );
-        innerComposite.setLayoutData( twd() );
+        innerComposite.setLayoutData( new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB) );
         context.adapt( innerComposite );
         
         final SapphireActionGroup actions = getActions();
@@ -123,7 +123,7 @@ public final class SapphireSection
         this.section.setTextClient( toolbar );
         
         toolkit.paintBordersFor( this.section );
-        this.section.setClient( outerComposite );
+        this.section.setClient( innerComposite );
         
         return innerComposite;
     }

@@ -1,6 +1,6 @@
 <!-- 
  ******************************************************************************
- * Copyright (c) 2011 Oracle and others
+ * Copyright (c) 2011 Oracle, Liferay, Accenture and Red Hat
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  *   Greg Amerson - [343972] Support image in editor page header
  *   Greg Amerson - [345198] Specify image in sdef editor for connection elements
  *   Kamesh Sampath - [354292] Actions, Handlers and Filters not shown @ Node Level
+ *   Rob Cernich - [360362] Allow creation of custom form editor pages
  ******************************************************************************
 -->
 
@@ -625,6 +626,55 @@
         </case>
         
         <case>
+            <model-element-type>FormEditorSectionDef</model-element-type>
+            <label>${ Label == null ? "&lt;section&gt;" : Label }</label>
+            <use-model-element-image />
+            <section>
+                <label>Section</label>
+                <content>
+                    <property-editor>Id</property-editor>
+                    <property-editor>Label</property-editor>
+                    <property-editor>VisibleWhenConditionClass</property-editor>
+                    <property-editor>VisibleWhenConditionParameter</property-editor>
+                </content>
+            </section>
+            <section>
+                <label>presentation</label>
+                <content>
+                    <property-editor>ColumnSpan</property-editor>
+                    <property-editor>RowSpan</property-editor>
+                    <property-editor>
+                        <property>Collapsible</property>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                    </property-editor>
+                    <property-editor>
+                        <property>CollapsedInitially</property>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                    </property-editor>
+                    <spacer></spacer>
+                    <include>CompositePresentation</include>
+                </content>
+            </section>
+            <node>
+                <label>content</label>
+                <node-include>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>Content</value>
+                    </param>
+                </node-include>
+            </node>
+            <node-include>DocumentationNode</node-include>
+        </case>
+
+        <case>
             <model-element-type>ISapphireCompositeDef</model-element-type>
             <label>${ Id == null ? "Composite" : Id }</label>
             <use-model-element-image/>
@@ -653,6 +703,34 @@
             <node-include>DocumentationNode</node-include>
         </case>
 
+        <case>
+            <model-element-type>FormEditorPageDef</model-element-type>
+            <label>${ Id == null ? "Form Editor Page" : Id }</label>
+            <use-model-element-image/>
+            <section>
+                <label>form editor page</label>
+                <content>
+                    <include>PartId</include>
+                    <property-editor>NumColumns</property-editor>
+                    <property-editor>PageName</property-editor>
+                    <property-editor>PageHeaderText</property-editor>
+                    <property-editor>PageHeaderImage</property-editor>
+                </content>
+            </section>
+            <node>
+                <label>sections</label>
+                <node-include>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>Sections</value>
+                    </param>
+                </node-include>
+            </node>
+            <node-include>ActionsOverallNode</node-include>
+            <node-include>DocumentationNode</node-include>
+        </case>
+        
         <case>
             <model-element-type>FormDef</model-element-type>
             <label>${ Id == null ? &quot;Form&quot; : Id }</label>

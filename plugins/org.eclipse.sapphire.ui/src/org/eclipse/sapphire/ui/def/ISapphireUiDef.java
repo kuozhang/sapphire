@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle and Accenture
+ * Copyright (c) 2011 Oracle, Accenture and Red Hat
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,8 @@
  *    Konstantin Komissarchik - initial implementation
  *    Ling Hao - [329114] rewrite context help binding feature
  *    Shenxue Zhou - [330482] support diagram editing in Sapphire UI
- *    Kamesh Sampath - [355751] General improvement of XML root binding API    
+ *    Kamesh Sampath - [355751] General improvement of XML root binding API
+ *    Rob Cernich - [360362] Allow creation of custom form editor pages
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.def;
@@ -33,7 +34,10 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEdit
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a> 
+ * @author <a href="mailto:rcernich@redhat.com">Rob Cernich</a> 
  */
 
 @GenerateImpl
@@ -107,7 +111,8 @@ public interface ISapphireUiDef extends IModelElement
             IMasterDetailsEditorPageDef.class,
             IDiagramEditorPageDef.class,
             ISapphireDialogDef.class,
-            ISapphireWizardDef.class
+            ISapphireWizardDef.class,
+            FormEditorPageDef.class
         }
     )
                       
@@ -136,7 +141,8 @@ public interface ISapphireUiDef extends IModelElement
             @XmlListBinding.Mapping( element = "editor-page", type = IMasterDetailsEditorPageDef.class ),
             @XmlListBinding.Mapping( element = "diagram-page", type = IDiagramEditorPageDef.class ),
             @XmlListBinding.Mapping( element = "dialog", type = ISapphireDialogDef.class ),
-            @XmlListBinding.Mapping( element = "wizard", type = ISapphireWizardDef.class )
+            @XmlListBinding.Mapping( element = "wizard", type = ISapphireWizardDef.class ),
+            @XmlListBinding.Mapping( element = "form-editor-page", type = FormEditorPageDef.class ),
         }
     )
                              
