@@ -20,7 +20,6 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
@@ -49,7 +48,6 @@ public interface FormEditorPageDef extends IEditorPageDef {
     @Type(base = Integer.class)
     @Label( standard = "number of columns" )
     @DefaultValue( text = "2" )
-    @Localizable
     @XmlBinding( path = "num-columns" )
     ValueProperty PROP_NUM_COLUMNS = new ValueProperty( TYPE, "NumColumns" );
     

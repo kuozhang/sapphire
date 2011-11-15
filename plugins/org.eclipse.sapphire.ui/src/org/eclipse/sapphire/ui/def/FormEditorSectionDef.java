@@ -18,7 +18,6 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -37,7 +36,6 @@ public interface FormEditorSectionDef extends ISapphireSectionDef {
     @Type(base = Integer.class)
     @Label( standard = "column span" )
     @DefaultValue( text = "1" )
-    @Localizable
     @XmlBinding( path = "column-span" )
     ValueProperty PROP_COLUMN_SPAN = new ValueProperty( TYPE, "ColumnSpan" );
     
@@ -50,7 +48,6 @@ public interface FormEditorSectionDef extends ISapphireSectionDef {
     @Type(base = Integer.class)
     @Label( standard = "row span" )
     @DefaultValue( text = "1" )
-    @Localizable
     @XmlBinding( path = "row-span" )
     ValueProperty PROP_ROW_SPAN = new ValueProperty( TYPE, "RowSpan" );
     

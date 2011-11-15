@@ -142,7 +142,7 @@ public interface ISapphireUiDef extends IModelElement
             @XmlListBinding.Mapping( element = "diagram-page", type = IDiagramEditorPageDef.class ),
             @XmlListBinding.Mapping( element = "dialog", type = ISapphireDialogDef.class ),
             @XmlListBinding.Mapping( element = "wizard", type = ISapphireWizardDef.class ),
-            @XmlListBinding.Mapping( element = "form-editor-page", type = FormEditorPageDef.class ),
+            @XmlListBinding.Mapping( element = "form-editor-page", type = FormEditorPageDef.class )
         }
     )
                              
