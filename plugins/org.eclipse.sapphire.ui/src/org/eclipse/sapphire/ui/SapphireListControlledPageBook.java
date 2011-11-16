@@ -1,12 +1,13 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation
+ *    Gregory Amerson - [363765] Page book control property should handle model paths
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -16,9 +17,12 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.util.MutableReference;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.PageBookExtDef;
 import org.eclipse.sapphire.ui.renderers.swt.DefaultListPropertyEditorRenderer;
@@ -31,10 +35,60 @@ import org.eclipse.swt.widgets.Table;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Greg Amerson</a>
  */
 
 public final class SapphireListControlledPageBook extends PageBookPart
 {
+    private IModelElement element;
+    private ListProperty property;
+
+    @Override
+    protected void init()
+    {
+        super.init();
+
+        final String pathString = ( (PageBookExtDef) this.definition ).getControlProperty().getContent();
+        final String pathStringSubstituted = substituteParams( pathString, this.params );
+        final ModelPath path = new ModelPath( pathStringSubstituted );
+        
+        this.element = getLocalModelElement();
+
+        for( int i = 0, n = path.length(); i < n; i++ )
+        {
+            final ModelPath.Segment segment = path.segment( i );
+
+            if( segment instanceof ModelPath.ModelRootSegment )
+            {
+                this.element = (IModelElement) this.element.root();
+            }
+            else if( segment instanceof ModelPath.ParentElementSegment )
+            {
+                IModelParticle parent = this.element.parent();
+
+                if ( !( parent instanceof IModelElement ) )
+                {
+                    parent = parent.parent();
+                }
+
+                this.element = (IModelElement) parent;
+            }
+            else if( segment instanceof ModelPath.PropertySegment )
+            {
+                this.property = (ListProperty) resolve( this.element, ( (ModelPath.PropertySegment) segment ).getPropertyName() );
+
+                if ( i + 1 != n )
+                {
+                    throw new RuntimeException( NLS.bind( Resources.invalidPath, pathString ) );
+                }
+            }
+            else
+            {
+                throw new RuntimeException( NLS.bind( Resources.invalidPath, pathString ) );
+            }
+        }
+    }
+
     @Override
     protected Object parsePageKey( final String pageKeyString )
     {
@@ -42,16 +96,13 @@ public final class SapphireListControlledPageBook extends PageBookPart
         final Class<?> cl = rootdef.resolveClass( pageKeyString );
         return ClassBasedKey.create( cl );
     }
-    
+
     @Override
     public void render( final SapphireRenderingContext context )
     {
         super.render( context );
-        
-        final IModelElement element = getModelElement();
-        final ListProperty property = (ListProperty) resolve( ( (PageBookExtDef) this.definition ).getControlProperty().getContent() );
-        
-        final Table table = findControlForProperty( context.getComposite(), element, property, Table.class );
+
+        final Table table = findControlForProperty( context.getComposite(), this.element, this.property, Table.class );
         
         final ISelectionProvider selectionProvider 
             = (ISelectionProvider) table.getData( DefaultListPropertyEditorRenderer.DATA_SELECTION_PROVIDER );
@@ -75,7 +126,7 @@ public final class SapphireListControlledPageBook extends PageBookPart
                     }
                     else
                     {
-                        newModelElement = element;
+                        newModelElement = SapphireListControlledPageBook.this.element;
                         newPageKey = null;
                     }
                     
@@ -97,7 +148,7 @@ public final class SapphireListControlledPageBook extends PageBookPart
             }
         );
         
-        changePage( element, (String) null );
+        changePage( this.element, (String) null );
     }
     
     private static <T> T findControlForProperty( final Control context,
@@ -149,6 +200,16 @@ public final class SapphireListControlledPageBook extends PageBookPart
         }
         
         return null;
+    }
+
+    private static final class Resources extends NLS
+    {
+        public static String invalidPath;
+
+        static
+        {
+            initializeMessages( SapphireListControlledPageBook.class.getName(), Resources.class );
+        }
     }
 
 }
