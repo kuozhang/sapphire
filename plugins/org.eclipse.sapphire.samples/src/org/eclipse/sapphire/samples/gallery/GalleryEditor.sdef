@@ -2,14 +2,14 @@
 
 <!-- 
  ******************************************************************************
- * Copyright (c) 2011 Oracle and others
+ * Copyright (c) 2011 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation
  *    Greg Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar
  *    Greg Amerson - [343972] Support image in editor page header
  ******************************************************************************
@@ -1927,7 +1927,7 @@
                         <split-form>
                             <orientation>horizontal</orientation>
                             <adjustable>true</adjustable>
-                            <section>
+                            <block>
                                 <content>
                                     <property-editor>String1</property-editor>
                                     <property-editor>String2</property-editor>
@@ -1966,12 +1966,12 @@
                                     </composite>
                                 </content>
                                 <weight>2</weight>
-                            </section>
-                            <section>
+                            </block>
+                            <block>
                                 <content>
                                     <split-form>
                                         <orientation>vertical</orientation>
-                                        <section>
+                                        <block>
                                             <content>
                                                 <property-editor>
                                                     <property>List2</property>
@@ -1980,8 +1980,8 @@
                                                     <scale-vertically>true</scale-vertically>
                                                 </property-editor>
                                             </content>
-                                        </section>
-                                        <section>
+                                        </block>
+                                        <block>
                                             <content>
                                                 <property-editor>
                                                     <property>List3</property>
@@ -1990,8 +1990,8 @@
                                                     <scale-vertically>true</scale-vertically>
                                                 </property-editor>
                                             </content>
-                                        </section>
-                                        <section>
+                                        </block>
+                                        <block>
                                             <content>
                                                 <property-editor>
                                                     <property>List4</property>
@@ -2000,12 +2000,12 @@
                                                     <child-property>Size</child-property>
                                                 </property-editor>
                                             </content>
-                                        </section>
+                                        </block>
                                         <scale-vertically>true</scale-vertically>
                                     </split-form>
                                 </content>
                                 <weight>3</weight>
-                            </section>
+                            </block>
                         </split-form>
                     </content>
                 </section>
@@ -2034,7 +2034,7 @@
         <label>split form dialog</label>
         <content>
             <split-form>
-                <section>
+                <block>
                     <content>
                         <property-editor>
                             <property>List1</property>
@@ -2046,8 +2046,8 @@
                         </property-editor>
                     </content>
                     <weight>7</weight>
-                </section>
-                <section>
+                </block>
+                <block>
                     <content>
                         <separator>
                             <label>description</label>
@@ -2076,7 +2076,7 @@
                         </switching-panel>
                     </content>
                     <weight>3</weight>
-                </section>
+                </block>
                 <orientation>vertical</orientation>
                 <scale-vertically>true</scale-vertically>
             </split-form>

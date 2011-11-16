@@ -54,6 +54,7 @@ import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartListenerDef;
+import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
 import org.eclipse.sapphire.ui.def.ISapphireSeparatorDef;
 import org.eclipse.sapphire.ui.def.ISapphireSpacerDef;
 import org.eclipse.sapphire.ui.def.ISapphireStaticTextFieldDef;
@@ -64,7 +65,7 @@ import org.eclipse.sapphire.ui.def.PageBookExtDef;
 import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.def.SplitFormDef;
-import org.eclipse.sapphire.ui.def.SplitFormSectionDef;
+import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.widgets.Display;
@@ -813,6 +814,10 @@ public abstract class SapphirePart implements ISapphirePart
         {
             part = new SapphireWizardPagePart();
         }
+        else if( definition instanceof ISapphireSectionDef )
+        {
+            part = new SapphireSection();
+        }
         else if( definition instanceof ISapphireCompositeDef )
         {
             part = new SapphireComposite();
@@ -856,9 +861,9 @@ public abstract class SapphirePart implements ISapphirePart
         {
             part = new SplitFormPart();
         }
-        else if( definition instanceof SplitFormSectionDef )
+        else if( definition instanceof SplitFormBlockDef )
         {
-            part = new SplitFormSectionPart();
+            part = new SplitFormBlockPart();
         }
         else if( definition instanceof FormDef )
         {

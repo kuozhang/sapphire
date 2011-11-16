@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2011 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation
+ ******************************************************************************
+-->
+
+<definition>
+    <form-editor-page>
+        <id>GeneralPage</id>
+        <page-name>general</page-name>
+        <page-header-text>purchase order</page-header-text>
+        <content>
+            <split-form>
+                <orientation>horizontal</orientation>
+                <scale-vertically>true</scale-vertically>
+                <block>
+                    <content>
+                        <section>
+                            <label>general</label>
+                            <content>
+                                <property-editor>Id</property-editor>
+                                <property-editor>Customer</property-editor>
+                                <property-editor>InitialQuoteDate</property-editor>
+                                <property-editor>OrderDate</property-editor>
+                                <property-editor>FulfillmentDate</property-editor>
+                            </content>
+                        </section>
+                    </content>
+                </block>
+                <block>
+                    <content>
+                        <section>
+                            <label>billing information</label>
+                            <content>
+                                <with>
+                                    <path>BillingInformation</path>
+                                    <default-panel>
+                                        <content>
+                                            <property-editor>Name</property-editor>
+                                            <property-editor>Organization</property-editor>
+                                            <property-editor>Street</property-editor>
+                                            <property-editor>City</property-editor>
+                                            <property-editor>State</property-editor>
+                                            <property-editor>ZipCode</property-editor>
+                                        </content>
+                                    </default-panel>
+                                </with>
+                            </content>
+                        </section>
+                        <section>
+                            <label>shipping information</label>
+                            <content>
+                                <with>
+                                    <path>ShippingInformation</path>
+                                    <default-panel>
+                                        <content>
+                                            <property-editor>Name</property-editor>
+                                            <property-editor>Organization</property-editor>
+                                            <property-editor>Street</property-editor>
+                                            <property-editor>City</property-editor>
+                                            <property-editor>State</property-editor>
+                                            <property-editor>ZipCode</property-editor>
+                                        </content>
+                                    </default-panel>
+                                </with>
+                            </content>
+                        </section>
+                    </content>
+                </block>
+            </split-form>
+        </content>
+    </form-editor-page>
+    <form-editor-page>
+        <id>EntriesPage</id>
+        <page-name>entries</page-name>
+        <page-header-text>purchase order</page-header-text>
+        <content>
+            <split-form>
+                <orientation>horizontal</orientation>
+                <scale-vertically>true</scale-vertically>
+                <block>
+                    <content>
+                        <section>
+                            <label>entries</label>
+                            <content>
+                                <property-editor>
+                                    <property>Entries</property>
+                                    <scale-vertically>true</scale-vertically>
+                                    <show-label>false</show-label>
+                                    <span>true</span>
+                                    <child-property>Item</child-property>
+                                    <child-property>Description</child-property>
+                                    <child-property>Quantity</child-property>
+                                    <child-property>UnitPrice</child-property>
+                                    <hint>
+                                        <name>column.widths</name>
+                                        <value>100:15,100:55,100:15,100:15</value>
+                                    </hint>
+                                </property-editor>
+                            </content>
+                            <scale-vertically>true</scale-vertically>
+                        </section>
+                    </content>
+                    <weight>7</weight>
+                </block>
+                <block>
+                    <weight>3</weight>
+                    <content>
+                        <section>
+                            <label>summary</label>
+                        </section>
+                    </content>
+                </block>
+            </split-form>
+        </content>
+    </form-editor-page>
+</definition>

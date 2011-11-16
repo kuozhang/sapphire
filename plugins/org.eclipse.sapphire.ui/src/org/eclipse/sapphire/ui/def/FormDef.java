@@ -53,7 +53,8 @@ public interface FormDef extends FormPartDef
             HtmlPanelDef.class,
             IFormPartInclude.class,
             FormDef.class,
-            SplitFormDef.class
+            SplitFormDef.class,
+            ISapphireSectionDef.class
         }
     )
                       
@@ -78,7 +79,8 @@ public interface FormDef extends FormPartDef
             @XmlListBinding.Mapping( element = "html", type = HtmlPanelDef.class ),
             @XmlListBinding.Mapping( element = "include", type = IFormPartInclude.class ),
             @XmlListBinding.Mapping( element = "form", type = FormDef.class ),
-            @XmlListBinding.Mapping( element = "split-form", type = SplitFormDef.class )
+            @XmlListBinding.Mapping( element = "split-form", type = SplitFormDef.class ),
+            @XmlListBinding.Mapping( element = "section", type = ISapphireSectionDef.class )
         }
     )
                              

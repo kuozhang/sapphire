@@ -96,6 +96,12 @@ public abstract class SapphireEditor
         this.actionsManager = new SapphireActionManager( this, getActionContexts() );
     }
     
+    @Override
+    public Composite getContainer()
+    {
+        return super.getContainer();
+    }
+
     public ISapphirePartDef getDefinition()
     {
         return null;

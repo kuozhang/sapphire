@@ -12,18 +12,18 @@
 
 package org.eclipse.sapphire.ui;
 
-import org.eclipse.sapphire.ui.def.SplitFormSectionDef;
+import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SplitFormSectionPart extends SapphirePartContainer
+public final class SplitFormBlockPart extends SapphirePartContainer
 {
     @Override
-    public SplitFormSectionDef getDefinition()
+    public SplitFormBlockDef getDefinition()
     {
-        return (SplitFormSectionDef) super.getDefinition();
+        return (SplitFormBlockDef) super.getDefinition();
     }
     
     public int getWeight()

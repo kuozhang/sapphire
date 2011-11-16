@@ -64,7 +64,6 @@
       name="Calendar Editor"/>
   </extension>
 
-
   <!-- 
     ******************
     * Gallery Sample *
@@ -79,7 +78,6 @@
       id="org.eclipse.sapphire.samples.gallery.ui.SapphireGallerySampleEditor"
       name="Sapphire Gallery Sample Editor"/>
   </extension>
-
 
   <!-- 
     ****************
@@ -147,8 +145,6 @@
       name="Bug Database Editor (Sapphire Sample)"/>
   </extension>
 
-
-
   <!-- 
     *******************
     * Diagram Samples *
@@ -172,6 +168,30 @@
       id="org.eclipse.sapphire.samples.architecture.ui.ArchitectureEditor"
       name="Architecture Editor"/>
   </extension>
+
+  <!-- 
+    *************************
+    * Purchase Order Sample *
+    *************************
+  -->
   
+  <extension point="org.eclipse.ui.editors">
+    <editor
+      class="org.eclipse.sapphire.samples.po.PurchaseOrderEditor"
+      default="true"
+      filenames="*.po"
+      id="org.eclipse.sapphire.samples.po.PurchaseOrderEditor"
+      name="Purchase Order Editor"/>
+  </extension>
+  
+  <extension point="org.eclipse.core.runtime.contentTypes">
+    <content-type
+      file-extensions="po"
+      priority="high"
+      name="Purchase Order"
+      id="po"
+      base-type="org.eclipse.core.runtime.xml">
+    </content-type>
+  </extension>
 
 </plugin>

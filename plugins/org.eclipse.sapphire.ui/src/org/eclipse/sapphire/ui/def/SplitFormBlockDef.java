@@ -25,12 +25,12 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "split form section" )
+@Label( standard = "split form block" )
 @GenerateImpl
 
-public interface SplitFormSectionDef extends FormDef
+public interface SplitFormBlockDef extends FormDef
 {
-    ModelElementType TYPE = new ModelElementType( SplitFormSectionDef.class );
+    ModelElementType TYPE = new ModelElementType( SplitFormBlockDef.class );
     
     // *** Weight ***
     

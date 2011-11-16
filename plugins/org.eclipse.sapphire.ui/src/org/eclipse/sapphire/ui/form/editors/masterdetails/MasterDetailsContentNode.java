@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails;
 
+import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twd;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -227,7 +229,15 @@ public final class MasterDetailsContentNode
         
         for( ISapphireSectionDef secdef : this.definition.getSections() )
         {
-            final SapphireSection section = new SapphireSection();
+            final SapphireSection section = new SapphireSection()
+            {
+                @Override
+                protected Object createSectionLayoutData()
+                {
+                    return twd();
+                }
+            };
+            
             section.init( this, this.modelElement, secdef, this.params );
             section.addListener( this.childPartListener );
             

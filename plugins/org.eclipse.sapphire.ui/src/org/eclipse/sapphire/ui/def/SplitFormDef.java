@@ -48,15 +48,15 @@ public interface SplitFormDef extends FormPartDef
     void setOrientation( String value );
     void setOrientation( Orientation value );
     
-    // *** Sections ***
+    // *** Blocks ***
     
-    @Type( base = SplitFormSectionDef.class )
-    @Label( standard = "sections" )
+    @Type( base = SplitFormBlockDef.class )
+    @Label( standard = "blocks" )
     @CountConstraint( min = 2 )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "section", type = SplitFormSectionDef.class ) )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "block", type = SplitFormBlockDef.class ) )
     
-    ListProperty PROP_SECTIONS = new ListProperty( TYPE, "Sections" );
+    ListProperty PROP_BLOCKS = new ListProperty( TYPE, "Blocks" );
     
-    ModelElementList<SplitFormSectionDef> getSections();
+    ModelElementList<SplitFormBlockDef> getBlocks();
     
 }

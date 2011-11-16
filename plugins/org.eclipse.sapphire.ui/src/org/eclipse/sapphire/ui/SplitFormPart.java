@@ -22,8 +22,8 @@ import java.util.List;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.def.Orientation;
+import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
 import org.eclipse.sapphire.ui.def.SplitFormDef;
-import org.eclipse.sapphire.ui.def.SplitFormSectionDef;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
@@ -40,9 +40,9 @@ public final class SplitFormPart extends SapphirePartContainer
         final IModelElement element = getLocalModelElement();
         final List<SapphirePart> childParts = new ArrayList<SapphirePart>();
         
-        for( SplitFormSectionDef splitFormSectionDef : getDefinition().getSections() )
+        for( SplitFormBlockDef splitFormBlockDef : getDefinition().getBlocks() )
         {
-            final SapphirePart childPart = create( this, element, splitFormSectionDef, this.params );
+            final SapphirePart childPart = create( this, element, splitFormBlockDef, this.params );
             childParts.add( childPart );
         }
         
@@ -63,9 +63,9 @@ public final class SplitFormPart extends SapphirePartContainer
     @Override
     @SuppressWarnings( "unchecked" )
     
-    public List<SplitFormSectionPart> getChildParts()
+    public List<SplitFormBlockPart> getChildParts()
     {
-        return (List<SplitFormSectionPart>) super.getChildParts();
+        return (List<SplitFormBlockPart>) super.getChildParts();
     }
 
     @Override
@@ -73,25 +73,27 @@ public final class SplitFormPart extends SapphirePartContainer
     {
         final SashForm form = new SashForm( context.getComposite(), ( getOrientation() == Orientation.HORIZONTAL ? SWT.HORIZONTAL : SWT.VERTICAL ) | SWT.SMOOTH );
         form.setLayoutData( gdhspan( ( getScaleVertically() ? gdfill() : gdhfill() ), 2 ) );
+        context.adapt( form );
         
-        final List<SplitFormSectionPart> sectionParts = getChildParts();
-        final int sectionPartsCount = sectionParts.size();
-        final int[] weights = new int[ sectionPartsCount ];
+        final List<SplitFormBlockPart> blockParts = getChildParts();
+        final int blockPartsCount = blockParts.size();
+        final int[] weights = new int[ blockPartsCount ];
         
-        for( int i = 0; i < sectionPartsCount; i++ )
+        for( int i = 0; i < blockPartsCount; i++ )
         {
-            final SplitFormSectionPart section = sectionParts.get( i );
-            final Composite sectionComposite = new Composite( form, SWT.NONE );
-            final SapphireRenderingContext sectionContext = new SapphireRenderingContext( this, context, sectionComposite );
+            final SplitFormBlockPart block = blockParts.get( i );
+            final Composite blockComposite = new Composite( form, SWT.NONE );
+            context.adapt( blockComposite );
+            final SapphireRenderingContext blockContext = new SapphireRenderingContext( this, context, blockComposite );
             
-            final int rightMargin = ( i < sectionPartsCount - 1 && getOrientation() == Orientation.HORIZONTAL ? 4 : 0 );
-            final int bottomMargin = ( i < sectionPartsCount - 1 && getOrientation() == Orientation.VERTICAL ? 1 : 0 );
+            final int rightMargin = ( i < blockPartsCount - 1 && getOrientation() == Orientation.HORIZONTAL ? 4 : 0 );
+            final int bottomMargin = ( i < blockPartsCount - 1 && getOrientation() == Orientation.VERTICAL ? 1 : 0 );
             final int topMargin = ( i > 0 && getOrientation() == Orientation.VERTICAL ? 1 : 0 );
-            sectionComposite.setLayout( glayout( 2, 0, rightMargin, topMargin, bottomMargin ) );
+            blockComposite.setLayout( glayout( 2, 0, rightMargin, topMargin, bottomMargin ) );
             
-            section.render( sectionContext );
+            block.render( blockContext );
             
-            weights[ i ] = section.getWeight();
+            weights[ i ] = block.getWeight();
         }
         
         form.setWeights( weights );

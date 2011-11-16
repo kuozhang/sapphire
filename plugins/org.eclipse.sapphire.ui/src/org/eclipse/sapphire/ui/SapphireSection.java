@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle, Liferay and Red Hat
+ * Copyright (c) 2011 Oracle and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,13 +10,13 @@
  *    Ling Hao - [329115] support more details link for long descriptions
  *    Ling Hao - [329114] rewrite context help binding feature
  *    Greg Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar           
- *    Rob Cernich - [360362] Allow creation of custom form editor pages
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twd;
-import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twlayout;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import java.util.Collections;
@@ -39,18 +39,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.forms.widgets.TableWrapData;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
- * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
- * @author <a href="mailto:gregory.amerson@liferay.com">Greg Amerson</a>
- * @author <a href="mailto:rcernich@redhat.com">Rob Cernich</a> 
  */
 
-public final class SapphireSection extends SapphireComposite
+public class SapphireSection extends SapphireComposite
 {
-    private ISapphireSectionDef definition;
     private SapphireCondition visibleWhenCondition;
     private Section section;
     private FunctionResult titleFunctionResult;
@@ -60,39 +55,52 @@ public final class SapphireSection extends SapphireComposite
     {
         super.init();
         
-        this.definition = (ISapphireSectionDef) super.definition;
+        final ISapphireSectionDef def = getDefinition();
         
         this.visibleWhenCondition = null;
         
-        final JavaType visibleWhenConditionClass = this.definition.getVisibleWhenConditionClass().resolve();
+        final JavaType visibleWhenConditionClass = def.getVisibleWhenConditionClass().resolve();
         
         if( visibleWhenConditionClass != null )
         {
-            final String parameter = this.definition.getVisibleWhenConditionParameter().getText();
+            final String parameter = def.getVisibleWhenConditionParameter().getText();
             this.visibleWhenCondition = SapphireCondition.create( this, visibleWhenConditionClass.artifact(), parameter );
         }
     }
     
     @Override
+    public ISapphireSectionDef getDefinition()
+    {
+        return (ISapphireSectionDef) super.getDefinition();
+    }
+
+    @Override
     protected Composite createOuterComposite( final SapphireRenderingContext context )
     {
         final FormToolkit toolkit = new FormToolkit( context.getDisplay() );
         
-        final boolean collapsible = this.definition.getCollapsible().getContent();
+        final ISapphireSectionDef def = getDefinition();
+        
+        final Composite outerComposite = new Composite( context.getComposite(), SWT.NONE );
+        outerComposite.setLayoutData( createSectionLayoutData() );
+        outerComposite.setLayout( glayout( 1, 10, 10, 10, 20 ) );
+        context.adapt( outerComposite );
+        
+        final boolean collapsible = def.getCollapsible().getContent();
         final int style = Section.TITLE_BAR | ( collapsible ? Section.TWISTIE : SWT.NONE );
         
-        this.section = toolkit.createSection( context.getComposite(), style );
-        this.section.setLayoutData( twd() );
+        this.section = toolkit.createSection( outerComposite, style );
+        this.section.setLayoutData( gdfill() );
         
         if( collapsible )
         {
-            this.section.setExpanded( ! this.definition.getCollapsedInitially().getContent() );
+            this.section.setExpanded( ! def.getCollapsedInitially().getContent() );
         }
         
         this.titleFunctionResult = initExpression
         (
             getModelElement(),
-            this.definition.getLabel().getContent(), 
+            def.getLabel().getContent(), 
             String.class,
             null,
             new Runnable()
@@ -106,12 +114,9 @@ public final class SapphireSection extends SapphireComposite
         
         refreshTitle();
         
-        this.section.setLayout( twlayout( 1, 0, 0, 0, 0 ) );
-        
-        final Composite innerComposite = new Composite( this.section, SWT.NONE );
-        innerComposite.setLayout( glayout( 2, 0, 0, 0, 0 ) );
-        innerComposite.setLayoutData( new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB) );
-        context.adapt( innerComposite );
+        final Composite sectionContentComposite = new Composite( this.section, SWT.NONE );
+        sectionContentComposite.setLayout( glayout( 2, 0, 0 ) );
+        context.adapt( sectionContentComposite );
         
         final SapphireActionGroup actions = getActions();
         final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager( context, actions );
@@ -123,9 +128,14 @@ public final class SapphireSection extends SapphireComposite
         this.section.setTextClient( toolbar );
         
         toolkit.paintBordersFor( this.section );
-        this.section.setClient( innerComposite );
+        this.section.setClient( sectionContentComposite );
         
-        return innerComposite;
+        return sectionContentComposite;
+    }
+    
+    protected Object createSectionLayoutData()
+    {
+        return gdhspan( ( getScaleVertically() ? gdfill() : gdhfill() ), 2 );
     }
     
     private void refreshTitle()

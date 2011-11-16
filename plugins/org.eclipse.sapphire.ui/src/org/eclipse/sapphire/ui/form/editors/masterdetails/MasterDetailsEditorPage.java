@@ -71,7 +71,6 @@ import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SapphireEditorFormPage;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.SapphireImageCache;
-import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartEvent;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -80,7 +79,6 @@ import org.eclipse.sapphire.ui.def.IEditorPageDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEditorPageDef;
@@ -136,7 +134,6 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.Page;
 import org.eclipse.ui.progress.WorkbenchJob;
@@ -236,9 +233,15 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
         return editorPagePart;
     }
 
-    public ISapphirePartDef getDefinition()
+    @Override
+    public MasterDetailsEditorPagePart getPart()
     {
-        return this.definition;
+        return (MasterDetailsEditorPagePart) super.getPart();
+    }
+    
+    public IMasterDetailsEditorPageDef getDefinition()
+    {
+        return getPart().getDefinition();
     }
     
     @Override
@@ -247,12 +250,6 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
         return getPartName();
     }
 
-    @Override
-    public MasterDetailsEditorPagePart getPart()
-    {
-        return (MasterDetailsEditorPagePart) super.getPart();
-    }
-    
     public MasterDetailsContentOutline getContentTree()
     {
         return getPart().getContentOutline();
@@ -262,7 +259,8 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
     {
         return this.mainSection.getCurrentDetailsSection();
     }
-    
+
+    @Override
     protected void createFormContent( final IManagedForm managedForm ) 
     {
         final SapphireEditorPagePart part = getPart();
@@ -1439,41 +1437,22 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
         }
     }
     
-    private static class DetailsSection 
-
-        extends SapphireRenderingContext
-        implements IDetailsPage
-        
+    private static class DetailsSection implements IDetailsPage
     {
         private MasterDetailsContentNode node;
-        protected IManagedForm mform;
-        protected FormToolkit toolkit;
-        
-        public DetailsSection()
-        {
-            super( null, null );
-        }
-        
-        public SapphirePart getPart()
-        {
-            return this.node;
-        }
+        private IManagedForm mform;
+        private Composite composite;
         
         public void initialize( final IManagedForm form ) 
         {
             this.mform = form;
-            this.toolkit = this.mform.getToolkit();
         }
     
         public final void createContents( final Composite parent ) 
         {
             this.composite = parent;
-            this.shell = this.composite.getShell();
             
-            final TableWrapLayout twl = twlayout( 1, 10, 10, 10, 10 );
-            twl.verticalSpacing = 20;
-
-            parent.setLayout( twl );
+            parent.setLayout( twlayout( 1 ) );
             
             createSections();
         }
@@ -1495,7 +1474,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
         public void refresh()
         {
         }
-
+    
         public void setFocus() {
         }
         
@@ -1503,24 +1482,6 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
             return false;
         }
     
-        public void adapt( final Control control )
-        {
-            super.adapt( control );
-            
-            if( control instanceof Composite )
-            {
-                this.toolkit.adapt( (Composite) control );
-            }
-            else if( control instanceof Label )
-            {
-                this.toolkit.adapt( control, false, false );
-            }
-            else
-            {
-                this.toolkit.adapt( control, true, true );
-            }
-        }
-        
         public void selectionChanged( final IFormPart part, 
                                       final ISelection selection ) 
         {
@@ -1540,9 +1501,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
         
         protected void createSections()
         {
-            final Composite rootComposite = getComposite();
-            
-            for( Control control : rootComposite.getChildren() )
+            for( Control control : this.composite.getChildren() )
             {
                 control.setVisible( false );
                 control.dispose();
@@ -1550,6 +1509,8 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
             
             if( this.node != null )
             {
+                final FormEditorRenderingContext context = new FormEditorRenderingContext( this.node, this.composite, this.mform.getToolkit() );
+                
                 for( SapphireSection section : this.node.getSections() )
                 {
                     if( section.checkVisibleWhenCondition() == false )
@@ -1557,11 +1518,11 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
                         continue;
                     }
                     
-                    section.render( this );
+                    section.render( context );
                 }
             }
             
-            rootComposite.getParent().layout( true, true );
+            this.composite.getParent().layout( true, true );
         }
     }
 

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle and Red Hat
+ * Copyright (c) 2011 Oracle
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,6 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation
- *    Rob Cernich - [360362] Allow creation of custom form editor pages
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.architecture.ui;
@@ -20,11 +19,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.samples.architecture.IArchitecture;
 import org.eclipse.sapphire.ui.SapphireEditor;
-import org.eclipse.sapphire.ui.SapphireEditorFormPage;
-import org.eclipse.sapphire.ui.StandardFormEditorPage;
-import org.eclipse.sapphire.ui.def.FormEditorPageDef;
-import org.eclipse.sapphire.ui.def.ISapphireUiDef;
-import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
@@ -37,7 +31,6 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
- * @author <a href="mailto:rcernich@redhat.com">Rob Cernich</a> 
  */
 
 public final class ArchitectureEditor extends SapphireEditor
@@ -46,7 +39,6 @@ public final class ArchitectureEditor extends SapphireEditor
     private StructuredTextEditor pageSource;
     private SapphireDiagramEditor pageDiagram;
     private MasterDetailsEditorPage pageDetails;
-    private SapphireEditorFormPage pageComponentsForm;
     
     public ArchitectureEditor()
     {
@@ -103,12 +95,6 @@ public final class ArchitectureEditor extends SapphireEditor
         addPage( 1, this.pageDetails );
         setPageText( 1, "Details" );
         setPageId( this.pages.get( 1 ), "Details", this.pageDetails.getPart() );        
-
-        ISapphireUiDef uiDef = SapphireUiDefFactory.load("org.eclipse.sapphire.samples", "org/eclipse/sapphire/samples/architecture/ArchitectureEditor.sdef");
-        this.pageComponentsForm = StandardFormEditorPage
-                .createFormEditorPage(this, getModelElement(), (FormEditorPageDef) uiDef.getPartDef("ComponentsPage", true, FormEditorPageDef.class));
-        addPage( 2, this.pageComponentsForm );
-        setPageId( this.pages.get( 2 ), "Components", this.pageComponentsForm.getPart() );        
     }
 
     @Override
