@@ -28,6 +28,12 @@
         <id>Sapphire.Java.TypeValidationService</id>
     </service>
     <service>
+        <id>Sapphire.Java.TypeConstraintService</id>
+        <context>Sapphire.Property.Instance</context>
+        <type>org.eclipse.sapphire.java.JavaTypeConstraintService</type>
+        <factory>org.eclipse.sapphire.java.internal.StandardJavaTypeConstraintService$Factory</factory>
+    </service>
+    <service>
         <description>Creates fact statements about Java type property's constraints by using semantical information specified by @JavaTypeConstraints annotation.</description>
         <type>org.eclipse.sapphire.services.FactsService</type>
         <context>Sapphire.Property.Instance</context>

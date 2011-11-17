@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,15 +7,17 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [363551] JavaTypeConstraintService
  ******************************************************************************/
 
 package org.eclipse.sapphire.java.internal;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeConstraintBehavior;
+import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -33,6 +35,7 @@ import org.eclipse.sapphire.services.ServiceFactory;
  * specified by @JavaTypeConstraints annotation.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public final class JavaTypeConstraintFactsService extends FactsService
@@ -43,36 +46,37 @@ public final class JavaTypeConstraintFactsService extends FactsService
         final IModelElement element = context( IModelElement.class );
         final ValueProperty property = context( ValueProperty.class );
         
-        final JavaTypeConstraint a = property.getAnnotation( JavaTypeConstraint.class );
-        final JavaTypeKind[] kinds = a.kind();
+        final JavaTypeConstraintService service = element.service( property, JavaTypeConstraintService.class );
+
+        final List<JavaTypeKind> kinds = new ArrayList<JavaTypeKind>( service.kind() );
         
-        if( kinds.length > 0 && kinds.length < 5 )
+        if( kinds.size() > 0 && kinds.size() < 5 )
         {
-            if( kinds.length == 1 )
+            if( kinds.size() == 1 )
             {
-                facts.add( NLS.bind( Resources.statementKindOne, term( kinds[ 0 ] ) ) );
+                facts.add( NLS.bind( Resources.statementKindOne, term( kinds.get( 0 ) ) ) );
             }
-            else if( kinds.length == 2 )
+            else if( kinds.size() == 2 )
             {
-                facts.add( NLS.bind( Resources.statementKindTwo, term( kinds[ 0 ] ), term( kinds[ 1 ] ) ) );
+                facts.add( NLS.bind( Resources.statementKindTwo, term( kinds.get( 0 ) ), term( kinds.get( 1 ) ) ) );
             }
-            else if( kinds.length == 3 )
+            else if( kinds.size() == 3 )
             {
-                facts.add( NLS.bind( Resources.statementKindThree, term( kinds[ 0 ] ), term( kinds[ 1 ] ), term( kinds[ 2 ] ) ) );
+                facts.add( NLS.bind( Resources.statementKindThree, term( kinds.get( 0 ) ), term( kinds.get( 1 ) ), term( kinds.get( 2 ) ) ) );
             }
-            else if( kinds.length == 4 )
+            else if( kinds.size() == 4 )
             {
-                facts.add( NLS.bind( Resources.statementKindFour, term( kinds[ 0 ] ), term( kinds[ 1 ] ), term( kinds[ 2 ] ), term( kinds[ 3 ] ) ) );
+                facts.add( NLS.bind( Resources.statementKindFour, term( kinds.get( 0 ) ), term( kinds.get( 1 ) ), term( kinds.get( 2 ) ), term( kinds.get( 3 ) ) ) );
             }
         }
         
-        final String[] types = a.type();
+        final List<String> types = new ArrayList<String>( service.type() );
         
-        if( types.length > 0 )
+        if( types.size() > 0 )
         {
-            if( types.length == 1 )
+            if( types.size() == 1 )
             {
-                final String typeName = types[ 0 ];
+                final String typeName = types.get( 0 );
                 String verb = Resources.verbImplementOrExtend;
                 
                 final ReferenceService referenceService = element.service( property, ReferenceService.class );
@@ -143,7 +147,7 @@ public final class JavaTypeConstraintFactsService extends FactsService
                     buf.append( type );
                 }
                 
-                final JavaTypeConstraintBehavior behavior = a.behavior();
+                final JavaTypeConstraintBehavior behavior = service.behavior();
                 
                 if( behavior == JavaTypeConstraintBehavior.AT_LEAST_ONE )
                 {
@@ -181,7 +185,9 @@ public final class JavaTypeConstraintFactsService extends FactsService
                                    final Class<? extends Service> service )
         {
             final ValueProperty property = context.find( ValueProperty.class );
-            return ( property != null && property.hasAnnotation( JavaTypeConstraint.class ) );
+            final IModelElement element = context.find( IModelElement.class );
+
+            return ( property != null && element != null && element.service( property, JavaTypeConstraintService.class ) != null );
         }
     
         @Override

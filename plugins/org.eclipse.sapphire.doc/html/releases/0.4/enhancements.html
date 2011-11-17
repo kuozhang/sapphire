@@ -1,6 +1,6 @@
 <!-- 
  ******************************************************************************
- * Copyright (c) 2011 Oracle and Other Contributors
+ * Copyright (c) 2011 Oracle, Accenture and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Kamesh Sampath - [355457] Improve DTD doctype specification in XML binding
  *    Kamesh Sampath - [355751] General improvement of XML root binding API
+ *    Gregory Amerson - [363551] JavaTypeConstraintService
  ******************************************************************************
 -->
 
@@ -29,6 +30,7 @@
     <li><a href="#InitialValueService">InitialValueService and @InitialValue</a></li>
     <li><a href="#PossibleTypesService">PossibleTypesService</a></li>
     <li><a href="#ContentProposalService">ContentProposalService</a></li>
+    <li><a href="#JavaTypeConstraintService">JavaTypeConstraintService</a></li>
   </ol>
   <li><a href="#UI">User Interface</a></li>
   <ol type="A">
@@ -37,7 +39,7 @@
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
     <li><a href="#XmlDocumentType">@XmlDocumentType Annotation</a></li>
-	<li><a href="#XmlSchema">@XmlSchema Annotation</a></li>
+    <li><a href="#XmlSchema">@XmlSchema Annotation</a></li>
     <li><a href="#Copy">Model Copy Method</a></li>
   </ol>
 </ol>
@@ -109,6 +111,19 @@ adopters.</p>
 <p style="margin-left: 20px;"><img src="images/ContentProposalService.png"/></p>
 
 <p><a href="../../services/index.html#ContentProposalService">See Documentation</a></p>
+
+
+<h2><a name="JavaTypeConstraintService">JavaTypeConstraintService</a></h2>
+
+<p>The JavaTypeConstraintService describes constraints on the Java type that a property can reference, such as the kind of
+type (class, interface, etc.) and the types that the type must extend or implement. The information provided by this
+service is used for validation, content assist and other needs.</p>
+
+<p>The framework provides an implementation of JavaTypeConstraintService for properties with @JavaTypeConstraint 
+annotation, but this service can also be implemented directly by adopters. This is particularly useful when Java
+type constraint can vary at runtime.</p> 
+
+<p><a href="../../services/index.html#JavaTypeConstraintService">See Documentation</a></p>
 
 
 <h2><a name="UI"><a name="SplitForm">Split Form</a></a></h2>

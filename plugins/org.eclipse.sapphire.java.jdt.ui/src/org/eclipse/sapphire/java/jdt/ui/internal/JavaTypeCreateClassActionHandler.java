@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,15 +7,17 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amereson - [363551] JavaTypeConstraintService
  ******************************************************************************/
 
 package org.eclipse.sapphire.java.jdt.ui.internal;
 
-import org.eclipse.sapphire.java.JavaTypeConstraint;
+import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeKind;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public final class JavaTypeCreateClassActionHandler extends JavaTypeCreateActionHandler
@@ -28,15 +30,15 @@ public final class JavaTypeCreateClassActionHandler extends JavaTypeCreateAction
     public static final class Condition extends JavaTypeCreateActionHandler.Condition
     {
         @Override
-        protected boolean evaluate( final JavaTypeConstraint javaTypeConstraint )
+        protected boolean evaluate( final JavaTypeConstraintService javaTypeConstraintService )
         {
-            if( javaTypeConstraint == null )
+            if( javaTypeConstraintService == null )
             {
                 return true;
             }
             else
             {
-                for( JavaTypeKind kind : javaTypeConstraint.kind() )
+                for( JavaTypeKind kind : javaTypeConstraintService.kind() )
                 {
                     if( kind == JavaTypeKind.CLASS || kind == JavaTypeKind.ABSTRACT_CLASS )
                     {

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,13 +7,18 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [363551] JavaTypeConstraintService
  ******************************************************************************/
 
 package org.eclipse.sapphire.java.internal;
 
+import java.util.Set;
+
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeConstraintBehavior;
+import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.CapitalizationType;
@@ -30,62 +35,55 @@ import org.eclipse.sapphire.services.ValidationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public final class JavaTypeValidationService extends ValidationService
 {
-    private ValueProperty property;
-    private boolean isClassOk;
-    private boolean isAbstractClassOk;
-    private boolean isInterfaceOk;
-    private boolean isAnnotationOk;
-    private boolean isEnumOk;
-    private String[] requiredBaseTypes;
-    private JavaTypeConstraintBehavior behavior;
-    
     @Override
     protected void init()
     {
         super.init();
 
-        this.property = context( ValueProperty.class );
+        final IModelElement element = context( IModelElement.class );
+        final ValueProperty property = context( ValueProperty.class );
+
+        final JavaTypeConstraintService javaTypeConstraintService = element.service( property, JavaTypeConstraintService.class );
         
-        final JavaTypeConstraint javaTypeConstraintAnnotation = this.property.getAnnotation( JavaTypeConstraint.class );
-        
-        if( javaTypeConstraintAnnotation == null )
+        if( javaTypeConstraintService != null )
         {
-            throw new IllegalStateException();
+            javaTypeConstraintService.attach
+            (
+                new Listener()
+                {
+                    @Override
+                    public void handle( final Event event )
+                    {
+                        element.refresh( property );
+                    }
+                }
+            );
         }
-        
-        this.requiredBaseTypes = javaTypeConstraintAnnotation.type();
-        this.behavior = javaTypeConstraintAnnotation.behavior();
-        
-        boolean c = false, d = false, i = false, a = false, e = false;
-        
-        for( JavaTypeKind kind : javaTypeConstraintAnnotation.kind() )
-        {
-            switch( kind )
-            {
-                case CLASS:           c = true; break;
-                case ABSTRACT_CLASS:  d = true; break;
-                case INTERFACE:       i = true; break;
-                case ANNOTATION:      a = true; break;
-                case ENUM:            e = true; break;
-                default:              throw new IllegalStateException();
-            }
-        }
-        
-        this.isClassOk = c;
-        this.isAbstractClassOk = d;
-        this.isInterfaceOk = i;
-        this.isAnnotationOk = a;
-        this.isEnumOk = e;
     }
     
     @Override
     public Status validate()
     {
-        final ReferenceValue<?,?> value = (ReferenceValue<?,?>) context( IModelElement.class ).read( this.property );
+        final IModelElement element = context( IModelElement.class );
+        final ValueProperty property = context( ValueProperty.class );
+        
+        final JavaTypeConstraintService javaTypeConstraintService = element.service( property, JavaTypeConstraintService.class );
+        
+        if( javaTypeConstraintService == null )
+        {
+            return Status.createOkStatus();
+        }
+        
+        final Set<JavaTypeKind> kinds = javaTypeConstraintService.kind();
+        final Set<String> requiredBaseTypes = javaTypeConstraintService.type();
+        final JavaTypeConstraintBehavior behavior = javaTypeConstraintService.behavior();
+        
+        final ReferenceValue<?,?> value = (ReferenceValue<?,?>) element.read( property );
         final String val = value.getText( false );
         
         if( val != null )
@@ -103,9 +101,9 @@ public final class JavaTypeValidationService extends ValidationService
             {
                 case CLASS:
                 {
-                    if( ! this.isClassOk )
+                    if( ! kinds.contains( JavaTypeKind.CLASS ) )
                     {
-                        final String label = this.property.getLabel( true, CapitalizationType.NO_CAPS, false );
+                        final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.classNotAllowed, val, label );
                         return Status.createErrorStatus( msg );
                     }
@@ -114,9 +112,9 @@ public final class JavaTypeValidationService extends ValidationService
                 }
                 case ABSTRACT_CLASS:
                 {
-                    if( ! this.isAbstractClassOk )
+                    if( ! kinds.contains( JavaTypeKind.ABSTRACT_CLASS ) )
                     {
-                        final String label = this.property.getLabel( true, CapitalizationType.NO_CAPS, false );
+                        final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.abstractClassNotAllowed, val, label );
                         return Status.createErrorStatus( msg );
                     }
@@ -125,9 +123,9 @@ public final class JavaTypeValidationService extends ValidationService
                 }
                 case INTERFACE:
                 {
-                    if( ! this.isInterfaceOk )
+                    if( ! kinds.contains( JavaTypeKind.INTERFACE ) )
                     {
-                        final String label = this.property.getLabel( true, CapitalizationType.NO_CAPS, false );
+                        final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.interfaceNotAllowed, val, label );
                         return Status.createErrorStatus( msg );
                     }
@@ -136,9 +134,9 @@ public final class JavaTypeValidationService extends ValidationService
                 }
                 case ANNOTATION:
                 {
-                    if( ! this.isAnnotationOk )
+                    if( ! kinds.contains( JavaTypeKind.ANNOTATION ) )
                     {
-                        final String label = this.property.getLabel( true, CapitalizationType.NO_CAPS, false );
+                        final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.annotationNotAllowed, val, label );
                         return Status.createErrorStatus( msg );
                     }
@@ -147,9 +145,9 @@ public final class JavaTypeValidationService extends ValidationService
                 }
                 case ENUM:
                 {
-                    if( ! this.isEnumOk )
+                    if( ! kinds.contains( JavaTypeKind.ENUM ) )
                     {
-                        final String label = this.property.getLabel( true, CapitalizationType.NO_CAPS, false );
+                        final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.enumNotAllowed, val, label );
                         return Status.createErrorStatus( msg );
                     }
@@ -164,9 +162,9 @@ public final class JavaTypeValidationService extends ValidationService
             
             if( kind != JavaTypeKind.ENUM && kind != JavaTypeKind.ANNOTATION )
             {
-                if( this.behavior == JavaTypeConstraintBehavior.ALL )
+                if( behavior == JavaTypeConstraintBehavior.ALL )
                 {
-                    for( String baseType : this.requiredBaseTypes )
+                    for( String baseType : requiredBaseTypes )
                     {
                         if( ! type.isOfType( baseType ) )
                         {
@@ -180,7 +178,7 @@ public final class JavaTypeValidationService extends ValidationService
                 {
                     boolean satisfied = false;
                     
-                    for( String baseType : this.requiredBaseTypes )
+                    for( String baseType : requiredBaseTypes )
                     {
                         if( type.isOfType( baseType ) )
                         {
@@ -193,7 +191,7 @@ public final class JavaTypeValidationService extends ValidationService
                     {
                         final StringBuilder list = new StringBuilder();
                         
-                        for( String baseType : this.requiredBaseTypes )
+                        for( String baseType : requiredBaseTypes )
                         {
                             if( list.length() > 0 )
                             {
@@ -214,7 +212,6 @@ public final class JavaTypeValidationService extends ValidationService
         return Status.createOkStatus();
     }
     
-    
     public static final class Factory extends ServiceFactory
     {
         @Override
@@ -222,14 +219,15 @@ public final class JavaTypeValidationService extends ValidationService
                                    final Class<? extends Service> service )
         {
             final ValueProperty property = context.find( ValueProperty.class );
+            final IModelElement element = context.find( IModelElement.class );
             
-            if( property != null && property.getTypeClass() == JavaTypeName.class )
+            if ( property != null && element != null && property.getTypeClass() == JavaTypeName.class )
             {
                 final Reference referenceAnnotation = property.getAnnotation( Reference.class );
                 
                 if( referenceAnnotation != null && referenceAnnotation.target() == JavaType.class )
                 {
-                    return property.hasAnnotation( JavaTypeConstraint.class );
+                    return element.service( property, JavaTypeConstraintService.class ) != null;
                 }
             }
             

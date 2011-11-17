@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [363551] JavaTypeConstraintService
  ******************************************************************************/
 
 package org.eclipse.sapphire.java.jdt.ui.internal;
@@ -18,7 +19,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
 import org.eclipse.jdt.ui.JavaUI;
-import org.eclipse.sapphire.java.JavaTypeConstraint;
+import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -33,17 +34,15 @@ import org.eclipse.ui.dialogs.SelectionDialog;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-public final class JavaTypeBrowseActionHandler 
-
-    extends SapphireBrowseActionHandler
-    
+public final class JavaTypeBrowseActionHandler extends SapphireBrowseActionHandler
 {
     public static final String ID = "Sapphire.Browse.Java.Type";
     public static final String PARAM_KINDS = "kinds";
     
-    private int browseDialogStyle;
+    private String paramKinds;
     
     @Override
     public void init( final SapphireAction action,
@@ -53,12 +52,20 @@ public final class JavaTypeBrowseActionHandler
 
         setId( ID );
         
-        final String paramKinds = def.getParam( PARAM_KINDS );
+        this.paramKinds = def.getParam( PARAM_KINDS );
+    }
+
+    @Override
+    public String browse( final SapphireRenderingContext context )
+    {
+        final IModelElement element = getModelElement();
+        final ModelProperty property = getProperty();
+        
         final EnumSet<JavaTypeKind> kinds = EnumSet.noneOf( JavaTypeKind.class );
         
-        if( paramKinds != null )
+        if( this.paramKinds != null )
         {
-            for( String kindString : paramKinds.split( "," ) )
+            for( String kindString : this.paramKinds.split( "," ) )
             {
                 kindString = kindString.trim();
                 
@@ -91,19 +98,15 @@ public final class JavaTypeBrowseActionHandler
         }
         else
         {
-            final JavaTypeConstraint javaTypeConstraintAnnotation = getProperty().getAnnotation( JavaTypeConstraint.class );
+            final JavaTypeConstraintService javaTypeConstraintService = element.service( property, JavaTypeConstraintService.class );
             
-            if( javaTypeConstraintAnnotation != null )
+            if( javaTypeConstraintService != null )
             {
-                for( JavaTypeKind kind : javaTypeConstraintAnnotation.kind() )
-                {
-                    kinds.add( kind );
-                }
+                kinds.addAll( javaTypeConstraintService.kind() );
             }
         }
         
-        this.browseDialogStyle = IJavaElementSearchConstants.CONSIDER_ALL_TYPES;        
-        
+        int browseDialogStyle = IJavaElementSearchConstants.CONSIDER_ALL_TYPES;        
         int count = kinds.size();
         
         if( count == 1 )
@@ -112,11 +115,11 @@ public final class JavaTypeBrowseActionHandler
             
             switch( kind )
             {
-                case CLASS:           this.browseDialogStyle = IJavaElementSearchConstants.CONSIDER_CLASSES; break;
-                case ABSTRACT_CLASS:  this.browseDialogStyle = IJavaElementSearchConstants.CONSIDER_CLASSES; break;
-                case INTERFACE:       this.browseDialogStyle = IJavaElementSearchConstants.CONSIDER_INTERFACES; break;
-                case ANNOTATION:      this.browseDialogStyle = IJavaElementSearchConstants.CONSIDER_ANNOTATION_TYPES; break;
-                case ENUM:            this.browseDialogStyle = IJavaElementSearchConstants.CONSIDER_ENUMS; break;
+                case CLASS:           browseDialogStyle = IJavaElementSearchConstants.CONSIDER_CLASSES; break;
+                case ABSTRACT_CLASS:  browseDialogStyle = IJavaElementSearchConstants.CONSIDER_CLASSES; break;
+                case INTERFACE:       browseDialogStyle = IJavaElementSearchConstants.CONSIDER_INTERFACES; break;
+                case ANNOTATION:      browseDialogStyle = IJavaElementSearchConstants.CONSIDER_ANNOTATION_TYPES; break;
+                case ENUM:            browseDialogStyle = IJavaElementSearchConstants.CONSIDER_ENUMS; break;
                 default:              throw new IllegalStateException();
             }
         }
@@ -126,28 +129,21 @@ public final class JavaTypeBrowseActionHandler
             {
                 if( kinds.contains( JavaTypeKind.INTERFACE ) )
                 {
-                    this.browseDialogStyle = IJavaElementSearchConstants.CONSIDER_CLASSES_AND_INTERFACES;
+                    browseDialogStyle = IJavaElementSearchConstants.CONSIDER_CLASSES_AND_INTERFACES;
                 }
                 else if( kinds.contains( JavaTypeKind.ENUM ) )
                 {
-                    this.browseDialogStyle = IJavaElementSearchConstants.CONSIDER_CLASSES_AND_ENUMS;
+                    browseDialogStyle = IJavaElementSearchConstants.CONSIDER_CLASSES_AND_ENUMS;
                 }
             }
         }
-    }
-    
-    @Override
-    public String browse( final SapphireRenderingContext context )
-    {
-        final IModelElement element = getModelElement();
-        final ModelProperty property = getProperty();
-        
+
         final IProject project = element.adapt( IProject.class );
         
         try 
         {
             final SelectionDialog dlg 
-                = JavaUI.createTypeDialog( context.getShell(), null, project, this.browseDialogStyle, false );
+                = JavaUI.createTypeDialog( context.getShell(), null, project, browseDialogStyle, false );
             
             final String title = property.getLabel( true, CapitalizationType.TITLE_STYLE, false );
             dlg.setTitle(Resources.select + title);

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amereson - [363551] JavaTypeConstraintService
  ******************************************************************************/
 
 package org.eclipse.sapphire.java.jdt.ui.internal;
@@ -16,6 +17,7 @@ import static java.lang.Math.min;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -49,8 +51,8 @@ import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeConstraintBehavior;
+import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -74,13 +76,12 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditorActionHandler
 {
     private final JavaTypeKind kind;
-    private JavaTypeName base;
-    private final List<JavaTypeName> interfaces = new ArrayList<JavaTypeName>();
     
     public JavaTypeCreateActionHandler( final JavaTypeKind kind )
     {
@@ -95,42 +96,6 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
 
         final IModelElement element = getModelElement();
         final ValueProperty property = (ValueProperty) getProperty();
-        
-        final IProject proj = element.adapt( IProject.class );
-        final IJavaProject jproj = JavaCore.create( proj );
-        
-        final JavaTypeConstraint javaTypeConstraintAnnotation = property.getAnnotation( JavaTypeConstraint.class );
-        
-        if( javaTypeConstraintAnnotation != null )
-        {
-            final String[] types = javaTypeConstraintAnnotation.type();
-            
-            for( int i = 0, n = ( javaTypeConstraintAnnotation.behavior() == JavaTypeConstraintBehavior.ALL ? types.length : min( 1, types.length ) ); i < n; i++ )
-            {
-                final String typeName = types[ i ];
-                
-                try
-                {
-                    final IType type = jproj.findType( typeName.replace( '$', '.' ) );
-                    
-                    if( type != null && type.exists() )
-                    {
-                        if( type.isClass() )
-                        {
-                            this.base = new JavaTypeName( typeName );
-                        }
-                        else if( type.isInterface() )
-                        {
-                            this.interfaces.add( new JavaTypeName( typeName ) );
-                        }
-                    }
-                }
-                catch( Exception e )
-                {
-                    LoggingService.log( e );
-                }
-            }
-        }
         
         final ModelPropertyListener listener = new ModelPropertyListener()
         {
@@ -190,6 +155,50 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
             }
         }
         
+        final JavaTypeConstraintService javaTypeConstraintService = element.service( property, JavaTypeConstraintService.class );
+        
+        final IProject proj = element.adapt( IProject.class );
+        final IJavaProject jproj = JavaCore.create( proj );
+
+        JavaTypeName expectedBaseClassTemp = null;
+        final List<JavaTypeName> expectedInterfaces = new ArrayList<JavaTypeName>();
+        
+        if( javaTypeConstraintService != null )
+        {
+            final JavaTypeConstraintBehavior behavior = javaTypeConstraintService.behavior();
+
+            final Collection<String> types = javaTypeConstraintService.type();
+            final Iterator<String> iterator = types.iterator();
+
+            for( int i = 0, n = ( behavior == JavaTypeConstraintBehavior.ALL ? types.size() : min( 1, types.size() ) ); i < n; i++ )
+            {
+                final String typeName = iterator.next();
+                
+                try
+                {
+                    final IType type = jproj.findType( typeName.replace( '$', '.' ) );
+                    
+                    if( type != null && type.exists() )
+                    {
+                        if( type.isClass() )
+                        {
+                            expectedBaseClassTemp = new JavaTypeName( typeName );
+                        }
+                        else if( type.isInterface() )
+                        {
+                            expectedInterfaces.add( new JavaTypeName( typeName ) );
+                        }
+                    }
+                }
+                catch( Exception e )
+                {
+                    LoggingService.log( e );
+                }
+            }
+        }
+        
+        final JavaTypeName expectedBaseClass = expectedBaseClassTemp;
+        
         final IRunnableWithProgress op = new IRunnableWithProgress()
         {
             public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
@@ -212,16 +221,16 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
                 
                 String base = null;
                 
-                if( kind == JavaTypeKind.CLASS && JavaTypeCreateActionHandler.this.base != null )
+                if ( kind == JavaTypeKind.CLASS && expectedBaseClass != null )
                 {
-                    base = deriveSafeLocalName( JavaTypeCreateActionHandler.this.base, imports );
+                    base = deriveSafeLocalName( expectedBaseClass, imports );
                 }
                 
                 final List<String> interfaces = new ArrayList<String>();
                 
                 if( kind == JavaTypeKind.CLASS || kind == JavaTypeKind.INTERFACE )
                 {
-                    for( JavaTypeName t : JavaTypeCreateActionHandler.this.interfaces )
+                    for( JavaTypeName t : expectedInterfaces )
                     {
                         interfaces.add( deriveSafeLocalName( t, imports ) );
                     }
@@ -445,21 +454,22 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
         protected final boolean evaluate( final SapphirePropertyEditor part )
         {
             final ModelProperty property = part.getProperty();
+            final IModelElement element = part.getModelElement();
             
-            if( property instanceof ValueProperty && property.isOfType( JavaTypeName.class ) )
+            if( property instanceof ValueProperty && element != null && property.isOfType( JavaTypeName.class ) )
             {
                 final Reference referenceAnnotation = property.getAnnotation( Reference.class );
                 
                 if( referenceAnnotation != null && referenceAnnotation.target() == JavaType.class )
                 {
-                    return evaluate( property.getAnnotation( JavaTypeConstraint.class ) );
+                    return evaluate( element.service( property, JavaTypeConstraintService.class ) );
                 }
             }
             
             return false;
         }
         
-        protected abstract boolean evaluate( JavaTypeConstraint javaTypeConstraint );
+        protected abstract boolean evaluate( JavaTypeConstraintService javaTypeConstraintService );
     }
 
     private static final class Resources extends NLS 

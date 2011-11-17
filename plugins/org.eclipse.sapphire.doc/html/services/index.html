@@ -1,6 +1,6 @@
 <!-- 
  ******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [363551] JavaTypeConstraintService
  ******************************************************************************
 -->
 
@@ -32,6 +33,7 @@
   <li><a href="#FactsService">FactsService</a></li>
   <li><a href="#FileExtensionsService">FileExtensionsService</a></li>
   <li><a href="#InitialValueService">InitialValueService</a></li>
+  <li><a href="#JavaTypeConstraintService">JavaTypeConstraintService</a></li>
   <li><a href="#PossibleTypesService">PossibleTypesService</a></li>  
 </ul>
 
@@ -338,12 +340,74 @@ Value&lt;String> getType();
 void setType( String type );</font></code></pre>
 
 
+<a name="JavaTypeConstraintService"><h2>JavaTypeConstraintService</h2></a>
+
+<p>The JavaTypeConstraintService describes constraints on the Java type that a property can reference, such as the kind of
+type (class, interface, etc.) and the types that the type must extend or implement. The information provided by this
+service is used for validation, content assist and other needs.  
+
+<p>In majority of situations, the Java type constraint is static and should be configured using @JavaTypeConstraint 
+annotation. The framework provides an implementation of JavaTypeConstraintService that works with this annotation.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = JavaTypeName.class )
+@Reference( target = JavaType.class )</font>
+@JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = "javax.servlet.Filter" )
+
+<font color="#888888">ValueProperty PROP_SERVLET_FILTER_IMPL = new ValueProperty( TYPE, "ServletFilterImpl" );
+
+ReferenceValue&lt;JavaTypeName,JavaType> getServletFilterImpl();
+void setServletFilterImpl( JavaTypeName value );
+void setServletFilterImpl( String value );</font></code></pre>
+
+<p>When the Java type constraint varies due to runtime conditions, a custom implementation of JavaTypeConstraintService
+ can be provided.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class CustomJavaTypeConstraintService extends JavaTypeConstraintService
+{
+    @Override
+    protected void initJavaTypeConstraintService()
+    {
+        // Register listeners to invoke refresh() method when Java type constraint
+        // may have changed.
+    }
+    
+    @Override
+    protected State compute()
+    {
+        // Compute Java type constraint and return it using the State object.
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        // Remove any listeners that were added during initialization.
+    }
+}</code></pre>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = JavaTypeName.class )
+@Reference( target = JavaType.class )</font>
+@Service( impl = CustomJavaTypeConstrainService.class )
+
+<font color="#888888">ValueProperty PROP_SERVLET_FILTER_IMPL = new ValueProperty( TYPE, "ServletFilterImpl" );
+
+ReferenceValue&lt;JavaTypeName,JavaType> getServletFilterImpl();
+void setServletFilterImpl( JavaTypeName value );
+void setServletFilterImpl( String value );</font></code></pre>
+
+
 <a name="PossibleTypesService"><h2>PossibleTypesService</h2></a>
 
 <p>The PossibleTypesService enumerates the possible child element types for a list or an element property. Each 
 returned type is required to derive from the property's base type.</p>
 
-<p>In majority of situations, the set of possible types is static and should be configured using @Type annotation.</p>
+<p>In majority of situations, the set of possible types is static and should be configured using @Type annotation. 
+The framework provides an implementation of PossibleTypesService that works with this annotation.</p>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
 
@@ -363,8 +427,8 @@ of PossibleTypesService can be provided.</p>
     @Override
     protected void initPossibleTypesService()
     {
-        // Optionally register listeners to invoke refresh method when the list of possible types
-        // may need to be updated.
+        // Register listeners to invoke refresh() method when the list of possible types
+        // may have changed.
     }
 
     @Override
