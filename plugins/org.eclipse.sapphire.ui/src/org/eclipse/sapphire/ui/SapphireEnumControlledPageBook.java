@@ -131,11 +131,10 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
     
     private void updateCurrentPage()
     {
-        final IModelElement modelElement = getModelElement();
-        final Value<?> newEnumItemValue = modelElement.read( this.property );
+        final Value<?> newEnumItemValue = this.element.read( this.property );
         final Enum<?> newEnumItem = (Enum<?>) newEnumItemValue.getContent( true );
 
-        changePage( modelElement, newEnumItem );
+        changePage( this.element, newEnumItem );
     }
     
     @Override
