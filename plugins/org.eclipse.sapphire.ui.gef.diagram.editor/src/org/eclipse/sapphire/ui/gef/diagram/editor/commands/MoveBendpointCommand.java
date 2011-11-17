@@ -18,7 +18,7 @@ package org.eclipse.sapphire.ui.gef.diagram.editor.commands;
 public class MoveBendpointCommand extends BendpointCommand {
 
 	public void execute() {
-		this.getDiagramConnectionPart().updateBendpoint(getIndex(), getLocation().x, getLocation().y);
+		getDiagramConnectionModel().getModelPart().updateBendpoint(getIndex(), getLocation().x, getLocation().y);
 		super.execute();
 	}
 

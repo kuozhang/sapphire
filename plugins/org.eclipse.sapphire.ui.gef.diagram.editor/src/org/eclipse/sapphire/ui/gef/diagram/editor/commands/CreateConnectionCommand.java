@@ -19,8 +19,8 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -35,9 +35,9 @@ public class CreateConnectionCommand extends Command {
 	//private DiagramConnectionPart connection;
 
 	/** Start endpoint for the connection. */
-	private final DiagramNodePart source;
+	private final DiagramNodeModel source;
 	/** Target endpoint for the connection. */
-	private DiagramNodePart target;
+	private DiagramNodeModel target;
 
 	/**
 	 * Instantiate a command that can create a connection between two shapes.
@@ -51,14 +51,14 @@ public class CreateConnectionCommand extends Command {
 	 *             if source is null
 	 * @see Connection#setLineStyle(int)
 	 */
-	public CreateConnectionCommand(DiagramNodePart source, IDiagramConnectionDef connDef) {
+	public CreateConnectionCommand(DiagramNodeModel source, IDiagramConnectionDef connDef) {
 		if (source == null) {
 			throw new IllegalArgumentException();
 		}
 		setLabel("connection creation");
 		this.source = source;
 		this.connDef = connDef;
-		this.diagramPart = source.nearest(SapphireDiagramEditorPagePart.class);
+		this.diagramPart = source.getModelPart().nearest(SapphireDiagramEditorPagePart.class);
 	}
 
 	/*
@@ -81,7 +81,7 @@ public class CreateConnectionCommand extends Command {
 	 */
 	public void execute() {
 		DiagramConnectionTemplate connectionTemplate = getConnectionTemplate(this.source);
-		DiagramConnectionPart connection = connectionTemplate.createNewDiagramConnection(this.source, this.target);
+		DiagramConnectionPart connection = connectionTemplate.createNewDiagramConnection(this.source.getModelPart(), this.target.getModelPart());
 		// TODO activate direct editing after object creation
 	}
 
@@ -89,20 +89,20 @@ public class CreateConnectionCommand extends Command {
 	 * Set the target endpoint for the connection.
 	 * 
 	 * @param target
-	 *            that target endpoint (a non-null DiagramNodePart instance)
+	 *            that target endpoint (a non-null DiagramNodeModel instance)
 	 * @throws IllegalArgumentException
 	 *             if target is null
 	 */
-	public void setTarget(DiagramNodePart target) {
+	public void setTarget(DiagramNodeModel target) {
 		if (target == null) {
 			throw new IllegalArgumentException();
 		}
 		this.target = target;
 	}
 
-    private DiagramConnectionTemplate getConnectionTemplate(DiagramNodePart srcNode)
+    private DiagramConnectionTemplate getConnectionTemplate(DiagramNodeModel srcNode)
     {
-        DiagramEmbeddedConnectionTemplate embeddedConn = srcNode.getDiagramNodeTemplate().getEmbeddedConnectionTemplate();
+        DiagramEmbeddedConnectionTemplate embeddedConn = srcNode.getModelPart().getDiagramNodeTemplate().getEmbeddedConnectionTemplate();
         if (embeddedConn != null && 
                 embeddedConn.getConnectionId().equalsIgnoreCase(this.connDef.getId().getContent()))
         {

@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditPart;
@@ -45,12 +46,18 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
-import org.eclipse.sapphire.ui.gef.diagram.editor.parts.DiagramNodeEditPart;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModelBase;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.parts.SapphireDiagramEditorEditPartFactory;
-import org.eclipse.sapphire.ui.gef.diagram.editor.parts.SapphireDiagramEditorPageEditPart;
+import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartConstants;
 import org.eclipse.ui.forms.editor.FormEditor;
 
 /**
@@ -63,8 +70,13 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	private PaletteRoot root;
     private IDiagramEditorPageDef diagramPageDef;
     private SapphireDiagramEditorPagePart diagramPart;
+    private DiagramModel diagramModel;
     private SapphireDiagramPartListener diagramPartListener;
     private List<SapphirePart> selectedParts = null;
+    private boolean editorIsDirty = false;
+    
+	private Point mouseLocation;
+
 
     public SapphireDiagramEditor(final IModelElement rootModelElement, final IPath pageDefinitionLocation) {
 		final String bundleId = pageDefinitionLocation.segment( 0 );
@@ -85,28 +97,24 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
             @Override
             public void handleNodeUpdateEvent(final DiagramNodeEvent event)
             {
-            	System.out.println("handleNodeUpdateEvent");
                 updateNode((DiagramNodePart)event.getPart());
             }
             
             @Override
             public void handleNodeAddEvent(final DiagramNodeEvent event)
             {
-            	System.out.println("handleNodeAddEvent");
                 addNode((DiagramNodePart)event.getPart());
             }
             
             @Override
             public void handleNodeDeleteEvent(final DiagramNodeEvent event)
             {
-            	System.out.println("handleNodeDeleteEvent");
                 removeNode((DiagramNodePart)event.getPart());
             }
 
 			@Override
 		    public void handleNodeMoveEvent(final DiagramNodeEvent event)
 		    {
-            	System.out.println("handleNodeMoveEvent");
 		    	moveNode((DiagramNodePart)event.getPart());
 		    }
 			
@@ -141,24 +149,28 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		    public void handleConnectionAddBendpointEvent(final DiagramConnectionEvent event)
 		    {
             	System.out.println("handleConnectionAddBendpointEvent");
-		    	updateConnection((DiagramConnectionPart)event.getPart());
+		    	markEditorDirty();
+		    	updateConnectionBendpoint((DiagramConnectionPart)event.getPart());
 		    }
 
 		    public void handleConnectionRemoveBendpointEvent(final DiagramConnectionEvent event)
 		    {
             	System.out.println("handleConnectionRemoveBendpointEvent");
-		    	updateConnection((DiagramConnectionPart)event.getPart());
+		    	markEditorDirty();
+		    	updateConnectionBendpoint((DiagramConnectionPart)event.getPart());
 		    }
 
 		    public void handleConnectionMoveBendpointEvent(final DiagramConnectionEvent event)
 		    {
             	System.out.println("handleConnectionMoveBendpointEvent");
-		    	updateConnection((DiagramConnectionPart)event.getPart());
+		    	markEditorDirty();
+		    	updateConnectionBendpoint((DiagramConnectionPart)event.getPart());
 		    }
 			
 		    public void handleConnectionMoveLabelEvent(final DiagramConnectionEvent event)
 		    {
             	System.out.println("handleConnectionMoveLabelEvent");
+		    	markEditorDirty();
 		    	updateConnection((DiagramConnectionPart)event.getPart());
 		    }
 
@@ -192,107 +204,96 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	@Override
 	public boolean isDirty()
 	{
-		boolean dirty = super.isDirty();
-		//dirty |= this.gridVisibilityChanged;
-		return dirty;
+		return this.editorIsDirty;
 	}
 	
 	protected void markEditorDirty() {
-		System.out.println("TODO markEditorDirty");
+		this.editorIsDirty = true;
+		firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);
 	}
 	
-	protected void removeConnection(DiagramConnectionPart part) {
-		EditPart editPart = getEditPart(part);
-		if (editPart == null) {
+	protected void removeConnection(DiagramConnectionPart connPart) {
+		if (diagramModel == null) {
 			return;
 		}
 
-		IModelElement endpoint1 = part.getEndpoint1();
-		IModelElement endpoint2 = part.getEndpoint2();
-
-		DiagramNodePart nodePart1 = this.diagramPart.getDiagramNodePart(endpoint1);
-		DiagramNodePart nodePart2 = this.diagramPart.getDiagramNodePart(endpoint2);
-
-		EditPart editPart1 = getEditPart(nodePart1);
-		EditPart editPart2 = getEditPart(nodePart2);
-
-		if (editPart1 != null) {
-			((DiagramNodeEditPart)editPart1).handleSourceConnectionRemoved(part);
-		}
-		if (editPart2 != null) {
-			((DiagramNodeEditPart)editPart2).handleTargetConnectionRemoved(part);
-		}
+		diagramModel.removeConnection(connPart);
 	}
 
 	protected void addConnectionIfPossible(DiagramConnectionPart connPart) {
-		// TODO more specific adds?
-		refreshConnectionNodes(connPart);
+		if (diagramModel == null) {
+			return;
+		}
+
+		diagramModel.addConnection(connPart);
 	}
 	
 	private void refreshConnectionNodes(DiagramConnectionPart connPart) {
-		IModelElement endpoint1 = connPart.getEndpoint1();
-		IModelElement endpoint2 = connPart.getEndpoint2();
-		DiagramNodePart nodePart1 = this.diagramPart.getDiagramNodePart(endpoint1);
-		DiagramNodePart nodePart2 = this.diagramPart.getDiagramNodePart(endpoint2);
-		if (nodePart1 == null || nodePart2 == null) {
+		if (diagramModel == null) {
 			return;
 		}
-
-		EditPart editPart1 = getEditPart(nodePart1);
-		EditPart editPart2 = getEditPart(nodePart2);
-		if (editPart1 == null || editPart2 == null) {
-			return;
+		
+		DiagramConnectionModel connectionModel = diagramModel.getDiagramConnectionModel(connPart);
+		if (connectionModel != null) {
+			connectionModel.handleUpdateConnection();
 		}
-		editPart1.refresh();
-		editPart2.refresh();
 	}
 
 	protected void updateConnectionEndpoint(DiagramConnectionPart connPart) {
-		// TODO more specific updates?
 		refreshConnectionNodes(connPart);
 	}
 
-	protected void updateConnection(DiagramConnectionPart part) {
-		EditPart editPart = getEditPart(part);
-		if (editPart == null) {
+	protected void updateConnection(DiagramConnectionPart connPart) {
+		refreshConnectionNodes(connPart);
+	}
+
+	protected void updateConnectionBendpoint(DiagramConnectionPart connPart) {
+		if (diagramModel == null) {
 			return;
 		}
-
-		editPart.refresh();
+		
+		DiagramConnectionModel connectionModel = diagramModel.getDiagramConnectionModel(connPart);
+		if (connectionModel != null) {
+			connectionModel.handleUpdateBendPoints();
+		}
 	}
 
 	protected void moveNode(DiagramNodePart part) {
-		EditPart editPart = getEditPart(part);
-		if (editPart == null) {
+		if (diagramModel == null) {
 			return;
 		}
-
-		editPart.refresh();
+		
+		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
+		if (nodeModel != null) {
+			nodeModel.handleMoveNode();
+		}
 	}
 
 	protected void removeNode(DiagramNodePart part) {
-		EditPart editPart = getEditPart(part);
-		if (editPart == null) {
+		if (diagramModel == null) {
 			return;
 		}
-
-		SapphireDiagramEditorPageEditPart rootEditPart = (SapphireDiagramEditorPageEditPart)getRootEditPart();
-		rootEditPart.handleNodeRemoved(part);
+		
+		diagramModel.handleRemoveNode(part);
 	}
 
 	protected void addNode(DiagramNodePart part) {
-		// TODO more specific add
-		GraphicalViewer viewer = getGraphicalViewer();
-		viewer.getContents().refresh();
+		if (diagramModel == null) {
+			return;
+		}
+		
+		diagramModel.handleAddNode(part);
 	}
 
 	protected void updateNode(DiagramNodePart part) {
-		EditPart editPart = getEditPart(part);
-		if (editPart == null) {
+		if (diagramModel == null) {
 			return;
 		}
-
-		editPart.refresh();
+		
+		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
+		if (nodeModel != null) {
+			nodeModel.handleUpdateNode();
+		}
 	}
 	
 	@Override
@@ -313,55 +314,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
             }
         }
         if (editorIsActive) {
-
-            // long start = System.nanoTime();
-            // this is where we should check the selection source (part)
-            // * for CNF view the link flag must be obeyed
-            // this would however require a dependency to
-            // org.eclipse.ui.navigator
-//            if (part instanceof CommonNavigator) {
-//                if (!((CommonNavigator) part).isLinkingEnabled()) {
-//                    return;
-//                }
-//            }
-            // useful selection ??
-//            if (selection instanceof IStructuredSelection) {
-//                IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-//                List<PictogramElement> peList = new ArrayList<PictogramElement>();
-//                // Collect all Pictogram Elements for all selected domain
-//                // objects into one list
-//                for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
-//                    Object object = iterator.next();
-//                    if (object instanceof EObject) {
-//                        // Find the Pictogram Elements for the given domain
-//                        // object via the standard link service
-//                        List<PictogramElement> referencingPes = Graphiti.getLinkService().getPictogramElements(
-//                                getDiagramTypeProvider().getDiagram(), (EObject) object);
-//                        if (referencingPes.size() > 0) {
-//                            peList.addAll(referencingPes);
-//                        }
-//                    } else {
-//                        // For non-EMF domain objects use the registered
-//                        // notification service for finding
-//                        PictogramElement[] relatedPictogramElements = getDiagramTypeProvider().getNotificationService()
-//                                .calculateRelatedPictogramElements(new Object[] { object });
-//                        for (int i = 0; i < relatedPictogramElements.length; i++) {
-//                            peList.add(relatedPictogramElements[i]);
-//                        }
-//                    }
-//                }
-//
-//                // Do the selection in the diagram (in case there is something
-//                // to select)
-//                PictogramElement[] pes = null;
-//                if (peList.size() > 0) {
-//                    pes = peList.toArray(new PictogramElement[peList.size()]);
-//                }
-//                if (pes != null && pes.length > 0) {
-//                    selectPictogramElements(pes);
-//                }
-//
-//			}
 			updateActions(getSelectionActions());
 			
 			// Bug 339360 - MultiPage Editor's selectionProvider does not notify PropertySheet (edit) 
@@ -382,27 +334,10 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 					{
 						editPart = (EditPart) ((IAdaptable) object).getAdapter(EditPart.class);
 					}
-					if (editPart != null && editPart.getModel() instanceof SapphirePart) {
-						SapphirePart sp = (SapphirePart)editPart.getModel();
+					if (editPart != null && editPart.getModel() instanceof DiagramModelBase) {
+						SapphirePart sp = ((DiagramModelBase)editPart.getModel()).getSapphirePart();
 						partList.add(sp);
 					}
-//					if (editPart != null && editPart.getModel() instanceof PictogramElement) 
-//					{					
-//						PictogramElement pe = (PictogramElement) editPart.getModel();
-//						if (pe instanceof Diagram)
-//						{
-//							partList.add(getPart());
-//						}
-//						else 
-//						{
-//							SapphireDiagramFeatureProvider sfp = (SapphireDiagramFeatureProvider)getDiagramTypeProvider().getFeatureProvider();
-//							Object bo = sfp.getBusinessObjectForPictogramElement(pe);							
-//							if (bo instanceof SapphirePart) 
-//							{
-//								partList.add((SapphirePart)bo);
-//							}
-//						}
-//					}
 					if (partList.size() == 1)
 					{
 						getPart().setSelection(partList.get(0));
@@ -413,9 +348,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 					}
 					this.selectedParts = partList;
 				}
-				
 			}
-			
 		}
 	}    
 	
@@ -432,7 +365,13 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		System.out.println("TODO doSave");
+		try {
+			this.diagramGeometry.write();
+			this.editorIsDirty = false;
+			firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);
+		} catch (Exception e) {
+			SapphireUiFrameworkPlugin.log(e);
+		}
 	}
 
 	@Override
@@ -445,7 +384,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput)input;
 		IFile diagramFile = diagramInput.getDiagramFile();
 		IFile layoutFile = diagramInput.getLayoutFile();
-		this.diagramGeometry = new DiagramGeometryWrapper(layoutFile, getPart());
+		diagramGeometry = new DiagramGeometryWrapper(layoutFile, getPart());
 		System.out.println("setInput diagramFile: " + diagramFile);
 		System.out.println("setInput layoutFile: " + layoutFile);
 	}
@@ -453,13 +392,42 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	@Override
 	protected void initializeGraphicalViewer() {
 		super.initializeGraphicalViewer();
+		
 		GraphicalViewer viewer = getGraphicalViewer();
 		
+		viewer.getControl().addMouseMoveListener(new MouseMoveListener() {
+			public void mouseMove(MouseEvent e) {
+				setMouseLocation(e.x, e.y);
+			}
+		});
+
 		// set the contents of this editor
-		viewer.setContents(diagramPart); 
+		diagramModel = new DiagramModel(diagramPart);
+		viewer.setContents(diagramModel); 
+
+		// If the layout file doesn't exist, apply auto layout
+		// TODO the handler is DiagramGraphLayoutActionHandler - define action handler in sapphire-extension.xml
+//		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput) getEditorInput();
+//		if (diagramInput.noExistingLayout()) {
+//			SapphireAction layoutAction = this.diagramPart.getAction("Sapphire.Diagram.Layout");
+//			if (layoutAction != null) {
+//				SapphireActionHandler layoutHandler = layoutAction.getFirstActiveHandler();
+//				if (layoutHandler != null) {
+//					SapphireRenderingContext context = new SapphireRenderingContext(diagramPart, null);
+//					layoutHandler.execute(context);
+//				}
+//			}
+//		}
 
 		// listen for dropped parts
 		viewer.addDropTargetListener(new TemplateTransferDropTargetListener(getGraphicalViewer()));
+
+		this.editorIsDirty = false;
+		firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);		
+	}
+	
+	public DiagramModel getDiagramModel() {
+		return this.diagramModel;
 	}
 	
 	protected void configureGraphicalViewer() {
@@ -489,53 +457,14 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		return this.selectedParts;
 	}
 	
-	private EditPart getRootEditPart() {
-		GraphicalViewer viewer = getGraphicalViewer();
-		if (viewer != null) {
-			EditPart viewerEditPart = viewer.getContents(); 
-			if (viewerEditPart.getModel() == diagramPart) {
-				return viewerEditPart;
-			}
+	public Point getMouseLocation() {
+		if (mouseLocation == null) {
+			mouseLocation = new Point();
 		}
-		return null;
+		return mouseLocation;
 	}
 
-	private EditPart getEditPart(DiagramNodePart part) {
-		GraphicalViewer viewer = getGraphicalViewer();
-		if (viewer != null) {
-			EditPart viewerEditPart = viewer.getContents(); 
-			if (viewerEditPart.getModel() == part) {
-				return viewerEditPart;
-			}
-			for (Object object : viewerEditPart.getChildren()) {
-				EditPart childEditPart = (EditPart)object;
-				if (childEditPart.getModel() == part) {
-					return childEditPart;
-				}
-			}
-		}
-		return null;
-	}
-	
-	private EditPart getEditPart(DiagramConnectionPart part) {
-		GraphicalViewer viewer = getGraphicalViewer();
-		if (viewer != null) {
-			EditPart viewerEditPart = viewer.getContents(); 
-			if (viewerEditPart.getModel() == part) {
-				return viewerEditPart;
-			}
-			for (Object object : viewerEditPart.getChildren()) {
-				if (object instanceof DiagramNodeEditPart) {
-					DiagramNodeEditPart nodeEditPart = (DiagramNodeEditPart)object;
-					for (Object conn : nodeEditPart.getSourceConnections()) {
-						EditPart connEditPart = (EditPart)conn;
-						if (connEditPart.getModel() == part) {
-							return connEditPart;
-						}
-					}
-				}
-			}
-		}
-		return null;
+	void setMouseLocation(int x, int y) {
+		getMouseLocation().setLocation(x, y);
 	}
 }

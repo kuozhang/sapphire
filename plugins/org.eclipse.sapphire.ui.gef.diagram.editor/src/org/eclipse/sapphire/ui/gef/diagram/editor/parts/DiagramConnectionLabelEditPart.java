@@ -21,7 +21,7 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionLabel;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionLabelModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.ConnectionLabelDirectEditPolicy;
 
 /**
@@ -43,7 +43,7 @@ public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart {
 	}
 
 	public DiagramConnectionPart getDiagramConnectionPart() {
-		return ((DiagramConnectionLabel)getModel()).getModelPart();
+		return ((DiagramConnectionLabelModel)getModel()).getModelPart();
 	}
 	
 	private void performDirectEdit() {

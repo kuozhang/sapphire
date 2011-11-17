@@ -14,9 +14,9 @@ package org.eclipse.sapphire.ui.gef.diagram.editor.policies;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.DirectEditPolicy;
 import org.eclipse.gef.requests.DirectEditRequest;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.LabelNodeCommand;
 import org.eclipse.sapphire.ui.gef.diagram.editor.figures.NodeFigure;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.parts.DiagramNodeEditPart;
 
 /**
@@ -31,7 +31,7 @@ public class NodeLabelDirectEditPolicy extends DirectEditPolicy {
 	protected Command getDirectEditCommand(DirectEditRequest edit) {
 		String labelText = (String) edit.getCellEditor().getValue();
 		DiagramNodeEditPart editPart = (DiagramNodeEditPart) getHost();
-		LabelNodeCommand command = new LabelNodeCommand((DiagramNodePart)editPart.getModel(), labelText);
+		LabelNodeCommand command = new LabelNodeCommand((DiagramNodeModel)editPart.getModel(), labelText);
 		return command;
 	}
 

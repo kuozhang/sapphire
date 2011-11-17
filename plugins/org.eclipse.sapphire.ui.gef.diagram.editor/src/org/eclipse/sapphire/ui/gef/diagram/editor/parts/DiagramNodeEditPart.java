@@ -11,7 +11,8 @@
 
 package org.eclipse.sapphire.ui.gef.diagram.editor.parts;
 
-import java.util.ArrayList;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import org.eclipse.draw2d.ChopboxAnchor;
@@ -27,17 +28,10 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.Bounds;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.gef.diagram.editor.figures.NodeFigure;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramNodeEditPolicy;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.NodeEditPolicy;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.NodeLabelDirectEditPolicy;
@@ -46,11 +40,8 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.policies.NodeLabelDirectEditPo
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements NodeEditPart {
+public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements NodeEditPart, PropertyChangeListener {
 
-    public static final int DEFAULT_NODE_WIDTH = 100;
-    public static final int DEFAULT_NODE_HEIGHT = 30;
-    
     private NodeDirectEditManager manager;
     
     private ConnectionAnchor sourceAnchor;
@@ -68,6 +59,22 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new NodeEditPolicy());
 	}
 
+	@Override
+	public void activate() {
+		if (!isActive()) {
+			super.activate();
+			getCastedModel().addPropertyChangeListener(this);
+		}
+	}
+
+	@Override
+	public void deactivate() {
+		if (isActive()) {
+			super.deactivate();
+			getCastedModel().removePropertyChangeListener(this);
+		}
+	}
+
 	private void performDirectEdit() {
 		if (manager == null) {
 			Label label = getNodeFigure().getLabelFigure();
@@ -76,87 +83,24 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 		manager.show();
 	}
 
+	@Override
 	public void performRequest(Request request) {
 		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT)
 			performDirectEdit();
 	}
 
 	@Override
-	protected List<DiagramConnectionPart> getModelSourceConnections() {
-		List<DiagramConnectionPart> list = new ArrayList<DiagramConnectionPart>();
-		SapphireDiagramEditorPagePart diagramPart = getModelPart().nearest(SapphireDiagramEditorPagePart.class);
-		for (DiagramConnectionTemplate connTemplate : diagramPart.getConnectionTemplates()) {
-			for (DiagramConnectionPart connPart : connTemplate.getDiagramConnections(null)) {
-				IModelElement endpoint1 = connPart.getEndpoint1();
-				if (endpoint1 == getModelPart().getModelElement()) {
-					list.add(connPart);
-				}
-			}
-		}
-		// Add embedded connections. This needs to be done after all the nodes have been added.
-		for (DiagramNodeTemplate nodeTemplate : diagramPart.getNodeTemplates()) {
-			DiagramEmbeddedConnectionTemplate embeddedConnTemplate = nodeTemplate.getEmbeddedConnectionTemplate();
-			if (embeddedConnTemplate != null) {
-				for (DiagramConnectionPart connPart : embeddedConnTemplate.getDiagramConnections(null)) {
-					IModelElement endpoint1 = connPart.getEndpoint1();
-					if (endpoint1 == getModelPart().getModelElement()) {
-						list.add(connPart);
-					}
-				}
-			}
-		}
-		
-		// Add Implicit connections
-		for (DiagramImplicitConnectionTemplate implicitConnTemplate : diagramPart.getImplicitConnectionTemplates()) {
-			for (DiagramImplicitConnectionPart implicitConn : implicitConnTemplate.getImplicitConnections()) {
-				IModelElement endpoint1 = implicitConn.getEndpoint1();
-				if (endpoint1 == getModelPart().getModelElement()) {
-					list.add(implicitConn);
-				}
-			}
-		}
-		return list;
+	protected List<DiagramConnectionModel> getModelSourceConnections() {
+		return getCastedModel().getSourceConnections();
 	}
 
 	@Override
-	protected List<DiagramConnectionPart> getModelTargetConnections() {
-		List<DiagramConnectionPart> list = new ArrayList<DiagramConnectionPart>();
-		SapphireDiagramEditorPagePart diagramPart = getModelPart().nearest(SapphireDiagramEditorPagePart.class);
-		for (DiagramConnectionTemplate connTemplate : diagramPart.getConnectionTemplates()) {
-			for (DiagramConnectionPart connPart : connTemplate.getDiagramConnections(null)) {
-				IModelElement endpoint2 = connPart.getEndpoint2();
-				if (endpoint2 == getModelPart().getModelElement()) {
-					list.add(connPart);
-				}
-			}
-		}
-		// Add embedded connections. This needs to be done after all the nodes have been added.
-		for (DiagramNodeTemplate nodeTemplate : diagramPart.getNodeTemplates()) {
-			DiagramEmbeddedConnectionTemplate embeddedConnTemplate = nodeTemplate.getEmbeddedConnectionTemplate();
-			if (embeddedConnTemplate != null) {
-				for (DiagramConnectionPart connPart : embeddedConnTemplate.getDiagramConnections(null)) {
-					IModelElement endpoint2 = connPart.getEndpoint2();
-					if (endpoint2 == getModelPart().getModelElement()) {
-						list.add(connPart);
-					}
-				}
-			}
-		}
-		
-		// Add Implicit connections
-		for (DiagramImplicitConnectionTemplate implicitConnTemplate : diagramPart.getImplicitConnectionTemplates()) {
-			for (DiagramImplicitConnectionPart implicitConn : implicitConnTemplate.getImplicitConnections()) {
-				IModelElement endpoint2 = implicitConn.getEndpoint2();
-				if (endpoint2 == getModelPart().getModelElement()) {
-					list.add(implicitConn);
-				}
-			}
-		}
-		return list;
+	protected List<DiagramConnectionModel> getModelTargetConnections() {
+		return getCastedModel().getTargetConnections();
 	}
 
-	protected DiagramNodePart getModelPart() {
-		return (DiagramNodePart)getModel();
+	public DiagramNodeModel getCastedModel() {
+		return (DiagramNodeModel)getModel();
 	}
 	
 	protected NodeFigure getNodeFigure() {
@@ -165,20 +109,12 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 
 	@Override
 	protected void refreshVisuals() {
-		getNodeFigure().setText(getModelPart().getLabel());
-		Bounds nb = getModelPart().getNodeBounds();
-		Rectangle bounds = new Rectangle(nb.getX(), nb.getY(), DEFAULT_NODE_WIDTH, DEFAULT_NODE_HEIGHT);
+		getNodeFigure().setText(getCastedModel().getLabel());
+		Bounds nb = getCastedModel().getNodeBounds();
+		Rectangle bounds = new Rectangle(nb.getX(), nb.getY(), nb.getWidth(), nb.getHeight());
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this,	getFigure(), bounds);
 	}
 	
-	public void handleSourceConnectionRemoved(DiagramConnectionPart part) {
-		this.refreshSourceConnections();
-	}
-	
-	public void handleTargetConnectionRemoved(DiagramConnectionPart part) {
-		this.refreshTargetConnections();
-	}
-
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
 		if (sourceAnchor == null) {
 			sourceAnchor = new ChopboxAnchor(getFigure());
@@ -204,6 +140,19 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 		// when moving or creating connections, the line should always end
 		// directly at the mouse-pointer.
 		return null;
+	}
+
+	public void propertyChange(PropertyChangeEvent evt) {
+		String prop = evt.getPropertyName();
+		if (DiagramNodeModel.SOURCE_CONNECTIONS.equals(prop)) {
+			refreshSourceConnections();
+		} else if (DiagramNodeModel.TARGET_CONNECTIONS.equals(prop)) {
+			refreshTargetConnections();
+		} else if (DiagramNodeModel.NODE_BOUNDS.equals(prop)) {
+			refreshVisuals();
+		} else if (DiagramNodeModel.NODE_UPDATES.equals(prop)) {
+			refreshVisuals();
+		}
 	}
 	
 }

@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui.gef.diagram.editor;
 
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.Event;
@@ -19,7 +20,6 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 
 /**
  * Copied from org.eclipse.sapphire.ui.swt.graphiti
@@ -82,12 +82,9 @@ public class SapphireActionHandlerDelegate extends Action
 				}
 			}
 		});
-//		SapphireDiagramFeatureProvider fp = (SapphireDiagramFeatureProvider)this.diagramEditor.getDiagramTypeProvider().getFeatureProvider();
-//		DiagramRenderingContext context = fp.getRenderingContext((SapphirePart)this.sapphireActionHandler.getPart());
-//		ILocation loc = context.getDiagramEditor().getCurrentMouseLocation();
-//		context.setCurrentMouseLocation(loc.getX(), loc.getY());
-		// TODO LH
-		SapphireRenderingContext context = new SapphireRenderingContext((SapphirePart)this.sapphireActionHandler.getPart(), null);
+		DiagramRenderingContext context = new DiagramRenderingContext((SapphirePart)this.sapphireActionHandler.getPart(), diagramEditor);
+		Point pt = diagramEditor.getMouseLocation();
+		context.setCurrentMouseLocation(pt.x, pt.y);
 		this.sapphireActionHandler.execute(context);
 	}
 		

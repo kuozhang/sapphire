@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui.gef.diagram.editor.parts;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +31,8 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionLabel;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionLabelModel;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramConnectionBendpointEditPolicy;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramConnectionEndpointEditPolicy;
 
@@ -37,7 +40,7 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramConnectionEndp
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class DiagramConnectionEditPart extends AbstractConnectionEditPart {
+public class DiagramConnectionEditPart extends AbstractConnectionEditPart implements PropertyChangeListener {
 
 	@Override
 	protected void createEditPolicies() {
@@ -56,20 +59,39 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart {
 		return connection;
 	}
 	
-	private DiagramConnectionPart getModelPart() {
-		return (DiagramConnectionPart)getModel();
+	@Override
+	public void activate() {
+		if (!isActive()) {
+			super.activate();
+			getCastedModel().addPropertyChangeListener(this);
+		}
+	}
+
+	@Override
+	public void deactivate() {
+		if (isActive()) {
+			super.deactivate();
+			getCastedModel().removePropertyChangeListener(this);
+		}
+	}
+	
+	private DiagramConnectionModel getCastedModel() {
+		return (DiagramConnectionModel)getModel();
 	}
 	
 	public void updateStyle(PolylineConnection connection) {
-		IDiagramConnectionDef def = getModelPart().getConnectionDef();
+		DiagramConnectionPart connectionPart = getCastedModel().getModelPart();
+		IDiagramConnectionDef def = connectionPart.getConnectionDef();
 		connection.setLineStyle(SapphireDiagramEditorUtil.getLinkStyle(def));
 		connection.setLineWidth(def.getLineWidth().getContent());
-		connection.setForegroundColor(SapphireDiagramEditorUtil.getLineColor(getModelPart()));
+		connection.setForegroundColor(SapphireDiagramEditorUtil.getLineColor(connectionPart));
 	}
 	
 	private void refreshBendpoints() {
+		DiagramConnectionPart connectionPart = getCastedModel().getModelPart();
+
 		List<AbsoluteBendpoint> figureConstraint = new ArrayList<AbsoluteBendpoint>();
-		for (Point point : getModelPart().getConnectionBendpoints()) {
+		for (Point point : connectionPart.getConnectionBendpoints()) {
 			AbsoluteBendpoint bendpoint = new AbsoluteBendpoint(point.getX(), point.getY());
 			figureConstraint.add(bendpoint);
 		}
@@ -82,10 +104,10 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart {
 	}
 
 	@Override
-	protected List getModelChildren() {
+	protected List<DiagramConnectionLabelModel> getModelChildren() {
 		// add the label
-		List list = new ArrayList(1);
-		list.add(new DiagramConnectionLabel(getModelPart()));
+		List<DiagramConnectionLabelModel> list = new ArrayList<DiagramConnectionLabelModel>(1);
+		list.add(new DiagramConnectionLabelModel(getCastedModel()));
 		return list;
 	}
 
@@ -107,6 +129,16 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart {
 			return null;
 		}
 
+	}
+
+
+	public void propertyChange(PropertyChangeEvent evt) {
+		String prop = evt.getPropertyName();
+		if (DiagramConnectionModel.CONNECTION_UPDATES.equals(prop)) {
+			refreshChildren();
+		} else if (DiagramConnectionModel.CONNECTION_BEND_POINTS.equals(prop)) {
+			refreshVisuals();
+		}
 	}
 	
 }

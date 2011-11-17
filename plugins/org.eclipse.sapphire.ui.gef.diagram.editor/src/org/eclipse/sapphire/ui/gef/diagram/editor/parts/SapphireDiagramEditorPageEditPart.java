@@ -11,7 +11,8 @@
 
 package org.eclipse.sapphire.ui.gef.diagram.editor.parts;
 
-import java.util.ArrayList;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import org.eclipse.draw2d.ConnectionLayer;
@@ -34,18 +35,19 @@ import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.CreateNodeCommand;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.MoveNodeCommand;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramNodeSelectionEditPolicy;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart {
+public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart implements PropertyChangeListener {
 
 	@Override
 	protected IFigure createFigure() {
@@ -70,27 +72,35 @@ public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new DiagramXYLayoutEditPolicy());
 	}
 	
-	private SapphireDiagramEditorPagePart getModelPart() {
-		return (SapphireDiagramEditorPagePart)getModel();
+	@Override
+	public void activate() {
+		if (!isActive()) {
+			super.activate();
+			getCastedModel().addPropertyChangeListener(this);
+		}
 	}
 
 	@Override
-	protected List<DiagramNodePart> getModelChildren() {
-		List<DiagramNodePart> list = new ArrayList<DiagramNodePart>();
-		for (DiagramNodeTemplate nodeTemplate : getModelPart().getNodeTemplates()) {
-			if (getModelPart().isNodeTemplateVisible(nodeTemplate)) {
-				for (DiagramNodePart nodePart : nodeTemplate.getDiagramNodes()) {
-					System.out.println(nodePart.getLabel());
-					list.add(nodePart);
-				}
-			}
+	public void deactivate() {
+		if (isActive()) {
+			super.deactivate();
+			getCastedModel().removePropertyChangeListener(this);
 		}
-		return list;
+	}
+
+	private DiagramModel getCastedModel() {
+		return (DiagramModel)getModel();
+	}
+	
+	@Override
+	protected List<DiagramNodeModel> getModelChildren() {
+		return getCastedModel().getNodes();
 	}
 	
 	private DiagramNodeTemplate getDiagramNodeTemplate(ModelElementType type) {
-		for (DiagramNodeTemplate nodeTemplate : getModelPart().getNodeTemplates()) {
-			if (getModelPart().isNodeTemplateVisible(nodeTemplate)) {
+		SapphireDiagramEditorPagePart sapphirePart = getCastedModel().getModelPart();
+		for (DiagramNodeTemplate nodeTemplate : sapphirePart.getNodeTemplates()) {
+			if (sapphirePart.isNodeTemplateVisible(nodeTemplate)) {
 				// TODO check for type
 				return nodeTemplate;
 			}
@@ -98,14 +108,6 @@ public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart
 		return null;
 	}
 	
-	public void handleNodeRemoved(DiagramNodePart part) {
-		removeChild(getEditPartForChild(part));
-	}
-
-	private EditPart getEditPartForChild(Object child) {
-		return (EditPart) getViewer().getEditPartRegistry().get(child);
-	}
-
 	/**
 	 * EditPolicy for the Figure used by this edit part. Children of
 	 * XYLayoutEditPolicy can be used in Figures with XYLayout.
@@ -130,8 +132,8 @@ public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart
 		@Override
 		protected Command createChangeConstraintCommand(ChangeBoundsRequest request, EditPart child, Object constraint) {
 			if (child instanceof DiagramNodeEditPart && constraint instanceof Rectangle) {
-				DiagramNodePart part = (DiagramNodePart) ((DiagramNodeEditPart)child).getModel();
-				return new MoveNodeCommand(part, (Rectangle)constraint);
+				DiagramNodeModel node = ((DiagramNodeEditPart)child).getCastedModel();
+				return new MoveNodeCommand(node, (Rectangle)constraint);
 			}
 			return super.createChangeConstraintCommand(request, child, constraint);
 		}
@@ -150,5 +152,15 @@ public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart
 			return new CreateNodeCommand(template, request.getLocation());
 		}
 
+	}
+
+	public void propertyChange(PropertyChangeEvent evt) {
+		String prop = evt.getPropertyName();
+		System.out.println(prop + " property changed");
+		if (DiagramModel.NODE_ADDED.equals(prop)) {
+			refreshChildren();
+		} else if (DiagramModel.NODE_REMOVED.equals(prop)) {
+			refreshChildren();
+		} 
 	}
 }

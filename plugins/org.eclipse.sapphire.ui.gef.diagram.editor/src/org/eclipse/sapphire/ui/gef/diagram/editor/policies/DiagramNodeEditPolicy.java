@@ -18,6 +18,7 @@ import org.eclipse.gef.requests.ReconnectRequest;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.CreateConnectionCommand;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -28,13 +29,13 @@ public class DiagramNodeEditPolicy extends GraphicalNodeEditPolicy {
 	@Override
 	protected Command getConnectionCompleteCommand(CreateConnectionRequest request) {
 		CreateConnectionCommand cmd = (CreateConnectionCommand) request.getStartCommand();
-		cmd.setTarget((DiagramNodePart) getHost().getModel());
+		cmd.setTarget((DiagramNodeModel) getHost().getModel());
 		return cmd;
 	}
 
 	@Override
 	protected Command getConnectionCreateCommand(CreateConnectionRequest request) {
-		DiagramNodePart source = (DiagramNodePart) getHost().getModel();
+		DiagramNodeModel source = (DiagramNodeModel) getHost().getModel();
 		Object def = request.getNewObjectType();
 		CreateConnectionCommand cmd = new CreateConnectionCommand(source, (IDiagramConnectionDef)def);
 		request.setStartCommand(cmd);

@@ -33,8 +33,6 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-@SuppressWarnings("restriction")
-
 public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvider
 {
 	private static final String DIAGRAM_NODE_DEFAULT_ACTION = "Sapphire.Diagram.Node.Default";

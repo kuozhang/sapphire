@@ -13,7 +13,7 @@ package org.eclipse.sapphire.ui.gef.diagram.editor.commands;
 
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -21,17 +21,17 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 
 public class MoveNodeCommand extends Command {
 	
-	private DiagramNodePart part;
+	private DiagramNodeModel node;
 	private Rectangle rectangle;
 
-	public MoveNodeCommand(DiagramNodePart part, Rectangle rectangle) {
-		this.part = part;
+	public MoveNodeCommand(DiagramNodeModel node, Rectangle rectangle) {
+		this.node = node;
 		this.rectangle = rectangle;
 	}
 
 	@Override
 	public void execute() {
-		part.setNodePosition(rectangle.x, rectangle.y);
+		node.getModelPart().setNodePosition(rectangle.x, rectangle.y);
 	}
 	
 }

@@ -18,7 +18,7 @@ package org.eclipse.sapphire.ui.gef.diagram.editor.commands;
 public class DeleteBendpointCommand extends BendpointCommand {
 
 	public void execute() {
-		getDiagramConnectionPart().removeBendpoint(getIndex());
+		getDiagramConnectionModel().getModelPart().removeBendpoint(getIndex());
 		super.execute();
 	}
 

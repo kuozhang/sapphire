@@ -9,24 +9,19 @@
  *    Ling Hao - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.gef.diagram.editor.model;
+package org.eclipse.sapphire.ui.gef.diagram.editor.actions;
 
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.draw2d.PositionConstants;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class DiagramConnectionLabel {
-	
-	private DiagramConnectionPart part;
+public class VerticalGraphLayoutActionHandler extends DiagramGraphLayoutActionHandler {
 
-	public DiagramConnectionLabel(DiagramConnectionPart part) {
-		this.part = part;
+	@Override
+	public int getGraphDirection() {
+		return PositionConstants.NORTH_SOUTH;
 	}
 
-	public DiagramConnectionPart getModelPart() {
-		return part;
-	}
-	
 }

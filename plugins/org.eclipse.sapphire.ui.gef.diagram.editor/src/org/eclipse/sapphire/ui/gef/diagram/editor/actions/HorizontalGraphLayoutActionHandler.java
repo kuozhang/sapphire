@@ -9,28 +9,19 @@
  *    Ling Hao - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.gef.diagram.editor.commands;
+package org.eclipse.sapphire.ui.gef.diagram.editor.actions;
 
-import org.eclipse.gef.commands.Command;
-import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
+import org.eclipse.draw2d.PositionConstants;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class LabelNodeCommand extends Command {
-	
-	private DiagramNodeModel node;
-	private String labelText;
-
-	public LabelNodeCommand(DiagramNodeModel node, String labelText) {
-		this.node = node;
-		this.labelText = labelText;
-	}
+public class HorizontalGraphLayoutActionHandler extends DiagramGraphLayoutActionHandler {
 
 	@Override
-	public void execute() {
-		node.getModelPart().setLabel(labelText);
+	public int getGraphDirection() {
+		return PositionConstants.EAST_WEST;
 	}
-	
+
 }

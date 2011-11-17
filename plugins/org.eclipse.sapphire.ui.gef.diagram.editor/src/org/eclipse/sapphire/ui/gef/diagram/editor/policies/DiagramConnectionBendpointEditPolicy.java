@@ -15,11 +15,11 @@ import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.BendpointRequest;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.BendpointCommand;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.CreateBendpointCommand;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.DeleteBendpointCommand;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.MoveBendpointCommand;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -42,7 +42,7 @@ public class DiagramConnectionBendpointEditPolicy extends org.eclipse.gef.editpo
 		conn.translateToRelative(ref2);
 
 		com.setRelativeDimensions(p.getDifference(ref1), p.getDifference(ref2));
-		com.setDiagramConnectionPart((DiagramConnectionPart) request.getSource().getModel());
+		com.setDiagramConnectionModel((DiagramConnectionModel) request.getSource().getModel());
 		com.setIndex(request.getIndex());
 		return com;
 	}
@@ -63,7 +63,7 @@ public class DiagramConnectionBendpointEditPolicy extends org.eclipse.gef.editpo
 		conn.translateToRelative(ref2);
 
 		com.setRelativeDimensions(p.getDifference(ref1), p.getDifference(ref2));
-		com.setDiagramConnectionPart((DiagramConnectionPart) request.getSource().getModel());
+		com.setDiagramConnectionModel((DiagramConnectionModel) request.getSource().getModel());
 		com.setIndex(request.getIndex());
 		return com;
 	}
@@ -72,7 +72,7 @@ public class DiagramConnectionBendpointEditPolicy extends org.eclipse.gef.editpo
 		BendpointCommand com = new DeleteBendpointCommand();
 		Point p = request.getLocation();
 		com.setLocation(p);
-		com.setDiagramConnectionPart((DiagramConnectionPart) request.getSource().getModel());
+		com.setDiagramConnectionModel((DiagramConnectionModel) request.getSource().getModel());
 		com.setIndex(request.getIndex());
 		return com;
 	}

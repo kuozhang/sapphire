@@ -1,10 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.eclipse.sapphire.ui.gef.diagram.editor
+Bundle-SymbolicName: org.eclipse.sapphire.ui.gef.diagram.editor;singleton:=true
 Bundle-Version: 0.4.0.qualifier
 Bundle-Vendor: %providerName
 Bundle-Localization: bundle
+Export-Package: org.eclipse.sapphire.ui.gef.diagram.editor
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
@@ -17,4 +18,3 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.eclipse.sapphire.ui.gef.diagram.editor

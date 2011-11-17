@@ -9,28 +9,28 @@
  *    Ling Hao - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.gef.diagram.editor.commands;
+package org.eclipse.sapphire.ui.gef.diagram.editor.model;
 
-import org.eclipse.gef.commands.Command;
-import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class LabelNodeCommand extends Command {
+public class DiagramConnectionLabelModel {
 	
-	private DiagramNodeModel node;
-	private String labelText;
+	private DiagramConnectionModel connectionModel;
 
-	public LabelNodeCommand(DiagramNodeModel node, String labelText) {
-		this.node = node;
-		this.labelText = labelText;
+	public DiagramConnectionLabelModel(DiagramConnectionModel connectionModel) {
+		this.connectionModel = connectionModel;
+	}
+	
+	public DiagramConnectionModel getConnectionModel() {
+		return connectionModel;
 	}
 
-	@Override
-	public void execute() {
-		node.getModelPart().setLabel(labelText);
+	public DiagramConnectionPart getModelPart() {
+		return connectionModel.getModelPart();
 	}
 	
 }

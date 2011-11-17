@@ -18,7 +18,7 @@ package org.eclipse.sapphire.ui.gef.diagram.editor.commands;
 public class CreateBendpointCommand extends BendpointCommand {
 
 	public void execute() {
-		getDiagramConnectionPart().addBendpoint(getIndex(), getLocation().x, getLocation().y);
+		getDiagramConnectionModel().getModelPart().addBendpoint(getIndex(), getLocation().x, getLocation().y);
 		super.execute();
 	}
 

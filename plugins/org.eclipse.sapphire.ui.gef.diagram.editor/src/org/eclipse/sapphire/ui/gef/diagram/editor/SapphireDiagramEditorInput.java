@@ -25,7 +25,8 @@ public class SapphireDiagramEditorInput implements IEditorInput, IPersistableEle
 {
 	private IFile diagramFile;
     private IFile layoutFile;
-    
+    private boolean noExistingLayout;
+
     public SapphireDiagramEditorInput(IFile file, String providerId, boolean disposeEditingDomain) {
     	this.diagramFile = file;
     }
@@ -46,6 +47,16 @@ public class SapphireDiagramEditorInput implements IEditorInput, IPersistableEle
     }
     
     
+    public boolean noExistingLayout()
+    {
+    	return this.noExistingLayout;
+    }
+    
+    public void setNoExistingLayout(boolean value)
+    {
+    	this.noExistingLayout = value;
+    }
+
     public static SapphireDiagramEditorInput createEditorInput(IFile file, String providerId, boolean disposeEditingDomain) 
     {
 //        final Resource resource = diagram.eResource();
@@ -59,6 +70,7 @@ public class SapphireDiagramEditorInput implements IEditorInput, IPersistableEle
         return diagramEditorInput;
     }
 
+    @SuppressWarnings("rawtypes")
 	public Object getAdapter(Class adapter) {
 		// TODO Auto-generated method stub
 		return null;

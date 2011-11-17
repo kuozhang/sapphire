@@ -15,6 +15,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -24,7 +25,7 @@ public class BendpointCommand extends Command {
 
 	protected int index;
 	protected Point location;
-	protected DiagramConnectionPart diagramConnectionPart;
+	protected DiagramConnectionModel diagramConnectionModel;
 	private Dimension d1, d2;
 
 	protected Dimension getFirstRelativeDimension() {
@@ -60,12 +61,12 @@ public class BendpointCommand extends Command {
 		location = p;
 	}
 
-	protected DiagramConnectionPart getDiagramConnectionPart() {
-		return diagramConnectionPart;
+	protected DiagramConnectionModel getDiagramConnectionModel() {
+		return diagramConnectionModel;
 	}
 
-	public void setDiagramConnectionPart(DiagramConnectionPart part) {
-		diagramConnectionPart = part;
+	public void setDiagramConnectionModel(DiagramConnectionModel connectionModel) {
+		diagramConnectionModel = connectionModel;
 	}
 
 }
