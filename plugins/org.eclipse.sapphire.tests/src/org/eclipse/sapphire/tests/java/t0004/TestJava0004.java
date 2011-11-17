@@ -242,7 +242,7 @@ public class TestJava0004
         test( property, "java.util.AbstractList", "Type java.util.AbstractList is an abstract class, which is not allowed for required interface 3." );
         test( property, "java.util.HashMap", "Type java.util.HashMap is a class, which is not allowed for required interface 3." );
         test( property, "java.util.List", "Interface java.util.List does not extend java.lang.Cloneable." );
-        test( property, "java.util.Set", "Interface java.util.Set does not extend java.util.List." );
+        test( property, "javax.naming.Name", "Interface javax.naming.Name does not extend java.util.List." );
         test( property, "java.lang.Deprecated", "Type java.lang.Deprecated is an annotation, which is not allowed for required interface 3." );
         test( property, "java.lang.annotation.ElementType", "Type java.lang.annotation.ElementType is an enum, which is not allowed for required interface 3." );
     }

@@ -82,12 +82,12 @@ public final class TestJava0005 extends SapphireTestCase
     
     public void testTypeOneOf() throws Exception
     {
-        test( TestRootElement.PROP_TYPE_ONE_OF, "Must implement or extend one of: java.util.List, java.util.Set, java.util.Map." );
+        test( TestRootElement.PROP_TYPE_ONE_OF, "Must implement or extend one of: java.util.List, java.util.Map, java.util.Set." );
     }
     
     public void testTypeAll() throws Exception
     {
-        test( TestRootElement.PROP_TYPE_ALL, "Must implement or extend all: java.util.List, java.lang.Comparable, java.lang.Cloneable." );
+        test( TestRootElement.PROP_TYPE_ALL, "Must implement or extend all: java.lang.Cloneable, java.lang.Comparable, java.util.List." );
     }
 
     public void testCombo1() throws Exception

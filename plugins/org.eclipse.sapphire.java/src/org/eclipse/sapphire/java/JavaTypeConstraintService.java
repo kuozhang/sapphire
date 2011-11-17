@@ -12,10 +12,10 @@
 
 package org.eclipse.sapphire.java;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.eclipse.sapphire.services.Service;
 
@@ -39,12 +39,12 @@ public abstract class JavaTypeConstraintService extends Service
     {
     }
     
-    public final Set<JavaTypeKind> kind()
+    public final SortedSet<JavaTypeKind> kind()
     {
         return this.state.kind();
     }
     
-    public final Set<String> type()
+    public final SortedSet<String> type()
     {
         return this.state.type();
     }
@@ -74,12 +74,12 @@ public abstract class JavaTypeConstraintService extends Service
     
 	protected static final class State
 	{
-	    private final Set<JavaTypeKind> kind;
-	    private final Set<String> type;
+	    private final SortedSet<JavaTypeKind> kind;
+	    private final SortedSet<String> type;
 	    private final JavaTypeConstraintBehavior behavior;
 	    
-	    public State( final Set<JavaTypeKind> kind,
-	                  final Set<String> type,
+	    public State( final Collection<JavaTypeKind> kind,
+	                  final Collection<String> type,
 	                  final JavaTypeConstraintBehavior behavior )
 	    {
 	        if( kind == null )
@@ -113,23 +113,23 @@ public abstract class JavaTypeConstraintService extends Service
 	            throw new IllegalArgumentException();
 	        }
 	        
-	        this.kind = Collections.unmodifiableSet( EnumSet.copyOf( kind ) );
-	        this.type = Collections.unmodifiableSet( new HashSet<String>( type ) );
+	        this.kind = Collections.unmodifiableSortedSet( new TreeSet<JavaTypeKind>( kind ) );
+	        this.type = Collections.unmodifiableSortedSet( new TreeSet<String>( type ) );
 	        this.behavior = behavior;
 	    }
 	    
-	    public State( final Set<JavaTypeKind> kind,
-	                  final Set<String> type )
+	    public State( final Collection<JavaTypeKind> kind,
+	                  final Collection<String> type )
 	    {
 	        this( kind, type, JavaTypeConstraintBehavior.ALL );
 	    }
 	    
-	    public Set<JavaTypeKind> kind()
+	    public SortedSet<JavaTypeKind> kind()
 	    {
 	        return this.kind;
 	    }
 	    
-	    public Set<String> type()
+	    public SortedSet<String> type()
 	    {
 	        return this.type;
 	    }
