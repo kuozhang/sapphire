@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2011 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [364098] Slush bucket property editor issue with case-insensitive possible values
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.renderers.swt;
@@ -20,9 +21,11 @@ import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.suppressDashedTableEn
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -71,12 +74,10 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-public final class SlushBucketPropertyEditor
-
-    extends AbstractSlushBucketPropertyEditorRenderer
-    
+public final class SlushBucketPropertyEditor extends AbstractSlushBucketPropertyEditorRenderer
 {
     private ModelElementType memberType;
     private ValueProperty memberProperty;
@@ -164,9 +165,30 @@ public final class SlushBucketPropertyEditor
                     }
                 }
                 
-                final Set<String> values = new HashSet<String>( allValues );
-                values.removeAll( valuesToRemove );
+                final Collection<String> values;
                 
+                if( SlushBucketPropertyEditor.this.possibleValuesService.isCaseSensitive() )
+                {
+                    values = new HashSet<String>( allValues );
+                    values.removeAll( valuesToRemove );
+                }
+                else
+                {
+                    final Map<String,String> valuesLowerCaseToOriginalCase = new HashMap<String,String>();
+
+                    for( String value : allValues )
+                    {
+                        valuesLowerCaseToOriginalCase.put( value.toLowerCase(), value );
+                    }
+
+                    for( String valueToRemove : valuesToRemove )
+                    {
+                        valuesLowerCaseToOriginalCase.remove( valueToRemove.toLowerCase() );
+                    }
+                    
+                    values = valuesLowerCaseToOriginalCase.values();
+                }
+
                 return values.toArray();
             }
 
@@ -411,10 +433,7 @@ public final class SlushBucketPropertyEditor
         }
     }
     
-    private final class MoveRightActionHandler
-    
-        extends SapphireActionHandler
-        
+    private final class MoveRightActionHandler extends SapphireActionHandler
     {
         private Collection<String> input = Collections.emptyList();
         
