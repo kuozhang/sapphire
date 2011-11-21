@@ -17,7 +17,6 @@ import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_BROWSE;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_JUMP;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.createFilterByActionId;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_BORDER;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_BROWSE_ONLY;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_LISTENERS;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_READ_ONLY;
@@ -188,7 +187,7 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
         decorator.addEditorControl( nestedComposite );
         
         final int style 
-            = ( part.getRenderingHint( HINT_BORDER, ! isReadOnly ) ? SWT.BORDER : SWT.NONE ) | 
+            = SWT.BORDER | 
               ( isLongString ? SWT.MULTI | SWT.WRAP | SWT.V_SCROLL : SWT.NONE ) |
               ( ( isReadOnly || isBrowseOnly ) ? SWT.READ_ONLY : SWT.NONE ) |
               ( isSensitiveData ? SWT.PASSWORD : SWT.NONE );
@@ -197,7 +196,7 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
         this.textField.setLayoutData( gdfill() );
         this.context.adapt( this.textField );
         decorator.addEditorControl( this.textField, true );
-        
+
         final TextOverlayPainter.Controller textOverlayPainterController;
         
         if( jumpActionHandler != null )
@@ -237,9 +236,9 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
         
         TextOverlayPainter.install( this.textField, textOverlayPainterController );
         
-        if( isBrowseOnly )
+        if( isBrowseOnly || isReadOnly )
         {
-            final Color bgcolor = new Color( this.textField.getDisplay(), 235, 235, 235 );
+            final Color bgcolor = new Color( this.textField.getDisplay(), 245, 245, 245 );
             this.textField.setBackground( bgcolor );
             
             this.textField.addDisposeListener

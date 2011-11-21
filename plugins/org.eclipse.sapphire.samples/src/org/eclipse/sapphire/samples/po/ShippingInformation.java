@@ -11,19 +11,14 @@
 
 package org.eclipse.sapphire.samples.po;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
-import org.eclipse.sapphire.modeling.annotations.Service;
-import org.eclipse.sapphire.samples.contacts.internal.CityNamePossibleValuesService;
-import org.eclipse.sapphire.samples.contacts.internal.StateCodePossibleValuesService;
-import org.eclipse.sapphire.samples.contacts.internal.ZipCodePossibleValuesService;
+import org.eclipse.sapphire.samples.address.Address;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -31,7 +26,7 @@ import org.eclipse.sapphire.samples.contacts.internal.ZipCodePossibleValuesServi
 
 @GenerateImpl
 
-public interface ShippingInformation extends IModelElement
+public interface ShippingInformation extends Address
 {
     ModelElementType TYPE = new ModelElementType( ShippingInformation.class );
     
@@ -58,52 +53,26 @@ public interface ShippingInformation extends IModelElement
     
     // *** Street ***
 
-    @Label( standard = "street" )
-    @Required
     @DefaultValue( text = "${ Parent().BillingInformation.Street }" )
 
-    ValueProperty PROP_STREET = new ValueProperty( TYPE, "Street" );
-
-    Value<String> getStreet();
-    void setStreet( String street );
+    ValueProperty PROP_STREET = new ValueProperty( TYPE, Address.PROP_STREET );
     
     // *** City ***
 
-    @Label( standard = "city" )
-    @Required
-    @Service( impl = CityNamePossibleValuesService.class )
-    @DependsOn( { "ZipCode", "State" } )
     @DefaultValue( text = "${ Parent().BillingInformation.City }" )
 
-    ValueProperty PROP_CITY = new ValueProperty( TYPE, "City" );
-
-    Value<String> getCity();
-    void setCity( String city );
+    ValueProperty PROP_CITY = new ValueProperty( TYPE, Address.PROP_CITY );
 
     // *** State ***
 
-    @Label( standard = "state" )
-    @Required
-    @Service( impl = StateCodePossibleValuesService.class )
-    @DependsOn( { "ZipCode", "City" } )
     @DefaultValue( text = "${ Parent().BillingInformation.State }" )
 
-    ValueProperty PROP_STATE = new ValueProperty( TYPE, "State" );
-
-    Value<String> getState();
-    void setState( String state );
+    ValueProperty PROP_STATE = new ValueProperty( TYPE, Address.PROP_STATE );
 
     // *** ZipCode ***
 
-    @Label( standard = "ZIP code" )
-    @Required
-    @Service( impl = ZipCodePossibleValuesService.class )
-    @DependsOn( { "State", "City" } )
     @DefaultValue( text = "${ Parent().BillingInformation.ZipCode }" )
 
-    ValueProperty PROP_ZIP_CODE = new ValueProperty( TYPE, "ZipCode" );
-
-    Value<String> getZipCode();
-    void setZipCode( String zipCode );
+    ValueProperty PROP_ZIP_CODE = new ValueProperty( TYPE, Address.PROP_ZIP_CODE );
 
 }

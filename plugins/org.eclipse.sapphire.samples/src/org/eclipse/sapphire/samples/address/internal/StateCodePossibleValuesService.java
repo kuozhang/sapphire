@@ -9,12 +9,12 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.contacts.internal;
+package org.eclipse.sapphire.samples.address.internal;
 
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.util.NLS;
-import org.eclipse.sapphire.samples.contacts.IAddress;
+import org.eclipse.sapphire.samples.address.Address;
 import org.eclipse.sapphire.samples.zipcodes.ZipCodesDatabase;
 import org.eclipse.sapphire.services.PossibleValuesService;
 
@@ -27,7 +27,7 @@ public final class StateCodePossibleValuesService extends PossibleValuesService
     @Override
     protected void fillPossibleValues( final SortedSet<String> values )
     {
-        final IAddress address = context( IAddress.class );
+        final Address address = context( Address.class );
         
         final String zipCode = address.getZipCode().getText();
         final String city = address.getCity().getText();

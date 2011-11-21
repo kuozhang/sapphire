@@ -24,13 +24,13 @@
 <body>
 <h1>Enhancements in 0.4</h1>
 <ol>
-  <li><a href="#el">Expression Language</a></li>
+  <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
-    <li><a href="#scale-function">Scale Function</a></li>
-    <li><a href="#aggregate-functions">Aggregate Functions</a></li>
-    <li><a href="#el-derived-value">Use in @Derived</a></li>
-    <li><a href="#el-default-value">Use in @DefaultValue</a></li>
-    <li><a href="#el-initial-value">Use in @InitialValue</a></li>
+    <li><a href="#ScaleFunction">Scale Function</a></li>
+    <li><a href="#AggregateFunctions">Aggregate Functions</a></li>
+    <li><a href="#ExprInDerived">Use in @Derived</a></li>
+    <li><a href="#ExprDefaultValue">Use in @DefaultValue</a></li>
+    <li><a href="#ExprInitialValue">Use in @InitialValue</a></li>
   </ol>
   <li><a href="#Services">Services</a></li>
   <ol type="A">
@@ -43,6 +43,7 @@
   <li><a href="#UI">User Interface</a></li>
   <ol type="A">
     <li><a href="#SplitForm">Split Form</a></li>
+    <li><a href="#MultiSectionFormEditorPage">Multi-Section Form Editor Page</a></li>
   </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
@@ -53,7 +54,7 @@
 </ol>
 
  
-<h2><a name="el"><a name="scale-function">Scale Function</a></a></h2>
+<h2><a name="ExpressionLanguage"><a name="ScaleFunction">Scale Function</a></a></h2>
 
 <p>When working with decimals, controlling the scale of the number is very
 important, whether to decrease the scale in order to round the number or to
@@ -64,7 +65,7 @@ increase the scale ahead of arithmetic operations.</p>
 <pre class="source-code"><code>${ Scale( UnitPrice * Scale( Quantity, 2 ), 2 ) }</code></pre>
 
 
-<h2><a name="aggregate-functions">Aggregate Functions</a></h2>
+<h2><a name="AggregateFunctions">Aggregate Functions</a></h2>
 
 <p>Compute the sum, the average, the min or the max of numbers in a collection. Typically, these function 
 takes the collection as the sole parameter. However, when the collection is a model element list, a second 
@@ -81,7 +82,7 @@ ${ Max( Entries, 'Total' ) }
 ${ Sum( List( 1.2, 3.4, 5.6, 7.8 ) ) }</code></pre>
 
 
-<h2><a name="el-derived-value">Use in @Derived</a></h2>
+<h2><a name="ExprInDerived">Use in @Derived</a></h2>
 
 <p>Use expression language when specifying derived value in @Derived annotation.</p>
 
@@ -93,7 +94,7 @@ ${ Sum( List( 1.2, 3.4, 5.6, 7.8 ) ) }</code></pre>
 Value&lt;BigDecimal> getTotal();</font></code></pre>
 
 
-<h2><a name="el-default-value">Use in @DefaultValue</a></h2>
+<h2><a name="ExprDefaultValue">Use in @DefaultValue</a></h2>
 
 <p>Use expression language when specifying default value in @DefaultValue annotation.</p>
 
@@ -105,7 +106,7 @@ Value<String> getStreet();
 void setStreet( String street );</font></code></pre>
 
 
-<h2><a name="el-initial-value">Use in @InitialValue</a></h2>
+<h2><a name="ExprInitialValue">Use in @InitialValue</a></h2>
 
 <p>Use expression language when specifying initial value in @InitialValue annotation.</p>
 
@@ -273,6 +274,138 @@ to the list property editor versus the description text field.</p>
 &lt;/dialog></font></code></pre>
 
 <p style="margin-left: 20px;"><img src="images/SplitForm.png"/></p>
+
+
+<h2><a name="MultiSectionFormEditorPage">Multi-Section Form Editor Page</a></h2>
+
+<p>Create form editor pages with highly configurable section layouts. The feature is used in conjunction
+with split form feature to break the page into resizable blocks where sections are places.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, two multi-section form editor pages are used to organize
+purchase order entry fields.</p>
+
+<pre class="source-code"><code>&lt;form-editor-page>
+    &lt;id>GeneralPage&lt;/id>
+    &lt;page-name>general&lt;/page-name>
+    &lt;page-header-text>purchase order&lt;/page-header-text>
+    &lt;content>
+        &lt;split-form>
+            &lt;orientation>horizontal&lt;/orientation>
+            &lt;scale-vertically>true&lt;/scale-vertically>
+            &lt;block>
+                &lt;content>
+                    &lt;section>
+                        &lt;label>general&lt;/label>
+                        &lt;content>
+                            <font color="#888888">&lt;property-editor>Id&lt;/property-editor>
+                            &lt;property-editor>Customer&lt;/property-editor>
+                            &lt;property-editor>InitialQuoteDate&lt;/property-editor>
+                            &lt;property-editor>OrderDate&lt;/property-editor>
+                            &lt;property-editor>FulfillmentDate&lt;/property-editor></font>
+                        &lt;/content>
+                    &lt;/section>
+                &lt;/content>
+            &lt;/block>
+            &lt;block>
+                &lt;content>
+                    &lt;section>
+                        &lt;label>billing information&lt;/label>
+                        &lt;content>
+                            <font color="#888888">&lt;with>
+                                &lt;path>BillingInformation&lt;/path>
+                                &lt;default-panel>
+                                    &lt;content>
+                                        &lt;property-editor>Name&lt;/property-editor>
+                                        &lt;property-editor>Organization&lt;/property-editor>
+                                        &lt;property-editor>Street&lt;/property-editor>
+                                        &lt;property-editor>City&lt;/property-editor>
+                                        &lt;property-editor>State&lt;/property-editor>
+                                        &lt;property-editor>ZipCode&lt;/property-editor>
+                                    &lt;/content>
+                                &lt;/default-panel>
+                            &lt;/with></font>
+                        &lt;/content>
+                    &lt;/section>
+                    &lt;section>
+                        &lt;label>shipping information&lt;/label>
+                        &lt;content>
+                            <font color="#888888">&lt;with>
+                                &lt;path>ShippingInformation&lt;/path>
+                                &lt;default-panel>
+                                    &lt;content>
+                                        &lt;property-editor>Name&lt;/property-editor>
+                                        &lt;property-editor>Organization&lt;/property-editor>
+                                        &lt;property-editor>Street&lt;/property-editor>
+                                        &lt;property-editor>City&lt;/property-editor>
+                                        &lt;property-editor>State&lt;/property-editor>
+                                        &lt;property-editor>ZipCode&lt;/property-editor>
+                                    &lt;/content>
+                                &lt;/default-panel>
+                            &lt;/with></font>
+                        &lt;/content>
+                    &lt;/section>
+                &lt;/content>
+            &lt;/block>
+        &lt;/split-form>
+    &lt;/content>
+&lt;/form-editor-page>
+&lt;form-editor-page>
+    &lt;id>EntriesPage&lt;/id>
+    &lt;page-name>entries&lt;/page-name>
+    &lt;page-header-text>purchase order&lt;/page-header-text>
+    &lt;content>
+        &lt;split-form>
+            &lt;orientation>horizontal&lt;/orientation>
+            &lt;scale-vertically>true&lt;/scale-vertically>
+            &lt;block>
+                &lt;content>
+                    &lt;section>
+                        &lt;label>entries&lt;/label>
+                        &lt;content>
+                            <font color="#888888">&lt;property-editor>
+                                &lt;property>Entries&lt;/property>
+                                &lt;scale-vertically>true&lt;/scale-vertically>
+                                &lt;show-label>false&lt;/show-label>
+                                &lt;span>true&lt;/span>
+                                &lt;child-property>Item&lt;/child-property>
+                                &lt;child-property>Description&lt;/child-property>
+                                &lt;child-property>Quantity&lt;/child-property>
+                                &lt;child-property>UnitPrice&lt;/child-property>
+                                &lt;hint>
+                                    &lt;name>column.widths&lt;/name>
+                                    &lt;value>100:1,100:6,100:1,100:1,100:1&lt;/value>
+                                &lt;/hint>
+                                &lt;child-property>Total&lt;/child-property>
+                            &lt;/property-editor></font>
+                        &lt;/content>
+                        &lt;scale-vertically>true&lt;/scale-vertically>
+                    &lt;/section>
+                &lt;/content>
+                &lt;weight>7&lt;/weight>
+            &lt;/block>
+            &lt;block>
+                &lt;weight>3&lt;/weight>
+                &lt;content>
+                    &lt;section>
+                        &lt;label>summary&lt;/label>
+                        &lt;content>
+                            <font color="#888888">&lt;property-editor>Subtotal&lt;/property-editor>
+                            &lt;property-editor>Discount&lt;/property-editor>
+                            &lt;property-editor>Delivery&lt;/property-editor>
+                            &lt;property-editor>Total&lt;/property-editor></font>
+                        &lt;/content>
+                    &lt;/section>
+                &lt;/content>
+            &lt;/block>
+        &lt;/split-form>
+    &lt;/content>
+&lt;/form-editor-page></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/MultiSectionFormEditorPage1.png"/></p>
+
+<p style="margin-left: 20px;"><img src="images/MultiSectionFormEditorPage2.png"/></p>
 
 
 <h2><a name="Miscellaneous"><a name="XmlDocumentType">@XmlDocumentType Annotation</a></a></h2>

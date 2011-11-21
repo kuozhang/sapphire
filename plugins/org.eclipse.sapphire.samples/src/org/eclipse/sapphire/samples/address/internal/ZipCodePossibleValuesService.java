@@ -9,12 +9,12 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.contacts.internal;
+package org.eclipse.sapphire.samples.address.internal;
 
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.util.NLS;
-import org.eclipse.sapphire.samples.contacts.IAddress;
+import org.eclipse.sapphire.samples.address.Address;
 import org.eclipse.sapphire.samples.zipcodes.ZipCodesDatabase;
 import org.eclipse.sapphire.services.PossibleValuesService;
 
@@ -22,23 +22,23 @@ import org.eclipse.sapphire.services.PossibleValuesService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class CityNamePossibleValuesService extends PossibleValuesService
+public final class ZipCodePossibleValuesService extends PossibleValuesService
 {
     @Override
     protected void fillPossibleValues( final SortedSet<String> values )
     {
-        final IAddress address = context( IAddress.class );
+        final Address address = context( Address.class );
         
-        final String zipCode = address.getZipCode().getText();
-        final String stateCode = address.getState().getText();
+        final String state = address.getState().getText();
+        final String city = address.getCity().getText();
         
-        values.addAll( ZipCodesDatabase.getCities( zipCode, stateCode ) );
+        values.addAll( ZipCodesDatabase.getZipCodes( state, city ) );
     }
 
     @Override
     public String getInvalidValueMessage( final String invalidValue )
     {
-        return NLS.bind( "\"{0}\" is not a valid city for the specified state and ZIP code.", invalidValue );
+        return NLS.bind( "\"{0}\" is not a valid ZIP code for the specified city and state.", invalidValue );
     }
 
     @Override
@@ -46,5 +46,5 @@ public final class CityNamePossibleValuesService extends PossibleValuesService
     {
         return false;
     }
-
+    
 }
