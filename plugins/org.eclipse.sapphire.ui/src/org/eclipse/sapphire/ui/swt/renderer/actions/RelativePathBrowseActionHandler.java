@@ -12,6 +12,8 @@
 package org.eclipse.sapphire.ui.swt.renderer.actions;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -67,10 +69,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class RelativePathBrowseActionHandler 
-
-    extends SapphireBrowseActionHandler
-    
+public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
 {
     private static final ImageDescriptor IMG_FILE
         = SwtRendererUtil.createImageDescriptor( RelativePathBrowseActionHandler.class, "File.png" );
@@ -206,7 +205,7 @@ public class RelativePathBrowseActionHandler
             final ILabelProvider labelProvider;
             final ViewerComparator viewerComparator;
             final Object input;
-            
+
             if( roots.size() == baseContainers.size() )
             {
                 // All paths are in the Eclipse Workspace. Use the available content and label
@@ -237,6 +236,55 @@ public class RelativePathBrowseActionHandler
             dialog.setHelpAvailable( false );
             dialog.setInput( input );
             dialog.setComparator( viewerComparator );
+            
+            final Path currentPathAbsolute = convertToAbsolute( getModelElement().<Path>read( property ).getContent() );
+            
+            if( currentPathAbsolute != null )
+            {
+                Object initialSelection = null;
+                
+                if( contentProvider instanceof WorkspaceContentProvider )
+                {
+                    final URI uri = currentPathAbsolute.toFile().toURI();
+                    final IWorkspaceRoot wsroot = ResourcesPlugin.getWorkspace().getRoot();
+                    
+                    final IFile[] files = wsroot.findFilesForLocationURI( uri );
+                    
+                    if( files.length > 0 )
+                    {
+                        final IFile file = files[ 0 ];
+                        
+                        if( file.exists() )
+                        {
+                            initialSelection = file;
+                        }
+                    }
+                    
+                    if( initialSelection == null )
+                    {
+                        final IContainer[] containers = wsroot.findContainersForLocationURI( uri );
+                        
+                        if( containers.length > 0 )
+                        {
+                            final IContainer container = containers[ 0 ];
+                            
+                            if( container.exists() )
+                            {
+                                initialSelection = container;
+                            }
+                        }                       
+                    }
+                }
+                else
+                {
+                    initialSelection = ( (FileSystemContentProvider) contentProvider ).find( currentPathAbsolute );
+                }
+                
+                if( initialSelection != null )
+                {
+                    dialog.setInitialSelection( initialSelection );
+                }
+            }
             
             if( this.type == FileSystemResourceType.FILE )
             {
@@ -350,28 +398,6 @@ public class RelativePathBrowseActionHandler
         return getModelElement().service( getProperty(), RelativePathService.class ).roots();
     }
     
-    protected Path convertToRelative( final Path path )
-    {
-        final RelativePathService service = getModelElement().service( getProperty(), RelativePathService.class );
-        
-        if( service == null )
-        {
-            for( Path root : getBasePaths() )
-            {
-                if( root.isPrefixOf( path ) )
-                {
-                    return path.makeRelativeTo( root );
-                }
-            }
-            
-            return null;
-        }
-        else
-        {
-            return service.convertToRelative( path );
-        }
-    }
-    
     protected boolean enclosed()
     {
         final RelativePathService service = getModelElement().service( getProperty(), RelativePathService.class );
@@ -384,6 +410,92 @@ public class RelativePathBrowseActionHandler
         {
             return service.enclosed();
         }
+    }
+    
+    protected Path convertToRelative( final Path path )
+    {
+        if( path != null )
+        {
+            final RelativePathService service = getModelElement().service( getProperty(), RelativePathService.class );
+            
+            if( service == null )
+            {
+                if( enclosed() )
+                {
+                    for( Path root : getBasePaths() )
+                    {
+                        if( root.isPrefixOf( path ) )
+                        {
+                            return path.makeRelativeTo( root );
+                        }
+                    }
+                }
+                else
+                {
+                    final String pathDevice = path.getDevice();
+                    
+                    for( Path root : getBasePaths() )
+                    {
+                        if( MiscUtil.equal( pathDevice, root.getDevice() ) )
+                        {
+                            return path.makeRelativeTo( root );
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return service.convertToRelative( path );
+            }
+        }
+        
+        return null;
+    }
+    
+    protected Path convertToAbsolute( final Path path )
+    {
+        if( path != null )
+        {
+            final RelativePathService service = getModelElement().service( getProperty(), RelativePathService.class );
+            
+            if( service == null )
+            {
+                if( enclosed() && path.segmentCount() > 0 && path.segment( 0 ).equals( ".." ) )
+                {
+                    return null;
+                }
+                
+                Path absolute = null;
+                
+                for( Path root : getBasePaths() )
+                {
+                    try
+                    {
+                        final File file = root.append( path ).toFile().getCanonicalFile();
+                        absolute = new Path( file.getPath() );
+                        
+                        if( file.exists() )
+                        {
+                            break;
+                        }
+                    }
+                    catch( IOException e )
+                    {
+                        // Intentionally ignoring to continue to the next root. If none of the roots
+                        // produce a viable absolute path, a null return from this method signifies
+                        // being unable to convert the relative path. That is sufficient.
+                    }
+                }
+                
+                return absolute;
+            }
+            else
+            {
+                return service.convertToAbsolute( path );
+            }
+        }
+        
+        return null;
     }
     
     private static String getFileExtension( final String fileName ) 
@@ -416,10 +528,7 @@ public class RelativePathBrowseActionHandler
         return null;
     }
     
-    public static final class ContainersOnlyViewerFilter
-        
-        extends ViewerFilter
-        
+    public static final class ContainersOnlyViewerFilter extends ViewerFilter
     {
         public boolean select( final Viewer viewer, 
                                final Object parent, 
@@ -430,10 +539,7 @@ public class RelativePathBrowseActionHandler
         }
     }
 
-    public static final class ExtensionBasedViewerFilter
-    
-        extends ViewerFilter
-        
+    public static final class ExtensionBasedViewerFilter extends ViewerFilter
     {
         private List<String> extensions;
         
@@ -492,10 +598,7 @@ public class RelativePathBrowseActionHandler
         }
     }
 
-    private static final class FileSelectionStatusValidator
-    
-        implements ISelectionStatusValidator
-        
+    private static final class FileSelectionStatusValidator implements ISelectionStatusValidator
     {
         private static final IStatus ERROR_STATUS 
             = new Status( IStatus.ERROR, SapphireUiFrameworkPlugin.PLUGIN_ID, MiscUtil.EMPTY_STRING );
@@ -520,10 +623,7 @@ public class RelativePathBrowseActionHandler
         }
     }
 
-    private static final class WorkspaceContentProvider
-    
-        extends WorkbenchContentProvider
- 
+    private static final class WorkspaceContentProvider extends WorkbenchContentProvider
     {
         private final List<IContainer> roots;
         
@@ -642,12 +742,33 @@ public class RelativePathBrowseActionHandler
 
             return new FileSystemNode[ 0 ];
         }
+        
+        public FileSystemNode find( final Path path )
+        {
+            final int pathSegmentCount = path.segmentCount();
+            
+            if( pathSegmentCount == 0 )
+            {
+                return this;
+            }
+            else
+            {
+                final String firstSegment = path.segment( 0 );
+                
+                for( FileSystemNode child : getChildren() )
+                {
+                    if( child.getFile().getName().equals( firstSegment ) )
+                    {
+                        return child.find( path.removeFirstSegments( 1 ) );
+                    }
+                }
+                
+                return null;
+            }
+        }
     }
     
-    private static final class FileSystemContentProvider
-    
-        implements ITreeContentProvider
-    
+    private static final class FileSystemContentProvider implements ITreeContentProvider
     {
         private final FileSystemNode[] roots;
         
@@ -659,6 +780,21 @@ public class RelativePathBrowseActionHandler
             {
                 this.roots[ i ] = new FileSystemNode( roots.get( i ).toFile(), null );
             }
+        }
+        
+        public FileSystemNode find( final Path path )
+        {
+            for( FileSystemNode root : this.roots )
+            {
+                final Path rootPath = new Path( root.getFile().getPath() );
+                
+                if( rootPath.isPrefixOf( path ) )
+                {
+                    return root.find( path.makeRelativeTo( rootPath ) );
+                }
+            }
+            
+            return null;
         }
         
         public Object[] getElements( final Object element )
@@ -692,10 +828,7 @@ public class RelativePathBrowseActionHandler
         }
     }
     
-    private static final class FileSystemLabelProvider
-    
-        extends LabelProvider
-        
+    private static final class FileSystemLabelProvider extends LabelProvider
     {
         private final SapphireRenderingContext context;
         
@@ -724,10 +857,7 @@ public class RelativePathBrowseActionHandler
         }
     }
     
-    private static final class FileSystemNodeComparator 
-        
-        extends ViewerComparator 
-        
+    private static final class FileSystemNodeComparator extends ViewerComparator 
     {
         @SuppressWarnings( "unchecked" )
         
@@ -756,10 +886,7 @@ public class RelativePathBrowseActionHandler
         }
     }
     
-    public static final class ResourceComparator 
-    
-        extends ViewerComparator 
-        
+    public static final class ResourceComparator extends ViewerComparator 
     {
         @SuppressWarnings( "unchecked" )
         
