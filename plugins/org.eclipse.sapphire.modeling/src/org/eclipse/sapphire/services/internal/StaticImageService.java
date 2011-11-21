@@ -16,6 +16,7 @@ import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.services.ImageService;
+import org.eclipse.sapphire.services.ImageServiceData;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
@@ -26,22 +27,20 @@ import org.eclipse.sapphire.services.ServiceFactory;
 
 public final class StaticImageService extends ImageService
 {
-    private ImageData image;
+    private ImageServiceData data;
     
     @Override
-    protected void init()
+    protected void initImageService()
     {
-        super.init();
-        
         final ModelElementType type = context( IModelElement.class ).getModelElementType();
         final Image imageAnnotation = type.getAnnotation( Image.class );
-        this.image = ImageData.createFromClassLoader( type.getAnnotationHostClass( imageAnnotation ), imageAnnotation.path() );
+        this.data = new ImageServiceData( ImageData.createFromClassLoader( type.getAnnotationHostClass( imageAnnotation ), imageAnnotation.path() ) );
     }
 
     @Override
-    public ImageData provide()
+    protected ImageServiceData compute()
     {
-        return this.image;
+        return this.data;
     }
     
     public static final class Factory extends ServiceFactory

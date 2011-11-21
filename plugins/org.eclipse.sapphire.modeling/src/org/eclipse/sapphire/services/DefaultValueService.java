@@ -11,15 +11,25 @@
 
 package org.eclipse.sapphire.services;
 
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class DefaultValueService
-
-    extends Service
-    
+public abstract class DefaultValueService extends DataService<DefaultValueServiceData>
 {
-    public abstract String getDefaultValue();
+    @Override
+    protected final void initDataService()
+    {
+        initDefaultValueService();
+    }
+
+    protected void initDefaultValueService()
+    {
+    }
+    
+    public final String value()
+    {
+        return data().value();
+    }
+    
 }

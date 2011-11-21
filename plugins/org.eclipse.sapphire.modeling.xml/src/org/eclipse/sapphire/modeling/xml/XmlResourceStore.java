@@ -276,6 +276,12 @@ public class XmlResourceStore extends ResourceStore
         // The default implementation doesn't do anything.
     }
 
+    public void unregisterModelElement( final Node xmlNode,
+                                        final IModelElement modelElement )
+    {
+        // The default implementation doesn't do anything.
+    }
+
     private static Document doc( final Reader r )
     {
         final DocumentBuilder docbuilder = docbuilder();

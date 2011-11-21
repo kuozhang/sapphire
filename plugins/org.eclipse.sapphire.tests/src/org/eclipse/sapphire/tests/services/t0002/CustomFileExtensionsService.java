@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.tests.services.t0002;
 
-import java.util.List;
-
+import org.eclipse.sapphire.services.FileExtensionsServiceData;
 import org.eclipse.sapphire.services.FileExtensionsService;
 
 /**
@@ -22,10 +21,9 @@ import org.eclipse.sapphire.services.FileExtensionsService;
 public final class CustomFileExtensionsService extends FileExtensionsService
 {
     @Override
-    protected void compute( final List<String> extensions )
+    protected FileExtensionsServiceData compute()
     {
-        extensions.add( "avi" );
-        extensions.add( "mpeg" );
+        return new FileExtensionsServiceData( "avi", "mpeg" );
     }
     
 }

@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.def.internal;
 
 import org.eclipse.sapphire.services.DefaultValueService;
+import org.eclipse.sapphire.services.DefaultValueServiceData;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
@@ -23,9 +24,16 @@ import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 public final class SapphireHintValueDefaultValueService extends DefaultValueService
 {
     @Override
-    public String getDefaultValue()
+    protected DefaultValueServiceData data()
     {
-        return getDefaultValue( context( ISapphireHint.class ).getName().getText() );
+        refresh();
+        return super.data();
+    }
+
+    @Override
+    protected DefaultValueServiceData compute()
+    {
+        return new DefaultValueServiceData( getDefaultValue( context( ISapphireHint.class ).getName().getText() ) );
     }
     
     public static String getDefaultValue( final String hint )

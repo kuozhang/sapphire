@@ -38,15 +38,7 @@ public final class JavaTypeCreateAnnotationActionHandler extends JavaTypeCreateA
             }
             else
             {
-                for( JavaTypeKind kind : javaTypeConstraintService.kind() )
-                {
-                    if( kind == JavaTypeKind.ANNOTATION )
-                    {
-                        return true;
-                    }
-                }
-                
-                return false;
+                return javaTypeConstraintService.kinds().contains( JavaTypeKind.ANNOTATION );
             }
         }
     }    

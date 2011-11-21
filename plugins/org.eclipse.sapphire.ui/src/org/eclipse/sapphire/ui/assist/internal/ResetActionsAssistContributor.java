@@ -57,9 +57,8 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
 
             if( val.getText( false ) != null )
             {
-                final boolean hasDefaultValue
-                    = ( element.service( prop, DefaultValueService.class ).getDefaultValue() != null );
-                
+                final DefaultValueService defaultValueService = element.service( prop, DefaultValueService.class );
+                final boolean hasDefaultValue = ( defaultValueService == null ? false : defaultValueService.value() != null );
                 final boolean isBooleanType = prop.getTypeClass().equals( Boolean.class );
                 
                 final String actionText

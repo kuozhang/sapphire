@@ -38,15 +38,7 @@ public final class JavaTypeCreateEnumActionHandler extends JavaTypeCreateActionH
             }
             else
             {
-                for( JavaTypeKind kind : javaTypeConstraintService.kind() )
-                {
-                    if( kind == JavaTypeKind.ENUM )
-                    {
-                        return true;
-                    }
-                }
-                
-                return false;
+                return javaTypeConstraintService.kinds().contains( JavaTypeKind.ENUM );
             }
         }
     }    

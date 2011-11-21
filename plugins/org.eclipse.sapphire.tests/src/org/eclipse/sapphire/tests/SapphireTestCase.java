@@ -15,8 +15,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -26,6 +24,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.util.MiscUtil;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -131,12 +130,12 @@ public abstract class SapphireTestCase
     
     protected static <T> List<T> list( final T... items )
     {
-        return Arrays.asList( items );
+        return MiscUtil.list( items );
     }
     
     protected static <T> Set<T> set( final T... items )
     {
-        return new LinkedHashSet<T>( Arrays.asList( items ) );
+        return MiscUtil.set( items );
     }
 
 }

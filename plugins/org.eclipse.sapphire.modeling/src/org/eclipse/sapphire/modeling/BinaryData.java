@@ -15,6 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -46,6 +47,23 @@ public class BinaryData
     public InputStream contents()
     {
         return new ByteArrayInputStream( this.data );
+    }
+
+    @Override
+    public boolean equals( final Object obj )
+    {
+        if( obj instanceof BinaryData )
+        {
+            return Arrays.equals( this.data, ( (BinaryData) obj ).data );
+        }
+        
+        return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Arrays.hashCode( this.data );
     }
     
 }

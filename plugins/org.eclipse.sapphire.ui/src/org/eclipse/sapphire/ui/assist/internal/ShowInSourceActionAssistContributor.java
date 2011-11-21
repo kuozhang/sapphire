@@ -30,10 +30,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ShowInSourceActionAssistContributor
-
-    extends PropertyEditorAssistContributor
-    
+public final class ShowInSourceActionAssistContributor extends PropertyEditorAssistContributor
 {
     public ShowInSourceActionAssistContributor()
     {
@@ -55,25 +52,28 @@ public final class ShowInSourceActionAssistContributor
         
         boolean contribute = false;
         
-        if( prop instanceof ValueProperty )
+        if( ! prop.isDerived() )
         {
-            if( element.read( (ValueProperty) prop ).getText( false ) != null )
+            if( prop instanceof ValueProperty )
             {
-                contribute = true;
+                if( element.read( (ValueProperty) prop ).getText( false ) != null )
+                {
+                    contribute = true;
+                }
             }
-        }
-        else if( prop instanceof ListProperty )
-        {
-            if( element.read( (ListProperty) prop ).size() > 0 )
+            else if( prop instanceof ListProperty )
             {
-                contribute = true;
+                if( element.read( (ListProperty) prop ).size() > 0 )
+                {
+                    contribute = true;
+                }
             }
-        }
-        else if( prop instanceof ElementProperty && ! ( prop instanceof ImpliedElementProperty ) )
-        {
-            if( element.read( (ElementProperty) prop ).element() != null )
+            else if( prop instanceof ElementProperty && ! ( prop instanceof ImpliedElementProperty ) )
             {
-                contribute = true;
+                if( element.read( (ElementProperty) prop ).element() != null )
+                {
+                    contribute = true;
+                }
             }
         }
         
@@ -101,10 +101,7 @@ public final class ShowInSourceActionAssistContributor
         section.addContribution( contribution );
     }
     
-    private static final class Resources
-        
-        extends NLS
-    
+    private static final class Resources extends NLS
     {
         public static String action;
         

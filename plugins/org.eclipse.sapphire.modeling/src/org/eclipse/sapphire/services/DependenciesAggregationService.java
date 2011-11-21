@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.services;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,9 +27,10 @@ import org.eclipse.sapphire.modeling.ModelProperty;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class DependenciesAggregationService extends Service
+public final class DependenciesAggregationService extends DataService<DependenciesServiceData>
 {
-    public final Set<ModelPath> dependencies()
+    @Override
+    protected DependenciesServiceData compute()
     {
         final Set<ModelPath> dependencies = new HashSet<ModelPath>();
         
@@ -39,7 +39,12 @@ public final class DependenciesAggregationService extends Service
             dependencies.addAll( ds.dependencies() );
         }
         
-        return Collections.unmodifiableSet( dependencies );
+        return new DependenciesServiceData( dependencies );
+    }
+    
+    public final Set<ModelPath> dependencies()
+    {
+        return data().dependencies();
     }
 
 }

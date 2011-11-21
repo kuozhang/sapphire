@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
+import org.eclipse.sapphire.services.DependenciesServiceData;
 import org.eclipse.sapphire.services.DependenciesService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -32,7 +33,7 @@ import org.eclipse.sapphire.services.ServiceFactory;
 public final class DeclarativeDependenciesService extends DependenciesService
 {
     @Override
-    protected void compute( final Set<ModelPath> dependencies )
+    protected DependenciesServiceData compute()
     {
         final Set<String> dependenciesAsStrings = new HashSet<String>();
         
@@ -45,6 +46,8 @@ public final class DeclarativeDependenciesService extends DependenciesService
                 dependenciesAsStrings.add( dependsOnPropertyRef );
             }
         }
+        
+        final Set<ModelPath> dependencies = new HashSet<ModelPath>();
         
         for( String str : dependenciesAsStrings )
         {
@@ -61,6 +64,8 @@ public final class DeclarativeDependenciesService extends DependenciesService
             
             dependencies.add( path );
         }
+        
+        return new DependenciesServiceData( dependencies );
     }
 
     public static final class Factory extends ServiceFactory

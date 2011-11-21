@@ -11,7 +11,8 @@
 
 package org.eclipse.sapphire.samples.gallery.internal;
 
-import java.util.SortedSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
@@ -20,6 +21,7 @@ import org.eclipse.sapphire.samples.gallery.IChildElement;
 import org.eclipse.sapphire.samples.gallery.IChildElementWithEnum;
 import org.eclipse.sapphire.samples.gallery.IChildElementWithInteger;
 import org.eclipse.sapphire.samples.gallery.ListPropertyCustomGallery;
+import org.eclipse.sapphire.services.PossibleTypesServiceData;
 import org.eclipse.sapphire.services.PossibleTypesService;
 
 /**
@@ -40,7 +42,7 @@ public final class ListPropertyCustomGalleryServices
                 @Override
                 public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
                 {
-                    broadcast();
+                    refresh();
                 }
             };
             
@@ -48,11 +50,12 @@ public final class ListPropertyCustomGalleryServices
             gallery.addListener( listener, ListPropertyCustomGallery.PROP_ALLOW_CHILD_ELEMENT_WITH_INTEGER.getName() );
             gallery.addListener( listener, ListPropertyCustomGallery.PROP_ALLOW_CHILD_ELEMENT_WITH_ENUM.getName() );
         }
-
+        
         @Override
-        protected void types( final SortedSet<ModelElementType> types )
+        protected PossibleTypesServiceData compute()
         {
             final ListPropertyCustomGallery gallery = context( ListPropertyCustomGallery.class );
+            final List<ModelElementType> types = new ArrayList<ModelElementType>();
             
             types.add( IChildElement.TYPE );
             
@@ -65,6 +68,8 @@ public final class ListPropertyCustomGalleryServices
             {
                 types.add( IChildElementWithEnum.TYPE );
             }
+            
+            return new PossibleTypesServiceData( types );
         }
     }
     

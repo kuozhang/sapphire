@@ -79,8 +79,8 @@ public final class JavaTypeValidationService extends ValidationService
             return Status.createOkStatus();
         }
         
-        final Set<JavaTypeKind> kinds = javaTypeConstraintService.kind();
-        final Set<String> requiredBaseTypes = javaTypeConstraintService.type();
+        final Set<JavaTypeKind> kinds = javaTypeConstraintService.kinds();
+        final Set<String> requiredBaseTypes = javaTypeConstraintService.types();
         final JavaTypeConstraintBehavior behavior = javaTypeConstraintService.behavior();
         
         final ReferenceValue<?,?> value = (ReferenceValue<?,?>) element.read( property );

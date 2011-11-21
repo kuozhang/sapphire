@@ -102,7 +102,7 @@ public final class JavaTypeBrowseActionHandler extends SapphireBrowseActionHandl
             
             if( javaTypeConstraintService != null )
             {
-                kinds.addAll( javaTypeConstraintService.kind() );
+                kinds.addAll( javaTypeConstraintService.kinds() );
             }
         }
         

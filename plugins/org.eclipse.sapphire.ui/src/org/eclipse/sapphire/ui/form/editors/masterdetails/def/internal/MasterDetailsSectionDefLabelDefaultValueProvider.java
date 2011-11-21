@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.form.editors.masterdetails.def.internal;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.services.DefaultValueService;
+import org.eclipse.sapphire.services.DefaultValueServiceData;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeDef;
 
 /**
@@ -22,10 +23,17 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsCont
 public final class MasterDetailsSectionDefLabelDefaultValueProvider extends DefaultValueService
 {
     @Override
-    public String getDefaultValue()
+    protected DefaultValueServiceData data()
+    {
+        refresh();
+        return super.data();
+    }
+
+    @Override
+    protected DefaultValueServiceData compute()
     {
         final IMasterDetailsContentNodeDef node = (IMasterDetailsContentNodeDef) context( IModelElement.class ).parent().parent();
-        return node.getLabel().getText();
+        return new DefaultValueServiceData( node.getLabel().getText() );
     }
     
 }

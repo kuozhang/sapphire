@@ -38,15 +38,7 @@ public final class JavaTypeCreateInterfaceActionHandler extends JavaTypeCreateAc
             }
             else
             {
-                for( JavaTypeKind kind : javaTypeConstraintService.kind() )
-                {
-                    if( kind == JavaTypeKind.INTERFACE )
-                    {
-                        return true;
-                    }
-                }
-                
-                return false;
+                return javaTypeConstraintService.kinds().contains( JavaTypeKind.INTERFACE );
             }
         }
     }    

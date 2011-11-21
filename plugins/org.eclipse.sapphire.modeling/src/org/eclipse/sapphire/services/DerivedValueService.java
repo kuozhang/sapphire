@@ -15,7 +15,21 @@ package org.eclipse.sapphire.services;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class DerivedValueService extends Service
+public abstract class DerivedValueService extends DataService<DerivedValueServiceData>
 {
-    public abstract String getDerivedValue();
+    @Override
+    protected final void initDataService()
+    {
+        initDerivedValueService();
+    }
+
+    protected void initDerivedValueService()
+    {
+    }
+    
+    public final String value()
+    {
+        return data().value();
+    }
+    
 }

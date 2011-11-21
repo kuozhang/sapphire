@@ -15,46 +15,21 @@ package org.eclipse.sapphire.services;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class EnablementService extends Service
+public abstract class EnablementService extends DataService<EnablementServiceData>
 {
-    private boolean state = false;
-    
     @Override
-    protected final void init()
+    protected final void initDataService()
     {
         initEnablementService();
-        refresh( false );
     }
 
     protected void initEnablementService()
     {
     }
     
-    public boolean state()
+    public final boolean enablement()
     {
-        return this.state;
-    }
-    
-    protected abstract boolean compute();
-    
-    protected final void refresh()
-    {
-        refresh( true );
-    }
-    
-    protected final void refresh( final boolean notifyListeners )
-    {
-        final boolean newState = compute();
-        
-        if( this.state != newState )
-        {
-            this.state = newState;
-            
-            if( notifyListeners )
-            {
-                broadcast();
-            }
-        }
+        return data().enablement();
     }
     
 }

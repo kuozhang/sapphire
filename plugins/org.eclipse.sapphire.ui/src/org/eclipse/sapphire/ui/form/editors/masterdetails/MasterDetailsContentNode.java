@@ -416,7 +416,7 @@ public final class MasterDetailsContentNode
                             @Override
                             protected Object evaluate() throws FunctionException
                             {
-                                return imageService.provide();
+                                return imageService.image();
                             }
 
                             @Override

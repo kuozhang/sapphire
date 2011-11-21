@@ -11,14 +11,13 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import java.util.Set;
-
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
+import org.eclipse.sapphire.services.DependenciesServiceData;
 import org.eclipse.sapphire.services.DependenciesService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -33,9 +32,9 @@ import org.eclipse.sapphire.services.ServiceFactory;
 public final class UniqueValueDependenciesService extends DependenciesService
 {
     @Override
-    protected void compute( final Set<ModelPath> dependencies )
+    protected DependenciesServiceData compute()
     {
-        dependencies.add( new ModelPath( "*/" + context( ModelProperty.class ).getName() ) );
+        return new DependenciesServiceData( new ModelPath( "*/" + context( ModelProperty.class ).getName() ) );
     }
 
     public static final class Factory extends ServiceFactory

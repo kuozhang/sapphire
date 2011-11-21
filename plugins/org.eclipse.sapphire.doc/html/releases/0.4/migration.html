@@ -801,6 +801,175 @@ void setSample( Circle value );</font></code></pre>
   </tr>
   <tr>
     <td>
+<pre class="source-code"><code><font color="#888888">public class CustomDefaultValueService extends DefaultValueService
+{
+    @Override</font>
+    public String getDefaultValue<font color="#888888">()
+    {
+        String value;
+        
+        ...
+        
+        return</font> value<font color="#888888">;
+    }
+
+    ...
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomDefaultValueService extends DefaultValueService
+{</font>
+    @Override
+    protected DefaultValueServiceData data()
+    {
+        refresh();
+        return super.data();
+    }
+
+    <font color="#888888">@Override</font>
+    protected DefaultValueServiceData compute<font color="#888888">()
+    {
+        String value;
+        
+        ...
+        
+        return</font> new DefaultValueServiceData( value )<font color="#888888">;
+    }
+
+    ...
+}</font></code></pre>
+
+<p>The above represents the quickest way to migrate an existing default value service, but is far from
+ideal. A better solution would be to not override the data() method with a refresh on every invocation.
+To do that, the service would need to listen on changes to data used in the compute() method and call
+refresh() method when that data changes.</p>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomDependenciesService extends DependenciesService
+{
+    @Override
+    protected</font> void <font color="#888888">compute</font>( Set&lt;ModelPath> dependencies )
+    <font color="#888888">{
+        dependencies.add( ... );
+        dependencies.add( ... );
+        
+        ...
+    }
+
+    ...
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomDependenciesService extends DependenciesService
+{
+    @Override
+    protected</font> DependenciesServiceData <font color="#888888">compute</font>()
+    <font color="#888888">{</font>
+        List&lt;ModelPath> dependencies = new ArrayList&lt;ModelPath>();
+
+        <font color="#888888">dependencies.add( ... );
+        dependencies.add( ... );
+        
+        ...</font>
+        
+        return new DependenciesServiceData( dependencies );
+    <font color="#888888">}
+
+    ...
+}</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomDerivedValueService extends DerivedValueService
+{
+    @Override</font>
+    public String getDerivedValue<font color="#888888">()
+    {
+        String value;
+
+        ...
+        
+        return</font> value<font color="#888888">;
+    }
+       
+    ...
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomDerivedValueService extends DerivedValueService
+{
+    @Override</font>
+    protected DerivedValueServiceData compute<font color="#888888">()
+    {
+        String value;
+
+        ...
+        
+        return</font> new DerivedValueServiceData( value )<font color="#888888">;
+    }
+
+    ...
+}</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomEnablementService extends EnablementService
+{
+    @Override
+    protected void initEnablementService</font>( IModelElement element,
+                                          ModelProperty property,
+                                          String[] params )<font color="#888888">
+    {
+        ...
+    }
+
+    @Override
+    protected</font> boolean <font color="#888888">compute()
+    {
+        boolean enablement;
+
+        ...
+        
+        return</font> enablement<font color="#888888">;
+    }
+       
+    ...
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomEnablementService extends EnablementService
+{
+    @Override
+    protected void initEnablementService</font>()<font color="#888888">
+    {</font>
+        final IModelElement element = context( IModelElement.class );
+        final ModelProperty property = context( ModelProperty.class );
+        final String p1 = param( "p1" );
+        final String p2 = param( "p2" );
+
+        <font color="#888888">...
+    }
+
+    @Override
+    protected</font> EnablementServiceData <font color="#888888">compute()
+    {
+        boolean enablement;
+
+        ...
+        
+        return</font> new EnablementServiceData( enablement )<font color="#888888">;
+    }
+
+    ...
+}</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
 <pre class="source-code"><code><font color="#888888">public class CustomFileExtensionsService extends FileExtensionsService
 {
     @Override
@@ -808,6 +977,15 @@ void setSample( Circle value );</font></code></pre>
                                               ModelProperty property,
                                               String[] params )<font color="#888888">
     {
+        ...
+    }
+    
+    @Override
+    protected</font> void <font color="#888888">compute</font>( List&lt;String> extensions )
+    <font color="#888888">{
+        extensions.add( ... );
+        extensions.add( ... );
+        
         ...
     }
 
@@ -827,6 +1005,19 @@ void setSample( Circle value );</font></code></pre>
 
         <font color="#888888">...
     }
+    
+    @Override
+    protected</font> FileExtensionsServiceData <font color="#888888">compute</font>()
+    <font color="#888888">{</font>
+        List&lt;String> extensions = new ArrayList&lt;String>();
+
+        <font color="#888888">extensions.add( ... );
+        extensions.add( ... );
+        
+        ...</font>
+        
+        return new FileExtensionsServiceData( extensions );
+    <font color="#888888">}
 
     ...
 }</font></code></pre>
@@ -834,31 +1025,52 @@ void setSample( Circle value );</font></code></pre>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">public class CustomEnablementService extends EnablementService
+<pre class="source-code"><code><font color="#888888">public class CustomImageService extends ImageService
 {
     @Override
-    protected void initEnablementService</font>( IModelElement element,
-                                          ModelProperty property,
-                                          String[] params )<font color="#888888">
-    {
+    protected void</font> init<font color="#888888">()
+    {</font>
+        super.init();
+        
+        <font color="#888888">// Listen on entities that influence image choice.
+        // Call </font>broadcast<font color="#888888">() when something has changed.
+        
         ...
+    }
+
+    @Override</font>
+    public ImageData provide<font color="#888888">()
+    {
+        ImageData image;
+        
+        ...
+        
+        return</font> image<font color="#888888">;
     }
 
     ...
 }</font></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">public class CustomEnablementService extends EnablementService
-{
+<pre class="source-code"><code><font color="#888888">public class CustomImageService extends ImageService
+{</font>
     @Override
-    protected void initEnablementService</font>()<font color="#888888">
+    protected void</font> initImageService<font color="#888888">()
     {</font>
-        final IModelElement element = context( IModelElement.class );
-        final ModelProperty property = context( ModelProperty.class );
-        final String p1 = param( "p1" );
-        final String p2 = param( "p2" );
+        <font color="#888888">// Listen on entities that influence image choice.
+        // Call </font>refresh<font color="#888888">() when something has changed.
+        
+        ...
+    }
 
-        <font color="#888888">...
+    <font color="#888888">@Override</font>
+    protected ImageServiceData compute<font color="#888888">()
+    {
+        ImageData image;
+        
+        ...
+        
+        return</font> new ImageServiceData( image )<font color="#888888">;
     }
 
     ...

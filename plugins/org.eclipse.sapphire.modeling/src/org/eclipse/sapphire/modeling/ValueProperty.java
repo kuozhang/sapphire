@@ -15,8 +15,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.sapphire.modeling.annotations.Derived;
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -106,12 +104,6 @@ public final class ValueProperty
         {
             this.keywords = NO_KEYWORDS;
         }
-    }
-    
-    @Override
-    public boolean isReadOnly()
-    {
-        return super.isReadOnly() || hasAnnotation( Derived.class );
     }
     
     public Set<ValueKeyword> getKeywords()

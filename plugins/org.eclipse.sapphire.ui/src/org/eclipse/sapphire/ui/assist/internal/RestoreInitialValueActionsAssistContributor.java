@@ -53,7 +53,7 @@ public final class RestoreInitialValueActionsAssistContributor extends PropertyE
             
             if( initialValueService != null )
             {
-                final String initialValue = initialValueService.text();
+                final String initialValue = initialValueService.value();
                 final String currentValue = element.read( prop ).getText( false );
                 
                 if( initialValue != null && ! initialValue.equals( currentValue ) )

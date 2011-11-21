@@ -12,6 +12,8 @@
 
 package org.eclipse.sapphire.java.jdt.ui.internal;
 
+import java.util.SortedSet;
+
 import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeKind;
 
@@ -38,15 +40,8 @@ public final class JavaTypeCreateClassActionHandler extends JavaTypeCreateAction
             }
             else
             {
-                for( JavaTypeKind kind : javaTypeConstraintService.kind() )
-                {
-                    if( kind == JavaTypeKind.CLASS || kind == JavaTypeKind.ABSTRACT_CLASS )
-                    {
-                        return true;
-                    }
-                }
-                
-                return false;
+                final SortedSet<JavaTypeKind> kinds = javaTypeConstraintService.kinds();
+                return kinds.contains( JavaTypeKind.CLASS ) || kinds.contains( JavaTypeKind.ABSTRACT_CLASS );
             }
         }
     }    

@@ -15,6 +15,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -38,6 +39,7 @@ public interface ShippingInformation extends IModelElement
     
     @Label( standard = "name" )
     @Required
+    @DefaultValue( text = "${ Parent().BillingInformation.Name }" )
     
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
     
@@ -47,6 +49,7 @@ public interface ShippingInformation extends IModelElement
     // *** Organization ***
     
     @Label( standard = "organization" )
+    @DefaultValue( text = "${ Parent().BillingInformation.Organization }" )
     
     ValueProperty PROP_ORGANIZATION = new ValueProperty( TYPE, "Organization" );
     
@@ -57,6 +60,7 @@ public interface ShippingInformation extends IModelElement
 
     @Label( standard = "street" )
     @Required
+    @DefaultValue( text = "${ Parent().BillingInformation.Street }" )
 
     ValueProperty PROP_STREET = new ValueProperty( TYPE, "Street" );
 
@@ -69,6 +73,7 @@ public interface ShippingInformation extends IModelElement
     @Required
     @Service( impl = CityNamePossibleValuesService.class )
     @DependsOn( { "ZipCode", "State" } )
+    @DefaultValue( text = "${ Parent().BillingInformation.City }" )
 
     ValueProperty PROP_CITY = new ValueProperty( TYPE, "City" );
 
@@ -81,6 +86,7 @@ public interface ShippingInformation extends IModelElement
     @Required
     @Service( impl = StateCodePossibleValuesService.class )
     @DependsOn( { "ZipCode", "City" } )
+    @DefaultValue( text = "${ Parent().BillingInformation.State }" )
 
     ValueProperty PROP_STATE = new ValueProperty( TYPE, "State" );
 
@@ -93,6 +99,7 @@ public interface ShippingInformation extends IModelElement
     @Required
     @Service( impl = ZipCodePossibleValuesService.class )
     @DependsOn( { "State", "City" } )
+    @DefaultValue( text = "${ Parent().BillingInformation.ZipCode }" )
 
     ValueProperty PROP_ZIP_CODE = new ValueProperty( TYPE, "ZipCode" );
 

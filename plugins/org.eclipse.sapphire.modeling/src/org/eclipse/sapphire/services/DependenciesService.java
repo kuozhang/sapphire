@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.services;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.sapphire.modeling.ModelPath;
@@ -24,18 +22,12 @@ import org.eclipse.sapphire.modeling.ModelPath;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class DependenciesService extends Service
+public abstract class DependenciesService extends DataService<DependenciesServiceData>
 {
-    private Set<ModelPath> dependencies;
-    
     @Override
-    protected final void init()
+    protected final void initDataService()
     {
         initDependenciesService();
-        
-        final Set<ModelPath> dependencies = new HashSet<ModelPath>();
-        compute( dependencies );
-        this.dependencies = Collections.unmodifiableSet( dependencies );
     }
 
     protected void initDependenciesService()
@@ -44,9 +36,7 @@ public abstract class DependenciesService extends Service
     
     public final Set<ModelPath> dependencies()
     {
-        return this.dependencies;
+        return data().dependencies();
     }
-    
-    protected abstract void compute( Set<ModelPath> dependencies );
     
 }

@@ -48,7 +48,7 @@ public final class JavaTypeConstraintFactsService extends FactsService
         
         final JavaTypeConstraintService service = element.service( property, JavaTypeConstraintService.class );
 
-        final List<JavaTypeKind> kinds = new ArrayList<JavaTypeKind>( service.kind() );
+        final List<JavaTypeKind> kinds = new ArrayList<JavaTypeKind>( service.kinds() );
         
         if( kinds.size() > 0 && kinds.size() < 5 )
         {
@@ -70,7 +70,7 @@ public final class JavaTypeConstraintFactsService extends FactsService
             }
         }
         
-        final List<String> types = new ArrayList<String>( service.type() );
+        final List<String> types = new ArrayList<String>( service.types() );
         
         if( types.size() > 0 )
         {

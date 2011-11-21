@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeConstraintService;
+import org.eclipse.sapphire.java.JavaTypeConstraintServiceData;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -33,7 +34,7 @@ import org.eclipse.sapphire.services.ServiceFactory;
 
 public final class StandardJavaTypeConstraintService extends JavaTypeConstraintService
 {
-    private State state;
+    private JavaTypeConstraintServiceData data;
 
     @Override
     protected void initJavaTypeConstraintService()
@@ -63,13 +64,13 @@ public final class StandardJavaTypeConstraintService extends JavaTypeConstraintS
             }
         }
         
-        this.state = new State( kind, type, javaTypeConstraintAnnotation.behavior() );
+        this.data = new JavaTypeConstraintServiceData( kind, type, javaTypeConstraintAnnotation.behavior() );
     }
 
     @Override
-    protected State compute()
+    protected JavaTypeConstraintServiceData compute()
     {
-        return this.state;
+        return this.data;
     }
     
     public static final class Factory extends ServiceFactory

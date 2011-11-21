@@ -292,7 +292,7 @@ public final class ModelElementType extends ModelMetadataItem
                     
                     if( initialValueService != null ) 
                     {
-                        element.write( (ValueProperty) property, initialValueService.text() );
+                        element.write( (ValueProperty) property, initialValueService.value() );
                     }
 
                 }

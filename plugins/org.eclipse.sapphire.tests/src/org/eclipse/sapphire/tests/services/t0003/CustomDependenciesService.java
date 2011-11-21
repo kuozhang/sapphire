@@ -11,9 +11,8 @@
 
 package org.eclipse.sapphire.tests.services.t0003;
 
-import java.util.Set;
-
 import org.eclipse.sapphire.modeling.ModelPath;
+import org.eclipse.sapphire.services.DependenciesServiceData;
 import org.eclipse.sapphire.services.DependenciesService;
 
 /**
@@ -23,10 +22,9 @@ import org.eclipse.sapphire.services.DependenciesService;
 public final class CustomDependenciesService extends DependenciesService
 {
     @Override
-    protected void compute( final Set<ModelPath> dependencies )
+    protected DependenciesServiceData compute()
     {
-        dependencies.add( new ModelPath( "Name" ) );
-        dependencies.add( new ModelPath( "Id" ) );
+        return new DependenciesServiceData( new ModelPath( "Name" ), new ModelPath( "Id" ) );
     }
     
 }

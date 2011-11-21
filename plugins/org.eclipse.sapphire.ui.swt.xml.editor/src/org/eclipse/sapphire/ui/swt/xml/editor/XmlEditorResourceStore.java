@@ -308,6 +308,26 @@ public class XmlEditorResourceStore extends XmlResourceStore
     }
     
     @Override
+    public void unregisterModelElement( final Node xmlNode,
+                                        final IModelElement element )
+    {
+        synchronized( this.nodeToModelElementsMap )
+        {
+            List<IModelElement> elements = this.nodeToModelElementsMap.get( xmlNode );
+            
+            if( elements != null )
+            {
+                elements.remove( element );
+                
+                if( elements.size() == 0 )
+                {
+                    this.nodeToModelElementsMap.remove( xmlNode );
+                }
+            }
+        }
+    }
+
+    @Override
     public void dispose()
     {
         super.dispose();

@@ -103,8 +103,9 @@
                                     <child-property>UnitPrice</child-property>
                                     <hint>
                                         <name>column.widths</name>
-                                        <value>100:15,100:55,100:15,100:15</value>
+                                        <value>100:1,100:6,100:1,100:1,100:1</value>
                                     </hint>
+                                    <child-property>Total</child-property>
                                 </property-editor>
                             </content>
                             <scale-vertically>true</scale-vertically>
@@ -117,6 +118,12 @@
                     <content>
                         <section>
                             <label>summary</label>
+                            <content>
+                                <property-editor>Subtotal</property-editor>
+                                <property-editor>Discount</property-editor>
+                                <property-editor>Delivery</property-editor>
+                                <property-editor>Total</property-editor>
+                            </content>
                         </section>
                     </content>
                 </block>

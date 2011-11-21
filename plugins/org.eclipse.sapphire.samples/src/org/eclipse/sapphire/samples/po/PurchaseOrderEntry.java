@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -80,5 +81,15 @@ public interface PurchaseOrderEntry extends IModelElement
     Value<BigDecimal> getUnitPrice();
     void setUnitPrice( String value );
     void setUnitPrice( BigDecimal value );
+    
+    // *** Total ***
+    
+    @Type( base = BigDecimal.class )
+    @Label( standard = "total" )
+    @Derived( text = "${ Scale( UnitPrice * Scale( Quantity, 2 ), 2 ) }" )
+    
+    ValueProperty PROP_TOTAL = new ValueProperty( TYPE, "Total" );
+    
+    Value<BigDecimal> getTotal();
     
 }

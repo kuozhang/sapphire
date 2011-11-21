@@ -26,6 +26,7 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
+import org.eclipse.sapphire.services.EnablementServiceData;
 import org.eclipse.sapphire.services.EnablementService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -80,7 +81,7 @@ public final class FunctionBasedEnablementService extends EnablementService
     }
 
     @Override
-    public boolean compute()
+    protected EnablementServiceData compute()
     {
         boolean state = true;
         
@@ -89,7 +90,7 @@ public final class FunctionBasedEnablementService extends EnablementService
             state = ( state && (Boolean) result.value() );
         }
         
-        return state;
+        return new EnablementServiceData( state );
     }
 
     @Override

@@ -33,11 +33,16 @@ public class SapphireCommonUtil {
     public final static String getDefaultValueLabel( final IModelElement element, 
                                                      final ValueProperty property ) 
     {
-        final String defaultValue = element.service( property, DefaultValueService.class ).getDefaultValue();
+        final DefaultValueService defaultValueService = element.service( property, DefaultValueService.class );
         
-        if( defaultValue != null )
+        if( defaultValueService != null )
         {
-            return getValueLabel( element, property, defaultValue );
+            final String defaultValue = defaultValueService.value();
+            
+            if( defaultValue != null )
+            {
+                return getValueLabel( element, property, defaultValue );
+            }
         }
         
         return null;

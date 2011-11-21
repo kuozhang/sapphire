@@ -526,7 +526,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         if( hasDerivedValueProviderAnnotation )
         {
-            rb.append( "final String val = service( #1, DerivedValueService.class ).getDerivedValue();", propField.name );
+            rb.append( "final String val = service( #1, DerivedValueService.class ).value();", propField.name );
             implClassModel.addImport( DerivedValueService.class );
         }
         else

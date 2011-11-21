@@ -16,7 +16,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.security.MessageDigest;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.eclipse.sapphire.modeling.LoggingService;
 
@@ -209,6 +213,16 @@ public class MiscUtil
         }
         
         return result.toString();
+    }
+    
+    public static <T> List<T> list( final T... items )
+    {
+        return Arrays.asList( items );
+    }
+    
+    public static <T> Set<T> set( final T... items )
+    {
+        return new LinkedHashSet<T>( Arrays.asList( items ) );
     }
     
 }

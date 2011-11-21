@@ -90,9 +90,15 @@ adds "#/Name" dependency.</p>
 <pre class="source-code"><code>public class CustomDependenciesService extends DependenciesService
 {
     @Override
-    protected void compute( Set&lt;ModelPath> dependencies )
+    protected DependenciesServiceData compute()
     {
-        // Compute the list of extensions.
+        // Compute the list of dependencies.
+        
+        List&lt;ModelPath> dependencies = new ArrayList&lt;ModelPath>();
+        
+        ...
+        
+        return new DependenciesServiceData( dependencies );
     }
 }</code></pre>
 
@@ -257,9 +263,15 @@ be supplied.</p>
     }
 
     @Override
-    protected void compute( List&lt;String> extensions )
+    protected FileExtensionsServiceData compute()
     {
         // Compute the list of extensions.
+        
+        List&lt;String> extensions = new ArrayList&lt;String>();
+        
+        ...
+        
+        return new FileExtensionsServiceData( extensions );
     }
 
     @Override
@@ -324,9 +336,30 @@ be provided.</p>
 <pre class="source-code"><code>public class PhoneTypeInitialValueService extends InitialValueService
 {
     @Override
-    public String text()
+    protected void initInitialValueService()
+    {
+        // Register listeners to invoke refresh() method when the initial value
+        // may have changed.
+    }
+    
+    @Override
+    protected InitialValueServiceData compute()
     {
         // Compute the initial value.
+        
+        String value;
+        
+        ...
+        
+        return new InitialValueServiceData( value );
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        // Remove any listeners that were added during initialization.
     }
 }</code></pre>
 
@@ -376,9 +409,17 @@ void setServletFilterImpl( String value );</font></code></pre>
     }
     
     @Override
-    protected State compute()
+    protected JavaTypeConstraintServiceData compute()
     {
-        // Compute Java type constraint and return it using the State object.
+        // Compute Java type constraint.
+        
+        List&lt;JavaTypeKind> kinds = new ArrayList&lt;JavaTypeKind>();
+        List&lt;String> types = new ArrayList&lt;String>();
+        JavaTypeConstraintBehavior behavior;
+        
+        ...
+        
+        return new JavaTypeConstraintServiceData( kinds, types, behavior );
     }
 
     @Override
@@ -432,9 +473,15 @@ of PossibleTypesService can be provided.</p>
     }
 
     @Override
-    protected void types( SortedSet&lt;ModelElementType> types )
+    protected PossibleTypesServiceData compute()
     {
         // Compute the list of possible types.
+        
+        List&lt;ModelElementType> types = new ArrayList&lt;ModelElementType>();
+        
+        ...
+        
+        return new PossibleTypesServiceData( types );
     }
 
     @Override

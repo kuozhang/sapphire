@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.samples.contacts.IContact;
 import org.eclipse.sapphire.services.ImageService;
+import org.eclipse.sapphire.services.ImageServiceData;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -25,22 +26,20 @@ import org.eclipse.sapphire.services.ImageService;
 
 public final class AttendeeImageService extends ImageService
 {
-    private static final ImageData IMG_PERSON = ImageData.readFromClassLoader( IContact.class, "Contact.png" );
-    private static final ImageData IMG_PERSON_FADED = ImageData.readFromClassLoader( IContact.class, "ContactFaded.png" );
+    private static final ImageServiceData IMG_PERSON = new ImageServiceData( ImageData.readFromClassLoader( IContact.class, "Contact.png" ) );
+    private static final ImageServiceData IMG_PERSON_FADED = new ImageServiceData( ImageData.readFromClassLoader( IContact.class, "ContactFaded.png" ) );
     
     private ModelPropertyListener listener;
     
     @Override
-    protected void init()
+    protected void initImageService()
     {
-        super.init();
-        
         this.listener = new ModelPropertyListener()
         {
             @Override
             public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
             {
-                broadcast();
+                refresh();
             }
         };
         
@@ -48,7 +47,7 @@ public final class AttendeeImageService extends ImageService
     }
 
     @Override
-    public ImageData provide()
+    protected ImageServiceData compute()
     {
         if( context( IAttendee.class ).isInContactsDatabase().getContent() )
         {

@@ -15,17 +15,16 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.w3c.dom.Node;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class VirtualChildXmlResource
-
-    extends XmlResource
-    
+public class VirtualChildXmlResource extends XmlResource
 {
     private final XmlPath path;
+    private Node lastDomNode;
 
     public VirtualChildXmlResource( final XmlResource parent,
                                     final XmlPath path )
@@ -64,6 +63,27 @@ public class VirtualChildXmlResource
         if( parent != null )
         {
             element = (XmlElement) parent.getChildNode( this.path, createIfNecessary );
+        }
+        
+        Node node = null;
+        
+        if( element != null )
+        {
+            node = element.getDomNode();
+        }
+        
+        if( this.lastDomNode != node )
+        {
+            final XmlResourceStore store = root().store();
+            final IModelElement modelElement = element();
+            
+            if( this.lastDomNode != null )
+            {
+                store.unregisterModelElement( this.lastDomNode, modelElement );
+            }
+            
+            store.registerModelElement( node, modelElement );
+            this.lastDomNode = node;
         }
         
         return element;

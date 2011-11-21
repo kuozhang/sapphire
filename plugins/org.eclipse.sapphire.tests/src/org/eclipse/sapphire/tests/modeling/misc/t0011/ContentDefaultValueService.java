@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.tests.modeling.misc.t0011;
 
 import org.eclipse.sapphire.services.DefaultValueService;
+import org.eclipse.sapphire.services.DefaultValueServiceData;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -20,8 +21,17 @@ import org.eclipse.sapphire.services.DefaultValueService;
 public final class ContentDefaultValueService extends DefaultValueService
 {
     @Override
-    public String getDefaultValue()
+    protected DefaultValueServiceData data()
     {
+        refresh();
+        return super.data();
+    }
+
+    @Override
+    protected DefaultValueServiceData compute()
+    {
+        String value = null;
+        
         final TestElementChild element = context( TestElementChild.class );
         final String ref = element.getReference().getText();
         
@@ -33,12 +43,12 @@ public final class ContentDefaultValueService extends DefaultValueService
             {
                 if( child != element && ref.equals( child.getId().getText() ) )
                 {
-                    return child.getContent().getText();
+                    value = child.getContent().getText();
                 }
             }
         }
         
-        return null;
+        return new DefaultValueServiceData( value );
     }
-    
+
 }

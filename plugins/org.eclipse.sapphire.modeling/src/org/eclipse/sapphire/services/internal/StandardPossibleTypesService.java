@@ -16,13 +16,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.services.PossibleTypesServiceData;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -80,11 +80,11 @@ public final class StandardPossibleTypesService extends PossibleTypesService
     }
 
     @Override
-    protected void types( final SortedSet<ModelElementType> types )
+    protected PossibleTypesServiceData compute()
     {
-        types.addAll( this.possible );
+        return new PossibleTypesServiceData( this.possible );
     }
-    
+
     public static final class Factory extends ServiceFactory
     {
         @Override

@@ -17,8 +17,21 @@ import org.eclipse.sapphire.modeling.ImageData;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ImageService extends Service
+public abstract class ImageService extends DataService<ImageServiceData>
 {
-    public abstract ImageData provide();
+    @Override
+    protected final void initDataService()
+    {
+        initImageService();
+    }
+
+    protected void initImageService()
+    {
+    }
+    
+    public final ImageData image()
+    {
+        return data().image();
+    }
     
 }

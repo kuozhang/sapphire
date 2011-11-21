@@ -24,6 +24,14 @@
 <body>
 <h1>Enhancements in 0.4</h1>
 <ol>
+  <li><a href="#el">Expression Language</a></li>
+  <ol type="A">
+    <li><a href="#scale-function">Scale Function</a></li>
+    <li><a href="#aggregate-functions">Aggregate Functions</a></li>
+    <li><a href="#el-derived-value">Use in @Derived</a></li>
+    <li><a href="#el-default-value">Use in @DefaultValue</a></li>
+    <li><a href="#el-initial-value">Use in @InitialValue</a></li>
+  </ol>
   <li><a href="#Services">Services</a></li>
   <ol type="A">
     <li><a href="#FactsService">FactsService</a></li>
@@ -45,6 +53,70 @@
 </ol>
 
  
+<h2><a name="el"><a name="scale-function">Scale Function</a></a></h2>
+
+<p>When working with decimals, controlling the scale of the number is very
+important, whether to decrease the scale in order to round the number or to
+increase the scale ahead of arithmetic operations.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>${ Scale( UnitPrice * Scale( Quantity, 2 ), 2 ) }</code></pre>
+
+
+<h2><a name="aggregate-functions">Aggregate Functions</a></h2>
+
+<p>Compute the sum, the average, the min or the max of numbers in a collection. Typically, these function 
+takes the collection as the sole parameter. However, when the collection is a model element list, a second 
+parameter may be necessary to specify the name (in the form of a string) of the list entry's value property 
+to use in aggregation. If the the collection is a model element list and the second parameter is not 
+specified, these functions will use list entry's first value property for aggregation.</p>
+
+<p style="margin-left: 20px;"><b>Examples</b></p>
+
+<pre class="source-code"><code>${ Sum( Entries, 'Total' ) }
+${ Avg( Entries, 'Total' ) }
+${ Min( Entries, 'Total' ) }
+${ Max( Entries, 'Total' ) }
+${ Sum( List( 1.2, 3.4, 5.6, 7.8 ) ) }</code></pre>
+
+
+<h2><a name="el-derived-value">Use in @Derived</a></h2>
+
+<p>Use expression language when specifying derived value in @Derived annotation.</p>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = BigDecimal.class )</font>
+@Derived( text = "${ Scale( UnitPrice * Scale( Quantity, 2 ), 2 ) }" )
+
+<font color="#888888">ValueProperty PROP_TOTAL = new ValueProperty( TYPE, "Total" );
+
+Value&lt;BigDecimal> getTotal();</font></code></pre>
+
+
+<h2><a name="el-default-value">Use in @DefaultValue</a></h2>
+
+<p>Use expression language when specifying default value in @DefaultValue annotation.</p>
+
+<pre class="source-code"><code>@DefaultValue( text = "${ Parent().BillingInformation.Street }" )
+
+<font color="#888888">ValueProperty PROP_STREET = new ValueProperty( TYPE, "Street" );
+
+Value<String> getStreet();
+void setStreet( String street );</font></code></pre>
+
+
+<h2><a name="el-initial-value">Use in @InitialValue</a></h2>
+
+<p>Use expression language when specifying initial value in @InitialValue annotation.</p>
+
+<pre class="source-code"><code>@InitialValue( text = "${ Parent().BillingInformation.Street }" )
+
+<font color="#888888">ValueProperty PROP_STREET = new ValueProperty( TYPE, "Street" );
+
+Value<String> getStreet();
+void setStreet( String street );</font></code></pre>
+
+
 <h2><a name="Services"><a name="FactsService">FactsService</a></a></h2>
 <p>When a property is described to a user in documentation one does it with a series of short statements that
 define its semantics, such as "must be specified" or "maximum value is 100". When a property is

@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.def.internal;
 
 import org.eclipse.sapphire.services.DefaultValueService;
+import org.eclipse.sapphire.services.DefaultValueServiceData;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 
 /**
@@ -21,17 +22,24 @@ import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 public class CompositeMarginWidthHeightDefaultValueProvider extends DefaultValueService
 {
     @Override
-    public String getDefaultValue()
+    protected DefaultValueServiceData data()
+    {
+        refresh();
+        return super.data();
+    }
+
+    @Override
+    protected DefaultValueServiceData compute()
     {
         final ISapphireCompositeDef def = context( ISapphireCompositeDef.class );
         
         if( def.getScrollHorizontally().getContent() == true || def.getScrollVertically().getContent() == true )
         {
-            return "10";
+            return new DefaultValueServiceData( "10" );
         }
         else
         {
-            return "0";
+            return new DefaultValueServiceData( "0" );
         }
     }
     

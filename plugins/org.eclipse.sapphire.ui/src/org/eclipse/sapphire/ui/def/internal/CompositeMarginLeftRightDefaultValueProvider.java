@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.def.internal;
 
 import org.eclipse.sapphire.services.DefaultValueService;
+import org.eclipse.sapphire.services.DefaultValueServiceData;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 
 /**
@@ -21,9 +22,16 @@ import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 public class CompositeMarginLeftRightDefaultValueProvider extends DefaultValueService
 {
     @Override
-    public String getDefaultValue()
+    protected DefaultValueServiceData data()
     {
-        return context( ISapphireCompositeDef.class ).getMarginWidth().getText();
+        refresh();
+        return super.data();
+    }
+
+    @Override
+    protected DefaultValueServiceData compute()
+    {
+        return new DefaultValueServiceData( context( ISapphireCompositeDef.class ).getMarginWidth().getText() );
     }
     
 }

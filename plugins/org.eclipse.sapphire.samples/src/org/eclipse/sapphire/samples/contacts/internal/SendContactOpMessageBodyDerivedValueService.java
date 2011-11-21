@@ -15,6 +15,7 @@ import org.eclipse.sapphire.samples.contacts.IAddress;
 import org.eclipse.sapphire.samples.contacts.IContact;
 import org.eclipse.sapphire.samples.contacts.IPhoneNumber;
 import org.eclipse.sapphire.samples.contacts.ISendContactOp;
+import org.eclipse.sapphire.services.DerivedValueServiceData;
 import org.eclipse.sapphire.services.DerivedValueService;
 
 /**
@@ -24,7 +25,7 @@ import org.eclipse.sapphire.services.DerivedValueService;
 public final class SendContactOpMessageBodyDerivedValueService extends DerivedValueService
 {
     @Override
-    public String getDerivedValue()
+    protected DerivedValueServiceData compute()
     {
         final ISendContactOp op = context( ISendContactOp.class );
         final IContact contact = op.getContact().content();
@@ -85,7 +86,7 @@ public final class SendContactOpMessageBodyDerivedValueService extends DerivedVa
         
         buf.append( "</body></html>" );
         
-        return buf.toString();
+        return new DerivedValueServiceData( buf.toString() );
     }
 
 }

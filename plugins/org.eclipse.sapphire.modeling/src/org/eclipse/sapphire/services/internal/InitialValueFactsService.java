@@ -40,7 +40,7 @@ public final class InitialValueFactsService extends FactsService
         final ValueProperty property = context( ValueProperty.class );
         final InitialValueService initialValueService = element.service( property, InitialValueService.class );
         
-        final String value = initialValueService.text();
+        final String value = initialValueService.value();
         final String valueLabel = getValueLabel( element, property, value );
         facts.add( NLS.bind( Resources.statement, valueLabel ) );
     }

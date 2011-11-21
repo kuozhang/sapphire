@@ -167,7 +167,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
         {
             final JavaTypeConstraintBehavior behavior = javaTypeConstraintService.behavior();
 
-            final Collection<String> types = javaTypeConstraintService.type();
+            final Collection<String> types = javaTypeConstraintService.types();
             final Iterator<String> iterator = types.iterator();
 
             for( int i = 0, n = ( behavior == JavaTypeConstraintBehavior.ALL ? types.size() : min( 1, types.size() ) ); i < n; i++ )

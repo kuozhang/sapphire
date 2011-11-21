@@ -30,7 +30,9 @@ import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.ModelPath.TypeFilterSegment;
 import org.eclipse.sapphire.modeling.annotations.ClearOnDisable;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.services.DefaultValueService;
 import org.eclipse.sapphire.services.DependenciesAggregationService;
+import org.eclipse.sapphire.services.DerivedValueService;
 import org.eclipse.sapphire.services.EnablementService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -102,23 +104,32 @@ public abstract class ModelElement
                 }
             }
 
-            Listener validationServiceListener = null;
+            final Listener triggerRefreshOnServiceEventListener = new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    refresh( property );
+                }
+            };
             
             for( ValidationService validationService : services( property, ValidationService.class ) )
             {
-                if( validationServiceListener == null )
-                {
-                    validationServiceListener = new Listener()
-                    {
-                        @Override
-                        public void handle( final Event event )
-                        {
-                            refresh( property );
-                        }
-                    };
-                }
-                
-                validationService.attach( validationServiceListener );
+                validationService.attach( triggerRefreshOnServiceEventListener );
+            }
+            
+            final DefaultValueService defaultValueService = service( property, DefaultValueService.class );
+            
+            if( defaultValueService != null )
+            {
+                defaultValueService.attach( triggerRefreshOnServiceEventListener );
+            }
+            
+            final DerivedValueService derivedValueService = service( property, DerivedValueService.class );
+            
+            if( derivedValueService != null )
+            {
+                derivedValueService.attach( triggerRefreshOnServiceEventListener );
             }
 
             if( property.hasAnnotation( ClearOnDisable.class ) )
@@ -643,7 +654,7 @@ public abstract class ModelElement
             
             for( EnablementService service : services( property, EnablementService.class ) )
             {
-                newState = ( newState && service.state() );
+                newState = ( newState && service.enablement() );
                 
                 if( newState == false )
                 {

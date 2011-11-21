@@ -11,12 +11,8 @@
 
 package org.eclipse.sapphire.services;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementType;
 
 /**
@@ -26,26 +22,12 @@ import org.eclipse.sapphire.modeling.ModelElementType;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class PossibleTypesService extends Service
+public abstract class PossibleTypesService extends DataService<PossibleTypesServiceData>
 {
-    private static final Comparator<ModelElementType> COMPARATOR = new Comparator<ModelElementType>()
-    {
-        public int compare( final ModelElementType x,
-                            final ModelElementType y )
-        {
-            return x.getSimpleName().compareTo( y.getSimpleName() );
-        }
-    };
-    
-    private static SortedSet<ModelElementType> EMPTY_TYPES = Collections.unmodifiableSortedSet( new TreeSet<ModelElementType>() );
-    
-    private SortedSet<ModelElementType> types = EMPTY_TYPES;
-    
     @Override
-    protected final void init()
+    protected final void initDataService()
     {
         initPossibleTypesService();
-        refresh( false );
     }
 
     protected void initPossibleTypesService()
@@ -54,38 +36,7 @@ public abstract class PossibleTypesService extends Service
     
     public final SortedSet<ModelElementType> types()
     {
-        return this.types;
+        return data().types();
     }
     
-    protected abstract void types( SortedSet<ModelElementType> types );
-    
-    protected final void refresh()
-    {
-        refresh( true );
-    }
-    
-    private final void refresh( final boolean notifyListeners )
-    {
-        final SortedSet<ModelElementType> types = new TreeSet<ModelElementType>( COMPARATOR );
-        
-        try
-        {
-            types( types );
-        }
-        catch( Exception e )
-        {
-            LoggingService.log( e );
-        }
-        
-        if( ! this.types.equals( types ) )
-        {
-            this.types = Collections.unmodifiableSortedSet( types );
-            
-            if( notifyListeners )
-            {
-                broadcast();
-            }
-        }
-    }
-
 }

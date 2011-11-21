@@ -1877,7 +1877,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             }
             else
             {
-                return getPart().getImageCache().getImage( this.imageService.provide(), this.element.validate().severity() );
+                return getPart().getImageCache().getImage( this.imageService.image(), this.element.validate().severity() );
             }
         }
         

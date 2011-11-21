@@ -16,6 +16,7 @@ import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.services.EnablementServiceData;
 import org.eclipse.sapphire.services.EnablementService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -59,9 +60,9 @@ public final class ParentBasedEnablementService extends EnablementService
     }
 
     @Override
-    public boolean compute()
+    public EnablementServiceData compute()
     {
-        return this.parentElement.isPropertyEnabled( this.parentProperty );
+        return new EnablementServiceData( this.parentElement.isPropertyEnabled( this.parentProperty ) );
     }
 
     @Override

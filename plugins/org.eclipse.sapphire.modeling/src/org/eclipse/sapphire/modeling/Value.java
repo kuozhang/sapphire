@@ -89,7 +89,9 @@ public class Value<T>
     {
         if( ! this.defaultValueInitialized )
         {
-            this.defaultText = normalize( parent().service( this.property, DefaultValueService.class ).getDefaultValue() );
+            final DefaultValueService defaultValueService = parent().service( this.property, DefaultValueService.class );
+            
+            this.defaultText = ( defaultValueService == null ? null : normalize( defaultValueService.value() ) );
             this.defaultContent = parse( this.property.decodeKeywords( this.defaultText ) );
             this.defaultValueInitialized = true;
         }

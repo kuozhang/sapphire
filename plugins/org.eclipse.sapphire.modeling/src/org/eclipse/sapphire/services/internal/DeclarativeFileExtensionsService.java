@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
+import org.eclipse.sapphire.services.FileExtensionsServiceData;
 import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -78,10 +80,12 @@ public final class DeclarativeFileExtensionsService extends FileExtensionsServic
             );
         }
     }
-
+    
     @Override
-    protected void compute( final List<String> extensions )
+    protected FileExtensionsServiceData compute()
     {
+        final List<String> extensions = new ArrayList<String>();
+        
         if( this.functionResult != null )
         {
             for( Object extension : (List<?>) this.functionResult.value() )
@@ -89,6 +93,8 @@ public final class DeclarativeFileExtensionsService extends FileExtensionsServic
                 extensions.add( (String) extension );
             }
         }
+        
+        return new FileExtensionsServiceData( extensions );
     }
 
     @Override

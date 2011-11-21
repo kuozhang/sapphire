@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.annotations.PropertyListeners;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -217,9 +218,14 @@ public abstract class ModelProperty extends ModelMetadataItem
         return refine( ModelElementType.getModelElementType( modelElement.getClass() ) );
     }
 
-    public boolean isReadOnly()
+    public final boolean isReadOnly()
     {
-        return hasAnnotation( ReadOnly.class );
+        return hasAnnotation( ReadOnly.class ) || isDerived();
+    }
+    
+    public final boolean isDerived()
+    {
+        return hasAnnotation( Derived.class );
     }
     
     private void gatherAnnotations() 

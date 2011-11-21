@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.samples.po;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -21,10 +22,13 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -93,6 +97,7 @@ public interface PurchaseOrder extends IModelElement
     
     @Type( base = BillingInformation.class )
     @Label( standard = "billing information" )
+    @XmlBinding( path = "BillingInformation" ) // TODO: This should not be necessary.
     
     ImpliedElementProperty PROP_BILLING_INFORMATION = new ImpliedElementProperty( TYPE, "BillingInformation" );
     
@@ -102,6 +107,7 @@ public interface PurchaseOrder extends IModelElement
     
     @Type( base = ShippingInformation.class )
     @Label( standard = "shipping information" )
+    @XmlBinding( path = "ShippingInformation" ) // TODO: This should not be necessary.
     
     ImpliedElementProperty PROP_SHIPPING_INFORMATION = new ImpliedElementProperty( TYPE, "ShippingInformation" );
     
@@ -116,5 +122,49 @@ public interface PurchaseOrder extends IModelElement
     ListProperty PROP_ENTRIES = new ListProperty( TYPE, "Entries" );
     
     ModelElementList<PurchaseOrderEntry> getEntries();
+    
+    // *** Subtotal ***
+    
+    @Type( base = BigDecimal.class )
+    @Label( standard = "subtotal" )
+    @Derived( text = "${ Sum( Entries, 'Total' ) }" )
+    
+    ValueProperty PROP_SUBTOTAL = new ValueProperty( TYPE, "Subtotal" );
+    
+    Value<BigDecimal> getSubtotal();
+    
+    // *** Discount ***
+    
+    @Type( base = BigDecimal.class )
+    @Label( standard = "discount" )
+    @DefaultValue( text = "0.00" )
+    
+    ValueProperty PROP_DISCOUNT = new ValueProperty( TYPE, "Discount" );
+    
+    Value<BigDecimal> getDiscount();
+    void setDiscount( String value );
+    void setDiscount( BigDecimal value );
+    
+    // *** Delivery ***
+    
+    @Type( base = BigDecimal.class )
+    @Label( standard = "delivery" )
+    @DefaultValue( text = "0.00" )
+    
+    ValueProperty PROP_DELIVERY = new ValueProperty( TYPE, "Delivery" );
+    
+    Value<BigDecimal> getDelivery();
+    void setDelivery( String value );
+    void setDelivery( BigDecimal value );
+    
+    // *** Total ***
+    
+    @Type( base = BigDecimal.class )
+    @Label( standard = "total" )
+    @Derived( text = "${ Scale( Subtotal, 2 ) - Scale( Discount, 2 ) + Scale( Delivery, 2 ) }" )
+    
+    ValueProperty PROP_TOTAL = new ValueProperty( TYPE, "Total" );
+    
+    Value<BigDecimal> getTotal();
     
 }

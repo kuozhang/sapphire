@@ -532,7 +532,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
             else if( this.elementImageService != null )
             {
                 final Status st = this.element.read( getMemberProperty() ).validate();
-                image = cache.getImage( this.elementImageService.provide(), st.severity() );
+                image = cache.getImage( this.elementImageService.image(), st.severity() );
             }
             else
             {
