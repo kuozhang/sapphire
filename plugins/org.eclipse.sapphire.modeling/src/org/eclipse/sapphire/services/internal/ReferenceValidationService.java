@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ReferenceValue;
@@ -19,6 +21,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.services.ReferenceService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
@@ -30,6 +33,34 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class ReferenceValidationService extends ValidationService
 {
+    private ReferenceService referenceService;
+    private Listener referenceServiceListener;
+    
+    @Override
+    protected void init()
+    {
+        super.init();
+        
+        final IModelElement element = context( IModelElement.class );
+        final ValueProperty property = context( ValueProperty.class );
+        
+        this.referenceService = element.service( property, ReferenceService.class );
+        
+        if( this.referenceService != null )
+        {
+            this.referenceServiceListener = new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    broadcast();
+                }
+            };
+            
+            this.referenceService.attach( this.referenceServiceListener );
+        }
+    }
+
     @Override
     public Status validate()
     {
@@ -47,6 +78,17 @@ public final class ReferenceValidationService extends ValidationService
         return Status.createOkStatus();
     }
     
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        if( this.referenceServiceListener != null )
+        {
+            this.referenceService.detach( this.referenceServiceListener );
+        }
+    }
+
     public static final class Factory extends ServiceFactory
     {
         @Override
