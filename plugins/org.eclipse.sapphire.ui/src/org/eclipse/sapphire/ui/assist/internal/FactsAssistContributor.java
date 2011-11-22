@@ -28,10 +28,7 @@ import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class FactsAssistContributor
-
-    extends PropertyEditorAssistContributor
-    
+public final class FactsAssistContributor extends PropertyEditorAssistContributor
 {
     public FactsAssistContributor()
     {
@@ -73,11 +70,11 @@ public final class FactsAssistContributor
         
         for( String fact : element.service( property, FactsAggregationService.class ).facts() )
         {
-            final PropertyEditorAssistContribution contribution = new PropertyEditorAssistContribution();
-            contribution.setText( "<p>" + escapeForXml( fact ) + "</p>" );
+            final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
+            contribution.text( "<p>" + escapeForXml( fact ) + "</p>" );
             
             final PropertyEditorAssistSection section = context.getSection( SECTION_ID_INFO );
-            section.addContribution( contribution );
+            section.addContribution( contribution.create() );
         }
     }
     

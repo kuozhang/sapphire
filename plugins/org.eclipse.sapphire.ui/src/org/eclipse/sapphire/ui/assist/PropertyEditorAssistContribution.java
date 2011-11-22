@@ -15,61 +15,125 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.forms.events.IHyperlinkListener;
+import org.eclipse.sapphire.modeling.ImageData;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class PropertyEditorAssistContribution
+public final class PropertyEditorAssistContribution
 {
-    private String text;
-    private final Map<String,Image> images;
-    private final Map<String,Image> imagesReadOnly;
-    private IHyperlinkListener listener;
+    private final String text;
+    private final Map<String,ImageData> images;
+    private final Map<String,Runnable> links;
     
-    public PropertyEditorAssistContribution()
+    public static Factory factory()
     {
-        this.text = null;
-        this.images = new HashMap<String,Image>();
-        this.imagesReadOnly = Collections.unmodifiableMap( this.images );
-        this.listener = null;
+        return new Factory();
     }
     
-    public String getText()
+    private PropertyEditorAssistContribution( final String text,
+                                              final Map<String,ImageData> images,
+                                              final Map<String,Runnable> links )
+    {
+        this.text = text;
+        this.images = Collections.unmodifiableMap( images );
+        this.links = Collections.unmodifiableMap( links );
+    }
+    
+    public final String text()
     {
         return this.text;
     }
     
-    public void setText( final String text )
+    public final Map<String,ImageData> images()
     {
-        this.text = text;
+        return this.images;
     }
     
-    public Map<String,Image> getImages()
+    public final ImageData image( final String id )
     {
-        return this.imagesReadOnly;
+        return this.images.get( id );
     }
     
-    public Image getImage( final String name )
+    public final Map<String,Runnable> links()
     {
-        return this.images.get( name );
+        return this.links;
     }
     
-    public void setImage( final String name,
-                          final Image image )
+    public final Runnable link( final String id )
     {
-        this.images.put( name, image );
+        return this.links.get( id );
     }
     
-    public IHyperlinkListener getHyperlinkListener()
+    public static final class Factory
     {
-        return this.listener;
+        private String text;
+        private final Map<String,ImageData> images = new HashMap<String,ImageData>();
+        private final Map<String,Runnable> links = new HashMap<String,Runnable>();
+        
+        private Factory()
+        {
+            // No direct public instantiation. Use factory() method instead.
+        }
+        
+        public Factory text( final String text )
+        {
+            if( text == null )
+            {
+                throw new IllegalArgumentException(); 
+            }
+            
+            this.text = text;
+            
+            return this;
+        }
+        
+        public Factory image( final String id,
+                              final ImageData image )
+        {
+            if( id == null )
+            {
+                throw new IllegalArgumentException();
+            }
+            
+            if( image == null )
+            {
+                throw new IllegalArgumentException();
+            }
+            
+            this.images.put( id, image );
+            
+            return this;
+        }
+        
+        public Factory link( final String id,
+                             final Runnable operation )
+        {
+            if( id == null )
+            {
+                throw new IllegalArgumentException();
+            }
+            
+            if( operation == null )
+            {
+                throw new IllegalArgumentException();
+            }
+            
+            this.links.put( id, operation );
+            
+            return this;
+        }
+        
+        public PropertyEditorAssistContribution create()
+        {
+            if( this.text == null )
+            {
+                throw new IllegalStateException();
+            }
+            
+            return new PropertyEditorAssistContribution( this.text, this.images, this.links );
+        }
     }
-    
-    public void setHyperlinkListener( final IHyperlinkListener listener )
-    {
-        this.listener = listener;
-    }
+
 }

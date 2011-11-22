@@ -25,8 +25,6 @@ import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -64,15 +62,16 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
                 final String actionText
                     = ( hasDefaultValue || isBooleanType ? Resources.restoreDefaultValue : Resources.clear );
                 
-                final PropertyEditorAssistContribution contribution = new PropertyEditorAssistContribution();
-                contribution.setText( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( actionText ) + "</a></p>" );
+                final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
                 
-                contribution.setHyperlinkListener
+                contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( actionText ) + "</a></p>" );
+                
+                contribution.link
                 (
-                    new HyperlinkAdapter()
+                    "action",
+                    new Runnable()
                     {
-                        @Override
-                        public void linkActivated( final HyperlinkEvent event )
+                        public void run()
                         {
                             element.write( (ValueProperty) prop, null );
                         }
@@ -80,7 +79,7 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
                 );
                 
                 final PropertyEditorAssistSection section = context.getSection( SECTION_ID_ACTIONS );
-                section.addContribution( contribution );
+                section.addContribution( contribution.create() );
             }
         }
         else if( prop instanceof ListProperty )
@@ -89,15 +88,16 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
 
             if( ! list.isEmpty() )
             {
-                final PropertyEditorAssistContribution contribution = new PropertyEditorAssistContribution();
-                contribution.setText( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( Resources.clear ) + "</a></p>" );
+                final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
                 
-                contribution.setHyperlinkListener
+                contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( Resources.clear ) + "</a></p>" );
+                
+                contribution.link
                 (
-                    new HyperlinkAdapter()
+                    "action",
+                    new Runnable()
                     {
-                        @Override
-                        public void linkActivated( final HyperlinkEvent event )
+                        public void run()
                         {
                             list.clear();
                         }
@@ -105,7 +105,7 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
                 );
                 
                 final PropertyEditorAssistSection section = context.getSection( SECTION_ID_ACTIONS );
-                section.addContribution( contribution );
+                section.addContribution( contribution.create() );
             }
         }
         else if( prop instanceof ElementProperty )
@@ -114,15 +114,16 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
 
             if( handle.element() != null )
             {
-                final PropertyEditorAssistContribution contribution = new PropertyEditorAssistContribution();
-                contribution.setText( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( Resources.clear ) + "</a></p>" );
+                final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
                 
-                contribution.setHyperlinkListener
+                contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( Resources.clear ) + "</a></p>" );
+                
+                contribution.link
                 (
-                    new HyperlinkAdapter()
+                    "action",
+                    new Runnable()
                     {
-                        @Override
-                        public void linkActivated( final HyperlinkEvent event )
+                        public void run()
                         {
                             handle.remove();
                         }
@@ -130,15 +131,12 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
                 );
                 
                 final PropertyEditorAssistSection section = context.getSection( SECTION_ID_ACTIONS );
-                section.addContribution( contribution );
+                section.addContribution( contribution.create() );
             }
         }
     }
     
-    private static final class Resources
-        
-        extends NLS
-    
+    private static final class Resources extends NLS
     {
         public static String restoreDefaultValue;
         public static String clear;

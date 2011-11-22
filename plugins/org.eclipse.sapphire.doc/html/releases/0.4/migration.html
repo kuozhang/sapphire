@@ -49,6 +49,7 @@ to 0.4 release. Only changes from the previous release are covered.</p>
   <li><a href="#PossibleTypes">Possible Types</a></li>
   <li><a href="#ActionHandlerDispose">Action Handler Dispose</a></li>
   <li><a href="#XmlRootBinding">@XmlRootBinding</a></li>
+  <li><a href="#PropertyEditorAssistContribution">PropertyEditorAssistContribution</a></li>
 </ol>
 
 <h2><a name="Documentation">Documentation</a></h2>
@@ -1400,6 +1401,77 @@ previously handled by @XmlRootBinding annotation are now handled by different co
 )
 
 @XmlBinding( path = "e:root" )</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PropertyEditorAssistContribution">PropertyEditorAssistContribution</a></h2>
+
+<p>The PropertyEditorAssistContribution API has changed to remove dependencies on SWT/JFace and to make contribution
+immutable once created.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomContributor extends PropertyEditorAssistContributor
+{
+    @Override
+    public void contribute( PropertyEditorAssistContext context )
+    {</font>
+        PropertyEditorAssistContribution <font color="#888888">contribution = </font>new PropertyEditorAssistContribution<font color="#888888">();
+
+        contribution.</font>setText<font color="#888888">( ... );
+        contribution.</font>setImage<font color="#888888">( "CustomImageId", </font>(Image) <font color="#888888">... );</font>
+        
+        contribution.setHyperlinkListener
+        (
+            new HyperlinkAdapter()
+            {
+                @Override
+                public void linkActivated( HyperlinkEvent event )
+                {
+                    ...
+                }
+            }
+        );
+
+        <font color="#888888">PropertyEditorAssistSection section = context.getSection( ... );
+        section.addContribution( </font>contribution<font color="#888888"> );
+    }
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomContributor extends PropertyEditorAssistContributor
+{
+    @Override
+    public void contribute( PropertyEditorAssistContext context )
+    {</font>
+        PropertyEditorAssistContribution.Factory <font color="#888888">contribution = </font>PropertyEditorAssistContribution.factory<font color="#888888">();
+
+        contribution.</font>text<font color="#888888">( ... );
+        contribution.</font>image<font color="#888888">( "CustomImageId", </font>(ImageData) <font color="#888888">... );</font>
+
+        contribution.link
+        (
+            "CustomActionId",
+            new Runnable()
+            {
+                public void run()
+                {
+                    ...
+                }
+            }
+        );
+
+        <font color="#888888">PropertyEditorAssistSection section = context.getSection( ... );
+        section.addContribution( </font>contribution.create()<font color="#888888"> );
+    }
+}</code></pre>
     </td>
   </tr>
 </table>

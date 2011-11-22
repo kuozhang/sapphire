@@ -15,6 +15,7 @@ package org.eclipse.sapphire.ui.assist.internal;
 import java.util.Map;
 
 import org.eclipse.sapphire.modeling.EditFailedException;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
@@ -22,7 +23,6 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.SapphirePopup;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -112,7 +111,7 @@ public class PropertyEditorAssistDialog
             
             section.setClient( composite );
             
-            for( PropertyEditorAssistContribution contribution : secdef.getContributions() )
+            for( final PropertyEditorAssistContribution contribution : secdef.getContributions() )
             {
                 final SapphireFormText text = new SapphireFormText( composite, SWT.WRAP );
                 
@@ -121,53 +120,53 @@ public class PropertyEditorAssistDialog
                 td.grabHorizontal = true;
                 text.setLayoutData( td );
                 
-                for( Map.Entry<String,Image> image : contribution.getImages().entrySet() )
+                for( Map.Entry<String,ImageData> image : contribution.images().entrySet() )
                 {
                     text.setImage( image.getKey(), image.getValue() );
                 }
                 
                 final StringBuffer buffer = new StringBuffer();
-                buffer.append( "<form>" ); //$NON-NLS-1$
-                buffer.append( contribution.getText() );
-                buffer.append( "</form>" ); //$NON-NLS-1$
+                buffer.append( "<form>" );
+                buffer.append( contribution.text() );
+                buffer.append( "</form>" );
                 text.setText( buffer.toString(), true, false );
                 
-                final IHyperlinkListener listener = contribution.getHyperlinkListener();
-                
-                if( listener != null )
-                {
-                    text.addHyperlinkListener
-                    (
-                        new HyperlinkAdapter()
+                text.addHyperlinkListener
+                (
+                    new HyperlinkAdapter()
+                    {
+                        @Override
+                        public void linkActivated( final HyperlinkEvent event )
                         {
-                            @Override
-                            public void linkActivated( final HyperlinkEvent event )
+                            try
                             {
-                                try
+                                final Runnable operation = contribution.link( (String) event.getHref() );
+                                
+                                if( operation != null )
                                 {
-                                    listener.linkActivated( event );
-                                }
-                                catch( Exception e )
-                                {
-                                    // The EditFailedException happen here only as the result of the user explicitly deciding
-                                    // not not go forward with an action. They serve the purpose of an abort signal so we
-                                    // don't log them. Everything else gets logged.
-                                    
-                                    final EditFailedException editFailedException = EditFailedException.findAsCause( e );
-                                    
-                                    if( editFailedException == null )
-                                    {
-                                        SapphireUiFrameworkPlugin.log( e );
-                                    }
-                                }
-                                finally
-                                {
-                                    close();
+                                    operation.run();
                                 }
                             }
-                         }
-                    );
-                }
+                            catch( Exception e )
+                            {
+                                // The EditFailedException happen here only as the result of the user explicitly deciding
+                                // not not go forward with an action. They serve the purpose of an abort signal so we
+                                // don't log them. Everything else gets logged.
+                                
+                                final EditFailedException editFailedException = EditFailedException.findAsCause( e );
+                                
+                                if( editFailedException == null )
+                                {
+                                    SapphireUiFrameworkPlugin.log( e );
+                                }
+                            }
+                            finally
+                            {
+                                close();
+                            }
+                        }
+                     }
+                );
             }
         }
         

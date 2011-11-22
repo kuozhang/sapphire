@@ -54,28 +54,25 @@ public final class ProblemsAssistContributor extends PropertyEditorAssistContrib
                                     final Status status )
     {
         final Status.Severity valResultSeverity = status.severity();
-        String imageKey = null;
         ImageData image = null;
         
         if( valResultSeverity == Status.Severity.ERROR )
         {
-            imageKey = "error";
             image = ImageData.createFromClassLoader( SapphireImageCache.class, "Error.png" );
         }
         else if( valResultSeverity == Status.Severity.WARNING )
         {
-            imageKey = "error";
             image = ImageData.createFromClassLoader( SapphireImageCache.class, "Warning.png" );
         }
         
-        if( imageKey != null )
+        if( image != null )
         {
-            final PropertyEditorAssistContribution contribution = new PropertyEditorAssistContribution();
-            contribution.setText( "<li style=\"image\" value=\"" + imageKey + "\">" + escapeForXml( status.message() ) + "</li>" );
-            contribution.setImage( imageKey, context.getUiContext().getImageCache().getImage( image ) );
+            final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
+            contribution.text( "<li style=\"image\" value=\"problem\">" + escapeForXml( status.message() ) + "</li>" );
+            contribution.image( "problem", image );
             
             final PropertyEditorAssistSection section = context.getSection( SECTION_ID_PROBLEMS );
-            section.addContribution( contribution );
+            section.addContribution( contribution.create() );
         }
     }
     

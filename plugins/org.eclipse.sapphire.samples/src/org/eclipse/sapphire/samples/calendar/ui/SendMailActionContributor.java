@@ -17,17 +17,12 @@ import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SendMailActionContributor
-
-    extends PropertyEditorAssistContributor
-    
+public final class SendMailActionContributor extends PropertyEditorAssistContributor
 {
     @Override
     public void contribute( final PropertyEditorAssistContext context )
@@ -36,15 +31,16 @@ public final class SendMailActionContributor
         
         if( attendee.getEMail().getText() != null )
         {
-            final PropertyEditorAssistContribution contribution = new PropertyEditorAssistContribution();
-            contribution.setText( "<p><a href=\"action\" nowrap=\"true\">Send mail...</a></p>" );
+            final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
             
-            contribution.setHyperlinkListener
+            contribution.text( "<p><a href=\"action\" nowrap=\"true\">Send mail...</a></p>" );
+            
+            contribution.link
             (
-                new HyperlinkAdapter()
+                "action",
+                new Runnable()
                 {
-                    @Override
-                    public void linkActivated( final HyperlinkEvent event )
+                    public void run()
                     {
                         MessageDialog.openInformation( context.getShell(), "Mail", "Launch e-mail client here..."  );
                     }
@@ -52,7 +48,7 @@ public final class SendMailActionContributor
             );
             
             final PropertyEditorAssistSection section = context.getSection( SECTION_ID_ACTIONS );
-            section.addContribution( contribution );
+            section.addContribution( contribution.create() );
         }
     }
     
