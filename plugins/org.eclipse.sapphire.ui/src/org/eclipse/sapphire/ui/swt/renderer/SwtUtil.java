@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.swt.renderer;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.TableViewer;
@@ -27,6 +28,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -231,4 +233,31 @@ public final class SwtUtil
         );
     }
     
+    public static void changeRadioButtonSelection( final List<Button> group,
+                                                   final Button buttonToSelect )
+    {
+        final Control focusControl = buttonToSelect.getDisplay().getFocusControl();
+        boolean groupHasFocus = false;
+        
+        for( final Button b : group )
+        {
+            if( b != buttonToSelect )
+            {
+                b.setSelection( false );
+            }
+            
+            if( b == focusControl )
+            {
+                groupHasFocus = true;
+            }
+        }
+        
+        buttonToSelect.setSelection( true );
+        
+        if( groupHasFocus )
+        {
+            buttonToSelect.setFocus();
+        }
+    }
+
 }

@@ -20,6 +20,10 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
+import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.changeRadioButtonSelection;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
@@ -50,10 +54,7 @@ import org.eclipse.swt.widgets.Text;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class NamedValuesPropertyEditorRenderer 
-
-    extends ValuePropertyEditorRenderer
-    
+public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditorRenderer
 {
     private Composite rootComposite;
     private boolean updating;
@@ -64,6 +65,7 @@ public final class NamedValuesPropertyEditorRenderer
     private Text arbitraryValueTextField;
     private NamedValueLocal[] namedValues;
     private Button[] namedValuesRadioButtons;
+    private List<Button> radioButtonGroup;
     
     public NamedValuesPropertyEditorRenderer( final SapphireRenderingContext context,
                                               final SapphirePropertyEditor part )
@@ -156,12 +158,15 @@ public final class NamedValuesPropertyEditorRenderer
         radioButtonsComposite.setLayout( glayout( 2, 0, 0, 0, 0 ) );
         decorator.addEditorControl( radioButtonsComposite );
         
+        this.radioButtonGroup = new ArrayList<Button>();
+        
         final String arbitraryValueLabel 
             = property.getLocalizationService().text( namedValuesAnnotation.arbitraryValueLabel(), CapitalizationType.FIRST_WORD_ONLY, true ) + ":";
     
         this.arbitraryValueRadioButton = createRadioButton( radioButtonsComposite, arbitraryValueLabel );
         this.arbitraryValueRadioButton.setLayoutData( gd() );
         this.arbitraryValueRadioButton.addSelectionListener( selectionListener );
+        this.radioButtonGroup.add( this.arbitraryValueRadioButton );
         decorator.addEditorControl( this.arbitraryValueRadioButton );
 
         this.arbitraryValueTextField = new Text( radioButtonsComposite, SWT.BORDER );
@@ -198,6 +203,7 @@ public final class NamedValuesPropertyEditorRenderer
             rb.addSelectionListener( selectionListener );
             decorator.addEditorControl( rb );
             this.namedValuesRadioButtons[ i ] = rb;
+            this.radioButtonGroup.add( rb );
         }
         
         this.rootComposite.setData( "peditor", this );
@@ -283,26 +289,28 @@ public final class NamedValuesPropertyEditorRenderer
             
             if( namedValue != null )
             {
-                this.arbitraryValueRadioButton.setSelection( false );
-                this.arbitraryValueTextField.setEnabled( false );
-                this.arbitraryValueTextField.setText( MiscUtil.EMPTY_STRING );
+                Button buttonToSelect = null;
                 
                 for( int i = 0; i < this.namedValues.length; i++ )
                 {
-                    final boolean selected = ( namedValue == this.namedValues[ i ] );
-                    this.namedValuesRadioButtons[ i ].setSelection( selected );
+                    if( namedValue == this.namedValues[ i ] )
+                    {
+                        buttonToSelect = this.namedValuesRadioButtons[ i ];
+                        break;
+                    }
                 }
+
+                changeRadioButtonSelection( this.radioButtonGroup, buttonToSelect );
+
+                this.arbitraryValueTextField.setEnabled( false );
+                this.arbitraryValueTextField.setText( MiscUtil.EMPTY_STRING );
             }
             else
             {
-                this.arbitraryValueRadioButton.setSelection( true );
+                changeRadioButtonSelection( this.radioButtonGroup, this.arbitraryValueRadioButton );
+                
                 this.arbitraryValueTextField.setEnabled( true );
                 
-                for( int i = 0; i < this.namedValues.length; i++ )
-                {
-                    this.namedValuesRadioButtons[ i ].setSelection( false );
-                }
-
                 final String existingValue = this.arbitraryValueTextField.getText();
                 String valueWithoutDefault = val.getText( false );
                 valueWithoutDefault = ( valueWithoutDefault == null ? "" : valueWithoutDefault );

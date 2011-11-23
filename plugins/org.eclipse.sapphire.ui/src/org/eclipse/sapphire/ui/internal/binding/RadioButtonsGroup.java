@@ -16,6 +16,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.changeRadioButtonSelection;
 import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.reflowOnResize;
 import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.setEnabledOnChildren;
 
@@ -180,28 +181,7 @@ public class RadioButtonsGroup
     {
         this.selection = button;
         
-        final Control focusControl = button.getDisplay().getFocusControl();
-        boolean groupHasFocus = false;
-        
-        for( final Button b : this.buttons )
-        {
-            if( b != button )
-            {
-                b.setSelection( false );
-            }
-            
-            if( b == focusControl )
-            {
-                groupHasFocus = true;
-            }
-        }
-        
-        button.setSelection( true );
-        
-        if( groupHasFocus )
-        {
-            button.setFocus();
-        }
+        changeRadioButtonSelection( this.buttons, button );
     }
 
     public int getSelectionIndex()

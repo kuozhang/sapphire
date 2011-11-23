@@ -82,7 +82,11 @@ public class VirtualChildXmlResource extends XmlResource
                 store.unregisterModelElement( this.lastDomNode, modelElement );
             }
             
-            store.registerModelElement( node, modelElement );
+            if( node != null )
+            {
+                store.registerModelElement( node, modelElement );
+            }
+            
             this.lastDomNode = node;
         }
         
