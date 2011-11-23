@@ -35,5 +35,5 @@ public @interface XmlListBinding
     }
     
     String path() default "";
-    Mapping[] mappings();
+    Mapping[] mappings() default {};
 }

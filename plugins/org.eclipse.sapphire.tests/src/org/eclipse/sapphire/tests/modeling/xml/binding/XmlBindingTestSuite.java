@@ -25,6 +25,14 @@ import org.eclipse.sapphire.tests.modeling.xml.binding.t0007.TestXmlBinding0007;
 import org.eclipse.sapphire.tests.modeling.xml.binding.t0008.TestXmlBinding0008;
 import org.eclipse.sapphire.tests.modeling.xml.binding.t0009.TestXmlBinding0009;
 import org.eclipse.sapphire.tests.modeling.xml.binding.t0010.TestXmlBinding0010;
+import org.eclipse.sapphire.tests.modeling.xml.binding.t0011a.TestXmlBinding0011a;
+import org.eclipse.sapphire.tests.modeling.xml.binding.t0011b.TestXmlBinding0011b;
+import org.eclipse.sapphire.tests.modeling.xml.binding.t0011c.TestXmlBinding0011c;
+import org.eclipse.sapphire.tests.modeling.xml.binding.t0011d.TestXmlBinding0011d;
+import org.eclipse.sapphire.tests.modeling.xml.binding.t0011e.TestXmlBinding0011e;
+import org.eclipse.sapphire.tests.modeling.xml.binding.t0011f.TestXmlBinding0011f;
+import org.eclipse.sapphire.tests.modeling.xml.binding.t0011g.TestXmlBinding0011g;
+import org.eclipse.sapphire.tests.modeling.xml.binding.t0011h.TestXmlBinding0011h;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -56,6 +64,14 @@ public final class XmlBindingTestSuite
         suite.addTest( TestXmlBinding0008.suite() );
         suite.addTest( TestXmlBinding0009.suite() );
         suite.addTest( TestXmlBinding0010.suite() );
+        suite.addTest( TestXmlBinding0011a.suite() );
+        suite.addTest( TestXmlBinding0011b.suite() );
+        suite.addTest( TestXmlBinding0011c.suite() );
+        suite.addTest( TestXmlBinding0011d.suite() );
+        suite.addTest( TestXmlBinding0011e.suite() );
+        suite.addTest( TestXmlBinding0011f.suite() );
+        suite.addTest( TestXmlBinding0011g.suite() );
+        suite.addTest( TestXmlBinding0011h.suite() );
         
         return suite;
     }

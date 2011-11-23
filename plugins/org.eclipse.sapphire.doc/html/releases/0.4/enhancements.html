@@ -45,10 +45,14 @@
     <li><a href="#SplitForm">Split Form</a></li>
     <li><a href="#MultiSectionFormEditorPage">Multi-Section Form Editor Page</a></li>
   </ol>
-  <li><a href="#Miscellaneous">Miscellaneous</a></li>
+  <li><a href="#XML">XML</a></li>
   <ol type="A">
     <li><a href="#XmlDocumentType">@XmlDocumentType Annotation</a></li>
     <li><a href="#XmlSchema">@XmlSchema Annotation</a></li>
+    <li><a href="#ListElementPropertyBindingNoMappings">List and Element Property Binding Without Mappings</a></li>
+  </ol>
+  <li><a href="#Miscellaneous">Miscellaneous</a></li>
+  <ol type="A">
     <li><a href="#Copy">Model Copy Method</a></li>
   </ol>
 </ol>
@@ -408,7 +412,8 @@ purchase order entry fields.</p>
 <p style="margin-left: 20px;"><img src="images/MultiSectionFormEditorPage2.png"/></p>
 
 
-<h2><a name="Miscellaneous"><a name="XmlDocumentType">@XmlDocumentType Annotation</a></a></h2>
+<h2><a name="XML"><a name="XmlDocumentType">@XmlDocumentType Annotation</a></a></h2>
+
 <p>The new @XmlDocumentType annotation can be used when working with DTD-based documents to easily specify systemId or
 publicId/systemId pair. Sapphire XML binding will manage the XML DOCTYPE declaration.</p>
 
@@ -432,6 +437,7 @@ public interface Root extends IModelElement
 
 
 <h2><a name="XmlSchema">@XmlSchema Annotation</a></h2>
+
 <p>The new @XmlSchema annotation can be used when working with XSD-based documents to easily specify schema location for a
 given namespace. Sapphire XML binding will manage the xsi:schemaLocation declaration.</p>
 
@@ -459,7 +465,124 @@ public interface Root extends IModelElement
 <p>To specify locations of multiple schemas, use @XmlSchemas annotation.</p>
 
 
-<h2><a name="Copy">Model Copy Method</a></h2>
+<h2><a name="ListElementPropertyBindingNoMappings">List and Element Property Binding Without Mappings</a></h2>
+
+<p>When declaratively specifying XML binding for a list or an element property, the adopter must tell the framework
+what XML element name to use for a given child model element type. In the past, the only way to do that was via
+the mappings attribute of @XmlListBinding or @XmlElementBinding annotation. These declarations can now be made
+via @XmlBinding annotations placed on the model element type. If the property's mappings do not contain
+a declaration for a given model element type, the framework will look for the type's @XmlBinding annotation.</p>
+
+<p>Which approach you choose to use depends on the requirements. Explicitly specifying mappings is useful when
+the same model element type is used in different properties where it must bind to different XML element names.
+Using @XmlBinding on model element type instead of mappings is less verbose and is particularly useful in cases
+where a custom PossibleTypesService is provided. In those situations, list or element property's author may
+not be able to enumerate possible types at design time, so explicitly specifying mappings is not possible.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two listings are equivalent.</p>
+
+<pre class="source-code"><code><font color="#888888">@GenerateImpl</font>
+@XmlBinding( path = "root" )
+
+<font color="#888888">public interface Root extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( Root.class );
+
+    // *** List ***
+
+    @Type( base = Child.class, possible = { ChildA.class, ChildB.class } )</font>
+    @XmlListBinding( path = "" )
+
+    <font color="#888888">ListProperty PROP_LIST = new ListProperty( TYPE, "List" );
+
+    ModelElementList&lt;Child> getList();
+
+    ...
+}
+
+public interface Child extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( Child.class );
+
+    ...
+}
+
+@GenerateImpl</font>
+@XmlBinding( path = "a" )
+
+<font color="#888888">public interface ChildA extends Child
+{
+    ModelElementType TYPE = new ModelElementType( Child.class );
+
+    ...
+}
+
+@GenerateImpl</font>
+@XmlBinding( path = "b" )
+
+<font color="#888888">public interface ChildB extends Child
+{
+    ModelElementType TYPE = new ModelElementType( Child.class );
+
+    ...
+}</font></code></pre>
+  
+<pre class="source-code"><code><font color="#888888">@GenerateImpl</font>
+@XmlBinding( path = "root" )
+
+<font color="#888888">public interface Root extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( Root.class );
+
+    // *** List ***
+
+    @Type( base = Child.class, possible = { ChildA.class, ChildB.class } )</font>
+
+    @XmlListBinding
+    (
+        mappings = 
+        {
+            @XmlListBinding.Mapping( element = "a", type = ChildA.class ),
+            @XmlListBinding.Mapping( element = "b", type = ChildB.class )
+        }
+    )
+
+    <font color="#888888">ListProperty PROP_LIST = new ListProperty( TYPE, "List" );
+
+    ModelElementList&lt;Child> getList();
+
+    ...
+}
+
+public interface Child extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( Child.class );
+
+    ...
+}
+
+@GenerateImpl
+
+public interface ChildA extends Child
+{
+    ModelElementType TYPE = new ModelElementType( Child.class );
+
+    ...
+}
+
+@GenerateImpl
+
+public interface ChildB extends Child
+{
+    ModelElementType TYPE = new ModelElementType( Child.class );
+
+    ...
+}</font></code></pre>
+
+
+<h2><a name="Miscellaneous"><a name="Copy">Model Copy Method</a></a></h2>
 
 <p>Easily copy content of model elements using the new copy method. Copy a few model elements or the
 entire model. Even copy across different resource stores.</p>

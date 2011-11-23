@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns="http://www.eclipse.org/sapphire/tests/xml/0011e/1" xmlns:ns2="http://www.eclipse.org/sapphire/tests/xml/0011e/2" xmlns:ns3="http://www.eclipse.org/sapphire/tests/xml/0011e/3" xmlns:ns4="http://www.eclipse.org/sapphire/tests/xml/0011e/4" xmlns:ns5="http://www.eclipse.org/sapphire/tests/xml/0011e/5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <x>
+        <ns2:y1>
+            <ns2:z>
+                <ns4:a1>1111</ns4:a1>
+                <ns4:a2>2222</ns4:a2>
+            </ns2:z>
+        </ns2:y1>
+        <ns3:y2>
+            <ns5:b2>3333</ns5:b2>
+        </ns3:y2>
+    </x>
+</root>

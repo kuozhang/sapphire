@@ -16,6 +16,8 @@ import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchemasCache;
 import org.w3c.dom.Document;
@@ -37,6 +39,11 @@ public class StandardRootElementController extends RootElementController
     public StandardRootElementController( final String elementName )
     {
         this( null, null, elementName, Collections.<String,String>emptyMap() );
+    }
+    
+    public StandardRootElementController( final QName elementName )
+    {
+        this( elementName.getNamespaceURI(), elementName.getPrefix(), elementName.getLocalPart(), Collections.<String,String>emptyMap() );
     }
     
     public StandardRootElementController( final String namespace,

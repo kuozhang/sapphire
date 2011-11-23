@@ -20,6 +20,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchemasCache;
 import org.w3c.dom.Attr;
@@ -184,16 +185,41 @@ public final class XmlUtil
         return new QName( namespace, localName );
     }
     
-    public static String createDefaultElementName( final ModelElementType type )
+    public static QName createDefaultElementName( final ModelElementType type )
     {
-        String xmlElementName = type.getSimpleName();
+        QName name = null;
         
-        if( xmlElementName.charAt( 0 ) == 'I' && xmlElementName.length() > 1 && Character.isUpperCase( xmlElementName.charAt( 1 ) ) )
+        final XmlBinding xmlBindingAnnotation = type.getAnnotation( XmlBinding.class );
+        final XmlNamespaceResolver xmlNamespaceResolver = new StandardXmlNamespaceResolver( type );
+        
+        if( xmlBindingAnnotation != null )
         {
-            xmlElementName = xmlElementName.substring( 1 );
+            final XmlPath path = new XmlPath( xmlBindingAnnotation.path(), xmlNamespaceResolver );
+            
+            if( path.getSegmentCount() == 1 )
+            {
+                final XmlPath.Segment firstSegment = path.getSegment( 0 );
+                
+                if( ! firstSegment.isAttribute() && ! firstSegment.isComment() )
+                {
+                    name = firstSegment.getQualifiedName();
+                }
+            }
         }
         
-        return xmlElementName;
+        if( name == null )
+        {
+            String xmlElementName = type.getSimpleName();
+            
+            if( xmlElementName.charAt( 0 ) == 'I' && xmlElementName.length() > 1 && Character.isUpperCase( xmlElementName.charAt( 1 ) ) )
+            {
+                xmlElementName = xmlElementName.substring( 1 );
+            }
+
+            name = createQualifiedName( xmlElementName, xmlNamespaceResolver );
+        }
+        
+        return name;
     }
     
     public static boolean equal( final QName a,

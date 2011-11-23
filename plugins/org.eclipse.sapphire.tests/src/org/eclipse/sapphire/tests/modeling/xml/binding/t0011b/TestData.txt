@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <List>
+        <a1>1111</a1>
+        <a2>2222</a2>
+    </List>
+    <Element>
+        <b2>3333</b2>
+    </Element>
+</root>

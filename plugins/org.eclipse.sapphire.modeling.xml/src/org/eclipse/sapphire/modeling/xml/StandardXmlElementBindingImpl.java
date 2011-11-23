@@ -13,7 +13,6 @@ package org.eclipse.sapphire.modeling.xml;
 
 import static org.eclipse.sapphire.modeling.util.MiscUtil.indexOf;
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.contains;
-import static org.eclipse.sapphire.modeling.xml.XmlUtil.createDefaultElementName;
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.createQualifiedName;
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.equal;
 
@@ -109,8 +108,7 @@ public final class StandardXmlElementBindingImpl extends LayeredElementBindingIm
                     
                     for( int i = 0; i < this.modelElementTypes.length; i++ )
                     {
-                        final String xmlElementName = createDefaultElementName( this.modelElementTypes[ i ] );
-                        this.xmlElementNames[ i ] = createQualifiedName( xmlElementName, xmlNamespaceResolver );
+                        this.xmlElementNames[ i ] = createDefaultElementName( this.modelElementTypes[ i ], xmlNamespaceResolver );
                     }
                 }
             }
@@ -140,13 +138,14 @@ public final class StandardXmlElementBindingImpl extends LayeredElementBindingIm
                             }
 
                             this.xmlElementNames[ i ] = createQualifiedName( mappingElementName, xmlNamespaceResolver );
+                            
+                            break;
                         }
-                        
-                        if( this.xmlElementNames[ i ] == null )
-                        {
-                            final String xmlElementName = createDefaultElementName( type );
-                            this.xmlElementNames[ i ] = createQualifiedName( xmlElementName, xmlNamespaceResolver );
-                        }
+                    }
+                    
+                    if( this.xmlElementNames[ i ] == null )
+                    {
+                        this.xmlElementNames[ i ] = createDefaultElementName( type, xmlNamespaceResolver );
                     }
                 }
             }
@@ -156,6 +155,21 @@ public final class StandardXmlElementBindingImpl extends LayeredElementBindingIm
             final String msg = NLS.bind( Resources.failure, element.getModelElementType().getSimpleName(), property.getName(), e.getMessage() );
             throw new RuntimeException( msg, e );
         }
+    }
+    
+    /**
+     * Creates the XML element name for a type that does not have an explicit mapping. This method can be
+     * overridden to provide custom behavior.
+     * 
+     * @param type the model element type
+     * @param xmlNamespaceResolver the resolver of XML namespace suffixes to declared namespaces
+     * @return the qualified XML element name for the given model element type
+     */
+    
+    protected QName createDefaultElementName( final ModelElementType type, 
+                                              final XmlNamespaceResolver xmlNamespaceResolver )
+    {
+        return XmlUtil.createDefaultElementName( type );
     }
     
     @Override

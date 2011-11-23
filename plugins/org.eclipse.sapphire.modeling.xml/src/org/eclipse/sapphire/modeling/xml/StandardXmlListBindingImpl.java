@@ -136,6 +136,8 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
                         }
 
                         this.xmlElementNames[ i ] = createQualifiedName( mappingElementName, xmlNamespaceResolver );
+                        
+                        break;
                     }
                 }
                 
@@ -159,8 +161,7 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
     protected QName createDefaultElementName( final ModelElementType type, 
                                               final XmlNamespaceResolver xmlNamespaceResolver )
     {
-        final String xmlElementName = XmlUtil.createDefaultElementName( type );
-        return createQualifiedName( xmlElementName, xmlNamespaceResolver );
+        return XmlUtil.createDefaultElementName( type );
     }
 
     @Override

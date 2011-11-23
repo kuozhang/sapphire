@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestModelRoot>
+    <List>
+        <TestModelElementA1>1111</TestModelElementA1>
+        <TestModelElementA2>2222</TestModelElementA2>
+    </List>
+    <Element>
+        <TestModelElementB2>3333</TestModelElementB2>
+    </Element>
+</TestModelRoot>
