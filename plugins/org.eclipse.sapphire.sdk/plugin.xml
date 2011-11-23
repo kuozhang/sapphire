@@ -64,7 +64,7 @@
     <include file="templates/modeling/templates.xml" translations="templates/modeling/templates.properties" /> 
   </extension>
   
-  <extension point="org.eclipse.ui.newWizards">
+  <!-- <extension point="org.eclipse.ui.newWizards">
 	<category
       id="Sapphire"
       name="%WizardCategory">
@@ -77,6 +77,6 @@
       icon="org/eclipse/sapphire/sdk/SapphireCreateFileWizard.png">
       <description>%CreateExtensionManifestWizard.Description</description>
     </wizard>
-  </extension>
+  </extension> -->
 
 </plugin>
