@@ -710,7 +710,6 @@ public class SapphireDiagramEditor extends DiagramEditor
 					refresh();
 				}				
 			});
-			markEditorDirty();
 		}		
 	}
 	
