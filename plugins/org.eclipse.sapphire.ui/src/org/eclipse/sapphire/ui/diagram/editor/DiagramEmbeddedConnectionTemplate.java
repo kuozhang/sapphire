@@ -216,7 +216,11 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
                 endpointVal = IdUtil.computeNodeId(targetNode);
             }
             setModelProperty(newEndpoint, endpointProperty, endpointVal);     
-            connPart = createNewConnectionPart(newEndpoint, srcNodeModel);
+            
+            connPart = getConnectionPart(srcNodeModel, newEndpoint);
+            if (connPart == null) {
+            	connPart = createNewConnectionPart(newEndpoint, null);
+            }
         }
         
         return connPart;

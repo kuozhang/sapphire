@@ -386,7 +386,11 @@ public class DiagramConnectionTemplate extends SapphirePart
                 IModelElement newElement = list.addNewElement();
                 setModelProperty(newElement, ((ModelPath.PropertySegment)this.endpoint1Path.head()).getPropertyName(), endpoint1Value);
                 setModelProperty(newElement, ((ModelPath.PropertySegment)this.endpoint2Path.head()).getPropertyName(), endpoint2Value);
-                DiagramConnectionPart newConn = createNewConnectionPart(newElement, null);
+
+                DiagramConnectionPart newConn = getConnectionPart(srcNode.getModelElement(), newElement);
+                if (newConn == null) {
+                	newConn = createNewConnectionPart(newElement, null);
+                }
                 return newConn;                
             }
             else
@@ -427,7 +431,10 @@ public class DiagramConnectionTemplate extends SapphirePart
                 ModelElementList<?> connList = srcElement.read((ListProperty)connProp);
                 IModelElement newElement = connList.addNewElement();
                 setModelProperty(newElement, ((ModelPath.PropertySegment)this.endpoint2Path.head()).getPropertyName(), endpoint2Value);
-                DiagramConnectionPart newConn = createNewConnectionPart(newElement, null);
+                DiagramConnectionPart newConn = getConnectionPart(srcNode.getModelElement(), newElement);
+                if (newConn == null) {
+                	newConn = createNewConnectionPart(newElement, null);
+                }                
                 return newConn;
             }
         } 
