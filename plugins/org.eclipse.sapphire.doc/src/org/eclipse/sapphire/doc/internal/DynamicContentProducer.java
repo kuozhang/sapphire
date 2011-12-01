@@ -61,14 +61,14 @@ public class DynamicContentProducer implements IHelpContentProducer
 
         if( pluginID.equals( "org.eclipse.sapphire.doc" ) )
         {
-            if( href.equals( "html/extensions/existing.html" ) )
+            if( href.startsWith( "html/extensions/existing.html" ) )
             {
                 final ExtensionSummaryExportOp op = ExtensionSummaryExportOp.TYPE.instantiate();
                 op.setDocumentBodyTitle( "Sapphire Extensions" );
 
                 content = op.execute( getExtensions(), null );
             }
-            else if( href.equals( "html/el/index.html" ) )
+            else if( href.startsWith( "html/el/index.html" ) )
             {
                 final ExtensionSummaryExportOp op = ExtensionSummaryExportOp.TYPE.instantiate();
                 op.setCreateFinishedDocument( false );
@@ -130,7 +130,7 @@ public class DynamicContentProducer implements IHelpContentProducer
                 content = loadResource( "html/services/index.html" );
                 content = content.replace( "##facts-servicess##", functions );
             }
-            else if( href.equals( "html/actions/index.html" ) )
+            else if( href.startsWith( "html/actions/index.html" ) )
             {
                 content = loadResource( "html/actions/index.html" );
 
