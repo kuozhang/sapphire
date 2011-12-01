@@ -33,15 +33,23 @@
      </topic>
   </topic>
   <topic href="html/services/index.html" label="Services">
-     <topic href="html/services/index.html#FactsAggregationService" label="FactsAggregationService">
-     </topic>
-     <topic href="html/services/index.html#FactsService" label="FactsService">
+     <topic href="html/services/index.html#ContentProposalService" label="ContentProposalService">
      </topic>
      <topic href="html/services/index.html#DependenciesAggregationService" label="DependenciesAggregationService">
      </topic>
      <topic href="html/services/index.html#DependenciesService" label="DependenciesService">
      </topic>
+     <topic href="html/services/index.html#FactsAggregationService" label="FactsAggregationService">
+     </topic>
+     <topic href="html/services/index.html#FactsService" label="FactsService">
+     </topic>
      <topic href="html/services/index.html#FileExtensionsService" label="FileExtensionsService">
+     </topic>
+     <topic href="html/services/index.html#InitialValueService" label="InitialValueService">
+     </topic>
+     <topic href="html/services/index.html#JavaTypeConstraintService" label="JavaTypeConstraintService">
+     </topic>
+     <topic href="html/services/index.html#PossibleTypesService" label="PossibleTypesService">
      </topic>
   </topic>
   <topic href="html/releases/index.html" label="Releases">
