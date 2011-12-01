@@ -22,14 +22,21 @@ public class DiagramConnectionModel extends DiagramModelBase {
 	
 	public final static String CONNECTION_UPDATES = "CONNECTION_UPDATES";
 	public final static String CONNECTION_BEND_POINTS = "CONNECTION_BEND_POINTS";
+	public final static String CONNECTION_START_EDITING = "CONNECTION_START_EDITING";
 
+	private DiagramModel parent;
 	private DiagramConnectionPart part;
 	
 	private DiagramNodeModel sourceNode;
 	private DiagramNodeModel targetNode;
 
-	public DiagramConnectionModel(DiagramConnectionPart part) {
+	public DiagramConnectionModel(DiagramModel parent, DiagramConnectionPart part) {
+		this.parent = parent;
 		this.part = part;
+	}
+	
+	public DiagramModel getDiagramModel() {
+		return parent;
 	}
 	
 	public SapphirePart getSapphirePart() {
@@ -62,5 +69,9 @@ public class DiagramConnectionModel extends DiagramModelBase {
 	
 	public void handleUpdateBendPoints() {
 		firePropertyChange(CONNECTION_BEND_POINTS, null, getModelPart());
+	}
+
+	public void handleStartEditing() {
+		firePropertyChange(CONNECTION_START_EDITING, null, null);
 	}
 }

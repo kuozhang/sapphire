@@ -41,6 +41,8 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramConnectionEndp
  */
 
 public class DiagramConnectionEditPart extends AbstractConnectionEditPart implements PropertyChangeListener {
+	
+	private List<DiagramConnectionLabelModel> modelChildren;
 
 	@Override
 	protected void createEditPolicies() {
@@ -105,10 +107,24 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart implem
 
 	@Override
 	protected List<DiagramConnectionLabelModel> getModelChildren() {
-		// add the label
-		List<DiagramConnectionLabelModel> list = new ArrayList<DiagramConnectionLabelModel>(1);
-		list.add(new DiagramConnectionLabelModel(getCastedModel()));
-		return list;
+		if (modelChildren == null) {
+			// add the label
+			modelChildren = new ArrayList<DiagramConnectionLabelModel>(1);
+			modelChildren.add(new DiagramConnectionLabelModel(getCastedModel()));
+		}
+		return modelChildren;
+	}
+	
+	private void updateLabel() {
+		for (DiagramConnectionLabelModel child : getModelChildren()) {
+			child.handleUpdateLabel();
+		}
+	}
+	
+	private void startEditing() {
+		for (DiagramConnectionLabelModel child : getModelChildren()) {
+			child.handleStartEditing();
+		}
 	}
 
 	
@@ -135,9 +151,11 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart implem
 	public void propertyChange(PropertyChangeEvent evt) {
 		String prop = evt.getPropertyName();
 		if (DiagramConnectionModel.CONNECTION_UPDATES.equals(prop)) {
-			refreshChildren();
+			updateLabel();
 		} else if (DiagramConnectionModel.CONNECTION_BEND_POINTS.equals(prop)) {
 			refreshVisuals();
+		} else if (DiagramConnectionModel.CONNECTION_START_EDITING.equals(prop)) {
+			startEditing();
 		}
 	}
 	

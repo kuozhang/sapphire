@@ -16,7 +16,6 @@ import org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.CreateConnectionCommand;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 

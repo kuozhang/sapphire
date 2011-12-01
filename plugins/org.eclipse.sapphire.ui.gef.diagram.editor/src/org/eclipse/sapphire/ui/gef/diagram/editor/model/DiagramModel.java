@@ -81,9 +81,24 @@ public class DiagramModel extends DiagramModelBase {
 	}
 	
 	public void handleAddNode(DiagramNodePart nodePart) {
-		DiagramNodeModel nodeModel = new DiagramNodeModel(nodePart); 
+		DiagramNodeModel nodeModel = new DiagramNodeModel(this, nodePart); 
 		nodes.add(nodeModel);
 		firePropertyChange(NODE_ADDED, null, nodeModel);
+		
+	}
+	
+	public void handleDirectEditing(DiagramNodePart nodePart) {
+		DiagramNodeModel nodeModel = getDiagramNodeModel(nodePart);
+		if (nodeModel != null) {
+			nodeModel.handleStartEditing();
+		}
+	}
+
+	public void handleDirectEditing(DiagramConnectionPart connectionPart) {
+		DiagramConnectionModel connectionModel = getDiagramConnectionModel(connectionPart);
+		if (connectionModel != null) {
+			connectionModel.handleStartEditing();
+		}
 	}
 
 	public void handleRemoveNode(DiagramNodePart nodePart) {
@@ -99,7 +114,7 @@ public class DiagramModel extends DiagramModelBase {
 			if (getModelPart().isNodeTemplateVisible(nodeTemplate)) {
 				for (DiagramNodePart nodePart : nodeTemplate.getDiagramNodes()) {
 					System.out.println(nodePart.getLabel());
-					nodes.add(new DiagramNodeModel(nodePart));
+					nodes.add(new DiagramNodeModel(this, nodePart));
 				}
 			}
 		}
@@ -133,14 +148,18 @@ public class DiagramModel extends DiagramModelBase {
 	}
 	
 	public void addConnection(DiagramConnectionPart connPart) {
-		DiagramConnectionModel connectionModel = new DiagramConnectionModel(connPart);
-		connections.add(connectionModel);
+		if (getDiagramConnectionModel(connPart) != null) {
+			return;
+		}
 		
 		IModelElement endpoint1 = connPart.getEndpoint1();
 		IModelElement endpoint2 = connPart.getEndpoint2();
 		DiagramNodePart nodePart1 = this.part.getDiagramNodePart(endpoint1);
 		DiagramNodePart nodePart2 = this.part.getDiagramNodePart(endpoint2);
 		if (nodePart1 != null && nodePart2 != null) {
+			DiagramConnectionModel connectionModel = new DiagramConnectionModel(this, connPart);
+			connections.add(connectionModel);
+
 			DiagramNodeModel sourceNode = getDiagramNodeModel(nodePart1);
 			DiagramNodeModel targetNode = getDiagramNodeModel(nodePart2);
 			if (sourceNode != null && targetNode != null) {

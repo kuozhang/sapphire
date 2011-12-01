@@ -11,18 +11,27 @@
 
 package org.eclipse.sapphire.ui.gef.diagram.editor.model;
 
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class DiagramConnectionLabelModel {
+public class DiagramConnectionLabelModel extends DiagramModelBase {
 	
-	private DiagramConnectionModel connectionModel;
+    public final static String CONNECTION_LABEL = "CONNECTION_LABEL";
+    public final static String CONNECTION_START_EDITING = "CONNECTION_START_EDITING";
+
+    private DiagramConnectionModel connectionModel;
 
 	public DiagramConnectionLabelModel(DiagramConnectionModel connectionModel) {
 		this.connectionModel = connectionModel;
+	}
+	
+	@Override
+	public SapphirePart getSapphirePart() {
+		return getModelPart();
 	}
 	
 	public DiagramConnectionModel getConnectionModel() {
@@ -32,5 +41,13 @@ public class DiagramConnectionLabelModel {
 	public DiagramConnectionPart getModelPart() {
 		return connectionModel.getModelPart();
 	}
-	
+
+	public void handleUpdateLabel() {
+		firePropertyChange(CONNECTION_LABEL, null, getModelPart().getLabel());
+	}
+
+	public void handleStartEditing() {
+		firePropertyChange(CONNECTION_START_EDITING, null, null);
+	}
+
 }

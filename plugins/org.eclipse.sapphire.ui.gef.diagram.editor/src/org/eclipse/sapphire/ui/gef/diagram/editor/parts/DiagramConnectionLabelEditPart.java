@@ -11,6 +11,9 @@
 
 package org.eclipse.sapphire.ui.gef.diagram.editor.parts;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolylineConnection;
@@ -28,7 +31,7 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.policies.ConnectionLabelDirect
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart {
+public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart implements PropertyChangeListener {
 	
     private NodeDirectEditManager manager;
 
@@ -46,6 +49,26 @@ public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart {
 		return ((DiagramConnectionLabelModel)getModel()).getModelPart();
 	}
 	
+	private DiagramConnectionLabelModel getCastedModel() {
+		return (DiagramConnectionLabelModel)getModel();
+	}
+
+	@Override
+	public void activate() {
+		if (!isActive()) {
+			super.activate();
+			getCastedModel().addPropertyChangeListener(this);
+		}
+	}
+
+	@Override
+	public void deactivate() {
+		if (isActive()) {
+			super.deactivate();
+			getCastedModel().removePropertyChangeListener(this);
+		}
+	}
+
 	private void performDirectEdit() {
 		if (manager == null) {
 			Label label = (Label)getFigure();
@@ -58,17 +81,30 @@ public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart {
 		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT)
 			performDirectEdit();
 	}
+	
+	private void refreshLabel() {
+		((Label)getFigure()).setText(getDiagramConnectionPart().getLabel());
+	}
 
 	@Override
 	public void refresh() {
 		super.refresh();
-		
-		((Label)getFigure()).setText(getDiagramConnectionPart().getLabel());
+
+		refreshLabel();
 
 		PolylineConnection parent = (PolylineConnection)getFigure().getParent(); 
 		Point position = getDiagramConnectionPart().getLabelPosition();
 		SapphireMidpointLocator locator = position == null ? new SapphireMidpointLocator(parent) : new SapphireMidpointLocator(parent, position.getX(), position.getY());
 		parent.getLayoutManager().setConstraint(getFigure(), locator);
+	}
+
+	public void propertyChange(PropertyChangeEvent evt) {
+		String prop = evt.getPropertyName();
+		if (DiagramConnectionLabelModel.CONNECTION_LABEL.equals(prop)) {
+			refreshLabel();
+		} else if (DiagramConnectionLabelModel.CONNECTION_START_EDITING.equals(prop)) {
+			performDirectEdit();
+		}
 	}
 
 }

@@ -149,7 +149,7 @@ public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart
 		protected Command getCreateCommand(CreateRequest request) {
 			ModelElementType type = (ModelElementType)request.getNewObjectType();
 			DiagramNodeTemplate template = getDiagramNodeTemplate(type);
-			return new CreateNodeCommand(template, request.getLocation());
+			return new CreateNodeCommand(getCastedModel(), template, request.getLocation());
 		}
 
 	}

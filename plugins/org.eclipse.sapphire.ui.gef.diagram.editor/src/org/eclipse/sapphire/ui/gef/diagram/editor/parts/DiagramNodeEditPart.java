@@ -152,6 +152,8 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 			refreshVisuals();
 		} else if (DiagramNodeModel.NODE_UPDATES.equals(prop)) {
 			refreshVisuals();
+		} else if (DiagramNodeModel.NODE_START_EDITING.equals(prop)) {
+			performDirectEdit();
 		}
 	}
 	

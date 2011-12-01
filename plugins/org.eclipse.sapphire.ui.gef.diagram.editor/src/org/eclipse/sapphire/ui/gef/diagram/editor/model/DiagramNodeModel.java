@@ -31,13 +31,20 @@ public class DiagramNodeModel extends DiagramModelBase {
 	public final static String TARGET_CONNECTIONS = "TARGET_CONNECTIONS";
 	public final static String NODE_BOUNDS = "NODE_BOUNDS";
 	public final static String NODE_UPDATES = "NODE_UPDATES";
+	public final static String NODE_START_EDITING = "NODE_START_EDITING";
 	
+	private DiagramModel parent;
     private DiagramNodePart part;
 	private List<DiagramConnectionModel> sourceConnection = new ArrayList<DiagramConnectionModel>();
 	private List<DiagramConnectionModel> targetConnection = new ArrayList<DiagramConnectionModel>();
 
-	public DiagramNodeModel(DiagramNodePart part) {
+	public DiagramNodeModel(DiagramModel parent, DiagramNodePart part) {
+		this.parent = parent;
 		this.part = part;
+	}
+	
+	public DiagramModel getDiagramModel() {
+		return parent;
 	}
 
 	public SapphirePart getSapphirePart() {
@@ -97,6 +104,10 @@ public class DiagramNodeModel extends DiagramModelBase {
 	public void removeTargetConnection(DiagramConnectionModel connection) {
 		targetConnection.remove(connection);
 		firePropertyChange(TARGET_CONNECTIONS, null, connection);
+	}
+
+	public void handleStartEditing() {
+		firePropertyChange(NODE_START_EDITING, null, null);
 	}
 
 }
