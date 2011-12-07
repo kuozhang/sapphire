@@ -40,10 +40,14 @@ public class DiagramModel extends DiagramModelBase {
 	private List<DiagramNodeModel> nodes = new ArrayList<DiagramNodeModel>();
 	private List<DiagramConnectionModel> connections = new ArrayList<DiagramConnectionModel>();
 	
+	private DiagramImageCache imageCache;
+
 	public DiagramModel(SapphireDiagramEditorPagePart part) {
 		this.part = part;
 		contructNodes();
 		constructConnections();
+		
+		imageCache = new DiagramImageCache(part);
 	}
 	
 	public SapphirePart getSapphirePart() {
@@ -54,6 +58,10 @@ public class DiagramModel extends DiagramModelBase {
 		return this.part;
 	}
 	
+	public DiagramImageCache getImageCache() {
+		return imageCache;
+	}
+
 	public List<DiagramNodeModel> getNodes() {
 		return nodes;
 	}

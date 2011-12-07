@@ -49,7 +49,8 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 
     @Override
 	protected IFigure createFigure() {
-		return new NodeFigure();
+    	String imageId = getCastedModel().getModelPart().getImageId();
+		return new NodeFigure(imageId != null);
 	}
 
 	@Override
@@ -110,7 +111,14 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 	@Override
 	protected void refreshVisuals() {
 		getNodeFigure().setText(getCastedModel().getLabel());
+		getNodeFigure().setImage(getCastedModel().getImage());
+		
 		Bounds nb = getCastedModel().getNodeBounds();
+		Bounds labelBounds = getCastedModel().getLabelBounds(nb);
+		Bounds imageBounds = getCastedModel().getImageBounds(nb);
+		
+		getNodeFigure().refreshConstraints(labelBounds, imageBounds);
+		
 		Rectangle bounds = new Rectangle(nb.getX(), nb.getY(), nb.getWidth(), nb.getHeight());
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this,	getFigure(), bounds);
 	}

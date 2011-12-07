@@ -12,16 +12,17 @@
 package org.eclipse.sapphire.ui.gef.diagram.editor.figures;
 
 import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.RoundedRectangle;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.gef.diagram.editor.parts.SapphireDiagramEditorUtil;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -37,14 +38,17 @@ public class NodeFigure extends RoundedRectangle {
 
     private static final org.eclipse.sapphire.ui.Color SELECTED_BACKGROUND = new org.eclipse.sapphire.ui.Color(0x9A, 0xBF, 0xE0);
     
-    private static final int DEFAULT_TEXT_HEIGHT = 20;
+    private boolean hasImage;
 
     private Label labelFigure;
+    private Label iconFigure;
 
     private boolean selected;
 	private boolean hasFocus;
 
-	public NodeFigure() {
+	public NodeFigure(boolean hasImage) {
+		this.hasImage = hasImage;
+		
 		this.setForegroundColor(SapphireDiagramEditorUtil.getColor(DEFAULT_NODE_FOREGROUND));
 		setLayoutManager(new XYLayout());
 
@@ -52,15 +56,20 @@ public class NodeFigure extends RoundedRectangle {
 		labelFigure.setForegroundColor(SapphireDiagramEditorUtil.getColor(DEFAULT_TEXT_FOREGROUND));
 		this.add(labelFigure);
 
-		this.addFigureListener(new FigureListener() {
-
-			public void figureMoved(IFigure source) {
-
-				Rectangle bounds = getBounds();
-				Rectangle labelFigureConstraint = new Rectangle(0, 5, bounds.width, DEFAULT_TEXT_HEIGHT);
-				getLayoutManager().setConstraint(labelFigure, labelFigureConstraint);
-			}
-		});
+		if (hasImage) {
+			iconFigure = new Label();
+			iconFigure.setBackgroundColor(ColorConstants.green);
+			this.add(iconFigure);
+		}
+	}
+	
+	public void refreshConstraints(Bounds labelBounds, Bounds iconBounds) {
+		Rectangle labelFigureConstraint = new Rectangle(labelBounds.getX(), labelBounds.getY(), labelBounds.getWidth(), labelBounds.getHeight());
+		getLayoutManager().setConstraint(labelFigure, labelFigureConstraint);
+		if (iconBounds != null) {
+			Rectangle iconFigureConstraint = new Rectangle(iconBounds.getX(), iconBounds.getY(), iconBounds.getWidth(), iconBounds.getHeight());
+			getLayoutManager().setConstraint(iconFigure, iconFigureConstraint);
+		}
 	}
 	
 	public Label getLabelFigure() {
@@ -71,12 +80,18 @@ public class NodeFigure extends RoundedRectangle {
 		labelFigure.setText(text);
 	}
 	
-	public String getText() {
-		return labelFigure.getText();
+	public void setImage(Image image) {
+		if (iconFigure != null && image != null) {
+			iconFigure.setIcon(image);
+		}
 	}
 	
 	@Override
 	protected void fillShape(Graphics graphics) {
+		if (hasImage) {
+			return;
+		}
+		
 		final Dimension cornerDimension = new Dimension(1, 1); //this.getCornerDimensions();
 		final Rectangle fillRectangle = getBounds().getShrinked(cornerDimension.width, cornerDimension.height);
 		
@@ -110,14 +125,17 @@ public class NodeFigure extends RoundedRectangle {
 		r.width -= inset1 + inset2;
 		r.height -= inset1 + inset2;
 
-		graphics.drawRoundRectangle(r,
-				Math.max(0, getCornerDimensions().width - (int) lineInset),
-				Math.max(0, getCornerDimensions().height - (int) lineInset));
+		if (hasImage == false) {
+			graphics.drawRoundRectangle(r,
+					Math.max(0, getCornerDimensions().width - (int) lineInset),
+					Math.max(0, getCornerDimensions().height - (int) lineInset));
+		}
 		
 		if (hasFocus) {
 			final Color foregroundSave = graphics.getForegroundColor();
 			graphics.setForegroundColor(ColorConstants.orange);
 			Rectangle expanded = r.getExpanded(1, 1);
+			graphics.setLineStyle(SWT.LINE_DASH);
 			graphics.drawRoundRectangle(expanded,
 					Math.max(0, getCornerDimensions().width - (int) lineInset),
 					Math.max(0, getCornerDimensions().height - (int) lineInset));
