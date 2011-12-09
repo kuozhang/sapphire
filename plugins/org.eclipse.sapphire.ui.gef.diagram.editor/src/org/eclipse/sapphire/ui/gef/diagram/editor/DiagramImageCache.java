@@ -9,7 +9,7 @@
  *    Ling Hao - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.gef.diagram.editor.model;
+package org.eclipse.sapphire.ui.gef.diagram.editor;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -33,7 +33,18 @@ import org.osgi.framework.Bundle;
 
 public class DiagramImageCache {
 
-	private final Map<String, ImageDescriptor> idToImageDescriptor = new HashMap<String, ImageDescriptor>();
+    // The prefix for all identifiers of this image provider
+	protected static final String PREFIX = "org.eclipse.sapphire.ui.gef.diagram.editor";
+	
+	// The common image identifiers
+    public static final String IMG_SHOW_IN_SOURCE = PREFIX + "showInSource"; //$NON-NLS-1$
+    public static final String IMG_CONNECTION = PREFIX + "connection"; //$NON-NLS-1$
+    public static final String IMG_ERROR = PREFIX + "error"; //$NON-NLS-1$
+    public static final String IMG_ERROR_TSK = PREFIX + "errorTsk"; //$NON-NLS-1$
+    public static final String IMG_WARNING = PREFIX + "warning"; //$NON-NLS-1$
+    public static final String IMG_WARN_TSK = PREFIX + "warnTsk"; //$NON-NLS-1$
+
+    private final Map<String, ImageDescriptor> idToImageDescriptor = new HashMap<String, ImageDescriptor>();
 
 	public DiagramImageCache(SapphireDiagramEditorPagePart diagramPart) {
 		// Add node images
@@ -64,14 +75,22 @@ public class DiagramImageCache {
 				registerImage(image);
 			}
 		}
+		
+		// add common images
+        addImageFilePath(IMG_SHOW_IN_SOURCE, "images/show-in-source.png"); //$NON-NLS-1$
+        addImageFilePath(IMG_CONNECTION, "images/connection.png"); //$NON-NLS-1$
+        addImageFilePath(IMG_ERROR, "images/error.gif"); //$NON-NLS-1$
+        addImageFilePath(IMG_ERROR_TSK, "images/error_tsk.gif"); //$NON-NLS-1$
+        addImageFilePath(IMG_WARNING, "images/warning.gif"); //$NON-NLS-1$
+        addImageFilePath(IMG_WARN_TSK, "images/warn_tsk.gif"); //$NON-NLS-1$
 	}
-
+	
 	private void registerImage(IDiagramImageChoice imageChoice) {
 		ISapphireUiDef uiDef = imageChoice.nearest(ISapphireUiDef.class);
 		String imageId = imageChoice.getImageId().getContent();
 		String imagePath = imageChoice.getImagePath().getContent();
 
-		// TODO should be relative to sdef and not bundle?
+		// TODO should be relative to sdef?
 		final Bundle bundle = uiDef.adapt(Bundle.class);
 
 		if (imageId != null && imagePath != null) {
@@ -82,6 +101,12 @@ public class DiagramImageCache {
 	        }
 		}
 	}
+
+	private void addImageFilePath(final String imageId, final String imagePath) {
+		ImageDescriptor descriptor = ImageDescriptor.createFromFile(SapphireDiagramEditor.class, imagePath);
+		idToImageDescriptor.put(imageId, descriptor);
+	}
+
 
 	public ImageDescriptor getImageDescriptor(final String imageId) {
 		return idToImageDescriptor.get(imageId);

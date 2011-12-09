@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.gef.diagram.editor.parts;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.ChopboxAnchor;
@@ -46,6 +47,8 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
     
     private ConnectionAnchor sourceAnchor;
     private ConnectionAnchor targetAnchor;
+    
+    private List<IFigure> decorators = new ArrayList<IFigure>();
 
     @Override
 	protected IFigure createFigure() {
@@ -107,6 +110,19 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 	protected NodeFigure getNodeFigure() {
 		return (NodeFigure)getFigure();
 	}
+	
+	private void addDecorators(Bounds labelBounds, Bounds imageBounds) {
+		NodeFigure nodeFigure = getNodeFigure();
+		
+		// first remove all decorators
+		for (IFigure decorator : decorators) {
+			nodeFigure.remove(decorator);
+		}
+		decorators.clear();
+
+		NodeDecorator util = new NodeDecorator(getCastedModel(), labelBounds, imageBounds);
+		decorators.addAll(util.decorate(getNodeFigure()));
+	}
 
 	@Override
 	protected void refreshVisuals() {
@@ -118,6 +134,8 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 		Bounds imageBounds = getCastedModel().getImageBounds(nb);
 		
 		getNodeFigure().refreshConstraints(labelBounds, imageBounds);
+		
+		addDecorators(labelBounds, imageBounds);
 		
 		Rectangle bounds = new Rectangle(nb.getX(), nb.getY(), nb.getWidth(), nb.getHeight());
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this,	getFigure(), bounds);
