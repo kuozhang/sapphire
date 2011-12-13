@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - Customized grid layer, grid state save and restore.
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.gef.diagram.editor;
@@ -20,6 +21,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.DefaultEditDomain;
@@ -28,6 +30,7 @@ import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.dnd.TemplateTransferDropTargetListener;
+import org.eclipse.gef.editparts.GridLayer;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
@@ -181,6 +184,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			{
 				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, new Boolean(diagramPart.isGridVisible()));
 				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, new Boolean(diagramPart.isGridVisible()));
+				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_SPACING, 
+						new Dimension(diagramPart.getGridUnit(), diagramPart.getVerticalGridUnit()));
 				markEditorDirty();
 			}
 			
@@ -390,6 +395,16 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		diagramGeometry = new DiagramGeometryWrapper(layoutFile, getPart());
 		System.out.println("setInput diagramFile: " + diagramFile);
 		System.out.println("setInput layoutFile: " + layoutFile);
+		
+		if (this.diagramGeometry.isGridPropertySet())
+		{
+			this.diagramPart.syncGridStateWithDiagramLayout(this.diagramGeometry.isGridVisible());
+		}
+		if (this.diagramGeometry.isShowGuidesPropertySet())
+		{
+			this.diagramPart.syncGuideStateWithDiagramLayout(this.diagramGeometry.isShowGuides());
+		}
+		
 	}
 
 	@Override
@@ -403,7 +418,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 				setMouseLocation(e.x, e.y);
 			}
 		});
-
+				
 		// set the contents of this editor
 		diagramModel = new DiagramModel(diagramPart);
 		viewer.setContents(diagramModel); 
@@ -436,14 +451,50 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	protected void configureGraphicalViewer() {
 		super.configureGraphicalViewer();
 
-		GraphicalViewer viewer = getGraphicalViewer();
+		GraphicalViewer viewer = getGraphicalViewer();		
+		
 		viewer.setEditPartFactory(new SapphireDiagramEditorEditPartFactory());
-		viewer.setRootEditPart(new ScalableFreeformRootEditPart());
+		
+		viewer.setRootEditPart(new ScalableFreeformRootEditPart()
+		{
+			@Override
+			protected GridLayer createGridLayer() 
+			{
+				return new SapphireDiagramGridLayer(diagramPart);
+			}			
+		});
+		
 		viewer.setKeyHandler(new GraphicalViewerKeyHandler(viewer));
 
 		// configure the context menu provider
 		ContextMenuProvider cmProvider = new SapphireDiagramEditorContextMenuProvider(this);
 		viewer.setContextMenu(cmProvider);
+		
+		// Configure grid and guide properties
+		boolean isGridVisibleInViewer = false;
+		if (viewer.getProperty(SnapToGrid.PROPERTY_GRID_VISIBLE) != null)
+		{
+			isGridVisibleInViewer = (Boolean) viewer.getProperty(SnapToGrid.PROPERTY_GRID_VISIBLE);
+		}
+		if (this.diagramPart.isGridVisible() != isGridVisibleInViewer)
+		{
+			viewer.setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, this.diagramPart.isGridVisible());
+			viewer.setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, this.diagramPart.isGridVisible());
+			viewer.setProperty(SnapToGrid.PROPERTY_GRID_SPACING, 
+					new Dimension(this.diagramPart.getGridUnit(), this.diagramPart.getVerticalGridUnit()));
+		}
+		
+		boolean isShowGuidesInViewer = false;
+		if (viewer.getProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED) != null)
+		{
+			isShowGuidesInViewer = (Boolean)viewer.getProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED);
+		}
+		if (this.diagramPart.isShowGuides() != isShowGuidesInViewer)
+		{
+			viewer.setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, this.diagramPart.isShowGuides());
+		}
+		
+		
 	}
 
 	public SapphireDiagramEditorPagePart getPart() {

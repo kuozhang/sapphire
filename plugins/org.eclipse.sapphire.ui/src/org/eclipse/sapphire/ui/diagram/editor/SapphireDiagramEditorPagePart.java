@@ -62,6 +62,8 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     private ImplicitConnectionTemplateListener implicitConnTemplateListener;
     private boolean showGrid;
     private boolean showGuides;
+    private int gridUnit;
+    private int verticalGridUnit;
         
     @Override
     protected void init()
@@ -81,6 +83,8 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         
         this.showGrid = this.diagramPageDef.getGridDefinition().isVisible().getContent();
         this.showGuides = this.diagramPageDef.getGuidesDefinition().isVisible().getContent();
+        this.gridUnit = this.diagramPageDef.getGridDefinition().getGridUnit().getContent();
+        this.verticalGridUnit = this.diagramPageDef.getGridDefinition().getVerticalGridUnit().getContent();
         
         this.nodeTemplateListener = new NodeTemplateListener();
         this.connTemplateListener = new ConnectionTemplateListener();
@@ -215,6 +219,23 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	}
     }
     
+    public int getGridUnit()
+    {
+    	return this.gridUnit;
+    }
+    
+    public int getVerticalGridUnit()
+    {
+    	if (this.verticalGridUnit > 0)
+    	{
+    		return this.verticalGridUnit;
+    	}
+    	else
+    	{
+    		return this.gridUnit;
+    	}
+    }
+
     public void syncGuideStateWithDiagramLayout(boolean showGuides)
     {
     	this.showGuides = showGuides;

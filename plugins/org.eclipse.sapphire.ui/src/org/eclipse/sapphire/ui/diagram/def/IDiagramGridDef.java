@@ -45,4 +45,30 @@ public interface IDiagramGridDef
     void setVisible( String value );
     void setVisible( Boolean value );
     
+    // *** GridUnit ***
+    
+    @Type( base = Integer.class )
+    @Label( standard = "grid unit" )
+    @XmlBinding( path = "grid-unit" )
+    @DefaultValue( text = "10" )
+    
+    ValueProperty PROP_GRID_UNIT = new ValueProperty( TYPE, "GridUnit" );
+    
+    Value<Integer> getGridUnit();
+    void setGridUnit( String unit );
+    void setGridUnit( Integer unit );    
+
+    // *** VerticalGridUnit ***
+    
+    @Type( base = Integer.class )
+    @Label( standard = "vertical grid unit" )
+    @XmlBinding( path = "vertical-grid-unit" )
+    @DefaultValue( text = "10" )
+    
+    ValueProperty PROP_VERTICAL_GRID_UNIT = new ValueProperty( TYPE, "VerticalGridUnit" );
+    
+    Value<Integer> getVerticalGridUnit();
+    void setVerticalGridUnit( String unit );
+    void setVerticalGridUnit( Integer unit );    
+
 }
