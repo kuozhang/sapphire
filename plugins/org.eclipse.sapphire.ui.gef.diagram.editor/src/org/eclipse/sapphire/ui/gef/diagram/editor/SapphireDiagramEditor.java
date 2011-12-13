@@ -115,6 +115,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			@Override
 		    public void handleNodeMoveEvent(final DiagramNodeEvent event)
 		    {
+            	System.out.println("handleNodeMoveEvent");
+		    	markEditorDirty();
 		    	moveNode((DiagramNodePart)event.getPart());
 		    }
 			
@@ -240,7 +242,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	}
 
 	protected void updateConnectionEndpoint(DiagramConnectionPart connPart) {
-		refreshConnectionNodes(connPart);
+		removeConnection(connPart);
+		addConnectionIfPossible(connPart);
 	}
 
 	protected void updateConnection(DiagramConnectionPart connPart) {

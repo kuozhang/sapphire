@@ -282,4 +282,9 @@ public class DiagramNodeModel extends DiagramModelBase {
 		return part.getImageCache().getImage(imageDescriptor);
 	}
 
+	@Override
+	public String toString() {
+		return getLabel();
+	}
+
 }

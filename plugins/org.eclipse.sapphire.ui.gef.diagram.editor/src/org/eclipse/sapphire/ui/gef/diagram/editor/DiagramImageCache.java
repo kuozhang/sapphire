@@ -37,8 +37,6 @@ public class DiagramImageCache {
 	protected static final String PREFIX = "org.eclipse.sapphire.ui.gef.diagram.editor";
 	
 	// The common image identifiers
-    public static final String IMG_SHOW_IN_SOURCE = PREFIX + "showInSource"; //$NON-NLS-1$
-    public static final String IMG_CONNECTION = PREFIX + "connection"; //$NON-NLS-1$
     public static final String IMG_ERROR = PREFIX + "error"; //$NON-NLS-1$
     public static final String IMG_ERROR_TSK = PREFIX + "errorTsk"; //$NON-NLS-1$
     public static final String IMG_WARNING = PREFIX + "warning"; //$NON-NLS-1$
@@ -77,8 +75,6 @@ public class DiagramImageCache {
 		}
 		
 		// add common images
-        addImageFilePath(IMG_SHOW_IN_SOURCE, "images/show-in-source.png"); //$NON-NLS-1$
-        addImageFilePath(IMG_CONNECTION, "images/connection.png"); //$NON-NLS-1$
         addImageFilePath(IMG_ERROR, "images/error.gif"); //$NON-NLS-1$
         addImageFilePath(IMG_ERROR_TSK, "images/error_tsk.gif"); //$NON-NLS-1$
         addImageFilePath(IMG_WARNING, "images/warning.gif"); //$NON-NLS-1$

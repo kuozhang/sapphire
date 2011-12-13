@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
@@ -90,7 +91,15 @@ public class DiagramModel extends DiagramModelBase {
 	}
 	
 	public void handleAddNode(DiagramNodePart nodePart) {
-		DiagramNodeModel nodeModel = new DiagramNodeModel(this, nodePart); 
+		DiagramNodeModel nodeModel = new DiagramNodeModel(this, nodePart);
+		
+		// initialize location
+		org.eclipse.sapphire.ui.Point position = nodePart.getNodePosition();
+		if (position.getX() < 0 && position.getY() < 0) {
+			position = getDefaultPosition();
+			nodePart.setNodePosition(position.getX(), position.getY());
+		}
+		
 		nodes.add(nodeModel);
 		firePropertyChange(NODE_ADDED, null, nodeModel);
 		
@@ -190,23 +199,31 @@ public class DiagramModel extends DiagramModelBase {
 	public void removeConnection(DiagramConnectionPart connPart) {
 		DiagramConnectionModel connectionModel = getDiagramConnectionModel(connPart);
 		if (connectionModel != null) {
-			IModelElement endpoint1 = connPart.getEndpoint1();
-			IModelElement endpoint2 = connPart.getEndpoint2();
-			DiagramNodePart nodePart1 = this.part.getDiagramNodePart(endpoint1);
-			DiagramNodePart nodePart2 = this.part.getDiagramNodePart(endpoint2);
-			if (nodePart1 != null && nodePart2 != null) {
-				DiagramNodeModel sourceNode = getDiagramNodeModel(nodePart1);
-				DiagramNodeModel targetNode = getDiagramNodeModel(nodePart2);
-				if (sourceNode != null && targetNode != null) {
-					sourceNode.removeSourceConnection(connectionModel);
-					targetNode.removeTargetConnection(connectionModel);
-					
-					connectionModel.setSourceNode(null);
-					connectionModel.setTargetNode(null);
-				}
+			DiagramNodeModel sourceNode = connectionModel.getSourceNode();
+			DiagramNodeModel targetNode = connectionModel.getTargetNode();
+			if (sourceNode != null && targetNode != null) {
+				sourceNode.removeSourceConnection(connectionModel);
+				targetNode.removeTargetConnection(connectionModel);
+				
+				connectionModel.setSourceNode(null);
+				connectionModel.setTargetNode(null);
 			}
+			connPart.removeAllBendpoints();
 			connections.remove(connectionModel);
 		}
+	}
+	
+	private org.eclipse.sapphire.ui.Point getDefaultPosition() {
+		int x = 10;
+		int y = -1;
+		for (DiagramNodeModel nodeModel : nodes) {
+			DiagramNodePart part = nodeModel.getModelPart();
+			Bounds bounds = part.getNodeBounds();
+			int height = Math.max(bounds.getHeight(), DiagramNodeModel.DEFAULT_NODE_HEIGHT);
+			height += bounds.getY() + 10; 
+			y = Math.max(y,  height);
+		}
+		return new org.eclipse.sapphire.ui.Point(x, y);
 	}
 
 }
