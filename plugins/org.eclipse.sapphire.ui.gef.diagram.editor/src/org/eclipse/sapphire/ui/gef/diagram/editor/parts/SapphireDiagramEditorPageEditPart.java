@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - Turn on anti-aliasing on diagram connection layer
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.gef.diagram.editor.parts;
@@ -42,6 +43,7 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.commands.MoveNodeCommand;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramNodeSelectionEditPolicy;
+import org.eclipse.swt.SWT;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -58,6 +60,7 @@ public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart
 		// Create the static router for the connection layer
 		ConnectionLayer connLayer = (ConnectionLayer) getLayer(LayerConstants.CONNECTION_LAYER);
 		connLayer.setConnectionRouter(new ShortestPathConnectionRouter(f));
+		connLayer.setAntialias(SWT.ON);
 
 		return f;
 	}
