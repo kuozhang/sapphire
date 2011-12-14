@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.gef.diagram.editor.commands;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
 
 /**

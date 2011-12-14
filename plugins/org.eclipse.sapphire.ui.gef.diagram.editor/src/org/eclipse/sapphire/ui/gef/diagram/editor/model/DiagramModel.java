@@ -199,6 +199,8 @@ public class DiagramModel extends DiagramModelBase {
 	public void removeConnection(DiagramConnectionPart connPart) {
 		DiagramConnectionModel connectionModel = getDiagramConnectionModel(connPart);
 		if (connectionModel != null) {
+			SapphireConnectionRouter.getInstance().removeConnectionFromCache(connectionModel);
+
 			DiagramNodeModel sourceNode = connectionModel.getSourceNode();
 			DiagramNodeModel targetNode = connectionModel.getTargetNode();
 			if (sourceNode != null && targetNode != null) {

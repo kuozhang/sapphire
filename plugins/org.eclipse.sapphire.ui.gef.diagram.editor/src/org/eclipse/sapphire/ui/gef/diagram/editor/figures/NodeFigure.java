@@ -41,6 +41,8 @@ public class NodeFigure extends RoundedRectangle {
     
 	// drag/drop select color
     //private static final org.eclipse.sapphire.ui.Color DRAG_DROP_SELECT_BACKGROUND = new org.eclipse.sapphire.ui.Color(0xD0, 0xE6, 0xF9);
+    
+    private static final org.eclipse.sapphire.ui.Color OUTLINE_FOREGROUND = new org.eclipse.sapphire.ui.Color(0xFF, 0xA5, 0x00);
 
     private boolean hasImage;
 
@@ -135,9 +137,9 @@ public class NodeFigure extends RoundedRectangle {
 					Math.max(0, getCornerDimensions().height - (int) lineInset));
 		}
 		
-		if (hasFocus) {
+		if (hasFocus || selected) {
 			final Color foregroundSave = graphics.getForegroundColor();
-			graphics.setForegroundColor(ColorConstants.orange);
+			graphics.setForegroundColor(SapphireDiagramEditorUtil.getColor(OUTLINE_FOREGROUND));
 			Rectangle expanded = r.getExpanded(1, 1);
 			graphics.setLineStyle(SWT.LINE_DASH);
 			graphics.drawRoundRectangle(expanded,
