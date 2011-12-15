@@ -29,10 +29,13 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
+import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
 import org.eclipse.gef.dnd.TemplateTransferDropTargetListener;
 import org.eclipse.gef.editparts.GridLayer;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.palette.PaletteRoot;
+import org.eclipse.gef.ui.palette.PaletteViewer;
+import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.jface.viewers.ISelection;
@@ -496,6 +499,21 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		
 		
 	}
+	
+	@Override
+	protected PaletteViewerProvider createPaletteViewerProvider() 
+	{
+		return new PaletteViewerProvider(getEditDomain()) 
+		{
+			@Override
+			protected void configurePaletteViewer(PaletteViewer viewer)
+			{
+				super.configurePaletteViewer(viewer);
+				viewer.addDragSourceListener(new TemplateTransferDragSourceListener(viewer));
+			}
+		};
+	}
+	
 
 	public SapphireDiagramEditorPagePart getPart() {
 		return this.diagramPart;
