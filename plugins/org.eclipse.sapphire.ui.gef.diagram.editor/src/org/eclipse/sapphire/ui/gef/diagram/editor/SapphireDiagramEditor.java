@@ -96,6 +96,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
         this.diagramPart = new SapphireDiagramEditorPagePart();
         this.diagramPart.init(null, rootModelElement, this.diagramPageDef, Collections.<String,String>emptyMap());
 
+        this.diagramModel = new DiagramModel(diagramPart);
+
 		setEditDomain(new DefaultEditDomain(this));
 
 		this.diagramPartListener = new SapphireDiagramPartListener() 
@@ -370,7 +372,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	@Override
 	protected PaletteRoot getPaletteRoot() {
 		if (root == null)
-			root = SapphireDiagramEditorPaletteFactory.createPalette(diagramPageDef);
+			root = SapphireDiagramEditorPaletteFactory.createPalette(diagramPageDef, diagramModel.getImageCache());
 		return root;
 	}
 
@@ -423,7 +425,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		});
 				
 		// set the contents of this editor
-		diagramModel = new DiagramModel(diagramPart);
 		viewer.setContents(diagramModel); 
 
 		// If the layout file doesn't exist, apply auto layout

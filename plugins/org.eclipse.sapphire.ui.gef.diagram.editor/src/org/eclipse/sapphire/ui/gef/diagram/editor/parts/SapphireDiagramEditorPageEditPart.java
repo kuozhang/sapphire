@@ -35,7 +35,7 @@ import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.CreateNodeCommand;
@@ -100,12 +100,13 @@ public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart
 		return getCastedModel().getNodes();
 	}
 	
-	private DiagramNodeTemplate getDiagramNodeTemplate(ModelElementType type) {
+	private DiagramNodeTemplate getDiagramNodeTemplate(IDiagramNodeDef nodeDef) {
 		SapphireDiagramEditorPagePart sapphirePart = getCastedModel().getModelPart();
 		for (DiagramNodeTemplate nodeTemplate : sapphirePart.getNodeTemplates()) {
 			if (sapphirePart.isNodeTemplateVisible(nodeTemplate)) {
-				// TODO check for type
-				return nodeTemplate;
+				if (nodeDef == nodeTemplate.getDefinition()) {
+					return nodeTemplate;
+				}
 			}
 		}
 		return null;
@@ -150,8 +151,8 @@ public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart
 
 		@Override
 		protected Command getCreateCommand(CreateRequest request) {
-			ModelElementType type = (ModelElementType)request.getNewObjectType();
-			DiagramNodeTemplate template = getDiagramNodeTemplate(type);
+			IDiagramNodeDef nodeDef = (IDiagramNodeDef)request.getNewObjectType();
+			DiagramNodeTemplate template = getDiagramNodeTemplate(nodeDef);
 			return new CreateNodeCommand(getCastedModel(), template, request.getLocation());
 		}
 
@@ -159,7 +160,6 @@ public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart
 
 	public void propertyChange(PropertyChangeEvent evt) {
 		String prop = evt.getPropertyName();
-		System.out.println(prop + " property changed");
 		if (DiagramModel.NODE_ADDED.equals(prop)) {
 			refreshChildren();
 		} else if (DiagramModel.NODE_REMOVED.equals(prop)) {

@@ -45,6 +45,11 @@ public class DiagramImageCache {
     private final Map<String, ImageDescriptor> idToImageDescriptor = new HashMap<String, ImageDescriptor>();
 
 	public DiagramImageCache(SapphireDiagramEditorPagePart diagramPart) {
+		// Add decorators
+		for (IDiagramImageChoice decorator : diagramPart.getImageDecorators()) {
+			registerImage(decorator);
+		}
+		
 		// Add node images
 		List<DiagramNodeTemplate> nodeTemplates = diagramPart.getNodeTemplates();
 		for (DiagramNodeTemplate nodeTemplate : nodeTemplates) {
@@ -106,6 +111,14 @@ public class DiagramImageCache {
 
 	public ImageDescriptor getImageDescriptor(final String imageId) {
 		return idToImageDescriptor.get(imageId);
+	}
+	
+	public ImageDescriptor getImageDescriptor(final IDiagramImageChoice imageChoice) {
+		if (imageChoice != null) {
+			String imageId = imageChoice.getImageId().getContent();
+			return idToImageDescriptor.get(imageId);
+		}
+		return null;
 	}
 
 }

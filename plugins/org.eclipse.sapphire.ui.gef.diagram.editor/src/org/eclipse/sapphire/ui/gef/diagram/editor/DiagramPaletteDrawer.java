@@ -11,27 +11,29 @@
 
 package org.eclipse.sapphire.ui.gef.diagram.editor;
 
-import org.eclipse.gef.requests.CreationFactory;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
+import org.eclipse.gef.palette.PaletteDrawer;
+import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class NodeCreationFactory implements CreationFactory {
+public class DiagramPaletteDrawer extends PaletteDrawer {
 	
-	private IDiagramNodeDef nodeDef;
-	
-	public NodeCreationFactory(IDiagramNodeDef nodeDef) {
-		this.nodeDef = nodeDef;
+	private String id;
+
+	public DiagramPaletteDrawer(String label, String id) {
+		super(label);
+		this.id = id;
 	}
 
-	public Object getNewObject() {
-		return null;
+	public DiagramPaletteDrawer(String label, ImageDescriptor icon, String id) {
+		super(label, icon);
+		this.id = id;
 	}
-
-	public Object getObjectType() {
-		return nodeDef;
+	
+	public String getId() {
+		return this.id;
 	}
 
 }
