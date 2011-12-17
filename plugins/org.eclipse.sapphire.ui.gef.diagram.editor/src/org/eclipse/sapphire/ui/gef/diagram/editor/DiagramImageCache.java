@@ -38,9 +38,9 @@ public class DiagramImageCache {
 	
 	// The common image identifiers
     public static final String IMG_ERROR = PREFIX + "error"; //$NON-NLS-1$
-    public static final String IMG_ERROR_TSK = PREFIX + "errorTsk"; //$NON-NLS-1$
+    public static final String IMG_ERROR_SMALL = PREFIX + "error_small"; //$NON-NLS-1$
     public static final String IMG_WARNING = PREFIX + "warning"; //$NON-NLS-1$
-    public static final String IMG_WARN_TSK = PREFIX + "warnTsk"; //$NON-NLS-1$
+    public static final String IMG_WARNING_SMALL = PREFIX + "warning_small"; //$NON-NLS-1$
 
     private final Map<String, ImageDescriptor> idToImageDescriptor = new HashMap<String, ImageDescriptor>();
 
@@ -81,9 +81,9 @@ public class DiagramImageCache {
 		
 		// add common images
         addImageFilePath(IMG_ERROR, "images/error.gif"); //$NON-NLS-1$
-        addImageFilePath(IMG_ERROR_TSK, "images/error_tsk.gif"); //$NON-NLS-1$
+        addImageFilePath(IMG_ERROR_SMALL, "images/error_small.png"); //$NON-NLS-1$
         addImageFilePath(IMG_WARNING, "images/warning.gif"); //$NON-NLS-1$
-        addImageFilePath(IMG_WARN_TSK, "images/warn_tsk.gif"); //$NON-NLS-1$
+        addImageFilePath(IMG_WARNING_SMALL, "images/warning_small.png"); //$NON-NLS-1$
 	}
 	
 	private void registerImage(IDiagramImageChoice imageChoice) {

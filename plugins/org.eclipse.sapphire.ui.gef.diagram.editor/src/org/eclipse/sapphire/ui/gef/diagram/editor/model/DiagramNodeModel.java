@@ -29,7 +29,7 @@ public class DiagramNodeModel extends DiagramModelBase {
 	
     public static final int DEFAULT_NODE_WIDTH = 100;
     public static final int DEFAULT_NODE_HEIGHT = 30;
-    private static final int DEFAULT_TEXT_HEIGHT = 20;
+    private static final int DEFAULT_TEXT_HEIGHT = 15;
     
     public final static String SOURCE_CONNECTIONS = "SOURCE_CONNECTIONS";
 	public final static String TARGET_CONNECTIONS = "TARGET_CONNECTIONS";
@@ -100,9 +100,7 @@ public class DiagramNodeModel extends DiagramModelBase {
 	        
 	        
 			int labelHeight = nodePart.getLabelHeight();
-			if (labelHeight <= 0) {
-				labelHeight = DEFAULT_NODE_HEIGHT;
-			}
+			labelHeight = Math.max(labelHeight, DEFAULT_TEXT_HEIGHT);
 	        if (imageId != null) {
 				int imageHeight = nodePart.getImageHeight();
 				if (imageHeight == 0) {
@@ -120,6 +118,8 @@ public class DiagramNodeModel extends DiagramModelBase {
 	            {
 	            	labelHeight = Math.max(labelHeight, imageHeight);
 	            }
+	        } else {
+	        	labelHeight += DEFAULT_TEXT_HEIGHT;
 	        }
 			bounds.setHeight(labelHeight);
 		}
@@ -200,7 +200,7 @@ public class DiagramNodeModel extends DiagramModelBase {
         int labelWidth = nodePart.getLabelWidth();
         int labelHeight = nodePart.getLabelHeight();
         labelWidth = labelWidth > 0 ? labelWidth : nodeBounds.getWidth();
-        labelHeight = labelHeight > 0 ? labelHeight : DEFAULT_TEXT_HEIGHT;
+        labelHeight = Math.max(labelHeight, DEFAULT_TEXT_HEIGHT);
         
 		int verticalSpacing = nodePart.getVerticalSpacing();            
 
@@ -234,7 +234,7 @@ public class DiagramNodeModel extends DiagramModelBase {
         	y += offset;
         }
 
-        return new Bounds(x, y, labelWidth, DEFAULT_TEXT_HEIGHT);
+        return new Bounds(x, y, labelWidth, labelHeight);
 	}
 
 	public void handleMoveNode() {

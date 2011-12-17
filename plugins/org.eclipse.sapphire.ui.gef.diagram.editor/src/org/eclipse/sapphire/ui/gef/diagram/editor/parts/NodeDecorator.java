@@ -119,13 +119,13 @@ public class NodeDecorator {
 		if (status.severity() != Status.Severity.OK) {
 			if (status.severity() == Status.Severity.WARNING) {
 				if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL) {
-					imageRenderingDecorator = new ImageDecorator(DiagramImageCache.IMG_WARN_TSK);
+					imageRenderingDecorator = new ImageDecorator(DiagramImageCache.IMG_WARNING_SMALL);
 				} else {
 					imageRenderingDecorator = new ImageDecorator(DiagramImageCache.IMG_WARNING);
 				}
 			} else if (status.severity() == Status.Severity.ERROR) {
 				if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL) {
-					imageRenderingDecorator = new ImageDecorator(DiagramImageCache.IMG_ERROR_TSK);
+					imageRenderingDecorator = new ImageDecorator(DiagramImageCache.IMG_ERROR_SMALL);
 				} else {
 					imageRenderingDecorator = new ImageDecorator(DiagramImageCache.IMG_ERROR);
 				}
