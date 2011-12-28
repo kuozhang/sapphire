@@ -229,7 +229,7 @@ public class DiagramNodeModel extends DiagramModelBase {
         
 
         // center the label
-        int offset = nodeBounds.getHeight() - imageHeight + verticalSpacing - labelHeight >> 1;
+        int offset = nodeBounds.getHeight() - imageHeight - verticalSpacing - labelHeight >> 1;
         if (offset > 0) {
         	y += offset;
         }

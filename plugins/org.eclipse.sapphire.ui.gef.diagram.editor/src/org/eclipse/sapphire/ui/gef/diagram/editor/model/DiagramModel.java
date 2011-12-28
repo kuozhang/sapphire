@@ -46,10 +46,10 @@ public class DiagramModel extends DiagramModelBase {
 
 	public DiagramModel(SapphireDiagramEditorPagePart part) {
 		this.part = part;
+		imageCache = new DiagramImageCache(part);
+
 		contructNodes();
 		constructConnections();
-		
-		imageCache = new DiagramImageCache(part);
 	}
 	
 	public SapphirePart getSapphirePart() {

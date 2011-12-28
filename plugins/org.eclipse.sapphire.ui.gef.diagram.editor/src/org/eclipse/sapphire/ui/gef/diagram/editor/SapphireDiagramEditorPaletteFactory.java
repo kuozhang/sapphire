@@ -22,8 +22,8 @@ import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
 import org.eclipse.gef.palette.ConnectionCreationToolEntry;
 import org.eclipse.gef.palette.MarqueeToolEntry;
 import org.eclipse.gef.palette.PaletteContainer;
+import org.eclipse.gef.palette.PaletteGroup;
 import org.eclipse.gef.palette.PaletteRoot;
-import org.eclipse.gef.palette.PaletteToolbar;
 import org.eclipse.gef.palette.PanningSelectionToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.CreationFactory;
@@ -175,17 +175,17 @@ final class SapphireDiagramEditorPaletteFactory {
 	
 	/** Create the "Tools" group. */
 	private static PaletteContainer createModelIndependentTools(PaletteRoot palette) {
-		PaletteToolbar toolbar = new PaletteToolbar("Tools");
+		PaletteGroup group = new PaletteGroup("Tools");
 
 		// Add a selection tool to the group
 		ToolEntry tool = new PanningSelectionToolEntry();
-		toolbar.add(tool);
+		group.add(tool);
 		palette.setDefaultEntry(tool);
 
 		// Add a marquee tool to the group
-		toolbar.add(new MarqueeToolEntry());
+		group.add(new MarqueeToolEntry());
 
-		return toolbar;
+		return group;
 	}
 
 	/** Utility class. */

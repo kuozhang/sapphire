@@ -19,6 +19,8 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -27,7 +29,15 @@ import org.eclipse.swt.widgets.Display;
 
 public class SapphireDiagramEditorUtil {
 	
+	public static final String DEFAULT_FONT = "Arial"; //$NON-NLS-1$
+
 	private static List<Color> colors = new ArrayList<Color>();
+	private static Font defaultFont;
+	
+	static {
+		FontData fontData = new FontData(DEFAULT_FONT, 8, 0);
+		defaultFont = new Font(null, new FontData[] { fontData });
+	}
 
 	private SapphireDiagramEditorUtil() {
 	}
@@ -73,5 +83,9 @@ public class SapphireDiagramEditorUtil {
 		final Color newColor = new Color(Display.getCurrent(), red, green, blue);
 		colors.add(newColor);
 		return newColor;
+    }
+    
+    public static Font getDefaultFont() {
+    	return defaultFont;
     }
 }

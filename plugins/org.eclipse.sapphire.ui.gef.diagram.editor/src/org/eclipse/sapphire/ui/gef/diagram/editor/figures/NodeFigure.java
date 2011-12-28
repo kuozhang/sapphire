@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.ui.gef.diagram.editor.figures;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PositionConstants;
@@ -62,11 +61,11 @@ public class NodeFigure extends RoundedRectangle {
 		labelFigure = new Label();
 		labelFigure.setForegroundColor(SapphireDiagramEditorUtil.getColor(DEFAULT_TEXT_FOREGROUND));
 		labelFigure.setLabelAlignment(PositionConstants.CENTER);
+		labelFigure.setFont(SapphireDiagramEditorUtil.getDefaultFont());
 		this.add(labelFigure);
 
 		if (hasImage) {
 			iconFigure = new Label();
-			iconFigure.setBackgroundColor(ColorConstants.green);
 			this.add(iconFigure);
 		}
 	}
