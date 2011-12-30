@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - Add constructor which takes only ISapphirePart
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.gef.diagram.editor;
@@ -25,6 +26,10 @@ public class DiagramRenderingContext extends SapphireRenderingContext
 	private Point currentMouseLocation = new Point(0, 0);
 	private Object object;
 	
+	public DiagramRenderingContext(ISapphirePart part) {
+		super(part, null);
+	}
+
 	public DiagramRenderingContext(ISapphirePart part, SapphireDiagramEditor diagramEditor) {
 		super(part, null);
 		this.diagramEditor = diagramEditor;

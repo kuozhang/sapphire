@@ -31,7 +31,7 @@ public class NodeCreationFactory implements CreationFactory {
 	}
 
 	public Object getObjectType() {
-		return nodeDef;
+		return this.nodeDef;
 	}
 
 }

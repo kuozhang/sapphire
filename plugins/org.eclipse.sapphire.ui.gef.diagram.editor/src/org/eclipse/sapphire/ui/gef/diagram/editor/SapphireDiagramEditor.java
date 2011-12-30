@@ -7,7 +7,8 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
- *    Shenxue Zhou - Customized grid layer, grid state save and restore.
+ *    Shenxue Zhou - Customized grid layer, grid state save and restore; 
+ *                   DND fixes.
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.gef.diagram.editor;
@@ -38,6 +39,7 @@ import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
+import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -52,6 +54,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
+import org.eclipse.sapphire.ui.gef.diagram.editor.dnd.ObjectsTransferDropTargetListener;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModelBase;
@@ -443,6 +446,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 
 		// listen for dropped parts
 		viewer.addDropTargetListener(new TemplateTransferDropTargetListener(getGraphicalViewer()));
+		viewer.addDropTargetListener((TransferDropTargetListener) new ObjectsTransferDropTargetListener(viewer));
+
 
 		this.editorIsDirty = false;
 		firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);		
