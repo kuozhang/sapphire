@@ -77,7 +77,7 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart implem
 		}
 	}
 	
-	private DiagramConnectionModel getCastedModel() {
+	public DiagramConnectionModel getCastedModel() {
 		return (DiagramConnectionModel)getModel();
 	}
 	

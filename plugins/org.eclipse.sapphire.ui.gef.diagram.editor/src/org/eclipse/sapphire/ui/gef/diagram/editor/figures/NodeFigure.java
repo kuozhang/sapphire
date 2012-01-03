@@ -85,6 +85,7 @@ public class NodeFigure extends RoundedRectangle {
 	
 	public void setText(String text) {
 		labelFigure.setText(text);
+		this.setToolTip(new Label(text));
 	}
 	
 	public void setImage(Image image) {
