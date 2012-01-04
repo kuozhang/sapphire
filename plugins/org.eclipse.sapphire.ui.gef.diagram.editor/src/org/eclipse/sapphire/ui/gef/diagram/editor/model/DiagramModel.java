@@ -43,10 +43,12 @@ public class DiagramModel extends DiagramModelBase {
 	private List<DiagramConnectionModel> connections = new ArrayList<DiagramConnectionModel>();
 	
 	private DiagramImageCache imageCache;
+	private DiagramResourceCache resourceCache;
 
 	public DiagramModel(SapphireDiagramEditorPagePart part) {
 		this.part = part;
 		imageCache = new DiagramImageCache(part);
+		resourceCache = new DiagramResourceCache();
 
 		contructNodes();
 		constructConnections();
@@ -62,6 +64,10 @@ public class DiagramModel extends DiagramModelBase {
 	
 	public DiagramImageCache getImageCache() {
 		return imageCache;
+	}
+	
+	public DiagramResourceCache getResourceCache() {
+		return resourceCache;
 	}
 
 	public List<DiagramNodeModel> getNodes() {
@@ -228,4 +234,8 @@ public class DiagramModel extends DiagramModelBase {
 		return new org.eclipse.sapphire.ui.Point(x, y);
 	}
 
+	public void dispose() {
+		resourceCache.dispose();
+	}
+	
 }

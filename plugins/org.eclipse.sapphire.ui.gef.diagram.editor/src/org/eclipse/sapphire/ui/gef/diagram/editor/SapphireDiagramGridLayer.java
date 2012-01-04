@@ -15,7 +15,7 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.editparts.GridLayer;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.gef.diagram.editor.parts.SapphireDiagramEditorUtil;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
 import org.eclipse.swt.graphics.Color;
 
 /**
@@ -26,11 +26,14 @@ public class SapphireDiagramGridLayer extends GridLayer
 {
 	private static final org.eclipse.sapphire.ui.Color DEFAULT_MAJOR_LINE_COLOR = new org.eclipse.sapphire.ui.Color(206, 224, 242);
 	private static final org.eclipse.sapphire.ui.Color DEFAULT_MINOR_LINE_COLOR = new org.eclipse.sapphire.ui.Color(227, 238, 249);
+	
+	private DiagramModel diagramModel;
 	private SapphireDiagramEditorPagePart diagramPart;
 	
-	public SapphireDiagramGridLayer(SapphireDiagramEditorPagePart diagramPart)
+	public SapphireDiagramGridLayer(DiagramModel diagramModel)
 	{
-		this.diagramPart = diagramPart;
+		this.diagramModel = diagramModel;
+		this.diagramPart = diagramModel.getModelPart();
 	}
 	
 	@Override
@@ -38,8 +41,8 @@ public class SapphireDiagramGridLayer extends GridLayer
 	{
 		Rectangle clip = g.getClip(Rectangle.SINGLETON);
 		
-		Color majorLineColor = SapphireDiagramEditorUtil.getColor(DEFAULT_MAJOR_LINE_COLOR);
-		Color minorLineColor = SapphireDiagramEditorUtil.getColor(DEFAULT_MINOR_LINE_COLOR);
+		Color majorLineColor = diagramModel.getResourceCache().getColor(DEFAULT_MAJOR_LINE_COLOR);
+		Color minorLineColor = diagramModel.getResourceCache().getColor(DEFAULT_MINOR_LINE_COLOR);
 		
 		gridX = this.diagramPart.getGridUnit();
 		gridY = this.diagramPart.getVerticalGridUnit();

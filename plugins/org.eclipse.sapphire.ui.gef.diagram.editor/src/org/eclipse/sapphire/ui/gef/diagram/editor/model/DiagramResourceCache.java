@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2012 Oracle
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *    Ling Hao - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.gef.diagram.editor.parts;
+package org.eclipse.sapphire.ui.gef.diagram.editor.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,22 +27,19 @@ import org.eclipse.swt.widgets.Display;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class SapphireDiagramEditorUtil {
+public class DiagramResourceCache {
 	
-	public static final String DEFAULT_FONT = "Arial"; //$NON-NLS-1$
+	public final String DEFAULT_FONT = "Arial"; //$NON-NLS-1$
 
-	private static List<Color> colors = new ArrayList<Color>();
-	private static Font defaultFont;
+	private List<Color> colors = new ArrayList<Color>();
+	private Font defaultFont;
 	
-	static {
+	public DiagramResourceCache() {
 		FontData fontData = new FontData(DEFAULT_FONT, 8, 0);
 		defaultFont = new Font(null, new FontData[] { fontData });
 	}
-
-	private SapphireDiagramEditorUtil() {
-	}
 	
-    public static int getLinkStyle(IDiagramConnectionDef def) {
+    public int getLinkStyle(IDiagramConnectionDef def) {
         int linkStyle = SWT.LINE_SOLID;
         if (def != null) {
             org.eclipse.sapphire.ui.LineStyle style = def.getLineStyle().getContent();
@@ -59,7 +56,7 @@ public class SapphireDiagramEditorUtil {
         return linkStyle;
     }
 	
-    public static Color getLineColor(DiagramConnectionPart connection) {
+    public Color getLineColor(DiagramConnectionPart connection) {
     	IDiagramConnectionDef def = connection.getConnectionDef();
     	Color color = ColorConstants.darkBlue;
     	if (def != null) {
@@ -68,12 +65,11 @@ public class SapphireDiagramEditorUtil {
     	return color;
     }
     
-    public static Color getColor(org.eclipse.sapphire.ui.Color sapphireColor) {
+    public Color getColor(org.eclipse.sapphire.ui.Color sapphireColor) {
     	int red = sapphireColor.getRed();
     	int green = sapphireColor.getGreen();
     	int blue = sapphireColor.getBlue();
     	
-    	// TODO color management somewhere to dispose
 		for (Color existingColor : colors) {
 			if (existingColor.getRed() == red && existingColor.getGreen() == green && existingColor.getBlue() == blue) {
 				return existingColor;
@@ -85,7 +81,16 @@ public class SapphireDiagramEditorUtil {
 		return newColor;
     }
     
-    public static Font getDefaultFont() {
+    public Font getDefaultFont() {
     	return defaultFont;
+    }
+    
+    public void dispose() {
+    	defaultFont.dispose();
+    	defaultFont = null;
+
+    	for (Color existingColor : colors) {
+    		existingColor.dispose();
+    	}
     }
 }

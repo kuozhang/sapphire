@@ -53,7 +53,7 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
     @Override
 	protected IFigure createFigure() {
     	String imageId = getCastedModel().getModelPart().getImageId();
-		return new NodeFigure(imageId != null);
+		return new NodeFigure(imageId != null, getCastedModel().getDiagramModel().getResourceCache());
 	}
 
 	@Override

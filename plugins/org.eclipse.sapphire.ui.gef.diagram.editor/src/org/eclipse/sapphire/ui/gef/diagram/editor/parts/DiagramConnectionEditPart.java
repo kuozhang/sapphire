@@ -33,6 +33,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionLabelModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramConnectionBendpointEditPolicy;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramConnectionEndpointEditPolicy;
 
@@ -46,7 +47,7 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart implem
 
 	@Override
 	protected void createEditPolicies() {
-		installEditPolicy(EditPolicy.CONNECTION_ENDPOINTS_ROLE, new DiagramConnectionEndpointEditPolicy());
+		installEditPolicy(EditPolicy.CONNECTION_ENDPOINTS_ROLE, new DiagramConnectionEndpointEditPolicy(getCastedModel().getDiagramModel().getResourceCache()));
 		installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE, new DiagramConnectionBendpointEditPolicy());
 
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new DiagramConnectionLayoutEditPolicy());
@@ -82,11 +83,12 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart implem
 	}
 	
 	public void updateStyle(PolylineConnection connection) {
+		DiagramResourceCache resourceCache = getCastedModel().getDiagramModel().getResourceCache();
 		DiagramConnectionPart connectionPart = getCastedModel().getModelPart();
 		IDiagramConnectionDef def = connectionPart.getConnectionDef();
-		connection.setLineStyle(SapphireDiagramEditorUtil.getLinkStyle(def));
+		connection.setLineStyle(resourceCache.getLinkStyle(def));
 		connection.setLineWidth(def.getLineWidth().getContent());
-		connection.setForegroundColor(SapphireDiagramEditorUtil.getLineColor(connectionPart));
+		connection.setForegroundColor(resourceCache.getLineColor(connectionPart));
 	}
 	
 	private void refreshBendpoints() {

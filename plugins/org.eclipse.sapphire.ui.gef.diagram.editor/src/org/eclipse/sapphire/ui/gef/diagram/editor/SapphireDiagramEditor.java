@@ -473,7 +473,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			@Override
 			protected GridLayer createGridLayer() 
 			{
-				return new SapphireDiagramGridLayer(diagramPart);
+				return new SapphireDiagramGridLayer(diagramModel);
 			}			
 		});
 		
@@ -549,4 +549,13 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	void setMouseLocation(int x, int y) {
 		getMouseLocation().setLocation(x, y);
 	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		diagramModel.dispose();
+	}
+	
+	
 }

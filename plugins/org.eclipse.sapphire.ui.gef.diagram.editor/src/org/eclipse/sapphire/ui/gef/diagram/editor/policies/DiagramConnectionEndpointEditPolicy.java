@@ -14,8 +14,8 @@ package org.eclipse.sapphire.ui.gef.diagram.editor.policies;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.gef.diagram.editor.parts.DiagramConnectionEditPart;
-import org.eclipse.sapphire.ui.gef.diagram.editor.parts.SapphireDiagramEditorUtil;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -24,10 +24,16 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.parts.SapphireDiagramEditorUti
 public class DiagramConnectionEndpointEditPolicy extends ConnectionEndpointEditPolicy {
 
     private static final org.eclipse.sapphire.ui.Color CONNECTION_FOREGROUND = new org.eclipse.sapphire.ui.Color(0xFF, 0xA5, 0x00);
+    
+    private DiagramResourceCache resourceCache;
+    
+    public DiagramConnectionEndpointEditPolicy(DiagramResourceCache resourceCache) {
+    	this.resourceCache = resourceCache;
+    }
 
     protected void addSelectionHandles() {
 		super.addSelectionHandles();
-		getConnectionFigure().setForegroundColor(SapphireDiagramEditorUtil.getColor(CONNECTION_FOREGROUND));
+		getConnectionFigure().setForegroundColor(resourceCache.getColor(CONNECTION_FOREGROUND));
 	}
 
 	protected PolylineConnection getConnectionFigure() {

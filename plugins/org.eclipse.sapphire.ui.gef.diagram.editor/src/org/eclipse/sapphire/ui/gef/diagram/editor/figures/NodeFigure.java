@@ -19,7 +19,7 @@ import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.sapphire.ui.Bounds;
-import org.eclipse.sapphire.ui.gef.diagram.editor.parts.SapphireDiagramEditorUtil;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramResourceCache;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -45,6 +45,7 @@ public class NodeFigure extends RoundedRectangle {
     private static final org.eclipse.sapphire.ui.Color OUTLINE_FOREGROUND = new org.eclipse.sapphire.ui.Color(0xFF, 0xA5, 0x00);
 
     private boolean hasImage;
+    private DiagramResourceCache resourceCache;
 
     private Label labelFigure;
     private Label iconFigure;
@@ -52,16 +53,17 @@ public class NodeFigure extends RoundedRectangle {
     private boolean selected;
 	private boolean hasFocus;
 
-	public NodeFigure(boolean hasImage) {
+	public NodeFigure(boolean hasImage, DiagramResourceCache resourceCache) {
 		this.hasImage = hasImage;
+		this.resourceCache = resourceCache;
 		
-		this.setForegroundColor(SapphireDiagramEditorUtil.getColor(DEFAULT_NODE_FOREGROUND));
+		this.setForegroundColor(resourceCache.getColor(DEFAULT_NODE_FOREGROUND));
 		setLayoutManager(new XYLayout());
 
 		labelFigure = new Label();
-		labelFigure.setForegroundColor(SapphireDiagramEditorUtil.getColor(DEFAULT_TEXT_FOREGROUND));
+		labelFigure.setForegroundColor(resourceCache.getColor(DEFAULT_TEXT_FOREGROUND));
 		labelFigure.setLabelAlignment(PositionConstants.CENTER);
-		labelFigure.setFont(SapphireDiagramEditorUtil.getDefaultFont());
+		labelFigure.setFont(resourceCache.getDefaultFont());
 		this.add(labelFigure);
 
 		if (hasImage) {
@@ -107,11 +109,11 @@ public class NodeFigure extends RoundedRectangle {
 		final Color backgroundSave = graphics.getBackgroundColor();
 		
 		if (selected) {
-			graphics.setBackgroundColor(SapphireDiagramEditorUtil.getColor(SELECTED_BACKGROUND));
+			graphics.setBackgroundColor(resourceCache.getColor(SELECTED_BACKGROUND));
 			graphics.fillRectangle(fillRectangle);
 		} else {
-			graphics.setForegroundColor(SapphireDiagramEditorUtil.getColor(DEFAULT_BACKGROUND_END));
-			graphics.setBackgroundColor(SapphireDiagramEditorUtil.getColor(DEFAULT_BACKGROUND_START));
+			graphics.setForegroundColor(resourceCache.getColor(DEFAULT_BACKGROUND_END));
+			graphics.setBackgroundColor(resourceCache.getColor(DEFAULT_BACKGROUND_START));
 			
 			graphics.fillGradient(fillRectangle.x, fillRectangle.y, fillRectangle.width, fillRectangle.height, true/*vertical*/);
 		}
@@ -141,7 +143,7 @@ public class NodeFigure extends RoundedRectangle {
 		
 		if (hasFocus || selected) {
 			final Color foregroundSave = graphics.getForegroundColor();
-			graphics.setForegroundColor(SapphireDiagramEditorUtil.getColor(OUTLINE_FOREGROUND));
+			graphics.setForegroundColor(resourceCache.getColor(OUTLINE_FOREGROUND));
 			Rectangle expanded = r.getExpanded(1, 1);
 			graphics.setLineStyle(SWT.LINE_DASH);
 			graphics.drawRoundRectangle(expanded,
