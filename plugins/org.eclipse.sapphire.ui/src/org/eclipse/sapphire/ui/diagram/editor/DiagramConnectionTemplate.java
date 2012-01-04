@@ -431,7 +431,7 @@ public class DiagramConnectionTemplate extends SapphirePart
                 ModelElementList<?> connList = srcElement.read((ListProperty)connProp);
                 IModelElement newElement = connList.addNewElement();
                 setModelProperty(newElement, ((ModelPath.PropertySegment)this.endpoint2Path.head()).getPropertyName(), endpoint2Value);
-                DiagramConnectionPart newConn = getConnectionPart(srcNode.getModelElement(), newElement);
+                DiagramConnectionPart newConn = getConnectionPart(srcElement, newElement);
                 if (newConn == null) {
                 	newConn = createNewConnectionPart(newElement, null);
                 }                
