@@ -1,12 +1,9 @@
 /******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2012 Oracle
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *    Ling Hao - initial implementation and ongoing maintenance
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.gef.diagram.editor;
@@ -15,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +20,7 @@ import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
 import org.eclipse.gef.palette.ConnectionCreationToolEntry;
 import org.eclipse.gef.palette.MarqueeToolEntry;
 import org.eclipse.gef.palette.PaletteContainer;
+import org.eclipse.gef.palette.PaletteEntry;
 import org.eclipse.gef.palette.PaletteGroup;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.palette.PanningSelectionToolEntry;
@@ -37,22 +36,49 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramPaletteCompartmentDef;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 /**
- * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-final class SapphireDiagramEditorPaletteFactory {
+public class SapphirePaletteRoot extends PaletteRoot 
+{
+	private SapphireDiagramEditorPagePart diagramPart;
+	private DiagramImageCache imageCache;
 	
-    /**
-	 * Creates the PaletteRoot and adds all palette elements. Use this factory
-	 * method to create a new palette for your graphical editor.
-	 * 
-	 * @return a new PaletteRoot
+	public SapphirePaletteRoot(SapphireDiagramEditorPagePart diagramPart, DiagramImageCache imageCache)
+	{
+		this.diagramPart = diagramPart;
+		this.imageCache = imageCache;
+		updatePaletteEntries();
+	}
+	
+	/**
+	 * Creates resp. updates the PaletteEntries. All old PaletteEntries will be
+	 * removed and new ones will be created by calling the corresponding
+	 * create-methods.
 	 */
-	static PaletteRoot createPalette(IDiagramEditorPageDef diagramPageDef, DiagramImageCache imageCache) {
-		PaletteRoot palette = new PaletteRoot();
-		palette.add(createModelIndependentTools(palette));
+	public void updatePaletteEntries() 
+	{
+		// remove old entries
+		setDefaultEntry(null);
+		List<PaletteEntry> allEntries = new ArrayList<PaletteEntry>(getChildren()); // MUST
+																					// make
+																					// a
+																					// copy
+		for (Iterator<PaletteEntry> iter = allEntries.iterator(); iter.hasNext();) 
+		{
+			PaletteEntry entry = iter.next();
+			remove(entry);
+		}
+		
+		// create new entries
+		IDiagramEditorPageDef diagramPageDef = (IDiagramEditorPageDef)diagramPart.getDefinition();
+		//PaletteRoot palette = new PaletteRoot();
+		//palette.add(createModelIndependentTools(palette));
+		add(createModelIndependentTools());
 		
 		List<DiagramPaletteDrawer> drawers = new ArrayList<DiagramPaletteDrawer>();
 		Map<String, List<ToolEntry>> entries = new HashMap<String, List<ToolEntry>>();
@@ -87,7 +113,8 @@ final class SapphireDiagramEditorPaletteFactory {
 			}
 		}
 		
-        for (IDiagramConnectionDef connDef : diagramPageDef.getDiagramConnectionDefs()) {
+        for (IDiagramConnectionDef connDef : diagramPageDef.getDiagramConnectionDefs()) 
+        {
             IDiagramImageChoice image = connDef.getToolPaletteImage().element();
             ImageDescriptor imageDescriptor = imageCache.getImageDescriptor(image);
             
@@ -114,12 +141,17 @@ final class SapphireDiagramEditorPaletteFactory {
 	    			entries.put(drawer.getId(), list);
 	    		}
 	    		list.add(tool);
-			} else {
+			} 
+			else 
+			{
 				// TODO which case is this?? 
 			}
         }
 		
-        for (IDiagramNodeDef nodeDef : diagramPageDef.getDiagramNodeDefs()) {
+        List<DiagramNodeTemplate> nodeTemplates = diagramPart.getVisibleNodeTemplates();
+        for (DiagramNodeTemplate nodeTemplate : nodeTemplates) 
+        {
+        	IDiagramNodeDef nodeDef = nodeTemplate.getDefinition();
             IDiagramImageChoice image = nodeDef.getToolPaletteImage().element();
             ImageDescriptor imageDescriptor = imageCache.getImageDescriptor(image);
 
@@ -150,21 +182,26 @@ final class SapphireDiagramEditorPaletteFactory {
         }
         
         // sort the drawers
-        for (DiagramPaletteDrawer drawer : drawers) {
+        for (DiagramPaletteDrawer drawer : drawers)
+        {
     		List<ToolEntry> list = entries.get(drawer.getId());
-    		Collections.sort(list, new Comparator<ToolEntry>() {
-				public int compare(ToolEntry x, ToolEntry y) {
-		        	return x.getLabel().compareTo(y.getLabel());
-				}
-    		});
-    		drawer.addAll(list);
-    		palette.add(drawer);
+    		if (list != null)
+    		{
+	    		Collections.sort(list, new Comparator<ToolEntry>() 
+	    		{
+					public int compare(ToolEntry x, ToolEntry y) {
+			        	return x.getLabel().compareTo(y.getLabel());
+					}
+	    		});
+	    		drawer.addAll(list);
+    		}
+    		add(drawer);
         }
-
-        return palette;
+		
 	}
 	
-	private static DiagramPaletteDrawer getDiagramPaletteDrawer(List<DiagramPaletteDrawer> drawers, String id) {
+	private  DiagramPaletteDrawer getDiagramPaletteDrawer(List<DiagramPaletteDrawer> drawers, String id) 
+	{
 		for (DiagramPaletteDrawer drawer : drawers) {
 			if (id.equals(drawer.getId())) {
 				return drawer;
@@ -174,22 +211,19 @@ final class SapphireDiagramEditorPaletteFactory {
 	}
 	
 	/** Create the "Tools" group. */
-	private static PaletteContainer createModelIndependentTools(PaletteRoot palette) {
+	private PaletteContainer createModelIndependentTools() 
+	{
 		PaletteGroup group = new PaletteGroup("Tools");
 
 		// Add a selection tool to the group
 		ToolEntry tool = new PanningSelectionToolEntry();
 		group.add(tool);
-		palette.setDefaultEntry(tool);
+		setDefaultEntry(tool);
 
 		// Add a marquee tool to the group
 		group.add(new MarqueeToolEntry());
 
 		return group;
 	}
-
-	/** Utility class. */
-	private SapphireDiagramEditorPaletteFactory() {
-	}
-
+	
 }

@@ -369,13 +369,17 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	}    
 	
 	private void refreshPalette() {
-		System.out.println("TODO refreshPalette");
+		PaletteRoot pr = getPaletteRoot();
+		if (pr instanceof SapphirePaletteRoot) {
+			SapphirePaletteRoot spr = (SapphirePaletteRoot) pr;
+			spr.updatePaletteEntries();
+		}
 	}
 
 	@Override
 	protected PaletteRoot getPaletteRoot() {
 		if (root == null)
-			root = SapphireDiagramEditorPaletteFactory.createPalette(diagramPageDef, diagramModel.getImageCache());
+			root = new SapphirePaletteRoot(diagramPart, diagramModel.getImageCache());
 		return root;
 	}
 

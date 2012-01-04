@@ -28,7 +28,7 @@ import org.eclipse.swt.dnd.DND;
 /**
  * @noinstantiate This class is not intended to be instantiated by clients.
  * @noextend This class is not intended to be subclassed by clients.
- * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
 public class ObjectsTransferDropTargetListener extends AbstractTransferDropTargetListener {
