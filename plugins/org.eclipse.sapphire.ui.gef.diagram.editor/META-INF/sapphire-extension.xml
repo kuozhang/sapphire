@@ -19,17 +19,20 @@
         <impl>org.eclipse.sapphire.ui.gef.diagram.editor.actions.HorizontalGraphLayoutActionHandler</impl>
         <label>horizontally</label>
         <context>Sapphire.Diagram.Editor</context>
+        <condition>org.eclipse.sapphire.ui.gef.diagram.editor.actions.GEFEditorCondition</condition>
     </action-handler>    
     <action-handler>
         <action>Sapphire.Diagram.Layout</action>
         <impl>org.eclipse.sapphire.ui.gef.diagram.editor.actions.VerticalGraphLayoutActionHandler</impl>
         <label>vertically</label>
         <context>Sapphire.Diagram.Editor</context>
+        <condition>org.eclipse.sapphire.ui.gef.diagram.editor.actions.GEFEditorCondition</condition>
     </action-handler>    
     <action-handler-factory>
         <action>Sapphire.Add</action>
         <impl>org.eclipse.sapphire.ui.gef.diagram.editor.actions.DiagramNodeAddActionHandlerFactory</impl>
         <description>Creates an add action handler for every node type.</description>
         <context>Sapphire.Diagram.Editor</context>
+        <condition>org.eclipse.sapphire.ui.gef.diagram.editor.actions.GEFEditorCondition</condition>
     </action-handler-factory>  
 </extension>

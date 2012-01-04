@@ -98,7 +98,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 
         this.diagramPart = new SapphireDiagramEditorPagePart();
         this.diagramPart.init(null, rootModelElement, this.diagramPageDef, Collections.<String,String>emptyMap());
-
+        // TODO remove when GEF editor is ready
+        this.diagramPart.setEditorType("GEF");
+        
         this.diagramModel = new DiagramModel(diagramPart);
 
 		setEditDomain(new DefaultEditDomain(this));
