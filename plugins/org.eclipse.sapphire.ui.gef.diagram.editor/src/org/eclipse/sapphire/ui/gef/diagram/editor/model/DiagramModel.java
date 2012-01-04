@@ -128,6 +128,18 @@ public class DiagramModel extends DiagramModelBase {
 	public void handleRemoveNode(DiagramNodePart nodePart) {
 		DiagramNodeModel nodeModel = getDiagramNodeModel(nodePart);
 		if (nodeModel != null) {
+			// first remove all connections, if they still exist
+			List<DiagramConnectionModel> tobeRemoved = new ArrayList<DiagramConnectionModel>();
+			for (DiagramConnectionModel connectionModel : connections) {
+				if (connectionModel.getSourceNode().equals(nodeModel) || connectionModel.getTargetNode().equals(nodeModel)) {
+					tobeRemoved.add(connectionModel);
+				}
+			}
+			for (DiagramConnectionModel connectionModel : tobeRemoved) {
+				removeConnection(connectionModel);
+			}
+			
+			// next remove the node
 			nodes.remove(nodeModel);
 			firePropertyChange(NODE_REMOVED, null, nodePart);
 		}
@@ -205,20 +217,24 @@ public class DiagramModel extends DiagramModelBase {
 	public void removeConnection(DiagramConnectionPart connPart) {
 		DiagramConnectionModel connectionModel = getDiagramConnectionModel(connPart);
 		if (connectionModel != null) {
-			SapphireConnectionRouter.getInstance().removeConnectionFromCache(connectionModel);
-
-			DiagramNodeModel sourceNode = connectionModel.getSourceNode();
-			DiagramNodeModel targetNode = connectionModel.getTargetNode();
-			if (sourceNode != null && targetNode != null) {
-				sourceNode.removeSourceConnection(connectionModel);
-				targetNode.removeTargetConnection(connectionModel);
-				
-				connectionModel.setSourceNode(null);
-				connectionModel.setTargetNode(null);
-			}
+			removeConnection(connectionModel);
 			connPart.removeAllBendpoints();
-			connections.remove(connectionModel);
 		}
+	}
+	
+	private void removeConnection(DiagramConnectionModel connectionModel) {
+		SapphireConnectionRouter.getInstance().removeConnectionFromCache(connectionModel);
+
+		DiagramNodeModel sourceNode = connectionModel.getSourceNode();
+		DiagramNodeModel targetNode = connectionModel.getTargetNode();
+		if (sourceNode != null && targetNode != null) {
+			sourceNode.removeSourceConnection(connectionModel);
+			targetNode.removeTargetConnection(connectionModel);
+			
+			connectionModel.setSourceNode(null);
+			connectionModel.setTargetNode(null);
+		}
+		connections.remove(connectionModel);
 	}
 	
 	private org.eclipse.sapphire.ui.Point getDefaultPosition() {

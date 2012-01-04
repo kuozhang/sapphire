@@ -39,8 +39,8 @@ public class DiagramNodeModel extends DiagramModelBase {
 	
 	private DiagramModel parent;
     private DiagramNodePart part;
-	private List<DiagramConnectionModel> sourceConnection = new ArrayList<DiagramConnectionModel>();
-	private List<DiagramConnectionModel> targetConnection = new ArrayList<DiagramConnectionModel>();
+	private List<DiagramConnectionModel> sourceConnections = new ArrayList<DiagramConnectionModel>();
+	private List<DiagramConnectionModel> targetConnections = new ArrayList<DiagramConnectionModel>();
 	
 	public DiagramNodeModel(DiagramModel parent, DiagramNodePart part) {
 		this.parent = parent;
@@ -246,30 +246,30 @@ public class DiagramNodeModel extends DiagramModelBase {
 	}
 
 	public List<DiagramConnectionModel> getSourceConnections() {
-		return sourceConnection;
+		return sourceConnections;
 	}
 
 	public List<DiagramConnectionModel> getTargetConnections() {
-		return targetConnection;
+		return targetConnections;
 	}
 
 	public void addSourceConnection(DiagramConnectionModel connection) {
-		sourceConnection.add(connection);
+		sourceConnections.add(connection);
 		firePropertyChange(SOURCE_CONNECTIONS, null, connection);
 	}
 	
 	public void addTargetConnection(DiagramConnectionModel connection) {
-		targetConnection.add(connection);
+		targetConnections.add(connection);
 		firePropertyChange(TARGET_CONNECTIONS, null, connection);
 	}
 
 	public void removeSourceConnection(DiagramConnectionModel connection) {
-		sourceConnection.remove(connection);
+		sourceConnections.remove(connection);
 		firePropertyChange(SOURCE_CONNECTIONS, null, connection);
 	}
 	
 	public void removeTargetConnection(DiagramConnectionModel connection) {
-		targetConnection.remove(connection);
+		targetConnections.remove(connection);
 		firePropertyChange(TARGET_CONNECTIONS, null, connection);
 	}
 
