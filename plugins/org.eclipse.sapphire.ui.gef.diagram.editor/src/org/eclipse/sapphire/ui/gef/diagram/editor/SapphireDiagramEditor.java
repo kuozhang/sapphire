@@ -43,6 +43,8 @@ import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
@@ -437,18 +439,19 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		viewer.setContents(diagramModel); 
 
 		// If the layout file doesn't exist, apply auto layout
-		// TODO the handler is DiagramGraphLayoutActionHandler - define action handler in sapphire-extension.xml
-//		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput) getEditorInput();
-//		if (diagramInput.noExistingLayout()) {
-//			SapphireAction layoutAction = this.diagramPart.getAction("Sapphire.Diagram.Layout");
-//			if (layoutAction != null) {
-//				SapphireActionHandler layoutHandler = layoutAction.getFirstActiveHandler();
-//				if (layoutHandler != null) {
-//					SapphireRenderingContext context = new SapphireRenderingContext(diagramPart, null);
-//					layoutHandler.execute(context);
-//				}
-//			}
-//		}
+		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput) getEditorInput();
+		if (diagramInput.noExistingLayout()) {
+			SapphireAction layoutAction = this.diagramPart.getAction("Sapphire.Diagram.Layout");
+			if (layoutAction != null) {
+				SapphireActionHandler layoutHandler = layoutAction.getFirstActiveHandler();
+				if (layoutHandler != null) {
+					DiagramRenderingContext context = new DiagramRenderingContext(this.diagramPart, this);
+					Point pt = getMouseLocation();
+					context.setCurrentMouseLocation(pt.x, pt.y);
+					layoutHandler.execute(context);
+				}
+			}
+		}
 
 		// listen for dropped parts
 		viewer.addDropTargetListener(new TemplateTransferDropTargetListener(getGraphicalViewer()));
