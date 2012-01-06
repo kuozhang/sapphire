@@ -13,7 +13,10 @@ package org.eclipse.sapphire.ui.gef.diagram.editor.parts;
 
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionLocator;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.Rectangle;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -35,40 +38,34 @@ public class SapphireMidpointLocator extends ConnectionLocator {
 	}
 
 	@Override
+	protected Rectangle getNewBounds(Dimension size, Point center) {
+		return new Rectangle(center, size);
+	}
+
+	@Override
 	protected Point getReferencePoint() {
+		Point midPoint = super.getReferencePoint();
 		Connection conn = getConnection();
-		Point midPoint = Point.SINGLETON;
-		int size = conn.getPoints().size();
+		PointList points = conn.getPoints();
+		Point p1;
+		Point p2;
+		int size = points.size();
 		if (size % 2 == 0) {
-			int index = (size / 2) - 1;
-			Point p1 = conn.getPoints().getPoint(index);
-			Point p2 = conn.getPoints().getPoint(index + 1);
-			conn.translateToAbsolute(p1);
-			conn.translateToAbsolute(p2);
-			midPoint.x = (p2.x - p1.x) / 2 + p1.x;
-			midPoint.y = (p2.y - p1.y) / 2 + p1.y;
+			int i = points.size() / 2;
+			int j = i - 1;
+			p1 = points.getPoint(j);
+			p2 = points.getPoint(i);
 		} else {
 			int index = size / 2;
-			Point p1 = conn.getPoints().getPoint(index);
-			conn.translateToAbsolute(p1);
-			midPoint.x = p1.x;
-			midPoint.y = p1.y;
+			p1 = points.getPoint(index - 1);
+			p2 = points.getPoint(index + 1);
+		}
+		double value = Math.atan2(p1.y-p2.y, p1.x-p2.x);
+		double angle = Math.toDegrees(value);
+		if ((angle > 0 && angle < 90) || (angle > -180 && angle < -90)) {
+			midPoint.y -= 12; 
 		}
 		
-		
-//			int deltaX, deltaY;
-//
-//			if (Math.signum(p2.x - midPoint.x) == Math.signum(p2.y - midPoint.y)) {
-//				deltaX = 3;
-//				deltaY = -10;
-//			} else {
-//				deltaX = 3;
-//				deltaY = 0;
-//			}
-		// TODO calculate better deltas
-		midPoint.x += deltaX;
-		midPoint.y += deltaY;
-
 		return midPoint;
 	}
 }
