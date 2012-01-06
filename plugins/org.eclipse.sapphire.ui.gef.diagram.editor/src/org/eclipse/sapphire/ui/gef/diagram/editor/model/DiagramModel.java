@@ -241,8 +241,7 @@ public class DiagramModel extends DiagramModelBase {
 		int x = 10;
 		int y = -1;
 		for (DiagramNodeModel nodeModel : nodes) {
-			DiagramNodePart part = nodeModel.getModelPart();
-			Bounds bounds = part.getNodeBounds();
+			Bounds bounds = nodeModel.getNodeBounds();
 			int height = Math.max(bounds.getHeight(), DiagramNodeModel.DEFAULT_NODE_HEIGHT);
 			height += bounds.getY() + 10; 
 			y = Math.max(y,  height);
