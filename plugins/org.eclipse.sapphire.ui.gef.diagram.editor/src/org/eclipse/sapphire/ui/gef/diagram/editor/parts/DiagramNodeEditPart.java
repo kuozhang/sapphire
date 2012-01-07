@@ -28,7 +28,6 @@ import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.gef.diagram.editor.figures.NodeFigure;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
@@ -82,7 +81,7 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 	private void performDirectEdit() {
 		if (manager == null) {
 			Label label = getNodeFigure().getLabelFigure();
-			manager = new NodeDirectEditManager(this, TextCellEditor.class, new NodeCellEditorLocator(label), label);
+			manager = new NodeDirectEditManager(this, new NodeCellEditorLocator(label), label);
 		}
 		manager.show();
 	}

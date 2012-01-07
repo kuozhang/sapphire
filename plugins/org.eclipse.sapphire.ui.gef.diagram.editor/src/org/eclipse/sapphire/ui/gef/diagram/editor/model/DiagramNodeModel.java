@@ -234,7 +234,8 @@ public class DiagramNodeModel extends DiagramModelBase {
         	y += offset;
         }
 
-        return new Bounds(x, y, labelWidth, labelHeight);
+        // add margin around the label
+        return new Bounds(x + 6, y, labelWidth - 12, labelHeight);
 	}
 
 	public void handleMoveNode() {

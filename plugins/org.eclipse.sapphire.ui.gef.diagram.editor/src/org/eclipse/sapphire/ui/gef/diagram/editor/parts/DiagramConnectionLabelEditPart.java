@@ -33,7 +33,7 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.policies.ConnectionLabelDirect
 
 public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart implements PropertyChangeListener {
 	
-    private NodeDirectEditManager manager;
+    private ConnectionDirectEditManager manager;
 
     @Override
 	protected IFigure createFigure() {
@@ -72,7 +72,7 @@ public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart im
 	private void performDirectEdit() {
 		if (manager == null) {
 			Label label = (Label)getFigure();
-			manager = new NodeDirectEditManager(this, TextCellEditor.class, new NodeCellEditorLocator(label), label);
+			manager = new ConnectionDirectEditManager(this, TextCellEditor.class, new ConnectionEditorLocator(label), label);
 		}
 		manager.show();
 	}

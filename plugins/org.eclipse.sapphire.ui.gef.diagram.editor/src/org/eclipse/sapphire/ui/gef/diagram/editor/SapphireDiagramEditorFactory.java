@@ -90,7 +90,7 @@ public class SapphireDiagramEditorFactory
             existingLayout = false;
         }
 
-        final SapphireDiagramEditorInput diagramEditorInput = SapphireDiagramEditorInput.createEditorInput(file, SAPPHIRE_DIAGRAM_TYPE, false);
+        final SapphireDiagramEditorInput diagramEditorInput = SapphireDiagramEditorInput.createEditorInput(file, SAPPHIRE_DIAGRAM_TYPE);
         diagramEditorInput.setLayoutFile(layoutFile);
         diagramEditorInput.setNoExistingLayout(!existingLayout);
         return diagramEditorInput;

@@ -25,10 +25,12 @@ public class SapphireDiagramEditorInput implements IEditorInput, IPersistableEle
 {
 	private IFile diagramFile;
     private IFile layoutFile;
+    private String providerId;
     private boolean noExistingLayout;
 
-    public SapphireDiagramEditorInput(IFile file, String providerId, boolean disposeEditingDomain) {
+    public SapphireDiagramEditorInput(IFile file, String providerId) {
     	this.diagramFile = file;
+    	this.providerId = providerId;
     }
     
     public IFile getLayoutFile()
@@ -57,58 +59,47 @@ public class SapphireDiagramEditorInput implements IEditorInput, IPersistableEle
     	this.noExistingLayout = value;
     }
 
-    public static SapphireDiagramEditorInput createEditorInput(IFile file, String providerId, boolean disposeEditingDomain) 
+	public static SapphireDiagramEditorInput createEditorInput(IFile file, String providerId) 
     {
-//        final Resource resource = diagram.eResource();
-//        if (resource == null) {
-//            throw new IllegalArgumentException();
-//        }
-//        final String fragment = resource.getURIFragment(diagram);
-//        final URI fragmentUri = resource.getURI().appendFragment(fragment);
         SapphireDiagramEditorInput diagramEditorInput;
-        diagramEditorInput = new SapphireDiagramEditorInput(file, providerId, disposeEditingDomain);
+        diagramEditorInput = new SapphireDiagramEditorInput(file, providerId);
         return diagramEditorInput;
     }
 
     @SuppressWarnings("rawtypes")
 	public Object getAdapter(Class adapter) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void saveState(IMemento memento) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public String getFactoryId() {
-		// TODO Auto-generated method stub
-		return null;
+		return getClass().getName();
 	}
 
 	public boolean exists() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public ImageDescriptor getImageDescriptor() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getName() {
-		// TODO Auto-generated method stub
-		return "SapphireDiagramEditorInput-name";
+		return getProviderId();
 	}
 
 	public IPersistableElement getPersistable() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	public String getProviderId() {
+		return this.providerId;
+	}
+
 	public String getToolTipText() {
-		// TODO Auto-generated method stub
-		return "SapphireDiagramEditorInput-toolTipText";
+		return getProviderId();
 	}    
     
 }

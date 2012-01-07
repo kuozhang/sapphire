@@ -8,41 +8,59 @@
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
  ******************************************************************************/
+
 package org.eclipse.sapphire.ui.gef.diagram.editor.parts;
 
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Text;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-final public class NodeCellEditorLocator implements CellEditorLocator {
-
+public class ConnectionEditorLocator implements CellEditorLocator {
 	private Label label;
 
-	public NodeCellEditorLocator(Label stickyNote) {
-		setLabel(stickyNote);
+	/**
+	 * Creates a new ActivityCellEditorLocator for the given Label
+	 * 
+	 * @param label
+	 *            the Label
+	 */
+	public ConnectionEditorLocator(Label label) {
+		setLabel(label);
 	}
 
+	/**
+	 * @see CellEditorLocator#relocate(org.eclipse.jface.viewers.CellEditor)
+	 */
 	public void relocate(CellEditor celleditor) {
 		Text text = (Text) celleditor.getControl();
-		Rectangle rect = label.getClientArea();
+		Point pref = text.computeSize(-1, -1);
+		Rectangle rect = label.getTextBounds().getCopy();
 		label.translateToAbsolute(rect);
-		org.eclipse.swt.graphics.Rectangle trim = text.computeTrim(0, 0, 0, 0);
-		rect.translate(trim.x, trim.y);
-		rect.width += trim.width;
-		rect.height += trim.height;
-		text.setBounds(rect.x, rect.y, rect.width, rect.height);
+		text.setBounds(rect.x - 1, rect.y - 1, pref.x + 1, pref.y + 1);
 	}
 
+	/**
+	 * Returns the Label figure.
+	 * 
+	 * @return the Label
+	 */
 	protected Label getLabel() {
 		return label;
 	}
 
+	/**
+	 * Sets the label.
+	 * 
+	 * @param label
+	 *            The label to set
+	 */
 	protected void setLabel(Label label) {
 		this.label = label;
 	}
