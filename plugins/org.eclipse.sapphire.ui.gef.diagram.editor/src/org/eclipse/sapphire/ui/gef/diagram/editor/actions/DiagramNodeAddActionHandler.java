@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.gef.diagram.editor.actions;
 
 import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescriptor;
 
+import org.eclipse.gef.EditPart;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -23,6 +24,9 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramRenderingContext;
+import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditor;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -74,6 +78,22 @@ public class DiagramNodeAddActionHandler extends SapphireDiagramActionHandler
 		DiagramNodePart nodePart = this.nodeTemplate.createNewDiagramNode();
 		Point pt = drc.getCurrentMouseLocation();
 		nodePart.setNodePosition(pt.getX(), pt.getY());
+		
+		// Select the new node and put it in direct-edit mode
+		SapphireDiagramEditor diagramEditor = drc.getDiagramEditor();
+		if (diagramEditor != null)
+		{
+			DiagramModel diagramModel = diagramEditor.getDiagramModel();
+			DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(nodePart);
+			Object editpart = diagramEditor.getGraphicalViewer().getEditPartRegistry().get(nodeModel);
+			if (editpart instanceof EditPart) 
+			{
+				// Force a layout first.
+				diagramEditor.getGraphicalViewer().flush();
+				diagramEditor.getGraphicalViewer().select((EditPart) editpart);
+			}			
+			diagramModel.handleDirectEditing(nodePart);			
+		}
 		return nodePart;
 	}	
 

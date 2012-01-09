@@ -155,7 +155,7 @@ public class SapphirePaletteRoot extends PaletteRoot
             IDiagramImageChoice image = nodeDef.getToolPaletteImage().element();
             ImageDescriptor imageDescriptor = imageCache.getImageDescriptor(image);
 
-            CreationFactory factory = new NodeCreationFactory(nodeDef);
+            CreationFactory factory = new NodeCreationFactory(nodeTemplate);
 
 			String tpLabel = nodeDef.getToolPaletteLabel().getContent();
 			if (tpLabel != null)

@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.gef.diagram.editor.commands;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
 
 /**
@@ -23,23 +22,17 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
 
 public class CreateNodeCommand extends Command {
 	
-	private DiagramModel diagramModel;
-	private DiagramNodeTemplate template;
+	private DiagramNodePart nodePart;
 	private Point location;
 
-	public CreateNodeCommand(DiagramModel diagramModel, DiagramNodeTemplate template, Point location) {
-		this.diagramModel = diagramModel;
-		this.template = template;
+	public CreateNodeCommand(DiagramModel diagramModel, DiagramNodePart nodePart, Point location) {
+		this.nodePart = nodePart;
 		this.location = location;
 	}
 
 	@Override
 	public void execute() {
-		DiagramNodePart part = this.template.createNewDiagramNode();
-		part.setNodePosition(location.x, location.y);
-		
-		// activate direct editing after object creation
-		diagramModel.handleDirectEditing(part);
+		this.nodePart.setNodePosition(location.x, location.y);		
 	}
 	
 	

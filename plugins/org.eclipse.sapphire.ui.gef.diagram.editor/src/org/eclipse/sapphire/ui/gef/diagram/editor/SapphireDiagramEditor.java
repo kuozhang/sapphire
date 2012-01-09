@@ -31,7 +31,6 @@ import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
-import org.eclipse.gef.dnd.TemplateTransferDropTargetListener;
 import org.eclipse.gef.editparts.GridLayer;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.palette.PaletteRoot;
@@ -57,6 +56,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.gef.diagram.editor.dnd.ObjectsTransferDropTargetListener;
+import org.eclipse.sapphire.ui.gef.diagram.editor.dnd.SapphireTemplateTransferDropTargetListener;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModelBase;
@@ -454,7 +454,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		}
 
 		// listen for dropped parts
-		viewer.addDropTargetListener(new TemplateTransferDropTargetListener(getGraphicalViewer()));
+		viewer.addDropTargetListener(new SapphireTemplateTransferDropTargetListener(getGraphicalViewer()));
 		viewer.addDropTargetListener((TransferDropTargetListener) new ObjectsTransferDropTargetListener(viewer));
 
 

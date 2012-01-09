@@ -12,26 +12,27 @@
 package org.eclipse.sapphire.ui.gef.diagram.editor;
 
 import org.eclipse.gef.requests.CreationFactory;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class NodeCreationFactory implements CreationFactory {
+	private DiagramNodeTemplate nodeTemplate;
 	
-	private IDiagramNodeDef nodeDef;
-	
-	public NodeCreationFactory(IDiagramNodeDef nodeDef) {
-		this.nodeDef = nodeDef;
+	public NodeCreationFactory(DiagramNodeTemplate nodeTemplate) {
+		this.nodeTemplate = nodeTemplate;
 	}
 
 	public Object getNewObject() {
-		return null;
+		DiagramNodePart newPart = this.nodeTemplate.createNewDiagramNode();
+		return newPart;
 	}
 
 	public Object getObjectType() {
-		return this.nodeDef;
+		return DiagramNodeTemplate.class;
 	}
 
 }

@@ -24,9 +24,8 @@ import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.CreateNodeCommand;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.DndObjectCommand;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.MoveNodeCommand;
@@ -81,10 +80,9 @@ public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy
 	@Override
 	protected Command getCreateCommand(CreateRequest request) {
 		Command cmd = UnexecutableCommand.INSTANCE;
-		if (request.getNewObjectType() instanceof IDiagramNodeDef) {
-			IDiagramNodeDef nodeDef = (IDiagramNodeDef)request.getNewObjectType();
-			DiagramNodeTemplate template = getDiagramNodeTemplate(nodeDef);
-			cmd = new CreateNodeCommand(this.model, template, request.getLocation());
+		if (request.getNewObjectType() == DiagramNodeTemplate.class) {
+			DiagramNodePart newNodePart = (DiagramNodePart)request.getNewObject();
+			cmd = new CreateNodeCommand(this.model, newNodePart, request.getLocation());
 		}
 		else if (request.getNewObjectType() == ISelection.class) {
 			// DND from project explorer
@@ -93,18 +91,6 @@ public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy
 			cmd = new DndObjectCommand(diagramModel, selection, request.getLocation());
 		}
 		return cmd;
-	}
-
-	private DiagramNodeTemplate getDiagramNodeTemplate(IDiagramNodeDef nodeDef) {
-		SapphireDiagramEditorPagePart sapphirePart = this.model.getModelPart();
-		for (DiagramNodeTemplate nodeTemplate : sapphirePart.getNodeTemplates()) {
-			if (sapphirePart.isNodeTemplateVisible(nodeTemplate)) {
-				if (nodeDef == nodeTemplate.getDefinition()) {
-					return nodeTemplate;
-				}
-			}
-		}
-		return null;
 	}
 	
 }
