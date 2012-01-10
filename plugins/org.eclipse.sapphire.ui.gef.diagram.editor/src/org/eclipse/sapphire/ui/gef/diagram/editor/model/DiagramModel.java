@@ -149,7 +149,6 @@ public class DiagramModel extends DiagramModelBase {
 		for (DiagramNodeTemplate nodeTemplate : getModelPart().getNodeTemplates()) {
 			if (getModelPart().isNodeTemplateVisible(nodeTemplate)) {
 				for (DiagramNodePart nodePart : nodeTemplate.getDiagramNodes()) {
-					System.out.println(nodePart.getLabel());
 					nodes.add(new DiagramNodeModel(this, nodePart));
 				}
 			}

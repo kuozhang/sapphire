@@ -34,6 +34,10 @@ public class DiagramConnectionLabelModel extends DiagramModelBase {
 		return getModelPart();
 	}
 	
+	public DiagramModel getDiagramModel() {
+		return connectionModel.getDiagramModel();
+	}
+
 	public DiagramConnectionModel getConnectionModel() {
 		return connectionModel;
 	}

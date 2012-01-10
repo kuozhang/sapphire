@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionLabelModel;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.ConnectionLabelDirectEditPolicy;
 
 /**
@@ -37,7 +38,13 @@ public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart im
 
     @Override
 	protected IFigure createFigure() {
-    	return new Label();
+    	Label label = new Label();
+		
+    	DiagramResourceCache resourceCache = getCastedModel().getDiagramModel().getResourceCache();
+		DiagramConnectionPart connectionPart = getCastedModel().getModelPart();
+		label.setForegroundColor(resourceCache.getLineColor(connectionPart));
+
+		return label;
 	}
 
 	@Override

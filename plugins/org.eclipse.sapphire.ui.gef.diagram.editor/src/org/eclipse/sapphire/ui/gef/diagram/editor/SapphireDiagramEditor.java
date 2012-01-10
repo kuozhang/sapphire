@@ -130,7 +130,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			@Override
 		    public void handleNodeMoveEvent(final DiagramNodeEvent event)
 		    {
-            	System.out.println("handleNodeMoveEvent");
 		    	markEditorDirty();
 		    	moveNode((DiagramNodePart)event.getPart());
 		    }
@@ -138,55 +137,47 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			@Override
 			public void handleConnectionUpdateEvent(final DiagramConnectionEvent event)
 			{
-            	System.out.println("handleConnectionUpdateEvent");
 				updateConnection((DiagramConnectionPart)event.getPart());
 			}
 
             @Override
             public void handleConnectionEndpointEvent(final DiagramConnectionEvent event)
             {
-            	System.out.println("handleConnectionEndpointEvent");
                 updateConnectionEndpoint((DiagramConnectionPart)event.getPart());
             }
 
             @Override
             public void handleConnectionAddEvent(final DiagramConnectionEvent event)
             {
-            	System.out.println("handleConnectionAddEvent");
                 addConnectionIfPossible((DiagramConnectionPart)event.getPart());
             }
 
 			@Override
 			public void handleConnectionDeleteEvent(final DiagramConnectionEvent event)
 			{
-            	System.out.println("handleConnectionDeleteEvent");
 				removeConnection((DiagramConnectionPart)event.getPart());
 			}
 			
 		    public void handleConnectionAddBendpointEvent(final DiagramConnectionEvent event)
 		    {
-            	System.out.println("handleConnectionAddBendpointEvent");
 		    	markEditorDirty();
 		    	updateConnectionBendpoint((DiagramConnectionPart)event.getPart());
 		    }
 
 		    public void handleConnectionRemoveBendpointEvent(final DiagramConnectionEvent event)
 		    {
-            	System.out.println("handleConnectionRemoveBendpointEvent");
 		    	markEditorDirty();
 		    	updateConnectionBendpoint((DiagramConnectionPart)event.getPart());
 		    }
 
 		    public void handleConnectionMoveBendpointEvent(final DiagramConnectionEvent event)
 		    {
-            	System.out.println("handleConnectionMoveBendpointEvent");
 		    	markEditorDirty();
 		    	updateConnectionBendpoint((DiagramConnectionPart)event.getPart());
 		    }
 			
 		    public void handleConnectionMoveLabelEvent(final DiagramConnectionEvent event)
 		    {
-            	System.out.println("handleConnectionMoveLabelEvent");
 		    	markEditorDirty();
 		    	updateConnection((DiagramConnectionPart)event.getPart());
 		    }
@@ -211,7 +202,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			@Override
 			public void handleDiagramUpdateEvent(final DiagramPageEvent event)
 			{
-            	System.out.println("handleDiagramUpdateEvent");
 				refreshPalette();
 			}
 			
@@ -406,11 +396,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		setEditDomain(new DefaultEditDomain(this));
 
 		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput)input;
-		IFile diagramFile = diagramInput.getDiagramFile();
+		//IFile diagramFile = diagramInput.getDiagramFile();
 		IFile layoutFile = diagramInput.getLayoutFile();
 		diagramGeometry = new DiagramGeometryWrapper(layoutFile, getPart());
-		System.out.println("setInput diagramFile: " + diagramFile);
-		System.out.println("setInput layoutFile: " + layoutFile);
 		
 		if (this.diagramGeometry.isGridPropertySet())
 		{
