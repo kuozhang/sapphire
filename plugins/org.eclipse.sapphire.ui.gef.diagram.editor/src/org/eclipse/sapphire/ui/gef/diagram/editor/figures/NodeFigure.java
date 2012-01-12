@@ -102,8 +102,9 @@ public class NodeFigure extends RoundedRectangle {
 			return;
 		}
 		
-		final Dimension cornerDimension = new Dimension(1, 1); //this.getCornerDimensions();
-		final Rectangle fillRectangle = getBounds().getShrinked(cornerDimension.width, cornerDimension.height);
+		final Dimension cornerDimension = new Dimension(1, 1);
+		Rectangle fillRectangle = new Rectangle(getBounds());
+		fillRectangle = fillRectangle.shrink(cornerDimension.width, cornerDimension.height);
 		
 		final Color foregroundSave = graphics.getForegroundColor();
 		final Color backgroundSave = graphics.getBackgroundColor();
@@ -135,10 +136,11 @@ public class NodeFigure extends RoundedRectangle {
 		r.width -= inset1 + inset2;
 		r.height -= inset1 + inset2;
 
+		final Dimension cornerDimension = new Dimension(4, 4); 
 		if (hasImage == false) {
 			graphics.drawRoundRectangle(r,
-					Math.max(0, getCornerDimensions().width - (int) lineInset),
-					Math.max(0, getCornerDimensions().height - (int) lineInset));
+					Math.max(0, cornerDimension.width - (int) lineInset),
+					Math.max(0, cornerDimension.height - (int) lineInset));
 		}
 		
 		if (hasFocus || selected) {
@@ -147,8 +149,8 @@ public class NodeFigure extends RoundedRectangle {
 			Rectangle expanded = r.getExpanded(1, 1);
 			graphics.setLineStyle(SWT.LINE_DASH);
 			graphics.drawRoundRectangle(expanded,
-					Math.max(0, getCornerDimensions().width - (int) lineInset),
-					Math.max(0, getCornerDimensions().height - (int) lineInset));
+					Math.max(0, cornerDimension.width - (int) lineInset),
+					Math.max(0, cornerDimension.height - (int) lineInset));
 			graphics.setForegroundColor(foregroundSave);
 		}
 	}
