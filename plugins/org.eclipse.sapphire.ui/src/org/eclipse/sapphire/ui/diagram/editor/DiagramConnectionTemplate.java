@@ -340,14 +340,11 @@ public class DiagramConnectionTemplate extends SapphirePart
             return ConnectionType.OneToOne;
         }
     }
-        
-    public DiagramConnectionPart createNewDiagramConnection(DiagramNodePart srcNode, 
-                                                            DiagramNodePart targetNode)
-    {        
-        // Get the serialized value of endpoint1
+    
+    public String getSerializedEndpoint1(DiagramNodePart srcNode)
+    {
         String endpoint1Value = null;
         IDiagramConnectionEndpointBindingDef srcAnchorDef = this.bindingDef.getEndpoint1().element();
-        String srcProperty = srcAnchorDef.getProperty().getContent();
         Value<Function> srcFunc = srcAnchorDef.getValue();
         FunctionResult srcFuncResult = getNodeReferenceFunction(srcNode, srcFunc, 
                                 this.bindingDef.adapt( LocalizationService.class ));
@@ -360,8 +357,11 @@ public class DiagramConnectionTemplate extends SapphirePart
         {
             endpoint1Value = IdUtil.computeNodeId(srcNode);
         }
-        
-        // get the serialized value of endpoint2
+        return endpoint1Value;
+    }
+    
+    public String getSerializedEndpoint2(DiagramNodePart targetNode)
+    {
         String endpoint2Value = null;
         IDiagramConnectionEndpointBindingDef targetAnchorDef = this.bindingDef.getEndpoint2().element();
         Value<Function> targetFunc = targetAnchorDef.getValue();;
@@ -377,6 +377,72 @@ public class DiagramConnectionTemplate extends SapphirePart
         {
             endpoint2Value = IdUtil.computeNodeId(targetNode);
         }
+        return endpoint2Value;
+    }
+    
+    private IModelElement getOneToManyConnectionSrcElement(String endpoint1Value)
+    {
+        ModelElementList<?> list = this.modelElement.read(this.modelProperty);
+        IModelElement srcElement = null;
+        for (IModelElement element : list)
+        {
+            Object valObj = element.read(this.endpoint1Property);
+            String val = null;
+            if (valObj instanceof ReferenceValue)
+            {
+                val = (((ReferenceValue<?,?>)valObj).getText());
+            }
+            else
+            {
+                val = (String)valObj;
+            }
+            if (val != null && val.equals(endpoint1Value))
+            {
+                srcElement = element;
+                break;
+            }
+        }
+        return srcElement;
+    }
+
+    public void setSerializedEndpoint1(IModelElement connModelElement, String endpoint1Value)
+    {
+        IDiagramConnectionEndpointBindingDef srcAnchorDef = this.bindingDef.getEndpoint1().element();
+        if (getConnectionType() == ConnectionType.OneToOne)
+        {
+            setModelProperty(connModelElement, ((ModelPath.PropertySegment)this.endpoint1Path.head()).getPropertyName(), endpoint1Value);
+        }
+        else
+        {
+        	IModelElement srcElement = getOneToManyConnectionSrcElement(endpoint1Value);
+            if (srcElement != null)
+            {
+                String srcProperty = srcAnchorDef.getProperty().getContent();
+                setModelProperty(srcElement, srcProperty, endpoint1Value);
+            }
+        }
+    }
+    
+    public void setSerializedEndpoint2(IModelElement connModelElement, String endpoint2Value)
+    {
+        if (getConnectionType() == ConnectionType.OneToOne)
+        {
+            setModelProperty(connModelElement, ((ModelPath.PropertySegment)this.endpoint2Path.head()).getPropertyName(), endpoint2Value);
+        }
+        else
+        {
+        	setModelProperty(connModelElement, ((ModelPath.PropertySegment)this.endpoint2Path.head()).getPropertyName(), endpoint2Value);            
+        }            	
+    }
+    
+    public DiagramConnectionPart createNewDiagramConnection(DiagramNodePart srcNode, 
+                                                            DiagramNodePart targetNode)
+    {        
+        // Get the serialized value of endpoint1
+        String endpoint1Value = getSerializedEndpoint1(srcNode);
+        
+        // get the serialized value of endpoint2
+        String endpoint2Value = getSerializedEndpoint2(targetNode);
         
         if (endpoint1Value != null && endpoint2Value != null)
         {
@@ -395,28 +461,13 @@ public class DiagramConnectionTemplate extends SapphirePart
             }
             else
             {
-                ModelElementList<?> list = this.modelElement.read(this.modelProperty);
-                IModelElement srcElement = null;
-                for (IModelElement element : list)
-                {
-                    Object valObj = element.read(this.endpoint1Property);
-                    String val = null;
-                    if (valObj instanceof ReferenceValue)
-                    {
-                        val = (((ReferenceValue<?,?>)valObj).getText());
-                    }
-                    else
-                    {
-                        val = (String)valObj;
-                    }
-                    if (val != null && val.equals(endpoint1Value))
-                    {
-                        srcElement = element;
-                        break;
-                    }
-                }
+                IModelElement srcElement = getOneToManyConnectionSrcElement(endpoint1Value);
+                IDiagramConnectionEndpointBindingDef srcAnchorDef = this.bindingDef.getEndpoint1().element();
+	            String srcProperty = srcAnchorDef.getProperty().getContent();                
+                
                 if (srcElement == null)
                 {
+                	ModelElementList<?> list = this.modelElement.read(this.modelProperty);
                     srcElement = list.addNewElement();
                     setModelProperty(srcElement, srcProperty, endpoint1Value);
                 }

@@ -139,6 +139,11 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
         }        
     }
         
+    @Override
+    public void resetEndpoint1(DiagramNodePart newSrcNode)
+    {
+    }
+    
     public DiagramNodePart getSourceNodePart()
     {
         SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)getParentPart().getParentPart().getParentPart();

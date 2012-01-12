@@ -30,11 +30,7 @@ import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
-import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
@@ -155,6 +151,15 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     }
         
     @Override
+    public void setSerializedEndpoint2(IModelElement connModelElement, String endpoint2Value)
+    {
+        IDiagramConnectionEndpointBindingDef endpointDef = this.bindingDef.getEndpoint2().element();
+        String endpointProperty = endpointDef.getProperty().getContent();
+
+        setModelProperty(connModelElement, endpointProperty, endpoint2Value);
+    }
+    
+    @Override
     public DiagramConnectionPart createNewDiagramConnection(DiagramNodePart srcNode, 
             DiagramNodePart targetNode)
     {
@@ -199,30 +204,18 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
             ModelElementList<?> list = srcNodeModel.read(listProperty);
             newEndpoint = list.addNewElement();            
         }
-        IDiagramConnectionEndpointBindingDef endpointDef = this.bindingDef.getEndpoint2().element();
-        String endpointProperty = endpointDef.getProperty().getContent();
-        Value<Function> endpointFunc = endpointDef.getValue();
-        FunctionResult endpointFuncResult = getNodeReferenceFunction(targetNode, endpointFunc, 
-                                    this.bindingDef.adapt( LocalizationService.class ));
         
-        DiagramConnectionPart connPart = null;
-        if (endpointFuncResult != null)
+        // Get serialized value of endpoint
+        String endpointVal = getSerializedEndpoint2(targetNode);
+        
+        // Set the serialized value of endpoint
+        setSerializedEndpoint2(newEndpoint, endpointVal);
+        
+        DiagramConnectionPart connPart = getConnectionPart(srcNodeModel, newEndpoint);
+        if (connPart == null) 
         {
-            String endpointVal = (String)endpointFuncResult.value();
-            endpointFuncResult.dispose();
-                        
-            if (endpointVal == null || endpointVal.length() == 0)
-            {
-                endpointVal = IdUtil.computeNodeId(targetNode);
-            }
-            setModelProperty(newEndpoint, endpointProperty, endpointVal);     
-            
-            connPart = getConnectionPart(srcNodeModel, newEndpoint);
-            if (connPart == null) {
-            	connPart = createNewConnectionPart(newEndpoint, null);
-            }
-        }
-        
+        	connPart = createNewConnectionPart(newEndpoint, null);
+        }        
         return connPart;
     }
     

@@ -344,6 +344,20 @@ public class DiagramConnectionPart
         }        
     }
 
+    public void resetEndpoint1(DiagramNodePart newSrcNode)
+    {
+    	this.srcNodeModel = newSrcNode.getLocalModelElement();
+    	String endpoint1Value = this.connectionTemplate.getSerializedEndpoint1(newSrcNode);
+    	this.connectionTemplate.setSerializedEndpoint1(this.modelElement, endpoint1Value);
+    }
+    
+    public void resetEndpoint2(DiagramNodePart newTargetNode)
+    {
+    	this.targetNodeModel = newTargetNode.getLocalModelElement();
+    	String endpoint2Value = this.connectionTemplate.getSerializedEndpoint2(newTargetNode);
+    	this.connectionTemplate.setSerializedEndpoint2(this.modelElement, endpoint2Value);
+    }
+
     protected IModelElement resolveEndpoint(IModelElement modelElement, ModelPath endpointPath)
     {
         if (endpointPath.length() == 1)
