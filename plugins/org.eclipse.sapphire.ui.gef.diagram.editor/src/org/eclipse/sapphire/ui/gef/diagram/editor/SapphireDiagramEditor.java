@@ -28,12 +28,16 @@ import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.KeyHandler;
+import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
 import org.eclipse.gef.editparts.GridLayer;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.palette.PaletteRoot;
+import org.eclipse.gef.ui.actions.DirectEditAction;
+import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
@@ -63,12 +67,14 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModelBase;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.parts.SapphireDiagramEditorEditPartFactory;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartConstants;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.editor.FormEditor;
 
 /**
@@ -85,7 +91,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
     private SapphireDiagramPartListener diagramPartListener;
     private List<SapphirePart> selectedParts = null;
     private boolean editorIsDirty = false;
-    
+
 	private Point mouseLocation;
 
 
@@ -324,7 +330,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
             }
         }
         if (editorIsActive) {
-			updateActions(getSelectionActions());
+        	updateActions(getSelectionActions());
 			
 			// Bug 339360 - MultiPage Editor's selectionProvider does not notify PropertySheet (edit) 
 			// bypass the selection provider
@@ -447,7 +453,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 
 
 		this.editorIsDirty = false;
-		firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);		
+		firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);	
+		
 	}
 	
 	public DiagramModel getDiagramModel() {
@@ -469,8 +476,12 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 				return new SapphireDiagramGridLayer(diagramModel);
 			}			
 		});
+
+		initActionRegistry();
 		
-		viewer.setKeyHandler(new GraphicalViewerKeyHandler(viewer));
+		GraphicalViewerKeyHandler graphicalViewerKeyHandler = new GraphicalViewerKeyHandler(viewer);
+		KeyHandler parentKeyHandler = graphicalViewerKeyHandler.setParent(getCommonKeyHandler());
+		viewer.setKeyHandler(parentKeyHandler);		
 
 		// configure the context menu provider
 		ContextMenuProvider cmProvider = new SapphireDiagramEditorContextMenuProvider(this);
@@ -498,10 +509,29 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		if (this.diagramPart.isShowGuides() != isShowGuidesInViewer)
 		{
 			viewer.setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, this.diagramPart.isShowGuides());
-		}
-		
+		}		
 		
 	}
+	
+	protected void initActionRegistry()
+	{
+		DirectEditAction deAction = new DirectEditAction((IWorkbenchPart) this);
+		getActionRegistry().registerAction(deAction);
+		getSelectionActions().add(deAction.getId());
+	}
+	
+	protected KeyHandler getCommonKeyHandler()
+	{
+
+		KeyHandler sharedKeyHandler = new KeyHandler();
+		sharedKeyHandler.put(KeyStroke.getPressed(SWT.DEL, 127, 0), getActionRegistry().getAction(
+				ActionFactory.DELETE.getId()));
+		sharedKeyHandler.put(KeyStroke.getPressed(SWT.F2, 0), getActionRegistry().getAction(
+				GEFActionConstants.DIRECT_EDIT));
+
+		return sharedKeyHandler;
+	}
+		
 	
 	@Override
 	protected PaletteViewerProvider createPaletteViewerProvider() 
