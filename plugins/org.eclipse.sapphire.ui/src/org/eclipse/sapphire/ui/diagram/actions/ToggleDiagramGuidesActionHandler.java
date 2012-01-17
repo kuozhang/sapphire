@@ -9,7 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.graphiti.actions;
+package org.eclipse.sapphire.ui.diagram.actions;
 
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -22,8 +22,8 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class ToggleDiagramGridActionHandler extends SapphireDiagramActionHandler 
-{		
+public class ToggleDiagramGuidesActionHandler extends SapphireDiagramActionHandler 
+{
     @Override
     public void init( final SapphireAction action,
                       final ISapphireActionHandlerDef def )
@@ -32,7 +32,7 @@ public class ToggleDiagramGridActionHandler extends SapphireDiagramActionHandler
     	if (action.getType() == SapphireActionType.TOGGLE)
     	{
     		SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)this.getPart();
-    		setChecked(diagramPart.isGridVisible());
+    		setChecked(diagramPart.isShowGuides());
     	}
     }
     
@@ -46,8 +46,8 @@ public class ToggleDiagramGridActionHandler extends SapphireDiagramActionHandler
 	protected Object run(SapphireRenderingContext context) 
 	{
 		SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)this.getPart();
-		boolean visible = !diagramPart.isGridVisible();
-		diagramPart.setGridVisible(visible);
+		boolean showGuides = !diagramPart.isShowGuides();
+		diagramPart.setShowGuides(showGuides);
 		return null;
 	}
 }

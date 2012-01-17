@@ -15,18 +15,6 @@
 
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
     <action-handler>
-        <action>Sapphire.Diagram.Grid.Toggle</action>
-        <impl>org.eclipse.sapphire.ui.swt.graphiti.actions.ToggleDiagramGridActionHandler</impl>
-        <description>Show/Hide diagram grid</description>
-        <condition>org.eclipse.sapphire.ui.swt.graphiti.actions.GraphitiEditorCondition</condition>
-    </action-handler>
-    <action-handler>
-        <action>Sapphire.Diagram.Guides.Toggle</action>
-        <impl>org.eclipse.sapphire.ui.swt.graphiti.actions.ToggleDiagramGuidesActionHandler</impl>
-        <description>Show/Hide guides</description>
-        <condition>org.eclipse.sapphire.ui.swt.graphiti.actions.GraphitiEditorCondition</condition>
-    </action-handler>
-    <action-handler>
         <action>Sapphire.Diagram.Layout</action>
         <impl>org.eclipse.sapphire.ui.swt.graphiti.actions.HorizontalGraphLayoutActionHandler</impl>
         <label>horizontally</label>

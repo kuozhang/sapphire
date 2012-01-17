@@ -323,7 +323,17 @@
         <description>Deletes the model element associated with a given diagram node or connection.</description>
         <context>Sapphire.Diagram.Node</context>
         <context>Sapphire.Diagram.Connection</context>
-    </action-handler>        
+    </action-handler>
+    <action-handler>
+        <action>Sapphire.Diagram.Grid.Toggle</action>
+        <impl>org.eclipse.sapphire.ui.diagram.actions.ToggleDiagramGridActionHandler</impl>
+        <description>Show/Hide diagram grid</description>
+    </action-handler>
+    <action-handler>
+        <action>Sapphire.Diagram.Guides.Toggle</action>
+        <impl>org.eclipse.sapphire.ui.diagram.actions.ToggleDiagramGuidesActionHandler</impl>
+        <description>Show/Hide guides</description>
+    </action-handler>            
     <action-handler-factory>
         <action>Sapphire.Add</action>
         <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeAddActionHandlerFactory</impl>
