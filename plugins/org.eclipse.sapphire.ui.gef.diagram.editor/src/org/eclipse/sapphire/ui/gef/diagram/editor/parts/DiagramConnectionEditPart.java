@@ -35,6 +35,7 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionLabelMo
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramConnectionBendpointEditPolicy;
+import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramConnectionEditPolicy;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramConnectionEndpointEditPolicy;
 
 /**
@@ -51,6 +52,7 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart implem
 		installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE, new DiagramConnectionBendpointEditPolicy());
 
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new DiagramConnectionLayoutEditPolicy());
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, new DiagramConnectionEditPolicy());
 	}
 
 	@Override
