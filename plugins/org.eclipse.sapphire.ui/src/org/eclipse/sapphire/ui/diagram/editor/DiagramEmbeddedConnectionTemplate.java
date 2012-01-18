@@ -214,7 +214,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         DiagramConnectionPart connPart = getConnectionPart(srcNodeModel, newEndpoint);
         if (connPart == null) 
         {
-        	connPart = createNewConnectionPart(newEndpoint, null);
+        	connPart = createNewConnectionPart(newEndpoint, srcNodeModel);
         }        
         return connPart;
     }
