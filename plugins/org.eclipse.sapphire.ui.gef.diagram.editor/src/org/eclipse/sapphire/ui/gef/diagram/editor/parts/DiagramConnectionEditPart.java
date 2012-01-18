@@ -31,6 +31,7 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.gef.diagram.editor.figures.DiagramConnectionFigure;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionLabelModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramResourceCache;
@@ -57,7 +58,7 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart implem
 
 	@Override
 	protected IFigure createFigure() {
-		PolylineConnection connection = (PolylineConnection) super.createFigure();
+		PolylineConnection connection = new DiagramConnectionFigure();
 		connection.setTargetDecoration(new PolygonDecoration());
 		updateStyle(connection);
 		
