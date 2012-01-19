@@ -136,7 +136,7 @@ public class NodeFigure extends RoundedRectangle {
 		r.width -= inset1 + inset2;
 		r.height -= inset1 + inset2;
 
-		final Dimension cornerDimension = new Dimension(4, 4); 
+		final Dimension cornerDimension = new Dimension(8, 8); 
 		if (hasImage == false) {
 			graphics.drawRoundRectangle(r,
 					Math.max(0, cornerDimension.width - (int) lineInset),

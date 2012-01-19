@@ -44,7 +44,6 @@ public class SapphireMidpointLocator extends ConnectionLocator {
 
 	@Override
 	protected Point getReferencePoint() {
-		Point midPoint = super.getReferencePoint();
 		Connection conn = getConnection();
 		PointList points = conn.getPoints();
 		Point p1;
@@ -57,14 +56,18 @@ public class SapphireMidpointLocator extends ConnectionLocator {
 			p2 = points.getPoint(i);
 		} else {
 			int index = size / 2;
-			p1 = points.getPoint(index - 1);
-			p2 = points.getPoint(index + 1);
+			p1 = points.getPoint(index + 1);
+			p2 = points.getPoint(index);
 		}
+		Dimension d = p2.getDifference(p1);
+		Point midPoint = Point.SINGLETON.setLocation(p1.x + d.width / 2, p1.y	+ d.height / 2);
+
 		double value = Math.atan2(p1.y-p2.y, p1.x-p2.x);
 		double angle = Math.toDegrees(value);
 		if ((angle > 0 && angle < 90) || (angle > -180 && angle < -90)) {
 			midPoint.y -= 12; 
 		}
+		midPoint.x += 3;
 		
 		return midPoint;
 	}
