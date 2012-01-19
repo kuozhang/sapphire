@@ -66,7 +66,7 @@ public class Map2Editor extends SapphireEditor
     @Override
     protected void createDiagramPages() throws PartInitException
     {
-        IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/map/MapEditor.sdef/diagram" );
+        IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/map/Map2Editor.sdef/diagram" );
         this.mapDiagram = new SapphireDiagramEditor(this.modelMap, path);
         SapphireDiagramEditorInput diagramEditorInput = null;
         try

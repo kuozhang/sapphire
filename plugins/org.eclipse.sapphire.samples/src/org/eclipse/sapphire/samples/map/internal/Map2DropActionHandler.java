@@ -29,7 +29,7 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramRenderingContext;
+import org.eclipse.sapphire.ui.swt.graphiti.DiagramRenderingContext;
 
 /**
  * Action handler for Sapphire.Drop action for the map editor. The implementation reads city names
@@ -38,7 +38,7 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramRenderingContext;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MapDropActionHandler extends SapphireDiagramActionHandler
+public final class Map2DropActionHandler extends SapphireDiagramActionHandler
 {
     @Override
     protected Object run( final SapphireRenderingContext context )
