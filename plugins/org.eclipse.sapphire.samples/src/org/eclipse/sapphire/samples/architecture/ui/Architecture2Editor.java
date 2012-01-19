@@ -21,9 +21,9 @@ import org.eclipse.sapphire.samples.architecture.IArchitecture;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditor;
-import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditorFactory;
-import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditorInput;
+import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
+import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditorFactory;
+import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditorInput;
 import org.eclipse.sapphire.ui.swt.xml.editor.XmlEditorResourceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
@@ -33,14 +33,14 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ArchitectureEditor extends SapphireEditor
+public final class Architecture2Editor extends SapphireEditor
 {
     private IArchitecture model;
     private StructuredTextEditor pageSource;
     private SapphireDiagramEditor pageDiagram;
     private MasterDetailsEditorPage pageDetails;
     
-    public ArchitectureEditor()
+    public Architecture2Editor()
     {
         super( "org.eclipse.sapphire.samples" );
     }

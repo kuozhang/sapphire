@@ -88,6 +88,7 @@
                     </content>
                 </page>
             </properties-view>
+            <visible-when>${ Root().DetailLevel == 1 }</visible-when>
         </node>
         <page-header-text>architecture</page-header-text>
         <connection>

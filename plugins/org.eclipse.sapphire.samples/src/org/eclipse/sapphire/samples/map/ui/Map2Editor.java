@@ -20,27 +20,27 @@ import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.samples.map.IMap;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
-import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditor;
-import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditorFactory;
-import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditorInput;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.xml.editor.XmlEditorResourceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
+import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditorFactory;
+import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditorInput;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class MapEditor extends SapphireEditor 
+public class Map2Editor extends SapphireEditor 
 {
     private IMap modelMap;
     private StructuredTextEditor mapSourceEditor;
     private SapphireDiagramEditor mapDiagram;
     private MasterDetailsEditorPage mapOverviewPage;
     
-    public MapEditor()
+    public Map2Editor()
     {
         super( "org.eclipse.sapphire.samples" );
     }

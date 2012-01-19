@@ -162,11 +162,29 @@
 
   <extension point="org.eclipse.ui.editors">
     <editor
+      class="org.eclipse.sapphire.samples.map.ui.Map2Editor"
+      default="true"
+      filenames="map2.xml"
+      id="org.eclipse.sapphire.samples.map.ui.Map2Editor"
+      name="Map2 Editor"/>
+  </extension>
+
+  <extension point="org.eclipse.ui.editors">
+    <editor
       class="org.eclipse.sapphire.samples.architecture.ui.ArchitectureEditor"
       default="true"
       filenames="architecture.xml"
       id="org.eclipse.sapphire.samples.architecture.ui.ArchitectureEditor"
       name="Architecture Editor"/>
+  </extension>
+
+  <extension point="org.eclipse.ui.editors">
+    <editor
+      class="org.eclipse.sapphire.samples.architecture.ui.Architecture2Editor"
+      default="true"
+      filenames="architecture2.xml"
+      id="org.eclipse.sapphire.samples.architecture.ui.Architecture2Editor"
+      name="Architecture2 Editor"/>
   </extension>
 
   <!-- 
