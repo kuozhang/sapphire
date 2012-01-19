@@ -28,7 +28,6 @@ import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImplicitConnectionBindingDef;
@@ -38,7 +37,7 @@ import org.eclipse.sapphire.ui.diagram.def.IModelElementTypeDef;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class DiagramImplicitConnectionTemplate extends SapphirePart 
+public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate 
 {
     public static abstract class Listener
     {
@@ -51,7 +50,7 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
     }
     
     private IDiagramImplicitConnectionBindingDef bindingDef;
-    private IDiagramConnectionDef definition;
+    private IDiagramConnectionDef connectionDef;
     protected IModelElement modelElement;
     private SapphireDiagramEditorPagePart diagramEditor;
     private String propertyName;
@@ -76,7 +75,7 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
         this.diagramEditor = (SapphireDiagramEditorPagePart)getParentPart();
         this.listEntryFunctionMap = new HashMap<IModelElement, FunctionResult>();
         this.modelElement = getModelElement();
-        this.definition = (IDiagramConnectionDef)super.definition;
+        this.connectionDef = (IDiagramConnectionDef)super.getDefinition();
         this.propertyName = this.bindingDef.getProperty().getContent();
         this.modelProperty = (ListProperty)ModelUtil.resolve(this.modelElement, this.propertyName);
         
@@ -121,6 +120,7 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
         return this.diagramEditor;
     }
     
+    @Override
     public void addModelListener()
     {
         this.modelElement.addListener(this.modelPropertyListener, this.propertyName);
@@ -129,6 +129,7 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
         this.modelElement.addListener(this.modelPropertyListener, this.allDescendentsPath);
     }
     
+    @Override
     public void removeModelListener()
     {
         this.modelElement.removeListener(this.modelPropertyListener, this.propertyName);
@@ -148,7 +149,7 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
         for (int i = 0; i < newFilteredList.size() - 1; i++)
         {
             DiagramImplicitConnectionPart connPart = 
-                    createNewConnectionPart(newFilteredList.get(i), newFilteredList.get(i+1));
+                    createNewImplicitConnectionPart(newFilteredList.get(i), newFilteredList.get(i+1));
             if (connPart.getEndpoint1() != null && connPart.getEndpoint2() != null &&
             		this.diagramEditor.getDiagramNodePart(connPart.getEndpoint1()) != null &&
             		this.diagramEditor.getDiagramNodePart(connPart.getEndpoint2()) != null)
@@ -172,7 +173,7 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
         for (int i = 0; i < newFilteredList.size() - 1; i++)
         {
             DiagramImplicitConnectionPart connPart = 
-                    createNewConnectionPart(newFilteredList.get(i), newFilteredList.get(i+1));
+                    createNewImplicitConnectionPart(newFilteredList.get(i), newFilteredList.get(i+1));
             this.implicitConnections.add(connPart);
         }    
         
@@ -192,10 +193,10 @@ public class DiagramImplicitConnectionTemplate extends SapphirePart
         return filteredList;
     }
         
-    private DiagramImplicitConnectionPart createNewConnectionPart(IModelElement srcNodeModel, IModelElement targetNodeModel)
+    private DiagramImplicitConnectionPart createNewImplicitConnectionPart(IModelElement srcNodeModel, IModelElement targetNodeModel)
     {
         DiagramImplicitConnectionPart connPart = new DiagramImplicitConnectionPart(srcNodeModel, targetNodeModel);
-        connPart.init(this, srcNodeModel, this.definition, Collections.<String,String>emptyMap());
+        connPart.init(this, srcNodeModel, this.connectionDef, Collections.<String,String>emptyMap());
         return connPart;
     }
     

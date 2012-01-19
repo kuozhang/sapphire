@@ -81,7 +81,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     }
     
     protected SapphireDiagramEditorPagePart diagramEditor;
-    protected IDiagramConnectionDef definition;
+    protected IDiagramConnectionDef connectionDef;
     protected IDiagramExplicitConnectionBindingDef bindingDef;
     protected IModelElement modelElement;
     protected String propertyName;
@@ -112,7 +112,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     {
         this.diagramEditor = (SapphireDiagramEditorPagePart)getParentPart();
         this.modelElement = getModelElement();
-        this.definition = (IDiagramConnectionDef)super.definition;;
+        this.connectionDef = (IDiagramConnectionDef)super.getDefinition();
         
         this.diagramConnections = new ArrayList<DiagramConnectionPart>();
         
@@ -198,7 +198,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     
     public String getConnectionTypeId()
     {
-        return this.definition.getId().getContent();
+        return this.connectionDef.getId().getContent();
     }
     
     public List<DiagramConnectionPart> getDiagramConnections(IModelElement connListParent)
@@ -495,7 +495,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     public DiagramConnectionPart createNewConnectionPart(IModelElement connElement, IModelElement srcNodeElement)
     {
         DiagramConnectionPart connPart = new DiagramConnectionPart(this.bindingDef, this.endpoint1Path, this.endpoint2Path);
-        connPart.init(this, connElement, this.definition, 
+        connPart.init(this, connElement, this.connectionDef, 
                 Collections.<String,String>emptyMap());
         connPart.addListener(this.connPartListener);
         addConnectionPart(srcNodeElement, connPart);

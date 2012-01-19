@@ -36,7 +36,8 @@ public class DiagramImplicitConnectionPart extends DiagramConnectionPart
     {   
         this.connectionTemplate = (DiagramImplicitConnectionTemplate)getParentPart();
         
-        this.definition = (IDiagramConnectionDef)getDefinition();        
+        this.definition = (IDiagramConnectionDef)getDefinition(); 
+        this.modelElement = getModelElement();
     }
     
     @Override
@@ -66,7 +67,8 @@ public class DiagramImplicitConnectionPart extends DiagramConnectionPart
     {
     }
     
-    public DiagramImplicitConnectionTemplate getImplicitConnectionTemplate()
+    @Override
+    public DiagramConnectionTemplate getDiagramConnectionTemplate()
     {
         return this.connectionTemplate;
     }
@@ -75,6 +77,11 @@ public class DiagramImplicitConnectionPart extends DiagramConnectionPart
     public PropertiesViewContributionPart getPropertiesViewContribution()
     {
         return null;
+    }
+    
+    @Override
+    public void addModelListener()
+    {    	
     }
     
     @Override

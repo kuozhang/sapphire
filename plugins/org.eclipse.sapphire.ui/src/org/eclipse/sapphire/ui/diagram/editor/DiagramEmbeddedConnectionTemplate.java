@@ -57,7 +57,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         this.nodeTemplate = (DiagramNodeTemplate)getParentPart();
         this.diagramEditor = this.nodeTemplate.getDiagramEditorPart();
         this.modelElement = getModelElement();
-        this.definition = (IDiagramConnectionDef)super.getDefinition();
+        this.connectionDef = (IDiagramConnectionDef)super.getDefinition();
         
         this.diagramConnectionMap = new HashMap<IModelElement, List<DiagramConnectionPart>>();
         
@@ -224,7 +224,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     {
         DiagramEmbeddedConnectionPart connPart = 
             new DiagramEmbeddedConnectionPart(this.bindingDef, srcNodeElement, this.endpointPath);
-        connPart.init(this, connElement, this.definition, Collections.<String,String>emptyMap());
+        connPart.init(this, connElement, this.connectionDef, Collections.<String,String>emptyMap());
         connPart.addListener(this.connPartListener);
         addConnectionPart(srcNodeElement, connPart);
         return connPart;
