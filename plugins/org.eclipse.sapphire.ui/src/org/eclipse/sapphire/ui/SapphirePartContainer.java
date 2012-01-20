@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
@@ -37,19 +39,21 @@ public class SapphirePartContainer extends FormPart
         final List<SapphirePart> childPartsFromInit = initChildParts();
         this.childParts = Collections.unmodifiableList( new ArrayList<SapphirePart>( childPartsFromInit ) );
 
-        final SapphirePartListener childPartListener = new SapphirePartListener()
+        final Listener childPartListener = new Listener()
         {
             @Override
-            public void handleValidateStateChange( final Status oldValidateState,
-                                                   final Status newValidationState )
+            public void handle( final Event event )
             {
-                updateValidationState();
+                if( event instanceof ValidationChangedEvent )
+                {
+                    updateValidationState();
+                }
             }
         };
         
         for( SapphirePart childPart : this.childParts )
         {
-            childPart.addListener( childPartListener );
+            childPart.attach( childPartListener );
         }
         
         updateValidationState();

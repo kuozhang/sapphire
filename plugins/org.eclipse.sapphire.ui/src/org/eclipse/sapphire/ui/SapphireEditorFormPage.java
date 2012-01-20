@@ -15,6 +15,8 @@ package org.eclipse.sapphire.ui;
 
 import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescriptor;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
@@ -31,14 +33,11 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphireEditorFormPage
-
-    extends FormPage
-    
+public abstract class SapphireEditorFormPage extends FormPage
 {
     private final SapphireEditor editor;
     private final SapphireEditorPagePart part;
-    private final SapphirePartListener listener;
+    private final Listener listener;
     
     public SapphireEditorFormPage( final SapphireEditor editor,
                                    final SapphireEditorPagePart editorPagePart ) 
@@ -48,10 +47,10 @@ public abstract class SapphireEditorFormPage
         this.editor = editor;
         this.part = editorPagePart;
         
-        this.listener = new SapphirePartListener()
+        this.listener = new Listener()
         {
             @Override
-            public void handleEvent( final SapphirePartEvent event )
+            public void handle( final Event event )
             {
                 if( event instanceof ImageChangedEvent )
                 {
@@ -60,7 +59,7 @@ public abstract class SapphireEditorFormPage
             }
         };
         
-        this.part.addListener( this.listener );
+        this.part.attach( this.listener );
     }
     
     public final SapphireEditor getEditor()
@@ -116,7 +115,7 @@ public abstract class SapphireEditorFormPage
     {
         super.dispose();
         
-        this.part.removeListener( this.listener );
+        this.part.detach( this.listener );
         
         if( getManagedForm() != null )
         {

@@ -20,14 +20,14 @@ import org.eclipse.sapphire.ui.def.FormPartDef;
 public abstract class FormPart extends SapphirePart
 {
     @Override
-    public FormPartDef getDefinition()
+    public FormPartDef definition()
     {
-        return (FormPartDef) super.getDefinition();
+        return (FormPartDef) super.definition();
     }
 
     public final boolean getScaleVertically()
     {
-        return getDefinition().getScaleVertically().getContent();
+        return definition().getScaleVertically().getContent();
     }
     
     

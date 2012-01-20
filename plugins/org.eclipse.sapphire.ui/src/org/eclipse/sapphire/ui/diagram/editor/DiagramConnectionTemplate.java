@@ -112,7 +112,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     {
         this.diagramEditor = (SapphireDiagramEditorPagePart)getParentPart();
         this.modelElement = getModelElement();
-        this.connectionDef = (IDiagramConnectionDef)super.getDefinition();
+        this.connectionDef = (IDiagramConnectionDef)super.definition();
         
         this.diagramConnections = new ArrayList<DiagramConnectionPart>();
         

@@ -91,7 +91,7 @@ public final class FormEditorPage extends SapphireEditorFormPage
 
     public FormEditorPageDef getDefinition()
     {
-        return getPart().getDefinition();
+        return getPart().definition();
     }
     
     @Override
@@ -118,7 +118,7 @@ public final class FormEditorPage extends SapphireEditorFormPage
             child.render( context );
         }
 
-        final ISapphireDocumentation doc = part.getDefinition().getDocumentation().element();
+        final ISapphireDocumentation doc = part.definition().getDocumentation().element();
         
         if( doc != null )
         {

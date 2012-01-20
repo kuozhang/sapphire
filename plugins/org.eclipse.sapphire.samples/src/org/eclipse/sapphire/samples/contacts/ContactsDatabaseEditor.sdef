@@ -37,10 +37,10 @@
                     <content>
                         <label>Use this simple editor to organize your contacts.</label>
                         <spacer/>
-                        <action-link>
+                        <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>add a contact</label>
-                        </action-link>
+                        </actuator>
                     </content>
                 </section>
                 <node-factory>

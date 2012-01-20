@@ -11,14 +11,11 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
-import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescriptor;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
@@ -26,6 +23,7 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
@@ -156,7 +154,7 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
             setId( ID_BASE + this.type.getSimpleName() );
             setLabel( this.type.getLabel( true, CapitalizationType.NO_CAPS, false ) );
             
-            final ImageDescriptor typeSpecificAddImage = toImageDescriptor( this.type.image() );
+            final ImageData typeSpecificAddImage = this.type.image();
             
             if( typeSpecificAddImage != null )
             {

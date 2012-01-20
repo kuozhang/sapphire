@@ -56,6 +56,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
@@ -71,8 +72,6 @@ import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SapphireEditorFormPage;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.SapphireImageCache;
-import org.eclipse.sapphire.ui.SapphirePartEvent;
-import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireSection;
 import org.eclipse.sapphire.ui.def.IEditorPageDef;
@@ -149,7 +148,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
     private RootSection mainSection;
     private ContentOutline contentOutlinePage;
     private IPartListener2 partListener;
-    private SapphirePartListener editorPagePartListener;
+    private Listener editorPagePartListener;
     
     public MasterDetailsEditorPage( final SapphireEditor editor,
                                     final IModelElement rootModelElement,
@@ -181,7 +180,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
         
         part.setState( state );
 
-        this.definition = part.getDefinition();
+        this.definition = part.definition();
         
         String partName = pageName;
         
@@ -241,7 +240,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
     
     public IMasterDetailsEditorPageDef getDefinition()
     {
-        return getPart().getDefinition();
+        return getPart().definition();
     }
     
     @Override
@@ -302,10 +301,10 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
             actionPresentation.setToolBarManager( form.getToolBarManager() );
             actionPresentation.render();
             
-            this.editorPagePartListener = new SapphirePartListener()
+            this.editorPagePartListener = new Listener()
             {
                 @Override
-                public void handleEvent( final SapphirePartEvent event )
+                public void handle( final org.eclipse.sapphire.Event event )
                 {
                     if( event instanceof MasterDetailsEditorPagePart.DetailsFocusRequested )
                     {
@@ -314,7 +313,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
                 }
             };
             
-            part.addListener( this.editorPagePartListener );
+            part.attach( this.editorPagePartListener );
         }
         catch( final Exception e )
         {
@@ -987,7 +986,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
         
         if( this.editorPagePartListener != null )
         {
-            getPart().removeListener( this.editorPagePartListener );
+            getPart().detach( this.editorPagePartListener );
         }
     }
     

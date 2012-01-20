@@ -24,10 +24,7 @@ import org.eclipse.sapphire.ui.def.ISapphireTabDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TabGroupPagePart
-
-    extends SapphirePartContainer
-    
+public final class TabGroupPagePart extends SapphirePartContainer
 {
     private static final ImageData IMG_TAB_GROUP_PAGE
         = ImageData.createFromClassLoader( TabGroupPagePart.class, "TabGroupPage.png" );
@@ -41,7 +38,7 @@ public final class TabGroupPagePart
         super.init();
 
         final IModelElement element = getModelElement();
-        final ISapphireTabDef def = getDefinition();
+        final ISapphireTabDef def = definition();
         
         this.labelFunctionResult = initExpression
         (
@@ -53,7 +50,7 @@ public final class TabGroupPagePart
             {
                 public void run()
                 {
-                    notifyListeners( new LabelChangedEvent( TabGroupPagePart.this ) );
+                    broadcast( new LabelChangedEvent( TabGroupPagePart.this ) );
                 }
             }
         );
@@ -62,9 +59,9 @@ public final class TabGroupPagePart
     }
 
     @Override
-    public ISapphireTabDef getDefinition()
+    public ISapphireTabDef definition()
     {
-        return (ISapphireTabDef) super.getDefinition();
+        return (ISapphireTabDef) super.definition();
     }
     
     public String getLabel()

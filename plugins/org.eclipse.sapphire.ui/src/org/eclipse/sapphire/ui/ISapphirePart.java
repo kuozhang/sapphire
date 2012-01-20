@@ -32,10 +32,8 @@ public interface ISapphirePart
     Status getValidationState();
     IContext getDocumentationContext();
     SapphireImageCache getImageCache();
-    void addListener( SapphirePartListener listener );
-    void removeListener( SapphirePartListener listener );
     void dispose();
-    ISapphirePartDef getDefinition();
+    ISapphirePartDef definition();
     
     Set<String> getActionContexts();
     String getMainActionContext();

@@ -33,7 +33,7 @@ public final class PropertiesViewContributionPagePart extends SapphirePartContai
         super.init();
 
         final IModelElement element = getModelElement();
-        final IPropertiesViewContributionPageDef def = getDefinition();
+        final IPropertiesViewContributionPageDef def = definition();
         
         this.labelFunctionResult = initExpression
         (
@@ -45,7 +45,7 @@ public final class PropertiesViewContributionPagePart extends SapphirePartContai
             {
                 public void run()
                 {
-                    notifyListeners( new LabelChangedEvent( PropertiesViewContributionPagePart.this ) );
+                    broadcast( new LabelChangedEvent( PropertiesViewContributionPagePart.this ) );
                 }
             }
         );
@@ -62,16 +62,16 @@ public final class PropertiesViewContributionPagePart extends SapphirePartContai
             {
                 public void run()
                 {
-                    notifyListeners( new VisibilityChangedEvent( PropertiesViewContributionPagePart.this ) );
+                    broadcast( new VisibilityChangedEvent( PropertiesViewContributionPagePart.this ) );
                 }
             }
         );
     }
 
     @Override
-    public IPropertiesViewContributionPageDef getDefinition()
+    public IPropertiesViewContributionPageDef definition()
     {
-        return (IPropertiesViewContributionPageDef) super.getDefinition();
+        return (IPropertiesViewContributionPageDef) super.definition();
     }
     
     public String getLabel()

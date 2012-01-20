@@ -34,7 +34,7 @@ public final class SapphireDialogPart
     }
 
     @Override
-    public ISapphireDialogDef getDefinition()
+    public ISapphireDialogDef definition()
     {
         return this.def;
     }

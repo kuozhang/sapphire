@@ -92,7 +92,7 @@ public interface PropertyEditorDef extends FormPartDef
             ISapphireWithDirectiveDef.class,
             ISapphireIfElseDirectiveDef.class,
             ISapphireCompositeDef.class,
-            ISapphireActionLinkDef.class,
+            ActuatorDef.class,
             ISapphireCustomPartDef.class,
             ISapphireStaticTextFieldDef.class,
             PageBookExtDef.class,
@@ -114,7 +114,7 @@ public interface PropertyEditorDef extends FormPartDef
             @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),
             @XmlListBinding.Mapping( element = "if", type = ISapphireIfElseDirectiveDef.class ),
             @XmlListBinding.Mapping( element = "composite", type = ISapphireCompositeDef.class ),
-            @XmlListBinding.Mapping( element = "action-link", type = ISapphireActionLinkDef.class ),
+            @XmlListBinding.Mapping( element = "actuator", type = ActuatorDef.class ),
             @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
             @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
             @XmlListBinding.Mapping( element = "switching-panel", type = PageBookExtDef.class ),
@@ -169,7 +169,7 @@ public interface PropertyEditorDef extends FormPartDef
     @Documentation
     (
         content = "Overrides property editor label. By default, the property editor will use property's label from " +
-        		  "model metadata."
+                  "model metadata."
     )
     
     ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );

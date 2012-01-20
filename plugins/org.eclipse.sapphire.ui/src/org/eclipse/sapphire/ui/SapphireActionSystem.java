@@ -19,7 +19,7 @@ public final class SapphireActionSystem
 {
     private static final String PREFIX = "Sapphire.";
     
-    public static final String CONTEXT_ACTION_LINK = PREFIX + "ActionLink";
+    public static final String CONTEXT_ACTUATOR = PREFIX + "Actuator";
     public static final String CONTEXT_EDITOR_PAGE = PREFIX + "EditorPage";
     public static final String CONTEXT_EDITOR_PAGE_OUTLINE = PREFIX + "EditorPage.Outline";
     public static final String CONTEXT_EDITOR_PAGE_OUTLINE_HEADER = PREFIX + "EditorPage.Outline.Header";

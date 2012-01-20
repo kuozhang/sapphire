@@ -21,12 +21,10 @@ import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireWizardPagePart
-
-    extends SapphireComposite
-    
+public final class SapphireWizardPagePart extends SapphireComposite
 {
     private FunctionResult imageFunctionResult;
+    private boolean visible;
     
     @Override
     protected void init()
@@ -34,7 +32,7 @@ public final class SapphireWizardPagePart
         super.init();
         
         final IModelElement element = getModelElement();
-        final ISapphireWizardPageDef def = getDefinition();
+        final ISapphireWizardPageDef def = definition();
         
         this.imageFunctionResult = initExpression
         (
@@ -46,31 +44,45 @@ public final class SapphireWizardPagePart
             {
                 public void run()
                 {
-                    notifyListeners( new ImageChangedEvent( SapphireWizardPagePart.this ) );
+                    broadcast( new ImageChangedEvent( SapphireWizardPagePart.this ) );
                 }
             }
         );
     }
 
     @Override
-    public ISapphireWizardPageDef getDefinition()
+    public ISapphireWizardPageDef definition()
     {
-        return (ISapphireWizardPageDef) super.getDefinition();
+        return (ISapphireWizardPageDef) super.definition();
     }
     
     public String getLabel()
     {
-        return getDefinition().getLabel().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
+        return definition().getLabel().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
     }
     
     public String getDescription()
     {
-        return getDefinition().getDescription().getLocalizedText( CapitalizationType.NO_CAPS, false );
+        return definition().getDescription().getLocalizedText( CapitalizationType.NO_CAPS, false );
     }
     
     public ImageData getImage()
     {
         return (ImageData) this.imageFunctionResult.value();
+    }
+    
+    public boolean isVisible()
+    {
+        return this.visible;
+    }
+    
+    public void setVisible( final boolean visible )
+    {
+        if( this.visible != visible )
+        {
+            this.visible = visible;
+            broadcast( new VisibilityChangedEvent( this ) );
+        }
     }
 
     @Override

@@ -56,7 +56,7 @@ public final class BooleanPropertyEditorRenderer extends ValuePropertyEditorRend
         final ValueProperty property = (ValueProperty) part.getProperty();
         
         final CheckboxLayout checkboxLayout;
-        final String checkboxLayoutHint = part.getDefinition().getHint( PropertyEditorDef.HINT_CHECKBOX_LAYOUT );
+        final String checkboxLayoutHint = part.definition().getHint( PropertyEditorDef.HINT_CHECKBOX_LAYOUT );
         
         if( checkboxLayoutHint == null )
         {

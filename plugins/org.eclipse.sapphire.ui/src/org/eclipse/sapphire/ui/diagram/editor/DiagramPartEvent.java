@@ -9,20 +9,26 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui;
+package org.eclipse.sapphire.ui.diagram.editor;
+
+import org.eclipse.sapphire.ui.ISapphirePart;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphirePageBookListener
-
-    extends SapphirePartListener
-    
+public class DiagramPartEvent
 {
-    public void handlePageChange()
+    private final ISapphirePart part;
+    
+    public DiagramPartEvent( final ISapphirePart part )
     {
-        // The default implementation doesn't do anything.
+        this.part = part;
+    }
+    
+    public final ISapphirePart getPart()
+    {
+        return this.part;
     }
     
 }

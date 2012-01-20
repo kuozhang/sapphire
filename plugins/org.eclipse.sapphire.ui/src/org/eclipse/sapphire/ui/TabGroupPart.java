@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.ISapphireTabDef;
@@ -38,10 +40,7 @@ import org.eclipse.swt.widgets.TabItem;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TabGroupPart
-
-    extends SapphirePart
-    
+public final class TabGroupPart extends SapphirePart
 {
     private List<TabGroupPagePart> pages;
     
@@ -54,37 +53,39 @@ public final class TabGroupPart
 
         this.pages = new ArrayList<TabGroupPagePart>();
         
-        for( ISapphireTabDef pageDef : getDefinition().getTabs() )
+        for( ISapphireTabDef pageDef : definition().getTabs() )
         {
             final TabGroupPagePart pagePart = new TabGroupPagePart();
             pagePart.init( this, element, pageDef, this.params );
             
             this.pages.add( pagePart );
 
-            final SapphirePartListener tabPartListener = new SapphirePartListener()
+            final Listener tabPartListener = new Listener()
             {
                 @Override
-                public void handleValidateStateChange( final Status oldValidateState,
-                                                       final Status newValidationState )
+                public void handle( final Event event )
                 {
-                    updateValidationState();
+                    if( event instanceof ValidationChangedEvent )
+                    {
+                        updateValidationState();
+                    }
                 }
             };
             
-            pagePart.addListener( tabPartListener );
+            pagePart.attach( tabPartListener );
         }
     }
     
     @Override
-    public ISapphireTabGroupDef getDefinition()
+    public ISapphireTabGroupDef definition()
     {
-        return (ISapphireTabGroupDef) super.getDefinition();
+        return (ISapphireTabGroupDef) super.definition();
     }
 
     @Override
     public void render( final SapphireRenderingContext context )
     {
-        final boolean scaleVertically = getDefinition().getScaleVertically().getContent();
+        final boolean scaleVertically = definition().getScaleVertically().getContent();
     
         final TabFolder tabGroup = new TabFolder( context.getComposite(), SWT.TOP );
         tabGroup.setLayoutData( gdhspan( ( scaleVertically ? gdfill() : gdhfill() ), 2 ) );
@@ -102,23 +103,23 @@ public final class TabGroupPart
             final Map<ImageDescriptor,Image> images = new HashMap<ImageDescriptor,Image>();
             updateTabImage( tab, page, images );
             
-            final SapphirePartListener tabPartListener = new SapphirePartListener()
+            final Listener tabPartListener = new Listener()
             {
                 @Override
-                public void handleEvent( final SapphirePartEvent event )
+                public void handle( final Event event )
                 {
-                    if( event instanceof SapphirePart.LabelChangedEvent )
+                    if( event instanceof LabelChangedEvent )
                     {
                         tab.setText( page.getLabel() );
                     }
-                    else if( event instanceof SapphirePart.ImageChangedEvent )
+                    else if( event instanceof ImageChangedEvent )
                     {
                         updateTabImage( tab, page, images );
                     }
                 }
             };
             
-            page.addListener( tabPartListener );
+            page.attach( tabPartListener );
             
             tab.addDisposeListener
             (
@@ -126,7 +127,7 @@ public final class TabGroupPart
                 {
                     public void widgetDisposed( final DisposeEvent event )
                     {
-                        page.removeListener( tabPartListener );
+                        page.detach( tabPartListener );
                         
                         for( Image image : images.values() )
                         {

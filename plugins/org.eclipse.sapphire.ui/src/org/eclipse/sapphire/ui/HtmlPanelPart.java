@@ -20,6 +20,8 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.el.ConcatFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -27,7 +29,6 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.HtmlContentSourceType;
 import org.eclipse.sapphire.ui.def.HtmlPanelDef;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
@@ -78,7 +79,7 @@ public final class HtmlPanelPart extends FormPart
                 {
                     public void run()
                     {
-                        notifyContentChangeEventListeners();
+                        broadcast( new ContentChangedEvent( HtmlPanelPart.this ) );
                     }
                 }
             );
@@ -95,7 +96,7 @@ public final class HtmlPanelPart extends FormPart
                 {
                     public void run()
                     {
-                        notifyContentChangeEventListeners();
+                        broadcast( new ContentChangedEvent( HtmlPanelPart.this ) );
                     }
                 }
             );
@@ -143,31 +144,11 @@ public final class HtmlPanelPart extends FormPart
         }
     }
     
-    private void notifyContentChangeEventListeners()
+    public static final class ContentChangedEvent extends PartEvent
     {
-        final SapphirePartEvent event = new SapphirePartEvent( this );
-        
-        for( SapphirePartListener listener : getListeners() )
+        public ContentChangedEvent( final SapphirePart part )
         {
-            if( listener instanceof Listener )
-            {
-                try
-                {
-                    ( (Listener) listener ).handleContentChangeEvent( event );
-                }
-                catch( Exception e )
-                {
-                    SapphireUiFrameworkPlugin.log( e );
-                }
-            }
-        }
-    }
-    
-    public static abstract class Listener extends SapphirePartListener
-    {
-        public void handleContentChangeEvent( final SapphirePartEvent event )
-        {
-            // The default implementation doesn't do anything.
+            super( part );
         }
     }
     
@@ -198,9 +179,12 @@ public final class HtmlPanelPart extends FormPart
                 listener = new Listener()
                 {
                     @Override
-                    public void handleContentChangeEvent( final SapphirePartEvent event )
+                    public void handle( final Event event )
                     {
-                        browser.setText( getContent() );
+                        if( event instanceof ContentChangedEvent )
+                        {
+                            browser.setText( getContent() );
+                        }
                     }
                 };
             }
@@ -211,14 +195,17 @@ public final class HtmlPanelPart extends FormPart
                 listener = new Listener()
                 {
                     @Override
-                    public void handleContentChangeEvent( final SapphirePartEvent event )
+                    public void handle( final Event event )
                     {
-                        browser.setUrl( getContentUrl() );
+                        if( event instanceof ContentChangedEvent )
+                        {
+                            browser.setUrl( getContentUrl() );
+                        }
                     }
                 };
             }
             
-            addListener( listener );
+            attach( listener );
             
             browser.addDisposeListener
             (
@@ -226,7 +213,7 @@ public final class HtmlPanelPart extends FormPart
                 {
                     public void widgetDisposed( final DisposeEvent event )
                     {
-                        removeListener( listener );
+                        detach( listener );
                     }
                 }
             );

@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -31,7 +33,6 @@ import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphirePartEvent;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
@@ -175,12 +176,12 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         this.selection = this;
         this.propertiesViewContributionManager = new PropertiesViewContributionManager( this, this.modelElement );
                 
-        this.addListener
+        attach
         (
-            new SapphirePartListener()
+            new Listener()
             {
                 @Override
-                public void handleEvent( final SapphirePartEvent event )
+                public void handle( final Event event )
                 {
                     if( event instanceof SelectionChangedEvent )
                     {
@@ -351,12 +352,8 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     {
         if( this.selection != selection )
         {
-            final SapphirePart oldSelection = this.selection;
-            final SapphirePart newSelection = selection;
-            
-            this.selection = newSelection;
-            
-            notifyListeners( new SelectionChangedEvent( this, oldSelection, newSelection ) );
+            this.selection = selection;
+            broadcast( new SelectionChangedEvent( this ) );
         }
     }
     

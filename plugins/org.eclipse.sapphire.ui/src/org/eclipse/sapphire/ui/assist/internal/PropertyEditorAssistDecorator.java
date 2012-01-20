@@ -125,7 +125,7 @@ public final class PropertyEditorAssistDecorator
         this.mouseOverEditorControl = false;
         this.mouseTrackListener = new EditorControlMouseTrackListener();
         
-        final ISapphirePartDef def = this.part.getDefinition();
+        final ISapphirePartDef def = this.part.definition();
         
         this.contributorsToSuppress = new ArrayList<String>();
         final String contributorsToSuppressStr = def.getHint( HINT_SUPPRESS_ASSIST_CONTRIBUTORS );

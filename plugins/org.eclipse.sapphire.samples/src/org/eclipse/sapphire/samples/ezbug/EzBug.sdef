@@ -163,10 +163,10 @@
                     <content>
                         <label>Use this editor to manage your bug database.</label>
                         <spacer/>
-                        <action-link>
+                        <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>add a bug report</label>
-                        </action-link>
+                        </actuator>
                     </content>
                 </section>
                 <node-factory>

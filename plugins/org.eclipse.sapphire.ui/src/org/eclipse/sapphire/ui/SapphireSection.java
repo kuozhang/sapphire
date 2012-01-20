@@ -55,7 +55,7 @@ public class SapphireSection extends SapphireComposite
     {
         super.init();
         
-        final ISapphireSectionDef def = getDefinition();
+        final ISapphireSectionDef def = definition();
         
         this.visibleWhenCondition = null;
         
@@ -69,9 +69,9 @@ public class SapphireSection extends SapphireComposite
     }
     
     @Override
-    public ISapphireSectionDef getDefinition()
+    public ISapphireSectionDef definition()
     {
-        return (ISapphireSectionDef) super.getDefinition();
+        return (ISapphireSectionDef) super.definition();
     }
 
     @Override
@@ -79,7 +79,7 @@ public class SapphireSection extends SapphireComposite
     {
         final FormToolkit toolkit = new FormToolkit( context.getDisplay() );
         
-        final ISapphireSectionDef def = getDefinition();
+        final ISapphireSectionDef def = definition();
         
         final Composite outerComposite = new Composite( context.getComposite(), SWT.NONE );
         outerComposite.setLayoutData( createSectionLayoutData() );

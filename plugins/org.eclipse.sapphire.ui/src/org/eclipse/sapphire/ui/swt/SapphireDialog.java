@@ -18,12 +18,13 @@ import java.util.Collections;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
 import org.eclipse.sapphire.ui.SapphireDialogPart;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ISapphireDialogDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
@@ -94,7 +95,7 @@ public class SapphireDialog extends Dialog
         
         this.part.render( context );
         
-        final String initialFocusProperty = this.part.getDefinition().getInitialFocus().getContent();
+        final String initialFocusProperty = this.part.definition().getInitialFocus().getContent();
         
         if( initialFocusProperty != null )
         {
@@ -129,17 +130,19 @@ public class SapphireDialog extends Dialog
         
         this.okButton = getButton( IDialogConstants.OK_ID );
         
-        final SapphirePartListener listener = new SapphirePartListener()
+        final Listener listener = new Listener()
         {
             @Override
-            public void handleValidateStateChange( final Status oldValidateState,
-                                                   final Status newValidationState )
+            public void handle( final Event event )
             {
-                updateOkButtonEnablement();
+                if( event instanceof SapphirePart.ValidationChangedEvent )
+                {
+                    updateOkButtonEnablement();
+                }
             }
         };
         
-        this.part.addListener( listener );
+        this.part.attach( listener );
         
         this.okButton.addDisposeListener
         (
@@ -147,7 +150,7 @@ public class SapphireDialog extends Dialog
             {
                 public void widgetDisposed( final DisposeEvent event )
                 {
-                    SapphireDialog.this.part.removeListener( listener );
+                    SapphireDialog.this.part.detach( listener );
                 }
             }
         );

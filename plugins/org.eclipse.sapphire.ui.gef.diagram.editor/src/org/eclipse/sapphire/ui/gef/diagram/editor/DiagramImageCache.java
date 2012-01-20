@@ -53,7 +53,7 @@ public class DiagramImageCache {
 		// Add node images
 		List<DiagramNodeTemplate> nodeTemplates = diagramPart.getNodeTemplates();
 		for (DiagramNodeTemplate nodeTemplate : nodeTemplates) {
-			final IDiagramNodeDef nodeDef = nodeTemplate.getDefinition();
+			final IDiagramNodeDef nodeDef = nodeTemplate.definition();
 			final IDiagramNodeImageDef imageDef = nodeDef.getImage().element();
 
 			if (imageDef != null) {

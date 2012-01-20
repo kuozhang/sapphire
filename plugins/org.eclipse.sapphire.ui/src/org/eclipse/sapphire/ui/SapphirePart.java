@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
+ *    Ling Hao - [329114] rewrite context help binding feature
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -24,6 +24,7 @@ import org.eclipse.help.IContext;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
@@ -41,10 +42,10 @@ import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.ui.def.ActuatorDef;
 import org.eclipse.sapphire.ui.def.FormDef;
 import org.eclipse.sapphire.ui.def.HtmlPanelDef;
 import org.eclipse.sapphire.ui.def.IFormPartInclude;
-import org.eclipse.sapphire.ui.def.ISapphireActionLinkDef;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphireCustomPartDef;
 import org.eclipse.sapphire.ui.def.ISapphireDialogDef;
@@ -64,8 +65,8 @@ import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
 import org.eclipse.sapphire.ui.def.PageBookExtDef;
 import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
-import org.eclipse.sapphire.ui.def.SplitFormDef;
 import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
+import org.eclipse.sapphire.ui.def.SplitFormDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.widgets.Display;
@@ -82,7 +83,8 @@ public abstract class SapphirePart implements ISapphirePart
     protected Map<String,String> params;
     private ModelElementListener modelElementListener;
     private Status validationState;
-    private Set<SapphirePartListener> listeners;
+    private final ListenerContext listeners = new ListenerContext();
+    private Set<SapphirePartListener> listenersDeprecated;
     private SapphireImageCache imageCache;
     private Map<String,SapphireActionGroup> actions;
     
@@ -115,7 +117,6 @@ public abstract class SapphirePart implements ISapphirePart
         this.modelElement.addListener( this.modelElementListener );
         
         this.validationState = Status.createOkStatus();
-        this.listeners = null;
         
         for( ISapphirePartListenerDef listenerDefinition : definition.getListeners() )
         {
@@ -137,9 +138,9 @@ public abstract class SapphirePart implements ISapphirePart
                 
                 if( listener != null )
                 {
-                    if( listener instanceof SapphirePartListener )
+                    if( listener instanceof Listener )
                     {
-                        addListener( (SapphirePartListener) listener );
+                        attach( (Listener) listener );
                     }
                     else
                     {
@@ -211,7 +212,7 @@ public abstract class SapphirePart implements ISapphirePart
 
     public abstract void render( final SapphireRenderingContext context );
     
-    public ISapphirePartDef getDefinition()
+    public ISapphirePartDef definition()
     {
         return this.definition;
     }
@@ -272,23 +273,8 @@ public abstract class SapphirePart implements ISapphirePart
         
         if( this.validationState == null || newValidationState == null || ! this.validationState.equals( newValidationState ) )
         {
-            final Status oldValidationState = this.validationState;
             this.validationState = newValidationState;
-            
-            if( this.listeners != null )
-            {
-                for( SapphirePartListener listener : this.listeners )
-                {
-                    try
-                    {
-                        listener.handleValidateStateChange( oldValidationState, newValidationState );
-                    }
-                    catch( Exception e )
-                    {
-                        SapphireUiFrameworkPlugin.log( e );
-                    }
-                }
-            }
+            broadcast( new ValidationChangedEvent( this ) );
         }
     }
     
@@ -307,26 +293,6 @@ public abstract class SapphirePart implements ISapphirePart
         return setFocus( new ModelPath( path ) );
     }
     
-    protected final void notifyFocusRecievedEventListeners()
-    {
-        if( this.listeners != null )
-        {
-            final SapphirePartEvent event = new SapphirePartEvent( this );
-            
-            for( SapphirePartListener listener : this.listeners )
-            {
-                try
-                {
-                    listener.handleFocusReceivedEvent( event );
-                }
-                catch( Exception e )
-                {
-                    SapphireUiFrameworkPlugin.log( e );
-                }
-            }
-        }
-    }
-    
     public IContext getDocumentationContext()
     {
         return null;
@@ -342,91 +308,75 @@ public abstract class SapphirePart implements ISapphirePart
         // The default implement doesn't do anything.
     }
     
-    public final void addListener( final SapphirePartListener listener )
+    public final void attach( final Listener listener )
     {
-        if( this.listeners == null )
+        this.listeners.attach( listener );
+    }
+    
+    public final void detach( final Listener listener )
+    {
+        this.listeners.detach( listener );
+    }
+    
+    protected final void broadcast( final Event event )
+    {
+        this.listeners.broadcast( event );
+        
+        // HACK
+        
+        if( event instanceof StructureChangedEvent && this.parent != null && this.parent instanceof SapphirePart )
         {
-            this.listeners = Collections.singleton( listener );
-        }
-        else
-        {
-            this.listeners = new HashSet<SapphirePartListener>( this.listeners );
-            this.listeners.add( listener );
+            ( (SapphirePart) this.parent ).broadcast( event );
         }
     }
     
+    @Deprecated
+    public final void addListener( final SapphirePartListener listener )
+    {
+        if( this.listenersDeprecated == null )
+        {
+            this.listenersDeprecated = Collections.singleton( listener );
+        }
+        else
+        {
+            this.listenersDeprecated = new HashSet<SapphirePartListener>( this.listenersDeprecated );
+            this.listenersDeprecated.add( listener );
+        }
+    }
+    
+    @Deprecated
     public final void removeListener( final SapphirePartListener listener )
     {
-        if( this.listeners != null )
+        if( this.listenersDeprecated != null )
         {
-            if( this.listeners.contains( listener ) )
+            if( this.listenersDeprecated.contains( listener ) )
             {
-                if( this.listeners.size() == 1 )
+                if( this.listenersDeprecated.size() == 1 )
                 {
-                    this.listeners = null;
+                    this.listenersDeprecated = null;
                 }
                 else
                 {
-                    this.listeners = new HashSet<SapphirePartListener>( this.listeners );
-                    this.listeners.remove( listener );
+                    this.listenersDeprecated = new HashSet<SapphirePartListener>( this.listenersDeprecated );
+                    this.listenersDeprecated.remove( listener );
                 }
             }
         }
     }
     
+    @Deprecated
     public final Set<SapphirePartListener> getListeners()
     {
-        if( this.listeners == null)
+        if( this.listenersDeprecated == null)
         {
             return Collections.emptySet();
         }
         else
         {
-            return this.listeners;
+            return this.listenersDeprecated;
         }
     }
     
-    public final void notifyStructureChangedEventListeners( final SapphirePartEvent event )
-    {
-        if( this.listeners != null )
-        {
-            for( SapphirePartListener listener : this.listeners )
-            {
-                try
-                {
-                    listener.handleStructureChangedEvent( event );
-                }
-                catch( Exception e )
-                {
-                    SapphireUiFrameworkPlugin.log( e );
-                }
-            }
-        }
-        
-        if( this.parent != null && this.parent instanceof SapphirePart )
-        {
-            ( (SapphirePart) this.parent ).notifyStructureChangedEventListeners( event );
-        }
-    }
-    
-    public final void notifyListeners( final SapphirePartEvent event )
-    {
-        if( this.listeners != null )
-        {
-            for( SapphirePartListener listener : this.listeners )
-            {
-                try
-                {
-                    listener.handleEvent( event );
-                }
-                catch( Exception e )
-                {
-                    SapphireUiFrameworkPlugin.log( e );
-                }
-            }
-        }
-    }
-
     public final ModelProperty resolve( final String propertyName )
     {
         return resolve( this.modelElement, propertyName );
@@ -615,15 +565,17 @@ public abstract class SapphirePart implements ISapphirePart
                 }
             );
             
-            addListener
+            attach
             (
-                new SapphirePartListener()
+                new Listener()
                 {
                     @Override
-                    public void handleValidateStateChange( final Status oldValidateState,
-                                                           final Status newValidationState )
+                    public void handle( final Event event )
                     {
-                        refresh( true );
+                        if( event instanceof ValidationChangedEvent )
+                        {
+                            refresh( true );
+                        }
                     }
                 }
             );
@@ -687,7 +639,7 @@ public abstract class SapphirePart implements ISapphirePart
             
             if( notifyListenersIfNecessary && this.current != old )
             {
-                notifyListeners( new ImageChangedEvent( SapphirePart.this ) );
+                broadcast( new ImageChangedEvent( SapphirePart.this ) );
             }
         }
         
@@ -697,23 +649,30 @@ public abstract class SapphirePart implements ISapphirePart
         }
     }
     
-    public static final class LabelChangedEvent extends SapphirePartEvent
+    public static abstract class PartEvent extends Event
     {
-        public LabelChangedEvent( final SapphirePart part )
+        private final SapphirePart part;
+        
+        public PartEvent( final SapphirePart part )
+        {
+            this.part = part;
+        }
+        
+        public final SapphirePart part()
+        {
+            return this.part;
+        }
+    }
+    
+    public static final class ValidationChangedEvent extends PartEvent
+    {
+        public ValidationChangedEvent( final SapphirePart part )
         {
             super( part );
         }
     }
     
-    public static final class ImageChangedEvent extends SapphirePartEvent
-    {
-        public ImageChangedEvent( final SapphirePart part )
-        {
-            super( part );
-        }
-    }
-    
-    public static final class VisibilityChangedEvent extends SapphirePartEvent
+    public static final class VisibilityChangedEvent extends PartEvent
     {
         public VisibilityChangedEvent( final SapphirePart part )
         {
@@ -721,6 +680,38 @@ public abstract class SapphirePart implements ISapphirePart
         }
     }
     
+    public static final class LabelChangedEvent extends PartEvent
+    {
+        public LabelChangedEvent( final SapphirePart part )
+        {
+            super( part );
+        }
+    }
+
+    public static final class ImageChangedEvent extends PartEvent
+    {
+        public ImageChangedEvent( final SapphirePart part )
+        {
+            super( part );
+        }
+    }
+
+    public static final class FocusReceivedEvent extends PartEvent
+    {
+        public FocusReceivedEvent( final SapphirePart part )
+        {
+            super( part );
+        }
+    }
+    
+    public static final class StructureChangedEvent extends PartEvent
+    {
+        public StructureChangedEvent( final SapphirePart part )
+        {
+            super( part );
+        }
+    }
+
     public static final SapphirePart create( final SapphirePart parent,
                                              final IModelElement modelElement,
                                              final ISapphirePartDef definition,
@@ -751,9 +742,9 @@ public abstract class SapphirePart implements ISapphirePart
         {
             part = new SapphireSpacer();
         }
-        else if( definition instanceof ISapphireActionLinkDef )
+        else if( definition instanceof ActuatorDef )
         {
-            part = new SapphireActionLink(); 
+            part = new ActuatorPart(); 
         }
         else if( definition instanceof ISapphireCustomPartDef )
         {
@@ -880,10 +871,7 @@ public abstract class SapphirePart implements ISapphirePart
         return part;
     }
     
-    private static final class Resources
-    
-        extends NLS
-    
+    private static final class Resources extends NLS
     {
         public static String failedToInstantiate;
         public static String doesNotExtend;

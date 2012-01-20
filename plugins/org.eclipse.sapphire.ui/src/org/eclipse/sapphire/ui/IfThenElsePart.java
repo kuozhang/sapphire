@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.Status;
@@ -97,13 +99,15 @@ public final class IfThenElsePart extends SapphirePart
         {
             final IModelElement element = getLocalModelElement();
             
-            final SapphirePartListener childPartListener = new SapphirePartListener()
+            final Listener childPartListener = new Listener()
             {
                 @Override
-                public void handleValidateStateChange( final Status oldValidateState,
-                                                       final Status newValidationState )
+                public void handle( final Event event )
                 {
-                    updateValidationState();
+                    if( event instanceof ValidationChangedEvent )
+                    {
+                        updateValidationState();
+                    }
                 }
             };
         
@@ -111,7 +115,7 @@ public final class IfThenElsePart extends SapphirePart
             {
                 final SapphirePart childPart = create( this, element, childPartDef, this.params );
                 this.currentBranchContent.add( childPart );
-                childPart.addListener( childPartListener );
+                childPart.attach( childPartListener );
             }
         }
         
@@ -119,7 +123,7 @@ public final class IfThenElsePart extends SapphirePart
         
         if( ! initializing )
         {
-            notifyStructureChangedEventListeners( new SapphirePartEvent( IfThenElsePart.this ) );
+            broadcast( new StructureChangedEvent( IfThenElsePart.this ) );
         }
     }
     

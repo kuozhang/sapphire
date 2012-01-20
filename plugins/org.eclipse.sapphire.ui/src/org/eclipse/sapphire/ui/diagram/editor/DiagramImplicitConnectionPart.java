@@ -36,7 +36,7 @@ public class DiagramImplicitConnectionPart extends DiagramConnectionPart
     {   
         this.connectionTemplate = (DiagramImplicitConnectionTemplate)getParentPart();
         
-        this.definition = (IDiagramConnectionDef)getDefinition(); 
+        this.definition = (IDiagramConnectionDef)definition(); 
         this.modelElement = getModelElement();
     }
     

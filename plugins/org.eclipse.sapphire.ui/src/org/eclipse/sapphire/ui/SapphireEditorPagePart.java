@@ -44,7 +44,7 @@ public class SapphireEditorPagePart
         super.init();
         
         final IModelElement element = getModelElement();
-        final IEditorPageDef def = getDefinition();
+        final IEditorPageDef def = definition();
         
         this.imageFunctionResult = initExpression
         (
@@ -56,16 +56,16 @@ public class SapphireEditorPagePart
             {
                 public void run()
                 {
-                    notifyListeners( new ImageChangedEvent( SapphireEditorPagePart.this ) );
+                    broadcast( new ImageChangedEvent( SapphireEditorPagePart.this ) );
                 }
             }
         );
     }
     
     @Override
-    public IEditorPageDef getDefinition()
+    public IEditorPageDef definition()
     {
-        return (IEditorPageDef) super.getDefinition();
+        return (IEditorPageDef) super.definition();
     }
 
     @Override
@@ -111,7 +111,7 @@ public class SapphireEditorPagePart
         if( this.propertiesViewContributionPart != propertiesViewContributionPart )
         {
             this.propertiesViewContributionPart = propertiesViewContributionPart;
-            notifyListeners( new PropertiesViewContributionChangedEvent( this, this.propertiesViewContributionPart ) );
+            broadcast( new PropertiesViewContributionChangedEvent( this, propertiesViewContributionPart ) );
         }
     }
     
@@ -131,19 +131,11 @@ public class SapphireEditorPagePart
         }
     }
     
-    public static abstract class Event extends SapphirePartEvent
-    {
-        public Event( final SapphireEditorPagePart part )
-        {
-            super( part );
-        }
-    }
-    
-    public static final class PropertiesViewContributionChangedEvent extends Event
+    public static final class PropertiesViewContributionChangedEvent extends PartEvent
     {
         private final PropertiesViewContributionPart contribution;
         
-        public PropertiesViewContributionChangedEvent( final SapphireEditorPagePart part,
+        public PropertiesViewContributionChangedEvent( final SapphirePart part,
                                                        final PropertiesViewContributionPart contribution )
         {
             super( part );
@@ -151,35 +143,17 @@ public class SapphireEditorPagePart
             this.contribution = contribution;
         }
         
-        public PropertiesViewContributionPart getPropertiesViewContribution()
+        public PropertiesViewContributionPart contribution()
         {
             return this.contribution;
         }
     }
-    
-    public static final class SelectionChangedEvent extends Event
+
+    public static final class SelectionChangedEvent extends PartEvent
     {
-        private final SapphirePart oldSelection;
-        private final SapphirePart newSelection;
-        
-        public SelectionChangedEvent( final SapphireEditorPagePart part,
-                                      final SapphirePart oldSelection,
-                                      final SapphirePart newSelection )
+        public SelectionChangedEvent( final SapphirePart part )
         {
             super( part );
-            
-            this.oldSelection = oldSelection;
-            this.newSelection = newSelection;
-        }
-        
-        public SapphirePart getOldSelection()
-        {
-            return this.oldSelection;
-        }
-        
-        public SapphirePart getNewSelection()
-        {
-            return this.newSelection;
         }
     }
 

@@ -63,11 +63,21 @@ public interface ISapphireUiExtensionDef extends IModelElement
     // *** ActionHandlerFactories ***
     
     @Type( base = ISapphireActionHandlerFactoryDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action-handler-factory", type = ISapphireActionHandlerFactoryDef.class ) )
     @Label( standard = "action handler factories" )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action-handler-factory", type = ISapphireActionHandlerFactoryDef.class ) )
     
     ListProperty PROP_ACTION_HANDLER_FACTORIES = new ListProperty( TYPE, "ActionHandlerFactories" );
     
     ModelElementList<ISapphireActionHandlerFactoryDef> getActionHandlerFactories();
+    
+    // *** PresentationStyles ***
+
+    @Type( base = PresentationStyleDef.class )
+    @Label( standard = "presentation styles" )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "presentation-style", type = PresentationStyleDef.class ) )
+    
+    ListProperty PROP_PRESENTATION_STYLES = new ListProperty(TYPE, "PresentationStyles");
+
+    ModelElementList<PresentationStyleDef> getPresentationStyles();
     
 }

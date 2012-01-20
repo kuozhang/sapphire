@@ -48,7 +48,7 @@ public interface ISapphireActionContext
     (
         values =
         {
-            SapphireActionSystem.CONTEXT_ACTION_LINK,
+            SapphireActionSystem.CONTEXT_ACTUATOR,
             SapphireActionSystem.CONTEXT_EDITOR_PAGE,
             SapphireActionSystem.CONTEXT_EDITOR_PAGE_OUTLINE,
             SapphireActionSystem.CONTEXT_EDITOR_PAGE_OUTLINE_HEADER,

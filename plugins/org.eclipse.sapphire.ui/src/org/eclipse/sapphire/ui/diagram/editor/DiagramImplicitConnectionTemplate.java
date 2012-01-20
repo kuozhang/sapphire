@@ -75,7 +75,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
         this.diagramEditor = (SapphireDiagramEditorPagePart)getParentPart();
         this.listEntryFunctionMap = new HashMap<IModelElement, FunctionResult>();
         this.modelElement = getModelElement();
-        this.connectionDef = (IDiagramConnectionDef)super.getDefinition();
+        this.connectionDef = (IDiagramConnectionDef)super.definition();
         this.propertyName = this.bindingDef.getProperty().getContent();
         this.modelProperty = (ListProperty)ModelUtil.resolve(this.modelElement, this.propertyName);
         

@@ -353,7 +353,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         
         for( final ValueProperty memberProperty : columnProperties )
         {
-            final PropertyEditorDef childPropertyEditorDef = part.getDefinition().getChildPropertyEditor( memberProperty );
+            final PropertyEditorDef childPropertyEditorDef = part.definition().getChildPropertyEditor( memberProperty );
             
             final TableViewerColumn col2 = new TableViewerColumn( this.tableViewer, SWT.NONE );
             col2.getColumn().setText( SapphirePropertyEditor.getLabel( memberProperty, childPropertyEditorDef, CapitalizationType.TITLE_STYLE, false ) );
@@ -1634,7 +1634,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         {
             super.init( action, def );
             
-            final ImageDescriptor typeSpecificAddImage = getPart().getImageCache().getImageDescriptor( this.type );
+            final ImageData typeSpecificAddImage = this.type.image();
             
             if( typeSpecificAddImage != null )
             {

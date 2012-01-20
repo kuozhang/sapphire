@@ -347,4 +347,12 @@
         <impl>org.eclipse.sapphire.ui.def.internal.StringToImageDataCast</impl>
         <description>Able to convert a string to an image if the requesting function origin is a model element and if that element is contained in ISapphireUiDef or if the element is adaptable to ResourceLocator.</description>
     </type-cast>
+    <presentation-style>
+        <id>Sapphire.Actuator.Link</id>
+        <part-type>Sapphire.Actuator</part-type>
+    </presentation-style>
+    <presentation-style>
+        <id>Sapphire.Actuator.Button</id>
+        <part-type>Sapphire.Actuator</part-type>
+    </presentation-style>
 </extension>

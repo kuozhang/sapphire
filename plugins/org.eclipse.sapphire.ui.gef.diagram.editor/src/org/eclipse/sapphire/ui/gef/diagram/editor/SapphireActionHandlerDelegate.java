@@ -20,6 +20,7 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 
 /**
  * Copied from org.eclipse.sapphire.ui.swt.graphiti
@@ -60,11 +61,11 @@ public class SapphireActionHandlerDelegate extends Action
 	{
 		if (this.sapphireActionHandler.getImage(16) != null)
 		{
-			return this.sapphireActionHandler.getImage(16);
+			return SwtRendererUtil.toImageDescriptor( this.sapphireActionHandler.getImage(16) );
 		}
 		else
 		{
-			return this.sapphireActionHandler.getAction().getImage(16);
+			return SwtRendererUtil.toImageDescriptor( this.sapphireActionHandler.getAction().getImage(16) );
 		}
 	}
 	

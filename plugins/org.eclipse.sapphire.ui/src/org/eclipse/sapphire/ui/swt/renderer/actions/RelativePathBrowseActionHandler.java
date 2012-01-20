@@ -29,7 +29,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -40,6 +39,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -54,12 +54,9 @@ import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.WorkbenchContentProvider;
@@ -71,11 +68,8 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
 {
-    private static final ImageDescriptor IMG_FILE
-        = SwtRendererUtil.createImageDescriptor( RelativePathBrowseActionHandler.class, "File.png" );
-    
-    private static final ImageDescriptor IMG_FOLDER
-        = SwtRendererUtil.createImageDescriptor( RelativePathBrowseActionHandler.class, "Folder.png" );
+    private static final ImageData IMG_FILE = ImageData.createFromClassLoader( RelativePathBrowseActionHandler.class, "File.png" );
+    private static final ImageData IMG_FOLDER = ImageData.createFromClassLoader( RelativePathBrowseActionHandler.class, "Folder.png" );
     
     public static final String ID = "Sapphire.Browse.Path.Relative";
     
@@ -96,7 +90,7 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
 
         setId( ID );
         setLabel( Resources.label );
-        addImage( PlatformUI.getWorkbench().getSharedImages().getImageDescriptor( ISharedImages.IMG_OBJ_FILE ) );
+        addImage( IMG_FILE );
         
         final IModelElement element = getModelElement();
         final ValueProperty property = getProperty();

@@ -9,44 +9,37 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.def;
+package org.eclipse.sapphire.samples.gallery;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "image reference" )
 @GenerateImpl
 
-public interface ISapphireActionImage
-
-    extends IModelElement
-    
+public interface ActuatorsGallery extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireActionImage.class );
+    ModelElementType TYPE = new ModelElementType( ActuatorsGallery.class );
     
-    // *** Image ***
+    // *** Number ***
     
-    @Type( base = Function.class )
-    @Label( standard = "image" )
-    @Required
-    @XmlBinding( path = "" )
+    @Type( base = Integer.class )
+    @Label( standard = "number" )
+    @DefaultValue( text = "0" )
     
-    ValueProperty PROP_IMAGE = new ValueProperty( TYPE, "Image" );
+    ValueProperty PROP_NUMBER = new ValueProperty( TYPE, "Number" );
     
-    Value<Function> getImage();
-    void setImage( String value );
-    void setImage( Function value );
-    
+    Value<Integer> getNumber();
+    void setNumber( String value );
+    void setNumber( Integer value );
+ 
 }

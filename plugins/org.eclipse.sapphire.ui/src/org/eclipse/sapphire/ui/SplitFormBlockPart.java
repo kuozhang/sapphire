@@ -21,14 +21,14 @@ import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
 public final class SplitFormBlockPart extends SapphirePartContainer
 {
     @Override
-    public SplitFormBlockDef getDefinition()
+    public SplitFormBlockDef definition()
     {
-        return (SplitFormBlockDef) super.getDefinition();
+        return (SplitFormBlockDef) super.definition();
     }
     
     public int getWeight()
     {
-        int weight = getDefinition().getWeight().getContent();
+        int weight = definition().getWeight().getContent();
         
         if( weight < 1 )
         {

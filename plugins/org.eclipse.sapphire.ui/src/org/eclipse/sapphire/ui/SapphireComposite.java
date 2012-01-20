@@ -20,6 +20,8 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
@@ -41,15 +43,12 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class SapphireComposite
-
-    extends SapphirePartContainer
-    
+public class SapphireComposite extends SapphirePartContainer
 {
     @Override
-    public ISapphireCompositeDef getDefinition()
+    public ISapphireCompositeDef definition()
     {
-        return (ISapphireCompositeDef) super.getDefinition();
+        return (ISapphireCompositeDef) super.definition();
     }
 
     @Override
@@ -184,54 +183,57 @@ public class SapphireComposite
             scrolledComposite.setMinSize( composite.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
         }
         
-        final SapphirePartListener partListener = new SapphirePartListener()
+        final Listener partListener = new Listener()
         {
             @Override
-            public void handleStructureChangedEvent( final SapphirePartEvent event )
+            public void handle( final Event event )
             {
-                // Something changed in the tree of parts arranged beneath this composite part. If this is
-                // the composite closest to the affected part, it will need to re-render.
-                
-                ISapphirePart part = event.getPart();
-                Boolean needToReRender = null;
-                
-                while( part != null && needToReRender == null )
+                if( event instanceof StructureChangedEvent )
                 {
-                    part = part.getParentPart();
+                    // Something changed in the tree of parts arranged beneath this composite part. If this is
+                    // the composite closest to the affected part, it will need to re-render.
                     
-                    if( part instanceof SapphireComposite )
+                    ISapphirePart part = ( (StructureChangedEvent) event ).part();
+                    Boolean needToReRender = null;
+                    
+                    while( part != null && needToReRender == null )
                     {
-                        if( part == SapphireComposite.this )
+                        part = part.getParentPart();
+                        
+                        if( part instanceof SapphireComposite )
                         {
-                            needToReRender = Boolean.TRUE;
+                            if( part == SapphireComposite.this )
+                            {
+                                needToReRender = Boolean.TRUE;
+                            }
+                            else
+                            {
+                                needToReRender = Boolean.FALSE;
+                            }
                         }
-                        else
+                    }
+                    
+                    if( needToReRender == Boolean.TRUE )
+                    {
+                        for( Control control : composite.getChildren() )
                         {
-                            needToReRender = Boolean.FALSE;
+                            control.dispose();
                         }
+                        
+                        SapphireComposite.super.render( innerContext );
+                        
+                        if( scrolledComposite != null )
+                        {
+                            scrolledComposite.setMinSize( composite.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+                        }
+                        
+                        context.layout();
                     }
-                }
-                
-                if( needToReRender == Boolean.TRUE )
-                {
-                    for( Control control : composite.getChildren() )
-                    {
-                        control.dispose();
-                    }
-                    
-                    SapphireComposite.super.render( innerContext );
-                    
-                    if( scrolledComposite != null )
-                    {
-                        scrolledComposite.setMinSize( composite.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
-                    }
-                    
-                    context.layout();
                 }
             }
         };
         
-        addListener( partListener );
+        attach( partListener );
         
         composite.addDisposeListener
         (
@@ -239,7 +241,7 @@ public class SapphireComposite
             {
                 public void widgetDisposed( final DisposeEvent event )
                 {
-                    removeListener( partListener );
+                    detach( partListener );
                 }
             }
         );
@@ -252,13 +254,13 @@ public class SapphireComposite
     
     public int getWidth( final int defaultValue )
     {
-        final Integer width = getDefinition().getWidth().getContent();
+        final Integer width = definition().getWidth().getContent();
         return ( width == null || width < 1 ? defaultValue : width );
     }
     
     public int getHeight( final int defaultValue )
     {
-        final Integer height = getDefinition().getHeight().getContent();
+        final Integer height = definition().getHeight().getContent();
         return ( height == null || height < 1 ? defaultValue : height );
     }
     

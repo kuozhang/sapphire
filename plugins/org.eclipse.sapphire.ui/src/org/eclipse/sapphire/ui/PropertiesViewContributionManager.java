@@ -35,7 +35,7 @@ public final class PropertiesViewContributionManager
     public PropertiesViewContributionManager( final SapphirePart part,
                                               final IModelElement element )
     {
-        this( part, element, (IPropertiesViewContributorDef) part.getDefinition() );
+        this( part, element, (IPropertiesViewContributorDef) part.definition() );
     }
     
     public PropertiesViewContributionManager( final SapphirePart part,

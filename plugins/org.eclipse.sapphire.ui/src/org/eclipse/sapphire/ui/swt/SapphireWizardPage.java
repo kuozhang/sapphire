@@ -20,12 +20,11 @@ import org.eclipse.help.IContext;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardContainer2;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
-import org.eclipse.sapphire.ui.SapphirePartEvent;
-import org.eclipse.sapphire.ui.SapphirePartListener;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.SapphireWizardPageListener;
 import org.eclipse.sapphire.ui.SapphireWizardPagePart;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
@@ -39,36 +38,33 @@ import org.eclipse.ui.PlatformUI;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class SapphireWizardPage 
-
-    extends WizardPage
-    
+public class SapphireWizardPage extends WizardPage
 {
     private final SapphireWizardPagePart part;
-    private final SapphirePartListener listener;
+    private final Listener listener;
     
     public SapphireWizardPage( final SapphireWizardPagePart part )
     {
-        super( part.getDefinition().getId().getContent() );
+        super( part.definition().getId().getContent() );
         
         this.part = part;
         
         setTitle( this.part.getLabel() );
         setDescription( this.part.getDescription() );
         
-        this.listener = new SapphirePartListener()
+        this.listener = new Listener()
         {
             @Override
-            public void handleEvent( final SapphirePartEvent event )
+            public void handle( final Event event )
             {
-                if( event instanceof ImageChangedEvent )
+                if( event instanceof SapphirePart.ImageChangedEvent )
                 {
                     refreshImage();
                 }
             }
         };
         
-        this.part.addListener( this.listener );
+        this.part.attach( this.listener );
         
         refreshImage();
     }
@@ -127,19 +123,21 @@ public class SapphireWizardPage
         
         messageUpdateOperation.run();
         
-        final SapphirePartListener messageUpdateListener = new SapphirePartListener()
+        final Listener messageUpdateListener = new Listener()
         {
             @Override
-            public void handleValidateStateChange( final Status oldValidateState,
-                                                   final Status newValidationState )
+            public void handle( final Event event )
             {
-                messageUpdateOperation.run();
+                if( event instanceof SapphirePart.ValidationChangedEvent )
+                {
+                    messageUpdateOperation.run();
+                }
             }
         };
         
-        this.part.addListener( messageUpdateListener );
+        this.part.attach( messageUpdateListener );
         
-        final ISapphireDocumentation doc = this.part.getDefinition().getDocumentation().element();
+        final ISapphireDocumentation doc = this.part.definition().getDocumentation().element();
         
         if( doc != null )
         {
@@ -178,32 +176,15 @@ public class SapphireWizardPage
     {
         super.setVisible( visible );
         
+        this.part.setVisible( visible );
+        
         if( visible )
         {
-            final String initialFocusProperty = this.part.getDefinition().getInitialFocus().getContent();
+            final String initialFocusProperty = this.part.definition().getInitialFocus().getContent();
             
             if( initialFocusProperty != null )
             {
                 this.part.setFocus( initialFocusProperty );
-            }
-        }
-
-        final SapphirePartEvent event = new SapphirePartEvent( this.part );
-        
-        for( SapphirePartListener listener : this.part.getListeners() )
-        {
-            if( listener instanceof SapphireWizardPageListener )
-            {
-                final SapphireWizardPageListener wlnr = (SapphireWizardPageListener) listener;
-                
-                if( visible )
-                {
-                    wlnr.handleShowPageEvent( event );
-                }
-                else
-                {
-                    wlnr.handleHidePageEvent( event );
-                }
             }
         }
     }
@@ -218,7 +199,7 @@ public class SapphireWizardPage
     {
         super.dispose();
         
-        this.part.removeListener( this.listener );
+        this.part.detach( this.listener );
     }
     
 }

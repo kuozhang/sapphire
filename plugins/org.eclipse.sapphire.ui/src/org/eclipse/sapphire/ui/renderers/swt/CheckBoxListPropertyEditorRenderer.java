@@ -443,7 +443,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         public Entry( final String value,
                       final IModelElement element )
         {
-            this.localizationService = getPart().getDefinition().adapt( LocalizationService.class );
+            this.localizationService = getPart().definition().adapt( LocalizationService.class );
             this.value = value;
             this.element = element;
             

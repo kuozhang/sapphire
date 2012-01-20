@@ -41,8 +41,6 @@ import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphirePartEvent;
-import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.AuxTextProvider;
@@ -212,16 +210,19 @@ public abstract class PropertyEditorRenderer
         
         handlePropertyChangedEvent();
 
-        final SapphirePartListener partListener = new SapphirePartListener()
+        final org.eclipse.sapphire.Listener partListener = new org.eclipse.sapphire.Listener()
         {
             @Override
-            public void handleFocusReceivedEvent( final SapphirePartEvent event )
+            public void handle( final org.eclipse.sapphire.Event event )
             {
-                PropertyEditorRenderer.this.handleFocusReceivedEvent();
+                if( event instanceof SapphirePart.FocusReceivedEvent )
+                {
+                    handleFocusReceivedEvent();
+                }
             }
         };
         
-        part.addListener( partListener );
+        part.attach( partListener );
         
         this.actionPresentationKeyboard.render();
         
@@ -231,7 +232,7 @@ public abstract class PropertyEditorRenderer
             {
                 public void run()
                 {
-                    part.removeListener( partListener );
+                    part.detach( partListener );
                     modelElement.removeListener( propertyChangeListener, property.getName() );
                 }
             }

@@ -43,11 +43,11 @@ public final class MapDropActionHandler extends SapphireDiagramActionHandler
     @Override
     protected Object run( final SapphireRenderingContext context )
     {
-    	DiagramRenderingContext diagramCtx = (DiagramRenderingContext)context;
-    	SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)diagramCtx.getPart();
-    	
-    	Object obj = diagramCtx.getObject();
-    	
+        DiagramRenderingContext diagramCtx = (DiagramRenderingContext)context;
+        SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)diagramCtx.getPart();
+        
+        Object obj = diagramCtx.getObject();
+        
         if( obj instanceof IFile )
         {
             final List<String> cities = new ArrayList<String>();
@@ -101,16 +101,16 @@ public final class MapDropActionHandler extends SapphireDiagramActionHandler
                 int y = currentMousePos.getY();
                 for (String cityName : cities)
                 {
-	                final IDestination city = map.getDestinations().addNewElement();
-	                city.setName( cityName );
-	                DiagramNodePart cityPart = diagramPart.getDiagramNodePart(city);
-	                if (cityPart != null)
-	                {
-	                	cityPart.setNodePosition(x, y);
-	                	cityParts.add(cityPart);
-	                	x += 50;
-	                	y += 50;
-	                }
+                    final IDestination city = map.getDestinations().addNewElement();
+                    city.setName( cityName );
+                    DiagramNodePart cityPart = diagramPart.getDiagramNodePart(city);
+                    if (cityPart != null)
+                    {
+                        cityPart.setNodePosition(x, y);
+                        cityParts.add(cityPart);
+                        x += 50;
+                        y += 50;
+                    }
                 }
                 return cityParts;
             }

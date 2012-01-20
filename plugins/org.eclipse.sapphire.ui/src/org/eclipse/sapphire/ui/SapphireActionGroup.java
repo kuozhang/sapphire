@@ -45,7 +45,7 @@ public final class SapphireActionGroup
         
         this.actions = new CopyOnWriteArrayList<SapphireAction>();
         
-        final ISapphirePartDef partDef = this.part.getDefinition();
+        final ISapphirePartDef partDef = this.part.definition();
         
         createActions( SapphireExtensionSystem.getActions() );
         

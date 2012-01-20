@@ -11,33 +11,11 @@
 
 package org.eclipse.sapphire.ui;
 
-import org.eclipse.sapphire.modeling.Status;
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public abstract class SapphirePartListener
 {
-    public void handleEvent( final SapphirePartEvent event )
-    {
-        // The default implementation doesn't do anything.
-    }
-    
-    public void handleValidateStateChange( final Status oldValidateState,
-                                           final Status newValidationState )
-    {
-        // The default implementation doesn't do anything.
-    }
-    
-    public void handleStructureChangedEvent( final SapphirePartEvent event )
-    {
-        // The default implementation doesn't do anything.
-    }
-    
-    public void handleFocusReceivedEvent( final SapphirePartEvent event )
-    {
-        // The default implementation doesn't do anything.
-    }
     
 }

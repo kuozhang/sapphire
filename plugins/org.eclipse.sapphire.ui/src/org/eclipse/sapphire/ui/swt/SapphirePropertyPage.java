@@ -12,11 +12,13 @@
 package org.eclipse.sapphire.ui.swt;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
-import org.eclipse.sapphire.ui.SapphirePartListener;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.dialogs.PropertyPage;
@@ -81,17 +83,19 @@ public abstract class SapphirePropertyPage
         
         messageUpdateOperation.run();
         
-        final SapphirePartListener messageUpdateListener = new SapphirePartListener()
+        final Listener messageUpdateListener = new Listener()
         {
             @Override
-            public void handleValidateStateChange( final Status oldValidateState,
-                                                   final Status newValidationState )
+            public void handle( final Event event )
             {
-                messageUpdateOperation.run();
+                if( event instanceof SapphirePart.ValidationChangedEvent )
+                {
+                    messageUpdateOperation.run();
+                }
             }
         };
         
-        control.getPart().addListener( messageUpdateListener );
+        control.getPart().attach( messageUpdateListener );
         
         return control;
     }
@@ -119,10 +123,7 @@ public abstract class SapphirePropertyPage
         performOk();
     }
 
-    private static final class Resources
-    
-        extends NLS
-        
+    private static final class Resources extends NLS
     {
         public static String errorDialogTitle;
         

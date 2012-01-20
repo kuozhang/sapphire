@@ -75,7 +75,7 @@ public class SapphirePaletteRoot extends PaletteRoot
 		}
 		
 		// create new entries
-		IDiagramEditorPageDef diagramPageDef = (IDiagramEditorPageDef)diagramPart.getDefinition();
+		IDiagramEditorPageDef diagramPageDef = (IDiagramEditorPageDef)diagramPart.definition();
 		//PaletteRoot palette = new PaletteRoot();
 		//palette.add(createModelIndependentTools(palette));
 		add(createModelIndependentTools());
@@ -151,7 +151,7 @@ public class SapphirePaletteRoot extends PaletteRoot
         List<DiagramNodeTemplate> nodeTemplates = diagramPart.getVisibleNodeTemplates();
         for (DiagramNodeTemplate nodeTemplate : nodeTemplates) 
         {
-        	IDiagramNodeDef nodeDef = nodeTemplate.getDefinition();
+        	IDiagramNodeDef nodeDef = nodeTemplate.definition();
             IDiagramImageChoice image = nodeDef.getToolPaletteImage().element();
             ImageDescriptor imageDescriptor = imageCache.getImageDescriptor(image);
 

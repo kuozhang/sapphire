@@ -196,10 +196,10 @@
                     <content>
                         <label>Define components.</label>
                         <spacer></spacer>
-                        <action-link>
+                        <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>Add a component</label>
-                        </action-link>
+                        </actuator>
                     </content>
                 </section>
             </node>

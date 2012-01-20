@@ -26,10 +26,7 @@ import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireWizardPart
-
-    extends SapphirePart
-    
+public final class SapphireWizardPart extends SapphirePart
 {
     private FunctionResult imageFunctionResult;
     private List<SapphireWizardPagePart> pages;
@@ -41,7 +38,7 @@ public final class SapphireWizardPart
         super.init();
         
         final IModelElement element = getModelElement();
-        final ISapphireWizardDef def = getDefinition();
+        final ISapphireWizardDef def = definition();
         
         this.imageFunctionResult = initExpression
         (
@@ -53,7 +50,7 @@ public final class SapphireWizardPart
             {
                 public void run()
                 {
-                    notifyListeners( new ImageChangedEvent( SapphireWizardPart.this ) );
+                    broadcast( new ImageChangedEvent( SapphireWizardPart.this ) );
                 }
             }
         );
@@ -69,19 +66,19 @@ public final class SapphireWizardPart
     }
 
     @Override
-    public ISapphireWizardDef getDefinition()
+    public ISapphireWizardDef definition()
     {
-        return (ISapphireWizardDef) super.getDefinition();
+        return (ISapphireWizardDef) super.definition();
     }
     
     public String getLabel()
     {
-        return getDefinition().getLabel().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
+        return definition().getLabel().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
     }
     
     public String getDescription()
     {
-        return getDefinition().getDescription().getLocalizedText( CapitalizationType.NO_CAPS, false );
+        return definition().getDescription().getLocalizedText( CapitalizationType.NO_CAPS, false );
     }
     
     public ImageData getImage()

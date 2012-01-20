@@ -26,10 +26,7 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.state.IMasterDetailsEd
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class MasterDetailsEditorPagePart
-
-    extends SapphireEditorPagePart
-    
+public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
 {
     private IMasterDetailsEditorPageState state;
     private MasterDetailsContentOutline contentOutline;
@@ -62,9 +59,9 @@ public class MasterDetailsEditorPagePart
     }
 
     @Override
-    public IMasterDetailsEditorPageDef getDefinition()
+    public IMasterDetailsEditorPageDef definition()
     {
-        return (IMasterDetailsEditorPageDef) super.getDefinition();
+        return (IMasterDetailsEditorPageDef) super.definition();
     }
     
     @Override
@@ -109,10 +106,10 @@ public class MasterDetailsEditorPagePart
     
     public final void setFocusOnDetails()
     {
-        notifyListeners( new DetailsFocusRequested( this ) );
+        broadcast( new DetailsFocusRequested( this ) );
     }
     
-    public static final class DetailsFocusRequested extends Event
+    public static final class DetailsFocusRequested extends PartEvent
     {
         public DetailsFocusRequested( final MasterDetailsEditorPagePart part )
         {

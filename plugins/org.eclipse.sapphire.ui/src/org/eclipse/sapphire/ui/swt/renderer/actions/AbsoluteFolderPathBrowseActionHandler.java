@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.swt.renderer.actions;
 import java.io.File;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -23,17 +24,12 @@ import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class AbsoluteFolderPathBrowseActionHandler 
-
-    extends SapphireBrowseActionHandler
-    
+public class AbsoluteFolderPathBrowseActionHandler extends SapphireBrowseActionHandler
 {
     public static final String ID = "Sapphire.Browse.Folder.Absolute";
     
@@ -45,7 +41,7 @@ public class AbsoluteFolderPathBrowseActionHandler
 
         setId( ID );
         setLabel( Resources.label );
-        addImage( PlatformUI.getWorkbench().getSharedImages().getImageDescriptor( ISharedImages.IMG_OBJ_FOLDER ) );
+        addImage( ImageData.createFromClassLoader( getClass(), "Folder.png" ) );
     }
 
     @Override

@@ -690,10 +690,10 @@
                         <content>
                             <label>A list with one possible element type.</label>
                             <spacer />
-                            <action-link>
+                            <actuator>
                                 <action-id>Sapphire.Add</action-id>
                                 <label>add a child element</label>
-                            </action-link>
+                            </actuator>
                             <spacer></spacer>
                             <label>Use the following property to experiment with enabling and disabling the lists.</label>
                             <spacer></spacer>
@@ -753,21 +753,21 @@
                         <content>
                             <label>A list with multiple possible element types.</label>
                             <spacer />
-                            <action-link>
+                            <actuator>
                                 <action-id>Sapphire.Add</action-id>
                                 <action-handler-id>Sapphire.Add.IChildElement</action-handler-id>
                                 <label>add a basic child element</label>
-                            </action-link>
-                            <action-link>
+                            </actuator>
+                            <actuator>
                                 <action-id>Sapphire.Add</action-id>
                                 <action-handler-id>Sapphire.Add.IChildElementWithEnum</action-handler-id>
                                 <label>add a child element with enum</label>
-                            </action-link>
-                            <action-link>
+                            </actuator>
+                            <actuator>
                                 <action-id>Sapphire.Add</action-id>
                                 <action-handler-id>Sapphire.Add.IChildElementWithInteger</action-handler-id>
                                 <label>add a child element with integer</label>
-                            </action-link>
+                            </actuator>
                             <spacer></spacer>
                             <label>Use the following property to experiment with enabling and disabling the lists.</label>
                             <spacer></spacer>
@@ -895,21 +895,21 @@
                         <content>
                             <label>A list with multiple possible element types that can vary at runtime.</label>
                             <spacer />
-                            <action-link>
+                            <actuator>
                                 <action-id>Sapphire.Add</action-id>
                                 <action-handler-id>Sapphire.Add.IChildElement</action-handler-id>
                                 <label>add a basic child element</label>
-                            </action-link>
-                            <action-link>
+                            </actuator>
+                            <actuator>
                                 <action-id>Sapphire.Add</action-id>
                                 <action-handler-id>Sapphire.Add.IChildElementWithEnum</action-handler-id>
                                 <label>add a child element with enum</label>
-                            </action-link>
-                            <action-link>
+                            </actuator>
+                            <actuator>
                                 <action-id>Sapphire.Add</action-id>
                                 <action-handler-id>Sapphire.Add.IChildElementWithInteger</action-handler-id>
                                 <label>add a child element with integer</label>
-                            </action-link>
+                            </actuator>
                             <spacer></spacer>
                             <label>Use the following properties to experiment with varying possible element types.</label>
                             <spacer></spacer>
@@ -1471,6 +1471,193 @@
                         </content>
                     </section>
                 </node>
+                <node>
+                    <label>actuators</label>
+                    <section>
+                        <content>
+                            <label>An actuator provides means to invoke an action. The action could be drawn from the context where actuator is placed or provided as part of actuator's definition. In this example, the action doubles the entered number.</label>
+                            <spacer></spacer>
+                            <property-editor>Number</property-editor>
+                            <spacer></spacer>
+                            <label>An actuator can be presented as a link that is aligned in different ways across both of the columns.</label>
+                            <spacer></spacer>
+                            <actuator>
+                                <action-id>Sapphire.Gallery.Actuators.DoubleTheNumber</action-id>
+                                <action>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <label>double the number</label>
+                                </action>
+                                <action-handler>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <action>Sapphire.Gallery.Actuators.DoubleTheNumber</action>
+                                    <impl>ActuatorsGalleryDoubleTheNumberActionHandler</impl>
+                                </action-handler>
+                            </actuator>
+                            <actuator>
+                                <action-id>Sapphire.Gallery.Actuators.DoubleTheNumber</action-id>
+                                <action>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <label>double the number</label>
+                                </action>
+                                <action-handler>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <action>Sapphire.Gallery.Actuators.DoubleTheNumber</action>
+                                    <impl>ActuatorsGalleryDoubleTheNumberActionHandler</impl>
+                                </action-handler>
+                                <horizontal-align>center</horizontal-align>
+                            </actuator>
+                            <actuator>
+                                <action-id>Sapphire.Gallery.Actuators.DoubleTheNumber</action-id>
+                                <action>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <label>double the number</label>
+                                </action>
+                                <action-handler>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <action>Sapphire.Gallery.Actuators.DoubleTheNumber</action>
+                                    <impl>ActuatorsGalleryDoubleTheNumberActionHandler</impl>
+                                </action-handler>
+                                <horizontal-align>right</horizontal-align>
+                            </actuator>
+                            <spacer></spacer>
+                            <label>Alternatively, the alignment range can be limited to just the second column.</label>
+                            <spacer></spacer>
+                            <actuator>
+                                <action-id>Sapphire.Gallery.Actuators.DoubleTheNumber</action-id>
+                                <action>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <label>double the number</label>
+                                </action>
+                                <action-handler>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <action>Sapphire.Gallery.Actuators.DoubleTheNumber</action>
+                                    <impl>ActuatorsGalleryDoubleTheNumberActionHandler</impl>
+                                </action-handler>
+                                <span>false</span>
+                            </actuator>
+                            <actuator>
+                                <action-id>Sapphire.Gallery.Actuators.DoubleTheNumber</action-id>
+                                <action>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <label>double the number</label>
+                                </action>
+                                <action-handler>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <action>Sapphire.Gallery.Actuators.DoubleTheNumber</action>
+                                    <impl>ActuatorsGalleryDoubleTheNumberActionHandler</impl>
+                                </action-handler>
+                                <span>false</span>
+                                <horizontal-align>center</horizontal-align>
+                            </actuator>
+                            <actuator>
+                                <action-id>Sapphire.Gallery.Actuators.DoubleTheNumber</action-id>
+                                <action>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <label>double the number</label>
+                                </action>
+                                <action-handler>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <action>Sapphire.Gallery.Actuators.DoubleTheNumber</action>
+                                    <impl>ActuatorsGalleryDoubleTheNumberActionHandler</impl>
+                                </action-handler>
+                                <span>false</span>
+                                <horizontal-align>right</horizontal-align>
+                            </actuator>
+                            <spacer></spacer>
+                            <label>An actuator can also be presented as a button.</label>
+                            <spacer></spacer>
+                            <actuator>
+                                <action-id>Sapphire.Gallery.Actuators.DoubleTheNumber</action-id>
+                                <action>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <label>double the number</label>
+                                </action>
+                                <action-handler>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <action>Sapphire.Gallery.Actuators.DoubleTheNumber</action>
+                                    <impl>ActuatorsGalleryDoubleTheNumberActionHandler</impl>
+                                </action-handler>
+                                <style>Sapphire.Actuator.Button</style>
+                            </actuator>
+                            <actuator>
+                                <action-id>Sapphire.Gallery.Actuators.DoubleTheNumber</action-id>
+                                <action>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <label>double the number</label>
+                                </action>
+                                <action-handler>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <action>Sapphire.Gallery.Actuators.DoubleTheNumber</action>
+                                    <impl>ActuatorsGalleryDoubleTheNumberActionHandler</impl>
+                                </action-handler>
+                                <horizontal-align>center</horizontal-align>
+                                <style>Sapphire.Actuator.Button</style>
+                            </actuator>
+                            <actuator>
+                                <action-id>Sapphire.Gallery.Actuators.DoubleTheNumber</action-id>
+                                <action>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <label>double the number</label>
+                                </action>
+                                <action-handler>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <action>Sapphire.Gallery.Actuators.DoubleTheNumber</action>
+                                    <impl>ActuatorsGalleryDoubleTheNumberActionHandler</impl>
+                                </action-handler>
+                                <horizontal-align>right</horizontal-align>
+                                <style>Sapphire.Actuator.Button</style>
+                            </actuator>
+                            <spacer></spacer>
+                            <label>Similarly to link presentation, the alignment range can be limited to just the second column.</label>
+                            <spacer></spacer>
+                            <actuator>
+                                <action-id>Sapphire.Gallery.Actuators.DoubleTheNumber</action-id>
+                                <action>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <label>double the number</label>
+                                </action>
+                                <action-handler>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <action>Sapphire.Gallery.Actuators.DoubleTheNumber</action>
+                                    <impl>ActuatorsGalleryDoubleTheNumberActionHandler</impl>
+                                </action-handler>
+                                <span>false</span>
+                                <style>Sapphire.Actuator.Button</style>
+                            </actuator>
+                            <actuator>
+                                <action-id>Sapphire.Gallery.Actuators.DoubleTheNumber</action-id>
+                                <action>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <label>double the number</label>
+                                </action>
+                                <action-handler>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <action>Sapphire.Gallery.Actuators.DoubleTheNumber</action>
+                                    <impl>ActuatorsGalleryDoubleTheNumberActionHandler</impl>
+                                </action-handler>
+                                <span>false</span>
+                                <horizontal-align>center</horizontal-align>
+                                <style>Sapphire.Actuator.Button</style>
+                            </actuator>
+                            <actuator>
+                                <action-id>Sapphire.Gallery.Actuators.DoubleTheNumber</action-id>
+                                <action>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <label>double the number</label>
+                                </action>
+                                <action-handler>
+                                    <id>Sapphire.Gallery.Actuators.DoubleTheNumber</id>
+                                    <action>Sapphire.Gallery.Actuators.DoubleTheNumber</action>
+                                    <impl>ActuatorsGalleryDoubleTheNumberActionHandler</impl>
+                                </action-handler>
+                                <span>false</span>
+                                <horizontal-align>right</horizontal-align>
+                                <style>Sapphire.Actuator.Button</style>
+                            </actuator>
+                        </content>
+                    </section>
+                    <property>Actuators</property>
+                </node>
             </node>
             <node>
                 <label>sections</label>
@@ -1910,7 +2097,7 @@
                     <content>
                         <label>Some descriptive text.</label>
                         <spacer></spacer>
-                        <action-link>
+                        <actuator>
                             <label>Open split form dialog...</label>
                             <action>
                                 <id>Sapphire.Samples.Gallery.OpenSplitFormDialog</id>
@@ -1922,7 +2109,7 @@
                                 <impl>OpenSplitFormDialogActionHandler</impl>
                             </action-handler>
                             <action-id>Sapphire.Samples.Gallery.OpenSplitFormDialog</action-id>
-                        </action-link>
+                        </actuator>
                         <spacer></spacer>
                         <split-form>
                             <orientation>horizontal</orientation>

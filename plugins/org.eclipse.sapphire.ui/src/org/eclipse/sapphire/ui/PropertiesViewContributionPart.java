@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.IPropertiesViewContributionDef;
@@ -47,17 +49,19 @@ public final class PropertiesViewContributionPart extends SapphirePart
             
             this.pages.add( pagePart );
 
-            final SapphirePartListener pagePartListener = new SapphirePartListener()
+            final Listener pagePartListener = new Listener()
             {
                 @Override
-                public void handleValidateStateChange( final Status oldValidateState,
-                                                       final Status newValidationState )
+                public void handle( final Event event )
                 {
-                    updateValidationState();
+                    if( event instanceof ValidationChangedEvent )
+                    {
+                        updateValidationState();
+                    }
                 }
             };
             
-            pagePart.addListener( pagePartListener );
+            pagePart.attach( pagePartListener );
         }
         
         this.selectedPage = this.pages.get( 0 );

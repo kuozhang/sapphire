@@ -64,13 +64,13 @@ public interface ISapphireActionSystemPartDef
     
     // *** Images ***
     
-    @Type( base = ISapphireActionImage.class )
+    @Type( base = ImageReference.class )
     @Label( standard = "images" )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "image", type = ISapphireActionImage.class ) )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "image", type = ImageReference.class ) )
     
     ListProperty PROP_IMAGES = new ListProperty( TYPE, "Images" );
     
-    ModelElementList<ISapphireActionImage> getImages();
+    ModelElementList<ImageReference> getImages();
     
     // *** Description ***
     

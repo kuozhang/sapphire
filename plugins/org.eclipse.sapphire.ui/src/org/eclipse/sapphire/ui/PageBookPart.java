@@ -19,6 +19,8 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.FormDef;
@@ -41,7 +43,7 @@ public abstract class PageBookPart extends FormPart
     private FormDef defaultPageDef;
     private SapphirePartContainer currentPage;
     private boolean exposePageValidationState = false;
-    private SapphirePartListener childPartListener = null;
+    private Listener childPartListener = null;
     
     @Override
     protected void init()
@@ -80,26 +82,29 @@ public abstract class PageBookPart extends FormPart
         composite.setLayout( glayout( 2, 0, 0 ) );
         context.adapt( composite );
         
-        final SapphirePageBookListener pageChangeListener = new SapphirePageBookListener()
+        final Listener pageChangeListener = new Listener()
         {
             @Override
-            public void handlePageChange()
+            public void handle( final Event event )
             {
-                for( Control control : composite.getChildren() )
+                if( event instanceof PageChangedEvent )
                 {
-                    control.dispose();
+                    for( Control control : composite.getChildren() )
+                    {
+                        control.dispose();
+                    }
+                    
+                    if( PageBookPart.this.currentPage != null )
+                    {
+                        PageBookPart.this.currentPage.render( new SapphireRenderingContext( PageBookPart.this, context, composite ) );
+                    }
+                    
+                    context.layout();
                 }
-                
-                if( PageBookPart.this.currentPage != null )
-                {
-                    PageBookPart.this.currentPage.render( new SapphireRenderingContext( PageBookPart.this, context, composite ) );
-                }
-                
-                context.layout();
             }
         };
         
-        addListener( pageChangeListener );
+        attach( pageChangeListener );
         
         composite.addDisposeListener
         (
@@ -107,7 +112,7 @@ public abstract class PageBookPart extends FormPart
             {
                 public void widgetDisposed( final DisposeEvent event )
                 {
-                    removeListener( pageChangeListener );
+                    detach( pageChangeListener );
                 }
             }
         );
@@ -162,7 +167,7 @@ public abstract class PageBookPart extends FormPart
             
             if( this.childPartListener != null )
             {
-                this.currentPage.addListener( this.childPartListener );
+                this.currentPage.attach( this.childPartListener );
             }
         }
         else
@@ -172,13 +177,7 @@ public abstract class PageBookPart extends FormPart
         
         updateValidationState();
         
-        for( SapphirePartListener listener : getListeners() )
-        {
-            if( listener instanceof SapphirePageBookListener )
-            {
-                ( (SapphirePageBookListener) listener ).handlePageChange();
-            }
-        }
+        broadcast( new PageChangedEvent( this ) );
     }
     
     protected abstract Object parsePageKey( final String pageKeyString );
@@ -207,19 +206,21 @@ public abstract class PageBookPart extends FormPart
             
             if( this.exposePageValidationState == true )
             {
-                this.childPartListener = new SapphirePartListener()
+                this.childPartListener = new Listener()
                 {
                     @Override
-                    public void handleValidateStateChange( final Status oldValidateState,
-                                                           final Status newValidationState )
+                    public void handle( final Event event )
                     {
-                        updateValidationState();
+                        if( event instanceof ValidationChangedEvent )
+                        {
+                            updateValidationState();
+                        }
                     }
                 };
                 
                 if( this.currentPage != null )
                 {
-                    this.currentPage.addListener( this.childPartListener );
+                    this.currentPage.attach( this.childPartListener );
                 }
             }
             else
@@ -239,6 +240,14 @@ public abstract class PageBookPart extends FormPart
         if( this.currentPage != null )
         {
             this.currentPage.dispose();
+        }
+    }
+    
+    public static final class PageChangedEvent extends PartEvent
+    {
+        public PageChangedEvent( final SapphirePart part )
+        {
+            super( part );
         }
     }
     

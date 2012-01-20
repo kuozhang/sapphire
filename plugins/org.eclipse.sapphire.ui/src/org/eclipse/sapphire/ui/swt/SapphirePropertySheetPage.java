@@ -30,8 +30,7 @@ import org.eclipse.sapphire.modeling.util.MutableReference;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPagePart;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
-import org.eclipse.sapphire.ui.SapphirePartEvent;
-import org.eclipse.sapphire.ui.SapphirePartListener;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.swt.internal.TabbedPropertyComposite;
 import org.eclipse.sapphire.ui.swt.internal.TabbedPropertyList;
@@ -151,7 +150,7 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
             
             tabbedPropertiesComposite.setLayoutData( gdfill() );
             
-            final LocalizationService localizationService = this.part.getDefinition().adapt( LocalizationService.class );
+            final LocalizationService localizationService = this.part.definition().adapt( LocalizationService.class );
             final List<PropertiesViewContributionPagePart> pages = this.part.getPages();
             final List<PropertiesViewContributionPagePart> visiblePages = new ArrayList<PropertiesViewContributionPagePart>();
             final List<TabbedPropertyList.Item> elements = new ArrayList<TabbedPropertyList.Item>( pages.size() );
@@ -213,27 +212,26 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
                     index = -1;
                 }
 
-                final SapphirePartListener listener = new SapphirePartListener()
+                final org.eclipse.sapphire.Listener listener = new org.eclipse.sapphire.Listener()
                 {
                     @Override
-                    public void handleEvent( final SapphirePartEvent event )
+                    public void handle( final org.eclipse.sapphire.Event event )
                     {
-                        if( event instanceof PropertiesViewContributionPagePart.LabelChangedEvent ||
-                            event instanceof PropertiesViewContributionPagePart.ImageChangedEvent )
+                        if( event instanceof SapphirePart.LabelChangedEvent || event instanceof SapphirePart.ImageChangedEvent )
                         {
                             if( index != -1 )
                             {
                                 list.update( index );
                             }
                         }
-                        else if( event instanceof PropertiesViewContributionPagePart.VisibilityChangedEvent )
+                        else if( event instanceof SapphirePart.VisibilityChangedEvent )
                         {
                             refresh();
                         }
                     }
                 };
                 
-                page.addListener( listener );
+                page.attach( listener );
                 
                 tabbedPropertiesComposite.addDisposeListener
                 (
@@ -241,7 +239,7 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
                     {
                         public void widgetDisposed( final DisposeEvent event )
                         {
-                            page.removeListener( listener );
+                            page.detach( listener );
                         }
                     }
                 );

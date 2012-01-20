@@ -269,9 +269,9 @@ public final class SapphirePropertyEditor extends FormPart
     }
     
     @Override
-    public PropertyEditorDef getDefinition()
+    public PropertyEditorDef definition()
     {
-        return (PropertyEditorDef) super.getDefinition();
+        return (PropertyEditorDef) super.definition();
     }
     
     @Override
@@ -345,7 +345,7 @@ public final class SapphirePropertyEditor extends FormPart
     public String getLabel( final CapitalizationType capitalizationType,
                             final boolean includeMnemonic )
     {
-        return getLabel( this.property, getDefinition(), capitalizationType, includeMnemonic );
+        return getLabel( this.property, definition(), capitalizationType, includeMnemonic );
     }
     
     public static String getLabel( final ModelProperty property,
@@ -368,29 +368,29 @@ public final class SapphirePropertyEditor extends FormPart
     
     public boolean getShowLabel()
     {
-        return getDefinition().getShowLabel().getContent();
+        return definition().getShowLabel().getContent();
     }
     
     public boolean getSpanBothColumns()
     {
-        return getDefinition().getSpanBothColumns().getContent();
+        return definition().getSpanBothColumns().getContent();
     }
     
     public int getWidth( final int defaultValue )
     {
-        final Integer width = getDefinition().getWidth().getContent();
+        final Integer width = definition().getWidth().getContent();
         return ( width == null || width < 1 ? defaultValue : width );
     }
     
     public int getHeight( final int defaultValue )
     {
-        final Integer height = getDefinition().getHeight().getContent();
+        final Integer height = definition().getHeight().getContent();
         return ( height == null || height < 1 ? defaultValue : height );
     }
     
     public int getMarginLeft()
     {
-        int marginLeft = getDefinition().getMarginLeft().getContent();
+        int marginLeft = definition().getMarginLeft().getContent();
         
         if( marginLeft < 0 )
         {
@@ -423,7 +423,7 @@ public final class SapphirePropertyEditor extends FormPart
     
     public int getRelatedContentWidth()
     {
-        final Value<Integer> relatedContentWidth = getDefinition().getRelatedContentWidth();
+        final Value<Integer> relatedContentWidth = definition().getRelatedContentWidth();
         
         if( relatedContentWidth.validate().ok() )
         {
@@ -508,7 +508,7 @@ public final class SapphirePropertyEditor extends FormPart
     {
         if( this.element.isPropertyEnabled( this.property ) )
         {
-            notifyFocusRecievedEventListeners();
+            broadcast( new FocusReceivedEvent( this ) );
             return true;
         }
         

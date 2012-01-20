@@ -12,13 +12,12 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescriptor;
+import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.sizeOfImage;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
@@ -29,11 +28,11 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
-import org.eclipse.sapphire.ui.def.ISapphireActionImage;
 import org.eclipse.sapphire.ui.def.ISapphireActionLocationHint;
 import org.eclipse.sapphire.ui.def.ISapphireActionLocationHintAfter;
 import org.eclipse.sapphire.ui.def.ISapphireActionLocationHintBefore;
 import org.eclipse.sapphire.ui.def.ISapphireActionSystemPartDef;
+import org.eclipse.sapphire.ui.def.ImageReference;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -44,7 +43,7 @@ public abstract class SapphireActionSystemPart
     private FunctionContext functionContext;
     private String id;
     private FunctionResult labelFunctionResult;
-    private final List<ImageDescriptor> images = new CopyOnWriteArrayList<ImageDescriptor>();
+    private final List<ImageData> images = new CopyOnWriteArrayList<ImageData>();
     private final List<SapphireActionLocationHint> locationHints = new CopyOnWriteArrayList<SapphireActionLocationHint>();
     private final List<SapphireActionLocationHint> locationHintsReadOnly = Collections.unmodifiableList( this.locationHints );
     private boolean enabled;
@@ -75,7 +74,7 @@ public abstract class SapphireActionSystemPart
                 }
             );
             
-            for( ISapphireActionImage image : def.getImages() )
+            for( ImageReference image : def.getImages() )
             {
                 final Function imageFunction = FailSafeFunction.create( image.getImage().getContent(), Literal.create( ImageData.class ) );
                 final FunctionResult imageFunctionResult = imageFunction.evaluate( this.functionContext ); 
@@ -83,12 +82,7 @@ public abstract class SapphireActionSystemPart
                 
                 if( data != null )
                 {
-                    final ImageDescriptor img = toImageDescriptor( data );
-                    
-                    if( img != null )
-                    {
-                        this.images.add( img ); 
-                    }
+                    this.images.add( data );
                 }
                 
                 imageFunctionResult.dispose();
@@ -161,11 +155,11 @@ public abstract class SapphireActionSystemPart
         broadcast( new LabelChangedEvent() );
     }
     
-    public final ImageDescriptor getImage( final int size )
+    public final ImageData getImage( final int size )
     {
-        for( ImageDescriptor image : this.images )
+        for( ImageData image : this.images )
         {
-            if( image.getImageData().height == size )
+            if( sizeOfImage( image ) == size )
             {
                 return image;
             }
@@ -174,7 +168,7 @@ public abstract class SapphireActionSystemPart
         return null;
     }
     
-    public final void addImage( final ImageDescriptor image )
+    public final void addImage( final ImageData image )
     {
         if( image == null )
         {
@@ -185,7 +179,7 @@ public abstract class SapphireActionSystemPart
         broadcast( new ImagesChangedEvent() );
     }
     
-    public final void removeImage( final ImageDescriptor image )
+    public final void removeImage( final ImageData image )
     {
         if( image == null )
         {

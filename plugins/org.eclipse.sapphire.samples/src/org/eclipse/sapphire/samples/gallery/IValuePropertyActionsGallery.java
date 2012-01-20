@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.samples.gallery;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -67,5 +68,14 @@ public interface IValuePropertyActionsGallery
     ListProperty PROP_REFERENCES = new ListProperty( TYPE, "References" );
     
     ModelElementList<IValuePropertyActionsGalleryReference> getReferences();
+    
+    // *** Actuators ***
+    
+    @Type( base = ActuatorsGallery.class )
+    @XmlBinding( path = "actuators" )
+
+    ImpliedElementProperty PROP_ACTUATORS = new ImpliedElementProperty( TYPE, "Actuators" );
+    
+    ActuatorsGallery getActuators();
  
 }

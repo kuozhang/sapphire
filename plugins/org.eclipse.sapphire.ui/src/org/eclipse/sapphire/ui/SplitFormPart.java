@@ -40,7 +40,7 @@ public final class SplitFormPart extends SapphirePartContainer
         final IModelElement element = getLocalModelElement();
         final List<SapphirePart> childParts = new ArrayList<SapphirePart>();
         
-        for( SplitFormBlockDef splitFormBlockDef : getDefinition().getBlocks() )
+        for( SplitFormBlockDef splitFormBlockDef : definition().getBlocks() )
         {
             final SapphirePart childPart = create( this, element, splitFormBlockDef, this.params );
             childParts.add( childPart );
@@ -50,14 +50,14 @@ public final class SplitFormPart extends SapphirePartContainer
     }
 
     @Override
-    public SplitFormDef getDefinition()
+    public SplitFormDef definition()
     {
-        return (SplitFormDef) super.getDefinition();
+        return (SplitFormDef) super.definition();
     }
     
     public Orientation getOrientation()
     {
-        return getDefinition().getOrientation().getContent();
+        return definition().getOrientation().getContent();
     }
     
     @Override

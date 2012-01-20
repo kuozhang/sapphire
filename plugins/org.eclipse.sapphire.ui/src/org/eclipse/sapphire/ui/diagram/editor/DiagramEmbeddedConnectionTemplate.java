@@ -57,7 +57,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         this.nodeTemplate = (DiagramNodeTemplate)getParentPart();
         this.diagramEditor = this.nodeTemplate.getDiagramEditorPart();
         this.modelElement = getModelElement();
-        this.connectionDef = (IDiagramConnectionDef)super.getDefinition();
+        this.connectionDef = (IDiagramConnectionDef)super.definition();
         
         this.diagramConnectionMap = new HashMap<IModelElement, List<DiagramConnectionPart>>();
         

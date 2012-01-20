@@ -11,13 +11,11 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
-import org.eclipse.sapphire.ui.SapphirePartEvent;
-
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class DiagramPageEvent extends SapphirePartEvent 
+public class DiagramPageEvent extends DiagramPartEvent 
 {
 	 public DiagramPageEvent(final SapphireDiagramEditorPagePart part)
 	 {

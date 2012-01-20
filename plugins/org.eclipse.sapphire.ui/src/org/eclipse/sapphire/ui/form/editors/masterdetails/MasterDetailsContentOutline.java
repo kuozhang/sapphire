@@ -65,7 +65,7 @@ public final class MasterDetailsContentOutline
     public MasterDetailsContentOutline( final MasterDetailsEditorPagePart editorPagePart )
     {
         this.editorPagePart = editorPagePart;
-        this.editorPageDef = editorPagePart.getDefinition();
+        this.editorPageDef = editorPagePart.definition();
         this.rootModelElement = editorPagePart.getModelElement();
         this.selection = Collections.emptyList();
         this.listeners = new CopyOnWriteArraySet<Listener>();

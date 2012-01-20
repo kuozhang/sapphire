@@ -50,8 +50,6 @@ import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireCondition;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphirePartEvent;
-import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphirePropertyEnabledCondition;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireSection;
@@ -90,7 +88,7 @@ public final class MasterDetailsContentNode
     private MasterDetailsContentNode parentNode;
     private FunctionResult labelFunctionResult;
     private ImageManager imageManager;
-    private SapphirePartListener childPartListener;
+    private Listener childPartListener;
     private List<Object> rawChildren;
     private List<SapphireSection> sections;
     private List<SapphireSection> sectionsReadOnly;
@@ -199,27 +197,31 @@ public final class MasterDetailsContentNode
         
         this.expanded = false;
         
-        this.childPartListener = new SapphirePartListener()
+        this.childPartListener = new Listener()
         {
             @Override
-            public void handleValidateStateChange( final Status oldValidateState,
-                                                   final Status newValidationState )
+            public void handle( final Event event )
             {
-                updateValidationState();
+                if( event instanceof ValidationChangedEvent )
+                {
+                    updateValidationState();
+                }
             }
         };
         
-        final SapphirePartListener validationStateListener = new SapphirePartListener()
+        final Listener validationStateListener = new Listener()
         {
             @Override
-            public void handleValidateStateChange( final Status oldValidateState,
-                                                   final Status newValidationState )
+            public void handle( final Event event )
             {
-                getContentTree().notifyOfNodeUpdate( MasterDetailsContentNode.this );
+                if( event instanceof ValidationChangedEvent )
+                {
+                    getContentTree().notifyOfNodeUpdate( MasterDetailsContentNode.this );
+                }
             }
         };
         
-        addListener( validationStateListener );
+        attach( validationStateListener );
         
         // Sections and Child Nodes
         
@@ -239,7 +241,7 @@ public final class MasterDetailsContentNode
             };
             
             section.init( this, this.modelElement, secdef, this.params );
-            section.addListener( this.childPartListener );
+            section.attach( this.childPartListener );
             
             this.sections.add( section );
         }
@@ -277,7 +279,7 @@ public final class MasterDetailsContentNode
                 
                 final MasterDetailsContentNode node = new MasterDetailsContentNode();
                 node.init( this, this.modelElement, def, params );
-                node.addListener( this.childPartListener );
+                node.attach( this.childPartListener );
                 
                 this.rawChildren.add( node );
             }
@@ -443,12 +445,12 @@ public final class MasterDetailsContentNode
         
         this.imageManager = new ImageManager( this.modelElement, imageFunction, defaultImageLiteral );
         
-        addListener
+        attach
         (
-            new SapphirePartListener()
+            new Listener()
             {
                 @Override
-                public void handleEvent( final SapphirePartEvent event )
+                public void handle( final Event event )
                 {
                     if( event instanceof SapphirePart.ImageChangedEvent )
                     {
@@ -931,7 +933,7 @@ public final class MasterDetailsContentNode
             
             final MasterDetailsContentNode node = new MasterDetailsContentNode();
             node.init( MasterDetailsContentNode.this, element, relevantCaseDef, this.params );
-            node.addListener( MasterDetailsContentNode.this.childPartListener );
+            node.attach( MasterDetailsContentNode.this.childPartListener );
             node.transformLabelCase = false;
             
             return node;

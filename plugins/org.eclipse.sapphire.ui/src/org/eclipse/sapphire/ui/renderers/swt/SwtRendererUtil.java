@@ -64,5 +64,10 @@ public final class SwtRendererUtil
     {
         return toImageDescriptor( org.eclipse.sapphire.modeling.ImageData.createFromClassLoader( cl, path ) );
     }
-
+    
+    public static int sizeOfImage( final org.eclipse.sapphire.modeling.ImageData image )
+    {
+        return toImageData( image ).height;
+    }
+    
 }

@@ -54,7 +54,7 @@ public abstract class SapphireActionHandler extends SapphireActionSystemPart
     protected final FunctionContext initFunctionContext()
     {
         final ISapphirePart part = getPart();
-        return new ModelElementFunctionContext( part.getLocalModelElement(), part.getDefinition().adapt( LocalizationService.class ) );
+        return new ModelElementFunctionContext( part.getLocalModelElement(), part.definition().adapt( LocalizationService.class ) );
     }
     
     public final SapphireAction getAction()

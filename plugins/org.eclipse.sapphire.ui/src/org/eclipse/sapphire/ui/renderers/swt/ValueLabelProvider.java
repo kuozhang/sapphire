@@ -54,7 +54,7 @@ public final class ValueLabelProvider implements ILabelProvider
         
         final IModelElement element = this.part.getLocalModelElement();
         
-        this.localizationService = this.part.getDefinition().adapt( LocalizationService.class );
+        this.localizationService = this.part.definition().adapt( LocalizationService.class );
         this.valueLabelService = element.service( this.property, ValueLabelService.class );
         this.valueImageService = element.service( this.property, ValueImageService.class );
         

@@ -150,7 +150,7 @@ public final class SapphireAction extends SapphireActionSystemPart
     {
         final ISapphirePart part = getPart();
         
-        return new ModelElementFunctionContext( part.getLocalModelElement(), part.getDefinition().adapt( LocalizationService.class ) )
+        return new ModelElementFunctionContext( part.getLocalModelElement(), part.definition().adapt( LocalizationService.class ) )
         {
             @Override
             public FunctionResult property( final Object element,

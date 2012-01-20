@@ -156,7 +156,7 @@ public class DiagramNodeTemplate extends SapphirePart
         }
     }
     
-    public IDiagramNodeDef getDefinition()
+    public IDiagramNodeDef definition()
     {
         return this.definition;
     }

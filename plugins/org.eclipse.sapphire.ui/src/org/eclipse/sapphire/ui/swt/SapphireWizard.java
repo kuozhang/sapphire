@@ -20,13 +20,13 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
-import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
-import org.eclipse.sapphire.ui.SapphirePartEvent;
-import org.eclipse.sapphire.ui.SapphirePartListener;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireWizardPagePart;
 import org.eclipse.sapphire.ui.SapphireWizardPart;
 import org.eclipse.sapphire.ui.def.ISapphireWizardDef;
@@ -46,7 +46,7 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
 {
     private final M element;
     private final SapphireWizardPart part;
-    private final SapphirePartListener listener;
+    private final Listener listener;
     
     public SapphireWizard( final M modelElement,
                            final String wizardDefPath )
@@ -60,19 +60,19 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
         
         setWindowTitle( this.part.getLabel() );
         
-        this.listener = new SapphirePartListener()
+        this.listener = new Listener()
         {
             @Override
-            public void handleEvent( final SapphirePartEvent event )
+            public void handle( final Event event )
             {
-                if( event instanceof ImageChangedEvent )
+                if( event instanceof SapphirePart.ImageChangedEvent )
                 {
                     refreshImage();
                 }
             }
         };
         
-        this.part.addListener( this.listener );
+        this.part.attach( this.listener );
         
         refreshImage();
         
@@ -183,7 +183,7 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
     {
         super.dispose();
         
-        this.part.removeListener( this.listener );
+        this.part.detach( this.listener );
     }
     
 }

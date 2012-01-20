@@ -33,6 +33,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.help.IContext;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -84,7 +86,7 @@ public abstract class SapphireEditor
     private SapphireEditorContentOutline outline;
     private final SapphireActionManager actionsManager;
     private SapphirePropertySheetPage propertiesViewPage;
-    private SapphirePartListener propertiesViewContributionChangeListener;
+    private Listener propertiesViewContributionChangeListener;
     
     public SapphireEditor( final String pluginId )
     {
@@ -102,7 +104,7 @@ public abstract class SapphireEditor
         return super.getContainer();
     }
 
-    public ISapphirePartDef getDefinition()
+    public ISapphirePartDef definition()
     {
         return null;
     }
@@ -644,17 +646,17 @@ public abstract class SapphireEditor
             {
                 this.propertiesViewPage = new SapphirePropertySheetPage();
                 
-                this.propertiesViewContributionChangeListener = new SapphirePartListener()
+                this.propertiesViewContributionChangeListener = new Listener()
                 {
                     @Override
-                    public void handleEvent( final SapphirePartEvent event )
+                    public void handle( final Event event )
                     {
                         if( event instanceof SapphireEditorPagePart.PropertiesViewContributionChangedEvent )
                         {
                             final SapphireEditorPagePart.PropertiesViewContributionChangedEvent evt
                                 = (SapphireEditorPagePart.PropertiesViewContributionChangedEvent) event;
                             
-                            SapphireEditor.this.propertiesViewPage.setPart( evt.getPropertiesViewContribution() );
+                            SapphireEditor.this.propertiesViewPage.setPart( evt.contribution() );
                         }
                     }
                 };
@@ -674,7 +676,7 @@ public abstract class SapphireEditor
         {
             for( SapphireEditorPagePart editorPagePart : this.partByPage.values() )
             {
-                editorPagePart.removeListener( this.propertiesViewContributionChangeListener );
+                editorPagePart.attach( this.propertiesViewContributionChangeListener );
             }
             
             final Object page = getPage();
@@ -683,7 +685,7 @@ public abstract class SapphireEditor
             
             if( editorPagePart != null )
             {
-                editorPagePart.addListener( this.propertiesViewContributionChangeListener );
+                editorPagePart.detach( this.propertiesViewContributionChangeListener );
                 contribution = editorPagePart.getPropertiesViewContribution();
             }
             else
@@ -776,16 +778,6 @@ public abstract class SapphireEditor
     }
     
     public void collectAllReferencedProperties( final Set<ModelProperty> collection )
-    {
-        throw new UnsupportedOperationException();
-    }
-    
-    public void addListener( final SapphirePartListener listener )
-    {
-        throw new UnsupportedOperationException();
-    }
-    
-    public void removeListener( final SapphirePartListener listener )
     {
         throw new UnsupportedOperationException();
     }
