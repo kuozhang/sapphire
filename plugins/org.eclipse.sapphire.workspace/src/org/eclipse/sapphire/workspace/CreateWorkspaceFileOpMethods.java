@@ -24,8 +24,8 @@ import org.eclipse.sapphire.platform.PathBridge;
 
 public final class CreateWorkspaceFileOpMethods
 {
-	public static IFile getFileHandle( final CreateWorkspaceFileOp operation )
-	{
+    public static IFile getFileHandle( final CreateWorkspaceFileOp operation )
+    {
         final Path folderPath = operation.getFolder().getContent();
         String fileName = operation.getFileName().getContent();
         
@@ -55,6 +55,6 @@ public final class CreateWorkspaceFileOpMethods
         final Path newFilePath = folderPath.append( fileName );
         
         return ResourcesPlugin.getWorkspace().getRoot().getFile( PathBridge.create( newFilePath ) );
-	}
+    }
     
 }

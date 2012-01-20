@@ -47,10 +47,10 @@
                     <content>
                         <label>Define named documentation content. Reference the same documentation content from multiple parts.</label>
                         <spacer/>
-                        <action-link>
+                        <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>Add documentation content</label>
-                        </action-link>
+                        </actuator>
                     </content>
                 </section>
                 <node-factory>
@@ -74,10 +74,10 @@
                     <content>
                         <label>Define parts.</label>
                         <spacer/>
-                        <action-link>
+                        <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>Add a part</label>
-                        </action-link>
+                        </actuator>
                     </content>
                 </section>
                 <node-include>
@@ -182,10 +182,10 @@
                 <content>
                     <label>Define action handler filters.</label>
                     <spacer/>
-                    <action-link>
+                    <actuator>
                         <action-id>Sapphire.Add</action-id>
                         <label>Add an action handler filter</label>
-                    </action-link>
+                    </actuator>
                 </content>
             </section>
             <node-factory>
@@ -394,23 +394,50 @@
         </case>
         
         <case>
-            <model-element-type>ISapphireActionLinkDef</model-element-type>
-            <label>Action Link</label>
+            <model-element-type>ActuatorDef</model-element-type>
+            <label>Actuator</label>
             <use-model-element-image/>
             <section>
                 <content>
-                    <property-editor>Label</property-editor>
-                    <composite>
-                        <indent>true</indent>
-                        <content>
-                            <property-editor>ShowImage</property-editor>
-                        </content>
-                    </composite>
+                    <label>An actuator provides means to invoke an action. The action could be drawn from the context where actuator is placed or provided as part of actuator's definition.</label>
+                    <spacer></spacer>
                     <property-editor>ActionId</property-editor>
                     <property-editor>ActionHandlerId</property-editor>
                 </content>
             </section>
             <node-include>ActionsOverallNode</node-include>
+            <section>
+                <label>Presentation</label>
+                <content>
+                    <property-editor>
+                        <property>ShowLabel</property>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                    </property-editor>
+                    <property-editor>Label</property-editor>
+                    <spacer></spacer>
+                    <property-editor>
+                        <property>ShowImage</property>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                    </property-editor>
+                    <property-editor>Images</property-editor>
+                    <spacer></spacer>
+                    <property-editor>Style</property-editor>
+                    <property-editor>HorizontalAlignment</property-editor>
+                    <property-editor>
+                        <property>SpanBothColumns</property>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                    </property-editor>
+                </content>
+            </section>
         </case>
         
         <case>
@@ -1731,10 +1758,10 @@
             <content>
                 <label>Define properties view contribution.</label>
                 <spacer></spacer>
-                <action-link>
+                <actuator>
                     <label>Add a page</label>
                     <action-id>Sapphire.Add</action-id>
-                </action-link>
+                </actuator>
             </content>
         </section>
     </node>

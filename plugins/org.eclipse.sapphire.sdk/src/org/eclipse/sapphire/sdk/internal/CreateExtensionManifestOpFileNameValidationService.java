@@ -31,11 +31,11 @@ public final class CreateExtensionManifestOpFileNameValidationService extends Va
         final Value<String> target = context( IModelElement.class ).read( context( ValueProperty.class ) );
         final String fileName = target.getText();
         
-    	if( fileName != null && ! fileName.equals( SapphireExtensionDef.FILE_NAME ) )
-    	{
+        if( fileName != null && ! fileName.equals( SapphireExtensionDef.FILE_NAME ) )
+        {
             final String msg = NLS.bind( Resources.invalidFileName, fileName );
             return Status.createWarningStatus( msg );
-    	}
+        }
         
         return Status.createOkStatus();
     }

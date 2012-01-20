@@ -76,7 +76,7 @@ public interface ServiceDef extends IModelElement
     @Documentation
     (
         content = "Provides information about the service. The description should be in the form of " +
-    	          "properly capitalized and punctuated sentences."
+                  "properly capitalized and punctuated sentences."
     )
     
     ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );

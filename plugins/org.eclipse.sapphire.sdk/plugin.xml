@@ -65,10 +65,10 @@
   </extension>
   
   <!-- <extension point="org.eclipse.ui.newWizards">
-	<category
+    <category
       id="Sapphire"
       name="%WizardCategory">
-	</category>
+    </category>
     <wizard
       id="org.eclipse.sapphire.sdk.internal.CreateExtensionManifestWizard"
       category="Sapphire"

@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.sdk.internal;
+package org.eclipse.sapphire.sdk.extensibility.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,6 +46,7 @@ import org.eclipse.sapphire.ui.def.ISapphireActionContext;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFactoryDef;
+import org.eclipse.sapphire.ui.def.PresentationStyleDef;
 import org.osgi.framework.Bundle;
 
 /**
@@ -112,6 +113,9 @@ public final class ExtensionSummaryExportOpMethods
 
             def = sections.addNewElement();
             def.setExtensionType( SapphireExtensionDef.PROP_ACTION_HANDLER_FACTORIES.getName() );
+
+            def = sections.addNewElement();
+            def.setExtensionType( SapphireExtensionDef.PROP_PRESENTATION_STYLES.getName() );
         }
         
         for( ExtensionSummarySectionDef def : sections )
@@ -142,6 +146,10 @@ public final class ExtensionSummaryExportOpMethods
             else if( extensionType.endsWith( SapphireExtensionDef.PROP_ACTION_HANDLER_FACTORIES.getName() ) )
             {
                 sectionWriter = new ActionHandlerFactoriesSectionWriter( out, extensions, filter, def );
+            }
+            else if( extensionType.endsWith( SapphireExtensionDef.PROP_PRESENTATION_STYLES.getName() ) )
+            {
+                sectionWriter = new PresentationStylesSectionWriter( out, extensions, filter, def );
             }
             else
             {
@@ -426,6 +434,47 @@ public final class ExtensionSummaryExportOpMethods
             final List<ModelProperty> columns = new ArrayList<ModelProperty>();
             columns.add( ISapphireActionHandlerFactoryDef.PROP_ACTION );
             columns.add( ISapphireActionHandlerFactoryDef.PROP_DESCRIPTION );
+            return columns;
+        }
+    }
+    
+    private static final class PresentationStylesSectionWriter extends SectionWriter
+    {
+        public PresentationStylesSectionWriter( final PrintWriter out,
+                                                final List<SapphireExtensionDef> extensions,
+                                                final Filter<IModelElement> filter,
+                                                final ExtensionSummarySectionDef def )
+        {
+            super( out, extensions, filter, def );
+        }
+        
+        @Override
+        protected void sort( final List<IModelElement> extElements )
+        {
+            Collections.sort
+            ( 
+                extElements, 
+                new Comparator<IModelElement>()
+                {
+                    public int compare( final IModelElement a,
+                                        final IModelElement b )
+                    {
+                        final PresentationStyleDef x = (PresentationStyleDef) a;
+                        final PresentationStyleDef y = (PresentationStyleDef) b;
+                        
+                        return comp( x.getId().getContent(), y.getId().getContent() );
+                    }
+                }
+            );
+        }
+
+        @Override
+        protected List<ModelProperty> getDefaultColumns()
+        {
+            final List<ModelProperty> columns = new ArrayList<ModelProperty>();
+            columns.add( PresentationStyleDef.PROP_ID );
+            columns.add( PresentationStyleDef.PROP_PART_TYPE );
+            columns.add( PresentationStyleDef.PROP_DESCRIPTION );
             return columns;
         }
     }

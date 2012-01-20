@@ -26,10 +26,10 @@
             <content>
                 <label>${ Params.Extension ? "Define actions that should be available globally in the system." : "Define actions." }</label>
                 <spacer/>
-                <action-link>
+                <actuator>
                     <action-id>Sapphire.Add</action-id>
                     <label>Add an action</label>
-                </action-link>
+                </actuator>
             </content>
         </section>
         <node-factory>
@@ -85,10 +85,10 @@
             <content>
                 <label>${ Params.Extension ? "Define action handlers that should be available globally in the system." : "Define action handlers." }</label>
                 <spacer/>
-                <action-link>
+                <actuator>
                     <action-id>Sapphire.Add</action-id>
                     <label>Add an action handler</label>
-                </action-link>
+                </actuator>
             </content>
         </section>
         <node-factory>
@@ -134,10 +134,10 @@
             <content>
                 <label>${ Params.Extension ? "Define action handler factories that should be available globally in the system." : "Define action handler factories." }</label>
                 <spacer/>
-                <action-link>
+                <actuator>
                     <action-id>Sapphire.Add</action-id>
                     <label>Add an action handler factory</label>
-                </action-link>
+                </actuator>
             </content>
         </section>
         <node-factory>

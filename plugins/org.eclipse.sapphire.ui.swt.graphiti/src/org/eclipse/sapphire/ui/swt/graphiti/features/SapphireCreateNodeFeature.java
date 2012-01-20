@@ -64,7 +64,7 @@ public class SapphireCreateNodeFeature extends AbstractCreateFeature implements 
 
 	public IDiagramNodeDef getNodeDef()
 	{
-		return this.nodeTemplate.getDefinition();
+		return this.nodeTemplate.definition();
 	}
 	
 	public int compareTo(SapphireCreateFeature o) 

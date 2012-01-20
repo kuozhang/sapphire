@@ -67,10 +67,10 @@ public abstract class CreateWorkspaceFileWizard<M extends CreateWorkspaceFileOp>
         }
     }
 
-	@Override
-	protected void performPostFinish() 
-	{
-		openFileEditors( getModelElement().getFileHandle() );
-	}
+    @Override
+    protected void performPostFinish() 
+    {
+        openFileEditors( getModelElement().getFileHandle() );
+    }
     
 }

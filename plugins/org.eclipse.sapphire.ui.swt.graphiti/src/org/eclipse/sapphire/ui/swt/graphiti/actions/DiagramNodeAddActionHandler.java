@@ -9,9 +9,7 @@
 
 package org.eclipse.sapphire.ui.swt.graphiti.actions;
 
-import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescriptor;
-
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -44,7 +42,7 @@ public class DiagramNodeAddActionHandler extends SapphireDiagramActionHandler
 		{
 			setLabel(this.nodeTemplate.getToolPaletteLabel());
 		}
-		final ImageDescriptor typeSpecificAddImage = toImageDescriptor(this.nodeTemplate.getNodeType().image());
+		final ImageData typeSpecificAddImage = this.nodeTemplate.getNodeType().image();
 		if (typeSpecificAddImage != null)
 		{
 			addImage(typeSpecificAddImage);

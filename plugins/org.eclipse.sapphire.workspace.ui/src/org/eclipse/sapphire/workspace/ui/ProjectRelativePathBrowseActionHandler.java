@@ -15,22 +15,18 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE.SharedImages;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ProjectRelativePathBrowseActionHandler 
-
-    extends RelativePathBrowseActionHandler
-    
+public final class ProjectRelativePathBrowseActionHandler extends RelativePathBrowseActionHandler
 {
     @Override
     public void init( final SapphireAction action,
@@ -39,7 +35,7 @@ public final class ProjectRelativePathBrowseActionHandler
         super.init( action, def );
         
         setLabel( Resources.label );
-        addImage( PlatformUI.getWorkbench().getSharedImages().getImageDescriptor( SharedImages.IMG_OBJ_PROJECT ) );
+        addImage( ImageData.createFromClassLoader( getClass(), "Project.png" ) );
     }
 
     @Override

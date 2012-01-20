@@ -1,0 +1,65 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2011 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>Enhancements in Sapphire 0.5</title>
+  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+<h1>Enhancements in 0.5</h1>
+<ol>
+  <li><a href="#UI">User Interface</a></li>
+  <ol type="A">
+    <li><a href="#MoreFlexibleActuatorPresentation">More Flexible Actuator Presentation</a></li>
+  </ol>
+</ol>
+
+
+<h2><a name="UI"><a name="MoreFlexibleActuatorPresentation">More Flexible Actuator Presentation</a></a></h2>
+
+<p>An actuator provides means to invoke an action. The action could be drawn from the context where actuator 
+is placed or provided as part of actuator's definition. Actuators were formerly limited to links and were
+referred to as action links. New for this release is the ability to choose either link or button presentation
+along with ability to control horizontal alignment.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;actuator>
+    &lt;action-id>Sapphire.Gallery.Actuators.DoubleTheNumber&lt;/action-id>
+    &lt;action>
+        &lt;id>Sapphire.Gallery.Actuators.DoubleTheNumber&lt;/id>
+        &lt;label>double the number&lt;/label>
+    &lt;/action>
+    &lt;action-handler>
+        &lt;id>Sapphire.Gallery.Actuators.DoubleTheNumber&lt;/id>
+        &lt;action>Sapphire.Gallery.Actuators.DoubleTheNumber&lt;/action>
+        &lt;impl>ActuatorsGalleryDoubleTheNumberActionHandler&lt;/impl>
+    &lt;/action-handler></font>
+    &lt;span>false&lt;/span>
+    &lt;horizontal-align>right&lt;/horizontal-align>
+    &lt;style>Sapphire.Actuator.Button&lt;/style>
+<font color="#888888">&lt;/actuator></font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/MoreFlexibleActuatorPresentation.png"/></p>
+
+
+<div class="copyright">Copyright (c) 2011 Oracle and Other Contributors<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+
+</body>
+
+</html>

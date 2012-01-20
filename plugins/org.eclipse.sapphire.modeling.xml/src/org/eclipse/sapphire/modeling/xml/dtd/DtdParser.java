@@ -51,11 +51,11 @@ public final class DtdParser
             
             if( ! parser.entities.isEmpty() )
             {
-            	String substitutedContent = substituteEntity(content, parser.entities);
-            	while (!content.equals(substitutedContent)) {
-            		content = substitutedContent;
-                	substitutedContent = substituteEntity(content, parser.entities);
-            	}
+                String substitutedContent = substituteEntity(content, parser.entities);
+                while (!content.equals(substitutedContent)) {
+                    content = substitutedContent;
+                    substitutedContent = substituteEntity(content, parser.entities);
+                }
                 
                 parser = new DtdParserImpl( new StringReader( content ) );
                 parser.Start();

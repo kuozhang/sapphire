@@ -180,7 +180,7 @@ public class SapphireDiagramToolBehaviorProvider extends DefaultToolBehaviorProv
 				new HashMap<IPaletteCompartmentEntry, List<SapphireCreateFeature>>();
 		
 		SapphireDiagramEditor diagramEditor = (SapphireDiagramEditor)this.getDiagramTypeProvider().getDiagramEditor();
-		IDiagramEditorPageDef pageDef = (IDiagramEditorPageDef)diagramEditor.getPart().getDefinition();
+		IDiagramEditorPageDef pageDef = (IDiagramEditorPageDef)diagramEditor.getPart().definition();
 		
 		List<IPaletteCompartmentEntry> compartments = new ArrayList<IPaletteCompartmentEntry>();
 		ModelElementList<IDiagramPaletteCompartmentDef> compartmentDefs = pageDef.getPaletteCompartments();

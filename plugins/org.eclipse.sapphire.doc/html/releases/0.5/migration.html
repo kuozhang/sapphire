@@ -1,0 +1,109 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2011 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>Migration Guide for Sapphire 0.5</title>
+  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+  <style type="text/css">
+    pre.source-code 
+    {
+      font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace; 
+      color: #000000;
+      background-color: #ffffff;
+      font-size: 12px;
+      border: 0px;
+      line-height: 14px;
+      padding: 5px;
+      margin-left: 0px;
+      margin-right: 0px;
+      overflow: auto
+    }
+</style></head>
+
+<body>
+
+<h1>Migration Guide for 0.5</h1>
+
+<p>This documents covers code changes that need to be made by Sapphire adopters as part of migrating 
+to 0.5 release. Only changes from the previous release are covered.</p>
+
+<p>Table of Contents</p>
+
+<ol>
+  <li><a href="#Actuator">Actuator</a></li>
+</ol>
+
+
+<h2><a name="Actuator">Actuator</a></h2>
+
+<p>The action link facility in sdef language has been generalized to support other presentations. In the
+process it was renamed as actuator.</p> 
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;action-link>
+    <font color="#888888">&lt;action-id>Sapphire.Add&lt;/action-id>
+    &lt;label>add a contact&lt;/label></font>
+&lt;/action-link>
+</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;actuator>
+    <font color="#888888">&lt;action-id>Sapphire.Add&lt;/action-id>
+    &lt;label>add a contact&lt;/label></font>
+&lt;/actuator>
+</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;action-link>
+    <font color="#888888">&lt;action-id>Sapphire.Add&lt;/action-id>
+    &lt;label>add a contact&lt;/label></font>
+    &lt;show-image/>
+&lt;/action-link>
+</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;actuator>
+    <font color="#888888">&lt;action-id>Sapphire.Add&lt;/action-id>
+    &lt;label>add a contact&lt;/label></font>
+    &lt;show-image>true&lt;/show-image>
+&lt;/actuator>
+</code></pre>
+    </td>
+  </tr>
+</table>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;(?s)&lt;action-link>(.*?)&lt;show-image/>(.*?)&lt;/action-link></nobr><br/>
+<nobr>Replace: &nbsp;&lt;actuator>\1&lt;show-image>true&lt;/show-image>\2&lt;/actuator></nobr></p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;(?s)&lt;action-link>(.*?)&lt;/action-link></nobr><br/>
+<nobr>Replace: &nbsp;&lt;actuator>\1&lt;/actuator></nobr></p>
+
+
+<div class="copyright">Copyright (c) 2011 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

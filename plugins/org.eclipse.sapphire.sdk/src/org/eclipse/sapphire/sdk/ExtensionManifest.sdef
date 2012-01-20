@@ -30,10 +30,10 @@
                     <content>
                         <label>Define services.</label>
                         <spacer/>
-                        <action-link>
+                        <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>Add a service</label>
-                        </action-link>
+                        </actuator>
                     </content>
                 </section>
                 <node-factory>
@@ -63,10 +63,10 @@
                     <content>
                         <label>Define expression language functions.</label>
                         <spacer/>
-                        <action-link>
+                        <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>Add an expression language function</label>
-                        </action-link>
+                        </actuator>
                     </content>
                 </section>
                 <node-factory>
@@ -91,10 +91,10 @@
                 <label>type casts</label>
                 <section>
                     <content>
-                        <action-link>
+                        <actuator>
                             <label>Add an expression language type cast</label>
                             <action-id>Sapphire.Add</action-id>
-                        </action-link>
+                        </actuator>
                     </content>
                 </section>
                 <node-factory>
@@ -137,6 +137,33 @@
                     <value>true</value>
                 </param>
             </node-include>
+            <node>
+                <label>presentation styles</label>
+                <node-factory>
+                    <case>
+                        <label>${ Id == null ? &quot;&lt;presentation-style&gt;&quot; : Id }</label>
+                        <section>
+                            <label>presentation style</label>
+                            <content>
+                                <property-editor>Id</property-editor>
+                                <property-editor>PartType</property-editor>
+                                <property-editor>Description</property-editor>
+                            </content>
+                        </section>
+                    </case>
+                    <property>PresentationStyles</property>
+                </node-factory>
+                <section>
+                    <content>
+                        <label>Define presentation styles. A presentation style is an abstraction that gives the user interface author some influence over how a part is presented without the part type hardcoding the alternatives. Providers of concrete presentations associate their rendering logic with registered presentation styles.</label>
+                        <spacer></spacer>
+                        <actuator>
+                            <label>Add a presentation style</label>
+                            <action-id>Sapphire.Add</action-id>
+                        </actuator>
+                    </content>
+                </section>
+            </node>
         </root-node>
     </editor-page>
     <wizard>

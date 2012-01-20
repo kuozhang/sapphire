@@ -28,6 +28,7 @@ import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.sapphire.ui.swt.graphiti.actions.SapphireActionHandlerDelegate;
 
 /**
@@ -112,7 +113,7 @@ public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvide
 		else if (action.getActiveHandlers().size() > 1)
 		{			
 			String menuText = LabelTransformer.transform(action.getLabel(), CapitalizationType.TITLE_STYLE, true);
-			MenuManager addMenuMgr = new MenuManager(menuText, action.getImage(16), action.getId());
+			MenuManager addMenuMgr = new MenuManager(menuText, SwtRendererUtil.toImageDescriptor( action.getImage(16) ), action.getId());
 			addMenuMgr.setParent(menuMgr);
 			menuMgr.add(addMenuMgr);
 			for (SapphireActionHandler handler : action.getActiveHandlers())

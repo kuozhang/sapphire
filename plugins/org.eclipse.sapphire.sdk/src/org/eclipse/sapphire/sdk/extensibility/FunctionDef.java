@@ -40,10 +40,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 @Label( standard = "function" )
 @GenerateImpl
 
-public interface FunctionDef
-
-    extends IModelElement
-    
+public interface FunctionDef extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( FunctionDef.class );
     
@@ -70,7 +67,7 @@ public interface FunctionDef
     @Whitespace( collapse = true )
     @XmlValueBinding( path = "description" )
     
-    @Documentation( content = "Provides information about the value serialization service. The " +
+    @Documentation( content = "Provides detailed information about the function. The " +
                               "description should be in the form of properly capitalized and punctuated sentences." )
     
     ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );

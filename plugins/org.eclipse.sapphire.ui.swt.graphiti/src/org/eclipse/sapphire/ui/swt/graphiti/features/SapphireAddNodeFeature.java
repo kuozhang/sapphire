@@ -102,7 +102,7 @@ public class SapphireAddNodeFeature extends AbstractAddShapeFeature
 		final Diagram targetDiagram = (Diagram) context.getTargetContainer();
 		
         // define a default size for the shape
-        IDiagramNodeDef nodeDef = (IDiagramNodeDef)nodePart.getDefinition();
+        IDiagramNodeDef nodeDef = (IDiagramNodeDef)nodePart.definition();
         int width = getNodeWidth(nodePart, context.getWidth());
         int height = getNodeHeight(nodePart, context.getHeight());
         
