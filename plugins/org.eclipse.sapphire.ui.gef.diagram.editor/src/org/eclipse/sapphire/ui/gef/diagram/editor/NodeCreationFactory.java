@@ -7,12 +7,12 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - Fix the new object and object type.
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.gef.diagram.editor;
 
 import org.eclipse.gef.requests.CreationFactory;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 
 /**
@@ -27,8 +27,7 @@ public class NodeCreationFactory implements CreationFactory {
 	}
 
 	public Object getNewObject() {
-		DiagramNodePart newPart = this.nodeTemplate.createNewDiagramNode();
-		return newPart;
+		return this.nodeTemplate;
 	}
 
 	public Object getObjectType() {

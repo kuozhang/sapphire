@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.gef.diagram.editor.commands;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
 
 /**
@@ -22,17 +23,18 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
 
 public class CreateNodeCommand extends Command {
 	
-	private DiagramNodePart nodePart;
+	private DiagramNodeTemplate nodeTemplate;
 	private Point location;
 
-	public CreateNodeCommand(DiagramModel diagramModel, DiagramNodePart nodePart, Point location) {
-		this.nodePart = nodePart;
+	public CreateNodeCommand(DiagramModel diagramModel, DiagramNodeTemplate nodeTemplate, Point location) {
+		this.nodeTemplate = nodeTemplate;
 		this.location = location;
 	}
 
 	@Override
 	public void execute() {
-		this.nodePart.setNodePosition(location.x, location.y);		
+		DiagramNodePart newPart = this.nodeTemplate.createNewDiagramNode();
+		newPart.setNodePosition(location.x, location.y);		
 	}
 	
 	

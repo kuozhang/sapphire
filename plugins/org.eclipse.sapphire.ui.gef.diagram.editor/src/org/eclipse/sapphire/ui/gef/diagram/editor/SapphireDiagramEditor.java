@@ -46,6 +46,7 @@ import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -448,7 +449,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		}
 
 		// listen for dropped parts
-		viewer.addDropTargetListener(new SapphireTemplateTransferDropTargetListener(getGraphicalViewer()));
+		viewer.addDropTargetListener(new SapphireTemplateTransferDropTargetListener(this));
 		viewer.addDropTargetListener((TransferDropTargetListener) new ObjectsTransferDropTargetListener(viewer));
 
 
@@ -562,6 +563,26 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		return this.selectedParts;
 	}
 	
+	public void selectAndDirectEditPart(ISapphirePart part)
+	{
+		if (part instanceof DiagramNodePart)
+		{
+			DiagramNodePart nodePart = (DiagramNodePart)part;
+			DiagramNodeModel nodeModel = this.getDiagramModel().getDiagramNodeModel(nodePart);
+			GraphicalViewer viewer = this.getGraphicalViewer();
+			viewer.getControl().forceFocus();
+			Object editpart = viewer.getEditPartRegistry().get(nodeModel);
+			if (editpart instanceof EditPart) 
+			{
+				// Force a layout first.
+				viewer.flush();
+				viewer.select((EditPart) editpart);
+			}
+			
+			this.getDiagramModel().handleDirectEditing(nodePart);
+		}
+	}
+	
 	public Point getMouseLocation() {
 		if (mouseLocation == null) {
 			mouseLocation = new Point();
@@ -579,6 +600,5 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		
 		diagramModel.dispose();
 	}
-	
-	
+		
 }

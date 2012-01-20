@@ -170,6 +170,7 @@ public class SapphirePaletteRoot extends PaletteRoot
 								tpDesc, CapitalizationType.TITLE_STYLE, false);
 			}
     		ToolEntry tool = new CombinedTemplateCreationEntry(tpLabel, tpDesc, factory, imageDescriptor, imageDescriptor);
+    		tool.setToolClass(SapphireCreationTool.class);
 
     		// find the right drawer
     		DiagramPaletteDrawer drawer = getDiagramPaletteDrawer(drawers, nodeDef.getToolPaletteCompartment().getContent());

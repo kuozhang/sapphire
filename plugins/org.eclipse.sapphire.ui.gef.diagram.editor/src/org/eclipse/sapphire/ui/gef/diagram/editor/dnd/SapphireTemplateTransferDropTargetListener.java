@@ -6,18 +6,18 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Ling Hao - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.gef.diagram.editor.dnd;
 
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPartViewer;
+import java.util.List;
+
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.dnd.TemplateTransferDropTargetListener;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
-import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
+import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditor;
 import org.eclipse.swt.dnd.DND;
 
 
@@ -28,9 +28,12 @@ import org.eclipse.swt.dnd.DND;
 public class SapphireTemplateTransferDropTargetListener extends
 		TemplateTransferDropTargetListener 
 {
-	public SapphireTemplateTransferDropTargetListener(EditPartViewer viewer)
+	private SapphireDiagramEditor diagramEditor;
+	
+	public SapphireTemplateTransferDropTargetListener(SapphireDiagramEditor diagramEditor)
 	{
-		super(viewer);
+		super(diagramEditor.getGraphicalViewer());
+		this.diagramEditor = diagramEditor;
 	}
 
 	@Override
@@ -57,24 +60,15 @@ public class SapphireTemplateTransferDropTargetListener extends
 	private void selectAddedObject() 
 	{
 		Object model = getCreateRequest().getNewObject();
-		if (model instanceof DiagramNodePart)
+		if (model instanceof DiagramNodeTemplate)
 		{
-			DiagramNodePart nodePart = (DiagramNodePart)model;
-			EditPart parentPart = getTargetEditPart();
-			DiagramModel diagramModel = (DiagramModel)parentPart.getModel();
-			DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(nodePart);
-			
-			EditPartViewer viewer = getViewer();
-			viewer.getControl().forceFocus();
-			Object editpart = viewer.getEditPartRegistry().get(nodeModel);
-			if (editpart instanceof EditPart) 
+			DiagramNodeTemplate nodeTemplate = (DiagramNodeTemplate)model;
+			List<DiagramNodePart> nodeParts = nodeTemplate.getDiagramNodes();
+			if (nodeParts.size() > 0)
 			{
-				// Force a layout first.
-				viewer.flush();
-				viewer.select((EditPart) editpart);
+				DiagramNodePart nodePart = nodeParts.get(nodeParts.size() - 1);
+				this.diagramEditor.selectAndDirectEditPart(nodePart);
 			}
-			
-			diagramModel.handleDirectEditing(nodePart);
 		}
 	}
 	

@@ -24,7 +24,6 @@ import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.CreateNodeCommand;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.DndObjectCommand;
@@ -81,8 +80,8 @@ public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy
 	protected Command getCreateCommand(CreateRequest request) {
 		Command cmd = UnexecutableCommand.INSTANCE;
 		if (request.getNewObjectType() == DiagramNodeTemplate.class) {
-			DiagramNodePart newNodePart = (DiagramNodePart)request.getNewObject();
-			cmd = new CreateNodeCommand(this.model, newNodePart, request.getLocation());
+			DiagramNodeTemplate nodeTemplate = (DiagramNodeTemplate)request.getNewObject();
+			cmd = new CreateNodeCommand(this.model, nodeTemplate, request.getLocation());
 		}
 		else if (request.getNewObjectType() == ISelection.class) {
 			// DND from project explorer
