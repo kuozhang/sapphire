@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - double click handling
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.gef.diagram.editor.parts;
@@ -20,6 +21,7 @@ import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
@@ -27,8 +29,11 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.sapphire.ui.Bounds;
+import org.eclipse.sapphire.ui.gef.diagram.editor.commands.DoubleClickNodeCommand;
 import org.eclipse.sapphire.ui.gef.diagram.editor.figures.NodeFigure;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
@@ -87,9 +92,40 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 	}
 
 	@Override
-	public void performRequest(Request request) {
+	public void performRequest(Request request) 
+	{
 		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT)
+		{
 			performDirectEdit();
+		}
+		else if (request.getType().equals(REQ_OPEN))
+		{
+			SelectionRequest selRequest = (SelectionRequest)request;
+			Point pt = selRequest.getLocation();
+			NodeFigure nodeFig = getNodeFigure();
+			Rectangle bounds = nodeFig.getLabelFigure().getBounds();
+			if (bounds.contains(pt))
+			{
+				performDirectEdit();
+			}
+			else
+			{
+				Command cmd = new DoubleClickNodeCommand(getCastedModel().getModelPart());
+				// If executing the command from edit domain's command stack, we'd get an 
+				// invalid cursor before the double click cmd is executed.
+				// Bypassing the command stack
+				//this.getViewer().getEditDomain().getCommandStack().execute(cmd);
+				if (cmd.canExecute())
+				{
+					cmd.execute();
+				}
+				
+			}
+		}
+		else
+		{
+			super.performRequest(request);
+		}
 	}
 
 	@Override
