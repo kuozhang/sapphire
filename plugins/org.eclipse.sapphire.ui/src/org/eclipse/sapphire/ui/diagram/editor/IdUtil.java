@@ -9,6 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [341856] NPE when a diagram connection doesn't define a label
  *    Konstantin Komissarchik - [342897] Integrate with properties view
+ *    Ling Hao - Include index to id to restore multiple connection bending points 
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -35,12 +36,12 @@ public class IdUtil
         {
             buffer.append(nodePart.getInstanceId());
         }
-        else
-        {
-            List<DiagramNodePart> nodeParts = nodePart.getDiagramNodeTemplate().getDiagramNodes();            
-            int index = nodeParts.indexOf(nodePart);
-            buffer.append(index);
-        }
+        
+        buffer.append(NODE_ID_SEPARATOR);
+        List<DiagramNodePart> nodeParts = nodePart.getDiagramNodeTemplate().getDiagramNodes();            
+        int index = nodeParts.indexOf(nodePart);
+        buffer.append(index);
+
         return buffer.toString();
     }
     
@@ -53,18 +54,18 @@ public class IdUtil
         {
             buffer.append(connPart.getInstanceId());
         }
-        else
+        
+        buffer.append(CONNECTION_ID_SEPARATOR);
+        IModelElement srcNodeElement = null;
+        if (connPart instanceof DiagramEmbeddedConnectionPart)
         {
-            IModelElement srcNodeElement = null;
-            if (connPart instanceof DiagramEmbeddedConnectionPart)
-            {
-                DiagramEmbeddedConnectionPart embeddedConn = (DiagramEmbeddedConnectionPart)connPart;
-                srcNodeElement = embeddedConn.getSourceNodePart().getLocalModelElement();
-            }
-            List<DiagramConnectionPart> connParts = connPart.getDiagramConnectionTemplate().getDiagramConnections(srcNodeElement);
-            int index = connParts.indexOf(connPart);
-            buffer.append(index);                
+            DiagramEmbeddedConnectionPart embeddedConn = (DiagramEmbeddedConnectionPart)connPart;
+            srcNodeElement = embeddedConn.getSourceNodePart().getLocalModelElement();
         }
+        List<DiagramConnectionPart> connParts = connPart.getDiagramConnectionTemplate().getDiagramConnections(srcNodeElement);
+        int index = connParts.indexOf(connPart);
+        buffer.append(index);                
+
         return buffer.toString();        
     }
 
@@ -77,15 +78,26 @@ public class IdUtil
         }
         String nodePartId = nodeId.substring(0, index);
         String subId = nodeId.substring(index + 1);
+        // To maintain backward compatibility - Sapphire 0.4 subId contains either the id or the index
+        int index2 = subId.indexOf(NODE_ID_SEPARATOR);
+        String idString;
+        if (index2 >= 0) 
+        {
+        	idString = subId.substring(index2 + 1);
+        	subId = subId.substring(0, index2);
+        } else {
+        	idString = nodeId;
+        }
         int nodeIndex;
         try
         {
-            nodeIndex = Integer.valueOf(subId);
+            nodeIndex = Integer.valueOf(idString);
         }
         catch (NumberFormatException ne)
         {
             nodeIndex = -1;
         }
+        
         for (DiagramNodeTemplate nodeTemplate : diagramPart.getNodeTemplates())
         {
             if (nodeTemplate.getNodeTypeId().equals(nodePartId))
@@ -95,13 +107,21 @@ public class IdUtil
                 {
                     DiagramNodePart nodePart = nodeParts.get(i);
                     String nodeId2 = nodePart.getInstanceId();
-                    if (subId != null && nodeId2 != null && subId.equals(nodeId2))
+                    if (subId != null && subId.length() > 0 && nodeIndex != -1) 
                     {
-                        return nodePart;
-                    }
-                    else if (nodeIndex == i)
-                    {
-                        return nodePart;
+                    	if (subId.equals(nodeId2) && nodeIndex == i) 
+                    	{
+                    		return nodePart;
+                    	}
+                    } else {
+                        if (subId != null && nodeId2 != null && subId.equals(nodeId2))
+                        {
+                            return nodePart;
+                        }
+                        else if (nodeIndex == i)
+                        {
+                            return nodePart;
+                        }
                     }
                 }
             }
@@ -118,10 +138,20 @@ public class IdUtil
         }
         String connPartId = connId.substring(0, index);
         String subId = connId.substring(index + 1);
+        // To maintain backward compatibility - Sapphire 0.4 subId contains either the id or the index
+        int index2 = subId.indexOf(CONNECTION_ID_SEPARATOR);
+        String idString;
+        if (index2 >= 0) 
+        {
+        	idString = subId.substring(index2 + 1);
+        	subId = subId.substring(0, index2);
+        } else {
+        	idString = subId;
+        }
         int connIndex; 
         try 
         {
-            connIndex = Integer.valueOf(subId);
+            connIndex = Integer.valueOf(idString);
         }
         catch (NumberFormatException ne)
         {
@@ -136,13 +166,21 @@ public class IdUtil
                 {
                     DiagramConnectionPart connPart = connParts.get(i);
                     String connId2 = connPart.getInstanceId();
-                    if (subId != null && connId2 != null && subId.equals(connId2))
+                    if (subId != null && subId.length() > 0 && connIndex != -1) 
                     {
-                        return connPart;
-                    }
-                    else if (i == connIndex)
-                    {
-                        return connPart;
+                    	if (subId.equals(connId2) && i == connIndex) 
+                    	{
+                    		return connPart;
+                    	}
+                    } else {
+                        if (subId != null && connId2 != null && subId.equals(connId2))
+                        {
+                            return connPart;
+                        }
+                        else if (i == connIndex)
+                        {
+                            return connPart;
+                        }
                     }
                 }
             }
@@ -159,10 +197,20 @@ public class IdUtil
         }
         String connPartId = connId.substring(0, index);
         String subId = connId.substring(index + 1);
+        // To maintain backward compatibility - Sapphire 0.4 subId contains either the id or the index
+        int index2 = subId.indexOf(CONNECTION_ID_SEPARATOR);
+        String idString;
+        if (index2 >= 0) 
+        {
+        	idString = subId.substring(index2 + 1);
+        	subId = subId.substring(0, index2);
+        } else {
+        	idString = subId;
+        }
         int connIndex; 
         try 
         {
-            connIndex = Integer.valueOf(subId);
+            connIndex = Integer.valueOf(idString);
         }
         catch (NumberFormatException ne)
         {
@@ -179,14 +227,22 @@ public class IdUtil
             {
                 DiagramConnectionPart connPart = connParts.get(i);
                 String connId2 = connPart.getInstanceId();
-                if (subId != null && connId2 != null && subId.equals(connId2))
+                if (subId != null && subId.length() > 0 && connIndex != -1) 
                 {
-                    return connPart;
+                	if (subId.equals(connId2) && i == connIndex) 
+                	{
+                		return connPart;
+                	}
+                } else {
+                    if (subId != null && connId2 != null && subId.equals(connId2))
+                    {
+                        return connPart;
+                    }
+                    else if (i == connIndex)
+                    {
+                        return connPart;
+                    }                
                 }
-                else if (i == connIndex)
-                {
-                    return connPart;
-                }                
             }
         }
         return null;
