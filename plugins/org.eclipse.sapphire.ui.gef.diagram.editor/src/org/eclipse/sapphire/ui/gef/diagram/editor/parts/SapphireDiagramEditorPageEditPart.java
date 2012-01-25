@@ -9,12 +9,14 @@
  *    Ling Hao - initial implementation and ongoing maintenance
  *    Shenxue Zhou - Turn on anti-aliasing on diagram connection layer;
  *                   Move DiagramXYLayoutEditPolicy inner class to its own file.
+ *                   SnapToHelper Adapter and Snap feedback policy.
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.gef.diagram.editor.parts;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.ConnectionLayer;
@@ -24,13 +26,20 @@ import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ShortestPathConnectionRouter;
+import org.eclipse.gef.CompoundSnapToHelper;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.LayerConstants;
+import org.eclipse.gef.SnapToGeometry;
+import org.eclipse.gef.SnapToGrid;
+import org.eclipse.gef.SnapToGuides;
+import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
+import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramXYLayoutEditPolicy;
+import org.eclipse.sapphire.ui.gef.diagram.editor.policies.SapphireSnapFeedbackPolicy;
 import org.eclipse.swt.SWT;
 
 /**
@@ -61,6 +70,7 @@ public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart
 		// handles constraint changes (e.g. moving and/or resizing) of model
 		// elements and creation of new model elements
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new DiagramXYLayoutEditPolicy(getCastedModel()));
+		installEditPolicy("Snap Feedback", new SapphireSnapFeedbackPolicy(getCastedModel().getResourceCache())); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -96,4 +106,32 @@ public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart
 			refreshChildren();
 		} 
 	}
+	
+	@Override
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+		if (adapter == SnapToHelper.class) {
+			List<SnapToHelper> snapStrategies = new ArrayList<SnapToHelper>();
+			Boolean val = (Boolean) getViewer().getProperty(RulerProvider.PROPERTY_RULER_VISIBILITY);
+			if (val != null && val.booleanValue())
+				snapStrategies.add(new SnapToGuides(this));
+			val = (Boolean) getViewer().getProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED);
+			if (val != null && val.booleanValue())
+				snapStrategies.add(new SnapToGeometry(this));
+			val = (Boolean) getViewer().getProperty(SnapToGrid.PROPERTY_GRID_ENABLED);
+			if (val != null && val.booleanValue())
+				snapStrategies.add(new SnapToGrid(this));
+
+			if (snapStrategies.size() == 0)
+				return null;
+			if (snapStrategies.size() == 1)
+				return snapStrategies.get(0);
+
+			SnapToHelper ss[] = new SnapToHelper[snapStrategies.size()];
+			for (int i = 0; i < snapStrategies.size(); i++)
+				ss[i] = snapStrategies.get(i);
+			return new CompoundSnapToHelper(ss);
+		}
+		return super.getAdapter(adapter);
+	}
+	
 }
