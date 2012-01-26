@@ -11,21 +11,36 @@
 
 package org.eclipse.sapphire.ui.gef.diagram.editor.policies;
 
+import org.eclipse.draw2d.Connection;
+import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.CreateConnectionCommand;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.ReconnectConnectionCommand;
+import org.eclipse.sapphire.ui.gef.diagram.editor.figures.DiagramConnectionFigure;
+import org.eclipse.sapphire.ui.gef.diagram.editor.figures.NodeFigure;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
+import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.gef.diagram.editor.parts.DiagramConnectionEditPart;
+import org.eclipse.swt.SWT;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class DiagramNodeEditPolicy extends GraphicalNodeEditPolicy {
+
+    private static final org.eclipse.sapphire.ui.Color DUMMY_CONNECTION_FOREGROUND = new org.eclipse.sapphire.ui.Color(0xFF, 0x99, 0x33);
+
+	Rectangle rec;
 
 	@Override
 	protected Command getConnectionCompleteCommand(CreateConnectionRequest request) {
@@ -61,4 +76,67 @@ public class DiagramNodeEditPolicy extends GraphicalNodeEditPolicy {
 		return cmd;
 	}
 
+	private void identifySourceFigure(Request req) {
+		if (req instanceof CreateConnectionRequest) {
+			CreateConnectionRequest r = (CreateConnectionRequest) req;
+			if (r.getSourceEditPart() instanceof AbstractGraphicalEditPart) {
+				AbstractGraphicalEditPart ep = (AbstractGraphicalEditPart) r.getSourceEditPart();
+				rec = ep.getFigure().getBounds();
+			}
+		} else {
+			rec = null;
+		}
+	}
+
+	@Override
+	protected Connection createDummyConnection(Request req) {
+		identifySourceFigure(req);
+		IFigure hostFigure = getHostFigure();
+		PolylineConnection connection = new DummyPolylineConnection(hostFigure);
+		connection.setLineWidth(2);
+		connection.setLineStyle(SWT.LINE_DASH);
+		if (hostFigure instanceof NodeFigure) {
+			DiagramResourceCache cache = ((NodeFigure)hostFigure).getDiagramResourceCache();
+			connection.setForegroundColor(cache.getColor(DUMMY_CONNECTION_FOREGROUND));
+		}
+		return connection;
+	}
+
+	private final class DummyPolylineConnection extends PolylineConnection {
+		private IFigure hostFigure;
+
+		DummyPolylineConnection(IFigure hostFigure) {
+			super();
+			setHostFigure(hostFigure);
+		}
+
+		@Override
+		public void paint(Graphics g) {
+			// We do not draw unless the target position of the
+			// dummy connection lies outside of the source figure's bounds.
+			// But we have to draw in polyline connections if a connection is
+			// created starting from an existing one.
+			if (rec != null && (!(getHostFigure() instanceof DiagramConnectionFigure)) && rec.contains(getPoints().getLastPoint())) {
+				return;
+			}
+
+			g.setAntialias(SWT.ON);
+			super.paint(g);
+		}
+
+		/**
+		 * @return the hostFigure
+		 */
+		private IFigure getHostFigure() {
+			return hostFigure;
+		}
+
+		/**
+		 * @param hostFigure
+		 *            the hostFigure to set
+		 */
+		private void setHostFigure(IFigure hostFigure) {
+			this.hostFigure = hostFigure;
+		}
+	}
 }
