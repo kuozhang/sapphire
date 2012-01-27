@@ -33,6 +33,7 @@ public class SapphireTemplateTransferDropTargetListener extends
 	public SapphireTemplateTransferDropTargetListener(SapphireDiagramEditor diagramEditor)
 	{
 		super(diagramEditor.getGraphicalViewer());
+		setEnablementDeterminedByCommand(true);
 		this.diagramEditor = diagramEditor;
 	}
 
@@ -71,5 +72,5 @@ public class SapphireTemplateTransferDropTargetListener extends
 			}
 		}
 	}
-	
+
 }

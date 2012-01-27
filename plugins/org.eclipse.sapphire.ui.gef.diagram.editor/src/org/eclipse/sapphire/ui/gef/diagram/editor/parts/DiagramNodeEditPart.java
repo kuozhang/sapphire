@@ -40,6 +40,7 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramNodeEditPolicy;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.NodeEditPolicy;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.NodeLabelDirectEditPolicy;
+import org.eclipse.sapphire.ui.gef.diagram.editor.policies.NodeLayoutEditPolicy;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -65,6 +66,7 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new DiagramNodeEditPolicy());
 		installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new NodeLabelDirectEditPolicy());
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new NodeEditPolicy());
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new NodeLayoutEditPolicy());
 	}
 
 	@Override
