@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui.gef.diagram.editor.policies;
 
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
@@ -33,4 +34,11 @@ public class NodeLayoutEditPolicy extends XYLayoutEditPolicy
 		return null;
 	}
 
+	@Override
+	protected Command createChangeConstraintCommand(EditPart child,
+			Object constraint) 
+	{
+		return null;
+	}
+	
 }
