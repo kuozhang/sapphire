@@ -46,10 +46,6 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.sapphire.ui.swt.graphiti"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.sapphire.ui.gef.diagram.editor"
          version="0.0.0"/>
 
