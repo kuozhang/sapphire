@@ -65,20 +65,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     private boolean showGuides;
     private int gridUnit;
     private int verticalGridUnit;
-    // Temporary solution to allow supression of action handlers contributed by another editor
-    // TODO remove when GEF editor is ready
-    private String editorType;
-        
-    public void setEditorType(String editorType)
-    {
-    	this.editorType = editorType;
-    }
-    
-    public String getEditorType()
-    {
-    	return this.editorType;
-    }
-    
+
     @Override
     protected void init()
     {
