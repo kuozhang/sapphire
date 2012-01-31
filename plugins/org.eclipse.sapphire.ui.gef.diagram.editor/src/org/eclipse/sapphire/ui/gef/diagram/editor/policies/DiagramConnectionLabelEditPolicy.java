@@ -17,7 +17,6 @@ import java.util.List;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.LineBorder;
-import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Handle;
 import org.eclipse.gef.SharedCursors;
@@ -34,31 +33,26 @@ import org.eclipse.swt.graphics.Cursor;
 
 public class DiagramConnectionLabelEditPolicy extends NonResizableEditPolicy {
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected List createSelectionHandles() {
-		List list = new ArrayList();
-		createMoveHandle(list);
-		return list;
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	protected void createMoveHandle(List handles) {
+		List handles = new ArrayList();
+		//createMoveHandle(list);
 		if (isDragAllowed()) {
 			// display 'move' handle to allow dragging
 			// Replace ResizableHandleKit.addMoveHandle to customize color and style
-			handles.add(moveHandle((GraphicalEditPart) getHost(), getDragTracker(), Cursors.SIZEALL));
+			handles.add(moveHandle((GraphicalEditPart) getHost(), Cursors.SIZEALL));
 		} else {
 			// display 'move' handle only to indicate selection
 			// Replace ResizableHandleKit.addMoveHandle to customize color and style
-			handles.add(moveHandle((GraphicalEditPart) getHost(), getDragTracker(), SharedCursors.ARROW));
+			handles.add(moveHandle((GraphicalEditPart) getHost(), SharedCursors.ARROW));
 		}
+		return handles;
 	}
 
-	public static Handle moveHandle(GraphicalEditPart owner, DragTracker tracker, Cursor cursor) {
+	public static Handle moveHandle(GraphicalEditPart owner, Cursor cursor) {
 		MoveHandle moveHandle = new MoveHandle(owner);
-		moveHandle.setDragTracker(tracker);
+		//moveHandle.setDragTracker(tracker);
 		moveHandle.setCursor(cursor);
 
     	DiagramResourceCache resourceCache = ((DiagramConnectionLabelEditPart)owner).getCastedModel().getDiagramModel().getResourceCache();
