@@ -38,6 +38,7 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramConnectionBendpointEditPolicy;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramConnectionEditPolicy;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramConnectionEndpointEditPolicy;
+import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramConnectionLabelEditPolicy;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -126,6 +127,12 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart implem
 		}
 	}
 	
+	private void updateLabelMoved() {
+		for (DiagramConnectionLabelModel child : getModelChildren()) {
+			child.handleUpdateLabelMoved();
+		}
+	}
+
 	private void startEditing() {
 		for (DiagramConnectionLabelModel child : getModelChildren()) {
 			child.handleStartEditing();
@@ -137,6 +144,9 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart implem
 
 		@Override
 		protected EditPolicy createChildEditPolicy(EditPart child) {
+			if (child instanceof DiagramConnectionLabelEditPart) {
+				return new DiagramConnectionLabelEditPolicy();
+			}
 			return new NonResizableEditPolicy();
 		}
 
@@ -150,6 +160,11 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart implem
 			return null;
 		}
 
+		@Override
+		protected Command getAddCommand(Request request) {
+			return super.getAddCommand(request);
+		}
+		
 	}
 
 
@@ -157,6 +172,8 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart implem
 		String prop = evt.getPropertyName();
 		if (DiagramConnectionModel.CONNECTION_UPDATES.equals(prop)) {
 			updateLabel();
+		} else if (DiagramConnectionModel.CONNECTION_LABEL_MOVED.equals(prop)) {
+			updateLabelMoved();
 		} else if (DiagramConnectionModel.CONNECTION_BEND_POINTS.equals(prop)) {
 			refreshVisuals();
 		} else if (DiagramConnectionModel.CONNECTION_START_EDITING.equals(prop)) {

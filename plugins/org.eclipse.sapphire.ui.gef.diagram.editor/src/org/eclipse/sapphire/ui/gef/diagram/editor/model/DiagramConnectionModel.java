@@ -21,6 +21,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 public class DiagramConnectionModel extends DiagramModelBase {
 	
 	public final static String CONNECTION_UPDATES = "CONNECTION_UPDATES";
+	public final static String CONNECTION_LABEL_MOVED = "CONNECTION_LABEL_MOVED";
 	public final static String CONNECTION_BEND_POINTS = "CONNECTION_BEND_POINTS";
 	public final static String CONNECTION_START_EDITING = "CONNECTION_START_EDITING";
 
@@ -65,6 +66,10 @@ public class DiagramConnectionModel extends DiagramModelBase {
 
 	public void handleUpdateConnection() {
 		firePropertyChange(CONNECTION_UPDATES, null, getModelPart().getLabel());
+	}
+	
+	public void handleUpdateConnectionMoveLabel() {
+		firePropertyChange(CONNECTION_LABEL_MOVED, null, getModelPart());
 	}
 	
 	public void handleUpdateBendPoints() {

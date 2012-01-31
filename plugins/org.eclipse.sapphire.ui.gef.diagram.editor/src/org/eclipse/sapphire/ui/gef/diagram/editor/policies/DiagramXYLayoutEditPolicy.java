@@ -27,9 +27,11 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.CreateNodeCommand;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.DndObjectCommand;
+import org.eclipse.sapphire.ui.gef.diagram.editor.commands.MoveConnectionLabelCommand;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.MoveNodeCommand;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
+import org.eclipse.sapphire.ui.gef.diagram.editor.parts.DiagramConnectionLabelEditPart;
 import org.eclipse.sapphire.ui.gef.diagram.editor.parts.DiagramNodeEditPart;
 
 /**
@@ -70,9 +72,10 @@ public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy
 	}
 
 	@Override
-	protected Command createChangeConstraintCommand(EditPart child,
-			Object constraint) {
-		// not used in this example
+	protected Command createChangeConstraintCommand(EditPart part, Object constraint) {
+		if (part instanceof DiagramConnectionLabelEditPart && constraint instanceof Rectangle) {
+			return new MoveConnectionLabelCommand((DiagramConnectionLabelEditPart)part, (Rectangle)constraint);
+		}
 		return null;
 	}
 
@@ -91,5 +94,5 @@ public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy
 		}
 		return cmd;
 	}
-	
+
 }

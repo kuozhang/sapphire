@@ -11,9 +11,12 @@
 
 package org.eclipse.sapphire.ui.gef.diagram.editor.commands;
 
+import org.eclipse.draw2d.Connection;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.gef.diagram.editor.parts.DiagramConnectionLabelEditPart;
+import org.eclipse.sapphire.ui.gef.diagram.editor.parts.SapphireMidpointLocator;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -21,17 +24,23 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 
 public class MoveConnectionLabelCommand extends Command {
 	
-	private DiagramConnectionPart part;
+	private DiagramConnectionLabelEditPart editPart;
 	private Rectangle rectangle;
 
-	public MoveConnectionLabelCommand(DiagramConnectionPart part, Rectangle rectangle) {
-		this.part = part;
+	public MoveConnectionLabelCommand(DiagramConnectionLabelEditPart editPart, Rectangle rectangle) {
+		this.editPart = editPart;
 		this.rectangle = rectangle;
 	}
 
 	@Override
 	public void execute() {
-		part.setLabelPosition(rectangle.x, rectangle.y);
+		int x = rectangle.x;
+		int y = rectangle.y;
+		Connection connection = (Connection)editPart.getFigure().getParent();
+		SapphireMidpointLocator location = new SapphireMidpointLocator(connection);
+		Point midpoint = location.getMidpoint();
+		
+		editPart.getDiagramConnectionPart().setLabelPosition(x - midpoint.x, y - midpoint.y);
 	}
 	
 }

@@ -17,6 +17,7 @@ import java.beans.PropertyChangeListener;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
@@ -25,7 +26,6 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionLabelModel;
-import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.ConnectionLabelDirectEditPolicy;
 
 /**
@@ -40,9 +40,10 @@ public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart im
 	protected IFigure createFigure() {
     	Label label = new Label();
 		
-    	DiagramResourceCache resourceCache = getCastedModel().getDiagramModel().getResourceCache();
-		DiagramConnectionPart connectionPart = getCastedModel().getModelPart();
-		label.setForegroundColor(resourceCache.getLineColor(connectionPart));
+    	// let text change color when the parent connection is selected 
+//    	DiagramResourceCache resourceCache = getCastedModel().getDiagramModel().getResourceCache();
+//		DiagramConnectionPart connectionPart = getCastedModel().getModelPart();
+//		label.setForegroundColor(resourceCache.getLineColor(connectionPart));
 
 		return label;
 	}
@@ -56,8 +57,23 @@ public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart im
 		return ((DiagramConnectionLabelModel)getModel()).getModelPart();
 	}
 	
-	private DiagramConnectionLabelModel getCastedModel() {
+	public DiagramConnectionLabelModel getCastedModel() {
 		return (DiagramConnectionLabelModel)getModel();
+	}
+
+	@Override
+	public EditPart getParent() {
+		EditPart parent = super.getParent();
+		if (parent instanceof DiagramConnectionEditPart) {
+			DiagramConnectionEditPart connectionEditPart = (DiagramConnectionEditPart)parent;
+			if (connectionEditPart.getSource() != null) {
+				return connectionEditPart.getSource().getParent(); 
+			}
+			if (connectionEditPart.getTarget() != null) {
+				connectionEditPart.getTarget().getParent();
+			}
+		}
+		return parent;
 	}
 
 	@Override
@@ -92,23 +108,29 @@ public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart im
 	private void refreshLabel() {
 		((Label)getFigure()).setText(getDiagramConnectionPart().getLabel());
 	}
-
-	@Override
-	public void refresh() {
-		super.refresh();
-
-		refreshLabel();
-
+	
+	private void refreshLabelLocation() {
 		PolylineConnection parent = (PolylineConnection)getFigure().getParent(); 
 		Point position = getDiagramConnectionPart().getLabelPosition();
 		SapphireMidpointLocator locator = position == null ? new SapphireMidpointLocator(parent) : new SapphireMidpointLocator(parent, position.getX(), position.getY());
 		parent.getLayoutManager().setConstraint(getFigure(), locator);
 	}
 
+	@Override
+	public void refresh() {
+		super.refresh();
+
+		refreshLabel();
+		refreshLabelLocation();
+	}
+
 	public void propertyChange(PropertyChangeEvent evt) {
 		String prop = evt.getPropertyName();
 		if (DiagramConnectionLabelModel.CONNECTION_LABEL.equals(prop)) {
 			refreshLabel();
+		} else if (DiagramConnectionLabelModel.CONNECTION_LABEL_MOVED.equals(prop)) {
+			refreshLabelLocation();
+			getFigure().revalidate();
 		} else if (DiagramConnectionLabelModel.CONNECTION_START_EDITING.equals(prop)) {
 			performDirectEdit();
 		}

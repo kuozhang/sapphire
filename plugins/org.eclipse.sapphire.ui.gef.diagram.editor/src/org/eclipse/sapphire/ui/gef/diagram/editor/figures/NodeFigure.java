@@ -42,7 +42,7 @@ public class NodeFigure extends RoundedRectangle {
 	// drag/drop select color
     //private static final org.eclipse.sapphire.ui.Color DRAG_DROP_SELECT_BACKGROUND = new org.eclipse.sapphire.ui.Color(0xD0, 0xE6, 0xF9);
     
-    private static final org.eclipse.sapphire.ui.Color OUTLINE_FOREGROUND = new org.eclipse.sapphire.ui.Color(0xFF, 0xA5, 0x00);
+    public static final org.eclipse.sapphire.ui.Color OUTLINE_FOREGROUND = new org.eclipse.sapphire.ui.Color(0xFF, 0xA5, 0x00);
     
     private boolean hasImage;
     private DiagramResourceCache resourceCache;

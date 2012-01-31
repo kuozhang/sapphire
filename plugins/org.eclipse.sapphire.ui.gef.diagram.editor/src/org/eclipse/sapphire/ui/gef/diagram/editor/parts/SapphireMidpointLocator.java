@@ -24,8 +24,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 
 public class SapphireMidpointLocator extends ConnectionLocator {
 	
-	int deltaX = 5;
-	int deltaY = -10;
+	private Point delta = null;
 
 	public SapphireMidpointLocator(Connection connection) {
 		super(connection);
@@ -33,8 +32,14 @@ public class SapphireMidpointLocator extends ConnectionLocator {
 
 	public SapphireMidpointLocator(Connection connection, int deltaX, int deltaY) {
 		super(connection);
-		this.deltaX = deltaX;
-		this.deltaY = deltaY;
+		
+		delta = new Point(deltaX, deltaY);
+	}
+	
+	public Point getMidpoint() {
+		Point p = getLocation(getConnection().getPoints());
+		getConnection().translateToAbsolute(p);
+		return p;
 	}
 
 	@Override
@@ -45,35 +50,39 @@ public class SapphireMidpointLocator extends ConnectionLocator {
 	@Override
 	protected Point getReferencePoint() {
 		Point midPoint = super.getReferencePoint();
-		Connection conn = getConnection();
-		PointList points = conn.getPoints();
-		Point p1;
-		Point p2;
-		int size = points.size();
-		if (size % 2 == 0) {
-			int i = points.size() / 2;
-			int j = i - 1;
-			p1 = points.getPoint(j);
-			p2 = points.getPoint(i);
-
-			double value = Math.atan2(p1.y-p2.y, p1.x-p2.x);
-			double angle = Math.toDegrees(value);
-			if ((angle > 0 && angle < 90) || (angle > -180 && angle < -90)) {
-				midPoint.y -= 12; 
-			}
+		if (delta != null) {
+			midPoint.x += delta.x;
+			midPoint.y += delta.y;
 		} else {
-			int index = size / 2;
-			p1 = points.getPoint(index - 1);
-			p2 = points.getPoint(index + 1);
-			
-			if (p1.x > midPoint.x && p2.x > midPoint.x) {
-				midPoint.x += 8; 
-			}
-			if (p1.y > midPoint.y && p2.y > midPoint.y) {
-				midPoint.y += 8; 
+			Connection conn = getConnection();
+			PointList points = conn.getPoints();
+			Point p1;
+			Point p2;
+			int size = points.size();
+			if (size % 2 == 0) {
+				int i = points.size() / 2;
+				int j = i - 1;
+				p1 = points.getPoint(j);
+				p2 = points.getPoint(i);
+
+				double value = Math.atan2(p1.y-p2.y, p1.x-p2.x);
+				double angle = Math.toDegrees(value);
+				if ((angle > 0 && angle < 90) || (angle > -180 && angle < -90)) {
+					midPoint.y -= 12; 
+				}
+			} else {
+				int index = size / 2;
+				p1 = points.getPoint(index - 1);
+				p2 = points.getPoint(index + 1);
+				
+				if (p1.x > midPoint.x && p2.x > midPoint.x) {
+					midPoint.x += 8; 
+				}
+				if (p1.y > midPoint.y && p2.y > midPoint.y) {
+					midPoint.y += 8; 
+				}
 			}
 		}
-		
 		return midPoint;
 	}
 }

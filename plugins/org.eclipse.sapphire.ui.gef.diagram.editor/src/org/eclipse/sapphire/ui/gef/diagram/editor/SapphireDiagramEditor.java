@@ -184,7 +184,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		    public void handleConnectionMoveLabelEvent(final DiagramConnectionEvent event)
 		    {
 		    	markEditorDirty();
-		    	updateConnection((DiagramConnectionPart)event.getPart());
+		    	updateConnectionMoveLabel((DiagramConnectionPart)event.getPart());
 		    }
 
 		    @Override
@@ -263,6 +263,17 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 
 	protected void updateConnection(DiagramConnectionPart connPart) {
 		refreshConnectionNodes(connPart);
+	}
+
+	protected void updateConnectionMoveLabel(DiagramConnectionPart connPart) {
+		if (diagramModel == null) {
+			return;
+		}
+		
+		DiagramConnectionModel connectionModel = diagramModel.getDiagramConnectionModel(connPart);
+		if (connectionModel != null) {
+			connectionModel.handleUpdateConnectionMoveLabel();
+		}
 	}
 
 	protected void updateConnectionBendpoint(DiagramConnectionPart connPart) {
