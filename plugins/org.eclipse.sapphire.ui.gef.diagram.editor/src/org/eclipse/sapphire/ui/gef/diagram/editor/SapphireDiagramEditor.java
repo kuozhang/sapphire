@@ -232,6 +232,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		}
 
 		diagramModel.removeConnection(connPart);
+		DiagramRenderingContextCache.getInstance().remove(connPart);
 	}
 
 	protected void addConnectionIfPossible(DiagramConnectionPart connPart) {
@@ -240,6 +241,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		}
 
 		diagramModel.addConnection(connPart);
+		DiagramRenderingContext ctx = new DiagramRenderingContext(connPart, this);
+		DiagramRenderingContextCache.getInstance().put(connPart, ctx);
 	}
 	
 	private void refreshConnectionNodes(DiagramConnectionPart connPart) {
@@ -290,6 +293,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		}
 		
 		diagramModel.handleRemoveNode(part);
+		DiagramRenderingContextCache.getInstance().remove(part);
 	}
 
 	protected void addNode(DiagramNodePart part) {
@@ -298,6 +302,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		}
 		
 		diagramModel.handleAddNode(part);
+		DiagramRenderingContext ctx = new DiagramRenderingContext(part, this);
+		DiagramRenderingContextCache.getInstance().put(part, ctx);		
 	}
 
 	protected void updateNode(DiagramNodePart part) {
@@ -414,6 +420,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			this.diagramPart.syncGuideStateWithDiagramLayout(this.diagramGeometry.isShowGuides());
 		}
 		
+		// cache DiagramRenderingContext for the diagram edit page part
+		DiagramRenderingContext ctx = new DiagramRenderingContext(this.diagramPart, this);
+		DiagramRenderingContextCache.getInstance().put(this.diagramPart, ctx);
 	}
 
 	@Override
@@ -429,7 +438,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		});
 				
 		// set the contents of this editor
-		viewer.setContents(diagramModel); 
+		viewer.setContents(diagramModel);
+		
+		initRenderingContext();
 
 		// If the layout file doesn't exist, apply auto layout
 		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput) getEditorInput();
@@ -438,7 +449,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			if (layoutAction != null) {
 				SapphireActionHandler layoutHandler = layoutAction.getFirstActiveHandler();
 				if (layoutHandler != null) {
-					DiagramRenderingContext context = new DiagramRenderingContext(this.diagramPart, this);
+					DiagramRenderingContext context = DiagramRenderingContextCache.getInstance().get(this.diagramPart);
 					Point pt = getMouseLocation();
 					context.setCurrentMouseLocation(pt.x, pt.y);
 					layoutHandler.execute(context);
@@ -454,6 +465,22 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		this.editorIsDirty = false;
 		firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);	
 		
+	}
+	
+	private void initRenderingContext()
+	{
+		List<DiagramNodeModel> nodes = this.diagramModel.getNodes();
+		for (DiagramNodeModel node : nodes)
+		{
+			DiagramRenderingContext ctx = new DiagramRenderingContext(node.getModelPart(), this);
+			DiagramRenderingContextCache.getInstance().put(node.getModelPart(), ctx);
+		}
+		List<DiagramConnectionModel> conns = this.diagramModel.getConnections();
+		for (DiagramConnectionModel conn : conns)
+		{
+			DiagramRenderingContext ctx = new DiagramRenderingContext(conn.getModelPart(), this);
+			DiagramRenderingContextCache.getInstance().put(conn.getModelPart(), ctx);
+		}
 	}
 	
 	public DiagramModel getDiagramModel() {
@@ -597,6 +624,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		super.dispose();
 		
 		diagramModel.dispose();
+		diagramPart.dispose();
+		DiagramRenderingContextCache.getInstance().clear();
 	}
 		
 }

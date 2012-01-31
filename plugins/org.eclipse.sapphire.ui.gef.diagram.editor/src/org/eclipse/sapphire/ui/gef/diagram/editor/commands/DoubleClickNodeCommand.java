@@ -15,6 +15,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramRenderingContext;
+import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramRenderingContextCache;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -42,7 +43,7 @@ public class DoubleClickNodeCommand extends Command
         SapphireDiagramActionHandler handler = (SapphireDiagramActionHandler)this.nodePart.getDefaultActionHandler();
         if (handler != null && handler.canExecute(this.nodePart))
         {
-        	DiagramRenderingContext context = new DiagramRenderingContext(this.nodePart);
+        	DiagramRenderingContext context = DiagramRenderingContextCache.getInstance().get(this.nodePart);
             handler.execute(context);
         }            
 	}

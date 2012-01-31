@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramRenderingContext;
+import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramRenderingContextCache;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
 
 /**
@@ -77,9 +78,9 @@ public class DndObjectCommand extends Command
 	{
 		int currX = this.location.x;
 		int currY = this.location.y;
+		DiagramRenderingContext diagramCtx = DiagramRenderingContextCache.getInstance().get(this.diagramModel.getSapphirePart());
 		for (Object droppedObj : this.droppedObjs)
 		{
-			DiagramRenderingContext diagramCtx = new DiagramRenderingContext(this.diagramModel.getSapphirePart());
 			diagramCtx.setCurrentMouseLocation(currX, currY);
 			currX += 20;
 			currY += 20;

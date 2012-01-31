@@ -83,7 +83,7 @@ public class SapphireActionHandlerDelegate extends Action
 				}
 			}
 		});
-		DiagramRenderingContext context = new DiagramRenderingContext((SapphirePart)this.sapphireActionHandler.getPart(), diagramEditor);
+		DiagramRenderingContext context = DiagramRenderingContextCache.getInstance().get(this.sapphireActionHandler.getPart());
 		Point pt = diagramEditor.getMouseLocation();
 		context.setCurrentMouseLocation(pt.x, pt.y);
 		this.sapphireActionHandler.execute(context);

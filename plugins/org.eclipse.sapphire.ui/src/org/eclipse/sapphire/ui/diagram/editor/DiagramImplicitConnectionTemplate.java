@@ -281,7 +281,6 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     @Override
     public void dispose()
     {
-        super.dispose();
         Iterator<IModelElement> it = this.listEntryFunctionMap.keySet().iterator();
         while (it.hasNext())
         {
@@ -290,6 +289,11 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
         	{
         		fr.dispose();
         	}
+        }
+        List<DiagramImplicitConnectionPart> connParts = getImplicitConnections();
+        for (DiagramImplicitConnectionPart connPart : connParts)
+        {
+        	connPart.dispose();
         }
     }
     
