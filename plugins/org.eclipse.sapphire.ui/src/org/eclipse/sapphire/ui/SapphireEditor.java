@@ -676,7 +676,7 @@ public abstract class SapphireEditor
         {
             for( SapphireEditorPagePart editorPagePart : this.partByPage.values() )
             {
-                editorPagePart.attach( this.propertiesViewContributionChangeListener );
+                editorPagePart.detach( this.propertiesViewContributionChangeListener );
             }
             
             final Object page = getPage();
@@ -685,7 +685,7 @@ public abstract class SapphireEditor
             
             if( editorPagePart != null )
             {
-                editorPagePart.detach( this.propertiesViewContributionChangeListener );
+                editorPagePart.attach( this.propertiesViewContributionChangeListener );
                 contribution = editorPagePart.getPropertiesViewContribution();
             }
             else
