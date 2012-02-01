@@ -20,10 +20,7 @@ import java.util.Map;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ClassLocalizationService
-
-    extends StandardLocalizationService
-    
+public final class ClassLocalizationService extends StandardLocalizationService
 {
     private final Class<?> cl;
     
@@ -51,21 +48,35 @@ public final class ClassLocalizationService
         
         resPath = resPath + ".properties";
         
-        final InputStream stream = this.cl.getClassLoader().getResourceAsStream( resPath );
+        ClassLoader loader = this.cl.getClassLoader();
         
-        if( stream != null )
+        if( loader == null )
         {
-            try
-            {
-                return parse( stream, keyToText );
-            }
-            finally
+            // Some JVM implementations, in certain circumstances (perhaps related to running with different
+            // locales) will return null from Class.getClassLoader() call to signify that the class was
+            // loaded by the bootstrap class loader. Try to recover.
+            
+            loader = ClassLoader.getSystemClassLoader();
+        }
+        
+        if( loader != null )
+        {
+            final InputStream stream = loader.getResourceAsStream( resPath );
+            
+            if( stream != null )
             {
                 try
                 {
-                    stream.close();
+                    return parse( stream, keyToText );
                 }
-                catch( IOException e ) {}
+                finally
+                {
+                    try
+                    {
+                        stream.close();
+                    }
+                    catch( IOException e ) {}
+                }
             }
         }
         
