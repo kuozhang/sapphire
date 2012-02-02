@@ -83,4 +83,8 @@ public class DiagramNodeAddActionHandler extends SapphireDiagramActionHandler
 		return nodePart;
 	}	
 
+	public DiagramNodeTemplate getNodeTemplate()
+	{
+		return this.nodeTemplate;
+	}
 }

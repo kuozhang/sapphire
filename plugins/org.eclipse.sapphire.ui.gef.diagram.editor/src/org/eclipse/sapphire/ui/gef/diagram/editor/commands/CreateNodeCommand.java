@@ -11,10 +11,18 @@
 
 package org.eclipse.sapphire.ui.gef.diagram.editor.commands;
 
+import java.util.List;
+
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramRenderingContext;
+import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramRenderingContextCache;
+import org.eclipse.sapphire.ui.gef.diagram.editor.actions.DiagramNodeAddActionHandler;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
 
 /**
@@ -32,10 +40,25 @@ public class CreateNodeCommand extends Command {
 	}
 
 	@Override
-	public void execute() {
-		DiagramNodePart newPart = this.nodeTemplate.createNewDiagramNode();
-		newPart.setNodePosition(location.x, location.y);		
-	}
-	
-	
+	public void execute() 
+	{
+		// Invoke "Sapphire.Add" action
+		SapphireDiagramEditorPagePart editorPart = this.nodeTemplate.getDiagramEditorPart();
+		SapphireAction addAction = editorPart.getAction(SapphireActionSystem.ACTION_ADD);
+		if (addAction != null)
+		{
+			List<SapphireActionHandler> addHandlers = addAction.getActiveHandlers();
+			for (SapphireActionHandler handler : addHandlers)
+			{
+				DiagramNodeAddActionHandler nodeAddHandler = (DiagramNodeAddActionHandler)handler;
+				if (nodeAddHandler.getNodeTemplate().equals(this.nodeTemplate))
+				{
+					DiagramRenderingContext ctx = DiagramRenderingContextCache.getInstance().get(editorPart);
+					ctx.setCurrentMouseLocation(this.location.x, this.location.y);
+					nodeAddHandler.execute(ctx);
+					break;
+				}
+			}
+		}
+	}	
 }

@@ -13,6 +13,7 @@
 
 package org.eclipse.sapphire.ui.gef.diagram.editor.policies;
 
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
@@ -82,15 +83,22 @@ public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy
 	@Override
 	protected Command getCreateCommand(CreateRequest request) {
 		Command cmd = UnexecutableCommand.INSTANCE;
+		// determine constraint
+		Rectangle rectangle = null;
+		Point pt = new Point(-1, -1);
+		if (request.getLocation() != null) {
+			rectangle = (Rectangle) getConstraintFor(request);
+			pt = new Point(rectangle.x, rectangle.y);
+		}
 		if (request.getNewObjectType() == DiagramNodeTemplate.class) {
-			DiagramNodeTemplate nodeTemplate = (DiagramNodeTemplate)request.getNewObject();
-			cmd = new CreateNodeCommand(this.model, nodeTemplate, request.getLocation());
+			DiagramNodeTemplate nodeTemplate = (DiagramNodeTemplate)request.getNewObject();			
+			cmd = new CreateNodeCommand(this.model, nodeTemplate, pt);
 		}
 		else if (request.getNewObjectType() == ISelection.class) {
 			// DND from project explorer
 			ISelection selection = (ISelection)request.getNewObject();
 			DiagramModel diagramModel = (DiagramModel)getHost().getModel();
-			cmd = new DndObjectCommand(diagramModel, selection, request.getLocation());
+			cmd = new DndObjectCommand(diagramModel, selection, pt);
 		}
 		return cmd;
 	}
