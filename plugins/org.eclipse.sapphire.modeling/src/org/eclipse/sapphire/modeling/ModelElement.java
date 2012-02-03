@@ -59,6 +59,7 @@ public abstract class ModelElement
     private boolean enablementServicesInitialized;
     private ElementInstanceServiceContext elementServiceContext;
     private final Map<ModelProperty,PropertyInstanceServiceContext> propertyServiceContexts;
+    private boolean disposed = false;
     
     public ModelElement( final ModelElementType type,
                          final IModelParticle parent,
@@ -91,7 +92,10 @@ public abstract class ModelElement
                     @Override
                     public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
                     {
-                        refresh( property );
+                        if( ! disposed() )
+                        {
+                            refresh( property );
+                        }
                     }
                 };
                 
@@ -109,7 +113,10 @@ public abstract class ModelElement
                 @Override
                 public void handle( final Event event )
                 {
-                    refresh( property );
+                    if( ! disposed() )
+                    {
+                        refresh( property );
+                    }
                 }
             };
             
@@ -637,7 +644,10 @@ public abstract class ModelElement
                         @Override
                         public void handle( final Event event )
                         {
-                            refreshPropertyEnablement( prop, true );
+                            if( ! disposed() )
+                            {
+                                refreshPropertyEnablement( prop, true );
+                            }
                         }
                     };
                     
@@ -1194,10 +1204,20 @@ public abstract class ModelElement
         return set;
     }
     
+    public final boolean disposed()
+    {
+        synchronized( root() )
+        {
+            return this.disposed;
+        }
+    }
+    
     public final void dispose()
     {
         synchronized( root() )
         {
+            this.disposed = true;
+            
             if( this.listeners != null )
             {
                 final ModelElementDisposedEvent event = new ModelElementDisposedEvent( this );
