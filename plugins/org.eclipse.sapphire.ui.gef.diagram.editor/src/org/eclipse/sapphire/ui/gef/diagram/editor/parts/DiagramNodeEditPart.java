@@ -31,6 +31,7 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.DoubleClickNodeCommand;
@@ -98,15 +99,27 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 	{
 		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT)
 		{
-			performDirectEdit();
+			Point pt = null;
+			if (request.getType() == RequestConstants.REQ_DIRECT_EDIT && !(request instanceof DirectEditRequest))
+			{
+				// Direct edit invoked using key command
+				performDirectEdit();
+			}
+			else if (request.getType() == RequestConstants.REQ_DIRECT_EDIT)
+			{
+				DirectEditRequest deReq = (DirectEditRequest)request;
+				pt = deReq.getLocation();
+				if (mouseInLabelRegion(pt))
+				{
+					performDirectEdit();
+				}
+			}
 		}
 		else if (request.getType().equals(REQ_OPEN))
 		{
 			SelectionRequest selRequest = (SelectionRequest)request;
 			Point pt = selRequest.getLocation();
-			NodeFigure nodeFig = getNodeFigure();
-			Rectangle bounds = nodeFig.getLabelFigure().getBounds();
-			if (bounds.contains(pt))
+			if (mouseInLabelRegion(pt))
 			{
 				performDirectEdit();
 			}
@@ -121,7 +134,6 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 				{
 					cmd.execute();
 				}
-				
 			}
 		}
 		else
@@ -130,6 +142,17 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 		}
 	}
 
+	private boolean mouseInLabelRegion(Point pt)
+	{
+		NodeFigure nodeFig = getNodeFigure();
+		Rectangle bounds = nodeFig.getLabelFigure().getBounds();
+		if (bounds.contains(pt))
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	@Override
 	protected List<DiagramConnectionModel> getModelSourceConnections() {
 		return getCastedModel().getSourceConnections();
