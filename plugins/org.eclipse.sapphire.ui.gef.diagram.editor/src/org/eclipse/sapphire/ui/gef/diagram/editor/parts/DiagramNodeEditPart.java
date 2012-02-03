@@ -100,12 +100,12 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT)
 		{
 			Point pt = null;
-			if (request.getType() == RequestConstants.REQ_DIRECT_EDIT && !(request instanceof DirectEditRequest))
+			if (!(request instanceof DirectEditRequest))
 			{
 				// Direct edit invoked using key command
 				performDirectEdit();
 			}
-			else if (request.getType() == RequestConstants.REQ_DIRECT_EDIT)
+			else
 			{
 				DirectEditRequest deReq = (DirectEditRequest)request;
 				pt = deReq.getLocation();
