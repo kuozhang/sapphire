@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [344319] Image specification for diagram parts inconsistent with the rest of sdef 
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.def;
@@ -34,17 +35,19 @@ public interface IDiagramImageDecoratorDef
 {
     ModelElementType TYPE = new ModelElementType( IDiagramImageDecoratorDef.class );
     
-    // *** ImageId ***
+    // *** ImagePath ***
     
-    @Label( standard = "image ID" )
+    @Type( base = Function.class )
+    @Label( standard = "image path" )
     @Required
-    @XmlBinding( path = "id" )
+    @XmlBinding( path = "path" )
     
-    ValueProperty PROP_IMAGE_ID = new ValueProperty( TYPE, "ImageId" );
+    ValueProperty PROP_IMAGE = new ValueProperty( TYPE, "Image" );
     
-    Value<String> getImageId();
-    void setImageId( String Id );
-    
+    Value<Function> getImage();
+    void setImage( String value );
+    void setImage( Function value );
+
     // *** VisibleWhen ***
     
     @Type( base = Function.class )

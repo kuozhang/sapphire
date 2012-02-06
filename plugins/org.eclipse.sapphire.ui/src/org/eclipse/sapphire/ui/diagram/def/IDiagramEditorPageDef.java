@@ -8,6 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
+ *    Ling Hao - [344319] Image specification for diagram parts inconsistent with the rest of sdef 
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.def;
@@ -127,14 +128,5 @@ public interface IDiagramEditorPageDef
     ListProperty PROP_IMPLICIT_CONNECTION_BINDING_DEFS = new ListProperty( TYPE, "ImplicitConnectionBindingDefs" );
     
     ModelElementList<IDiagramImplicitConnectionBindingDef> getImplicitConnectionBindingDefs();
-    
-    // *** DiagramImageDecorators ***
-    
-    @Type( base = IDiagramImageChoice.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "image-decorator", type = IDiagramImageChoice.class ) )
-                             
-    ListProperty PROP_DIAGRAM_IMAGE_DECORATORS = new ListProperty( TYPE, "DiagramImageDecorators" );
-    
-    ModelElementList<IDiagramImageChoice> getDiagramImageDecorators();
     
 }

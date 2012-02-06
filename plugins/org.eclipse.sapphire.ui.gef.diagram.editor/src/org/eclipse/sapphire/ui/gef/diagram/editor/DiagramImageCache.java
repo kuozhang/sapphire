@@ -33,23 +33,9 @@ import org.osgi.framework.Bundle;
 
 public class DiagramImageCache {
 
-    // The prefix for all identifiers of this image provider
-	protected static final String PREFIX = "org.eclipse.sapphire.ui.gef.diagram.editor";
-	
-	// The common image identifiers
-    public static final String IMG_ERROR = PREFIX + "error"; //$NON-NLS-1$
-    public static final String IMG_ERROR_SMALL = PREFIX + "error_small"; //$NON-NLS-1$
-    public static final String IMG_WARNING = PREFIX + "warning"; //$NON-NLS-1$
-    public static final String IMG_WARNING_SMALL = PREFIX + "warning_small"; //$NON-NLS-1$
-
     private final Map<String, ImageDescriptor> idToImageDescriptor = new HashMap<String, ImageDescriptor>();
 
 	public DiagramImageCache(SapphireDiagramEditorPagePart diagramPart) {
-		// Add decorators
-		for (IDiagramImageChoice decorator : diagramPart.getImageDecorators()) {
-			registerImage(decorator);
-		}
-		
 		// Add node images
 		List<DiagramNodeTemplate> nodeTemplates = diagramPart.getNodeTemplates();
 		for (DiagramNodeTemplate nodeTemplate : nodeTemplates) {
@@ -78,12 +64,6 @@ public class DiagramImageCache {
 				registerImage(image);
 			}
 		}
-		
-		// add common images
-        addImageFilePath(IMG_ERROR, "images/error.gif"); //$NON-NLS-1$
-        addImageFilePath(IMG_ERROR_SMALL, "images/error_small.png"); //$NON-NLS-1$
-        addImageFilePath(IMG_WARNING, "images/warning.gif"); //$NON-NLS-1$
-        addImageFilePath(IMG_WARNING_SMALL, "images/warning_small.png"); //$NON-NLS-1$
 	}
 	
 	private void registerImage(IDiagramImageChoice imageChoice) {
@@ -102,12 +82,6 @@ public class DiagramImageCache {
 	        }
 		}
 	}
-
-	private void addImageFilePath(final String imageId, final String imagePath) {
-		ImageDescriptor descriptor = ImageDescriptor.createFromFile(SapphireDiagramEditor.class, imagePath);
-		idToImageDescriptor.put(imageId, descriptor);
-	}
-
 
 	public ImageDescriptor getImageDescriptor(final String imageId) {
 		return idToImageDescriptor.get(imageId);

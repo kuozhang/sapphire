@@ -8,6 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
+ *    Ling Hao - [344319] Image specification for diagram parts inconsistent with the rest of sdef 
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -242,11 +243,6 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	this.showGuides = showGuides;
     }
 
-    public List<IDiagramImageChoice> getImageDecorators()
-    {
-        return this.diagramPageDef.getDiagramImageDecorators();
-    }
-    
     public List<DiagramNodeTemplate> getNodeTemplates()
     {
         return this.nodeTemplates;

@@ -20,8 +20,17 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.el.FailSafeFunction;
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.el.Literal;
+import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.Bounds;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.def.VerticalAlignment;
@@ -35,6 +44,7 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramImageCache;
 import org.eclipse.sapphire.ui.gef.diagram.editor.figures.DecoratorImageFigure;
 import org.eclipse.sapphire.ui.gef.diagram.editor.figures.NodeFigure;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
+import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -42,6 +52,15 @@ import org.eclipse.swt.graphics.Image;
  */
 
 public class NodeDecorator {
+
+    private static final ImageDescriptor IMG_ERROR_SMALL
+    	= SwtRendererUtil.createImageDescriptor( NodeDecorator.class, "error_small.png" );
+    private static final ImageDescriptor IMG_ERROR
+		= SwtRendererUtil.createImageDescriptor( NodeDecorator.class, "error.gif" );
+    private static final ImageDescriptor IMG_WARNING_SMALL
+		= SwtRendererUtil.createImageDescriptor( NodeDecorator.class, "warning_small.png" );
+    private static final ImageDescriptor IMG_WARNING
+		= SwtRendererUtil.createImageDescriptor( NodeDecorator.class, "warning.gif" );
 
     private static final int SMALL_ERROR_DECORATOR_WIDTH = 7;
     private static final int SMALL_ERROR_DECORATOR_HEIGHT = 8;
@@ -119,15 +138,19 @@ public class NodeDecorator {
 		if (status.severity() != Status.Severity.OK) {
 			if (status.severity() == Status.Severity.WARNING) {
 				if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL) {
-					imageRenderingDecorator = new ImageDecorator(DiagramImageCache.IMG_WARNING_SMALL);
+					Image image = nodeModel.getModelPart().getImageCache().getImage(IMG_WARNING_SMALL);
+					imageRenderingDecorator = new ImageDecorator(image);
 				} else {
-					imageRenderingDecorator = new ImageDecorator(DiagramImageCache.IMG_WARNING);
+					Image image = nodeModel.getModelPart().getImageCache().getImage(IMG_WARNING);
+					imageRenderingDecorator = new ImageDecorator(image);
 				}
 			} else if (status.severity() == Status.Severity.ERROR) {
 				if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL) {
-					imageRenderingDecorator = new ImageDecorator(DiagramImageCache.IMG_ERROR_SMALL);
+					Image image = nodeModel.getModelPart().getImageCache().getImage(IMG_ERROR_SMALL);
+					imageRenderingDecorator = new ImageDecorator(image);
 				} else {
-					imageRenderingDecorator = new ImageDecorator(DiagramImageCache.IMG_ERROR);
+					Image image = nodeModel.getModelPart().getImageCache().getImage(IMG_ERROR);
+					imageRenderingDecorator = new ImageDecorator(image);
 				}
 			}
 		}
@@ -144,16 +167,19 @@ public class NodeDecorator {
 	}
 
 	private void addNodeImageDecorator(IDiagramImageDecoratorDef imageDecoratorDef, List<ImageDecorator> decoratorList) {
-		String imageId = imageDecoratorDef.getImageId().getContent();
-		if (imageId != null) {
-			ImageDecorator imageRenderingDecorator = new ImageDecorator(imageId);
-			ImageDescriptor descriptor = nodeModel.getDiagramModel().getImageCache().getImageDescriptor(imageId);
-			Image image = nodeModel.getModelPart().getImageCache().getImage(descriptor);
-			Point pt = getDecoratorPosition(imageDecoratorDef, image.getImageData().width, image.getImageData().height);
-			imageRenderingDecorator.setX(pt.getX());
-			imageRenderingDecorator.setY(pt.getY());
-			decoratorList.add(imageRenderingDecorator);
-		}
+        final ISapphirePart part = nodeModel.getModelPart();
+        FunctionContext functionContext = new ModelElementFunctionContext( part.getLocalModelElement(), part.definition().adapt( LocalizationService.class ) );
+        final Function imageFunction = FailSafeFunction.create( imageDecoratorDef.getImage().getContent(), Literal.create( ImageData.class ) );
+        final FunctionResult imageFunctionResult = imageFunction.evaluate( functionContext ); 
+        final ImageData data = (ImageData) imageFunctionResult.value();
+        Image image = part.getImageCache().getImage(data);
+		imageFunctionResult.dispose();
+
+		ImageDecorator imageRenderingDecorator = new ImageDecorator(image);
+		Point pt = getDecoratorPosition(imageDecoratorDef, image.getImageData().width, image.getImageData().height);
+		imageRenderingDecorator.setX(pt.getX());
+		imageRenderingDecorator.setY(pt.getY());
+		decoratorList.add(imageRenderingDecorator);
 	}
 
 	private Point getDecoratorPosition(IDiagramDecoratorDef decoratorDef, int decoratorWidth, int decoratorHeight) {
@@ -198,8 +224,8 @@ public class NodeDecorator {
 		private int y;
 		private String message;
 
-		public ImageDecorator(final String imageId) {
-			this.imageId = imageId;
+		public ImageDecorator(final Image image) {
+			this.image = image;
 		}
 
 		public String getImageId() {

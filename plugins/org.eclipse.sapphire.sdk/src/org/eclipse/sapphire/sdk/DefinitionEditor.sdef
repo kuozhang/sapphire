@@ -1416,11 +1416,11 @@
                             <node-factory>
                                 <property>ImageDecorators</property>
                                 <case>
-                                    <label>${ ImageId == null ? &quot;&lt;image-ID&gt;&quot; : ImageId }</label>
+                                    <label>${ Image == null ? &quot;&lt;image-path&gt;&quot; : Image }</label>
                                     <section>
                                         <label>node image decorator</label>
                                         <content>
-                                            <property-editor>ImageId</property-editor>
+                                            <property-editor>Image</property-editor>
                                             <property-editor>VisibleWhen</property-editor>
                                             <separator></separator>
                                             <property-editor>
@@ -1703,22 +1703,6 @@
                                     <show-label>false</show-label>
                                     <span>true</span>
                                 </property-editor>
-                            </content>
-                        </section>
-                    </case>
-                </node-factory>
-            </node>
-            <node>
-                <label>image decorators</label>
-                <node-factory>
-                    <property>DiagramImageDecorators</property>
-                    <case>
-                        <label>${ ImageId == null ? &quot;&lt;image-ID&gt;&quot; : ImageId }</label>
-                        <section>
-                            <label>diagram image decorator</label>
-                            <content>
-                                <property-editor>ImageId</property-editor>
-                                <property-editor>ImagePath</property-editor>
                             </content>
                         </section>
                     </case>
