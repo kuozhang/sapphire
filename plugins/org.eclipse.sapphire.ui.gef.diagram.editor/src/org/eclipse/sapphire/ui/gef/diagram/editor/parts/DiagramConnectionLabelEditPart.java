@@ -25,6 +25,7 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionLabelModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.ConnectionLabelDirectEditPolicy;
 
@@ -32,10 +33,20 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.policies.ConnectionLabelDirect
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart implements PropertyChangeListener {
+public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart 
+		implements PropertyChangeListener, IConfigurationManagerHolder {
 	
+	private DiagramConfigurationManager configManager;
     private ConnectionDirectEditManager manager;
 
+    public DiagramConnectionLabelEditPart(DiagramConfigurationManager configManager) {
+    	this.configManager = configManager;
+    }
+    
+    public DiagramConfigurationManager getConfigurationManager() {
+    	return this.configManager;
+    }
+    
     @Override
 	protected IFigure createFigure() {
     	Label label = new Label();

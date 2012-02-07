@@ -36,6 +36,7 @@ import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
 import org.eclipse.gef.rulers.RulerProvider;
+import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramXYLayoutEditPolicy;
@@ -46,8 +47,19 @@ import org.eclipse.swt.SWT;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart implements PropertyChangeListener {
+public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart 
+		implements PropertyChangeListener, IConfigurationManagerHolder {
 
+	private DiagramConfigurationManager configManager;
+	
+	public SapphireDiagramEditorPageEditPart(DiagramConfigurationManager configManager) {
+		this.configManager = configManager;
+	}
+	
+	public DiagramConfigurationManager getConfigurationManager() {
+		return this.configManager;
+	}
+	
 	@Override
 	protected IFigure createFigure() {
 		Figure f = new FreeformLayer();

@@ -22,22 +22,12 @@ import org.eclipse.sapphire.ui.ISapphirePart;
 public class DiagramRenderingContextCache 
 {
 	private HashMap<ISapphirePart, DiagramRenderingContext> partContextMap;
-	private static DiagramRenderingContextCache instance;
 	
-	private DiagramRenderingContextCache()
+	public DiagramRenderingContextCache()
 	{
 		this.partContextMap = new HashMap<ISapphirePart, DiagramRenderingContext>();
 	}
-	
-	public static DiagramRenderingContextCache getInstance()
-	{
-		if (instance == null)
-		{
-			instance = new DiagramRenderingContextCache();
-		}
-		return instance;
-	}
-	
+		
     public void put(ISapphirePart part, DiagramRenderingContext ctx)
     {
         this.partContextMap.put(part, ctx);

@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.gef.diagram.editor.parts;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
+import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionLabelModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
@@ -24,6 +25,11 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 
 public class SapphireDiagramEditorEditPartFactory implements EditPartFactory {
 
+	private DiagramConfigurationManager configManager;
+	
+	public SapphireDiagramEditorEditPartFactory(DiagramConfigurationManager configManager) {
+		this.configManager = configManager;
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -46,29 +52,17 @@ public class SapphireDiagramEditorEditPartFactory implements EditPartFactory {
 	 *             if no match was found (programming error)
 	 */
 	private EditPart getPartForElement(Object modelElement) {
-//		if (modelElement instanceof SapphireDiagramEditorPagePart) {
-//			return new SapphireDiagramEditorPageEditPart();
-//		}
-//		if (modelElement instanceof DiagramNodePart) {
-//			return new DiagramNodeEditPart();
-//		}
-//		if (modelElement instanceof DiagramConnectionPart) {
-//			return new DiagramConnectionEditPart();
-//		}
-//		if (modelElement instanceof DiagramConnectionLabelModel) {
-//			return new DiagramConnectionLabelEditPart();
-//		}
 		if (modelElement instanceof DiagramModel) {
-			return new SapphireDiagramEditorPageEditPart();
+			return new SapphireDiagramEditorPageEditPart(this.configManager);
 		}
 		if (modelElement instanceof DiagramNodeModel) {
-			return new DiagramNodeEditPart();
+			return new DiagramNodeEditPart(this.configManager);
 		}
 		if (modelElement instanceof DiagramConnectionModel) {
-			return new DiagramConnectionEditPart();
+			return new DiagramConnectionEditPart(this.configManager);
 		}
 		if (modelElement instanceof DiagramConnectionLabelModel) {
-			return new DiagramConnectionLabelEditPart();
+			return new DiagramConnectionLabelEditPart(this.configManager);
 		}
 		throw new RuntimeException("Can't create part for model element: "
 				+ ((modelElement != null) ? modelElement.getClass().getName()

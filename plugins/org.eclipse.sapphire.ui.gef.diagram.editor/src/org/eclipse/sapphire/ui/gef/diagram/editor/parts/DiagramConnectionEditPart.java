@@ -31,6 +31,7 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.gef.diagram.editor.figures.DiagramConnectionFigure;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionLabelModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
@@ -44,9 +45,19 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.policies.DiagramConnectionLabe
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class DiagramConnectionEditPart extends AbstractConnectionEditPart implements PropertyChangeListener {
+public class DiagramConnectionEditPart extends AbstractConnectionEditPart 
+		implements PropertyChangeListener, IConfigurationManagerHolder {
 	
 	private List<DiagramConnectionLabelModel> modelChildren;
+	private DiagramConfigurationManager configManager;
+	
+	public DiagramConnectionEditPart(DiagramConfigurationManager configManager) {
+		this.configManager = configManager;
+	}
+	
+	public DiagramConfigurationManager getConfigurationManager() {
+		return this.configManager;
+	}
 
 	@Override
 	protected void createEditPolicies() {

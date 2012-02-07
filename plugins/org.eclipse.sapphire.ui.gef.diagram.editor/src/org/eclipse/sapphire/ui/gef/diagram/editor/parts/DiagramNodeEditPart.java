@@ -34,6 +34,7 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.sapphire.ui.Bounds;
+import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.DoubleClickNodeCommand;
 import org.eclipse.sapphire.ui.gef.diagram.editor.figures.NodeFigure;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
@@ -47,8 +48,10 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.policies.NodeLayoutEditPolicy;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements NodeEditPart, PropertyChangeListener {
+public class DiagramNodeEditPart extends AbstractGraphicalEditPart 
+		implements NodeEditPart, PropertyChangeListener, IConfigurationManagerHolder {
 
+	private DiagramConfigurationManager configManager;
     private NodeDirectEditManager manager;
     
     private ConnectionAnchor sourceAnchor;
@@ -56,6 +59,14 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
     
     private List<IFigure> decorators = new ArrayList<IFigure>();
 
+    public DiagramNodeEditPart(DiagramConfigurationManager configManager) {
+    	this.configManager = configManager;
+    }
+    
+    public DiagramConfigurationManager getConfigurationManager() {
+    	return this.configManager;
+    }
+    
     @Override
 	protected IFigure createFigure() {
     	String imageId = getCastedModel().getModelPart().getImageId();
@@ -125,7 +136,7 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart implements No
 			}
 			else
 			{
-				Command cmd = new DoubleClickNodeCommand(getCastedModel().getModelPart());
+				Command cmd = new DoubleClickNodeCommand(this, getCastedModel().getModelPart());
 				// If executing the command from edit domain's command stack, we'd get an 
 				// invalid cursor before the double click cmd is executed.
 				// Bypassing the command stack

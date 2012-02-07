@@ -22,9 +22,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
+import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramRenderingContext;
-import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramRenderingContextCache;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
+import org.eclipse.sapphire.ui.gef.diagram.editor.parts.IConfigurationManagerHolder;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -37,11 +38,14 @@ public class DndObjectCommand extends Command
 	private SapphireDiagramActionHandler dropHandler;
 	private List<Object> droppedObjs;
 	private Point location;
+	private IConfigurationManagerHolder configHolder;
 	
-	public DndObjectCommand(DiagramModel diagramModel, ISelection sel, Point location)
+	public DndObjectCommand(DiagramModel diagramModel, IConfigurationManagerHolder configHolder, 
+			ISelection sel, Point location)
 	{
 		this.diagramModel = diagramModel;
 		this.location = location;
+		this.configHolder = configHolder;
 		
 		droppedObjs = new ArrayList<Object>();
 		
@@ -78,7 +82,8 @@ public class DndObjectCommand extends Command
 	{
 		int currX = this.location.x;
 		int currY = this.location.y;
-		DiagramRenderingContext diagramCtx = DiagramRenderingContextCache.getInstance().get(this.diagramModel.getSapphirePart());
+		DiagramConfigurationManager configManager = this.configHolder.getConfigurationManager();
+		DiagramRenderingContext diagramCtx = configManager.getDiagramRenderingContextCache().get(this.diagramModel.getSapphirePart());
 		for (Object droppedObj : this.droppedObjs)
 		{
 			diagramCtx.setCurrentMouseLocation(currX, currY);

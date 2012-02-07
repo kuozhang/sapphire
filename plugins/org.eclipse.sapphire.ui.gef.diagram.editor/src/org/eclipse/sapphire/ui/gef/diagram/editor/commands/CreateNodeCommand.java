@@ -20,10 +20,11 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramRenderingContext;
-import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramRenderingContextCache;
 import org.eclipse.sapphire.ui.gef.diagram.editor.actions.DiagramNodeAddActionHandler;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
+import org.eclipse.sapphire.ui.gef.diagram.editor.parts.IConfigurationManagerHolder;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -33,15 +34,18 @@ public class CreateNodeCommand extends Command {
 	
 	private DiagramNodeTemplate nodeTemplate;
 	private Point location;
+	IConfigurationManagerHolder configHolder;
 
-	public CreateNodeCommand(DiagramModel diagramModel, DiagramNodeTemplate nodeTemplate, Point location) {
+	public CreateNodeCommand(DiagramModel diagramModel, IConfigurationManagerHolder configHolder,
+			DiagramNodeTemplate nodeTemplate, Point location) {
+		this.configHolder = configHolder;
 		this.nodeTemplate = nodeTemplate;
 		this.location = location;
 	}
 
 	@Override
 	public void execute() 
-	{
+	{		
 		// Invoke "Sapphire.Add" action
 		SapphireDiagramEditorPagePart editorPart = this.nodeTemplate.getDiagramEditorPart();
 		SapphireAction addAction = editorPart.getAction(SapphireActionSystem.ACTION_ADD);
@@ -53,7 +57,8 @@ public class CreateNodeCommand extends Command {
 				DiagramNodeAddActionHandler nodeAddHandler = (DiagramNodeAddActionHandler)handler;
 				if (nodeAddHandler.getNodeTemplate().equals(this.nodeTemplate))
 				{
-					DiagramRenderingContext ctx = DiagramRenderingContextCache.getInstance().get(editorPart);
+					DiagramConfigurationManager configManager = this.configHolder.getConfigurationManager();
+					DiagramRenderingContext ctx = configManager.getDiagramRenderingContextCache().get(editorPart);
 					ctx.setCurrentMouseLocation(this.location.x, this.location.y);
 					nodeAddHandler.execute(ctx);
 					break;

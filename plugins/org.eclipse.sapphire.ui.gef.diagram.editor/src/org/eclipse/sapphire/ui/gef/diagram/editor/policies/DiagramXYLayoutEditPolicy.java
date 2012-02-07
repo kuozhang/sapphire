@@ -34,6 +34,7 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.parts.DiagramConnectionLabelEditPart;
 import org.eclipse.sapphire.ui.gef.diagram.editor.parts.DiagramNodeEditPart;
+import org.eclipse.sapphire.ui.gef.diagram.editor.parts.IConfigurationManagerHolder;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -90,15 +91,16 @@ public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy
 			rectangle = (Rectangle) getConstraintFor(request);
 			pt = new Point(rectangle.x, rectangle.y);
 		}
+		IConfigurationManagerHolder host = (IConfigurationManagerHolder)getHost();
 		if (request.getNewObjectType() == DiagramNodeTemplate.class) {
-			DiagramNodeTemplate nodeTemplate = (DiagramNodeTemplate)request.getNewObject();			
-			cmd = new CreateNodeCommand(this.model, nodeTemplate, pt);
+			DiagramNodeTemplate nodeTemplate = (DiagramNodeTemplate)request.getNewObject();				
+			cmd = new CreateNodeCommand(this.model, host, nodeTemplate, pt);
 		}
 		else if (request.getNewObjectType() == ISelection.class) {
 			// DND from project explorer
 			ISelection selection = (ISelection)request.getNewObject();
 			DiagramModel diagramModel = (DiagramModel)getHost().getModel();
-			cmd = new DndObjectCommand(diagramModel, selection, pt);
+			cmd = new DndObjectCommand(diagramModel, host, selection, pt);
 		}
 		return cmd;
 	}

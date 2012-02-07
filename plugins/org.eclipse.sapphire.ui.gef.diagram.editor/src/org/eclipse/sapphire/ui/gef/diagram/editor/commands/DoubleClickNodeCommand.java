@@ -14,8 +14,9 @@ package org.eclipse.sapphire.ui.gef.diagram.editor.commands;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramRenderingContext;
-import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramRenderingContextCache;
+import org.eclipse.sapphire.ui.gef.diagram.editor.parts.IConfigurationManagerHolder;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -24,9 +25,11 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramRenderingContextCache;
 public class DoubleClickNodeCommand extends Command
 {
 	private DiagramNodePart nodePart;
+	private IConfigurationManagerHolder configHolder;
 	
-	public DoubleClickNodeCommand(DiagramNodePart nodePart)
+	public DoubleClickNodeCommand(IConfigurationManagerHolder configHolder, DiagramNodePart nodePart)
 	{
+		this.configHolder = configHolder;
 		this.nodePart = nodePart;
 	}
 	
@@ -43,7 +46,8 @@ public class DoubleClickNodeCommand extends Command
         SapphireDiagramActionHandler handler = (SapphireDiagramActionHandler)this.nodePart.getDefaultActionHandler();
         if (handler != null && handler.canExecute(this.nodePart))
         {
-        	DiagramRenderingContext context = DiagramRenderingContextCache.getInstance().get(this.nodePart);
+        	DiagramConfigurationManager configManager = configHolder.getConfigurationManager();
+        	DiagramRenderingContext context = configManager.getDiagramRenderingContextCache().get(this.nodePart);
             handler.execute(context);
         }            
 	}
