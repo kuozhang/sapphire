@@ -26,8 +26,8 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramImageCache;
-import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireConnectionRouter;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -39,14 +39,16 @@ public class DiagramModel extends DiagramModelBase {
 	public final static String NODE_REMOVED = "NODE_REMOVED";
 
 	private SapphireDiagramEditorPagePart part;
+	private DiagramConfigurationManager configManager;
 	private List<DiagramNodeModel> nodes = new ArrayList<DiagramNodeModel>();
 	private List<DiagramConnectionModel> connections = new ArrayList<DiagramConnectionModel>();
 	
 	private DiagramImageCache imageCache;
 	private DiagramResourceCache resourceCache;
 
-	public DiagramModel(SapphireDiagramEditorPagePart part) {
+	public DiagramModel(SapphireDiagramEditorPagePart part, DiagramConfigurationManager configManager) {
 		this.part = part;
+		this.configManager = configManager;
 		imageCache = new DiagramImageCache(part);
 		resourceCache = new DiagramResourceCache();
 
@@ -205,7 +207,7 @@ public class DiagramModel extends DiagramModelBase {
 				connectionModel.setTargetNode(targetNode);
 
 				// add bendpoint if collision
-				Point bendPoint = SapphireConnectionRouter.getInstance().route(connectionModel);
+				Point bendPoint = this.configManager.getConnectionRouter().route(connectionModel);
 	        	if (bendPoint != null) {
 	        		connectionModel.getModelPart().addBendpoint(0, bendPoint.x, bendPoint.y);
 	        	}
@@ -222,7 +224,7 @@ public class DiagramModel extends DiagramModelBase {
 	}
 	
 	private void removeConnection(DiagramConnectionModel connectionModel) {
-		SapphireConnectionRouter.getInstance().removeConnectionFromCache(connectionModel);
+		this.configManager.getConnectionRouter().removeConnectionFromCache(connectionModel);
 
 		DiagramNodeModel sourceNode = connectionModel.getSourceNode();
 		DiagramNodeModel targetNode = connectionModel.getTargetNode();

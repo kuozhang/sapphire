@@ -109,7 +109,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
         this.diagramPart = new SapphireDiagramEditorPagePart();
         this.diagramPart.init(null, rootModelElement, this.diagramPageDef, Collections.<String,String>emptyMap());
         
-        this.diagramModel = new DiagramModel(diagramPart);
+        this.configManager = new DiagramConfigurationManager(this);
+        
+        this.diagramModel = new DiagramModel(diagramPart, this.configManager);
 
 		setEditDomain(new DefaultEditDomain(this));
 
@@ -240,10 +242,15 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		if (diagramModel == null) {
 			return;
 		}
-
-		diagramModel.addConnection(connPart);
-		DiagramRenderingContext ctx = new DiagramRenderingContext(connPart, this);
-		getConfigurationManager().getDiagramRenderingContextCache().put(connPart, ctx);
+		IModelElement endpoint1 = connPart.getEndpoint1();
+		IModelElement endpoint2 = connPart.getEndpoint2();
+		DiagramNodePart nodePart1 = this.diagramPart.getDiagramNodePart(endpoint1);
+		DiagramNodePart nodePart2 = this.diagramPart.getDiagramNodePart(endpoint2);
+		if (nodePart1 != null && nodePart2 != null) {
+			diagramModel.addConnection(connPart);
+			DiagramRenderingContext ctx = new DiagramRenderingContext(connPart, this);
+			getConfigurationManager().getDiagramRenderingContextCache().put(connPart, ctx);
+		}
 	}
 	
 	private void refreshConnectionNodes(DiagramConnectionPart connPart) {
@@ -430,9 +437,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		if (this.diagramGeometry.isShowGuidesPropertySet())
 		{
 			this.diagramPart.syncGuideStateWithDiagramLayout(this.diagramGeometry.isShowGuides());
-		}
-		
-		this.configManager = new DiagramConfigurationManager(this);
+		}		
 		
 		// cache DiagramRenderingContext for the diagram edit page part
 		DiagramRenderingContext ctx = new DiagramRenderingContext(this.diagramPart, this);

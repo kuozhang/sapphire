@@ -12,6 +12,8 @@
 package org.eclipse.sapphire.ui.gef.diagram.editor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
@@ -28,8 +30,10 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 
 public class SapphireConnectionRouter 
 {
-	private static SapphireConnectionRouter instance;
 	private MultiValueMap connections = new MultiValueMap();
+	private MultiValueMap connectionIndices = new MultiValueMap();
+	private HashMap<DiagramConnectionModel, Integer> connectionIndexMap = 
+					new HashMap<DiagramConnectionModel, Integer>();
 	private int separation = 30;
 	
 	private class HashKey 
@@ -74,18 +78,10 @@ public class SapphireConnectionRouter
 			return sourceNode.hashCode() ^ targetNode.hashCode();
 		}
 	}
+	
 
-	private SapphireConnectionRouter() {}
-	
-	public static SapphireConnectionRouter getInstance()
-	{
-		if (instance == null)
-		{
-			instance = new SapphireConnectionRouter();
-		}
-		return instance;
-	}
-	
+	public SapphireConnectionRouter() {}
+		
 	public int getSeparation() 
 	{
 		return separation;
@@ -100,6 +96,11 @@ public class SapphireConnectionRouter
 	{
 		HashKey connectionKey = new HashKey(conn);
 		connections.remove(connectionKey, conn);
+		if (connectionIndexMap.containsKey(conn))
+		{
+			int index = connectionIndexMap.get(conn);
+			connectionIndices.remove(connectionKey, index);
+		}
 	}
 	
 	private Point getNodeLocation(DiagramNodeModel node) {
@@ -118,17 +119,10 @@ public class SapphireConnectionRouter
 			points.addPoint(getNodeLocation(conn.getSourceNode()));
 			points.addPoint(getNodeLocation(conn.getTargetNode()));
 
-			int index;
-
-			if (connectionList.contains(conn)) 
-			{
-				index = connectionList.indexOf(conn) + 1;
-			} 
-			else 
-			{
-				index = connectionList.size() + 1;
-				connections.put(connectionKey, conn);
-			}
+			int index  = getNextConnectionIndex(connectionKey);
+			connections.put(connectionKey, conn);
+			connectionIndices.put(connectionKey, index);
+			connectionIndexMap.put(conn, index);
 
 			Point bendpoint = handleCollision(points, index);
 			return bendpoint;
@@ -136,6 +130,8 @@ public class SapphireConnectionRouter
 		else 
 		{
 			connections.put(connectionKey, conn);
+			connectionIndices.put(connectionKey, -1);
+			connectionIndexMap.put(conn, -1);
 		}
 		return null;
 	}
@@ -184,5 +180,33 @@ public class SapphireConnectionRouter
 		return null;
 	}
 	
+	private int getNextConnectionIndex(HashKey connectionKey)
+	{
+		ArrayList indices = connectionIndices.get(connectionKey);
+		int[] intArr = new int[indices.size()];
+		int i = 0;
+		for (Object obj : indices)
+		{
+			Integer intObj = (Integer)obj;
+			intArr[i++] = intObj;
+		}
+		Arrays.sort(intArr, 0, indices.size());
+		
+		int nextInt = -1;
+		for (int j = 0; j < intArr.length; j++)
+		{
+			int temp = intArr[j];
+			if (temp > 1 && temp != j + 1)
+			{
+				nextInt = j + 1;
+				break;
+			}
+		}
+		if (nextInt == -1)
+		{
+			nextInt = indices.size() + 1;
+		}
+		return nextInt;
+	}
 
 }
