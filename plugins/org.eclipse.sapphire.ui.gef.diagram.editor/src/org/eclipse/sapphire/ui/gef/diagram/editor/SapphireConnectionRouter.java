@@ -19,10 +19,10 @@ import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Ray;
-import org.eclipse.draw2d.internal.MultiValueMap;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
+import org.eclipse.sapphire.ui.gef.diagram.editor.utils.MultiValueMap;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -101,6 +101,13 @@ public class SapphireConnectionRouter
 			int index = connectionIndexMap.get(conn);
 			connectionIndices.remove(connectionKey, index);
 		}
+	}
+	
+	public void clear()
+	{
+		this.connectionIndexMap.clear();
+		this.connections.clear();
+		this.connectionIndices.clear();
 	}
 	
 	private Point getNodeLocation(DiagramNodeModel node) {

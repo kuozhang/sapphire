@@ -107,6 +107,7 @@ public abstract class DiagramGraphLayoutActionHandler extends
 	}
 	
 	private void mapGraphCoordinatesToDiagram(final CompoundDirectedGraph graph, SapphireDiagramEditor diagramEditor) {
+		diagramEditor.getConfigurationManager().getConnectionRouter().clear();
 		DiagramModel diagramModel = diagramEditor.getDiagramModel();
 		mapGraphNodeCoordinatesToDiagram(graph);
 		removeDiagramManualBendpoints(diagramModel);
