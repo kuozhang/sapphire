@@ -21,7 +21,7 @@ public class HorizontalGraphLayoutActionHandler extends DiagramGraphLayoutAction
 
 	@Override
 	public int getGraphDirection() {
-		return PositionConstants.EAST_WEST;
+		return PositionConstants.EAST;
 	}
 
 }

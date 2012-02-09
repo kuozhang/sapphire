@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - handle feedback edges correctly.
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.gef.diagram.editor.actions;
@@ -73,10 +74,7 @@ public abstract class DiagramGraphLayoutActionHandler extends
 		DiagramModel diagramModel = diagramEditor.getDiagramModel();
 		Map<DiagramNodeModel, Node> shapeToNode = new HashMap<DiagramNodeModel, Node>();
 		CompoundDirectedGraph dg = new CompoundDirectedGraph();
-		if (getGraphDirection() == PositionConstants.EAST_WEST)
-		{
-			dg.setDirection(getGraphDirection());
-		}
+		dg.setDirection(getGraphDirection());
 		EdgeList edgeList = new EdgeList();
 		NodeList nodeList = new NodeList();
 		List<DiagramNodeModel> children = diagramModel.getNodes();
@@ -159,17 +157,31 @@ public abstract class DiagramGraphLayoutActionHandler extends
 					Node vn = nodes.getNode(i);
 					int x = vn.x;
 					int y = vn.y;
-					if (getGraphDirection() == PositionConstants.EAST_WEST)
+					if (getGraphDirection() == PositionConstants.EAST)
 					{
-						int offset = edge.isFeedback() ? -vn.width : vn.width;
-						connPart.addBendpoint(bpIndex, x, y);
-						connPart.addBendpoint(bpIndex + 1, x + offset, y);
+						if (edge.isFeedback())
+						{
+							connPart.addBendpoint(bpIndex, x + vn.width, y);
+							connPart.addBendpoint(bpIndex + 1, x, y);
+						}
+						else
+						{
+							connPart.addBendpoint(bpIndex, x, y);
+							connPart.addBendpoint(bpIndex + 1, x + vn.width, y);
+						}
 					}
 					else
 					{
-						int offset = edge.isFeedback() ? -vn.height : vn.height;
-						connPart.addBendpoint(bpIndex, x, y);
-						connPart.addBendpoint(bpIndex + 1, x, y + offset);
+						if (edge.isFeedback())
+						{
+							connPart.addBendpoint(bpIndex, x, y + vn.height);
+							connPart.addBendpoint(bpIndex + 1, x, y);
+						}
+						else
+						{
+							connPart.addBendpoint(bpIndex, x, y);
+							connPart.addBendpoint(bpIndex + 1, x, y + vn.height);
+						}
 					}
 					bpIndex += 2;
 				}

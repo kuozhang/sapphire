@@ -21,7 +21,7 @@ public class VerticalGraphLayoutActionHandler extends DiagramGraphLayoutActionHa
 
 	@Override
 	public int getGraphDirection() {
-		return PositionConstants.NORTH_SOUTH;
+		return PositionConstants.SOUTH;
 	}
 
 }
