@@ -14,7 +14,7 @@ package org.eclipse.sapphire.ui.gef.diagram.editor.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.def.ImagePlacement;
@@ -64,11 +64,11 @@ public class DiagramNodeModel extends DiagramModelBase {
 	}
 	
 	public Image getImage() {
-		String imageId = getModelPart().getImageId();
-		if (imageId != null) {
-			return getImage(imageId);
+		ImageData imageData = getModelPart().getImage();
+		if (imageData != null) {
+			return getModelPart().getImageCache().getImage(imageData);
 		}
-		return null; 
+		return null;
 	}
 	
 	public Bounds getNodeBounds() {
@@ -80,11 +80,10 @@ public class DiagramNodeModel extends DiagramModelBase {
 			if (labelWidth <= 0) {
 				labelWidth = DEFAULT_NODE_WIDTH;
 			}
-			String imageId = nodePart.getImageId();
-			if (imageId != null) {
+			Image image = getImage();
+			if (image != null) {
 				int imageWidth = nodePart.getImageWidth();
 				if (imageWidth == 0) {
-					Image image = getImage(imageId);
 					imageWidth = image.getImageData().width;
 				}
 
@@ -101,10 +100,9 @@ public class DiagramNodeModel extends DiagramModelBase {
 	        
 			int labelHeight = nodePart.getLabelHeight();
 			labelHeight = Math.max(labelHeight, DEFAULT_TEXT_HEIGHT);
-	        if (imageId != null) {
+	        if (image != null) {
 				int imageHeight = nodePart.getImageHeight();
 				if (imageHeight == 0) {
-					Image image = getImage(imageId);
 					imageHeight = image.getImageData().height;
 				}
 
@@ -132,14 +130,12 @@ public class DiagramNodeModel extends DiagramModelBase {
 		int imageWidth = nodePart.getImageWidth();
 		int imageHeight = nodePart.getImageHeight();
 
-		String imageId = nodePart.getImageId();
-		if (imageId != null) {
+		Image image = getImage();
+		if (image != null) {
 			if (imageWidth == 0) {
-				Image image = getImage(imageId);
 				imageWidth = image.getImageData().width;
 			}
 			if (imageHeight == 0) {
-				Image image = getImage(imageId);
 				imageHeight = image.getImageData().height;
 			}
 		}
@@ -179,18 +175,16 @@ public class DiagramNodeModel extends DiagramModelBase {
 	public Bounds getLabelBounds(Bounds nodeBounds) {
 		DiagramNodePart nodePart = getModelPart();
 
-		String imageId = nodePart.getImageId();
+		Image image = getImage();
 		int imageWidth = 0;
 		int imageHeight = 0;
-		if (imageId != null) {
+		if (image != null) {
 			imageWidth = nodePart.getImageWidth();
 			if (imageWidth == 0) {
-				Image image = getImage(imageId);
 				imageWidth = image.getImageData().width;
 			}
 			imageHeight = nodePart.getImageHeight();
 			if (imageHeight == 0) {
-				Image image = getImage(imageId);
 				imageHeight = image.getImageData().height;
 			}
 		}
@@ -278,11 +272,6 @@ public class DiagramNodeModel extends DiagramModelBase {
 		firePropertyChange(NODE_START_EDITING, null, null);
 	}
 	
-	private Image getImage(final String imageId) {
-		ImageDescriptor imageDescriptor = parent.getImageCache().getImageDescriptor(imageId);
-		return part.getImageCache().getImage(imageDescriptor);
-	}
-
 	@Override
 	public String toString() {
 		return getLabel();

@@ -9,6 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
  *    Konstantin Komissarchik - [342775] Support EL in IMasterDetailsTreeNodeDef.ImagePath
+ *    Ling Hao - [44319] Image specification for diagram parts inconsistent with the rest of sdef 
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
@@ -57,8 +59,9 @@ public class DiagramNodePart
 	private IModelElement modelElement;
 	private FunctionResult labelFunctionResult;
 	private FunctionResult idFunctionResult;
-	private FunctionResult imageFunctionResult;
+	private FunctionResult imageDataFunctionResult;
 	private List<FunctionResult> imageDecoratorFunctionResults;
+	private List<FunctionResult> imageDecoratorDataFunctionResults;
 	private ValueProperty labelProperty;
 	private SapphireAction defaultAction;
 	private SapphireActionHandler defaultActionHandler;
@@ -107,11 +110,11 @@ public class DiagramNodePart
         
         if (this.definition.getImage().element() != null)
         {
-            this.imageFunctionResult = initExpression
+            this.imageDataFunctionResult = initExpression
             ( 
                 this.modelElement,
-                this.definition.getImage().element().getId().getContent(),
-                String.class,
+                this.definition.getImage().element().getImage().getContent(),
+                ImageData.class,
                 null,
                 new Runnable()
                 {
@@ -122,7 +125,7 @@ public class DiagramNodePart
                 }
             );
         }
-                
+
         // Image decorator functions
         
         ModelElementList<IDiagramImageDecoratorDef> imageDecorators = this.definition.getImageDecorators();
@@ -146,6 +149,26 @@ public class DiagramNodePart
             this.imageDecoratorFunctionResults.add(imageResult);
         }
         
+        this.imageDecoratorDataFunctionResults = new ArrayList<FunctionResult>();
+        for (IDiagramImageDecoratorDef imageDecorator : imageDecorators)
+        {
+            FunctionResult imageResult = initExpression
+            ( 
+                this.modelElement,
+                imageDecorator.getImage().getContent(),
+                ImageData.class,
+                null,
+                new Runnable()
+                {
+                    public void run()
+                    {
+                        refreshDecorator();
+                    }
+                }
+            );
+            this.imageDecoratorDataFunctionResults.add(imageResult);
+        }
+
         // Default Action handler
         this.defaultAction = getAction(DEFAULT_ACTION_ID);
         this.defaultActionHandler = this.defaultAction.getFirstActiveHandler();
@@ -174,20 +197,22 @@ public class DiagramNodePart
         return this.modelElement;
     }    
            
-    public List<IDiagramImageDecoratorDef> getImageDecorators()
+    public List<NodeImageDecorator> getImageDecorators()
     {
-        List<IDiagramImageDecoratorDef> imageDecorators = new ArrayList<IDiagramImageDecoratorDef>();
+        List<NodeImageDecorator> imageDecorators = new ArrayList<NodeImageDecorator>();
         ModelElementList<IDiagramImageDecoratorDef> defs = this.definition.getImageDecorators();
         for (int i = 0; i < this.imageDecoratorFunctionResults.size(); i++)
         {
             FunctionResult result = this.imageDecoratorFunctionResults.get(i);
-            IDiagramImageDecoratorDef def = defs.get(i);
             if (result != null)
             {
                 String show = (String)result.value();
                 if (show != null && show.equals("true"))
                 {
-                    imageDecorators.add(def);
+                    IDiagramImageDecoratorDef def = defs.get(i);
+                	FunctionResult imageDataResult = this.imageDecoratorDataFunctionResults.get(i);
+                	NodeImageDecorator nodeImageDecorator = new NodeImageDecorator((ImageData)imageDataResult.value(), def);
+                    imageDecorators.add(nodeImageDecorator);
                 }
             }
         }
@@ -230,9 +255,9 @@ public class DiagramNodePart
             this.idFunctionResult.dispose();
         }
         
-        if (this.imageFunctionResult != null)
+        if (this.imageDataFunctionResult != null)
         {
-            this.imageFunctionResult.dispose();
+            this.imageDataFunctionResult.dispose();
         }
     
         for (int i = 0; i < this.imageDecoratorFunctionResults.size(); i++)
@@ -244,6 +269,16 @@ public class DiagramNodePart
             }
         }
         
+        for (int i = 0; i < this.imageDecoratorDataFunctionResults.size(); i++)
+        {
+            FunctionResult result = this.imageDecoratorDataFunctionResults.get(i);
+            if (result != null)
+            {
+                result.dispose();
+            }
+        }
+        
+
         this.modelElement.removeListener(this.modelPropertyListener, "*");
     }
     
@@ -382,12 +417,11 @@ public class DiagramNodePart
 		return 0;
 	}
 
-    public String getImageId()
+    public ImageData getImage()
     {
-        if( this.imageFunctionResult != null )
+        if( this.imageDataFunctionResult != null )
         {
-            String idStr = (String) this.imageFunctionResult.value();
-            return idStr;
+        	return (ImageData) this.imageDataFunctionResult.value();
         }
         return null;        
     }
@@ -497,6 +531,26 @@ public class DiagramNodePart
         }
         
         return this.propertiesViewContributionManager.getPropertiesViewContribution();
+    }
+    
+    public final static class NodeImageDecorator {
+    	
+    	ImageData imageData;
+    	IDiagramImageDecoratorDef imageDecoratorDef;
+    	
+    	public NodeImageDecorator(ImageData imageData, IDiagramImageDecoratorDef imageDecoratorDef) {
+    		this.imageData = imageData;
+    		this.imageDecoratorDef = imageDecoratorDef;
+    	}
+    	
+    	public ImageData getImageData() {
+    		return this.imageData;
+    	}
+    	
+    	public IDiagramImageDecoratorDef getImageDecoratorDef() {
+    		return this.imageDecoratorDef;
+    	}
+    	
     }
     
 }

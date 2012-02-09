@@ -43,6 +43,7 @@ to 0.5 release. Only changes from the previous release are covered.</p>
 
 <ol>
   <li><a href="#Actuator">Actuator</a></li>
+  <li><a href="#DiagramImage">Diagram Image</a></li>
 </ol>
 
 
@@ -100,6 +101,76 @@ process it was renamed as actuator.</p>
 <nobr>Search: &nbsp;&nbsp;(?s)&lt;action-link>(.*?)&lt;/action-link></nobr><br/>
 <nobr>Replace: &nbsp;&lt;actuator>\1&lt;/actuator></nobr></p>
 
+<h2><a name="DiagramImage">Diagram Image</a></h2>
+
+<p>Image specifications inside diagram parts are now consistent with the rest of the sdef. 
+Images are now referenced at the point of use, rather than defined separately and then referenced by id.</p> 
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;image-decorator>
+    &lt;id>defaultIndicator&lt;/id>
+    &lt;path>icons/default-indicator.png&lt;/path>
+&lt;/image-decorator>
+</code></pre>
+    </td>
+    <td>
+    Remove, path will be specified at the point of use.
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;image-decorator></font>
+    &lt;id>defaultIndicator&lt;/id>
+    <font color="#888888">&lt;decorator-placement>image&lt;/decorator-placement>
+    &lt;horizontal-align>center&lt;/horizontal-align>
+    &lt;vertical-align>top&lt;/vertical-align>
+&lt;/image-decorator></font>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;image-decorator></font>
+    &lt;path>icons/default-indicator.png&lt;/path>
+    <font color="#888888">&lt;decorator-placement>image&lt;/decorator-placement>
+    &lt;horizontal-align>center&lt;/horizontal-align>
+    &lt;vertical-align>top&lt;/vertical-align>
+&lt;/image-decorator></font>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;tool-palette-image>
+    &lt;id>flowPaletteImage&lt;/id>
+    &lt;path>icons/control-flow-16.png&lt;/path>
+&lt;/tool-palette-image>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;tool-palette-image>icons/control-flow-16.png&lt;/tool-palette-image>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;image>
+    &lt;id>routerIcon&lt;/id>
+    &lt;placement>top&lt;/placement>
+    &lt;possible>
+      &lt;id>routerIcon&lt;/id>
+      &lt;path>icons/node-router.png&lt;/path>
+    &lt;/possible>        
+&lt;/image>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;image>
+    &lt;path>icons/node-router.png&lt;/path>
+    &lt;placement>top&lt;/placement>
+&lt;/image>
+    </td>
+  </tr>
+</table>
 
 <div class="copyright">Copyright (c) 2012 Oracle<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>

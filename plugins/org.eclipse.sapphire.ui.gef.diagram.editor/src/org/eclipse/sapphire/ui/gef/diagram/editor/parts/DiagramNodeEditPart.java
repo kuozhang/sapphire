@@ -33,6 +33,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.SelectionRequest;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.gef.diagram.editor.commands.DoubleClickNodeCommand;
@@ -69,8 +70,8 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart
     
     @Override
 	protected IFigure createFigure() {
-    	String imageId = getCastedModel().getModelPart().getImageId();
-		return new NodeFigure(imageId != null, getCastedModel().getDiagramModel().getResourceCache());
+    	ImageData imageData = getCastedModel().getModelPart().getImage();
+		return new NodeFigure(imageData != null, getCastedModel().getDiagramModel().getResourceCache());
 	}
 
 	@Override

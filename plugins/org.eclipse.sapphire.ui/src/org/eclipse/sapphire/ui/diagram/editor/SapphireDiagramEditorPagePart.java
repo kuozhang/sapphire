@@ -24,6 +24,7 @@ import java.util.Set;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -39,7 +40,6 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 
@@ -66,6 +66,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     private boolean showGuides;
     private int gridUnit;
     private int verticalGridUnit;
+	private List<FunctionResult> connectionImageDataFunctionResults;
 
     @Override
     protected void init()
@@ -161,6 +162,26 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
             connectionTemplate.addTemplateListener(this.implicitConnTemplateListener);
         }
         
+        this.connectionImageDataFunctionResults = new ArrayList<FunctionResult>();
+        for (IDiagramConnectionDef connectionDef : this.connectionDefs)
+        {
+            FunctionResult imageResult = initExpression
+            ( 
+                this.modelElement,
+                connectionDef.getToolPaletteImage().getContent(),
+                ImageData.class,
+                null,
+                new Runnable()
+                {
+                    public void run()
+                    {
+                        broadcast( new ImageChangedEvent( SapphireDiagramEditorPagePart.this ) );
+                    }
+                }
+            );
+            this.connectionImageDataFunctionResults.add(imageResult);
+        }
+
         this.selection = this;
         this.propertiesViewContributionManager = new PropertiesViewContributionManager( this, this.modelElement );
                 
@@ -276,9 +297,21 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	return visible;
     }
     
-    public List<IDiagramConnectionDef> getDiagramConnectionDefs()
-    {
-        return this.connectionDefs;
+    public List<ConnectionPalette> getConnectionPalettes() {
+        List<ConnectionPalette> list = new ArrayList<ConnectionPalette>();
+        for (int i = 0; i < this.connectionImageDataFunctionResults.size(); i++)
+        {
+            FunctionResult result = this.connectionImageDataFunctionResults.get(i);
+            ImageData imageData = null;
+            if (result != null)
+            {
+               	imageData = (ImageData)result.value();
+            }
+        	IDiagramConnectionDef def = this.connectionDefs.get(i);
+            ConnectionPalette palette = new ConnectionPalette(imageData, def);
+            list.add(palette);
+        }
+        return list;
     }
     
     public IDiagramConnectionDef getDiagramConnectionDef(String connId)
@@ -412,6 +445,16 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     public void dispose() 
     {
         super.dispose();
+
+        for (int i = 0; i < this.connectionImageDataFunctionResults.size(); i++)
+        {
+            FunctionResult result = this.connectionImageDataFunctionResults.get(i);
+            if (result != null)
+            {
+                result.dispose();
+            }
+        }
+        
         disposeParts();
     }
     
@@ -744,4 +787,23 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         
     }
     
+    public final static class ConnectionPalette {
+    	
+    	ImageData imageData;
+    	IDiagramConnectionDef connectionDef;
+    	
+    	public ConnectionPalette(ImageData imageData, IDiagramConnectionDef connectionDef) {
+    		this.imageData = imageData;
+    		this.connectionDef = connectionDef;
+    	}
+    	
+    	public ImageData getImageData() {
+    		return this.imageData;
+    	}
+    	
+    	public IDiagramConnectionDef getConnectionDef() {
+    		return this.connectionDef;
+    	}
+    	
+    }
 }

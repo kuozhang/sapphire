@@ -1305,22 +1305,11 @@
                             <content>
                                 <property-editor>ToolPaletteCompartment</property-editor>
                                 <property-editor>ToolPaletteLabel</property-editor>
+                                <property-editor>ToolPaletteImage</property-editor>
                                 <property-editor>
                                     <property>ToolPaletteDescription</property>
                                     <height>90</height>
                                 </property-editor>
-                                <spacer />
-                                <with>
-                                    <path>ToolPaletteImage</path>
-                                    <label>specify tool palette item image</label>
-                                    <panel>
-                                        <key>IDiagramImageChoice</key>
-                                        <content>
-                                            <property-editor>ImageId</property-editor>
-                                            <property-editor>ImagePath</property-editor>
-                                        </content>
-                                    </panel>
-                                </with>
                             </content>
                         </section>
                         <label>${ ToolPaletteLabel == null ? &quot;&lt;node&gt;&quot; : ToolPaletteLabel }</label>
@@ -1333,15 +1322,10 @@
                                         <panel>
                                             <key>IDiagramNodeImageDef</key>
                                             <content>
-                                                <property-editor>Id</property-editor>
+                                                <property-editor>Image</property-editor>
                                                 <property-editor>Placement</property-editor>
                                                 <property-editor>Width</property-editor>
                                                 <property-editor>Height</property-editor>                                               
-                                                <property-editor>
-                                                    <property>PossibleImages</property>
-                                                    <child-property>ImageId</child-property>
-                                                    <child-property>ImagePath</child-property>
-                                                </property-editor>
                                             </content>
                                         </panel>
                                         <label>show node image</label>
@@ -1545,22 +1529,11 @@
                             <content>
                                 <property-editor>ToolPaletteCompartment</property-editor>
                                 <property-editor>ToolPaletteLabel</property-editor>
+                                <property-editor>ToolPaletteImage</property-editor>
                                 <property-editor>
                                     <property>ToolPaletteDescription</property>
                                     <height>90</height>
                                 </property-editor>
-                                <spacer />
-                                <with>
-                                    <path>ToolPaletteImage</path>
-                                    <label>specify tool palette item image</label>
-                                    <panel>
-                                        <key>IDiagramImageChoice</key>
-                                        <content>
-                                            <property-editor>ImageId</property-editor>
-                                            <property-editor>ImagePath</property-editor>
-                                        </content>
-                                    </panel>
-                                </with>
                             </content>
                         </section>
                         <section>

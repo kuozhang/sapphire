@@ -26,8 +26,8 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireConnectionRouter;
 import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramConfigurationManager;
-import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramImageCache;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -43,14 +43,12 @@ public class DiagramModel extends DiagramModelBase {
 	private List<DiagramNodeModel> nodes = new ArrayList<DiagramNodeModel>();
 	private List<DiagramConnectionModel> connections = new ArrayList<DiagramConnectionModel>();
 	
-	private DiagramImageCache imageCache;
 	private DiagramResourceCache resourceCache;
 
 	public DiagramModel(SapphireDiagramEditorPagePart part, DiagramConfigurationManager configManager) {
 		this.part = part;
 		this.configManager = configManager;
-		imageCache = new DiagramImageCache(part);
-		resourceCache = new DiagramResourceCache();
+		this.resourceCache = new DiagramResourceCache();
 
 		contructNodes();
 		constructConnections();
@@ -62,10 +60,6 @@ public class DiagramModel extends DiagramModelBase {
 
 	public SapphireDiagramEditorPagePart getModelPart() {
 		return this.part;
-	}
-	
-	public DiagramImageCache getImageCache() {
-		return imageCache;
 	}
 	
 	public DiagramResourceCache getResourceCache() {

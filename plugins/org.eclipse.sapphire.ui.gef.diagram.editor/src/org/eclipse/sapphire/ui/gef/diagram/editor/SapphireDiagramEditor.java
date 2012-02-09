@@ -403,7 +403,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	@Override
 	protected PaletteRoot getPaletteRoot() {
 		if (root == null)
-			root = new SapphirePaletteRoot(diagramPart, diagramModel.getImageCache());
+			root = new SapphirePaletteRoot(diagramPart);
 		return root;
 	}
 

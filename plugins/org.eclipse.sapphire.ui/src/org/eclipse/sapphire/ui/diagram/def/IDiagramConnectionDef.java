@@ -8,13 +8,12 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
+ *    Ling Hao - [44319] Image specification for diagram parts inconsistent with the rest of sdef 
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.def;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -27,6 +26,7 @@ import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.Color;
@@ -94,14 +94,16 @@ public interface IDiagramConnectionDef
         
     // *** ToolPaletteImage ***
 
-    @Type( base = IDiagramImageChoice.class )
+    @Type( base = Function.class )
     @Label( standard = "tool palette item image" )
     @XmlBinding( path = "tool-palette-image" )
     @Enablement( expr = "${!ImplicitConnection}" )
 
-    ElementProperty PROP_TOOL_PALETTE_IMAGE = new ElementProperty( TYPE, "ToolPaletteImage" );
+    ValueProperty PROP_TOOL_PALETTE_IMAGE = new ValueProperty( TYPE, "ToolPaletteImage" );
     
-    ModelElementHandle<IDiagramImageChoice> getToolPaletteImage();
+    Value<Function> getToolPaletteImage();
+    void setToolPaletteImage( String value );
+    void setToolPaletteImage( Function value );
     
     // *** ToolPaletteCompartment ***
 

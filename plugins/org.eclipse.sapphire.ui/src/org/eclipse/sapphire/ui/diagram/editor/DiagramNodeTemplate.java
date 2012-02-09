@@ -9,6 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
  *    Konstantin Komissarchik - [348813] Generalize Sapphire.Diagram.Drop action
+ *    Ling Hao - [44319] Image specification for diagram parts inconsistent with the rest of sdef 
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -23,6 +24,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -30,12 +32,12 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 
 /**
@@ -68,6 +70,7 @@ public class DiagramNodeTemplate extends SapphirePart
 	private JavaType modelElementType;
 	private String toolPaletteLabel;
 	private String toolPaletteDesc;
+	private FunctionResult toolPaletteImageFunctionResult;
 	private DiagramEmbeddedConnectionTemplate embeddedConnTemplate;
 	private ModelPropertyListener modelPropertyListener;
 	private SapphireDiagramPartListener nodePartListener;
@@ -127,6 +130,21 @@ public class DiagramNodeTemplate extends SapphirePart
             }
         }
 
+        this.toolPaletteImageFunctionResult = initExpression
+        (
+        	this.modelElement,
+            this.definition.getToolPaletteImage().getContent(),
+            ImageData.class,
+            null,
+            new Runnable()
+            {
+                public void run()
+                {
+                    broadcast( new ImageChangedEvent( DiagramNodeTemplate.this ) );
+                }
+            }
+        );
+
         // Add model property listener
         this.modelPropertyListener = new ModelPropertyListener()
         {
@@ -176,9 +194,9 @@ public class DiagramNodeTemplate extends SapphirePart
         return this.toolPaletteDesc;
     }
     
-    public IDiagramImageChoice getToolPaletteImage()
+    public ImageData getToolPaletteImage()
     {
-        return this.definition.getToolPaletteImage().element();
+        return (ImageData) this.toolPaletteImageFunctionResult.value();
     }
     
     public String getNodeTypeId()
@@ -400,6 +418,11 @@ public class DiagramNodeTemplate extends SapphirePart
         if (this.embeddedConnTemplate != null)
         {
             this.embeddedConnTemplate.dispose();
+        }
+        
+        if( this.toolPaletteImageFunctionResult != null )
+        {
+            this.toolPaletteImageFunctionResult.dispose();
         }
     }
     

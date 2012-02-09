@@ -28,16 +28,17 @@ import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.diagram.def.DiagramPaletteCompartmentConstants;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramImageChoice;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramPaletteCompartmentDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -46,12 +47,10 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 public class SapphirePaletteRoot extends PaletteRoot 
 {
 	private SapphireDiagramEditorPagePart diagramPart;
-	private DiagramImageCache imageCache;
 	
-	public SapphirePaletteRoot(SapphireDiagramEditorPagePart diagramPart, DiagramImageCache imageCache)
+	public SapphirePaletteRoot(SapphireDiagramEditorPagePart diagramPart)
 	{
 		this.diagramPart = diagramPart;
-		this.imageCache = imageCache;
 		updatePaletteEntries();
 	}
 	
@@ -64,10 +63,7 @@ public class SapphirePaletteRoot extends PaletteRoot
 	{
 		// remove old entries
 		setDefaultEntry(null);
-		List<PaletteEntry> allEntries = new ArrayList<PaletteEntry>(getChildren()); // MUST
-																					// make
-																					// a
-																					// copy
+		List<PaletteEntry> allEntries = new ArrayList<PaletteEntry>(getChildren()); // MUST make a copy
 		for (Iterator<PaletteEntry> iter = allEntries.iterator(); iter.hasNext();) 
 		{
 			PaletteEntry entry = iter.next();
@@ -76,8 +72,6 @@ public class SapphirePaletteRoot extends PaletteRoot
 		
 		// create new entries
 		IDiagramEditorPageDef diagramPageDef = (IDiagramEditorPageDef)diagramPart.definition();
-		//PaletteRoot palette = new PaletteRoot();
-		//palette.add(createModelIndependentTools(palette));
 		add(createModelIndependentTools());
 		
 		List<DiagramPaletteDrawer> drawers = new ArrayList<DiagramPaletteDrawer>();
@@ -113,11 +107,12 @@ public class SapphirePaletteRoot extends PaletteRoot
 			}
 		}
 		
-        for (IDiagramConnectionDef connDef : diagramPageDef.getDiagramConnectionDefs()) 
-        {
-            IDiagramImageChoice image = connDef.getToolPaletteImage().element();
-            ImageDescriptor imageDescriptor = imageCache.getImageDescriptor(image);
-            
+		for (SapphireDiagramEditorPagePart.ConnectionPalette connectionPalette : diagramPart.getConnectionPalettes()) 
+		{
+			IDiagramConnectionDef connDef = connectionPalette.getConnectionDef();
+			ImageData imageData = connectionPalette.getImageData();
+            ImageDescriptor imageDescriptor = SwtRendererUtil.toImageDescriptor(imageData);
+
             CreationFactory factory = new ConnectionCreationFactory(connDef);
 			String tpLabel = connDef.getToolPaletteLabel().getContent();
 			if (tpLabel != null)
@@ -146,14 +141,15 @@ public class SapphirePaletteRoot extends PaletteRoot
 			{
 				// TODO which case is this?? 
 			}
-        }
+		}
 		
         List<DiagramNodeTemplate> nodeTemplates = diagramPart.getVisibleNodeTemplates();
         for (DiagramNodeTemplate nodeTemplate : nodeTemplates) 
         {
         	IDiagramNodeDef nodeDef = nodeTemplate.definition();
-            IDiagramImageChoice image = nodeDef.getToolPaletteImage().element();
-            ImageDescriptor imageDescriptor = imageCache.getImageDescriptor(image);
+
+            final ImageData imageData = nodeTemplate.getToolPaletteImage();
+            ImageDescriptor imageDescriptor = SwtRendererUtil.toImageDescriptor(imageData);
 
             CreationFactory factory = new NodeCreationFactory(nodeTemplate);
 
