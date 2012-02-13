@@ -13,7 +13,7 @@
  ******************************************************************************
 -->
 
-<feature id="org.eclipse.sapphire.stage2" version="0.4.0.qualifier" label="Sapphire Build Stage 2" provider-name="Eclipse.org - Sapphire">
+<feature id="org.eclipse.sapphire.stage2" version="0.4.1.qualifier" label="Sapphire Build Stage 2" provider-name="Eclipse.org - Sapphire">
 
     <plugin download-size="0" id="org.eclipse.sapphire.modeling" install-size="0" unpack="false" version="0.0.0"/>
     <plugin download-size="0" id="org.eclipse.sapphire.modeling.xml" install-size="0" unpack="false" version="0.0.0"/>
