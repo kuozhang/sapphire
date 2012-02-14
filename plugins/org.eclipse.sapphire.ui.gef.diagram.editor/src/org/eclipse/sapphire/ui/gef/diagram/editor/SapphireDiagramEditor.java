@@ -9,16 +9,18 @@
  *    Ling Hao - initial implementation and ongoing maintenance
  *    Shenxue Zhou - Customized grid layer, grid state save and restore; 
  *                   DND fixes.
+ *    Shenxue Zhou - [bugzilla 365019] - SapphireDiagramEditor does not work on 
+ *                   non-workspace files 
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.gef.diagram.editor;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -427,7 +429,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 
 		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput)input;
 		//IFile diagramFile = diagramInput.getDiagramFile();
-		IFile layoutFile = diagramInput.getLayoutFile();
+		File layoutFile = diagramInput.getLayoutFile();
 		diagramGeometry = new DiagramGeometryWrapper(layoutFile, getPart());
 		
 		if (this.diagramGeometry.isGridPropertySet())

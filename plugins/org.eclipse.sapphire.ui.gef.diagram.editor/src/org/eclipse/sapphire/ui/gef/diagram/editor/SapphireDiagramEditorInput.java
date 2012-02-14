@@ -11,7 +11,8 @@
 
 package org.eclipse.sapphire.ui.gef.diagram.editor;
 
-import org.eclipse.core.resources.IFile;
+import java.io.File;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IMemento;
@@ -23,32 +24,25 @@ import org.eclipse.ui.IPersistableElement;
 
 public class SapphireDiagramEditorInput implements IEditorInput, IPersistableElement
 {
-	private IFile diagramFile;
-    private IFile layoutFile;
+    private File layoutFile;
     private String providerId;
     private boolean noExistingLayout;
 
-    public SapphireDiagramEditorInput(IFile file, String providerId) {
-    	this.diagramFile = file;
+    public SapphireDiagramEditorInput(String providerId) 
+    {
     	this.providerId = providerId;
     }
     
-    public IFile getLayoutFile()
+    public File getLayoutFile()
     {
         return this.layoutFile;
     }
     
-    public void setLayoutFile(IFile file)
+    public void setLayoutFile(File file)
     {
         this.layoutFile = file;
     }
-    
-    public IFile getDiagramFile() 
-    {
-    	return this.diagramFile;
-    }
-    
-    
+        
     public boolean noExistingLayout()
     {
     	return this.noExistingLayout;
@@ -59,10 +53,10 @@ public class SapphireDiagramEditorInput implements IEditorInput, IPersistableEle
     	this.noExistingLayout = value;
     }
 
-	public static SapphireDiagramEditorInput createEditorInput(IFile file, String providerId) 
+	public static SapphireDiagramEditorInput createEditorInput(String providerId) 
     {
         SapphireDiagramEditorInput diagramEditorInput;
-        diagramEditorInput = new SapphireDiagramEditorInput(file, providerId);
+        diagramEditorInput = new SapphireDiagramEditorInput(providerId);
         return diagramEditorInput;
     }
 

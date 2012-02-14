@@ -7,14 +7,17 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - [bugzilla 365019] - SapphireDiagramEditor does not work on 
+ *                   non-workspace files 
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.gef.diagram.editor;
 
+import java.io.File;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.sapphire.modeling.FileResourceStore;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
@@ -33,7 +36,6 @@ import org.eclipse.sapphire.ui.diagram.geometry.IDiagramConnectionGeometry;
 import org.eclipse.sapphire.ui.diagram.geometry.IDiagramGeometry;
 import org.eclipse.sapphire.ui.diagram.geometry.IDiagramNodeGeometry;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
 
 /**
  * Copied from org.eclipse.sapphire.ui.swt.graphiti
@@ -42,11 +44,11 @@ import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
 
 public class DiagramGeometryWrapper 
 {
-	private IFile file;
+	private File file;
 	private IDiagramGeometry geometryModel;
 	private SapphireDiagramEditorPagePart diagramPart;
 		
-	public DiagramGeometryWrapper(IFile file, SapphireDiagramEditorPagePart diagramPart)
+	public DiagramGeometryWrapper(File file, SapphireDiagramEditorPagePart diagramPart)
 	{
 		if (file == null)
 		{
@@ -97,8 +99,7 @@ public class DiagramGeometryWrapper
 
 	public void read() throws ResourceStoreException, CoreException
 	{
-		this.file.refreshLocal(0, null);
-		final XmlResourceStore resourceStore = new XmlResourceStore( new WorkspaceFileResourceStore(this.file ));
+		final XmlResourceStore resourceStore = new XmlResourceStore( new FileResourceStore(this.file ));
 		this.geometryModel = IDiagramGeometry.TYPE.instantiate(new RootXmlResource( resourceStore ));
 
 		ModelElementList<IDiagramNodeGeometry> nodes = this.geometryModel.getDiagramNodeGeometries();

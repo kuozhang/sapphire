@@ -8,6 +8,8 @@
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
+ *    Shenxue Zhou - [bugzilla 365019] - SapphireDiagramEditor does not work on 
+ *                   non-workspace files 
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -584,7 +586,7 @@ public abstract class SapphireEditor
     {
         final IResourceDelta delta = event.getDelta();
         
-        if( delta != null )
+        if( delta != null && getFile() != null )
         {
             final IResourceDelta localDelta = delta.findMember( getFile().getFullPath() );
             

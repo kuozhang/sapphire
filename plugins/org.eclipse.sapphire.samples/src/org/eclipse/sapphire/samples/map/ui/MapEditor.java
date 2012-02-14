@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.samples.map.ui;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -26,7 +25,6 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditorInput;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.xml.editor.XmlEditorResourceStore;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 /**
@@ -50,9 +48,8 @@ public class MapEditor extends SapphireEditor
     {
         this.mapSourceEditor = new StructuredTextEditor();
         this.mapSourceEditor.setEditorPart(this);
-        final FileEditorInput rootEditorInput = (FileEditorInput) getEditorInput();
         
-        int index = addPage( this.mapSourceEditor, rootEditorInput );
+        int index = addPage( this.mapSourceEditor, getEditorInput() );
         setPageText( index, "map.xml" );
     }
 
@@ -71,7 +68,7 @@ public class MapEditor extends SapphireEditor
         SapphireDiagramEditorInput diagramEditorInput = null;
         try
         {
-            diagramEditorInput = SapphireDiagramEditorFactory.createEditorInput(this.modelMap.adapt(IFile.class), null, false);
+        	diagramEditorInput = SapphireDiagramEditorFactory.createEditorInput(getEditorInput(), null, false);
         }
         catch (Exception e)
         {

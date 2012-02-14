@@ -7,11 +7,11 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation
+ *    Shenxue Zhou - handle external file input
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.architecture.ui;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -20,13 +20,12 @@ import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.samples.architecture.IArchitecture;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditorFactory;
 import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditorInput;
+import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.xml.editor.XmlEditorResourceStore;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 /**
@@ -50,9 +49,8 @@ public final class ArchitectureEditor extends SapphireEditor
     {
         this.pageSource = new StructuredTextEditor();
         this.pageSource.setEditorPart( this );
-        final FileEditorInput rootEditorInput = (FileEditorInput) getEditorInput();
         
-        int index = addPage( this.pageSource, rootEditorInput );
+        int index = addPage( this.pageSource, getEditorInput() );
         setPageText( index, "Source" );
     }
 
@@ -72,7 +70,7 @@ public final class ArchitectureEditor extends SapphireEditor
         
         try
         {
-            diagramEditorInput = SapphireDiagramEditorFactory.createEditorInput( this.model.adapt( IFile.class ) );
+            diagramEditorInput = SapphireDiagramEditorFactory.createEditorInput( getEditorInput() );
         }
         catch( Exception e )
         {
