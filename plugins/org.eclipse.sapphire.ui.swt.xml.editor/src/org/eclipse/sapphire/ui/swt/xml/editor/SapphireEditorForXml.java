@@ -42,6 +42,11 @@ public abstract class SapphireEditorForXml extends SapphireEditor
         super( pluginId );
     }
     
+    public final StructuredTextEditor getXmlEditor()
+    {
+        return this.sourceEditor;
+    }
+    
     public final String getEditorDefinitionPath()
     {
         return this.editorDefinitionPath;
