@@ -315,6 +315,47 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
             };
             
             part.addListener( this.editorPagePartListener );
+            
+            this.partListener = new IPartListener2()
+            {
+                public void partActivated( final IWorkbenchPartReference partRef )
+                {
+                }
+
+                public void partBroughtToTop( final IWorkbenchPartReference partRef )
+                {
+                }
+
+                public void partClosed( final IWorkbenchPartReference partRef )
+                {
+                    if( ! isDetailsMaximized() )
+                    {
+                        setOutlineRatioCookie( MasterDetailsEditorPage.this.mainSection.getOutlineRatio() );
+                    }
+                }
+
+                public void partDeactivated( final IWorkbenchPartReference partRef )
+                {
+                }
+
+                public void partOpened( final IWorkbenchPartReference partRef )
+                {
+                }
+
+                public void partHidden( final IWorkbenchPartReference partRef )
+                {
+                }
+
+                public void partVisible( final IWorkbenchPartReference partRef )
+                {
+                }
+
+                public void partInputChanged( final IWorkbenchPartReference partRef )
+                {
+                }
+            };
+            
+            getSite().getPage().addPartListener( this.partListener );
         }
         catch( final Exception e )
         {
@@ -342,9 +383,21 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
                 msgAndShowStackTraceLinkComposite.setLayout( glayout( 2, 0, 0 ) );
                 msgAndShowStackTraceLinkComposite.setBackground( bgcolor );
                 
+                String message = e.getMessage();
+                
+                if( message == null )
+                {
+                    message = e.getClass().getName();
+                }
+                else
+                {
+                    message = message.replace( "&", "&amp;" );
+                    message = message.replace( "<", "&lt;" );
+                }
+                
                 final SapphireFormText text = new SapphireFormText( msgAndShowStackTraceLinkComposite, SWT.NONE );
                 text.setLayoutData( gdhfill() );
-                text.setText( "<form><li style=\"image\" value=\"error\">" + e.getMessage() + "</li></form>", true, false );
+                text.setText( "<form><li style=\"image\" value=\"error\">" + message + "</li></form>", true, false );
                 text.setImage( "error", ImageData.createFromClassLoader( SapphireImageCache.class, "Error.png" ) );
                 text.setBackground( bgcolor );
 
@@ -380,47 +433,6 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
                 );
             }
         }
-        
-        this.partListener = new IPartListener2()
-        {
-            public void partActivated( final IWorkbenchPartReference partRef )
-            {
-            }
-
-            public void partBroughtToTop( final IWorkbenchPartReference partRef )
-            {
-            }
-
-            public void partClosed( final IWorkbenchPartReference partRef )
-            {
-                if( ! isDetailsMaximized() )
-                {
-                    setOutlineRatioCookie( MasterDetailsEditorPage.this.mainSection.getOutlineRatio() );
-                }
-            }
-
-            public void partDeactivated( final IWorkbenchPartReference partRef )
-            {
-            }
-
-            public void partOpened( final IWorkbenchPartReference partRef )
-            {
-            }
-
-            public void partHidden( final IWorkbenchPartReference partRef )
-            {
-            }
-
-            public void partVisible( final IWorkbenchPartReference partRef )
-            {
-            }
-
-            public void partInputChanged( final IWorkbenchPartReference partRef )
-            {
-            }
-        };
-        
-        getSite().getPage().addPartListener( this.partListener );
     }
     
     public IContentOutlinePage getContentOutlinePage()
@@ -489,6 +501,21 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
         }
     }
     
+    @Override
+    public void setActive( final boolean active )
+    {
+        if( this.mainSection != null )
+        {
+            super.setActive( active );
+        }
+    }
+    
+    @Override
+    public boolean isDirty()
+    {
+        return false;
+    }
+
     @Override
     public void setFocus()
     {
