@@ -363,7 +363,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
         }
     }
 
-    protected List<IModelElement> getModelElements( final Node xmlNode )
+    public final List<IModelElement> getModelElements( final Node xmlNode )
     {
         synchronized( this.nodeToModelElementsMap )
         {
@@ -379,6 +379,10 @@ public class XmlEditorResourceStore extends XmlResourceStore
             if( elements == null )
             {
                 elements = Collections.singletonList( this.rootModelElement );
+            }
+            else
+            {
+                elements = Collections.unmodifiableList( elements );
             }
             
             return elements;
