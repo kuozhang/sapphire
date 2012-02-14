@@ -68,7 +68,7 @@ public class MapEditor extends SapphireEditor
         SapphireDiagramEditorInput diagramEditorInput = null;
         try
         {
-        	diagramEditorInput = SapphireDiagramEditorFactory.createEditorInput(getEditorInput(), null, false);
+        	diagramEditorInput = SapphireDiagramEditorFactory.createEditorInput(getEditorInput());
         }
         catch (Exception e)
         {
