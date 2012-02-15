@@ -25,6 +25,7 @@
   <ol type="A">
     <li><a href="#MoreFlexibleActuatorPresentation">More Flexible Actuator Presentation</a></li>
   </ol>
+  <li><a href="#DiagramLayout">Diagram Layout Storage</li>
 </ol>
 
 
@@ -55,6 +56,14 @@ along with ability to control horizontal alignment.</p>
 
 <p style="margin-left: 20px;"><img src="images/MoreFlexibleActuatorPresentation.png"/></p>
 
+<h2><a name="DiagramLayout">More Flexible Diagram Layout Storage</a></h2>
+
+<p>Diagram Editor can now open workspace files, non-workspace files and non-local files. Developer can
+choose to store diagram's layout information in a separate file in the same folder as the file being
+edited, or a computed unique folder in project's .setting directory for workspace files. For non-workspace
+files, the layout file will be stored in a folder under the current workspace's .metadata directory.</p>
+
+<p>The diagram layout storage location is controlled by diagram page definition's "SideBySideLayoutStorage" property.</p>
 
 <div class="copyright">Copyright (c) 2012 Oracle and Other Contributors<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
