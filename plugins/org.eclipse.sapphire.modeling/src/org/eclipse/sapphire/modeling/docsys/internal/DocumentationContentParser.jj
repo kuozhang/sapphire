@@ -31,6 +31,7 @@ TOKEN : { < BOLD_OPEN : "[b]" > }
 TOKEN : { < BOLD_CLOSE : "[/b]" > }
 TOKEN : { < CODE_OPEN : "[code]" > }
 TOKEN : { < CODE_CLOSE : "[/code]" > }
+TOKEN : { < WHITESPACE : ( " " | "\t" | "\n" | "\r" )* > }
 TOKEN : { < CHARACTER : ~[] > }
 
 DocumentationContent Start() :
@@ -94,11 +95,13 @@ DocumentationPart Part() :
             list = new UnorderedListPart();
             part = list;
         }
+        <WHITESPACE>
         (
             item = ListItem()
             {
                 list.addItem( item );
             }
+            <WHITESPACE>
         )*
         <UL_CLOSE>
     |
@@ -107,11 +110,13 @@ DocumentationPart Part() :
             list = new OrderedListPart();
             part = list;
         }
+        <WHITESPACE>
         (
             item = ListItem()
             {
                 list.addItem( item );
             }
+            <WHITESPACE>
         )*
         <OL_CLOSE>
     |
@@ -152,6 +157,11 @@ TextPart Text() :
 {
     (
         token = <CHARACTER>
+        {
+            buf.append( token.image );
+        }
+    |
+        token = <WHITESPACE>
         {
             buf.append( token.image );
         }
