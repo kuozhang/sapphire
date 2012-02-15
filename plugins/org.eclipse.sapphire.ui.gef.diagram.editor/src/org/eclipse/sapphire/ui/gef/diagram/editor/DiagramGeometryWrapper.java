@@ -9,6 +9,9 @@
  *    Ling Hao - initial implementation and ongoing maintenance
  *    Shenxue Zhou - [bugzilla 365019] - SapphireDiagramEditor does not work on 
  *                   non-workspace files 
+ *                 - [371576] - Add support for SapphireDigramEditor loading
+ *    				 non-local files
+ *                   
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.gef.diagram.editor;
@@ -50,12 +53,9 @@ public class DiagramGeometryWrapper
 		
 	public DiagramGeometryWrapper(File file, SapphireDiagramEditorPagePart diagramPart)
 	{
-		if (file == null)
-		{
-			throw new IllegalArgumentException();
-		}
 		this.file = file;
 		this.diagramPart = diagramPart;
+		this.geometryModel = null;
 	
 		try
 		{
@@ -69,36 +69,46 @@ public class DiagramGeometryWrapper
 	
 	public boolean isGridPropertySet()
 	{
-		return this.geometryModel.getGridDefinition().isVisible().getContent(false) != null;
+		return this.geometryModel != null && this.geometryModel.getGridDefinition().isVisible().getContent(false) != null;
 	}
 	
 	public boolean isGridVisible()
 	{
-		return this.geometryModel.getGridDefinition().isVisible().getContent();
+		return this.geometryModel != null && this.geometryModel.getGridDefinition().isVisible().getContent();
 	}
 	
 	public void setGridVisible(boolean visible)
 	{
-		this.geometryModel.getGridDefinition().setVisible(visible);
+		if (this.geometryModel != null)
+		{
+			this.geometryModel.getGridDefinition().setVisible(visible);
+		}
 	}
 		
 	public boolean isShowGuidesPropertySet()
 	{
-		return this.geometryModel.getGuidesDefinition().isVisible().getContent(false) != null;
+		return this.geometryModel != null && this.geometryModel.getGuidesDefinition().isVisible().getContent(false) != null;
 	}
 	
 	public boolean isShowGuides()
 	{
-		return this.geometryModel.getGuidesDefinition().isVisible().getContent();
+		return this.geometryModel != null && this.geometryModel.getGuidesDefinition().isVisible().getContent();
 	}
 	
 	public void setShowGuides(boolean visible)
 	{
-		this.geometryModel.getGuidesDefinition().setVisible(visible);
+		if (this.geometryModel != null)
+		{
+			this.geometryModel.getGuidesDefinition().setVisible(visible);
+		}
 	}
 
 	public void read() throws ResourceStoreException, CoreException
 	{
+		if (this.file == null)
+		{
+			return;
+		}
 		final XmlResourceStore resourceStore = new XmlResourceStore( new FileResourceStore(this.file ));
 		this.geometryModel = IDiagramGeometry.TYPE.instantiate(new RootXmlResource( resourceStore ));
 
@@ -165,6 +175,10 @@ public class DiagramGeometryWrapper
 	
 	public void write() throws ResourceStoreException
 	{		
+		if (this.geometryModel == null)
+		{
+			return;
+		}
 		this.geometryModel.getGridDefinition().setVisible(this.diagramPart.isGridVisible());
 		this.geometryModel.getGuidesDefinition().setVisible(this.diagramPart.isShowGuides());
 		addNodeBoundsToModel();

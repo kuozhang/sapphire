@@ -9,6 +9,8 @@
  *    Ling Hao - initial implementation and ongoing maintenance
  *    Shenxue Zhou - [bugzilla 365019] - SapphireDiagramEditor does not work on 
  *                   non-workspace files 
+ *    Gregory Amerson - [371576] - Add support for SapphireDigramEditor loading
+ *    				 non-local files
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.gef.diagram.editor;
@@ -24,12 +26,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.modeling.StatusException;
 import org.eclipse.sapphire.modeling.util.internal.FileUtil;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 
@@ -67,7 +71,19 @@ public class SapphireDiagramEditorFactory
     		FileStoreEditorInput fileStoreInput = (FileStoreEditorInput)input;
     		return createEditorInput(fileStoreInput.getURI(), diagramPageId, sideBySideLayoutFile);
     	}
-    	return null;
+		else if ( input instanceof IStorageEditorInput )
+		{
+			IStorageEditorInput storageEditorInput = (IStorageEditorInput) input;
+			return createEditorInput( storageEditorInput.getStorage(), diagramPageId, sideBySideLayoutFile );
+		}
+		else
+		{
+			// Could not determine the layout file folder, we'll not persist the layout and 
+			// let auto layout do the work.
+	        final SapphireDiagramEditorInput diagramEditorInput = SapphireDiagramEditorInput.createEditorInput(SAPPHIRE_DIAGRAM_TYPE);
+	        diagramEditorInput.setNoExistingLayout(true);
+	        return diagramEditorInput;			
+		}
     }
     
     public static SapphireDiagramEditorInput createEditorInput(IFile file, String diagramPageId, boolean sideBySideLayoutFile) 
@@ -96,18 +112,17 @@ public class SapphireDiagramEditorFactory
         
         // compute layout folder path
         
-        IFolder diagramSettingRootFolder = project.getFolder(".settings/org.eclipse.sapphire.ui.diagram/");                    
-        IPath diagramSettingFolderPath = diagramSettingRootFolder.getProjectRelativePath().append(inputFilePath);
-        IFolder diagramSettingFolder = project.getFolder(diagramSettingFolderPath);
-        if (!diagramSettingFolder.exists())
-        {
-            FileUtil.mkdirs(diagramSettingFolder.getLocation().toFile());
-            diagramSettingFolder.refreshLocal(IResource.DEPTH_ONE, null);
-        }
-        
         IFolder layoutFolder;
         if (!sideBySideLayoutFile)
         {
+            IFolder diagramSettingRootFolder = project.getFolder(".settings/org.eclipse.sapphire.ui.diagram/");                    
+            IPath diagramSettingFolderPath = diagramSettingRootFolder.getProjectRelativePath().append(inputFilePath);
+            IFolder diagramSettingFolder = project.getFolder(diagramSettingFolderPath);
+            if (!diagramSettingFolder.exists())
+            {
+                FileUtil.mkdirs(diagramSettingFolder.getLocation().toFile());
+                diagramSettingFolder.refreshLocal(IResource.DEPTH_ONE, null);
+            }
             layoutFolder = diagramSettingFolder;
         }
         else
@@ -157,12 +172,43 @@ public class SapphireDiagramEditorFactory
         }
         
         // compute layout folder path
-        String parentPath = localFile.getParentFile().getCanonicalPath();
-        int index = parentPath.indexOf(':');
-        if (index != 0)
+        File layoutFolder;
+        if (!sideBySideLayoutFile)
         {
-        	parentPath = parentPath.substring(0, index) + parentPath.substring(index + 1);
+	        String parentPath = localFile.getParentFile().getCanonicalPath();
+	        int index = parentPath.indexOf(':');
+	        if (index != 0)
+	        {
+	        	parentPath = parentPath.substring(0, index) + parentPath.substring(index + 1);
+	        }
+	        File file = ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
+	        file = new File(file, ".metadata/.plugins/org.eclipse.sapphire.ui.gef.diagram.editor/layout");
+	        layoutFolder = new File(file, parentPath);
+	        if (!layoutFolder.exists())
+	        {
+	        	FileUtil.mkdirs(layoutFolder);
+	        }	        
         }
+        else
+        {
+        	layoutFolder = localFile.getParentFile();
+        }
+		return createEditorInputFromPath( fileName, layoutFolder );
+	}
+
+	public static SapphireDiagramEditorInput createEditorInput(
+		IStorage storage, String diagramPageId, boolean sideBySideLayoutFile ) throws StatusException, CoreException,
+		IOException
+	{
+		IPath storagePath = storage.getFullPath();
+		String fileName = storagePath.lastSegment();
+
+		String parentPath = storagePath.toOSString();
+		int index = parentPath.indexOf( ':' );
+		if ( index > 0 )
+		{
+			parentPath = parentPath.substring( 0, index ) + parentPath.substring( index + 1 );
+		}
         File file = ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
         file = new File(file, ".metadata/.plugins/org.eclipse.sapphire.ui.gef.diagram.editor/layout");
         File layoutFolder = new File(file, parentPath);
@@ -170,6 +216,13 @@ public class SapphireDiagramEditorFactory
         {
         	FileUtil.mkdirs(layoutFolder);
         }
+
+		return createEditorInputFromPath( fileName, layoutFolder );
+	}
+
+	private static SapphireDiagramEditorInput createEditorInputFromPath( String fileName, File layoutFolder )
+		throws StatusException, IOException
+	{
         // create diagram layout file if it doesn't exist
         boolean existingLayout = true;
         File layoutFile = new File(layoutFolder, fileName + ".layout");

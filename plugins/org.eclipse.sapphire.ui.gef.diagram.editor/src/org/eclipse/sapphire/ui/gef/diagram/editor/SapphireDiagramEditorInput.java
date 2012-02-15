@@ -31,6 +31,8 @@ public class SapphireDiagramEditorInput implements IEditorInput, IPersistableEle
     public SapphireDiagramEditorInput(String providerId) 
     {
     	this.providerId = providerId;
+    	this.layoutFile = null;
+    	this.noExistingLayout = true;
     }
     
     public File getLayoutFile()

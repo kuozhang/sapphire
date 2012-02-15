@@ -19,6 +19,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.samples.architecture.IArchitecture;
 import org.eclipse.sapphire.ui.SapphireEditor;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
 import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditorFactory;
@@ -70,7 +71,9 @@ public final class ArchitectureEditor extends SapphireEditor
         
         try
         {
-            diagramEditorInput = SapphireDiagramEditorFactory.createEditorInput( getEditorInput() );
+        	IDiagramEditorPageDef pageDef = this.pageDiagram.getDiagramEditorPageDef();
+        	boolean sideBySideLayout = pageDef.isSideBySideLayoutStorage().getContent();        	
+            diagramEditorInput = SapphireDiagramEditorFactory.createEditorInput( getEditorInput(), null, sideBySideLayout );
         }
         catch( Exception e )
         {

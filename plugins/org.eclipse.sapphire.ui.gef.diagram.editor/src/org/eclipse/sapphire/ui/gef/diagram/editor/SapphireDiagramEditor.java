@@ -220,6 +220,11 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		this.diagramPart.addListener(this.diagramPartListener);
     }
     
+    public IDiagramEditorPageDef getDiagramEditorPageDef()
+    {
+    	return this.diagramPageDef;
+    }
+    
 	@Override
 	public boolean isDirty()
 	{
@@ -428,7 +433,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		setEditDomain(new DefaultEditDomain(this));
 
 		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput)input;
-		//IFile diagramFile = diagramInput.getDiagramFile();
 		File layoutFile = diagramInput.getLayoutFile();
 		diagramGeometry = new DiagramGeometryWrapper(layoutFile, getPart());
 		
