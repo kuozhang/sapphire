@@ -9,7 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.geometry;
+package org.eclipse.sapphire.ui.diagram.layout;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -29,9 +29,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @GenerateImpl
 
-public interface IDiagramNodeGeometry extends IModelElement
+public interface DiagramNodeLayout extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IDiagramNodeGeometry.class );
+    ModelElementType TYPE = new ModelElementType( DiagramNodeLayout.class );
     
     // *** NodeId ***
     
@@ -89,12 +89,12 @@ public interface IDiagramNodeGeometry extends IModelElement
     
     // *** EmbeddedConnectionGeometries ***
 
-    @Type( base = IDiagramConnectionGeometry.class )
+    @Type( base = DiagramConnectionLayout.class )
     
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "connection", type = IDiagramConnectionGeometry.class ) )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "connection", type = DiagramConnectionLayout.class ) )
     
     ListProperty PROP_EMBEDDED_CONNECTION_GEOMETRIES = new ListProperty( TYPE, "EmbeddedConnectionGeometries" );
     
-    ModelElementList<IDiagramConnectionGeometry> getEmbeddedConnectionGeometries();    
+    ModelElementList<DiagramConnectionLayout> getEmbeddedConnectionGeometries();    
     
 }

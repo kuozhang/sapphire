@@ -34,10 +34,10 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.IdUtil;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.diagram.geometry.IBendPoint;
-import org.eclipse.sapphire.ui.diagram.geometry.IDiagramConnectionGeometry;
-import org.eclipse.sapphire.ui.diagram.geometry.IDiagramGeometry;
-import org.eclipse.sapphire.ui.diagram.geometry.IDiagramNodeGeometry;
+import org.eclipse.sapphire.ui.diagram.layout.DiagramBendPointLayout;
+import org.eclipse.sapphire.ui.diagram.layout.DiagramConnectionLayout;
+import org.eclipse.sapphire.ui.diagram.layout.DiagramLayout;
+import org.eclipse.sapphire.ui.diagram.layout.DiagramNodeLayout;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
@@ -45,13 +45,13 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class DiagramGeometryWrapper 
+public class DiagramLayoutWrapper 
 {
 	private File file;
-	private IDiagramGeometry geometryModel;
+	private DiagramLayout geometryModel;
 	private SapphireDiagramEditorPagePart diagramPart;
 		
-	public DiagramGeometryWrapper(File file, SapphireDiagramEditorPagePart diagramPart)
+	public DiagramLayoutWrapper(File file, SapphireDiagramEditorPagePart diagramPart)
 	{
 		this.file = file;
 		this.diagramPart = diagramPart;
@@ -69,37 +69,37 @@ public class DiagramGeometryWrapper
 	
 	public boolean isGridPropertySet()
 	{
-		return this.geometryModel != null && this.geometryModel.getGridDefinition().isVisible().getContent(false) != null;
+		return this.geometryModel != null && this.geometryModel.getGridLayout().isVisible().getContent(false) != null;
 	}
 	
 	public boolean isGridVisible()
 	{
-		return this.geometryModel != null && this.geometryModel.getGridDefinition().isVisible().getContent();
+		return this.geometryModel != null && this.geometryModel.getGridLayout().isVisible().getContent();
 	}
 	
 	public void setGridVisible(boolean visible)
 	{
 		if (this.geometryModel != null)
 		{
-			this.geometryModel.getGridDefinition().setVisible(visible);
+			this.geometryModel.getGridLayout().setVisible(visible);
 		}
 	}
 		
 	public boolean isShowGuidesPropertySet()
 	{
-		return this.geometryModel != null && this.geometryModel.getGuidesDefinition().isVisible().getContent(false) != null;
+		return this.geometryModel != null && this.geometryModel.getGuidesLayout().isVisible().getContent(false) != null;
 	}
 	
 	public boolean isShowGuides()
 	{
-		return this.geometryModel != null && this.geometryModel.getGuidesDefinition().isVisible().getContent();
+		return this.geometryModel != null && this.geometryModel.getGuidesLayout().isVisible().getContent();
 	}
 	
 	public void setShowGuides(boolean visible)
 	{
 		if (this.geometryModel != null)
 		{
-			this.geometryModel.getGuidesDefinition().setVisible(visible);
+			this.geometryModel.getGuidesLayout().setVisible(visible);
 		}
 	}
 
@@ -110,10 +110,10 @@ public class DiagramGeometryWrapper
 			return;
 		}
 		final XmlResourceStore resourceStore = new XmlResourceStore( new FileResourceStore(this.file ));
-		this.geometryModel = IDiagramGeometry.TYPE.instantiate(new RootXmlResource( resourceStore ));
+		this.geometryModel = DiagramLayout.TYPE.instantiate(new RootXmlResource( resourceStore ));
 
-		ModelElementList<IDiagramNodeGeometry> nodes = this.geometryModel.getDiagramNodeGeometries();
-		for (IDiagramNodeGeometry node : nodes)
+		ModelElementList<DiagramNodeLayout> nodes = this.geometryModel.getDiagramNodesLayout();
+		for (DiagramNodeLayout node : nodes)
 		{
 			String id = node.getNodeId().getContent();
 			DiagramNodePart nodePart = IdUtil.getNodePart(this.diagramPart, id);
@@ -125,16 +125,16 @@ public class DiagramGeometryWrapper
 				int height = node.getHeight().getContent() != null ? node.getHeight().getContent() : -1;
 				nodePart.setNodeBounds(x, y, width, height);
 				
-				ModelElementList<IDiagramConnectionGeometry> connList = node.getEmbeddedConnectionGeometries();
-				for (IDiagramConnectionGeometry connGeometry : connList)
+				ModelElementList<DiagramConnectionLayout> connList = node.getEmbeddedConnectionGeometries();
+				for (DiagramConnectionLayout connGeometry : connList)
 				{
 					String connId = connGeometry.getConnectionId().getContent();
 					DiagramConnectionPart connPart = IdUtil.getConnectionPart(nodePart, connId);
 					if (connPart != null)
 					{
-						ModelElementList<IBendPoint> bps = connGeometry.getConnectionBendpoints();
+						ModelElementList<DiagramBendPointLayout> bps = connGeometry.getConnectionBendpoints();
 						int index = 0;
-						for (IBendPoint pt : bps)
+						for (DiagramBendPointLayout pt : bps)
 						{
 							connPart.addBendpoint(index++, pt.getX().getContent(), pt.getY().getContent());
 						}
@@ -150,23 +150,23 @@ public class DiagramGeometryWrapper
 			}
 		}
 		
-		ModelElementList<IDiagramConnectionGeometry> connList = this.geometryModel.getDiagramConnectionGeometries();
-		for (IDiagramConnectionGeometry connGeometry : connList)
+		ModelElementList<DiagramConnectionLayout> connList = this.geometryModel.getDiagramConnectionsLayout();
+		for (DiagramConnectionLayout connLayout : connList)
 		{
-			String connId = connGeometry.getConnectionId().getContent();
+			String connId = connLayout.getConnectionId().getContent();
 			DiagramConnectionPart connPart = IdUtil.getConnectionPart(this.diagramPart, connId);
 			if (connPart != null)
 			{
-				ModelElementList<IBendPoint> bps = connGeometry.getConnectionBendpoints();
+				ModelElementList<DiagramBendPointLayout> bps = connLayout.getConnectionBendpoints();
 				int index = 0;
-				for (IBendPoint pt : bps)
+				for (DiagramBendPointLayout pt : bps)
 				{
 					connPart.addBendpoint(index++, pt.getX().getContent(), pt.getY().getContent());
 				}
-				if (connGeometry.getLabelX().getContent() != null && connGeometry.getLabelY().getContent() != null)
+				if (connLayout.getLabelX().getContent() != null && connLayout.getLabelY().getContent() != null)
 				{
-					connPart.setLabelPosition(connGeometry.getLabelX().getContent(), 
-							connGeometry.getLabelY().getContent());
+					connPart.setLabelPosition(connLayout.getLabelX().getContent(), 
+							connLayout.getLabelY().getContent());
 				}
 				
 			}			
@@ -179,8 +179,8 @@ public class DiagramGeometryWrapper
 		{
 			return;
 		}
-		this.geometryModel.getGridDefinition().setVisible(this.diagramPart.isGridVisible());
-		this.geometryModel.getGuidesDefinition().setVisible(this.diagramPart.isShowGuides());
+		this.geometryModel.getGridLayout().setVisible(this.diagramPart.isGridVisible());
+		this.geometryModel.getGuidesLayout().setVisible(this.diagramPart.isShowGuides());
 		addNodeBoundsToModel();
 		addConnectionsToModel();
 		this.geometryModel.resource().save();
@@ -188,13 +188,13 @@ public class DiagramGeometryWrapper
 
 	private void addNodeBoundsToModel()
 	{
-		this.geometryModel.getDiagramNodeGeometries().clear();
+		this.geometryModel.getDiagramNodesLayout().clear();
 		for (DiagramNodeTemplate nodeTemplate : this.diagramPart.getNodeTemplates())
 		{
 			for (DiagramNodePart nodePart : nodeTemplate.getDiagramNodes())
 			{
 				String id = IdUtil.computeNodeId(nodePart);
-				IDiagramNodeGeometry diagramNode = this.geometryModel.getDiagramNodeGeometries().addNewElement();
+				DiagramNodeLayout diagramNode = this.geometryModel.getDiagramNodesLayout().addNewElement();
 				diagramNode.setNodeId(id);
 				Bounds nodeBounds = nodePart.getNodeBounds();
 				diagramNode.setX(nodeBounds.getX());
@@ -214,14 +214,14 @@ public class DiagramGeometryWrapper
 					for (DiagramConnectionPart connPart : connParts)
 					{
 						String connId = IdUtil.computeConnectionId(connPart);
-						IDiagramConnectionGeometry conn = null;
+						DiagramConnectionLayout conn = null;
 						if (connPart.getConnectionBendpoints().size() > 0)
 						{
 							conn = diagramNode.getEmbeddedConnectionGeometries().addNewElement();
 							conn.setConnectionId(connId);
 							for (Point pt : connPart.getConnectionBendpoints())
 							{
-								IBendPoint pt2 = conn.getConnectionBendpoints().addNewElement();
+								DiagramBendPointLayout pt2 = conn.getConnectionBendpoints().addNewElement();
 								pt2.setX(pt.getX());
 								pt2.setY(pt.getY());
 							}
@@ -245,20 +245,20 @@ public class DiagramGeometryWrapper
 	
 	private void addConnectionsToModel()
 	{
-		this.geometryModel.getDiagramConnectionGeometries().clear();
+		this.geometryModel.getDiagramConnectionsLayout().clear();
 		for (DiagramConnectionTemplate connTemplate : this.diagramPart.getConnectionTemplates())
 		{
 			for (DiagramConnectionPart connPart : connTemplate.getDiagramConnections(null))
 			{
 				String id = IdUtil.computeConnectionId(connPart);
-				IDiagramConnectionGeometry conn = null;
+				DiagramConnectionLayout conn = null;
 				if (connPart.getConnectionBendpoints().size() > 0)
 				{					
-					conn = this.geometryModel.getDiagramConnectionGeometries().addNewElement();
+					conn = this.geometryModel.getDiagramConnectionsLayout().addNewElement();
 					conn.setConnectionId(id);
 					for (Point pt : connPart.getConnectionBendpoints())
 					{
-						IBendPoint pt2 = conn.getConnectionBendpoints().addNewElement();
+						DiagramBendPointLayout pt2 = conn.getConnectionBendpoints().addNewElement();
 						pt2.setX(pt.getX());
 						pt2.setY(pt.getY());
 					}					
@@ -267,7 +267,7 @@ public class DiagramGeometryWrapper
 				{
 					if (conn == null)
 					{
-						conn = this.geometryModel.getDiagramConnectionGeometries().addNewElement();
+						conn = this.geometryModel.getDiagramConnectionsLayout().addNewElement();
 						conn.setConnectionId(id);
 					}
 					conn.setLabelX(connPart.getLabelPosition().getX());

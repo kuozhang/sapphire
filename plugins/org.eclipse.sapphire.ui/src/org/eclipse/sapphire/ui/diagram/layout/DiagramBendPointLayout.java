@@ -9,7 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.geometry;
+package org.eclipse.sapphire.ui.diagram.layout;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -25,9 +25,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface IBendPoint extends IModelElement 
+public interface DiagramBendPointLayout extends IModelElement 
 {
-    ModelElementType TYPE = new ModelElementType( IBendPoint.class );
+    ModelElementType TYPE = new ModelElementType( DiagramBendPointLayout.class );
     
     // *** X ***
     

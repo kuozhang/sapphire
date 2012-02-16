@@ -86,7 +86,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 
 public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 
-    private DiagramGeometryWrapper diagramGeometry;
+    private DiagramLayoutWrapper diagramLayout;
 	private PaletteRoot root;
     private IDiagramEditorPageDef diagramPageDef;
     private SapphireDiagramEditorPagePart diagramPart;
@@ -417,7 +417,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		try {
-			this.diagramGeometry.write();
+			this.diagramLayout.write();
 			this.editorIsDirty = false;
 			firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);
 		} catch (Exception e) {
@@ -434,15 +434,15 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 
 		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput)input;
 		File layoutFile = diagramInput.getLayoutFile();
-		diagramGeometry = new DiagramGeometryWrapper(layoutFile, getPart());
+		diagramLayout = new DiagramLayoutWrapper(layoutFile, getPart());
 		
-		if (this.diagramGeometry.isGridPropertySet())
+		if (this.diagramLayout.isGridPropertySet())
 		{
-			this.diagramPart.syncGridStateWithDiagramLayout(this.diagramGeometry.isGridVisible());
+			this.diagramPart.syncGridStateWithDiagramLayout(this.diagramLayout.isGridVisible());
 		}
-		if (this.diagramGeometry.isShowGuidesPropertySet())
+		if (this.diagramLayout.isShowGuidesPropertySet())
 		{
-			this.diagramPart.syncGuideStateWithDiagramLayout(this.diagramGeometry.isShowGuides());
+			this.diagramPart.syncGuideStateWithDiagramLayout(this.diagramLayout.isShowGuides());
 		}		
 		
 		// cache DiagramRenderingContext for the diagram edit page part

@@ -9,7 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.geometry;
+package org.eclipse.sapphire.ui.diagram.layout;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -29,9 +29,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @GenerateImpl
 
-public interface IDiagramConnectionGeometry extends IModelElement 
+public interface DiagramConnectionLayout extends IModelElement 
 {
-    ModelElementType TYPE = new ModelElementType( IDiagramConnectionGeometry.class );
+    ModelElementType TYPE = new ModelElementType( DiagramConnectionLayout.class );
     
     // *** ConnectionId ***
     
@@ -67,12 +67,12 @@ public interface IDiagramConnectionGeometry extends IModelElement
     
     // *** ConnectionBendpoints***
 
-    @Type( base = IBendPoint.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "bendpoint", type = IBendPoint.class ) )
+    @Type( base = DiagramBendPointLayout.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "bendpoint", type = DiagramBendPointLayout.class ) )
     
     ListProperty PROP_CONNECTION_BENDPOINTS = new ListProperty( TYPE, "ConnectionBendPoints" );
     
-    ModelElementList<IBendPoint> getConnectionBendpoints();
+    ModelElementList<DiagramBendPointLayout> getConnectionBendpoints();
     
     
 }
