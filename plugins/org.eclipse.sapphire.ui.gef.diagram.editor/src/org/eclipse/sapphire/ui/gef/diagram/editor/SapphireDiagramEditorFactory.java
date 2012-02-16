@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,10 +7,8 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
- *    Shenxue Zhou - [bugzilla 365019] - SapphireDiagramEditor does not work on 
- *                   non-workspace files 
- *    Gregory Amerson - [371576] - Add support for SapphireDigramEditor loading
- *    				 non-local files
+ *    Shenxue Zhou - [365019] SapphireDiagramEditor does not work on non-workspace files 
+ *    Gregory Amerson - [371576] Support non-local files in SapphireDiagramEditor
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.gef.diagram.editor;
