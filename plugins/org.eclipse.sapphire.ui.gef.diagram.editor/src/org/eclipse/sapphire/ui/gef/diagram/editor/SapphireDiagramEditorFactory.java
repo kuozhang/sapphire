@@ -42,13 +42,7 @@ import org.eclipse.ui.part.FileEditorInput;
 public class SapphireDiagramEditorFactory 
 {
     public static final String SAPPHIRE_DIAGRAM_TYPE = "sapphireDiagram";
-    
-    public static SapphireDiagramEditorInput createEditorInput(IFile file)
-            throws StatusException, CoreException
-    {
-        return createEditorInput(file, null, false);
-    }
-    
+        
     public static SapphireDiagramEditorInput createEditorInput(IEditorInput input)
     		throws StatusException, CoreException, IOException
     {
@@ -78,12 +72,16 @@ public class SapphireDiagramEditorFactory
 		{
 			// Could not determine the layout file folder, we'll not persist the layout and 
 			// let auto layout do the work.
-	        final SapphireDiagramEditorInput diagramEditorInput = SapphireDiagramEditorInput.createEditorInput(SAPPHIRE_DIAGRAM_TYPE);
-	        diagramEditorInput.setNoExistingLayout(true);
-	        return diagramEditorInput;			
+			return createNoLayoutEditorInput();
 		}
     }
     
+    public static SapphireDiagramEditorInput createEditorInput(IFile file)
+            throws StatusException, CoreException
+    {
+        return createEditorInput(file, null, false);
+    }
+
     public static SapphireDiagramEditorInput createEditorInput(IFile file, String diagramPageId, boolean sideBySideLayoutFile) 
         throws StatusException, CoreException
     {
@@ -199,6 +197,10 @@ public class SapphireDiagramEditorFactory
 		IOException
 	{
 		IPath storagePath = storage.getFullPath();
+		if (storagePath == null)
+		{
+			return createNoLayoutEditorInput();
+		}
 		String fileName = storagePath.lastSegment();
 
 		String parentPath = storagePath.toOSString();
@@ -237,4 +239,10 @@ public class SapphireDiagramEditorFactory
 
     }
         
+	private static SapphireDiagramEditorInput createNoLayoutEditorInput()
+	{
+        final SapphireDiagramEditorInput diagramEditorInput = SapphireDiagramEditorInput.createEditorInput(SAPPHIRE_DIAGRAM_TYPE);
+        diagramEditorInput.setNoExistingLayout(true);
+        return diagramEditorInput;		
+	}
 }
