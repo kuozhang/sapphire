@@ -87,14 +87,14 @@ public interface DiagramNodeLayout extends IModelElement
     void setHeight(Integer value);
     void setHeight(String value);
     
-    // *** EmbeddedConnectionGeometries ***
+    // *** EmbeddedConnectionsLayout ***
 
     @Type( base = DiagramConnectionLayout.class )
     
     @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "connection", type = DiagramConnectionLayout.class ) )
     
-    ListProperty PROP_EMBEDDED_CONNECTION_GEOMETRIES = new ListProperty( TYPE, "EmbeddedConnectionGeometries" );
+    ListProperty PROP_EMBEDDED_CONNECTIONS_LAYOUT = new ListProperty( TYPE, "EmbeddedConnectionsLayout" );
     
-    ModelElementList<DiagramConnectionLayout> getEmbeddedConnectionGeometries();    
+    ModelElementList<DiagramConnectionLayout> getEmbeddedConnectionsLayout();    
     
 }

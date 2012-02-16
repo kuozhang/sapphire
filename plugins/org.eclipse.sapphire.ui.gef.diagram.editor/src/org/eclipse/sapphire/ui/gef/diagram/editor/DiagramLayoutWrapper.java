@@ -125,7 +125,7 @@ public class DiagramLayoutWrapper
 				int height = node.getHeight().getContent() != null ? node.getHeight().getContent() : -1;
 				nodePart.setNodeBounds(x, y, width, height);
 				
-				ModelElementList<DiagramConnectionLayout> connList = node.getEmbeddedConnectionGeometries();
+				ModelElementList<DiagramConnectionLayout> connList = node.getEmbeddedConnectionsLayout();
 				for (DiagramConnectionLayout connGeometry : connList)
 				{
 					String connId = connGeometry.getConnectionId().getContent();
@@ -209,7 +209,7 @@ public class DiagramLayoutWrapper
 						nodePart.getDiagramNodeTemplate().getEmbeddedConnectionTemplate();
 				if (embeddedConnTemplate != null)
 				{
-					diagramNode.getEmbeddedConnectionGeometries().clear();
+					diagramNode.getEmbeddedConnectionsLayout().clear();
 					List<DiagramConnectionPart> connParts = embeddedConnTemplate.getDiagramConnections(nodePart.getLocalModelElement());
 					for (DiagramConnectionPart connPart : connParts)
 					{
@@ -217,7 +217,7 @@ public class DiagramLayoutWrapper
 						DiagramConnectionLayout conn = null;
 						if (connPart.getConnectionBendpoints().size() > 0)
 						{
-							conn = diagramNode.getEmbeddedConnectionGeometries().addNewElement();
+							conn = diagramNode.getEmbeddedConnectionsLayout().addNewElement();
 							conn.setConnectionId(connId);
 							for (Point pt : connPart.getConnectionBendpoints())
 							{
@@ -230,7 +230,7 @@ public class DiagramLayoutWrapper
 						{
 							if (conn == null)
 							{
-								conn = diagramNode.getEmbeddedConnectionGeometries().addNewElement();
+								conn = diagramNode.getEmbeddedConnectionsLayout().addNewElement();
 								conn.setConnectionId(connId);
 							}
 							conn.setLabelX(connPart.getLabelPosition().getX());

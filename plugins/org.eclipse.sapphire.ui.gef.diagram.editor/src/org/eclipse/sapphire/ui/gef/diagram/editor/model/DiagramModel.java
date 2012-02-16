@@ -26,7 +26,6 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireConnectionRouter;
 import org.eclipse.sapphire.ui.gef.diagram.editor.DiagramConfigurationManager;
 
 /**
