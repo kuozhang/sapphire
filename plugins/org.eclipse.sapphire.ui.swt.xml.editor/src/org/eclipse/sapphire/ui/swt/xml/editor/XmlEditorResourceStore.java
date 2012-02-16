@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [371697] ClassCastException in XmlEditorResourceStore for non-local files
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.xml.editor;
@@ -248,7 +249,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
             {
                 result = (A) ( (FileEditorInput) input ).getFile().getLocation().toFile();
             }
-            else
+			else if( input instanceof FileStoreEditorInput )
             {
                 //Handle files that are not part of the current workspace.
                 
