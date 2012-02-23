@@ -275,6 +275,14 @@ public class XmlEditorResourceStore extends XmlResourceStore
                 result = (A) ( (FileEditorInput) input ).getFile().getProject();
             }
         }
+        else if( adapterType == IEditorInput.class )
+        {
+        	result = (A) this.sourceEditor.getEditorInput();
+        }
+        else if( adapterType == SapphireEditor.class )
+        {
+            result = (A) this.sapphireEditor;
+        }
         else
         {
             result = super.adapt( adapterType );
