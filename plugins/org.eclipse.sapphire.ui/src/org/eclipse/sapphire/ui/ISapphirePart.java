@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,8 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Ling Hao - [bugzilla 329114] rewrite context help binding feature
+ *    Ling Hao - [329114] rewrite context help binding feature
+ *    Gregory Amerson - [372816] Provide adapt mechanism for SapphirePart 
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -21,6 +22,7 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public interface ISapphirePart
@@ -41,4 +43,5 @@ public interface ISapphirePart
     SapphireActionGroup getActions( String context );
     SapphireAction getAction( String id );
     
+    <A> A adapt( Class<A> adapterType );
 }
