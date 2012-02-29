@@ -23,6 +23,7 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.IEditorPageDef;
@@ -60,18 +61,19 @@ public interface IDiagramEditorPageDef
 
     IDiagramGuidesDef getGuidesDefinition(); 
     
-    // *** SideBySideLayoutStorage ***
+    // *** LayoutStorage ***
     
-    @Type( base = Boolean.class )
-    @XmlBinding( path = "side-by-side-layout-storage" )
-    @DefaultValue( text = "false" )
-    @Label( standard = "side by side layout storage")
+    @Type( base = LayoutStorage.class )
+    @Label( standard = "layout-storage")
+    @Localizable
+    @XmlBinding( path = "layout-storage" )
+    @DefaultValue( text = "workspace" )
     
-    ValueProperty PROP_SIDE_BY_SIDE_LAYOUT_STORAGE = new ValueProperty(TYPE, "SideBySideLayoutStorage");
+    ValueProperty PROP_LAYOUT_STORAGE = new ValueProperty( TYPE, "LayoutStorage" );
     
-    Value<Boolean> isSideBySideLayoutStorage();
-    void setSideBySideLayoutStorage( String value );
-    void setSideBySideLayoutStorage( Boolean value );
+    Value<LayoutStorage> getLayoutStorage();
+    void setLayoutStorage( String value );
+    void setLayoutStorage( LayoutStorage value );
     
     // *** PaletteCompartments ***
     

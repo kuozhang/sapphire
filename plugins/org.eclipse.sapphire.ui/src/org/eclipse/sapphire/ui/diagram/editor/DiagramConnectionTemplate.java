@@ -74,6 +74,9 @@ public class DiagramConnectionTemplate extends SapphirePart
         public void handleMoveBendpoint(final DiagramConnectionPart connPart)
         {        	
         }
+        public void handleResetBendpoints(final DiagramConnectionPart connPart)
+        {        	
+        }
         public void handleMoveLabel(final DiagramConnectionPart connPart)
         {        	
         }
@@ -766,6 +769,14 @@ public class DiagramConnectionTemplate extends SapphirePart
         }        
     }
     
+    protected void notifyResetBendpoints(DiagramConnectionPart connPart)
+    {
+        for( Listener listener : this.templateListeners )
+        {
+            listener.handleResetBendpoints(connPart);
+        }        
+    }
+
     protected void notifyMoveLabel(DiagramConnectionPart connPart)
     {
         for( Listener listener : this.templateListeners )
@@ -810,6 +821,11 @@ public class DiagramConnectionTemplate extends SapphirePart
         public void handleConnectionMoveBendpointEvent(final DiagramConnectionEvent event)
         {
             notifyMoveBendpoint((DiagramConnectionPart)event.getPart());
+        }            
+        @Override
+        public void handleConnectionResetBendpointsEvent(final DiagramConnectionEvent event)
+        {
+            notifyResetBendpoints((DiagramConnectionPart)event.getPart());
         }            
         @Override
         public void handleConnectionMoveLabelEvent(final DiagramConnectionEvent event)

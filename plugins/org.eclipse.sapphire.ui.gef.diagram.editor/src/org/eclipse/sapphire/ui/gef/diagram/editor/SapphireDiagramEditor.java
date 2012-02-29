@@ -15,7 +15,6 @@
 
 package org.eclipse.sapphire.ui.gef.diagram.editor;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -48,6 +47,7 @@ import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -62,6 +62,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
+import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
 import org.eclipse.sapphire.ui.gef.diagram.editor.dnd.ObjectsTransferDropTargetListener;
 import org.eclipse.sapphire.ui.gef.diagram.editor.dnd.SapphireTemplateTransferDropTargetListener;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramConnectionModel;
@@ -86,7 +87,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 
 public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 
-    private DiagramLayoutWrapper diagramLayout;
+    private DiagramLayoutPersistenceService layoutPersistenceService;
 	private PaletteRoot root;
     private IDiagramEditorPageDef diagramPageDef;
     private SapphireDiagramEditorPagePart diagramPart;
@@ -97,7 +98,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 
 	private Point mouseLocation;
 	private DiagramConfigurationManager configManager;
-
 
     public SapphireDiagramEditor(final IModelElement rootModelElement, final IPath pageDefinitionLocation) {
 		final String bundleId = pageDefinitionLocation.segment( 0 );
@@ -168,24 +168,35 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 				removeConnection((DiagramConnectionPart)event.getPart());
 			}
 			
+			@Override
 		    public void handleConnectionAddBendpointEvent(final DiagramConnectionEvent event)
 		    {
 		    	markEditorDirty();
 		    	updateConnectionBendpoint((DiagramConnectionPart)event.getPart());
 		    }
 
+			@Override
 		    public void handleConnectionRemoveBendpointEvent(final DiagramConnectionEvent event)
 		    {
 		    	markEditorDirty();
 		    	updateConnectionBendpoint((DiagramConnectionPart)event.getPart());
 		    }
-
+			
+			@Override
 		    public void handleConnectionMoveBendpointEvent(final DiagramConnectionEvent event)
 		    {
 		    	markEditorDirty();
 		    	updateConnectionBendpoint((DiagramConnectionPart)event.getPart());
 		    }
 			
+			@Override
+		    public void handleConnectionResetBendpointsEvent(final DiagramConnectionEvent event)
+		    {
+		    	markEditorDirty();
+		    	updateConnectionBendpoint((DiagramConnectionPart)event.getPart());
+		    }
+
+			@Override
 		    public void handleConnectionMoveLabelEvent(final DiagramConnectionEvent event)
 		    {
 		    	markEditorDirty();
@@ -223,6 +234,11 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
     public IDiagramEditorPageDef getDiagramEditorPageDef()
     {
     	return this.diagramPageDef;
+    }
+    
+    public DiagramLayoutPersistenceService getLayoutPersistenceService()
+    {
+    	return this.layoutPersistenceService;
     }
     
 	@Override
@@ -417,7 +433,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		try {
-			this.diagramLayout.write();
+			this.diagramPart.saveDiagram();
 			this.editorIsDirty = false;
 			firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);
 		} catch (Exception e) {
@@ -431,23 +447,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 
 		// Is this the right place?
 		setEditDomain(new DefaultEditDomain(this));
-
-		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput)input;
-		File layoutFile = diagramInput.getLayoutFile();
-		diagramLayout = new DiagramLayoutWrapper(layoutFile, getPart());
-		
-		if (this.diagramLayout.isGridPropertySet())
-		{
-			this.diagramPart.syncGridStateWithDiagramLayout(this.diagramLayout.isGridVisible());
-		}
-		if (this.diagramLayout.isShowGuidesPropertySet())
-		{
-			this.diagramPart.syncGuideStateWithDiagramLayout(this.diagramLayout.isShowGuides());
-		}		
-		
-		// cache DiagramRenderingContext for the diagram edit page part
-		DiagramRenderingContext ctx = new DiagramRenderingContext(this.diagramPart, this);
-		this.configManager.getDiagramRenderingContextCache().put(this.diagramPart, ctx);
 	}
 
 	@Override
@@ -461,19 +460,32 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 				setMouseLocation(e.x, e.y);
 			}
 		});
+		
 				
 		// set the contents of this editor
 		viewer.setContents(diagramModel);
 		
+		// listen for dropped parts
+		viewer.addDropTargetListener(new SapphireTemplateTransferDropTargetListener(this));
+		viewer.addDropTargetListener((TransferDropTargetListener) new ObjectsTransferDropTargetListener(viewer));
+		
+	}
+	
+	public void postInit()
+	{
+		this.layoutPersistenceService = SapphireDiagramEditorFactory.getLayoutPersistenceService(this.diagramPart);
+		
 		initRenderingContext();
 
-		// If the layout file doesn't exist, apply auto layout
-		SapphireDiagramEditorInput diagramInput = (SapphireDiagramEditorInput) getEditorInput();
-		if (diagramInput.noExistingLayout()) {
+		// If the layout file doesn't exist or no layout is written to the layout file, apply auto layout
+		if (hasNoExistingLayout()) 
+		{
 			SapphireAction layoutAction = this.diagramPart.getAction("Sapphire.Diagram.Layout");
-			if (layoutAction != null) {
+			if (layoutAction != null) 
+			{
 				SapphireActionHandler layoutHandler = layoutAction.getFirstActiveHandler();
-				if (layoutHandler != null) {
+				if (layoutHandler != null) 
+				{
 					DiagramRenderingContext context = getConfigurationManager().getDiagramRenderingContextCache().get(this.diagramPart);
 					Point pt = getMouseLocation();
 					context.setCurrentMouseLocation(pt.x, pt.y);
@@ -481,31 +493,49 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 				}
 			}
 		}
-
-		// listen for dropped parts
-		viewer.addDropTargetListener(new SapphireTemplateTransferDropTargetListener(this));
-		viewer.addDropTargetListener((TransferDropTargetListener) new ObjectsTransferDropTargetListener(viewer));
-
-
-		this.editorIsDirty = false;
-		firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);	
 		
+		this.editorIsDirty = false;
+		firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);			
 	}
 	
 	private void initRenderingContext()
 	{
+		// cache DiagramRenderingContext for the diagram edit page part
+		DiagramRenderingContext ctx = new DiagramRenderingContext(this.diagramPart, this);
+		this.configManager.getDiagramRenderingContextCache().put(this.diagramPart, ctx);
+		
 		List<DiagramNodeModel> nodes = this.diagramModel.getNodes();
 		for (DiagramNodeModel node : nodes)
 		{
-			DiagramRenderingContext ctx = new DiagramRenderingContext(node.getModelPart(), this);
+			ctx = new DiagramRenderingContext(node.getModelPart(), this);
 			getConfigurationManager().getDiagramRenderingContextCache().put(node.getModelPart(), ctx);
 		}
 		List<DiagramConnectionModel> conns = this.diagramModel.getConnections();
 		for (DiagramConnectionModel conn : conns)
 		{
-			DiagramRenderingContext ctx = new DiagramRenderingContext(conn.getModelPart(), this);
+			ctx = new DiagramRenderingContext(conn.getModelPart(), this);
 			getConfigurationManager().getDiagramRenderingContextCache().put(conn.getModelPart(), ctx);
 		}
+	}
+	
+	private boolean hasNoExistingLayout()
+	{
+		if (this.layoutPersistenceService == null)
+		{
+			return true;
+		}
+		List<DiagramNodeModel> nodes = this.diagramModel.getNodes();
+		for (DiagramNodeModel node : nodes)
+		{
+			DiagramNodePart nodePart = node.getModelPart();
+			Bounds bounds = nodePart.getNodeBounds();
+			if (bounds.getX() == -1 || bounds.getY() == -1)
+			{
+				return true;
+			}
+		}
+				
+		return false;
 	}
 	
 	public DiagramModel getDiagramModel() {
@@ -655,6 +685,11 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		
 		diagramModel.dispose();
 		diagramPart.dispose();
+		diagramPart.removeListener(diagramPartListener);
+		if (layoutPersistenceService != null)
+		{
+			layoutPersistenceService.dispose();
+		}
 	}
 		
 }

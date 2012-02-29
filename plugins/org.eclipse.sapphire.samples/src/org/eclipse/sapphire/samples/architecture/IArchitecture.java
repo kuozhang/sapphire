@@ -7,7 +7,8 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation
- *    Kamesh Sampath - [355751] General improvement of XML root binding API    
+ *    Kamesh Sampath - [355751] General improvement of XML root binding API
+ *    Shenxue Zhou - Modify the sample to store layout info in the model
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.architecture;
@@ -23,9 +24,11 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.samples.architecture.internal.InPlaceLayoutPersistenceService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -34,6 +37,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @GenerateImpl
 @XmlBinding( path = "architecture" )
+@Service( impl = InPlaceLayoutPersistenceService.class)
 
 public interface IArchitecture extends IModelElement
 {
@@ -70,5 +74,31 @@ public interface IArchitecture extends IModelElement
     Value<Integer> getDetailLevel();
     void setDetailLevel( String value );
     void setDetailLevel( Integer value );
+    
+	// *** ShowGrid ***
+	
+	@Type( base = Boolean.class )
+	@XmlBinding( path = "show-grid" )
+	@DefaultValue( text = "false" )
+	@Label( standard = "show grid")
+	
+	ValueProperty PROP_SHOW_GRID = new ValueProperty(TYPE, "ShowGrid");
+	
+	Value<Boolean> isShowGrid();
+	void setShowGrid( String value );
+	void setShowGrid( Boolean value );
+    
+	// *** ShowGuides ***
+	
+	@Type( base = Boolean.class )
+	@XmlBinding( path = "show-guides" )
+	@DefaultValue( text = "false" )
+	@Label( standard = "show guides")
+	
+	ValueProperty PROP_SHOW_GUIDES = new ValueProperty(TYPE, "ShowGuides");
+	
+	Value<Boolean> isShowGuides();
+	void setShowGuides( String value );
+	void setShowGuides( Boolean value );
     
 }

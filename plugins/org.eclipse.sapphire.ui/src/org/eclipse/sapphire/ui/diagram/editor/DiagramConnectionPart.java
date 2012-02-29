@@ -645,6 +645,19 @@ public class DiagramConnectionPart
         }    	
     }
 
+    protected void notifyResetBendpoints()
+    {
+        Set<SapphirePartListener> listeners = this.getListeners();
+        for(SapphirePartListener listener : listeners)
+        {
+            if (listener instanceof SapphireDiagramPartListener)
+            {
+                DiagramConnectionEvent cue = new DiagramConnectionEvent(this);
+                ((SapphireDiagramPartListener)listener).handleConnectionResetBendpointsEvent(cue);
+            }
+        }    	
+    }
+
     protected void notifyMoveConnectionLabel()
     {
         Set<SapphirePartListener> listeners = this.getListeners();
@@ -693,6 +706,34 @@ public class DiagramConnectionPart
     		this.bendpoints.set(index, new Point(x, y));
     	}
     	notifyMoveBendpoint();
+    }
+    
+    public void resetBendpoints(List<Point> bendpoints)
+    {
+    	boolean changed = false;
+    	if (bendpoints.size() != this.bendpoints.size())
+    	{
+    		changed = true;
+    	}
+    	else
+    	{
+			for (int i = 0; i < bendpoints.size(); i++)
+			{
+				Point newPt = bendpoints.get(i);
+				Point oldPt = this.bendpoints.get(i);
+				if (newPt.getX() != oldPt.getX() || newPt.getY() != oldPt.getY())
+				{
+					changed = true;
+					break;
+				}
+			}    		
+    	}
+    	if (changed)
+    	{
+    		this.bendpoints.clear();
+    		this.bendpoints.addAll(bendpoints);
+    		notifyResetBendpoints();
+    	}
     }
     
     public List<Point> getConnectionBendpoints()

@@ -8,8 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
-
-package org.eclipse.sapphire.ui.diagram.layout;
+package org.eclipse.sapphire.ui.diagram.layout.standard;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -17,6 +16,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -42,11 +42,12 @@ public interface DiagramNodeLayout extends IModelElement
 
     Value<String> getNodeId();
     void setNodeId( String name );
-
+    
     // *** X ***
     
     @Type( base = Integer.class )
     @XmlBinding( path = "bounds/@x" )
+    @DefaultValue( text = "-1" )
     
     ValueProperty PROP_X = new ValueProperty( TYPE, "X");
     
@@ -58,6 +59,7 @@ public interface DiagramNodeLayout extends IModelElement
     
     @Type( base = Integer.class )
     @XmlBinding( path = "bounds/@y" )
+    @DefaultValue( text = "-1" )
 
     ValueProperty PROP_Y = new ValueProperty( TYPE, "Y");
     
@@ -69,6 +71,7 @@ public interface DiagramNodeLayout extends IModelElement
     
     @Type( base = Integer.class )
     @XmlBinding( path = "bounds/@width" )
+    @DefaultValue( text = "-1" )
     
     ValueProperty PROP_WIDTH = new ValueProperty( TYPE, "Width");
     
@@ -80,13 +83,14 @@ public interface DiagramNodeLayout extends IModelElement
     
     @Type( base = Integer.class )
     @XmlBinding( path = "bounds/@height" )
+    @DefaultValue( text = "-1" )
     
     ValueProperty PROP_HEIGHT = new ValueProperty( TYPE, "Height");
     
     Value<Integer> getHeight();
     void setHeight(Integer value);
     void setHeight(String value);
-    
+            
     // *** EmbeddedConnectionsLayout ***
 
     @Type( base = DiagramConnectionLayout.class )

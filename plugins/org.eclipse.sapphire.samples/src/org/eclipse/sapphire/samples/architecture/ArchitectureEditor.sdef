@@ -19,6 +19,7 @@
     </import>
     <diagram-page>
         <id>DiagramPage</id>
+        <layout-storage>custom</layout-storage>
         <node>
             <instance-id>${ Name }</instance-id>
             <tool-palette-label>component</tool-palette-label>

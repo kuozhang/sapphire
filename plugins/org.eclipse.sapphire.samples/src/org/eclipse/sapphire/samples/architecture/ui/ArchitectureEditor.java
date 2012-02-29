@@ -19,12 +19,8 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.samples.architecture.IArchitecture;
 import org.eclipse.sapphire.ui.SapphireEditor;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
 import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditor;
-import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditorFactory;
-import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditorInput;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.xml.editor.XmlEditorResourceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
@@ -35,7 +31,7 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public final class ArchitectureEditor extends SapphireEditor
 {
-    private IArchitecture model;
+    private IArchitecture architectureModel;
     private StructuredTextEditor pageSource;
     private SapphireDiagramEditor pageDiagram;
     private MasterDetailsEditorPage pageDetails;
@@ -58,41 +54,26 @@ public final class ArchitectureEditor extends SapphireEditor
     @Override
     protected IModelElement createModel() 
     {
-        this.model = IArchitecture.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.pageSource ) ) );
-        return this.model;
+        this.architectureModel = IArchitecture.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.pageSource ) ) );
+        return this.architectureModel;
     }
 
     @Override
     protected void createDiagramPages() throws PartInitException
     {
         IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/architecture/ArchitectureEditor.sdef/DiagramPage" );
-        this.pageDiagram = new SapphireDiagramEditor( this.model, path );
-        SapphireDiagramEditorInput diagramEditorInput = null;
-        
-        try
-        {
-        	IDiagramEditorPageDef pageDef = this.pageDiagram.getDiagramEditorPageDef();
-        	boolean sideBySideLayout = pageDef.isSideBySideLayoutStorage().getContent();        	
-            diagramEditorInput = SapphireDiagramEditorFactory.createEditorInput( getEditorInput(), null, sideBySideLayout );
-        }
-        catch( Exception e )
-        {
-            SapphireUiFrameworkPlugin.log( e );
-        }
-
-        if( diagramEditorInput != null )
-        {
-            addPage( 0, this.pageDiagram, diagramEditorInput );
-            setPageText( 0, "Diagram" );
-            setPageId( this.pages.get( 0 ), "Diagram", this.pageDiagram.getPart() );
-        }
+        this.pageDiagram = new SapphireDiagramEditor( this.architectureModel, path );
+        addPage( 0, this.pageDiagram, getEditorInput() );
+        setPageText( 0, "Diagram" );
+        setPageId( this.pages.get( 0 ), "Diagram", this.pageDiagram.getPart() );
+        this.pageDiagram.postInit();
     }
     
     @Override
     protected void createFormPages() throws PartInitException 
     {
         IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/architecture/ArchitectureEditor.sdef/DetailsPage" );
-        this.pageDetails = new MasterDetailsEditorPage( this, this.model, path );
+        this.pageDetails = new MasterDetailsEditorPage( this, this.architectureModel, path );
         addPage( 1, this.pageDetails );
         setPageText( 1, "Details" );
         setPageId( this.pages.get( 1 ), "Details", this.pageDetails.getPart() );        
@@ -101,8 +82,8 @@ public final class ArchitectureEditor extends SapphireEditor
     @Override
     public void doSave( final IProgressMonitor monitor )
     {
-        super.doSave( monitor );        
         this.pageDiagram.doSave( monitor );
+        super.doSave( monitor );        
     }
     
 }

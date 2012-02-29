@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - include the node positioning info in the model
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.architecture;
@@ -17,6 +18,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -82,5 +84,54 @@ public interface IComponent extends IModelElement
     
     Value<String> getCopyright();
     void setCopyright( String value );
+    
+    // *** X ***
+    
+    @Type( base = Integer.class )
+    @XmlBinding( path = "bounds/@x" )
+    @DefaultValue( text = "-1" )
+    
+    ValueProperty PROP_X = new ValueProperty( TYPE, "X");
+    
+    Value<Integer> getX();
+    void setX(Integer value);
+    void setX(String value);
+
+    // *** Y ***
+    
+    @Type( base = Integer.class )
+    @XmlBinding( path = "bounds/@y" )
+    @DefaultValue( text = "-1" )
+
+    ValueProperty PROP_Y = new ValueProperty( TYPE, "Y");
+    
+    Value<Integer> getY();
+    void setY(Integer value);
+    void setY(String value);
+    
+    // *** Width ***
+    
+    @Type( base = Integer.class )
+    @XmlBinding( path = "bounds/@width" )
+    @DefaultValue( text = "-1" )
+    
+    ValueProperty PROP_WIDTH = new ValueProperty( TYPE, "Width");
+    
+    Value<Integer> getWidth();
+    void setWidth(Integer value);
+    void setWidth(String value);
+    
+    // *** Height ***
+    
+    @Type( base = Integer.class )
+    @XmlBinding( path = "bounds/@height" )
+    @DefaultValue( text = "-1" )
+    
+    ValueProperty PROP_HEIGHT = new ValueProperty( TYPE, "Height");
+    
+    Value<Integer> getHeight();
+    void setHeight(Integer value);
+    void setHeight(String value);
+    
 
 }

@@ -24,10 +24,13 @@ Export-Package: org.eclipse.sapphire.ui,
  org.eclipse.sapphire.ui.swt,
  org.eclipse.sapphire.ui.swt.renderer,
  org.eclipse.sapphire.ui.swt.renderer.actions,
- org.eclipse.sapphire.ui.util
+ org.eclipse.sapphire.ui.util,
+ org.eclipse.sapphire.ui.diagram.layout,
+ org.eclipse.sapphire.ui.diagram.layout.standard.internal;x-friends:="org.eclipse.sapphire.ui.gef.diagram.editor"
 Require-Bundle: org.eclipse.sapphire.modeling,
  org.eclipse.sapphire.modeling.xml,
  org.eclipse.sapphire.java,
+ org.eclipse.sapphire.workspace,
  org.eclipse.sapphire.osgi,
  org.eclipse.core.runtime,
  org.eclipse.swt,
@@ -39,7 +42,8 @@ Require-Bundle: org.eclipse.sapphire.modeling,
  org.eclipse.ui.views,
  org.eclipse.ui.workbench,
  org.eclipse.help,
- org.eclipse.core.resources
+ org.eclipse.core.resources,
+ org.eclipse.core.filesystem
 Import-Package: com.ibm.icu.text
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

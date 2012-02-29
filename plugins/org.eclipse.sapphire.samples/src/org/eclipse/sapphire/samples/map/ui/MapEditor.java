@@ -18,12 +18,8 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.samples.map.IMap;
 import org.eclipse.sapphire.ui.SapphireEditor;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
 import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditor;
-import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditorFactory;
-import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditorInput;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.xml.editor.XmlEditorResourceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
@@ -66,24 +62,10 @@ public class MapEditor extends SapphireEditor
     {
         IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/map/MapEditor.sdef/diagram" );
         this.mapDiagram = new SapphireDiagramEditor(this.modelMap, path);
-        SapphireDiagramEditorInput diagramEditorInput = null;
-        try
-        {
-        	IDiagramEditorPageDef pageDef = this.mapDiagram.getDiagramEditorPageDef();
-        	boolean sideBySideLayout = pageDef.isSideBySideLayoutStorage().getContent();
-        	diagramEditorInput = SapphireDiagramEditorFactory.createEditorInput(getEditorInput(), null, sideBySideLayout);
-        }
-        catch (Exception e)
-        {
-            SapphireUiFrameworkPlugin.log( e );
-        }
-
-        if (diagramEditorInput != null)
-        {
-            addPage(0, mapDiagram, diagramEditorInput);
-            setPageText( 0, "Diagram" );
-            setPageId(this.pages.get(0), "Diagram", this.mapDiagram.getPart());
-        }
+        addPage(0, mapDiagram, getEditorInput());
+        setPageText( 0, "Diagram" );
+        setPageId(this.pages.get(0), "Diagram", this.mapDiagram.getPart());
+        this.mapDiagram.postInit();
     }
     
     @Override
@@ -104,8 +86,8 @@ public class MapEditor extends SapphireEditor
     @Override
     public void doSave( final IProgressMonitor monitor )
     {
-        super.doSave(monitor);        
         this.mapDiagram.doSave(monitor);
+        super.doSave(monitor);        
     }
     
 }

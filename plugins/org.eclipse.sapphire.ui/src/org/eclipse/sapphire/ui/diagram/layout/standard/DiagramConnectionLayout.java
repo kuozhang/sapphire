@@ -9,7 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.layout;
+package org.eclipse.sapphire.ui.diagram.layout.standard;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -17,6 +17,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -31,6 +32,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface DiagramConnectionLayout extends IModelElement 
 {
+
     ModelElementType TYPE = new ModelElementType( DiagramConnectionLayout.class );
     
     // *** ConnectionId ***
@@ -42,11 +44,12 @@ public interface DiagramConnectionLayout extends IModelElement
 
     Value<String> getConnectionId();
     void setConnectionId( String name );
-
+    
     // *** LabelX ***
     
     @Type( base = Integer.class )
     @XmlBinding( path = "labelPosition/@x" )
+    @DefaultValue( text = "-1" )
     
     ValueProperty PROP_LABEL_X = new ValueProperty( TYPE, "LabelX");
     
@@ -59,11 +62,12 @@ public interface DiagramConnectionLayout extends IModelElement
     @Type( base = Integer.class )
     @XmlBinding( path = "labelPosition/@y" )
 
-    ValueProperty PROP_LabelY = new ValueProperty( TYPE, "LabelY");
+    ValueProperty PROP_LABEL_Y = new ValueProperty( TYPE, "LabelY");
     
     Value<Integer> getLabelY();
     void setLabelY(Integer value);
     void setLabelY(String value);
+    @DefaultValue( text = "-1" )
     
     // *** ConnectionBendpoints***
 
@@ -73,6 +77,5 @@ public interface DiagramConnectionLayout extends IModelElement
     ListProperty PROP_CONNECTION_BENDPOINTS = new ListProperty( TYPE, "ConnectionBendPoints" );
     
     ModelElementList<DiagramBendPointLayout> getConnectionBendpoints();
-    
-    
+    	
 }

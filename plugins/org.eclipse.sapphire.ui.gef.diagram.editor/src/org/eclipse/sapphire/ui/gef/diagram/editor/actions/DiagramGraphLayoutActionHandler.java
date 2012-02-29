@@ -123,7 +123,7 @@ public abstract class DiagramGraphLayoutActionHandler extends
 			Node node = (Node) object;
 			DiagramNodeModel nodeModel = (DiagramNodeModel) node.data;
 			DiagramNodePart nodePart = nodeModel.getModelPart();
-			nodePart.setNodePosition(node.x, node.y);
+			nodePart.setNodePosition(node.x, node.y, true);
 		}		
 	}
 	

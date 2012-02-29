@@ -6,25 +6,24 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Ling Hao - initial implementation and ongoing maintenance
- *    Shenxue Zhou - [bugzilla 365019] - SapphireDiagramEditor does not work on 
- *                   non-workspace files 
- *                 - [371576] - Add support for SapphireDigramEditor loading
- *    				 non-local files
- *                   
+ *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.gef.diagram.editor;
+package org.eclipse.sapphire.ui.diagram.layout.standard.internal;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.sapphire.modeling.FileResourceStore;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
-import org.eclipse.sapphire.modeling.xml.RootXmlResource;
-import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
+import org.eclipse.sapphire.modeling.StatusException;
+import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
@@ -32,87 +31,96 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
 import org.eclipse.sapphire.ui.diagram.editor.IdUtil;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.diagram.layout.DiagramBendPointLayout;
-import org.eclipse.sapphire.ui.diagram.layout.DiagramConnectionLayout;
-import org.eclipse.sapphire.ui.diagram.layout.DiagramLayout;
-import org.eclipse.sapphire.ui.diagram.layout.DiagramNodeLayout;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
+import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
+import org.eclipse.sapphire.ui.diagram.layout.standard.DiagramBendPointLayout;
+import org.eclipse.sapphire.ui.diagram.layout.standard.DiagramConnectionLayout;
+import org.eclipse.sapphire.ui.diagram.layout.standard.DiagramNodeLayout;
+import org.eclipse.sapphire.ui.diagram.layout.standard.StandardDiagramLayout;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.ide.FileStoreEditorInput;
+import org.eclipse.ui.part.FileEditorInput;
 
 /**
- * Copied from org.eclipse.sapphire.ui.swt.graphiti
- * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class DiagramLayoutWrapper 
+public abstract class LazyLoadLayoutPersistenceService extends DiagramLayoutPersistenceService
 {
-	private File file;
-	private DiagramLayout geometryModel;
-	private SapphireDiagramEditorPagePart diagramPart;
-		
-	public DiagramLayoutWrapper(File file, SapphireDiagramEditorPagePart diagramPart)
+	protected StandardDiagramLayout layoutModel;
+	protected IEditorInput editorInput;
+	protected SapphireDiagramEditorPagePart diagramPart;
+	private SapphireDiagramPartListener diagramPartListener;
+
+	public LazyLoadLayoutPersistenceService(IEditorInput editorInput, SapphireDiagramEditorPagePart diagramPart)
 	{
-		this.file = file;
+		if (editorInput == null || diagramPart == null)
+		{
+			throw new IllegalArgumentException();
+		}
+		this.editorInput = editorInput;
 		this.diagramPart = diagramPart;
-		this.geometryModel = null;
+		init();
+		addDiagramPartListener();
+	}
 	
+    @Override
+    protected void init()
+    {
+        super.init();
 		try
 		{
-			read();
+			load();
 		}
 		catch (Exception e)
 		{
 			SapphireUiFrameworkPlugin.log( e );
 		}
-	}
+        
+    }		
 	
-	public boolean isGridPropertySet()
-	{
-		return this.geometryModel != null && this.geometryModel.getGridLayout().isVisible().getContent(false) != null;
-	}
+    private void setGridVisible(boolean visible)
+    {
+    	if (this.layoutModel != null)
+    	{
+    		this.layoutModel.getGridLayout().setVisible(visible);
+    	}
+    }
 	
-	public boolean isGridVisible()
-	{
-		return this.geometryModel != null && this.geometryModel.getGridLayout().isVisible().getContent();
-	}
+	private void setGuidesVisible(boolean visible)
+    {    	
+    	if (this.layoutModel != null)
+    	{
+    		this.layoutModel.getGuidesLayout().setVisible(visible);
+    	}
+    }
 	
-	public void setGridVisible(boolean visible)
+	
+	@Override
+	public void dispose()
 	{
-		if (this.geometryModel != null)
+		if (this.diagramPartListener != null)
 		{
-			this.geometryModel.getGridLayout().setVisible(visible);
+			this.diagramPart.removeListener(this.diagramPartListener);
 		}
 	}
-		
-	public boolean isShowGuidesPropertySet()
-	{
-		return this.geometryModel != null && this.geometryModel.getGuidesLayout().isVisible().getContent(false) != null;
-	}
+	protected abstract StandardDiagramLayout initLayoutModel();
 	
-	public boolean isShowGuides()
+	public void load() throws ResourceStoreException, CoreException, IOException, StatusException
 	{
-		return this.geometryModel != null && this.geometryModel.getGuidesLayout().isVisible().getContent();
-	}
-	
-	public void setShowGuides(boolean visible)
-	{
-		if (this.geometryModel != null)
-		{
-			this.geometryModel.getGuidesLayout().setVisible(visible);
-		}
-	}
-
-	public void read() throws ResourceStoreException, CoreException
-	{
-		if (this.file == null)
+		this.layoutModel = initLayoutModel();
+		if (this.layoutModel == null)
 		{
 			return;
 		}
-		final XmlResourceStore resourceStore = new XmlResourceStore( new FileResourceStore(this.file ));
-		this.geometryModel = DiagramLayout.TYPE.instantiate(new RootXmlResource( resourceStore ));
-
-		ModelElementList<DiagramNodeLayout> nodes = this.geometryModel.getDiagramNodesLayout();
+		this.diagramPart.setGridVisible(this.layoutModel.getGridLayout().isVisible().getContent());
+		this.diagramPart.setShowGuides(this.layoutModel.getGuidesLayout().isVisible().getContent());
+		ModelElementList<DiagramNodeLayout> nodes = this.layoutModel.getDiagramNodesLayout();
 		for (DiagramNodeLayout node : nodes)
 		{
 			String id = node.getNodeId().getContent();
@@ -150,7 +158,7 @@ public class DiagramLayoutWrapper
 			}
 		}
 		
-		ModelElementList<DiagramConnectionLayout> connList = this.geometryModel.getDiagramConnectionsLayout();
+		ModelElementList<DiagramConnectionLayout> connList = this.layoutModel.getDiagramConnectionsLayout();
 		for (DiagramConnectionLayout connLayout : connList)
 		{
 			String connId = connLayout.getConnectionId().getContent();
@@ -172,37 +180,82 @@ public class DiagramLayoutWrapper
 			}			
 		}
 	}
-	
-	public void write() throws ResourceStoreException
-	{		
-		if (this.geometryModel == null)
+
+	public void save() 
+	{
+		if (this.layoutModel == null)
 		{
 			return;
 		}
-		this.geometryModel.getGridLayout().setVisible(this.diagramPart.isGridVisible());
-		this.geometryModel.getGuidesLayout().setVisible(this.diagramPart.isShowGuides());
 		addNodeBoundsToModel();
 		addConnectionsToModel();
-		this.geometryModel.resource().save();
+		try
+		{
+			this.layoutModel.resource().save();
+		}
+		catch (ResourceStoreException rse)
+		{
+			SapphireUiFrameworkPlugin.log( rse );
+		}
 	}
-
-	private void addNodeBoundsToModel()
+	
+	protected String computeLayoutFileName(IEditorInput editorInput) throws CoreException, IOException
 	{
-		this.geometryModel.getDiagramNodesLayout().clear();
+		// Compute a unique path for the layout file based on a hash associated with the editor input
+		String uniquePath = null;
+    	if (editorInput instanceof FileEditorInput)
+    	{
+    		FileEditorInput fileEditorInput = (FileEditorInput)editorInput;
+    		IFile ifile = fileEditorInput.getFile();
+    		uniquePath = ifile.getLocation().toPortableString();
+    	}
+    	else if (editorInput instanceof FileStoreEditorInput)
+    	{
+    		FileStoreEditorInput fileStoreInput = (FileStoreEditorInput)editorInput;
+        	IFileStore store = EFS.getStore(fileStoreInput.getURI());
+        	File localFile = store.toLocalFile(EFS.NONE, null);
+    		//if no local file is available, obtain a cached file
+    		if (localFile == null)
+    			localFile = store.toLocalFile(EFS.CACHE, null);
+    		if (localFile == null)
+    			throw new IllegalArgumentException();
+    		uniquePath = localFile.getCanonicalPath();
+    	}
+    	else if (editorInput instanceof IStorageEditorInput)
+    	{
+    		IStorageEditorInput storageEditorInput = (IStorageEditorInput) editorInput;
+    		IPath storagePath = storageEditorInput.getStorage().getFullPath();
+    		if (storagePath != null)
+    		{
+    			uniquePath = storagePath.toPortableString();
+    		}    		
+    	}
+		return uniquePath != null ? MiscUtil.createStringDigest(uniquePath) : null;
+	}
+		
+	protected void addNodeBoundsToModel()
+	{
+		this.layoutModel.getDiagramNodesLayout().clear();
 		for (DiagramNodeTemplate nodeTemplate : this.diagramPart.getNodeTemplates())
 		{
 			for (DiagramNodePart nodePart : nodeTemplate.getDiagramNodes())
 			{
 				String id = IdUtil.computeNodeId(nodePart);
-				DiagramNodeLayout diagramNode = this.geometryModel.getDiagramNodesLayout().addNewElement();
+				DiagramNodeLayout diagramNode = this.layoutModel.getDiagramNodesLayout().addNewElement();
 				diagramNode.setNodeId(id);
 				Bounds nodeBounds = nodePart.getNodeBounds();
 				diagramNode.setX(nodeBounds.getX());
 				diagramNode.setY(nodeBounds.getY());
 				if (nodePart.canResizeShape())
 				{
-					diagramNode.setWidth(nodeBounds.getWidth());
-					diagramNode.setHeight(nodeBounds.getHeight());
+					if (nodeBounds.getHeight() != -1)
+					{
+						diagramNode.setHeight(nodeBounds.getHeight());
+					}
+					if (nodeBounds.getWidth() != -1)
+					{
+						diagramNode.setWidth(nodeBounds.getWidth());
+					}
 				}
 				// save the embedded connection bendpoints
 				DiagramEmbeddedConnectionTemplate embeddedConnTemplate = 
@@ -243,9 +296,9 @@ public class DiagramLayoutWrapper
 		}
 	}
 	
-	private void addConnectionsToModel()
+	protected void addConnectionsToModel()
 	{
-		this.geometryModel.getDiagramConnectionsLayout().clear();
+		this.layoutModel.getDiagramConnectionsLayout().clear();
 		for (DiagramConnectionTemplate connTemplate : this.diagramPart.getConnectionTemplates())
 		{
 			for (DiagramConnectionPart connPart : connTemplate.getDiagramConnections(null))
@@ -254,7 +307,7 @@ public class DiagramLayoutWrapper
 				DiagramConnectionLayout conn = null;
 				if (connPart.getConnectionBendpoints().size() > 0)
 				{					
-					conn = this.geometryModel.getDiagramConnectionsLayout().addNewElement();
+					conn = this.layoutModel.getDiagramConnectionsLayout().addNewElement();
 					conn.setConnectionId(id);
 					for (Point pt : connPart.getConnectionBendpoints())
 					{
@@ -267,7 +320,7 @@ public class DiagramLayoutWrapper
 				{
 					if (conn == null)
 					{
-						conn = this.geometryModel.getDiagramConnectionsLayout().addNewElement();
+						conn = this.layoutModel.getDiagramConnectionsLayout().addNewElement();
 						conn.setConnectionId(id);
 					}
 					conn.setLabelX(connPart.getLabelPosition().getX());
@@ -276,5 +329,33 @@ public class DiagramLayoutWrapper
 			}
 		}
 	}
+	
+	private void addDiagramPartListener()
+	{
+		this.diagramPartListener = new SapphireDiagramPartListener() 
+		{
+		    @Override
+			public void handleGridStateChangeEvent(final DiagramPageEvent event)
+			{
+		    	SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)event.getPart();
+		    	setGridVisible(diagramPart.isGridVisible());
+			}
 			
+			@Override
+			public void handleGuideStateChangeEvent(final DiagramPageEvent event)
+			{
+				SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)event.getPart();
+		    	setGuidesVisible(diagramPart.isShowGuides());
+			}
+			
+		    public void handleDiagramSaveEvent(final DiagramPageEvent event)
+		    {
+		    	save();
+		    }			
+			
+		};
+		this.diagramPart.addListener(this.diagramPartListener);
+	}
+	
+	
 }

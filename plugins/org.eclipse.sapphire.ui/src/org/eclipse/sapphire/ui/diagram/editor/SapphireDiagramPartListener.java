@@ -74,6 +74,11 @@ public abstract class SapphireDiagramPartListener extends SapphirePartListener
     	// The default implementation doesn't do anything.
     }
     
+    public void handleConnectionResetBendpointsEvent(final DiagramConnectionEvent event)
+    {
+    	// The default implementation doesn't do anything.
+    }
+    
     public void handleConnectionMoveLabelEvent(final DiagramConnectionEvent event)
     {
     	// The default implementation doesn't do anything.
@@ -93,4 +98,10 @@ public abstract class SapphireDiagramPartListener extends SapphirePartListener
     {
     	// The default implementation doesn't do anything.
     }
+    
+    public void handleDiagramSaveEvent(final DiagramPageEvent event)
+    {
+    	// The default implementation doesn't do anything.
+    }
+        
 }

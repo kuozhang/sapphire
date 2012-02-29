@@ -213,17 +213,13 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     {
         return this.showGrid;
     }
-        
-    public void syncGridStateWithDiagramLayout(boolean gridVisible)
-    {
-    	this.showGrid = gridVisible;
-    }
-    
+            
     public void setGridVisible(boolean visible)
     {
     	if (visible != this.showGrid)
     	{
     		this.showGrid = visible;
+    		this.
     		notifyGridStateChange();
     	}
     }
@@ -259,11 +255,16 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	}
     }
 
-    public void syncGuideStateWithDiagramLayout(boolean showGuides)
+    public void saveDiagram()
     {
-    	this.showGuides = showGuides;
+    	notifyDiagramSave();
     }
-
+    
+    public IDiagramEditorPageDef getPageDef()
+    {
+    	return this.diagramPageDef;
+    }
+    
     public List<DiagramNodeTemplate> getNodeTemplates()
     {
         return this.nodeTemplates;
@@ -439,6 +440,44 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
             }
         }
         return null;
+    }
+    
+    public DiagramConnectionPart getDiagramConnectionPart(IModelElement connElement)
+    {
+    	if (connElement == null)
+    	{
+    		return null;
+    	}
+    	List<DiagramConnectionTemplate> connTemplates = this.getConnectionTemplates();
+    	for (DiagramConnectionTemplate connTemplate : connTemplates)
+    	{
+    		 List<DiagramConnectionPart> connParts = connTemplate.getDiagramConnections(null);
+    		 for (DiagramConnectionPart connPart : connParts)
+    		 {
+    			 if (connPart.getLocalModelElement().equals(connElement))
+    			 {
+    				 return connPart;
+    			 }
+    		 }
+    	}
+    	// Check for embedded connections
+        List<DiagramNodeTemplate> nodeTemplates = this.getNodeTemplates();
+        for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
+        {
+        	DiagramEmbeddedConnectionTemplate connTemplate = nodeTemplate.getEmbeddedConnectionTemplate();
+        	if (connTemplate != null)
+        	{
+        		List<DiagramConnectionPart> connParts = connTemplate.getDiagramConnections(null);
+	       		 for (DiagramConnectionPart connPart : connParts)
+	       		 {
+	       			 if (connPart.getLocalModelElement().equals(connElement))
+	       			 {
+	       				 return connPart;
+	       			 }
+	       		 }        	
+        	}
+        }    	
+    	return null;
     }
         
     @Override
@@ -636,6 +675,19 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 		}		
 	}
 	
+	private void notifyConnectionResetBendpoints(DiagramConnectionPart connPart)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
+				((SapphireDiagramPartListener)listener).handleConnectionResetBendpointsEvent(cue);
+			}
+		}		
+	}
+
 	private void notifyConnectionMoveLabel(DiagramConnectionPart connPart)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
@@ -688,6 +740,19 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 		}		
 	}
 	
+	private void notifyDiagramSave()
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramPageEvent pageEvent = new DiagramPageEvent(this);
+				((SapphireDiagramPartListener)listener).handleDiagramSaveEvent(pageEvent);
+			}
+		}		
+	}
+
 	// --------------------------------------------------------------------
 	// Inner classes
 	//---------------------------------------------------------------------
@@ -761,6 +826,12 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         public void handleMoveBendpoint(final DiagramConnectionPart connPart)
         {
             notifyConnectionMoveBendpoint(connPart);
+        }
+
+        @Override
+        public void handleResetBendpoints(final DiagramConnectionPart connPart)
+        {
+            notifyConnectionResetBendpoints(connPart);
         }
 
         @Override

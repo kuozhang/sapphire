@@ -9,7 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.layout;
+package org.eclipse.sapphire.ui.diagram.layout.standard;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -52,7 +52,7 @@ public interface DiagramGridLayout
 	@Type( base = Integer.class )
 	@Label( standard = "grid unit" )
 	@XmlBinding( path = "grid-unit" )
-	@DefaultValue( text = "10" )
+	@DefaultValue( text = "-1" )
 	
 	ValueProperty PROP_GRID_UNIT = new ValueProperty( TYPE, "GridUnit" );
 	
@@ -65,7 +65,7 @@ public interface DiagramGridLayout
 	@Type( base = Integer.class )
 	@Label( standard = "vertical grid unit" )
 	@XmlBinding( path = "vertical-grid-unit" )
-	@DefaultValue( text = "10" )
+	@DefaultValue( text = "-1" )
 	
 	ValueProperty PROP_VERTICAL_GRID_UNIT = new ValueProperty( TYPE, "VerticalGridUnit" );
 	

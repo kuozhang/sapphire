@@ -17,8 +17,21 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 public class DiagramNodeEvent extends DiagramPartEvent 
 {
-     public DiagramNodeEvent(final DiagramNodePart part)
-     {
-         super(part);
-     }
+    private boolean autoLayout;
+    
+    public DiagramNodeEvent(final DiagramNodePart part)
+    {
+        this(part, false);
+    }
+
+    public DiagramNodeEvent(final DiagramNodePart part, boolean autoLayout)
+    {
+        super(part);
+        this.autoLayout = autoLayout;
+    }
+    
+    public boolean isFromAutoLayout()
+    {
+    	return this.autoLayout;
+    }
 }

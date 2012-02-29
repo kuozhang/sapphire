@@ -12,6 +12,8 @@
 package org.eclipse.sapphire.samples.architecture;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
@@ -22,7 +24,9 @@ import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
+import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.samples.architecture.internal.ComponentReferenceService;
 
 /**
@@ -60,5 +64,14 @@ public interface IComponentDependency
     
     Value<String> getDescription();
     void setDescription( String value );
+    
+    // *** ConnectionBendpoints***
+
+    @Type( base = ConnectionBendpoint.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "bendpoint", type = ConnectionBendpoint.class ) )
+    
+    ListProperty PROP_CONNECTION_BENDPOINTS = new ListProperty( TYPE, "ConnectionBendPoints" );
+    
+    ModelElementList<ConnectionBendpoint> getConnectionBendpoints();
     
 }

@@ -484,12 +484,18 @@ public class DiagramNodePart
 		
 	public void setNodePosition(int x, int y)
 	{
+		setNodePosition(x, y, false);
+	}
+	
+	public void setNodePosition(int x, int y, boolean autoLayout)
+	{
 		if (this.leftTopPos.getX() != x || this.leftTopPos.getY() != y)
 		{
 			this.leftTopPos.setX(x); 
 			this.leftTopPos.setY(y);
-			notifyNodeMove();
+			notifyNodeMove(autoLayout);
 		}
+		
 	}
 	
 	public Point getNodePosition()
@@ -510,14 +516,14 @@ public class DiagramNodePart
 		}
 	}
 	
-	private void notifyNodeMove()
+	private void notifyNodeMove(boolean autoLayout)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
 		{
 			if (listener instanceof SapphireDiagramPartListener)
 			{
-				DiagramNodeEvent ne = new DiagramNodeEvent(this);
+				DiagramNodeEvent ne = new DiagramNodeEvent(this, autoLayout);
 				((SapphireDiagramPartListener)listener).handleNodeMoveEvent(ne);
 			}
 		}		

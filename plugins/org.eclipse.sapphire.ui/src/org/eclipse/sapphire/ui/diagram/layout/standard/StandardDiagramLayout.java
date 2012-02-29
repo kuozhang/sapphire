@@ -1,16 +1,15 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle and Accenture
+ * Copyright (c) 2012 Oracle
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Shenxue Zhou - initial implementation
- *    Kamesh Sampath - [355751] General improvement of XML root binding API    
+ *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.layout;
+package org.eclipse.sapphire.ui.diagram.layout.standard;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
@@ -24,15 +23,14 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
- * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a> 
  */
 
 @GenerateImpl
 @XmlBinding( path = "diagram-geometry" )
 
-public interface DiagramLayout extends IModelElement 
+public interface StandardDiagramLayout extends IModelElement 
 {
-    ModelElementType TYPE = new ModelElementType( DiagramLayout.class );
+    ModelElementType TYPE = new ModelElementType( StandardDiagramLayout.class );
     
     // *** GridLayout ***
     
