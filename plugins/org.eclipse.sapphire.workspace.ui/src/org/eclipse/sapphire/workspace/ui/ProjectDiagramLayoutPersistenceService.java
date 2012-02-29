@@ -9,7 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.layout.standard.internal;
+package org.eclipse.sapphire.workspace.ui;
 
 import java.io.File;
 
@@ -24,6 +24,7 @@ import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.layout.standard.StandardDiagramLayout;
+import org.eclipse.sapphire.ui.diagram.layout.standard.internal.LazyLoadLayoutPersistenceService;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
 import org.eclipse.ui.IEditorInput;

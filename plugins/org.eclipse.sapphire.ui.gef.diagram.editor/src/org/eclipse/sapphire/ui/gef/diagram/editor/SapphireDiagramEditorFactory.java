@@ -18,9 +18,9 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.LayoutStorage;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
-import org.eclipse.sapphire.ui.diagram.layout.standard.internal.ProjectDiagramLayoutPersistenceService;
-import org.eclipse.sapphire.ui.diagram.layout.standard.internal.SideBySideLayoutPersistenceService;
 import org.eclipse.sapphire.ui.diagram.layout.standard.internal.WorkspaceDiagramLayoutPersistenceService;
+import org.eclipse.sapphire.workspace.ui.ProjectDiagramLayoutPersistenceService;
+import org.eclipse.sapphire.workspace.ui.SideBySideLayoutPersistenceService;
 import org.eclipse.ui.IEditorInput;
 
 /**
