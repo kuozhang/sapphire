@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [372359] Provide means to extend the behavior of adapt methods
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling;
@@ -30,6 +31,7 @@ import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.ModelPath.TypeFilterSegment;
 import org.eclipse.sapphire.modeling.annotations.ClearOnDisable;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.services.AdapterService;
 import org.eclipse.sapphire.services.DefaultValueService;
 import org.eclipse.sapphire.services.DependenciesAggregationService;
 import org.eclipse.sapphire.services.DerivedValueService;
@@ -42,6 +44,7 @@ import org.eclipse.sapphire.services.internal.PropertyInstanceServiceContext;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public abstract class ModelElement
@@ -1288,6 +1291,29 @@ public abstract class ModelElement
         LoggingService.log( Status.createErrorStatus( message ) );
     }
     
+    @Override
+    public <A> A adapt( Class<A> adapterType )
+    {
+        A result = null;
+
+        for( AdapterService service : this.services( AdapterService.class ) )
+        {
+            result = service.adapt( adapterType );
+            
+            if( result != null )
+            {
+                break;
+            }
+        }
+
+        if( result == null )
+        {
+            result = super.adapt( adapterType );
+        }
+
+        return result;
+    }
+
     protected static final boolean equal( final String value1,
                                           final String value2 )
     {
