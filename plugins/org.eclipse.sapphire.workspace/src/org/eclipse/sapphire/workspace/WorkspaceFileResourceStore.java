@@ -154,23 +154,21 @@ public class WorkspaceFileResourceStore
     }
     
     @Override
-    @SuppressWarnings( "unchecked" )
-    
     public <A> A adapt( final Class<A> adapterType )
     {
         A result = null;
         
         if( adapterType == File.class )
         {
-            result = (A) this.file.getLocation().toFile();
+            result = adapterType.cast( this.file.getLocation().toFile() );
         }
         else if( adapterType == IFile.class )
         {
-            result = (A) this.file;
+            result = adapterType.cast( this.file );
         }
         else if( adapterType == IProject.class )
         {
-            result = (A) this.file.getProject();
+            result = adapterType.cast( this.file.getProject() );
         }
         else
         {

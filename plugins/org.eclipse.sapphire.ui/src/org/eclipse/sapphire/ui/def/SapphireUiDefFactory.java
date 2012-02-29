@@ -63,17 +63,15 @@ public final class SapphireUiDefFactory
                     final UrlResourceStore resourceStore = new UrlResourceStore( url )
                     {
                         @Override
-                        @SuppressWarnings( "unchecked" )
-                        
                         public <A> A adapt( final Class<A> adapterType )
                         {
                             if( adapterType == ResourceLocator.class )
                             {
-                                return (A) resourceLocator;
+                                return adapterType.cast( resourceLocator );
                             }
                             else if( adapterType == ClassLocator.class )
                             {
-                                return (A) classLocator;
+                                return adapterType.cast( classLocator );
                             }
                             
                             return super.adapt( adapterType );

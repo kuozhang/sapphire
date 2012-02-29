@@ -71,17 +71,15 @@ public final class SapphireExtensionSystem
                     final UrlResourceStore store = new UrlResourceStore( handle.extension() )
                     {
                         @Override
-                        @SuppressWarnings( "unchecked" )
-                        
                         public <A> A adapt( final Class<A> adapterType )
                         {
                             if( adapterType == ClassLocator.class )
                             {
-                                return (A) classLocator;
+                                return adapterType.cast( classLocator );
                             }
                             else if( adapterType == ResourceLocator.class )
                             {
-                                return (A) resourceLocator;
+                                return adapterType.cast( resourceLocator );
                             }
                             
                             return super.adapt( adapterType );

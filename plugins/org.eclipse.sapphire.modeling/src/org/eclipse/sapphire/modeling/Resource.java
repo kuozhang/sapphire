@@ -120,18 +120,17 @@ public abstract class Resource
         }
     }
     
-    @SuppressWarnings( "unchecked" )
     public <A> A adapt( final Class<A> adapterType )
     {
         A result = null;
         
         if( adapterType.isInstance( this ) )
         {
-            result = (A) this;
+            result = adapterType.cast( this );
         }
         else if( adapterType == LocalizationService.class )
         {
-            result = (A) getLocalizationService();
+            result = adapterType.cast( getLocalizationService() );
         }
         else if( this.parent != null )
         {

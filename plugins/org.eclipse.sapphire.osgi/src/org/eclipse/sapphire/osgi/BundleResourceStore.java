@@ -144,8 +144,6 @@ public class BundleResourceStore
     }
     
     @Override
-    @SuppressWarnings( "unchecked" )
-    
     public <A> A adapt( final Class<A> adapterType )
     {
         if( adapterType == ResourceLocator.class )
@@ -162,7 +160,7 @@ public class BundleResourceStore
                 };
             }
             
-            return (A) this.resourceLocator;
+            return adapterType.cast( this.resourceLocator );
         }
         else if( adapterType == ClassLocator.class )
         {
@@ -187,11 +185,11 @@ public class BundleResourceStore
                 };
             }
             
-            return (A) this.classLocator;
+            return adapterType.cast( this.classLocator );
         }
         else if( adapterType == Bundle.class )
         {
-            return (A) bundle();
+            return adapterType.cast( bundle() );
         }
 
         return super.adapt( adapterType );

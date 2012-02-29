@@ -26,14 +26,13 @@ public abstract class ResourceStore
 {
     private final Map<Locale,LocalizationService> localizationServices = new HashMap<Locale,LocalizationService>();
     
-    @SuppressWarnings( "unchecked" )
     public <A> A adapt( final Class<A> adapterType )
     {
         A result = null;
         
         if( adapterType == LocalizationService.class )
         {
-            result = (A) getLocalizationService();
+            result = adapterType.cast( getLocalizationService() );
         }
         
         return result;

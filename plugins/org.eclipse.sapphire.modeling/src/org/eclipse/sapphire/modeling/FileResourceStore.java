@@ -130,15 +130,13 @@ public class FileResourceStore
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
-    
     public <A> A adapt( final Class<A> adapterType )
     {
         A result = null;
         
         if( adapterType == File.class )
         {
-            result = (A) this.file;
+            result = adapterType.cast( this.file );
         }
         else
         {

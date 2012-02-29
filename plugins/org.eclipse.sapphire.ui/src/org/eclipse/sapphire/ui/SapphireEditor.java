@@ -788,25 +788,23 @@ public abstract class SapphireEditor
         throw new UnsupportedOperationException();
     }
     
-    @SuppressWarnings( "unchecked" )
-    
     public <A> A adapt( final Class<A> adapterType )
     {
         A result = null;
 
         if( adapterType == IEditorPart.class )
         {
-            result = (A) getActiveEditor();
+            result = adapterType.cast( getActiveEditor() );
         }
 
         if( result == null && adapterType == IEditorSite.class )
         {
-            result = (A) getEditorSite();
+            result = adapterType.cast( getEditorSite() );
         }
 
         if( result == null )
         {
-            result = (A) getAdapter( adapterType );
+            result = adapterType.cast( getAdapter( adapterType ) );
         }
 
         if( result == null && getParentPart() != null )

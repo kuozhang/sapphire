@@ -53,13 +53,11 @@ public abstract class ModelParticle
         return this.parent;
     }
     
-    @SuppressWarnings( "unchecked" )
-    
     public final <T> T nearest( final Class<T> particleType )
     {
         if( particleType.isAssignableFrom( getClass() ) )
         {
-            return (T) this;
+            return particleType.cast( this );
         }
         else
         {
@@ -73,8 +71,6 @@ public abstract class ModelParticle
             }
         }
     }
-    
-    @SuppressWarnings( "unchecked" )
     
     public <A> A adapt( final Class<A> adapterType )
     {
@@ -92,7 +88,7 @@ public abstract class ModelParticle
         
         if( result == null && adapterType == LocalizationService.class )
         {
-            result = (A) SourceLanguageLocalizationService.INSTANCE;
+            result = adapterType.cast( SourceLanguageLocalizationService.INSTANCE );
         }
         
         return result;

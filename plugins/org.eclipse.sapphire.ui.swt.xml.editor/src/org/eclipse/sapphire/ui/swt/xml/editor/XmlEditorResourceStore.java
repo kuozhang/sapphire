@@ -227,19 +227,17 @@ public class XmlEditorResourceStore extends XmlResourceStore
     }
     
     @Override
-    @SuppressWarnings( "unchecked" )
-    
     public <A> A adapt( final Class<A> adapterType )
     {
         A result = null;
         
         if( adapterType == ITextEditor.class )
         {
-            result = (A) getXmlEditor();
+            result = adapterType.cast( getXmlEditor() );
         }
         else if( adapterType == SourceEditorService.class )
         {
-            result = (A) this.sourceEditorService;
+            result = adapterType.cast( this.sourceEditorService );
         }
         else if( adapterType == File.class )
         {
@@ -247,14 +245,14 @@ public class XmlEditorResourceStore extends XmlResourceStore
             
             if( input instanceof FileEditorInput)
             {
-                result = (A) ( (FileEditorInput) input ).getFile().getLocation().toFile();
+                result = adapterType.cast( ( (FileEditorInput) input ).getFile().getLocation().toFile() );
             }
             else if( input instanceof FileStoreEditorInput )
             {
                 //Handle files that are not part of the current workspace.
                 
                 final URI uri = ( (FileStoreEditorInput) input ).getURI();
-                result = (A) new File( uri );
+                result = adapterType.cast( new File( uri ) );
             }
         }
         else if( adapterType == IFile.class )
@@ -263,7 +261,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
             
             if( input instanceof FileEditorInput )
             {
-                result = (A) ( (FileEditorInput) input ).getFile();
+                result = adapterType.cast( ( (FileEditorInput) input ).getFile() );
             }
         }
         else if( adapterType == IProject.class )
@@ -272,16 +270,16 @@ public class XmlEditorResourceStore extends XmlResourceStore
             
             if( input instanceof FileEditorInput )
             {
-                result = (A) ( (FileEditorInput) input ).getFile().getProject();
+                result = adapterType.cast( ( (FileEditorInput) input ).getFile().getProject() );
             }
         }
         else if( adapterType == IEditorInput.class )
         {
-        	result = (A) this.sourceEditor.getEditorInput();
+        	result = adapterType.cast( this.sourceEditor.getEditorInput() );
         }
         else if( adapterType == SapphireEditor.class )
         {
-            result = (A) this.sapphireEditor;
+            result = adapterType.cast( this.sapphireEditor );
         }
         else
         {
