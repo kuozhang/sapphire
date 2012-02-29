@@ -1,6 +1,6 @@
 <!-- 
  ******************************************************************************
- * Copyright (c) 2011 Oracle
+ * Copyright (c) 2012 Oracle
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1051,7 +1051,7 @@ Fragment-Host: @{Bundle}
               <if>
                 <not><istrue value="${.content.valid}"/></not>
                 <then>
-                  <get src="http://www.eclipse.org/downloads/download.php?file=@{file}&amp;r=1&amp;protocol=http" dest="${downloads}/${.url.checksum}"/>
+                  <get src="http://www.eclipse.org/downloads/download.php?file=@{file}&amp;r=1&amp;protocol=http" dest="${downloads}/${.url.checksum}" verbose="true"/>
                 </then>
               </if>
               
@@ -1063,11 +1063,17 @@ Fragment-Host: @{Bundle}
       <if>
         <istrue value="${.content.valid}"/>
         <then>
+        
+          <propertyfile file="${downloads}/${.url.checksum}.properties">
+            <entry key="LastUsed" type="date" value="now" pattern="yyyy-MM-dd"/>
+          </propertyfile>
+        
           <var name="@{property}" value="${downloads}/${.url.checksum}"/>
           <var name=".url.checksum" unset="true"/>
           <var name=".content.valid" unset="true"/>
           <var name=".file" unset="true"/>
           <var name=".archived" unset="true"/>
+          
         </then>
         <else>
           <fail message="Failed to download @{file} from Eclipse Foundation."/>
@@ -1076,6 +1082,100 @@ Fragment-Host: @{Bundle}
       
     </sequential>
   </macrodef>
+  
+	
+  <macrodef name="prune-downloads-from-eclipse">
+    <sequential>
+    
+      <init-download-from-eclipse/>
+      
+      <if>
+        <available file="${downloads}" type="dir"/>
+        <then>
+        
+          <echo message="Removing Eclipse downloads that haven't been used recently..."/>
+        
+          <for param="dfe.file">
+            <path>
+              <fileset dir="${downloads}">
+                <include name="*"/>
+          	    <exclude name="*.properties"/>
+              </fileset>
+            </path>
+            <sequential>
+          
+              <basename file="@{dfe.file}" property=".dfe.file.name"/>
+              <property name=".dfe.file.metadata" value="${downloads}/${.dfe.file.name}.properties"/>
+        	
+              <if>
+                <available file="${.dfe.file.metadata}"/>
+                <then>
+                  <property file="${.dfe.file.metadata}" prefix=".dfe.metadata."/>
+                </then>
+              </if>
+              
+              <if>
+        	    <isset property=".dfe.metadata.LastUsed"/>
+                <then>
+            	  
+                  <if>
+              	    <scriptcondition language="javascript">
+                      <![CDATA[
+              		    var dateParts = project.getProperty( ".dfe.metadata.LastUsed" ).split( "-" );
+              		    
+              		    if( dateParts.length == 3 )
+              		    {
+              		        var lastUsed = new Date( dateParts[ 0 ], dateParts[ 1 ] - 1, dateParts[ 2 ] );
+              		        var today = new Date();
+              		        
+              		        if( today.getTime() - lastUsed.getTime() < ( 30 * 24 * 60 * 60 * 1000 ) )
+              		        {
+              		            self.value = false;
+              		        }
+              		        else
+              		        {
+              		            self.value = true;
+                            }
+              		    }
+              		    else
+              		    {
+              		        self.value = false;
+              	        }
+                      ]]>
+              	    </scriptcondition>
+              	    <then>
+              	      <delete file="@{dfe.file}"/>
+              	      <delete file="${.dfe.file.metadata}"/>
+              	    </then>
+                  </if>
+            	  
+                </then>
+                <else>
+                  <propertyfile file="${.dfe.file.metadata}">
+                    <entry key="LastUsed" type="date" value="now" pattern="yyyy-MM-dd"/>
+                  </propertyfile>
+        	    </else>
+              </if>
+              
+              <var name=".dfe.file.name" unset="true"/>
+              <var name=".dfe.file.metadata" unset="true"/>
+              <var name=".dfe.metadata.LastUsed" unset="true"/>
+              
+            </sequential>
+          </for>
+    	  
+        </then>
+      </if>
+      
+    </sequential>
+  </macrodef>
+
+
+  <target name="prune-downloads-from-eclipse" depends="init">
+  
+    <prune-downloads-from-eclipse/>
+
+  </target>
   
   
   <macrodef name="wipe-download-from-eclipse">
