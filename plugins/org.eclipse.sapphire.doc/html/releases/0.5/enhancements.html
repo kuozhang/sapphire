@@ -65,10 +65,14 @@ along with ability to control horizontal alignment.</p>
 
 <p>Diagram Editor can now open workspace files, non-workspace files and non-local files. Developer can
 choose to store diagram's layout information in a separate file in the same folder as the file being
-edited, or a computed unique folder in project's .setting directory for workspace files. For non-workspace
-files, the layout file will be stored in a folder under the current workspace's .metadata directory.</p>
+edited, or a computed unique folder in project's .setting directory or in current workspace's .metadata directory.
+Third party developers can also provide a customized layout storage service. The service should extend
+<font color="#888888">DiagramLayoutPersistenceService</font> class. The architecture sample has been
+modified to provide an "in place" layout storage which stores the diagram layout info in  
+architecture.xml file. Developers can use that as an example if they want to implement their own
+layout storage service.</p>
 
-<p>The diagram layout storage location is controlled by diagram page definition's "SideBySideLayoutStorage" property.</p>
+<p>The diagram layout storage mechanism is controlled by diagram page definition's "LayoutStorage" property.</p>
 
 
 <h2><a name="Services"><a name="AdapterService">AdapterService</a></a></h2>
