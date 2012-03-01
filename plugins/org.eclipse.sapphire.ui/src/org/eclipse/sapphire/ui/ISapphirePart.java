@@ -13,11 +13,13 @@
 
 package org.eclipse.sapphire.ui;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.help.IContext;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 /**
@@ -44,4 +46,8 @@ public interface ISapphirePart
     SapphireAction getAction( String id );
     
     <A> A adapt( Class<A> adapterType );
+    
+    <S extends Service> S service( Class<S> serviceType );
+    <S extends Service> List<S> services( Class<S> serviceType );
+    
 }

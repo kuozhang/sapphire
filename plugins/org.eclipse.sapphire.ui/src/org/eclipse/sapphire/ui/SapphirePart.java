@@ -18,6 +18,7 @@ import static org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin.logErro
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,6 +44,7 @@ import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.def.ActuatorDef;
 import org.eclipse.sapphire.ui.def.FormDef;
 import org.eclipse.sapphire.ui.def.HtmlPanelDef;
@@ -68,6 +70,7 @@ import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
 import org.eclipse.sapphire.ui.def.SplitFormDef;
+import org.eclipse.sapphire.ui.internal.PartServiceContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.widgets.Display;
@@ -90,6 +93,7 @@ public abstract class SapphirePart implements ISapphirePart
     private Set<SapphirePartListener> listenersDeprecated;
     private SapphireImageCache imageCache;
     private Map<String,SapphireActionGroup> actions;
+    private PartServiceContext serviceContext;
     
     public final void init( final ISapphirePart parent,
                             final IModelElement modelElement,
@@ -527,7 +531,23 @@ public abstract class SapphirePart implements ISapphirePart
     
         return result;
     }
+    
+    public final <S extends Service> S service( final Class<S> serviceType )
+    {
+        final List<S> services = services( serviceType );
+        return ( services.isEmpty() ? null : services.get( 0 ) );
+    }
 
+    public final <S extends Service> List<S> services( final Class<S> serviceType )
+    {
+        if( this.serviceContext == null )
+        {
+            this.serviceContext = new PartServiceContext( this );
+        }
+        
+        return this.serviceContext.services( serviceType );
+    }
+    
     public void dispose()
     {
         this.modelElement.removeListener( this.modelElementListener );
@@ -543,6 +563,11 @@ public abstract class SapphirePart implements ISapphirePart
             {
                 actionsForContext.dispose();
             }
+        }
+        
+        if( this.serviceContext != null )
+        {
+            this.serviceContext.dispose();
         }
     }
     

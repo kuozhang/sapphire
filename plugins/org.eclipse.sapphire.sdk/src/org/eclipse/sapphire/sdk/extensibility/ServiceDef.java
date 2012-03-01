@@ -139,7 +139,8 @@ public interface ServiceDef extends IModelElement
             ServiceContext.ID_ELEMENT_INSTANCE,
             ServiceContext.ID_ELEMENT_METAMODEL,
             ServiceContext.ID_PROPERTY_INSTANCE,
-            ServiceContext.ID_PROPERTY_METAMODEL
+            ServiceContext.ID_PROPERTY_METAMODEL,
+            "Sapphire.Part"
         },
         invalidValueSeverity = Severity.OK
     )

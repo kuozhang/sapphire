@@ -22,6 +22,7 @@ import java.io.File;
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,8 +44,10 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
+import org.eclipse.sapphire.ui.internal.PartServiceContext;
 import org.eclipse.sapphire.ui.internal.SapphireActionManager;
 import org.eclipse.sapphire.ui.internal.SapphireEditorContentOutline;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -93,6 +96,7 @@ public abstract class SapphireEditor
     private final SapphireActionManager actionsManager;
     private SapphirePropertySheetPage propertiesViewPage;
     private Listener propertiesViewContributionChangeListener;
+    private PartServiceContext serviceContext;
     
     public SapphireEditor( final String pluginId )
     {
@@ -630,6 +634,11 @@ public abstract class SapphireEditor
         {
             this.model.dispose();
         }
+        
+        if( this.serviceContext != null )
+        {
+            this.serviceContext.dispose();
+        }
     }
     
     @Override
@@ -813,6 +822,22 @@ public abstract class SapphireEditor
         }
 
         return result;
+    }
+    
+    public final <S extends Service> S service( final Class<S> serviceType )
+    {
+        final List<S> services = services( serviceType );
+        return ( services.isEmpty() ? null : services.get( 0 ) );
+    }
+
+    public final <S extends Service> List<S> services( final Class<S> serviceType )
+    {
+        if( this.serviceContext == null )
+        {
+            this.serviceContext = new PartServiceContext( this );
+        }
+        
+        return this.serviceContext.services( serviceType );
     }
 
     private static final class Resources extends NLS
