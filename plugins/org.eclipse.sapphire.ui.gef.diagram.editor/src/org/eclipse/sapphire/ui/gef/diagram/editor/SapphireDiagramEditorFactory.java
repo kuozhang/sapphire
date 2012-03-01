@@ -28,9 +28,7 @@ import org.eclipse.ui.IEditorInput;
  */
 
 public class SapphireDiagramEditorFactory 
-{
-    public static final String SAPPHIRE_DIAGRAM_TYPE = "sapphireDiagram";    
-    
+{    
     public static DiagramLayoutPersistenceService getLayoutPersistenceService(SapphireDiagramEditorPagePart diagramPart)
     {
     	IModelElement rootElement = diagramPart.getLocalModelElement();
@@ -53,7 +51,7 @@ public class SapphireDiagramEditorFactory
     	}
     	else if (layoutStorage == LayoutStorage.CUSTOM)
     	{
-    		layoutPersistentService = rootElement.service(DiagramLayoutPersistenceService.class);
+    		layoutPersistentService = diagramPart.service(DiagramLayoutPersistenceService.class);
     	}
         return layoutPersistentService;     	
     }

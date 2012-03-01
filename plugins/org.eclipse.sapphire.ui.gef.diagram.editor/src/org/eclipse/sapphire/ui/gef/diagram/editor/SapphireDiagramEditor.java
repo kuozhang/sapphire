@@ -235,12 +235,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
     {
     	return this.diagramPageDef;
     }
-    
-    public DiagramLayoutPersistenceService getLayoutPersistenceService()
-    {
-    	return this.layoutPersistenceService;
-    }
-    
+        
 	@Override
 	public boolean isDirty()
 	{
@@ -447,6 +442,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 
 		// Is this the right place?
 		setEditDomain(new DefaultEditDomain(this));
+				
 	}
 
 	@Override
@@ -468,11 +464,12 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		// listen for dropped parts
 		viewer.addDropTargetListener(new SapphireTemplateTransferDropTargetListener(this));
 		viewer.addDropTargetListener((TransferDropTargetListener) new ObjectsTransferDropTargetListener(viewer));
-		
+		postInit();
 	}
 	
-	public void postInit()
-	{
+	private void postInit()
+	{				
+		// Initialize layout persistence service
 		this.layoutPersistenceService = SapphireDiagramEditorFactory.getLayoutPersistenceService(this.diagramPart);
 		
 		initRenderingContext();

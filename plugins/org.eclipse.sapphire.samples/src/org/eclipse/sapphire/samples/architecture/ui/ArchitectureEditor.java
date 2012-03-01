@@ -66,7 +66,6 @@ public final class ArchitectureEditor extends SapphireEditor
         addPage( 0, this.pageDiagram, getEditorInput() );
         setPageText( 0, "Diagram" );
         setPageId( this.pages.get( 0 ), "Diagram", this.pageDiagram.getPart() );
-        this.pageDiagram.postInit();
     }
     
     @Override

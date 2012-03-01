@@ -65,7 +65,6 @@ public class MapEditor extends SapphireEditor
         addPage(0, mapDiagram, getEditorInput());
         setPageText( 0, "Diagram" );
         setPageId(this.pages.get(0), "Diagram", this.mapDiagram.getPart());
-        this.mapDiagram.postInit();
     }
     
     @Override

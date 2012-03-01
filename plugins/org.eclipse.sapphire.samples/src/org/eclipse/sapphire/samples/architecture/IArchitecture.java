@@ -37,7 +37,6 @@ import org.eclipse.sapphire.samples.architecture.internal.InPlaceLayoutPersisten
 
 @GenerateImpl
 @XmlBinding( path = "architecture" )
-@Service( impl = InPlaceLayoutPersistenceService.class)
 
 public interface IArchitecture extends IModelElement
 {

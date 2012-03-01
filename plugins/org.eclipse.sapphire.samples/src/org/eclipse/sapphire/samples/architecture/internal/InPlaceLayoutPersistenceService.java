@@ -14,7 +14,6 @@ package org.eclipse.sapphire.samples.architecture.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
@@ -23,9 +22,12 @@ import org.eclipse.sapphire.samples.architecture.ConnectionBendpoint;
 import org.eclipse.sapphire.samples.architecture.IArchitecture;
 import org.eclipse.sapphire.samples.architecture.IComponent;
 import org.eclipse.sapphire.samples.architecture.IComponentDependency;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.ui.Bounds;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.Point;
-import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
@@ -34,7 +36,6 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
-import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditor;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -52,11 +53,9 @@ public class InPlaceLayoutPersistenceService extends DiagramLayoutPersistenceSer
 	@Override
     protected void init()
     {
-    	super.init();
-    	this.architecture = (IArchitecture)context(IModelElement.class);
-    	SapphireEditor sapphireEditor = context(IModelElement.class).adapt(SapphireEditor.class);
-    	SapphireDiagramEditor diagramEditor = (SapphireDiagramEditor)sapphireEditor.getPage("Diagram");
-    	this.diagramPart = diagramEditor.getPart();
+    	super.init();    	
+    	this.diagramPart = (SapphireDiagramEditorPagePart)context().find(ISapphirePart.class);
+    	this.architecture = (IArchitecture)this.diagramPart.getLocalModelElement();
     	load();
     	addDiagramPartListener();
     	addModelListeners();
@@ -356,4 +355,23 @@ public class InPlaceLayoutPersistenceService extends DiagramLayoutPersistenceSer
 			}
 		}
 	}
+	
+    public static final class Factory extends ServiceFactory
+    {
+        @Override
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
+        {
+        	ISapphirePart part = context.find(ISapphirePart.class);
+        	return part instanceof SapphireDiagramEditorPagePart;
+        }
+    
+        @Override
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
+        {
+            return new InPlaceLayoutPersistenceService();
+        }
+    }
+	
 }
