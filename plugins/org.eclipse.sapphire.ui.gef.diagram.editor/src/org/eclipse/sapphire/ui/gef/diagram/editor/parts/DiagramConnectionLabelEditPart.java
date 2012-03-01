@@ -7,6 +7,8 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - [371909] Double-click on connection labels does not place 
+ *                   label in direct edit mode
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.gef.diagram.editor.parts;
@@ -112,7 +114,7 @@ public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart
 	}
 
 	public void performRequest(Request request) {
-		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT)
+		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT || request.getType().equals(REQ_OPEN))
 			performDirectEdit();
 	}
 	
