@@ -363,7 +363,7 @@ public class InPlaceLayoutPersistenceService extends DiagramLayoutPersistenceSer
                                    final Class<? extends Service> service )
         {
         	ISapphirePart part = context.find(ISapphirePart.class);
-        	return part instanceof SapphireDiagramEditorPagePart;
+        	return part instanceof SapphireDiagramEditorPagePart && part.getModelElement() instanceof IArchitecture;
         }
     
         @Override
