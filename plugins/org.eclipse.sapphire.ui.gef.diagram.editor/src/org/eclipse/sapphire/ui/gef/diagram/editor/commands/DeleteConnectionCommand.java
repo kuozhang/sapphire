@@ -30,6 +30,14 @@ public class DeleteConnectionCommand extends Command
 	{
 		this.connectionPart = part;
 	}
+	
+	@Override
+	public boolean canExecute() 
+	{
+		SapphireActionHandler deleteActionHandler = this.connectionPart.getAction(DELETE_ACTION_ID).getFirstActiveHandler();
+		return deleteActionHandler.isEnabled();
+	}
+	
 
 	@Override
 	public void execute() 

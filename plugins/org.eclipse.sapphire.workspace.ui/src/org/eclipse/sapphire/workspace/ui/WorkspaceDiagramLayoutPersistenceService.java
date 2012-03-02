@@ -9,36 +9,36 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.layout.standard.internal;
+package org.eclipse.sapphire.workspace.ui;
 
 import java.io.File;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.sapphire.modeling.FileResourceStore;
 import org.eclipse.sapphire.modeling.StatusException;
 import org.eclipse.sapphire.modeling.util.internal.FileUtil;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
+import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
+import org.eclipse.sapphire.ui.diagram.def.LayoutStorage;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.layout.standard.StandardDiagramLayout;
+import org.eclipse.sapphire.ui.diagram.layout.standard.StandardDiagramLayoutPersistenceService;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.ui.IEditorInput;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
 public class WorkspaceDiagramLayoutPersistenceService extends
-		LazyLoadLayoutPersistenceService 
+		StandardDiagramLayoutPersistenceService 
 {
 	private static final String WORKSPACE_LAYOUT_FOLDER = ".metadata/.plugins/org.eclipse.sapphire.ui.diagram/layouts";
-	
-	public WorkspaceDiagramLayoutPersistenceService(IEditorInput editorInput, SapphireDiagramEditorPagePart diagramPart)
-	{
-		super(editorInput, diagramPart);
-	}
 	
 	@Override
 	protected StandardDiagramLayout initLayoutModel() 
@@ -61,7 +61,7 @@ public class WorkspaceDiagramLayoutPersistenceService extends
 		return layoutModel;
 	}
 	
-	private File getLayoutPersistenceFile(String fileName) throws StatusException, CoreException
+	private File getLayoutPersistenceFile(String fileName) throws StatusException
 	{
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
         File layoutFolder = workspaceRoot.getLocation().toFile();
@@ -73,5 +73,32 @@ public class WorkspaceDiagramLayoutPersistenceService extends
         File layoutFile = new File (layoutFolder, fileName);
         return layoutFile;
 	}
+	
+    public static final class Factory extends ServiceFactory
+    {
+        @Override
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
+        {
+        	ISapphirePart part = context.find(ISapphirePart.class);
+        	if (part instanceof SapphireDiagramEditorPagePart)
+        	{
+        		SapphireDiagramEditorPagePart diagramPagePart = (SapphireDiagramEditorPagePart)part;
+        		IDiagramEditorPageDef pageDef = diagramPagePart.getPageDef();
+        		if (pageDef.getLayoutStorage().getContent() == LayoutStorage.WORKSPACE)
+        		{
+        			return true;
+        		}
+        	}
+        	return false;
+        }
+    
+        @Override
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
+        {
+            return new WorkspaceDiagramLayoutPersistenceService();
+        }
+    }
 	
 }

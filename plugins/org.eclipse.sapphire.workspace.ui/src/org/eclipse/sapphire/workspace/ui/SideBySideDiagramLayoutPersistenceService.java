@@ -22,9 +22,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.sapphire.modeling.FileResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactory;
+import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
+import org.eclipse.sapphire.ui.diagram.def.LayoutStorage;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.layout.standard.StandardDiagramLayout;
-import org.eclipse.sapphire.ui.diagram.layout.standard.internal.LazyLoadLayoutPersistenceService;
+import org.eclipse.sapphire.ui.diagram.layout.standard.StandardDiagramLayoutPersistenceService;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
 import org.eclipse.ui.IEditorInput;
@@ -36,13 +42,9 @@ import org.eclipse.ui.part.FileEditorInput;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class SideBySideLayoutPersistenceService extends
-		LazyLoadLayoutPersistenceService 
+public class SideBySideDiagramLayoutPersistenceService extends
+		StandardDiagramLayoutPersistenceService 
 {
-	public SideBySideLayoutPersistenceService(IEditorInput editorInput, SapphireDiagramEditorPagePart diagramPart)
-	{
-		super(editorInput, diagramPart);
-	}
 
 	@Override
 	protected StandardDiagramLayout initLayoutModel() 
@@ -117,5 +119,32 @@ public class SideBySideLayoutPersistenceService extends
     	}
 		return fileName;
 	}
+	
+    public static final class Factory extends ServiceFactory
+    {
+        @Override
+        public boolean applicable( final ServiceContext context,
+                                   final Class<? extends Service> service )
+        {
+        	ISapphirePart part = context.find(ISapphirePart.class);
+        	if (part instanceof SapphireDiagramEditorPagePart)
+        	{
+        		SapphireDiagramEditorPagePart diagramPagePart = (SapphireDiagramEditorPagePart)part;
+        		IDiagramEditorPageDef pageDef = diagramPagePart.getPageDef();
+        		if (pageDef.getLayoutStorage().getContent() == LayoutStorage.SIDE_BY_SIDE)
+        		{
+        			return true;
+        		}
+        	}
+        	return false;
+        }
+    
+        @Override
+        public Service create( final ServiceContext context,
+                               final Class<? extends Service> service )
+        {
+            return new SideBySideDiagramLayoutPersistenceService();
+        }
+    }
 	
 }

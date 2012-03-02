@@ -9,7 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.layout.standard.internal;
+package org.eclipse.sapphire.ui.diagram.layout.standard;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +25,7 @@ import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.StatusException;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.Bounds;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
@@ -36,10 +37,6 @@ import org.eclipse.sapphire.ui.diagram.editor.IdUtil;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
-import org.eclipse.sapphire.ui.diagram.layout.standard.DiagramBendPointLayout;
-import org.eclipse.sapphire.ui.diagram.layout.standard.DiagramConnectionLayout;
-import org.eclipse.sapphire.ui.diagram.layout.standard.DiagramNodeLayout;
-import org.eclipse.sapphire.ui.diagram.layout.standard.StandardDiagramLayout;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
@@ -50,29 +47,19 @@ import org.eclipse.ui.part.FileEditorInput;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public abstract class LazyLoadLayoutPersistenceService extends DiagramLayoutPersistenceService
+public abstract class StandardDiagramLayoutPersistenceService extends DiagramLayoutPersistenceService
 {
 	protected StandardDiagramLayout layoutModel;
 	protected IEditorInput editorInput;
 	protected SapphireDiagramEditorPagePart diagramPart;
 	private SapphireDiagramPartListener diagramPartListener;
-
-	public LazyLoadLayoutPersistenceService(IEditorInput editorInput, SapphireDiagramEditorPagePart diagramPart)
-	{
-		if (editorInput == null || diagramPart == null)
-		{
-			throw new IllegalArgumentException();
-		}
-		this.editorInput = editorInput;
-		this.diagramPart = diagramPart;
-		init();
-		addDiagramPartListener();
-	}
 	
     @Override
     protected void init()
     {
         super.init();
+    	this.diagramPart = (SapphireDiagramEditorPagePart)context().find(ISapphirePart.class);
+    	this.editorInput = this.diagramPart.getLocalModelElement().adapt(IEditorInput.class);        
 		try
 		{
 			load();
@@ -81,7 +68,7 @@ public abstract class LazyLoadLayoutPersistenceService extends DiagramLayoutPers
 		{
 			SapphireUiFrameworkPlugin.log( e );
 		}
-        
+		addDiagramPartListener();
     }		
 	
     private void setGridVisible(boolean visible)
@@ -356,6 +343,5 @@ public abstract class LazyLoadLayoutPersistenceService extends DiagramLayoutPers
 		};
 		this.diagramPart.addListener(this.diagramPartListener);
 	}
-	
-	
+		
 }

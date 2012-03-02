@@ -13,15 +13,8 @@
 
 package org.eclipse.sapphire.ui.gef.diagram.editor;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
-import org.eclipse.sapphire.ui.diagram.def.LayoutStorage;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
-import org.eclipse.sapphire.ui.diagram.layout.standard.internal.WorkspaceDiagramLayoutPersistenceService;
-import org.eclipse.sapphire.workspace.ui.ProjectDiagramLayoutPersistenceService;
-import org.eclipse.sapphire.workspace.ui.SideBySideLayoutPersistenceService;
-import org.eclipse.ui.IEditorInput;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -31,28 +24,9 @@ public class SapphireDiagramEditorFactory
 {    
     public static DiagramLayoutPersistenceService getLayoutPersistenceService(SapphireDiagramEditorPagePart diagramPart)
     {
-    	IModelElement rootElement = diagramPart.getLocalModelElement();
-    	IEditorInput input = rootElement.adapt(IEditorInput.class);
-    	IDiagramEditorPageDef pageDef = diagramPart.getPageDef();
-    	LayoutStorage layoutStorage = pageDef.getLayoutStorage().getContent();
-    	DiagramLayoutPersistenceService layoutPersistentService = null;
+    	DiagramLayoutPersistenceService layoutPersistentService = 
+    			diagramPart.service(DiagramLayoutPersistenceService.class);
     	
-    	if (layoutStorage == LayoutStorage.WORKSPACE)
-    	{
-    		layoutPersistentService = new WorkspaceDiagramLayoutPersistenceService(input, diagramPart);
-    	}
-    	else if (layoutStorage == LayoutStorage.PROJECT)
-    	{
-    		layoutPersistentService = new ProjectDiagramLayoutPersistenceService(input, diagramPart);
-    	}
-    	else if (layoutStorage == LayoutStorage.SIDE_BY_SIDE)
-    	{
-    		layoutPersistentService = new SideBySideLayoutPersistenceService(input, diagramPart);
-    	}
-    	else if (layoutStorage == LayoutStorage.CUSTOM)
-    	{
-    		layoutPersistentService = diagramPart.service(DiagramLayoutPersistenceService.class);
-    	}
         return layoutPersistentService;     	
     }
         
