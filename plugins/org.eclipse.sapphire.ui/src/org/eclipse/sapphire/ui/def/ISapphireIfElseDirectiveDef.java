@@ -71,7 +71,7 @@ public interface ISapphireIfElseDirectiveDef
     
     @Type
     ( 
-        base = ISapphirePartDef.class,
+        base = PartDef.class,
         possible = 
         { 
             PropertyEditorDef.class, 
@@ -119,13 +119,13 @@ public interface ISapphireIfElseDirectiveDef
                              
     ListProperty PROP_THEN_CONTENT = new ListProperty( TYPE, "ThenContent" );
     
-    ModelElementList<ISapphirePartDef> getThenContent();
+    ModelElementList<PartDef> getThenContent();
     
     // *** ElseContent ***
     
     @Type
     ( 
-        base = ISapphirePartDef.class,
+        base = PartDef.class,
         possible = 
         { 
             PropertyEditorDef.class, 
@@ -173,6 +173,6 @@ public interface ISapphireIfElseDirectiveDef
                              
     ListProperty PROP_ELSE_CONTENT = new ListProperty( TYPE, "ElseContent" );
     
-    ModelElementList<ISapphirePartDef> getElseContent();
+    ModelElementList<PartDef> getElseContent();
     
 }

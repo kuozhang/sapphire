@@ -19,7 +19,7 @@ import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 
@@ -47,7 +47,7 @@ public final class SapphireHintValuePossibleValuesService
                 values.add( PropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL );
                 values.add( PropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL_INDENTED );
             }
-            else if ( hint.equals( ISapphirePartDef.HINT_STYLE ) ) 
+            else if ( hint.equals( PartDef.HINT_STYLE ) ) 
             {
                 if( partdef instanceof ISapphireWithDirectiveDef )
                 {

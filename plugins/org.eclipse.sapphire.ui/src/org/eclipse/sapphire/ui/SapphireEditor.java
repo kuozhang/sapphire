@@ -45,7 +45,7 @@ import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.Service;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
 import org.eclipse.sapphire.ui.internal.PartServiceContext;
 import org.eclipse.sapphire.ui.internal.SapphireActionManager;
@@ -114,7 +114,7 @@ public abstract class SapphireEditor
         return super.getContainer();
     }
 
-    public ISapphirePartDef definition()
+    public PartDef definition()
     {
         return null;
     }

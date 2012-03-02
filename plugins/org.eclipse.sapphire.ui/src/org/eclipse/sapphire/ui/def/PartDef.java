@@ -32,9 +32,9 @@ import org.eclipse.sapphire.ui.def.internal.SapphirePartDefMethods;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface ISapphirePartDef extends IModelElement
+public interface PartDef extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( ISapphirePartDef.class );
+    ModelElementType TYPE = new ModelElementType( PartDef.class );
     
     String HINT_HIDE_IF_DISABLED = "hide.if.disabled";
     String HINT_PREFER_FORM_STYLE = "prefer.form.style";
@@ -161,5 +161,15 @@ public interface ISapphirePartDef extends IModelElement
     ListProperty PROP_ACTION_HANDLER_FILTERS = new ListProperty( TYPE, "ActionHandlerFilters" );
     
     ModelElementList<ISapphireActionHandlerFilterDef> getActionHandlerFilters();
+    
+    // *** Services ***
+    
+    @Type( base = ServiceDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "service", type = ServiceDef.class ) )
+    @Label( standard = "service" )
+    
+    ListProperty PROP_SERVICES = new ListProperty( TYPE, "Services" );
+    
+    ModelElementList<ServiceDef> getServices();
     
 }

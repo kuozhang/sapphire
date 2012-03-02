@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.FormDef;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -65,7 +65,7 @@ public class SapphirePartContainer extends FormPart
         final FormDef def = (FormDef) this.definition;
         final List<SapphirePart> childParts = new ArrayList<SapphirePart>();
         
-        for( ISapphirePartDef childPartDef : def.getContent() )
+        for( PartDef childPartDef : def.getContent() )
         {
             final SapphirePart childPart = create( this, element, childPartDef, this.params );
             childParts.add( childPart );

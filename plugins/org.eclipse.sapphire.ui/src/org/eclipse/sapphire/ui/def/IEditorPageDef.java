@@ -31,7 +31,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface IEditorPageDef
 
-    extends ISapphirePartDef
+    extends PartDef
     
 {
     ModelElementType TYPE = new ModelElementType( IEditorPageDef.class );

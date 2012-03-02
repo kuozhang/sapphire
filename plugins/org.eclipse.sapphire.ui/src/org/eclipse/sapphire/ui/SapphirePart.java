@@ -56,7 +56,7 @@ import org.eclipse.sapphire.ui.def.ISapphireGroupDef;
 import org.eclipse.sapphire.ui.def.ISapphireIfElseDirectiveDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartListenerDef;
 import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
 import org.eclipse.sapphire.ui.def.ISapphireSeparatorDef;
@@ -85,7 +85,7 @@ public abstract class SapphirePart implements ISapphirePart
 {
     private ISapphirePart parent;
     private IModelElement modelElement;
-    protected ISapphirePartDef definition;
+    protected PartDef definition;
     protected Map<String,String> params;
     private ModelElementListener modelElementListener;
     private Status validationState;
@@ -97,7 +97,7 @@ public abstract class SapphirePart implements ISapphirePart
     
     public final void init( final ISapphirePart parent,
                             final IModelElement modelElement,
-                            final ISapphirePartDef definition,
+                            final PartDef definition,
                             final Map<String,String> params )
     {
         this.parent = parent;
@@ -219,7 +219,7 @@ public abstract class SapphirePart implements ISapphirePart
 
     public abstract void render( final SapphireRenderingContext context );
     
-    public ISapphirePartDef definition()
+    public PartDef definition()
     {
         return this.definition;
     }
@@ -754,7 +754,7 @@ public abstract class SapphirePart implements ISapphirePart
 
     public static final SapphirePart create( final SapphirePart parent,
                                              final IModelElement modelElement,
-                                             final ISapphirePartDef definition,
+                                             final PartDef definition,
                                              final Map<String,String> params )
     {
         if( modelElement == null )
@@ -764,7 +764,7 @@ public abstract class SapphirePart implements ISapphirePart
         
         SapphirePart part = null;
         Map<String,String> partParams = params;
-        ISapphirePartDef def = definition;
+        PartDef def = definition;
         
         if( definition instanceof PropertyEditorDef )
         {

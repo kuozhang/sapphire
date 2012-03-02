@@ -204,6 +204,71 @@
             </node-factory>
         </node>
     </node>
+    <node>
+        <id>ServicesNode</id>
+        <label>services</label>
+        <node-factory>
+            <property>Services</property>
+            <case>
+                <model-element-type>ServiceDef</model-element-type>
+                <section>
+                    <label>service</label>
+                    <content>
+                        <property-editor>Implementation</property-editor>
+                        <property-editor>Overrides</property-editor>
+                    </content>
+                </section>
+                <label>${ Implementation == null ? &quot;&lt;service&gt;&quot; : LastSegment( Implementation, &quot;.&quot; ) }</label>
+            </case>
+        </node-factory>
+        <section>
+            <content>
+                <label>Define services.</label>
+                <spacer></spacer>
+                <actuator>
+                    <action-id>Sapphire.Add</action-id>
+                    <label>add a service</label>
+                </actuator>
+            </content>
+        </section>
+    </node>
+
+    <node>
+        <id>PropertiesViewContributionNode</id>
+        <label>properties view contribution</label>
+        <property>PropertiesViewContribution</property>
+        <node-factory>
+            <property>Pages</property>
+            <case>
+                <section>
+                    <label>properties view contribution page</label>
+                    <content>
+                        <property-editor>Label</property-editor>
+                        <property-editor>Image</property-editor>
+                        <property-editor>VisibleWhen</property-editor>
+                    </content>
+                </section>
+                <node-include>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>Content</value>
+                    </param>
+                </node-include>
+                <label>${ Label == null ? &quot;&lt;page&gt;&quot; : Label }</label>
+            </case>
+        </node-factory>
+        <section>
+            <content>
+                <label>Define properties view contribution.</label>
+                <spacer></spacer>
+                <actuator>
+                    <label>Add a page</label>
+                    <action-id>Sapphire.Add</action-id>
+                </actuator>
+            </content>
+        </section>
+    </node>
     
     <form>
         <id>PartId</id>
@@ -218,7 +283,7 @@
             </if>
         </content>
     </form>
-
+    
     <form>
         <id>CompositePresentation</id>
         <content>
@@ -263,7 +328,6 @@
             </property-editor>
         </content>
     </form>
-    
     <node-factory>
         <id>PartsNodeList</id>
         <property>@{Property}</property>
@@ -271,7 +335,7 @@
         <case>
             <model-element-type>PropertyEditorDef</model-element-type>
             <label>${ Id == null ? ( Property == null ? "Property Editor" : Property ) : Id }</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <label>property editor</label>
                 <content>
@@ -308,7 +372,7 @@
                             to display units property next to the amount property or to display explanatory text next to a property requiring complex
                             text input.
                         </label>
-                        <spacer/>
+                        <spacer />
                         <property-editor>RelatedContentWidth</property-editor>
                     </content>
                 </section>
@@ -321,7 +385,7 @@
                 </node-include>
             </node>
             <node-include>ActionsOverallNode</node-include>
-            <node-include>DocumentationNode</node-include>
+            <node-include>ServicesNode</node-include>
             <section>
                 <label>customization</label>
                 <content>
@@ -355,48 +419,52 @@
                     <property-editor>Hints</property-editor>
                 </content>
             </section>
+            <node-include>DocumentationNode</node-include>
         </case>
         
         <case>
             <model-element-type>ISapphireSeparatorDef</model-element-type>
             <label>Separator</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <content>
                     <include>PartId</include>
                     <property-editor>Label</property-editor>
                 </content>
             </section>
+            <node-include>ServicesNode</node-include>
         </case>
 
         <case>
             <model-element-type>ISapphireSpacerDef</model-element-type>
             <label>Spacer</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <content>
                     <include>PartId</include>
                     <property-editor>Size</property-editor>
                 </content>
             </section>
+            <node-include>ServicesNode</node-include>
         </case>
 
         <case>
             <model-element-type>ISapphireLabelDef</model-element-type>
             <label>Label</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <content>
                     <include>PartId</include>
                     <property-editor>Text</property-editor>
                 </content>
             </section>
+            <node-include>ServicesNode</node-include>
         </case>
         
         <case>
             <model-element-type>ActuatorDef</model-element-type>
             <label>Actuator</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <content>
                     <label>An actuator provides means to invoke an action. The action could be drawn from the context where actuator is placed or provided as part of actuator's definition.</label>
@@ -438,12 +506,13 @@
                     </property-editor>
                 </content>
             </section>
+            <node-include>ServicesNode</node-include>
         </case>
         
         <case>
             <model-element-type>HtmlPanelDef</model-element-type>
             <label>HTML Panel</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <content>
                     <property-editor>
@@ -451,7 +520,7 @@
                         <show-label>false</show-label>
                         <span>true</span>
                     </property-editor>
-                    <separator/>
+                    <separator />
                     <switching-panel>
                         <enum-controller>
                             <property>ContentSourceType</property>
@@ -496,12 +565,13 @@
                     <property-editor>Height</property-editor>
                 </content>
             </section>
+            <node-include>ServicesNode</node-include>
         </case>
         
         <case>
             <model-element-type>ISapphireIfElseDirectiveDef</model-element-type>
             <label>If</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <label>If</label>
                 <content>
@@ -539,12 +609,13 @@
                     </param>
                 </node-include>
             </node>
+            <node-include>ServicesNode</node-include>
         </case>
 
         <case>
             <model-element-type>ISapphireWizardDef</model-element-type>
             <label>${ Id == null ? ( Label == null ? "Wizard" : Label ) : Id }</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <label>Wizard</label>
                 <content>
@@ -589,13 +660,14 @@
                     <node-include>DocumentationNode</node-include>
                 </case>
             </node-factory>
+            <node-include>ServicesNode</node-include>
             <node-include>DocumentationNode</node-include>
         </case>
         
         <case>
             <model-element-type>ISapphireDialogDef</model-element-type>
             <label>${ Id == null ? ( Label == null ? "Dialog" : Label ) : Id }</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <label>Dialog</label>
                 <content>
@@ -621,13 +693,14 @@
                     </param>
                 </node-include>
             </node>
+            <node-include>ServicesNode</node-include>
             <node-include>DocumentationNode</node-include>
         </case>
         
         <case>
             <model-element-type>ISapphireGroupDef</model-element-type>
             <label>Group</label>
-            <use-model-element-image/>
+            <use-model-element-image />
             <section>
                 <content>
                     <property-editor>Label</property-editor>
@@ -649,6 +722,7 @@
                     </param>
                 </node-include>
             </node>
+            <node-include>ServicesNode</node-include>
             <node-include>DocumentationNode</node-include>
         </case>
 
@@ -694,6 +768,7 @@
                     </param>
                 </node-include>
             </node>
+            <node-include>ServicesNode</node-include>
             <node-include>DocumentationNode</node-include>
         </case>
 
@@ -723,6 +798,7 @@
                     </param>
                 </node-include>
             </node>
+            <node-include>ServicesNode</node-include>
             <node-include>DocumentationNode</node-include>
         </case>
         
@@ -750,6 +826,7 @@
                 </node-include>
             </node>
             <node-include>ActionsOverallNode</node-include>
+            <node-include>ServicesNode</node-include>
             <node-include>DocumentationNode</node-include>
         </case>
         
@@ -773,6 +850,7 @@
                     </param>
                 </node-include>
             </node>
+            <node-include>ServicesNode</node-include>
             <node-include>DocumentationNode</node-include>
         </case>
         
@@ -787,6 +865,7 @@
                     <property-editor>Params</property-editor>
                 </content>
             </section>
+            <node-include>ServicesNode</node-include>
         </case>
 
         <case>
@@ -825,6 +904,7 @@
                     </section>
                 </case>
             </node-factory>
+            <node-include>ServicesNode</node-include>
         </case>
 
         <case>
@@ -883,6 +963,7 @@
                     </property-editor>
                 </content>
             </section>
+            <node-include>ServicesNode</node-include>
         </case>
 
         <case>
@@ -938,6 +1019,7 @@
                     </param>
                 </node-include>
             </node>
+            <node-include>ServicesNode</node-include>
         </case>
         
         <case>
@@ -975,6 +1057,7 @@
                     </node-include>
                 </case>
             </node-factory>
+            <node-include>ServicesNode</node-include>
         </case>
         
         <case>
@@ -987,6 +1070,7 @@
                     <property-editor>Text</property-editor>
                 </content>
             </section>
+            <node-include>ServicesNode</node-include>
             <node-include>DocumentationNode</node-include>
         </case>
         
@@ -999,6 +1083,7 @@
                     <property-editor>ImplClass</property-editor>
                 </content>
             </section>
+            <node-include>ServicesNode</node-include>
             <node-include>DocumentationNode</node-include>
         </case>
 
@@ -1086,6 +1171,7 @@
             </node>
             <node-include>ActionsOverallNode</node-include>
             <node-include>PropertiesViewContributionNode</node-include>
+            <node-include>ServicesNode</node-include>
             <node-include>DocumentationNode</node-include>
         </case>
         
@@ -1187,6 +1273,7 @@
                     <node-include>DocumentationNode</node-include>
                 </case>
             </node-factory>
+            <node-include>ServicesNode</node-include>
         </case>
         
         <case>
@@ -1200,6 +1287,7 @@
                     <property-editor>Params</property-editor>
                 </content>
             </section>
+            <node-include>ServicesNode</node-include>
         </case>
         
         <case>
@@ -1229,6 +1317,7 @@
                 </node-include>
             </node>
             <node-include>ActionsOverallNode</node-include>
+            <node-include>ServicesNode</node-include>
             <node-include>DocumentationNode</node-include>
         </case>
         
@@ -1682,45 +1771,9 @@
                 </node-factory>
             </node>
             <node-include>PropertiesViewContributionNode</node-include>
+            <node-include>ServicesNode</node-include>
         </case>
         
     </node-factory>
-    
-    <node>
-        <id>PropertiesViewContributionNode</id>
-        <label>properties view contribution</label>
-        <property>PropertiesViewContribution</property>
-        <node-factory>
-            <property>Pages</property>
-            <case>
-                <section>
-                    <label>properties view contribution page</label>
-                    <content>
-                        <property-editor>Label</property-editor>
-                        <property-editor>Image</property-editor>
-                        <property-editor>VisibleWhen</property-editor>
-                    </content>
-                </section>
-                <node-include>
-                    <part>PartsNodeList</part>
-                    <param>
-                        <name>Property</name>
-                        <value>Content</value>
-                    </param>
-                </node-include>
-                <label>${ Label == null ? &quot;&lt;page&gt;&quot; : Label }</label>
-            </case>
-        </node-factory>
-        <section>
-            <content>
-                <label>Define properties view contribution.</label>
-                <spacer></spacer>
-                <actuator>
-                    <label>Add a page</label>
-                    <action-id>Sapphire.Add</action-id>
-                </actuator>
-            </content>
-        </section>
-    </node>
 
 </definition>

@@ -54,8 +54,11 @@ public abstract class ServiceFactoryProxy
         return result;
     }
     
-    protected abstract boolean applicableHandOff( ServiceContext context,
-                                                  Class<? extends Service> service );
+    protected boolean applicableHandOff( final ServiceContext context,
+                                         final Class<? extends Service> service )
+    {
+        return true;
+    }
     
     public final Service create( final ServiceContext context,
                                  final Class<? extends Service> service )

@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui.form.editors.masterdetails.def;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -20,7 +20,7 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 public interface IMasterDetailsContentNodeChildDef
 
-    extends ISapphirePartDef
+    extends PartDef
     
 {
     ModelElementType TYPE = new ModelElementType( IMasterDetailsContentNodeChildDef.class );

@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.ISapphireIfElseDirectiveDef;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -111,7 +111,7 @@ public final class IfThenElsePart extends SapphirePart
                 }
             };
         
-            for( ISapphirePartDef childPartDef : ( this.condition.getConditionState() ? this.def.getThenContent() : this.def.getElseContent() ) )
+            for( PartDef childPartDef : ( this.condition.getConditionState() ? this.def.getThenContent() : this.def.getElseContent() ) )
             {
                 final SapphirePart childPart = create( this, element, childPartDef, this.params );
                 this.currentBranchContent.add( childPart );

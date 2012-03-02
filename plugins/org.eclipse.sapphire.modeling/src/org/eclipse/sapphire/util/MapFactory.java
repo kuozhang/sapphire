@@ -9,47 +9,51 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.util;
+package org.eclipse.sapphire.util;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ListFactory<E>
+public final class MapFactory<K,V>
 {
-    private E firstElement = null;
-    private List<E> list = null;
+    private K firstKey = null;
+    private V firstValue = null;
+    private Map<K,V> map = null;
     private boolean created = false;
     
-    public void add( E element )
+    public void put( K key,
+                     V value )
     {
         if( this.created )
         {
             throw new IllegalStateException();
         }
         
-        if( this.list != null )
+        if( this.map != null )
         {
-            this.list.add( element );
+            this.map.put( key, value );
         }
-        else if( this.firstElement != null )
+        else if( this.firstKey != null )
         {
-            this.list = new ArrayList<E>();
-            this.list.add( this.firstElement );
-            this.list.add( element );
-            this.firstElement = null;
+            this.map = new HashMap<K,V>();
+            this.map.put( this.firstKey, this.firstValue );
+            this.map.put( key, value );
+            this.firstKey = null;
+            this.firstValue = null;
         }
         else
         {
-            this.firstElement = element;
+            this.firstKey = key;
+            this.firstValue = value;
         }
     }
     
-    public List<E> create()
+    public Map<K,V> create()
     {
         if( this.created )
         {
@@ -58,17 +62,17 @@ public final class ListFactory<E>
         
         this.created = true;
         
-        if( this.list != null )
+        if( this.map != null )
         {
-            return Collections.unmodifiableList( this.list );
+            return Collections.unmodifiableMap( this.map );
         }
-        else if( this.firstElement != null )
+        else if( this.firstKey != null )
         {
-            return Collections.singletonList( this.firstElement );
+            return Collections.singletonMap( this.firstKey, this.firstValue );
         }
         else
         {
-            return Collections.emptyList();
+            return Collections.emptyMap();
         }
     }
     

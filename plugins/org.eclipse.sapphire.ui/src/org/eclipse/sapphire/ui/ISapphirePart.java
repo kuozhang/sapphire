@@ -20,7 +20,7 @@ import org.eclipse.help.IContext;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.Service;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -37,7 +37,7 @@ public interface ISapphirePart
     IContext getDocumentationContext();
     SapphireImageCache getImageCache();
     void dispose();
-    ISapphirePartDef definition();
+    PartDef definition();
     
     Set<String> getActionContexts();
     String getMainActionContext();

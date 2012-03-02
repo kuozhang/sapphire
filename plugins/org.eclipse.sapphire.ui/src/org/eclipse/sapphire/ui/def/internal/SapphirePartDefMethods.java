@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui.def.internal;
 
 import org.eclipse.sapphire.ui.def.ISapphireHint;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -20,7 +20,7 @@ import org.eclipse.sapphire.ui.def.ISapphirePartDef;
 
 public final class SapphirePartDefMethods
 {
-    public static String getHint( final ISapphirePartDef def,
+    public static String getHint( final PartDef def,
                                   final String hintName )
     {
         String hintValue = null;
@@ -42,7 +42,7 @@ public final class SapphirePartDefMethods
         return hintValue;
     }
     
-    public static String getHint( final ISapphirePartDef def,
+    public static String getHint( final PartDef def,
                                   final String hintName,
                                   final String defaultValue )
     {
@@ -50,7 +50,7 @@ public final class SapphirePartDefMethods
         return ( hintValueStr == null ? defaultValue : hintValueStr );
     }
     
-    public static boolean getHint( final ISapphirePartDef def,
+    public static boolean getHint( final PartDef def,
                                    final String hintName,
                                    final boolean defaultValue )
     {
@@ -64,7 +64,7 @@ public final class SapphirePartDefMethods
         return defaultValue;
     }
     
-    public static int getHint( final ISapphirePartDef def,
+    public static int getHint( final PartDef def,
                                final String hintName,
                                final int defaultValue )
     {

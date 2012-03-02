@@ -34,7 +34,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface ISapphireWizardDef
 
-    extends ISapphirePartDef
+    extends PartDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireWizardDef.class );

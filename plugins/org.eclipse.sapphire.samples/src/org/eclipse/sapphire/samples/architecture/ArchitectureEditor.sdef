@@ -16,6 +16,8 @@
 <definition>
     <import>
         <package>org.eclipse.sapphire.samples.architecture</package>
+        <package>org.eclipse.sapphire.samples.architecture.internal</package>
+        <package>org.eclipse.sapphire.ui.diagram.layout</package>
     </import>
     <diagram-page>
         <id>DiagramPage</id>
@@ -113,6 +115,10 @@
                 </content>
             </page>
         </properties-view>
+        <service>
+            <type>DiagramLayoutPersistenceService</type>
+            <implementation>ArchitectureDiagramLayoutPersistenceService</implementation>
+        </service>
     </diagram-page>
     <editor-page>
         <id>DetailsPage</id>

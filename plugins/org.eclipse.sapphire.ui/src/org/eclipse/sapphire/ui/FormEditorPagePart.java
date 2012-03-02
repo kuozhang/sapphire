@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.FormEditorPageDef;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a> 
@@ -58,7 +58,7 @@ public final class FormEditorPagePart extends SapphireEditorPagePart
         
         this.childParts = new ArrayList<SapphirePart>();
         
-        for( ISapphirePartDef childPartDef : definition().getContent() )
+        for( PartDef childPartDef : definition().getContent() )
         {
             final SapphirePart childPart = create( this, element, childPartDef, this.params );
             childPart.attach( childPartListener );

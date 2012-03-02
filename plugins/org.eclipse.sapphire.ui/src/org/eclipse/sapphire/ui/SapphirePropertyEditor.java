@@ -39,7 +39,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -262,7 +262,7 @@ public final class SapphirePropertyEditor extends FormPart
         this.relatedContentParts = new ArrayList<SapphirePart>();
         this.relatedContentPartsReadOnly = Collections.unmodifiableList( this.relatedContentParts );
         
-        for( ISapphirePartDef relatedContentPartDef : propertyEditorPartDef.getRelatedContent() )
+        for( PartDef relatedContentPartDef : propertyEditorPartDef.getRelatedContent() )
         {
             this.relatedContentParts.add( create( this, this.element, relatedContentPartDef, this.params ) );
         }

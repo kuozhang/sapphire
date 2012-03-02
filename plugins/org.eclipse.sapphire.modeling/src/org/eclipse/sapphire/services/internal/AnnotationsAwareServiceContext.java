@@ -137,13 +137,6 @@ public abstract class AnnotationsAwareServiceContext extends ServiceContext
                 }
 
                 @Override
-                protected boolean applicableHandOff( final ServiceContext context,
-                                                     final Class<? extends Service> service )
-                {
-                    return true;
-                }
-
-                @Override
                 protected Service createHandOff( final ServiceContext context,
                                                  final Class<? extends Service> service )
                 {

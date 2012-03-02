@@ -29,7 +29,7 @@ import org.eclipse.sapphire.ui.SapphireActionSystemPart.EnablementChangedEvent;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart.LabelChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
@@ -137,7 +137,7 @@ public final class SapphireToolBarActionPresentation extends SapphireHotSpotsAct
                 throw new IllegalStateException();
             }
             
-            final String hint = action.getRenderingHint( ISapphirePartDef.HINT_STYLE, ISapphireActionDef.HINT_VALUE_STYLE_IMAGE );
+            final String hint = action.getRenderingHint( PartDef.HINT_STYLE, ISapphireActionDef.HINT_VALUE_STYLE_IMAGE );
             
             if( ISapphireActionDef.HINT_VALUE_STYLE_IMAGE.equals( hint ) || 
                 ISapphireActionDef.HINT_VALUE_STYLE_IMAGE_TEXT.equals( hint ) )

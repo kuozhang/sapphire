@@ -81,7 +81,7 @@ public interface PropertyEditorDef extends FormPartDef
     
     @Type
     ( 
-        base = ISapphirePartDef.class,
+        base = PartDef.class,
         possible = 
         { 
             PropertyEditorDef.class, 
@@ -125,7 +125,7 @@ public interface PropertyEditorDef extends FormPartDef
                              
     ListProperty PROP_RELATED_CONTENT = new ListProperty( TYPE, "RelatedContent" );
     
-    ModelElementList<ISapphirePartDef> getRelatedContent();
+    ModelElementList<PartDef> getRelatedContent();
     
     // *** RelatedContentWidth ***
     

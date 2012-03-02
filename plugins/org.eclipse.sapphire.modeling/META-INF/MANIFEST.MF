@@ -15,7 +15,8 @@ Export-Package: org.eclipse.sapphire,
  org.eclipse.sapphire.modeling.localization,
  org.eclipse.sapphire.modeling.util,
  org.eclipse.sapphire.modeling.util.internal;x-friends:="org.eclipse.sapphire.ui",
- org.eclipse.sapphire.services
+ org.eclipse.sapphire.services,
+ org.eclipse.sapphire.util
 Bundle-Vendor: %providerName
 Bundle-ActivationPolicy: lazy
 

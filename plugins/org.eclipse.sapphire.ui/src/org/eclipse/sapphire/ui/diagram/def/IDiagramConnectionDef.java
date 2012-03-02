@@ -31,7 +31,7 @@ import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.Color;
 import org.eclipse.sapphire.ui.LineStyle;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.diagram.def.internal.ToolPaletteCompartmentPossibleValuesService;
 
 /**
@@ -43,7 +43,7 @@ import org.eclipse.sapphire.ui.diagram.def.internal.ToolPaletteCompartmentPossib
 
 public interface IDiagramConnectionDef 
     
-    extends ISapphirePartDef
+    extends PartDef
     
 {
     ModelElementType TYPE = new ModelElementType( IDiagramConnectionDef.class );
@@ -52,7 +52,7 @@ public interface IDiagramConnectionDef
     
     @Required
     
-    ValueProperty PROP_ID = new ValueProperty( TYPE, ISapphirePartDef.PROP_ID );
+    ValueProperty PROP_ID = new ValueProperty( TYPE, PartDef.PROP_ID );
     
     // *** ImplicitConnection ***
     

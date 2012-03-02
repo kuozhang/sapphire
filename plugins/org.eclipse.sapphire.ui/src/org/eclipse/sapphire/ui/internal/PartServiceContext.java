@@ -11,9 +11,22 @@
 
 package org.eclipse.sapphire.ui.internal;
 
+import java.util.List;
+import java.util.Set;
+
+import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.java.JavaTypeName;
+import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.modeling.ReferenceValue;
+import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ServiceFactoryProxy;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.def.PartDef;
+import org.eclipse.sapphire.ui.def.ServiceDef;
+import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.SetFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -31,7 +44,6 @@ public final class PartServiceContext extends ServiceContext
     }
     
     @Override
-    
     public <T> T find( final Class<T> type )
     {
         T obj = super.find( type );
@@ -45,6 +57,85 @@ public final class PartServiceContext extends ServiceContext
         }
         
         return obj;
+    }
+
+    @Override
+    protected List<ServiceFactoryProxy> local()
+    {
+        final ListFactory<ServiceFactoryProxy> local = new ListFactory<ServiceFactoryProxy>();
+        final PartDef partDef = this.part.definition();
+        
+        for( ServiceDef serviceDef : partDef.getServices() )
+        {
+            final Class<? extends Service> serviceImplClass = resolve( serviceDef.getImplementation() );
+            
+            final SetFactory<String> overridesSetFactory = new SetFactory<String>();
+            
+            for( ServiceDef.Override override : serviceDef.getOverrides() )
+            {
+                String id = override.getId().getText();
+                
+                if( id != null )
+                {
+                    id = id.trim();
+                    
+                    if( id.length() > 0 )
+                    {
+                        overridesSetFactory.add( id );
+                    }
+                }
+            }
+            
+            final Set<String> overrides = overridesSetFactory.create();
+            
+            if( serviceImplClass != null )
+            {
+                final ServiceFactoryProxy proxy = new ServiceFactoryProxy()
+                {
+                    @Override
+                    public Class<? extends Service> type()
+                    {
+                        return serviceImplClass;
+                    }
+
+                    @Override
+                    public Set<String> overrides()
+                    {
+                        return overrides;
+                    }
+
+                    @Override
+                    protected Service createHandOff( ServiceContext context,
+                                                     Class<? extends Service> service )
+                    {
+                        Service instance = null;
+                        
+                        try
+                        {
+                            instance = serviceImplClass.newInstance();
+                        }
+                        catch( Exception e )
+                        {
+                            LoggingService.log( e );
+                        }
+                        
+                        return instance;
+                    }
+                    
+                };
+                
+                local.add( proxy );
+            }
+        }
+        
+        return local.create();
+    }
+    
+    @SuppressWarnings( "unchecked" )
+    private static <T> Class<T> resolve( final ReferenceValue<JavaTypeName,JavaType> ref )
+    {
+        final JavaType type = ref.resolve();
+        return ( type != null ? (Class<T>) type.artifact() : null );
     }
     
 }

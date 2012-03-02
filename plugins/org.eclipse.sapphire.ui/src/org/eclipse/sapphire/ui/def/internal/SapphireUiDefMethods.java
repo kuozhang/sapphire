@@ -20,7 +20,7 @@ import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.IDefinitionReference;
 import org.eclipse.sapphire.ui.def.IPackageReference;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
@@ -30,14 +30,14 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 public final class SapphireUiDefMethods
 {
-    public static ISapphirePartDef getPartDef( final ISapphireUiDef rootdef,
+    public static PartDef getPartDef( final ISapphireUiDef rootdef,
                                                final String id,
                                                final boolean searchImportedDefinitions,
                                                final Class<?> expectedType )
     {
         if( id != null )
         {
-            for( ISapphirePartDef def : rootdef.getPartDefs() )
+            for( PartDef def : rootdef.getPartDefs() )
             {
                 if( id.equals( def.getId().getText() ) )
                 {
@@ -61,7 +61,7 @@ public final class SapphireUiDefMethods
                     
                     if( sdef != null )
                     {
-                        final ISapphirePartDef def = sdef.getPartDef( id, true, expectedType );
+                        final PartDef def = sdef.getPartDef( id, true, expectedType );
                         
                         if( def != null )
                         {

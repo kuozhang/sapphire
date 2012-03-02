@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface IPropertiesViewContributionDef
 
-    extends ISapphirePartDef
+    extends PartDef
     
 {
     ModelElementType TYPE = new ModelElementType( IPropertiesViewContributionDef.class );

@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface FormPartDef extends ISapphirePartDef
+public interface FormPartDef extends PartDef
 {
     ModelElementType TYPE = new ModelElementType( FormPartDef.class );
     

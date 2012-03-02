@@ -26,7 +26,7 @@ import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -266,7 +266,7 @@ public class SapphireComposite extends SapphirePartContainer
     
     public boolean getPreferFormStyle()
     {
-        return this.definition.getHint( ISapphirePartDef.HINT_PREFER_FORM_STYLE, false );
+        return this.definition.getHint( PartDef.HINT_PREFER_FORM_STYLE, false );
     }
     
 }

@@ -33,7 +33,7 @@ import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
 import org.eclipse.sapphire.ui.def.SapphireKeySequence;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -136,7 +136,7 @@ public final class SapphireAction extends SapphireActionSystemPart
             final String name = hint.getName().getText();
             Object parsedValue = null;
             
-            if( name.equals( ISapphirePartDef.HINT_STYLE ) )
+            if( name.equals( PartDef.HINT_STYLE ) )
             {
                 parsedValue = hint.getValue().getText();
             }

@@ -13,7 +13,6 @@ package org.eclipse.sapphire.ui.diagram.layout;
 
 import org.eclipse.sapphire.services.Service;
 
-
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */

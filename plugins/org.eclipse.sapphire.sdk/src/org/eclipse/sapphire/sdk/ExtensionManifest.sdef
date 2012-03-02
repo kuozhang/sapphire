@@ -32,7 +32,7 @@
                         <spacer/>
                         <actuator>
                             <action-id>Sapphire.Add</action-id>
-                            <label>Add a service</label>
+                            <label>add a service</label>
                         </actuator>
                     </content>
                 </section>

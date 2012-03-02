@@ -23,7 +23,7 @@ import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFactoryDef;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFilterDef;
 import org.eclipse.sapphire.ui.def.ISapphireConditionHostDef;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.util.TopologicalSorter;
 
@@ -45,7 +45,7 @@ public final class SapphireActionGroup
         
         this.actions = new CopyOnWriteArrayList<SapphireAction>();
         
-        final ISapphirePartDef partDef = this.part.definition();
+        final PartDef partDef = this.part.definition();
         
         createActions( SapphireExtensionSystem.getActions() );
         

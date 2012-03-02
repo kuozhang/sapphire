@@ -85,7 +85,7 @@ public interface ISapphireUiDef extends IModelElement
     
     @Type
     ( 
-        base = ISapphirePartDef.class,
+        base = PartDef.class,
         possible = 
         { 
             PropertyEditorDef.class, 
@@ -146,13 +146,13 @@ public interface ISapphireUiDef extends IModelElement
                              
     ListProperty PROP_PART_DEFS = new ListProperty( TYPE, "PartDefs" );
     
-    ModelElementList<ISapphirePartDef> getPartDefs();
+    ModelElementList<PartDef> getPartDefs();
     
     // *** Method : getPartDef ***
     
     @DelegateImplementation( SapphireUiDefMethods.class )
     
-    ISapphirePartDef getPartDef( String id,
+    PartDef getPartDef( String id,
                                  boolean searchImportedDefinitions,
                                  Class<?> expectedType );
     

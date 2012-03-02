@@ -45,7 +45,7 @@ import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
@@ -125,7 +125,7 @@ public final class PropertyEditorAssistDecorator
         this.mouseOverEditorControl = false;
         this.mouseTrackListener = new EditorControlMouseTrackListener();
         
-        final ISapphirePartDef def = this.part.definition();
+        final PartDef def = this.part.definition();
         
         this.contributorsToSuppress = new ArrayList<String>();
         final String contributorsToSuppressStr = def.getHint( HINT_SUPPRESS_ASSIST_CONTRIBUTORS );

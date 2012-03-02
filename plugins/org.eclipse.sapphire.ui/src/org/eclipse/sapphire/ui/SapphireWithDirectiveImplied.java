@@ -20,7 +20,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.ResolvePathResult;
 import org.eclipse.sapphire.ui.def.FormDef;
-import org.eclipse.sapphire.ui.def.ISapphirePartDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
 
 /**
@@ -65,7 +65,7 @@ public final class SapphireWithDirectiveImplied extends SapphirePartContainer
         final IModelElement element = getLocalModelElement();
         final List<SapphirePart> childParts = new ArrayList<SapphirePart>();
         
-        for( ISapphirePartDef childPartDef : this.formdef.getContent() )
+        for( PartDef childPartDef : this.formdef.getContent() )
         {
             final SapphirePart childPart = create( this, element, childPartDef, this.params );
             childParts.add( childPart );

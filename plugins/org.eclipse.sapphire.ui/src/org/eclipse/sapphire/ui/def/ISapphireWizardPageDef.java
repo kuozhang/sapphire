@@ -41,7 +41,7 @@ public interface ISapphireWizardPageDef
     
     @Required
     
-    ValueProperty PROP_ID = new ValueProperty( TYPE, ISapphirePartDef.PROP_ID );
+    ValueProperty PROP_ID = new ValueProperty( TYPE, PartDef.PROP_ID );
     
     // *** Label ***
     
