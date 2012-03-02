@@ -13,6 +13,7 @@
 package org.eclipse.sapphire.samples.architecture;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -25,6 +26,7 @@ import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramGridDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -85,53 +87,13 @@ public interface IComponent extends IModelElement
     Value<String> getCopyright();
     void setCopyright( String value );
     
-    // *** X ***
+    // *** Bounds ***
     
-    @Type( base = Integer.class )
-    @XmlBinding( path = "bounds/@x" )
-    @DefaultValue( text = "-1" )
+    @Type( base = Bounds.class )
+    @XmlBinding( path = "bounds")
     
-    ValueProperty PROP_X = new ValueProperty( TYPE, "X");
-    
-    Value<Integer> getX();
-    void setX(Integer value);
-    void setX(String value);
+    ImpliedElementProperty PROP_BOUNDS = new ImpliedElementProperty( TYPE, "Bounds" );
 
-    // *** Y ***
+    Bounds getBounds();    
     
-    @Type( base = Integer.class )
-    @XmlBinding( path = "bounds/@y" )
-    @DefaultValue( text = "-1" )
-
-    ValueProperty PROP_Y = new ValueProperty( TYPE, "Y");
-    
-    Value<Integer> getY();
-    void setY(Integer value);
-    void setY(String value);
-    
-    // *** Width ***
-    
-    @Type( base = Integer.class )
-    @XmlBinding( path = "bounds/@width" )
-    @DefaultValue( text = "-1" )
-    
-    ValueProperty PROP_WIDTH = new ValueProperty( TYPE, "Width");
-    
-    Value<Integer> getWidth();
-    void setWidth(Integer value);
-    void setWidth(String value);
-    
-    // *** Height ***
-    
-    @Type( base = Integer.class )
-    @XmlBinding( path = "bounds/@height" )
-    @DefaultValue( text = "-1" )
-    
-    ValueProperty PROP_HEIGHT = new ValueProperty( TYPE, "Height");
-    
-    Value<Integer> getHeight();
-    void setHeight(Integer value);
-    void setHeight(String value);
-    
-
 }

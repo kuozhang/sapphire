@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.samples.architecture.ConnectionBendpoint;
@@ -43,8 +42,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	private SapphireDiagramEditorPagePart diagramPart;
 	private IArchitecture architecture;
 	private SapphireDiagramPartListener diagramPartListener;
-	private ModelElementListener componentListener;
-	
+	private ModelPropertyListener componentListener;	
 	private ModelPropertyListener componentDependencyListener;
 	private boolean needFlushoutLayout = false;
 	
@@ -74,14 +72,14 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	{
 		IComponent component = (IComponent)nodePart.getLocalModelElement();
 		Bounds bounds = nodePart.getNodeBounds();
-		component.setX(bounds.getX());
-		component.setY(bounds.getY());
+		component.getBounds().setX(bounds.getX());
+		component.getBounds().setY(bounds.getY());
 		if (nodePart.canResizeShape())
 		{
 			if (bounds.getWidth() > 0)
-				component.setWidth(bounds.getWidth());
+				component.getBounds().setWidth(bounds.getWidth());
 			if (bounds.getHeight() > 0)
-				component.setHeight(bounds.getHeight());
+				component.getBounds().setHeight(bounds.getHeight());
 		}
 	}
 
@@ -115,8 +113,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		}
 		if (changed)
 		{
-			dependency.removeListener(this.componentDependencyListener, "ConnectionBendpoints");
-			dependency.removeListener(this.componentDependencyListener, "ConnectionBendpoints/*");
+			this.architecture.removeListener(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
 			dependency.getConnectionBendpoints().clear();
 			for (Point bendpoint : bendpoints)
 			{
@@ -124,8 +121,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 				bpLayout.setX(bendpoint.getX());
 				bpLayout.setY(bendpoint.getY());
 			}
-			dependency.addListener(componentDependencyListener, "ConnectionBendpoints");
-			dependency.addListener(componentDependencyListener, "ConnectionBendpoints/*");			
+			this.architecture.addListener(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
 		}
 	}
 
@@ -135,6 +131,14 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		if (this.diagramPartListener != null)
 		{
 			this.diagramPart.removeListener(this.diagramPartListener);
+		}
+		if (this.componentListener != null)
+		{
+			this.architecture.removeListener(this.componentListener, "/Components/Bounds/*");
+		}
+		if (this.componentDependencyListener != null)
+		{
+			this.architecture.removeListener(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
 		}
 	}
 
@@ -149,8 +153,10 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 			DiagramNodePart nodePart = this.diagramPart.getDiagramNodePart(component);
 			if (nodePart != null)
 			{
-				nodePart.setNodeBounds(component.getX().getContent(), component.getY().getContent(), 
-						component.getWidth().getContent(), component.getHeight().getContent());				
+				nodePart.setNodeBounds(component.getBounds().getX().getContent(), 
+						component.getBounds().getY().getContent(), 
+						component.getBounds().getWidth().getContent(), 
+						component.getBounds().getHeight().getContent());				
 				
 				// load the embedded connection layout
 				ModelElementList<IComponentDependency> dependencies = component.getDependencies();
@@ -175,20 +181,17 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		}		
 	}
 	
-	private void save()
+	private void flushoutLayout()
 	{
 		// If auto layout is applied when opening the diagram and user has made edits to the diagram,
 		// we need to flush out the node/connection layouts to the model
-		if (!needFlushoutLayout)
-			return;
-		
 		ModelElementList<IComponent> components = this.architecture.getComponents();
 		for (IComponent component : components)
 		{
-			if (component.getX().getContent(false) == null || 
-					component.getY().getContent(false) == null ||
-					component.getWidth().getContent(false) == null ||
-					component.getHeight().getContent(false) == null)
+			if (component.getBounds().getX().getContent(false) == null || 
+					component.getBounds().getY().getContent(false) == null ||
+					component.getBounds().getWidth().getContent(false) == null ||
+					component.getBounds().getHeight().getContent(false) == null)
 			{
 				DiagramNodePart nodePart = this.diagramPart.getDiagramNodePart(component);
 				write(nodePart);
@@ -205,34 +208,35 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 				}
 			}
 		}
+		this.needFlushoutLayout = false;
+		
 	}
+	
 	
 	private void handleNodeLayoutChange(IComponent component)
 	{
 		DiagramNodePart nodePart = this.diagramPart.getDiagramNodePart(component);
-		if (nodePart == null)
+		if (nodePart != null)
 		{
-			throw new RuntimeException("DiagramNodePart is null");
+			nodePart.setNodePosition(component.getBounds().getX().getContent(), component.getBounds().getY().getContent());
 		}
-		nodePart.setNodePosition(component.getX().getContent(), component.getY().getContent());
 	}
 	
 	private void handleConnectionBendpointChange(IComponentDependency componentDependency)
 	{
 		DiagramConnectionPart connPart = this.diagramPart.getDiagramConnectionPart(componentDependency);
-		if (connPart == null)
+		if (connPart != null)
 		{
-			throw new RuntimeException("DiagramConnectionPart is null");
-		}
-		List<Point> bendpoints = new ArrayList<Point>();
-		for (ConnectionBendpoint bendpoint : componentDependency.getConnectionBendpoints())
-		{
-			if (bendpoint.getX().getContent() != null && bendpoint.getY().getContent() != null)
+			List<Point> bendpoints = new ArrayList<Point>();
+			for (ConnectionBendpoint bendpoint : componentDependency.getConnectionBendpoints())
 			{
-				bendpoints.add(new Point(bendpoint.getX().getContent(), bendpoint.getY().getContent()));
+				if (bendpoint.getX().getContent() != null && bendpoint.getY().getContent() != null)
+				{
+					bendpoints.add(new Point(bendpoint.getX().getContent(), bendpoint.getY().getContent()));
+				}
 			}
+			connPart.resetBendpoints(bendpoints);
 		}
-		connPart.resetBendpoints(bendpoints);
 	}
 	
 	private void addDiagramPartListener()
@@ -244,7 +248,6 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
             {
 				DiagramNodePart nodePart = (DiagramNodePart)event.getPart();
 				write(nodePart);
-				nodePart.getLocalModelElement().addListener(componentListener);                
             }
 			
 			@Override
@@ -252,7 +255,14 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		    {
 				if (!event.isFromAutoLayout())
 				{
-					write((DiagramNodePart)event.getPart());
+					if (needFlushoutLayout)
+					{
+						flushoutLayout();
+					}
+					else
+					{
+						write((DiagramNodePart)event.getPart());
+					}
 				}
 				else
 				{
@@ -264,8 +274,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	        public void handleConnectionAddEvent(final DiagramConnectionEvent event)
 			{
 				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
-				connPart.getLocalModelElement().addListener(componentDependencyListener, "ConnectionBendpoints");
-				connPart.getLocalModelElement().addListener(componentDependencyListener, "ConnectionBendpoints/*");
+				write(connPart);
 			}
 			
 			@Override
@@ -298,31 +307,25 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		    	SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)event.getPart();
 		    	setGuidesVisible(diagramPart.isShowGuides());
 			}
-			
-		    public void handleDiagramSaveEvent(final DiagramPageEvent event)
-		    {
-		    	save();
-		    }			
-			
-		    		
+					    		
 		};
 		this.diagramPart.addListener(this.diagramPartListener);
 	}
 	
 	private void addModelListeners()
 	{
-		this.componentListener = new ModelElementListener() 
+		this.componentListener = new ModelPropertyListener() 
 		{
-		    public void propertyChanged( final ModelPropertyChangeEvent event )
+		    public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
 		    {
-		        String propertyName = event.getProperty().getName();
-		        if (propertyName.equals(IComponent.PROP_X.getName()) ||
-		        		propertyName.equals(IComponent.PROP_Y.getName()) ||
-		        		propertyName.equals(IComponent.PROP_WIDTH.getName()) ||
-		        		propertyName.equals(IComponent.PROP_HEIGHT.getName()))
-		        {
-		        	handleNodeLayoutChange((IComponent)event.getModelElement());
-		        }
+		    	if (event != null && event.getModelElement() != null)
+		    	{
+		    		IComponent component = event.getModelElement().nearest(IComponent.class);
+		    		if (component != null)
+		    		{
+		    			handleNodeLayoutChange(component);
+		    		}
+		    	}
 		    }
 			
 		};
@@ -335,23 +338,17 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 				if (event != null && event.getModelElement() != null)
 				{
 					IComponentDependency componentDependency = event.getModelElement().nearest(IComponentDependency.class);
-					handleConnectionBendpointChange(componentDependency);
+					if (componentDependency != null)
+					{
+						handleConnectionBendpointChange(componentDependency);
+					}
 				}
 			}
 		};
 		
-		ModelElementList<IComponent> components = this.architecture.getComponents();
-		for (IComponent component : components)
-		{
-			component.addListener(this.componentListener);
-			
-			ModelElementList<IComponentDependency> dependencies = component.getDependencies();
-			for (IComponentDependency dependency : dependencies)
-			{
-				dependency.addListener(this.componentDependencyListener, "ConnectionBendpoints");
-				dependency.addListener(this.componentDependencyListener, "ConnectionBendpoints/*");
-			}
-		}
+		this.architecture.addListener(this.componentListener, "/Components/Bounds/*");
+		this.architecture.addListener(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
+		
 	}
 	
 }

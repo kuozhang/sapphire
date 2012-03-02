@@ -212,7 +212,8 @@ public class DiagramModel extends DiagramModelBase {
 		DiagramConnectionModel connectionModel = getDiagramConnectionModel(connPart);
 		if (connectionModel != null) {
 			removeConnection(connectionModel);
-			connPart.removeAllBendpoints();
+			// Shenxue: Should not need the following line since we are removing the connection part.
+			//connPart.removeAllBendpoints();
 		}
 	}
 	
