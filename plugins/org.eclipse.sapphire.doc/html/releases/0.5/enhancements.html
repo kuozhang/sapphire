@@ -29,6 +29,7 @@
   <li><a href="#DiagramLayout">Diagram Layout Storage</li>
   <li><a href="#Services">Services</a></li>
   <ol type="A">
+    <li><a href="#PartServices">Part Services</a></li>
     <li><a href="#AdapterService">AdapterService</a></li>
   </ol>
 </ol>
@@ -75,7 +76,39 @@ layout storage service.</p>
 <p>The diagram layout storage mechanism is controlled by diagram page definition's "LayoutStorage" property.</p>
 
 
-<h2><a name="Services"><a name="AdapterService">AdapterService</a></a></h2>
+<h2><a name="Services"><a name="PartServices">Part Services</a></a></h2>
+
+<p>Services can now be attached to parts. This enhancement allows extensibility for parts to be handled with
+the same API that adopters should already be familiar with from the model layer.</p>
+
+<p>To attach a part service via the extension system, use Sapphire.Part context.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;extension></font>
+    &lt;service>
+        &lt;id>Example.CustomLayoutPersistenceService&lt;/id>
+        &lt;context>Sapphire.Part&lt;/context>
+        &lt;type>org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService&lt;/type>
+        &lt;factory>org.example.CustomLayoutPersistenceService$Factory&lt;/factory>
+    &lt;/service>
+<code><font color="#888888">&lt;/extension></font></code></pre>
+
+<p>Services can also be attached to parts at the local level in sdef.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;definition>
+    &lt;diagram-page></font>
+        &lt;service>
+            &lt;type>DiagramLayoutPersistenceService&lt;/type>
+            &lt;implementation>CustomLayoutPersistenceService&lt;/implementation>
+        &lt;/service>
+    <font color="#888888">&lt;/diagram-page>
+&lt;/definition></font></code></pre>
+
+
+<h2><a name="AdapterService">AdapterService</a></h2>
 
 <p>The AdapterService provides means to extend the behavior of the adapt method in a given context.</p>
 
