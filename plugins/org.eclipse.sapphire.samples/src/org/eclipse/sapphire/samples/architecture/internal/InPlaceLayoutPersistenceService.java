@@ -136,7 +136,7 @@ public class InPlaceLayoutPersistenceService extends DiagramLayoutPersistenceSer
 	{
 		if (this.diagramPartListener != null)
 		{
-			this.diagramPart.addListener(this.diagramPartListener);
+			this.diagramPart.removeListener(this.diagramPartListener);
 		}
 	}
 
