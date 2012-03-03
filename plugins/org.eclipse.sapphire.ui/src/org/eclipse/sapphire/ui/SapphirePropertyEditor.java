@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -39,8 +41,8 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
-import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.BooleanPropertyEditorRenderer;
@@ -262,9 +264,23 @@ public final class SapphirePropertyEditor extends FormPart
         this.relatedContentParts = new ArrayList<SapphirePart>();
         this.relatedContentPartsReadOnly = Collections.unmodifiableList( this.relatedContentParts );
         
+        final Listener relatedContentPartListener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
+            {
+                if( event instanceof ValidationChangedEvent )
+                {
+                    updateValidationState();
+                }
+            }
+        };
+
         for( PartDef relatedContentPartDef : propertyEditorPartDef.getRelatedContent() )
         {
-            this.relatedContentParts.add( create( this, this.element, relatedContentPartDef, this.params ) );
+            final SapphirePart relatedContentPart = create( this, this.element, relatedContentPartDef, this.params );
+            relatedContentPart.attach( relatedContentPartListener );
+            this.relatedContentParts.add( relatedContentPart );
         }
     }
     
@@ -481,25 +497,32 @@ public final class SapphirePropertyEditor extends FormPart
     @Override
     protected Status computeValidationState()
     {
+        final Status.CompositeStatusFactory factory = Status.factoryForComposite();
+        
         if( this.element.isPropertyEnabled( this.property ) )
         {
             final Object particle = this.element.read( this.property );
             
             if( particle instanceof Value<?> )
             {
-                return ( (Value<?>) particle ).validate();
+                factory.add( ( (Value<?>) particle ).validate() );
             }
             else if( particle instanceof ModelElementList<?> )
             {
-                return ( (ModelElementList<?>) particle ).validate();
+                factory.add( ( (ModelElementList<?>) particle ).validate() );
             }
             else if( particle instanceof ModelElementHandle<?> )
             {
-                return ( (ModelElementHandle<?>) particle ).validate();
+                factory.add( ( (ModelElementHandle<?>) particle ).validate() );
             }
         }
         
-        return Status.createOkStatus();
+        for( SapphirePart relatedContentPart : this.relatedContentParts )
+        {
+            factory.add( relatedContentPart.getValidationState() );
+        }
+        
+        return factory.create();
     }
     
     @Override
