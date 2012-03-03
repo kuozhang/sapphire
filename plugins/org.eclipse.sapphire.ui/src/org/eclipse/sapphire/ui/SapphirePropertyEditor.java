@@ -262,9 +262,21 @@ public final class SapphirePropertyEditor extends FormPart
         this.relatedContentParts = new ArrayList<SapphirePart>();
         this.relatedContentPartsReadOnly = Collections.unmodifiableList( this.relatedContentParts );
         
+        final SapphirePartListener relatedContentPartListener = new SapphirePartListener()
+        {
+            @Override
+            public void handleValidateStateChange( final Status oldValidateState,
+                                                   final Status newValidationState )
+            {
+                updateValidationState();
+            }
+        };
+
         for( ISapphirePartDef relatedContentPartDef : propertyEditorPartDef.getRelatedContent() )
         {
-            this.relatedContentParts.add( create( this, this.element, relatedContentPartDef, this.params ) );
+            final SapphirePart relatedContentPart = create( this, this.element, relatedContentPartDef, this.params );
+            relatedContentPart.addListener( relatedContentPartListener );
+            this.relatedContentParts.add( relatedContentPart );
         }
     }
     
@@ -481,25 +493,32 @@ public final class SapphirePropertyEditor extends FormPart
     @Override
     protected Status computeValidationState()
     {
+        final Status.CompositeStatusFactory factory = Status.factoryForComposite();
+        
         if( this.element.isPropertyEnabled( this.property ) )
         {
             final Object particle = this.element.read( this.property );
             
             if( particle instanceof Value<?> )
             {
-                return ( (Value<?>) particle ).validate();
+                factory.add( ( (Value<?>) particle ).validate() );
             }
             else if( particle instanceof ModelElementList<?> )
             {
-                return ( (ModelElementList<?>) particle ).validate();
+                factory.add( ( (ModelElementList<?>) particle ).validate() );
             }
             else if( particle instanceof ModelElementHandle<?> )
             {
-                return ( (ModelElementHandle<?>) particle ).validate();
+                factory.add( ( (ModelElementHandle<?>) particle ).validate() );
             }
         }
         
-        return Status.createOkStatus();
+        for( SapphirePart relatedContentPart : this.relatedContentParts )
+        {
+            factory.add( relatedContentPart.getValidationState() );
+        }
+        
+        return factory.create();
     }
     
     @Override
