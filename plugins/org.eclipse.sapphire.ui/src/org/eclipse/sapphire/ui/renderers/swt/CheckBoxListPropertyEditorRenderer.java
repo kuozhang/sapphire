@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -35,8 +36,11 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckStateProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.sapphire.Event;
@@ -64,6 +68,7 @@ import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -85,6 +90,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
     private CheckboxTableViewer tableViewer;
     private ModelElementType memberType;
     private ValueProperty memberProperty;
+    private SelectionProvider selectionProvider;
 
     public CheckBoxListPropertyEditorRenderer( final SapphireRenderingContext context,
                                                final SapphirePropertyEditor part )
@@ -157,6 +163,9 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         decorator.addEditorControl( mainComposite );
         
         suppressDashedTableEntryBorder( this.table );
+        
+        this.selectionProvider = new SelectionProvider( this.tableViewer );
+        this.table.setData( TableViewerSelectionProvider.DATA_SELECTION_PROVIDER, this.selectionProvider );
         
         // Bind to Model
         
@@ -393,6 +402,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         final Entry entry = (Entry) event.getElement();
         
         entry.flip();
+        this.selectionProvider.notifySelectionChangedListeners();
     }
     
     private void handleDoubleClickEvent( final MouseEvent event )
@@ -411,6 +421,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         if( entry != null )
         {
             entry.flip();
+            this.selectionProvider.notifySelectionChangedListeners();
         }
     }
     
@@ -655,6 +666,33 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
                                               final SapphirePropertyEditor part )
         {
             return new CheckBoxListPropertyEditorRenderer( context, part );
+        }
+    }
+    
+    private static final class SelectionProvider extends TableViewerSelectionProvider
+    {
+        public SelectionProvider( final TableViewer tableViewer )
+        {
+            super( tableViewer );
+        }
+
+        @Override
+        public ISelection getSelection()
+        {
+            final ListFactory<IModelElement> elements = new ListFactory<IModelElement>();
+            
+            for( Iterator<?> itr = ( (IStructuredSelection) super.getSelection() ).iterator(); itr.hasNext(); )
+            {
+                final Entry entry = (Entry) itr.next();
+                final IModelElement element = entry.element;
+                
+                if( element != null )
+                {
+                    elements.add( element );
+                }
+            }
+            
+            return new StructuredSelection( elements.create() );
         }
     }
     

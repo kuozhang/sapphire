@@ -38,9 +38,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -55,7 +53,6 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.OwnerDrawLabelProvider;
@@ -102,6 +99,7 @@ import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireMenuActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireTextCellEditor;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
+import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -130,8 +128,6 @@ import org.eclipse.swt.widgets.ToolBar;
 
 public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRenderer
 {
-    public static final String DATA_SELECTION_PROVIDER = "selection.provider";
-    
     private boolean exposeAddAction;
     private boolean exposeDeleteAction;
     private Map<IModelElement,TableRow> rows;
@@ -280,7 +276,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         this.table.setHeaderVisible( showHeader );
         
         this.selectionProvider = new SelectionProvider( this.tableViewer );
-        this.table.setData( DATA_SELECTION_PROVIDER, this.selectionProvider );
+        this.table.setData( TableViewerSelectionProvider.DATA_SELECTION_PROVIDER, this.selectionProvider );
         
         this.table.addFocusListener
         (
@@ -1766,75 +1762,40 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         }
     }
     
-    public static final class SelectionProvider implements ISelectionProvider
+    public static final class SelectionProvider extends TableViewerSelectionProvider
     {
-        private final TableViewer tableViewer;
-        private final Set<ISelectionChangedListener> listeners;
         private ISelection fakeSelection;
         
         public SelectionProvider( final TableViewer tableViewer )
         {
-            this.tableViewer = tableViewer;
-            this.listeners = new CopyOnWriteArraySet<ISelectionChangedListener>();
-            this.fakeSelection = null;
+            super( tableViewer );
             
-            this.tableViewer.addSelectionChangedListener
-            (
-                new ISelectionChangedListener()
-                {
-                    public void selectionChanged( final SelectionChangedEvent event )
-                    {
-                        handleSelectionChangedEvent( getSelection() );
-                    }
-                }
-            );
+            this.fakeSelection = null;
         }
 
+        @Override
         public ISelection getSelection()
         {
-            if( this.fakeSelection != null )
+            final ISelection original = ( this.fakeSelection != null ? this.fakeSelection : super.getSelection() );
+            final ListFactory<IModelElement> elements = new ListFactory<IModelElement>();
+            
+            for( Iterator<?> itr = ( (IStructuredSelection) original ).iterator(); itr.hasNext(); )
             {
-                return this.fakeSelection;
+                final TableRow row = (TableRow) itr.next();
+                elements.add( row.element() );
             }
-            else
-            {
-                return this.tableViewer.getSelection();
-            }
-        }
-
-        public void setSelection( final ISelection selection )
-        {
-            throw new UnsupportedOperationException();
+            
+            return new StructuredSelection( elements.create() );
         }
         
         public void setFakeSelection( final ISelection selection )
         {
             this.fakeSelection = selection;
-            handleSelectionChangedEvent( getSelection() );
-        }
-        
-        public void addSelectionChangedListener( final ISelectionChangedListener listener )
-        {
-            this.listeners.add( listener );
-        }
-
-        public void removeSelectionChangedListener( final ISelectionChangedListener listener )
-        {
-            this.listeners.remove( listener );
-        }
-        
-        private void handleSelectionChangedEvent( final ISelection selection )
-        {
-            final SelectionChangedEvent event = new SelectionChangedEvent( this, selection );
-            
-            for( ISelectionChangedListener listener : this.listeners )
-            {
-                listener.selectionChanged( event );
-            }
+            notifySelectionChangedListeners();
         }
     }
     
-    public final class TableRow
+    private final class TableRow
     {
         private final IModelElement element;
         private final ImageService imageService;

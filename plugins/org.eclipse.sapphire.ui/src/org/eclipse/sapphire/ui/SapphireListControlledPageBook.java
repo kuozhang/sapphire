@@ -25,7 +25,7 @@ import org.eclipse.sapphire.modeling.util.MutableReference;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.PageBookExtDef;
-import org.eclipse.sapphire.ui.renderers.swt.DefaultListPropertyEditorRenderer;
+import org.eclipse.sapphire.ui.renderers.swt.TableViewerSelectionProvider;
 import org.eclipse.sapphire.ui.swt.SapphireControl;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -105,7 +105,7 @@ public final class SapphireListControlledPageBook extends PageBookPart
         final Table table = findControlForProperty( context.getComposite(), this.element, this.property, Table.class );
         
         final ISelectionProvider selectionProvider 
-            = (ISelectionProvider) table.getData( DefaultListPropertyEditorRenderer.DATA_SELECTION_PROVIDER );
+            = (ISelectionProvider) table.getData( TableViewerSelectionProvider.DATA_SELECTION_PROVIDER );
         
         final MutableReference<IModelElement> selectedModelElementRef = new MutableReference<IModelElement>();
 
@@ -121,7 +121,7 @@ public final class SapphireListControlledPageBook extends PageBookPart
                     
                     if( ! sel.isEmpty() )
                     {
-                        newModelElement = ( (DefaultListPropertyEditorRenderer.TableRow) sel.getFirstElement() ).element();
+                        newModelElement = (IModelElement) sel.getFirstElement();
                         newPageKey = ClassBasedKey.create( newModelElement );
                     }
                     else
