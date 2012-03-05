@@ -9,7 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.workspace.ui;
+package org.eclipse.sapphire.workspace.ui.services.internal;
 
 import java.io.File;
 import java.io.IOException;

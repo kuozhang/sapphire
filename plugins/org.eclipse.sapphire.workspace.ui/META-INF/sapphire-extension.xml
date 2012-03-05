@@ -18,18 +18,18 @@
         <id>DiagramLayoutPersistenceService.Project</id>
         <type>org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService</type>
         <context>Sapphire.Part</context>
-        <factory>org.eclipse.sapphire.workspace.ui.ProjectDiagramLayoutPersistenceService$Factory</factory>
+        <factory>org.eclipse.sapphire.workspace.ui.services.internal.ProjectDiagramLayoutPersistenceService$Factory</factory>
     </service>
     <service>
         <id>DiagramLayoutPersistenceService.SideBySide</id>
         <type>org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService</type>
         <context>Sapphire.Part</context>
-        <factory>org.eclipse.sapphire.workspace.ui.SideBySideDiagramLayoutPersistenceService$Factory</factory>
+        <factory>org.eclipse.sapphire.workspace.ui.services.internal.SideBySideDiagramLayoutPersistenceService$Factory</factory>
     </service>
     <service>
         <id>DiagramLayoutPersistenceService.Workspace</id>
         <type>org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService</type>
         <context>Sapphire.Part</context>
-        <factory>org.eclipse.sapphire.workspace.ui.WorkspaceDiagramLayoutPersistenceService$Factory</factory>
+        <factory>org.eclipse.sapphire.workspace.ui.services.internal.WorkspaceDiagramLayoutPersistenceService$Factory</factory>
     </service>
 </extension>

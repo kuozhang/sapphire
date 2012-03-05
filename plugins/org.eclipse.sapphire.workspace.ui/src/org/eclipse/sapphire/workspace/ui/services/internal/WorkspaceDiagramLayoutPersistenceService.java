@@ -9,15 +9,13 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.workspace.ui;
+package org.eclipse.sapphire.workspace.ui.services.internal;
 
 import java.io.File;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.sapphire.modeling.FileResourceStore;
 import org.eclipse.sapphire.modeling.StatusException;
 import org.eclipse.sapphire.modeling.util.internal.FileUtil;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
@@ -32,16 +30,16 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.layout.standard.StandardDiagramLayout;
 import org.eclipse.sapphire.ui.diagram.layout.standard.StandardDiagramLayoutPersistenceService;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
-import org.eclipse.ui.IFileEditorInput;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class ProjectDiagramLayoutPersistenceService extends StandardDiagramLayoutPersistenceService 
-{	
-
+public class WorkspaceDiagramLayoutPersistenceService extends
+		StandardDiagramLayoutPersistenceService 
+{
+	private static final String WORKSPACE_LAYOUT_FOLDER = ".metadata/.plugins/org.eclipse.sapphire.ui.diagram/layouts";
+	
 	@Override
 	protected StandardDiagramLayout initLayoutModel() 
 	{
@@ -51,12 +49,9 @@ public class ProjectDiagramLayoutPersistenceService extends StandardDiagramLayou
 			String fileName = computeLayoutFileName(this.editorInput);
 			if (fileName != null)
 			{
-				IFile layoutFile = getLayoutPersistenceFile(fileName);
-				if (layoutFile != null)
-				{
-					final XmlResourceStore resourceStore = new XmlResourceStore( new WorkspaceFileResourceStore(layoutFile));
-					layoutModel = StandardDiagramLayout.TYPE.instantiate(new RootXmlResource( resourceStore ));
-				}
+				File layoutFile = getLayoutPersistenceFile(fileName);
+				final XmlResourceStore resourceStore = new XmlResourceStore( new FileResourceStore(layoutFile));
+				layoutModel = StandardDiagramLayout.TYPE.instantiate(new RootXmlResource( resourceStore ));			
 			}
 		}
 		catch (Exception e)
@@ -66,26 +61,17 @@ public class ProjectDiagramLayoutPersistenceService extends StandardDiagramLayou
 		return layoutModel;
 	}
 	
-	protected IFile getLayoutPersistenceFile(String fileName) throws StatusException, CoreException
+	private File getLayoutPersistenceFile(String fileName) throws StatusException
 	{
-		if (this.editorInput instanceof IFileEditorInput)
-		{
-			IFileEditorInput fileInput = (IFileEditorInput)this.editorInput;
-			IProject proj = fileInput.getFile().getProject();
-			if (proj != null)
-			{
-				IFolder layoutIFolder = proj.getFolder(".settings/org.eclipse.sapphire.ui.diagram/layouts");
-				File layoutFolder = layoutIFolder.getLocation().toFile();
-	            if (!layoutFolder.exists())
-	            {
-	                FileUtil.mkdirs(layoutFolder);
-	                layoutIFolder.refreshLocal(IResource.DEPTH_ONE, null);
-	            }
-	            IFile layoutFile = layoutIFolder.getFile(fileName);
-	            return layoutFile;
-			}
-		}
-		return null;
+		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+        File layoutFolder = workspaceRoot.getLocation().toFile();
+        layoutFolder = new File(layoutFolder, WORKSPACE_LAYOUT_FOLDER);
+        if (!layoutFolder.exists())
+        {
+        	FileUtil.mkdirs(layoutFolder);
+        }
+        File layoutFile = new File (layoutFolder, fileName);
+        return layoutFile;
 	}
 	
     public static final class Factory extends ServiceFactory
@@ -99,7 +85,7 @@ public class ProjectDiagramLayoutPersistenceService extends StandardDiagramLayou
         	{
         		SapphireDiagramEditorPagePart diagramPagePart = (SapphireDiagramEditorPagePart)part;
         		IDiagramEditorPageDef pageDef = diagramPagePart.getPageDef();
-        		if (pageDef.getLayoutStorage().getContent() == LayoutStorage.PROJECT)
+        		if (pageDef.getLayoutStorage().getContent() == LayoutStorage.WORKSPACE)
         		{
         			return true;
         		}
@@ -111,7 +97,7 @@ public class ProjectDiagramLayoutPersistenceService extends StandardDiagramLayou
         public Service create( final ServiceContext context,
                                final Class<? extends Service> service )
         {
-            return new ProjectDiagramLayoutPersistenceService();
+            return new WorkspaceDiagramLayoutPersistenceService();
         }
     }
 	
