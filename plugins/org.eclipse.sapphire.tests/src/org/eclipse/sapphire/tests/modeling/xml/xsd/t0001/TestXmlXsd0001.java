@@ -32,10 +32,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestXmlXsd0001
-
-    extends SapphireTestCase
-    
+public final class TestXmlXsd0001 extends SapphireTestCase
 {
     private TestXmlXsd0001( final String name )
     {
@@ -46,7 +43,7 @@ public final class TestXmlXsd0001
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "XmlXsd0001" );
+        suite.setName( "TestXmlXsd0001" );
 
         suite.addTest( new TestXmlXsd0001( "testSchemaParsing" ) );
         suite.addTest( new TestXmlXsd0001( "testInsertOrder" ) );

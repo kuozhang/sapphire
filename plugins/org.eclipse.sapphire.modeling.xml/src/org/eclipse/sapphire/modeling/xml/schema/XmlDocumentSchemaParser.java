@@ -135,7 +135,7 @@ public final class XmlDocumentSchemaParser
                         includedSchemaLocation = baseUrl + "/" + includedSchemaLocation;
                     }
                     
-                    parse( schema, includedSchemaLocation, baseLocation, prefixToNamespaceMap );
+                    parse( schema, includedSchemaLocation, baseLocation, new HashMap<String,String>() );
                     
                     if( elname.equals( "redefine" ) )
                     {

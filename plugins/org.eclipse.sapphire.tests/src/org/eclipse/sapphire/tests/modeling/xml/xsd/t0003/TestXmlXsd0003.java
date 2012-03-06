@@ -34,10 +34,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public final class TestXmlXsd0003
-
-    extends SapphireTestCase
-    
+public final class TestXmlXsd0003 extends SapphireTestCase
 {
     private final static String SCHEMA_LOCATION = "http://www.eclipse.org/sapphire/tests/xml/xsd/0003";
     
@@ -50,7 +47,7 @@ public final class TestXmlXsd0003
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "XmlXsd0003" );
+        suite.setName( "TestXmlXsd0003" );
 
         suite.addTest( new TestXmlXsd0003( "testSchemaParsing" ) );
         suite.addTest( new TestXmlXsd0003( "testInsertOrder" ) );
