@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle and Other Contributors
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Ling Hao - [329115] support more details link for long descriptions
  *    Ling Hao - [329114] rewrite context help binding feature
- *    Greg Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar           
+ *    Gregory Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar           
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -37,11 +37,15 @@ import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public class SapphireSection extends SapphireComposite
@@ -49,6 +53,7 @@ public class SapphireSection extends SapphireComposite
     private SapphireCondition visibleWhenCondition;
     private Section section;
     private FunctionResult titleFunctionResult;
+    private boolean expanded;
     
     @Override
     protected void init()
@@ -66,6 +71,8 @@ public class SapphireSection extends SapphireComposite
             final String parameter = def.getVisibleWhenConditionParameter().getText();
             this.visibleWhenCondition = SapphireCondition.create( this, visibleWhenConditionClass.artifact(), parameter );
         }
+        
+        this.expanded = ! def.getCollapsedInitially().getContent();
     }
     
     @Override
@@ -94,7 +101,18 @@ public class SapphireSection extends SapphireComposite
         
         if( collapsible )
         {
-            this.section.setExpanded( ! def.getCollapsedInitially().getContent() );
+            this.section.setExpanded( this.expanded );
+            
+            this.section.addExpansionListener
+            (
+                new ExpansionAdapter()
+                {
+                    public void expansionStateChanged( final ExpansionEvent event )
+                    {
+                        SapphireSection.this.expanded = event.getState();
+                    }
+                }
+            );
         }
         
         this.titleFunctionResult = initExpression
