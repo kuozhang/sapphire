@@ -15,11 +15,8 @@ import static org.eclipse.sapphire.modeling.localization.LocalizationUtil.transf
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -31,6 +28,7 @@ import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.internal.PropertyMetaModelServiceContext;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -47,7 +45,6 @@ public abstract class ModelProperty extends ModelMetadataItem
     private final Class<?> typeClass;
     private final ModelElementType type;
     
-    private final Map<Class<? extends Annotation>,Annotation> annotations;
     private Set<ModelPropertyListener> listeners;
     private Set<ModelPropertyListener> listenersReadOnly;
     private ServiceContext serviceContext;
@@ -61,9 +58,6 @@ public abstract class ModelProperty extends ModelMetadataItem
             this.modelElementType = modelElementType;
             this.propertyName = propertyName;
             this.baseProperty = baseProperty;
-            this.annotations = new HashMap<Class<? extends Annotation>,Annotation>();
-            
-            gatherAnnotations();
             
             final PropertyListeners propertyListenersAnnotation = getAnnotation( PropertyListeners.class );
             
@@ -162,33 +156,53 @@ public abstract class ModelProperty extends ModelMetadataItem
     }
     
     @Override
-    @SuppressWarnings( "unchecked" )
+    protected void initAnnotations( final ListFactory<Annotation> annotations )
+    {
+        Field propField = null;
+        
+        for( Field field : this.modelElementType.getModelElementClass().getFields() )
+        {
+            final String fieldName = field.getName();
+            
+            if( fieldName.startsWith( PROPERTY_FIELD_PREFIX ) )
+            {
+                final String propName = convertFieldNameToPropertyName( fieldName );
+                
+                if( this.propertyName.equalsIgnoreCase( propName ) )
+                {
+                    propField = field;
+                    break;
+                }
+            }
+        }
+        
+        if( propField != null )
+        {
+            annotations.addAll( propField.getDeclaredAnnotations() );
+        }
+    }
+
+    @Override
     public <A extends Annotation> List<A> getAnnotations( final Class<A> type )
     {
-        final List<A> annotations = new ArrayList<A>();
-        final A annotation = (A) this.annotations.get( type );
+        final ListFactory<A> annotationsListFactory = ListFactory.start();
         
-        if( annotation != null )
-        {
-            annotations.add( annotation );
-        }
+        annotationsListFactory.addAll( super.getAnnotations( type ) );
         
         if( this.baseProperty != null )
         {
-            annotations.addAll( this.baseProperty.getAnnotations( type ) );
+            annotationsListFactory.addAll( this.baseProperty.getAnnotations( type ) );
         }
         
-        return annotations;
+        return annotationsListFactory.create();
     }
     
     @Override
-    @SuppressWarnings( "unchecked" )
-    public <A extends Annotation> A getAnnotation( final Class<A> type,
-                                                   final boolean localOnly )
+    public <A extends Annotation> A getAnnotation( final Class<A> type )
     {
-        A annotation = (A) this.annotations.get( type );
+        A annotation = super.getAnnotation( type );
         
-        if( annotation == null && this.baseProperty != null && ! localOnly )
+        if( annotation == null && this.baseProperty != null )
         {
             annotation = this.baseProperty.getAnnotation( type );
         }
@@ -226,35 +240,6 @@ public abstract class ModelProperty extends ModelMetadataItem
     public final boolean isDerived()
     {
         return hasAnnotation( Derived.class );
-    }
-    
-    private void gatherAnnotations() 
-    {
-        Field propField = null;
-        
-        for( Field field : this.modelElementType.getModelElementClass().getFields() )
-        {
-            final String fieldName = field.getName();
-            
-            if( fieldName.startsWith( PROPERTY_FIELD_PREFIX ) )
-            {
-                final String propName = convertFieldNameToPropertyName( fieldName );
-                
-                if( this.propertyName.equalsIgnoreCase( propName ) )
-                {
-                    propField = field;
-                    break;
-                }
-            }
-        }
-        
-        if( propField != null )
-        {
-            for( Annotation x : propField.getAnnotations() )
-            {
-                this.annotations.put( x.annotationType(), x );
-            }
-        }
     }
     
     public Set<ModelPropertyListener> getListeners()

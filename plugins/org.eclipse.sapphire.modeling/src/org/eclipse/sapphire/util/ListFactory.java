@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,7 +26,14 @@ public final class ListFactory<E>
     private List<E> list = null;
     private boolean created = false;
     
-    public void add( E element )
+    private ListFactory() {}
+    
+    public static <E> ListFactory<E> start()
+    {
+        return new ListFactory<E>();
+    }
+    
+    public ListFactory<E> add( final E element )
     {
         if( this.created )
         {
@@ -47,6 +55,28 @@ public final class ListFactory<E>
         {
             this.firstElement = element;
         }
+        
+        return this;
+    }
+    
+    public ListFactory<E> addAll( final Collection<E> elements )
+    {
+        for( E element : elements )
+        {
+            add( element );
+        }
+        
+        return this;
+    }
+    
+    public ListFactory<E> addAll( final E[] elements )
+    {
+        for( E element : elements )
+        {
+            add( element );
+        }
+        
+        return this;
     }
     
     public List<E> create()

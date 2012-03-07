@@ -14,9 +14,12 @@ package org.eclipse.sapphire.modeling;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.MapFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -24,29 +27,45 @@ import org.eclipse.sapphire.modeling.localization.LocalizationService;
 
 public abstract class ModelMetadataItem 
 {
+    private List<Annotation> annotations;
+    private Map<Class<? extends Annotation>,Annotation> annotationByType;
+    
     public ModelMetadataItem getBase()
     {
         return null;
     }
     
+    private void initAnnotations()
+    {
+        if( this.annotations == null )
+        {
+            final ListFactory<Annotation> annotationsListFactory = ListFactory.start();
+            initAnnotations( annotationsListFactory );
+            this.annotations = annotationsListFactory.create();
+            
+            final MapFactory<Class<? extends Annotation>,Annotation> annotationByTypeMapFactory = MapFactory.start();
+            
+            for( Annotation annotation : this.annotations )
+            {
+                annotationByTypeMapFactory.put( annotation.annotationType(), annotation );
+            }
+            
+            this.annotationByType = annotationByTypeMapFactory.create();
+        }
+    }
+    
+    protected abstract void initAnnotations( ListFactory<Annotation> annotations );
+    
     public <A extends Annotation> List<A> getAnnotations( final Class<A> type )
     {
-        final A annotation = getAnnotation( type, false );
+        final A annotation = getAnnotation( type );
         return ( annotation == null ? Collections.<A>emptyList() : Collections.singletonList( annotation ) );
     }
     
-    public abstract <A extends Annotation> A getAnnotation( final Class<A> type,
-                                                            final boolean localOnly );
-    
-    public final <A extends Annotation> A getAnnotation( final Class<A> type )
+    public <A extends Annotation> A getAnnotation( final Class<A> type )
     {
-        return getAnnotation( type, false );
-    }
-    
-    public final boolean hasAnnotation( final Class<? extends Annotation> type,
-                                        final boolean localOnly )
-    {
-        return ( getAnnotation( type, localOnly ) != null );
+        initAnnotations();
+        return type.cast( this.annotationByType.get( type ) );
     }
     
     public final boolean hasAnnotation( final Class<? extends Annotation> type )
@@ -60,7 +79,7 @@ public abstract class ModelMetadataItem
     {
         String labelText = null;
 
-        final Label labelAnnotation = getAnnotation( Label.class, true );
+        final Label labelAnnotation = getAnnotation( Label.class );
         
         if( labelAnnotation != null )
         {

@@ -309,7 +309,7 @@ public final class XmlElement
     
     public List<XmlAttribute> getAttributes()
     {
-        final ListFactory<XmlAttribute> result = new ListFactory<XmlAttribute>();
+        final ListFactory<XmlAttribute> result = ListFactory.start();
         final NamedNodeMap attributes = getDomNode().getAttributes();
         
         this.attributesCache.track();
@@ -407,7 +407,7 @@ public final class XmlElement
     
     public List<XmlElement> getChildElements()
     {
-        final ListFactory<XmlElement> result = new ListFactory<XmlElement>();
+        final ListFactory<XmlElement> result = ListFactory.start();
         final NodeList children = getDomNode().getChildNodes();
         
         this.elementsCache.track();
@@ -438,7 +438,7 @@ public final class XmlElement
 
     public List<XmlElement> getChildElements( final QName name )
     {
-        final ListFactory<XmlElement> result = new ListFactory<XmlElement>();
+        final ListFactory<XmlElement> result = ListFactory.start();
         
         for( XmlElement element : getChildElements() )
         {
@@ -935,7 +935,7 @@ public final class XmlElement
     
     public List<XmlComment> getComments()
     {
-        final ListFactory<XmlComment> result = new ListFactory<XmlComment>();
+        final ListFactory<XmlComment> result = ListFactory.start();
         final NodeList children = getDomNode().getChildNodes();
         
         this.commentsCache.track();
@@ -1018,7 +1018,7 @@ public final class XmlElement
     
     public List<XmlMetaComment> getMetaComments()
     {
-        final ListFactory<XmlMetaComment> result = new ListFactory<XmlMetaComment>();
+        final ListFactory<XmlMetaComment> result = ListFactory.start();
         final NodeList children = getDomNode().getChildNodes();
         
         this.metaCommentsCache.track();

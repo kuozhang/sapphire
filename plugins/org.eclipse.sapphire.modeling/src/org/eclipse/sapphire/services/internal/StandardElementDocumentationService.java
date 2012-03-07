@@ -32,7 +32,7 @@ public final class StandardElementDocumentationService extends StandardDocumenta
                                                      final List<Topic> topics )
     {
         final ModelElementType type = context( ModelElementType.class );
-        final Documentation docAnnotation = type.getAnnotation( Documentation.class, true );
+        final Documentation docAnnotation = type.getAnnotation( Documentation.class );
         
         if( docAnnotation != null )
         {

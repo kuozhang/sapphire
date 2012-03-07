@@ -679,7 +679,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         @Override
         public ISelection getSelection()
         {
-            final ListFactory<IModelElement> elements = new ListFactory<IModelElement>();
+            final ListFactory<IModelElement> elements = ListFactory.start();
             
             for( Iterator<?> itr = ( (IStructuredSelection) super.getSelection() ).iterator(); itr.hasNext(); )
             {

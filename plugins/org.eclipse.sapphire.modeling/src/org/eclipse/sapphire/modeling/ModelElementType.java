@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle and Other Contributors
+ * Copyright (c) 2012 Oracle and Accenture
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,28 +31,45 @@ import org.eclipse.sapphire.services.InitialValueService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.internal.ElementMetaModelServiceContext;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a>
  */
 
 public final class ModelElementType extends ModelMetadataItem
 {
-    private final Class<?> modelElementClass;
+    private final Class<?> typeClass;
     private Class<?> implClass = null;
     private Constructor<?> implClassConstructor = null;
     private boolean implClassLoaded = false;
+    private final List<ModelElementType> baseTypes;
     private final List<ModelProperty> properties;
     private final LocalizationService localizationService;
     private ImageData image;
     private boolean imageInitialized;
     private ServiceContext serviceContext;
     
-    public ModelElementType( final Class<?> modelElementClass )
+    public ModelElementType( final Class<?> typeClass )
     {
-        this.modelElementClass = modelElementClass;
+        this.typeClass = typeClass;
         this.properties = new ArrayList<ModelProperty>();
-        this.localizationService = LocalizationSystem.service( this.modelElementClass );
+        this.localizationService = LocalizationSystem.service( this.typeClass );
+        
+        final ListFactory<ModelElementType> baseTypesFactory = ListFactory.start();
+        
+        for( Class<?> baseInterface : this.typeClass.getInterfaces() )
+        {
+            final ModelElementType baseType = getModelElementType( baseInterface, false );
+            
+            if( baseType != null )
+            {
+                baseTypesFactory.add( baseType );
+            }
+        }
+        
+        this.baseTypes = baseTypesFactory.create();
     }
     
     public static ModelElementType getModelElementType( final Class<?> modelElementClass )
@@ -99,17 +116,17 @@ public final class ModelElementType extends ModelMetadataItem
     
     public Class<?> getModelElementClass()
     {
-        return this.modelElementClass;
+        return this.typeClass;
     }
     
     public String getSimpleName()
     {
-        return this.modelElementClass.getSimpleName();
+        return this.typeClass.getSimpleName();
     }
     
     public String getQualifiedName()
     {
-        return this.modelElementClass.getName();
+        return this.typeClass.getName();
     }
     
     public Class<?> getImplClass()
@@ -120,13 +137,13 @@ public final class ModelElementType extends ModelMetadataItem
             {
                 this.implClassLoaded = true;
                 
-                final String implClassQualifiedName = getImplClassName( this.modelElementClass );
+                final String implClassQualifiedName = getImplClassName( this.typeClass );
                 
                 if( implClassQualifiedName != null )
                 {
                     try
                     {
-                        this.implClass = this.modelElementClass.getClassLoader().loadClass( implClassQualifiedName );
+                        this.implClass = this.typeClass.getClassLoader().loadClass( implClassQualifiedName );
                     }
                     catch( ClassNotFoundException e )
                     {
@@ -323,7 +340,7 @@ public final class ModelElementType extends ModelMetadataItem
     {
         final TreeMap<String,ModelProperty> properties = new TreeMap<String,ModelProperty>();
         
-        for( Class<?> cl : this.modelElementClass.getInterfaces() )
+        for( Class<?> cl : this.typeClass.getInterfaces() )
         {
             final ModelElementType t = getModelElementType( cl, false );
             
@@ -363,23 +380,71 @@ public final class ModelElementType extends ModelMetadataItem
     }
     
     @Override
-    public <A extends Annotation> A getAnnotation( final Class<A> type,
-                                                   final boolean localOnly )
+    protected void initAnnotations( final ListFactory<Annotation> annotations )
     {
-        return this.modelElementClass.getAnnotation( type );
+        annotations.addAll( this.typeClass.getDeclaredAnnotations() );
+    }
+
+    @Override
+    public <A extends Annotation> List<A> getAnnotations( final Class<A> type )
+    {
+        final ListFactory<A> annotationsListFactory = ListFactory.start();
+        
+        annotationsListFactory.addAll( super.getAnnotations( type ) );
+        
+        for( ModelElementType baseType : this.baseTypes )
+        {
+            annotationsListFactory.addAll( baseType.getAnnotations( type ) );
+        }
+        
+        return annotationsListFactory.create();
     }
     
-    public Class<?> getAnnotationHostClass( final Annotation annotation )
+    @Override
+    public <A extends Annotation> A getAnnotation( final Class<A> type )
     {
-        // TODO: Improve to take into account type hierarchies.
+        A annotation = super.getAnnotation( type );
         
-        return this.modelElementClass;
+        if( annotation == null )
+        {
+            for( ModelElementType baseType : this.baseTypes )
+            {
+                annotation = baseType.getAnnotation( type );
+                
+                if( annotation != null )
+                {
+                    break;
+                }
+            }
+        }
+        
+        return annotation;
+    }
+    
+    public Class<?> findAnnotationHostClass( final Annotation annotation )
+    {
+        if( this.typeClass.getAnnotation( annotation.annotationType() ) == annotation )
+        {
+            return this.typeClass;
+        }
+        
+        for( ModelElementType baseType : this.baseTypes )
+        {
+            final Class<?> cl = baseType.findAnnotationHostClass( annotation );
+            
+            if( cl != null )
+            {
+                return cl;
+            }
+        }
+        
+        return null;
     }
 
     @Override
     protected String getDefaultLabel()
     {
-        String className = this.modelElementClass.getName();
+        String className = this.typeClass.getName();
         int start = className.lastIndexOf( '.' ) + 1;
         final int startPlusOne = start + 1;
         
@@ -412,7 +477,7 @@ public final class ModelElementType extends ModelMetadataItem
             {
                 try
                 {
-                    this.image = ImageData.createFromClassLoader( getAnnotationHostClass( imageAnnotation ), imageAnnotation.path() );
+                    this.image = ImageData.createFromClassLoader( findAnnotationHostClass( imageAnnotation ), imageAnnotation.path() );
                 }
                 catch( Exception e )
                 {

@@ -62,14 +62,14 @@ public final class PartServiceContext extends ServiceContext
     @Override
     protected List<ServiceFactoryProxy> local()
     {
-        final ListFactory<ServiceFactoryProxy> local = new ListFactory<ServiceFactoryProxy>();
+        final ListFactory<ServiceFactoryProxy> local = ListFactory.start();
         final PartDef partDef = this.part.definition();
         
         for( ServiceDef serviceDef : partDef.getServices() )
         {
             final Class<? extends Service> serviceImplClass = resolve( serviceDef.getImplementation() );
             
-            final SetFactory<String> overridesSetFactory = new SetFactory<String>();
+            final SetFactory<String> overridesSetFactory = SetFactory.start();
             
             for( ServiceDef.Override override : serviceDef.getOverrides() )
             {

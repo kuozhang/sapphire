@@ -75,7 +75,7 @@ public final class StandardPropertyDocumentationService extends StandardDocument
             return;
         }
         
-        final Documentation docAnnotation = property.getAnnotation( Documentation.class, true );
+        final Documentation docAnnotation = property.getAnnotation( Documentation.class );
         
         if( docAnnotation == null || docAnnotation.mergeStrategy() != DocumentationMergeStrategy.REPLACE )
         {

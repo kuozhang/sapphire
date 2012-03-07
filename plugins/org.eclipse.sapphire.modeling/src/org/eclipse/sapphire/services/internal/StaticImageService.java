@@ -34,7 +34,7 @@ public final class StaticImageService extends ImageService
     {
         final ModelElementType type = context( IModelElement.class ).getModelElementType();
         final Image imageAnnotation = type.getAnnotation( Image.class );
-        this.data = new ImageServiceData( ImageData.createFromClassLoader( type.getAnnotationHostClass( imageAnnotation ), imageAnnotation.path() ) );
+        this.data = new ImageServiceData( ImageData.createFromClassLoader( type.findAnnotationHostClass( imageAnnotation ), imageAnnotation.path() ) );
     }
 
     @Override

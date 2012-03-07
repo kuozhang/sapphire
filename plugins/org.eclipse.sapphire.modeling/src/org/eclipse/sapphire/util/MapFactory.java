@@ -26,8 +26,15 @@ public final class MapFactory<K,V>
     private Map<K,V> map = null;
     private boolean created = false;
     
-    public void put( K key,
-                     V value )
+    private MapFactory() {}
+    
+    public static <K,V> MapFactory<K,V> start()
+    {
+        return new MapFactory<K,V>();
+    }
+    
+    public MapFactory<K,V> put( final K key,
+                                final V value )
     {
         if( this.created )
         {
@@ -51,6 +58,18 @@ public final class MapFactory<K,V>
             this.firstKey = key;
             this.firstValue = value;
         }
+        
+        return this;
+    }
+    
+    public MapFactory<K,V> putAll( final Map<K,V> map )
+    {
+        for( Map.Entry<K,V> entry : map.entrySet() )
+        {
+            put( entry.getKey(), entry.getValue() );
+        }
+        
+        return this;
     }
     
     public Map<K,V> create()

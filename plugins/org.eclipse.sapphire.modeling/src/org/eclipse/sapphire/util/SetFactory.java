@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.util;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +26,14 @@ public final class SetFactory<E>
     private Set<E> set = null;
     private boolean created = false;
     
-    public void add( E element )
+    private SetFactory() {}
+    
+    public static <E> SetFactory<E> start()
+    {
+        return new SetFactory<E>();
+    }
+    
+    public SetFactory<E> add( final E element )
     {
         if( this.created )
         {
@@ -47,6 +55,28 @@ public final class SetFactory<E>
         {
             this.firstElement = element;
         }
+        
+        return this;
+    }
+    
+    public SetFactory<E> addAll( final Collection<E> elements )
+    {
+        for( E element : elements )
+        {
+            add( element );
+        }
+        
+        return this;
+    }
+    
+    public SetFactory<E> addAll( final E[] elements )
+    {
+        for( E element : elements )
+        {
+            add( element );
+        }
+        
+        return this;
     }
     
     public Set<E> create()

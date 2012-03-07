@@ -103,7 +103,7 @@ public final class ActuatorPart extends SapphirePart
         
         if( this.showImage )
         {
-            final ListFactory<FunctionResult> imageFunctionResultsFactory = new ListFactory<FunctionResult>();
+            final ListFactory<FunctionResult> imageFunctionResultsFactory = ListFactory.start();
             
             for( ImageReference imageReference : def.getImages() )
             {

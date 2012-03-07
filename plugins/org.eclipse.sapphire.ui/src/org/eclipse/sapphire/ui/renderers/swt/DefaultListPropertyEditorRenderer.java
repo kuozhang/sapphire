@@ -1777,7 +1777,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         public ISelection getSelection()
         {
             final ISelection original = ( this.fakeSelection != null ? this.fakeSelection : super.getSelection() );
-            final ListFactory<IModelElement> elements = new ListFactory<IModelElement>();
+            final ListFactory<IModelElement> elements = ListFactory.start();
             
             for( Iterator<?> itr = ( (IStructuredSelection) original ).iterator(); itr.hasNext(); )
             {
