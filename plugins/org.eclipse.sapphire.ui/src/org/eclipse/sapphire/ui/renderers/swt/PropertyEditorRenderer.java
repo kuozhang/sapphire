@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_AUX_TEXT;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_AUX_TEXT_PROVIDER;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
@@ -45,6 +43,7 @@ import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.AuxTextProvider;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
+import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
@@ -139,10 +138,10 @@ public abstract class PropertyEditorRenderer
     {
         createContents( parent );
         
-        final String auxText = this.part.getRenderingHint( HINT_AUX_TEXT, null );
+        final String auxText = this.part.getRenderingHint( PropertyEditorDef.HINT_AUX_TEXT, null );
         
         final Class<AuxTextProvider> auxTextProviderClass 
-            = this.part.getRenderingHint( HINT_AUX_TEXT_PROVIDER, (Class<AuxTextProvider>) null );
+            = this.part.getRenderingHint( PropertyEditorDef.HINT_AUX_TEXT_PROVIDER, (Class<AuxTextProvider>) null );
         
         if( auxTextProviderClass != null )
         {

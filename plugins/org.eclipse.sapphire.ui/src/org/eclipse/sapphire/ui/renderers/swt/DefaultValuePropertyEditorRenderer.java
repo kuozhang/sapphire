@@ -17,9 +17,6 @@ import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_BROWSE;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_JUMP;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.createFilterByActionId;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_BROWSE_ONLY;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_LISTENERS;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_READ_ONLY;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.RELATED_CONTROLS;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
@@ -57,6 +54,7 @@ import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
+import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.internal.binding.TextFieldBinding;
 import org.eclipse.sapphire.ui.listeners.ValuePropertyEditorListener;
@@ -123,7 +121,7 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
         
         final boolean isLongString = property.hasAnnotation( LongString.class );
         final boolean isDeprecated = property.hasAnnotation( Deprecated.class );
-        final boolean isReadOnly = ( property.isReadOnly() || part.getRenderingHint( HINT_READ_ONLY, false ) );
+        final boolean isReadOnly = ( property.isReadOnly() || part.getRenderingHint( PropertyEditorDef.HINT_READ_ONLY, false ) );
         final boolean isSensitiveData = property.hasAnnotation( SensitiveData.class );
         
         final SapphireActionGroup actions = getActions();
@@ -153,7 +151,7 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
         );
         
         final boolean isActionsToolBarNeeded = toolBarActionsPresentation.hasActions();
-        final boolean isBrowseOnly = part.getRenderingHint( HINT_BROWSE_ONLY, false );
+        final boolean isBrowseOnly = part.getRenderingHint( PropertyEditorDef.HINT_BROWSE_ONLY, false );
         
         final Composite textFieldParent = createMainComposite
         (
@@ -323,7 +321,7 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
         // Hookup property editor listeners.
         
         final List<Class<?>> listenerClasses 
-            = part.getRenderingHint( HINT_LISTENERS, Collections.<Class<?>>emptyList() );
+            = part.getRenderingHint( PropertyEditorDef.HINT_LISTENERS, Collections.<Class<?>>emptyList() );
         
         if( ! listenerClasses.isEmpty() )
         {

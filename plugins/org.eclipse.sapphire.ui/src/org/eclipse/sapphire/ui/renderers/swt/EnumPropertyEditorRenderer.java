@@ -12,9 +12,6 @@
 package org.eclipse.sapphire.ui.renderers.swt;
 
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_PREFER_COMBO;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_PREFER_RADIO_BUTTONS;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_PREFER_VERTICAL_RADIO_BUTTONS;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
@@ -30,6 +27,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
+import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.binding.ComboBinding;
 import org.eclipse.sapphire.ui.internal.binding.RadioButtonsGroup;
 import org.eclipse.sapphire.ui.internal.binding.RadioButtonsGroupBinding;
@@ -64,9 +62,9 @@ public final class EnumPropertyEditorRenderer
         
         final boolean showLabel = part.getShowLabel();
         final int leftMargin = part.getMarginLeft();
-        final boolean preferVerticalRadioButtonBinding = part.getRenderingHint( HINT_PREFER_VERTICAL_RADIO_BUTTONS, false );
-        final boolean preferRadioButtonBinding = part.getRenderingHint( HINT_PREFER_RADIO_BUTTONS, false );
-        final boolean preferComboBinding = part.getRenderingHint( HINT_PREFER_COMBO, false );
+        final boolean preferVerticalRadioButtonBinding = part.getRenderingHint( PropertyEditorDef.HINT_PREFER_VERTICAL_RADIO_BUTTONS, false );
+        final boolean preferRadioButtonBinding = part.getRenderingHint( PropertyEditorDef.HINT_PREFER_RADIO_BUTTONS, false );
+        final boolean preferComboBinding = part.getRenderingHint( PropertyEditorDef.HINT_PREFER_COMBO, false );
         
         final Enum<?>[] enumValues = (Enum<?>[]) property.getTypeClass().getEnumConstants();
         

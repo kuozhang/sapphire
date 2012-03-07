@@ -68,22 +68,6 @@ public final class SapphirePropertyEditor extends FormPart
     public static final String DATA_PROPERTY = "property";
     public static final String DATA_ELEMENT = "element";
     
-    public static final String HINT_SHOW_HEADER = "show.header";
-    public static final String HINT_AUX_TEXT = "aux.text";
-    public static final String HINT_AUX_TEXT_PROVIDER = "aux.text.provider";
-    public static final String HINT_HIDE_IF_DISABLED = "hide.if.disabled";
-    public static final String HINT_BROWSE_ONLY = "browse.only";
-    public static final String HINT_READ_ONLY = "read.only";
-    public static final String HINT_BORDER = "border";
-    public static final String HINT_ASSIST_CONTRIBUTORS = "assist.contributors";
-    public static final String HINT_SUPPRESS_ASSIST_CONTRIBUTORS = "suppress.assist.contributors";
-    public static final String HINT_LISTENERS = "listeners";
-    public static final String HINT_COLUMN_WIDTHS = "column.widths";
-    public static final String HINT_PREFER_COMBO = "prefer.combo";
-    public static final String HINT_PREFER_RADIO_BUTTONS = "prefer.radio.buttons";
-    public static final String HINT_PREFER_VERTICAL_RADIO_BUTTONS = "prefer.vertical.radio.buttons";
-    public static final String HINT_FACTORY = "factory";
-    
     private static final List<PropertyEditorRendererFactory> FACTORIES = new ArrayList<PropertyEditorRendererFactory>();
     
     static
@@ -226,22 +210,22 @@ public final class SapphirePropertyEditor extends FormPart
             final String valueString = hint.getValue().getText();
             Object parsedValue = valueString;
             
-            if( name.equals( HINT_SHOW_HEADER ) ||
-                name.equals( HINT_BORDER ) ||
-                name.equals( HINT_BROWSE_ONLY ) ||
-                name.equals( HINT_PREFER_COMBO ) ||
-                name.equals( HINT_PREFER_RADIO_BUTTONS ) ||
-                name.equals( HINT_PREFER_VERTICAL_RADIO_BUTTONS ) ||
-                name.equals( HINT_READ_ONLY ) )
+            if( name.equals( PropertyEditorDef.HINT_SHOW_HEADER ) ||
+                name.equals( PropertyEditorDef.HINT_BORDER ) ||
+                name.equals( PropertyEditorDef.HINT_BROWSE_ONLY ) ||
+                name.equals( PropertyEditorDef.HINT_PREFER_COMBO ) ||
+                name.equals( PropertyEditorDef.HINT_PREFER_RADIO_BUTTONS ) ||
+                name.equals( PropertyEditorDef.HINT_PREFER_VERTICAL_RADIO_BUTTONS ) ||
+                name.equals( PropertyEditorDef.HINT_READ_ONLY ) )
             {
                 parsedValue = Boolean.parseBoolean( valueString );
             }
-            else if( name.startsWith( HINT_FACTORY ) ||
-                     name.startsWith( HINT_AUX_TEXT_PROVIDER ) )
+            else if( name.startsWith( PropertyEditorDef.HINT_FACTORY ) ||
+                     name.startsWith( PropertyEditorDef.HINT_AUX_TEXT_PROVIDER ) )
             {
                 parsedValue = rootdef.resolveClass( valueString );
             }
-            else if( name.equals( HINT_LISTENERS ) )
+            else if( name.equals( PropertyEditorDef.HINT_LISTENERS ) )
             {
                 final List<Class<?>> contributors = new ArrayList<Class<?>>();
                 
@@ -459,7 +443,7 @@ public final class SapphirePropertyEditor extends FormPart
         try
         {
             final Class<PropertyEditorRendererFactory> factoryClass 
-                = getRenderingHint( HINT_FACTORY, (Class<PropertyEditorRendererFactory>) null );
+                = getRenderingHint( PropertyEditorDef.HINT_FACTORY, (Class<PropertyEditorRendererFactory>) null );
             
             if( factoryClass != null )
             {
@@ -600,7 +584,7 @@ public final class SapphirePropertyEditor extends FormPart
     
     public boolean isReadOnly()
     {
-        return ( this.property.isReadOnly() || getRenderingHint( HINT_READ_ONLY, false ) );        
+        return ( this.property.isReadOnly() || getRenderingHint( PropertyEditorDef.HINT_READ_ONLY, false ) );        
     }
 
     @Override

@@ -19,6 +19,7 @@ import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.services.ValueSerializationService;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
@@ -60,7 +61,7 @@ public final class RadioButtonsGroupBinding
         for( Enum<?> enumItem : this.enumValues )
         {
             final String enumItemStr = element.service( property, ValueSerializationService.class ).encode( enumItem );
-            final String auxText = editor.getRenderingHint( SapphirePropertyEditor.HINT_AUX_TEXT + "." + enumItemStr, null );
+            final String auxText = editor.getRenderingHint( PropertyEditorDef.HINT_AUX_TEXT + "." + enumItemStr, null );
             final Button button = this.buttonsGroup.addRadioButton( enumValueType.getLabel( enumItem, false, CapitalizationType.FIRST_WORD_ONLY, true ), auxText );
             button.setData( enumItem );
         }

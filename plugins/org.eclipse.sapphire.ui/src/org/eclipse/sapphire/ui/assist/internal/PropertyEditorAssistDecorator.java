@@ -11,9 +11,6 @@
 
 package org.eclipse.sapphire.ui.assist.internal;
 
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_ASSIST_CONTRIBUTORS;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SUPPRESS_ASSIST_CONTRIBUTORS;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,8 +42,9 @@ import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
-import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
+import org.eclipse.sapphire.ui.def.PartDef;
+import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.SWT;
@@ -128,7 +126,7 @@ public final class PropertyEditorAssistDecorator
         final PartDef def = this.part.definition();
         
         this.contributorsToSuppress = new ArrayList<String>();
-        final String contributorsToSuppressStr = def.getHint( HINT_SUPPRESS_ASSIST_CONTRIBUTORS );
+        final String contributorsToSuppressStr = def.getHint( PropertyEditorDef.HINT_SUPPRESS_ASSIST_CONTRIBUTORS );
         
         if( contributorsToSuppressStr != null )
         {
@@ -139,7 +137,7 @@ public final class PropertyEditorAssistDecorator
         }
         
         this.additionalContributors = new ArrayList<Class<?>>();
-        final String additionalContributorsStr = def.getHint( HINT_ASSIST_CONTRIBUTORS );
+        final String additionalContributorsStr = def.getHint( PropertyEditorDef.HINT_ASSIST_CONTRIBUTORS );
         
         if( additionalContributorsStr != null )
         {

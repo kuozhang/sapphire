@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_HEADER;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
@@ -67,6 +66,7 @@ import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
+import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.SWT;
@@ -325,7 +325,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         
         this.tableViewer.setCheckStateProvider( checkStateProvider );
         
-        if( part.getRenderingHint( HINT_SHOW_HEADER, true ) == true )
+        if( part.getRenderingHint( PropertyEditorDef.HINT_SHOW_HEADER, true ) == true )
         {
             this.table.setHeaderVisible( true );
             makeTableSortable( this.tableViewer, Collections.<TableColumn,Comparator<Object>>singletonMap( column, comparator ) );

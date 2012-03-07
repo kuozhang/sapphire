@@ -51,24 +51,24 @@ public interface ISapphireHint
     (
         values = 
         {
-            "assist.contributors",
-            "aux.text",
-            "aux.text.provider",
-            "border",
-            "browse.only",
+            PropertyEditorDef.HINT_ASSIST_CONTRIBUTORS,
+            PropertyEditorDef.HINT_AUX_TEXT,
+            PropertyEditorDef.HINT_AUX_TEXT_PROVIDER,
+            PropertyEditorDef.HINT_BORDER,
+            PropertyEditorDef.HINT_BROWSE_ONLY,
             PropertyEditorDef.HINT_CHECKBOX_LAYOUT,
-            "column.widths",
-            "factory",
+            PropertyEditorDef.HINT_COLUMN_WIDTHS,
+            PropertyEditorDef.HINT_FACTORY,
             PartDef.HINT_HIDE_IF_DISABLED,
-            "listeners",
-            "prefer.combo",
+            PropertyEditorDef.HINT_LISTENERS,
+            PropertyEditorDef.HINT_PREFER_COMBO,
             PartDef.HINT_PREFER_FORM_STYLE,
-            "prefer.radio.buttons",
-            "prefer.vertical.radio.buttons",
-            "read.only",
-            "show.header",
+            PropertyEditorDef.HINT_PREFER_RADIO_BUTTONS,
+            PropertyEditorDef.HINT_PREFER_VERTICAL_RADIO_BUTTONS,
+            PropertyEditorDef.HINT_READ_ONLY,
+            PropertyEditorDef.HINT_SHOW_HEADER,
             PartDef.HINT_STYLE,
-            "suppress.assist.contributors"
+            PropertyEditorDef.HINT_SUPPRESS_ASSIST_CONTRIBUTORS
         },
         invalidValueMessage = "\"{0}\" is not a valid hint.",
         invalidValueSeverity = Status.Severity.OK

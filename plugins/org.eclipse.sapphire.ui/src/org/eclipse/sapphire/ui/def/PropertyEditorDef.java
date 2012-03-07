@@ -49,6 +49,21 @@ public interface PropertyEditorDef extends FormPartDef
     String HINT_VALUE_CHECKBOX_LAYOUT_LEADING_LABEL = "leading.label";
     String HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL = "trailing.label";
     String HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL_INDENTED = "trailing.label.idented";
+    String HINT_SHOW_HEADER = "show.header";
+    String HINT_AUX_TEXT = "aux.text";
+    String HINT_AUX_TEXT_PROVIDER = "aux.text.provider";
+    String HINT_HIDE_IF_DISABLED = "hide.if.disabled";
+    String HINT_BROWSE_ONLY = "browse.only";
+    String HINT_READ_ONLY = "read.only";
+    String HINT_BORDER = "border";
+    String HINT_ASSIST_CONTRIBUTORS = "assist.contributors";
+    String HINT_SUPPRESS_ASSIST_CONTRIBUTORS = "suppress.assist.contributors";
+    String HINT_LISTENERS = "listeners";
+    String HINT_COLUMN_WIDTHS = "column.widths";
+    String HINT_PREFER_COMBO = "prefer.combo";
+    String HINT_PREFER_RADIO_BUTTONS = "prefer.radio.buttons";
+    String HINT_PREFER_VERTICAL_RADIO_BUTTONS = "prefer.vertical.radio.buttons";
+    String HINT_FACTORY = "factory";
     
     // *** Property ***
     

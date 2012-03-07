@@ -19,8 +19,6 @@ import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_MOVE_DOWN;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_MOVE_UP;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.createFilterByActionId;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_COLUMN_WIDTHS;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.HINT_SHOW_HEADER;
 import static org.eclipse.sapphire.ui.SapphirePropertyEditor.RELATED_CONTROLS;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
@@ -160,7 +158,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         final IModelElement element = part.getLocalModelElement();
         final ListProperty property = (ListProperty) part.getProperty();
         final boolean isReadOnly = part.isReadOnly();
-        final boolean showHeader = part.getRenderingHint( HINT_SHOW_HEADER, true );
+        final boolean showHeader = part.getRenderingHint( PropertyEditorDef.HINT_SHOW_HEADER, true );
         
         final SapphireActionGroup actions = getActions();
         final SapphireActionPresentationManager actionPresentationManager = getActionPresentationManager();
@@ -344,7 +342,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         
         boolean showImages = true;
         
-        final String columnWidthsHint = part.getRenderingHint( HINT_COLUMN_WIDTHS, "" );
+        final String columnWidthsHint = part.getRenderingHint( PropertyEditorDef.HINT_COLUMN_WIDTHS, "" );
         final StringTokenizer columnWidthsHintTokenizer = new StringTokenizer( columnWidthsHint, "," );
         
         for( final ValueProperty memberProperty : columnProperties )

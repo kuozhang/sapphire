@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle and Other Contributors
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Greg Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar
+ *    Gregory Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.def.internal;
@@ -19,12 +19,13 @@ import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
-import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public final class SapphireHintValuePossibleValuesService
@@ -47,7 +48,7 @@ public final class SapphireHintValuePossibleValuesService
                 values.add( PropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL );
                 values.add( PropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL_INDENTED );
             }
-            else if ( hint.equals( PartDef.HINT_STYLE ) ) 
+            else if( hint.equals( PartDef.HINT_STYLE ) ) 
             {
                 if( partdef instanceof ISapphireWithDirectiveDef )
                 {
@@ -61,6 +62,19 @@ public final class SapphireHintValuePossibleValuesService
                     values.add( ISapphireActionDef.HINT_VALUE_STYLE_IMAGE_TEXT );
                     values.add( ISapphireActionDef.HINT_VALUE_STYLE_TEXT );
                 }
+            }
+            else if( hint.equals( PropertyEditorDef.HINT_SHOW_HEADER ) || 
+                     hint.equals( PropertyEditorDef.HINT_HIDE_IF_DISABLED ) ||
+                     hint.equals( PropertyEditorDef.HINT_BROWSE_ONLY ) ||
+                     hint.equals( PropertyEditorDef.HINT_READ_ONLY ) ||
+                     hint.equals( PropertyEditorDef.HINT_BORDER ) ||
+                     hint.equals( PropertyEditorDef.HINT_PREFER_COMBO ) ||
+                     hint.equals( PropertyEditorDef.HINT_PREFER_RADIO_BUTTONS ) ||
+                     hint.equals( PropertyEditorDef.HINT_PREFER_VERTICAL_RADIO_BUTTONS ) ||
+                     hint.equals( PropertyEditorDef.HINT_FACTORY ) )
+            {
+                values.add( Boolean.TRUE.toString() );
+                values.add( Boolean.FALSE.toString() );
             }
         }
     }
