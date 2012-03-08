@@ -28,6 +28,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.KeyHandler;
 import org.eclipse.gef.KeyStroke;
@@ -50,7 +51,9 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
@@ -71,6 +74,7 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramModelBase;
 import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.parts.SapphireDiagramEditorEditPartFactory;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
@@ -94,10 +98,14 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
     private DiagramModel diagramModel;
     private SapphireDiagramPartListener diagramPartListener;
     private List<SapphirePart> selectedParts = null;
+    private List<GraphicalEditPart> selectedEditParts = null;
     private boolean editorIsDirty = false;
 
 	private Point mouseLocation;
 	private DiagramConfigurationManager configManager;
+	private GraphicalViewerKeyHandler graphicalViewerKeyHandler;
+	private SapphireActionPresentationManager actionPresentationManager;
+	private SapphireActionGroup tempActions;
 
     public SapphireDiagramEditor(final IModelElement rootModelElement, final IPath pageDefinitionLocation) {
 		final String bundleId = pageDefinitionLocation.segment( 0 );
@@ -371,7 +379,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
                 }
             }
         }
-        if (editorIsActive) {
+        if (editorIsActive) 
+        {
         	updateActions(getSelectionActions());
 			
 			// Bug 339360 - MultiPage Editor's selectionProvider does not notify PropertySheet (edit) 
@@ -380,6 +389,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			{
 				StructuredSelection structuredSelection = (StructuredSelection) selection;
 				List<SapphirePart> partList = new ArrayList<SapphirePart>();
+				List<GraphicalEditPart> editPartList = new ArrayList<GraphicalEditPart>();
 				for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) 
 				{
 					Object object = iterator.next();
@@ -390,11 +400,12 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 					}
 					else if (object instanceof IAdaptable) 
 					{
-						editPart = (EditPart) ((IAdaptable) object).getAdapter(EditPart.class);
+						editPart = (EditPart) ((IAdaptable) object).getAdapter(EditPart.class);						
 					}
 					if (editPart != null && editPart.getModel() instanceof DiagramModelBase) {
 						SapphirePart sp = ((DiagramModelBase)editPart.getModel()).getSapphirePart();
 						partList.add(sp);
+						editPartList.add((GraphicalEditPart)editPart);
 					}
 					if (partList.size() == 1)
 					{
@@ -405,10 +416,62 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 						getPart().setSelection(null);
 					}
 					this.selectedParts = partList;
+					this.selectedEditParts = editPartList;
 				}
 			}
+			updateKeyHandler();
 		}
 	}    
+	
+	private void updateKeyHandler()
+	{
+        if( this.tempActions != null )
+        {
+            this.tempActions.dispose();
+            this.tempActions = null;
+        }
+		
+        if( this.actionPresentationManager != null )
+        {
+            this.actionPresentationManager.dispose();
+            this.actionPresentationManager = null;
+        }
+        
+		List<SapphirePart> selectedParts = this.getSelectedParts();
+		if (selectedParts.size() == 1)
+		{
+			SapphirePart selectedPart = selectedParts.get(0);
+			String actionContext = null;
+			if (selectedPart instanceof SapphireDiagramEditorPagePart)
+			{
+				actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR;
+			}
+			else if (selectedPart instanceof DiagramNodePart)
+			{
+				actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_NODE;
+			}
+			else if (selectedPart instanceof DiagramConnectionPart)
+			{
+				actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION;
+			}
+			this.tempActions = selectedPart.getActions(actionContext);
+			
+            this.actionPresentationManager = new SapphireActionPresentationManager( 
+            		new DiagramRenderingContext(selectedPart, this), this.tempActions );
+            
+            DiagramKeyboardActionPresentation keyboardActionPresentation = 
+            		new DiagramKeyboardActionPresentation(this.actionPresentationManager, getSelectedEditParts().get(0), this);
+            keyboardActionPresentation.render();
+            KeyHandler keyHandler = keyboardActionPresentation.getKeyHandler();
+            
+            if (this.graphicalViewerKeyHandler == null)
+            {
+            	graphicalViewerKeyHandler = new GraphicalViewerKeyHandler(getGraphicalViewer());
+            }
+    		KeyHandler parentKeyHandler = graphicalViewerKeyHandler.setParent(keyHandler);
+    		getGraphicalViewer().setKeyHandler(parentKeyHandler);					
+		}
+	}
 	
 	private void refreshPalette() {
 		PaletteRoot pr = getPaletteRoot();
@@ -562,10 +625,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 
 		initActionRegistry();
 		
-		GraphicalViewerKeyHandler graphicalViewerKeyHandler = new GraphicalViewerKeyHandler(viewer);
-		KeyHandler parentKeyHandler = graphicalViewerKeyHandler.setParent(getCommonKeyHandler());
-		viewer.setKeyHandler(parentKeyHandler);		
-
 		// configure the context menu provider
 		ContextMenuProvider cmProvider = new SapphireDiagramEditorContextMenuProvider(this);
 		viewer.setContextMenu(cmProvider);
@@ -602,20 +661,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		getActionRegistry().registerAction(deAction);
 		getSelectionActions().add(deAction.getId());
 	}
-	
-	protected KeyHandler getCommonKeyHandler()
-	{
-
-		KeyHandler sharedKeyHandler = new KeyHandler();
-		sharedKeyHandler.put(KeyStroke.getPressed(SWT.DEL, 127, 0), getActionRegistry().getAction(
-				ActionFactory.DELETE.getId()));
-		sharedKeyHandler.put(KeyStroke.getPressed(SWT.F2, 0), getActionRegistry().getAction(
-				GEFActionConstants.DIRECT_EDIT));
-
-		return sharedKeyHandler;
-	}
 		
-	
 	@Override
 	protected PaletteViewerProvider createPaletteViewerProvider() 
 	{
@@ -643,6 +689,11 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	public List<SapphirePart> getSelectedParts()
 	{
 		return this.selectedParts;
+	}
+	
+	public List<GraphicalEditPart> getSelectedEditParts()
+	{
+		return this.selectedEditParts;
 	}
 	
 	public void selectAndDirectEditPart(ISapphirePart part)

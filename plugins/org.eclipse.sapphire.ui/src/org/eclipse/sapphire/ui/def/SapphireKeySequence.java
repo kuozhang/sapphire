@@ -71,6 +71,13 @@ public final class SapphireKeySequence
     
     public static final int ARROW_DOWN = KEYCODE_BIT + 2;
     
+	/**
+	 * Keyboard event constant representing the F2 key
+	 * (value is (1&lt;&lt;24)+11).
+	 */
+    
+    public static final int F2 = KEYCODE_BIT + 11;
+    
     private static final char SEPARATOR = '+';
     private static final String SYMBOL_SHIFT = "SHIFT";
     private static final String SYMBOL_ALT = "ALT";
@@ -78,6 +85,7 @@ public final class SapphireKeySequence
     private static final String SYMBOL_DEL = "DEL";
     private static final String SYMBOL_ARROW_UP = "ARROW_UP";
     private static final String SYMBOL_ARROW_DOWN = "ARROW_DOWN";
+    private static final String SYMBOL_F2 = "F2";
     
     private final Set<Modifier> modifiers;
     private final int keyCode;
@@ -143,6 +151,15 @@ public final class SapphireKeySequence
                 }
                 
                 keyCode = ARROW_DOWN;
+            }
+            else if( segment.equalsIgnoreCase( SYMBOL_F2 ) )
+            {
+                if( keyCode != -1 )
+                {
+                    throw new IllegalArgumentException();
+                }
+                
+                keyCode = F2;
             }
             else if( segment.length() == 1 )
             {

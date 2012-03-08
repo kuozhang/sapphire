@@ -40,10 +40,4 @@ public class DiagramShowInSourceActionHandler extends
         return null;
     }
 
-    @Override
-    public boolean hasDoneModelChanges() 
-    {
-        return false;
-    }
-    
 }

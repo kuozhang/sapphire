@@ -14,6 +14,14 @@
 -->
 
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
+    <action>
+        <id>Sapphire.Diagram.DirectEdit</id>
+        <context>Sapphire.Diagram.Node</context>
+        <context>Sapphire.Diagram.Connection</context>
+        <label>direct edit</label>
+        <key-binding>F2</key-binding>
+        <description>Direct edit a node or connection</description>
+    </action>
     <action-handler>
         <action>Sapphire.Diagram.Layout</action>
         <impl>org.eclipse.sapphire.ui.gef.diagram.editor.actions.HorizontalGraphLayoutActionHandler</impl>
@@ -32,4 +40,11 @@
         <description>Creates an add action handler for every node type.</description>
         <context>Sapphire.Diagram.Editor</context>
     </action-handler-factory>  
+    <action-handler>
+        <action>Sapphire.Diagram.DirectEdit</action>
+        <impl>org.eclipse.sapphire.ui.gef.diagram.editor.actions.DiagramDirectEditActionHandler</impl>
+        <context>Sapphire.Diagram.Node</context>
+        <context>Sapphire.Diagram.Connection</context>
+    </action-handler>
+        
 </extension>

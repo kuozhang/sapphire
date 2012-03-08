@@ -27,6 +27,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 /**
@@ -93,31 +94,29 @@ public class DiagramDeleteActionHandler extends SapphireDiagramActionHandler
         return null;
     }
 
-    @Override
-    public boolean hasDoneModelChanges() 
-    {
-        return true;
-    }
-    
     private void deleteNodeConnections(DiagramNodePart nodePart)
     {
         IModelElement nodeModel = nodePart.getLocalModelElement();
+        SapphireDiagramEditorPagePart diagramPart = nodePart.getDiagramNodeTemplate().getDiagramEditorPart();
         
         // Look for embedded connections
-        DiagramEmbeddedConnectionTemplate embeddedConn = nodePart.getDiagramNodeTemplate().getEmbeddedConnectionTemplate();
-        if (embeddedConn != null)
+        for (DiagramNodeTemplate nodeTemplate : diagramPart.getNodeTemplates())
         {
-            for (DiagramConnectionPart connPart : embeddedConn.getDiagramConnections(null))
+        	DiagramEmbeddedConnectionTemplate embeddedConn = nodeTemplate.getEmbeddedConnectionTemplate();
+            if (embeddedConn != null)
             {
-                if ((connPart.getEndpoint1() != null && connPart.getEndpoint1().equals(nodeModel)) || 
-                        (connPart.getEndpoint2() != null && connPart.getEndpoint2().equals(nodeModel)))
+                for (DiagramConnectionPart connPart : embeddedConn.getDiagramConnections(null))
                 {
-                    deleteConnection(connPart);
+                    if ((connPart.getEndpoint1() != null && connPart.getEndpoint1().equals(nodeModel)) || 
+                            (connPart.getEndpoint2() != null && connPart.getEndpoint2().equals(nodeModel)))
+                    {
+                        deleteConnection(connPart);
+                    }
                 }
             }
         }
-        // Look for top level connections
-        SapphireDiagramEditorPagePart diagramPart = nodePart.getDiagramNodeTemplate().getDiagramEditorPart();
+
+        // Look for top level connections        
         for (DiagramConnectionTemplate connTemplate : diagramPart.getConnectionTemplates())
         {
             for (DiagramConnectionPart connPart : connTemplate.getDiagramConnections(null))

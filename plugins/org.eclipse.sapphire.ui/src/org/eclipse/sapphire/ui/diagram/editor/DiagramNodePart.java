@@ -168,10 +168,6 @@ public class DiagramNodePart
             );
             this.imageDecoratorDataFunctionResults.add(imageResult);
         }
-
-        // Default Action handler
-        this.defaultAction = getAction(DEFAULT_ACTION_ID);
-        this.defaultActionHandler = this.defaultAction.getFirstActiveHandler();
         
         // Add model property listener. It listens to all the properties so that the
         // validation status change would trigger node update
@@ -230,14 +226,15 @@ public class DiagramNodePart
     {
         return Collections.singleton( SapphireActionSystem.CONTEXT_DIAGRAM_NODE );
     }
-    
-    public SapphireAction getDefaultAction()
-    {
-        return this.defaultAction;
-    }
-    
+        
     public SapphireActionHandler getDefaultActionHandler()
     {        
+    	if (this.defaultAction == null)
+    	{
+            // Default Action handler
+            this.defaultAction = getAction(DEFAULT_ACTION_ID);
+            this.defaultActionHandler = this.defaultAction.getFirstActiveHandler();    		
+    	}
         return this.defaultActionHandler;
     }
     
