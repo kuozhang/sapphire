@@ -8,7 +8,8 @@
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Ling Hao - [329114] rewrite context help binding feature
- *    Gregory Amerson - [372816] Provide adapt mechanism for SapphirePart 
+ *    Gregory Amerson - [372816] Provide adapt mechanism for SapphirePart
+ *    Gregory Amerson - [373614] Suppport AdapterService in SapphirePart
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -44,6 +45,7 @@ import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.services.AdapterService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.def.ActuatorDef;
 import org.eclipse.sapphire.ui.def.FormDef;
@@ -56,7 +58,6 @@ import org.eclipse.sapphire.ui.def.ISapphireGroupDef;
 import org.eclipse.sapphire.ui.def.ISapphireIfElseDirectiveDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
-import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.ISapphirePartListenerDef;
 import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
 import org.eclipse.sapphire.ui.def.ISapphireSeparatorDef;
@@ -67,6 +68,7 @@ import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
 import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
 import org.eclipse.sapphire.ui.def.PageBookExtDef;
 import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
+import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
 import org.eclipse.sapphire.ui.def.SplitFormDef;
@@ -522,7 +524,22 @@ public abstract class SapphirePart implements ISapphirePart
     
     public <A> A adapt( final Class<A> adapterType )
     {
-        A result = getLocalModelElement().adapt( adapterType );
+        A result = null;
+
+        for( AdapterService service : services( AdapterService.class ) )
+        {
+            result = service.adapt( adapterType );
+
+            if( result != null )
+            {
+                break;
+            }
+        }
+
+        if( result == null )
+        {
+            result = getLocalModelElement().adapt( adapterType );
+        }
     
         if( result == null && this.parent != null )
         {

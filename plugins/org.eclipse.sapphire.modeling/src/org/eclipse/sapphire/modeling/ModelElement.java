@@ -1292,11 +1292,11 @@ public abstract class ModelElement
     }
     
     @Override
-    public <A> A adapt( Class<A> adapterType )
+    public <A> A adapt( final Class<A> adapterType )
     {
         A result = null;
 
-        for( AdapterService service : this.services( AdapterService.class ) )
+        for( AdapterService service : services( AdapterService.class ) )
         {
             result = service.adapt( adapterType );
             
