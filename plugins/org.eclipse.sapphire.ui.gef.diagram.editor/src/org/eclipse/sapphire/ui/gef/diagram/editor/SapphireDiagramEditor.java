@@ -438,7 +438,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
         }
         
 		List<SapphirePart> selectedParts = this.getSelectedParts();
-		if (selectedParts.size() == 1)
+		if (selectedParts != null && selectedParts.size() == 1)
 		{
 			SapphirePart selectedPart = selectedParts.get(0);
 			String actionContext = null;
