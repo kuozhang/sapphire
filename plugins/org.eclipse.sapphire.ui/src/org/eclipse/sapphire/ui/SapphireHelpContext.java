@@ -42,7 +42,11 @@ public final class SapphireHelpContext implements IContext, IContext2
         final StringBuilder content = new StringBuilder();
         final List<DocumentationService.Topic> topics = new ArrayList<DocumentationService.Topic>();
         
-        final DocumentationService propDocService = element.service( property, DocumentationService.class );
+        DocumentationService propDocService = null;
+        if (property != null)
+        {
+        	propDocService = element.service( property, DocumentationService.class );
+        }
         final DocumentationService elDocService = element.service( DocumentationService.class );
         
         content.append( "[br/]" );

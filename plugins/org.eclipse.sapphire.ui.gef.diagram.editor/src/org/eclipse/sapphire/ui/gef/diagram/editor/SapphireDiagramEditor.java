@@ -31,7 +31,6 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.KeyHandler;
-import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
@@ -39,7 +38,6 @@ import org.eclipse.gef.editparts.GridLayer;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.ui.actions.DirectEditAction;
-import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
@@ -54,6 +52,7 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
+import org.eclipse.sapphire.ui.SapphireHelpContext;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
@@ -75,14 +74,16 @@ import org.eclipse.sapphire.ui.gef.diagram.editor.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.gef.diagram.editor.parts.SapphireDiagramEditorEditPartFactory;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
-import org.eclipse.swt.SWT;
+import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
+import org.eclipse.swt.events.HelpEvent;
+import org.eclipse.swt.events.HelpListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartConstants;
-import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
 
 /**
@@ -651,7 +652,28 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		if (this.diagramPart.isShowGuides() != isShowGuidesInViewer)
 		{
 			viewer.setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, this.diagramPart.isShowGuides());
-		}		
+		}
+		
+		// Support context help
+		
+		this.getGraphicalControl().addHelpListener(new HelpListener() 
+        {
+            public void helpRequested(HelpEvent event) 
+            {            	
+            	if (getSelectedParts() != null && getSelectedParts().size() == 1)
+            	{
+            		SapphirePart part = getSelectedParts().get(0);
+	            	final SapphireHelpContext context = new SapphireHelpContext(part.getLocalModelElement(), null);
+	            	if (context.getText() != null || (context.getRelatedTopics() != null && context.getRelatedTopics().length > 0))
+	            	{
+		                // determine a location in the upper right corner of the widget
+		                org.eclipse.swt.graphics.Point point = SapphireHelpSystem.computePopUpLocation(event.widget.getDisplay());
+		                // display the help
+		                PlatformUI.getWorkbench().getHelpSystem().displayContext(context, point.x, point.y);
+	            	}
+            	}
+            }
+        });
 		
 	}
 	
