@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [374022] - SapphireGraphicalEditor init with SapphireEditor
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.map.ui;
@@ -61,7 +62,7 @@ public class MapEditor extends SapphireEditor
     protected void createDiagramPages() throws PartInitException
     {
         IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/map/MapEditor.sdef/diagram" );
-        this.mapDiagram = new SapphireDiagramEditor(this.modelMap, path);
+		this.mapDiagram = new SapphireDiagramEditor( this, this.modelMap, path );
         addPage(0, mapDiagram, getEditorInput());
         setPageText( 0, "Diagram" );
         setPageId(this.pages.get(0), "Diagram", this.mapDiagram.getPart());

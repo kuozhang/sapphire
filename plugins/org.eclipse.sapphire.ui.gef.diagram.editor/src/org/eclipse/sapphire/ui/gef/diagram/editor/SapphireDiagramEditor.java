@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  *                   DND fixes.
  *    Shenxue Zhou - [bugzilla 365019] - SapphireDiagramEditor does not work on 
  *                   non-workspace files 
+ *    Gregory Amerson - [374022] - SapphireGraphicalEditor init with SapphireEditor
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.gef.diagram.editor;
@@ -52,6 +53,7 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
+import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SapphireHelpContext;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
@@ -108,7 +110,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	private SapphireActionPresentationManager actionPresentationManager;
 	private SapphireActionGroup tempActions;
 
-    public SapphireDiagramEditor(final IModelElement rootModelElement, final IPath pageDefinitionLocation) {
+	public SapphireDiagramEditor(
+		final SapphireEditor editor, final IModelElement rootModelElement, final IPath pageDefinitionLocation )
+	{
 		final String bundleId = pageDefinitionLocation.segment( 0 );
         final String pageId = pageDefinitionLocation.lastSegment();
         final String relPath = pageDefinitionLocation.removeFirstSegments( 1 ).removeLastSegments( 1 ).toPortableString();
@@ -118,7 +122,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
         this.diagramPageDef = (IDiagramEditorPageDef) def.getPartDef( pageId, true, IDiagramEditorPageDef.class );
 
         this.diagramPart = new SapphireDiagramEditorPagePart();
-        this.diagramPart.init(null, rootModelElement, this.diagramPageDef, Collections.<String,String>emptyMap());
+		this.diagramPart.init( editor, rootModelElement, this.diagramPageDef, Collections.<String, String> emptyMap() );
         
         this.configManager = new DiagramConfigurationManager(this);
         

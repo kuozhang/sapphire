@@ -8,6 +8,7 @@
  * Contributors:
  *    Konstantin Komissarchik - initial implementation
  *    Shenxue Zhou - handle external file input
+ *    Gregory Amerson - [374022] - SapphireGraphicalEditor init with SapphireEditor
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.architecture.ui;
@@ -62,7 +63,7 @@ public final class ArchitectureEditor extends SapphireEditor
     protected void createDiagramPages() throws PartInitException
     {
         IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/architecture/ArchitectureEditor.sdef/DiagramPage" );
-        this.pageDiagram = new SapphireDiagramEditor( this.architectureModel, path );
+		this.pageDiagram = new SapphireDiagramEditor( this, this.architectureModel, path );
         addPage( 0, this.pageDiagram, getEditorInput() );
         setPageText( 0, "Diagram" );
         setPageId( this.pages.get( 0 ), "Diagram", this.pageDiagram.getPart() );

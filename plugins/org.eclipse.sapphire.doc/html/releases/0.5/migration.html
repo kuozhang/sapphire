@@ -44,6 +44,10 @@ to 0.5 release. Only changes from the previous release are covered.</p>
 <ol>
   <li><a href="#Actuator">Actuator</a></li>
   <li><a href="#DiagramImage">Diagram Image</a></li>
+  <li><a href="#GraphitiToGef">Graphiti to GEF Transition</a></li>
+  <ol type="A">
+    <li><a href="#SapphireDiagramEditor">SapphireDiagramEditor</a></li>
+  </ol>
 </ol>
 
 
@@ -168,6 +172,57 @@ Images are now referenced at the point of use, rather than defined separately an
     &lt;path>icons/node-router.png&lt;/path>
     &lt;placement>top&lt;/placement>
 &lt;/image>
+    </td>
+  </tr>
+</table>
+
+<h2><a name="GraphitiToGef">Graphiti to GEF Transition</a></h2>
+
+<p>In this release the dependency on Graphiti has been removed and the Sapphire Diagram UI has been rebased on straight GEF (see 
+		<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=344228">bug 344228</a> for more details).  The changes that will be required to existing diagram editors in previous 0.4 release are detailed below.</p> 
+
+<h2><a name="SapphireDiagramEditor">SapphireDiagramEditor</a></h2>
+
+<p>The use of SapphireDiagramEditor in 0.5 requires the following changes for adopters in previous 0.4.x release.  
+<ol>
+  <li>Package namespace changed from swt.graphiti.editor to gef.editor.</li>
+  <li>Constructor for SapphireDiagramEditor now requires passing in the parent SapphireEditor.</li>
+  <li>No longer need to create DiagramEditorInput</li>
+</ol>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td> 
+<pre class="source-code"><code>import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
+</code></pre>
+    </td>
+    <td>
+   <pre class="source-code"><code>import org.eclipse.sapphire.ui.gef.editor.SapphireDiagramEditor;
+</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>this.pageDiagram = new SapphireDiagramEditor( this.model, path );</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>this.pageDiagram = new SapphireDiagramEditor( sapphireEditor, this.architectureModel, path );</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>pageDiagram = new SapphireDiagramEditor( model, path );
+SapphireDiagramEditorInput diagramEditorInput = 
+	SapphireDiagramEditorFactory.createEditorInput( file );
+addPage( 0, pageDiagram, diagramEditorInput );</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>pageDiagram = new SapphireDiagramEditor( sapphireEditor, model, path );
+addPage( 0, pageDiagram, getEditorInput() );</code></pre>
     </td>
   </tr>
 </table>
