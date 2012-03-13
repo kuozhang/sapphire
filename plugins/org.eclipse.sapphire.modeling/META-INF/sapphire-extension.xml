@@ -361,6 +361,12 @@
         <factory>org.eclipse.sapphire.services.internal.DateSerializationServiceFactory</factory>
     </service>
     <service>
+        <id>Sapphire.ValueSerializationService.Uri</id>
+        <type>org.eclipse.sapphire.services.ValueSerializationService</type>
+        <context>Sapphire.Property.Instance</context>
+        <factory>org.eclipse.sapphire.services.internal.UriSerializationService$Factory</factory>
+    </service>
+    <service>
         <id>Sapphire.ValueSerializationService.Url</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
         <context>Sapphire.Property.Instance</context>
