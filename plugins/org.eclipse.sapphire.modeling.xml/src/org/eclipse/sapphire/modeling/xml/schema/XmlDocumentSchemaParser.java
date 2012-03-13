@@ -531,28 +531,31 @@ public final class XmlDocumentSchemaParser
                 }
             }
             
-            InputStream in = null;
-            
-            try
+            if( schemaLocationUrl != null )
             {
-                in = schemaLocationUrl.openStream();
-
-                final Document doc = docbuilder.parse( in );
+                InputStream in = null;
                 
-                if( doc != null )
+                try
                 {
-                    return doc.getDocumentElement();
-                }
-            }
-            finally
-            {
-                if( in != null )
-                {
-                    try
+                    in = schemaLocationUrl.openStream();
+    
+                    final Document doc = docbuilder.parse( in );
+                    
+                    if( doc != null )
                     {
-                        in.close();
+                        return doc.getDocumentElement();
                     }
-                    catch( IOException e ) {}
+                }
+                finally
+                {
+                    if( in != null )
+                    {
+                        try
+                        {
+                            in.close();
+                        }
+                        catch( IOException e ) {}
+                    }
                 }
             }
         }
