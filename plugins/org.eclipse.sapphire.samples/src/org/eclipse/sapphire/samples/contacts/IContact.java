@@ -29,6 +29,7 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
+import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -36,6 +37,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.samples.contacts.internal.ConnectionsListController;
 import org.eclipse.sapphire.samples.contacts.internal.ContactCategoryPossibleValueService;
+import org.eclipse.sapphire.samples.contacts.internal.ContactEqualityService;
 import org.eclipse.sapphire.samples.contacts.internal.ContactImageService;
 import org.eclipse.sapphire.samples.contacts.internal.ContactMethods;
 
@@ -44,7 +46,7 @@ import org.eclipse.sapphire.samples.contacts.internal.ContactMethods;
  */
 
 @Image( path = "Contact.png" )
-@Service( impl = ContactImageService.class )
+@Services( { @Service( impl = ContactImageService.class ), @Service( impl = ContactEqualityService.class ) } )
 @GenerateImpl
 
 public interface IContact extends IModelElement

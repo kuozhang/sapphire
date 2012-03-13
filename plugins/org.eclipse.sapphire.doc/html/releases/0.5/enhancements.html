@@ -32,6 +32,7 @@
   <ol type="A">
     <li><a href="#PartServices">Part Services</a></li>
     <li><a href="#AdapterService">AdapterService</a></li>
+    <li><a href="#EqualityService">EqualityService</a></li>
   </ol>
 </ol>
 
@@ -150,6 +151,53 @@ provide a custom method for adopting IModelElement to IProject.</p>
         }
 
         return null;
+    }
+}</code></pre>
+
+
+<h2><a name="EqualityService">EqualityService</a></h2>
+
+<p>The EqualityService provides means to implement equals() and hashCode() methods when the context object doesn't support
+implementing these methods directly. One such context is model elements, where the framework does not rely on a particular
+implementation of these methods, but having these methods behave in a way consistent with semantics of the data being modeled
+can be useful for other purposes.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class ContactEqualityService extends EqualityService
+{
+    @Override
+    public boolean doEquals( Object obj )
+    {
+        Contact c1 = context( Contact.class );
+        Contact c2 = (Contact) obj;
+        
+        return equal( c1.getLastName().getText(), c2.getLastName().getText() ) &&
+               equal( c1.getFirstName().getText(), c2.getFirstName().getText() );
+    }
+    
+    @Override
+    public int doHashCode()
+    {
+        Contact c = context( Contact.class );
+        String lastName = c.getLastName().getText();
+        String firstName = c.getFirstName().getText();
+        
+        return ( lastName == null ? 1 : lastName.hashCode() ) ^ ( firstName == null ? 1 : firstName.hashCode() );
+    }
+    
+    private static boolean equal( Object obj1, Object obj2 )
+    {
+        if( obj1 == obj2 )
+        {
+            return true;
+        }
+        else if( obj1 != null && obj2 != null )
+        {
+            return obj1.equals( obj2 );
+        }
+        
+        return false;
     }
 }</code></pre>
 

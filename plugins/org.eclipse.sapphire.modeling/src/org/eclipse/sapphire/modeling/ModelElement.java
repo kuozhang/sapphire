@@ -36,6 +36,7 @@ import org.eclipse.sapphire.services.DefaultValueService;
 import org.eclipse.sapphire.services.DependenciesAggregationService;
 import org.eclipse.sapphire.services.DerivedValueService;
 import org.eclipse.sapphire.services.EnablementService;
+import org.eclipse.sapphire.services.EqualityService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ValidationService;
@@ -567,6 +568,47 @@ public abstract class ModelElement
         }
     }
     
+    @Override
+    public final boolean equals( final Object obj )
+    {
+        boolean result = false;
+        
+        if( this == obj )
+        {
+            result = true;
+        }
+        else if( obj instanceof IModelElement )
+        {
+            final EqualityService equalityService = service( EqualityService.class );
+            
+            if( equalityService != null )
+            {
+                result = equalityService.doEquals( obj );
+            }
+        }
+        
+        return result;
+    }
+
+    @Override
+    public final int hashCode()
+    {
+        int result;
+        
+        final EqualityService equalityService = service( EqualityService.class );
+        
+        if( equalityService != null )
+        {
+            result = equalityService.doHashCode();
+        }
+        else
+        {
+            result = super.hashCode();
+        }
+        
+        return result;
+    }
+
     public final <S extends Service> S service( final Class<S> serviceType )
     {
         final List<S> services = services( serviceType );
