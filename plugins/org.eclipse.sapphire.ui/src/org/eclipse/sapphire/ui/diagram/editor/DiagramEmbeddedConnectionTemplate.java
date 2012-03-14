@@ -271,12 +271,12 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
             }
         }
         else
-        {            
+        {   
             // return all the connection parts
-            Iterator<IModelElement> it = this.diagramConnectionMap.keySet().iterator();
-            while (it.hasNext())
+        	
+            for (List<DiagramConnectionPart> connParts : this.diagramConnectionMap.values())
             {
-                allConnParts.addAll(this.diagramConnectionMap.get(it.next()));
+            	allConnParts.addAll(connParts);
             }
         }
         return allConnParts;
