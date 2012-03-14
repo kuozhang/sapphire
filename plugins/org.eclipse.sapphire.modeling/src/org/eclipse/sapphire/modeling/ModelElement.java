@@ -571,42 +571,55 @@ public abstract class ModelElement
     @Override
     public final boolean equals( final Object obj )
     {
-        boolean result = false;
-        
-        if( this == obj )
+        synchronized( root() )
         {
-            result = true;
-        }
-        else if( obj instanceof IModelElement )
-        {
-            final EqualityService equalityService = service( EqualityService.class );
+            boolean result = false;
             
-            if( equalityService != null )
+            if( this == obj )
             {
-                result = equalityService.doEquals( obj );
+                result = true;
             }
+            else if( obj instanceof IModelElement && ! disposed() )
+            {
+                final EqualityService equalityService = service( EqualityService.class );
+                
+                if( equalityService != null )
+                {
+                    result = equalityService.doEquals( obj );
+                }
+            }
+            
+            return result;
         }
-        
-        return result;
     }
 
     @Override
     public final int hashCode()
     {
-        int result;
-        
-        final EqualityService equalityService = service( EqualityService.class );
-        
-        if( equalityService != null )
+        synchronized( root() )
         {
-            result = equalityService.doHashCode();
+            int result;
+         
+            if( disposed() )
+            {
+                result = super.hashCode();
+            }
+            else
+            {
+                final EqualityService equalityService = service( EqualityService.class );
+                
+                if( equalityService != null )
+                {
+                    result = equalityService.doHashCode();
+                }
+                else
+                {
+                    result = super.hashCode();
+                }
+            }
+            
+            return result;
         }
-        else
-        {
-            result = super.hashCode();
-        }
-        
-        return result;
     }
 
     public final <S extends Service> S service( final Class<S> serviceType )

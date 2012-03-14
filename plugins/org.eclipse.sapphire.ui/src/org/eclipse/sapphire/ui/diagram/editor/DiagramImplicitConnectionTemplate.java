@@ -15,7 +15,7 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -74,7 +74,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     public void init()
     {
         this.diagramEditor = (SapphireDiagramEditorPagePart)getParentPart();
-        this.listEntryFunctionMap = new HashMap<IModelElement, FunctionResult>();
+        this.listEntryFunctionMap = new IdentityHashMap<IModelElement, FunctionResult>();
         this.modelElement = getModelElement();
         this.connectionDef = (IDiagramConnectionDef)super.definition();
         this.propertyName = this.bindingDef.getProperty().getContent();
