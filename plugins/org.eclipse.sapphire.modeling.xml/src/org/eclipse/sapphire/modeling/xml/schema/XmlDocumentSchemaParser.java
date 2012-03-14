@@ -8,7 +8,7 @@
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Ling Hao - [344015] Insertion order lost if xsd includes another xsd (regression)
- *               [337232] Certain schema causes elements to be out of order in corresponding xml files
+ *    Ling Hao - [337232] Certain schema causes elements to be out of order in corresponding xml files
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml.schema;
@@ -55,52 +55,53 @@ public final class XmlDocumentSchemaParser
     {
         final XmlDocumentSchema.Factory schema = new XmlDocumentSchema.Factory();
         schema.setSchemaLocation( schemaLocation );
-        parse( schema, schemaLocation, baseLocation, null );
+        parse( schema, schemaLocation, baseLocation );
         return schema.create();
     }
     
     private static void parse( final XmlDocumentSchema.Factory schema,
                                final String schemaLocation,
-                               final String baseLocation,
-                               Map<String,String> prefixToNamespaceMap )
+                               final String baseLocation )
     {
         final Element root = parseSchemaToDom( schemaLocation, baseLocation );
         
         if( root != null )
         {
-            if ( prefixToNamespaceMap == null )
+            final Map<String,String> prefixToNamespaceMap = new HashMap<String,String>();
+            
+            String ns = schema.getNamespace();
+            
+            if( ns == null )
             {
-                prefixToNamespaceMap = new HashMap<String,String>();
-
-                final String ns = root.getAttribute( "targetNamespace" );
+                ns = root.getAttribute( "targetNamespace" );
                 
                 if( ns.length() > 0 )
                 {
                     schema.setNamespace( ns );
                 }
+            }
 
-                final NamedNodeMap rootAttributes = root.getAttributes();
+            final NamedNodeMap rootAttributes = root.getAttributes();
+            
+            for( int i = 0, n = rootAttributes.getLength(); i < n; i++ )
+            {
+                final Node attributeNode = rootAttributes.item( i );
+                final String attributeNodeName = attributeNode.getNodeName();
+                final String attributeNodeValue = ( (Attr) attributeNode ).getValue();
                 
-                for( int i = 0, n = rootAttributes.getLength(); i < n; i++ )
+                if( attributeNodeName.equals( "xmlns" ) )
                 {
-                    final Node attributeNode = rootAttributes.item( i );
-                    final String attributeNodeName = attributeNode.getNodeName();
-                    final String attributeNodeValue = ( (Attr) attributeNode ).getValue();
-                    
-                    if( attributeNodeName.equals( "xmlns" ) )
-                    {
-                        prefixToNamespaceMap.put( "", attributeNodeValue );
-                    }
-                    else if( attributeNodeName.startsWith( "xmlns:" ) )
-                    {
-                        prefixToNamespaceMap.put( attributeNodeName.substring( 6 ), attributeNodeValue );
-                    }
+                    prefixToNamespaceMap.put( "", attributeNodeValue );
                 }
-                
-                if( ! prefixToNamespaceMap.containsValue( ns ) )
+                else if( attributeNodeName.startsWith( "xmlns:" ) )
                 {
-                    prefixToNamespaceMap.put( "", ns );
+                    prefixToNamespaceMap.put( attributeNodeName.substring( 6 ), attributeNodeValue );
                 }
+            }
+            
+            if( ! prefixToNamespaceMap.containsValue( ns ) )
+            {
+                prefixToNamespaceMap.put( "", ns );
             }
             
             for( Element el : elements( root ) )
@@ -135,7 +136,7 @@ public final class XmlDocumentSchemaParser
                         includedSchemaLocation = baseUrl + "/" + includedSchemaLocation;
                     }
                     
-                    parse( schema, includedSchemaLocation, baseLocation, new HashMap<String,String>() );
+                    parse( schema, includedSchemaLocation, baseLocation );
                     
                     if( elname.equals( "redefine" ) )
                     {

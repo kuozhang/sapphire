@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.xml.xsd.t0004;
+package org.eclipse.sapphire.tests.modeling.xml.xsd.t0005;
 
 import java.util.List;
 
@@ -32,16 +32,16 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
  * Tests treatment of namespaces when including a schema. This variant covers the case where included schema
- * does not define target namespace.
+ * defines target namespace.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestXmlXsd0004 extends SapphireTestCase
+public final class TestXmlXsd0005 extends SapphireTestCase
 {
-    private static final String NAMESPACE = "http://www.eclipse.org/sapphire/tests/xml/xsd/0004/workbook";
+    private static final String NAMESPACE = "http://www.eclipse.org/sapphire/tests/xml/xsd/0005/workbook";
     
-    private TestXmlXsd0004( final String name )
+    private TestXmlXsd0005( final String name )
     {
         super( name );
     }
@@ -50,10 +50,10 @@ public final class TestXmlXsd0004 extends SapphireTestCase
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "TestXmlXsd0004" );
+        suite.setName( "TestXmlXsd0005" );
 
-        suite.addTest( new TestXmlXsd0004( "testSchemaParsing" ) );
-        suite.addTest( new TestXmlXsd0004( "testInsertOrder" ) );
+        suite.addTest( new TestXmlXsd0005( "testSchemaParsing" ) );
+        suite.addTest( new TestXmlXsd0005( "testInsertOrder" ) );
         
         return suite;
     }
@@ -105,14 +105,14 @@ public final class TestXmlXsd0004 extends SapphireTestCase
     public void testInsertOrder() throws Exception
     {
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
-        final TestXmlXsd0004Workbook workbook = TestXmlXsd0004Workbook.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( resourceStore ) ) );
+        final TestXmlXsd0005Workbook workbook = TestXmlXsd0005Workbook.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( resourceStore ) ) );
         
-        final TestXmlXsd0004Circle circle = workbook.getShapes().addNewElement( TestXmlXsd0004Circle.class );
+        final TestXmlXsd0005Circle circle = workbook.getShapes().addNewElement( TestXmlXsd0005Circle.class );
         circle.setRadius( 3 );
         circle.setY( 2 );
         circle.setX( 1 );
         
-        final TestXmlXsd0004Rectangle rectangle = workbook.getShapes().addNewElement( TestXmlXsd0004Rectangle.class );
+        final TestXmlXsd0005Rectangle rectangle = workbook.getShapes().addNewElement( TestXmlXsd0005Rectangle.class );
         rectangle.setHeight( 4 );
         rectangle.setWidth( 3 );
         rectangle.setY( 2 );

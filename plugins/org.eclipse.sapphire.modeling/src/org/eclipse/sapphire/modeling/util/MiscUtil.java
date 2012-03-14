@@ -225,4 +225,14 @@ public class MiscUtil
         return new LinkedHashSet<T>( Arrays.asList( items ) );
     }
     
+    public static String normalizeToNull( final String string )
+    {
+        return ( string != null && string.length() == 0 ? null : string );
+    }
+    
+    public static String normalizeToEmptyString( final String string )
+    {
+        return ( string == null ? EMPTY_STRING : string );
+    }
+    
 }

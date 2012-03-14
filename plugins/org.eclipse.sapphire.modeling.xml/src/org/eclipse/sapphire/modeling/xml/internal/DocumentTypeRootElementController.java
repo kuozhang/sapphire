@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Accenture Services Pvt Ltd. and Oracle
+ * Copyright (c) 2012 Accenture and Oracle
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@
 package org.eclipse.sapphire.modeling.xml.internal;
 
 import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
+import static org.eclipse.sapphire.modeling.util.MiscUtil.normalizeToNull;
 
 import org.eclipse.sapphire.modeling.xml.RootElementController;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
@@ -104,16 +105,4 @@ public final class DocumentTypeRootElementController extends RootElementControll
         return false;
     }
     
-    private static String normalizeToNull( final String value )
-    {
-        String result = value;
-        
-        if( value != null && value.length() == 0 )
-        {
-            result = null;
-        }
-        
-        return result;
-    }
-
 }

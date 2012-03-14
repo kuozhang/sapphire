@@ -69,8 +69,18 @@
     </catalogContribution>
     <catalogContribution>
       <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/xsd/0005/shapes"
+        uri="schemas/xml/xsd/0005shapes.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
         systemId="http://www.eclipse.org/sapphire/tests/xml/xsd/0004/workbook"
         uri="schemas/xml/xsd/0004workbook.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/xsd/0005/workbook"
+        uri="schemas/xml/xsd/0005workbook.xsd"/>
     </catalogContribution>
     <catalogContribution>
       <system

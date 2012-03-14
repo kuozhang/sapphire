@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.modeling.xml;
 
 import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
+import static org.eclipse.sapphire.modeling.util.MiscUtil.normalizeToNull;
 
 import java.util.Collections;
 import java.util.Map;
@@ -178,23 +179,6 @@ public class StandardRootElementController extends RootElementController
             
             this.elementName = elementName.trim();
             this.schemas = schemas;
-        }
-        
-        private static final String normalizeToNull( final String str )
-        {
-            String normalized = str;
-            
-            if( normalized != null )
-            {
-                normalized = normalized.trim();
-                
-                if( normalized.length() == 0 )
-                {
-                    normalized = null;
-                }
-            }
-            
-            return normalized;
         }
     }
 

@@ -12,6 +12,8 @@
 
 package org.eclipse.sapphire.modeling.xml.schema;
 
+import static org.eclipse.sapphire.modeling.util.MiscUtil.normalizeToEmptyString;
+
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -95,7 +97,7 @@ public class XmlElementDefinition extends XmlContentModel
             final String namespace = contentModelName.getNamespaceURI();
             final String localName = contentModelName.getLocalPart();
             
-            if( namespace == null || namespace.length() == 0 || namespace.equals( this.schema.getNamespace() ) )
+            if( namespace.equals( normalizeToEmptyString( this.schema.getNamespace() ) ) )
             {
                 return this.schema.getContentModel( localName );
             }

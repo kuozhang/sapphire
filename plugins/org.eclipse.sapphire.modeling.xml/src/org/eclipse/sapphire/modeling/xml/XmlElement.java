@@ -12,6 +12,7 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
+import static org.eclipse.sapphire.modeling.util.MiscUtil.normalizeToNull;
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.EMPTY_STRING;
 
 import java.io.File;
@@ -1155,18 +1156,6 @@ public final class XmlElement
         }
     
         return objectsAreEqual;
-    }
-    
-    private static final String normalizeToNull( final String str )
-    {
-        if( str != null && str.equals( "" ) )
-        {
-            return null;
-        }
-        else
-        {
-            return str;
-        }
     }
     
     protected final void notifyPreChildElementAddListeners()
