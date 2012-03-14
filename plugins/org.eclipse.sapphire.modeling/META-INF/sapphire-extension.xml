@@ -410,6 +410,11 @@
         <description>Returns the root of the model.</description>
     </function>
     <function>
+        <name>Image</name>
+        <impl>org.eclipse.sapphire.modeling.el.ImageFunction</impl>
+        <description>Returns the image associated with the context model element.</description>
+    </function>
+    <function>
         <name>List</name>
         <impl>org.eclipse.sapphire.modeling.el.ListFunction</impl>
         <description>Constructs a list from arbitrary number of operands.</description>

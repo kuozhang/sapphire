@@ -1513,10 +1513,7 @@ public abstract class ModelElement
         }
     }
     
-    private static final class Resources
-    
-        extends NLS
-    
+    private static final class Resources extends NLS
     {
         public static String invalidModelPath;
         public static String cannotReadProperty;

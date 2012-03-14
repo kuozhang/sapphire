@@ -19,7 +19,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
@@ -28,7 +27,6 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 
 /**
@@ -67,19 +65,6 @@ public interface IMasterDetailsContentNodeDef
     Value<Function> getLabel();
     void setLabel( String value );
     void setLabel( Function value );
-    
-    // *** UseModelElementImage ***
-    
-    @Type( base = Boolean.class )
-    @Label( standard = "use model element image" )
-    @DefaultValue( text = "false" )
-    @XmlValueBinding( path = "use-model-element-image", mapExistanceToValue = "true" )
-    
-    ValueProperty PROP_USE_MODEL_ELEMENT_IMAGE = new ValueProperty( TYPE, "UseModelElementImage" );
-    
-    Value<Boolean> getUseModelElementImage();
-    void setUseModelElementImage( String useModelElementImage );
-    void setUseModelElementImage( Boolean useModelElementImage );
     
     // *** Image ***
     

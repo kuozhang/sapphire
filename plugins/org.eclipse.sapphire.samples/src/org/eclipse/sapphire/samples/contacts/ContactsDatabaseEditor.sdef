@@ -47,6 +47,7 @@
                     <property>Contacts</property>
                     <case>
                         <label>${ Name == null ? "&lt;contact&gt;" : Name }</label>
+                        <image>${ Image() }</image>
                         <action>
                             <id>SendContact</id>
                             <label>send contact...</label>
@@ -204,11 +205,11 @@
                                 </content>
                             </section>
                         </node>
-                        <use-model-element-image></use-model-element-image>
                     </case>
                 </node-factory>
             </node>
         </root-node>
+        <page-header-image>${ Image() }</page-header-image>
     </editor-page>
     
     <wizard>

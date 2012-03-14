@@ -16,6 +16,7 @@ import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.samples.contacts.IContact;
+import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
 import org.eclipse.sapphire.services.ImageService;
 import org.eclipse.sapphire.services.ImageServiceData;
 
@@ -23,7 +24,7 @@ import org.eclipse.sapphire.services.ImageServiceData;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ContactImageService extends ImageService
+public final class ContactDatabaseImageService extends ImageService
 {
     private static final ImageServiceData IMG_PERSON = new ImageServiceData( ImageData.readFromClassLoader( IContact.class, "Contact.png" ) );
     private static final ImageServiceData IMG_PERSON_FADED = new ImageServiceData( ImageData.readFromClassLoader( IContact.class, "ContactFaded.png" ) );
@@ -42,20 +43,24 @@ public final class ContactImageService extends ImageService
             }
         };
         
-        context( IModelElement.class ).addListener( this.listener, "EMail" );
+        context( IModelElement.class ).addListener( this.listener, "Contacts/EMail" );
     }
 
     @Override
     protected ImageServiceData compute()
     {
-        if( context( IContact.class ).getEMail().getContent() == null )
+        boolean foundContactWithEMail = false;
+        
+        for( IContact contact : context( IContactsDatabase.class ).getContacts() )
         {
-            return IMG_PERSON_FADED;
+            if( contact.getEMail().getContent() != null )
+            {
+                foundContactWithEMail = true;
+                break;
+            }
         }
-        else
-        {
-            return IMG_PERSON;
-        }
+        
+        return ( foundContactWithEMail ? IMG_PERSON : IMG_PERSON_FADED );
     }
 
     @Override
@@ -63,7 +68,7 @@ public final class ContactImageService extends ImageService
     {
         super.dispose();
         
-        context( IModelElement.class ).removeListener( this.listener, "EMail" );
+        context( IModelElement.class ).removeListener( this.listener, "Contacts/EMail" );
     }
     
 }

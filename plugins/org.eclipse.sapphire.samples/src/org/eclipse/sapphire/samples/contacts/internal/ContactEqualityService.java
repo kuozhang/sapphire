@@ -25,10 +25,17 @@ public final class ContactEqualityService extends EqualityService
     @Override
     public boolean doEquals( final Object obj )
     {
-        final IContact c1 = context( IContact.class );
-        final IContact c2 = (IContact) obj;
-        
-        return equal( c1.getName().getText(), c2.getName().getText() );
+        if( obj instanceof IContact )
+        {
+            final IContact c1 = context( IContact.class );
+            final IContact c2 = (IContact) obj;
+            
+            return equal( c1.getName().getText(), c2.getName().getText() );
+        }
+        else
+        {
+            return false;
+        }
     }
 
     @Override

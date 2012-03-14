@@ -44,6 +44,7 @@ to 0.5 release. Only changes from the previous release are covered.</p>
 <ol>
   <li><a href="#Actuator">Actuator</a></li>
   <li><a href="#DiagramImage">Diagram Image</a></li>
+  <li><a href="#ContentOutlineNodeImage">Content Outline Node Image</a></li>
   <li><a href="#GraphitiToGef">Graphiti to GEF Transition</a></li>
   <ol type="A">
     <li><a href="#SapphireDiagramEditor">SapphireDiagramEditor</a></li>
@@ -105,6 +106,7 @@ process it was renamed as actuator.</p>
 <nobr>Search: &nbsp;&nbsp;(?s)&lt;action-link>(.*?)&lt;/action-link></nobr><br/>
 <nobr>Replace: &nbsp;&lt;actuator>\1&lt;/actuator></nobr></p>
 
+
 <h2><a name="DiagramImage">Diagram Image</a></h2>
 
 <p>Image specifications inside diagram parts are now consistent with the rest of the sdef. 
@@ -120,8 +122,7 @@ Images are now referenced at the point of use, rather than defined separately an
 <pre class="source-code"><code>&lt;image-decorator>
     &lt;id>defaultIndicator&lt;/id>
     &lt;path>icons/default-indicator.png&lt;/path>
-&lt;/image-decorator>
-</code></pre>
+&lt;/image-decorator></code></pre>
     </td>
     <td>
     Remove, path will be specified at the point of use.
@@ -134,7 +135,7 @@ Images are now referenced at the point of use, rather than defined separately an
     <font color="#888888">&lt;decorator-placement>image&lt;/decorator-placement>
     &lt;horizontal-align>center&lt;/horizontal-align>
     &lt;vertical-align>top&lt;/vertical-align>
-&lt;/image-decorator></font>
+&lt;/image-decorator></font></code></pre>
     </td>
     <td>
 <pre class="source-code"><code><font color="#888888">&lt;image-decorator></font>
@@ -142,7 +143,7 @@ Images are now referenced at the point of use, rather than defined separately an
     <font color="#888888">&lt;decorator-placement>image&lt;/decorator-placement>
     &lt;horizontal-align>center&lt;/horizontal-align>
     &lt;vertical-align>top&lt;/vertical-align>
-&lt;/image-decorator></font>
+&lt;/image-decorator></font></code></pre>
     </td>
   </tr>
   <tr>
@@ -150,10 +151,10 @@ Images are now referenced at the point of use, rather than defined separately an
 <pre class="source-code"><code>&lt;tool-palette-image>
     &lt;id>flowPaletteImage&lt;/id>
     &lt;path>icons/control-flow-16.png&lt;/path>
-&lt;/tool-palette-image>
+&lt;/tool-palette-image></code></pre>
     </td>
     <td>
-<pre class="source-code"><code>&lt;tool-palette-image>icons/control-flow-16.png&lt;/tool-palette-image>
+<pre class="source-code"><code>&lt;tool-palette-image>icons/control-flow-16.png&lt;/tool-palette-image></code></pre>
     </td>
   </tr>
   <tr>
@@ -165,16 +166,49 @@ Images are now referenced at the point of use, rather than defined separately an
       &lt;id>routerIcon&lt;/id>
       &lt;path>icons/node-router.png&lt;/path>
     &lt;/possible>        
-&lt;/image>
+&lt;/image></code></pre>
     </td>
     <td>
 <pre class="source-code"><code>&lt;image>
     &lt;path>icons/node-router.png&lt;/path>
     &lt;placement>top&lt;/placement>
-&lt;/image>
+&lt;/image></code></pre>
     </td>
   </tr>
 </table>
+
+
+<h2><a name="ContentOutlineNodeImage">Content Outline Node Image</a></h2>
+
+<p>Prior to advent of Sapphire Expression Language, sdef language included the "use-model-element-image" switch
+as a way to indicate to the system that content outline node's image should be the same as the image for the
+associated model element. With advent of EL, the special switch is no longer necessary as an expression can be used
+to capture the same semantics.</p> 
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;use-model-element-image/></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;image>${ Image() }&lt;/image></code></pre>    
+    </td>
+  </tr>
+</table>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;&lt;use-model-element-image[ ]*/></nobr><br/>
+<nobr>Replace: &nbsp;&lt;image>\${ Image() }&lt;/image></nobr></p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;&lt;use-model-element-image>[ ]*&lt;/use-model-element-image></nobr><br/>
+<nobr>Replace: &nbsp;&lt;image>\${ Image() }&lt;/image></nobr></p>
+
+
 
 <h2><a name="GraphitiToGef">Graphiti to GEF Transition</a></h2>
 
