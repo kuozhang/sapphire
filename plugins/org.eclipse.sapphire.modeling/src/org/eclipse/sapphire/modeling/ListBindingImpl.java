@@ -17,10 +17,7 @@ import java.util.List;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ListBindingImpl
-
-    extends BindingImpl
-    
+public abstract class ListBindingImpl extends BindingImpl
 {
     @Override
     public final ListProperty property()
@@ -28,7 +25,7 @@ public abstract class ListBindingImpl
         return (ListProperty) super.property();
     }
     
-    public abstract List<Resource> read();
+    public abstract List<? extends Resource> read();
     
     public abstract ModelElementType type( Resource resource );    
     

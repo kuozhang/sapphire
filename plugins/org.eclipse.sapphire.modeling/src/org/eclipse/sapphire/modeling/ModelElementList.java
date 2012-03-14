@@ -100,7 +100,7 @@ public final class ModelElementList<T extends IModelElement>
         
         synchronized( this )
         {
-            final List<Resource> newResources = this.binding.read();
+            final List<? extends Resource> newResources = this.binding.read();
             final int newContentSize = newResources.size();
             
             boolean refreshNeeded;
