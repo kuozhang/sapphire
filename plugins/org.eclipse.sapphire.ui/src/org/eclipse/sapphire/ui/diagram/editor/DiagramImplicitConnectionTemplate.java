@@ -8,6 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342775] Support EL in IMasterDetailsTreeNodeDef.ImagePath
+ *    Konstantin Komissarchik - [374154] IllegalStateException in ServiceContext when disposing diagram connection templates
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -15,7 +16,6 @@ package org.eclipse.sapphire.ui.diagram.editor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,6 +35,7 @@ import org.eclipse.sapphire.ui.diagram.def.IModelElementTypeDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate 
@@ -281,15 +282,14 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     @Override
     public void dispose()
     {
-        Iterator<IModelElement> it = this.listEntryFunctionMap.keySet().iterator();
-        while (it.hasNext())
+        for( FunctionResult fr : this.listEntryFunctionMap.values() )
         {
-        	FunctionResult fr = this.listEntryFunctionMap.get(it.next());
-        	if (fr != null)
-        	{
-        		fr.dispose();
-        	}
+            if( fr != null )
+            {
+                fr.dispose();
+            }
         }
+
         List<DiagramImplicitConnectionPart> connParts = getImplicitConnections();
         for (DiagramImplicitConnectionPart connPart : connParts)
         {
