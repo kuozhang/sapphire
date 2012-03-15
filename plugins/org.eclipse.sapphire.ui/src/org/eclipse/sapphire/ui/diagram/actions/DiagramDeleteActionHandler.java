@@ -18,7 +18,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
-import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
@@ -36,7 +35,6 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 public class DiagramDeleteActionHandler extends SapphireDiagramActionHandler
 {
-    private static final String DELETE_ACTION_ID = "Sapphire.Delete";
     
     @Override
     public void init( final SapphireAction action,
@@ -60,9 +58,7 @@ public class DiagramDeleteActionHandler extends SapphireDiagramActionHandler
         if (part instanceof DiagramConnectionPart)
         {
             DiagramConnectionPart connPart = (DiagramConnectionPart)part;
-            final IModelElement element = connPart.getLocalModelElement();
-            final ModelElementList<?> list = (ModelElementList<?>) element.parent();
-            list.remove(element);            
+            deleteConnection(connPart);   
         }
         else if (part instanceof DiagramNodePart)
         {
@@ -135,8 +131,8 @@ public class DiagramDeleteActionHandler extends SapphireDiagramActionHandler
     
     private void deleteConnection(DiagramConnectionPart connPart)
     {
-        SapphireActionHandler deleteActionHandler = connPart.getAction(DELETE_ACTION_ID).getFirstActiveHandler();
-        SapphireRenderingContext renderingCtx = new SapphireRenderingContext(connPart, null);
-        deleteActionHandler.execute(renderingCtx);
+        final IModelElement element = connPart.getLocalModelElement();
+        final ModelElementList<?> list = (ModelElementList<?>) element.parent();
+        list.remove(element);            
     }
 }
