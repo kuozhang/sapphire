@@ -71,57 +71,62 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	private void write(DiagramNodePart nodePart) 
 	{
 		IComponent component = (IComponent)nodePart.getLocalModelElement();
-		Bounds bounds = nodePart.getNodeBounds();
-		component.getBounds().setX(bounds.getX());
-		component.getBounds().setY(bounds.getY());
-		if (nodePart.canResizeShape())
+		if (!component.disposed())
 		{
-			if (bounds.getWidth() > 0)
-				component.getBounds().setWidth(bounds.getWidth());
-			if (bounds.getHeight() > 0)
-				component.getBounds().setHeight(bounds.getHeight());
+			Bounds bounds = nodePart.getNodeBounds();
+			component.getBounds().setX(bounds.getX());
+			component.getBounds().setY(bounds.getY());
+			if (nodePart.canResizeShape())
+			{
+				if (bounds.getWidth() > 0)
+					component.getBounds().setWidth(bounds.getWidth());
+				if (bounds.getHeight() > 0)
+					component.getBounds().setHeight(bounds.getHeight());
+			}
 		}
 	}
 
 	private void write(DiagramConnectionPart connectionPart) 
 	{
 		IComponentDependency dependency = (IComponentDependency)connectionPart.getLocalModelElement();
-		
-		// Detect whether the connection bendpoints have been changed.
-		List<Point> bendpoints = connectionPart.getConnectionBendpoints();	
-		ModelElementList<ConnectionBendpoint> oldBendpoints = dependency.getConnectionBendpoints();
-		boolean changed = false;
-		if (bendpoints.size() != oldBendpoints.size())
+		if (!dependency.disposed())
 		{
-			changed = true;
-		}
-		else
-		{
-			for (int i = 0; i < bendpoints.size(); i++)
+			// Detect whether the connection bendpoints have been changed.
+			List<Point> bendpoints = connectionPart.getConnectionBendpoints();	
+			ModelElementList<ConnectionBendpoint> oldBendpoints = dependency.getConnectionBendpoints();
+			boolean changed = false;
+			if (bendpoints.size() != oldBendpoints.size())
 			{
-				Point newPt = bendpoints.get(i);
-				ConnectionBendpoint oldPt = oldBendpoints.get(i);
-				if (oldPt.getX().getContent() == null || 
-						oldPt.getY().getContent() == null ||
-						newPt.getX() != oldPt.getX().getContent() || 
-						newPt.getY() != oldPt.getY().getContent())
+				changed = true;
+			}
+			else
+			{
+				for (int i = 0; i < bendpoints.size(); i++)
 				{
-					changed = true;
-					break;
+					Point newPt = bendpoints.get(i);
+					ConnectionBendpoint oldPt = oldBendpoints.get(i);
+					if (oldPt.getX().getContent() == null || 
+							oldPt.getY().getContent() == null ||
+							newPt.getX() != oldPt.getX().getContent() || 
+							newPt.getY() != oldPt.getY().getContent())
+					{
+						changed = true;
+						break;
+					}
 				}
 			}
-		}
-		if (changed)
-		{
-			this.architecture.removeListener(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
-			dependency.getConnectionBendpoints().clear();
-			for (Point bendpoint : bendpoints)
+			if (changed)
 			{
-				ConnectionBendpoint bpLayout = dependency.getConnectionBendpoints().addNewElement();
-				bpLayout.setX(bendpoint.getX());
-				bpLayout.setY(bendpoint.getY());
+				this.architecture.removeListener(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
+				dependency.getConnectionBendpoints().clear();
+				for (Point bendpoint : bendpoints)
+				{
+					ConnectionBendpoint bpLayout = dependency.getConnectionBendpoints().addNewElement();
+					bpLayout.setX(bendpoint.getX());
+					bpLayout.setY(bendpoint.getY());
+				}
+				this.architecture.addListener(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
 			}
-			this.architecture.addListener(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
 		}
 	}
 

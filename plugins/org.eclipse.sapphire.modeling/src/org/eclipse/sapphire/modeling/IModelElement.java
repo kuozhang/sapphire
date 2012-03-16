@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - [374530] - Need to expose disposed() API on IModelElement 
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling;
@@ -158,4 +159,5 @@ public interface IModelElement extends IModelParticle
     void notifyPropertyChangeListeners( ModelProperty property );
     
     void dispose();
+    boolean disposed();
 }
