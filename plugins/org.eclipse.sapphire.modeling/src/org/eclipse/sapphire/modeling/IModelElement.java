@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Shenxue Zhou - [374530] - Need to expose disposed() API on IModelElement 
+ *    Shenxue Zhou - [374530] Expose disposed() API on IModelElement 
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling;
@@ -20,6 +20,7 @@ import org.eclipse.sapphire.services.Service;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
 public interface IModelElement extends IModelParticle

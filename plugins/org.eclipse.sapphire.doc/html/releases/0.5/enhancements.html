@@ -39,7 +39,10 @@
     <li><a href="#AdapterService">AdapterService</a></li>
     <li><a href="#EqualityService">EqualityService</a></li>
   </ol>
-  <li><a href="#NewAPI">New API on IModelElement</a></li>
+  <li><a href="#Miscellaneous">Miscellaneous</a></li>
+  <ol type="A">
+    <li><a href="#ModelElementDisposed">IModelElement.disposed()</a></li>
+  </ol>
 </ol>
 
 
@@ -233,10 +236,11 @@ can be useful for other purposes.</p>
     }
 }</code></pre>
 
-<h2><a name="NewAPI">New API on IModelElement</a></h2>
 
-<p>There are times when you need to know whether a model element has been disposed before manipulating it.
-A new API "boolean disposed()" has been added to IModelElement.</p>
+<h2><a name="Miscellaneous"><a name="ModelElementDisposed">IModelElement.disposed()</a></a></h2>
+
+<p>The new IModelElement.disposed() method provides a way to check if a model element has been disposed
+already.</p>
 
 
 <div class="copyright">Copyright (c) 2012 Oracle and Liferay<br/>
