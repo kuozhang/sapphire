@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
+import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEditorPageDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.state.IMasterDetailsEditorPageState;
@@ -71,6 +72,12 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
         contexts.addAll( super.getActionContexts() );
         contexts.add( CONTEXT_EDITOR_PAGE_OUTLINE_HEADER );
         return contexts;
+    }
+    
+    @Override
+    public String getMainActionContext()
+    {
+        return SapphireActionSystem.CONTEXT_EDITOR_PAGE;
     }
     
     public final MasterDetailsContentOutline getContentOutline()

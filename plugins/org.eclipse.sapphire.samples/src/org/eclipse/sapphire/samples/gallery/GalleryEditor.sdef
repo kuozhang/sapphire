@@ -2208,6 +2208,7 @@
                 <name>style</name>
                 <value>image+text</value>
             </hint>
+            <key-binding>SHIFT+CONTROL+ALT+s</key-binding>
         </action>
         <action-handler>
             <action>Sapphire.Gallery.Open.Homepage</action>

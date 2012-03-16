@@ -14,7 +14,9 @@ package org.eclipse.sapphire.ui.swt.renderer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.def.SapphireKeySequence;
 import org.eclipse.swt.SWT;
@@ -29,10 +31,7 @@ import org.eclipse.swt.widgets.Control;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireKeyboardActionPresentation
-
-    extends SapphireHotSpotsActionPresentation
-    
+public final class SapphireKeyboardActionPresentation extends SapphireHotSpotsActionPresentation
 {
     private final List<Control> attachedControls = new ArrayList<Control>();
     private KeyListener keyListener;
@@ -82,7 +81,37 @@ public final class SapphireKeyboardActionPresentation
     
     private void handleKeyEvent( final KeyEvent event )
     {
-        for( SapphireAction action : getManager().getActions() )
+        final SapphireActionGroup localGroupOfActions = getManager().getActionGroup();
+
+        if( handleKeyEvent( event, localGroupOfActions ) )
+        {
+            return;
+        }
+        
+        ISapphirePart part = localGroupOfActions.getPart().getParentPart();
+        
+        while( part != null )
+        {
+            final String mainActionContext = part.getMainActionContext();
+            
+            if( mainActionContext != null )
+            {
+                final SapphireActionGroup groupOfActions = part.getActions( mainActionContext );
+                
+                if( handleKeyEvent( event, groupOfActions ) )
+                {
+                    return;
+                }
+            }
+            
+            part = part.getParentPart();
+        }
+    }
+    
+    private boolean handleKeyEvent( final KeyEvent event,
+                                    final SapphireActionGroup groupOfActions )
+    {
+        for( SapphireAction action : groupOfActions.getActions() )
         {
             if( action.hasActiveHandlers() )
             {
@@ -137,13 +166,15 @@ public final class SapphireKeyboardActionPresentation
                             }
                         }
 
-                        return;
+                        return true;
                     }
                 }
             }
         }
+        
+        return false;
     }
-
+    
     @Override
     public void dispose()
     {

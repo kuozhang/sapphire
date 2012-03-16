@@ -77,6 +77,11 @@ public final class SapphireActionPresentationManager
         return this.context;
     }
     
+    public SapphireActionGroup getActionGroup()
+    {
+        return this.actions;
+    }
+    
     public List<SapphireAction> getActions()
     {
         return this.actions.getActions();

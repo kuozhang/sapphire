@@ -25,6 +25,7 @@
   <li><a href="#UI">User Interface</a></li>
   <ol type="A">
     <li><a href="#MoreFlexibleActuatorPresentation">More Flexible Actuator Presentation</a></li>
+    <li><a href="#HierarchicalKeyBindings">Hierarchical Key Bindings</a></li>
   </ol>
   <li><a href="#DiagramLayout">Diagram Layout Storage</a></li>
   <li><a href="#DiagramContextHelp">Diagram Context Help</a></li>
@@ -72,6 +73,13 @@ along with ability to control horizontal alignment.</p>
 <font color="#888888">&lt;/actuator></font></code></pre>
 
 <p style="margin-left: 20px;"><img src="images/MoreFlexibleActuatorPresentation.png"/></p>
+
+
+<h2><a name="HierarchicalKeyBindings">Hierarchical Key Bindings</a></h2>
+
+<p>When processing keyboard events, the system now takes into account actions defined in part's hierarchy rather
+than just the local ones. For instance, an action defined at editor page level will be accessible via its
+key binding even if the focus is on a property editor.</p> 
 
 
 <h2><a name="DiagramLayout">More Flexible Diagram Layout Storage</a></h2>

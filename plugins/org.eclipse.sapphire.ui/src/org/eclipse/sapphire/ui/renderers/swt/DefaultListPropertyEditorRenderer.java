@@ -351,45 +351,52 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         
         for( final ValueProperty memberProperty : columnProperties )
         {
+            final TableViewerColumn col2 = new TableViewerColumn( this.tableViewer, SWT.NONE );
             final PropertyEditorDef childPropertyEditorDef = part.definition().getChildPropertyEditor( memberProperty );
             
-            final TableViewerColumn col2 = new TableViewerColumn( this.tableViewer, SWT.NONE );
-            
-            final MutableReference<FunctionResult> labelFunctionResultRef = new MutableReference<FunctionResult>();
-            
-            final Runnable updateLabelOp = new Runnable()
+            if( childPropertyEditorDef == null )
             {
-                public void run()
-                {
-                    String label = (String) labelFunctionResultRef.get().value();
-                    label = LabelTransformer.transform( label, CapitalizationType.TITLE_STYLE, false );
-                    col2.getColumn().setText( label );
-                }
-            };
-            
-            final FunctionResult labelFunctionResult = part.initExpression
-            (
-                element,
-                childPropertyEditorDef.getLabel().getContent(), 
-                String.class,
-                Literal.create( memberProperty.getLabel( false, CapitalizationType.NO_CAPS, true ) ),
-                updateLabelOp
-            );
-            
-            labelFunctionResultRef.set( labelFunctionResult );
-            
-            updateLabelOp.run();
-            
-            addOnDisposeOperation
-            (
-                new Runnable()
+                final String label = memberProperty.getLabel( false, CapitalizationType.TITLE_STYLE, false );
+                col2.getColumn().setText( label );
+            }
+            else
+            {
+                final MutableReference<FunctionResult> labelFunctionResultRef = new MutableReference<FunctionResult>();
+                
+                final Runnable updateLabelOp = new Runnable()
                 {
                     public void run()
                     {
-                        labelFunctionResult.dispose();
+                        String label = (String) labelFunctionResultRef.get().value();
+                        label = LabelTransformer.transform( label, CapitalizationType.TITLE_STYLE, false );
+                        col2.getColumn().setText( label );
                     }
-                }
-            );
+                };
+                
+                final FunctionResult labelFunctionResult = part.initExpression
+                (
+                    element,
+                    childPropertyEditorDef.getLabel().getContent(), 
+                    String.class,
+                    Literal.create( memberProperty.getLabel( false, CapitalizationType.NO_CAPS, true ) ),
+                    updateLabelOp
+                );
+                
+                labelFunctionResultRef.set( labelFunctionResult );
+                
+                updateLabelOp.run();
+                
+                addOnDisposeOperation
+                (
+                    new Runnable()
+                    {
+                        public void run()
+                        {
+                            labelFunctionResult.dispose();
+                        }
+                    }
+                );
+            }
             
             ColumnWeightData columnWeightData = null;
             
