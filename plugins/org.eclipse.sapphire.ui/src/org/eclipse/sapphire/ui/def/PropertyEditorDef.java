@@ -27,6 +27,8 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.FoldingXmlValueBindingImpl;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -177,8 +179,10 @@ public interface PropertyEditorDef extends FormPartDef
     
     // *** Label ***
     
+    @Type( base = Function.class )
     @Label( standard = "label" )
     @Enablement( expr = "${ ShowLabel }" )
+    @Localizable
     @XmlBinding( path = "label" )
     
     @Documentation
@@ -189,8 +193,9 @@ public interface PropertyEditorDef extends FormPartDef
     
     ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
     
-    Value<String> getLabel();
+    Value<Function> getLabel();
     void setLabel( String value );
+    void setLabel( Function value );
     
     // *** SpanBothColumns ***
     

@@ -17,7 +17,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.services.ValueSerializationService;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -37,7 +37,7 @@ public final class RadioButtonsGroupBinding
     private RadioButtonsGroup buttonsGroup;
     private Button badValueButton;
     
-    public RadioButtonsGroupBinding( final SapphirePropertyEditor editor,
+    public RadioButtonsGroupBinding( final PropertyEditorPart editor,
                                      final SapphireRenderingContext context,
                                      final RadioButtonsGroup buttonsGroup )
     {
@@ -46,7 +46,7 @@ public final class RadioButtonsGroupBinding
     
     @Override
     
-    protected void initialize( final SapphirePropertyEditor editor,
+    protected void initialize( final PropertyEditorPart editor,
                                final SapphireRenderingContext context,
                                final Control control )
     {

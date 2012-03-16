@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
+import static org.eclipse.sapphire.ui.PropertyEditorPart.DATA_BINDING;
+import static org.eclipse.sapphire.ui.PropertyEditorPart.RELATED_CONTROLS;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_ADD;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_ASSIST;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_DELETE;
@@ -18,8 +20,6 @@ import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_JUMP;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_MOVE_DOWN;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_MOVE_UP;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.createFilterByActionId;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.RELATED_CONTROLS;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
@@ -74,17 +74,20 @@ import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.FixedOrderList;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.el.Literal;
+import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.ImageService;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.ValueSerializationService;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandler.PostExecuteEvent;
 import org.eclipse.sapphire.ui.SapphireImageCache;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
@@ -98,6 +101,7 @@ import org.eclipse.sapphire.ui.swt.renderer.SapphireMenuActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireTextCellEditor;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
 import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.MutableReference;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -136,7 +140,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     private Runnable refreshOperation;
     
     public DefaultListPropertyEditorRenderer( final SapphireRenderingContext context,
-                                              final SapphirePropertyEditor part )
+                                              final PropertyEditorPart part )
     {
         super( context, part );
         
@@ -154,7 +158,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                                       final boolean suppressLabel,
                                       final boolean ignoreLeftMarginHint )
     {
-        final SapphirePropertyEditor part = getPart();
+        final PropertyEditorPart part = getPart();
         final IModelElement element = part.getLocalModelElement();
         final ListProperty property = (ListProperty) part.getProperty();
         final boolean isReadOnly = part.isReadOnly();
@@ -350,7 +354,42 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             final PropertyEditorDef childPropertyEditorDef = part.definition().getChildPropertyEditor( memberProperty );
             
             final TableViewerColumn col2 = new TableViewerColumn( this.tableViewer, SWT.NONE );
-            col2.getColumn().setText( SapphirePropertyEditor.getLabel( memberProperty, childPropertyEditorDef, CapitalizationType.TITLE_STYLE, false ) );
+            
+            final MutableReference<FunctionResult> labelFunctionResultRef = new MutableReference<FunctionResult>();
+            
+            final Runnable updateLabelOp = new Runnable()
+            {
+                public void run()
+                {
+                    String label = (String) labelFunctionResultRef.get().value();
+                    label = LabelTransformer.transform( label, CapitalizationType.TITLE_STYLE, false );
+                    col2.getColumn().setText( label );
+                }
+            };
+            
+            final FunctionResult labelFunctionResult = part.initExpression
+            (
+                element,
+                childPropertyEditorDef.getLabel().getContent(), 
+                String.class,
+                Literal.create( memberProperty.getLabel( false, CapitalizationType.NO_CAPS, true ) ),
+                updateLabelOp
+            );
+            
+            labelFunctionResultRef.set( labelFunctionResult );
+            
+            updateLabelOp.run();
+            
+            addOnDisposeOperation
+            (
+                new Runnable()
+                {
+                    public void run()
+                    {
+                        labelFunctionResult.dispose();
+                    }
+                }
+            );
             
             ColumnWeightData columnWeightData = null;
             
@@ -735,7 +774,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 {
                     final IModelElement element = ( (TableRow) item.getData() ).element();
                     final ValueProperty property = columnProperties.get( column );
-                    final SapphirePropertyEditor propertyEditor = getPart().getChildPropertyEditor( element, property );
+                    final PropertyEditorPart propertyEditor = getPart().getChildPropertyEditor( element, property );
                     final SapphireActionGroup actions = propertyEditor.getActions();
                     return actions.getAction( ACTION_JUMP ).getFirstActiveHandler();
                 }
@@ -985,14 +1024,14 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
-        public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
+        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
         {
             return ( propertyEditorDefinition.getProperty() instanceof ListProperty );
         }
         
         @Override
         public PropertyEditorRenderer create( final SapphireRenderingContext context,
-                                              final SapphirePropertyEditor part )
+                                              final PropertyEditorPart part )
         {
             return new DefaultListPropertyEditorRenderer( context, part );
         }
@@ -1097,7 +1136,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             
             if( element.isPropertyEnabled( property ) )
             {
-                final SapphirePropertyEditor propertyEditor = this.columnHandler.getListPropertyEditor().getChildPropertyEditor( element, property );
+                final PropertyEditorPart propertyEditor = this.columnHandler.getListPropertyEditor().getChildPropertyEditor( element, property );
                 canEdit = ( ! propertyEditor.isReadOnly() );
             }
             else
@@ -1119,7 +1158,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         protected final Table table;
         protected final TableViewer tableViewer;
         protected final SelectionProvider selectionProvider;
-        protected final SapphirePropertyEditor listPropertyEditor;
+        protected final PropertyEditorPart listPropertyEditor;
         protected final List<ColumnHandler> allColumnHandlers;
         protected final ValueProperty property;
         protected final boolean showElementImage;
@@ -1130,7 +1169,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         public ColumnHandler( final SapphireRenderingContext context,
                               final TableViewer tableViewer,
                               final SelectionProvider selectionProvider,
-                              final SapphirePropertyEditor listPropertyEditor,
+                              final PropertyEditorPart listPropertyEditor,
                               final List<ColumnHandler> allColumnHandlers,
                               final ValueProperty property,
                               final boolean showElementImage )
@@ -1166,7 +1205,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             return this.selectionProvider;
         }
         
-        public final SapphirePropertyEditor getListPropertyEditor()
+        public final PropertyEditorPart getListPropertyEditor()
         {
             return this.listPropertyEditor;
         }
@@ -1238,7 +1277,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                     
                     final IModelElement element = ( (TableRow) obj ).element();
                     final ValueProperty property = ColumnHandler.this.property;
-                    final SapphirePropertyEditor propertyEditor = getListPropertyEditor().getChildPropertyEditor( element, property );
+                    final PropertyEditorPart propertyEditor = getListPropertyEditor().getChildPropertyEditor( element, property );
                     final SapphireActionGroup actions = propertyEditor.getActions();
 
                     final int style = ( getTable().getLinesVisible() ? SWT.NONE : SWT.BORDER );
@@ -1339,7 +1378,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         public EnumPropertyColumnHandler( final SapphireRenderingContext context,
                                           final TableViewer tableViewer,
                                           final SelectionProvider selectionProvider,
-                                          final SapphirePropertyEditor listPropertyEditor,
+                                          final PropertyEditorPart listPropertyEditor,
                                           final List<ColumnHandler> allColumnHandlers,
                                           final ValueProperty property,
                                           final boolean showElementImage )
@@ -1446,7 +1485,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         public BooleanPropertyColumnHandler( final SapphireRenderingContext context,
                                              final TableViewer tableViewer,
                                              final SelectionProvider selectionProvider,
-                                             final SapphirePropertyEditor listPropertyEditor,
+                                             final PropertyEditorPart listPropertyEditor,
                                              final List<ColumnHandler> allColumnHandlers,
                                              final ValueProperty property,
                                              final boolean showElementImage )

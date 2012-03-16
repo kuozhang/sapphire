@@ -42,12 +42,12 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFilter;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
@@ -63,7 +63,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -73,10 +72,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public final class CompactListPropertyEditorRenderer
-
-    extends ListPropertyEditorRenderer
-    
+public final class CompactListPropertyEditorRenderer extends ListPropertyEditorRenderer
 {
     public static final String DATA_SELECTION_PROVIDER = "selection.provider";
     
@@ -88,11 +84,9 @@ public final class CompactListPropertyEditorRenderer
     private List<TextBinding> textBindings = new ArrayList<TextBinding>();
     private SapphireFormText addText;
     private HyperlinkAdapter addTextHyperlinkAdapter;
-
-    private Label label;
     
     public CompactListPropertyEditorRenderer( final SapphireRenderingContext context,
-                                              final SapphirePropertyEditor part )
+                                              final PropertyEditorPart part )
     {
         super( context, part );
     }
@@ -100,7 +94,7 @@ public final class CompactListPropertyEditorRenderer
     @Override
     protected void createContents( final Composite parent )
     {
-        final SapphirePropertyEditor part = getPart();
+        final PropertyEditorPart part = getPart();
         final ListProperty property = (ListProperty) part.getProperty();
         // TODO support readonly
         //final boolean isReadOnly = ( property.isReadOnly() || part.getRenderingHint( HINT_READ_ONLY, false ) );
@@ -203,7 +197,7 @@ public final class CompactListPropertyEditorRenderer
             final ProxyResource resource = new ProxyResource();
             final IModelElement proxyElement = this.memberProperty.getModelElementType().instantiate(getPart().getLocalModelElement(), getPart().getProperty(), resource); 
             resource.init(proxyElement, this.memberProperty);
-            final SapphirePropertyEditor editor = this.getPart().getChildPropertyEditor( proxyElement, this.memberProperty );
+            final PropertyEditorPart editor = this.getPart().getChildPropertyEditor( proxyElement, this.memberProperty );
             
             PropertyEditorAssistDecorator decorator = addDecorator(editor);
 
@@ -248,7 +242,7 @@ public final class CompactListPropertyEditorRenderer
         this.addText.addHyperlinkListener(this.addTextHyperlinkAdapter);
     }
     
-    private void addToolbar(final TextBinding binding, final SapphirePropertyEditor editor) {
+    private void addToolbar(final TextBinding binding, final PropertyEditorPart editor) {
         final SapphireActionGroup parentActions = new SapphireActionGroup(getPart(), getPart().getActionContext());
 
         final SapphireAction deleteAction = parentActions.getAction( ACTION_DELETE );
@@ -340,7 +334,7 @@ public final class CompactListPropertyEditorRenderer
         TextOverlayPainter.install( binding.getText(), textOverlayPainterController );
     }
     
-    private PropertyEditorAssistDecorator addDecorator(final SapphirePropertyEditor editor) {
+    private PropertyEditorAssistDecorator addDecorator(final PropertyEditorPart editor) {
         final PropertyEditorAssistDecorator decorator = new PropertyEditorAssistDecorator(editor, this.context, this.textComposite);
         decorator.control().setLayoutData( gdvindent( gdvalign( gd(), SWT.TOP ), 2 ) );
 
@@ -351,7 +345,7 @@ public final class CompactListPropertyEditorRenderer
         ProxyResource resource = new ProxyResource();
         final IModelElement proxyElement = this.memberProperty.getModelElementType().instantiate(getPart().getLocalModelElement(), getPart().getProperty(), resource); 
         resource.init(proxyElement, this.memberProperty);
-        SapphirePropertyEditor editor = this.getPart().getChildPropertyEditor( proxyElement, this.memberProperty );
+        PropertyEditorPart editor = this.getPart().getChildPropertyEditor( proxyElement, this.memberProperty );
 
         PropertyEditorAssistDecorator decorator = addDecorator(editor);
 
@@ -720,14 +714,14 @@ public final class CompactListPropertyEditorRenderer
         
     {
         @Override
-        public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
+        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
         {
             return ( propertyEditorDefinition.getProperty() instanceof ListProperty );
         }
         
         @Override
         public PropertyEditorRenderer create( final SapphireRenderingContext context,
-                                              final SapphirePropertyEditor part )
+                                              final PropertyEditorPart part )
         {
             return new CompactListPropertyEditorRenderer( context, part );
         }

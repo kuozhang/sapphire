@@ -23,7 +23,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.swt.renderer.TextOverlayPainter;
@@ -52,7 +52,7 @@ public final class ScalePropertyEditorRenderer
     private Text textField;
     
     public ScalePropertyEditorRenderer( final SapphireRenderingContext context,
-                                        final SapphirePropertyEditor part )
+                                        final PropertyEditorPart part )
     {
         super( context, part );
     }
@@ -60,7 +60,7 @@ public final class ScalePropertyEditorRenderer
     @Override
     protected void createContents( final Composite parent )
     {
-        final SapphirePropertyEditor part = getPart();
+        final PropertyEditorPart part = getPart();
         final ValueProperty property = (ValueProperty) part.getProperty();
 
         final NumericRange rangeAnnotation = property.getAnnotation( NumericRange.class );
@@ -194,7 +194,7 @@ public final class ScalePropertyEditorRenderer
         
     {
         @Override
-        public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
+        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
         {
             final ModelProperty property = propertyEditorDefinition.getProperty();
             
@@ -219,7 +219,7 @@ public final class ScalePropertyEditorRenderer
         
         @Override
         public PropertyEditorRenderer create( final SapphireRenderingContext context,
-                                              final SapphirePropertyEditor part )
+                                              final PropertyEditorPart part )
         {
             return new ScalePropertyEditorRenderer( context, part );
         }

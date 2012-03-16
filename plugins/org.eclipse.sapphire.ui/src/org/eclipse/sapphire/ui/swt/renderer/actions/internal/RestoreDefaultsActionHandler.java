@@ -49,7 +49,7 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEnumControlledPageBook;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartContainer;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireWithDirective;
 import org.eclipse.swt.SWT;
@@ -172,9 +172,9 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
                 collectProperties( currentPage, result );
             }
         }
-        else if( part instanceof SapphirePropertyEditor )
+        else if( part instanceof PropertyEditorPart )
         {
-            final SapphirePropertyEditor editor = (SapphirePropertyEditor) part;
+            final PropertyEditorPart editor = (PropertyEditorPart) part;
             result.add( new PropertyRef( editor.getLocalModelElement(), editor.getProperty() ) );
             
             for( SapphirePart related : editor.getRelatedContent() )

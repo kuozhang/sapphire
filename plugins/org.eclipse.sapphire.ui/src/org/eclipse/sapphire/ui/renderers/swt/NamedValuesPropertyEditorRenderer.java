@@ -33,7 +33,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NamedValues;
 import org.eclipse.sapphire.modeling.annotations.NamedValues.NamedValue;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -68,14 +68,14 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
     private List<Button> radioButtonGroup;
     
     public NamedValuesPropertyEditorRenderer( final SapphireRenderingContext context,
-                                              final SapphirePropertyEditor part )
+                                              final PropertyEditorPart part )
     {
         super( context, part );
     }
     
     protected void createContents( final Composite parent )
     {
-        final SapphirePropertyEditor part = getPart();
+        final PropertyEditorPart part = getPart();
         final ValueProperty property = (ValueProperty) part.getProperty();
         
         this.rootComposite = new Composite( parent, SWT.NONE )
@@ -210,7 +210,7 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
         
         this.binding = new NamedValuesBinding( getPart(), this.context );
         
-        this.rootComposite.setData( SapphirePropertyEditor.DATA_BINDING, this.binding );
+        this.rootComposite.setData( PropertyEditorPart.DATA_BINDING, this.binding );
         
         addControl( this.rootComposite );
         
@@ -360,7 +360,7 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
         
     {
         @Override
-        public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
+        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
         {
             final ModelProperty property = propertyEditorDefinition.getProperty();
             return ( property instanceof ValueProperty && property.hasAnnotation( NamedValues.class ) );
@@ -368,7 +368,7 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
         
         @Override
         public PropertyEditorRenderer create( final SapphireRenderingContext context,
-                                              final SapphirePropertyEditor part )
+                                              final PropertyEditorPart part )
         {
             return new NamedValuesPropertyEditorRenderer( context, part );
         }
@@ -392,7 +392,7 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
         extends AbstractBinding
         
     {
-        public NamedValuesBinding( final SapphirePropertyEditor editor,
+        public NamedValuesBinding( final PropertyEditorPart editor,
                                    final SapphireRenderingContext context )
         {
             super( editor, context, NamedValuesPropertyEditorRenderer.this.rootComposite );

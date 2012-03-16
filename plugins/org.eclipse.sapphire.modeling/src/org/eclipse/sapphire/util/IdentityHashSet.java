@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.util;
+package org.eclipse.sapphire.util;
 
 import java.util.AbstractSet;
 import java.util.Collection;

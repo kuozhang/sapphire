@@ -16,7 +16,7 @@ import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.annotations.AbsolutePath;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
 
 /**
@@ -29,7 +29,7 @@ public final class AbsoluteFilePathBrowseActionHandlerCondition
     
 {
     @Override
-    protected boolean evaluate( final SapphirePropertyEditor part )
+    protected boolean evaluate( final PropertyEditorPart part )
     {
         final ModelProperty property = part.getProperty();
         

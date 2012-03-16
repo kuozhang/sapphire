@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.sapphire.util.IdentityHashSet;
+
 /**
  * Sorts objects in dependencies-first order.
  * 

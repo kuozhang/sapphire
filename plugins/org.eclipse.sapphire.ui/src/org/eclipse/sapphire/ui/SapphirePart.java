@@ -170,11 +170,11 @@ public abstract class SapphirePart implements ISapphirePart
         // The default implement doesn't do anything.
     }
     
-    protected final FunctionResult initExpression( final IModelElement contextModelElement,
-                                                   final Function function,
-                                                   final Class<?> expectedType,
-                                                   final Function defaultValue,
-                                                   final Runnable refreshOp )
+    public final FunctionResult initExpression( final IModelElement contextModelElement,
+                                                final Function function,
+                                                final Class<?> expectedType,
+                                                final Function defaultValue,
+                                                final Runnable refreshOp )
     {
         Function f = ( function == null ? Literal.NULL : function );
         f = FailSafeFunction.create( f, Literal.create( expectedType ), defaultValue );
@@ -785,7 +785,7 @@ public abstract class SapphirePart implements ISapphirePart
         
         if( definition instanceof PropertyEditorDef )
         {
-            part = new SapphirePropertyEditor();
+            part = new PropertyEditorPart();
         }
         else if( definition instanceof ISapphireLabelDef )
         {

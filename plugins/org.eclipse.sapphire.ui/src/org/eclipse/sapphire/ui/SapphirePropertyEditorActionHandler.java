@@ -66,12 +66,12 @@ public abstract class SapphirePropertyEditorActionHandler extends SapphireAction
     @Override
     public final IModelElement getModelElement()
     {
-        return ( (SapphirePropertyEditor) getPart() ).getLocalModelElement();
+        return ( (PropertyEditorPart) getPart() ).getLocalModelElement();
     }
 
     public ModelProperty getProperty()
     {
-        return ( (SapphirePropertyEditor) getPart() ).getProperty();
+        return ( (PropertyEditorPart) getPart() ).getProperty();
     }
     
     public final void refreshEnablementState()

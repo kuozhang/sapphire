@@ -16,7 +16,7 @@ import static org.eclipse.sapphire.modeling.util.MiscUtil.containsUsingIdentity;
 import java.util.Collection;
 import java.util.Set;
 
-import org.eclipse.sapphire.modeling.util.IdentityHashSet;
+import org.eclipse.sapphire.util.IdentityHashSet;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

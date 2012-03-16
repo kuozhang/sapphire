@@ -39,6 +39,9 @@ import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.el.Literal;
+import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
@@ -60,7 +63,7 @@ import org.eclipse.swt.widgets.Display;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphirePropertyEditor extends FormPart
+public final class PropertyEditorPart extends FormPart
 {
     public static final String RELATED_CONTROLS = "related-controls";
     public static final String BROWSE_BUTTON = "browse-button";
@@ -85,11 +88,12 @@ public final class SapphirePropertyEditor extends FormPart
     private ModelProperty property;
     private List<ModelProperty> childProperties;
     private List<ModelProperty> childPropertiesReadOnly;
-    private Map<IModelElement,Map<ModelProperty,SapphirePropertyEditor>> childPropertyEditors;
+    private Map<IModelElement,Map<ModelProperty,PropertyEditorPart>> childPropertyEditors;
     private Map<String,Object> hints;
     private List<SapphirePart> relatedContentParts;
     private List<SapphirePart> relatedContentPartsReadOnly;
     private ModelPropertyListener listener;
+    private FunctionResult labelFunctionResult;
     
     @Override
     protected void init()
@@ -170,7 +174,7 @@ public final class SapphirePropertyEditor extends FormPart
         
         this.childProperties = new ArrayList<ModelProperty>();
         this.childPropertiesReadOnly = Collections.unmodifiableList( this.childProperties );
-        this.childPropertyEditors = new HashMap<IModelElement,Map<ModelProperty,SapphirePropertyEditor>>();
+        this.childPropertyEditors = new HashMap<IModelElement,Map<ModelProperty,PropertyEditorPart>>();
         
         final ModelElementType type = this.property.getType();
         
@@ -266,6 +270,21 @@ public final class SapphirePropertyEditor extends FormPart
             relatedContentPart.attach( relatedContentPartListener );
             this.relatedContentParts.add( relatedContentPart );
         }
+        
+        this.labelFunctionResult = initExpression
+        (
+            getLocalModelElement(),
+            propertyEditorPartDef.getLabel().getContent(), 
+            String.class,
+            Literal.create( this.property.getLabel( false, CapitalizationType.NO_CAPS, true ) ),
+            new Runnable()
+            {
+                public void run()
+                {
+                    broadcast( new LabelChangedEvent( PropertyEditorPart.this ) );
+                }
+            }
+        );
     }
     
     @Override
@@ -290,17 +309,17 @@ public final class SapphirePropertyEditor extends FormPart
         return this.childPropertiesReadOnly;
     }
     
-    public SapphirePropertyEditor getChildPropertyEditor( final IModelElement element,
+    public PropertyEditorPart getChildPropertyEditor( final IModelElement element,
                                                           final ModelProperty property )
     {
-        Map<ModelProperty,SapphirePropertyEditor> propertyEditorsForElement = this.childPropertyEditors.get( element );
+        Map<ModelProperty,PropertyEditorPart> propertyEditorsForElement = this.childPropertyEditors.get( element );
         
         if( propertyEditorsForElement == null )
         {
-            propertyEditorsForElement = new HashMap<ModelProperty,SapphirePropertyEditor>();
+            propertyEditorsForElement = new HashMap<ModelProperty,PropertyEditorPart>();
             this.childPropertyEditors.put( element, propertyEditorsForElement );
             
-            final Map<ModelProperty,SapphirePropertyEditor> finalPropertyEditorsForElement = propertyEditorsForElement;
+            final Map<ModelProperty,PropertyEditorPart> finalPropertyEditorsForElement = propertyEditorsForElement;
             
             element.addListener
             (
@@ -309,18 +328,18 @@ public final class SapphirePropertyEditor extends FormPart
                     @Override
                     public void handleElementDisposedEvent( final ModelElementDisposedEvent event )
                     {
-                        for( SapphirePropertyEditor propertyEditor : finalPropertyEditorsForElement.values() )
+                        for( PropertyEditorPart propertyEditor : finalPropertyEditorsForElement.values() )
                         {
                             propertyEditor.dispose();
                         }
                         
-                        SapphirePropertyEditor.this.childPropertyEditors.remove( element );
+                        PropertyEditorPart.this.childPropertyEditors.remove( element );
                     }
                 }
             );
         }
         
-        SapphirePropertyEditor childPropertyEditorPart = propertyEditorsForElement.get( property );
+        PropertyEditorPart childPropertyEditorPart = propertyEditorsForElement.get( property );
         
         if( childPropertyEditorPart == null )
         {
@@ -333,7 +352,7 @@ public final class SapphirePropertyEditor extends FormPart
                 childPropertyEditorDef.setProperty( childPropertyName );
             }
             
-            childPropertyEditorPart = new SapphirePropertyEditor();
+            childPropertyEditorPart = new PropertyEditorPart();
             childPropertyEditorPart.init( this, element, childPropertyEditorDef, this.params );
             
             propertyEditorsForElement.put( property, childPropertyEditorPart );
@@ -345,25 +364,8 @@ public final class SapphirePropertyEditor extends FormPart
     public String getLabel( final CapitalizationType capitalizationType,
                             final boolean includeMnemonic )
     {
-        return getLabel( this.property, definition(), capitalizationType, includeMnemonic );
-    }
-    
-    public static String getLabel( final ModelProperty property,
-                                   final PropertyEditorDef propertyEditorDef,
-                                   final CapitalizationType capitalizationType,
-                                   final boolean includeMnemonic )
-    {
-        if( propertyEditorDef != null )
-        {
-            final Value<String> labelFromDef = propertyEditorDef.getLabel();
-            
-            if( labelFromDef.getText( false ) != null )
-            {
-                return labelFromDef.getLocalizedText( false, capitalizationType, includeMnemonic );
-            }
-        }
-        
-        return property.getLabel( false, capitalizationType, includeMnemonic );
+        final String label = (String) this.labelFunctionResult.value();
+        return LabelTransformer.transform( label, capitalizationType, includeMnemonic );
     }
     
     public boolean getShowLabel()
@@ -597,9 +599,14 @@ public final class SapphirePropertyEditor extends FormPart
             this.element.removeListener( this.listener, this.property.getName() );
         }
         
-        for( Map<ModelProperty,SapphirePropertyEditor> propertyEditorsForElement : this.childPropertyEditors.values() )
+        if( this.labelFunctionResult != null )
         {
-            for( SapphirePropertyEditor propertyEditor : propertyEditorsForElement.values() )
+            this.labelFunctionResult.dispose();
+        }
+        
+        for( Map<ModelProperty,PropertyEditorPart> propertyEditorsForElement : this.childPropertyEditors.values() )
+        {
+            for( PropertyEditorPart propertyEditor : propertyEditorsForElement.values() )
             {
                 propertyEditor.dispose();
             }
@@ -612,7 +619,7 @@ public final class SapphirePropertyEditor extends FormPart
         
         static
         {
-            initializeMessages( SapphirePropertyEditor.class.getName(), Resources.class );
+            initializeMessages( PropertyEditorPart.class.getName(), Resources.class );
         }
     }
     

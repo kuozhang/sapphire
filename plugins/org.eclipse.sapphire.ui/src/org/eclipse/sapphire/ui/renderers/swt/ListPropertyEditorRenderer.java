@@ -16,7 +16,7 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 
 /**
@@ -31,7 +31,7 @@ public abstract class ListPropertyEditorRenderer
     private ModelElementListener listElementListener;
 
     public ListPropertyEditorRenderer( final SapphireRenderingContext context,
-                                       final SapphirePropertyEditor part )
+                                       final PropertyEditorPart part )
     {
         super( context, part );
         

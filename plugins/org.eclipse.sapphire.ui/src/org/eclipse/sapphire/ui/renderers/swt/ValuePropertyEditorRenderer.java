@@ -15,7 +15,7 @@ import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
@@ -31,7 +31,7 @@ public abstract class ValuePropertyEditorRenderer
     private final ModifyPropertyValueTask modifyPropertyTask;
     
     public ValuePropertyEditorRenderer( final SapphireRenderingContext context,
-                                        final SapphirePropertyEditor part )
+                                        final PropertyEditorPart part )
     {
         super( context, part );
         

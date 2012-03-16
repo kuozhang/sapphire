@@ -54,7 +54,7 @@ import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -88,7 +88,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
     private MoveRightActionHandler moveRightActionHandler;
     
     public SlushBucketPropertyEditor( final SapphireRenderingContext context,
-                                      final SapphirePropertyEditor part )
+                                      final PropertyEditorPart part )
     {
         super( context, part );
         
@@ -394,7 +394,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
     public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
-        public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorPart )
+        public boolean isApplicableTo( final PropertyEditorPart propertyEditorPart )
         {
             final ModelProperty property = propertyEditorPart.getProperty();
             
@@ -427,7 +427,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
         
         @Override
         public PropertyEditorRenderer create( final SapphireRenderingContext context,
-                                              final SapphirePropertyEditor part )
+                                              final PropertyEditorPart part )
         {
             return new SlushBucketPropertyEditor( context, part );
         }

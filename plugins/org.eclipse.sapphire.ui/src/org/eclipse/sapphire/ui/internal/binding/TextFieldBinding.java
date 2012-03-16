@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.ValueNormalizationService;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -40,7 +40,7 @@ public class TextFieldBinding
     private ValueNormalizationService valueNormalizationService;
     private DelayedTasksExecutor.Task onTextContentModifyTask;
     
-    public TextFieldBinding( final SapphirePropertyEditor editor,
+    public TextFieldBinding( final PropertyEditorPart editor,
                              final SapphireRenderingContext context,
                              final Text text )
     {
@@ -48,7 +48,7 @@ public class TextFieldBinding
     }
 
     @Override
-    protected void initialize( final SapphirePropertyEditor editor,
+    protected void initialize( final PropertyEditorPart editor,
                                final SapphireRenderingContext context,
                                final Control control )
     {

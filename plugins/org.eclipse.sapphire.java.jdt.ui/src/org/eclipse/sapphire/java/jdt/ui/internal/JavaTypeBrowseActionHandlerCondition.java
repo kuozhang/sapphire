@@ -16,7 +16,7 @@ import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
 
 /**
@@ -29,7 +29,7 @@ public final class JavaTypeBrowseActionHandlerCondition
     
 {
     @Override
-    protected boolean evaluate( final SapphirePropertyEditor part )
+    protected boolean evaluate( final PropertyEditorPart part )
     {
         final ModelProperty property = part.getProperty();
         

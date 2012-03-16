@@ -36,10 +36,11 @@ import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.SapphirePart.LabelChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.AuxTextProvider;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
@@ -69,7 +70,7 @@ public abstract class PropertyEditorRenderer
     private static final String RELATED_CONTENT_WIDTH = "sapphire.related.content.width";
     
     protected final SapphireRenderingContext context;
-    private final SapphirePropertyEditor part;
+    private final PropertyEditorPart part;
     protected PropertyEditorAssistDecorator decorator;
     private Label auxTextControl;
     private AuxTextProvider auxTextProvider;
@@ -83,7 +84,7 @@ public abstract class PropertyEditorRenderer
     private final List<Runnable> onDisposeOperations = new ArrayList<Runnable>();
 
     public PropertyEditorRenderer( final SapphireRenderingContext context,
-                                   final SapphirePropertyEditor part )
+                                   final PropertyEditorPart part )
     {
         this.context = context;
         this.part = part;
@@ -99,7 +100,7 @@ public abstract class PropertyEditorRenderer
         return this.context;
     }
     
-    public SapphirePropertyEditor getPart()
+    public PropertyEditorPart getPart()
     {
         return this.part;
     }
@@ -183,7 +184,7 @@ public abstract class PropertyEditorRenderer
             }
         }
         
-        final SapphirePropertyEditor part = getPart();
+        final PropertyEditorPart part = getPart();
         final IModelElement modelElement = getModelElement();
         final ModelProperty property = getProperty();
         
@@ -247,9 +248,9 @@ public abstract class PropertyEditorRenderer
     
     protected class CreateMainCompositeDelegate
     {
-        private final SapphirePropertyEditor part;
+        private final PropertyEditorPart part;
         
-        public CreateMainCompositeDelegate( final SapphirePropertyEditor part )
+        public CreateMainCompositeDelegate( final PropertyEditorPart part )
         {
             this.part = part;
         }
@@ -294,9 +295,45 @@ public abstract class PropertyEditorRenderer
         if( showLabel )
         {
             final Label label = new Label( parent, SWT.NONE );
-            label.setText( delegate.getLabel( CapitalizationType.FIRST_WORD_ONLY, true ) + ":" );
+            
+            final Runnable updateLabelOp = new Runnable()
+            {
+                public void run()
+                {
+                    label.setText( delegate.getLabel( CapitalizationType.FIRST_WORD_ONLY, true ) + ":" );
+                }
+            };
+            
+            final org.eclipse.sapphire.Listener listener = new org.eclipse.sapphire.Listener()
+            {
+                @Override
+                public void handle( final org.eclipse.sapphire.Event event )
+                {
+                    if( event instanceof LabelChangedEvent )
+                    {
+                        updateLabelOp.run();
+                        PropertyEditorRenderer.this.context.layout();
+                    }
+                }
+            };
+            
+            this.part.attach( listener );
+            updateLabelOp.run();
+            
+            label.addDisposeListener
+            (
+                new DisposeListener()
+                {
+                    public void widgetDisposed( final DisposeEvent event )
+                    {
+                        getPart().detach( listener );
+                    }
+                }
+            );
+            
             label.setLayoutData( gdhindent( gdhspan( gdvalign( gd(), singleLinePart ? SWT.CENTER : SWT.TOP ), spanBothColumns ? 2 : 1 ), leftMargin + 9 ) );
             this.context.adapt( label );
+            
             addControl( label );
         }
         else if( ! spanBothColumns )
@@ -447,8 +484,8 @@ public abstract class PropertyEditorRenderer
         this.controls.add( control );
         
         control.setEnabled( element.isPropertyEnabled( property ) );
-        control.setData( SapphirePropertyEditor.DATA_PROPERTY, property );
-        control.setData( SapphirePropertyEditor.DATA_ELEMENT, element );
+        control.setData( PropertyEditorPart.DATA_PROPERTY, property );
+        control.setData( PropertyEditorPart.DATA_ELEMENT, element );
         
         control.addDisposeListener
         (

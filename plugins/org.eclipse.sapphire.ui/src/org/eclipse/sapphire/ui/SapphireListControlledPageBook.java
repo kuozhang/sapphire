@@ -21,12 +21,12 @@ import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.util.MutableReference;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.PageBookExtDef;
 import org.eclipse.sapphire.ui.renderers.swt.TableViewerSelectionProvider;
 import org.eclipse.sapphire.ui.swt.SapphireControl;
+import org.eclipse.sapphire.util.MutableReference;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -180,8 +180,8 @@ public final class SapphireListControlledPageBook extends PageBookPart
                                                        final ModelProperty property,
                                                        final Class<T> type )
     {
-        if( context.getData( SapphirePropertyEditor.DATA_ELEMENT ) == element && 
-            context.getData( SapphirePropertyEditor.DATA_PROPERTY ) == property && 
+        if( context.getData( PropertyEditorPart.DATA_ELEMENT ) == element && 
+            context.getData( PropertyEditorPart.DATA_PROPERTY ) == property && 
             type.isAssignableFrom( context.getClass() ) )
         {
             return (T) context;

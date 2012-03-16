@@ -17,7 +17,7 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.renderers.swt.ValueLabelProvider;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
@@ -49,7 +49,7 @@ public final class PossibleValuesProviderBrowseActionHandler
             final Collection<String> valuesList = valuesProvider.values();
             final String[] valuesArray = valuesList.toArray( new String[ valuesList.size() ] );
             
-            final ValueLabelProvider labelProvider = new ValueLabelProvider( (SapphirePropertyEditor) getPart(), property );
+            final ValueLabelProvider labelProvider = new ValueLabelProvider( (PropertyEditorPart) getPart(), property );
             
             final ElementListSelectionDialog dialog = new ElementListSelectionDialog( context.getShell(), labelProvider );
             

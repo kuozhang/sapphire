@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
+import static org.eclipse.sapphire.ui.PropertyEditorPart.DATA_BINDING;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
@@ -35,7 +35,7 @@ import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.services.FileExtensionsService;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler.ContainersOnlyViewerFilter;
 import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler.ExtensionBasedViewerFilter;
@@ -56,7 +56,7 @@ import org.eclipse.ui.part.DrillDownComposite;
 public final class EclipseWorkspacePathPropertyEditorRenderer extends DefaultValuePropertyEditorRenderer
 {
     public EclipseWorkspacePathPropertyEditorRenderer( final SapphireRenderingContext context,
-                                                       final SapphirePropertyEditor part )
+                                                       final PropertyEditorPart part )
     {
         super( context, part );
     }
@@ -64,7 +64,7 @@ public final class EclipseWorkspacePathPropertyEditorRenderer extends DefaultVal
     @Override
     protected void createContents( final Composite parent )
     {
-        final SapphirePropertyEditor part = getPart();
+        final PropertyEditorPart part = getPart();
         final IModelElement element = part.getLocalModelElement();
         final ModelProperty property = part.getProperty();
         
@@ -228,14 +228,14 @@ public final class EclipseWorkspacePathPropertyEditorRenderer extends DefaultVal
     public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
-        public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
+        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
         {
             return true;
         }
         
         @Override
         public PropertyEditorRenderer create( final SapphireRenderingContext context,
-                                              final SapphirePropertyEditor part )
+                                              final PropertyEditorPart part )
         {
             return new EclipseWorkspacePathPropertyEditorRenderer( context, part );
         }

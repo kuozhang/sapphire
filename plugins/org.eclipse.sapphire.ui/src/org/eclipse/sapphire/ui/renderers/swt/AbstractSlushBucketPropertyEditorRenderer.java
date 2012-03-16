@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.RELATED_CONTROLS;
+import static org.eclipse.sapphire.ui.PropertyEditorPart.DATA_BINDING;
+import static org.eclipse.sapphire.ui.PropertyEditorPart.RELATED_CONTROLS;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
@@ -26,7 +26,7 @@ import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFilter;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.ToolBar;
 public abstract class AbstractSlushBucketPropertyEditorRenderer extends DefaultListPropertyEditorRenderer
 {
     public AbstractSlushBucketPropertyEditorRenderer( final SapphireRenderingContext context,
-                                                      final SapphirePropertyEditor part )
+                                                      final PropertyEditorPart part )
     {
         super( context, part );
     }
@@ -53,7 +53,7 @@ public abstract class AbstractSlushBucketPropertyEditorRenderer extends DefaultL
     @Override
     protected void createContents( final Composite parent )
     {
-        final SapphirePropertyEditor part = getPart();
+        final PropertyEditorPart part = getPart();
 
         final Composite mainComposite = createMainComposite( parent );
         mainComposite.setLayout( new FillLayout( SWT.HORIZONTAL ) );

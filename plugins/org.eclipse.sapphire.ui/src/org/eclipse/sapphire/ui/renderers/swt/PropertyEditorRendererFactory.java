@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 
 /**
@@ -20,8 +20,8 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 
 public abstract class PropertyEditorRendererFactory
 {
-    public abstract boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition );
+    public abstract boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition );
     
     public abstract PropertyEditorRenderer create( final SapphireRenderingContext context,
-                                                   final SapphirePropertyEditor part );
+                                                   final PropertyEditorPart part );
 }

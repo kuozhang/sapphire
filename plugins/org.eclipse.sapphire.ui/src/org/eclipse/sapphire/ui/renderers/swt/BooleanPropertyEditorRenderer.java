@@ -22,13 +22,16 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
+import org.eclipse.sapphire.ui.SapphirePart.LabelChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
@@ -44,7 +47,7 @@ public final class BooleanPropertyEditorRenderer extends ValuePropertyEditorRend
     private Button checkbox;
     
     public BooleanPropertyEditorRenderer( final SapphireRenderingContext context,
-                                          final SapphirePropertyEditor part )
+                                          final PropertyEditorPart part )
     {
         super( context, part );
     }
@@ -52,7 +55,7 @@ public final class BooleanPropertyEditorRenderer extends ValuePropertyEditorRend
     @Override
     protected void createContents( final Composite parent )
     {
-        final SapphirePropertyEditor part = getPart();
+        final PropertyEditorPart part = getPart();
         final ValueProperty property = (ValueProperty) part.getProperty();
         
         final CheckboxLayout checkboxLayout;
@@ -125,7 +128,40 @@ public final class BooleanPropertyEditorRenderer extends ValuePropertyEditorRend
         
         if( checkboxLayout != CheckboxLayout.LEADING_LABEL )
         {
-            this.checkbox.setText( part.getLabel( CapitalizationType.FIRST_WORD_ONLY, true ) );
+            final Runnable updateLabelOp = new Runnable()
+            {
+                public void run()
+                {
+                    BooleanPropertyEditorRenderer.this.checkbox.setText( part.getLabel( CapitalizationType.FIRST_WORD_ONLY, true ) );
+                }
+            };
+            
+            final org.eclipse.sapphire.Listener listener = new org.eclipse.sapphire.Listener()
+            {
+                @Override
+                public void handle( final org.eclipse.sapphire.Event event )
+                {
+                    if( event instanceof LabelChangedEvent )
+                    {
+                        updateLabelOp.run();
+                        BooleanPropertyEditorRenderer.this.context.layout();
+                    }
+                }
+            };
+            
+            getPart().attach( listener );
+            updateLabelOp.run();
+            
+            this.checkbox.addDisposeListener
+            (
+                new DisposeListener()
+                {
+                    public void widgetDisposed( final DisposeEvent event )
+                    {
+                        getPart().detach( listener );
+                    }
+                }
+            );
         }
         
         if( isDeprecated )
@@ -208,7 +244,7 @@ public final class BooleanPropertyEditorRenderer extends ValuePropertyEditorRend
     public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
-        public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
+        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
         {
             final ModelProperty property = propertyEditorDefinition.getProperty();
             return ( property instanceof ValueProperty && property.isOfType( Boolean.class ) );
@@ -216,7 +252,7 @@ public final class BooleanPropertyEditorRenderer extends ValuePropertyEditorRend
         
         @Override
         public PropertyEditorRenderer create( final SapphireRenderingContext context,
-                                              final SapphirePropertyEditor part )
+                                              final PropertyEditorPart part )
         {
             return new BooleanPropertyEditorRenderer( context, part );
         }

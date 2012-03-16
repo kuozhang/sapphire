@@ -38,7 +38,7 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
@@ -104,7 +104,7 @@ public final class PropertyEditorAssistDecorator
     private EditorControlMouseTrackListener mouseTrackListener;
     private ModelPropertyListener modelPropertyListener;
     
-    public PropertyEditorAssistDecorator( final SapphirePropertyEditor part,
+    public PropertyEditorAssistDecorator( final PropertyEditorPart part,
                                           final SapphireRenderingContext context,
                                           final Composite parent )
     {

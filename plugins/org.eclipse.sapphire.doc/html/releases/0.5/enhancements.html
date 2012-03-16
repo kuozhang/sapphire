@@ -31,6 +31,7 @@
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
     <li><a href="#ImageFunction">Image Function</a></li>
+    <li><a href="#ExprInPropertyEditorLabel">Use in Property Editor Label</a></li>
   </ol>
   <li><a href="#Services">Services</a></li>
   <ol type="A">
@@ -100,6 +101,18 @@ with the root model element for the diagram editor.</p>
 <pre class="source-code"><code>${ Image() }
 ${ Address.Image() }
 ${ BusinessExpense ? BusinessAccount.Image() : PersonalAccount.Image() }</code></pre>
+
+
+<h2><a name="ExprInPropertyEditorLabel">Use in Property Editor Label</a></h2>
+
+<p>Use expression language when overriding the label in a property editor.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor>
+    &lt;property>Name&lt;/property></font>
+    &lt;label>${ Type == "Business" ? "company" : "name" }&lt;/label>
+<font color="#888888">&lt;/property-editor></font></code></pre>
 
 
 <h2><a name="Services"><a name="PartServices">Part Services</a></a></h2>

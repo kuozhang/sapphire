@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.services.ValueImageService;
 import org.eclipse.sapphire.services.ValueLabelService;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -30,13 +30,13 @@ import org.eclipse.swt.graphics.Image;
 
 public final class ValueLabelProvider implements ILabelProvider
 {
-    private final SapphirePropertyEditor part;
+    private final PropertyEditorPart part;
     private final ValueProperty property;
     private final LocalizationService localizationService;
     private final ValueLabelService valueLabelService;
     private final ValueImageService valueImageService;
     
-    public ValueLabelProvider( final SapphirePropertyEditor part,
+    public ValueLabelProvider( final PropertyEditorPart part,
                                         final ValueProperty property )
     {
         if( part == null )

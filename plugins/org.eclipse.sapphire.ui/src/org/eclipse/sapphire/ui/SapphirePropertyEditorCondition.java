@@ -24,14 +24,14 @@ public abstract class SapphirePropertyEditorCondition
     {
         final ISapphirePart part = getPart();
         
-        if( part instanceof SapphirePropertyEditor )
+        if( part instanceof PropertyEditorPart )
         {
-            return evaluate( (SapphirePropertyEditor) part );
+            return evaluate( (PropertyEditorPart) part );
         }
         
         return false;
     }
     
-    protected abstract boolean evaluate( final SapphirePropertyEditor part );
+    protected abstract boolean evaluate( final PropertyEditorPart part );
     
 }

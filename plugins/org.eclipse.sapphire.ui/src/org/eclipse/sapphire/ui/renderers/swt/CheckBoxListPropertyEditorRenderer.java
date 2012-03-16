@@ -63,7 +63,7 @@ import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ValueImageService;
 import org.eclipse.sapphire.services.ValueLabelService;
 import org.eclipse.sapphire.ui.SapphireImageCache;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
@@ -93,7 +93,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
     private SelectionProvider selectionProvider;
 
     public CheckBoxListPropertyEditorRenderer( final SapphireRenderingContext context,
-                                               final SapphirePropertyEditor part )
+                                               final PropertyEditorPart part )
     {
         super( context, part );
     }
@@ -103,7 +103,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
     {
         // Initialize
         
-        final SapphirePropertyEditor part = getPart();
+        final PropertyEditorPart part = getPart();
         final IModelElement element = part.getLocalModelElement();
         final ListProperty listProperty = (ListProperty) part.getProperty();
         
@@ -614,14 +614,14 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
     public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
-        public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
+        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
         {
             return true;
         }
         
         @Override
         public PropertyEditorRenderer create( final SapphireRenderingContext context,
-                                              final SapphirePropertyEditor part )
+                                              final PropertyEditorPart part )
         {
             return new CheckBoxListPropertyEditorRenderer( context, part );
         }
@@ -630,7 +630,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
     public static final class EnumFactory extends PropertyEditorRendererFactory
     {
         @Override
-        public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
+        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
         {
             final IModelElement element = propertyEditorDefinition.getLocalModelElement();
             final ModelProperty property = propertyEditorDefinition.getProperty();
@@ -663,7 +663,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         
         @Override
         public PropertyEditorRenderer create( final SapphireRenderingContext context,
-                                              final SapphirePropertyEditor part )
+                                              final PropertyEditorPart part )
         {
             return new CheckBoxListPropertyEditorRenderer( context, part );
         }

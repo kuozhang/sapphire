@@ -13,7 +13,7 @@ package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 
 import java.net.URL;
 
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
 
 /**
@@ -26,7 +26,7 @@ public final class UrlJumpActionHandlerCondition
     
 {
     @Override
-    protected boolean evaluate( final SapphirePropertyEditor part )
+    protected boolean evaluate( final PropertyEditorPart part )
     {
         return part.getProperty().isOfType( URL.class );
     }

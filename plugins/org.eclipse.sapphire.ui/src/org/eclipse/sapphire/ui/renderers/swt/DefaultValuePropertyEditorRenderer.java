@@ -16,8 +16,8 @@ import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_ASSIST;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_BROWSE;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_JUMP;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.createFilterByActionId;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.RELATED_CONTROLS;
+import static org.eclipse.sapphire.ui.PropertyEditorPart.DATA_BINDING;
+import static org.eclipse.sapphire.ui.PropertyEditorPart.RELATED_CONTROLS;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
@@ -51,7 +51,7 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandler.PostExecuteEvent;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFilter;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
@@ -101,7 +101,7 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
     }
 
     public DefaultValuePropertyEditorRenderer( final SapphireRenderingContext context,
-                                               final SapphirePropertyEditor part )
+                                               final PropertyEditorPart part )
     {
         super( context, part );
     }
@@ -115,7 +115,7 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
     protected Control createContents( final Composite parent,
                                       final boolean suppressBrowseAction )
     {
-        final SapphirePropertyEditor part = getPart();
+        final PropertyEditorPart part = getPart();
         final IModelElement element = part.getLocalModelElement();
         final ValueProperty property = (ValueProperty) part.getProperty();
         
@@ -384,14 +384,14 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
     public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
-        public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
+        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
         {
             return ( propertyEditorDefinition.getProperty() instanceof ValueProperty );
         }
         
         @Override
         public PropertyEditorRenderer create( final SapphireRenderingContext context,
-                                              final SapphirePropertyEditor part )
+                                              final PropertyEditorPart part )
         {
             return new DefaultValuePropertyEditorRenderer( context, part );
         }

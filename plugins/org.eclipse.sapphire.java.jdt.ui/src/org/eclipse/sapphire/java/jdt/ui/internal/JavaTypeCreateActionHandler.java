@@ -66,7 +66,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireAction;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -451,7 +451,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
     protected static abstract class Condition extends SapphirePropertyEditorCondition
     {
         @Override
-        protected final boolean evaluate( final SapphirePropertyEditor part )
+        protected final boolean evaluate( final PropertyEditorPart part )
         {
             final ModelProperty property = part.getProperty();
             final IModelElement element = part.getModelElement();

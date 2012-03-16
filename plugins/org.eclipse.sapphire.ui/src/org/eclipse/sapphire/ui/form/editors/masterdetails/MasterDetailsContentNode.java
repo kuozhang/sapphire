@@ -16,6 +16,7 @@ import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twd;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -760,7 +761,7 @@ public final class MasterDetailsContentNode
         private final IMasterDetailsContentNodeFactoryDef definition;
         private final Map<String,String> params;
         private SapphireCondition visibleWhenCondition;
-        private Map<Object,MasterDetailsContentNode> nodesCache;
+        private Map<IModelElement,MasterDetailsContentNode> nodesCache;
         
         public NodeFactory( final IMasterDetailsContentNodeFactoryDef definition,
                             final Map<String,String> params )
@@ -798,7 +799,7 @@ public final class MasterDetailsContentNode
         
         public final List<MasterDetailsContentNode> nodes()
         {
-            final Map<Object,MasterDetailsContentNode> newCache = new HashMap<Object,MasterDetailsContentNode>();
+            final Map<IModelElement,MasterDetailsContentNode> newCache = new IdentityHashMap<IModelElement,MasterDetailsContentNode>();
             final List<MasterDetailsContentNode> nodes = new ArrayList<MasterDetailsContentNode>();
             
             for( IModelElement element : elements() )

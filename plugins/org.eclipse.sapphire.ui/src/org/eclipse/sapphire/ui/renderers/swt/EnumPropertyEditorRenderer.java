@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
-import static org.eclipse.sapphire.ui.SapphirePropertyEditor.DATA_BINDING;
+import static org.eclipse.sapphire.ui.PropertyEditorPart.DATA_BINDING;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
@@ -24,7 +24,8 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
+import org.eclipse.sapphire.ui.SapphirePart.LabelChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
@@ -32,6 +33,8 @@ import org.eclipse.sapphire.ui.internal.binding.ComboBinding;
 import org.eclipse.sapphire.ui.internal.binding.RadioButtonsGroup;
 import org.eclipse.sapphire.ui.internal.binding.RadioButtonsGroupBinding;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -49,7 +52,7 @@ public final class EnumPropertyEditorRenderer
     private Control control;
 
     public EnumPropertyEditorRenderer( final SapphireRenderingContext context,
-                                       final SapphirePropertyEditor part )
+                                       final PropertyEditorPart part )
     {
         super( context, part );
     }
@@ -57,7 +60,7 @@ public final class EnumPropertyEditorRenderer
     @Override
     protected void createContents( final Composite parent )
     {
-        final SapphirePropertyEditor part = getPart();
+        final PropertyEditorPart part = getPart();
         final ValueProperty property = (ValueProperty) part.getProperty();
         
         final boolean showLabel = part.getShowLabel();
@@ -102,7 +105,41 @@ public final class EnumPropertyEditorRenderer
                 
                 final Label label = new Label( composite, SWT.WRAP );
                 label.setLayoutData( gd() );
-                label.setText( part.getLabel( CapitalizationType.FIRST_WORD_ONLY, true ) );
+                
+                final Runnable updateLabelOp = new Runnable()
+                {
+                    public void run()
+                    {
+                        label.setText( part.getLabel( CapitalizationType.FIRST_WORD_ONLY, true ) );
+                    }
+                };
+                
+                final org.eclipse.sapphire.Listener listener = new org.eclipse.sapphire.Listener()
+                {
+                    @Override
+                    public void handle( final org.eclipse.sapphire.Event event )
+                    {
+                        if( event instanceof LabelChangedEvent )
+                        {
+                            updateLabelOp.run();
+                            EnumPropertyEditorRenderer.this.context.layout();
+                        }
+                    }
+                };
+                
+                part.attach( listener );
+                updateLabelOp.run();
+                
+                label.addDisposeListener
+                (
+                    new DisposeListener()
+                    {
+                        public void widgetDisposed( final DisposeEvent event )
+                        {
+                            part.detach( listener );
+                        }
+                    }
+                );
                 
                 decorator.addEditorControl( label );
             }
@@ -182,7 +219,7 @@ public final class EnumPropertyEditorRenderer
         
     {
         @Override
-        public boolean isApplicableTo( final SapphirePropertyEditor propertyEditorDefinition )
+        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
         {
             final ModelProperty property = propertyEditorDefinition.getProperty();
             return ( property instanceof ValueProperty && property.isOfType( Enum.class ) );
@@ -190,7 +227,7 @@ public final class EnumPropertyEditorRenderer
         
         @Override
         public PropertyEditorRenderer create( final SapphireRenderingContext context,
-                                              final SapphirePropertyEditor part )
+                                              final PropertyEditorPart part )
         {
             return new EnumPropertyEditorRenderer( context, part );
         }

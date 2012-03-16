@@ -14,7 +14,7 @@ package org.eclipse.sapphire.ui.internal.binding;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.swt.widgets.Control;
 
@@ -29,7 +29,7 @@ public abstract class AbstractEnumBinding
 {
     protected Enum<?>[] enumValues;
     
-    public AbstractEnumBinding( final SapphirePropertyEditor editor,
+    public AbstractEnumBinding( final PropertyEditorPart editor,
                                 final SapphireRenderingContext context,
                                 final Control control )
     {
@@ -38,7 +38,7 @@ public abstract class AbstractEnumBinding
     
     @Override
     
-    protected void initialize( final SapphirePropertyEditor editor,
+    protected void initialize( final PropertyEditorPart editor,
                                final SapphireRenderingContext context,
                                final Control control )
     {

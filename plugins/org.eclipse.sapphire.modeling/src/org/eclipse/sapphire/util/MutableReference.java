@@ -9,10 +9,11 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.util;
+package org.eclipse.sapphire.util;
 
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ListenerContext;
 
 /**
  * An object reference that can be changed after creation. 
@@ -23,7 +24,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class MutableReference<T>
 {
     private T value;
-    private final Set<Listener> listeners;
+    private final ListenerContext listeners = new ListenerContext();
    
     public MutableReference()
     {
@@ -33,7 +34,6 @@ public class MutableReference<T>
     public MutableReference( final T value )
     {
         this.value = value;
-        this.listeners = new CopyOnWriteArraySet<Listener>();
     }
     
     public T get() 
@@ -54,32 +54,40 @@ public class MutableReference<T>
             this.value = value;
         }
         
-        notifyListeners( oldValue, value );
+        this.listeners.broadcast( new ReferenceChangedEvent( oldValue, value ) );
     }
     
-    public void addListener( final Listener listener )
+    public void attach( final Listener listener )
     {
-        this.listeners.add( listener );
+        this.listeners.attach( listener );
     }
     
-    public void removeListener( final Listener listener )
+    public void detach( final Listener listener )
     {
-        this.listeners.remove( listener );
+        this.listeners.detach( listener );
     }
     
-    private void notifyListeners( final T oldValue,
-                                  final T newValue )
+    public final class ReferenceChangedEvent extends Event
     {
-        for( Listener listener : this.listeners )
+        private final T before;
+        private final T after;
+        
+        private ReferenceChangedEvent( final T before,
+                                       final T after )
         {
-            listener.handleReferenceChanged( oldValue, newValue );
+            this.before = before;
+            this.after = after;
         }
-    }
-    
-    public static abstract class Listener
-    {
-        public abstract void handleReferenceChanged( final Object oldValue,
-                                                     final Object newValue );
+        
+        public T before()
+        {
+            return this.before;
+        }
+        
+        public T after()
+        {
+            return this.after;
+        }
     }
 
 }

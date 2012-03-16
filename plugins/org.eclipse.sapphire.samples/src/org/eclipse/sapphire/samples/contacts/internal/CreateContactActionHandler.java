@@ -22,7 +22,7 @@ import org.eclipse.sapphire.samples.contacts.IContact;
 import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
 
@@ -40,7 +40,7 @@ public final class CreateContactActionHandler extends SapphireActionHandler
     {
         super.init( action, def );
         
-        this.property = (ValueProperty) ( (SapphirePropertyEditor) action.getPart() ).getProperty();
+        this.property = (ValueProperty) ( (PropertyEditorPart) action.getPart() ).getProperty();
         
         final ModelPropertyListener listener = new ModelPropertyListener()
         {

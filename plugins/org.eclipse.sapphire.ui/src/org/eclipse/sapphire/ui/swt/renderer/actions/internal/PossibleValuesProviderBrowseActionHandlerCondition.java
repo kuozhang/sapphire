@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 
 import org.eclipse.sapphire.services.PossibleValuesService;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
 
 /**
@@ -25,7 +25,7 @@ public final class PossibleValuesProviderBrowseActionHandlerCondition
     
 {
     @Override
-    protected boolean evaluate( final SapphirePropertyEditor part )
+    protected boolean evaluate( final PropertyEditorPart part )
     {
         return ( part.getModelElement().service( part.getProperty(), PossibleValuesService.class ) != null );
     }

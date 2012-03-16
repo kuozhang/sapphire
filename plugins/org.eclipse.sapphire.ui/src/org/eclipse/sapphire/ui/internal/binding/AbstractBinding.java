@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
-import org.eclipse.sapphire.ui.SapphirePropertyEditor;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.swt.events.DisposeEvent;
@@ -31,12 +31,12 @@ import org.eclipse.swt.widgets.Control;
 
 public abstract class AbstractBinding
 {
-    private SapphirePropertyEditor editor;
+    private PropertyEditorPart editor;
     private ModelPropertyListener propertyChangeListener;
     private SapphireRenderingContext context;
     private Control control;
     
-    public AbstractBinding( final SapphirePropertyEditor editor,
+    public AbstractBinding( final PropertyEditorPart editor,
                             final SapphireRenderingContext context,
                             final Control control )
     {
@@ -167,7 +167,7 @@ public abstract class AbstractBinding
             final boolean enabled = getModelElement().isPropertyEnabled( getProperty() );
             this.control.setEnabled( enabled );
             
-            final Object relatedControls = this.control.getData( SapphirePropertyEditor.RELATED_CONTROLS );
+            final Object relatedControls = this.control.getData( PropertyEditorPart.RELATED_CONTROLS );
             
             if( relatedControls != null )
             {
@@ -194,7 +194,7 @@ public abstract class AbstractBinding
         getModelElement().removeListener( this.propertyChangeListener, getProperty().getName() );            
     }
     
-    protected void initialize( SapphirePropertyEditor editor,
+    protected void initialize( PropertyEditorPart editor,
                                SapphireRenderingContext context,
                                Control control )
     {
