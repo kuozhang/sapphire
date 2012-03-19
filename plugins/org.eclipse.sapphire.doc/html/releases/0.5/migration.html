@@ -43,11 +43,11 @@ to 0.5 release. Only changes from the previous release are covered.</p>
 
 <ol>
   <li><a href="#Actuator">Actuator</a></li>
-  <li><a href="#DiagramImage">Diagram Image</a></li>
   <li><a href="#ContentOutlineNodeImage">Content Outline Node Image</a></li>
   <li><a href="#GraphitiToGef">Graphiti to GEF Transition</a></li>
   <ol type="A">
     <li><a href="#SapphireDiagramEditor">SapphireDiagramEditor</a></li>
+    <li><a href="#DiagramImage">Diagram Image</a></li>
   </ol>
 </ol>
 
@@ -106,6 +106,89 @@ process it was renamed as actuator.</p>
 <nobr>Search: &nbsp;&nbsp;(?s)&lt;action-link>(.*?)&lt;/action-link></nobr><br/>
 <nobr>Replace: &nbsp;&lt;actuator>\1&lt;/actuator></nobr></p>
 
+
+
+<h2><a name="ContentOutlineNodeImage">Content Outline Node Image</a></h2>
+
+<p>Prior to advent of Sapphire Expression Language, sdef language included the "use-model-element-image" switch
+as a way to indicate to the system that content outline node's image should be the same as the image for the
+associated model element. With advent of EL, the special switch is no longer necessary as an expression can be used
+to capture the same semantics.</p> 
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;use-model-element-image/></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;image>${ Image() }&lt;/image></code></pre>    
+    </td>
+  </tr>
+</table>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;&lt;use-model-element-image[ ]*/></nobr><br/>
+<nobr>Replace: &nbsp;&lt;image>\${ Image() }&lt;/image></nobr></p>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
+<nobr>Search: &nbsp;&nbsp;&lt;use-model-element-image>[ ]*&lt;/use-model-element-image></nobr><br/>
+<nobr>Replace: &nbsp;&lt;image>\${ Image() }&lt;/image></nobr></p>
+
+
+
+<h2><a name="GraphitiToGef">Graphiti to GEF Transition</a></h2>
+
+<p>In this release the dependency on Graphiti has been removed and the Sapphire Diagram UI has been rebased on straight GEF. The changes that will be required to existing diagram editors in previous 0.4 release are detailed below.</p> 
+
+<h2><a name="SapphireDiagramEditor">SapphireDiagramEditor</a></h2>
+
+<p>The use of SapphireDiagramEditor in 0.5 requires the following changes for adopters in previous 0.4.x release.  
+<ol>
+  <li>Package namespace changed from org.eclipse.sapphire.ui.gef.diagram.editor to org.eclipse.sapphire.ui.swt.gef</li>
+  <li>Constructor for SapphireDiagramEditor now requires passing in the parent SapphireEditor.</li>
+  <li>No longer need to create DiagramEditorInput</li>
+</ol>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td> 
+<pre class="source-code"><code>import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditor;
+</code></pre>
+    </td>
+    <td>
+   <pre class="source-code"><code>import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
+</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>this.pageDiagram = new SapphireDiagramEditor( this.model, path );</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>this.pageDiagram = new SapphireDiagramEditor( sapphireEditor, this.architectureModel, path );</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>pageDiagram = new SapphireDiagramEditor( model, path );
+SapphireDiagramEditorInput diagramEditorInput = 
+	SapphireDiagramEditorFactory.createEditorInput( file );
+addPage( 0, pageDiagram, diagramEditorInput );</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>pageDiagram = new SapphireDiagramEditor( sapphireEditor, model, path );
+addPage( 0, pageDiagram, getEditorInput() );</code></pre>
+    </td>
+  </tr>
+</table>
 
 <h2><a name="DiagramImage">Diagram Image</a></h2>
 
@@ -177,89 +260,6 @@ Images are now referenced at the point of use, rather than defined separately an
   </tr>
 </table>
 
-
-<h2><a name="ContentOutlineNodeImage">Content Outline Node Image</a></h2>
-
-<p>Prior to advent of Sapphire Expression Language, sdef language included the "use-model-element-image" switch
-as a way to indicate to the system that content outline node's image should be the same as the image for the
-associated model element. With advent of EL, the special switch is no longer necessary as an expression can be used
-to capture the same semantics.</p> 
-
-<table>
-  <tr>
-    <th>Before</th>
-    <th>After</th>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code>&lt;use-model-element-image/></code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code>&lt;image>${ Image() }&lt;/image></code></pre>    
-    </td>
-  </tr>
-</table>
-
-<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
-<nobr>Search: &nbsp;&nbsp;&lt;use-model-element-image[ ]*/></nobr><br/>
-<nobr>Replace: &nbsp;&lt;image>\${ Image() }&lt;/image></nobr></p>
-
-<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.sdef<br/>
-<nobr>Search: &nbsp;&nbsp;&lt;use-model-element-image>[ ]*&lt;/use-model-element-image></nobr><br/>
-<nobr>Replace: &nbsp;&lt;image>\${ Image() }&lt;/image></nobr></p>
-
-
-
-<h2><a name="GraphitiToGef">Graphiti to GEF Transition</a></h2>
-
-<p>In this release the dependency on Graphiti has been removed and the Sapphire Diagram UI has been rebased on straight GEF (see 
-		<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=344228">bug 344228</a> for more details).  The changes that will be required to existing diagram editors in previous 0.4 release are detailed below.</p> 
-
-<h2><a name="SapphireDiagramEditor">SapphireDiagramEditor</a></h2>
-
-<p>The use of SapphireDiagramEditor in 0.5 requires the following changes for adopters in previous 0.4.x release.  
-<ol>
-  <li>Package namespace changed from swt.graphiti.editor to swt.gef</li>
-  <li>Constructor for SapphireDiagramEditor now requires passing in the parent SapphireEditor.</li>
-  <li>No longer need to create DiagramEditorInput</li>
-</ol>
-
-<table>
-  <tr>
-    <th>Before</th>
-    <th>After</th>
-  </tr>
-  <tr>
-    <td> 
-<pre class="source-code"><code>import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
-</code></pre>
-    </td>
-    <td>
-   <pre class="source-code"><code>import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
-</code></pre>
-    </td>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code>this.pageDiagram = new SapphireDiagramEditor( this.model, path );</code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code>this.pageDiagram = new SapphireDiagramEditor( sapphireEditor, this.architectureModel, path );</code></pre>
-    </td>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code>pageDiagram = new SapphireDiagramEditor( model, path );
-SapphireDiagramEditorInput diagramEditorInput = 
-	SapphireDiagramEditorFactory.createEditorInput( file );
-addPage( 0, pageDiagram, diagramEditorInput );</code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code>pageDiagram = new SapphireDiagramEditor( sapphireEditor, model, path );
-addPage( 0, pageDiagram, getEditorInput() );</code></pre>
-    </td>
-  </tr>
-</table>
 
 <div class="copyright">Copyright (c) 2012 Oracle<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
