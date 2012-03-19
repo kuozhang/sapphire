@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.samples.architecture.IArchitecture;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
-import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditor;
+import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.xml.editor.XmlEditorResourceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;

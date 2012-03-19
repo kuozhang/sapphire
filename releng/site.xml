@@ -9,7 +9,7 @@
    <feature url="features/org.eclipse.sapphire.ui_##version##.jar" id="org.eclipse.sapphire.ui" version="##version##">
       <category name="org.eclipse.sapphire"/>
    </feature>
-   <feature url="features/org.eclipse.sapphire.ui.gef.diagram.editor_##version##.jar" id="org.eclipse.sapphire.ui.gef.diagram.editor" version="##version##">
+   <feature url="features/org.eclipse.sapphire.ui.swt.gef_##version##.jar" id="org.eclipse.sapphire.ui.swt.gef" version="##version##">
       <category name="org.eclipse.sapphire"/>
    </feature>
    <feature url="features/org.eclipse.sapphire.ui.swt.xml.editor_##version##.jar" id="org.eclipse.sapphire.ui.swt.xml.editor" version="##version##">

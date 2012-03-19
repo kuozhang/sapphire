@@ -128,7 +128,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.sapphire.ui.gef.diagram.editor.source"
+         id="org.eclipse.sapphire.ui.swt.gef.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
