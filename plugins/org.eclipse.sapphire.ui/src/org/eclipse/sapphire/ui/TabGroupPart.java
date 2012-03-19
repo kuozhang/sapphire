@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui;
 
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
@@ -88,7 +89,7 @@ public final class TabGroupPart extends SapphirePart
         final boolean scaleVertically = definition().getScaleVertically().getContent();
     
         final TabFolder tabGroup = new TabFolder( context.getComposite(), SWT.TOP );
-        tabGroup.setLayoutData( gdhspan( ( scaleVertically ? gdfill() : gdhfill() ), 2 ) );
+        tabGroup.setLayoutData( gdhindent( gdhspan( ( scaleVertically ? gdfill() : gdhfill() ), 2 ), 9 ) );
         context.adapt( tabGroup );
         
         for( final TabGroupPagePart page : this.pages )
