@@ -95,7 +95,7 @@ public final class TabGroupPart extends SapphirePart
         for( final TabGroupPagePart page : this.pages )
         {
             final Composite tabControl = new Composite( tabGroup, SWT.NONE );
-            tabControl.setLayout( glayout( 2, 0, 0 ) );
+            tabControl.setLayout( glayout( 2, 1, 10, 10, 10 ) );
 
             final TabItem tab = new TabItem( tabGroup, SWT.NONE );
             tab.setText( page.getLabel() );
