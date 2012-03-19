@@ -219,7 +219,7 @@ to capture the same semantics.</p>
 
 <p>The use of SapphireDiagramEditor in 0.5 requires the following changes for adopters in previous 0.4.x release.  
 <ol>
-  <li>Package namespace changed from swt.graphiti.editor to gef.editor.</li>
+  <li>Package namespace changed from swt.graphiti.editor to swt.gef</li>
   <li>Constructor for SapphireDiagramEditor now requires passing in the parent SapphireEditor.</li>
   <li>No longer need to create DiagramEditorInput</li>
 </ol>
@@ -231,11 +231,11 @@ to capture the same semantics.</p>
   </tr>
   <tr>
     <td> 
-<pre class="source-code"><code>import org.eclipse.sapphire.ui.swt.graphiti.editor.SapphireDiagramEditor;
+<pre class="source-code"><code>import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 </code></pre>
     </td>
     <td>
-   <pre class="source-code"><code>import org.eclipse.sapphire.ui.gef.editor.SapphireDiagramEditor;
+   <pre class="source-code"><code>import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 </code></pre>
     </td>
   </tr>
