@@ -28,10 +28,10 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.handles.BendpointHandle;
 import org.eclipse.gef.requests.BendpointRequest;
-import org.eclipse.sapphire.ui.swt.gef.commands.BendpointCommand;
-import org.eclipse.sapphire.ui.swt.gef.commands.CreateBendpointCommand;
-import org.eclipse.sapphire.ui.swt.gef.commands.DeleteBendpointCommand;
-import org.eclipse.sapphire.ui.swt.gef.commands.MoveBendpointCommand;
+import org.eclipse.sapphire.ui.swt.gef.commands.BendPointCommand;
+import org.eclipse.sapphire.ui.swt.gef.commands.CreateBendPointCommand;
+import org.eclipse.sapphire.ui.swt.gef.commands.DeleteBendPointCommand;
+import org.eclipse.sapphire.ui.swt.gef.commands.MoveBendPointCommand;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 
 /**
@@ -46,7 +46,7 @@ public class DiagramConnectionBendpointEditPolicy extends org.eclipse.gef.editpo
 	private Map<Shape, Integer> shapeToLineStyle = new HashMap<Shape, Integer>();
 
 	protected Command getCreateBendpointCommand(BendpointRequest request) {
-		CreateBendpointCommand com = new CreateBendpointCommand();
+		CreateBendPointCommand com = new CreateBendPointCommand();
 		Point p = request.getLocation();
 		Connection conn = getConnection();
 
@@ -66,7 +66,7 @@ public class DiagramConnectionBendpointEditPolicy extends org.eclipse.gef.editpo
 	}
 
 	protected Command getMoveBendpointCommand(BendpointRequest request) {
-		MoveBendpointCommand com = new MoveBendpointCommand();
+		MoveBendPointCommand com = new MoveBendPointCommand();
 		Point p = request.getLocation();
 		Connection conn = getConnection();
 
@@ -87,7 +87,7 @@ public class DiagramConnectionBendpointEditPolicy extends org.eclipse.gef.editpo
 	}
 
 	protected Command getDeleteBendpointCommand(BendpointRequest request) {
-		BendpointCommand com = new DeleteBendpointCommand();
+		BendPointCommand com = new DeleteBendPointCommand();
 		Point p = request.getLocation();
 		com.setLocation(p);
 		com.setDiagramConnectionModel((DiagramConnectionModel) request.getSource().getModel());

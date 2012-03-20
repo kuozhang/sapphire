@@ -28,8 +28,12 @@
     <li><a href="#PropagatedKeyBindings">Propagated Key Bindings</a></li>
     <li><a href="#ActionToolTips">Action Tool Tips</a></li>
   </ol>
-  <li><a href="#DiagramLayout">Diagram Layout Storage</a></li>
-  <li><a href="#DiagramContextHelp">Diagram Context Help</a></li>
+  <li><a href="#DiagramEditor">DiagramEditor</a></li>
+  <ol type="A">
+    <li><a href="#DiagramLayout">Diagram Layout Storage</a></li>
+    <li><a href="#DiagramContextHelp">Diagram Context Help</a></li>
+    <li><a href="#DeleteAllBendPoints">Diagram Delete All Bend Points Action</a></li>    
+  </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
     <li><a href="#ImageFunction">Image Function</a></li>
@@ -124,7 +128,7 @@ set the action tool tip explicitly.</p>
 &lt;/action></font></code></pre>
 
 
-<h2><a name="DiagramLayout">More Flexible Diagram Layout Storage</a></h2>
+<h2><a name="DiagramEditor"><a name="DiagramLayout">More Flexible Diagram Layout Storage</a></a></h2>
 
 <p>Diagram Editor can now open workspace files, non-workspace files and non-local files. Developer can
 choose to store diagram's layout information in a separate file in the same folder as the file being
@@ -145,6 +149,10 @@ will display the context help associated with the node/connection model element 
 annotation. If nothing is selected in the diagram editor, hitting "F1" will display the context help associated
 with the root model element for the diagram editor.</p>
 
+<h2><a name="DiagramDeleteAllBendPoints">Diagram Delete All Bend Points</a></h2>
+
+<p>A new action "Delete All Bend Points" is available on connections with bend points. It can be accessed using
+context menu on connections.</p>
 
 <h2><a name="ExpressionLanguage"><a name="ImageFunction">Image Function</a></a></h2>
 

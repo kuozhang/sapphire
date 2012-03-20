@@ -22,12 +22,6 @@
         <key-binding>F2</key-binding>
         <description>Direct edit a node or connection</description>
     </action>
-    <action>
-        <id>Sapphire.Diagram.DeleteAllBendpoints</id>
-        <context>Sapphire.Diagram.Connection</context>
-        <label>delete all bendpoints</label>
-        <description>delete all bendpoints on a connection</description>
-    </action>
     <action-handler>
         <action>Sapphire.Diagram.Layout</action>
         <impl>org.eclipse.sapphire.ui.swt.gef.actions.HorizontalGraphLayoutActionHandler</impl>
@@ -46,10 +40,4 @@
         <context>Sapphire.Diagram.Node</context>
         <context>Sapphire.Diagram.Connection</context>
     </action-handler>
-    <action-handler>
-        <action>Sapphire.Diagram.DeleteAllBendpoints</action>
-        <impl>org.eclipse.sapphire.ui.swt.gef.actions.DeleteAllBendpointsActionHandler</impl>
-        <context>Sapphire.Diagram.Connection</context>
-    </action-handler>
-        
 </extension>

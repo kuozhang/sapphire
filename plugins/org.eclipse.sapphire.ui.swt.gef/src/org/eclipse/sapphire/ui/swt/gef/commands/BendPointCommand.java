@@ -20,7 +20,7 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class BendpointCommand extends Command {
+public class BendPointCommand extends Command {
 
 	protected int index;
 	protected Point location;

@@ -15,10 +15,10 @@ package org.eclipse.sapphire.ui.swt.gef.commands;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class DeleteBendpointCommand extends BendpointCommand {
+public class MoveBendPointCommand extends BendPointCommand {
 
 	public void execute() {
-		getDiagramConnectionModel().getModelPart().removeBendpoint(getIndex());
+		getDiagramConnectionModel().getModelPart().updateBendpoint(getIndex(), getLocation().x, getLocation().y);
 		super.execute();
 	}
 

@@ -9,7 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.gef.actions;
+package org.eclipse.sapphire.ui.diagram.actions;
 
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
@@ -19,7 +19,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class DeleteAllBendpointsActionHandler extends SapphireDiagramActionHandler 
+public class DeleteAllBendPointsActionHandler extends SapphireDiagramActionHandler 
 {
 
 	@Override
