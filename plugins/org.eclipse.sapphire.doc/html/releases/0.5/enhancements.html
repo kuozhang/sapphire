@@ -26,6 +26,7 @@
   <ol type="A">
     <li><a href="#MoreFlexibleActuatorPresentation">More Flexible Actuator Presentation</a></li>
     <li><a href="#HierarchicalKeyBindings">Hierarchical Key Bindings</a></li>
+    <li><a href="#ActionToolTips">Action Tool Tips</a></li>
   </ol>
   <li><a href="#DiagramLayout">Diagram Layout Storage</a></li>
   <li><a href="#DiagramContextHelp">Diagram Context Help</a></li>
@@ -80,6 +81,28 @@ along with ability to control horizontal alignment.</p>
 <p>When processing keyboard events, the system now takes into account actions defined in part's hierarchy rather
 than just the local ones. For instance, an action defined at editor page level will be accessible via its
 key binding even if the focus is on a property editor.</p> 
+
+
+<h2><a name="ActionToolTips">Action Tool Tips</a></h2>
+
+<p>By default, action label is used when a tool tip is necessary. If that's not appropriate, developer can now
+set the action tool tip explicitly.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;action>
+    &lt;id>Sapphire.Gallery.Open.Homepage&lt;/id>
+    &lt;label>Sapphire Homepage&lt;/label></font>
+    &lt;tooltip>Open Sapphire Homepage (Ctrl+Alt+Shift+S)&lt;/tooltip>
+    <font color="#888888">&lt;image>Web.png&lt;/image>
+    &lt;description>Open Sapphire project homepage.&lt;/description>
+    &lt;key-binding>CONTROL+ALT+SHIFT+s&lt;/key-binding>
+    &lt;context>Sapphire.EditorPage&lt;/context>
+    &lt;hint>
+        &lt;name>style&lt;/name>
+        &lt;value>image+text&lt;/value>
+    &lt;/hint>
+&lt;/action></font></code></pre>
 
 
 <h2><a name="DiagramLayout">More Flexible Diagram Layout Storage</a></h2>

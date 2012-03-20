@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle and Other Contributors
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,8 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Greg Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar
+ *    Gregory Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar
+ *    Gregory Amerson - [374622] Add ability to specify action tooltips
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.renderer;
@@ -27,6 +28,7 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart.CheckedStateChangedEvent;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart.EnablementChangedEvent;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart.LabelChangedEvent;
+import org.eclipse.sapphire.ui.SapphireActionSystemPart.ToolTipChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ISapphireActionDef;
 import org.eclipse.sapphire.ui.def.PartDef;
@@ -45,6 +47,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public final class SapphireToolBarActionPresentation extends SapphireHotSpotsActionPresentation
@@ -152,6 +155,12 @@ public final class SapphireToolBarActionPresentation extends SapphireHotSpotsAct
             {
                 public void run()
                 {
+                    if( Display.getCurrent() == null )
+                    {
+                        Display.getDefault().asyncExec( this );
+                        return;
+                    }
+                    
                     if( ! toolItem.isDisposed() )
                     {
                         if( ISapphireActionDef.HINT_VALUE_STYLE_IMAGE_TEXT.equals( hint ) ||
@@ -159,8 +168,23 @@ public final class SapphireToolBarActionPresentation extends SapphireHotSpotsAct
                         {
                             toolItem.setText( LabelTransformer.transform( action.getLabel(), CapitalizationType.TITLE_STYLE, true ) );
                         }
-                        
-                        toolItem.setToolTipText( LabelTransformer.transform( action.getLabel(), CapitalizationType.TITLE_STYLE, false ) );
+                    }
+                }
+            };
+            
+            final Runnable updateActionToolTipOp = new Runnable()
+            {
+                public void run()
+                {
+                    if( Display.getCurrent() == null )
+                    {
+                        Display.getDefault().asyncExec( this );
+                        return;
+                    }
+                    
+                    if( ! toolItem.isDisposed() )
+                    {
+                        toolItem.setToolTipText( LabelTransformer.transform( action.getToolTip(), CapitalizationType.TITLE_STYLE, false ) );
                     }
                 }
             };
@@ -210,7 +234,11 @@ public final class SapphireToolBarActionPresentation extends SapphireHotSpotsAct
                         {
                             updateActionLabelOp.run();
                         }
-                        if( event instanceof EnablementChangedEvent )
+                        else if( event instanceof ToolTipChangedEvent )
+                        {
+                            updateActionToolTipOp.run();
+                        }
+                        else if( event instanceof EnablementChangedEvent )
                         {
                             updateActionEnablementStateOp.run();
                         }
@@ -223,6 +251,7 @@ public final class SapphireToolBarActionPresentation extends SapphireHotSpotsAct
             );
             
             updateActionLabelOp.run();
+            updateActionToolTipOp.run();
             updateActionEnablementStateOp.run();
             updateActionCheckedStateOp.run();
         }

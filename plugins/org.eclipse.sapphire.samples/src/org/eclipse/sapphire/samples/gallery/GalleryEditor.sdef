@@ -10,8 +10,9 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation
- *    Greg Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar
- *    Greg Amerson - [343972] Support image in editor page header
+ *    Gregory Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar
+ *    Gregory Amerson - [343972] Support image in editor page header
+ *    Gregory Amerson - [374622] Add ability to specify action tooltips
  ******************************************************************************
 -->
 
@@ -2185,14 +2186,15 @@
         <action>
             <id>Sapphire.Gallery.Open.Homepage</id>
             <label>Sapphire Homepage</label>
+            <tooltip>Open Sapphire Homepage (Ctrl+Alt+Shift+S)</tooltip>
             <image>Web.png</image>
             <description>Open Sapphire project homepage.</description>
+            <key-binding>CONTROL+ALT+SHIFT+s</key-binding>
             <context>Sapphire.EditorPage</context>
             <hint>
                 <name>style</name>
                 <value>image+text</value>
             </hint>
-            <key-binding>SHIFT+CONTROL+ALT+s</key-binding>
         </action>
         <action-handler>
             <action>Sapphire.Gallery.Open.Homepage</action>

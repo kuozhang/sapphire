@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [374622] Add ability to specify action tooltips
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.def;
@@ -16,6 +17,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -30,12 +32,10 @@ import org.eclipse.sapphire.ui.def.internal.LocationHintsBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-public interface ISapphireActionSystemPartDef
-
-    extends ISapphireConditionHostDef, ISapphireActionContextsHostDef
-    
+public interface ISapphireActionSystemPartDef extends ISapphireConditionHostDef, ISapphireActionContextsHostDef
 {
     ModelElementType TYPE = new ModelElementType( ISapphireActionSystemPartDef.class );
     
@@ -62,6 +62,20 @@ public interface ISapphireActionSystemPartDef
     void setLabel( String value );
     void setLabel( Function value );
     
+    // *** ToolTip ***
+    
+    @Type( base = Function.class )
+    @Localizable
+    @Label( standard = "tool tip" )
+    @DefaultValue( text = "${ Label }" )
+    @XmlBinding( path = "tooltip" )
+    
+    ValueProperty PROP_TOOL_TIP = new ValueProperty( TYPE, "ToolTip" );
+
+    Value<Function> getToolTip();
+    void setToolTip( String value );
+    void setToolTip( Function value );
+
     // *** Images ***
     
     @Type( base = ImageReference.class )

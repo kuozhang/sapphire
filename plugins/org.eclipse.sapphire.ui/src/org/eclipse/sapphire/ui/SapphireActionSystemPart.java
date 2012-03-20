@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,8 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Greg Amerson - [342777] ImageProvider needs to support a listener mechanism
+ *    Gregory Amerson - [342777] ImageProvider needs to support a listener mechanism
+ *    Gregory Amerson - [374622] Add ability to specify action tooltips
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -36,6 +37,7 @@ import org.eclipse.sapphire.ui.def.ImageReference;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public abstract class SapphireActionSystemPart
@@ -43,6 +45,7 @@ public abstract class SapphireActionSystemPart
     private FunctionContext functionContext;
     private String id;
     private FunctionResult labelFunctionResult;
+    private FunctionResult toolTipFunctionResult;
     private final List<ImageData> images = new CopyOnWriteArrayList<ImageData>();
     private final List<SapphireActionLocationHint> locationHints = new CopyOnWriteArrayList<SapphireActionLocationHint>();
     private final List<SapphireActionLocationHint> locationHintsReadOnly = Collections.unmodifiableList( this.locationHints );
@@ -74,6 +77,22 @@ public abstract class SapphireActionSystemPart
                 }
             );
             
+            final Function toolTipFunction = FailSafeFunction.create( def.getToolTip().getContent(), Literal.create( String.class ) );
+
+            this.toolTipFunctionResult = toolTipFunction.evaluate( this.functionContext );
+
+            this.toolTipFunctionResult.attach
+            ( 
+                new Listener()
+                {
+                    @Override
+                    public void handle( final Event event )
+                    {
+                        broadcast( new ToolTipChangedEvent() );
+                    }
+                }
+            );
+
             for( ImageReference image : def.getImages() )
             {
                 final Function imageFunction = FailSafeFunction.create( image.getImage().getContent(), Literal.create( ImageData.class ) );
@@ -155,6 +174,24 @@ public abstract class SapphireActionSystemPart
         broadcast( new LabelChangedEvent() );
     }
     
+    public final String getToolTip()
+    {
+        synchronized( this )
+        {
+            return( this.toolTipFunctionResult == null ? null : (String) this.toolTipFunctionResult.value() );
+        }
+    }
+
+    public final void setToolTip( final String tooltip )
+    {
+        synchronized( this )
+        {
+            this.toolTipFunctionResult = Literal.create( tooltip ).evaluate( this.functionContext );
+        }
+
+        broadcast( new ToolTipChangedEvent() );
+    }
+
     public final ImageData getImage( final int size )
     {
         for( ImageData image : this.images )
@@ -298,6 +335,7 @@ public abstract class SapphireActionSystemPart
     
     public static final class IdChangedEvent extends Event {}
     public static final class LabelChangedEvent extends Event {}
+    public static final class ToolTipChangedEvent extends Event {}
     public static final class ImagesChangedEvent extends Event {}
     public static final class LocationHintsChangedEvent extends Event {}
     public static final class EnablementChangedEvent extends Event {}
