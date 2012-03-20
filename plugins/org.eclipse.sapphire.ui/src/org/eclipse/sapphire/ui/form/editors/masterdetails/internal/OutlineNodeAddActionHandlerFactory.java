@@ -36,8 +36,8 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFactory;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFactoryDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentOutline;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPagePart;
@@ -56,7 +56,7 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
     
     @Override
     public void init( final SapphireAction action,
-                      final ISapphireActionHandlerFactoryDef def )
+                      final ActionHandlerFactoryDef def )
     {
         super.init( action, def );
         
@@ -147,7 +147,7 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
     
         @Override
         public void init( final SapphireAction action,
-                          final ISapphireActionHandlerDef def )
+                          final ActionHandlerDef def )
         {
             super.init( action, def );
             
@@ -283,7 +283,7 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
         
         @Override
         public void init( SapphireAction action,
-                          ISapphireActionHandlerDef def )
+                          ActionHandlerDef def )
         {
             super.init( action, def );
             

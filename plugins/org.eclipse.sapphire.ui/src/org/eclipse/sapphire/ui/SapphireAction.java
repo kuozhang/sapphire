@@ -31,8 +31,9 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
-import org.eclipse.sapphire.ui.def.ISapphireActionDef;
+import org.eclipse.sapphire.ui.def.ActionDef;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
+import org.eclipse.sapphire.ui.def.KeyBindingBehavior;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
 import org.eclipse.sapphire.ui.def.SapphireKeySequence;
@@ -49,6 +50,7 @@ public final class SapphireAction extends SapphireActionSystemPart
     private SapphireActionType type;
     private String group;
     private SapphireKeySequence keyBinding;
+    private KeyBindingBehavior keyBindingBehavior;
     private final List<SapphireActionHandler> handlers = new CopyOnWriteArrayList<SapphireActionHandler>();
     private final Map<SapphireActionHandlerFactory,List<SapphireActionHandler>> handlerFactories = new LinkedHashMap<SapphireActionHandlerFactory,List<SapphireActionHandler>>();
     private final List<SapphireActionHandlerFilter> filters = new CopyOnWriteArrayList<SapphireActionHandlerFilter>();
@@ -56,7 +58,7 @@ public final class SapphireAction extends SapphireActionSystemPart
     private Map<String,Object> hints;
     
     public void init( final SapphireActionGroup parent,
-                      final ISapphireActionDef def )
+                      final ActionDef def )
     {
         this.parent = parent;
         
@@ -125,6 +127,7 @@ public final class SapphireAction extends SapphireActionSystemPart
             this.type = def.getType().getContent();
             this.group = def.getGroup().getContent();
             this.keyBinding = def.getKeyBinding().getContent();
+            this.keyBindingBehavior = def.getKeyBindingBehavior().getContent();
         }
         
         setEnabled( false );
@@ -299,6 +302,24 @@ public final class SapphireAction extends SapphireActionSystemPart
         }
         
         broadcast( new KeyBindingChangedEvent() );
+    }
+    
+    public KeyBindingBehavior getKeyBindingBehavior()
+    {
+        synchronized( this )
+        {
+            return this.keyBindingBehavior;
+        }
+    }
+    
+    public void setKeyBindingBehavior( final KeyBindingBehavior keyBindingBehavior )
+    {
+        synchronized( this )
+        {
+            this.keyBindingBehavior = keyBindingBehavior;
+        }
+        
+        broadcast( new KeyBindingBehaviorChangedEvent() );
     }
     
     public void addHandler( final SapphireActionHandler handler )
@@ -552,6 +573,7 @@ public final class SapphireAction extends SapphireActionSystemPart
     public static final class TypeChangedEvent extends Event {}
     public static final class GroupChangedEvent extends Event {}
     public static final class KeyBindingChangedEvent extends Event {}
+    public static final class KeyBindingBehaviorChangedEvent extends Event {}
     public static final class HandlersChangedEvent extends Event {}
     public static final class FiltersChangedEvent extends Event {}
     

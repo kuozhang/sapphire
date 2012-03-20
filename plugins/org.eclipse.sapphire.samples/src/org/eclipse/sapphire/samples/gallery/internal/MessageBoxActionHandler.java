@@ -15,7 +15,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -30,7 +30,7 @@ public final class MessageBoxActionHandler
     
     @Override
     public void init( final SapphireAction action,
-                      final ISapphireActionHandlerDef def )
+                      final ActionHandlerDef def )
     {
         super.init( action, def );
         

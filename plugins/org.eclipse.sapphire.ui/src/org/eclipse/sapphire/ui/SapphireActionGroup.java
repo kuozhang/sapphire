@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.ui.def.ISapphireActionContext;
-import org.eclipse.sapphire.ui.def.ISapphireActionContextsHostDef;
-import org.eclipse.sapphire.ui.def.ISapphireActionDef;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFactoryDef;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFilterDef;
+import org.eclipse.sapphire.ui.def.ActionContextRef;
+import org.eclipse.sapphire.ui.def.ActionContextsHostDef;
+import org.eclipse.sapphire.ui.def.ActionDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerFilterDef;
 import org.eclipse.sapphire.ui.def.ISapphireConditionHostDef;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -172,9 +172,9 @@ public final class SapphireActionGroup
         }
     }
     
-    private void createActions( final List<ISapphireActionDef> defs )
+    private void createActions( final List<ActionDef> defs )
     {
-        for( ISapphireActionDef def : defs )
+        for( ActionDef def : defs )
         {
             if( isForContext( def ) && checkCondition( def ) )
             {
@@ -185,9 +185,9 @@ public final class SapphireActionGroup
         }
     }
     
-    private void createActionHandlers( final List<ISapphireActionHandlerDef> defs )
+    private void createActionHandlers( final List<ActionHandlerDef> defs )
     {
-        for( ISapphireActionHandlerDef def : defs )
+        for( ActionHandlerDef def : defs )
         {
             final SapphireAction action = getAction( def.getAction().getContent() );
             
@@ -217,9 +217,9 @@ public final class SapphireActionGroup
         }
     }
 
-    private void createActionHandlersFromFactories( final List<ISapphireActionHandlerFactoryDef> defs )
+    private void createActionHandlersFromFactories( final List<ActionHandlerFactoryDef> defs )
     {
-        for( ISapphireActionHandlerFactoryDef def : defs )
+        for( ActionHandlerFactoryDef def : defs )
         {
             final SapphireAction action = getAction( def.getAction().getContent() );
             
@@ -249,9 +249,9 @@ public final class SapphireActionGroup
         }
     }
     
-    private void createActionHandlerFilters( final List<ISapphireActionHandlerFilterDef> defs )
+    private void createActionHandlerFilters( final List<ActionHandlerFilterDef> defs )
     {
-        for( ISapphireActionHandlerFilterDef def : defs )
+        for( ActionHandlerFilterDef def : defs )
         {
             if( isForContext( def ) )
             {
@@ -310,11 +310,11 @@ public final class SapphireActionGroup
         }
     }
 
-    private boolean isForContext( final ISapphireActionContextsHostDef def )
+    private boolean isForContext( final ActionContextsHostDef def )
     {
         if( ! def.getContexts().isEmpty() )
         {
-            for( ISapphireActionContext ctxt : def.getContexts() )
+            for( ActionContextRef ctxt : def.getContexts() )
             {
                 if( this.context.equalsIgnoreCase( ctxt.getContext().getContent() ) )
                 {

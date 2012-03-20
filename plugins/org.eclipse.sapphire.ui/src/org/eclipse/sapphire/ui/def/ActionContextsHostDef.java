@@ -23,21 +23,18 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface ISapphireActionContextsHostDef
-
-    extends IModelElement
-    
+public interface ActionContextsHostDef extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireActionContextsHostDef.class );
+    ModelElementType TYPE = new ModelElementType( ActionContextsHostDef.class );
     
     // *** Contexts ***
     
-    @Type( base = ISapphireActionContext.class )
+    @Type( base = ActionContextRef.class )
     @Label( standard = "contexts" )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "context", type = ISapphireActionContext.class ) )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "context", type = ActionContextRef.class ) )
     
     ListProperty PROP_CONTEXTS = new ListProperty( TYPE, "Contexts" );
     
-    ModelElementList<ISapphireActionContext> getContexts();
+    ModelElementList<ActionContextRef> getContexts();
     
 }

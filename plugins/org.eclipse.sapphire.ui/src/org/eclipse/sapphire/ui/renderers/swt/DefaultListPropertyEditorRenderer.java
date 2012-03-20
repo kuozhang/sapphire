@@ -91,7 +91,7 @@ import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.ReadOnlyComboBoxCellEditor;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
@@ -1670,7 +1670,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         
         @Override
         public void init( final SapphireAction action,
-                          final ISapphireActionHandlerDef def )
+                          final ActionHandlerDef def )
         {
             super.init( action, def );
             

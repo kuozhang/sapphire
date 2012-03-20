@@ -26,12 +26,9 @@ import org.eclipse.sapphire.modeling.annotations.Required;
 
 @Label( standard = "action location hint" )
 
-public interface ISapphireActionLocationHint
-
-    extends IModelElement
-    
+public interface ActionLocationHint extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireActionLocationHint.class );
+    ModelElementType TYPE = new ModelElementType( ActionLocationHint.class );
     
     // *** ReferenceEntityId ***
     

@@ -17,7 +17,7 @@ import java.util.SortedSet;
 import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.PossibleValuesService;
-import org.eclipse.sapphire.ui.def.ISapphireActionDef;
+import org.eclipse.sapphire.ui.def.ActionDef;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
 import org.eclipse.sapphire.ui.def.PartDef;
@@ -56,11 +56,11 @@ public final class SapphireHintValuePossibleValuesService
                     values.add( ISapphireWithDirectiveDef.HINT_VALUE_STYLE_RADIO_BUTTONS );
                     values.add( ISapphireWithDirectiveDef.HINT_VALUE_STYLE_DROP_DOWN_LIST );
                 }
-                else if( partdef instanceof ISapphireActionDef )
+                else if( partdef instanceof ActionDef )
                 {
-                    values.add( ISapphireActionDef.HINT_VALUE_STYLE_IMAGE );
-                    values.add( ISapphireActionDef.HINT_VALUE_STYLE_IMAGE_TEXT );
-                    values.add( ISapphireActionDef.HINT_VALUE_STYLE_TEXT );
+                    values.add( ActionDef.HINT_VALUE_STYLE_IMAGE );
+                    values.add( ActionDef.HINT_VALUE_STYLE_IMAGE_TEXT );
+                    values.add( ActionDef.HINT_VALUE_STYLE_TEXT );
                 }
             }
             else if( hint.equals( PropertyEditorDef.HINT_SHOW_HEADER ) || 

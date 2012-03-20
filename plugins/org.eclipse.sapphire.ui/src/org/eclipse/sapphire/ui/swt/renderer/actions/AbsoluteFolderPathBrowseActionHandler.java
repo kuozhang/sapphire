@@ -22,7 +22,7 @@ import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.swt.widgets.DirectoryDialog;
 
 /**
@@ -35,7 +35,7 @@ public class AbsoluteFolderPathBrowseActionHandler extends SapphireBrowseActionH
     
     @Override
     public void init( final SapphireAction action,
-                      final ISapphireActionHandlerDef def )
+                      final ActionHandlerDef def )
     {
         super.init( action, def );
 

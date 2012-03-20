@@ -29,12 +29,9 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 @Label( standard = "action context" )
 @GenerateImpl
 
-public interface ISapphireActionContext
-
-    extends IModelElement
-    
+public interface ActionContextRef extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireActionContext.class );
+    ModelElementType TYPE = new ModelElementType( ActionContextRef.class );
     
     // *** Context ***
     

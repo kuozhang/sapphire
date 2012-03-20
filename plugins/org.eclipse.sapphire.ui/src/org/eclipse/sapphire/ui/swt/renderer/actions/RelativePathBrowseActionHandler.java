@@ -52,7 +52,7 @@ import org.eclipse.sapphire.services.RelativePathService;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -84,7 +84,7 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
     
     @Override
     public void init( final SapphireAction action,
-                      final ISapphireActionHandlerDef def )
+                      final ActionHandlerDef def )
     {
         super.init( action, def );
 

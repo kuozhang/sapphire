@@ -124,43 +124,43 @@ public interface PartDef extends IModelElement
     
     // *** Actions ***
     
-    @Type( base = ISapphireActionDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action", type = ISapphireActionDef.class ) )
+    @Type( base = ActionDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action", type = ActionDef.class ) )
     @Label( standard = "action" )
     
     ListProperty PROP_ACTIONS = new ListProperty( TYPE, "Actions" );
     
-    ModelElementList<ISapphireActionDef> getActions();
+    ModelElementList<ActionDef> getActions();
     
     // *** ActionHandlers ***
     
-    @Type( base = ISapphireActionHandlerDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action-handler", type = ISapphireActionHandlerDef.class ) )
+    @Type( base = ActionHandlerDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action-handler", type = ActionHandlerDef.class ) )
     @Label( standard = "action handlers" )
     
     ListProperty PROP_ACTION_HANDLERS = new ListProperty( TYPE, "ActionHandlers" );
     
-    ModelElementList<ISapphireActionHandlerDef> getActionHandlers();
+    ModelElementList<ActionHandlerDef> getActionHandlers();
     
     // *** ActionHandlerFactories ***
     
-    @Type( base = ISapphireActionHandlerFactoryDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action-handler-factory", type = ISapphireActionHandlerFactoryDef.class ) )
+    @Type( base = ActionHandlerFactoryDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action-handler-factory", type = ActionHandlerFactoryDef.class ) )
     @Label( standard = "action handler factories" )
     
     ListProperty PROP_ACTION_HANDLER_FACTORIES = new ListProperty( TYPE, "ActionHandlerFactories" );
     
-    ModelElementList<ISapphireActionHandlerFactoryDef> getActionHandlerFactories();
+    ModelElementList<ActionHandlerFactoryDef> getActionHandlerFactories();
     
     // *** ActionHandlerFilters ***
     
-    @Type( base = ISapphireActionHandlerFilterDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action-handler-filter", type = ISapphireActionHandlerFilterDef.class ) )
+    @Type( base = ActionHandlerFilterDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action-handler-filter", type = ActionHandlerFilterDef.class ) )
     @Label( standard = "action handler filters" )
     
     ListProperty PROP_ACTION_HANDLER_FILTERS = new ListProperty( TYPE, "ActionHandlerFilters" );
     
-    ModelElementList<ISapphireActionHandlerFilterDef> getActionHandlerFilters();
+    ModelElementList<ActionHandlerFilterDef> getActionHandlerFilters();
     
     // *** Services ***
     

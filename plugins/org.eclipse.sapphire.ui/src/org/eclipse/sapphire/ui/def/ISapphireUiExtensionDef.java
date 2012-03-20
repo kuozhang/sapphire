@@ -40,35 +40,35 @@ public interface ISapphireUiExtensionDef extends IModelElement
     
     // *** Actions ***
     
-    @Type( base = ISapphireActionDef.class )
+    @Type( base = ActionDef.class )
     @Label( standard = "action" )
     @Documentation( content = "Actions that have been contributed via the extension point." )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action", type = ISapphireActionDef.class ) )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action", type = ActionDef.class ) )
     
     ListProperty PROP_ACTIONS = new ListProperty( TYPE, "Actions" );
     
-    ModelElementList<ISapphireActionDef> getActions();
+    ModelElementList<ActionDef> getActions();
     
     // *** ActionHandlers ***
     
-    @Type( base = ISapphireActionHandlerDef.class )
+    @Type( base = ActionHandlerDef.class )
     @Label( standard = "action handlers" )
     @Documentation( content = "Action handlers that have been contributed via the extension point." )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action-handler", type = ISapphireActionHandlerDef.class ) )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action-handler", type = ActionHandlerDef.class ) )
     
     ListProperty PROP_ACTION_HANDLERS = new ListProperty( TYPE, "ActionHandlers" );
     
-    ModelElementList<ISapphireActionHandlerDef> getActionHandlers();
+    ModelElementList<ActionHandlerDef> getActionHandlers();
     
     // *** ActionHandlerFactories ***
     
-    @Type( base = ISapphireActionHandlerFactoryDef.class )
+    @Type( base = ActionHandlerFactoryDef.class )
     @Label( standard = "action handler factories" )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action-handler-factory", type = ISapphireActionHandlerFactoryDef.class ) )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "action-handler-factory", type = ActionHandlerFactoryDef.class ) )
     
     ListProperty PROP_ACTION_HANDLER_FACTORIES = new ListProperty( TYPE, "ActionHandlerFactories" );
     
-    ModelElementList<ISapphireActionHandlerFactoryDef> getActionHandlerFactories();
+    ModelElementList<ActionHandlerFactoryDef> getActionHandlerFactories();
     
     // *** PresentationStyles ***
 

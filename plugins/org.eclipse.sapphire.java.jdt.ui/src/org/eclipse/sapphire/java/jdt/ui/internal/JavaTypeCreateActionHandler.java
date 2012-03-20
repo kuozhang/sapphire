@@ -70,7 +70,7 @@ import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 
@@ -90,7 +90,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
     
     @Override
     public void init( final SapphireAction action,
-                      final ISapphireActionHandlerDef def )
+                      final ActionHandlerDef def )
     {
         super.init( action, def );
 

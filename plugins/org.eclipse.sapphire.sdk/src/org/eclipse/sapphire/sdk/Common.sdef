@@ -44,7 +44,20 @@
                         <property-editor>Label</property-editor>
                         <property-editor>ToolTip</property-editor>
                         <property-editor>KeyBinding</property-editor>
-                        <property-editor>Type</property-editor>
+                        <property-editor>
+                            <property>KeyBindingBehavior</property>
+                            <hint>
+                                <name>prefer.combo</name>
+                                <value>true</value>
+                            </hint>
+                        </property-editor>
+                        <property-editor>
+                            <property>Type</property>
+                            <hint>
+                                <name>prefer.combo</name>
+                                <value>true</value>
+                            </hint>
+                        </property-editor>
                         <property-editor>Images</property-editor>
                         <property-editor>
                             <property>Description</property>

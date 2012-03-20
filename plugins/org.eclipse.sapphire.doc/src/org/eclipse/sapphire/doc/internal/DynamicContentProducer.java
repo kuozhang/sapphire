@@ -39,10 +39,10 @@ import org.eclipse.sapphire.sdk.extensibility.SapphireExtensionDef;
 import org.eclipse.sapphire.sdk.extensibility.ServiceDef;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.ui.IExportModelDocumentationOp;
-import org.eclipse.sapphire.ui.def.ISapphireActionDef;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFactoryDef;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFilterDef;
+import org.eclipse.sapphire.ui.def.ActionDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerFilterDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
@@ -134,16 +134,16 @@ public class DynamicContentProducer implements IHelpContentProducer
             {
                 content = loadResource( "html/actions/index.html" );
 
-                final String docAction = exportModelDocumentation( ISapphireActionDef.TYPE );
+                final String docAction = exportModelDocumentation( ActionDef.TYPE );
                 content = content.replace( "##action-details##", docAction );
 
-                final String docActionHandler = exportModelDocumentation( ISapphireActionHandlerDef.TYPE );
+                final String docActionHandler = exportModelDocumentation( ActionHandlerDef.TYPE );
                 content = content.replace( "##action-handler-details##", docActionHandler );
 
-                final String docActionHandlerFactory = exportModelDocumentation( ISapphireActionHandlerFactoryDef.TYPE );
+                final String docActionHandlerFactory = exportModelDocumentation( ActionHandlerFactoryDef.TYPE );
                 content = content.replace( "##action-handler-factory-details##", docActionHandlerFactory );
 
-                final String docActionHandlerFilter = exportModelDocumentation( ISapphireActionHandlerFilterDef.TYPE );
+                final String docActionHandlerFilter = exportModelDocumentation( ActionHandlerFilterDef.TYPE );
                 content = content.replace( "##action-handler-filter-details##", docActionHandlerFilter );
             }
         }

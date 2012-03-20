@@ -23,9 +23,9 @@ import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.UrlResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
-import org.eclipse.sapphire.ui.def.ISapphireActionDef;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFactoryDef;
+import org.eclipse.sapphire.ui.def.ActionDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiExtensionDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
@@ -36,9 +36,9 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 public final class SapphireExtensionSystem
 {
     private static List<ISapphireUiExtensionDef> extensions;
-    private static List<ISapphireActionDef> actions;
-    private static List<ISapphireActionHandlerDef> actionHandlers;
-    private static List<ISapphireActionHandlerFactoryDef> actionHandlerFactories;
+    private static List<ActionDef> actions;
+    private static List<ActionHandlerDef> actionHandlers;
+    private static List<ActionHandlerFactoryDef> actionHandlerFactories;
 
     public static synchronized List<ISapphireUiExtensionDef> getExtensions()
     {
@@ -103,15 +103,15 @@ public final class SapphireExtensionSystem
         return extensions;
     }
 
-    public static synchronized List<ISapphireActionDef> getActions()
+    public static synchronized List<ActionDef> getActions()
     {
         if( actions == null )
         {
-            final List<ISapphireActionDef> list = new ArrayList<ISapphireActionDef>();
+            final List<ActionDef> list = new ArrayList<ActionDef>();
 
             for( ISapphireUiExtensionDef extension : getExtensions() )
             {
-                for( ISapphireActionDef def : extension.getActions() )
+                for( ActionDef def : extension.getActions() )
                 {
                     // TODO: Validate and log
                     list.add( def );
@@ -124,15 +124,15 @@ public final class SapphireExtensionSystem
         return actions;
     }
 
-    public static synchronized List<ISapphireActionHandlerDef> getActionHandlers()
+    public static synchronized List<ActionHandlerDef> getActionHandlers()
     {
         if( actionHandlers == null )
         {
-            final List<ISapphireActionHandlerDef> list = new ArrayList<ISapphireActionHandlerDef>();
+            final List<ActionHandlerDef> list = new ArrayList<ActionHandlerDef>();
 
             for( ISapphireUiExtensionDef extension : getExtensions() )
             {
-                for( ISapphireActionHandlerDef def : extension.getActionHandlers() )
+                for( ActionHandlerDef def : extension.getActionHandlers() )
                 {
                     // TODO: Validate and log
                     list.add( def );
@@ -145,15 +145,15 @@ public final class SapphireExtensionSystem
         return actionHandlers;
     }
 
-    public static synchronized List<ISapphireActionHandlerFactoryDef> getActionHandlerFactories()
+    public static synchronized List<ActionHandlerFactoryDef> getActionHandlerFactories()
     {
         if( actionHandlerFactories == null )
         {
-            final List<ISapphireActionHandlerFactoryDef> list = new ArrayList<ISapphireActionHandlerFactoryDef>();
+            final List<ActionHandlerFactoryDef> list = new ArrayList<ActionHandlerFactoryDef>();
 
             for( ISapphireUiExtensionDef extension : getExtensions() )
             {
-                for( ISapphireActionHandlerFactoryDef def : extension.getActionHandlerFactories() )
+                for( ActionHandlerFactoryDef def : extension.getActionHandlerFactories() )
                 {
                     // TODO: Validate and log
                     list.add( def );

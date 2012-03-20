@@ -17,7 +17,7 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFactoryDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -29,7 +29,7 @@ public abstract class SapphireActionHandlerFactory
     private final ListenerContext listeners = new ListenerContext();
 
     public void init( final SapphireAction action,
-                      final ISapphireActionHandlerFactoryDef def )
+                      final ActionHandlerFactoryDef def )
     {
         this.action = action;
     }

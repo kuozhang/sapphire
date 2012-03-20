@@ -23,21 +23,18 @@ import org.eclipse.sapphire.ui.def.internal.LocationHintBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "before location hint" )
-@Image( path = "ActionLocationHintBefore.png" )
+@Label( standard = "after location hint" )
+@Image( path = "ActionLocationHintAfter.png" )
 @GenerateImpl
 
-public interface ISapphireActionLocationHintBefore
-
-    extends ISapphireActionLocationHint
-    
+public interface ActionLocationHintAfter extends ActionLocationHint
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireActionLocationHintBefore.class );
+    ModelElementType TYPE = new ModelElementType( ActionLocationHintAfter.class );
     
     // *** ReferenceEntityId ***
     
-    @CustomXmlValueBinding( impl = LocationHintBinding.class, params = "before:" )
+    @CustomXmlValueBinding( impl = LocationHintBinding.class, params = "after:" )
     
-    ValueProperty PROP_REFERENCE_ENTITY_ID = new ValueProperty( TYPE, ISapphireActionLocationHint.PROP_REFERENCE_ENTITY_ID );
+    ValueProperty PROP_REFERENCE_ENTITY_ID = new ValueProperty( TYPE, ActionLocationHint.PROP_REFERENCE_ENTITY_ID );
     
 }

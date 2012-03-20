@@ -19,7 +19,7 @@ import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.tests.SapphireTestCase;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEditorPageDef;
@@ -58,7 +58,7 @@ public final class TestUiDef0001
         final IMasterDetailsEditorPageDef page = (IMasterDetailsEditorPageDef) sdef.getPartDef( "TestPage", false, IMasterDetailsEditorPageDef.class );
         assertNotNull( page );
         
-        final ModelElementList<ISapphireActionHandlerDef> handlers = page.getActionHandlers();
+        final ModelElementList<ActionHandlerDef> handlers = page.getActionHandlers();
         assertNotNull( handlers );
         assertEquals( 3, handlers.size() );
         

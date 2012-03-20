@@ -25,7 +25,7 @@
   <li><a href="#UI">User Interface</a></li>
   <ol type="A">
     <li><a href="#MoreFlexibleActuatorPresentation">More Flexible Actuator Presentation</a></li>
-    <li><a href="#HierarchicalKeyBindings">Hierarchical Key Bindings</a></li>
+    <li><a href="#PropagatedKeyBindings">Propagated Key Bindings</a></li>
     <li><a href="#ActionToolTips">Action Tool Tips</a></li>
   </ol>
   <li><a href="#DiagramLayout">Diagram Layout Storage</a></li>
@@ -76,11 +76,29 @@ along with ability to control horizontal alignment.</p>
 <p style="margin-left: 20px;"><img src="images/MoreFlexibleActuatorPresentation.png"/></p>
 
 
-<h2><a name="HierarchicalKeyBindings">Hierarchical Key Bindings</a></h2>
+<h2><a name="PropagatedKeyBindings">Propagated Key Bindings</a></h2>
 
 <p>When processing keyboard events, the system now takes into account actions defined in part's hierarchy rather
-than just the local ones. For instance, an action defined at editor page level will be accessible via its
-key binding even if the focus is on a property editor.</p> 
+than just the local ones. For instance, an action defined at editor page level can be made accessible via its
+key binding even if the focus is on a property editor. This is done by specifying propagated key binding behavior
+as part of action definition.</p> 
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;action>
+    &lt;id>Sapphire.Gallery.Open.Homepage&lt;/id>
+    &lt;label>Sapphire Homepage&lt;/label>
+    &lt;tooltip>Open Sapphire Homepage (Ctrl+Alt+Shift+S)&lt;/tooltip>
+    &lt;image>Web.png&lt;/image>
+    &lt;description>Open Sapphire project homepage.&lt;/description>
+    &lt;key-binding>CONTROL+ALT+SHIFT+s&lt;/key-binding></font>
+    &lt;key-binding-behavior>propagated&lt;/key-binding-behavior>
+    <font color="#888888">&lt;context>Sapphire.EditorPage&lt;/context>
+    &lt;hint>
+        &lt;name>style&lt;/name>
+        &lt;value>image+text&lt;/value>
+    &lt;/hint>
+&lt;/action></font></code></pre>
 
 
 <h2><a name="ActionToolTips">Action Tool Tips</a></h2>
@@ -97,6 +115,7 @@ set the action tool tip explicitly.</p>
     <font color="#888888">&lt;image>Web.png&lt;/image>
     &lt;description>Open Sapphire project homepage.&lt;/description>
     &lt;key-binding>CONTROL+ALT+SHIFT+s&lt;/key-binding>
+    &lt;key-binding-behavior>propagated&lt;/key-binding-behavior>
     &lt;context>Sapphire.EditorPage&lt;/context>
     &lt;hint>
         &lt;name>style&lt;/name>

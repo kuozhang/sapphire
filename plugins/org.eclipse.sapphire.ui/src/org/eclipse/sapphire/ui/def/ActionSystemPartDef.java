@@ -35,9 +35,9 @@ import org.eclipse.sapphire.ui.def.internal.LocationHintsBinding;
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-public interface ISapphireActionSystemPartDef extends ISapphireConditionHostDef, ISapphireActionContextsHostDef
+public interface ActionSystemPartDef extends ISapphireConditionHostDef, ActionContextsHostDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireActionSystemPartDef.class );
+    ModelElementType TYPE = new ModelElementType( ActionSystemPartDef.class );
     
     // *** Id ***
     
@@ -101,12 +101,12 @@ public interface ISapphireActionSystemPartDef extends ISapphireConditionHostDef,
     
     // *** LocationHints ***
     
-    @Type( base = ISapphireActionLocationHint.class, possible = { ISapphireActionLocationHintBefore.class, ISapphireActionLocationHintAfter.class } )
+    @Type( base = ActionLocationHint.class, possible = { ActionLocationHintBefore.class, ActionLocationHintAfter.class } )
     @Label( standard = "location hints" )
     @CustomXmlListBinding( impl = LocationHintsBinding.class )
     
     ListProperty PROP_LOCATION_HINTS = new ListProperty( TYPE, "LocationHints" );
     
-    ModelElementList<ISapphireActionLocationHint> getLocationHints();
+    ModelElementList<ActionLocationHint> getLocationHints();
     
 }

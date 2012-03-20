@@ -32,12 +32,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 @Label( standard = "action handler filter" )
 @GenerateImpl
 
-public interface ISapphireActionHandlerFilterDef
-
-    extends ISapphireActionContextsHostDef
-    
+public interface ActionHandlerFilterDef extends ActionContextsHostDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireActionHandlerFilterDef.class );
+    ModelElementType TYPE = new ModelElementType( ActionHandlerFilterDef.class );
     
     // *** ImplClass ***
     
@@ -57,10 +54,13 @@ public interface ISapphireActionHandlerFilterDef
     
     // *** Contexts ***
     
-    @Documentation( content = "Every UI part that supports actions will define one or more context. An action handler filter can be " +
-                              "constrained to apply only to the specified contexts. If no context is specified, the " +
-                              "action handler filter will be treated as applicable to all contexts." )
+    @Documentation
+    ( 
+        content = "Every UI part that supports actions will define one or more context. An action handler filter can be " +
+                  "constrained to apply only to the specified contexts. If no context is specified, the " +
+                  "action handler filter will be treated as applicable to all contexts."
+    )
 
-    ListProperty PROP_CONTEXTS = new ListProperty( TYPE, ISapphireActionSystemPartDef.PROP_CONTEXTS );
+    ListProperty PROP_CONTEXTS = new ListProperty( TYPE, ActionSystemPartDef.PROP_CONTEXTS );
     
 }

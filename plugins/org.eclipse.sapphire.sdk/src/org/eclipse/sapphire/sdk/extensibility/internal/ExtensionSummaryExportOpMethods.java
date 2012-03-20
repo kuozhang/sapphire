@@ -42,10 +42,10 @@ import org.eclipse.sapphire.sdk.extensibility.FunctionDef;
 import org.eclipse.sapphire.sdk.extensibility.SapphireExtensionDef;
 import org.eclipse.sapphire.sdk.extensibility.ServiceDef;
 import org.eclipse.sapphire.sdk.extensibility.TypeCastDef;
-import org.eclipse.sapphire.ui.def.ISapphireActionContext;
-import org.eclipse.sapphire.ui.def.ISapphireActionDef;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFactoryDef;
+import org.eclipse.sapphire.ui.def.ActionContextRef;
+import org.eclipse.sapphire.ui.def.ActionDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
 import org.eclipse.sapphire.ui.def.PresentationStyleDef;
 import org.osgi.framework.Bundle;
 
@@ -298,8 +298,8 @@ public final class ExtensionSummaryExportOpMethods
                     public int compare( final IModelElement a,
                                         final IModelElement b )
                     {
-                        final ISapphireActionDef x = (ISapphireActionDef) a;
-                        final ISapphireActionDef y = (ISapphireActionDef) b;
+                        final ActionDef x = (ActionDef) a;
+                        final ActionDef y = (ActionDef) b;
                         
                         return comp( x.getId().getContent(), y.getId().getContent() );
                     }
@@ -311,10 +311,10 @@ public final class ExtensionSummaryExportOpMethods
         protected List<ModelProperty> getDefaultColumns()
         {
             final List<ModelProperty> columns = new ArrayList<ModelProperty>();
-            columns.add( ISapphireActionDef.PROP_ID );
-            columns.add( ISapphireActionDef.PROP_DESCRIPTION );
-            columns.add( ISapphireActionDef.PROP_KEY_BINDING );
-            columns.add( ISapphireActionDef.PROP_CONTEXTS );
+            columns.add( ActionDef.PROP_ID );
+            columns.add( ActionDef.PROP_DESCRIPTION );
+            columns.add( ActionDef.PROP_KEY_BINDING );
+            columns.add( ActionDef.PROP_CONTEXTS );
             return columns;
         }
 
@@ -322,11 +322,11 @@ public final class ExtensionSummaryExportOpMethods
         protected String getCellText( final IModelElement element,
                                       final ModelProperty property )
         {
-            if( property == ISapphireActionDef.PROP_CONTEXTS )
+            if( property == ActionDef.PROP_CONTEXTS )
             {
                 final StringBuilder contexts = new StringBuilder();
                 
-                for( ISapphireActionContext context : ( (ISapphireActionDef) element ).getContexts() )
+                for( ActionContextRef context : ( (ActionDef) element ).getContexts() )
                 {
                     if( contexts.length() > 0 )
                     {
@@ -364,8 +364,8 @@ public final class ExtensionSummaryExportOpMethods
                     public int compare( final IModelElement a,
                                         final IModelElement b )
                     {
-                        final ISapphireActionHandlerDef x = (ISapphireActionHandlerDef) a;
-                        final ISapphireActionHandlerDef y = (ISapphireActionHandlerDef) b;
+                        final ActionHandlerDef x = (ActionHandlerDef) a;
+                        final ActionHandlerDef y = (ActionHandlerDef) b;
                         
                         int res = comp( x.getAction().getContent(), y.getAction().getContent() );
                         
@@ -384,9 +384,9 @@ public final class ExtensionSummaryExportOpMethods
         protected List<ModelProperty> getDefaultColumns()
         {
             final List<ModelProperty> columns = new ArrayList<ModelProperty>();
-            columns.add( ISapphireActionHandlerDef.PROP_ACTION );
-            columns.add( ISapphireActionHandlerDef.PROP_ID );
-            columns.add( ISapphireActionHandlerDef.PROP_DESCRIPTION );
+            columns.add( ActionHandlerDef.PROP_ACTION );
+            columns.add( ActionHandlerDef.PROP_ID );
+            columns.add( ActionHandlerDef.PROP_DESCRIPTION );
             return columns;
         }
     }
@@ -412,8 +412,8 @@ public final class ExtensionSummaryExportOpMethods
                     public int compare( final IModelElement a,
                                         final IModelElement b )
                     {
-                        final ISapphireActionHandlerFactoryDef x = (ISapphireActionHandlerFactoryDef) a;
-                        final ISapphireActionHandlerFactoryDef y = (ISapphireActionHandlerFactoryDef) b;
+                        final ActionHandlerFactoryDef x = (ActionHandlerFactoryDef) a;
+                        final ActionHandlerFactoryDef y = (ActionHandlerFactoryDef) b;
                         
                         int res = comp( x.getAction().getContent(), y.getAction().getContent() );
                         
@@ -432,8 +432,8 @@ public final class ExtensionSummaryExportOpMethods
         protected List<ModelProperty> getDefaultColumns()
         {
             final List<ModelProperty> columns = new ArrayList<ModelProperty>();
-            columns.add( ISapphireActionHandlerFactoryDef.PROP_ACTION );
-            columns.add( ISapphireActionHandlerFactoryDef.PROP_DESCRIPTION );
+            columns.add( ActionHandlerFactoryDef.PROP_ACTION );
+            columns.add( ActionHandlerFactoryDef.PROP_DESCRIPTION );
             return columns;
         }
     }

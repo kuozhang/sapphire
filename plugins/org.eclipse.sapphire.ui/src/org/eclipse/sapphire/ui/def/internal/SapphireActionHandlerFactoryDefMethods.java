@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFactoryDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
 
 /**
@@ -20,7 +20,7 @@ import org.eclipse.sapphire.ui.def.ISapphireParam;
 
 public final class SapphireActionHandlerFactoryDefMethods
 {
-    public static String getParam( final ISapphireActionHandlerFactoryDef def,
+    public static String getParam( final ActionHandlerFactoryDef def,
                                    final String name )
     {
         if( name == null )

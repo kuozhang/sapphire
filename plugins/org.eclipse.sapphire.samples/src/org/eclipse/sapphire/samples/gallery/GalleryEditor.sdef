@@ -2190,6 +2190,7 @@
             <image>Web.png</image>
             <description>Open Sapphire project homepage.</description>
             <key-binding>CONTROL+ALT+SHIFT+s</key-binding>
+            <key-binding-behavior>propagated</key-binding-behavior>
             <context>Sapphire.EditorPage</context>
             <hint>
                 <name>style</name>

@@ -56,7 +56,7 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -439,7 +439,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
         
         @Override
         public void init( final SapphireAction action,
-                          final ISapphireActionHandlerDef def )
+                          final ActionHandlerDef def )
         {
             super.init( action, def );
             setEnabled( false );

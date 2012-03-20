@@ -21,8 +21,8 @@ import org.eclipse.sapphire.modeling.xml.ChildXmlResource;
 import org.eclipse.sapphire.modeling.xml.StandardXmlListBindingImpl;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
-import org.eclipse.sapphire.ui.def.ISapphireActionLocationHintAfter;
-import org.eclipse.sapphire.ui.def.ISapphireActionLocationHintBefore;
+import org.eclipse.sapphire.ui.def.ActionLocationHintAfter;
+import org.eclipse.sapphire.ui.def.ActionLocationHintBefore;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -53,11 +53,11 @@ public final class LocationHintsBinding
         
         if( text != null && text.toLowerCase().startsWith( AFTER_PREFIX ) )
         {
-            type = ISapphireActionLocationHintAfter.TYPE;
+            type = ActionLocationHintAfter.TYPE;
         }
         else
         {
-            type = ISapphireActionLocationHintBefore.TYPE;
+            type = ActionLocationHintBefore.TYPE;
         }
         
         return type;
@@ -67,7 +67,7 @@ public final class LocationHintsBinding
     protected Object addUnderlyingObject( final ModelElementType type )
     {
         final XmlElement xmlElement = getXmlElement( true ).addChildElement( EL_LOCATION );
-        final String prefix = ( type == ISapphireActionLocationHintAfter.TYPE ? AFTER_PREFIX : BEFORE_PREFIX );
+        final String prefix = ( type == ActionLocationHintAfter.TYPE ? AFTER_PREFIX : BEFORE_PREFIX );
         xmlElement.setText( prefix );
         
         return xmlElement;

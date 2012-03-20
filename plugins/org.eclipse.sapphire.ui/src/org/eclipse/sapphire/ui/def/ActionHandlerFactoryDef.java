@@ -44,12 +44,9 @@ import org.eclipse.sapphire.ui.def.internal.SapphireActionHandlerFactoryDefMetho
 @Label( standard = "action handler factory" )
 @GenerateImpl
 
-public interface ISapphireActionHandlerFactoryDef
-
-    extends ISapphireConditionHostDef, ISapphireActionContextsHostDef
-    
+public interface ActionHandlerFactoryDef extends ISapphireConditionHostDef, ActionContextsHostDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireActionHandlerFactoryDef.class );
+    ModelElementType TYPE = new ModelElementType( ActionHandlerFactoryDef.class );
     
     // *** Action ***
     
@@ -73,8 +70,11 @@ public interface ISapphireActionHandlerFactoryDef
     @Whitespace( collapse = true )
     @XmlValueBinding( path = "description" )
     
-    @Documentation( content = "Provides information about the action handler factory. The " +
-                              "description should be in the form of properly capitalized and punctuated sentences." )
+    @Documentation
+    ( 
+        content = "Provides information about the action handler factory. The " +
+                  "description should be in the form of properly capitalized and punctuated sentences."
+    )
     
     ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );
     
@@ -119,17 +119,23 @@ public interface ISapphireActionHandlerFactoryDef
     
     // *** ConditionClass ***
     
-    @Documentation( content = "A condition allows use of arbitrary logic to control whether the action handler factory is going to be " +
-                              "available or not in a given situation. Conditions must extends SapphireCondition class." )
+    @Documentation
+    ( 
+        content = "A condition allows use of arbitrary logic to control whether the action handler factory is going to be " +
+                  "available or not in a given situation. Conditions must extends SapphireCondition class."
+    )
 
-    ValueProperty PROP_CONDITION_CLASS = new ValueProperty( TYPE, ISapphireActionSystemPartDef.PROP_CONDITION_CLASS );
+    ValueProperty PROP_CONDITION_CLASS = new ValueProperty( TYPE, ActionSystemPartDef.PROP_CONDITION_CLASS );
 
     // *** Contexts ***
     
-    @Documentation( content = "Every UI part that supports actions will define one or more context. An action handler factory can be " +
-                              "constrained to apply only to the specified contexts. If no context is specified, the " +
-                              "action handler factory will be treated as applicable to all contexts." )
+    @Documentation
+    ( 
+        content = "Every UI part that supports actions will define one or more context. An action handler factory can be " +
+                  "constrained to apply only to the specified contexts. If no context is specified, the " +
+                  "action handler factory will be treated as applicable to all contexts." 
+    )
 
-    ListProperty PROP_CONTEXTS = new ListProperty( TYPE, ISapphireActionSystemPartDef.PROP_CONTEXTS );
+    ListProperty PROP_CONTEXTS = new ListProperty( TYPE, ActionSystemPartDef.PROP_CONTEXTS );
     
 }

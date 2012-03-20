@@ -20,8 +20,8 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFactory;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerFactoryDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -32,7 +32,7 @@ public class KeyFolderBrowseHandlerFactory extends SapphireActionHandlerFactory
     private File folder;
     
     @Override
-    public void init( SapphireAction action, ISapphireActionHandlerFactoryDef def )
+    public void init( SapphireAction action, ActionHandlerFactoryDef def )
     {
         super.init( action, def );
         this.folder = new File( def.getParam( "folder" ) );
@@ -65,7 +65,7 @@ public class KeyFolderBrowseHandlerFactory extends SapphireActionHandlerFactory
         
         @Override
         public void init( final SapphireAction action,
-                          final ISapphireActionHandlerDef def )
+                          final ActionHandlerDef def )
         {
             super.init( action, def );
 

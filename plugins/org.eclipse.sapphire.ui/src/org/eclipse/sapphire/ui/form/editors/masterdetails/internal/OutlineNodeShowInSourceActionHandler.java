@@ -24,7 +24,7 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SourceEditorService;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
 
 /**
@@ -35,7 +35,7 @@ public final class OutlineNodeShowInSourceActionHandler extends SapphireActionHa
 {
     @Override
     public void init( final SapphireAction action, 
-                      final ISapphireActionHandlerDef def ) 
+                      final ActionHandlerDef def ) 
     {
         super.init( action, def );
         

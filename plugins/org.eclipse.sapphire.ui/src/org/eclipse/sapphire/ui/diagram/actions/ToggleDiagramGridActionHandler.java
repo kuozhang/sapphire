@@ -13,7 +13,7 @@ package org.eclipse.sapphire.ui.diagram.actions;
 
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
@@ -26,7 +26,7 @@ public class ToggleDiagramGridActionHandler extends SapphireDiagramActionHandler
 {		
     @Override
     public void init( final SapphireAction action,
-                      final ISapphireActionHandlerDef def )
+                      final ActionHandlerDef def )
     {
     	super.init(action, def);
     	if (action.getType() == SapphireActionType.TOGGLE)

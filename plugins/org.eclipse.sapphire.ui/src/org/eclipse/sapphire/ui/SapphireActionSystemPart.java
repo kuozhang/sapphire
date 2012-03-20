@@ -29,10 +29,10 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
-import org.eclipse.sapphire.ui.def.ISapphireActionLocationHint;
-import org.eclipse.sapphire.ui.def.ISapphireActionLocationHintAfter;
-import org.eclipse.sapphire.ui.def.ISapphireActionLocationHintBefore;
-import org.eclipse.sapphire.ui.def.ISapphireActionSystemPartDef;
+import org.eclipse.sapphire.ui.def.ActionLocationHint;
+import org.eclipse.sapphire.ui.def.ActionLocationHintAfter;
+import org.eclipse.sapphire.ui.def.ActionLocationHintBefore;
+import org.eclipse.sapphire.ui.def.ActionSystemPartDef;
 import org.eclipse.sapphire.ui.def.ImageReference;
 
 /**
@@ -53,7 +53,7 @@ public abstract class SapphireActionSystemPart
     private boolean checked;
     private final ListenerContext listeners = new ListenerContext();
     
-    protected final void init( final ISapphireActionSystemPartDef def )
+    protected final void init( final ActionSystemPartDef def )
     {
         this.functionContext = initFunctionContext();
         
@@ -107,7 +107,7 @@ public abstract class SapphireActionSystemPart
                 imageFunctionResult.dispose();
             }
             
-            for( ISapphireActionLocationHint locationHintDef : def.getLocationHints() )
+            for( ActionLocationHint locationHintDef : def.getLocationHints() )
             {
                 final String locationHintText = locationHintDef.getReferenceEntityId().getContent();
                 
@@ -115,11 +115,11 @@ public abstract class SapphireActionSystemPart
                 {
                     final SapphireActionLocationHint locationHint;
                     
-                    if( locationHintDef instanceof ISapphireActionLocationHintBefore )
+                    if( locationHintDef instanceof ActionLocationHintBefore )
                     {
                         locationHint = new SapphireActionLocationHintBefore( locationHintText );
                     }
-                    else if( locationHintDef instanceof ISapphireActionLocationHintAfter )
+                    else if( locationHintDef instanceof ActionLocationHintAfter )
                     {
                         locationHint = new SapphireActionLocationHintAfter( locationHintText );
                     }

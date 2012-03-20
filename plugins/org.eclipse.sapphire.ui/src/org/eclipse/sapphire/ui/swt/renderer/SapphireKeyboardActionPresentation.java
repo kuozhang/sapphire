@@ -14,9 +14,11 @@ package org.eclipse.sapphire.ui.swt.renderer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.def.KeyBindingBehavior;
 import org.eclipse.sapphire.ui.def.SapphireKeySequence;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -82,12 +84,12 @@ public final class SapphireKeyboardActionPresentation extends SapphireHotSpotsAc
     {
         final SapphireActionGroup localGroupOfActions = getManager().getActionGroup();
 
-        if( handleKeyEvent( event, localGroupOfActions ) )
+        if( handleKeyEvent( event, localGroupOfActions, false ) )
         {
             return;
         }
         
-        /*ISapphirePart part = localGroupOfActions.getPart().getParentPart();
+        ISapphirePart part = localGroupOfActions.getPart().getParentPart();
         
         while( part != null )
         {
@@ -97,22 +99,23 @@ public final class SapphireKeyboardActionPresentation extends SapphireHotSpotsAc
             {
                 final SapphireActionGroup groupOfActions = part.getActions( mainActionContext );
                 
-                if( handleKeyEvent( event, groupOfActions ) )
+                if( handleKeyEvent( event, groupOfActions, true ) )
                 {
                     return;
                 }
             }
             
             part = part.getParentPart();
-        }*/
+        }
     }
     
     private boolean handleKeyEvent( final KeyEvent event,
-                                    final SapphireActionGroup groupOfActions )
+                                    final SapphireActionGroup groupOfActions,
+                                    final boolean onlyPropagatedKeyBindings )
     {
         for( SapphireAction action : groupOfActions.getActions() )
         {
-            if( action.hasActiveHandlers() )
+            if( action.hasActiveHandlers() && ( ! onlyPropagatedKeyBindings || action.getKeyBindingBehavior() == KeyBindingBehavior.PROPAGATED ) )
             {
                 final SapphireKeySequence keySequence = action.getKeyBinding();
                 
