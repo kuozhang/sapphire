@@ -84,6 +84,11 @@ public abstract class SapphireDiagramPartListener extends SapphirePartListener
     	// The default implementation doesn't do anything.
     }
 
+    public void handleDirectEditEvent(final DiagramPartEvent event)
+    {
+    	// The default implementation doesn't do anything.
+    }
+
     public void handleGridStateChangeEvent(final DiagramPageEvent event)
     {
     	// The default implementation doesn't do anything.

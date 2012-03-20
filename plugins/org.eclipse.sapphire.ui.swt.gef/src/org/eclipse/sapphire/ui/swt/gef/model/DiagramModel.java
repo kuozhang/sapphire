@@ -199,10 +199,13 @@ public class DiagramModel extends DiagramModelBase {
 				connectionModel.setSourceNode(sourceNode);
 				connectionModel.setTargetNode(targetNode);
 
-				// add bendpoint if collision
+				// add bendpoint if collision if the connection part doesn't have any bend points.
+				// But we still route the connection for the purpose of calculating next "fan position" correctly.
+				// See Bug 374793 - Additional bend points added to connection when visible-when condition on nodes change 
 				Point bendPoint = this.configManager.getConnectionRouter().route(connectionModel);
-	        	if (bendPoint != null) {
-	        		connectionModel.getModelPart().addBendpoint(0, bendPoint.x, bendPoint.y);
+	        	if (bendPoint != null && connPart.getConnectionBendpoints().isEmpty()) 
+	        	{
+        			connectionModel.getModelPart().addBendpoint(0, bendPoint.x, bendPoint.y);
 	        	}
 			}
 		}

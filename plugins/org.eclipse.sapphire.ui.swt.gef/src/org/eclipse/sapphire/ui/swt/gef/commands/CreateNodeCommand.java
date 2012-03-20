@@ -18,11 +18,11 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
+import org.eclipse.sapphire.ui.diagram.actions.DiagramNodeAddActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
-import org.eclipse.sapphire.ui.swt.gef.actions.DiagramNodeAddActionHandler;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.parts.IConfigurationManagerHolder;
 
@@ -59,7 +59,7 @@ public class CreateNodeCommand extends Command {
 				{
 					DiagramConfigurationManager configManager = this.configHolder.getConfigurationManager();
 					DiagramRenderingContext ctx = configManager.getDiagramRenderingContextCache().get(editorPart);
-					ctx.setCurrentMouseLocation(this.location.x, this.location.y);
+					editorPart.setMouseLocation(this.location.x, this.location.y);
 					nodeAddHandler.execute(ctx);
 					break;
 				}

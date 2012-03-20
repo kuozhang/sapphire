@@ -64,6 +64,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramPartEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
@@ -216,6 +217,12 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		    	updateConnectionMoveLabel((DiagramConnectionPart)event.getPart());
 		    }
 
+			@Override
+		    public void handleDirectEditEvent(final DiagramPartEvent event)
+		    {
+		    	selectAndDirectEditPart(event.getPart());
+		    }
+			
 		    @Override
 			public void handleGridStateChangeEvent(final DiagramPageEvent event)
 			{
@@ -724,21 +731,40 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	
 	public void selectAndDirectEditPart(ISapphirePart part)
 	{
-		if (part instanceof DiagramNodePart)
+		if (part instanceof DiagramNodePart || part instanceof DiagramConnectionPart)
 		{
-			DiagramNodePart nodePart = (DiagramNodePart)part;
-			DiagramNodeModel nodeModel = this.getDiagramModel().getDiagramNodeModel(nodePart);
 			GraphicalViewer viewer = this.getGraphicalViewer();
 			viewer.getControl().forceFocus();
-			Object editpart = viewer.getEditPartRegistry().get(nodeModel);
+			
+			Object editpart = null;
+			DiagramNodePart nodePart = null;
+			DiagramConnectionPart connPart = null;
+			if (part instanceof DiagramNodePart)
+			{
+				nodePart = (DiagramNodePart)part;
+				DiagramNodeModel nodeModel = this.getDiagramModel().getDiagramNodeModel(nodePart);
+				editpart = viewer.getEditPartRegistry().get(nodeModel);
+			}
+			else if (part instanceof DiagramConnectionPart)
+			{
+				connPart = (DiagramConnectionPart)part;
+				DiagramConnectionModel connModel = this.getDiagramModel().getDiagramConnectionModel(connPart);
+				editpart = viewer.getEditPartRegistry().get(connModel);				
+			}
 			if (editpart instanceof EditPart) 
 			{
 				// Force a layout first.
 				viewer.flush();
 				viewer.select((EditPart) editpart);
 			}
-			
-			this.getDiagramModel().handleDirectEditing(nodePart);
+			if (nodePart != null)
+			{
+				this.getDiagramModel().handleDirectEditing(nodePart);
+			}
+			else
+			{
+				this.getDiagramModel().handleDirectEditing(connPart);
+			}
 		}
 	}
 	
@@ -751,6 +777,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 
 	void setMouseLocation(int x, int y) {
 		getMouseLocation().setLocation(x, y);
+		this.diagramPart.setMouseLocation(x, y);
 	}
 
 	@Override

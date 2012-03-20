@@ -7,9 +7,10 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - [374433] - DiagramNodeAddActionHandlerFactory issues 
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.gef.actions;
+package org.eclipse.sapphire.ui.diagram.actions;
 
 import java.util.ArrayList;
 import java.util.List;

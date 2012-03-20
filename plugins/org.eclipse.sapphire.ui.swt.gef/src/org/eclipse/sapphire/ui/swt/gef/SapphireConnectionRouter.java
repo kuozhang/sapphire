@@ -127,18 +127,14 @@ public class SapphireConnectionRouter
 			points.addPoint(getNodeLocation(conn.getTargetNode()));
 
 			int index  = getNextConnectionIndex(connectionKey);
-			connections.put(connectionKey, conn);
-			connectionIndices.put(connectionKey, index);
-			connectionIndexMap.put(conn, index);
+			addConnectionKey(conn, connectionKey, index);
 
 			Point bendpoint = handleCollision(points, index);
 			return bendpoint;
 		}
 		else 
 		{
-			connections.put(connectionKey, conn);
-			connectionIndices.put(connectionKey, -1);
-			connectionIndexMap.put(conn, -1);
+			addConnectionKey(conn, connectionKey, -1);
 		}
 		return null;
 	}
@@ -146,7 +142,14 @@ public class SapphireConnectionRouter
 	public void addConnection(DiagramConnectionModel conn)
 	{
 		HashKey connectionKey = new HashKey(conn);
+		addConnectionKey(conn, connectionKey, -1);
+	}
+	
+	private void addConnectionKey(DiagramConnectionModel conn, HashKey connectionKey, int index)
+	{
 		connections.put(connectionKey, conn);
+		connectionIndices.put(connectionKey, index);
+		connectionIndexMap.put(conn, index);		
 	}
 	
 	private Point handleCollision(PointList points, int index) 

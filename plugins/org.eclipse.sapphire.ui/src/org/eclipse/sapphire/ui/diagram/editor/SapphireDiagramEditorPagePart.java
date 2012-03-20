@@ -30,6 +30,8 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
+import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
@@ -67,6 +69,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     private int gridUnit;
     private int verticalGridUnit;
 	private List<FunctionResult> connectionImageDataFunctionResults;
+	private Point mouseLocation;
 
     @Override
     protected void init()
@@ -88,6 +91,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         this.showGuides = this.diagramPageDef.getGuidesDefinition().isVisible().getContent();
         this.gridUnit = this.diagramPageDef.getGridDefinition().getGridUnit().getContent();
         this.verticalGridUnit = this.diagramPageDef.getGridDefinition().getVerticalGridUnit().getContent();
+        this.mouseLocation = new Point(0, 0);
         
         this.nodeTemplateListener = new NodeTemplateListener();
         this.connTemplateListener = new ConnectionTemplateListener();
@@ -255,6 +259,22 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	}
     }
 
+    public Point getMouseLocation()
+    {
+    	return this.mouseLocation;
+    }
+    
+    public void setMouseLocation(int x, int y)
+    {
+    	this.mouseLocation.setX(x);
+    	this.mouseLocation.setY(y);
+    }
+    
+    public void selectAndDirectEdit(ISapphirePart part)
+    {
+    	notifyDirectEdit(part);
+    }
+    
     public void saveDiagram()
     {
     	notifyDiagramSave();
@@ -701,6 +721,20 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 		}		
 	}
 
+	private void notifyDirectEdit(ISapphirePart part)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramPartEvent cue = new DiagramPartEvent(part);
+				((SapphireDiagramPartListener)listener).handleDirectEditEvent(cue);
+			}
+		}		
+
+	}
+
 	private void notifyGridStateChange()
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
@@ -752,7 +786,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 			}
 		}		
 	}
-
+	
 	// --------------------------------------------------------------------
 	// Inner classes
 	//---------------------------------------------------------------------

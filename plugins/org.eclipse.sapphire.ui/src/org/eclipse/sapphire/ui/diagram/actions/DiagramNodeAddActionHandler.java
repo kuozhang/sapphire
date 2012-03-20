@@ -7,9 +7,10 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - [374433] - DiagramNodeAddActionHandlerFactory issues 
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.gef.actions;
+package org.eclipse.sapphire.ui.diagram.actions;
 
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.Point;
@@ -20,8 +21,6 @@ import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
-import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -29,6 +28,7 @@ import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 
 public class DiagramNodeAddActionHandler extends SapphireDiagramActionHandler 
 {
+	public static final String ID_BASE = "Sapphire.Add.";
 	private DiagramNodeTemplate nodeTemplate;
 	
 	public DiagramNodeAddActionHandler(DiagramNodeTemplate nodeTemplate)
@@ -41,6 +41,7 @@ public class DiagramNodeAddActionHandler extends SapphireDiagramActionHandler
                       final ISapphireActionHandlerDef def )
     {
     	super.init(action, def);
+    	setId( ID_BASE + this.nodeTemplate.getNodeTypeId());
 		if (this.nodeTemplate.getToolPaletteLabel() != null)
 		{
 			setLabel(this.nodeTemplate.getToolPaletteLabel());
@@ -63,23 +64,21 @@ public class DiagramNodeAddActionHandler extends SapphireDiagramActionHandler
 	@Override
 	public boolean canExecute(Object obj) 
 	{
-		return true;
+		return isEnabled();
 	}
 
 	@Override
 	protected Object run(SapphireRenderingContext context) 
 	{
-		DiagramRenderingContext drc = (DiagramRenderingContext)context;
+    	SapphireDiagramEditorPagePart diagramPart = 
+    			(SapphireDiagramEditorPagePart)this.nodeTemplate.getParentPart();
+
 		DiagramNodePart nodePart = this.nodeTemplate.createNewDiagramNode();
-		Point pt = drc.getCurrentMouseLocation();
+		Point pt = diagramPart.getMouseLocation();
 		nodePart.setNodePosition(pt.getX(), pt.getY());
 		
 		// Select the new node and put it in direct-edit mode
-		SapphireDiagramEditor diagramEditor = drc.getDiagramEditor();
-		if (diagramEditor != null)
-		{
-			diagramEditor.selectAndDirectEditPart(nodePart);
-		}
+		diagramPart.selectAndDirectEdit(nodePart);
 		return nodePart;
 	}	
 

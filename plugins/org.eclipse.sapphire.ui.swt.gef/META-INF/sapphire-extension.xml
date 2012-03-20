@@ -40,12 +40,6 @@
         <label>vertically</label>
         <context>Sapphire.Diagram.Editor</context>
     </action-handler>    
-    <action-handler-factory>
-        <action>Sapphire.Add</action>
-        <impl>org.eclipse.sapphire.ui.swt.gef.actions.DiagramNodeAddActionHandlerFactory</impl>
-        <description>Creates an add action handler for every node type.</description>
-        <context>Sapphire.Diagram.Editor</context>
-    </action-handler-factory>  
     <action-handler>
         <action>Sapphire.Diagram.DirectEdit</action>
         <impl>org.eclipse.sapphire.ui.swt.gef.actions.DiagramDirectEditActionHandler</impl>

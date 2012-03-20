@@ -341,6 +341,13 @@
         <context>Sapphire.EditorPage.Outline.Node</context>
         <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeAddActionHandlerCondition</condition>
     </action-handler-factory>
+    <action-handler-factory>
+        <action>Sapphire.Add</action>
+        <impl>org.eclipse.sapphire.ui.diagram.actions.DiagramNodeAddActionHandlerFactory</impl>
+        <description>Creates an add action handler for every node type.</description>
+        <context>Sapphire.Diagram.Editor</context>
+    </action-handler-factory>  
+    
     <type-cast>
         <source>java.lang.String</source>
         <target>org.eclipse.sapphire.modeling.ImageData</target>
