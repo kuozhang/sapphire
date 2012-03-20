@@ -16,7 +16,7 @@ import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.def.ISapphireActionHandlerDef;
+import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
@@ -38,7 +38,7 @@ public class DiagramNodeAddActionHandler extends SapphireDiagramActionHandler
 	
     @Override
     public void init( final SapphireAction action,
-                      final ISapphireActionHandlerDef def )
+                      final ActionHandlerDef def )
     {
     	super.init(action, def);
     	setId( ID_BASE + this.nodeTemplate.getNodeTypeId());
