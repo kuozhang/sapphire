@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.swt.renderer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -88,7 +87,7 @@ public final class SapphireKeyboardActionPresentation extends SapphireHotSpotsAc
             return;
         }
         
-        ISapphirePart part = localGroupOfActions.getPart().getParentPart();
+        /*ISapphirePart part = localGroupOfActions.getPart().getParentPart();
         
         while( part != null )
         {
@@ -105,7 +104,7 @@ public final class SapphireKeyboardActionPresentation extends SapphireHotSpotsAc
             }
             
             part = part.getParentPart();
-        }
+        }*/
     }
     
     private boolean handleKeyEvent( final KeyEvent event,
