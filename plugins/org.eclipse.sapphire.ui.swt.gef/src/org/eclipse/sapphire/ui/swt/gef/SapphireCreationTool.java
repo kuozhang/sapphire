@@ -55,8 +55,11 @@ public class SapphireCreationTool extends CreationTool
 	 */
 	protected void performCreation(int button) 
 	{
-		executeCurrentCommand();
-		selectAddedObject();
+		if (getCurrentCommand() != null)
+		{
+			executeCurrentCommand();
+			selectAddedObject();
+		}
 	}
 
 	/*
