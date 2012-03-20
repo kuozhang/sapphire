@@ -27,11 +27,13 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.ui.def.ISapphireTabDef;
-import org.eclipse.sapphire.ui.def.ISapphireTabGroupDef;
+import org.eclipse.sapphire.ui.def.TabGroupDef;
+import org.eclipse.sapphire.ui.def.TabGroupPageDef;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
@@ -54,7 +56,7 @@ public final class TabGroupPart extends SapphirePart
 
         this.pages = new ArrayList<TabGroupPagePart>();
         
-        for( ISapphireTabDef pageDef : definition().getTabs() )
+        for( TabGroupPageDef pageDef : definition().getTabs() )
         {
             final TabGroupPagePart pagePart = new TabGroupPagePart();
             pagePart.init( this, element, pageDef, this.params );
@@ -78,9 +80,9 @@ public final class TabGroupPart extends SapphirePart
     }
     
     @Override
-    public ISapphireTabGroupDef definition()
+    public TabGroupDef definition()
     {
-        return (ISapphireTabGroupDef) super.definition();
+        return (TabGroupDef) super.definition();
     }
 
     @Override
@@ -140,19 +142,39 @@ public final class TabGroupPart extends SapphirePart
             
             page.render( new SapphireRenderingContext( page, context, tabControl ) );
         }
+        
+        tabGroup.addSelectionListener
+        (
+            new SelectionAdapter()
+            {
+                @Override
+                public void widgetSelected( final SelectionEvent event )
+                {
+                    final int tabGroupPageIndex = tabGroup.getSelectionIndex();
+                    final TabGroupPagePart tabGroupPagePart = TabGroupPart.this.pages.get( tabGroupPageIndex );;
+                    tabGroupPagePart.setFocus();
+                }
+            }
+        );
     }
     
     private void updateTabImage( final TabItem tab,
                                  final TabGroupPagePart tabPart,
                                  final Map<ImageDescriptor,Image> images )
     {
+        Image image = null;
+
         final ImageDescriptor imageDescriptor = tabPart.getImage();
-        Image image = images.get( imageDescriptor );
         
-        if( image == null )
+        if( imageDescriptor != null )
         {
-            image = imageDescriptor.createImage();
-            images.put( imageDescriptor, image );
+            image = images.get( imageDescriptor );
+        
+            if( image == null )
+            {
+                image = imageDescriptor.createImage();
+                images.put( imageDescriptor, image );
+            }
         }
         
         tab.setImage( image );

@@ -1933,44 +1933,28 @@
                         <tab-group>
                             <tab>
                                 <label>tab 1</label>
-                                <content>
-                                    <composite>
-                                        <content>
-                                            <label>Specify an image for a tab to make it easier for users to visually differentiate tabs. An expression can be used to specify the image. This allows the image to vary based some condition, such as property value. Change type kind property to see this in action.</label>
-                                            <spacer></spacer>
-                                            <property-editor>
-                                                <property>TypeKind</property>
-                                                <hint>
-                                                    <name>prefer.radio.buttons</name>
-                                                    <value>true</value>
-                                                </hint>
-                                            </property-editor>
-                                            <property-editor>Property1</property-editor>
-                                            <property-editor>Property2</property-editor>
-                                        </content>
-                                        <margin-left>0</margin-left>
-                                        <margin-right>10</margin-right>
-                                        <margin-top>10</margin-top>
-                                        <margin-bottom>10</margin-bottom>
-                                    </composite>
-                                </content>
                                 <image>${ TypeKind == &quot;ANNOTATION&quot; ? &quot;JavaAnnotation.png&quot; : ( TypeKind == &quot;ENUM&quot; ? &quot;JavaEnum.png&quot; : ( TypeKind == &quot;INTERFACE&quot; ? &quot;JavaInterface.png&quot; : &quot;JavaClass.png&quot; ) ) }</image>
+                                <content>
+                                    <label>Specify an image for a tab to make it easier for users to visually differentiate tabs. An expression can be used to specify the image. This allows the image to vary based some condition, such as property value. Change type kind property to see this in action.</label>
+                                    <spacer/>
+                                    <property-editor>
+                                        <property>TypeKind</property>
+                                        <hint>
+                                            <name>prefer.radio.buttons</name>
+                                            <value>true</value>
+                                        </hint>
+                                    </property-editor>
+                                    <property-editor>Property1</property-editor>
+                                    <property-editor>Property2</property-editor>
+                                </content>
                             </tab>
                             <tab>
                                 <label>tab 2</label>
                                 <content>
-                                    <composite>
-                                        <content>
-                                            <label>If no tab image is specified, a default one is used. This allows problem markers to be shown in all cases.</label>
-                                            <spacer></spacer>
-                                            <property-editor>Property3</property-editor>
-                                            <property-editor>Property4</property-editor>
-                                        </content>
-                                        <margin-left>0</margin-left>
-                                        <margin-right>10</margin-right>
-                                        <margin-top>10</margin-top>
-                                        <margin-bottom>10</margin-bottom>
-                                    </composite>
+                                    <label>If no tab image is specified, a default one is used. This allows problem markers to be shown in all cases.</label>
+                                    <spacer/>
+                                    <property-editor>Property3</property-editor>
+                                    <property-editor>Property4</property-editor>
                                 </content>
                             </tab>
                         </tab-group>

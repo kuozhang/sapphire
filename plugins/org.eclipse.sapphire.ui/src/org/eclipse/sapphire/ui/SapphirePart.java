@@ -63,7 +63,7 @@ import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
 import org.eclipse.sapphire.ui.def.ISapphireSeparatorDef;
 import org.eclipse.sapphire.ui.def.ISapphireSpacerDef;
 import org.eclipse.sapphire.ui.def.ISapphireStaticTextFieldDef;
-import org.eclipse.sapphire.ui.def.ISapphireTabGroupDef;
+import org.eclipse.sapphire.ui.def.TabGroupDef;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
 import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
 import org.eclipse.sapphire.ui.def.PageBookExtDef;
@@ -893,7 +893,7 @@ public abstract class SapphirePart implements ISapphirePart
                 part = new SapphirePartContainer();
             }
         }
-        else if( definition instanceof ISapphireTabGroupDef )
+        else if( definition instanceof TabGroupDef )
         {
             part = new TabGroupPart();
         }

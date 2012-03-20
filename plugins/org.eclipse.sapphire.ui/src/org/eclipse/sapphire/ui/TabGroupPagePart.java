@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
-import org.eclipse.sapphire.ui.def.ISapphireTabDef;
+import org.eclipse.sapphire.ui.def.TabGroupPageDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -38,7 +38,7 @@ public final class TabGroupPagePart extends SapphirePartContainer
         super.init();
 
         final IModelElement element = getModelElement();
-        final ISapphireTabDef def = definition();
+        final TabGroupPageDef def = definition();
         
         this.labelFunctionResult = initExpression
         (
@@ -59,9 +59,9 @@ public final class TabGroupPagePart extends SapphirePartContainer
     }
 
     @Override
-    public ISapphireTabDef definition()
+    public TabGroupPageDef definition()
     {
-        return (ISapphireTabDef) super.definition();
+        return (TabGroupPageDef) super.definition();
     }
     
     public String getLabel()

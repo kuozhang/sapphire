@@ -113,7 +113,7 @@ public interface PropertyEditorDef extends FormPartDef
             ISapphireCustomPartDef.class,
             ISapphireStaticTextFieldDef.class,
             PageBookExtDef.class,
-            ISapphireTabGroupDef.class,
+            TabGroupDef.class,
             HtmlPanelDef.class
         }
     )
@@ -135,7 +135,7 @@ public interface PropertyEditorDef extends FormPartDef
             @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
             @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
             @XmlListBinding.Mapping( element = "switching-panel", type = PageBookExtDef.class ),
-            @XmlListBinding.Mapping( element = "tab-group", type = ISapphireTabGroupDef.class ),
+            @XmlListBinding.Mapping( element = "tab-group", type = TabGroupDef.class ),
             @XmlListBinding.Mapping( element = "html", type = HtmlPanelDef.class )
         }
     )

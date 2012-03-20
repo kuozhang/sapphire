@@ -29,12 +29,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 @Label( standard = "tab" )
 @GenerateImpl
 
-public interface ISapphireTabDef
-
-    extends ISapphireCompositeDef
-    
+public interface TabGroupPageDef extends FormDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireTabDef.class );
+    ModelElementType TYPE = new ModelElementType( TabGroupPageDef.class );
     
     // *** Label ***
     

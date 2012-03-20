@@ -1023,7 +1023,7 @@
         </case>
         
         <case>
-            <model-element-type>ISapphireTabGroupDef</model-element-type>
+            <model-element-type>TabGroupDef</model-element-type>
             <label>Tab Group</label>
             <image>${ Image() }</image>
             <section>
@@ -1040,12 +1040,6 @@
                         <content>
                             <property-editor>Label</property-editor>
                             <property-editor>Image</property-editor>
-                        </content>
-                    </section>
-                    <section>
-                        <label>presentation</label>
-                        <content>
-                            <include>CompositePresentation</include>
                         </content>
                     </section>
                     <node-include>

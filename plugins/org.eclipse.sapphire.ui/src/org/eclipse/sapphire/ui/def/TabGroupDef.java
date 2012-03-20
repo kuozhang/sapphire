@@ -26,21 +26,18 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 @Label( standard = "tab group" )
 @GenerateImpl
 
-public interface ISapphireTabGroupDef
-
-    extends FormPartDef
-    
+public interface TabGroupDef extends FormPartDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireTabGroupDef.class );
+    ModelElementType TYPE = new ModelElementType( TabGroupDef.class );
     
     // *** Tabs ***
     
     @Label( standard = "tabs" )
-    @Type( base = ISapphireTabDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "tab", type = ISapphireTabDef.class ) )
+    @Type( base = TabGroupPageDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "tab", type = TabGroupPageDef.class ) )
     
     ListProperty PROP_TABS = new ListProperty( TYPE, "Tabs" );
     
-    ModelElementList<ISapphireTabDef> getTabs();
+    ModelElementList<TabGroupPageDef> getTabs();
     
 }
