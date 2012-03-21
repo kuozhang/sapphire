@@ -36,7 +36,7 @@ import org.eclipse.sapphire.services.PossibleTypesService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
+public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
 {
     private PossibleTypesService possibleTypesService;
     private Listener possibleTypesServiceListener;
@@ -193,25 +193,17 @@ public final class StandardXmlElementBindingImpl extends LayeredElementBindingIm
     @Override
     protected Object readUnderlyingObject()
     {
-        XmlElement parent = ( (XmlResource) element().resource() ).getXmlElement( false );
+        final XmlElement parent = parent( false );
         
         if( parent != null )
         {
-            if( this.path != null )
+            for( XmlElement element : parent.getChildElements() )
             {
-                parent = (XmlElement) parent.getChildNode( this.path, false );
-            }
-            
-            if( parent != null )
-            {
-                for( XmlElement element : parent.getChildElements() )
+                final QName xmlElementName = createQualifiedName( element.getDomNode() );
+                
+                if( contains( this.xmlElementNames, xmlElementName, xmlElementName.getNamespaceURI() ) )
                 {
-                    final QName xmlElementName = createQualifiedName( element.getDomNode() );
-                    
-                    if( contains( this.xmlElementNames, xmlElementName, xmlElementName.getNamespaceURI() ) )
-                    {
-                        return element;
-                    }
+                    return element;
                 }
             }
         }
@@ -222,13 +214,7 @@ public final class StandardXmlElementBindingImpl extends LayeredElementBindingIm
     @Override
     protected Object createUnderlyingObject( final ModelElementType type )
     {
-        XmlElement parent = ( (XmlResource) element().resource() ).getXmlElement( true );
-        
-        if( this.path != null )
-        {
-            parent = (XmlElement) parent.getChildNode( this.path, true );
-        }
-        
+        final XmlElement parent = parent( true );
         QName xmlElementName = this.xmlElementNames[ indexOf( this.modelElementTypes, type ) ];
         
         if( xmlElementName.getNamespaceURI().equals( "" ) )
@@ -251,16 +237,11 @@ public final class StandardXmlElementBindingImpl extends LayeredElementBindingIm
     @Override
     public void remove()
     {
-        XmlElement base = ( (XmlResource) element().resource() ).getXmlElement( false );
+        final XmlElement base = base( false );
         
         if( base != null )
         {
-            XmlElement parent = base;
-            
-            if( this.path != null )
-            {
-                parent = (XmlElement) parent.getChildNode( this.path, false );
-            }
+            final XmlElement parent = parent( false );
             
             if( parent != null )
             {
@@ -288,6 +269,24 @@ public final class StandardXmlElementBindingImpl extends LayeredElementBindingIm
         return true;
     }
     
+    protected XmlElement parent( final boolean createIfNecessary )
+    {
+        XmlElement parent = base( createIfNecessary );
+        
+        if( parent != null && this.path != null )
+        {
+            parent = (XmlElement) parent.getChildNode( this.path, createIfNecessary );
+        }
+        
+        return parent;
+    }
+    
+    protected XmlElement base( final boolean createIfNecessary )
+    {
+        final XmlResource resource = (XmlResource) element().resource();
+        return resource.getXmlElement( createIfNecessary );
+    }
+
     @Override
     public void dispose()
     {
