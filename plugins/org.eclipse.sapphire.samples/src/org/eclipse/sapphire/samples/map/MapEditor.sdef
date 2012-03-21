@@ -64,7 +64,6 @@
                 <label>show in Wikipedia</label>
                 <image>org/eclipse/sapphire/samples/map/internal/ShowInWikipedia.png</image>
                 <location>after:Sapphire.ShowInSource</location>
-                <location>before:Sapphire.Delete</location>
             </action>
             <action-handler>
                 <action>Sapphire.Diagram.Node.Default</action>
