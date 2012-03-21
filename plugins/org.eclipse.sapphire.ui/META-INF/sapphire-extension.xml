@@ -145,6 +145,8 @@
         <label>show in source</label>
         <image>org/eclipse/sapphire/ui/actions/ShowInSource.png</image>
         <description>Shows the model element associated with a given part in the corresponding source editor.</description>
+        <location>after:Sapphire.Delete</location>
+        <location>after:Sapphire.Diagram.DeleteAllBendPoints</location>
         <context>Sapphire.Diagram.Node</context>
         <context>Sapphire.Diagram.Connection</context>
     </action>
@@ -212,7 +214,9 @@
         <id>Sapphire.Diagram.DeleteAllBendPoints</id>
         <context>Sapphire.Diagram.Connection</context>
         <label>delete all bend points</label>
-        <description>delete all bend points on a connection</description>
+        <description>Deletes all bend points from a connection.</description>
+        <location>after:Sapphire.Delete</location>
+        <group>Sapphire.AddDeleteGroup</group>
     </action>    
     <action-handler>
         <action>Sapphire.Browse</action>
