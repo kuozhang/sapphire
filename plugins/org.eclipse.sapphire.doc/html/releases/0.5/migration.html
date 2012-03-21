@@ -49,6 +49,7 @@ to 0.5 release. Only changes from the previous release are covered.</p>
     <li><a href="#SapphireDiagramEditor">SapphireDiagramEditor</a></li>
     <li><a href="#DiagramImage">Diagram Image</a></li>
   </ol>
+  <li><a href="#Miscellaneous">Miscellaneous</a></li>
 </ol>
 
 
@@ -259,6 +260,58 @@ Images are now referenced at the point of use, rather than defined separately an
     </td>
   </tr>
 </table>
+
+
+<h2><a name="Miscellaneous">Miscellaneous</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">import org.eclipse.sapphire.ui.def.</font>ISapphireActionHandlerDef<font color="#888888">;</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">import org.eclipse.sapphire.ui.def.</font>ActionHandlerDef<font color="#888888">;</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomActionHandler extends SapphireActionHandler
+{
+    @Override
+    public void init( SapphireAction action,</font> ISapphireActionHandlerDef <font color="#888888">def )
+    {
+        super.init( action, def );
+        
+        ...
+    }
+    
+    ...
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomActionHandler extends SapphireActionHandler
+{
+    @Override
+    public void init( SapphireAction action,</font> ActionHandlerDef <font color="#888888">def )
+    {
+        super.init( action, def );
+        
+        ...
+    }
+    
+    ...
+}</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.java<br/>
+<nobr>Search: &nbsp;&nbsp;ISapphireActionHandlerDef</nobr><br/>
+<nobr>Replace: &nbsp;ActionHandlerDef</nobr></p>
 
 
 <div class="copyright">Copyright (c) 2012 Oracle<br/>
