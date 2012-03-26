@@ -38,7 +38,6 @@ import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
 import org.eclipse.gef.editparts.GridLayer;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.palette.PaletteRoot;
-import org.eclipse.gef.ui.actions.DirectEditAction;
 import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
@@ -50,7 +49,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
-import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditor;
@@ -68,6 +66,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramPartEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
+import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.gef.dnd.ObjectsTransferDropTargetListener;
 import org.eclipse.sapphire.ui.swt.gef.dnd.SapphireTemplateTransferDropTargetListener;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
@@ -75,8 +74,6 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModelBase;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.parts.SapphireDiagramEditorEditPartFactory;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.swt.events.HelpEvent;
 import org.eclipse.swt.events.HelpListener;
@@ -108,8 +105,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	private Point mouseLocation;
 	private DiagramConfigurationManager configManager;
 	private GraphicalViewerKeyHandler graphicalViewerKeyHandler;
-	private SapphireActionPresentationManager actionPresentationManager;
-	private DiagramKeyboardActionPresentation actionPresentation;
+	private SapphireDiagramKeyHandler diagramKeyHandler;
 
 	public SapphireDiagramEditor(
 		final SapphireEditor editor, final IModelElement rootModelElement, final IPath pageDefinitionLocation )
@@ -437,15 +433,10 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	
 	private void updateKeyHandler()
 	{
-        if (this.actionPresentation != null)
+        if (this.diagramKeyHandler != null)
         {
-        	this.actionPresentation.disposeActions();
-        	this.actionPresentation = null;
-        }
-        if (this.actionPresentationManager != null)
-        {
-        	this.actionPresentationManager.dispose();
-        	this.actionPresentationManager = null;
+        	this.diagramKeyHandler.dispose();
+        	this.diagramKeyHandler = null;
         }
 		List<SapphirePart> selectedParts = this.getSelectedParts();
 		if (selectedParts != null && selectedParts.size() == 1)
@@ -464,17 +455,12 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			{
 				actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION;
 			}
-			this.actionPresentationManager = new SapphireActionPresentationManager(
-					new DiagramRenderingContext(selectedPart, this));
-            this.actionPresentation = new DiagramKeyboardActionPresentation(this.actionPresentationManager,
-            		actionContext, selectedPart, this);
-            KeyHandler keyHandler = this.actionPresentation.getKeyHandler();
-            
+			this.diagramKeyHandler = new SapphireDiagramKeyHandler(this, selectedPart, actionContext);
             if (this.graphicalViewerKeyHandler == null)
             {
             	graphicalViewerKeyHandler = new GraphicalViewerKeyHandler(getGraphicalViewer());
             }
-    		KeyHandler parentKeyHandler = graphicalViewerKeyHandler.setParent(keyHandler);
+    		KeyHandler parentKeyHandler = graphicalViewerKeyHandler.setParent(this.diagramKeyHandler);
     		getGraphicalViewer().setKeyHandler(parentKeyHandler);
 		}
 	}

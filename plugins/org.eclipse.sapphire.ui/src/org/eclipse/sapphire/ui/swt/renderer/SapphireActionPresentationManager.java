@@ -31,14 +31,9 @@ public final class SapphireActionPresentationManager
 {
     private String label;
     private final SapphireRenderingContext context;
-    private SapphireActionGroup actions;
+    private final SapphireActionGroup actions;
     private final List<SapphireActionPresentation> presentations;
     private final List<SapphireActionPresentation> presentationsReadOnly;
-    
-    public SapphireActionPresentationManager( final SapphireRenderingContext context )
-    {
-    	this( context, null );
-    }
     
     public SapphireActionPresentationManager( final SapphireRenderingContext context,
                                               final SapphireActionGroup actions )
@@ -87,18 +82,9 @@ public final class SapphireActionPresentationManager
         return this.actions;
     }
     
-    public void setActionGroup( final SapphireActionGroup actions )
-    {
-    	this.actions = actions;
-    }
-    
     public List<SapphireAction> getActions()
     {
-    	if (this.actions == null)
-    	{
-    		return Collections.EMPTY_LIST;    		
-    	}
-    	return this.actions.getActions();
+        return this.actions.getActions();
     }
     
     public void dispose()
