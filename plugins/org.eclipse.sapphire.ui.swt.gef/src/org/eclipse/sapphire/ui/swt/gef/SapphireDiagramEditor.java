@@ -109,7 +109,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	private DiagramConfigurationManager configManager;
 	private GraphicalViewerKeyHandler graphicalViewerKeyHandler;
 	private SapphireActionPresentationManager actionPresentationManager;
-	private SapphireActionGroup tempActions;
+	private DiagramKeyboardActionPresentation actionPresentation;
 
 	public SapphireDiagramEditor(
 		final SapphireEditor editor, final IModelElement rootModelElement, final IPath pageDefinitionLocation )
@@ -392,9 +392,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
             }
         }
         if (editorIsActive) 
-        {
-        	updateActions(getSelectionActions());
-			
+        {			
+        	// TODO figure out sapphire actions in the menu
+        	//updateActions(getSelectionActions());
 			// Bug 339360 - MultiPage Editor's selectionProvider does not notify PropertySheet (edit) 
 			// bypass the selection provider
 			if (selection instanceof StructuredSelection) 
@@ -437,18 +437,16 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	
 	private void updateKeyHandler()
 	{
-        if( this.tempActions != null )
+        if (this.actionPresentation != null)
         {
-            this.tempActions.dispose();
-            this.tempActions = null;
+        	this.actionPresentation.disposeActions();
+        	this.actionPresentation = null;
         }
-		
-        if( this.actionPresentationManager != null )
+        if (this.actionPresentationManager != null)
         {
-            this.actionPresentationManager.dispose();
-            this.actionPresentationManager = null;
+        	this.actionPresentationManager.dispose();
+        	this.actionPresentationManager = null;
         }
-        
 		List<SapphirePart> selectedParts = this.getSelectedParts();
 		if (selectedParts != null && selectedParts.size() == 1)
 		{
@@ -466,22 +464,18 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			{
 				actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION;
 			}
-			this.tempActions = selectedPart.getActions(actionContext);
-			
-            this.actionPresentationManager = new SapphireActionPresentationManager( 
-            		new DiagramRenderingContext(selectedPart, this), this.tempActions );
-            
-            DiagramKeyboardActionPresentation keyboardActionPresentation = 
-            		new DiagramKeyboardActionPresentation(this.actionPresentationManager, getSelectedEditParts().get(0), this);
-            keyboardActionPresentation.render();
-            KeyHandler keyHandler = keyboardActionPresentation.getKeyHandler();
+			this.actionPresentationManager = new SapphireActionPresentationManager(
+					new DiagramRenderingContext(selectedPart, this));
+            this.actionPresentation = new DiagramKeyboardActionPresentation(this.actionPresentationManager,
+            		actionContext, selectedPart, this);
+            KeyHandler keyHandler = this.actionPresentation.getKeyHandler();
             
             if (this.graphicalViewerKeyHandler == null)
             {
             	graphicalViewerKeyHandler = new GraphicalViewerKeyHandler(getGraphicalViewer());
             }
     		KeyHandler parentKeyHandler = graphicalViewerKeyHandler.setParent(keyHandler);
-    		getGraphicalViewer().setKeyHandler(parentKeyHandler);					
+    		getGraphicalViewer().setKeyHandler(parentKeyHandler);
 		}
 	}
 	
@@ -634,8 +628,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 				return new SapphireDiagramGridLayer(diagramModel);
 			}			
 		});
-
-		initActionRegistry();
 		
 		// configure the context menu provider
 		ContextMenuProvider cmProvider = new SapphireDiagramEditorContextMenuProvider(this);
@@ -687,14 +679,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
         });
 		
 	}
-	
-	protected void initActionRegistry()
-	{
-		DirectEditAction deAction = new DirectEditAction((IWorkbenchPart) this);
-		getActionRegistry().registerAction(deAction);
-		getSelectionActions().add(deAction.getId());
-	}
-		
+			
 	@Override
 	protected PaletteViewerProvider createPaletteViewerProvider() 
 	{

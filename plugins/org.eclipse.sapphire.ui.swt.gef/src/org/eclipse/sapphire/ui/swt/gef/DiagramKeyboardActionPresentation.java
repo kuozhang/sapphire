@@ -16,7 +16,9 @@ import java.util.List;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.KeyHandler;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.def.SapphireKeySequence;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentation;
@@ -33,17 +35,23 @@ import org.eclipse.swt.graphics.Rectangle;
 
 public class DiagramKeyboardActionPresentation extends SapphireHotSpotsActionPresentation 
 {
+	private String actionContext;
 	private KeyHandler diagramKeyHandler;
+	private ISapphirePart part;
 	private GraphicalEditPart editPart;
 	private SapphireDiagramEditor diagramEditor;
+	private SapphireActionGroup tempActions;
 	
-    public DiagramKeyboardActionPresentation(final SapphireActionPresentationManager manager, 
-    		final GraphicalEditPart editPart,
+    public DiagramKeyboardActionPresentation(final SapphireActionPresentationManager actionPresentationManager,
+    		final String actionContext, 
+    		final ISapphirePart part,    		
     		final SapphireDiagramEditor diagramEditor)
     {
-        super(manager);
-        this.editPart = editPart;   
-        this.diagramEditor = diagramEditor;
+    	super(actionPresentationManager);
+    	this.actionContext = actionContext;
+    	this.part = part;
+    	this.diagramEditor = diagramEditor;
+        this.editPart = diagramEditor.getSelectedEditParts().get(0);
     }
 
 	@Override
@@ -58,7 +66,7 @@ public class DiagramKeyboardActionPresentation extends SapphireHotSpotsActionPre
 	
 	private void createKeyHandler()
 	{
-		this.diagramKeyHandler = new SapphireDiagramKeyHandler(getManager());
+		this.diagramKeyHandler = new SapphireDiagramKeyHandler();
 	}
 	
 	public KeyHandler getKeyHandler()
@@ -70,20 +78,33 @@ public class DiagramKeyboardActionPresentation extends SapphireHotSpotsActionPre
 		return this.diagramKeyHandler;
 	}
 
-	private static class SapphireDiagramKeyHandler extends KeyHandler
+	public void disposeActions()
 	{
-		private SapphireActionPresentationManager manager;
+        if( this.tempActions != null )
+        {
+            this.tempActions.dispose();
+            this.tempActions = null;
+        }
+		
+	}
+		
+	private class SapphireDiagramKeyHandler extends KeyHandler
+	{
 		private KeyHandler parent;
-		
-		public SapphireDiagramKeyHandler(final SapphireActionPresentationManager manager)
-		{
-			this.manager = manager;
-		}
-		
+				
 		@Override
 		public boolean keyPressed(KeyEvent event) 
 		{
-	        for( SapphireAction action : this.manager.getActions() )
+			final SapphireActionPresentationManager manager = getManager();
+			if (manager.getActionGroup() == null)
+			{
+				// Lazy load actions for performance reason
+				// See Bug 374820 - Selecting a node in diagram editor could take a few seconds 
+				tempActions = part.getActions(actionContext);
+				manager.setActionGroup(tempActions);
+				render();
+			}
+	        for( SapphireAction action : manager.getActions() )
 	        {
 	            if( action.hasActiveHandlers() )
 	            {
