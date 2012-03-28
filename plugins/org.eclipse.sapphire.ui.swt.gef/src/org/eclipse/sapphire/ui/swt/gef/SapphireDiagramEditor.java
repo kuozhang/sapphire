@@ -24,6 +24,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.ContextMenuProvider;
@@ -37,6 +38,7 @@ import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
 import org.eclipse.gef.editparts.GridLayer;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
+import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.palette.PaletteViewerProvider;
@@ -50,7 +52,6 @@ import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SapphireHelpContext;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -442,20 +443,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		if (selectedParts != null && selectedParts.size() == 1)
 		{
 			SapphirePart selectedPart = selectedParts.get(0);
-			String actionContext = null;
-			if (selectedPart instanceof SapphireDiagramEditorPagePart)
-			{
-				actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR;
-			}
-			else if (selectedPart instanceof DiagramNodePart)
-			{
-				actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_NODE;
-			}
-			else if (selectedPart instanceof DiagramConnectionPart)
-			{
-				actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION;
-			}
-			this.diagramKeyHandler = new SapphireDiagramKeyHandler(this, selectedPart, actionContext);
+			this.diagramKeyHandler = new SapphireDiagramKeyHandler(this, selectedPart);
             if (this.graphicalViewerKeyHandler == null)
             {
             	graphicalViewerKeyHandler = new GraphicalViewerKeyHandler(getGraphicalViewer());
@@ -746,10 +734,44 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		return mouseLocation;
 	}
 
-	void setMouseLocation(int x, int y) {
+	private void setMouseLocation(int x, int y) {
 		getMouseLocation().setLocation(x, y);
 		this.diagramPart.setMouseLocation(x, y);
 	}
+	
+	public FigureCanvas getFigureCanvas() 
+	{
+		GraphicalViewer viewer = getGraphicalViewer();
+		return (FigureCanvas) viewer.getControl();
+	}
+	
+	/**
+	 * Calculates the location in dependence from scrollbars and zoom factor.
+	 * 
+	 * @param nativeLocation
+	 *            the native location
+	 * @return the point
+	 */
+	public Point calculateRealMouseLocation(Point nativeLocation) 
+	{
+
+		Point ret = new Point(nativeLocation);
+		Point viewLocation;
+		// view location depends on the current scroll bar position
+		viewLocation = getFigureCanvas().getViewport().getViewLocation();
+
+		ret.x += viewLocation.x;
+		ret.y += viewLocation.y;
+
+		ZoomManager zoomManager = (ZoomManager) getGraphicalViewer().getProperty(ZoomManager.class.toString());
+		if (zoomManager != null)
+		{
+			ret = ret.getScaled(1 / zoomManager.getZoom());
+		}
+
+		return ret;
+	}
+	
 
 	@Override
 	public void dispose() {

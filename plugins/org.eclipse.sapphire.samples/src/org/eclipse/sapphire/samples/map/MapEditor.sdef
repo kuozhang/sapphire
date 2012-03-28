@@ -21,6 +21,7 @@
         <package>org.eclipse.sapphire.samples.map.ui</package>
         <package>org.eclipse.sapphire.samples.map.internal</package>
         <package>org.eclipse.sapphire.ui.diagram.actions</package>
+        <package>org.eclipse.sapphire.samples.ui</package>
     </import>
     
     <diagram-page>
@@ -94,7 +95,23 @@
             <action>Sapphire.Drop</action>
             <id>Sapphire.Samples.Map.Drop</id>
             <impl>MapDropActionHandler</impl>
-        </action-handler>        
+        </action-handler>
+        <action>
+            <id>Sapphire.Map.Open.Homepage</id>
+            <label>Sapphire Homepage</label>
+            <tooltip>Open Sapphire Homepage (Ctrl+Alt+Shift+S)</tooltip>
+            <description>Open Sapphire project homepage.</description>
+            <key-binding>CONTROL+ALT+SHIFT+s</key-binding>
+            <key-binding-behavior>propagated</key-binding-behavior>
+            <context>Sapphire.Diagram.Editor</context>
+        </action>
+        <action-handler>
+            <action>Sapphire.Map.Open.Homepage</action>
+            <id>Sapphire.Map.Open.Homepage</id>
+            <label>Sapphire Homepage</label>
+            <impl>OpenHomepageActionHandler</impl>
+        </action-handler>
+                
     </diagram-page>
     
     <editor-page>

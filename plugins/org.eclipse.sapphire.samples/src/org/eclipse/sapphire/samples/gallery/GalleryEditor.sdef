@@ -26,6 +26,7 @@
         <package>org.eclipse.sapphire.samples.gallery.internal</package>
         <package>org.eclipse.sapphire.samples.gallery.ui</package>
         <package>org.eclipse.sapphire.workspace.ui</package>
+        <package>org.eclipse.sapphire.samples.ui</package>
     </import>
 
     <documentation>

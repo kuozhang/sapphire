@@ -380,6 +380,12 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         return contextSet;
     }
         
+    @Override
+    public String getMainActionContext()
+    {
+    	return SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR;
+    }
+    
     public SapphirePart getSelection()
     {
         return this.selection;

@@ -16,6 +16,7 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -276,7 +277,10 @@ public class DiagramConnectionPart
     @Override
     public Set<String> getActionContexts()
     {
-        return Collections.singleton( SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION );
+        Set<String> contextSet = new HashSet<String>();
+        contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION);
+        contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION_HIDDEN);
+        return contextSet;    	
     }
     
     @Override

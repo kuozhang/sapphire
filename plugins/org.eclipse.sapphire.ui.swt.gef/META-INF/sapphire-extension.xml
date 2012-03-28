@@ -16,8 +16,8 @@
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
     <action>
         <id>Sapphire.Diagram.DirectEdit</id>
-        <context>Sapphire.Diagram.Node</context>
-        <context>Sapphire.Diagram.Connection</context>
+        <context>Sapphire.Diagram.Node.Hidden</context>
+        <context>Sapphire.Diagram.Connection.Hidden</context>
         <label>direct edit</label>
         <key-binding>F2</key-binding>
         <description>Direct edit a node or connection</description>
@@ -37,7 +37,7 @@
     <action-handler>
         <action>Sapphire.Diagram.DirectEdit</action>
         <impl>org.eclipse.sapphire.ui.swt.gef.actions.DiagramDirectEditActionHandler</impl>
-        <context>Sapphire.Diagram.Node</context>
-        <context>Sapphire.Diagram.Connection</context>
+        <context>Sapphire.Diagram.Node.Hidden</context>
+        <context>Sapphire.Diagram.Connection.Hidden</context>
     </action-handler>
 </extension>

@@ -19,7 +19,12 @@ import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphireActionSystem;
+import org.eclipse.sapphire.ui.def.KeyBindingBehavior;
 import org.eclipse.sapphire.ui.def.SapphireKeySequence;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.swt.SWT;
@@ -35,18 +40,36 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 	private SapphireDiagramEditor diagramEditor;
 	private ISapphirePart sapphirePart;
 	private String actionContext;
+	private String hiddenContext;
 	private GraphicalEditPart editPart;
 	private SapphireActionGroup tempActions;
+	private SapphireActionGroup hiddenActions;
 	private SapphireActionPresentationManager actionPresentationManager;
+	private SapphireActionPresentationManager hiddenActionPresentationManager;
 	private DiagramKeyboardActionPresentation actionPresentation;
+	private DiagramKeyboardActionPresentation hiddenActionPresentation;
 		
-	public SapphireDiagramKeyHandler(final SapphireDiagramEditor diagramEditor,
-					final ISapphirePart sapphirePart,
-					final String actionContext)
+	public SapphireDiagramKeyHandler(final SapphireDiagramEditor diagramEditor, final ISapphirePart sapphirePart)
 	{
 		this.diagramEditor = diagramEditor;
 		this.sapphirePart = sapphirePart;
-		this.actionContext = actionContext;
+		this.hiddenContext = null;
+		
+		if (sapphirePart instanceof SapphireDiagramEditorPagePart)
+		{
+			this.actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR;
+		}
+		else if (sapphirePart instanceof DiagramNodePart)
+		{
+			this.actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_NODE;
+			this.hiddenContext = SapphireActionSystem.CONTEXT_DIAGRAM_NODE_HIDDEN;
+		}
+		else if (sapphirePart instanceof DiagramConnectionPart)
+		{
+			this.actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION;
+			this.hiddenContext = SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION_HIDDEN;
+		}
+		
 		this.editPart = diagramEditor.getSelectedEditParts().get(0);
 	}
 	
@@ -54,73 +77,110 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 	public boolean keyPressed(KeyEvent event) 
 	{
 		final SapphireActionPresentationManager manager = getManager();
-        for( SapphireAction action : manager.getActions() )
+		final SapphireActionGroup localGroupOfActions = manager.getActionGroup();
+        
+		if( handleKeyEvent( event, manager, localGroupOfActions, false ) )
         {
-            if( action.hasActiveHandlers() )
+            return true;
+        }
+		if (this.hiddenActions != null)
+		{
+			if( handleKeyEvent( event, getHiddenManager(), this.hiddenActions, false ) )
+	        {
+	            return true;
+	        }
+		}
+		
+        ISapphirePart part = this.sapphirePart.getParentPart();
+        
+        while( part != null )
+        {
+            final String mainActionContext = part.getMainActionContext();
+            
+            if( mainActionContext != null )
             {
-                final SapphireKeySequence keySequence = action.getKeyBinding();
+                final SapphireActionGroup groupOfActions = part.getActions( mainActionContext );
                 
-                if( keySequence != null )
+                if( handleKeyEvent( event, getManager(), groupOfActions, true ) )
                 {
-                    int expectedStateMask = 0;
-                    
-                    for( SapphireKeySequence.Modifier modifier : keySequence.getModifiers() )
-                    {
-                        if( modifier == SapphireKeySequence.Modifier.SHIFT )
-                        {
-                            expectedStateMask = expectedStateMask | SWT.SHIFT;
-                        }
-                        else if( modifier == SapphireKeySequence.Modifier.ALT )
-                        {
-                            expectedStateMask = expectedStateMask | SWT.ALT;
-                        }
-                        else if( modifier == SapphireKeySequence.Modifier.CONTROL )
-                        {
-                            expectedStateMask = expectedStateMask | SWT.CONTROL;
-                        }
-                    }
-                    
-                    if( event.stateMask == expectedStateMask && event.keyCode == keySequence.getKeyCode() )
-                    {
-                        final List<SapphireActionHandler> handlers = action.getActiveHandlers();
-                        
-                        if( handlers.size() == 1 )
-                        {
-                            final SapphireActionHandler handler = handlers.get( 0 );
-                            
-                            final Runnable runnable = new Runnable()
-                            {
-                                public void run()
-                                {
-                                	if (handler.isEnabled())
-                                	{
-                                		handler.execute( manager.getContext() );
-                                	}
-                                }
-                            };
-                            
-                            manager.getContext().getDisplay().asyncExec( runnable );
-                            return true;
-                        }
-                        else
-                        {
-                            for( SapphireActionPresentation presentation : manager.getPresentations() )
-                            {
-                                if( presentation.displayActionHandlerChoice( action ) )
-                                {
-                                    return true;
-                                }
-                            }
-                        }
-                        
-                    }
+                    return true;
                 }
             }
+            
+            part = part.getParentPart();
         }
-		
+				
 		return parent != null && parent.keyPressed(event);
 	}
 	
+    private boolean handleKeyEvent( final KeyEvent event,
+            final SapphireActionPresentationManager manager, 
+            final SapphireActionGroup groupOfActions,
+            final boolean onlyPropagatedKeyBindings )
+    {
+    	for( SapphireAction action : groupOfActions.getActions() )
+    	{
+    		if( action.hasActiveHandlers() && ( ! onlyPropagatedKeyBindings || action.getKeyBindingBehavior() == KeyBindingBehavior.PROPAGATED ) )
+    		{
+    			final SapphireKeySequence keySequence = action.getKeyBinding();
+	
+    			if( keySequence != null )
+    			{
+    				int expectedStateMask = 0;
+	
+    				for( SapphireKeySequence.Modifier modifier : keySequence.getModifiers() )
+    				{
+						if( modifier == SapphireKeySequence.Modifier.SHIFT )
+						{
+						    expectedStateMask = expectedStateMask | SWT.SHIFT;
+						}
+						else if( modifier == SapphireKeySequence.Modifier.ALT )
+						{
+						    expectedStateMask = expectedStateMask | SWT.ALT;
+						}
+						else if( modifier == SapphireKeySequence.Modifier.CONTROL )
+						{
+						    expectedStateMask = expectedStateMask | SWT.CONTROL;
+						}
+    				}
+	
+    				if( event.stateMask == expectedStateMask && event.keyCode == keySequence.getKeyCode() )
+    				{
+    					final List<SapphireActionHandler> handlers = action.getActiveHandlers();
+	
+    					if( handlers.size() == 1 )
+    					{
+    						final SapphireActionHandler handler = handlers.get( 0 );
+	    
+    						final Runnable runnable = new Runnable()
+    						{
+    							public void run()
+    							{
+    								handler.execute( manager.getContext() );
+    							}
+    						};
+	    
+    						manager.getContext().getDisplay().asyncExec( runnable );
+    					}
+    					else
+    					{
+    						for( SapphireActionPresentation presentation : manager.getPresentations() )
+    						{
+    							if( presentation.displayActionHandlerChoice( action ) )
+    							{
+    								break;
+    							}
+    						}
+    					}
+	
+    					return true;
+    				}
+    			}
+    		}
+    	}	
+    	return false;
+	}
+		
 	public KeyHandler setParent(KeyHandler parent) 
 	{
 		this.parent = parent;
@@ -129,15 +189,15 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 	
 	public void dispose()
 	{
-		if (this.tempActions != null)
-		{
-			this.tempActions.dispose();
-			this.tempActions = null;
-		}
 		if (this.actionPresentationManager != null)
 		{
 			this.actionPresentationManager.dispose();
 			this.actionPresentationManager = null;			
+		}
+		if (this.hiddenActionPresentationManager != null)
+		{
+			this.hiddenActionPresentationManager.dispose();
+			this.hiddenActionPresentationManager = null;			
 		}
 	}
 	
@@ -145,15 +205,39 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 	{
 		if (this.actionPresentationManager == null)
 		{
-			this.tempActions = this.sapphirePart.getActions(this.actionContext);
-			this.actionPresentationManager = new SapphireActionPresentationManager(
-					new DiagramRenderingContext(this.sapphirePart, this.diagramEditor),
-					this.tempActions);
-			this.actionPresentation = new DiagramKeyboardActionPresentation(
-					this.actionPresentationManager, this.diagramEditor, this.editPart);
-			this.actionPresentation.render();
+			initActions();
 		}
 		return this.actionPresentationManager;
+	}
+	
+	private SapphireActionPresentationManager getHiddenManager()
+	{
+		if (this.actionPresentationManager == null)
+		{
+			initActions();
+		}
+		return this.hiddenActionPresentationManager;
+	}
+	
+	private void initActions()
+	{		
+		this.tempActions = this.sapphirePart.getActions(this.actionContext);
+		this.actionPresentationManager = new SapphireActionPresentationManager(
+				new DiagramRenderingContext(this.sapphirePart, this.diagramEditor),
+				this.tempActions);
+		this.actionPresentation = new DiagramKeyboardActionPresentation(
+				this.actionPresentationManager, this.diagramEditor, this.editPart);
+		this.actionPresentation.render();
+		if (this.hiddenContext != null)
+		{
+			this.hiddenActions = this.sapphirePart.getActions(this.hiddenContext);
+			this.hiddenActionPresentationManager = new SapphireActionPresentationManager(
+					new DiagramRenderingContext(this.sapphirePart, this.diagramEditor),
+					this.hiddenActions);
+			this.hiddenActionPresentation = new DiagramKeyboardActionPresentation(
+					this.hiddenActionPresentationManager, this.diagramEditor, this.editPart);
+			this.hiddenActionPresentation.render();
+		}
 	}
 	
 }

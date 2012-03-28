@@ -9,7 +9,7 @@
  *    Greg Amerson - initial implementation
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.gallery.ui;
+package org.eclipse.sapphire.samples.ui;
 
 import java.net.URL;
 

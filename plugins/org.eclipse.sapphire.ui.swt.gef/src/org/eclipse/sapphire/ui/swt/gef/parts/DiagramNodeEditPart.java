@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
+import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Point;
@@ -156,9 +157,10 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart
 
 	private boolean mouseInLabelRegion(Point pt)
 	{
+		Point realLocation = this.configManager.getDiagramEditor().calculateRealMouseLocation(pt);
 		NodeFigure nodeFig = getNodeFigure();
 		Rectangle bounds = nodeFig.getLabelFigure().getBounds();
-		if (bounds.contains(pt))
+		if (bounds.contains(realLocation))
 		{
 			return true;
 		}
