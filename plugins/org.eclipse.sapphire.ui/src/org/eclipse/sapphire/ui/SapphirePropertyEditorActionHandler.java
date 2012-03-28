@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui;
 
+import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.runOnDisplayThread;
+
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
@@ -76,7 +78,15 @@ public abstract class SapphirePropertyEditorActionHandler extends SapphireAction
     
     public final void refreshEnablementState()
     {
-        setEnabled( computeEnablementState() );
+        final Runnable op = new Runnable()
+        {
+            public void run()
+            {
+                setEnabled( computeEnablementState() );
+            }
+        };
+        
+        runOnDisplayThread( op );
     }
     
     protected boolean computeEnablementState()

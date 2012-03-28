@@ -31,11 +31,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 
 /**
@@ -258,6 +260,30 @@ public final class SwtUtil
         {
             buttonToSelect.setFocus();
         }
+    }
+    
+    public static void runOnDisplayThread( final Runnable op,
+                                           final Display display )
+    {
+        if( display.getThread() == Thread.currentThread() )
+        {
+            op.run();
+        }
+        else
+        {
+            display.asyncExec( op );
+        }
+    }
+
+    public static void runOnDisplayThread( final Runnable op,
+                                           final Control control )
+    {
+        runOnDisplayThread( op, control.getDisplay() );
+    }
+    
+    public static void runOnDisplayThread( final Runnable op )
+    {
+        runOnDisplayThread( op, PlatformUI.getWorkbench().getDisplay() );
     }
 
 }
