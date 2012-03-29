@@ -480,6 +480,60 @@
                     </section>
                     <property>ValuePropertiesGallery</property>
                 </node>
+                <node>
+                    <label>possible values</label>
+                    <section>
+                        <content>
+                            <with>
+                                <path>PossibleValuesGallery</path>
+                                <default-panel>
+                                    <content>
+                                        <label>Properties with possible values constraint can be presented in a number of different ways. The default presentation is a text field with a browse button and content assist.</label>
+                                        <spacer></spacer>
+                                        <label>In this example, two properties are used to illustrate the different options. The Color property specifies an error for the severity of deviation from the possible values constraint, while the Shape property specifies a warning.</label>
+                                        <spacer></spacer>
+                                        <property-editor>Color</property-editor>
+                                        <property-editor>Shape</property-editor>
+                                        <spacer></spacer>
+                                        <label>An editable combo box presentation can be used instead by specifying Sapphire.PropertyEditor.Combo.Editable as the presentation style. This presentation is most appropriate when the severity of deviation from the possible values constraint is something other than an error.</label>
+                                        <spacer></spacer>
+                                        <property-editor>
+                                            <property>Color</property>
+                                            <style>Sapphire.PropertyEditor.Combo.Editable</style>
+                                        </property-editor>
+                                        <property-editor>
+                                            <property>Shape</property>
+                                            <style>Sapphire.PropertyEditor.Combo.Editable</style>
+                                        </property-editor>
+                                        <spacer></spacer>
+                                        <label>A strict combo box presentation can be used instead by specifying Sapphire.PropertyEditor.Combo.Strict as the presentation style. This presentation is most appropriate when the severity of deviation from the possible values constraint is an error.</label>
+                                        <spacer></spacer>
+                                        <property-editor>
+                                            <property>Color</property>
+                                            <style>Sapphire.PropertyEditor.Combo.Strict</style>
+                                        </property-editor>
+                                        <property-editor>
+                                            <property>Shape</property>
+                                            <style>Sapphire.PropertyEditor.Combo.Strict</style>
+                                        </property-editor>
+                                        <spacer></spacer>
+                                        <label>Alternatively, let the framework choose between editable and strict combo styles depending on the property's possible values constraint by specifying Sapphire.PropertyEditor.Combo as the presentation style.</label>
+                                        <spacer></spacer>
+                                        <property-editor>
+                                            <property>Color</property>
+                                            <style>Sapphire.PropertyEditor.Combo</style>
+                                        </property-editor>
+                                        <property-editor>
+                                            <property>Shape</property>
+                                            <style>Sapphire.PropertyEditor.Combo</style>
+                                        </property-editor>
+                                    </content>
+                                </default-panel>
+                            </with>
+                        </content>
+                    </section>
+                    <property>ValuePropertiesGallery</property>
+                </node>
             </node>
             <node>
                 <label>element properties</label>

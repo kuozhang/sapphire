@@ -36,13 +36,16 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.Status.Severity;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
+import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.PartDef;
@@ -57,6 +60,7 @@ import org.eclipse.sapphire.ui.renderers.swt.NamedValuesPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorRendererFactory;
 import org.eclipse.sapphire.ui.renderers.swt.SlushBucketPropertyEditor;
+import org.eclipse.sapphire.ui.swt.internal.ComboPropertyEditorPresentation;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -440,44 +444,94 @@ public final class PropertyEditorPart extends FormPart
     @Override
     public void render( final SapphireRenderingContext context )
     {
-        PropertyEditorRendererFactory factory = null;
+        PropertyEditorRenderer presentation = null;
+        final String style = definition().getStyle().getText();
         
-        try
+        if( style == null )
         {
-            final Class<PropertyEditorRendererFactory> factoryClass 
-                = getRenderingHint( PropertyEditorDef.HINT_FACTORY, (Class<PropertyEditorRendererFactory>) null );
+            PropertyEditorRendererFactory factory = null;
             
-            if( factoryClass != null )
+            try
             {
-                factory = factoryClass.newInstance();
+                final Class<PropertyEditorRendererFactory> factoryClass 
+                    = getRenderingHint( PropertyEditorDef.HINT_FACTORY, (Class<PropertyEditorRendererFactory>) null );
+                
+                if( factoryClass != null )
+                {
+                    factory = factoryClass.newInstance();
+                }
+            }
+            catch( Exception e )
+            {
+                SapphireUiFrameworkPlugin.log( e );
+            }
+            
+            if( factory == null )
+            {
+                for( PropertyEditorRendererFactory f : FACTORIES )
+                {
+                    if( f.isApplicableTo( this ) )
+                    {
+                        factory = f;
+                        break;
+                    }
+                }
+            }
+    
+            if( factory != null )
+            {
+                presentation = factory.create( context, this );
             }
         }
-        catch( Exception e )
+        else
         {
-            SapphireUiFrameworkPlugin.log( e );
-        }
-        
-        if( factory == null )
-        {
-            for( PropertyEditorRendererFactory f : FACTORIES )
+            if( style.startsWith( "Sapphire.PropertyEditor.Combo" ) )
             {
-                if( f.isApplicableTo( this ) )
+                if( this.property instanceof ValueProperty && this.element.service( this.property, PossibleValuesService.class ) != null )
                 {
-                    factory = f;
-                    break;
+                    ComboPropertyEditorPresentation.Style comboPropertyEditorPresentationStyle = null;
+                    
+                    if( style.equals( "Sapphire.PropertyEditor.Combo" ) )
+                    {
+                        final PossibleValues possibleValuesAnnotation = this.property.getAnnotation( PossibleValues.class );
+                        
+                        if( possibleValuesAnnotation != null )
+                        {
+                            comboPropertyEditorPresentationStyle 
+                                = ( possibleValuesAnnotation.invalidValueSeverity() == Severity.ERROR 
+                                    ? ComboPropertyEditorPresentation.Style.STRICT : ComboPropertyEditorPresentation.Style.EDITABLE );
+                        }
+                        else
+                        {
+                            comboPropertyEditorPresentationStyle = ComboPropertyEditorPresentation.Style.EDITABLE;
+                        }
+                    }
+                    else if( style.equals( "Sapphire.PropertyEditor.Combo.Editable" ) )
+                    {
+                        comboPropertyEditorPresentationStyle = ComboPropertyEditorPresentation.Style.EDITABLE;
+                    }
+                    else if( style.equals( "Sapphire.PropertyEditor.Combo.Strict" ) )
+                    {
+                        comboPropertyEditorPresentationStyle = ComboPropertyEditorPresentation.Style.STRICT;
+                    }
+                    
+                    if( comboPropertyEditorPresentationStyle != null )
+                    {
+                        presentation = new ComboPropertyEditorPresentation( context, this, comboPropertyEditorPresentationStyle );
+                    }
                 }
             }
         }
-
-        if( factory != null )
+        
+        if( presentation != null )
         {
-            final PropertyEditorRenderer editor = factory.create( context, this );
-            editor.create( context.getComposite() );
+            presentation.create( context.getComposite() );
         }
         else
         {
             throw new IllegalStateException( this.property.toString() );
         }
+        
     }
 
     @Override

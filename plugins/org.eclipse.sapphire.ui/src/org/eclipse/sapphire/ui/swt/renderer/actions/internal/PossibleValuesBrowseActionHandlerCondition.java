@@ -19,10 +19,7 @@ import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PossibleValuesProviderBrowseActionHandlerCondition 
-
-    extends SapphirePropertyEditorCondition
-    
+public final class PossibleValuesBrowseActionHandlerCondition extends SapphirePropertyEditorCondition
 {
     @Override
     protected boolean evaluate( final PropertyEditorPart part )

@@ -26,14 +26,11 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PossibleValuesProviderBrowseActionHandler 
-
-    extends SapphireBrowseActionHandler
-    
+public final class PossibleValuesBrowseActionHandler extends SapphireBrowseActionHandler
 {
     public static final String ID = "Sapphire.Browse.Possible";
     
-    public PossibleValuesProviderBrowseActionHandler()
+    public PossibleValuesBrowseActionHandler()
     {
         setId( ID );
     }

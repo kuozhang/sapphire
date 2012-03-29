@@ -25,6 +25,7 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
+import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -272,5 +273,11 @@ public interface PropertyEditorDef extends FormPartDef
     Value<Integer> getMarginLeft();
     void setMarginLeft( String value );
     void setMarginLeft( Integer value );
+    
+    // *** Style ***
+
+    @PossibleValues( values = { "Sapphire.PropertyEditor.Combo", "Sapphire.PropertyEditor.Combo.Editable", "Sapphire.PropertyEditor.Combo.Strict" } )
+    
+    ValueProperty PROP_STYLE = new ValueProperty( TYPE, FormPartDef.PROP_STYLE );
 
 }

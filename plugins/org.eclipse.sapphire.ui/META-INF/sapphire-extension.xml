@@ -241,10 +241,10 @@
     </action-handler>
     <action-handler>
         <action>Sapphire.Browse</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.PossibleValuesProviderBrowseActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.PossibleValuesBrowseActionHandler</impl>
         <id>Sapphire.Browse.Possible</id>
         <description>Opens a browse dialog listing possible values for the property. Activates if the property is a value property and has either @PossibleValuesProvider, @PossibleValues or @PossibleValuesFromModel annotation.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.PossibleValuesProviderBrowseActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.PossibleValuesBrowseActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Help</action>
@@ -376,5 +376,17 @@
     <presentation-style>
         <id>Sapphire.Actuator.Button</id>
         <part-type>Sapphire.Actuator</part-type>
+    </presentation-style>
+    <presentation-style>
+        <id>Sapphire.PropertyEditor.Combo</id>
+        <part-type>Sapphire.PropertyEditor</part-type>
+    </presentation-style>
+    <presentation-style>
+        <id>Sapphire.PropertyEditor.Combo.Editable</id>
+        <part-type>Sapphire.PropertyEditor</part-type>
+    </presentation-style>
+    <presentation-style>
+        <id>Sapphire.PropertyEditor.Combo.Strict</id>
+        <part-type>Sapphire.PropertyEditor</part-type>
     </presentation-style>
 </extension>

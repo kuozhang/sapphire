@@ -111,11 +111,6 @@ public final class ValueLabelProvider implements ILabelProvider
             LoggingService.log( e );
         }
         
-        if( imageData == null )
-        {
-            imageData = this.property.getModelElementType().image();
-        }
-        
         return imageData;
     }
 

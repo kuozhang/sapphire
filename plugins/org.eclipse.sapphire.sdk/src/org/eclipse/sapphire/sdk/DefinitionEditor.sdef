@@ -388,7 +388,7 @@
             <node-include>ActionsOverallNode</node-include>
             <node-include>ServicesNode</node-include>
             <section>
-                <label>customization</label>
+                <label>presentation</label>
                 <content>
                     <property-editor>
                         <property>ScaleVertically</property>
@@ -418,6 +418,8 @@
                     <property-editor>Label</property-editor>
                     <spacer></spacer>
                     <property-editor>Hints</property-editor>
+                    <spacer></spacer>
+                    <property-editor>Style</property-editor>
                 </content>
             </section>
             <node-include>DocumentationNode</node-include>

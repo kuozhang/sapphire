@@ -27,6 +27,7 @@
     <li><a href="#MoreFlexibleActuatorPresentation">More Flexible Actuator Presentation</a></li>
     <li><a href="#PropagatedKeyBindings">Propagated Key Bindings</a></li>
     <li><a href="#ActionToolTips">Action Tool Tips</a></li>
+    <li><a href="#ComboBoxForPossibleValues">Combo Box Presentation for Possible Value Properties</a></li>
   </ol>
   <li><a href="#DiagramEditor">Diagram Editor</a></li>
   <ol type="A">
@@ -126,6 +127,67 @@ set the action tool tip explicitly.</p>
         &lt;value>image+text&lt;/value>
     &lt;/hint>
 &lt;/action></font></code></pre>
+
+
+<h2><a name="ComboBoxForPossibleValues">Combo Box Presentation for Possible Value Properties</a></h2>
+
+<p>Two combo box presentations (editable and strict) have been added for properties with a possible
+values constraint. The default presentation remains a text field with a browse button and content
+assist.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, two properties are used to illustrate the different options. The Color property 
+specifies an error for the severity of deviation from the possible values constraint, while the Shape 
+property specifies a warning.</p>
+
+<p style="margin-left: 20px;">The default presentation is a text field with a browse button and content assist.</p>
+
+<p style="margin-left: 20px;"><img src="images/ComboBoxForPossibleValues-1.png"/></p>
+
+<p style="margin-left: 20px;">An editable combo box presentation can be used by specifying <nobr><i>Sapphire.PropertyEditor.Combo.Editable</i></nobr> as 
+the presentation style. This presentation is most appropriate when the severity of deviation from the possible values 
+constraint is something other than an error.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor>
+    &lt;property>Color&lt;/property></font>
+    &lt;style>Sapphire.PropertyEditor.Combo.Editable&lt;/style>
+<font color="#888888">&lt;/property-editor>
+&lt;property-editor>
+    &lt;property>Shape&lt;/property></font>
+    &lt;style>Sapphire.PropertyEditor.Combo.Editable&lt;/style>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/ComboBoxForPossibleValues-2.png"/></p>
+
+<p style="margin-left: 20px;">A strict combo box presentation can be used by specifying <nobr><i>Sapphire.PropertyEditor.Combo.Strict</i></nobr> as 
+the presentation style. This presentation is most appropriate when the severity of deviation from the possible 
+values constraint is an error.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor>
+    &lt;property>Color&lt;/property></font>
+    &lt;style>Sapphire.PropertyEditor.Combo.Strict&lt;/style>
+<font color="#888888">&lt;/property-editor>
+&lt;property-editor>
+    &lt;property>Shape&lt;/property></font>
+    &lt;style>Sapphire.PropertyEditor.Combo.Strict&lt;/style>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/ComboBoxForPossibleValues-3.png"/></p>
+
+<p style="margin-left: 20px;">Alternatively, let the framework choose between editable and strict combo styles depending on the property's 
+possible values constraint by specifying <nobr><i>Sapphire.PropertyEditor.Combo</i></nobr> as the presentation style.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor>
+    &lt;property>Color&lt;/property></font>
+    &lt;style>Sapphire.PropertyEditor.Combo&lt;/style>
+<font color="#888888">&lt;/property-editor>
+&lt;property-editor>
+    &lt;property>Shape&lt;/property></font>
+    &lt;style>Sapphire.PropertyEditor.Combo&lt;/style>
+<font color="#888888">&lt;/property-editor></font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/ComboBoxForPossibleValues-4.png"/></p>
 
 
 <h2><a name="DiagramEditor"><a name="DiagramLayout">More Flexible Diagram Layout Storage</a></a></h2>

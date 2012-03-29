@@ -54,4 +54,13 @@ public interface IValuePropertiesGallery extends IModelElement
     
     InitialValueGallery getInitialValueGallery();
     
+    // *** PossibleValuesGallery ***
+    
+    @Type( base = PossibleValuesGallery.class )
+    @XmlBinding( path = "possible-values" )
+
+    ImpliedElementProperty PROP_POSSIBLE_VALUES_GALLERY = new ImpliedElementProperty( TYPE, "PossibleValuesGallery" );
+    
+    PossibleValuesGallery getPossibleValuesGallery();
+    
 }

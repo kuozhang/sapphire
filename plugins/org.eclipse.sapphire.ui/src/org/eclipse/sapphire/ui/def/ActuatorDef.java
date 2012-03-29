@@ -144,15 +144,10 @@ public interface ActuatorDef extends FormPartDef
     
     // *** Style ***
 
-    @Label( standard = "style" )
-    @XmlBinding( path = "style" )
     @DefaultValue( text = "Sapphire.Actuator.Link" )
     @PossibleValues( values = { "Sapphire.Actuator.Link", "Sapphire.Actuator.Button" } )
     
-    ValueProperty PROP_STYLE = new ValueProperty( TYPE, "Style" );
-
-    Value<String> getStyle();
-    void setStyle(String value);
+    ValueProperty PROP_STYLE = new ValueProperty( TYPE, FormPartDef.PROP_STYLE );
     
     // *** HorizontalAlignment ***
     

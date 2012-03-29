@@ -20,8 +20,10 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
@@ -111,6 +113,16 @@ public interface PartDef extends IModelElement
     
     int getHint( String name,
                  int defaultValue );
+    
+    // *** Style ***
+
+    @Label( standard = "style" )
+    @XmlBinding( path = "style" )
+    
+    ValueProperty PROP_STYLE = new ValueProperty( TYPE, "Style" );
+
+    Value<String> getStyle();
+    void setStyle( String value );
     
     // *** Listeners ***
     
