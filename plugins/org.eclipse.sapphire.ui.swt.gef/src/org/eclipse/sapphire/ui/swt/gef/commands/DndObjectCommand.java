@@ -67,14 +67,23 @@ public class DndObjectCommand extends Command
 	{
 		SapphireAction dropAction = this.diagramModel.getSapphirePart().getAction(SAPPHIRE_DROP_ACTION);
 		this.dropHandler = (SapphireDiagramActionHandler)dropAction.getFirstActiveHandler();
-		for (Object droppedObj : this.droppedObjs)
+		boolean canDrop = true;
+		if (this.dropHandler != null)
 		{
-			if (dropHandler != null && dropHandler.canExecute(droppedObj))
+			for (Object droppedObj : this.droppedObjs)
 			{
-				return true;
+				if (!dropHandler.canExecute(droppedObj))
+				{
+					canDrop = false;
+					break;
+				}
 			}
 		}
-		return false;
+		else
+		{
+			canDrop = false;
+		}
+		return canDrop;
 	}
 	
 	@Override

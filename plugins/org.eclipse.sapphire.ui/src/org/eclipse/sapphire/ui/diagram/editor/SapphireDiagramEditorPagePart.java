@@ -62,7 +62,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     private NodeTemplateListener nodeTemplateListener;
     private ConnectionTemplateListener connTemplateListener;
     private PropertiesViewContributionManager propertiesViewContributionManager;
-    private SapphirePart selection;
+    private List<ISapphirePart> selections;
     private ImplicitConnectionTemplateListener implicitConnTemplateListener;
     private boolean showGrid;
     private boolean showGuides;
@@ -186,7 +186,8 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
             this.connectionImageDataFunctionResults.add(imageResult);
         }
 
-        this.selection = this;
+        this.selections = new ArrayList<ISapphirePart>();
+        this.selections.add(this);
         this.propertiesViewContributionManager = new PropertiesViewContributionManager( this, this.modelElement );
                 
         attach
@@ -377,6 +378,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         Set<String> contextSet = new HashSet<String>();
         contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM);
         contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR);
+        contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_MULTIPLE_PARTS);
         return contextSet;
     }
         
@@ -386,35 +388,47 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	return SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR;
     }
     
-    public SapphirePart getSelection()
+    public List<ISapphirePart> getSelections()
     {
-        return this.selection;
+        return this.selections;
     }
     
-    public void setSelection( final SapphirePart selection )
+    public void setSelection( final ISapphirePart selection )
     {
-        if( this.selection != selection )
+        if( this.selections.size() != 1 || this.selections.get(0) != selection )
         {
-            this.selection = selection;
+            this.selections.clear();
+            this.selections.add(selection);
             broadcast( new SelectionChangedEvent( this ) );
         }
     }
     
+    public void setSelections(final List<ISapphirePart> selections)
+    {
+    	this.selections.clear();
+    	this.selections.addAll(selections);
+    	broadcast( new SelectionChangedEvent( this ) );
+    }
+    
     private void refreshPropertiesViewContribution()
     {
-        final SapphirePart selection = getSelection();
+        final List<ISapphirePart> selections = getSelections();
         
         PropertiesViewContributionPart propertiesViewContribution = null;
         
-        if( selection == SapphireDiagramEditorPagePart.this )
+        if (selections.size() == 1)
         {
-            propertiesViewContribution = this.propertiesViewContributionManager.getPropertiesViewContribution();
-        }
-        else if( selection instanceof IPropertiesViewContributorPart )
-        {
-            propertiesViewContribution = ( (IPropertiesViewContributorPart) selection ).getPropertiesViewContribution();
-        }
+        	ISapphirePart selection = selections.get(0);
         
+	        if( selection == SapphireDiagramEditorPagePart.this )
+	        {
+	            propertiesViewContribution = this.propertiesViewContributionManager.getPropertiesViewContribution();
+	        }
+	        else if( selection instanceof IPropertiesViewContributorPart )
+	        {
+	            propertiesViewContribution = ( (IPropertiesViewContributorPart) selection ).getPropertiesViewContribution();
+	        }	        	        
+        }
         setPropertiesViewContribution( propertiesViewContribution );
     }
     

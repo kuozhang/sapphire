@@ -13,7 +13,7 @@ package org.eclipse.sapphire.ui.swt.gef.actions;
 
 import java.util.List;
 
-import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
@@ -43,11 +43,11 @@ public class DiagramDirectEditActionHandler extends SapphireDiagramActionHandler
 		SapphireDiagramEditor diagramEditor = diagramContext.getDiagramEditor();
 		if (diagramEditor != null)
 		{
-			List<SapphirePart> parts = diagramEditor.getSelectedParts();
+			List<ISapphirePart> parts = diagramEditor.getSelectedParts();
 			DiagramModel model = diagramEditor.getDiagramModel();
 			if (parts.size() == 1)
 			{
-				SapphirePart part = parts.get(0);
+				ISapphirePart part = parts.get(0);
 				if (part instanceof DiagramNodePart)
 				{
 					model.handleDirectEditing((DiagramNodePart)part);

@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui.swt.gef;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.gef.GraphicalEditPart;
@@ -38,6 +39,7 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 {		
 	private KeyHandler parent;
 	private SapphireDiagramEditor diagramEditor;
+	private List<ISapphirePart> sapphireParts;
 	private ISapphirePart sapphirePart;
 	private String actionContext;
 	private String hiddenContext;
@@ -49,28 +51,38 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 	private DiagramKeyboardActionPresentation actionPresentation;
 	private DiagramKeyboardActionPresentation hiddenActionPresentation;
 		
-	public SapphireDiagramKeyHandler(final SapphireDiagramEditor diagramEditor, final ISapphirePart sapphirePart)
+	public SapphireDiagramKeyHandler(final SapphireDiagramEditor diagramEditor, final List<ISapphirePart> sapphireParts)
 	{
 		this.diagramEditor = diagramEditor;
-		this.sapphirePart = sapphirePart;
+		this.sapphireParts = new ArrayList<ISapphirePart>();
+		this.sapphireParts.addAll(sapphireParts);
 		this.hiddenContext = null;
 		
-		if (sapphirePart instanceof SapphireDiagramEditorPagePart)
+		if (sapphireParts.size() == 1)
 		{
-			this.actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR;
-		}
-		else if (sapphirePart instanceof DiagramNodePart)
-		{
-			this.actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_NODE;
-			this.hiddenContext = SapphireActionSystem.CONTEXT_DIAGRAM_NODE_HIDDEN;
-		}
-		else if (sapphirePart instanceof DiagramConnectionPart)
-		{
-			this.actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION;
-			this.hiddenContext = SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION_HIDDEN;
-		}
+			this.sapphirePart = sapphireParts.get(0);
+			if (this.sapphirePart instanceof SapphireDiagramEditorPagePart)
+			{
+				this.actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR;
+			}
+			else if (this.sapphirePart instanceof DiagramNodePart)
+			{
+				this.actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_NODE;
+				this.hiddenContext = SapphireActionSystem.CONTEXT_DIAGRAM_NODE_HIDDEN;
+			}
+			else if (this.sapphirePart instanceof DiagramConnectionPart)
+			{
+				this.actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION;
+				this.hiddenContext = SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION_HIDDEN;
+			}
 		
-		this.editPart = diagramEditor.getSelectedEditParts().get(0);
+			this.editPart = diagramEditor.getSelectedEditParts().get(0);
+		}
+		else if (sapphireParts.size() > 1)
+		{
+			this.actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_MULTIPLE_PARTS;
+			this.sapphirePart = this.diagramEditor.getPart();
+		}
 	}
 	
 	@Override
@@ -91,26 +103,30 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 	        }
 		}
 		
-        ISapphirePart part = this.sapphirePart.getParentPart();
-        
-        while( part != null )
-        {
-            final String mainActionContext = part.getMainActionContext();
-            
-            if( mainActionContext != null )
-            {
-                final SapphireActionGroup groupOfActions = part.getActions( mainActionContext );
-                
-                if( handleKeyEvent( event, getManager(), groupOfActions, true ) )
-                {
-                    return true;
-                }
-            }
-            
-            part = part.getParentPart();
-        }
-				
-		return parent != null && parent.keyPressed(event);
+		if (this.sapphireParts.size() == 1)
+		{
+	        ISapphirePart part = this.sapphirePart.getParentPart();
+	        
+	        while( part != null )
+	        {
+	            final String mainActionContext = part.getMainActionContext();
+	            
+	            if( mainActionContext != null )
+	            {
+	                final SapphireActionGroup groupOfActions = part.getActions( mainActionContext );
+	                
+	                if( handleKeyEvent( event, getManager(), groupOfActions, true ) )
+	                {
+	                    return true;
+	                }
+	            }
+	            
+	            part = part.getParentPart();
+	        }
+					
+			return parent != null && parent.keyPressed(event);
+		}
+		return false;
 	}
 	
     private boolean handleKeyEvent( final KeyEvent event,

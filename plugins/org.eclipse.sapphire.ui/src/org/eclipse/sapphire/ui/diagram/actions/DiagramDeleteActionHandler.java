@@ -12,6 +12,7 @@
 
 package org.eclipse.sapphire.ui.diagram.actions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -63,29 +64,26 @@ public class DiagramDeleteActionHandler extends SapphireDiagramActionHandler
         else if (part instanceof DiagramNodePart)
         {
             DiagramNodePart nodePart = (DiagramNodePart)part;
-            IModelElement nodeModel = nodePart.getLocalModelElement();
-            // Need to remove connection parts that are associated with this node
-            deleteNodeConnections(nodePart);
-            
-            // Check top level connections to see whether we need to remove the connection parent element
-            SapphireDiagramEditorPagePart editorPart = nodePart.getDiagramNodeTemplate().getDiagramEditorPart();
-            List<DiagramConnectionTemplate> connTemplates = editorPart.getConnectionTemplates();
-            for (DiagramConnectionTemplate connTemplate : connTemplates)
-            {
-                if (connTemplate.getConnectionType() == DiagramConnectionTemplate.ConnectionType.OneToMany)
+            deleteNode(nodePart);
+        }
+        else if (part instanceof SapphireDiagramEditorPagePart)
+        {
+        	SapphireDiagramEditorPagePart pagePart = (SapphireDiagramEditorPagePart)part;
+        	List<ISapphirePart> parts = new ArrayList<ISapphirePart>();
+        	parts.addAll(pagePart.getSelections());
+        	for (ISapphirePart selectedPart : parts)
+        	{
+        		if (selectedPart instanceof DiagramConnectionPart)
+        		{
+                    DiagramConnectionPart connPart = (DiagramConnectionPart)selectedPart;
+                    deleteConnection(connPart);           			
+        		}
+                else if (selectedPart instanceof DiagramNodePart)
                 {
-                    IModelElement connParentElement = connTemplate.getConnectionParentElement(nodeModel);
-                    if (connParentElement != null)
-                    {
-                        ModelElementList<?> connParentList = (ModelElementList<?>)connParentElement.parent();
-                        connParentList.remove(connParentElement);
-                    }
-                }
-            }
-            
-            ModelElementList<?> list = (ModelElementList<?>) nodeModel.parent();
-            list.remove(nodeModel);
-            
+                    DiagramNodePart nodePart = (DiagramNodePart)selectedPart;
+                    deleteNode(nodePart);
+                }        		
+        	}
         }
         return null;
     }
@@ -134,5 +132,32 @@ public class DiagramDeleteActionHandler extends SapphireDiagramActionHandler
         final IModelElement element = connPart.getLocalModelElement();
         final ModelElementList<?> list = (ModelElementList<?>) element.parent();
         list.remove(element);            
+    }
+    
+    private void deleteNode(DiagramNodePart nodePart)
+    {
+        IModelElement nodeModel = nodePart.getLocalModelElement();
+        // Need to remove connection parts that are associated with this node
+        deleteNodeConnections(nodePart);
+        
+        // Check top level connections to see whether we need to remove the connection parent element
+        SapphireDiagramEditorPagePart editorPart = nodePart.getDiagramNodeTemplate().getDiagramEditorPart();
+        List<DiagramConnectionTemplate> connTemplates = editorPart.getConnectionTemplates();
+        for (DiagramConnectionTemplate connTemplate : connTemplates)
+        {
+            if (connTemplate.getConnectionType() == DiagramConnectionTemplate.ConnectionType.OneToMany)
+            {
+                IModelElement connParentElement = connTemplate.getConnectionParentElement(nodeModel);
+                if (connParentElement != null)
+                {
+                    ModelElementList<?> connParentList = (ModelElementList<?>)connParentElement.parent();
+                    connParentList.remove(connParentElement);
+                }
+            }
+        }
+        
+        ModelElementList<?> list = (ModelElementList<?>) nodeModel.parent();
+        list.remove(nodeModel);            
+    	
     }
 }

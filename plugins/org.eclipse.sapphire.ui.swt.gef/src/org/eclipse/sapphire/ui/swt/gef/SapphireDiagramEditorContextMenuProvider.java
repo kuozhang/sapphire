@@ -19,11 +19,11 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
-import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
@@ -51,12 +51,13 @@ public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvide
 	@Override
 	public void buildContextMenu(IMenuManager menuMgr) 
 	{
-		List<SapphirePart> selectedParts = this.sapphireDiagramEditor.getSelectedParts();
+		List<ISapphirePart> selectedParts = this.sapphireDiagramEditor.getSelectedParts();
+		String actionContext = null;
 		if (selectedParts.size() == 1)
 		{
-			SapphirePart selectedPart = selectedParts.get(0);
+			ISapphirePart selectedPart = selectedParts.get(0);
 			
-			String actionContext = null;
+			actionContext = null;
 			if (selectedPart instanceof SapphireDiagramEditorPagePart)
 			{
 				actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR;
@@ -80,6 +81,15 @@ public class SapphireDiagramEditorContextMenuProvider extends ContextMenuProvide
 				}
 			}
 			
+		}
+		else if (selectedParts.size() > 1)
+		{
+			actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_MULTIPLE_PARTS;
+			SapphireActionGroup actionGroup = this.sapphireDiagramEditor.getPart().getActions(actionContext);
+			for (SapphireAction action : actionGroup.getActions())
+			{
+				addActionToContextMenu(menuMgr, action);
+			}
 		}
 	}
 

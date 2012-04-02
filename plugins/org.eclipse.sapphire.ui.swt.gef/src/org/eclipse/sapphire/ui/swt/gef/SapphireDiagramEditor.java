@@ -99,7 +99,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
     private SapphireDiagramEditorPagePart diagramPart;
     private DiagramModel diagramModel;
     private SapphireDiagramPartListener diagramPartListener;
-    private List<SapphirePart> selectedParts = null;
+    private List<ISapphirePart> selectedParts = null;
     private List<GraphicalEditPart> selectedEditParts = null;
     private boolean editorIsDirty = false;
 
@@ -397,7 +397,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			if (selection instanceof StructuredSelection) 
 			{
 				StructuredSelection structuredSelection = (StructuredSelection) selection;
-				List<SapphirePart> partList = new ArrayList<SapphirePart>();
+				List<ISapphirePart> partList = new ArrayList<ISapphirePart>();
 				List<GraphicalEditPart> editPartList = new ArrayList<GraphicalEditPart>();
 				for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) 
 				{
@@ -416,14 +416,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 						partList.add(sp);
 						editPartList.add((GraphicalEditPart)editPart);
 					}
-					if (partList.size() == 1)
-					{
-						getPart().setSelection(partList.get(0));
-					}
-					else
-					{
-						getPart().setSelection(null);
-					}
+					getPart().setSelections(partList);
 					this.selectedParts = partList;
 					this.selectedEditParts = editPartList;
 				}
@@ -439,18 +432,14 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
         	this.diagramKeyHandler.dispose();
         	this.diagramKeyHandler = null;
         }
-		List<SapphirePart> selectedParts = this.getSelectedParts();
-		if (selectedParts != null && selectedParts.size() == 1)
-		{
-			SapphirePart selectedPart = selectedParts.get(0);
-			this.diagramKeyHandler = new SapphireDiagramKeyHandler(this, selectedPart);
-            if (this.graphicalViewerKeyHandler == null)
-            {
-            	graphicalViewerKeyHandler = new GraphicalViewerKeyHandler(getGraphicalViewer());
-            }
-    		KeyHandler parentKeyHandler = graphicalViewerKeyHandler.setParent(this.diagramKeyHandler);
-    		getGraphicalViewer().setKeyHandler(parentKeyHandler);
-		}
+		List<ISapphirePart> selectedParts = this.getSelectedParts();
+		this.diagramKeyHandler = new SapphireDiagramKeyHandler(this, selectedParts);
+        if (this.graphicalViewerKeyHandler == null)
+        {
+        	graphicalViewerKeyHandler = new GraphicalViewerKeyHandler(getGraphicalViewer());
+        }
+		KeyHandler parentKeyHandler = graphicalViewerKeyHandler.setParent(this.diagramKeyHandler);
+		getGraphicalViewer().setKeyHandler(parentKeyHandler);
 	}
 	
 	private void refreshPalette() {
@@ -639,7 +628,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
             {            	
             	if (getSelectedParts() != null && getSelectedParts().size() == 1)
             	{
-            		SapphirePart part = getSelectedParts().get(0);
+            		ISapphirePart part = getSelectedParts().get(0);
 	            	final SapphireHelpContext context = new SapphireHelpContext(part.getLocalModelElement(), null);
 	            	if (context.getText() != null || (context.getRelatedTopics() != null && context.getRelatedTopics().length > 0))
 	            	{
@@ -678,7 +667,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		return super.getGraphicalViewer();
 	}
 
-	public List<SapphirePart> getSelectedParts()
+	public List<ISapphirePart> getSelectedParts()
 	{
 		return this.selectedParts;
 	}

@@ -81,6 +81,7 @@
         <context>Sapphire.EditorPage.Outline.Node</context>
         <context>Sapphire.Diagram.Node</context>
         <context>Sapphire.Diagram.Connection</context>
+        <context>Sapphire.Diagram.MultipleParts</context>
     </action>
     <action>
         <id>Sapphire.Help</id>
@@ -333,6 +334,7 @@
         <description>Deletes the model element associated with a given diagram node or connection.</description>
         <context>Sapphire.Diagram.Node</context>
         <context>Sapphire.Diagram.Connection</context>
+        <context>Sapphire.Diagram.MultipleParts</context>
     </action-handler>
     <action-handler>
         <action>Sapphire.Diagram.Grid.Toggle</action>
