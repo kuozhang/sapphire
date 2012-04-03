@@ -746,9 +746,11 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		return mouseLocation;
 	}
 
-	private void setMouseLocation(int x, int y) {
+	private void setMouseLocation(int x, int y) 
+	{
 		getMouseLocation().setLocation(x, y);
-		this.diagramPart.setMouseLocation(x, y);
+		Point realLocation = calculateRealMouseLocation(getMouseLocation());
+		this.diagramPart.setMouseLocation(realLocation.x, realLocation.y);
 	}
 	
 	public FigureCanvas getFigureCanvas() 
