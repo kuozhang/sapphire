@@ -95,6 +95,7 @@
                                     <property>PhoneNumbers</property>
                                     <child-property>
                                         <property>Type</property>
+                                        <style>Sapphire.PropertyEditor.Combo.Strict</style>
                                     </child-property>
                                     <child-property>
                                         <property>AreaCode</property>

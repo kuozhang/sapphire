@@ -71,9 +71,11 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.Status.Severity;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.FixedOrderList;
+import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
@@ -95,6 +97,8 @@ import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.ReadOnlyComboBoxCellEditor;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
+import org.eclipse.sapphire.ui.swt.internal.ComboPropertyEditorPresentation;
+import org.eclipse.sapphire.ui.swt.internal.ComboCellEditorPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.HyperlinkTable;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireMenuActionPresentation;
@@ -434,7 +438,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             
             tableColumnLayout.setColumnData( col2.getColumn(), columnWeightData );
             
-            final ColumnHandler columnHandler = createColumnHandler( this.columnHandlers, memberProperty, showImages );
+            final ColumnHandler columnHandler = createColumnHandler( this.columnHandlers, memberProperty, showImages, childPropertyEditorDef );
             
             showImages = false; // Only the first column should ever show the image.
             
@@ -968,9 +972,10 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     
     private ColumnHandler createColumnHandler( final List<ColumnHandler> allColumnHandlers,
                                                final ValueProperty property,
-                                               final boolean showImages )
+                                               final boolean showImages,
+                                               final PropertyEditorDef childPropertyEditorDef )
     {
-        final ColumnHandler columnHandler;
+        ColumnHandler columnHandler = null;
         
         if( property.isOfType( Boolean.class ) )
         {
@@ -984,8 +989,54 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         }
         else
         {
-            columnHandler = new ColumnHandler( this.context, this.tableViewer, this.selectionProvider, getPart(), 
-                                               allColumnHandlers, property, showImages );
+            if( childPropertyEditorDef != null )
+            {
+                final String style = childPropertyEditorDef.getStyle().getText();
+                
+                if( style != null )
+                {
+                    if( style.startsWith( "Sapphire.PropertyEditor.Combo" ) )
+                    {
+                        ComboPropertyEditorPresentation.Style comboPropertyEditorPresentationStyle = null;
+                        
+                        if( style.equals( "Sapphire.PropertyEditor.Combo" ) )
+                        {
+                            final PossibleValues possibleValuesAnnotation = property.getAnnotation( PossibleValues.class );
+                            
+                            if( possibleValuesAnnotation != null )
+                            {
+                                comboPropertyEditorPresentationStyle 
+                                    = ( possibleValuesAnnotation.invalidValueSeverity() == Severity.ERROR 
+                                        ? ComboPropertyEditorPresentation.Style.STRICT : ComboPropertyEditorPresentation.Style.EDITABLE );
+                            }
+                            else
+                            {
+                                comboPropertyEditorPresentationStyle = ComboPropertyEditorPresentation.Style.EDITABLE;
+                            }
+                        }
+                        else if( style.equals( "Sapphire.PropertyEditor.Combo.Editable" ) )
+                        {
+                            comboPropertyEditorPresentationStyle = ComboPropertyEditorPresentation.Style.EDITABLE;
+                        }
+                        else if( style.equals( "Sapphire.PropertyEditor.Combo.Strict" ) )
+                        {
+                            comboPropertyEditorPresentationStyle = ComboPropertyEditorPresentation.Style.STRICT;
+                        }
+                        
+                        if( comboPropertyEditorPresentationStyle != null )
+                        {
+                            columnHandler = new ComboColumnPresentation( this.context, this.tableViewer, this.selectionProvider, getPart(), 
+                                                                         allColumnHandlers, property, showImages );
+                        }
+                    }
+                }
+            }
+            
+            if( columnHandler == null )
+            {
+                columnHandler = new ColumnHandler( this.context, this.tableViewer, this.selectionProvider, getPart(), 
+                                                   allColumnHandlers, property, showImages );
+            }
         }
         
         allColumnHandlers.add( columnHandler );
@@ -1477,6 +1528,86 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             };
         }
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    private final class ComboColumnPresentation extends ColumnHandler
+    {
+        public ComboColumnPresentation( final SapphireRenderingContext context,
+                                        final TableViewer tableViewer,
+                                        final SelectionProvider selectionProvider,
+                                        final PropertyEditorPart listPropertyEditor,
+                                        final List<ColumnHandler> allColumnHandlers,
+                                        final ValueProperty property,
+                                        final boolean showElementImage )
+        {
+            super( context, tableViewer, selectionProvider, listPropertyEditor, allColumnHandlers, property, showElementImage );
+        }
+        
+        @Override
+        protected AbstractColumnEditingSupport createEditingSupport()
+        {
+            return new AbstractColumnEditingSupport( this )
+            {
+                private ComboCellEditorPresentation cellEditor;
+                private String[] possibleValues;
+
+                @Override
+                public CellEditor getCellEditor( final Object obj )
+                {
+                    if( this.cellEditor != null )
+                    {
+                        this.cellEditor.dispose();
+                    }
+                    
+                    final int style = ( getTable().getLinesVisible() ? SWT.NONE : SWT.BORDER ) | SWT.DROP_DOWN; // | SWT.READ_ONLY
+                    this.cellEditor = new ComboCellEditorPresentation( getTableViewer(), getSelectionProvider(), ( (TableRow) obj ).element(), getProperty(), style );
+                    
+                    return this.cellEditor;
+                }
+
+                @Override
+                public Object getValue( final Object obj )
+                {
+                    return getPropertyValue( ( (TableRow) obj ).element() );
+                }
+    
+                @Override
+                public void setValue( final Object obj,
+                                      final Object value )
+                {
+                    setPropertyValue( ( (TableRow) obj ).element(), (String) value );
+                }
+            };
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     private static final ImageDescriptor IMG_CHECKBOX_ON
         = SwtRendererUtil.createImageDescriptor( BooleanPropertyColumnHandler.class, "CheckBoxOn.gif" );
