@@ -716,7 +716,7 @@ Fragment-Host: @{Bundle}
   </target>
 
 
-  <target name="clean-start" depends="clean,create-dev-eclipse,create-dev-target">
+  <target name="clean-start" depends="clean,create-dev-eclipse,create-dev-target,prune-downloads-from-eclipse">
   </target>
 
 
