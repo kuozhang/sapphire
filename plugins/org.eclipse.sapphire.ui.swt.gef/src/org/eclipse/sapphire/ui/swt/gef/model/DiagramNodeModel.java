@@ -229,7 +229,9 @@ public class DiagramNodeModel extends DiagramModelBase {
         }
 
         // add margin around the label
-        return new Bounds(x + 6, y, labelWidth - 12, labelHeight);
+        // Make the margin consistent with Sapphire 0.4.
+        // See Bug 375972 - Node label text field is too small
+        return new Bounds(x + 3, y, labelWidth - 6, labelHeight);
 	}
 
 	public void handleMoveNode() {
