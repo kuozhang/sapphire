@@ -74,6 +74,7 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModelBase;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
+import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.SapphireDiagramEditorEditPartFactory;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.swt.events.HelpEvent;
@@ -716,6 +717,28 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		}
 	}
 	
+	public void selectAll()
+	{
+		GraphicalViewer viewer = this.getGraphicalViewer();
+		for (Object obj : viewer.getEditPartRegistry().values())
+		{
+			EditPart editPart = (EditPart)obj;
+			viewer.appendSelection(editPart);
+		}
+	}
+	
+	public void selectAllNodes()
+	{
+		GraphicalViewer viewer = this.getGraphicalViewer();
+		for (Object obj : viewer.getEditPartRegistry().values())
+		{
+			if (obj instanceof DiagramNodeEditPart)
+			{
+				viewer.appendSelection((DiagramNodeEditPart)obj);
+			}
+		}
+	}
+
 	public Point getMouseLocation() {
 		if (mouseLocation == null) {
 			mouseLocation = new Point();

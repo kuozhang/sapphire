@@ -429,7 +429,10 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 	            propertiesViewContribution = ( (IPropertiesViewContributorPart) selection ).getPropertiesViewContribution();
 	        }	        	        
         }
-        setPropertiesViewContribution( propertiesViewContribution );
+        if (propertiesViewContribution == null || !propertiesViewContribution.getLocalModelElement().disposed())
+        {
+        	setPropertiesViewContribution( propertiesViewContribution );
+        }
     }
     
     private void refreshDiagramPalette(DiagramNodeTemplate nodeTemplate)
