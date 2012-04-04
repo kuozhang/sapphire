@@ -33,7 +33,9 @@
   <ol type="A">
     <li><a href="#DiagramLayout">Diagram Layout Storage</a></li>
     <li><a href="#DiagramContextHelp">Diagram Context Help</a></li>
-    <li><a href="#DeleteAllBendPoints">Delete All Bend Points Action</a></li>    
+    <li><a href="#DeleteAllBendPoints">Delete All Bend Points Action</a></li>
+    <li><a href="#SelectALL">Select All Actions</a></li>
+    <li><a href="#MutiplePartsActions">Actions for Multiple Parts</a></li>   
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
@@ -216,6 +218,19 @@ with the root model element for the diagram editor.</p>
 
 <p>Delete all bend points on a connection using a new action accessible via connection's context menu.</p>
 
+<h2><a name="SelectAll">Select All Actions</a></h2>
+
+<p>There are two new actions available on diagram editor's context menu: "Select All" and "Select All Nodes". 
+"Select All" action selects all the nodes and connections while "Select All Nodes" selects all the nodes on
+the diagram editor canvas. "Select All" is also accessible through Ctrl + A key binding.</p>
+
+<h2><a name="MutiplePartsActions">Actions for Multiple Parts</a></h2>
+<p>Developers can now create actions that are available when multiple nodes or connections are selected in the 
+diagram editor. To create such actions, simply add "Sapphire.Diagram.MultipleParts" to their context.</P>
+
+<p>The Sapphire Delete action has been modified to delete all the selected nodes and connections.
+Map Sample's "Sapphire.Map.Open.Homepage" action has also been modified to work when multiple Destinations or
+are selected. See MapEditor.sdef for details.</p>
 
 <h2><a name="ExpressionLanguage"><a name="ImageFunction">Image Function</a></a></h2>
 
