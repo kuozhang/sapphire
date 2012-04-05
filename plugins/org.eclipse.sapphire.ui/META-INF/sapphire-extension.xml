@@ -380,15 +380,15 @@
         <part-type>Sapphire.Actuator</part-type>
     </presentation-style>
     <presentation-style>
-        <id>Sapphire.PropertyEditor.Combo</id>
+        <id>Sapphire.PropertyEditor.PopUpListField</id>
         <part-type>Sapphire.PropertyEditor</part-type>
     </presentation-style>
     <presentation-style>
-        <id>Sapphire.PropertyEditor.Combo.Editable</id>
+        <id>Sapphire.PropertyEditor.PopUpListField.Editable</id>
         <part-type>Sapphire.PropertyEditor</part-type>
     </presentation-style>
     <presentation-style>
-        <id>Sapphire.PropertyEditor.Combo.Strict</id>
+        <id>Sapphire.PropertyEditor.PopUpListField.Strict</id>
         <part-type>Sapphire.PropertyEditor</part-type>
     </presentation-style>
 </extension>

@@ -25,6 +25,7 @@ import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ValueLabelService;
 import org.eclipse.sapphire.services.ValueNormalizationService;
 import org.eclipse.sapphire.ui.renderers.swt.DefaultListPropertyEditorRenderer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -36,7 +37,7 @@ import org.eclipse.swt.widgets.Composite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ComboCellEditorPresentation extends ComboBoxCellEditor
+public final class PopUpListFieldCellEditorPresentation extends ComboBoxCellEditor
 {
     private final StructuredViewer viewer;
     private final DefaultListPropertyEditorRenderer.SelectionProvider selectionProvider;
@@ -48,11 +49,12 @@ public final class ComboCellEditorPresentation extends ComboBoxCellEditor
     private boolean disableFocusLostHandler;
     private ISelection selectionPriorToActivation;
     
-    public ComboCellEditorPresentation( final StructuredViewer parent,
-                                       final DefaultListPropertyEditorRenderer.SelectionProvider selectionProvider,
-                                       final IModelElement element,
-                                       final ValueProperty property,
-                                       final int style )
+    public PopUpListFieldCellEditorPresentation( final StructuredViewer parent,
+                                                 final DefaultListPropertyEditorRenderer.SelectionProvider selectionProvider,
+                                                 final IModelElement element,
+                                                 final ValueProperty property,
+                                                 final PopUpListFieldStyle popUpListFieldStyle,
+                                                 final int style )
     {
         super();
         
@@ -61,7 +63,7 @@ public final class ComboCellEditorPresentation extends ComboBoxCellEditor
         this.element = element;
         this.property = property;
         
-        setStyle( style );
+        setStyle( style | ( popUpListFieldStyle == PopUpListFieldStyle.STRICT ? SWT.READ_ONLY : SWT.NONE ) );
         create( (Composite) parent.getControl() );
         
         this.combo = (CCombo) getControl();
@@ -73,7 +75,7 @@ public final class ComboCellEditorPresentation extends ComboBoxCellEditor
                 @Override
                 public void widgetSelected( final SelectionEvent event )
                 {
-                    ComboCellEditorPresentation.this.isDefaultValue = false;
+                    PopUpListFieldCellEditorPresentation.this.isDefaultValue = false;
                 }
              }
         );
@@ -84,7 +86,7 @@ public final class ComboCellEditorPresentation extends ComboBoxCellEditor
             {
                 public void modifyText( final ModifyEvent event )
                 {
-                    ComboCellEditorPresentation.this.isDefaultValue = false;
+                    PopUpListFieldCellEditorPresentation.this.isDefaultValue = false;
                 }
             }
         );
@@ -164,7 +166,17 @@ public final class ComboCellEditorPresentation extends ComboBoxCellEditor
             }
         }
         
-        super.doSetValue( index );
+        if( index == -1 )
+        {
+            if( text != null )
+            {
+                this.combo.setText( text );
+            }
+        }
+        else
+        {
+            this.combo.select( index );
+        }
         
         if( val.getText( false ) == null && val.getDefaultContent() != null )
         {

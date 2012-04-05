@@ -45,20 +45,14 @@ import org.eclipse.swt.widgets.Composite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ComboPropertyEditorPresentation extends ValuePropertyEditorRenderer
+public final class PopUpListFieldPropertyEditorPresentation extends ValuePropertyEditorRenderer
 {
-    public enum Style
-    {
-        EDITABLE,
-        STRICT
-    }
-    
-    private final Style style;
+    private final PopUpListFieldStyle style;
     private Combo combo;
 
-    public ComboPropertyEditorPresentation( final SapphireRenderingContext context,
-                                            final PropertyEditorPart part,
-                                            final Style style )
+    public PopUpListFieldPropertyEditorPresentation( final SapphireRenderingContext context,
+                                                     final PropertyEditorPart part,
+                                                     final PopUpListFieldStyle style )
     {
         super( context, part );
         
@@ -84,7 +78,7 @@ public final class ComboPropertyEditorPresentation extends ValuePropertyEditorRe
         decorator.addEditorControl( composite );
         decorator.control().setLayoutData( gdvalign( gd(), SWT.TOP ) );
 
-        final Combo combo = new Combo( composite, SWT.SINGLE | SWT.BORDER | ( this.style == Style.STRICT ? SWT.READ_ONLY : SWT.NONE ) );
+        final Combo combo = new Combo( composite, SWT.SINGLE | SWT.BORDER | ( this.style == PopUpListFieldStyle.STRICT ? SWT.READ_ONLY : SWT.NONE ) );
         combo.setLayoutData( gdhfill() );
         combo.setVisibleItemCount( 10 );
 
@@ -112,7 +106,7 @@ public final class ComboPropertyEditorPresentation extends ValuePropertyEditorRe
                 }
                 else
                 {
-                    if( ComboPropertyEditorPresentation.this.style == Style.STRICT )
+                    if( PopUpListFieldPropertyEditorPresentation.this.style == PopUpListFieldStyle.STRICT )
                     {
                         final String[] possibleValues = possibleValuesRef.get();
                         int possibleValueIndex = -1;

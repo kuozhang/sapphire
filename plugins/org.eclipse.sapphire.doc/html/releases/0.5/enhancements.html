@@ -27,7 +27,7 @@
     <li><a href="#MoreFlexibleActuatorPresentation">More Flexible Actuator Presentation</a></li>
     <li><a href="#PropagatedKeyBindings">Propagated Key Bindings</a></li>
     <li><a href="#ActionToolTips">Action Tool Tips</a></li>
-    <li><a href="#ComboBoxForPossibleValues">Combo Box Presentation for Possible Value Properties</a></li>
+    <li><a href="#PopUpListFieldForPossibleValues">Pop-Up List Field Presentation for Possible Value Properties</a></li>
   </ol>
   <li><a href="#DiagramEditor">Diagram Editor</a></li>
   <ol type="A">
@@ -131,11 +131,12 @@ set the action tool tip explicitly.</p>
 &lt;/action></font></code></pre>
 
 
-<h2><a name="ComboBoxForPossibleValues">Combo Box Presentation for Possible Value Properties</a></h2>
+<h2><a name="PopUpListFieldForPossibleValues">Pop-Up List Field Presentation for Possible Value Properties</a></h2>
 
-<p>Two combo box presentations (editable and strict) have been added for properties with a possible
+<p>Two pop-up list field presentations (editable and strict) have been added for properties with a possible
 values constraint. The default presentation remains a text field with a browse button and content
-assist.</p>
+assist. The new presentations are available for both stand-alone property editors and when a property is
+edited within a table.</p>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
 
@@ -145,51 +146,70 @@ property specifies a warning.</p>
 
 <p style="margin-left: 20px;">The default presentation is a text field with a browse button and content assist.</p>
 
-<p style="margin-left: 20px;"><img src="images/ComboBoxForPossibleValues-1.png"/></p>
+<p style="margin-left: 20px;"><img src="images/PopUpListFieldForPossibleValues-1.png"/></p>
 
-<p style="margin-left: 20px;">An editable combo box presentation can be used by specifying <nobr><i>Sapphire.PropertyEditor.Combo.Editable</i></nobr> as 
+<p style="margin-left: 20px;">An editable pop-up list field presentation can be used by specifying <nobr><i>Sapphire.PropertyEditor.PopUpListField.Editable</i></nobr> as 
 the presentation style. This presentation is most appropriate when the severity of deviation from the possible values 
 constraint is something other than an error.</p>
 
 <pre class="source-code"><code><font color="#888888">&lt;property-editor>
     &lt;property>Color&lt;/property></font>
-    &lt;style>Sapphire.PropertyEditor.Combo.Editable&lt;/style>
+    &lt;style>Sapphire.PropertyEditor.PopUpListField.Editable&lt;/style>
 <font color="#888888">&lt;/property-editor>
 &lt;property-editor>
     &lt;property>Shape&lt;/property></font>
-    &lt;style>Sapphire.PropertyEditor.Combo.Editable&lt;/style>
+    &lt;style>Sapphire.PropertyEditor.PopUpListField.Editable&lt;/style>
 <font color="#888888">&lt;/property-editor></font></code></pre>
 
-<p style="margin-left: 20px;"><img src="images/ComboBoxForPossibleValues-2.png"/></p>
+<p style="margin-left: 20px;"><img src="images/PopUpListFieldForPossibleValues-2.png"/></p>
 
-<p style="margin-left: 20px;">A strict combo box presentation can be used by specifying <nobr><i>Sapphire.PropertyEditor.Combo.Strict</i></nobr> as 
+<p style="margin-left: 20px;">A strict pop-up list field presentation can be used by specifying <nobr><i>Sapphire.PropertyEditor.PopUpListField.Strict</i></nobr> as 
 the presentation style. This presentation is most appropriate when the severity of deviation from the possible 
 values constraint is an error.</p>
 
 <pre class="source-code"><code><font color="#888888">&lt;property-editor>
     &lt;property>Color&lt;/property></font>
-    &lt;style>Sapphire.PropertyEditor.Combo.Strict&lt;/style>
+    &lt;style>Sapphire.PropertyEditor.PopUpListField.Strict&lt;/style>
 <font color="#888888">&lt;/property-editor>
 &lt;property-editor>
     &lt;property>Shape&lt;/property></font>
-    &lt;style>Sapphire.PropertyEditor.Combo.Strict&lt;/style>
+    &lt;style>Sapphire.PropertyEditor.PopUpListField.Strict&lt;/style>
 <font color="#888888">&lt;/property-editor></font></code></pre>
 
-<p style="margin-left: 20px;"><img src="images/ComboBoxForPossibleValues-3.png"/></p>
+<p style="margin-left: 20px;"><img src="images/PopUpListFieldForPossibleValues-3.png"/></p>
 
-<p style="margin-left: 20px;">Alternatively, let the framework choose between editable and strict combo styles depending on the property's 
-possible values constraint by specifying <nobr><i>Sapphire.PropertyEditor.Combo</i></nobr> as the presentation style.</p>
+<p style="margin-left: 20px;">Alternatively, let the framework choose between editable and strict pop-up list field styles depending on the property's 
+possible values constraint by specifying <nobr><i>Sapphire.PropertyEditor.PopUpListField</i></nobr> as the presentation style.</p>
 
 <pre class="source-code"><code><font color="#888888">&lt;property-editor>
     &lt;property>Color&lt;/property></font>
-    &lt;style>Sapphire.PropertyEditor.Combo&lt;/style>
+    &lt;style>Sapphire.PropertyEditor.PopUpListField&lt;/style>
 <font color="#888888">&lt;/property-editor>
 &lt;property-editor>
     &lt;property>Shape&lt;/property></font>
-    &lt;style>Sapphire.PropertyEditor.Combo&lt;/style>
+    &lt;style>Sapphire.PropertyEditor.PopUpListField&lt;/style>
 <font color="#888888">&lt;/property-editor></font></code></pre>
 
-<p style="margin-left: 20px;"><img src="images/ComboBoxForPossibleValues-4.png"/></p>
+<p style="margin-left: 20px;"><img src="images/PopUpListFieldForPossibleValues-4.png"/></p>
+
+<p style="margin-left: 20px;">The new presentations are accessible in a similar manner when properties are edited within
+a table.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor>
+    &lt;property>ColoredShapes&lt;/property>
+    &lt;show-label>false&lt;/show-label>
+    &lt;span>true&lt;/span>
+    &lt;child-property>
+        &lt;property>Color&lt;/property></font>
+        &lt;style>Sapphire.PropertyEditor.PopUpListField&lt;/style>
+    <font color="#888888">&lt;/child-property>
+    &lt;child-property>
+        &lt;property>Shape&lt;/property></font>
+        &lt;style>Sapphire.PropertyEditor.PopUpListField&lt;/style>
+    <font color="#888888">&lt;/child-property>
+&lt;/property-editor></font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/PopUpListFieldForPossibleValues-5.png"/></p>
 
 
 <h2><a name="DiagramEditor"><a name="DiagramLayout">More Flexible Diagram Layout Storage</a></a></h2>

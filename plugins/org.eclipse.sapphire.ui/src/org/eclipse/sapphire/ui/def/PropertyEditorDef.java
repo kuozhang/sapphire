@@ -276,7 +276,7 @@ public interface PropertyEditorDef extends FormPartDef
     
     // *** Style ***
 
-    @PossibleValues( values = { "Sapphire.PropertyEditor.Combo", "Sapphire.PropertyEditor.Combo.Editable", "Sapphire.PropertyEditor.Combo.Strict" } )
+    @PossibleValues( values = { "Sapphire.PropertyEditor.PopUpListField", "Sapphire.PropertyEditor.PopUpListField.Editable", "Sapphire.PropertyEditor.PopUpListField.Strict" } )
     
     ValueProperty PROP_STYLE = new ValueProperty( TYPE, FormPartDef.PROP_STYLE );
 

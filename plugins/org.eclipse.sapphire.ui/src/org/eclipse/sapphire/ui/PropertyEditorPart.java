@@ -60,7 +60,8 @@ import org.eclipse.sapphire.ui.renderers.swt.NamedValuesPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorRendererFactory;
 import org.eclipse.sapphire.ui.renderers.swt.SlushBucketPropertyEditor;
-import org.eclipse.sapphire.ui.swt.internal.ComboPropertyEditorPresentation;
+import org.eclipse.sapphire.ui.swt.internal.PopUpListFieldPropertyEditorPresentation;
+import org.eclipse.sapphire.ui.swt.internal.PopUpListFieldStyle;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -485,39 +486,39 @@ public final class PropertyEditorPart extends FormPart
         }
         else
         {
-            if( style.startsWith( "Sapphire.PropertyEditor.Combo" ) )
+            if( style.startsWith( "Sapphire.PropertyEditor.PopUpListField" ) )
             {
                 if( this.property instanceof ValueProperty && this.element.service( this.property, PossibleValuesService.class ) != null )
                 {
-                    ComboPropertyEditorPresentation.Style comboPropertyEditorPresentationStyle = null;
+                    PopUpListFieldStyle popUpListFieldPresentationStyle = null;
                     
-                    if( style.equals( "Sapphire.PropertyEditor.Combo" ) )
+                    if( style.equals( "Sapphire.PropertyEditor.PopUpListField" ) )
                     {
                         final PossibleValues possibleValuesAnnotation = this.property.getAnnotation( PossibleValues.class );
                         
                         if( possibleValuesAnnotation != null )
                         {
-                            comboPropertyEditorPresentationStyle 
+                            popUpListFieldPresentationStyle 
                                 = ( possibleValuesAnnotation.invalidValueSeverity() == Severity.ERROR 
-                                    ? ComboPropertyEditorPresentation.Style.STRICT : ComboPropertyEditorPresentation.Style.EDITABLE );
+                                    ? PopUpListFieldStyle.STRICT : PopUpListFieldStyle.EDITABLE );
                         }
                         else
                         {
-                            comboPropertyEditorPresentationStyle = ComboPropertyEditorPresentation.Style.EDITABLE;
+                            popUpListFieldPresentationStyle = PopUpListFieldStyle.EDITABLE;
                         }
                     }
-                    else if( style.equals( "Sapphire.PropertyEditor.Combo.Editable" ) )
+                    else if( style.equals( "Sapphire.PropertyEditor.PopUpListField.Editable" ) )
                     {
-                        comboPropertyEditorPresentationStyle = ComboPropertyEditorPresentation.Style.EDITABLE;
+                        popUpListFieldPresentationStyle = PopUpListFieldStyle.EDITABLE;
                     }
-                    else if( style.equals( "Sapphire.PropertyEditor.Combo.Strict" ) )
+                    else if( style.equals( "Sapphire.PropertyEditor.PopUpListField.Strict" ) )
                     {
-                        comboPropertyEditorPresentationStyle = ComboPropertyEditorPresentation.Style.STRICT;
+                        popUpListFieldPresentationStyle = PopUpListFieldStyle.STRICT;
                     }
                     
-                    if( comboPropertyEditorPresentationStyle != null )
+                    if( popUpListFieldPresentationStyle != null )
                     {
-                        presentation = new ComboPropertyEditorPresentation( context, this, comboPropertyEditorPresentationStyle );
+                        presentation = new PopUpListFieldPropertyEditorPresentation( context, this, popUpListFieldPresentationStyle );
                     }
                 }
             }

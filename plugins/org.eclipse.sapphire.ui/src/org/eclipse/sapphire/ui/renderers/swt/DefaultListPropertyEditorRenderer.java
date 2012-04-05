@@ -63,7 +63,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.EnumValueType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -83,7 +82,6 @@ import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.ImageService;
 import org.eclipse.sapphire.services.PossibleTypesService;
-import org.eclipse.sapphire.services.ValueSerializationService;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
@@ -95,10 +93,9 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
-import org.eclipse.sapphire.ui.internal.ReadOnlyComboBoxCellEditor;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
-import org.eclipse.sapphire.ui.swt.internal.ComboPropertyEditorPresentation;
-import org.eclipse.sapphire.ui.swt.internal.ComboCellEditorPresentation;
+import org.eclipse.sapphire.ui.swt.internal.PopUpListFieldCellEditorPresentation;
+import org.eclipse.sapphire.ui.swt.internal.PopUpListFieldStyle;
 import org.eclipse.sapphire.ui.swt.renderer.HyperlinkTable;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireMenuActionPresentation;
@@ -975,64 +972,62 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                                                final boolean showImages,
                                                final PropertyEditorDef childPropertyEditorDef )
     {
-        ColumnHandler columnHandler = null;
+        final ColumnHandler columnHandler;
         
         if( property.isOfType( Boolean.class ) )
         {
             columnHandler = new BooleanPropertyColumnHandler( this.context, this.tableViewer, this.selectionProvider, getPart(), 
                                                               allColumnHandlers, property, showImages );
         }
-        else if( property.isOfType( Enum.class ) )
-        {
-            columnHandler = new EnumPropertyColumnHandler( this.context, this.tableViewer, this.selectionProvider, getPart(), 
-                                                           allColumnHandlers, property, showImages );
-        }
         else
         {
-            if( childPropertyEditorDef != null )
+            PopUpListFieldStyle popUpListFieldPresentationStyle = null;
+            
+            if( property.isOfType( Enum.class ) )
+            {
+                popUpListFieldPresentationStyle = PopUpListFieldStyle.STRICT;
+            }
+            else if( childPropertyEditorDef != null )
             {
                 final String style = childPropertyEditorDef.getStyle().getText();
                 
                 if( style != null )
                 {
-                    if( style.startsWith( "Sapphire.PropertyEditor.Combo" ) )
+                    if( style.startsWith( "Sapphire.PropertyEditor.PopUpListField" ) )
                     {
-                        ComboPropertyEditorPresentation.Style comboPropertyEditorPresentationStyle = null;
-                        
-                        if( style.equals( "Sapphire.PropertyEditor.Combo" ) )
+                        if( style.equals( "Sapphire.PropertyEditor.PopUpListField" ) )
                         {
                             final PossibleValues possibleValuesAnnotation = property.getAnnotation( PossibleValues.class );
                             
                             if( possibleValuesAnnotation != null )
                             {
-                                comboPropertyEditorPresentationStyle 
+                                popUpListFieldPresentationStyle 
                                     = ( possibleValuesAnnotation.invalidValueSeverity() == Severity.ERROR 
-                                        ? ComboPropertyEditorPresentation.Style.STRICT : ComboPropertyEditorPresentation.Style.EDITABLE );
+                                        ? PopUpListFieldStyle.STRICT : PopUpListFieldStyle.EDITABLE );
                             }
                             else
                             {
-                                comboPropertyEditorPresentationStyle = ComboPropertyEditorPresentation.Style.EDITABLE;
+                                popUpListFieldPresentationStyle = PopUpListFieldStyle.EDITABLE;
                             }
                         }
-                        else if( style.equals( "Sapphire.PropertyEditor.Combo.Editable" ) )
+                        else if( style.equals( "Sapphire.PropertyEditor.PopUpListField.Editable" ) )
                         {
-                            comboPropertyEditorPresentationStyle = ComboPropertyEditorPresentation.Style.EDITABLE;
+                            popUpListFieldPresentationStyle = PopUpListFieldStyle.EDITABLE;
                         }
-                        else if( style.equals( "Sapphire.PropertyEditor.Combo.Strict" ) )
+                        else if( style.equals( "Sapphire.PropertyEditor.PopUpListField.Strict" ) )
                         {
-                            comboPropertyEditorPresentationStyle = ComboPropertyEditorPresentation.Style.STRICT;
-                        }
-                        
-                        if( comboPropertyEditorPresentationStyle != null )
-                        {
-                            columnHandler = new ComboColumnPresentation( this.context, this.tableViewer, this.selectionProvider, getPart(), 
-                                                                         allColumnHandlers, property, showImages );
+                            popUpListFieldPresentationStyle = PopUpListFieldStyle.STRICT;
                         }
                     }
                 }
             }
             
-            if( columnHandler == null )
+            if( popUpListFieldPresentationStyle != null )
+            {
+                columnHandler = new PopUpListFieldColumnPresentation( this.context, this.tableViewer, this.selectionProvider, getPart(), 
+                                                                      allColumnHandlers, property, showImages, popUpListFieldPresentationStyle );
+            }
+            else
             {
                 columnHandler = new ColumnHandler( this.context, this.tableViewer, this.selectionProvider, getPart(), 
                                                    allColumnHandlers, property, showImages );
@@ -1428,23 +1423,22 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         }
     }
     
-    private final class EnumPropertyColumnHandler extends ColumnHandler
+    private final class PopUpListFieldColumnPresentation extends ColumnHandler
     {
-        private final EnumValueType annotatedEnumeration;
-        private final Enum<?>[] enumValues;
+        private final PopUpListFieldStyle popUpListFieldStyle;
         
-        public EnumPropertyColumnHandler( final SapphireRenderingContext context,
-                                          final TableViewer tableViewer,
-                                          final SelectionProvider selectionProvider,
-                                          final PropertyEditorPart listPropertyEditor,
-                                          final List<ColumnHandler> allColumnHandlers,
-                                          final ValueProperty property,
-                                          final boolean showElementImage )
+        public PopUpListFieldColumnPresentation( final SapphireRenderingContext context,
+                                                 final TableViewer tableViewer,
+                                                 final SelectionProvider selectionProvider,
+                                                 final PropertyEditorPart listPropertyEditor,
+                                                 final List<ColumnHandler> allColumnHandlers,
+                                                 final ValueProperty property,
+                                                 final boolean showElementImage,
+                                                 final PopUpListFieldStyle popUpListFieldStyle )
         {
             super( context, tableViewer, selectionProvider, listPropertyEditor, allColumnHandlers, property, showElementImage );
             
-            this.annotatedEnumeration = new EnumValueType( property.getTypeClass() );
-            this.enumValues = this.annotatedEnumeration.getItems();
+            this.popUpListFieldStyle = popUpListFieldStyle;
         }
         
         @Override
@@ -1452,115 +1446,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         {
             return new AbstractColumnEditingSupport( this )
             {
-                private ReadOnlyComboBoxCellEditor cellEditor;
-                private List<String> cellEditorItems;
-
-                @Override
-                public CellEditor getCellEditor( final Object obj )
-                {
-                    if( this.cellEditor == null )
-                    {
-                        this.cellEditor = new ReadOnlyComboBoxCellEditor( getTable(), new String[ 0 ], SWT.DROP_DOWN | SWT.READ_ONLY );
-                        this.cellEditorItems = new ArrayList<String>();
-                    }
-                    
-                    final IModelElement element = ( (TableRow) obj ).element();
-                    
-                    final EnumValueType annotatedEnumeration = EnumPropertyColumnHandler.this.annotatedEnumeration;
-                    final Enum<?>[] enumValues = EnumPropertyColumnHandler.this.enumValues;
-                    
-                    final Value<?> value = element.read( getProperty() );
-                    final String stringValue = value.getText( false );
-                    
-                    boolean needExtraEntry = false;
-                    
-                    if( stringValue != null && value.getContent( false ) == null )
-                    {
-                        needExtraEntry = true;
-                    }
-                    
-                    final String[] items = new String[ enumValues.length + ( needExtraEntry ? 1 : 0 ) ];
-                    this.cellEditorItems.clear();
-                    
-                    for( int i = 0; i < enumValues.length; i++ )
-                    {
-                        final Enum<?> enumValue = enumValues[ i ];
-                        final String enumValueText = element.service( getProperty(), ValueSerializationService.class ).encode( enumValue );
-                        this.cellEditorItems.add( enumValueText );
-                        items[ i ] = annotatedEnumeration.getLabel( enumValue, false, CapitalizationType.FIRST_WORD_ONLY, false );
-                    }
-                    
-                    if( needExtraEntry )
-                    {
-                        items[ items.length ] = stringValue;
-                    }
-                    
-                    this.cellEditor.setItems( items );
-                    
-                    return this.cellEditor;
-                }
-
-                @Override
-                public Object getValue( final Object obj )
-                {
-                    String str = getPropertyValue( ( (TableRow) obj ).element() ).getText( false );
-                    str = ( str != null ? str : MiscUtil.EMPTY_STRING );
-                    
-                    for( int i = 0, n = this.cellEditorItems.size(); i < n; i++ )
-                    {
-                        if( this.cellEditorItems.get( i ).equals( str ) )
-                        {
-                            return i;
-                        }
-                    }
-                    
-                    return -1;
-                }
-
-                @Override
-                public void setValue( final Object obj,
-                                      final Object value )
-                {
-                    final int index = (Integer) value;
-                    final String str = ( index == -1 ? null : this.cellEditorItems.get( index ) );
-                    setPropertyValue( ( (TableRow) obj ).element(), str );
-                }
-            };
-        }
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    private final class ComboColumnPresentation extends ColumnHandler
-    {
-        public ComboColumnPresentation( final SapphireRenderingContext context,
-                                        final TableViewer tableViewer,
-                                        final SelectionProvider selectionProvider,
-                                        final PropertyEditorPart listPropertyEditor,
-                                        final List<ColumnHandler> allColumnHandlers,
-                                        final ValueProperty property,
-                                        final boolean showElementImage )
-        {
-            super( context, tableViewer, selectionProvider, listPropertyEditor, allColumnHandlers, property, showElementImage );
-        }
-        
-        @Override
-        protected AbstractColumnEditingSupport createEditingSupport()
-        {
-            return new AbstractColumnEditingSupport( this )
-            {
-                private ComboCellEditorPresentation cellEditor;
-                private String[] possibleValues;
+                private PopUpListFieldCellEditorPresentation cellEditor;
 
                 @Override
                 public CellEditor getCellEditor( final Object obj )
@@ -1570,8 +1456,8 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                         this.cellEditor.dispose();
                     }
                     
-                    final int style = ( getTable().getLinesVisible() ? SWT.NONE : SWT.BORDER ) | SWT.DROP_DOWN; // | SWT.READ_ONLY
-                    this.cellEditor = new ComboCellEditorPresentation( getTableViewer(), getSelectionProvider(), ( (TableRow) obj ).element(), getProperty(), style );
+                    final int style = ( getTable().getLinesVisible() ? SWT.NONE : SWT.BORDER );
+                    this.cellEditor = new PopUpListFieldCellEditorPresentation( getTableViewer(), getSelectionProvider(), ( (TableRow) obj ).element(), getProperty(), PopUpListFieldColumnPresentation.this.popUpListFieldStyle, style );
                     
                     return this.cellEditor;
                 }

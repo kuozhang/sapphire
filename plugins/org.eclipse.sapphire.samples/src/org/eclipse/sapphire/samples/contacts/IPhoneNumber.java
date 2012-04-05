@@ -66,7 +66,6 @@ public interface IPhoneNumber
     
     @Label( standard = "area code" )
     @Required
-    @DefaultValue( text = "206" )
     @CustomXmlValueBinding( impl = AreaCodeBinding.class )
     
     ValueProperty PROP_AREA_CODE = new ValueProperty( TYPE, "AreaCode" );

@@ -495,37 +495,37 @@
                                         <property-editor>Color</property-editor>
                                         <property-editor>Shape</property-editor>
                                         <spacer></spacer>
-                                        <label>An editable combo box presentation can be used instead by specifying Sapphire.PropertyEditor.Combo.Editable as the presentation style. This presentation is most appropriate when the severity of deviation from the possible values constraint is something other than an error.</label>
+                                        <label>An editable combo box presentation can be used instead by specifying Sapphire.PropertyEditor.PopUpListField.Editable as the presentation style. This presentation is most appropriate when the severity of deviation from the possible values constraint is something other than an error.</label>
                                         <spacer></spacer>
                                         <property-editor>
                                             <property>Color</property>
-                                            <style>Sapphire.PropertyEditor.Combo.Editable</style>
+                                            <style>Sapphire.PropertyEditor.PopUpListField.Editable</style>
                                         </property-editor>
                                         <property-editor>
                                             <property>Shape</property>
-                                            <style>Sapphire.PropertyEditor.Combo.Editable</style>
+                                            <style>Sapphire.PropertyEditor.PopUpListField.Editable</style>
                                         </property-editor>
                                         <spacer></spacer>
-                                        <label>A strict combo box presentation can be used instead by specifying Sapphire.PropertyEditor.Combo.Strict as the presentation style. This presentation is most appropriate when the severity of deviation from the possible values constraint is an error.</label>
+                                        <label>A strict combo box presentation can be used instead by specifying Sapphire.PropertyEditor.PopUpListField.Strict as the presentation style. This presentation is most appropriate when the severity of deviation from the possible values constraint is an error.</label>
                                         <spacer></spacer>
                                         <property-editor>
                                             <property>Color</property>
-                                            <style>Sapphire.PropertyEditor.Combo.Strict</style>
+                                            <style>Sapphire.PropertyEditor.PopUpListField.Strict</style>
                                         </property-editor>
                                         <property-editor>
                                             <property>Shape</property>
-                                            <style>Sapphire.PropertyEditor.Combo.Strict</style>
+                                            <style>Sapphire.PropertyEditor.PopUpListField.Strict</style>
                                         </property-editor>
                                         <spacer></spacer>
-                                        <label>Alternatively, let the framework choose between editable and strict combo styles depending on the property's possible values constraint by specifying Sapphire.PropertyEditor.Combo as the presentation style.</label>
+                                        <label>Alternatively, let the framework choose between editable and strict combo styles depending on the property's possible values constraint by specifying Sapphire.PropertyEditor.PopUpListField as the presentation style.</label>
                                         <spacer></spacer>
                                         <property-editor>
                                             <property>Color</property>
-                                            <style>Sapphire.PropertyEditor.Combo</style>
+                                            <style>Sapphire.PropertyEditor.PopUpListField</style>
                                         </property-editor>
                                         <property-editor>
                                             <property>Shape</property>
-                                            <style>Sapphire.PropertyEditor.Combo</style>
+                                            <style>Sapphire.PropertyEditor.PopUpListField</style>
                                         </property-editor>
                                     </content>
                                 </default-panel>
@@ -533,6 +533,31 @@
                         </content>
                     </section>
                     <property>ValuePropertiesGallery</property>
+                    <section>
+                        <label>list</label>
+                        <content>
+                            <with>
+                                <path>PossibleValuesGallery</path>
+                                <default-panel>
+                                    <content>
+                                        <property-editor>
+                                            <property>ColoredShapes</property>
+                                            <show-label>false</show-label>
+                                            <span>true</span>
+                                            <child-property>
+                                                <property>Color</property>
+                                                <style>Sapphire.PropertyEditor.PopUpListField</style>
+                                            </child-property>
+                                            <child-property>
+                                                <property>Shape</property>
+                                                <style>Sapphire.PropertyEditor.PopUpListField</style>
+                                            </child-property>
+                                        </property-editor>
+                                    </content>
+                                </default-panel>
+                            </with>
+                        </content>
+                    </section>
                 </node>
             </node>
             <node>

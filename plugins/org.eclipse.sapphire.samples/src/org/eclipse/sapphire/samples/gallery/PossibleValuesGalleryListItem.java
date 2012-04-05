@@ -12,8 +12,6 @@
 package org.eclipse.sapphire.samples.gallery;
 
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Status.Severity;
 import org.eclipse.sapphire.modeling.Value;
@@ -22,9 +20,7 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
-import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -32,9 +28,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @GenerateImpl
 
-public interface PossibleValuesGallery extends IModelElement
+public interface PossibleValuesGalleryListItem extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( PossibleValuesGallery.class );
+    ModelElementType TYPE = new ModelElementType( PossibleValuesGalleryListItem.class );
     
     // *** Color ***
     
@@ -84,15 +80,5 @@ public interface PossibleValuesGallery extends IModelElement
     
     Value<String> getShape();
     void setShape( String value );
-    
-    // *** ColoredShapes ***
-
-    @Type( base = PossibleValuesGalleryListItem.class )
-    @Label( standard = "colored shapes" )
-    @XmlListBinding( path = "list", mappings = @XmlListBinding.Mapping( element = "item", type = PossibleValuesGalleryListItem.class ) )
-    
-    ListProperty PROP_COLORED_SHAPES = new ListProperty( TYPE, "ColoredShapes" );
-
-    ModelElementList<PossibleValuesGalleryListItem> getColoredShapes();
     
 }
