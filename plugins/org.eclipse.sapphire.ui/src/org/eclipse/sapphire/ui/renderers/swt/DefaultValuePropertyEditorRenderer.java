@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle and Accenture Services Pvt Ltd.
+ * Copyright (c) 2012 Oracle, Accenture and Modelity Technologies
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *   Konstantin Komissarchik - initial implementation and ongoing maintenance
  *   Kamesh Sampath - [354199] Support content proposals in text field property editor
+ *   Roded Bahat - [376198] Vertically align actions for @LongString property editors
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.renderers.swt;
@@ -75,6 +76,7 @@ import org.eclipse.swt.widgets.ToolBar;
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a>
+ * @author <a href="mailto:rodedb@gmail.com">Roded Bahat</a>
  */
 
 public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRenderer
@@ -283,7 +285,8 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
         
         if( isActionsToolBarNeeded )
         {
-            final ToolBar toolbar = new ToolBar( textFieldParent, SWT.FLAT | SWT.HORIZONTAL );
+            final int alignment = ( isLongString ? SWT.VERTICAL : SWT.HORIZONTAL );
+            final ToolBar toolbar = new ToolBar( textFieldParent, SWT.FLAT | alignment );
             toolbar.setLayoutData( gdvfill() );
             toolBarActionsPresentation.setToolBar( toolbar );
             toolBarActionsPresentation.render();
