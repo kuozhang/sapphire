@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [376266] Diagram delete all connection bend points action should be available in multi-select mode
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.actions;
@@ -17,30 +18,29 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class DeleteAllBendPointsActionHandler extends SapphireDiagramActionHandler 
+public class DeleteAllBendPointsForConnectionActionHandler extends SapphireDiagramActionHandler 
 {
-
-	@Override
-	public boolean canExecute(Object obj) 
-	{
-		return isEnabled();
-	}
+    @Override
+    public boolean canExecute(Object obj) 
+    {
+        return isEnabled();
+    }
     
-	@Override
+    @Override
     public boolean isEnabled()
     {
-		DiagramConnectionPart connPart = (DiagramConnectionPart)this.getAction().getPart();
-		return connPart.getConnectionBendpoints().size() > 0;
+        return ! ( (DiagramConnectionPart) getPart() ).getConnectionBendpoints().isEmpty();
     }
 
-	@Override
-	protected Object run(SapphireRenderingContext context) 
-	{
-		DiagramConnectionPart connPart = (DiagramConnectionPart)context.getPart();
-		connPart.removeAllBendpoints();
-		return null;
-	}
+    @Override
+    protected Object run( final SapphireRenderingContext context) 
+    {
+        ( (DiagramConnectionPart) getPart() ).removeAllBendpoints();
+        
+        return null;
+    }
 
 }

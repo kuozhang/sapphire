@@ -224,6 +224,7 @@
         <description>Deletes all bend points from a connection.</description>
         <location>after:Sapphire.Delete</location>
         <group>Sapphire.AddDeleteGroup</group>
+        <context>Sapphire.Diagram.MultipleParts</context>
     </action>    
     <action-handler>
         <action>Sapphire.Browse</action>
@@ -354,8 +355,15 @@
     </action-handler>
     <action-handler>
         <action>Sapphire.Diagram.DeleteAllBendPoints</action>
-        <impl>org.eclipse.sapphire.ui.diagram.actions.DeleteAllBendPointsActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.diagram.actions.DeleteAllBendPointsForConnectionActionHandler</impl>
+        <id>Sapphire.Diagram.DeleteAllBendPoints.Connection</id>
         <context>Sapphire.Diagram.Connection</context>
+    </action-handler>
+    <action-handler>
+        <action>Sapphire.Diagram.DeleteAllBendPoints</action>
+        <impl>org.eclipse.sapphire.ui.diagram.actions.DeleteAllBendPointsForMultiplePartsActionHandler</impl>
+        <id>Sapphire.Diagram.DeleteAllBendPoints.MultipleParts</id>
+        <context>Sapphire.Diagram.MultipleParts</context>
     </action-handler>
     <action-handler-factory>
         <action>Sapphire.Add</action>
