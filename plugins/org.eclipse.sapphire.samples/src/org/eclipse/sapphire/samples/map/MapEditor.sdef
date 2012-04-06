@@ -104,7 +104,6 @@
             <key-binding>CONTROL+ALT+SHIFT+s</key-binding>
             <key-binding-behavior>propagated</key-binding-behavior>
             <context>Sapphire.Diagram.Editor</context>
-            <context>Sapphire.Diagram.MultipleParts</context>
         </action>
         <action-handler>
             <action>Sapphire.Map.Open.Homepage</action>

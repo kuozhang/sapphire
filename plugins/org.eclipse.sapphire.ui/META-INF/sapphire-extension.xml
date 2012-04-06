@@ -191,20 +191,26 @@
         <context>Sapphire.Diagram.Editor</context>
         <label>show grid</label>
         <type>toggle</type>
-        <description>Show or hide the grid</description>       
+        <description>Show or hide the grid</description>
+        <location>after:Sapphire.Diagram.SelectAllNodes</location>
+        <group>Sapphire.Diagram.Appearance</group>       
     </action>
     <action>
         <id>Sapphire.Diagram.Guides.Toggle</id>
         <context>Sapphire.Diagram.Editor</context>
         <label>show guides</label>
         <type>toggle</type>
-        <description>Show or hide the guides</description>       
+        <description>Show or hide the guides</description>
+        <location>after:Sapphire.Diagram.Grid.Toggle</location>
+        <group>Sapphire.Diagram.Appearance</group>       
     </action>
     <action>
         <id>Sapphire.Diagram.Layout</id>
         <context>Sapphire.Diagram.Editor</context>
         <label>layout</label>
-        <description>Apply auto layout to diagram</description>       
+        <description>Apply auto layout to diagram</description>
+        <location>after:Sapphire.Diagram.Guides.Toggle</location>
+        <group>Sapphire.Diagram.Appearance</group>       
     </action>
     <action>
         <id>Sapphire.Diagram.Node.Default</id>

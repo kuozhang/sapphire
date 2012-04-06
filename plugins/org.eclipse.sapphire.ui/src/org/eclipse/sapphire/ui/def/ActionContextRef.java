@@ -57,7 +57,10 @@ public interface ActionContextRef extends IModelElement
             SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR,
             SapphireActionSystem.CONTEXT_DIAGRAM,
             SapphireActionSystem.CONTEXT_DIAGRAM_NODE,
+            SapphireActionSystem.CONTEXT_DIAGRAM_NODE_HIDDEN,
             SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION,
+            SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION_HIDDEN,
+            SapphireActionSystem.CONTEXT_DIAGRAM_MULTIPLE_PARTS,
             SapphireActionSystem.CONTEXT_WITH_DIRECTIVE
         },
         invalidValueMessage = "\"{0}\" is not valid action context.",

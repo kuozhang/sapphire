@@ -11,8 +11,13 @@
 
 package org.eclipse.sapphire.ui;
 
+import static org.eclipse.sapphire.modeling.util.MiscUtil.normalizeToEmptyString;
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.sapphire.java.JavaType;
@@ -97,15 +102,39 @@ public final class SapphireActionGroup
     
     public List<SapphireAction> getActions()
     {
-        final TopologicalSorter<SapphireAction> sorter = new TopologicalSorter<SapphireAction>();
+        // Sort actions in two passes. First pass buckets actions by groups.
+        
+        final Map<String,List<SapphireAction>> buckets = new LinkedHashMap<String,List<SapphireAction>>();
         
         for( SapphireAction action : this.actions )
         {
-            final TopologicalSorter.Entity actionEntity = sorter.entity( action.getId(), action );
+            final String group = normalizeToEmptyString( action.getGroup() );
             
-            for( SapphireActionLocationHint locationHint : action.getLocationHints() )
+            List<SapphireAction> bucket = buckets.get( group );
+            
+            if( bucket == null )
             {
-                actionEntity.constraint( locationHint.toString() );
+                bucket = new ArrayList<SapphireAction>();
+                buckets.put( group, bucket );
+            }
+            
+            bucket.add( action );
+        }
+        
+        // Second pass performs a topological sort using before and after location hints.
+        
+        final TopologicalSorter<SapphireAction> sorter = new TopologicalSorter<SapphireAction>();
+        
+        for( List<SapphireAction> bucket : buckets.values() )
+        {
+            for( SapphireAction action : bucket )
+            {
+                final TopologicalSorter.Entity actionEntity = sorter.entity( action.getId(), action );
+                
+                for( SapphireActionLocationHint locationHint : action.getLocationHints() )
+                {
+                    actionEntity.constraint( locationHint.toString() );
+                }
             }
         }
         

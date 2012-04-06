@@ -28,12 +28,16 @@
         <label>select all</label>
         <key-binding>CONTROL+a</key-binding>
         <description>Select all edit parts in the diagram</description>
+        <location>after:Sapphire.Add</location>
+        <group>Sapphire.Diagram.SelectAll</group>
     </action>
     <action>
         <id>Sapphire.Diagram.SelectAllNodes</id>
         <context>Sapphire.Diagram.Editor</context>
         <label>select all nodes</label>
         <description>Select all node edit parts in the diagram</description>
+        <location>after:Sapphire.Diagram.SelectAll</location>
+        <group>Sapphire.Diagram.SelectAll</group>
     </action>
     <action-handler>
         <action>Sapphire.Diagram.Layout</action>
