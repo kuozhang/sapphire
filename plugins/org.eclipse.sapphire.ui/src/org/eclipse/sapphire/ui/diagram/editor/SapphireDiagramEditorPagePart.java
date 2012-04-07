@@ -8,7 +8,8 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
- *    Ling Hao - [344319] Image specification for diagram parts inconsistent with the rest of sdef 
+ *    Ling Hao - [344319] Image specification for diagram parts inconsistent with the rest of sdef
+ *    Konstantin Komissarchik - [375770] Support context menu actions when multiple diagram parts are selected 
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -36,7 +37,6 @@ import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
-import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
@@ -44,9 +44,12 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
@@ -463,6 +466,36 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	}
     	notifyDiagramChange();
     	refreshPropertiesViewContribution();
+    }
+    
+    public List<DiagramNodePart> getNodes()
+    {
+        final ListFactory<DiagramNodePart> nodes = ListFactory.start();
+        
+        for( DiagramNodeTemplate template : getNodeTemplates() )
+        {
+            nodes.addAll( template.getDiagramNodes() );
+        }
+        
+        return nodes.create();
+    }
+    
+    public List<DiagramConnectionPart> getConnections()
+    {
+        final ListFactory<DiagramConnectionPart> connections = ListFactory.start();
+        
+        for( DiagramConnectionTemplate template : getConnectionTemplates() )
+        {
+            connections.addAll( template.getDiagramConnections( null ) );
+        }
+        
+        for( DiagramNodeTemplate nodeTemplate : getNodeTemplates() )
+        {
+            final DiagramConnectionTemplate embeddedConnectionTemplate = nodeTemplate.getEmbeddedConnectionTemplate();
+            connections.addAll( embeddedConnectionTemplate.getDiagramConnections( null ) );
+        }
+        
+        return connections.create();
     }
     
     public DiagramNodePart getDiagramNodePart(IModelElement nodeElement)

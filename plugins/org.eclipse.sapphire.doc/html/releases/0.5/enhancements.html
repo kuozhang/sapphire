@@ -33,9 +33,8 @@
   <ol type="A">
     <li><a href="#DiagramLayout">Diagram Layout Storage</a></li>
     <li><a href="#DiagramContextHelp">Diagram Context Help</a></li>
-    <li><a href="#DeleteAllBendPoints">Delete All Bend Points Action</a></li>
-    <li><a href="#SelectALL">Select All Actions</a></li>
-    <li><a href="#MutiplePartsActions">Actions for Multiple Parts</a></li>   
+    <li><a href="#NewDiagramActions">New Diagram Actions</a></li>
+    <li><a href="#MutipleDiagramPartsActions">Actions for Multiple Diagram Parts</a></li>   
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
@@ -234,21 +233,58 @@ annotation. If nothing is selected in the diagram editor, hitting "F1" will disp
 with the root model element for the diagram editor.</p>
 
 
-<h2><a name="DeleteAllBendPoints">Delete All Bend Points Action</a></h2>
+<h2><a name="NewDiagramActions">New Diagram Actions</a></h2>
 
-<p>Delete all bend points on a connection using a new action accessible via connection's context menu.</p>
+<p>Easily delete all bend points for one or more connections.</p>
 
-<h2><a name="SelectAll">Select All Actions</a></h2>
+<p>Select all diagram parts or just the nodes using a pair of new actions. Alternatively, use
+Ctrl + A key binding to select everything.</p>
 
-<p>There are two new actions available on diagram editor's context menu: "Select All" and "Select All Nodes". 
-"Select All" action selects all the nodes and connections while "Select All Nodes" selects all the nodes on
-the diagram editor canvas. "Select All" is also accessible through Ctrl + A key binding.</p>
 
-<h2><a name="MutiplePartsActions">Actions for Multiple Parts</a></h2>
-<p>Developers can now create actions that are available when multiple nodes or connections are selected in the 
-diagram editor. To create such actions, simply add "Sapphire.Diagram.MultipleParts" to their context.</P>
+<h2><a name="MutipleDiagramPartsActions">Actions for Multiple Diagram Parts</a></h2>
 
-<p>The Sapphire Delete action has been modified to delete all the selected nodes and connections.</p>
+<p>Develop actions that work in the context where multiple nodes and/or connections are selected. Such
+actions should specify "Sapphire.Diagram.MultipleParts" context and be contributed at diagram page level.</P>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class ExampleActionHandler extends SapphireActionHandler
+{
+    @Override
+    protected Object run( SapphireRenderingContext context ) 
+    {
+        final SapphireDiagramEditorPagePart page = (SapphireDiagramEditorPagePart) getPart();
+        
+        for( ISapphirePart selectedPart : page.getSelections() )
+        {
+            if( selectedPart instanceof DiagramNodePart )
+            {
+                ...
+            }
+            else if( selectedPart instanceof DiagramConnectionPart )
+            {
+                ...
+            }
+        }
+        
+        ...
+        
+        return null;
+    }
+}</code></pre>
+
+<pre class="source-code"><code>&lt;diagram-page>
+    &lt;action>
+        &lt;id>Example&lt;/id>
+        &lt;label>example&lt;/label>
+        &lt;context>Sapphire.Diagram.MultipleParts&lt;/context>
+    &lt;/action>
+    &lt;action-handler>
+        &lt;action>Example&lt;/action>
+        &lt;impl>ExampleActionHandler&lt;/impl>
+    &lt;/action-handler>
+&lt;/diagram-page></code></pre>
+
 
 <h2><a name="ExpressionLanguage"><a name="ImageFunction">Image Function</a></a></h2>
 

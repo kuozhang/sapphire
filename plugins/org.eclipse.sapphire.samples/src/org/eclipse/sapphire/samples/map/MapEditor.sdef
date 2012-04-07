@@ -97,7 +97,7 @@
             <impl>MapDropActionHandler</impl>
         </action-handler>
         <action>
-            <id>Sapphire.Map.Open.Homepage</id>
+            <id>Sapphire.Samples.Map.OpenHomepage</id>
             <label>Sapphire Homepage</label>
             <tooltip>Open Sapphire Homepage (Ctrl+Alt+Shift+S)</tooltip>
             <description>Open Sapphire project homepage.</description>
@@ -106,10 +106,24 @@
             <context>Sapphire.Diagram.Editor</context>
         </action>
         <action-handler>
-            <action>Sapphire.Map.Open.Homepage</action>
-            <id>Sapphire.Map.Open.Homepage</id>
+            <action>Sapphire.Samples.Map.OpenHomepage</action>
+            <id>Sapphire.Samples.Map.OpenHomepage</id>
             <label>Sapphire Homepage</label>
             <impl>OpenHomepageActionHandler</impl>
+        </action-handler>
+        <action>
+            <id>Sapphire.Samples.Map.ShowStatistics</id>
+            <label>show statistics</label>
+            <context>Sapphire.Diagram.Editor</context>
+            <context>Sapphire.Diagram.MultipleParts</context>
+            <location>after:Sapphire.Diagram.Guides.Toggle</location>
+            <location>before:Sapphire.Diagram.Layout</location>
+            <group>Sapphire.Diagram.Appearance</group>
+        </action>
+        <action-handler>
+            <action>Sapphire.Samples.Map.ShowStatistics</action>
+            <id>Sapphire.Samples.Map.ShowStatistics</id>
+            <impl>ShowStatisticsActionHandler</impl>
         </action-handler>
                 
     </diagram-page>
