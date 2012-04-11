@@ -283,6 +283,11 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     {
     	notifyDiagramSave();
     }
+
+    public void autoLayoutDiagram()
+    {
+    	notifyDiagramAutoLayout();
+    }
     
     public IDiagramEditorPageDef getPageDef()
     {
@@ -492,7 +497,10 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         for( DiagramNodeTemplate nodeTemplate : getNodeTemplates() )
         {
             final DiagramConnectionTemplate embeddedConnectionTemplate = nodeTemplate.getEmbeddedConnectionTemplate();
-            connections.addAll( embeddedConnectionTemplate.getDiagramConnections( null ) );
+            if (embeddedConnectionTemplate != null)
+            {
+                connections.addAll( embeddedConnectionTemplate.getDiagramConnections( null ) );
+            }
         }
         
         return connections.create();
@@ -556,6 +564,50 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	return null;
     }
         
+    /**
+     * Returns the list of connections that are attached to a node on either end.
+     * @param nodePart the sapphire node part
+     * @return the list of connections
+     */
+    public List<DiagramConnectionPart> getAttachedConnections(DiagramNodePart nodePart)
+    {
+    	IModelElement nodeElement = nodePart.getLocalModelElement();
+    	List<DiagramConnectionPart> attachedConnections = new ArrayList<DiagramConnectionPart>();
+    	
+    	List<DiagramConnectionTemplate> connTemplates = this.getConnectionTemplates();
+    	for (DiagramConnectionTemplate connTemplate : connTemplates)
+    	{
+    		 List<DiagramConnectionPart> connParts = connTemplate.getDiagramConnections(null);
+    		 for (DiagramConnectionPart connPart : connParts)
+    		 {
+    			 if ((connPart.getEndpoint1() != null && connPart.getEndpoint1().equals(nodeElement)) || 
+    					 connPart.getEndpoint2() != null && connPart.getEndpoint2().equals(nodeElement))
+    			 {
+    				 attachedConnections.add(connPart);
+    			 }
+    		 }
+    	}
+    	// Check for embedded connections
+        List<DiagramNodeTemplate> nodeTemplates = this.getNodeTemplates();
+        for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
+        {
+        	DiagramEmbeddedConnectionTemplate connTemplate = nodeTemplate.getEmbeddedConnectionTemplate();
+        	if (connTemplate != null)
+        	{
+        		List<DiagramConnectionPart> connParts = connTemplate.getDiagramConnections(null);
+	       		 for (DiagramConnectionPart connPart : connParts)
+	       		 {
+	    			 if (connPart.getEndpoint1().equals(nodeElement) || connPart.getEndpoint2().equals(nodeElement))
+	    			 {
+	    				 attachedConnections.add(connPart);
+	    			 }
+	       		 }        	
+        	}
+        }    	
+    	
+    	return attachedConnections;
+    }
+        
     @Override
     public void dispose() 
     {
@@ -572,7 +624,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         
         disposeParts();
     }
-    
+        
     private void disposeParts()
     {
     	for (DiagramNodeTemplate nodeTemplate : this.nodeTemplates)
@@ -843,6 +895,19 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 		}		
 	}
 	
+	private void notifyDiagramAutoLayout()
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramPageEvent pageEvent = new DiagramPageEvent(this);
+				((SapphireDiagramPartListener)listener).handleDiagramAutoLayout(pageEvent);
+			}
+		}		
+	}
+
 	// --------------------------------------------------------------------
 	// Inner classes
 	//---------------------------------------------------------------------

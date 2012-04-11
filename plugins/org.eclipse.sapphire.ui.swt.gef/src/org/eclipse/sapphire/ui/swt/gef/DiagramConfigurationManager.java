@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui.swt.gef;
 
+import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
+
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
@@ -41,5 +43,10 @@ public class DiagramConfigurationManager
 	public SapphireConnectionRouter getConnectionRouter()
 	{
 		return this.connectionRouter;
+	}
+	
+	public DiagramLayoutPersistenceService getLayoutPersistenceService()
+	{
+		return this.diagramEditor.getLayoutPersistenceService();
 	}
 }

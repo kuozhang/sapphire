@@ -29,6 +29,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
+import org.eclipse.sapphire.ui.diagram.editor.IdUtil;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
@@ -67,12 +68,29 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		this.architecture.setShowGuides(visible);
 	}
 
-
+	public void read(DiagramNodePart nodePart)
+	{
+		IComponent component = (IComponent)nodePart.getLocalModelElement();
+		if (!component.disposed())
+		{
+			String nodeId = IdUtil.computeNodeId(nodePart);
+			if (isNodePersisted(nodePart))
+			{
+				if (component.getBounds().getX().getContent(false) != null && component.getBounds().getY().getContent() != null)
+				{
+					nodePart.setNodePosition(component.getBounds().getX().getContent(), 
+							component.getBounds().getY().getContent());
+				}
+			}
+		}
+	}
+	
 	private void write(DiagramNodePart nodePart) 
 	{
 		IComponent component = (IComponent)nodePart.getLocalModelElement();
 		if (!component.disposed())
 		{
+			this.architecture.removeListener(this.componentListener, "/Components/Bounds/*");
 			Bounds bounds = nodePart.getNodeBounds();
 			component.getBounds().setX(bounds.getX());
 			component.getBounds().setY(bounds.getY());
@@ -83,9 +101,30 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 				if (bounds.getHeight() > 0)
 					component.getBounds().setHeight(bounds.getHeight());
 			}
+			this.architecture.addListener(this.componentListener, "/Components/Bounds/*");
 		}
 	}
 
+	public void read(DiagramConnectionPart connectionPart)
+	{
+		IComponentDependency dependency = (IComponentDependency)connectionPart.getLocalModelElement();
+		if (!dependency.disposed())
+		{
+			if (isConnectionPersisted(connectionPart))
+			{
+				if (connectionPart.getConnectionBendpoints().size() == 0 && dependency.getConnectionBendpoints().size() != 0 )
+				{
+					List<Point> bendPoints = new ArrayList<Point>();
+					for (ConnectionBendpoint bendPoint : dependency.getConnectionBendpoints())
+					{
+						bendPoints.add(new Point(bendPoint.getX().getContent(), bendPoint.getY().getContent()));
+					}
+					connectionPart.resetBendpoints(bendPoints);
+				}
+			}
+		}
+	}
+	
 	private void write(DiagramConnectionPart connectionPart) 
 	{
 		IComponentDependency dependency = (IComponentDependency)connectionPart.getLocalModelElement();
@@ -161,7 +200,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 				nodePart.setNodeBounds(component.getBounds().getX().getContent(), 
 						component.getBounds().getY().getContent(), 
 						component.getBounds().getWidth().getContent(), 
-						component.getBounds().getHeight().getContent());				
+						component.getBounds().getHeight().getContent());
 				
 				// load the embedded connection layout
 				ModelElementList<IComponentDependency> dependencies = component.getDependencies();
@@ -252,7 +291,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
             public void handleNodeAddEvent(final DiagramNodeEvent event)
             {
 				DiagramNodePart nodePart = (DiagramNodePart)event.getPart();
-				write(nodePart);
+				read(nodePart);
             }
 			
 			@Override
@@ -279,7 +318,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	        public void handleConnectionAddEvent(final DiagramConnectionEvent event)
 			{
 				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
-				write(connPart);
+				read(connPart);
 			}
 			
 			@Override
@@ -312,7 +351,12 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		    	SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)event.getPart();
 		    	setGuidesVisible(diagramPart.isShowGuides());
 			}
-					    		
+			
+			@Override
+			public void handleDiagramSaveEvent(final DiagramPageEvent event)
+			{
+				handleDiagramSave();
+			}
 		};
 		this.diagramPart.addListener(this.diagramPartListener);
 	}
@@ -356,4 +400,8 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		
 	}
 	
+	private void handleDiagramSave()
+	{
+		refreshPersistedPartsCache();
+	}
 }

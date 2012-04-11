@@ -12,9 +12,9 @@
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -100,7 +100,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
                 ModelElementList<?> connList = srcNodeModel.read(connListProperty);
                 for (IModelElement endpointModel : connList)
                 {
-                    createNewConnectionPart(endpointModel, srcNodeModel);
+                	createNewConnectionPart(endpointModel, srcNodeModel);                	
                 }                
                 addModelListener(srcNodeModel);
             }
@@ -283,7 +283,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     }
 
     @Override
-    protected void addConnectionPart(IModelElement srcNodeModel, DiagramConnectionPart connPart)
+    public void addConnectionPart(IModelElement srcNodeModel, DiagramConnectionPart connPart)
     {
         List<DiagramConnectionPart> connParts = this.diagramConnectionMap.get(srcNodeModel);
         if (connParts == null)
@@ -295,13 +295,18 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     }
 
     @Override
-    protected void removeConnectionPart(IModelElement srcNodeModel, DiagramConnectionPart connPart)
+    public void disposeConnectionPart(DiagramConnectionPart connPart)
     {
-        List<DiagramConnectionPart> connParts = this.diagramConnectionMap.get(srcNodeModel);
-        if (connParts != null)
-        {
-            connParts.remove(connPart);
-        }
+    	connPart.dispose();
+    	Collection<List<DiagramConnectionPart>> allConnParts = this.diagramConnectionMap.values();
+    	for (List<DiagramConnectionPart> connParts : allConnParts)
+    	{
+    		if (connParts.contains(connPart))
+    		{
+    			connParts.remove(connPart);
+    			break;
+    		}
+    	}
     }
     
     private void handleModelElementDispose(final ModelElementDisposedEvent event)
@@ -314,10 +319,9 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
             if (connPart.getEndpoint1() == element || connPart.getEndpoint2() == element)
             {
                 notifyConnectionDelete(connPart);
-                connPart.dispose();
+                disposeConnectionPart(connPart);
             }
         }
-        connParts.clear();
         removeModelListener(element);
     } 
     

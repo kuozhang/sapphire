@@ -118,14 +118,14 @@ public class DiagramNodeTemplate extends SapphirePart
         {
             if (this.modelElementType == null)
             {
-                createNewNodePart(listEntryModelElement);
+                createNewNodePart(listEntryModelElement);                
             }
             else 
             {
                 final Class<?> cl = this.modelElementType.artifact();
                 if( cl == null || cl.isAssignableFrom( listEntryModelElement.getClass() ) )
                 {
-                    createNewNodePart(listEntryModelElement);
+                	createNewNodePart(listEntryModelElement);
                 }
             }
         }
@@ -310,49 +310,41 @@ public class DiagramNodeTemplate extends SapphirePart
         		}
     		}
     	}
-	
-    	if (newList.size() != getDiagramNodes().size())
-    	{
-    		List<DiagramNodePart> nodeParts = getDiagramNodes();
-    		List<IModelElement> oldList = new ArrayList<IModelElement>(nodeParts.size());
-    		for (DiagramNodePart nodePart : nodeParts)
-    		{
-    			oldList.add(nodePart.getLocalModelElement());
-    		}
-    		
-	    	if (newList.size() > oldList.size())
+    	List<DiagramNodePart> nodeParts = getDiagramNodes();
+		List<IModelElement> oldList = new ArrayList<IModelElement>(nodeParts.size());
+		for (DiagramNodePart nodePart : nodeParts)
+		{
+			oldList.add(nodePart.getLocalModelElement());
+		}
+    	
+    	List<IModelElement> deletedNodes = ListUtil.ListDiff(oldList, newList);
+    	List<IModelElement> newNodes = ListUtil.ListDiff(newList, oldList);
+		for (IModelElement deletedNode : deletedNodes)
+		{
+			DiagramNodePart nodePart = getNodePart(deletedNode);
+			if (nodePart != null)
+			{
+				notifyNodeDelete(nodePart);
+				nodePart.dispose();
+				this.diagramNodes.remove(nodePart);
+			}
+		}    	    	
+		for (IModelElement newNode : newNodes)
+		{
+	    	DiagramNodePart nodePart = createNewNodePart(newNode);
+	    	if (this.diagramEditor.isNodeTemplateVisible(this))
 	    	{
-	    		// new nodes are added outside of the diagram editor
-	    		List<IModelElement> newNodes = ListUtil.ListDiff(newList, oldList);
-	    		for (IModelElement newNode : newNodes)
-	    		{
-    		    	DiagramNodePart nodePart = createNewNodePart(newNode);
-    		    	if (this.diagramEditor.isNodeTemplateVisible(this))
-    		    	{
-    		    		notifyNodeAdd(nodePart);
-    		    	}
-    		    	if (this.embeddedConnTemplate != null)
-    		    	{
-    		    		this.embeddedConnTemplate.refreshConnections(newNode);
-    		    	}
-	    		}
+	    		notifyNodeAdd(nodePart);
 	    	}
-	    	else if (newList.size() < oldList.size())
+	    	if (this.embeddedConnTemplate != null)
 	    	{
-	    		// nodes are deleted
-	    		List<IModelElement> deletedNodes = ListUtil.ListDiff(newList, oldList);
-	    		for (IModelElement deletedNode : deletedNodes)
-	    		{
-	    			DiagramNodePart nodePart = getNodePart(deletedNode);
-	    			if (nodePart != null)
-	    			{
-	    				notifyNodeDelete(nodePart);
-    					nodePart.dispose();
-    					this.diagramNodes.remove(nodePart);
-	    			}
-	    		}
+	    		this.embeddedConnTemplate.refreshConnections(newNode);
 	    	}
-    	}
+	    	// If a connection part is created before the two endpoint node parts are created,
+	    	// the connection part hasn't been visually displayed on the diagram canvas.
+	    	// We need to refresh those connections in case they become valid.
+	    	refreshAttachedConnections(nodePart);	    
+		}
     }
     
     public DiagramNodePart getNodePart(IModelElement element)
@@ -462,4 +454,26 @@ public class DiagramNodeTemplate extends SapphirePart
             listener.handleNodeMove(event);
         }				
 	}
+	
+    /**
+     * In the case where the entire Sapphire model is reconstructed (revert source file in the source editor), 
+     * connection properties may have triggered events before the node properties change events
+     * are sent out. So those connection parts will be created before the endpoint node
+     * parts are created. But those connection parts won't be displayed visually on diagram canvas
+     * until those corresponding endpoint nodes are created on the canvas.
+     * 
+     * [Bug 376245] Revert action in StructuredTextEditor does not revert diagram nodes and connections
+     * in SapphireDiagramEditor
+     * 
+     * @param nodePart
+     */
+    private void refreshAttachedConnections(DiagramNodePart nodePart)
+    {
+    	List<DiagramConnectionPart> attachedConnections = this.diagramEditor.getAttachedConnections(nodePart);
+    	for (DiagramConnectionPart connPart : attachedConnections)
+    	{
+    		connPart.getDiagramConnectionTemplate().notifyConnectionAdd(connPart);
+    	}
+    }
+	
 }

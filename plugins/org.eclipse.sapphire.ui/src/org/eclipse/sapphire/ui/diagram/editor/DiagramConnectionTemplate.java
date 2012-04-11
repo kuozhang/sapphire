@@ -177,7 +177,7 @@ public class DiagramConnectionTemplate extends SapphirePart
                 ModelElementList<?> connList = listEntryModelElement.read((ListProperty)connProp);                        
                 for (IModelElement connElement : connList)
                 {
-                    createNewConnectionPart(connElement, null);
+                	createNewConnectionPart(connElement, null);
                 }
             }
         }
@@ -578,49 +578,39 @@ public class DiagramConnectionTemplate extends SapphirePart
         if (property == this.connListProperty)
         {
             List<DiagramConnectionPart> connParts = getDiagramConnections(element);
-            if (newList.size() != connParts.size())
-            {                
-                List<IModelElement> oldList = new ArrayList<IModelElement>(connParts.size());
-                for (DiagramConnectionPart connPart : connParts)
+            List<IModelElement> oldList = new ArrayList<IModelElement>(connParts.size());
+            for (DiagramConnectionPart connPart : connParts)
+            {
+                oldList.add(connPart.getLocalModelElement());
+            }
+            List<IModelElement> deletedConns = ListUtil.ListDiff(oldList, newList);
+            List<IModelElement> newConns = ListUtil.ListDiff(newList, oldList);
+            
+            // Handle deleted connections
+            for (IModelElement deletedConn : deletedConns)
+            {
+                DiagramConnectionPart connPart = getConnectionPart(element, deletedConn);
+                if (connPart != null)
                 {
-                    oldList.add(connPart.getLocalModelElement());
+                    notifyConnectionDelete(connPart);
+                    disposeConnectionPart(connPart);
                 }
-                            
-                if (newList.size() > oldList.size())
+            }
+            // Handle newly created connections
+            for (IModelElement newConn : newConns)
+            {                    
+                DiagramConnectionPart connPart = createNewConnectionPart(newConn, element);
+                if (connPart.getEndpoint1() != null && connPart.getEndpoint2() != null)
                 {
-                    // new connections are added
-                    List<IModelElement> newConns = ListUtil.ListDiff(newList, oldList);
-                    for (IModelElement newConn : newConns)
-                    {                    
-                        DiagramConnectionPart connPart = createNewConnectionPart(newConn, element);
-                        if (connPart.getEndpoint1() != null && connPart.getEndpoint2() != null)
-                        {
-                            notifyConnectionAdd(connPart);
-                        }
-                        else
-                        {
-                            connPart.dispose();
-                            removeConnectionPart(element, connPart);
-                        }
-                    }
+                    notifyConnectionAdd(connPart);
                 }
                 else
                 {
-                    // connections are deleted
-                    List<IModelElement> deletedConns = ListUtil.ListDiff(newList, oldList);
-                    for (IModelElement deletedConn : deletedConns)
-                    {
-                        DiagramConnectionPart connPart = getConnectionPart(element, deletedConn);
-                        if (connPart != null)
-                        {
-                            notifyConnectionDelete(connPart);
-                            connPart.dispose();
-                            removeConnectionPart(element, connPart);
-                        }
-                    }
+                    disposeConnectionPart(connPart);
                 }
             }
-        }
+            
+        }  
         else if (property == this.modelProperty)
         {
             // 1xn type connection and we are dealing with events on connection list parent
@@ -641,45 +631,41 @@ public class DiagramConnectionTemplate extends SapphirePart
             {
                 oldList.add(it.next());
             }
-            if (newList.size() > oldList.size())
+            List<IModelElement> deletedConnParents = ListUtil.ListDiff(oldList, newList);
+            List<IModelElement> newConnParents = ListUtil.ListDiff(newList, oldList);
+            
+            // connection parents are deleted and we need to dispose any connections associated with them
+            List<DiagramConnectionPart> connPartsCopy = new ArrayList<DiagramConnectionPart>(connParts.size());
+            connPartsCopy.addAll(connParts);
+            for (DiagramConnectionPart connPart : connPartsCopy)
             {
-                // new connection parents are added and we need to listen on their connection list property
-                List<IModelElement> newConnParents = ListUtil.ListDiff(newList, oldList);
-                ModelPath.PropertySegment head = (ModelPath.PropertySegment)this.originalEndpoint2Path.head();
-                for (IModelElement newConnParent : newConnParents)
+                IModelElement connElement = connPart.getLocalModelElement();                
+                IModelElement connParentElement = (IModelElement)connElement.parent().parent();
+                if (deletedConnParents.contains(connParentElement))
                 {
-                    newConnParent.addListener(this.modelPropertyListener, head.getPropertyName());
-                    newConnParent.notifyPropertyChangeListeners(this.connListProperty);
+                    notifyConnectionDelete(connPart);
+                    disposeConnectionPart(connPart);                        
                 }
-            }
-            else if (newList.size() < oldList.size())
+            }            
+            // new connection parents are added and we need to listen on their connection list property
+            ModelPath.PropertySegment head = (ModelPath.PropertySegment)this.originalEndpoint2Path.head();
+            for (IModelElement newConnParent : newConnParents)
             {
-                // connection parents are deleted and we need to dispose any connections associated with them
-                List<IModelElement> deletedConnParents = ListUtil.ListDiff(newList, oldList);
-                List<DiagramConnectionPart> connPartsCopy = new ArrayList<DiagramConnectionPart>(connParts.size());
-                connPartsCopy.addAll(connParts);
-                for (DiagramConnectionPart connPart : connPartsCopy)
-                {
-                    IModelElement connElement = connPart.getLocalModelElement();                
-                    IModelElement connParentElement = (IModelElement)connElement.parent().parent();
-                    if (deletedConnParents.contains(connParentElement))
-                    {
-                        notifyConnectionDelete(connPart);
-                        connPart.dispose();
-                        removeConnectionPart(element, connPart);                        
-                    }
-                }
+                newConnParent.addListener(this.modelPropertyListener, head.getPropertyName());
+                newConnParent.notifyPropertyChangeListeners(this.connListProperty);
             }
+
         }
     }
     
-    protected void addConnectionPart(IModelElement srcNodeModel, DiagramConnectionPart connPart)
+    public void addConnectionPart(IModelElement srcNodeModel, DiagramConnectionPart connPart)
     {
         this.diagramConnections.add(connPart);
     }
     
-    protected void removeConnectionPart(IModelElement srcNodeModel, DiagramConnectionPart connPart)
+    public void disposeConnectionPart(DiagramConnectionPart connPart)
     {
+    	connPart.dispose();
         this.diagramConnections.remove(connPart);
     }
     
@@ -729,7 +715,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         }        
     }
     
-    protected void notifyConnectionAdd(DiagramConnectionPart connPart)
+    public void notifyConnectionAdd(DiagramConnectionPart connPart)
     {
         for( Listener listener : this.templateListeners )
         {

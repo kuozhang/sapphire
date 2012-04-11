@@ -27,6 +27,14 @@ public final class Bounds extends Point
         this.height = height;
     }
     
+    // Copy constructor
+    public Bounds(Bounds another)
+    {
+    	super(another.getX(), another.getY());
+    	this.width = another.getWidth();
+    	this.height = another.getHeight();
+    }
+    
     public int getWidth()
     {
         return this.width;

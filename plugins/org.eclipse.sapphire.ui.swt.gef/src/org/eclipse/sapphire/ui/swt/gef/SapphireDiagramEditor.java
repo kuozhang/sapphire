@@ -123,6 +123,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
         this.diagramPart = new SapphireDiagramEditorPagePart();
 		this.diagramPart.init( editor, rootModelElement, this.diagramPageDef, Collections.<String, String> emptyMap() );
         
+		// Initialize layout persistence service
+		this.layoutPersistenceService = SapphireDiagramEditorFactory.getLayoutPersistenceService(this.diagramPart);
+		
         this.configManager = new DiagramConfigurationManager(this);
         
         this.diagramModel = new DiagramModel(diagramPart, this.configManager);
@@ -253,7 +256,12 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
     {
     	return this.diagramPageDef;
     }
-        
+     
+    public DiagramLayoutPersistenceService getLayoutPersistenceService()
+    {
+    	return this.layoutPersistenceService;
+    }
+    
 	@Override
 	public boolean isDirty()
 	{
@@ -282,7 +290,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		IModelElement endpoint2 = connPart.getEndpoint2();
 		DiagramNodePart nodePart1 = this.diagramPart.getDiagramNodePart(endpoint1);
 		DiagramNodePart nodePart2 = this.diagramPart.getDiagramNodePart(endpoint2);
-		if (nodePart1 != null && nodePart2 != null) {
+		GraphicalEditPart node1 = getGraphicalEditPart(nodePart1);
+		GraphicalEditPart node2 = getGraphicalEditPart(nodePart2);
+		if (node1 != null && node2 != null) {
 			diagramModel.addConnection(connPart);
 			DiagramRenderingContext ctx = new DiagramRenderingContext(connPart, this);
 			getConfigurationManager().getDiagramRenderingContextCache().put(connPart, ctx);
@@ -501,10 +511,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	}
 	
 	private void postInit()
-	{				
-		// Initialize layout persistence service
-		this.layoutPersistenceService = SapphireDiagramEditorFactory.getLayoutPersistenceService(this.diagramPart);
-		
+	{						
 		initRenderingContext();
 
 		// If the layout file doesn't exist or no layout is written to the layout file, apply auto layout
@@ -520,6 +527,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 					Point pt = getMouseLocation();
 					context.setCurrentMouseLocation(pt.x, pt.y);
 					layoutHandler.execute(context);
+					this.diagramPart.autoLayoutDiagram();
 				}
 			}
 		}
@@ -678,6 +686,32 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		return this.selectedEditParts;
 	}
 	
+	public GraphicalEditPart getGraphicalEditPart(ISapphirePart sapphirePart)
+	{
+		if (sapphirePart instanceof DiagramNodePart || sapphirePart instanceof DiagramConnectionPart)
+		{
+			GraphicalViewer viewer = this.getGraphicalViewer();
+			
+			Object editpartObj = null;
+			DiagramNodePart nodePart = null;
+			DiagramConnectionPart connPart = null;
+			if (sapphirePart instanceof DiagramNodePart)
+			{
+				nodePart = (DiagramNodePart)sapphirePart;
+				DiagramNodeModel nodeModel = this.getDiagramModel().getDiagramNodeModel(nodePart);
+				editpartObj = viewer.getEditPartRegistry().get(nodeModel);
+			}
+			else if (sapphirePart instanceof DiagramConnectionPart)
+			{
+				connPart = (DiagramConnectionPart)sapphirePart;
+				DiagramConnectionModel connModel = this.getDiagramModel().getDiagramConnectionModel(connPart);
+				editpartObj = viewer.getEditPartRegistry().get(connModel);				
+			}
+			return (GraphicalEditPart)editpartObj;
+		}
+		return null;
+	}
+	
 	public void selectAndDirectEditPart(ISapphirePart part)
 	{
 		if (part instanceof DiagramNodePart || part instanceof DiagramConnectionPart)
@@ -685,34 +719,21 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			GraphicalViewer viewer = this.getGraphicalViewer();
 			viewer.getControl().forceFocus();
 			
-			Object editpart = null;
-			DiagramNodePart nodePart = null;
-			DiagramConnectionPart connPart = null;
-			if (part instanceof DiagramNodePart)
-			{
-				nodePart = (DiagramNodePart)part;
-				DiagramNodeModel nodeModel = this.getDiagramModel().getDiagramNodeModel(nodePart);
-				editpart = viewer.getEditPartRegistry().get(nodeModel);
-			}
-			else if (part instanceof DiagramConnectionPart)
-			{
-				connPart = (DiagramConnectionPart)part;
-				DiagramConnectionModel connModel = this.getDiagramModel().getDiagramConnectionModel(connPart);
-				editpart = viewer.getEditPartRegistry().get(connModel);				
-			}
-			if (editpart instanceof EditPart) 
+			GraphicalEditPart editpart = getGraphicalEditPart(part);
+			if (editpart != null) 
 			{
 				// Force a layout first.
 				viewer.flush();
-				viewer.select((EditPart) editpart);
-			}
-			if (nodePart != null)
-			{
-				this.getDiagramModel().handleDirectEditing(nodePart);
-			}
-			else
-			{
-				this.getDiagramModel().handleDirectEditing(connPart);
+				viewer.select(editpart);
+				if (part instanceof DiagramNodePart)
+				{
+					this.getDiagramModel().handleDirectEditing((DiagramNodePart)part);
+				}
+				else if (part instanceof DiagramConnectionPart)
+				{
+					this.getDiagramModel().handleDirectEditing((DiagramConnectionPart)part);
+				}
+				
 			}
 		}
 	}

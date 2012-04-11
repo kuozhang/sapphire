@@ -13,7 +13,10 @@ package org.eclipse.sapphire.ui.diagram.layout.standard;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -25,7 +28,6 @@ import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.StatusException;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.Bounds;
-import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
@@ -51,15 +53,17 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 {
 	protected StandardDiagramLayout layoutModel;
 	protected IEditorInput editorInput;
-	protected SapphireDiagramEditorPagePart diagramPart;
 	private SapphireDiagramPartListener diagramPartListener;
+	private Map<String, Bounds> nodeBounds;
+	private Map<String, List<Point>> connectionBendPoints;
 	
     @Override
     protected void init()
     {
         super.init();
-    	this.diagramPart = (SapphireDiagramEditorPagePart)context().find(ISapphirePart.class);
-    	this.editorInput = this.diagramPart.getLocalModelElement().adapt(IEditorInput.class);        
+    	this.editorInput = getDiagramEditorPagePart().getLocalModelElement().adapt(IEditorInput.class);
+    	this.nodeBounds = new HashMap<String, Bounds>();
+    	this.connectionBendPoints = new HashMap<String, List<Point>>();
 		try
 		{
 			load();
@@ -71,6 +75,32 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		addDiagramPartListener();
     }		
 	
+    public void read(DiagramNodePart nodePart)
+    {
+    	String id = IdUtil.computeNodeId(nodePart);
+    	if (isNodePersisted(nodePart))
+    	{
+    		Bounds bounds = this.nodeBounds.get(id);
+    		if (bounds != null)
+    		{
+    			nodePart.setNodeBounds(bounds.getX(), bounds.getY(), bounds.getHeight(), bounds.getWidth());
+    		}
+    	}
+    }
+    
+    public void read(DiagramConnectionPart connPart)
+    {
+    	if (isConnectionPersisted(connPart))
+    	{
+    		String id = IdUtil.computeConnectionId(connPart);
+    		List<Point> bendPoints = this.connectionBendPoints.get(id);
+    		if (bendPoints != null)
+    		{
+    			connPart.resetBendpoints(bendPoints);
+    		}
+    	}
+    }
+    
     private void setGridVisible(boolean visible)
     {
     	if (this.layoutModel != null)
@@ -93,7 +123,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	{
 		if (this.diagramPartListener != null)
 		{
-			this.diagramPart.removeListener(this.diagramPartListener);
+			getDiagramEditorPagePart().removeListener(this.diagramPartListener);
 		}
 	}
 	protected abstract StandardDiagramLayout initLayoutModel();
@@ -105,54 +135,58 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		{
 			return;
 		}
-		this.diagramPart.setGridVisible(this.layoutModel.getGridLayout().isVisible().getContent());
-		this.diagramPart.setShowGuides(this.layoutModel.getGuidesLayout().isVisible().getContent());
+		getDiagramEditorPagePart().setGridVisible(this.layoutModel.getGridLayout().isVisible().getContent());
+		getDiagramEditorPagePart().setShowGuides(this.layoutModel.getGuidesLayout().isVisible().getContent());
+		
+		
 		ModelElementList<DiagramNodeLayout> nodes = this.layoutModel.getDiagramNodesLayout();
 		for (DiagramNodeLayout node : nodes)
 		{
 			String id = node.getNodeId().getContent();
-			DiagramNodePart nodePart = IdUtil.getNodePart(this.diagramPart, id);
+			DiagramNodePart nodePart = IdUtil.getNodePart(getDiagramEditorPagePart(), id);
+			int x = node.getX().getContent() != null ? node.getX().getContent() : -1;
+			int y = node.getY().getContent() != null ? node.getY().getContent() : -1;
+			int width = node.getWidth().getContent() != null ? node.getWidth().getContent() : -1;
+			int height = node.getHeight().getContent() != null ? node.getHeight().getContent() : -1;
+			
 			if (nodePart != null)
 			{
-				int x = node.getX().getContent() != null ? node.getX().getContent() : -1;
-				int y = node.getY().getContent() != null ? node.getY().getContent() : -1;
-				int width = node.getWidth().getContent() != null ? node.getWidth().getContent() : -1;
-				int height = node.getHeight().getContent() != null ? node.getHeight().getContent() : -1;
 				nodePart.setNodeBounds(x, y, width, height);
-				
-				ModelElementList<DiagramConnectionLayout> connList = node.getEmbeddedConnectionsLayout();
-				for (DiagramConnectionLayout connGeometry : connList)
-				{
-					String connId = connGeometry.getConnectionId().getContent();
-					DiagramConnectionPart connPart = IdUtil.getConnectionPart(nodePart, connId);
-					if (connPart != null)
-					{
-						ModelElementList<DiagramBendPointLayout> bps = connGeometry.getConnectionBendpoints();
-						int index = 0;
-						for (DiagramBendPointLayout pt : bps)
-						{
-							connPart.addBendpoint(index++, pt.getX().getContent(), pt.getY().getContent());
-						}
-						
-						if (connGeometry.getLabelX().getContent() != null && connGeometry.getLabelY().getContent() != null)
-						{
-							connPart.setLabelPosition(connGeometry.getLabelX().getContent(), 
-									connGeometry.getLabelY().getContent());
-						}
-					}			
-				}
-				
 			}
+			this.nodeBounds.put(id, new Bounds(x, y, width, height));
+			ModelElementList<DiagramConnectionLayout> connList = node.getEmbeddedConnectionsLayout();
+			for (DiagramConnectionLayout connGeometry : connList)
+			{
+				String connId = connGeometry.getConnectionId().getContent();
+				ModelElementList<DiagramBendPointLayout> bps = connGeometry.getConnectionBendpoints();
+				DiagramConnectionPart connPart = IdUtil.getConnectionPart(nodePart, connId);
+				if (connPart != null)
+				{					
+					int index = 0;
+					for (DiagramBendPointLayout pt : bps)
+					{
+						connPart.addBendpoint(index++, pt.getX().getContent(), pt.getY().getContent());
+					}
+					
+					if (connGeometry.getLabelX().getContent() != null && connGeometry.getLabelY().getContent() != null)
+					{
+						connPart.setLabelPosition(connGeometry.getLabelX().getContent(), 
+								connGeometry.getLabelY().getContent());
+					}
+				}
+				addConnectionBendPointsToCache(connId, bps);
+			}
+				
 		}
 		
 		ModelElementList<DiagramConnectionLayout> connList = this.layoutModel.getDiagramConnectionsLayout();
 		for (DiagramConnectionLayout connLayout : connList)
 		{
 			String connId = connLayout.getConnectionId().getContent();
-			DiagramConnectionPart connPart = IdUtil.getConnectionPart(this.diagramPart, connId);
+			DiagramConnectionPart connPart = IdUtil.getConnectionPart(getDiagramEditorPagePart(), connId);
+			ModelElementList<DiagramBendPointLayout> bps = connLayout.getConnectionBendpoints();
 			if (connPart != null)
 			{
-				ModelElementList<DiagramBendPointLayout> bps = connLayout.getConnectionBendpoints();
 				int index = 0;
 				for (DiagramBendPointLayout pt : bps)
 				{
@@ -163,13 +197,28 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 					connPart.setLabelPosition(connLayout.getLabelX().getContent(), 
 							connLayout.getLabelY().getContent());
 				}
-				
-			}			
+			}
+			addConnectionBendPointsToCache(connId, bps);
+		}
+		
+	}
+	
+	private void addConnectionBendPointsToCache(String connId, List<DiagramBendPointLayout> bendPoints)
+	{
+		if (bendPoints != null && bendPoints.size() > 0)
+		{
+			List<Point> bendPoints2 = new ArrayList<Point>(bendPoints.size());
+			for (DiagramBendPointLayout pt : bendPoints)
+			{
+				bendPoints2.add(new Point(pt.getX().getContent(), pt.getY().getContent()));
+			}
+			this.connectionBendPoints.put(connId, bendPoints2);
 		}
 	}
 
 	public void save() 
 	{
+		refreshPersistedPartsCache();
 		if (this.layoutModel == null)
 		{
 			return;
@@ -183,6 +232,26 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		catch (ResourceStoreException rse)
 		{
 			SapphireUiFrameworkPlugin.log( rse );
+		}
+	}
+	
+	private void addAutoLayoutToCache()
+	{
+		for (DiagramNodePart nodePart : getDiagramEditorPagePart().getNodes())
+		{
+			String nodeId = IdUtil.computeNodeId(nodePart);
+			Bounds bounds = nodePart.getNodeBounds();
+			this.nodeBounds.put(nodeId, new Bounds(bounds));
+		}
+		for (DiagramConnectionPart connPart : getDiagramEditorPagePart().getConnections())
+		{
+			if (connPart.getConnectionBendpoints().size() > 0)
+			{
+				String connId = IdUtil.computeConnectionId(connPart);
+				ArrayList<Point> bps = new ArrayList<Point>(connPart.getConnectionBendpoints().size());
+				bps.addAll(connPart.getConnectionBendpoints());
+				this.connectionBendPoints.put(connId, bps);
+			}
 		}
 	}
 	
@@ -223,7 +292,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	protected void addNodeBoundsToModel()
 	{
 		this.layoutModel.getDiagramNodesLayout().clear();
-		for (DiagramNodeTemplate nodeTemplate : this.diagramPart.getNodeTemplates())
+		for (DiagramNodeTemplate nodeTemplate : getDiagramEditorPagePart().getNodeTemplates())
 		{
 			for (DiagramNodePart nodePart : nodeTemplate.getDiagramNodes())
 			{
@@ -231,6 +300,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 				DiagramNodeLayout diagramNode = this.layoutModel.getDiagramNodesLayout().addNewElement();
 				diagramNode.setNodeId(id);
 				Bounds nodeBounds = nodePart.getNodeBounds();
+				this.nodeBounds.put(id, nodeBounds);
 				diagramNode.setX(nodeBounds.getX());
 				diagramNode.setY(nodeBounds.getY());
 				if (nodePart.canResizeShape())
@@ -257,6 +327,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 						DiagramConnectionLayout conn = null;
 						if (connPart.getConnectionBendpoints().size() > 0)
 						{
+							this.connectionBendPoints.put(connId, connPart.getConnectionBendpoints());
 							conn = diagramNode.getEmbeddedConnectionsLayout().addNewElement();
 							conn.setConnectionId(connId);
 							for (Point pt : connPart.getConnectionBendpoints())
@@ -286,14 +357,15 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	protected void addConnectionsToModel()
 	{
 		this.layoutModel.getDiagramConnectionsLayout().clear();
-		for (DiagramConnectionTemplate connTemplate : this.diagramPart.getConnectionTemplates())
+		for (DiagramConnectionTemplate connTemplate : getDiagramEditorPagePart().getConnectionTemplates())
 		{
 			for (DiagramConnectionPart connPart : connTemplate.getDiagramConnections(null))
 			{
 				String id = IdUtil.computeConnectionId(connPart);
 				DiagramConnectionLayout conn = null;
 				if (connPart.getConnectionBendpoints().size() > 0)
-				{					
+				{		
+					this.connectionBendPoints.put(id, connPart.getConnectionBendpoints());
 					conn = this.layoutModel.getDiagramConnectionsLayout().addNewElement();
 					conn.setConnectionId(id);
 					for (Point pt : connPart.getConnectionBendpoints())
@@ -340,8 +412,12 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		    	save();
 		    }			
 			
+		    public void handleDiagramAutoLayout(final DiagramPageEvent event)
+		    {
+		    	addAutoLayoutToCache();
+		    }			
 		};
-		this.diagramPart.addListener(this.diagramPartListener);
+		getDiagramEditorPagePart().addListener(this.diagramPartListener);
 	}
 		
 }

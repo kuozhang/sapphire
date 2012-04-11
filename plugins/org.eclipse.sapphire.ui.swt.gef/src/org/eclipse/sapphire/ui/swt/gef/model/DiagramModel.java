@@ -94,7 +94,13 @@ public class DiagramModel extends DiagramModelBase {
 	public void handleAddNode(DiagramNodePart nodePart) {
 		DiagramNodeModel nodeModel = new DiagramNodeModel(this, nodePart);
 		
-		// initialize location
+		// initialize location if necessary
+		// [Bug 376245] Revert action in StructuredTextEditor does not revert diagram nodes 
+		// and connections in SapphireDiagramEditor
+		if (this.configManager.getLayoutPersistenceService().isNodePersisted(nodePart))
+		{
+			this.configManager.getLayoutPersistenceService().read(nodePart);
+		}
 		org.eclipse.sapphire.ui.Point position = nodePart.getNodePosition();
 		if (position.getX() < 0 && position.getY() < 0) {
 			position = getDefaultPosition();
@@ -199,11 +205,21 @@ public class DiagramModel extends DiagramModelBase {
 				connectionModel.setSourceNode(sourceNode);
 				connectionModel.setTargetNode(targetNode);
 
+				// Restore connection bend points if necessary
+				// [Bug 376245] Revert action in StructuredTextEditor does not revert diagram nodes 
+				// and connections in SapphireDiagramEditor
+
+				if (this.configManager.getLayoutPersistenceService().isConnectionPersisted(connPart))
+				{
+					this.configManager.getLayoutPersistenceService().read(connPart);
+				}
 				// add bendpoint if collision if the connection part doesn't have any bend points.
 				// But we still route the connection for the purpose of calculating next "fan position" correctly.
-				// See Bug 374793 - Additional bend points added to connection when visible-when condition on nodes change 
+				// See Bug 374793 - Additional bend points added to connection when visible-when condition on nodes change
+								
+				// If the connection part was constructed during diagram open, we should not try to route the connection
 				Point bendPoint = this.configManager.getConnectionRouter().route(connectionModel);
-	        	if (bendPoint != null && connPart.getConnectionBendpoints().isEmpty()) 
+	        	if (!this.configManager.getLayoutPersistenceService().isConnectionPersisted(connPart) && bendPoint != null) 
 	        	{
         			connectionModel.getModelPart().addBendpoint(0, bendPoint.x, bendPoint.y);
 	        	}
