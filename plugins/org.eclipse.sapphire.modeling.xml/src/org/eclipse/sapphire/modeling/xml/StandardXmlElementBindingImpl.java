@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [376531] Need ability to distinguish between switch among heterogeneous elements 
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.xml;
@@ -214,6 +215,25 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
     @Override
     protected Object createUnderlyingObject( final ModelElementType type )
     {
+        final XmlElement base = base( false );
+        if( base != null )
+        {
+            final XmlElement parent = parent( false );
+            
+            if( parent != null )
+            {
+                for( XmlElement element : parent.getChildElements() )
+                {
+                    final QName xmlElementName = createQualifiedName( element.getDomNode() );
+                    
+                    if( contains( this.xmlElementNames, xmlElementName, xmlElementName.getNamespaceURI() ) )
+                    {
+                        element.remove();
+                    }
+                }
+            }
+        }
+    	
         final XmlElement parent = parent( true );
         QName xmlElementName = this.xmlElementNames[ indexOf( this.modelElementTypes, type ) ];
         

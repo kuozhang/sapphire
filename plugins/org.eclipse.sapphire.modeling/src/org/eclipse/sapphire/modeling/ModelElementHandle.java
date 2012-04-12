@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [376531] Need ability to distinguish between switch among heterogeneous elements 
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling;
@@ -120,12 +121,7 @@ public final class ModelElementHandle<T extends IModelElement>
                     refresh();
                 }
                 
-                if( this.element != null && this.element.getModelElementType() != t )
-                {
-                    removeInternal();
-                }
-                
-                if( this.element == null )
+                if( this.element == null || this.element.getModelElementType() != t )
                 {
                     final Resource resource = this.binding.create( t );
                     this.element = t.instantiate( this.parent, this.property, resource );
