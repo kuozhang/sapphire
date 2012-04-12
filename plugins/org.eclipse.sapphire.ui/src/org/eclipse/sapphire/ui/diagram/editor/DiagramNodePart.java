@@ -390,9 +390,9 @@ public class DiagramNodePart
 
 	public void setNodeBounds(int x, int y, int width, int height)
 	{
-		setNodePosition(x, y);
 		this.nodeWidth = width;
 		this.nodeHeight = height;
+		setNodePosition(x, y);
 	}
 	
 	public Bounds getNodeBounds()

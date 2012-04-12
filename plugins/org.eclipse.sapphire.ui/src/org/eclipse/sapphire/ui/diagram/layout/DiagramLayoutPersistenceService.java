@@ -12,10 +12,13 @@
 package org.eclipse.sapphire.ui.diagram.layout;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.IdUtil;
@@ -41,9 +44,29 @@ public abstract class DiagramLayoutPersistenceService extends Service
     	refreshPersistedPartsCache();
     }	
 	
-	public abstract void read(DiagramNodePart nodePart);
+	/**
+	 * Read the node bounds from the persistence model
+	 * @param nodePart
+	 * @return node bounds. Null if the persistence model doesn't contain bounds for this node. 
+	 */
+	public abstract Bounds read(DiagramNodePart nodePart);
 	
-	public abstract void read(DiagramConnectionPart connectionPart);
+	/**
+	 * Read the connection bend points from the persistence model
+	 * @param connectionPart
+	 * @return the connection bend point list. If the connection doesn't contain bend points, 
+	 * it should return an empty list.
+	 */
+	public abstract List<Point> read(DiagramConnectionPart connectionPart);
+	
+	/**
+	 * Read the connection label position from the persistence model
+	 * @param connectionPart
+	 * @return the connection label position. If the connection doesn't contain label, 
+	 * it should return null
+	 */
+	public abstract Point readConnectionLabelPosition(DiagramConnectionPart connectionPart);
+	
 	
 	public SapphireDiagramEditorPagePart getDiagramEditorPagePart()
 	{

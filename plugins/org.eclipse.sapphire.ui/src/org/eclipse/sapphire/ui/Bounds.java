@@ -20,6 +20,11 @@ public final class Bounds extends Point
     private int width;
     private int height;
     
+    public Bounds()
+    {
+    	this(-1, -1, -1, -1);    	
+    }
+    
     public Bounds(int x, int y, int width, int height)
     {
         super(x, y);

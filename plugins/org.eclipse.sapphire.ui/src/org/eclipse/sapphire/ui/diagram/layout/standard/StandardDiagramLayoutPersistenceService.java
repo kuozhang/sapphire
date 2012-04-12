@@ -56,6 +56,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	private SapphireDiagramPartListener diagramPartListener;
 	private Map<String, Bounds> nodeBounds;
 	private Map<String, List<Point>> connectionBendPoints;
+	private Map<String, Point> connectionLabelPositions;
 	
     @Override
     protected void init()
@@ -64,6 +65,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
     	this.editorInput = getDiagramEditorPagePart().getLocalModelElement().adapt(IEditorInput.class);
     	this.nodeBounds = new HashMap<String, Bounds>();
     	this.connectionBendPoints = new HashMap<String, List<Point>>();
+    	this.connectionLabelPositions = new HashMap<String, Point>();
 		try
 		{
 			load();
@@ -75,31 +77,39 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		addDiagramPartListener();
     }		
 	
-    public void read(DiagramNodePart nodePart)
+    public Bounds read(DiagramNodePart nodePart)
     {
     	String id = IdUtil.computeNodeId(nodePart);
     	if (isNodePersisted(nodePart))
     	{
-    		Bounds bounds = this.nodeBounds.get(id);
-    		if (bounds != null)
-    		{
-    			nodePart.setNodeBounds(bounds.getX(), bounds.getY(), bounds.getHeight(), bounds.getWidth());
-    		}
+    		return this.nodeBounds.get(id);    		
     	}
+    	return null;
     }
     
-    public void read(DiagramConnectionPart connPart)
+    public List<Point> read(DiagramConnectionPart connPart)
     {
+    	List<Point> bendPoints = new ArrayList<Point>();
     	if (isConnectionPersisted(connPart))
     	{
     		String id = IdUtil.computeConnectionId(connPart);
-    		List<Point> bendPoints = this.connectionBendPoints.get(id);
-    		if (bendPoints != null)
+    		if (this.connectionBendPoints.get(id) != null)
     		{
-    			connPart.resetBendpoints(bendPoints);
+    			bendPoints.addAll(this.connectionBendPoints.get(id));
     		}
     	}
+    	return bendPoints;
     }
+    
+	public Point readConnectionLabelPosition(DiagramConnectionPart connPart)
+	{
+		if (isConnectionPersisted(connPart))
+		{
+			String id = IdUtil.computeConnectionId(connPart);
+			return this.connectionLabelPositions.get(id);
+		}
+		return null;
+	}
     
     private void setGridVisible(boolean visible)
     {
@@ -155,10 +165,10 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 			}
 			this.nodeBounds.put(id, new Bounds(x, y, width, height));
 			ModelElementList<DiagramConnectionLayout> connList = node.getEmbeddedConnectionsLayout();
-			for (DiagramConnectionLayout connGeometry : connList)
+			for (DiagramConnectionLayout connLayout : connList)
 			{
-				String connId = connGeometry.getConnectionId().getContent();
-				ModelElementList<DiagramBendPointLayout> bps = connGeometry.getConnectionBendpoints();
+				String connId = connLayout.getConnectionId().getContent();
+				ModelElementList<DiagramBendPointLayout> bps = connLayout.getConnectionBendpoints();
 				DiagramConnectionPart connPart = IdUtil.getConnectionPart(nodePart, connId);
 				if (connPart != null)
 				{					
@@ -168,10 +178,12 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 						connPart.addBendpoint(index++, pt.getX().getContent(), pt.getY().getContent());
 					}
 					
-					if (connGeometry.getLabelX().getContent() != null && connGeometry.getLabelY().getContent() != null)
+					if (connLayout.getLabelX().getContent() != null && connLayout.getLabelY().getContent() != null)
 					{
-						connPart.setLabelPosition(connGeometry.getLabelX().getContent(), 
-								connGeometry.getLabelY().getContent());
+						connPart.setLabelPosition(connLayout.getLabelX().getContent(), 
+								connLayout.getLabelY().getContent());
+						this.connectionLabelPositions.put(connId, 
+								new Point(connLayout.getLabelX().getContent(), connLayout.getLabelY().getContent()));
 					}
 				}
 				addConnectionBendPointsToCache(connId, bps);
@@ -196,6 +208,9 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 				{
 					connPart.setLabelPosition(connLayout.getLabelX().getContent(), 
 							connLayout.getLabelY().getContent());
+					this.connectionLabelPositions.put(connId, 
+							new Point(connLayout.getLabelX().getContent(), connLayout.getLabelY().getContent()));
+					
 				}
 			}
 			addConnectionBendPointsToCache(connId, bps);
@@ -384,6 +399,8 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 					}
 					conn.setLabelX(connPart.getLabelPosition().getX());
 					conn.setLabelY(connPart.getLabelPosition().getY());
+					this.connectionLabelPositions.put(id, 
+							new Point(connPart.getLabelPosition().getX(), connPart.getLabelPosition().getY()));
 				}
 			}
 		}

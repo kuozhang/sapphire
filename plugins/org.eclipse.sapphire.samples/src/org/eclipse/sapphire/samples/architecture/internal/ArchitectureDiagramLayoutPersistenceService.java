@@ -29,7 +29,6 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
-import org.eclipse.sapphire.ui.diagram.editor.IdUtil;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
@@ -68,21 +67,25 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		this.architecture.setShowGuides(visible);
 	}
 
-	public void read(DiagramNodePart nodePart)
+	public Bounds read(DiagramNodePart nodePart)
 	{
+		
 		IComponent component = (IComponent)nodePart.getLocalModelElement();
 		if (!component.disposed())
 		{
-			String nodeId = IdUtil.computeNodeId(nodePart);
 			if (isNodePersisted(nodePart))
 			{
 				if (component.getBounds().getX().getContent(false) != null && component.getBounds().getY().getContent() != null)
 				{
-					nodePart.setNodePosition(component.getBounds().getX().getContent(), 
-							component.getBounds().getY().getContent());
+					Bounds bounds = new Bounds(component.getBounds().getX().getContent(),
+							component.getBounds().getY().getContent(),
+							component.getBounds().getWidth().getContent(),
+							component.getBounds().getHeight().getContent());
+					return bounds;
 				}
 			}
 		}
+		return new Bounds();
 	}
 	
 	private void write(DiagramNodePart nodePart) 
@@ -105,24 +108,30 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		}
 	}
 
-	public void read(DiagramConnectionPart connectionPart)
+	public List<Point> read(DiagramConnectionPart connectionPart)
 	{
+		List<Point> bendPoints = new ArrayList<Point>();
 		IComponentDependency dependency = (IComponentDependency)connectionPart.getLocalModelElement();
 		if (!dependency.disposed())
 		{
 			if (isConnectionPersisted(connectionPart))
 			{
-				if (connectionPart.getConnectionBendpoints().size() == 0 && dependency.getConnectionBendpoints().size() != 0 )
+				if (dependency.getConnectionBendpoints().size() != 0 )
 				{
-					List<Point> bendPoints = new ArrayList<Point>();
 					for (ConnectionBendpoint bendPoint : dependency.getConnectionBendpoints())
 					{
 						bendPoints.add(new Point(bendPoint.getX().getContent(), bendPoint.getY().getContent()));
-					}
-					connectionPart.resetBendpoints(bendPoints);
+					}					
 				}
 			}
 		}
+		return bendPoints;
+	}
+	
+	public Point readConnectionLabelPosition(DiagramConnectionPart connectionPart)
+	{
+		// Architecture sample's dependency connections don't have labels
+		return null;
 	}
 	
 	private void write(DiagramConnectionPart connectionPart) 

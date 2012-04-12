@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditPart;
@@ -154,9 +155,26 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 
 			@Override
 		    public void handleNodeMoveEvent(final DiagramNodeEvent event)
-		    {
-		    	markEditorDirty();
-		    	moveNode((DiagramNodePart)event.getPart());
+		    {		    	
+		    	DiagramNodePart nodePart = (DiagramNodePart)event.getPart();
+		    	moveNode(nodePart);
+		    	if (layoutPersistenceService.isNodePersisted(nodePart))
+		    	{
+		    		Bounds newBounds = nodePart.getNodeBounds();
+		    		Bounds oldBounds = layoutPersistenceService.read(nodePart);
+		    		if (oldBounds == null || newBounds.getX() != oldBounds.getX() || newBounds.getY() != oldBounds.getY())
+		    		{
+		    			markEditorDirty();
+		    		}
+		    		else
+		    		{
+		    			markEditorClean();
+		    		}
+		    	}
+		    	else
+		    	{
+		    		markEditorDirty();
+		    	}
 		    }
 			
 			@Override
@@ -186,36 +204,58 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			@Override
 		    public void handleConnectionAddBendpointEvent(final DiagramConnectionEvent event)
 		    {
-		    	markEditorDirty();
-		    	updateConnectionBendpoint((DiagramConnectionPart)event.getPart());
+				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
+		    	updateConnectionBendpoint(connPart);
+		    	markEditorForConnectionBendPointEvent(connPart);
 		    }
 
 			@Override
 		    public void handleConnectionRemoveBendpointEvent(final DiagramConnectionEvent event)
 		    {
-		    	markEditorDirty();
-		    	updateConnectionBendpoint((DiagramConnectionPart)event.getPart());
+				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
+		    	updateConnectionBendpoint(connPart);
+		    	markEditorForConnectionBendPointEvent(connPart);
 		    }
 			
 			@Override
 		    public void handleConnectionMoveBendpointEvent(final DiagramConnectionEvent event)
 		    {
-		    	markEditorDirty();
-		    	updateConnectionBendpoint((DiagramConnectionPart)event.getPart());
+				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
+		    	updateConnectionBendpoint(connPart);
+		    	markEditorForConnectionBendPointEvent(connPart);
 		    }
 			
 			@Override
 		    public void handleConnectionResetBendpointsEvent(final DiagramConnectionEvent event)
 		    {
-		    	markEditorDirty();
-		    	updateConnectionBendpoint((DiagramConnectionPart)event.getPart());
+				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
+		    	updateConnectionBendpoint(connPart);
+		    	markEditorForConnectionBendPointEvent(connPart);
 		    }
 
 			@Override
 		    public void handleConnectionMoveLabelEvent(final DiagramConnectionEvent event)
 		    {
-		    	markEditorDirty();
-		    	updateConnectionMoveLabel((DiagramConnectionPart)event.getPart());
+				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
+		    	updateConnectionMoveLabel(connPart);
+		    	if (layoutPersistenceService.isConnectionPersisted(connPart))
+		    	{
+		    		org.eclipse.sapphire.ui.Point savedLabelPos = layoutPersistenceService.readConnectionLabelPosition(connPart);
+		    		org.eclipse.sapphire.ui.Point newLabelPos = connPart.getLabelPosition();
+		    		if (savedLabelPos != null && newLabelPos.getX() == savedLabelPos.getX() && 
+		    				newLabelPos.getY() == savedLabelPos.getY())
+		    		{
+		    			markEditorClean();
+		    		}
+		    		else
+		    		{
+		    			markEditorDirty();
+		    		}
+		    	}
+		    	else
+		    	{
+		    		markEditorDirty();
+		    	}
 		    }
 
 			@Override
@@ -247,6 +287,50 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 				refreshPalette();
 			}
 			
+			private boolean bendPointsChangedFromSaved(DiagramConnectionPart connPart)
+			{
+				boolean changed = false;
+				List<org.eclipse.sapphire.ui.Point> newBendPoints = connPart.getConnectionBendpoints();
+				List<org.eclipse.sapphire.ui.Point> oldBendPoints = layoutPersistenceService.read(connPart);
+				if (newBendPoints.size() != oldBendPoints.size())
+				{
+					changed = true;
+				}
+				else
+				{
+					for (int i = 0; i < newBendPoints.size(); i++)
+					{
+						if (newBendPoints.get(i).getX() != oldBendPoints.get(i).getX() ||
+								newBendPoints.get(i).getY() != oldBendPoints.get(i).getY())
+						{
+							changed = true;
+							break;
+						}
+					}
+				}
+				return changed;
+			}
+			
+			private void markEditorForConnectionBendPointEvent(DiagramConnectionPart connPart)
+			{
+		    	if (layoutPersistenceService.isConnectionPersisted(connPart))
+		    	{
+		    		if (bendPointsChangedFromSaved(connPart))
+		    		{
+		    			markEditorDirty();
+		    		}
+		    		else
+		    		{
+		    			markEditorClean();
+		    		}
+		    	}
+		    	else
+		    	{
+		    		markEditorDirty();
+		    	}
+				
+			}
+			
 		};
 		
 		this.diagramPart.addListener(this.diagramPartListener);
@@ -273,6 +357,11 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);
 	}
 	
+	protected void markEditorClean() {
+		this.editorIsDirty = false;
+		firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);
+	}
+
 	protected void removeConnection(DiagramConnectionPart connPart) {
 		if (diagramModel == null) {
 			return;
@@ -282,6 +371,13 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		getConfigurationManager().getDiagramRenderingContextCache().remove(connPart);
 	}
 
+	private void addConnection(DiagramConnectionPart connPart)
+	{
+		diagramModel.addConnection(connPart);
+		DiagramRenderingContext ctx = new DiagramRenderingContext(connPart, this);
+		getConfigurationManager().getDiagramRenderingContextCache().put(connPart, ctx);
+	}
+	
 	protected void addConnectionIfPossible(DiagramConnectionPart connPart) {
 		if (diagramModel == null) {
 			return;
@@ -293,9 +389,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		GraphicalEditPart node1 = getGraphicalEditPart(nodePart1);
 		GraphicalEditPart node2 = getGraphicalEditPart(nodePart2);
 		if (node1 != null && node2 != null) {
-			diagramModel.addConnection(connPart);
-			DiagramRenderingContext ctx = new DiagramRenderingContext(connPart, this);
-			getConfigurationManager().getDiagramRenderingContextCache().put(connPart, ctx);
+			addConnection(connPart);
 		}
 	}
 	
@@ -310,9 +404,34 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		}
 	}
 
-	protected void updateConnectionEndpoint(DiagramConnectionPart connPart) {
-		removeConnection(connPart);
-		addConnectionIfPossible(connPart);
+	protected void updateConnectionEndpoint(DiagramConnectionPart connPart) 
+	{
+		// Check whether the end points have truely changed		
+				
+		IModelElement endpoint1 = connPart.getEndpoint1();
+		IModelElement endpoint2 = connPart.getEndpoint2();
+		DiagramNodePart nodePart1 = this.diagramPart.getDiagramNodePart(endpoint1);
+		DiagramNodePart nodePart2 = this.diagramPart.getDiagramNodePart(endpoint2);
+		GraphicalEditPart newSrcNode = getGraphicalEditPart(nodePart1);
+		GraphicalEditPart newTargetNode = getGraphicalEditPart(nodePart2);
+
+		ConnectionEditPart connEditPart = (ConnectionEditPart)getGraphicalEditPart(connPart);
+		GraphicalEditPart oldSrcNode = null;
+		GraphicalEditPart oldTargetNode = null;
+		if (connEditPart != null)
+		{
+			oldSrcNode = (GraphicalEditPart)connEditPart.getSource();
+			oldTargetNode = (GraphicalEditPart)connEditPart.getTarget();						
+		}
+		if (oldSrcNode != newSrcNode || oldTargetNode != newTargetNode)
+		{
+			if (newSrcNode != null && newTargetNode != null)
+			{
+				removeConnection(connPart);
+				addConnection(connPart);				
+			}
+		}			
+		
 	}
 
 	protected void updateConnection(DiagramConnectionPart connPart) {
@@ -472,8 +591,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	public void doSave(IProgressMonitor monitor) {
 		try {
 			this.diagramPart.saveDiagram();
-			this.editorIsDirty = false;
-			firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);
+			markEditorClean();
 		} catch (Exception e) {
 			SapphireUiFrameworkPlugin.log(e);
 		}
@@ -528,12 +646,11 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 					context.setCurrentMouseLocation(pt.x, pt.y);
 					layoutHandler.execute(context);
 					this.diagramPart.autoLayoutDiagram();
+					markEditorClean();
 				}
 			}
 		}
 		
-		this.editorIsDirty = false;
-		firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);			
 	}
 	
 	private void initRenderingContext()
