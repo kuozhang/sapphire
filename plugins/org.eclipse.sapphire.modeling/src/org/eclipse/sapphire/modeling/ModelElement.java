@@ -85,7 +85,7 @@ public abstract class ModelElement
         final Map<ModelProperty,ModelPropertyListener> listenerByProperty = new HashMap<ModelProperty,ModelPropertyListener>();
         final Map<ModelProperty,Set<ModelPath>> dependenciesByProperty = new HashMap<ModelProperty,Set<ModelPath>>();
         
-        for( final ModelProperty property : type.getProperties() )
+        for( final ModelProperty property : type.properties() )
         {
             final Set<ModelPath> dependencies = service( property, DependenciesAggregationService.class ).dependencies();
             
@@ -227,7 +227,7 @@ public abstract class ModelElement
         }
     }
 
-    public ModelElementType getModelElementType()
+    public ModelElementType type()
     {
         return this.type;
     }
@@ -332,7 +332,7 @@ public abstract class ModelElement
             }
             else if( head instanceof AllDescendentsSegment )
             {
-                for( ModelProperty property : getModelElementType().getProperties() )
+                for( ModelProperty property : type().properties() )
                 {
                     final Object obj = read( property );
                     
@@ -360,7 +360,7 @@ public abstract class ModelElement
             }
             else if( head instanceof TypeFilterSegment )
             {
-                final String t = getModelElementType().getSimpleName();
+                final String t = type().getSimpleName();
                 boolean match = false;
                 
                 for( String type : ( (TypeFilterSegment) head ).getTypes() )
@@ -380,7 +380,7 @@ public abstract class ModelElement
             else
             {
                 final String propertyName = ( (ModelPath.PropertySegment) head ).getPropertyName();
-                final ModelProperty property = getModelElementType().getProperty( propertyName );
+                final ModelProperty property = type().property( propertyName );
 
                 if( property == null )
                 {
@@ -449,7 +449,7 @@ public abstract class ModelElement
     {
         synchronized( root() )
         {
-            for( ModelProperty property : getModelElementType().getProperties() )
+            for( ModelProperty property : type().properties() )
             {
                 refresh( property, force, deep );
             }
@@ -511,12 +511,12 @@ public abstract class ModelElement
     
     public final void copy( final IModelElement element )
     {
-        if( this.type != element.getModelElementType() )
+        if( this.type != element.type() )
         {
             throw new IllegalArgumentException();
         }
         
-        for( ModelProperty property : this.type.getProperties() )
+        for( ModelProperty property : this.type.properties() )
         {
             if( ! property.isReadOnly() )
             {
@@ -542,7 +542,7 @@ public abstract class ModelElement
                     }
                     else
                     {
-                        final IModelElement thisChild = handle.element( true, elementChild.getModelElementType() );
+                        final IModelElement thisChild = handle.element( true, elementChild.type() );
                         thisChild.copy( elementChild );
                     }
                 }
@@ -555,7 +555,7 @@ public abstract class ModelElement
                     
                     for( final IModelElement elementChild : element.read( prop ) )
                     {
-                        final IModelElement thisChild = list.addNewElement( elementChild.getModelElementType() );
+                        final IModelElement thisChild = list.addNewElement( elementChild.type() );
                         thisChild.copy( elementChild );
                     }
                 }
@@ -695,7 +695,7 @@ public abstract class ModelElement
         {
             if( ! this.enablementServicesInitialized )
             {
-                for( final ModelProperty prop : this.type.getProperties() )
+                for( final ModelProperty prop : this.type.properties() )
                 {
                     final Listener enablementServiceListener = new Listener()
                     {
@@ -764,7 +764,7 @@ public abstract class ModelElement
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         
-        for( ModelProperty property : this.type.getProperties() )
+        for( ModelProperty property : this.type.properties() )
         {
             if( isPropertyEnabled( property ) )
             {
@@ -887,7 +887,7 @@ public abstract class ModelElement
             }
             else if( head instanceof AllDescendentsSegment )
             {
-                for( ModelProperty property : this.type.getProperties() )
+                for( ModelProperty property : this.type.properties() )
                 {
                     final Set<ModelPropertyListener> listeners = getListenersForEdit( property );
                     
@@ -927,7 +927,7 @@ public abstract class ModelElement
             else
             {
                 final String propertyName = ( (ModelPath.PropertySegment) head ).getPropertyName();
-                final ModelProperty property = this.type.getProperty( propertyName );
+                final ModelProperty property = this.type.property( propertyName );
                 
                 if( property == null )
                 {
@@ -1027,7 +1027,7 @@ public abstract class ModelElement
             }
             else if( head instanceof AllDescendentsSegment )
             {
-                for( ModelProperty property : this.type.getProperties() )
+                for( ModelProperty property : this.type.properties() )
                 {
                     final Set<ModelPropertyListener> listeners = getListenersForEdit( property );
                     
@@ -1091,7 +1091,7 @@ public abstract class ModelElement
             else
             {
                 final String propertyName = ( (ModelPath.PropertySegment) head ).getPropertyName();
-                final ModelProperty property = this.type.getProperty( propertyName );
+                final ModelProperty property = this.type.property( propertyName );
                 
                 if( property == null )
                 {
@@ -1293,7 +1293,7 @@ public abstract class ModelElement
                 }
             }
             
-            for( ModelProperty property : this.type.getProperties() )
+            for( ModelProperty property : this.type.properties() )
             {
                 if( property instanceof ListProperty )
                 {

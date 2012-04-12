@@ -25,8 +25,8 @@ import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.ServiceDef;
-import org.eclipse.sapphire.util.ListFactory;
-import org.eclipse.sapphire.util.SetFactory;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ReadOnlySetFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -62,14 +62,14 @@ public final class PartServiceContext extends ServiceContext
     @Override
     protected List<ServiceFactoryProxy> local()
     {
-        final ListFactory<ServiceFactoryProxy> local = ListFactory.start();
+        final ReadOnlyListFactory<ServiceFactoryProxy> local = ReadOnlyListFactory.start();
         final PartDef partDef = this.part.definition();
         
         for( ServiceDef serviceDef : partDef.getServices() )
         {
             final Class<? extends Service> serviceImplClass = resolve( serviceDef.getImplementation() );
             
-            final SetFactory<String> overridesSetFactory = SetFactory.start();
+            final ReadOnlySetFactory<String> overridesSetFactory = ReadOnlySetFactory.start();
             
             for( ServiceDef.Override override : serviceDef.getOverrides() )
             {

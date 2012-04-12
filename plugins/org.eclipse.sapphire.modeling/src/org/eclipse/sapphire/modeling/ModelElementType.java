@@ -31,7 +31,7 @@ import org.eclipse.sapphire.services.InitialValueService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.internal.ElementMetaModelServiceContext;
-import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -57,11 +57,11 @@ public final class ModelElementType extends ModelMetadataItem
         this.properties = new ArrayList<ModelProperty>();
         this.localizationService = LocalizationSystem.service( this.typeClass );
         
-        final ListFactory<ModelElementType> baseTypesFactory = ListFactory.start();
+        final ReadOnlyListFactory<ModelElementType> baseTypesFactory = ReadOnlyListFactory.start();
         
         for( Class<?> baseInterface : this.typeClass.getInterfaces() )
         {
-            final ModelElementType baseType = getModelElementType( baseInterface, false );
+            final ModelElementType baseType = read( baseInterface, false );
             
             if( baseType != null )
             {
@@ -72,17 +72,30 @@ public final class ModelElementType extends ModelMetadataItem
         this.baseTypes = baseTypesFactory.create();
     }
     
-    public static ModelElementType getModelElementType( final Class<?> modelElementClass )
+    public static ModelElementType read( final ClassLoader classLoader,
+                                         final String qualifiedTypeName )
     {
-        return getModelElementType( modelElementClass, true );
+        try
+        {
+            return read( classLoader.loadClass( qualifiedTypeName ) );
+        }
+        catch( ClassNotFoundException e )
+        {
+            throw new IllegalArgumentException( e );
+        }
     }
     
-    public static ModelElementType getModelElementType( final Class<?> modelElementClass,
-                                                        final boolean throwExceptionIfNotFound )
+    public static ModelElementType read( final Class<?> modelElementClass )
+    {
+        return read( modelElementClass, true );
+    }
+    
+    public static ModelElementType read( final Class<?> modelElementClass,
+                                         final boolean throwExceptionIfNotFound )
     {
         for( Field field : modelElementClass.getFields() )
         {
-            if( field.getName().equals( "TYPE" ) ) //$NON-NLS-1$
+            if( field.getName().equals( "TYPE" ) )
             {
                 try
                 {
@@ -106,7 +119,7 @@ public final class ModelElementType extends ModelMetadataItem
         
         if( throwExceptionIfNotFound )
         {
-            throw new IllegalArgumentException( "Did not find TYPE field on " + modelElementClass.getName() ); //$NON-NLS-1$
+            throw new IllegalArgumentException( "Did not find TYPE field on " + modelElementClass.getName() );
         }
         else
         {
@@ -336,17 +349,17 @@ public final class ModelElementType extends ModelMetadataItem
         return (T) instantiate( null, null, new MemoryResource( this ) );
     }
 
-    public List<ModelProperty> getProperties()
+    public List<ModelProperty> properties()
     {
         final TreeMap<String,ModelProperty> properties = new TreeMap<String,ModelProperty>();
         
         for( Class<?> cl : this.typeClass.getInterfaces() )
         {
-            final ModelElementType t = getModelElementType( cl, false );
+            final ModelElementType t = read( cl, false );
             
             if( t != null )
             {
-                for( ModelProperty property : t.getProperties() )
+                for( ModelProperty property : t.properties() )
                 {
                     properties.put( property.getName(), property );
                 }
@@ -361,9 +374,9 @@ public final class ModelElementType extends ModelMetadataItem
         return new ArrayList<ModelProperty>( properties.values() );
     }
     
-    public ModelProperty getProperty( final String propertyName )
+    public ModelProperty property( final String propertyName )
     {
-        for( ModelProperty property : getProperties() )
+        for( ModelProperty property : properties() )
         {
             if( property.getName().equalsIgnoreCase( propertyName ) )
             {
@@ -380,21 +393,21 @@ public final class ModelElementType extends ModelMetadataItem
     }
     
     @Override
-    protected void initAnnotations( final ListFactory<Annotation> annotations )
+    protected void initAnnotations( final ReadOnlyListFactory<Annotation> annotations )
     {
-        annotations.addAll( this.typeClass.getDeclaredAnnotations() );
+        annotations.add( this.typeClass.getDeclaredAnnotations() );
     }
 
     @Override
     public <A extends Annotation> List<A> getAnnotations( final Class<A> type )
     {
-        final ListFactory<A> annotationsListFactory = ListFactory.start();
+        final ReadOnlyListFactory<A> annotationsListFactory = ReadOnlyListFactory.start();
         
-        annotationsListFactory.addAll( super.getAnnotations( type ) );
+        annotationsListFactory.add( super.getAnnotations( type ) );
         
         for( ModelElementType baseType : this.baseTypes )
         {
-            annotationsListFactory.addAll( baseType.getAnnotations( type ) );
+            annotationsListFactory.add( baseType.getAnnotations( type ) );
         }
         
         return annotationsListFactory.create();

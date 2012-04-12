@@ -19,22 +19,22 @@ import java.util.Map;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MapFactory<K,V>
+public final class ReadOnlyMapFactory<K,V>
 {
     private K firstKey = null;
     private V firstValue = null;
     private Map<K,V> map = null;
     private boolean created = false;
     
-    private MapFactory() {}
+    private ReadOnlyMapFactory() {}
     
-    public static <K,V> MapFactory<K,V> start()
+    public static <K,V> ReadOnlyMapFactory<K,V> start()
     {
-        return new MapFactory<K,V>();
+        return new ReadOnlyMapFactory<K,V>();
     }
     
-    public MapFactory<K,V> put( final K key,
-                                final V value )
+    public ReadOnlyMapFactory<K,V> add( final K key,
+                                        final V value )
     {
         if( this.created )
         {
@@ -62,11 +62,11 @@ public final class MapFactory<K,V>
         return this;
     }
     
-    public MapFactory<K,V> putAll( final Map<K,V> map )
+    public ReadOnlyMapFactory<K,V> add( final Map<K,V> map )
     {
         for( Map.Entry<K,V> entry : map.entrySet() )
         {
-            put( entry.getKey(), entry.getValue() );
+            add( entry.getKey(), entry.getValue() );
         }
         
         return this;
@@ -93,6 +93,17 @@ public final class MapFactory<K,V>
         {
             return Collections.emptyMap();
         }
+    }
+    
+    public static <K,V> Map<K,V> create( final K key,
+                                         final V value )
+    {
+        return Collections.singletonMap( key, value );
+    }
+    
+    public static <K,V> Map<K,V> create( final Map<K,V> map )
+    {
+        return ReadOnlyMapFactory.<K,V>start().add( map ).create();
     }
     
 }

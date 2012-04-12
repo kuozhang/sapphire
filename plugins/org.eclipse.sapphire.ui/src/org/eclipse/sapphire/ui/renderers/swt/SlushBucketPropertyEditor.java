@@ -93,7 +93,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
         super( context, part );
         
         this.memberType = getProperty().getType();
-        this.memberProperty = (ValueProperty) this.memberType.getProperties().get( 0 );
+        this.memberProperty = (ValueProperty) this.memberType.properties().get( 0 );
         this.possibleValuesService = part.getLocalModelElement().service( this.memberProperty, PossibleValuesService.class );
         
         setAddActionDesired( false );
@@ -406,7 +406,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
                 if( element.service( listProperty, PossibleTypesService.class ).types().size() == 1 )
                 {
                     final ModelElementType memberType = listProperty.getType();
-                    final List<ModelProperty> properties = memberType.getProperties();
+                    final List<ModelProperty> properties = memberType.properties();
                     
                     if( properties.size() == 1 )
                     {

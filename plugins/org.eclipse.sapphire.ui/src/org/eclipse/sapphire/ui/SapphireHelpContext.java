@@ -55,7 +55,7 @@ public final class SapphireHelpContext implements IContext, IContext2
         {
             if( elDocService != null )
             {
-                title = element.getModelElementType().getLabel( true, CapitalizationType.TITLE_STYLE, false );
+                title = element.type().getLabel( true, CapitalizationType.TITLE_STYLE, false );
                 content.append( elDocService.content() );
                 topics.addAll( elDocService.topics() );
             }
@@ -69,7 +69,7 @@ public final class SapphireHelpContext implements IContext, IContext2
             if( elDocService != null )
             {
                 content.append( "[pbr/][b]" );
-                content.append( element.getModelElementType().getLabel( true, CapitalizationType.TITLE_STYLE, false ) );
+                content.append( element.type().getLabel( true, CapitalizationType.TITLE_STYLE, false ) );
                 content.append( "[/b][pbr/]" );
                 content.append( elDocService.content() );
                 topics.addAll( elDocService.topics() );

@@ -42,7 +42,7 @@ public final class PropertyInstanceServiceContext extends PropertyServiceContext
         {
             if( type == ModelElementType.class )
             {
-                obj = (T) this.element.getModelElementType();
+                obj = (T) this.element.type();
             }
             else if( type == IModelElement.class )
             {

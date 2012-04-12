@@ -499,7 +499,7 @@ public final class ExtensionSummaryExportOpMethods
         
         public final void write()
         {
-            final ListProperty extTypeListProperty = (ListProperty) SapphireExtensionDef.TYPE.getProperty( this.def.getExtensionType().getText() );
+            final ListProperty extTypeListProperty = (ListProperty) SapphireExtensionDef.TYPE.property( this.def.getExtensionType().getText() );
             final ModelElementType extType = extTypeListProperty.getType();
             
             final List<IModelElement> extElements = new ArrayList<IModelElement>();
@@ -559,7 +559,7 @@ public final class ExtensionSummaryExportOpMethods
                 
                 for( ExtensionSummarySectionColumnDef cdef : this.def.getColumns() )
                 {
-                    final ModelProperty cprop = extType.getProperty( cdef.getName().getText() );
+                    final ModelProperty cprop = extType.property( cdef.getName().getText() );
                     
                     if( cprop != null )
                     {

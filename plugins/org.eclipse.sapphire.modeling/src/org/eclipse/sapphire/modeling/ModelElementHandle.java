@@ -121,12 +121,12 @@ public final class ModelElementHandle<T extends IModelElement>
                     refresh();
                 }
                 
-                if( this.element == null || this.element.getModelElementType() != t )
+                if( this.element == null || this.element.type() != t )
                 {
                     final Resource resource = this.binding.create( t );
                     this.element = t.instantiate( this.parent, this.property, resource );
                     
-                    for( ModelProperty property : t.getProperties() )
+                    for( ModelProperty property : t.properties() )
                     {
                         this.element.addListener( this.listener, property.getName() );
                     }
@@ -141,7 +141,7 @@ public final class ModelElementHandle<T extends IModelElement>
         {
             synchronized( this )
             {
-                if( this.element != null && type != null && this.element.getModelElementType() != type )
+                if( this.element != null && type != null && this.element.type() != type )
                 {
                     throw new IllegalArgumentException();
                 }

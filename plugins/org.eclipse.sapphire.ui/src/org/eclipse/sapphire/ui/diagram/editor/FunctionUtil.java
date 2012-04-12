@@ -34,8 +34,8 @@ public class FunctionUtil
             if (functionResult.operand(0).value() instanceof String)
             {
                 String propName = (String)functionResult.operand(0).value();
-                final ModelElementType type = modelElement.getModelElementType();
-                final ModelProperty property = type.getProperty(propName);
+                final ModelElementType type = modelElement.type();
+                final ModelProperty property = type.property(propName);
                 
                 if( isWritableValueProperty( property ) )
                 {

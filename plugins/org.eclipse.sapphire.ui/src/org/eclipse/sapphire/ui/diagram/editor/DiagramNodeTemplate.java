@@ -251,7 +251,7 @@ public class DiagramNodeTemplate extends SapphirePart
         else 
         {
             final Class<?> cl = this.modelElementType.artifact();
-            return ModelElementType.getModelElementType(cl);
+            return ModelElementType.read(cl);
         }
     }
     

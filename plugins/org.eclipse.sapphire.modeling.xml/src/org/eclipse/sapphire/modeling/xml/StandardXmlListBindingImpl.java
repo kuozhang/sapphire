@@ -70,7 +70,7 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
                 }
                 catch( Exception e )
                 {
-                    final String msg = NLS.bind( Resources.failure, element.getModelElementType().getSimpleName(), property.getName(), e.getMessage() );
+                    final String msg = NLS.bind( Resources.failure, element.type().getSimpleName(), property.getName(), e.getMessage() );
                     LoggingService.log( Status.createErrorStatus( msg ) );
                 }
             }
@@ -84,7 +84,7 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
         }
         catch( Exception e )
         {
-            final String msg = NLS.bind( Resources.failure, element.getModelElementType().getSimpleName(), property.getName(), e.getMessage() );
+            final String msg = NLS.bind( Resources.failure, element.type().getSimpleName(), property.getName(), e.getMessage() );
             throw new RuntimeException( msg, e );
         }
     }

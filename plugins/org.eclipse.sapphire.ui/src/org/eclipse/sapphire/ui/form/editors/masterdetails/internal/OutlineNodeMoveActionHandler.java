@@ -42,16 +42,19 @@ public abstract class OutlineNodeMoveActionHandler extends SapphireActionHandler
 
         this.contentTree = ( (MasterDetailsContentNode) getPart() ).getContentTree();
         
-        final MasterDetailsContentOutline.Listener contentTreeListener = new MasterDetailsContentOutline.Listener()
+        final Listener contentTreeListener = new Listener()
         {
             @Override
-            public void handleFilterChange( String newFilterText )
+            public void handle( final Event event )
             {
-                refreshEnabledState();
+                if( event instanceof MasterDetailsContentOutline.FilterChangedEvent )
+                {
+                    refreshEnabledState();
+                }
             }
         };
         
-        this.contentTree.addListener( contentTreeListener );
+        this.contentTree.attach( contentTreeListener );
         
         final Runnable op = new Runnable()
         {
@@ -90,7 +93,7 @@ public abstract class OutlineNodeMoveActionHandler extends SapphireActionHandler
                     if( event instanceof DisposeEvent )
                     {
                         parent.removeListener( listPropertyListener );
-                        OutlineNodeMoveActionHandler.this.contentTree.removeListener( contentTreeListener );
+                        OutlineNodeMoveActionHandler.this.contentTree.detach( contentTreeListener );
                     }
                 }
             }

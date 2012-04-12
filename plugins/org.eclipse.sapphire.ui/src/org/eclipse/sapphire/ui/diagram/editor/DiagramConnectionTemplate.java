@@ -130,7 +130,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         this.originalEndpoint2Path = new ModelPath(endpt2PropStr);
         
         ModelElementType type = this.modelProperty.getType();
-        this.endpoint1Property = type.getProperty(endpt1PropStr);
+        this.endpoint1Property = type.property(endpt1PropStr);
         this.endpoint2Property = ModelUtil.resolve(type, this.originalEndpoint2Path);
                 
         if (getConnectionType() == ConnectionType.OneToOne)
@@ -142,7 +142,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         else 
         {
             ModelPath.PropertySegment head = (ModelPath.PropertySegment)this.originalEndpoint2Path.head();
-            ModelProperty prop = type.getProperty(head.getPropertyName());
+            ModelProperty prop = type.property(head.getPropertyName());
             if (prop instanceof ListProperty)
             {
                 this.endpoint1Path = new ModelPath("../" + endpt1PropStr);
@@ -262,7 +262,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     public boolean canStartNewConnection(DiagramNodePart srcNode)
     {
            boolean canStart = false;
-        ModelElementType srcType = srcNode.getModelElement().getModelElementType();
+        ModelElementType srcType = srcNode.getModelElement().type();
         if (this.endpoint1Property.getType() == null && this.endpoint1Property.hasAnnotation(Reference.class))
         {
             canStart = this.endpoint1Property.getAnnotation(Reference.class).target().isAssignableFrom(srcType.getModelElementClass());
@@ -278,7 +278,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         if (!canCreate)
             return false;
         
-        ModelElementType targetType = targetNode.getModelElement().getModelElementType();
+        ModelElementType targetType = targetNode.getModelElement().type();
         
         if (this.endpoint2Property.getType() == null && this.endpoint2Property.hasAnnotation(Reference.class))
         {
@@ -533,8 +533,8 @@ public class DiagramConnectionTemplate extends SapphirePart
     {
         if (propertyName != null)
         {
-            final ModelElementType type = modelElement.getModelElementType();
-            final ModelProperty property = type.getProperty( propertyName );
+            final ModelElementType type = modelElement.type();
+            final ModelProperty property = type.property( propertyName );
             if( property == null )
             {
                 throw new RuntimeException( "Could not find property " + propertyName + " in " + type.getQualifiedName() );

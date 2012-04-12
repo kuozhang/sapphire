@@ -44,7 +44,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
-import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -475,11 +475,11 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     
     public List<DiagramNodePart> getNodes()
     {
-        final ListFactory<DiagramNodePart> nodes = ListFactory.start();
+        final ReadOnlyListFactory<DiagramNodePart> nodes = ReadOnlyListFactory.start();
         
         for( DiagramNodeTemplate template : getNodeTemplates() )
         {
-            nodes.addAll( template.getDiagramNodes() );
+            nodes.add( template.getDiagramNodes() );
         }
         
         return nodes.create();
@@ -487,11 +487,11 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     
     public List<DiagramConnectionPart> getConnections()
     {
-        final ListFactory<DiagramConnectionPart> connections = ListFactory.start();
+        final ReadOnlyListFactory<DiagramConnectionPart> connections = ReadOnlyListFactory.start();
         
         for( DiagramConnectionTemplate template : getConnectionTemplates() )
         {
-            connections.addAll( template.getDiagramConnections( null ) );
+            connections.add( template.getDiagramConnections( null ) );
         }
         
         for( DiagramNodeTemplate nodeTemplate : getNodeTemplates() )
@@ -499,7 +499,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
             final DiagramConnectionTemplate embeddedConnectionTemplate = nodeTemplate.getEmbeddedConnectionTemplate();
             if (embeddedConnectionTemplate != null)
             {
-                connections.addAll( embeddedConnectionTemplate.getDiagramConnections( null ) );
+                connections.add( embeddedConnectionTemplate.getDiagramConnections( null ) );
             }
         }
         

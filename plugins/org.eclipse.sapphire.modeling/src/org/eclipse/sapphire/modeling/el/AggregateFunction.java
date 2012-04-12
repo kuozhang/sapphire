@@ -62,7 +62,7 @@ public abstract class AggregateFunction extends Function
                     {
                         final String listEntryPropertyName = cast( operand( 1 ).value(), String.class );
                     
-                        final ModelProperty prop = listEntryType.getProperty( listEntryPropertyName );
+                        final ModelProperty prop = listEntryType.property( listEntryPropertyName );
                         
                         if( prop == null )
                         {
@@ -80,7 +80,7 @@ public abstract class AggregateFunction extends Function
                     {
                         ValueProperty prop = null;
                         
-                        for( ModelProperty p : listEntryType.getProperties() )
+                        for( ModelProperty p : listEntryType.properties() )
                         {
                             if( p instanceof ValueProperty )
                             {

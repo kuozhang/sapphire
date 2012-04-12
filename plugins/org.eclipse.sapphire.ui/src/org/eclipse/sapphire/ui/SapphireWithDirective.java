@@ -308,7 +308,7 @@ public final class SapphireWithDirective extends PageBookPart
                                 }
                                 else
                                 {
-                                    button = typeToButton.get( subModelElement.getModelElementType() );
+                                    button = typeToButton.get( subModelElement.type() );
                                 }
                                 
                                 if( radioButtonsGroup.getSelection() != button )
@@ -399,7 +399,7 @@ public final class SapphireWithDirective extends PageBookPart
                                 }
                                 else
                                 {
-                                    index = typeToIndex.get( subModelElement.getModelElementType() );
+                                    index = typeToIndex.get( subModelElement.type() );
                                 }
                                 
                                 if( combo.getSelectionIndex() != index )

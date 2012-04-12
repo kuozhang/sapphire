@@ -61,7 +61,7 @@ public final class TestModelingMisc0006
                               final String expected )
     {
         assertEquals( "org.eclipse.sapphire.tests.modeling.misc.t0006." + expected, ModelElementType.getImplClassName( typeClass ) );
-        final ModelElementType type = ModelElementType.getModelElementType( typeClass );
+        final ModelElementType type = ModelElementType.read( typeClass );
         assertNotNull( type.instantiate() );
     }
 

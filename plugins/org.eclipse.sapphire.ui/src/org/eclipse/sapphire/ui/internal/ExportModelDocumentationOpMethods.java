@@ -95,7 +95,7 @@ public final class ExportModelDocumentationOpMethods
         
         final TreeMap<String,ModelProperty> properties = new TreeMap<String,ModelProperty>();
         
-        for( ModelProperty property : type.getProperties() )
+        for( ModelProperty property : type.properties() )
         {
             String xmlPath = null;
             
@@ -233,7 +233,7 @@ public final class ExportModelDocumentationOpMethods
                 boolean skip = false;
                 
                 final ModelElementType childType = property.service( PossibleTypesService.class ).types().first();
-                final List<ModelProperty> childTypeProperties = childType.getProperties();
+                final List<ModelProperty> childTypeProperties = childType.properties();
                 
                 if( childTypeProperties.size() == 1 )
                 {

@@ -163,16 +163,19 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
             
             this.contentTree = ( (MasterDetailsContentNode) getPart() ).getContentTree();
             
-            final MasterDetailsContentOutline.Listener contentTreeListener = new MasterDetailsContentOutline.Listener()
+            final Listener contentTreeListener = new Listener()
             {
                 @Override
-                public void handleFilterChange( String newFilterText )
+                public void handle( final Event event )
                 {
-                    refreshEnablementState();
+                    if( event instanceof MasterDetailsContentOutline.FilterChangedEvent )
+                    {
+                        refreshEnablementState();
+                    }
                 }
             };
             
-            this.contentTree.addListener( contentTreeListener );
+            this.contentTree.attach( contentTreeListener );
             
             refreshEnablementState();
             
@@ -185,7 +188,7 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
                     {
                         if( event instanceof DisposeEvent )
                         {
-                            AbstractActionHandler.this.contentTree.removeListener( contentTreeListener );
+                            AbstractActionHandler.this.contentTree.detach( contentTreeListener );
                         }
                     }
                 }

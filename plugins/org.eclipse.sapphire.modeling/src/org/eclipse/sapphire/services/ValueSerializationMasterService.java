@@ -49,7 +49,7 @@ public final class ValueSerializationMasterService extends Service
             {
                 final String message
                     = NLS.bind( Resources.noSerializationService, 
-                                element.getModelElementType().getModelElementClass().getName(),
+                                element.type().getModelElementClass().getName(),
                                 property.getName(), type.getName() );
                 
                 LoggingService.log( Status.createErrorStatus( message ) );

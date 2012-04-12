@@ -101,7 +101,7 @@ import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireMenuActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireTextCellEditor;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
-import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 import org.eclipse.sapphire.util.MutableReference;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -1838,7 +1838,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         public ISelection getSelection()
         {
             final ISelection original = ( this.fakeSelection != null ? this.fakeSelection : super.getSelection() );
-            final ListFactory<IModelElement> elements = ListFactory.start();
+            final ReadOnlyListFactory<IModelElement> elements = ReadOnlyListFactory.start();
             
             for( Iterator<?> itr = ( (IStructuredSelection) original ).iterator(); itr.hasNext(); )
             {

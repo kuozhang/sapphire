@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.LocalizationSystem;
-import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -43,9 +43,9 @@ public final class EnumValueType extends ModelMetadataItem
     }
     
     @Override
-    protected void initAnnotations( final ListFactory<Annotation> annotations )
+    protected void initAnnotations( final ReadOnlyListFactory<Annotation> annotations )
     {
-        annotations.addAll( this.enumClass.getDeclaredAnnotations() );
+        annotations.add( this.enumClass.getDeclaredAnnotations() );
     }
 
     public <A extends Annotation> A getAnnotation( final Enum<?> enumItem,

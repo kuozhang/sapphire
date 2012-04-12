@@ -45,7 +45,7 @@ public abstract class XmlResource
     {
         super.init( modelElement );
         
-        this.xmlNamespaceResolver = new StandardXmlNamespaceResolver( modelElement.getModelElementType() );
+        this.xmlNamespaceResolver = new StandardXmlNamespaceResolver( modelElement.type() );
     }
 
     @Override

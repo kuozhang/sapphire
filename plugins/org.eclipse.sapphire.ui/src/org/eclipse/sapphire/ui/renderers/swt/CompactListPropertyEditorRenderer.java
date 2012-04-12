@@ -99,7 +99,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
         // TODO support readonly
         //final boolean isReadOnly = ( property.isReadOnly() || part.getRenderingHint( HINT_READ_ONLY, false ) );
 
-        final List<ModelProperty> allMemberProperties = property.getType().getProperties();
+        final List<ModelProperty> allMemberProperties = property.getType().properties();
         
         if( allMemberProperties.size() == 1 )
         {

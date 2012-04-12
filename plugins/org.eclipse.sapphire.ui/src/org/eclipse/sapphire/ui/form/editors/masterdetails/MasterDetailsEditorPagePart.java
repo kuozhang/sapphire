@@ -17,6 +17,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
@@ -39,21 +41,27 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
         
         this.contentOutline = new MasterDetailsContentOutline( this );
         
-        this.contentOutline.addListener
+        this.contentOutline.attach
         (
-            new MasterDetailsContentOutline.Listener()
+            new Listener()
             {
-                @Override
-                public void handleSelectionChange( final List<MasterDetailsContentNode> newSelection )
+               @Override
+                public void handle( final Event event )
                 {
-                    PropertiesViewContributionPart propertiesViewContribution = null;
-                    
-                    if( newSelection.size() == 1 )
+                    if( event instanceof MasterDetailsContentOutline.SelectionChangedEvent )
                     {
-                        propertiesViewContribution = newSelection.get( 0 ).getPropertiesViewContribution();
+                        final MasterDetailsContentOutline.SelectionChangedEvent evt = (MasterDetailsContentOutline.SelectionChangedEvent) event;
+                        final List<MasterDetailsContentNode> selection = evt.selection();
+
+                        PropertiesViewContributionPart propertiesViewContribution = null;
+                        
+                        if( selection.size() == 1 )
+                        {
+                            propertiesViewContribution = selection.get( 0 ).getPropertiesViewContribution();
+                        }
+                        
+                        setPropertiesViewContribution( propertiesViewContribution );
                     }
-                    
-                    setPropertiesViewContribution( propertiesViewContribution );
                 }
             }
         );

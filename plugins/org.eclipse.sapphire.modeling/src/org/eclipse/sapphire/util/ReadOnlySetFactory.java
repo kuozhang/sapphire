@@ -20,20 +20,20 @@ import java.util.Set;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SetFactory<E>
+public final class ReadOnlySetFactory<E>
 {
     private E firstElement = null;
     private Set<E> set = null;
     private boolean created = false;
     
-    private SetFactory() {}
+    private ReadOnlySetFactory() {}
     
-    public static <E> SetFactory<E> start()
+    public static <E> ReadOnlySetFactory<E> start()
     {
-        return new SetFactory<E>();
+        return new ReadOnlySetFactory<E>();
     }
     
-    public SetFactory<E> add( final E element )
+    public ReadOnlySetFactory<E> add( final E element )
     {
         if( this.created )
         {
@@ -59,7 +59,7 @@ public final class SetFactory<E>
         return this;
     }
     
-    public SetFactory<E> addAll( final Collection<E> elements )
+    public ReadOnlySetFactory<E> add( final E... elements )
     {
         for( E element : elements )
         {
@@ -69,7 +69,7 @@ public final class SetFactory<E>
         return this;
     }
     
-    public SetFactory<E> addAll( final E[] elements )
+    public ReadOnlySetFactory<E> add( final Collection<E> elements )
     {
         for( E element : elements )
         {
@@ -100,6 +100,21 @@ public final class SetFactory<E>
         {
             return Collections.emptySet();
         }
+    }
+    
+    public static <E> Set<E> create( final E element )
+    {
+        return Collections.singleton( element );
+    }
+    
+    public static <E> Set<E> create( final E... elements )
+    {
+        return ReadOnlySetFactory.<E>start().add( elements ).create();
+    }
+    
+    public static <E> Set<E> create( final Collection<E> elements )
+    {
+        return ReadOnlySetFactory.<E>start().add( elements ).create();
     }
     
 }

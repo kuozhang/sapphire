@@ -270,7 +270,7 @@ public final class ModelElementList<T extends IModelElement>
     {
         ensureNotReadOnly();
         
-        final ModelElementType type = ModelElementType.getModelElementType( cl );
+        final ModelElementType type = ModelElementType.read( cl );
         
         if( type == null )
         {
@@ -329,7 +329,7 @@ public final class ModelElementList<T extends IModelElement>
         
         synchronized( this )
         {
-            if( this.data.indexOf( a ) == -1 || this.data.indexOf( b ) == -1 )
+            if( indexOf( a ) == -1 || indexOf( b ) == -1 )
             {
                 throw new IllegalArgumentException();
             }
@@ -412,22 +412,59 @@ public final class ModelElementList<T extends IModelElement>
 
     public synchronized int indexOf( final Object object )
     {
-        return this.data.indexOf( object );
+        int index = -1;
+        
+        for( int i = 0, n = this.data.size(); i < n; i++ )
+        {
+            if( this.data.get( i ) == object )
+            {
+                index = i;
+                break;
+            }
+        }
+        
+        return index;
     }
 
     public synchronized int lastIndexOf( final Object object )
     {
-        return this.data.lastIndexOf( object );
+        int index = -1;
+        
+        for( int i = 0, n = this.data.size(); i < n; i++ )
+        {
+            if( this.data.get( i ) == object )
+            {
+                index = i;
+            }
+        }
+        
+        return index;
     }
 
     public synchronized boolean contains( final Object object )
     {
-        return this.data.contains( object );
+        for( Object x : this.data )
+        {
+            if( x == object )
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     public synchronized boolean containsAll( final Collection<?> collection )
     {
-        return this.data.containsAll( collection );
+        for( Object x : collection )
+        {
+            if( ! contains( x ) )
+            {
+                return false;
+            }
+        }
+        
+        return true;
     }
 
     public synchronized boolean isEmpty()

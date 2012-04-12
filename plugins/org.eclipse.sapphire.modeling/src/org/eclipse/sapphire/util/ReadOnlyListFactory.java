@@ -20,20 +20,20 @@ import java.util.List;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ListFactory<E>
+public final class ReadOnlyListFactory<E>
 {
     private E firstElement = null;
     private List<E> list = null;
     private boolean created = false;
     
-    private ListFactory() {}
+    private ReadOnlyListFactory() {}
     
-    public static <E> ListFactory<E> start()
+    public static <E> ReadOnlyListFactory<E> start()
     {
-        return new ListFactory<E>();
+        return new ReadOnlyListFactory<E>();
     }
     
-    public ListFactory<E> add( final E element )
+    public ReadOnlyListFactory<E> add( final E element )
     {
         if( this.created )
         {
@@ -59,7 +59,7 @@ public final class ListFactory<E>
         return this;
     }
     
-    public ListFactory<E> addAll( final Collection<E> elements )
+    public ReadOnlyListFactory<E> add( final E... elements )
     {
         for( E element : elements )
         {
@@ -68,8 +68,8 @@ public final class ListFactory<E>
         
         return this;
     }
-    
-    public ListFactory<E> addAll( final E[] elements )
+
+    public ReadOnlyListFactory<E> add( final Collection<E> elements )
     {
         for( E element : elements )
         {
@@ -100,6 +100,21 @@ public final class ListFactory<E>
         {
             return Collections.emptyList();
         }
+    }
+    
+    public static <E> List<E> create( final E element )
+    {
+        return Collections.singletonList( element );
+    }
+    
+    public static <E> List<E> create( final E... elements )
+    {
+        return ReadOnlyListFactory.<E>start().add( elements ).create();
+    }
+    
+    public static <E> List<E> create( final Collection<E> elements )
+    {
+        return ReadOnlyListFactory.<E>start().add( elements ).create();
     }
     
 }

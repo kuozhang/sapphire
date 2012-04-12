@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.form.editors.masterdetails;
 
 import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twd;
+import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.runOnDisplayThread;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,7 +59,6 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsCont
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeFactoryCaseDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeFactoryDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeInclude;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -701,16 +701,17 @@ public final class MasterDetailsContentNode
         
         if( isChildNodeFactoryProperty( event.getProperty() ) )
         {
-            final Runnable notifyOfStructureChangeOperation = new Runnable()
-            {
-                public void run()
+            runOnDisplayThread
+            (
+                new Runnable()
                 {
-                    getContentTree().notifyOfNodeStructureChange( MasterDetailsContentNode.this );
-                    updateValidationState();
+                    public void run()
+                    {
+                        getContentTree().notifyOfNodeStructureChange( MasterDetailsContentNode.this );
+                        updateValidationState();
+                    }
                 }
-            };
-            
-            Display.getDefault().asyncExec( notifyOfStructureChangeOperation );
+            );
         }
     }
 

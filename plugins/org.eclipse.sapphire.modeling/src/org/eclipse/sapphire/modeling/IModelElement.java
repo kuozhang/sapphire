@@ -25,7 +25,7 @@ import org.eclipse.sapphire.services.Service;
 
 public interface IModelElement extends IModelParticle
 {
-    ModelElementType getModelElementType();
+    ModelElementType type();
     ModelProperty getParentProperty();
     
     Object read( ModelProperty property );

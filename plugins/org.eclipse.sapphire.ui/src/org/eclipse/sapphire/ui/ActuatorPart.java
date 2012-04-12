@@ -37,7 +37,7 @@ import org.eclipse.sapphire.ui.def.ActuatorDef;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.def.ImageReference;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
-import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -103,7 +103,7 @@ public final class ActuatorPart extends SapphirePart
         
         if( this.showImage )
         {
-            final ListFactory<FunctionResult> imageFunctionResultsFactory = ListFactory.start();
+            final ReadOnlyListFactory<FunctionResult> imageFunctionResultsFactory = ReadOnlyListFactory.start();
             
             for( ImageReference imageReference : def.getImages() )
             {

@@ -63,7 +63,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         
         ListProperty nodeProperty = (ListProperty)this.nodeTemplate.getModelProperty();
         this.propertyName = this.bindingDef.getProperty().getContent();
-        this.connListProperty = (ListProperty)nodeProperty.getType().getProperty(this.propertyName);
+        this.connListProperty = (ListProperty)nodeProperty.getType().property(this.propertyName);
         
         this.connPartListener = new ConnectionPartListener();
         
@@ -118,7 +118,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     {
         IModelElement srcNodeModel = srcNode.getLocalModelElement();
         // check the source node type
-        ModelElementType srcNodeType = srcNodeModel.getModelElementType();
+        ModelElementType srcNodeType = srcNodeModel.type();
         ModelElementType desiredsrcNodeType = this.nodeTemplate.getNodeType();
         
         if (!srcNodeType.equals(desiredsrcNodeType))
@@ -137,12 +137,12 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         }
         IModelElement srcNodeModel = srcNode.getLocalModelElement();
         // check the target node type
-        ModelElementType targetType = targetNode.getLocalModelElement().getModelElementType();
+        ModelElementType targetType = targetNode.getLocalModelElement().type();
         
         ModelProperty connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);        
         ModelElementType connType = connProp.getType();
         ModelProperty endpointProp = 
-            connType.getProperty(this.bindingDef.getEndpoint2().element().getProperty().getContent());
+            connType.property(this.bindingDef.getEndpoint2().element().getProperty().getContent());
         if (endpointProp.getType() == null && endpointProp.hasAnnotation(Reference.class))
         {
             return endpointProp.getAnnotation(Reference.class).target().isAssignableFrom(targetType.getModelElementClass());

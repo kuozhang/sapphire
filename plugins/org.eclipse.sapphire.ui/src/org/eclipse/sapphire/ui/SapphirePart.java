@@ -405,8 +405,8 @@ public abstract class SapphirePart implements ISapphirePart
         {
             propertyName = substituteParams( propertyName.trim(), params );
             
-            final ModelElementType type = modelElement.getModelElementType();
-            final ModelProperty property = type.getProperty( propertyName );
+            final ModelElementType type = modelElement.type();
+            final ModelProperty property = type.property( propertyName );
             
             if( property == null )
             {

@@ -425,8 +425,8 @@ public class DiagramConnectionPart
     {
         if (propertyName != null)
         {
-            final ModelElementType type = modelElement.getModelElementType();
-            final ModelProperty property = type.getProperty( propertyName );
+            final ModelElementType type = modelElement.type();
+            final ModelProperty property = type.property( propertyName );
             if( property == null )
             {
                 throw new RuntimeException( "Could not find property " + propertyName + " in " + type.getQualifiedName() );

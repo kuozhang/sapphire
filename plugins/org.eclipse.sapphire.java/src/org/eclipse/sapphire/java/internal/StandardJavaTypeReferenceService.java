@@ -110,7 +110,7 @@ public final class StandardJavaTypeReferenceService
             }
             else
             {
-                final ClassLoader classLoader = element.getModelElementType().getModelElementClass().getClassLoader();
+                final ClassLoader classLoader = element.type().getModelElementClass().getClassLoader();
                 return new StandardJavaTypeReferenceService( classLoader );
             }
         }

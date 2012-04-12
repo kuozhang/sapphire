@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.internal.PropertyMetaModelServiceContext;
-import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -118,7 +118,7 @@ public abstract class ModelProperty extends ModelMetadataItem
         }
         else
         {
-            this.type = ModelElementType.getModelElementType( this.typeClass );
+            this.type = ModelElementType.read( this.typeClass );
         }
         
         this.modelElementType.addProperty( this );
@@ -156,7 +156,7 @@ public abstract class ModelProperty extends ModelMetadataItem
     }
     
     @Override
-    protected void initAnnotations( final ListFactory<Annotation> annotations )
+    protected void initAnnotations( final ReadOnlyListFactory<Annotation> annotations )
     {
         Field propField = null;
         
@@ -178,20 +178,20 @@ public abstract class ModelProperty extends ModelMetadataItem
         
         if( propField != null )
         {
-            annotations.addAll( propField.getDeclaredAnnotations() );
+            annotations.add( propField.getDeclaredAnnotations() );
         }
     }
 
     @Override
     public <A extends Annotation> List<A> getAnnotations( final Class<A> type )
     {
-        final ListFactory<A> annotationsListFactory = ListFactory.start();
+        final ReadOnlyListFactory<A> annotationsListFactory = ReadOnlyListFactory.start();
         
-        annotationsListFactory.addAll( super.getAnnotations( type ) );
+        annotationsListFactory.add( super.getAnnotations( type ) );
         
         if( this.baseProperty != null )
         {
-            annotationsListFactory.addAll( this.baseProperty.getAnnotations( type ) );
+            annotationsListFactory.add( this.baseProperty.getAnnotations( type ) );
         }
         
         return annotationsListFactory.create();
@@ -224,12 +224,12 @@ public abstract class ModelProperty extends ModelMetadataItem
 
     public ModelProperty refine( final ModelElementType type )
     {
-        return type.getProperty( this.propertyName );
+        return type.property( this.propertyName );
     }
 
     public ModelProperty refine( final IModelElement modelElement )
     {
-        return refine( ModelElementType.getModelElementType( modelElement.getClass() ) );
+        return refine( ModelElementType.read( modelElement.getClass() ) );
     }
 
     public final boolean isReadOnly()

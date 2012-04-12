@@ -346,7 +346,7 @@ public abstract class DelimitedListBindingImpl
         {
             final ModelElementType listEntryType = property().getType();
             
-            for( ModelProperty prop : listEntryType.getProperties() )
+            for( ModelProperty prop : listEntryType.properties() )
             {
                 if( this.listEntryProperty != null )
                 {

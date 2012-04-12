@@ -33,7 +33,7 @@ public class SapphirePropertyEnabledCondition
                                final String parameter )
     {
         final IModelElement element = part.getModelElement();
-        this.property = element.getModelElementType().getProperty( parameter );
+        this.property = element.type().property( parameter );
 
         super.initCondition( part, parameter );
     }

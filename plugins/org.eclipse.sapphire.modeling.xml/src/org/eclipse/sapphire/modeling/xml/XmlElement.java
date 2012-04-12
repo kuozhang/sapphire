@@ -29,7 +29,7 @@ import org.eclipse.sapphire.modeling.xml.schema.XmlContentModel;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchemasCache;
 import org.eclipse.sapphire.modeling.xml.schema.XmlElementDefinition;
-import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
@@ -310,7 +310,7 @@ public final class XmlElement
     
     public List<XmlAttribute> getAttributes()
     {
-        final ListFactory<XmlAttribute> result = ListFactory.start();
+        final ReadOnlyListFactory<XmlAttribute> result = ReadOnlyListFactory.start();
         final NamedNodeMap attributes = getDomNode().getAttributes();
         
         this.attributesCache.track();
@@ -408,7 +408,7 @@ public final class XmlElement
     
     public List<XmlElement> getChildElements()
     {
-        final ListFactory<XmlElement> result = ListFactory.start();
+        final ReadOnlyListFactory<XmlElement> result = ReadOnlyListFactory.start();
         final NodeList children = getDomNode().getChildNodes();
         
         this.elementsCache.track();
@@ -439,7 +439,7 @@ public final class XmlElement
 
     public List<XmlElement> getChildElements( final QName name )
     {
-        final ListFactory<XmlElement> result = ListFactory.start();
+        final ReadOnlyListFactory<XmlElement> result = ReadOnlyListFactory.start();
         
         for( XmlElement element : getChildElements() )
         {
@@ -936,7 +936,7 @@ public final class XmlElement
     
     public List<XmlComment> getComments()
     {
-        final ListFactory<XmlComment> result = ListFactory.start();
+        final ReadOnlyListFactory<XmlComment> result = ReadOnlyListFactory.start();
         final NodeList children = getDomNode().getChildNodes();
         
         this.commentsCache.track();
@@ -1019,7 +1019,7 @@ public final class XmlElement
     
     public List<XmlMetaComment> getMetaComments()
     {
-        final ListFactory<XmlMetaComment> result = ListFactory.start();
+        final ReadOnlyListFactory<XmlMetaComment> result = ReadOnlyListFactory.start();
         final NodeList children = getDomNode().getChildNodes();
         
         this.metaCommentsCache.track();

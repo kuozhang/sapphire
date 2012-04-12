@@ -30,8 +30,8 @@ public class ModelUtil
     {
         if (propertyName != null)
         {
-            final ModelElementType type = modelElement.getModelElementType();
-            final ModelProperty property = type.getProperty( propertyName );
+            final ModelElementType type = modelElement.type();
+            final ModelProperty property = type.property( propertyName );
             if( property == null )
             {
                 throw new RuntimeException( "Could not find property " + propertyName + " in " + type.getQualifiedName() );
@@ -46,7 +46,7 @@ public class ModelUtil
         if (path.length() == 1)
         {
             String propertyName = ((ModelPath.PropertySegment)path.head()).getPropertyName();
-            ModelProperty modelProperty = modelElementType.getProperty(propertyName);
+            ModelProperty modelProperty = modelElementType.property(propertyName);
             return modelProperty;
         }
         else
@@ -55,7 +55,7 @@ public class ModelUtil
             if (head instanceof ModelPath.PropertySegment)
             {
                 final String propertyName = ((ModelPath.PropertySegment)head).getPropertyName();
-                final ModelProperty property = modelElementType.getProperty(propertyName);
+                final ModelProperty property = modelElementType.property(propertyName);
                 if (property instanceof ListProperty)
                 {
                     ModelElementType type = ((ListProperty)property).getType();
@@ -86,7 +86,7 @@ public class ModelUtil
             if (head instanceof ModelPath.PropertySegment)
             {
                 final String propertyName = ((ModelPath.PropertySegment)head).getPropertyName();
-                final ModelProperty property = modelElement.getModelElementType().getProperty(propertyName);
+                final ModelProperty property = modelElement.type().property(propertyName);
                 if (property instanceof ListProperty)
                 {
                     ModelElementType type = ((ListProperty)property).getType();

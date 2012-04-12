@@ -25,6 +25,8 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.util.CollectionsUtil.findPrecedingItem;
+import static org.eclipse.sapphire.util.CollectionsUtil.findTrailingItem;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -60,10 +62,12 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -82,6 +86,7 @@ import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEditorPageDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.state.IMasterDetailsEditorPageState;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.ModelElementsTransfer;
 import org.eclipse.sapphire.ui.swt.SapphireToolTip;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
@@ -93,6 +98,14 @@ import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.sapphire.util.MutableReference;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSource;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.DragSourceListener;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetAdapter;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
@@ -100,6 +113,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -592,12 +606,12 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
     }
 
     private FilteredTree createContentOutline( final Composite parent,
-                                               final MasterDetailsContentOutline contentTree,
+                                               final MasterDetailsContentOutline outline,
                                                final boolean addBorders )
     {
         final int treeStyle = ( addBorders ? SWT.BORDER : SWT.NONE ) | SWT.MULTI;
         
-        final ContentOutlineFilteredTree filteredTree = new ContentOutlineFilteredTree( parent, treeStyle, contentTree );
+        final ContentOutlineFilteredTree filteredTree = new ContentOutlineFilteredTree( parent, treeStyle, outline );
         final TreeViewer treeViewer = filteredTree.getViewer();
         final Tree tree = treeViewer.getTree();
         
@@ -605,7 +619,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
         {
             public Object[] getElements( final Object inputElement )
             {
-                return contentTree.getRoot().getChildNodes().toArray();
+                return outline.getRoot().getChildNodes().toArray();
             }
         
             public Object[] getChildren( final Object parentElement )
@@ -819,74 +833,78 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
         final MutableReference<Boolean> ignoreSelectionChange = new MutableReference<Boolean>( false );
         final MutableReference<Boolean> ignoreExpandedStateChange = new MutableReference<Boolean>( false );
         
-        final MasterDetailsContentOutline.Listener contentTreeListener = new MasterDetailsContentOutline.Listener()
+        final Listener contentTreeListener = new Listener()
         {
             @Override
-            public void handleNodeUpdate( final MasterDetailsContentNode node )
+            public void handle( final org.eclipse.sapphire.Event event )
             {
-                treeViewer.update( node, null );
-            }
-
-            @Override
-            public void handleNodeStructureChange( final MasterDetailsContentNode node )
-            {
-                treeViewer.refresh( node );
-            }
-
-            @Override
-            public void handleSelectionChange( final List<MasterDetailsContentNode> selection )
-            {
-                if( ignoreSelectionChange.get() == true )
+                if( event instanceof MasterDetailsContentOutline.NodeUpdatedEvent )
                 {
-                    return;
+                    final MasterDetailsContentOutline.NodeUpdatedEvent evt = (MasterDetailsContentOutline.NodeUpdatedEvent) event;
+                    treeViewer.update( evt.node(), null );
                 }
-                
-                final IStructuredSelection sel;
-                
-                if( selection.isEmpty() )
+                else if( event instanceof MasterDetailsContentOutline.NodeStructureChangedEvent )
                 {
-                    sel = StructuredSelection.EMPTY;
+                    final MasterDetailsContentOutline.NodeStructureChangedEvent evt = (MasterDetailsContentOutline.NodeStructureChangedEvent) event;
+                    treeViewer.refresh( evt.node() );
                 }
-                else
+                else if( event instanceof MasterDetailsContentOutline.SelectionChangedEvent )
                 {
-                    sel = new StructuredSelection( selection );
-                }
-                
-                if( ! treeViewer.getSelection().equals( sel ) )
-                {
-                    for( MasterDetailsContentNode node : selection )
+                    if( ignoreSelectionChange.get() == true )
                     {
-                        treeViewer.reveal( node );
+                        return;
                     }
                     
-                    treeViewer.setSelection( sel );
+                    final MasterDetailsContentOutline.SelectionChangedEvent evt = (MasterDetailsContentOutline.SelectionChangedEvent) event;
+                    final List<MasterDetailsContentNode> selection = evt.selection();
+                    
+                    final IStructuredSelection sel;
+                    
+                    if( selection.isEmpty() )
+                    {
+                        sel = StructuredSelection.EMPTY;
+                    }
+                    else
+                    {
+                        sel = new StructuredSelection( selection );
+                    }
+                    
+                    if( ! treeViewer.getSelection().equals( sel ) )
+                    {
+                        for( MasterDetailsContentNode node : selection )
+                        {
+                            treeViewer.reveal( node );
+                        }
+                        
+                        treeViewer.setSelection( sel );
+                    }
                 }
-            }
-            
-            @Override
-            public void handleNodeExpandedStateChange( final MasterDetailsContentNode node )
-            {
-                if( ignoreExpandedStateChange.get() == true )
+                else if( event instanceof MasterDetailsContentOutline.NodeExpandedStateChangedEvent )
                 {
-                    return;
-                }
-                
-                final boolean expandedState = node.isExpanded();
-                
-                if( treeViewer.getExpandedState( node ) != expandedState )
-                {
-                    treeViewer.setExpandedState( node, expandedState );
-                }
-            }
+                    if( ignoreExpandedStateChange.get() == true )
+                    {
+                        return;
+                    }
+                    
+                    final MasterDetailsContentOutline.NodeExpandedStateChangedEvent evt = (MasterDetailsContentOutline.NodeExpandedStateChangedEvent) event;
+                    final MasterDetailsContentNode node = evt.node();
 
-            @Override
-            public void handleFilterChange( final String newFilterText )
-            {
-                filteredTree.changeFilterText( newFilterText );
+                    final boolean expandedState = node.isExpanded();
+                    
+                    if( treeViewer.getExpandedState( node ) != expandedState )
+                    {
+                        treeViewer.setExpandedState( node, expandedState );
+                    }
+                }
+                else if( event instanceof MasterDetailsContentOutline.FilterChangedEvent )
+                {
+                    final MasterDetailsContentOutline.FilterChangedEvent evt = (MasterDetailsContentOutline.FilterChangedEvent) event;
+                    filteredTree.changeFilterText( evt.filter() );
+                }
             }
         };
 
-        contentTree.addListener( contentTreeListener );
+        outline.attach( contentTreeListener );
         
         treeViewer.addSelectionChangedListener
         (
@@ -906,7 +924,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
                             nodes.add( (MasterDetailsContentNode) itr.next() );
                         }
                         
-                        contentTree.setSelectedNodes( nodes );
+                        outline.setSelectedNodes( nodes );
                     }
                     finally
                     {
@@ -952,12 +970,198 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
             }
         );
         
-        final ContentOutlineActionSupport actionSupport = new ContentOutlineActionSupport( contentTree, tree );
+        final ContentOutlineActionSupport actionSupport = new ContentOutlineActionSupport( outline, tree );
         
-        treeViewer.setExpandedElements( contentTree.getExpandedNodes().toArray() );
-        contentTreeListener.handleSelectionChange( contentTree.getSelectedNodes() );
+        treeViewer.setExpandedElements( outline.getExpandedNodes().toArray() );
+        contentTreeListener.handle( new MasterDetailsContentOutline.SelectionChangedEvent( outline.getSelectedNodes() ) );
         
-        filteredTree.changeFilterText( contentTree.getFilterText() );
+        filteredTree.changeFilterText( outline.getFilterText() );
+        
+        final ModelElementsTransfer transfer = new ModelElementsTransfer( getModelElement().type().getModelElementClass().getClassLoader() );
+        final Transfer[] transfers = new Transfer[] { transfer };
+        
+        final DragSource dragSource = new DragSource( tree, DND.DROP_MOVE );
+        dragSource.setTransfer( transfers );
+
+        final List<IModelElement> dragElements = new ArrayList<IModelElement>();
+        
+        dragSource.addDragListener
+        (
+            new DragSourceListener()
+            {
+                public void dragStart( final DragSourceEvent event )
+                {
+                    final TreeItem[] selection = tree.getSelection();
+                    
+                    if( draggable( selection ) )
+                    {
+                        event.doit = true;
+                        
+                        for( TreeItem item : selection )
+                        {
+                            final MasterDetailsContentNode node = (MasterDetailsContentNode) item.getData();
+                            dragElements.add( node.getModelElement() );
+                        }
+                    }
+                    else
+                    {
+                        event.doit = false;
+                    }
+                }
+                
+                protected boolean draggable( final TreeItem[] selection )
+                {
+                    if( selection.length > 0 )
+                    {
+                        for( TreeItem item : selection )
+                        {
+                            final MasterDetailsContentNode node = (MasterDetailsContentNode) item.getData();
+                            
+                            if( ! draggable( node ) )
+                            {
+                                return false;
+                            }
+                        }
+                    
+                        return true;
+                    }
+                    
+                    return false;
+                }
+                
+                protected boolean draggable( final MasterDetailsContentNode node )
+                {
+                    final IModelElement element = node.getModelElement();
+                    
+                    if( element.parent() instanceof ModelElementList<?> )
+                    {
+                        final ISapphirePart parentPart = node.getParentPart();
+                        
+                        if( parentPart != null && parentPart instanceof MasterDetailsContentNode )
+                        {
+                            final MasterDetailsContentNode parentNode = (MasterDetailsContentNode) parentPart;
+                            
+                            return ( element != parentNode.getLocalModelElement() );
+                        }
+                        
+                        return true;
+                    }
+                    
+                    return false;
+                }
+                
+                public void dragSetData( final DragSourceEvent event )
+                {
+                    event.data = dragElements;
+                }
+                
+                public void dragFinished( final DragSourceEvent event )
+                {
+                    dragElements.clear();
+                }
+            }
+        );
+        
+        final DropTarget target = new DropTarget( tree, DND.DROP_MOVE );
+        target.setTransfer( transfers );
+        
+        target.addDropListener
+        (
+            new DropTargetAdapter()
+            {
+                public void dragOver( final DropTargetEvent event )
+                {
+                    event.feedback = DND.FEEDBACK_SCROLL;
+                    
+                    if( event.item != null )
+                    {
+                        final TreeItem item = (TreeItem) event.item;
+                        final Point pt = item.getDisplay().map( null, tree, event.x, event.y );
+                        final Rectangle bounds = item.getBounds();
+                        
+                        if( pt.y < bounds.y + bounds.height / 2 )
+                        {
+                            event.feedback |= DND.FEEDBACK_INSERT_BEFORE;
+                        }
+                        else
+                        {
+                            event.feedback |= DND.FEEDBACK_INSERT_AFTER;
+                        }
+                    }
+                }
+
+                @SuppressWarnings( "unchecked" )
+                
+                public void drop( final DropTargetEvent event ) 
+                {
+                    if( event.data == null )
+                    {
+                        event.detail = DND.DROP_NONE;
+                        return;
+                    }
+                    
+                    final TreeItem dropTargetItem = (TreeItem) event.item;
+                    final MasterDetailsContentNode dropTargetNode = (MasterDetailsContentNode) dropTargetItem.getData();
+                    final MasterDetailsContentNode parentNode = dropTargetNode.getParentNode();
+                    final List<MasterDetailsContentNode> siblingNodes = parentNode.getChildNodes();
+                    
+                    final Point pt = tree.getDisplay().map( null, tree, event.x, event.y );
+                    final Rectangle bounds = dropTargetItem.getBounds();
+                    
+                    MasterDetailsContentNode precedingNode = null;
+                    MasterDetailsContentNode trailingNode = null;
+
+                    if( pt.y < bounds.y + bounds.height / 2 ) 
+                    {
+                        precedingNode = findPrecedingItem( siblingNodes, dropTargetNode );
+                        trailingNode = dropTargetNode;
+                    }
+                    else
+                    {
+                        precedingNode = dropTargetNode;
+                        trailingNode = findTrailingItem( siblingNodes, dropTargetNode );
+                    }
+                    
+                    final IModelElement precedingElement = precedingNode.getModelElement();
+                    final ModelElementList<IModelElement> list = (ModelElementList<IModelElement>) precedingElement.parent();
+                    
+                    try
+                    {
+                        outline.listeners().suspend( MasterDetailsContentOutline.SelectionChangedEvent.class );
+                    
+                        for( IModelElement element : dragElements )
+                        {
+                            list.remove( element );
+                        }
+    
+                        final List<IModelElement> droppedElements = (List<IModelElement>) event.data;
+                        final List<MasterDetailsContentNode> newSelection = new ArrayList<MasterDetailsContentNode>();
+    
+                        final int offset = list.size() - list.indexOf( precedingElement ) - 1;
+                        
+                        for( IModelElement droppedElement : droppedElements )
+                        {
+                            final IModelElement insertedElement = list.addNewElement( droppedElement.type() );
+                            
+                            insertedElement.copy( droppedElement );
+                            
+                            for( int i = 0; i < offset; i++ )
+                            {
+                                list.moveUp( insertedElement );
+                            }
+                            
+                            newSelection.add( parentNode.findNodeByModelElement( insertedElement ) );
+                        }
+                        
+                        parentNode.getContentTree().setSelectedNodes( newSelection );
+                    }
+                    finally
+                    {
+                        outline.listeners().resume( MasterDetailsContentOutline.SelectionChangedEvent.class );
+                    }
+                }
+            }
+        );
         
         tree.addDisposeListener
         (
@@ -965,7 +1169,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
             {
                 public void widgetDisposed( final DisposeEvent event )
                 {
-                    contentTree.removeListener( contentTreeListener );
+                    outline.detach( contentTreeListener );
                     actionSupport.dispose();
                 }
             }
@@ -1159,7 +1363,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
     private final class ContentOutlineActionSupport
     {
         private final MasterDetailsContentOutline contentTree;
-        private final MasterDetailsContentOutline.Listener contentOutlineListener;
+        private final Listener contentOutlineListener;
         private final Tree tree;
         private final Menu menu;
         private SapphireActionPresentationManager actionPresentationManager;
@@ -1174,16 +1378,20 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
             this.menu = new Menu( tree );
             this.tree.setMenu( this.menu );
             
-            this.contentOutlineListener = new MasterDetailsContentOutline.Listener()
+            this.contentOutlineListener = new Listener()
             {
                 @Override
-                public void handleSelectionChange( final List<MasterDetailsContentNode> selection )
+                public void handle( final org.eclipse.sapphire.Event event )
                 {
-                    handleSelectionChangedEvent( selection );
+                    if( event instanceof MasterDetailsContentOutline.SelectionChangedEvent )
+                    {
+                        final MasterDetailsContentOutline.SelectionChangedEvent evt = (MasterDetailsContentOutline.SelectionChangedEvent) event;
+                        handleSelectionChangedEvent( evt.selection() );
+                    }
                 }
             };
 
-            this.contentTree.addListener( this.contentOutlineListener );
+            this.contentTree.attach( this.contentOutlineListener );
             
             handleSelectionChangedEvent( contentOutline.getSelectedNodes() );
         }
@@ -1235,7 +1443,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
         
         public void dispose()
         {
-            this.contentTree.removeListener( this.contentOutlineListener );
+            this.contentTree.detach( this.contentOutlineListener );
             
             if( this.tempActions != null )
             {
@@ -1417,14 +1625,18 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
             this.sectionPart = new SectionPart( this );
             this.managedForm.addPart( this.sectionPart );
     
-            contentTree.addListener
+            contentTree.attach
             (
-                new MasterDetailsContentOutline.Listener()
+                new Listener()
                 {
                     @Override
-                    public void handleSelectionChange( final List<MasterDetailsContentNode> selection )
+                    public void handle( final org.eclipse.sapphire.Event event )
                     {
-                        handleSelectionChangedEvent( selection );
+                        if( event instanceof MasterDetailsContentOutline.SelectionChangedEvent )
+                        {
+                            final MasterDetailsContentOutline.SelectionChangedEvent evt = (MasterDetailsContentOutline.SelectionChangedEvent) event;
+                            handleSelectionChangedEvent( evt.selection() );
+                        }
                     }
                 }
             );

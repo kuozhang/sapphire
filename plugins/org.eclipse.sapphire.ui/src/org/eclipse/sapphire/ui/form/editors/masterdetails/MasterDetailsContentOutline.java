@@ -16,14 +16,17 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEditorPageDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.state.IContentOutlineNodeState;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.state.IMasterDetailsEditorPageState;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -31,35 +34,12 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 public final class MasterDetailsContentOutline
 {
-    public static abstract class Listener
-    {
-        public void handleNodeUpdate( final MasterDetailsContentNode node )
-        {
-        }
-        
-        public void handleNodeStructureChange( final MasterDetailsContentNode node )
-        {
-        }
-        
-        public void handleNodeExpandedStateChange( final MasterDetailsContentNode node )
-        {
-        }
-        
-        public void handleSelectionChange( final List<MasterDetailsContentNode> newSelection )
-        {
-        }
-        
-        public void handleFilterChange( final String newFilterText )
-        {
-        }
-    }
-    
     private final MasterDetailsEditorPagePart editorPagePart;
     private final IMasterDetailsEditorPageDef editorPageDef;
     private final IModelElement rootModelElement;
     private MasterDetailsContentNode root;
     private List<MasterDetailsContentNode> selection;
-    private final Set<Listener> listeners;
+    private final ListenerContext listeners;
     private String filterText;
     
     public MasterDetailsContentOutline( final MasterDetailsEditorPagePart editorPagePart )
@@ -68,7 +48,7 @@ public final class MasterDetailsContentOutline
         this.editorPageDef = editorPagePart.definition();
         this.rootModelElement = editorPagePart.getModelElement();
         this.selection = Collections.emptyList();
-        this.listeners = new CopyOnWriteArraySet<Listener>();
+        this.listeners = new ListenerContext();
         this.filterText = "";
     }
     
@@ -83,26 +63,21 @@ public final class MasterDetailsContentOutline
             
             loadTreeState();
             
-            addListener
+            attach
             (
                 new Listener()
                 {
                     @Override
-                    public void handleNodeExpandedStateChange( final MasterDetailsContentNode node )
+                    public void handle( final Event event )
                     {
-                        saveTreeState();
-                    }
-
-                    @Override
-                    public void handleSelectionChange( final List<MasterDetailsContentNode> newSelection )
-                    {
-                        saveTreeState();
-                    }
-
-                    @Override
-                    public void handleNodeStructureChange( final MasterDetailsContentNode node )
-                    {
-                        MasterDetailsContentOutline.this.handleNodeStructureChange();
+                        if( event instanceof NodeExpandedStateChangedEvent || event instanceof SelectionChangedEvent )
+                        {
+                            saveTreeState();
+                        }
+                        else if( event instanceof NodeStructureChangedEvent )
+                        {
+                            handleNodeStructureChange();
+                        }
                     }
                 }
             );
@@ -163,7 +138,7 @@ public final class MasterDetailsContentOutline
                 this.selection = new ArrayList<MasterDetailsContentNode>( selection );
             }
             
-            notifyOfSelectionChange( this.selection );
+            this.listeners.broadcast( new SelectionChangedEvent( this.selection ) );
         }
     }
 
@@ -243,26 +218,28 @@ public final class MasterDetailsContentOutline
         if( ! this.filterText.equals( filterText ) )
         {
             this.filterText = filterText;
-            notifyOfFilterChange( filterText );
+            this.listeners.broadcast( new FilterChangedEvent( filterText ) );
         }
     }
     
-    public void addListener( final Listener listener )
+    public final ListenerContext listeners()
     {
-        this.listeners.add( listener );
+        return this.listeners;
     }
     
-    public void removeListener( final Listener listener )
+    public final void attach( final Listener listener )
     {
-        this.listeners.remove( listener );
+        this.listeners.attach( listener );
+    }
+    
+    public final void detach( final Listener listener )
+    {
+        this.listeners.detach( listener );
     }
     
     public void notifyOfNodeUpdate( final MasterDetailsContentNode node )
     {
-        for( Listener listener : this.listeners )
-        {
-            listener.handleNodeUpdate( node );
-        }
+        this.listeners.broadcast( new NodeUpdatedEvent( node ) );
         
         final MasterDetailsContentNode parent = node.getParentNode();
         
@@ -274,34 +251,12 @@ public final class MasterDetailsContentOutline
     
     public void notifyOfNodeStructureChange( final MasterDetailsContentNode node )
     {
-        for( Listener listener : this.listeners )
-        {
-            listener.handleNodeStructureChange( node );
-        }
+        this.listeners.broadcast( new NodeStructureChangedEvent( node ) );
     }
     
     public void notifyOfNodeExpandedStateChange( final MasterDetailsContentNode node )
     {
-        for( Listener listener : this.listeners )
-        {
-            listener.handleNodeExpandedStateChange( node );
-        }
-    }
-    
-    public void notifyOfSelectionChange( final List<MasterDetailsContentNode> newSelection )
-    {
-        for( Listener listener : this.listeners )
-        {
-            listener.handleSelectionChange( newSelection );
-        }
-    }
-    
-    private void notifyOfFilterChange( final String newFilterText )
-    {
-        for( Listener listener : this.listeners )
-        {
-            listener.handleFilterChange( newFilterText );
-        }
+        this.listeners.broadcast( new NodeExpandedStateChangedEvent( node ) );
     }
     
     public void refresh()
@@ -501,6 +456,81 @@ public final class MasterDetailsContentOutline
             {
                 saveTreeState( childNodeState, child, selection );
             }
+        }
+    }
+    
+    public static final class NodeUpdatedEvent extends Event
+    {
+        private final MasterDetailsContentNode node;
+        
+        public NodeUpdatedEvent( final MasterDetailsContentNode node )
+        {
+            this.node = node;
+        }
+        
+        public MasterDetailsContentNode node()
+        {
+            return this.node;
+        }
+    }
+    
+    public static final class NodeStructureChangedEvent extends Event
+    {
+        private final MasterDetailsContentNode node;
+        
+        public NodeStructureChangedEvent( final MasterDetailsContentNode node )
+        {
+            this.node = node;
+        }
+        
+        public MasterDetailsContentNode node()
+        {
+            return this.node;
+        }
+    }
+    
+    public static final class NodeExpandedStateChangedEvent extends Event
+    {
+        private final MasterDetailsContentNode node;
+        
+        public NodeExpandedStateChangedEvent( final MasterDetailsContentNode node )
+        {
+            this.node = node;
+        }
+        
+        public MasterDetailsContentNode node()
+        {
+            return this.node;
+        }
+    }
+    
+    public static final class SelectionChangedEvent extends Event
+    {
+        private final List<MasterDetailsContentNode> selection;
+        
+        public SelectionChangedEvent( final List<MasterDetailsContentNode> selection )
+        {
+            this.selection = ReadOnlyListFactory.create( selection );
+        }
+        
+        public List<MasterDetailsContentNode> selection()
+        {
+            return this.selection;
+        }
+    }
+    
+    public static final class FilterChangedEvent extends Event
+    {
+        private final String filter;
+        
+        public FilterChangedEvent( final String filter )
+        {
+            this.filter = filter;
+        }
+        
+        public String filter()
+        {
+            return this.filter;
         }
     }
     

@@ -65,7 +65,7 @@ public final class StandardPossibleTypesService extends PossibleTypesService
         
             if( possible.size() == 1 )
             {
-                this.possible = Collections.singleton( ModelElementType.getModelElementType( possible.get( 0 ) ) );
+                this.possible = Collections.singleton( ModelElementType.read( possible.get( 0 ) ) );
             }
             else
             {
@@ -73,7 +73,7 @@ public final class StandardPossibleTypesService extends PossibleTypesService
                 
                 for( Class<?> cl : possible )
                 {
-                    this.possible.add( ModelElementType.getModelElementType( cl ) );
+                    this.possible.add( ModelElementType.read( cl ) );
                 }
             }
         }

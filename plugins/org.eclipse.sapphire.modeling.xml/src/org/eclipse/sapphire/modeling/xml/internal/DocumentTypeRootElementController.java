@@ -44,7 +44,7 @@ public final class DocumentTypeRootElementController extends RootElementControll
     public void init(XmlResource resource) {
         super.init(resource);
         XmlDocumentType doctypeAnnotation = resource.root().element()
-                .getModelElementType().getAnnotation(XmlDocumentType.class);
+                .type().getAnnotation(XmlDocumentType.class);
         
         if( doctypeAnnotation != null ) 
         {

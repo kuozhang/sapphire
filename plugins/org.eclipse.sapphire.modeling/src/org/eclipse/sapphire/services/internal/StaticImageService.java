@@ -32,7 +32,7 @@ public final class StaticImageService extends ImageService
     @Override
     protected void initImageService()
     {
-        final ModelElementType type = context( IModelElement.class ).getModelElementType();
+        final ModelElementType type = context( IModelElement.class ).type();
         final Image imageAnnotation = type.getAnnotation( Image.class );
         this.data = new ImageServiceData( ImageData.createFromClassLoader( type.findAnnotationHostClass( imageAnnotation ), imageAnnotation.path() ) );
     }
@@ -49,7 +49,7 @@ public final class StaticImageService extends ImageService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            return ( context.find( IModelElement.class ).getModelElementType().getAnnotation( Image.class ) != null );
+            return ( context.find( IModelElement.class ).type().getAnnotation( Image.class ) != null );
         }
 
         @Override

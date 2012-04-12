@@ -32,11 +32,14 @@ public final class ContactCategoryPossibleValueService extends PossibleValuesSer
         final IContact c = context( IContact.class );
         final IContactsDatabase cdb = c.nearest( IContactsDatabase.class );
         
-        for( IContact contact : cdb.getContacts() )
+        if( cdb != null )
         {
-            if( contact != c )
+            for( IContact contact : cdb.getContacts() )
             {
-                values.add( contact.getCategory().getText( true ) );
+                if( contact != c )
+                {
+                    values.add( contact.getCategory().getText( true ) );
+                }
             }
         }
     }

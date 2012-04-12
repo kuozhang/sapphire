@@ -11,7 +11,9 @@
 
 package org.eclipse.sapphire;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.sapphire.modeling.LoggingService;
@@ -23,6 +25,7 @@ import org.eclipse.sapphire.modeling.LoggingService;
 public final class ListenerContext
 {
     private final List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
+    private final Map<Class<? extends Event>,Event> suspended = new HashMap<Class<? extends Event>,Event>();
     
     public void attach( final Listener listener )
     {
@@ -46,15 +49,34 @@ public final class ListenerContext
     
     public void broadcast( final Event event )
     {
-        for( Listener listener : this.listeners )
+        final Class<? extends Event> eventType = event.getClass();
+        final boolean broadcast;
+        
+        synchronized( this )
         {
-            try
+            if( this.suspended.containsKey( eventType ) )
             {
-                listener.handle( event );
+                this.suspended.put( eventType, event );
+                broadcast = false;
             }
-            catch( Exception e )
+            else
             {
-                LoggingService.log( e );
+                broadcast = true;
+            }
+        }
+        
+        if( broadcast )
+        {
+            for( Listener listener : this.listeners )
+            {
+                try
+                {
+                    listener.handle( event );
+                }
+                catch( Exception e )
+                {
+                    LoggingService.log( e );
+                }
             }
         }
     }
@@ -62,6 +84,32 @@ public final class ListenerContext
     public void broadcast()
     {
         broadcast( new Event() );
+    }
+    
+    public void suspend( final Class<? extends Event> eventType )
+    {
+        synchronized( this )
+        {
+            if( ! this.suspended.containsKey( eventType ) )
+            {
+                this.suspended.put( eventType, null );
+            }
+        }
+    }
+    
+    public void resume( final Class<? extends Event> eventType )
+    {
+        Event event = null;
+        
+        synchronized( this )
+        {
+            event = this.suspended.remove( eventType );
+        }
+        
+        if( event != null )
+        {
+            broadcast( event );
+        }
     }
 
 }

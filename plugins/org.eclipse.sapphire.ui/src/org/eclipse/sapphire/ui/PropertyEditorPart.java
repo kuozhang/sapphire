@@ -187,7 +187,7 @@ public final class PropertyEditorPart extends FormPart
         {
             if( propertyEditorPartDef.getChildProperties().isEmpty() )
             {
-                for( ModelProperty childProperty : type.getProperties() )
+                for( ModelProperty childProperty : type.properties() )
                 {
                     this.childProperties.add( childProperty );
                 }
@@ -197,7 +197,7 @@ public final class PropertyEditorPart extends FormPart
                 for( PropertyEditorDef childPropertyEditor : propertyEditorPartDef.getChildProperties() )
                 {
                     final String childPropertyName = childPropertyEditor.getProperty().getContent();
-                    final ModelProperty childProperty = type.getProperty( childPropertyName );
+                    final ModelProperty childProperty = type.property( childPropertyName );
                     
                     if( childProperty == null )
                     {

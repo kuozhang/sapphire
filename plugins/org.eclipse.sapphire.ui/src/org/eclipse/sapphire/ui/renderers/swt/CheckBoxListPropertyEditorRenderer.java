@@ -68,7 +68,7 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -109,7 +109,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         
         this.memberType = listProperty.getType();
         
-        final List<ModelProperty> allMemberProperties = this.memberType.getProperties();
+        final List<ModelProperty> allMemberProperties = this.memberType.properties();
         
         if( allMemberProperties.size() == 1 )
         {
@@ -642,7 +642,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
                 if( element.service( listProperty, PossibleTypesService.class ).types().size() == 1 )
                 {
                     final ModelElementType memberType = listProperty.getType();
-                    final List<ModelProperty> properties = memberType.getProperties();
+                    final List<ModelProperty> properties = memberType.properties();
                     
                     if( properties.size() == 1 )
                     {
@@ -679,7 +679,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         @Override
         public ISelection getSelection()
         {
-            final ListFactory<IModelElement> elements = ListFactory.start();
+            final ReadOnlyListFactory<IModelElement> elements = ReadOnlyListFactory.start();
             
             for( Iterator<?> itr = ( (IStructuredSelection) super.getSelection() ).iterator(); itr.hasNext(); )
             {

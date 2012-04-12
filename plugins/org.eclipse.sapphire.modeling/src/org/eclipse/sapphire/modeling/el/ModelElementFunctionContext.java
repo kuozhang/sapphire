@@ -59,8 +59,8 @@ public class ModelElementFunctionContext
         if( element == this || element instanceof IModelElement )
         {
             final IModelElement el = ( element == this ? element() : (IModelElement) element );
-            final ModelElementType type = el.getModelElementType();
-            final ModelProperty property = type.getProperty( name );
+            final ModelElementType type = el.type();
+            final ModelProperty property = type.property( name );
             
             if( property != null )
             {

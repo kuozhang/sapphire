@@ -77,7 +77,7 @@ public class RootXmlResource extends XmlResource
     {
         super.init( modelElement );
 
-        final ModelElementType modelElementType = modelElement.getModelElementType();
+        final ModelElementType modelElementType = modelElement.type();
         
         final CustomXmlRootBinding customXmlRootBindingAnnotation = modelElementType.getAnnotation( CustomXmlRootBinding.class );
         

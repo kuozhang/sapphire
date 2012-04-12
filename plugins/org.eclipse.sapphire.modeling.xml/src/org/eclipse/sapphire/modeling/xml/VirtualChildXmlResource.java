@@ -48,7 +48,7 @@ public class VirtualChildXmlResource extends XmlResource
             }
         };
         
-        for( ModelProperty property : modelElement.getModelElementType().getProperties() )
+        for( ModelProperty property : modelElement.type().properties() )
         {
             modelElement.addListener( listener, property.getName() );
         }
