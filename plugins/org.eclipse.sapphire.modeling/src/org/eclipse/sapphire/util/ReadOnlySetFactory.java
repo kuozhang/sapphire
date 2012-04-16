@@ -24,18 +24,33 @@ public final class ReadOnlySetFactory<E>
 {
     private E firstElement = null;
     private Set<E> set = null;
-    private boolean created = false;
+    private boolean exported = false;
     
     private ReadOnlySetFactory() {}
     
-    public static <E> ReadOnlySetFactory<E> start()
+    public static <E> ReadOnlySetFactory<E> create()
     {
         return new ReadOnlySetFactory<E>();
     }
     
+    public static <E> Set<E> create( final E element )
+    {
+        return Collections.singleton( element );
+    }
+    
+    public static <E> Set<E> create( final E... elements )
+    {
+        return ReadOnlySetFactory.<E>create().add( elements ).export();
+    }
+    
+    public static <E> Set<E> create( final Collection<E> elements )
+    {
+        return ReadOnlySetFactory.<E>create().add( elements ).export();
+    }
+
     public ReadOnlySetFactory<E> add( final E element )
     {
-        if( this.created )
+        if( this.exported )
         {
             throw new IllegalStateException();
         }
@@ -79,14 +94,14 @@ public final class ReadOnlySetFactory<E>
         return this;
     }
     
-    public Set<E> create()
+    public Set<E> export()
     {
-        if( this.created )
+        if( this.exported )
         {
             throw new IllegalStateException();
         }
         
-        this.created = true;
+        this.exported = true;
         
         if( this.set != null )
         {
@@ -100,21 +115,6 @@ public final class ReadOnlySetFactory<E>
         {
             return Collections.emptySet();
         }
-    }
-    
-    public static <E> Set<E> create( final E element )
-    {
-        return Collections.singleton( element );
-    }
-    
-    public static <E> Set<E> create( final E... elements )
-    {
-        return ReadOnlySetFactory.<E>start().add( elements ).create();
-    }
-    
-    public static <E> Set<E> create( final Collection<E> elements )
-    {
-        return ReadOnlySetFactory.<E>start().add( elements ).create();
     }
     
 }

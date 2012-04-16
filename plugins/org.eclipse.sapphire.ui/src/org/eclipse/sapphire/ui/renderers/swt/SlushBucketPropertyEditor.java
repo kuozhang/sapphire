@@ -459,7 +459,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
             
             if( list != null )
             {
-                final ReadOnlyListFactory<IModelElement> elements = ReadOnlyListFactory.start();
+                final ReadOnlyListFactory<IModelElement> elements = ReadOnlyListFactory.create();
                 
                 for( String str : this.input )
                 {
@@ -468,7 +468,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
                     elements.add( element );
                 }
                 
-                setSelectedElements( elements.create() );
+                setSelectedElements( elements.export() );
                 setFocusOnTable();
             }
             

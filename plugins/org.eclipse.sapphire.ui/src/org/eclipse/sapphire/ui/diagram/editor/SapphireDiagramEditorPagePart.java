@@ -475,19 +475,19 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     
     public List<DiagramNodePart> getNodes()
     {
-        final ReadOnlyListFactory<DiagramNodePart> nodes = ReadOnlyListFactory.start();
+        final ReadOnlyListFactory<DiagramNodePart> nodes = ReadOnlyListFactory.create();
         
         for( DiagramNodeTemplate template : getNodeTemplates() )
         {
             nodes.add( template.getDiagramNodes() );
         }
         
-        return nodes.create();
+        return nodes.export();
     }
     
     public List<DiagramConnectionPart> getConnections()
     {
-        final ReadOnlyListFactory<DiagramConnectionPart> connections = ReadOnlyListFactory.start();
+        final ReadOnlyListFactory<DiagramConnectionPart> connections = ReadOnlyListFactory.create();
         
         for( DiagramConnectionTemplate template : getConnectionTemplates() )
         {
@@ -503,7 +503,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
             }
         }
         
-        return connections.create();
+        return connections.export();
     }
     
     public DiagramNodePart getDiagramNodePart(IModelElement nodeElement)

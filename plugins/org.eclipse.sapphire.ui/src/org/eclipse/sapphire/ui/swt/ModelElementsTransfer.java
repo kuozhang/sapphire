@@ -169,7 +169,7 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
         
         try
         {
-            final ReadOnlyListFactory<IModelElement> elementsListFactory = ReadOnlyListFactory.start();
+            final ReadOnlyListFactory<IModelElement> elementsListFactory = ReadOnlyListFactory.create();
             final int size = in.readInt();
             
             for( int i = 0; i < size; i++ )
@@ -181,7 +181,7 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
                 elementsListFactory.add( element );
             }
             
-            return elementsListFactory.create();
+            return elementsListFactory.export();
         }
         catch( IOException e )
         {

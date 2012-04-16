@@ -310,7 +310,7 @@ public final class XmlElement
     
     public List<XmlAttribute> getAttributes()
     {
-        final ReadOnlyListFactory<XmlAttribute> result = ReadOnlyListFactory.start();
+        final ReadOnlyListFactory<XmlAttribute> result = ReadOnlyListFactory.create();
         final NamedNodeMap attributes = getDomNode().getAttributes();
         
         this.attributesCache.track();
@@ -331,7 +331,7 @@ public final class XmlElement
         
         this.attributesCache.purge();
         
-        return result.create();
+        return result.export();
     }
     
     public XmlAttribute getAttribute( final String name,
@@ -408,7 +408,7 @@ public final class XmlElement
     
     public List<XmlElement> getChildElements()
     {
-        final ReadOnlyListFactory<XmlElement> result = ReadOnlyListFactory.start();
+        final ReadOnlyListFactory<XmlElement> result = ReadOnlyListFactory.create();
         final NodeList children = getDomNode().getChildNodes();
         
         this.elementsCache.track();
@@ -434,12 +434,12 @@ public final class XmlElement
         
         this.elementsCache.purge();
         
-        return result.create();
+        return result.export();
     }
 
     public List<XmlElement> getChildElements( final QName name )
     {
-        final ReadOnlyListFactory<XmlElement> result = ReadOnlyListFactory.start();
+        final ReadOnlyListFactory<XmlElement> result = ReadOnlyListFactory.create();
         
         for( XmlElement element : getChildElements() )
         {
@@ -450,7 +450,7 @@ public final class XmlElement
             }
         }
         
-        return result.create();
+        return result.export();
     }
     
     public List<XmlElement> getChildElements( final String name )
@@ -936,7 +936,7 @@ public final class XmlElement
     
     public List<XmlComment> getComments()
     {
-        final ReadOnlyListFactory<XmlComment> result = ReadOnlyListFactory.start();
+        final ReadOnlyListFactory<XmlComment> result = ReadOnlyListFactory.create();
         final NodeList children = getDomNode().getChildNodes();
         
         this.commentsCache.track();
@@ -962,7 +962,7 @@ public final class XmlElement
         
         this.commentsCache.purge();
         
-        return result.create();
+        return result.export();
     }
     
     public XmlComment addComment( final String commentText )
@@ -1019,7 +1019,7 @@ public final class XmlElement
     
     public List<XmlMetaComment> getMetaComments()
     {
-        final ReadOnlyListFactory<XmlMetaComment> result = ReadOnlyListFactory.start();
+        final ReadOnlyListFactory<XmlMetaComment> result = ReadOnlyListFactory.create();
         final NodeList children = getDomNode().getChildNodes();
         
         this.metaCommentsCache.track();
@@ -1045,7 +1045,7 @@ public final class XmlElement
         
         this.metaCommentsCache.purge();
         
-        return result.create();
+        return result.export();
     }
      
     public XmlMetaComment getMetaComment( final String name,

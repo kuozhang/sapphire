@@ -38,7 +38,9 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -53,6 +55,7 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.OwnerDrawLabelProvider;
@@ -64,6 +67,9 @@ import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
@@ -121,8 +127,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -255,9 +259,9 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         this.table.addListener
         (
             SWT.MeasureItem, 
-            new Listener() 
+            new org.eclipse.swt.widgets.Listener() 
             {
-                public void handleEvent( final Event event ) 
+                public void handleEvent( final org.eclipse.swt.widgets.Event event ) 
                 {
                     // The rows should be 18 pixels at minimum to allow sufficient 
                     // room for the cell editors.
@@ -287,43 +291,38 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         
         final ListSelectionService selectionService = part.service( ListSelectionService.class );
        
-        if( selectionService != null ) 
-        {
-            this.selectionProvider.addSelectionChangedListener
-            (
-                new ISelectionChangedListener()
-                {
-                    public void selectionChanged( SelectionChangedEvent event )
-                    {
-                        selectionService.select( getSelectedElements() );
-                    }
-                }
-            );
-            
-            final org.eclipse.sapphire.Listener selectionServiceListener = new org.eclipse.sapphire.Listener()
+        this.selectionProvider.addSelectionChangedListener
+        (
+            new ISelectionChangedListener()
             {
-                @Override
-                public void handle( final org.eclipse.sapphire.Event event )
+                public void selectionChanged( SelectionChangedEvent event )
                 {
-                    setSelectedElements( ( (ListSelectionChangedEvent) event ).after() );
+                    selectionService.select( getSelectedElements() );
                 }
-            };
-
-            selectionService.attach( selectionServiceListener );
-
-            addOnDisposeOperation
-            ( 
-                new Runnable()
-                {
-                    public void run()
-                    {
-                        selectionService.detach( selectionServiceListener );
-                    }
-                }
-            );
-        }
+            }
+        );
         
-        this.table.setData( TableViewerSelectionProvider.DATA_SELECTION_PROVIDER, this.selectionProvider );
+        final org.eclipse.sapphire.Listener selectionServiceListener = new org.eclipse.sapphire.Listener()
+        {
+            @Override
+            public void handle( final org.eclipse.sapphire.Event event )
+            {
+                setSelectedElements( ( (ListSelectionChangedEvent) event ).after() );
+            }
+        };
+
+        selectionService.attach( selectionServiceListener );
+
+        addOnDisposeOperation
+        ( 
+            new Runnable()
+            {
+                public void run()
+                {
+                    selectionService.detach( selectionServiceListener );
+                }
+            }
+        );
         
         this.table.addFocusListener
         (
@@ -893,7 +892,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     public final List<IModelElement> getSelectedElements()
     {
         final IStructuredSelection sel = (IStructuredSelection) DefaultListPropertyEditorRenderer.this.tableViewer.getSelection();
-        final ReadOnlyListFactory<IModelElement> elements = ReadOnlyListFactory.start();
+        final ReadOnlyListFactory<IModelElement> elements = ReadOnlyListFactory.create();
         
         if( sel != null )
         {
@@ -903,14 +902,14 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             }
         }
         
-        return elements.create();
+        return elements.export();
     }
     
     public final void setSelectedElements( final List<IModelElement> elements )
     {
         if( ! equalsBasedOnEntryIdentity( getSelectedElements(), elements ) )
         {
-            final ReadOnlyListFactory<TableRow> rows = ReadOnlyListFactory.start();
+            final ReadOnlyListFactory<TableRow> rows = ReadOnlyListFactory.create();
             
             for( IModelElement element : elements )
             {
@@ -922,7 +921,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 }
             }
             
-            this.tableViewer.setSelection( new StructuredSelection( rows.create() ) );
+            this.tableViewer.setSelection( new StructuredSelection( rows.export() ) );
         }
     }
     
@@ -1581,7 +1580,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             return new OwnerDrawLabelProvider()
             {
                 @Override
-                protected void erase( final Event event,
+                protected void erase( final org.eclipse.swt.widgets.Event event,
                                       final Object element )
                 {
                     // The default implementation causes non-native behavior on some platforms and
@@ -1589,13 +1588,13 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 }
     
                 @Override
-                protected void measure( final Event event,
+                protected void measure( final org.eclipse.swt.widgets.Event event,
                                         final Object element )
                 {
                 }
     
                 @Override
-                protected void paint( final Event event,
+                protected void paint( final org.eclipse.swt.widgets.Event event,
                                       final Object object )
                 {
                     final TableItem item = (TableItem) event.item;
@@ -1766,17 +1765,38 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         }
     }
     
-    private abstract class SelectionBasedActionHandler extends SapphirePropertyEditorActionHandler
+    private static abstract class SelectionBasedActionHandler extends SapphirePropertyEditorActionHandler
     {
-        public SelectionBasedActionHandler()
+        @Override
+        public void init( final SapphireAction action, 
+                          final ActionHandlerDef def )
         {
-            DefaultListPropertyEditorRenderer.this.tableViewer.addSelectionChangedListener
-            (
-                new ISelectionChangedListener()
+            super.init( action, def );
+            
+            final ListSelectionService selectionService = action.getPart().service( ListSelectionService.class );
+            
+            final Listener selectionListener = new Listener()
+            {
+                @Override
+                public void handle( final Event event )
                 {
-                    public void selectionChanged( final SelectionChangedEvent event )
+                    refreshEnablementState();
+                }
+            };
+            
+            selectionService.attach( selectionListener );
+            
+            attach
+            (
+                new Listener()
+                {
+                    @Override
+                    public void handle( final Event event )
                     {
-                        refreshEnablementState();
+                        if( event instanceof DisposeEvent )
+                        {
+                            selectionService.detach( selectionListener );
+                        }
                     }
                 }
             );
@@ -1881,22 +1901,34 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         }
     }
     
-    public static final class SelectionProvider extends TableViewerSelectionProvider
+    public static final class SelectionProvider implements ISelectionProvider
     {
+        private final TableViewer tableViewer;
+        private final Set<ISelectionChangedListener> listeners;
         private ISelection fakeSelection;
         
         public SelectionProvider( final TableViewer tableViewer )
         {
-            super( tableViewer );
-            
+            this.tableViewer = tableViewer;
+            this.listeners = new CopyOnWriteArraySet<ISelectionChangedListener>();
             this.fakeSelection = null;
+            
+            this.tableViewer.addSelectionChangedListener
+            (
+                new ISelectionChangedListener()
+                {
+                    public void selectionChanged( final SelectionChangedEvent event )
+                    {
+                        notifySelectionChangedListeners();
+                    }
+                }
+            );
         }
 
-        @Override
         public ISelection getSelection()
         {
-            final ISelection original = ( this.fakeSelection != null ? this.fakeSelection : super.getSelection() );
-            final ReadOnlyListFactory<IModelElement> elements = ReadOnlyListFactory.start();
+            final ISelection original = ( this.fakeSelection != null ? this.fakeSelection : this.tableViewer.getSelection() );
+            final ReadOnlyListFactory<IModelElement> elements = ReadOnlyListFactory.create();
             
             for( Iterator<?> itr = ( (IStructuredSelection) original ).iterator(); itr.hasNext(); )
             {
@@ -1904,13 +1936,38 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 elements.add( row.element() );
             }
             
-            return new StructuredSelection( elements.create() );
+            return new StructuredSelection( elements.export() );
         }
         
+        public void setSelection( final ISelection selection )
+        {
+            throw new UnsupportedOperationException();
+        }
+
         public void setFakeSelection( final ISelection selection )
         {
             this.fakeSelection = selection;
             notifySelectionChangedListeners();
+        }
+        
+        public final void addSelectionChangedListener( final ISelectionChangedListener listener )
+        {
+            this.listeners.add( listener );
+        }
+
+        public final void removeSelectionChangedListener( final ISelectionChangedListener listener )
+        {
+            this.listeners.remove( listener );
+        }
+        
+        private final void notifySelectionChangedListeners()
+        {
+            final SelectionChangedEvent event = new SelectionChangedEvent( this, getSelection() );
+            
+            for( ISelectionChangedListener listener : this.listeners )
+            {
+                listener.selectionChanged( event );
+            }
         }
     }
     

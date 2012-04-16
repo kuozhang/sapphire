@@ -73,8 +73,6 @@ public final class PropertyEditorPart extends FormPart
     public static final String RELATED_CONTROLS = "related-controls";
     public static final String BROWSE_BUTTON = "browse-button";
     public static final String DATA_BINDING = "binding";
-    public static final String DATA_PROPERTY = "property";
-    public static final String DATA_ELEMENT = "element";
     
     private static final List<PropertyEditorRendererFactory> FACTORIES = new ArrayList<PropertyEditorRendererFactory>();
     

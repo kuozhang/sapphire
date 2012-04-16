@@ -57,7 +57,7 @@ public final class ModelElementType extends ModelMetadataItem
         this.properties = new ArrayList<ModelProperty>();
         this.localizationService = LocalizationSystem.service( this.typeClass );
         
-        final ReadOnlyListFactory<ModelElementType> baseTypesFactory = ReadOnlyListFactory.start();
+        final ReadOnlyListFactory<ModelElementType> baseTypesFactory = ReadOnlyListFactory.create();
         
         for( Class<?> baseInterface : this.typeClass.getInterfaces() )
         {
@@ -69,7 +69,7 @@ public final class ModelElementType extends ModelMetadataItem
             }
         }
         
-        this.baseTypes = baseTypesFactory.create();
+        this.baseTypes = baseTypesFactory.export();
     }
     
     public static ModelElementType read( final ClassLoader classLoader,
@@ -401,7 +401,7 @@ public final class ModelElementType extends ModelMetadataItem
     @Override
     public <A extends Annotation> List<A> getAnnotations( final Class<A> type )
     {
-        final ReadOnlyListFactory<A> annotationsListFactory = ReadOnlyListFactory.start();
+        final ReadOnlyListFactory<A> annotationsListFactory = ReadOnlyListFactory.create();
         
         annotationsListFactory.add( super.getAnnotations( type ) );
         
@@ -410,7 +410,7 @@ public final class ModelElementType extends ModelMetadataItem
             annotationsListFactory.add( baseType.getAnnotations( type ) );
         }
         
-        return annotationsListFactory.create();
+        return annotationsListFactory.export();
     }
     
     @Override

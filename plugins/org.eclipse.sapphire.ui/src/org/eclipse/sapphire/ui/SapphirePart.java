@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.eclipse.help.IContext;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
@@ -63,7 +64,6 @@ import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
 import org.eclipse.sapphire.ui.def.ISapphireSeparatorDef;
 import org.eclipse.sapphire.ui.def.ISapphireSpacerDef;
 import org.eclipse.sapphire.ui.def.ISapphireStaticTextFieldDef;
-import org.eclipse.sapphire.ui.def.TabGroupDef;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
 import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
 import org.eclipse.sapphire.ui.def.PageBookExtDef;
@@ -72,6 +72,7 @@ import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
 import org.eclipse.sapphire.ui.def.SplitFormDef;
+import org.eclipse.sapphire.ui.def.TabGroupDef;
 import org.eclipse.sapphire.ui.internal.PartServiceContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
@@ -586,6 +587,8 @@ public abstract class SapphirePart implements ISapphirePart
         {
             this.serviceContext.dispose();
         }
+        
+        broadcast( new DisposeEvent() );
     }
     
     protected final class ImageManager

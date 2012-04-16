@@ -61,14 +61,14 @@ public final class PartServiceContext extends ServiceContext
     @Override
     protected List<ServiceFactoryProxy> local()
     {
-        final ReadOnlyListFactory<ServiceFactoryProxy> local = ReadOnlyListFactory.start();
+        final ReadOnlyListFactory<ServiceFactoryProxy> local = ReadOnlyListFactory.create();
         final PartDef partDef = this.part.definition();
         
         for( ServiceDef serviceDef : partDef.getServices() )
         {
             final Class<? extends Service> serviceImplClass = resolve( serviceDef.getImplementation() );
             
-            final ReadOnlySetFactory<String> overridesSetFactory = ReadOnlySetFactory.start();
+            final ReadOnlySetFactory<String> overridesSetFactory = ReadOnlySetFactory.create();
             
             for( ServiceDef.Override override : serviceDef.getOverrides() )
             {
@@ -85,7 +85,7 @@ public final class PartServiceContext extends ServiceContext
                 }
             }
             
-            final Set<String> overrides = overridesSetFactory.create();
+            final Set<String> overrides = overridesSetFactory.export();
             
             if( serviceImplClass != null )
             {
@@ -127,7 +127,7 @@ public final class PartServiceContext extends ServiceContext
             }
         }
         
-        return local.create();
+        return local.export();
     }
     
     @SuppressWarnings( "unchecked" )

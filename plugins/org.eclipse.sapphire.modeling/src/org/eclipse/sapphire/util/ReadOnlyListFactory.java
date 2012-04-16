@@ -24,18 +24,33 @@ public final class ReadOnlyListFactory<E>
 {
     private E firstElement = null;
     private List<E> list = null;
-    private boolean created = false;
+    private boolean exported = false;
     
     private ReadOnlyListFactory() {}
     
-    public static <E> ReadOnlyListFactory<E> start()
+    public static <E> ReadOnlyListFactory<E> create()
     {
         return new ReadOnlyListFactory<E>();
     }
     
+    public static <E> List<E> create( final E element )
+    {
+        return Collections.singletonList( element );
+    }
+    
+    public static <E> List<E> create( final E... elements )
+    {
+        return ReadOnlyListFactory.<E>create().add( elements ).export();
+    }
+    
+    public static <E> List<E> create( final Collection<E> elements )
+    {
+        return ReadOnlyListFactory.<E>create().add( elements ).export();
+    }
+
     public ReadOnlyListFactory<E> add( final E element )
     {
-        if( this.created )
+        if( this.exported )
         {
             throw new IllegalStateException();
         }
@@ -79,14 +94,14 @@ public final class ReadOnlyListFactory<E>
         return this;
     }
     
-    public List<E> create()
+    public List<E> export()
     {
-        if( this.created )
+        if( this.exported )
         {
             throw new IllegalStateException();
         }
         
-        this.created = true;
+        this.exported = true;
         
         if( this.list != null )
         {
@@ -100,21 +115,6 @@ public final class ReadOnlyListFactory<E>
         {
             return Collections.emptyList();
         }
-    }
-    
-    public static <E> List<E> create( final E element )
-    {
-        return Collections.singletonList( element );
-    }
-    
-    public static <E> List<E> create( final E... elements )
-    {
-        return ReadOnlyListFactory.<E>start().add( elements ).create();
-    }
-    
-    public static <E> List<E> create( final Collection<E> elements )
-    {
-        return ReadOnlyListFactory.<E>start().add( elements ).create();
     }
     
 }

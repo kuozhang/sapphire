@@ -103,7 +103,7 @@ public final class ActuatorPart extends SapphirePart
         
         if( this.showImage )
         {
-            final ReadOnlyListFactory<FunctionResult> imageFunctionResultsFactory = ReadOnlyListFactory.start();
+            final ReadOnlyListFactory<FunctionResult> imageFunctionResultsFactory = ReadOnlyListFactory.create();
             
             for( ImageReference imageReference : def.getImages() )
             {
@@ -125,7 +125,7 @@ public final class ActuatorPart extends SapphirePart
                 imageFunctionResultsFactory.add( imageFunctionResult );
             }
             
-            this.imageFunctionResults = imageFunctionResultsFactory.create();
+            this.imageFunctionResults = imageFunctionResultsFactory.export();
         }
         
         this.style = def.getStyle().getContent();

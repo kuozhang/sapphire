@@ -185,7 +185,7 @@ public abstract class ModelProperty extends ModelMetadataItem
     @Override
     public <A extends Annotation> List<A> getAnnotations( final Class<A> type )
     {
-        final ReadOnlyListFactory<A> annotationsListFactory = ReadOnlyListFactory.start();
+        final ReadOnlyListFactory<A> annotationsListFactory = ReadOnlyListFactory.create();
         
         annotationsListFactory.add( super.getAnnotations( type ) );
         
@@ -194,7 +194,7 @@ public abstract class ModelProperty extends ModelMetadataItem
             annotationsListFactory.add( this.baseProperty.getAnnotations( type ) );
         }
         
-        return annotationsListFactory.create();
+        return annotationsListFactory.export();
     }
     
     @Override

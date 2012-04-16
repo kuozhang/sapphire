@@ -484,8 +484,6 @@ public abstract class PropertyEditorRenderer
         this.controls.add( control );
         
         control.setEnabled( element.isPropertyEnabled( property ) );
-        control.setData( PropertyEditorPart.DATA_PROPERTY, property );
-        control.setData( PropertyEditorPart.DATA_ELEMENT, element );
         
         control.addDisposeListener
         (

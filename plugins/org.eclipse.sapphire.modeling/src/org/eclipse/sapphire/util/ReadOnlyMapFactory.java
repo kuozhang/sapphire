@@ -24,19 +24,30 @@ public final class ReadOnlyMapFactory<K,V>
     private K firstKey = null;
     private V firstValue = null;
     private Map<K,V> map = null;
-    private boolean created = false;
+    private boolean exported = false;
     
     private ReadOnlyMapFactory() {}
     
-    public static <K,V> ReadOnlyMapFactory<K,V> start()
+    public static <K,V> ReadOnlyMapFactory<K,V> create()
     {
         return new ReadOnlyMapFactory<K,V>();
+    }
+
+    public static <K,V> Map<K,V> create( final K key,
+                                         final V value )
+    {
+        return Collections.singletonMap( key, value );
+    }
+    
+    public static <K,V> Map<K,V> create( final Map<K,V> map )
+    {
+        return ReadOnlyMapFactory.<K,V>create().add( map ).export();
     }
     
     public ReadOnlyMapFactory<K,V> add( final K key,
                                         final V value )
     {
-        if( this.created )
+        if( this.exported )
         {
             throw new IllegalStateException();
         }
@@ -72,14 +83,14 @@ public final class ReadOnlyMapFactory<K,V>
         return this;
     }
     
-    public Map<K,V> create()
+    public Map<K,V> export()
     {
-        if( this.created )
+        if( this.exported )
         {
             throw new IllegalStateException();
         }
         
-        this.created = true;
+        this.exported = true;
         
         if( this.map != null )
         {
@@ -93,17 +104,6 @@ public final class ReadOnlyMapFactory<K,V>
         {
             return Collections.emptyMap();
         }
-    }
-    
-    public static <K,V> Map<K,V> create( final K key,
-                                         final V value )
-    {
-        return Collections.singletonMap( key, value );
-    }
-    
-    public static <K,V> Map<K,V> create( final Map<K,V> map )
-    {
-        return ReadOnlyMapFactory.<K,V>start().add( map ).create();
     }
     
 }

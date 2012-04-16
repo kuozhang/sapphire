@@ -12,10 +12,12 @@
 
 package org.eclipse.sapphire.ui;
 
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
+import java.util.List;
+import java.util.Set;
+
+import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -24,14 +26,9 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.PageBookExtDef;
-import org.eclipse.sapphire.ui.renderers.swt.TableViewerSelectionProvider;
-import org.eclipse.sapphire.ui.swt.SapphireControl;
+import org.eclipse.sapphire.util.IdentityHashSet;
 import org.eclipse.sapphire.util.MutableReference;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -96,53 +93,120 @@ public final class SapphireListControlledPageBook extends PageBookPart
         final Class<?> cl = rootdef.resolveClass( pageKeyString );
         return ClassBasedKey.create( cl );
     }
+    
+    private PropertyEditorPart findPropertyEditor( final ISapphirePart part,
+                                                   final IModelElement element,
+                                                   final ModelProperty property )
+    {
+        return findPropertyEditor( part, element, property, new IdentityHashSet<ISapphirePart>() );
+    }
+    
+    private PropertyEditorPart findPropertyEditor( final ISapphirePart part,
+                                                   final IModelElement element,
+                                                   final ModelProperty property,
+                                                   final Set<ISapphirePart> searchedParts )
+    {
+        if( searchedParts.contains( part ) )
+        {
+            return null;
+        }
+        
+        if( part instanceof PropertyEditorPart )
+        {
+            final PropertyEditorPart propertyEditorPart = (PropertyEditorPart) part;
+            
+            if( propertyEditorPart.getLocalModelElement() == element && propertyEditorPart.getProperty() == property )
+            {
+                return propertyEditorPart;
+            }
+        }
+        
+        searchedParts.add( part );
+        
+        if( part instanceof SapphirePartContainer )
+        {
+            final SapphirePartContainer partContainerPart = (SapphirePartContainer) part;
+            
+            for( SapphirePart child : partContainerPart.getChildParts() )
+            {
+                final PropertyEditorPart propertyEditorPart = findPropertyEditor( child, element, property, searchedParts );
+                
+                if( propertyEditorPart != null )
+                {
+                    return propertyEditorPart;
+                }
+            }
+        }
+        
+        final ISapphirePart parent = part.getParentPart();
+        
+        if( parent != null )
+        {
+            return findPropertyEditor( parent, element, property, searchedParts );
+        }
+        
+        return null;
+    }
 
     @Override
     public void render( final SapphireRenderingContext context )
     {
         super.render( context );
 
-        final Table table = findControlForProperty( context.getComposite(), this.element, this.property, Table.class );
-        
-        final ISelectionProvider selectionProvider 
-            = (ISelectionProvider) table.getData( TableViewerSelectionProvider.DATA_SELECTION_PROVIDER );
+        final PropertyEditorPart listPropertyEditorPart = findPropertyEditor( context.getPart(), this.element, this.property );
+        final ListSelectionService listSelectionService = listPropertyEditorPart.service( ListSelectionService.class );
         
         final MutableReference<IModelElement> selectedModelElementRef = new MutableReference<IModelElement>();
 
-        selectionProvider.addSelectionChangedListener
-        (
-            new ISelectionChangedListener()
+        final Listener listSelectionServiceListener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
             {
-                public void selectionChanged( final SelectionChangedEvent event )
+                final List<IModelElement> selection = listSelectionService.selection();
+                final IModelElement newModelElement;
+                final ClassBasedKey newPageKey;
+                
+                if( ! selection.isEmpty() )
                 {
-                    final IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-                    final IModelElement newModelElement;
-                    final ClassBasedKey newPageKey;
+                    newModelElement = selection.get( 0 );
+                    newPageKey = ClassBasedKey.create( newModelElement );
+                }
+                else
+                {
+                    newModelElement = SapphireListControlledPageBook.this.element;
+                    newPageKey = null;
+                }
+                
+                if( selectedModelElementRef.get() != newModelElement )
+                {
+                    selectedModelElementRef.set( newModelElement );
                     
-                    if( ! sel.isEmpty() )
+                    final Runnable inputChangeOperation = new Runnable()
                     {
-                        newModelElement = (IModelElement) sel.getFirstElement();
-                        newPageKey = ClassBasedKey.create( newModelElement );
-                    }
-                    else
-                    {
-                        newModelElement = SapphireListControlledPageBook.this.element;
-                        newPageKey = null;
-                    }
-                    
-                    if( selectedModelElementRef.get() != newModelElement )
-                    {
-                        selectedModelElementRef.set( newModelElement );
-                        
-                        final Runnable inputChangeOperation = new Runnable()
+                        public void run()
                         {
-                            public void run()
-                            {
-                                changePage( newModelElement, newPageKey );
-                            }
-                        };
-                        
-                        Display.getDefault().syncExec( inputChangeOperation );
+                            changePage( newModelElement, newPageKey );
+                        }
+                    };
+                    
+                    Display.getDefault().syncExec( inputChangeOperation );
+                }
+            }
+        };
+        
+        listSelectionService.attach( listSelectionServiceListener );
+        
+        attach
+        (
+            new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    if( event instanceof DisposeEvent )
+                    {
+                        listSelectionService.detach( listSelectionServiceListener );
                     }
                 }
             }
@@ -151,57 +215,6 @@ public final class SapphireListControlledPageBook extends PageBookPart
         changePage( this.element, (String) null );
     }
     
-    private static <T> T findControlForProperty( final Control context,
-                                                 final IModelElement element,
-                                                 final ModelProperty property,
-                                                 final Class<T> type )
-    {
-        Control root = context;
-        
-        while( ! ( root instanceof SapphireControl ) )
-        {
-            final Control parent = root.getParent();
-            
-            if( parent instanceof Shell )
-            {
-                break;
-            }
-            
-            root = parent;
-        }
-        
-        return findControlForPropertyHelper( root, element, property, type );
-    }
-    
-    @SuppressWarnings( "unchecked" )
-    
-    private static <T> T findControlForPropertyHelper( final Control context,
-                                                       final IModelElement element,
-                                                       final ModelProperty property,
-                                                       final Class<T> type )
-    {
-        if( context.getData( PropertyEditorPart.DATA_ELEMENT ) == element && 
-            context.getData( PropertyEditorPart.DATA_PROPERTY ) == property && 
-            type.isAssignableFrom( context.getClass() ) )
-        {
-            return (T) context;
-        }
-        else if( context instanceof Composite )
-        {
-            for( Control child : ( (Composite) context ).getChildren() )
-            {
-                final T control = findControlForPropertyHelper( child, element, property, type );
-                
-                if( control != null )
-                {
-                    return control;
-                }
-            }
-        }
-        
-        return null;
-    }
-
     private static final class Resources extends NLS
     {
         public static String invalidPath;
