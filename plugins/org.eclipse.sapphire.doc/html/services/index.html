@@ -10,6 +10,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Gregory Amerson - [363551] JavaTypeConstraintService
  *    Gregory Amerson - [372359] Provide means to extend the behavior of adapt methods
+ *    Gregory Amerson - [358295] Need access to selection in list property editor
  ******************************************************************************
 -->
 
@@ -37,6 +38,7 @@
   <li><a href="#FileExtensionsService">FileExtensionsService</a></li>
   <li><a href="#InitialValueService">InitialValueService</a></li>
   <li><a href="#JavaTypeConstraintService">JavaTypeConstraintService</a></li>
+  <li><a href="#ListSelectionService">ListSelectionService</a></li>
   <li><a href="#PossibleTypesService">PossibleTypesService</a></li>  
 </ul>
 
@@ -531,6 +533,59 @@ ReferenceValue&lt;JavaTypeName,JavaType> getServletFilterImpl();
 void setServletFilterImpl( JavaTypeName value );
 void setServletFilterImpl( String value );</font></code></pre>
 
+<a name="ListSelectionService"><h2>ListSelectionService</h2></a>
+
+<p>The ListSelectionService functions as a conduit between the presentation layer and anything that may want to see or 
+change the selection. The presentation layer pushes selection changes made by the user to ListSelectionService and at
+the same time listens for changes to selection coming from ListSelectionService.</p>
+
+<p>An implementation of this service is provided with Sapphire. This service is not intended to be implemented by adopters.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, an action handler attaches a listener to the ListSelectionService to 
+refresh action handler's enablement state when selection changes.</p>
+
+<pre class="source-code"><code>
+<font color="#888888">public class ExampleActionHandler extends SapphireActionHandler
+{
+    @Override
+    public void init( SapphireAction action, ActionHandlerDef def )
+    {
+        super.init( action, def );</font>
+        
+        final ListSelectionService selectionService = action.getPart().service( ListSelectionService.class );
+        
+        if( selectionService != null )
+        {
+            final Listener selectionListener = new Listener()
+            {
+                @Override
+                public void handle( Event event )
+                {
+                    refreshEnablementState();
+                }
+            };
+            
+            selectionService.attach( selectionListener );
+            
+            attach
+            (
+                new Listener()
+                {
+                    @Override
+                    public void handle( Event event )
+                    {
+                        if( event instanceof DisposeEvent )
+                        {
+                            selectionService.detach( selectionListener );
+                        }
+                    }
+                }
+            );
+        }
+    <font color="#888888">}
+}</font></code></pre>
 
 <a name="PossibleTypesService"><h2>PossibleTypesService</h2></a>
 

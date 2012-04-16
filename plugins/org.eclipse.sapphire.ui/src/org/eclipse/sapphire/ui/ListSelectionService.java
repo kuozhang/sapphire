@@ -1,0 +1,115 @@
+/******************************************************************************
+ * Copyright (c) 2012 Liferay and Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Gregory Amerson - initial implementation
+ *    Konstantin Komissarchik - initial implementation review and ongoing maintenance
+ ******************************************************************************/
+
+package org.eclipse.sapphire.ui;
+
+import static org.eclipse.sapphire.util.CollectionsUtil.equalsBasedOnEntryIdentity;
+
+import java.util.Collections;
+import java.util.List;
+
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
+
+/**
+ * Serves as a conduit between the presentation layer and anything that may want 
+ * to see or change the selection.
+ * 
+ * @author <a href="mailto:gregory.amerson@liferay.com">Greory Amerson</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ */
+
+public final class ListSelectionService extends Service
+{
+    private List<IModelElement> elements = Collections.emptyList();
+
+    /**
+     * Returns the list of currently selected elements.
+     * 
+     * @return an unmodifiable list of the current selection
+     */
+    
+    public List<IModelElement> selection()
+    {
+        return this.elements;
+    }
+
+    /**
+     * Selects a single element in the list. If selection changes, ListSelectionChangedEvent will
+     * be fired.
+     * 
+     * @param element the new selection
+     */
+    
+    public void select( final IModelElement element )
+    {
+        final List<IModelElement> elements = Collections.singletonList( element );
+
+        if( ! equalsBasedOnEntryIdentity( elements, this.elements ) )
+        {
+            final List<IModelElement> before = this.elements;
+            
+            this.elements = elements;
+
+            broadcast( new ListSelectionChangedEvent( before, this.elements ) );
+        }
+    }
+
+    /**
+     * Select zero or more elements in the list. If the selection changes, ListSelectionChangedEvent will
+     * be fired.
+     * 
+     * @param elements the new selection
+     */
+    
+    public void select( final List<IModelElement> elements )
+    {
+        if( ! equalsBasedOnEntryIdentity( this.elements, elements ) )
+        {
+            final List<IModelElement> before = this.elements;
+            
+            this.elements = ReadOnlyListFactory.create( elements );
+
+            broadcast( new ListSelectionChangedEvent( before, this.elements ) );
+        }
+    }
+    
+    /**
+     * The event that is fired when list selection changes.
+     */
+
+    public static final class ListSelectionChangedEvent extends Event
+    {
+        private List<IModelElement> before;
+        private List<IModelElement> after;
+
+        public ListSelectionChangedEvent( final List<IModelElement> before, 
+                                          final List<IModelElement> after )
+        {
+            this.before = before;
+            this.after = after;
+        }
+
+        public List<IModelElement> before()
+        {
+            return this.before;
+        }
+
+        public List<IModelElement> after()
+        {
+            return this.after;
+        }
+    }
+
+}

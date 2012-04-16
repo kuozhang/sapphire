@@ -52,12 +52,13 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.PossibleValuesService;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -374,7 +375,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
     
     private void handleSourceTableFocusGainedEvent()
     {
-        setSelection( Collections.<IModelElement>emptyList() );
+        setSelectedElements( Collections.<IModelElement>emptyList() );
         
         if( this.sourceTableViewer.getSelection().isEmpty() && this.sourceTable.getItemCount() > 0 )
         {
@@ -458,16 +459,16 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
             
             if( list != null )
             {
-                final List<IModelElement> items = new ArrayList<IModelElement>();
+                final ReadOnlyListFactory<IModelElement> elements = ReadOnlyListFactory.start();
                 
                 for( String str : this.input )
                 {
-                    final IModelElement item = list.addNewElement();
-                    item.write( SlushBucketPropertyEditor.this.memberProperty, str );
-                    items.add( item );
+                    final IModelElement element = list.addNewElement();
+                    element.write( SlushBucketPropertyEditor.this.memberProperty, str );
+                    elements.add( element );
                 }
                 
-                setSelection( items );
+                setSelectedElements( elements.create() );
                 setFocusOnTable();
             }
             

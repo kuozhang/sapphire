@@ -22,7 +22,6 @@ import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactoryProxy;
 import org.eclipse.sapphire.ui.ISapphirePart;
-import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.ServiceDef;
 import org.eclipse.sapphire.util.ReadOnlyListFactory;
@@ -50,7 +49,7 @@ public final class PartServiceContext extends ServiceContext
         
         if( obj == null )
         {
-            if( type == ISapphirePart.class || type == SapphirePart.class )
+            if( type.isInstance( this.part ) )
             {
                 obj = type.cast( this.part );
             }

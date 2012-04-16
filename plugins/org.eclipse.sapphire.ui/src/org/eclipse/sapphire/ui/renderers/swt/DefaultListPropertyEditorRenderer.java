@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [358295] Need access to selection in list property editor
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.renderers.swt;
@@ -29,6 +30,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.suppressDashedTableEntryBorder;
 import static org.eclipse.sapphire.ui.util.MiscUtil.findSelectionPostDelete;
+import static org.eclipse.sapphire.util.CollectionsUtil.equalsBasedOnEntryIdentity;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -82,6 +84,8 @@ import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.ImageService;
 import org.eclipse.sapphire.services.PossibleTypesService;
+import org.eclipse.sapphire.ui.ListSelectionService;
+import org.eclipse.sapphire.ui.ListSelectionService.ListSelectionChangedEvent;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
@@ -101,8 +105,8 @@ import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireMenuActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireTextCellEditor;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
 import org.eclipse.sapphire.util.MutableReference;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -127,6 +131,7 @@ import org.eclipse.swt.widgets.ToolBar;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRenderer
@@ -279,6 +284,45 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         this.table.setHeaderVisible( showHeader );
         
         this.selectionProvider = new SelectionProvider( this.tableViewer );
+        
+        final ListSelectionService selectionService = part.service( ListSelectionService.class );
+       
+        if( selectionService != null ) 
+        {
+            this.selectionProvider.addSelectionChangedListener
+            (
+                new ISelectionChangedListener()
+                {
+                    public void selectionChanged( SelectionChangedEvent event )
+                    {
+                        selectionService.select( getSelectedElements() );
+                    }
+                }
+            );
+            
+            final org.eclipse.sapphire.Listener selectionServiceListener = new org.eclipse.sapphire.Listener()
+            {
+                @Override
+                public void handle( final org.eclipse.sapphire.Event event )
+                {
+                    setSelectedElements( ( (ListSelectionChangedEvent) event ).after() );
+                }
+            };
+
+            selectionService.attach( selectionServiceListener );
+
+            addOnDisposeOperation
+            ( 
+                new Runnable()
+                {
+                    public void run()
+                    {
+                        selectionService.detach( selectionServiceListener );
+                    }
+                }
+            );
+        }
+        
         this.table.setData( TableViewerSelectionProvider.DATA_SELECTION_PROVIDER, this.selectionProvider );
         
         this.table.addFocusListener
@@ -849,7 +893,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     public final List<IModelElement> getSelectedElements()
     {
         final IStructuredSelection sel = (IStructuredSelection) DefaultListPropertyEditorRenderer.this.tableViewer.getSelection();
-        final List<IModelElement> elements = new ArrayList<IModelElement>();
+        final ReadOnlyListFactory<IModelElement> elements = ReadOnlyListFactory.start();
         
         if( sel != null )
         {
@@ -859,7 +903,27 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             }
         }
         
-        return elements;
+        return elements.create();
+    }
+    
+    public final void setSelectedElements( final List<IModelElement> elements )
+    {
+        if( ! equalsBasedOnEntryIdentity( getSelectedElements(), elements ) )
+        {
+            final ReadOnlyListFactory<TableRow> rows = ReadOnlyListFactory.start();
+            
+            for( IModelElement element : elements )
+            {
+                final TableRow row = this.rows.get( element );
+                
+                if( row != null )
+                {
+                    rows.add( row );
+                }
+            }
+            
+            this.tableViewer.setSelection( new StructuredSelection( rows.create() ) );
+        }
     }
     
     private final List<TableRow> getSelectedRows()
@@ -876,12 +940,6 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         }
         
         return rows;
-    }
-    
-    public final void setSelection( final List<IModelElement> selection )
-    {
-        final IStructuredSelection sel = new StructuredSelection( selection );
-        this.tableViewer.setSelection( sel );
     }
     
     public final void setFocusOnTable()
