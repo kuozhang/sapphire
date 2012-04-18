@@ -258,6 +258,7 @@ public final class ModelElementList<T extends IModelElement>
                 if( element.resource() == newResource )
                 {
                     newElement = (T) element;
+                    newElement.initialize();
                     break;
                 }
             }

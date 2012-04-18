@@ -28,6 +28,8 @@ public interface IModelElement extends IModelParticle
     ModelElementType type();
     ModelProperty getParentProperty();
     
+    void initialize();
+    
     Object read( ModelProperty property );
     
     <T> Value<T> read( ValueProperty property );

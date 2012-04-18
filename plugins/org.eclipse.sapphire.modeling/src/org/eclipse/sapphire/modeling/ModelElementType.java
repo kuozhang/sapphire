@@ -27,7 +27,6 @@ import org.eclipse.sapphire.modeling.internal.MemoryResource;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.LocalizationSystem;
 import org.eclipse.sapphire.modeling.util.NLS;
-import org.eclipse.sapphire.services.InitialValueService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.internal.ElementMetaModelServiceContext;
@@ -313,20 +312,8 @@ public final class ModelElementType extends ModelMetadataItem
                 final String msg = NLS.bind( Resources.cannotInstantiate, getSimpleName() );
                 throw new RuntimeException( msg, e );
             }
-
-            for( ModelProperty property : this.properties ) 
-            {
-                if( property instanceof ValueProperty ) 
-                {
-                    final InitialValueService initialValueService = element.service( property, InitialValueService.class );
-                    
-                    if( initialValueService != null ) 
-                    {
-                        element.write( (ValueProperty) property, initialValueService.value() );
-                    }
-
-                }
-            }
+            
+            element.initialize();
             
             return element;                
         }
@@ -348,7 +335,7 @@ public final class ModelElementType extends ModelMetadataItem
     {
         return (T) instantiate( null, null, new MemoryResource( this ) );
     }
-
+    
     public List<ModelProperty> properties()
     {
         final TreeMap<String,ModelProperty> properties = new TreeMap<String,ModelProperty>();

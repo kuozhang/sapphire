@@ -37,6 +37,7 @@ import org.eclipse.sapphire.services.DependenciesAggregationService;
 import org.eclipse.sapphire.services.DerivedValueService;
 import org.eclipse.sapphire.services.EnablementService;
 import org.eclipse.sapphire.services.EqualityService;
+import org.eclipse.sapphire.services.InitialValueService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ValidationService;
@@ -237,6 +238,22 @@ public abstract class ModelElement
         return this.parentProperty;
     }
     
+    public final void initialize()
+    {
+        for( ModelProperty property : type().properties() ) 
+        {
+            if( property instanceof ValueProperty ) 
+            {
+                final InitialValueService initialValueService = service( property, InitialValueService.class );
+                
+                if( initialValueService != null ) 
+                {
+                    write( (ValueProperty) property, initialValueService.value() );
+                }
+            }
+        }
+    }
+
     public Object read( final ModelProperty property )
     {
         final String msg = NLS.bind( Resources.cannotReadProperty, property.getName() );

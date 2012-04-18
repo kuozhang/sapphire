@@ -125,6 +125,7 @@ public final class ModelElementHandle<T extends IModelElement>
                 {
                     final Resource resource = this.binding.create( t );
                     this.element = t.instantiate( this.parent, this.property, resource );
+                    this.element.initialize();
                     
                     for( ModelProperty property : t.properties() )
                     {
