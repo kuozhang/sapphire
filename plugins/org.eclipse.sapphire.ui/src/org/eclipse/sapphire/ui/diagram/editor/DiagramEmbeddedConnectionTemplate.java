@@ -202,7 +202,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         {
             ListProperty listProperty = (ListProperty)connProp;
             ModelElementList<?> list = srcNodeModel.read(listProperty);
-            newEndpoint = list.addNewElement();            
+            newEndpoint = list.insert();            
         }
         
         // Get serialized value of endpoint

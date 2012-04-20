@@ -96,25 +96,25 @@ public final class ExtensionSummaryExportOpMethods
         {
             ExtensionSummarySectionDef def;
             
-            def = sections.addNewElement();
+            def = sections.insert();
             def.setExtensionType( SapphireExtensionDef.PROP_SERVICES.getName() );
             
-            def = sections.addNewElement();
+            def = sections.insert();
             def.setExtensionType( SapphireExtensionDef.PROP_FUNCTIONS.getName() );
 
-            def = sections.addNewElement();
+            def = sections.insert();
             def.setExtensionType( SapphireExtensionDef.PROP_TYPE_CASTS.getName() );
 
-            def = sections.addNewElement();
+            def = sections.insert();
             def.setExtensionType( SapphireExtensionDef.PROP_ACTIONS.getName() );
 
-            def = sections.addNewElement();
+            def = sections.insert();
             def.setExtensionType( SapphireExtensionDef.PROP_ACTION_HANDLERS.getName() );
 
-            def = sections.addNewElement();
+            def = sections.insert();
             def.setExtensionType( SapphireExtensionDef.PROP_ACTION_HANDLER_FACTORIES.getName() );
 
-            def = sections.addNewElement();
+            def = sections.insert();
             def.setExtensionType( SapphireExtensionDef.PROP_PRESENTATION_STYLES.getName() );
         }
         

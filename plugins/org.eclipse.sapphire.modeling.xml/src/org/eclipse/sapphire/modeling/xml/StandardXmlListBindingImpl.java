@@ -17,7 +17,6 @@ import static org.eclipse.sapphire.modeling.xml.XmlUtil.contains;
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.createQualifiedName;
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.equal;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
@@ -36,6 +35,7 @@ import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.services.PossibleTypesService;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -183,6 +183,15 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
     }
 
     @Override
+    protected Resource resource( final Object obj )
+    {
+        final XmlElement xmlElement = (XmlElement) obj;
+        final XmlResource parentXmlResource = (XmlResource) element().resource();
+        
+        return new ChildXmlResource( parentXmlResource, xmlElement );
+    }
+
+    @Override
     protected List<?> readUnderlyingList()
     {
         final XmlElement parent = getXmlElement( false );
@@ -193,7 +202,7 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
         }
         else
         {
-            final List<XmlElement> list = new ArrayList<XmlElement>();
+            final ReadOnlyListFactory<XmlElement> list = ReadOnlyListFactory.create();
             
             for( XmlElement element : parent.getChildElements() )
             {
@@ -205,12 +214,13 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
                 }
             }
             
-            return list;
+            return list.export();
         }
     }
 
     @Override
-    protected Object addUnderlyingObject( final ModelElementType type )
+    protected Object insertUnderlyingObject( final ModelElementType type,
+                                             final int position )
     {
         final XmlElement parent = getXmlElement( true );
         QName xmlElementName = this.xmlElementNames[ indexOf( this.modelElementTypes, type ) ];
@@ -220,18 +230,23 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
             xmlElementName = new QName( parent.getNamespace(), xmlElementName.getLocalPart() );
         }
         
-        return parent.addChildElement( xmlElementName );
-    }
-
-    @Override
-    protected Resource createResource( final Object obj )
-    {
-        final XmlElement xmlElement = (XmlElement) obj;
-        final XmlResource parentXmlResource = (XmlResource) element().resource();
+        final List<?> list = readUnderlyingList();
+        final XmlElement refXmlElement = (XmlElement) ( position < list.size() ? list.get( position ) : null );
         
-        return new ChildXmlResource( parentXmlResource, xmlElement );
+        return parent.addChildElement( xmlElementName, refXmlElement );
     }
     
+    @Override
+    public void move( final Resource resource, 
+                      final int position )
+    {
+        final List<?> list = readUnderlyingList();
+        final XmlElement xmlElement = ( (ChildXmlResource) resource ).getXmlElement();
+        final XmlElement refXmlElement = (XmlElement) ( position < list.size() ? list.get( position ) : null );
+        
+        xmlElement.move( refXmlElement );
+    }
+
     @Override
     public void remove( final Resource resource )
     {
@@ -254,16 +269,6 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
                 }
             }
         }
-    }
-
-    @Override
-    public void swap( final Resource a, 
-                      final Resource b )
-    {
-        final XmlElement x = ( (XmlResource) a ).getXmlElement();
-        final XmlElement y = ( (XmlResource) b ).getXmlElement();
-        
-        x.swap( y );
     }
 
     protected XmlElement getXmlElement( final boolean createIfNecessary )

@@ -23,10 +23,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestModelingMisc0003
-
-    extends SapphireTestCase
-    
+public final class TestModelingMisc0003 extends SapphireTestCase
 {
     private TestModelingMisc0003( final String name )
     {
@@ -63,7 +60,7 @@ public final class TestModelingMisc0003
 
         // List Property
         
-        element.gEtLiStPrOpErTy().addNewElement();
+        element.gEtLiStPrOpErTy().insert();
         assertEquals( 1, element.gEtLiStPrOpErTy().size() );
         
         // Explicit Element Property

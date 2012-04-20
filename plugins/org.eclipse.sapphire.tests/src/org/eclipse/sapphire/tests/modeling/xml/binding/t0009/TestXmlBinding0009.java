@@ -72,13 +72,13 @@ public final class TestXmlBinding0009
         model.setValuePropertyA( "aaaa" );
         model.setValuePropertyB( "bbbb" );
         
-        final TestChildElementA listChild1 = (TestChildElementA) model.getListPropertyA().addNewElement( TestChildElementA.TYPE );
+        final TestChildElementA listChild1 = (TestChildElementA) model.getListPropertyA().insert( TestChildElementA.TYPE );
         listChild1.setValuePropertyA( "cccc" );
         
-        final TestChildElementB listChild2 = (TestChildElementB) model.getListPropertyA().addNewElement( TestChildElementB.TYPE );
+        final TestChildElementB listChild2 = (TestChildElementB) model.getListPropertyA().insert( TestChildElementB.TYPE );
         listChild2.setValuePropertyB( "dddd" );
         
-        final TestChildElementA listChild3 = (TestChildElementA) model.getListPropertyA().addNewElement( TestChildElementA.TYPE );
+        final TestChildElementA listChild3 = (TestChildElementA) model.getListPropertyA().insert( TestChildElementA.TYPE );
         listChild3.setValuePropertyA( "eeee" );
         
         final TestChildElementB elementChild = (TestChildElementB) model.getElementPropertyA().element( true, TestChildElementB.TYPE );
@@ -112,13 +112,13 @@ public final class TestXmlBinding0009
         model.setValuePropertyA( "aaaa" );
         model.setValuePropertyB( "bbbb" );
         
-        final ITestChildElementA listChild1 = (ITestChildElementA) model.getListPropertyA().addNewElement( ITestChildElementA.TYPE );
+        final ITestChildElementA listChild1 = (ITestChildElementA) model.getListPropertyA().insert( ITestChildElementA.TYPE );
         listChild1.setValuePropertyA( "cccc" );
         
-        final ITestChildElementB listChild2 = (ITestChildElementB) model.getListPropertyA().addNewElement( ITestChildElementB.TYPE );
+        final ITestChildElementB listChild2 = (ITestChildElementB) model.getListPropertyA().insert( ITestChildElementB.TYPE );
         listChild2.setValuePropertyB( "dddd" );
         
-        final ITestChildElementA listChild3 = (ITestChildElementA) model.getListPropertyA().addNewElement( ITestChildElementA.TYPE );
+        final ITestChildElementA listChild3 = (ITestChildElementA) model.getListPropertyA().insert( ITestChildElementA.TYPE );
         listChild3.setValuePropertyA( "eeee" );
         
         final ITestChildElementB elementChild = (ITestChildElementB) model.getElementPropertyA().element( true, ITestChildElementB.TYPE );

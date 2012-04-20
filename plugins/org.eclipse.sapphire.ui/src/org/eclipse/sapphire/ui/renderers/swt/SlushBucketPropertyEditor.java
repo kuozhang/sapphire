@@ -463,7 +463,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
                 
                 for( String str : this.input )
                 {
-                    final IModelElement element = list.addNewElement();
+                    final IModelElement element = list.insert();
                     element.write( SlushBucketPropertyEditor.this.memberProperty, str );
                     elements.add( element );
                 }

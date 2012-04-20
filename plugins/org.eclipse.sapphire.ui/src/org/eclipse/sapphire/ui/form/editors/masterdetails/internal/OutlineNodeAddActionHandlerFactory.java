@@ -272,7 +272,7 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
                                         final ModelProperty property,
                                         final ModelElementType type )
         {
-            return element.read( (ListProperty) property ).addNewElement( type );
+            return element.read( (ListProperty) property ).insert( type );
         }
     }
 

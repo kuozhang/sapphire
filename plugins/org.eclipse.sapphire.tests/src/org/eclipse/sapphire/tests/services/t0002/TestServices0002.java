@@ -100,7 +100,7 @@ public final class TestServices0002
     public void testFileExtensionsExpr2() throws Exception
     {
         final TestModelRoot root = TestModelRoot.TYPE.instantiate();
-        final TestModel model = root.getList().addNewElement();
+        final TestModel model = root.getList().insert();
         final FileExtensionsService service = model.service( TestModel.PROP_FILE_PATH_5, FileExtensionsService.class );
         
         assertNotNull( service );

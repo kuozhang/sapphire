@@ -452,7 +452,7 @@ public class DiagramConnectionTemplate extends SapphirePart
             if (getConnectionType() == ConnectionType.OneToOne)
             {
                 ModelElementList<?> list = this.modelElement.read(this.modelProperty);
-                IModelElement newElement = list.addNewElement();
+                IModelElement newElement = list.insert();
                 setModelProperty(newElement, ((ModelPath.PropertySegment)this.endpoint1Path.head()).getPropertyName(), endpoint1Value);
                 setModelProperty(newElement, ((ModelPath.PropertySegment)this.endpoint2Path.head()).getPropertyName(), endpoint2Value);
 
@@ -471,7 +471,7 @@ public class DiagramConnectionTemplate extends SapphirePart
                 if (srcElement == null)
                 {
                 	ModelElementList<?> list = this.modelElement.read(this.modelProperty);
-                    srcElement = list.addNewElement();
+                    srcElement = list.insert();
                     setModelProperty(srcElement, srcProperty, endpoint1Value);
                 }
                 
@@ -483,7 +483,7 @@ public class DiagramConnectionTemplate extends SapphirePart
                 }
                 // the connection is of type 1xn
                 ModelElementList<?> connList = srcElement.read((ListProperty)connProp);
-                IModelElement newElement = connList.addNewElement();
+                IModelElement newElement = connList.insert();
                 setModelProperty(newElement, ((ModelPath.PropertySegment)this.endpoint2Path.head()).getPropertyName(), endpoint2Value);
                 DiagramConnectionPart newConn = getConnectionPart(srcElement, newElement);
                 if (newConn == null) {

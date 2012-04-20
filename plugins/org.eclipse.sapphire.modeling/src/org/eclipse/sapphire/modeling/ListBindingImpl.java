@@ -29,18 +29,19 @@ public abstract class ListBindingImpl extends BindingImpl
     
     public abstract ModelElementType type( Resource resource );    
     
-    public Resource add( final ModelElementType type )
+    public Resource insert( final ModelElementType type,
+                            final int position )
+    {
+        throw new UnsupportedOperationException();
+    }
+    
+    public void move( final Resource resource,
+                      final int position )
     {
         throw new UnsupportedOperationException();
     }
     
     public void remove( final Resource resource )
-    {
-        throw new UnsupportedOperationException();
-    }
-    
-    public void swap( final Resource a, 
-                      final Resource b )
     {
         throw new UnsupportedOperationException();
     }

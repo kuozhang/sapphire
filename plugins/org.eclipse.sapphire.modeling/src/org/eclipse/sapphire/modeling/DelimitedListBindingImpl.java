@@ -18,10 +18,7 @@ import java.util.List;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class DelimitedListBindingImpl
-
-    extends ListBindingImpl
-
+public abstract class DelimitedListBindingImpl extends ListBindingImpl
 {
     private ListEntryResource head;
     
@@ -101,23 +98,33 @@ public abstract class DelimitedListBindingImpl
     }
     
     @Override
-    public final Resource add( final ModelElementType type )
+    public final Resource insert( final ModelElementType type,
+                                  final int position )
     {
-        ListEntryResource entry = this.head;
+        ListEntryResource entry;
         
-        if( entry == null )
+        if( this.head == null )
         {
             entry = createListEntryResource();
             this.head = entry;
         }
         else
         {
-            while( entry.next != null )
+            if( position == 0 )
             {
-                entry = entry.next;
+                entry = this.head.insertBefore();
             }
-            
-            entry = entry.insertAfter();
+            else
+            {
+                entry = this.head;
+                
+                for( int i = 0; i < position; i++ )
+                {
+                    entry = entry.next;
+                }
+                
+                entry = entry.insertAfter();
+            }
         }
         
         writeListString();
@@ -126,54 +133,53 @@ public abstract class DelimitedListBindingImpl
     }
     
     @Override
-    public void remove( final Resource resource )
+    public void move( final Resource resource, 
+                      final int position )
     {
-        ( (ListEntryResource) resource ).remove();
+        final ListEntryResource x = (ListEntryResource) resource;
+        
+        ListEntryResource y = this.head;
+
+        for( int i = 0; i < position; i++ )
+        {
+            y = y.next;
+        }
+        
+        final ListEntryResource xPrev = x.prev;
+        final ListEntryResource xNext = x.next;
+        final ListEntryResource yPrev = y.prev;
+        
+        x.next = y;
+        x.prev = yPrev;
+        y.prev = x;
+        
+        if( yPrev != null )
+        {
+            yPrev.next = x;
+        }
+        
+        if( xPrev != null )
+        {
+            xPrev.next = xNext;
+        }
+        
+        if( xNext != null )
+        {
+            xNext.prev = xPrev;
+        }
+        
+        if( position == 0 )
+        {
+            this.head = x;
+        }
+        
         writeListString();
     }
 
     @Override
-    public final void swap( final Resource x,
-                            final Resource y )
+    public void remove( final Resource resource )
     {
-        final ListEntryResource a = (ListEntryResource) x;
-        final ListEntryResource b = (ListEntryResource) y;
-        
-        if( a.next == b )
-        {
-            final ListEntryResource aPrev = a.prev;
-            final ListEntryResource bNext = b.next;
-            
-            a.prev = b;
-            a.next = bNext;
-            
-            b.prev = aPrev;
-            b.next = a;
-            
-            if( aPrev != null )
-            {
-                aPrev.next = b;
-            }
-            
-            if( bNext != null )
-            {
-                bNext.prev = a;
-            }
-            
-            if( a == this.head )
-            {
-                this.head = b;
-            }
-        }
-        else if( b.next == a )
-        {
-            swap( y, x );
-        }
-        else
-        {
-            throw new UnsupportedOperationException();
-        }
-        
+        ( (ListEntryResource) resource ).remove();
         writeListString();
     }
     
@@ -255,10 +261,7 @@ public abstract class DelimitedListBindingImpl
         return list;
     }
     
-    public abstract class ListEntryResource
-    
-        extends Resource
-        
+    public abstract class ListEntryResource extends Resource
     {
         private ListEntryResource prev;
         private ListEntryResource next;
@@ -318,6 +321,26 @@ public abstract class DelimitedListBindingImpl
             this.next = null;
         }
 
+        private ListEntryResource insertBefore()
+        {
+            final ListEntryResource entry = createListEntryResource();
+            
+            entry.next = this;
+            entry.prev = this.prev;
+            this.prev = entry;
+            
+            if( entry.prev == null )
+            {
+                DelimitedListBindingImpl.this.head = entry;
+            }
+            else
+            {
+                entry.prev.next = entry;
+            }
+            
+            return entry;
+        }
+
         private ListEntryResource insertAfter()
         {
             final ListEntryResource entry = createListEntryResource();
@@ -335,10 +358,7 @@ public abstract class DelimitedListBindingImpl
         }
     }
 
-    private final class DefaultListEntryResource
-    
-        extends ListEntryResource
-        
+    private final class DefaultListEntryResource extends ListEntryResource
     {
         private ValueProperty listEntryProperty;
         

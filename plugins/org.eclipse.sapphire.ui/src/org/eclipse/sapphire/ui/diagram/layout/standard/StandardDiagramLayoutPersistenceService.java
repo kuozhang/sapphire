@@ -312,7 +312,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 			for (DiagramNodePart nodePart : nodeTemplate.getDiagramNodes())
 			{
 				String id = IdUtil.computeNodeId(nodePart);
-				DiagramNodeLayout diagramNode = this.layoutModel.getDiagramNodesLayout().addNewElement();
+				DiagramNodeLayout diagramNode = this.layoutModel.getDiagramNodesLayout().insert();
 				diagramNode.setNodeId(id);
 				Bounds nodeBounds = nodePart.getNodeBounds();
 				this.nodeBounds.put(id, nodeBounds);
@@ -343,11 +343,11 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 						if (connPart.getConnectionBendpoints().size() > 0)
 						{
 							this.connectionBendPoints.put(connId, connPart.getConnectionBendpoints());
-							conn = diagramNode.getEmbeddedConnectionsLayout().addNewElement();
+							conn = diagramNode.getEmbeddedConnectionsLayout().insert();
 							conn.setConnectionId(connId);
 							for (Point pt : connPart.getConnectionBendpoints())
 							{
-								DiagramBendPointLayout pt2 = conn.getConnectionBendpoints().addNewElement();
+								DiagramBendPointLayout pt2 = conn.getConnectionBendpoints().insert();
 								pt2.setX(pt.getX());
 								pt2.setY(pt.getY());
 							}
@@ -356,7 +356,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 						{
 							if (conn == null)
 							{
-								conn = diagramNode.getEmbeddedConnectionsLayout().addNewElement();
+								conn = diagramNode.getEmbeddedConnectionsLayout().insert();
 								conn.setConnectionId(connId);
 							}
 							conn.setLabelX(connPart.getLabelPosition().getX());
@@ -381,11 +381,11 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 				if (connPart.getConnectionBendpoints().size() > 0)
 				{		
 					this.connectionBendPoints.put(id, connPart.getConnectionBendpoints());
-					conn = this.layoutModel.getDiagramConnectionsLayout().addNewElement();
+					conn = this.layoutModel.getDiagramConnectionsLayout().insert();
 					conn.setConnectionId(id);
 					for (Point pt : connPart.getConnectionBendpoints())
 					{
-						DiagramBendPointLayout pt2 = conn.getConnectionBendpoints().addNewElement();
+						DiagramBendPointLayout pt2 = conn.getConnectionBendpoints().insert();
 						pt2.setX(pt.getX());
 						pt2.setY(pt.getY());
 					}					
@@ -394,7 +394,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 				{
 					if (conn == null)
 					{
-						conn = this.layoutModel.getDiagramConnectionsLayout().addNewElement();
+						conn = this.layoutModel.getDiagramConnectionsLayout().insert();
 						conn.setConnectionId(id);
 					}
 					conn.setLabelX(connPart.getLabelPosition().getX());

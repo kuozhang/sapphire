@@ -488,39 +488,78 @@ public final class XmlElement
     
     public XmlElement addChildElement( final QName name )
     {
+        return addChildElement( name, (Node) null );
+    }
+    
+    public XmlElement addChildElement( final String name )
+    {
+        return addChildElement( createQualifiedName( name ) );
+    }
+
+    public XmlElement addChildElement( final QName name,
+                                       final XmlElement refElement )
+    {
+        return addChildElement( name, ( refElement == null ? null : refElement.getDomNode() ) );
+    }
+    
+    public XmlElement addChildElement( final String name,
+                                       final XmlElement refElement )
+    {
+        return addChildElement( createQualifiedName( name ), refElement );
+    }
+    
+    private XmlElement addChildElement( final QName name,
+                                        final Node refNode )
+    {
         validateEdit();
         
         final Element domElement = getDomNode();
         final Document document = domElement.getOwnerDocument();
-        final NodeList nodes = domElement.getChildNodes();
+        final NodeList siblings = domElement.getChildNodes();
+        final int siblingsCount = siblings.getLength();
         
         // Notify listeners that an element is about to be added.
         
         notifyPreChildElementAddListeners();
         
-        // Find the insertion position.
+        // Create the new element and insert it in the correct spot.
         
-        final XmlContentModel xmlContentModel = getContentModel();
-        int position = ( xmlContentModel == null ? nodes.getLength() : xmlContentModel.findInsertionPosition( nodes, name ) );
+        Node refNodeRevised = refNode;
         
-        // Convert the insertion position into a reference node.
-        
-        Node refChild = ( position < nodes.getLength() ) ? nodes.item( position ) : null;
-        
-        int prevPosition = position - 1;
-        Node prevChild = ( prevPosition < nodes.getLength()) ? nodes.item( prevPosition ) : null;
-        
-        if( prevChild != null && prevChild.getNodeType() == Node.TEXT_NODE && 
-            prevChild.getNodeValue().trim().length() == 0 )
+        if( refNodeRevised == null )
         {
-            refChild = prevChild;
-            position = prevPosition;
+            final XmlContentModel xmlContentModel = getContentModel();
+            
+            if( xmlContentModel != null )
+            {
+                final int position = xmlContentModel.findInsertionPosition( siblings, name );
+                
+                if( position < siblingsCount )
+                {
+                    refNodeRevised = siblings.item( position );
+                }
+            }
         }
         
-        prevPosition = position - 1;
-        prevChild = ( prevPosition < nodes.getLength()) ? nodes.item( prevPosition ) : null;
+        Node prevNode = null;
         
-        // Create the new element and insert it in the correct spot.
+        if( refNodeRevised == null )
+        {
+            if( siblingsCount > 0 )
+            {
+                prevNode = siblings.item( siblingsCount - 1 );
+            }
+        }
+        else
+        {
+            prevNode = refNodeRevised.getPreviousSibling();
+        }
+            
+        if( prevNode != null && prevNode.getNodeType() == Node.TEXT_NODE && 
+            prevNode.getNodeValue().trim().length() == 0 )
+        {
+            refNodeRevised = prevNode;
+        }
         
         final String namespace = name.getNamespaceURI();
         final Element element;
@@ -541,7 +580,7 @@ public final class XmlElement
             element = document.createElementNS( namespace, qname );
         }
         
-        domElement.insertBefore( element, refChild );
+        domElement.insertBefore( element, refNodeRevised );
         
         final XmlElement wrappedElement = new XmlElement( this, element );
         this.elementsCache.put( element, wrappedElement );
@@ -563,12 +602,7 @@ public final class XmlElement
         
         return wrappedElement;
     }
-    
-    public XmlElement addChildElement( final String name )
-    {
-        return addChildElement( createQualifiedName( name ) );
-    }
-    
+
     private String findNamespacePrefix( final String namespace,
                                         final String defaultPrefix )
     {
@@ -845,6 +879,20 @@ public final class XmlElement
                     }
                 }
             }
+        }
+    }
+    
+    public void move( final XmlElement ref )
+    {
+        if( this != ref )
+        {
+            validateEdit();
+            
+            final Element domElement = getDomNode();
+            final Node parent = domElement.getParentNode();
+            
+            parent.removeChild( domElement );
+            parent.insertBefore( domElement, ref.getDomNode() );
         }
     }
     

@@ -20,9 +20,9 @@ import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.samples.contacts.IContact;
 import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 
@@ -111,7 +111,7 @@ public final class CreateContactActionHandler extends SapphireActionHandler
         final String name = element.read( this.property ).getText();
         final IContactsDatabase cdb = element.nearest( IContactsDatabase.class );
         
-        final IContact newContact = cdb.getContacts().addNewElement();
+        final IContact newContact = cdb.getContacts().insert();
         newContact.setName( name );
         
         return null;

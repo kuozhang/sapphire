@@ -656,7 +656,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         {
             if( this.element == null )
             {
-                this.element = getList().addNewElement();
+                this.element = getList().insert();
                 this.element.write( getMemberProperty(), this.value );
                 
                 this.elementImageService = this.element.service( ImageService.class );

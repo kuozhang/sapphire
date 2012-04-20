@@ -77,12 +77,12 @@ public final class TestXmlDtd0003 extends SapphireTestCase
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( byteArrayResourceStore );
 
         final TestElement root = type.instantiate( new RootXmlResource( xmlResourceStore ) );
-        root.getCcc().addNewElement().setText( "111" );
-        root.getBbb().addNewElement().setText( "222" );
-        root.getAaa().addNewElement().setText( "333" );
-        root.getCcc().addNewElement().setText( "444" );
-        root.getBbb().addNewElement().setText( "555" );
-        root.getAaa().addNewElement().setText( "666" );
+        root.getCcc().insert().setText( "111" );
+        root.getBbb().insert().setText( "222" );
+        root.getAaa().insert().setText( "333" );
+        root.getCcc().insert().setText( "444" );
+        root.getBbb().insert().setText( "555" );
+        root.getAaa().insert().setText( "666" );
         
         root.resource().save();
         final String result = new String( byteArrayResourceStore.getContents(), "UTF-8" );

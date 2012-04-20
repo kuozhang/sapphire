@@ -116,7 +116,7 @@ public final class StringResourcesExtractor
     private static void gather( final IModelElement element,
                                 final Set<String> strings )
     {
-        for( ModelProperty property : element.type().properties() )
+        for( ModelProperty property : element.properties() )
         {
             if( property instanceof ValueProperty )
             {

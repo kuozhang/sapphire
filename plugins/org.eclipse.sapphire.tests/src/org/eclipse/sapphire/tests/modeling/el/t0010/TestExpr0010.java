@@ -114,7 +114,7 @@ public final class TestExpr0010 extends TestExpr
         testForExpectedValue( context, "${ Sum( List1, 'Value1' ) }", new BigDecimal( "0" ) );
         testForExpectedValue( context, "${ Sum( List1, 'Value2' ) }", new BigDecimal( "0" ) );
         
-        a = list.addNewElement();
+        a = list.insert();
         a.setValue1( "1" );
         a.setValue2( 2 );
 
@@ -122,11 +122,11 @@ public final class TestExpr0010 extends TestExpr
         testForExpectedValue( context, "${ Sum( List1, 'Value1' ) }", new BigDecimal( "1" ) );
         testForExpectedValue( context, "${ Sum( List1, 'Value2' ) }", new BigDecimal( "2" ) );
 
-        a = list.addNewElement();
+        a = list.insert();
         a.setValue1( "2" );
         a.setValue2( 3 );
 
-        a = list.addNewElement();
+        a = list.insert();
         a.setValue1( "3.5" );
         a.setValue2( 4 );
         
@@ -147,7 +147,7 @@ public final class TestExpr0010 extends TestExpr
         
         assertEquals( new BigDecimal( "9.0" ), result.value() );
         
-        a = list.addNewElement();
+        a = list.insert();
         a.setValue1( "5.2" );
         
         assertEquals( new BigDecimal( "14.2" ), result.value() );

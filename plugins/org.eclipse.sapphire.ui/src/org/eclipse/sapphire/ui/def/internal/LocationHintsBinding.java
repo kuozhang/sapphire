@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -28,10 +30,7 @@ import org.eclipse.sapphire.ui.def.ActionLocationHintBefore;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class LocationHintsBinding
-
-    extends StandardXmlListBindingImpl
-    
+public final class LocationHintsBinding extends StandardXmlListBindingImpl
 {
     private static final String EL_LOCATION = "location";
     public static final String BEFORE_PREFIX = "before:";
@@ -64,19 +63,22 @@ public final class LocationHintsBinding
     }
 
     @Override
-    protected Object addUnderlyingObject( final ModelElementType type )
+    protected Resource resource( final Object obj )
     {
-        final XmlElement xmlElement = getXmlElement( true ).addChildElement( EL_LOCATION );
+        return new ChildXmlResource( (XmlResource) element().resource(), (XmlElement) obj );
+    }
+
+    @Override
+    protected Object insertUnderlyingObject( final ModelElementType type,
+                                             final int position )
+    {
+        final List<?> list = readUnderlyingList();
+        final XmlElement refXmlElement = (XmlElement) ( position < list.size() ? list.get( position ) : null );
+        final XmlElement xmlElement = getXmlElement( true ).addChildElement( EL_LOCATION, refXmlElement );
         final String prefix = ( type == ActionLocationHintAfter.TYPE ? AFTER_PREFIX : BEFORE_PREFIX );
         xmlElement.setText( prefix );
         
         return xmlElement;
-    }
-
-    @Override
-    protected Resource createResource( final Object obj )
-    {
-        return new ChildXmlResource( (XmlResource) element().resource(), (XmlElement) obj );
     }
     
 }

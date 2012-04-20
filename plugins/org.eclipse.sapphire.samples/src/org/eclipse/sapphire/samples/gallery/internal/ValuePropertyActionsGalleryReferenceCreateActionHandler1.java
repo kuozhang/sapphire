@@ -90,7 +90,7 @@ public final class ValuePropertyActionsGalleryReferenceCreateActionHandler1 exte
         
         if( entityName != null && ! isEntityDefined( entityName ) )
         {
-            final IValuePropertyActionsGalleryEntity entity = element.nearest( IValuePropertyActionsGallery.class ).getEntities().addNewElement();
+            final IValuePropertyActionsGalleryEntity entity = element.nearest( IValuePropertyActionsGallery.class ).getEntities().insert();
             entity.setName( entityName );
         }
         

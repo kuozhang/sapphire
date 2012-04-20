@@ -234,14 +234,34 @@ public final class ModelElementList<T extends IModelElement>
         }
     }
     
-    public T addNewElement()
+    public T insert()
     {
-        ensureNotReadOnly();
-        
-        return addNewElement( this.possibleTypesService.types().first() );
+        return insert( this.possibleTypesService.types().first() );
     }
     
-    public T addNewElement( final ModelElementType type )
+    public T insert( final int position )
+    {
+        return insert( this.possibleTypesService.types().first(), position );
+    }
+    
+    public T insert( final ModelElementType type )
+    {
+        synchronized( this )
+        {
+            return insert( type, size() );
+        }
+    }
+    
+    public <C extends IModelElement> C insert( final Class<C> cl )
+    {
+        synchronized( this )
+        {
+            return insert( cl, size() );
+        }
+    }
+    
+    public T insert( final ModelElementType type,
+                     final int position )
     {
         ensureNotReadOnly();
         
@@ -249,7 +269,7 @@ public final class ModelElementList<T extends IModelElement>
         
         synchronized( this )
         {
-            final Resource newResource = this.binding.add( type );
+            final Resource newResource = this.binding.insert( type, position );
             
             refresh();
             
@@ -267,10 +287,9 @@ public final class ModelElementList<T extends IModelElement>
         return newElement;
     }
     
-    public <C extends IModelElement> C addNewElement( final Class<C> cl )
+    public <C extends IModelElement> C insert( final Class<C> cl,
+                                               final int position )
     {
-        ensureNotReadOnly();
-        
         final ModelElementType type = ModelElementType.read( cl );
         
         if( type == null )
@@ -278,9 +297,36 @@ public final class ModelElementList<T extends IModelElement>
             throw new IllegalArgumentException();
         }
         
-        return (C) addNewElement( type );
+        return (C) insert( type, position );
     }
     
+    public void move( final T element,
+                      final int position )
+    {
+        ensureNotReadOnly();
+        
+        synchronized( this )
+        {
+            if( position < 0 || position > size() )
+            {
+                throw new IllegalArgumentException();
+            }
+            
+            final int oldPosition = indexOf( element );
+            
+            if( oldPosition == -1 )
+            {
+                throw new IllegalArgumentException();
+            }
+            
+            if( position != oldPosition )
+            {
+                this.binding.move( element.resource(), position );
+                refresh();
+            }
+        }
+    }
+
     public void moveUp( final T modelElement )
     {
         ensureNotReadOnly();
@@ -330,13 +376,20 @@ public final class ModelElementList<T extends IModelElement>
         
         synchronized( this )
         {
-            if( indexOf( a ) == -1 || indexOf( b ) == -1 )
+            final int aPosition = indexOf( a );
+            final int bPosition = indexOf( b );
+            
+            if( aPosition == -1 || bPosition == -1 )
             {
                 throw new IllegalArgumentException();
             }
-
-            this.binding.swap( a.resource(), b.resource() );
-            refresh();
+            
+            if( aPosition != bPosition )
+            {
+                this.binding.move( a.resource(), bPosition );
+                this.binding.move( b.resource(), aPosition );
+                refresh();
+            }
         }
     }
 

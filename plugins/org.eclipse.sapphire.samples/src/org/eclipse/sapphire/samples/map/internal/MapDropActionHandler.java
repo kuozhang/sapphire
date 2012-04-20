@@ -101,7 +101,7 @@ public final class MapDropActionHandler extends SapphireDiagramActionHandler
                 int y = currentMousePos.getY();
                 for (String cityName : cities)
                 {
-                    final IDestination city = map.getDestinations().addNewElement();
+                    final IDestination city = map.getDestinations().insert();
                     city.setName( cityName );
                     DiagramNodePart cityPart = diagramPart.getDiagramNodePart(city);
                     if (cityPart != null)

@@ -25,10 +25,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestXmlBinding0003
-
-    extends SapphireTestCase
-    
+public final class TestXmlBinding0003 extends SapphireTestCase
 {
     private TestXmlBinding0003( final String name )
     {
@@ -57,14 +54,14 @@ public final class TestXmlBinding0003
         final TestXmlBinding0003AB ab = a.getAb().element( true );
         ab.setAba( "aba" );
         
-        final TestXmlBinding0003AC ac = a.getAc().addNewElement();
+        final TestXmlBinding0003AC ac = a.getAc().insert();
         ac.setAca( "aca" );
         ac.setAcb( "acb" );
         
         final TestXmlBinding0003ACC acc = ac.getAcc().element( true );
         acc.setAcca( "acca" );
         
-        final TestXmlBinding0003ACD acd = ac.getAcd().addNewElement();
+        final TestXmlBinding0003ACD acd = ac.getAcd().insert();
         acd.setAcda( "acda" );
         
         a.resource().save();

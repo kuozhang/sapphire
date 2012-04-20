@@ -169,7 +169,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 				dependency.getConnectionBendpoints().clear();
 				for (Point bendpoint : bendpoints)
 				{
-					ConnectionBendpoint bpLayout = dependency.getConnectionBendpoints().addNewElement();
+					ConnectionBendpoint bpLayout = dependency.getConnectionBendpoints().insert();
 					bpLayout.setX(bendpoint.getX());
 					bpLayout.setY(bendpoint.getY());
 				}

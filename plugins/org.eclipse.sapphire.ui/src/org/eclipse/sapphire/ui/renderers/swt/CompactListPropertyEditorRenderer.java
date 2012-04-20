@@ -448,7 +448,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
                 return;
             }
             if (b.getModelElement() == null) {
-                final IModelElement newElement = getList().addNewElement();
+                final IModelElement newElement = getList().insert();
                 b.setModelElement(newElement);
             }
         }
@@ -559,7 +559,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
         
         private IModelElement getActualElement(boolean create) {
             if (create && this.actualElement == null) {
-                final IModelElement element = getList().addNewElement();
+                final IModelElement element = getList().insert();
                 setModelElement(element);
             }
             return this.actualElement;
@@ -693,7 +693,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
                         // new element may not be the last one - insert empty strings 
                         insertEmpty(this);
                         
-                        final IModelElement newElement = getList().addNewElement();
+                        final IModelElement newElement = getList().insert();
                         setModelElement(newElement);
                         createNew = true;
                     }

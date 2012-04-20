@@ -107,12 +107,12 @@ public final class TestXmlXsd0004 extends SapphireTestCase
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
         final TestXmlXsd0004Workbook workbook = TestXmlXsd0004Workbook.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( resourceStore ) ) );
         
-        final TestXmlXsd0004Circle circle = workbook.getShapes().addNewElement( TestXmlXsd0004Circle.class );
+        final TestXmlXsd0004Circle circle = workbook.getShapes().insert( TestXmlXsd0004Circle.class );
         circle.setRadius( 3 );
         circle.setY( 2 );
         circle.setX( 1 );
         
-        final TestXmlXsd0004Rectangle rectangle = workbook.getShapes().addNewElement( TestXmlXsd0004Rectangle.class );
+        final TestXmlXsd0004Rectangle rectangle = workbook.getShapes().insert( TestXmlXsd0004Rectangle.class );
         rectangle.setHeight( 4 );
         rectangle.setWidth( 3 );
         rectangle.setY( 2 );

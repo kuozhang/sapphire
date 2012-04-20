@@ -438,7 +438,7 @@ public final class MasterDetailsContentOutline
         
         if( isExpanded || isSelected )
         {
-            final IContentOutlineNodeState childNodeState = parentNodeState.getChildren().addNewElement();
+            final IContentOutlineNodeState childNodeState = parentNodeState.getChildren().insert();
             
             childNodeState.setLabel( node.getLabel() );
             

@@ -183,7 +183,7 @@ public final class AttendeeResource extends Resource
     
             if( c == null && createIfNecessary )
             {
-                c = this.contacts.getContacts().addNewElement();
+                c = this.contacts.getContacts().insert();
                 c.setName( name );
             }
     

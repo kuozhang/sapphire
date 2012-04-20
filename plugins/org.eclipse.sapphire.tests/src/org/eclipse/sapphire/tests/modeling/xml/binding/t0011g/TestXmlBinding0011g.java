@@ -49,8 +49,8 @@ public final class TestXmlBinding0011g extends SapphireTestCase
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
         final TestModelRoot root = TestModelRoot.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         
-        ( (TestModelElementA1) root.getList().addNewElement( TestModelElementA1.TYPE ) ).setValue( "1111" );
-        ( (TestModelElementA2) root.getList().addNewElement( TestModelElementA2.TYPE ) ).setValue( "2222" );
+        ( (TestModelElementA1) root.getList().insert( TestModelElementA1.TYPE ) ).setValue( "1111" );
+        ( (TestModelElementA2) root.getList().insert( TestModelElementA2.TYPE ) ).setValue( "2222" );
         
         ( (TestModelElementB2) root.getElement().element( true, TestModelElementB2.TYPE ) ).setValue( "3333" );
         

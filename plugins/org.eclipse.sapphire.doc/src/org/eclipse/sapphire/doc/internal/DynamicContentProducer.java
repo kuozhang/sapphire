@@ -73,14 +73,14 @@ public class DynamicContentProducer implements IHelpContentProducer
                 final ExtensionSummaryExportOp op = ExtensionSummaryExportOp.TYPE.instantiate();
                 op.setCreateFinishedDocument( false );
 
-                final ExtensionSummarySectionDef section = op.getSections().addNewElement();
+                final ExtensionSummarySectionDef section = op.getSections().insert();
                 section.setExtensionType( SapphireExtensionDef.PROP_FUNCTIONS.getName() );
                 section.setIncludeSectionHeader( false );
 
-                final ExtensionSummarySectionColumnDef nameColumn = section.getColumns().addNewElement();
+                final ExtensionSummarySectionColumnDef nameColumn = section.getColumns().insert();
                 nameColumn.setName( FunctionDef.PROP_NAME.getName() );
 
-                final ExtensionSummarySectionColumnDef descColumn = section.getColumns().addNewElement();
+                final ExtensionSummarySectionColumnDef descColumn = section.getColumns().insert();
                 descColumn.setName( FunctionDef.PROP_DESCRIPTION.getName() );
 
                 final String functions = op.execute( getExtensions(), null );
@@ -93,14 +93,14 @@ public class DynamicContentProducer implements IHelpContentProducer
                 final ExtensionSummaryExportOp op = ExtensionSummaryExportOp.TYPE.instantiate();
                 op.setCreateFinishedDocument( false );
 
-                final ExtensionSummarySectionDef section = op.getSections().addNewElement();
+                final ExtensionSummarySectionDef section = op.getSections().insert();
                 section.setExtensionType( SapphireExtensionDef.PROP_SERVICES.getName() );
                 section.setIncludeSectionHeader( false );
 
-                final ExtensionSummarySectionColumnDef idColumn = section.getColumns().addNewElement();
+                final ExtensionSummarySectionColumnDef idColumn = section.getColumns().insert();
                 idColumn.setName( ServiceDef.PROP_ID.getName() );
 
-                final ExtensionSummarySectionColumnDef descColumn = section.getColumns().addNewElement();
+                final ExtensionSummarySectionColumnDef descColumn = section.getColumns().insert();
                 descColumn.setName( ServiceDef.PROP_DESCRIPTION.getName() );
                 
                 final Filter<IModelElement> filter = new Filter<IModelElement>()

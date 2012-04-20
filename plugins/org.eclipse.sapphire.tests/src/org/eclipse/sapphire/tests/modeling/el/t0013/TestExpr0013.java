@@ -114,7 +114,7 @@ public final class TestExpr0013 extends TestExpr
         testForExpectedValue( context, "${ Max( List1, 'Value1' ) }", null );
         testForExpectedValue( context, "${ Max( List1, 'Value2' ) }", null );
         
-        a = list.addNewElement();
+        a = list.insert();
         a.setValue1( "1" );
         a.setValue2( 2 );
 
@@ -122,11 +122,11 @@ public final class TestExpr0013 extends TestExpr
         testForExpectedValue( context, "${ Max( List1, 'Value1' ) }", new BigDecimal( "1" ) );
         testForExpectedValue( context, "${ Max( List1, 'Value2' ) }", new BigDecimal( "2" ) );
 
-        a = list.addNewElement();
+        a = list.insert();
         a.setValue1( "2" );
         a.setValue2( 3 );
 
-        a = list.addNewElement();
+        a = list.insert();
         a.setValue1( "3.5" );
         a.setValue2( 4 );
         
@@ -147,7 +147,7 @@ public final class TestExpr0013 extends TestExpr
         
         assertEquals( new BigDecimal( "3.5" ), result.value() );
         
-        a = list.addNewElement();
+        a = list.insert();
         a.setValue1( "5.2" );
         
         assertEquals( new BigDecimal( "5.2" ), result.value() );

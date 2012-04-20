@@ -47,15 +47,15 @@ public final class TestModelingMisc0011 extends SapphireTestCase
     {
         final TestElementRoot root = TestElementRoot.TYPE.instantiate();
         
-        final TestElementChild x = root.getChildren().addNewElement();
+        final TestElementChild x = root.getChildren().insert();
         x.setId( "x" );
         x.setContent( "123" );
         
-        final TestElementChild y = root.getChildren().addNewElement();
+        final TestElementChild y = root.getChildren().insert();
         y.setId( "y" );
         y.setReference( "x" );
         
-        final TestElementChild z = root.getChildren().addNewElement();
+        final TestElementChild z = root.getChildren().insert();
         z.setId( "z" );
         z.setReference( "y" );
         

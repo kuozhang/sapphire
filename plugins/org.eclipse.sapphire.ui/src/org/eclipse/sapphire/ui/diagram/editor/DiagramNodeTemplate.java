@@ -219,18 +219,18 @@ public class DiagramNodeTemplate extends SapphirePart
 		ModelElementList<?> list = this.modelElement.read(this.modelProperty);
 		if (this.modelElementType == null)
 		{
-			newElement = list.addNewElement();
+			newElement = list.insert();
 		}
 		else
 		{
 			final Class cl = this.modelElementType.artifact();
 			if (cl != null)
 			{
-				newElement = list.addNewElement(cl);
+				newElement = list.insert(cl);
 			}
 			else
 			{
-				newElement = list.addNewElement();
+				newElement = list.insert();
 			}
 		}
 		DiagramNodePart newNodePart = getNodePart(newElement);

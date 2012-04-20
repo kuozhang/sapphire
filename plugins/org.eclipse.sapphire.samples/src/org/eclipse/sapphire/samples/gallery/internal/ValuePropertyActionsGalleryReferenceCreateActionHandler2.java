@@ -77,7 +77,7 @@ public final class ValuePropertyActionsGalleryReferenceCreateActionHandler2
             final String entityName = dialog.getValue();
             final IModelElement element = getModelElement();
             
-            final IValuePropertyActionsGalleryEntity entity = element.nearest( IValuePropertyActionsGallery.class ).getEntities().addNewElement();
+            final IValuePropertyActionsGalleryEntity entity = element.nearest( IValuePropertyActionsGallery.class ).getEntities().insert();
             entity.setName( entityName );
             
             element.write( (ValueProperty) getProperty(), entityName );

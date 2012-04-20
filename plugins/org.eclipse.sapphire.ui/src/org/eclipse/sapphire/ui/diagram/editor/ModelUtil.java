@@ -86,7 +86,7 @@ public class ModelUtil
             if (head instanceof ModelPath.PropertySegment)
             {
                 final String propertyName = ((ModelPath.PropertySegment)head).getPropertyName();
-                final ModelProperty property = modelElement.type().property(propertyName);
+                final ModelProperty property = modelElement.property(propertyName);
                 if (property instanceof ListProperty)
                 {
                     ModelElementType type = ((ListProperty)property).getType();

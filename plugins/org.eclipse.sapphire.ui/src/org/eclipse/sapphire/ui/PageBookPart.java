@@ -71,7 +71,7 @@ public abstract class PageBookPart extends FormPart
     protected FormDef initDefaultPageDef()
     {
         final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
-        return (FormDef) root.getPartDefs().addNewElement( FormDef.TYPE );
+        return (FormDef) root.getPartDefs().insert( FormDef.TYPE );
     }
 
     @Override

@@ -168,28 +168,36 @@ public final class MemoryResource
                 }
 
                 @Override
-                public Resource add( final ModelElementType type )
+                public Resource insert( final ModelElementType type,
+                                        final int position )
                 {
                     final MemoryResource resource = new MemoryResource( type, MemoryResource.this );
-                    this.list.add( resource );
+                    this.list.add( position, resource );
                     return resource;
+                }
+                
+                @Override
+                public void move( final Resource resource, 
+                                  final int position )
+                {
+                    final int oldPosition = this.list.indexOf( resource );
+                    
+                    if( position < oldPosition )
+                    {
+                        this.list.remove( oldPosition );
+                        this.list.add( position, resource );
+                    }
+                    else
+                    {
+                        this.list.add( position, resource );
+                        this.list.remove( oldPosition );
+                    }
                 }
 
                 @Override
                 public void remove( final Resource resource )
                 {
                     this.list.remove( resource );
-                }
-
-                @Override
-                public void swap( final Resource a,
-                                  final Resource b )
-                {
-                    final int aIndex = this.list.indexOf( a );
-                    final int bIndex = this.list.indexOf( b );
-                    
-                    this.list.set( aIndex, b );
-                    this.list.set( bIndex, a );
                 }
             };
         }

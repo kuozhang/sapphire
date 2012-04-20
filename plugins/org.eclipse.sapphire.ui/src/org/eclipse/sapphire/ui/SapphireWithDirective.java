@@ -110,8 +110,8 @@ public final class SapphireWithDirective extends PageBookPart
     protected ISapphireCompositeDef initDefaultPageDef()
     {
         final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
-        final ISapphireCompositeDef composite = (ISapphireCompositeDef) root.getPartDefs().addNewElement( ISapphireCompositeDef.TYPE );
-        final ISapphireLabelDef label = (ISapphireLabelDef) composite.getContent().addNewElement( ISapphireLabelDef.TYPE );
+        final ISapphireCompositeDef composite = (ISapphireCompositeDef) root.getPartDefs().insert( ISapphireCompositeDef.TYPE );
+        final ISapphireLabelDef label = (ISapphireLabelDef) composite.getContent().insert( ISapphireLabelDef.TYPE );
         label.setText( Resources.noAdditionalPropertiesMessage );
         
         return composite;

@@ -1136,21 +1136,17 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
     
                         final List<IModelElement> droppedElements = (List<IModelElement>) event.data;
                         final List<MasterDetailsContentNode> newSelection = new ArrayList<MasterDetailsContentNode>();
-    
-                        final int offset = list.size() - list.indexOf( precedingElement ) - 1;
+                        
+                        int position = list.indexOf( precedingElement ) + 1;
                         
                         for( IModelElement droppedElement : droppedElements )
                         {
-                            final IModelElement insertedElement = list.addNewElement( droppedElement.type() );
-                            
+                            final IModelElement insertedElement = list.insert( droppedElement.type(), position );
                             insertedElement.copy( droppedElement );
                             
-                            for( int i = 0; i < offset; i++ )
-                            {
-                                list.moveUp( insertedElement );
-                            }
-                            
                             newSelection.add( parentNode.findNodeByModelElement( insertedElement ) );
+                            
+                            position++;
                         }
                         
                         parentNode.getContentTree().setSelectedNodes( newSelection );

@@ -107,34 +107,35 @@ public final class CalendarResource extends Resource
                 }
 
                 @Override
+                protected Resource resource( final Object obj )
+                {
+                    return new EventResource( CalendarResource.this, (org.eclipse.sapphire.samples.calendar.IEvent) obj );
+                }
+                
+                @Override
                 protected List<?> readUnderlyingList()
                 {
                     return this.base;
                 }
 
                 @Override
-                protected Object addUnderlyingObject( final ModelElementType type )
+                protected Object insertUnderlyingObject( final ModelElementType type,
+                                                         final int position )
                 {
-                    return this.base.addNewElement( org.eclipse.sapphire.samples.calendar.IEvent.TYPE );
+                    return this.base.insert( org.eclipse.sapphire.samples.calendar.IEvent.TYPE, position );
                 }
 
                 @Override
-                protected Resource createResource( final Object obj )
+                public void move( final Resource resource, 
+                                  final int position )
                 {
-                    return new EventResource( CalendarResource.this, (org.eclipse.sapphire.samples.calendar.IEvent) obj );
+                    this.base.move( ( (EventResource) resource ).getBase(), position );
                 }
-                
+
                 @Override
                 public void remove( final Resource resource )
                 {
                     this.base.remove( ( (EventResource) resource ).getBase() );
-                }
-
-                @Override
-                public void swap( final Resource a,
-                                  final Resource b )
-                {
-                    this.base.swap( ( (EventResource) a ).getBase(), ( (EventResource) b ).getBase() );
                 }
             };
             

@@ -11,17 +11,15 @@
 
 package org.eclipse.sapphire.modeling;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class LayeredListBindingImpl
-
-    extends ListBindingImpl
-    
+public abstract class LayeredListBindingImpl extends ListBindingImpl
 {
     private final IdentityCache<Object,Resource> cache = new IdentityCache<Object,Resource>();
 
@@ -30,7 +28,7 @@ public abstract class LayeredListBindingImpl
     {
         this.cache.track();
 
-        final List<Resource> list = new ArrayList<Resource>();
+        final ReadOnlyListFactory<Resource> list = ReadOnlyListFactory.create();
         
         for( Object obj : readUnderlyingList() )
         {
@@ -38,7 +36,7 @@ public abstract class LayeredListBindingImpl
             
             if( resource == null )
             {
-                resource = createResource( obj );
+                resource = resource( obj );
                 this.cache.put( obj, resource );
             }
             
@@ -47,27 +45,29 @@ public abstract class LayeredListBindingImpl
         
         this.cache.purge();
         
-        return list;
+        return list.export();
     }
     
     protected abstract List<?> readUnderlyingList();
     
     @Override
-    public final Resource add( final ModelElementType type )
+    public final Resource insert( final ModelElementType type,
+                                  final int position )
     {
-        final Object obj = addUnderlyingObject( type );
-        final Resource resource = createResource( obj );
+        final Object obj = insertUnderlyingObject( type, position );
+        final Resource resource = resource( obj );
         
         this.cache.put( obj, resource );
         
         return resource;
     }
     
-    protected Object addUnderlyingObject( final ModelElementType type )
+    protected Object insertUnderlyingObject( final ModelElementType type,
+                                             final int position )
     {
         throw new UnsupportedOperationException();
     }
     
-    protected abstract Resource createResource( Object obj );
+    protected abstract Resource resource( Object obj );
 
 }

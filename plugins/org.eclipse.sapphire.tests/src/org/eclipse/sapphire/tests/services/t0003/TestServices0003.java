@@ -82,7 +82,7 @@ public final class TestServices0003
     public void testNoDuplicatesInListProperty() throws Exception
     {
         final TestModel model = TestModel.TYPE.instantiate();
-        final TestModelItem item = model.getItems().addNewElement();
+        final TestModelItem item = model.getItems().insert();
         final Set<ModelPath> dependencies = item.service( TestModelItem.PROP_NAME, DependenciesAggregationService.class ).dependencies();
         
         assertEquals( set( new ModelPath( "#/Name" ) ), dependencies );
@@ -91,7 +91,7 @@ public final class TestServices0003
     public void testNoDuplicatesAndDependsOn() throws Exception
     {
         final TestModel model = TestModel.TYPE.instantiate();
-        final TestModelItem item = model.getItems().addNewElement();
+        final TestModelItem item = model.getItems().insert();
         final Set<ModelPath> dependencies = item.service( TestModelItem.PROP_ID, DependenciesAggregationService.class ).dependencies();
         
         assertEquals( set( new ModelPath( "Name" ), new ModelPath( "#/Id" ) ), dependencies );
@@ -100,7 +100,7 @@ public final class TestServices0003
     public void testCustom1() throws Exception
     {
         final TestModel model = TestModel.TYPE.instantiate();
-        final TestModelItem item = model.getItems().addNewElement();
+        final TestModelItem item = model.getItems().insert();
         final Set<ModelPath> dependencies = item.service( TestModelItem.PROP_CUSTOM_1, DependenciesAggregationService.class ).dependencies();
         
         assertEquals( set( new ModelPath( "Name" ), new ModelPath( "Id" ) ), dependencies );
@@ -109,7 +109,7 @@ public final class TestServices0003
     public void testCustom2() throws Exception
     {
         final TestModel model = TestModel.TYPE.instantiate();
-        final TestModelItem item = model.getItems().addNewElement();
+        final TestModelItem item = model.getItems().insert();
         final Set<ModelPath> dependencies = item.service( TestModelItem.PROP_CUSTOM_2, DependenciesAggregationService.class ).dependencies();
         
         assertEquals( set( new ModelPath( "Name" ), new ModelPath( "Id" ), new ModelPath( "Custom1" ) ), dependencies );

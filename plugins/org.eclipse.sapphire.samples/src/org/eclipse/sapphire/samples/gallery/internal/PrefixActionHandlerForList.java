@@ -90,7 +90,7 @@ public final class PrefixActionHandlerForList extends SapphirePropertyEditorActi
         if( ! list.isEmpty() )
         {
             final IModelElement element = list.get( 0 );
-            final ValueProperty property = (ValueProperty) element.type().properties().get( 0 );
+            final ValueProperty property = (ValueProperty) element.properties().get( 0 );
             final String oldValue = element.read( property ).getText();
             final String newValue;
             
@@ -137,7 +137,7 @@ public final class PrefixActionHandlerForList extends SapphirePropertyEditorActi
         if( ! list.isEmpty() )
         {
             final IModelElement element = list.get( 0 );
-            final ValueProperty property = (ValueProperty) element.type().properties().get( 0 );
+            final ValueProperty property = (ValueProperty) element.properties().get( 0 );
             final String value = element.read( property ).getText();
             checked = ( value != null && value.startsWith( this.prefix ) );
         }

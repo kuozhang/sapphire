@@ -361,13 +361,15 @@ public final class ModelElementType extends ModelMetadataItem
         return new ArrayList<ModelProperty>( properties.values() );
     }
     
-    public ModelProperty property( final String propertyName )
+    @SuppressWarnings( "unchecked" )
+    
+    public <T extends ModelProperty> T property( final String name )
     {
         for( ModelProperty property : properties() )
         {
-            if( property.getName().equalsIgnoreCase( propertyName ) )
+            if( property.getName().equalsIgnoreCase( name ) )
             {
-                return property;
+                return (T) property;
             }
         }
         

@@ -240,7 +240,7 @@ public abstract class ModelElement
     
     public final void initialize()
     {
-        for( ModelProperty property : type().properties() ) 
+        for( ModelProperty property : properties() ) 
         {
             if( property instanceof ValueProperty ) 
             {
@@ -252,6 +252,16 @@ public abstract class ModelElement
                 }
             }
         }
+    }
+    
+    public List<ModelProperty> properties()
+    {
+        return this.type.properties();
+    }
+
+    public <T extends ModelProperty> T property( final String name )
+    {
+        return this.type.property( name );
     }
 
     public Object read( final ModelProperty property )
@@ -349,7 +359,7 @@ public abstract class ModelElement
             }
             else if( head instanceof AllDescendentsSegment )
             {
-                for( ModelProperty property : type().properties() )
+                for( ModelProperty property : properties() )
                 {
                     final Object obj = read( property );
                     
@@ -397,7 +407,7 @@ public abstract class ModelElement
             else
             {
                 final String propertyName = ( (ModelPath.PropertySegment) head ).getPropertyName();
-                final ModelProperty property = type().property( propertyName );
+                final ModelProperty property = property( propertyName );
 
                 if( property == null )
                 {
@@ -466,7 +476,7 @@ public abstract class ModelElement
     {
         synchronized( root() )
         {
-            for( ModelProperty property : type().properties() )
+            for( ModelProperty property : properties() )
             {
                 refresh( property, force, deep );
             }
@@ -572,7 +582,7 @@ public abstract class ModelElement
                     
                     for( final IModelElement elementChild : element.read( prop ) )
                     {
-                        final IModelElement thisChild = list.addNewElement( elementChild.type() );
+                        final IModelElement thisChild = list.insert( elementChild.type() );
                         thisChild.copy( elementChild );
                     }
                 }

@@ -30,6 +30,9 @@ public interface IModelElement extends IModelParticle
     
     void initialize();
     
+    <T extends ModelProperty> T property( String name );
+    List<ModelProperty> properties();
+    
     Object read( ModelProperty property );
     
     <T> Value<T> read( ValueProperty property );

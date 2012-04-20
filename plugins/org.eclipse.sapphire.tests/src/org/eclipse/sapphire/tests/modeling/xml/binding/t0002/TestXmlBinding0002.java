@@ -52,7 +52,7 @@ public final class TestXmlBinding0002
         
         try
         {
-            element.getTestProperty().addNewElement();
+            element.getTestProperty().insert();
             fail( "Did not catch the expected exception." );
         }
         catch( Exception e )

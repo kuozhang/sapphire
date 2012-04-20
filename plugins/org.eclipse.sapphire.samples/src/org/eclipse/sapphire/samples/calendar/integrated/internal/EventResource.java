@@ -192,34 +192,35 @@ public final class EventResource extends Resource
                 }
 
                 @Override
+                protected Resource resource( final Object obj )
+                {
+                    return new AttendeeResource( EventResource.this, (org.eclipse.sapphire.samples.calendar.IAttendee) obj );
+                }
+                
+                @Override
                 protected List<?> readUnderlyingList()
                 {
                     return this.base;
                 }
 
                 @Override
-                protected Object addUnderlyingObject( final ModelElementType type )
+                protected Object insertUnderlyingObject( final ModelElementType type,
+                                                         final int position )
                 {
-                    return this.base.addNewElement( org.eclipse.sapphire.samples.calendar.IAttendee.TYPE );
-                }
-
-                @Override
-                protected Resource createResource( final Object obj )
-                {
-                    return new AttendeeResource( EventResource.this, (org.eclipse.sapphire.samples.calendar.IAttendee) obj );
+                    return this.base.insert( org.eclipse.sapphire.samples.calendar.IAttendee.TYPE, position );
                 }
                 
+                @Override
+                public void move( final Resource resource, 
+                                  final int position )
+                {
+                    this.base.move( ( (AttendeeResource) resource ).getBase(), position );
+                }
+
                 @Override
                 public void remove( final Resource resource )
                 {
                     this.base.remove( ( (AttendeeResource) resource ).getBase() );
-                }
-
-                @Override
-                public void swap( final Resource a,
-                                  final Resource b )
-                {
-                    this.base.swap( ( (AttendeeResource) a ).getBase(), ( (AttendeeResource) b ).getBase() );
                 }
             };
             
@@ -241,34 +242,35 @@ public final class EventResource extends Resource
                 }
 
                 @Override
+                protected Resource resource( final Object obj )
+                {
+                    return new EventAttachmentResource( EventResource.this, (org.eclipse.sapphire.samples.calendar.IEventAttachment) obj );
+                }
+                
+                @Override
                 protected List<?> readUnderlyingList()
                 {
                     return this.base;
                 }
 
                 @Override
-                protected Object addUnderlyingObject( final ModelElementType type )
+                protected Object insertUnderlyingObject( final ModelElementType type,
+                                                         final int position )
                 {
-                    return this.base.addNewElement( org.eclipse.sapphire.samples.calendar.IEventAttachment.TYPE );
-                }
-
-                @Override
-                protected Resource createResource( final Object obj )
-                {
-                    return new EventAttachmentResource( EventResource.this, (org.eclipse.sapphire.samples.calendar.IEventAttachment) obj );
+                    return this.base.insert( org.eclipse.sapphire.samples.calendar.IEventAttachment.TYPE, position );
                 }
                 
+                @Override
+                public void move( final Resource resource, 
+                                  final int position )
+                {
+                    this.base.move( ( (EventAttachmentResource) resource ).getBase(), position );
+                }
+
                 @Override
                 public void remove( final Resource resource )
                 {
                     this.base.remove( ( (EventAttachmentResource) resource ).getBase() );
-                }
-
-                @Override
-                public void swap( final Resource a,
-                                  final Resource b )
-                {
-                    this.base.swap( ( (EventAttachmentResource) a ).getBase(), ( (EventAttachmentResource) b ).getBase() );
                 }
             };
             

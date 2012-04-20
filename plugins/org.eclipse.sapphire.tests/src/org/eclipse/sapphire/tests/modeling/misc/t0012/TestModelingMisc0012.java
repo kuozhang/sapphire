@@ -64,23 +64,23 @@ public final class TestModelingMisc0012 extends SapphireTestCase
         ac2.setValueProperty1( "element-2-a" );
         ac2.setValueProperty2( "element-2-b" );
         
-        ac1 = a.getListProperty1().addNewElement();
+        ac1 = a.getListProperty1().insert();
         ac1.setValueProperty1( "list-1-a" );
         
-        ac1 = a.getListProperty1().addNewElement();
+        ac1 = a.getListProperty1().insert();
         ac1.setValueProperty1( "list-1-b" );
         
-        ac1 = a.getListProperty1().addNewElement();
+        ac1 = a.getListProperty1().insert();
         ac1.setValueProperty1( "list-1-c" );
         
-        ac1 = a.getListProperty2().addNewElement( TestElementChild.TYPE );
+        ac1 = a.getListProperty2().insert( TestElementChild.TYPE );
         ac1.setValueProperty1( "list-2-a" );
 
-        ac2 = (TestElementChildEx) a.getListProperty2().addNewElement( TestElementChildEx.TYPE );
+        ac2 = (TestElementChildEx) a.getListProperty2().insert( TestElementChildEx.TYPE );
         ac2.setValueProperty1( "list-2-b-a" );
         ac2.setValueProperty2( "list-2-b-b" );
         
-        ac2 = (TestElementChildEx) a.getListProperty2().addNewElement( TestElementChildEx.TYPE );
+        ac2 = (TestElementChildEx) a.getListProperty2().insert( TestElementChildEx.TYPE );
         ac2.setValueProperty1( "list-2-c-a" );
         ac2.setValueProperty2( "list-2-c-b" );
         

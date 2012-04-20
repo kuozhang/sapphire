@@ -59,11 +59,11 @@ public final class TestModelingMisc0008 extends SapphireTestCase
         final RootXmlResource rootXmlResource = new RootXmlResource( new XmlResourceStore( loadResource( "TestData.xml" ) ) );
         final TestRootElement root = TestRootElement.TYPE.instantiate( rootXmlResource );
         
-        root.getChildren().addNewElement();
+        root.getChildren().insert();
         
         try
         {
-            root.getChildrenReadOnly().addNewElement();
+            root.getChildrenReadOnly().insert();
             fail( "Failed to generated UnsupportedOperationException." );
         }
         catch( UnsupportedOperationException e ) {}
@@ -74,11 +74,11 @@ public final class TestModelingMisc0008 extends SapphireTestCase
         final RootXmlResource rootXmlResource = new RootXmlResource( new XmlResourceStore( loadResource( "TestData.xml" ) ) );
         final TestRootElement root = TestRootElement.TYPE.instantiate( rootXmlResource );
         
-        root.getChildren().addNewElement( TestChildElement.TYPE );
+        root.getChildren().insert( TestChildElement.TYPE );
         
         try
         {
-            root.getChildrenReadOnly().addNewElement( TestChildElement.TYPE );
+            root.getChildrenReadOnly().insert( TestChildElement.TYPE );
             fail( "Failed to generated UnsupportedOperationException." );
         }
         catch( UnsupportedOperationException e ) {}
@@ -89,11 +89,11 @@ public final class TestModelingMisc0008 extends SapphireTestCase
         final RootXmlResource rootXmlResource = new RootXmlResource( new XmlResourceStore( loadResource( "TestData.xml" ) ) );
         final TestRootElement root = TestRootElement.TYPE.instantiate( rootXmlResource );
         
-        root.getChildren().addNewElement( TestChildElement.class );
+        root.getChildren().insert( TestChildElement.class );
         
         try
         {
-            root.getChildrenReadOnly().addNewElement( TestChildElement.class );
+            root.getChildrenReadOnly().insert( TestChildElement.class );
             fail( "Failed to generated UnsupportedOperationException." );
         }
         catch( UnsupportedOperationException e ) {}

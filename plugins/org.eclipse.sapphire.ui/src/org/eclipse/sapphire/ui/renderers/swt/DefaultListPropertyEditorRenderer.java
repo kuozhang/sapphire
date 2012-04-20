@@ -1761,7 +1761,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         @Override
         protected Object run( final SapphireRenderingContext context )
         {
-            return getList().addNewElement( this.type );
+            return getList().insert( this.type );
         }
     }
     

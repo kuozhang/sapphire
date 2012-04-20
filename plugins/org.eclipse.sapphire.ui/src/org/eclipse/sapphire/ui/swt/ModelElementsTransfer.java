@@ -107,7 +107,7 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
     {
         out.writeUTF( element.type().getQualifiedName() );
         
-        for( ModelProperty property : element.type().properties() )
+        for( ModelProperty property : element.properties() )
         {
             if( property instanceof ValueProperty )
             {
@@ -198,7 +198,7 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
         while( in.readByte() != 0 )
         {
             final String propertyName = in.readUTF();
-            final ModelProperty property = element.type().property( propertyName );
+            final ModelProperty property = element.property( propertyName );
             
             if( property instanceof ValueProperty )
             {
@@ -227,7 +227,7 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
                 {
                     final String qualifiedTypeName = in.readUTF();
                     final ModelElementType type = ModelElementType.read( this.classLoader, qualifiedTypeName );
-                    final IModelElement child = list.addNewElement( type );
+                    final IModelElement child = list.insert( type );
                     nativeToJava( in, child );
                 }
             }
