@@ -284,11 +284,6 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	notifyDiagramSave();
     }
 
-    public void autoLayoutDiagram()
-    {
-    	notifyDiagramAutoLayout();
-    }
-    
     public IDiagramEditorPageDef getPageDef()
     {
     	return this.diagramPageDef;
@@ -712,119 +707,110 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 		}
 	}
 
-	private void notifyConnectionUpdate(DiagramConnectionPart connPart)
+	private void notifyConnectionUpdate(final DiagramConnectionEvent event)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
 		{
 			if (listener instanceof SapphireDiagramPartListener)
 			{
-				DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
-				((SapphireDiagramPartListener)listener).handleConnectionUpdateEvent(cue);
+				((SapphireDiagramPartListener)listener).handleConnectionUpdateEvent(event);
 			}
 		}		
 	}
 	
-	private void notifyConnectionEndpointUpdate(DiagramConnectionPart connPart)
+	private void notifyConnectionEndpointUpdate(final DiagramConnectionEvent event)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
 		{
 			if (listener instanceof SapphireDiagramPartListener)
 			{
-				DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
-				((SapphireDiagramPartListener)listener).handleConnectionEndpointEvent(cue);
+				((SapphireDiagramPartListener)listener).handleConnectionEndpointEvent(event);
 			}
 		}		
 	}
 
-    private void notifyConnectionAdd(DiagramConnectionPart connPart)
+    private void notifyConnectionAdd(final DiagramConnectionEvent event)
     {
         Set<SapphirePartListener> listeners = this.getListeners();
         for(SapphirePartListener listener : listeners)
         {
             if (listener instanceof SapphireDiagramPartListener)
             {
-                DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
-                ((SapphireDiagramPartListener)listener).handleConnectionAddEvent(cue);
+                ((SapphireDiagramPartListener)listener).handleConnectionAddEvent(event);
             }
         }        
     }
 
-	private void notifyConnectionDelete(DiagramConnectionPart connPart)
+	private void notifyConnectionDelete(final DiagramConnectionEvent event)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
 		{
 			if (listener instanceof SapphireDiagramPartListener)
 			{
-				DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
-				((SapphireDiagramPartListener)listener).handleConnectionDeleteEvent(cue);
+				((SapphireDiagramPartListener)listener).handleConnectionDeleteEvent(event);
 			}
 		}		
 	}
 	
-	private void notifyConnectionAddBendpoint(DiagramConnectionPart connPart)
+	private void notifyConnectionAddBendpoint(final DiagramConnectionEvent cue)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
 		{
 			if (listener instanceof SapphireDiagramPartListener)
 			{
-				DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
 				((SapphireDiagramPartListener)listener).handleConnectionAddBendpointEvent(cue);
 			}
 		}		
 	}
 
-	private void notifyConnectionRemoveBendpoint(DiagramConnectionPart connPart)
+	private void notifyConnectionRemoveBendpoint(final DiagramConnectionEvent event)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
 		{
 			if (listener instanceof SapphireDiagramPartListener)
 			{
-				DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
-				((SapphireDiagramPartListener)listener).handleConnectionRemoveBendpointEvent(cue);
+				((SapphireDiagramPartListener)listener).handleConnectionRemoveBendpointEvent(event);
 			}
 		}		
 	}
 
-	private void notifyConnectionMoveBendpoint(DiagramConnectionPart connPart)
+	private void notifyConnectionMoveBendpoint(final DiagramConnectionEvent event)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
 		{
 			if (listener instanceof SapphireDiagramPartListener)
 			{
-				DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
-				((SapphireDiagramPartListener)listener).handleConnectionMoveBendpointEvent(cue);
+				((SapphireDiagramPartListener)listener).handleConnectionMoveBendpointEvent(event);
 			}
 		}		
 	}
 	
-	private void notifyConnectionResetBendpoints(DiagramConnectionPart connPart)
+	private void notifyConnectionResetBendpoints(final DiagramConnectionEvent event)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
 		{
 			if (listener instanceof SapphireDiagramPartListener)
 			{
-				DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
-				((SapphireDiagramPartListener)listener).handleConnectionResetBendpointsEvent(cue);
+				((SapphireDiagramPartListener)listener).handleConnectionResetBendpointsEvent(event);
 			}
 		}		
 	}
 
-	private void notifyConnectionMoveLabel(DiagramConnectionPart connPart)
+	private void notifyConnectionMoveLabel(final DiagramConnectionEvent event)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
 		{
 			if (listener instanceof SapphireDiagramPartListener)
 			{
-				DiagramConnectionEvent cue = new DiagramConnectionEvent(connPart);
-				((SapphireDiagramPartListener)listener).handleConnectionMoveLabelEvent(cue);
+				((SapphireDiagramPartListener)listener).handleConnectionMoveLabelEvent(event);
 			}
 		}		
 	}
@@ -895,19 +881,6 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 		}		
 	}
 	
-	private void notifyDiagramAutoLayout()
-	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramPageEvent pageEvent = new DiagramPageEvent(this);
-				((SapphireDiagramPartListener)listener).handleDiagramAutoLayout(pageEvent);
-			}
-		}		
-	}
-
 	// --------------------------------------------------------------------
 	// Inner classes
 	//---------------------------------------------------------------------
@@ -942,57 +915,57 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 	private class ConnectionTemplateListener extends DiagramConnectionTemplate.Listener
 	{
         @Override
-        public void handleConnectionUpdate(final DiagramConnectionPart connPart)
+        public void handleConnectionUpdate(final DiagramConnectionEvent event)
         {
-            notifyConnectionUpdate(connPart);
+            notifyConnectionUpdate(event);
         }
         
         @Override
-        public void handleConnectionEndpointUpdate(final DiagramConnectionPart connPart)
+        public void handleConnectionEndpointUpdate(final DiagramConnectionEvent event)
         {
-            notifyConnectionEndpointUpdate(connPart);
+            notifyConnectionEndpointUpdate(event);
         }
 
         @Override
-        public void handleConnectionAdd(final DiagramConnectionPart connPart)
+        public void handleConnectionAdd(final DiagramConnectionEvent event)
         {
-            notifyConnectionAdd(connPart);
+            notifyConnectionAdd(event);
         }
 
         @Override
-        public void handleConnectionDelete(final DiagramConnectionPart connPart)
+        public void handleConnectionDelete(final DiagramConnectionEvent event)
         {
-            notifyConnectionDelete(connPart);
+            notifyConnectionDelete(event);
         }
         
         @Override
-        public void handleAddBendpoint(final DiagramConnectionPart connPart)
+        public void handleAddBendpoint(final DiagramConnectionEvent event)
         {
-            notifyConnectionAddBendpoint(connPart);
+            notifyConnectionAddBendpoint(event);
         }
 
         @Override
-        public void handleRemoveBendpoint(final DiagramConnectionPart connPart)
+        public void handleRemoveBendpoint(final DiagramConnectionEvent event)
         {
-            notifyConnectionRemoveBendpoint(connPart);
+            notifyConnectionRemoveBendpoint(event);
         }
 
         @Override
-        public void handleMoveBendpoint(final DiagramConnectionPart connPart)
+        public void handleMoveBendpoint(final DiagramConnectionEvent event)
         {
-            notifyConnectionMoveBendpoint(connPart);
+            notifyConnectionMoveBendpoint(event);
         }
 
         @Override
-        public void handleResetBendpoints(final DiagramConnectionPart connPart)
+        public void handleResetBendpoints(final DiagramConnectionEvent event)
         {
-            notifyConnectionResetBendpoints(connPart);
+            notifyConnectionResetBendpoints(event);
         }
 
         @Override
-        public void handleMoveLabel(final DiagramConnectionPart connPart)
+        public void handleMoveLabel(final DiagramConnectionEvent event)
         {
-            notifyConnectionMoveLabel(connPart);
+            notifyConnectionMoveLabel(event);
         }
 	}
     
@@ -1000,15 +973,15 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     {
 
         @Override
-        public void handleConnectionAdd(final DiagramImplicitConnectionPart connPart)
+        public void handleConnectionAdd(final DiagramConnectionEvent event)
         {
-            notifyConnectionAdd(connPart);
+            notifyConnectionAdd(event);
         }
 
         @Override
-        public void handleConnectionDelete(final DiagramImplicitConnectionPart connPart)
+        public void handleConnectionDelete(final DiagramConnectionEvent event)
         {
-            notifyConnectionDelete(connPart);
+            notifyConnectionDelete(event);
         }
         
     }

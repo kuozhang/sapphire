@@ -15,7 +15,7 @@ package org.eclipse.sapphire.ui;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public final class Bounds extends Point
+public class Bounds extends Point
 {
     private int width;
     private int height;

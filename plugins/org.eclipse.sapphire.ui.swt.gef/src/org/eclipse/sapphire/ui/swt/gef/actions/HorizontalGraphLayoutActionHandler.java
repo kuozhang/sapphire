@@ -11,17 +11,32 @@
 
 package org.eclipse.sapphire.ui.swt.gef.actions;
 
-import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
+import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
+import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
+import org.eclipse.sapphire.ui.swt.gef.layout.HorizontalGraphLayout;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class HorizontalGraphLayoutActionHandler extends DiagramGraphLayoutActionHandler {
-
+public class HorizontalGraphLayoutActionHandler extends SapphireDiagramActionHandler 
+{
 	@Override
-	public int getGraphDirection() {
-		return PositionConstants.EAST;
+	public boolean canExecute(Object obj) 
+	{
+		return true;
 	}
 
+	@Override
+	protected Object run(SapphireRenderingContext context) 
+	{
+		DiagramRenderingContext diagramCtx = (DiagramRenderingContext)context;
+		SapphireDiagramEditor diagramEditor = diagramCtx.getDiagramEditor();
+		new HorizontalGraphLayout().layout(diagramEditor);
+		
+		return null;
+	}
+	
 }

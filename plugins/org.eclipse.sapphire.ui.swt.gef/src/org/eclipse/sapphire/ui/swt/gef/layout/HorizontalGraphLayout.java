@@ -9,18 +9,20 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.editor;
+package org.eclipse.sapphire.ui.swt.gef.layout;
+
+import org.eclipse.draw2d.PositionConstants;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class DiagramNodeEvent extends DiagramPartEvent 
+public class HorizontalGraphLayout extends DiagramGraphLayout 
 {
-    
-    public DiagramNodeEvent(final DiagramNodePart part)
-    {
-       super(part);
-    }
+	@Override
+	public int getGraphDirection()
+	{
+		return PositionConstants.EAST;
+	}
 
 }

@@ -15,7 +15,6 @@
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -77,7 +76,7 @@ public class DiagramConnectionPart
 	protected FunctionResult idFunctionResult;
 	protected ModelPropertyListener modelPropertyListener;
 	private PropertiesViewContributionManager propertiesViewContributionManager;
-	private List<Point> bendpoints = new ArrayList<Point>();
+	private DiagramConnectionBendPoints bendPoints = new DiagramConnectionBendPoints();
 	private Point labelPosition;
 	
 	public DiagramConnectionPart() {}
@@ -617,8 +616,8 @@ public class DiagramConnectionPart
         {
             if (listener instanceof SapphireDiagramPartListener)
             {
-                DiagramConnectionEvent cue = new DiagramConnectionEvent(this);
-                ((SapphireDiagramPartListener)listener).handleConnectionAddBendpointEvent(cue);
+            	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
+                ((SapphireDiagramPartListener)listener).handleConnectionAddBendpointEvent(event);
             }
         }    	
     }
@@ -656,8 +655,8 @@ public class DiagramConnectionPart
         {
             if (listener instanceof SapphireDiagramPartListener)
             {
-                DiagramConnectionEvent cue = new DiagramConnectionEvent(this);
-                ((SapphireDiagramPartListener)listener).handleConnectionResetBendpointsEvent(cue);
+            	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
+                ((SapphireDiagramPartListener)listener).handleConnectionResetBendpointsEvent(event);
             }
         }    	
     }
@@ -687,35 +686,43 @@ public class DiagramConnectionPart
 	
     public void addBendpoint(int index, int x, int y)
     {
-    	this.bendpoints.add(index, new Point(x, y));
+    	this.bendPoints.getBendPoints().add(index, new Point(x, y));
     	notifyAddBendpoint();
     }
     
     public void removeBendpoint(int index)
     {
-    	this.bendpoints.remove(index);
+    	this.bendPoints.getBendPoints().remove(index);
     	notifyRemoveBendpoint();
     }
     
     public void removeAllBendpoints()
     {
-    	this.bendpoints.clear();
+    	this.bendPoints.getBendPoints().clear();
     	notifyRemoveBendpoint();
     }
     
     public void updateBendpoint(int index, int x, int y)
     {
-    	if (index < this.bendpoints.size())
+    	if (index < this.bendPoints.getBendPoints().size())
     	{
-    		this.bendpoints.set(index, new Point(x, y));
+    		this.bendPoints.getBendPoints().set(index, new Point(x, y));
     	}
     	notifyMoveBendpoint();
     }
     
-    public void resetBendpoints(List<Point> bendpoints)
+    public void resetBendpoints(DiagramConnectionBendPoints bendPoints)
+    {
+    	resetBendpoints(bendPoints.getBendPoints(), bendPoints.isAutoLayout(), 
+    			bendPoints.isDefault());
+    }
+    
+    public void resetBendpoints(List<Point> bendpoints, boolean autoLayout , boolean isDefault)
     {
     	boolean changed = false;
-    	if (bendpoints.size() != this.bendpoints.size())
+    	if (bendpoints.size() != this.bendPoints.getBendPoints().size() || 
+    			autoLayout != this.bendPoints.isAutoLayout() ||
+    			isDefault != this.bendPoints.isDefault())
     	{
     		changed = true;
     	}
@@ -724,7 +731,7 @@ public class DiagramConnectionPart
 			for (int i = 0; i < bendpoints.size(); i++)
 			{
 				Point newPt = bendpoints.get(i);
-				Point oldPt = this.bendpoints.get(i);
+				Point oldPt = this.bendPoints.getBendPoints().get(i);
 				if (newPt.getX() != oldPt.getX() || newPt.getY() != oldPt.getY())
 				{
 					changed = true;
@@ -734,15 +741,16 @@ public class DiagramConnectionPart
     	}
     	if (changed)
     	{
-    		this.bendpoints.clear();
-    		this.bendpoints.addAll(bendpoints);
+    		this.bendPoints.setBendPoints(bendpoints);
+    		this.bendPoints.setDefault(isDefault);
+    		this.bendPoints.setAutoLayout(autoLayout);
     		notifyResetBendpoints();
     	}
     }
     
-    public List<Point> getConnectionBendpoints()
+    public DiagramConnectionBendPoints getConnectionBendpoints()
     {
-    	return this.bendpoints;
+    	return new DiagramConnectionBendPoints(this.bendPoints);
     }
 
     public Point getLabelPosition()
@@ -750,17 +758,29 @@ public class DiagramConnectionPart
     	return this.labelPosition;
     }
     
-    public void setLabelPosition(int x, int y)
+    public void setLabelPosition(Point newPos)
     {
-    	if (this.labelPosition == null)
+    	boolean changed = false;
+    	
+    	if (this.labelPosition == null && newPos != null)
     	{
-    		this.labelPosition = new Point(x, y);
+    		this.labelPosition = new Point(newPos);
+    		changed = true;
     	}
-    	else
+    	else if (this.labelPosition != null && newPos == null)
     	{
-    		this.labelPosition.setX(x);
-    		this.labelPosition.setY(y);
+    		this.labelPosition = null;
+    		changed = true;
     	}
-    	notifyMoveConnectionLabel();
+    	else if (this.labelPosition != null && newPos != null && !this.labelPosition.equals(newPos))
+    	{
+    		this.labelPosition.setX(newPos.getX());
+    		this.labelPosition.setY(newPos.getY());
+   			changed = true;
+    	}
+    	if (changed)
+    	{
+    		notifyMoveConnectionLabel();
+    	}
     }
 }

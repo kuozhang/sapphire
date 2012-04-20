@@ -42,10 +42,10 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
 {
     public static abstract class Listener
     {
-        public void handleConnectionAdd(final DiagramImplicitConnectionPart connPart)
+        public void handleConnectionAdd(final DiagramConnectionEvent event)
         {            
         }
-        public void handleConnectionDelete(final DiagramImplicitConnectionPart connPart)
+        public void handleConnectionDelete(final DiagramConnectionEvent event)
         {            
         }
     }
@@ -267,7 +267,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     {
         for( Listener listener : this.templateListeners )
         {
-            listener.handleConnectionAdd(connPart);
+            listener.handleConnectionAdd(new DiagramConnectionEvent(connPart));
         }        
     }
 
@@ -275,7 +275,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     {
         for( Listener listener : this.templateListeners )
         {
-            listener.handleConnectionDelete(connPart);
+            listener.handleConnectionDelete(new DiagramConnectionEvent(connPart));
         }        
     }
     

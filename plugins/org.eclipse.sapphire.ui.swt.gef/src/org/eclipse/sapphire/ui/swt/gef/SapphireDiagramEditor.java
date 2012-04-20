@@ -51,8 +51,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.ISapphirePart;
-import org.eclipse.sapphire.ui.SapphireAction;
-import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SapphireHelpContext;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -68,9 +66,11 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramPartEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
+import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceServiceListener;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.gef.dnd.ObjectsTransferDropTargetListener;
 import org.eclipse.sapphire.ui.swt.gef.dnd.SapphireTemplateTransferDropTargetListener;
+import org.eclipse.sapphire.ui.swt.gef.layout.HorizontalGraphLayout;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModelBase;
@@ -101,6 +101,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
     private SapphireDiagramEditorPagePart diagramPart;
     private DiagramModel diagramModel;
     private SapphireDiagramPartListener diagramPartListener;
+    private DiagramLayoutPersistenceServiceListener layoutPersistenceServiceListener;
     private List<ISapphirePart> selectedParts = null;
     private List<GraphicalEditPart> selectedEditParts = null;
     private boolean editorIsDirty = false;
@@ -158,23 +159,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		    {		    	
 		    	DiagramNodePart nodePart = (DiagramNodePart)event.getPart();
 		    	moveNode(nodePart);
-		    	if (layoutPersistenceService.isNodePersisted(nodePart))
-		    	{
-		    		Bounds newBounds = nodePart.getNodeBounds();
-		    		Bounds oldBounds = layoutPersistenceService.read(nodePart);
-		    		if (oldBounds == null || newBounds.getX() != oldBounds.getX() || newBounds.getY() != oldBounds.getY())
-		    		{
-		    			markEditorDirty();
-		    		}
-		    		else
-		    		{
-		    			markEditorClean();
-		    		}
-		    	}
-		    	else
-		    	{
-		    		markEditorDirty();
-		    	}
 		    }
 			
 			@Override
@@ -206,7 +190,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		    {
 				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
 		    	updateConnectionBendpoint(connPart);
-		    	markEditorForConnectionBendPointEvent(connPart);
 		    }
 
 			@Override
@@ -214,7 +197,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		    {
 				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
 		    	updateConnectionBendpoint(connPart);
-		    	markEditorForConnectionBendPointEvent(connPart);
 		    }
 			
 			@Override
@@ -222,7 +204,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		    {
 				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
 		    	updateConnectionBendpoint(connPart);
-		    	markEditorForConnectionBendPointEvent(connPart);
 		    }
 			
 			@Override
@@ -230,7 +211,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		    {
 				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
 		    	updateConnectionBendpoint(connPart);
-		    	markEditorForConnectionBendPointEvent(connPart);
 		    }
 
 			@Override
@@ -238,24 +218,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		    {
 				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
 		    	updateConnectionMoveLabel(connPart);
-		    	if (layoutPersistenceService.isConnectionPersisted(connPart))
-		    	{
-		    		org.eclipse.sapphire.ui.Point savedLabelPos = layoutPersistenceService.readConnectionLabelPosition(connPart);
-		    		org.eclipse.sapphire.ui.Point newLabelPos = connPart.getLabelPosition();
-		    		if (savedLabelPos != null && newLabelPos.getX() == savedLabelPos.getX() && 
-		    				newLabelPos.getY() == savedLabelPos.getY())
-		    		{
-		    			markEditorClean();
-		    		}
-		    		else
-		    		{
-		    			markEditorDirty();
-		    		}
-		    	}
-		    	else
-		    	{
-		    		markEditorDirty();
-		    	}
 		    }
 
 			@Override
@@ -286,54 +248,24 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			{
 				refreshPalette();
 			}
-			
-			private boolean bendPointsChangedFromSaved(DiagramConnectionPart connPart)
-			{
-				boolean changed = false;
-				List<org.eclipse.sapphire.ui.Point> newBendPoints = connPart.getConnectionBendpoints();
-				List<org.eclipse.sapphire.ui.Point> oldBendPoints = layoutPersistenceService.read(connPart);
-				if (newBendPoints.size() != oldBendPoints.size())
-				{
-					changed = true;
-				}
-				else
-				{
-					for (int i = 0; i < newBendPoints.size(); i++)
-					{
-						if (newBendPoints.get(i).getX() != oldBendPoints.get(i).getX() ||
-								newBendPoints.get(i).getY() != oldBendPoints.get(i).getY())
-						{
-							changed = true;
-							break;
-						}
-					}
-				}
-				return changed;
-			}
-			
-			private void markEditorForConnectionBendPointEvent(DiagramConnectionPart connPart)
-			{
-		    	if (layoutPersistenceService.isConnectionPersisted(connPart))
-		    	{
-		    		if (bendPointsChangedFromSaved(connPart))
-		    		{
-		    			markEditorDirty();
-		    		}
-		    		else
-		    		{
-		    			markEditorClean();
-		    		}
-		    	}
-		    	else
-		    	{
-		    		markEditorDirty();
-		    	}
-				
-			}
-			
 		};
 		
 		this.diagramPart.addListener(this.diagramPartListener);
+		
+		this.layoutPersistenceServiceListener = new DiagramLayoutPersistenceServiceListener() 
+		{
+		    public void markClean()
+		    {
+		    	markEditorClean();
+		    }       
+			
+		    public void markDirty()
+		    {
+		    	markEditorDirty();
+		    }			
+		};
+		
+		this.layoutPersistenceService.addListener(this.layoutPersistenceServiceListener);
     }
     
     public IDiagramEditorPageDef getDiagramEditorPageDef()
@@ -635,22 +567,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		// If the layout file doesn't exist or no layout is written to the layout file, apply auto layout
 		if (hasNoExistingLayout()) 
 		{
-			SapphireAction layoutAction = this.diagramPart.getAction("Sapphire.Diagram.Layout");
-			if (layoutAction != null) 
-			{
-				SapphireActionHandler layoutHandler = layoutAction.getFirstActiveHandler();
-				if (layoutHandler != null) 
-				{
-					DiagramRenderingContext context = getConfigurationManager().getDiagramRenderingContextCache().get(this.diagramPart);
-					Point pt = getMouseLocation();
-					context.setCurrentMouseLocation(pt.x, pt.y);
-					layoutHandler.execute(context);
-					this.diagramPart.autoLayoutDiagram();
-					markEditorClean();
-				}
-			}
-		}
-		
+			new HorizontalGraphLayout().layout(this, true);
+			markEditorClean();
+		}		
 	}
 	
 	private void initRenderingContext()
@@ -931,7 +850,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		
 		diagramModel.dispose();
 		diagramPart.dispose();
-		diagramPart.removeListener(diagramPartListener);
+		diagramPart.removeListener(this.diagramPartListener);
+		layoutPersistenceService.removeListener(this.layoutPersistenceServiceListener);
 		if (layoutPersistenceService != null)
 		{
 			layoutPersistenceService.dispose();

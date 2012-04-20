@@ -11,15 +11,15 @@
 
 package org.eclipse.sapphire.ui.diagram.layout;
 
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.services.Service;
-import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.ISapphirePart;
-import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.IdUtil;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
@@ -31,98 +31,62 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 public abstract class DiagramLayoutPersistenceService extends Service
 {
 	private SapphireDiagramEditorPagePart diagramPart;
-	private Set<String> persistedNodes;
-	private Set<String> persistedConnections;
+	private Set<DiagramLayoutPersistenceServiceListener> listeners;
 	
 	@Override
     protected void init()
     {
 		super.init();
 		this.diagramPart = (SapphireDiagramEditorPagePart)context().find(ISapphirePart.class);
-    	this.persistedNodes = new HashSet<String>();
-    	this.persistedConnections = new HashSet<String>();
-    	refreshPersistedPartsCache();
     }	
-	
-	/**
-	 * Read the node bounds from the persistence model
-	 * @param nodePart
-	 * @return node bounds. Null if the persistence model doesn't contain bounds for this node. 
-	 */
-	public abstract Bounds read(DiagramNodePart nodePart);
-	
-	/**
-	 * Read the connection bend points from the persistence model
-	 * @param connectionPart
-	 * @return the connection bend point list. If the connection doesn't contain bend points, 
-	 * it should return an empty list.
-	 */
-	public abstract List<Point> read(DiagramConnectionPart connectionPart);
-	
-	/**
-	 * Read the connection label position from the persistence model
-	 * @param connectionPart
-	 * @return the connection label position. If the connection doesn't contain label, 
-	 * it should return null
-	 */
-	public abstract Point readConnectionLabelPosition(DiagramConnectionPart connectionPart);
-	
 	
 	public SapphireDiagramEditorPagePart getDiagramEditorPagePart()
 	{
 		return this.diagramPart;
 	}
 	
-	/**
-	 * When a node part is created, diagram layout persistence service is consulted
-	 * to see whether the node has been persisted in the persistence service.
-	 * 
-	 * @param nodePart the node part
-	 * @return true if the node was persisted in the persistence service; false otherwise
-	 * 
-	 */
-	public boolean isNodePersisted(DiagramNodePart nodePart)
-	{
-		String nodeId = IdUtil.computeNodeId(nodePart); 
-		if (this.persistedNodes.contains(nodeId))
-		{
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * When a connection part is created, diagram layout persistence service is consulted
-	 * to see whether the connection has been persisted in the persistence service.
-	 * 
-	 * @param connectionPart the connection part
-	 * @return true if the connection was persisted in the persistence service; false otherwise
-	 * 
-	 */	
-	public boolean isConnectionPersisted(DiagramConnectionPart connPart)
-	{
-		String connId = IdUtil.computeConnectionId(connPart); 
-		if (this.persistedConnections.contains(connId))
-		{
-			return true;
-		}
-		return false;
-	}
-
-	protected void refreshPersistedPartsCache()
-	{
-		this.persistedConnections.clear();
-		this.persistedNodes.clear();
-		for (DiagramConnectionPart connPart : this.diagramPart.getConnections())
-		{
-			String connId = IdUtil.computeConnectionId(connPart);
-			this.persistedConnections.add(connId);
-		}
-		for (DiagramNodePart nodePart : this.diagramPart.getNodes())
-		{
-			String nodeId = IdUtil.computeNodeId(nodePart);
-			this.persistedNodes.add(nodeId);
-		}		
-	}
-	
+    public final void addListener( final DiagramLayoutPersistenceServiceListener listener )
+    {
+        if( this.listeners== null )
+        {
+            this.listeners= Collections.singleton( listener );
+        }
+        else
+        {
+            this.listeners= new HashSet<DiagramLayoutPersistenceServiceListener>( this.listeners);
+            this.listeners.add( listener );
+        }
+    }
+    
+    public final void removeListener( final DiagramLayoutPersistenceServiceListener listener )
+    {
+        if( this.listeners!= null )
+        {
+            if( this.listeners.contains( listener ) )
+            {
+                if( this.listeners.size() == 1 )
+                {
+                    this.listeners= null;
+                }
+                else
+                {
+                    this.listeners = new HashSet<DiagramLayoutPersistenceServiceListener>( this.listeners);
+                    this.listeners.remove( listener );
+                }
+            }
+        }
+    }
+    
+    public final Set<DiagramLayoutPersistenceServiceListener> getListeners()
+    {
+        if( this.listeners == null)
+        {
+            return Collections.emptySet();
+        }
+        else
+        {
+            return this.listeners;
+        }
+    }
+			
 }

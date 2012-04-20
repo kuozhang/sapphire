@@ -110,7 +110,7 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart
 		DiagramConnectionPart connectionPart = getCastedModel().getModelPart();
 
 		List<AbsoluteBendpoint> figureConstraint = new ArrayList<AbsoluteBendpoint>();
-		for (Point point : connectionPart.getConnectionBendpoints()) {
+		for (Point point : connectionPart.getConnectionBendpoints().getBendPoints()) {
 			AbsoluteBendpoint bendpoint = new AbsoluteBendpoint(point.getX(), point.getY());
 			figureConstraint.add(bendpoint);
 		}

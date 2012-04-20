@@ -94,21 +94,10 @@ public class DiagramModel extends DiagramModelBase {
 	public void handleAddNode(DiagramNodePart nodePart) {
 		DiagramNodeModel nodeModel = new DiagramNodeModel(this, nodePart);
 		
-		// initialize location if necessary
-		// [Bug 376245] Revert action in StructuredTextEditor does not revert diagram nodes 
-		// and connections in SapphireDiagramEditor
-		if (this.configManager.getLayoutPersistenceService().isNodePersisted(nodePart))
-		{
-			Bounds bounds = this.configManager.getLayoutPersistenceService().read(nodePart);
-			if (bounds != null)
-			{
-				nodePart.setNodeBounds(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
-			}
-		}
-		org.eclipse.sapphire.ui.Point position = nodePart.getNodePosition();
-		if (position.getX() < 0 && position.getY() < 0) {
-			position = getDefaultPosition();
-			nodePart.setNodePosition(position.getX(), position.getY());
+		Bounds bounds = nodePart.getNodeBounds();
+		if (bounds.getX() < 0 && bounds.getY() < 0) {
+			org.eclipse.sapphire.ui.Point position = getDefaultPosition();
+			nodePart.setNodeBounds(position.getX(), position.getY(), false, true);
 		}
 		
 		nodes.add(nodeModel);
@@ -209,32 +198,16 @@ public class DiagramModel extends DiagramModelBase {
 				connectionModel.setSourceNode(sourceNode);
 				connectionModel.setTargetNode(targetNode);
 
-				// Restore connection bend points if necessary
-				// [Bug 376245] Revert action in StructuredTextEditor does not revert diagram nodes 
-				// and connections in SapphireDiagramEditor
-
-				if (this.configManager.getLayoutPersistenceService().isConnectionPersisted(connPart))
-				{
-					List<org.eclipse.sapphire.ui.Point> bendPoints = this.configManager.getLayoutPersistenceService().read(connPart);
-					if (bendPoints != null)
-					{
-						connPart.resetBendpoints(bendPoints);
-					}
-					org.eclipse.sapphire.ui.Point labelPos = this.configManager.getLayoutPersistenceService().readConnectionLabelPosition(connPart);
-					if (labelPos != null)
-					{
-						connPart.setLabelPosition(labelPos.getX(), labelPos.getY());
-					}
-				}
 				// add bendpoint if collision if the connection part doesn't have any bend points.
 				// But we still route the connection for the purpose of calculating next "fan position" correctly.
 				// See Bug 374793 - Additional bend points added to connection when visible-when condition on nodes change
 								
-				// If the connection part was constructed during diagram open, we should not try to route the connection
 				Point bendPoint = this.configManager.getConnectionRouter().route(connectionModel);
-	        	if (!this.configManager.getLayoutPersistenceService().isConnectionPersisted(connPart) && bendPoint != null) 
+	        	if (bendPoint != null && connPart.getConnectionBendpoints().isEmpty()) 
 	        	{
-        			connectionModel.getModelPart().addBendpoint(0, bendPoint.x, bendPoint.y);
+	        		List<org.eclipse.sapphire.ui.Point> bendPoints = new ArrayList<org.eclipse.sapphire.ui.Point>(1);
+	        		bendPoints.add(new org.eclipse.sapphire.ui.Point(bendPoint.x, bendPoint.y));
+        			connectionModel.getModelPart().resetBendpoints(bendPoints, false, true);
 	        	}
 			}
 		}
@@ -243,8 +216,17 @@ public class DiagramModel extends DiagramModelBase {
 	public void removeConnection(DiagramConnectionPart connPart) {
 		DiagramConnectionModel connectionModel = getDiagramConnectionModel(connPart);
 		if (connectionModel != null) {
-			removeConnection(connectionModel);			
-			connPart.removeAllBendpoints();
+			removeConnection(connectionModel);
+			// Shenxue There is only one case when removing bend points of the connection part is necessary:
+			// When creating new connection, connection template receives property change event on the connection
+			// list property and creates a new connection part. The newly created connection part listens on the endpoint
+			// property change event and broadcasts the connection end point event. SapphireDiagramEditor listens on that
+			// event and remove and recreate connection edit part upon such event.
+			// SapphireDiagramEditor's updateConnectionEndpoint() has been modified to detect a true end point change
+			// before recreates connection edit part. 
+			// For other cases, this method is called on connection part that'll be disposed. So we don't need to remove 
+			// its bend points.
+			//connPart.removeAllBendpoints();
 		}
 	}
 	

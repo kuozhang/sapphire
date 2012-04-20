@@ -75,7 +75,7 @@ public class DiagramNodeAddActionHandler extends SapphireDiagramActionHandler
 
 		DiagramNodePart nodePart = this.nodeTemplate.createNewDiagramNode();
 		Point pt = diagramPart.getMouseLocation();
-		nodePart.setNodePosition(pt.getX(), pt.getY());
+		nodePart.setNodeBounds(pt.getX(), pt.getY());
 		
 		// Select the new node and put it in direct-edit mode
 		diagramPart.selectAndDirectEdit(nodePart);

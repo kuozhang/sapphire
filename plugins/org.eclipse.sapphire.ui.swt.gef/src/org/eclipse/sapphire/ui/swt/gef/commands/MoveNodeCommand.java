@@ -31,7 +31,7 @@ public class MoveNodeCommand extends Command {
 
 	@Override
 	public void execute() {
-		node.getModelPart().setNodePosition(rectangle.x, rectangle.y);
+		node.getModelPart().setNodeBounds(rectangle.x, rectangle.y);
 	}
 	
 }

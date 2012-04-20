@@ -472,7 +472,7 @@ public class DiagramNodeTemplate extends SapphirePart
     	List<DiagramConnectionPart> attachedConnections = this.diagramEditor.getAttachedConnections(nodePart);
     	for (DiagramConnectionPart connPart : attachedConnections)
     	{
-    		connPart.getDiagramConnectionTemplate().notifyConnectionAdd(connPart);
+    		connPart.getDiagramConnectionTemplate().notifyConnectionAdd(new DiagramConnectionEvent(connPart));
     	}
     }
 	

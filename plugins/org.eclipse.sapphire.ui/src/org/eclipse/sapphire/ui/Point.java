@@ -26,6 +26,12 @@ public class Point
         this.y = y;
     }
     
+    public Point(Point another)
+    {
+    	this.x = another.getX();
+    	this.y = another.getY();
+    }
+    
     public int getX() 
     { 
         return this.x; 
@@ -44,5 +50,20 @@ public class Point
     public void setY(int y)
     {
         this.y = y;
+    }
+    
+    @Override
+    public boolean equals(Object another)
+    {
+    	boolean isEqual = false;
+    	if (another instanceof Point)
+    	{
+    		Point pt = (Point)another;
+    		if (pt.getX() == getX() && pt.getY() == getY())
+    		{
+    			isEqual = true;
+    		}
+    	}
+    	return isEqual;
     }
 }

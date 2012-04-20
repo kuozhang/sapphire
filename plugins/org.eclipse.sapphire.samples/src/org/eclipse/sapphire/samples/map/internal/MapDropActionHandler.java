@@ -106,7 +106,7 @@ public final class MapDropActionHandler extends SapphireDiagramActionHandler
                     DiagramNodePart cityPart = diagramPart.getDiagramNodePart(city);
                     if (cityPart != null)
                     {
-                        cityPart.setNodePosition(x, y);
+                        cityPart.setNodeBounds(x, y);
                         cityParts.add(cityPart);
                         x += 50;
                         y += 50;

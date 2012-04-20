@@ -6,12 +6,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Ling Hao - initial implementation and ongoing maintenance
- *    Shenxue Zhou - handle feedback edges correctly.
+ *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.gef.actions;
+package org.eclipse.sapphire.ui.swt.gef.layout;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,51 +25,39 @@ import org.eclipse.draw2d.graph.EdgeList;
 import org.eclipse.draw2d.graph.Node;
 import org.eclipse.draw2d.graph.NodeList;
 import org.eclipse.sapphire.ui.Bounds;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
-import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
-import org.eclipse.sapphire.ui.swt.gef.layout.NodeJoiningDirectedGraphLayout;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 
 /**
- * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public abstract class DiagramGraphLayoutActionHandler extends
-		SapphireDiagramActionHandler 
+public abstract class DiagramGraphLayout 
 {
 	private static final int PADDING = 36;
 	
-	@Override
-	public boolean canExecute(Object obj) 
-	{
-		return true;
-	}
-	
 	public abstract int getGraphDirection();
-
-	@Override
-	protected Object run(SapphireRenderingContext context) 
+	
+	public void layout(final SapphireDiagramEditor diagramEditor)
 	{
-		DiagramRenderingContext diagramCtx = (DiagramRenderingContext)context;
-		SapphireDiagramEditor diagramEditor = diagramCtx.getDiagramEditor();
-		
+		layout(diagramEditor, false);
+	}
+
+	public void layout(final SapphireDiagramEditor diagramEditor, boolean autoLayout)
+	{
 		final DirectedGraph graph = mapDiagramToGraph(diagramEditor);
 		graph.setDefaultPadding(new Insets(PADDING));
 		new NodeJoiningDirectedGraphLayout().visit(graph);
-		mapGraphCoordinatesToDiagram(graph, diagramEditor);
-		
-		return null;
+		mapGraphCoordinatesToDiagram(graph, diagramEditor, autoLayout);		
 	}
-
+	
 	@SuppressWarnings("unchecked")
-	private DirectedGraph mapDiagramToGraph(SapphireDiagramEditor diagramEditor) 
+	private DirectedGraph mapDiagramToGraph(final SapphireDiagramEditor diagramEditor) 
 	{
 		DiagramModel diagramModel = diagramEditor.getDiagramModel();
 		Map<DiagramNodeModel, Node> shapeToNode = new HashMap<DiagramNodeModel, Node>();
@@ -105,16 +93,16 @@ public abstract class DiagramGraphLayoutActionHandler extends
 		return dg;
 	}
 	
-	private void mapGraphCoordinatesToDiagram(final DirectedGraph graph, SapphireDiagramEditor diagramEditor) {
+	private void mapGraphCoordinatesToDiagram(final DirectedGraph graph, 
+			final SapphireDiagramEditor diagramEditor, final boolean autoLayout) 
+	{
 		diagramEditor.getConfigurationManager().getConnectionRouter().clear();
-		DiagramModel diagramModel = diagramEditor.getDiagramModel();
-		mapGraphNodeCoordinatesToDiagram(graph);
-		removeDiagramManualBendpoints(diagramModel);
-		mapGraphEdgeCoordinatesToDiagram(graph, diagramEditor);
+		mapGraphNodeCoordinatesToDiagram(graph, autoLayout);
+		mapGraphEdgeCoordinatesToDiagram(graph, diagramEditor, autoLayout);
 	}
 
 	@SuppressWarnings("unchecked")
-	private void mapGraphNodeCoordinatesToDiagram(final DirectedGraph graph)
+	private void mapGraphNodeCoordinatesToDiagram(final DirectedGraph graph, boolean autoLayout)
 	{
 		NodeList myNodes = new NodeList();
 		myNodes.addAll(graph.nodes);
@@ -123,20 +111,13 @@ public abstract class DiagramGraphLayoutActionHandler extends
 			Node node = (Node) object;
 			DiagramNodeModel nodeModel = (DiagramNodeModel) node.data;
 			DiagramNodePart nodePart = nodeModel.getModelPart();
-			nodePart.setNodePosition(node.x, node.y, true);
+			nodePart.setNodeBounds(node.x, node.y, autoLayout, false);
 		}		
 	}
-	
-	private void removeDiagramManualBendpoints(final DiagramModel diagramModel) {
-		List<DiagramConnectionModel> connections = diagramModel.getConnections();
-		for (DiagramConnectionModel conn : connections) {
-			DiagramConnectionPart connPart = conn.getModelPart();
-			connPart.removeAllBendpoints();
-		}
-	}
-	
+		
 	@SuppressWarnings("unchecked")
-	private void mapGraphEdgeCoordinatesToDiagram(DirectedGraph graph, SapphireDiagramEditor diagramEditor)
+	private void mapGraphEdgeCoordinatesToDiagram(DirectedGraph graph, 
+			final SapphireDiagramEditor diagramEditor, final boolean autoLayout)
 	{
 		// add bend points generated by the graph layout
 		EdgeList myEdges = new EdgeList();
@@ -153,9 +134,10 @@ public abstract class DiagramGraphLayoutActionHandler extends
 			DiagramConnectionModel conn = (DiagramConnectionModel)edge.data;
 			NodeList nodes = edge.vNodes;
 			DiagramConnectionPart connPart = conn.getModelPart();
+			ArrayList<org.eclipse.sapphire.ui.Point> connBendPoints = new ArrayList<org.eclipse.sapphire.ui.Point>();
 			if (nodes != null)
 			{
-				int bpIndex = 0;
+				//int bpIndex = 0;
 				for (int i = 0; i < nodes.size(); i++)
 				{
 					Node vn = nodes.getNode(i);
@@ -165,29 +147,28 @@ public abstract class DiagramGraphLayoutActionHandler extends
 					{
 						if (edge.isFeedback())
 						{
-							connPart.addBendpoint(bpIndex, x + vn.width, y);
-							connPart.addBendpoint(bpIndex + 1, x, y);
+							connBendPoints.add(new org.eclipse.sapphire.ui.Point(x + vn.width, y));
+							connBendPoints.add(new org.eclipse.sapphire.ui.Point(x, y));
 						}
 						else
 						{
-							connPart.addBendpoint(bpIndex, x, y);
-							connPart.addBendpoint(bpIndex + 1, x + vn.width, y);
+							connBendPoints.add(new org.eclipse.sapphire.ui.Point(x, y));
+							connBendPoints.add(new org.eclipse.sapphire.ui.Point(x + vn.width, y));
 						}
 					}
 					else
 					{
 						if (edge.isFeedback())
 						{
-							connPart.addBendpoint(bpIndex, x, y + vn.height);
-							connPart.addBendpoint(bpIndex + 1, x, y);
+							connBendPoints.add(new org.eclipse.sapphire.ui.Point(x, y + vn.height));
+							connBendPoints.add(new org.eclipse.sapphire.ui.Point(x, y));
 						}
 						else
 						{
-							connPart.addBendpoint(bpIndex, x, y);
-							connPart.addBendpoint(bpIndex + 1, x, y + vn.height);
+							connBendPoints.add(new org.eclipse.sapphire.ui.Point(x, y));
+							connBendPoints.add(new org.eclipse.sapphire.ui.Point(x, y + vn.height));
 						}
 					}
-					bpIndex += 2;
 				}
 			}
 			else 
@@ -195,12 +176,12 @@ public abstract class DiagramGraphLayoutActionHandler extends
 	        	Point bendPoint = configManager.getConnectionRouter().route(conn);
 	        	if (bendPoint != null)
 	        	{
-	        		connPart.addBendpoint(0, bendPoint.x, bendPoint.y);
+	        		connBendPoints.add(new org.eclipse.sapphire.ui.Point(bendPoint.x, bendPoint.y));
 	        	}				
 			}
+			connPart.resetBendpoints(connBendPoints, autoLayout, false);
+			connPart.setLabelPosition(null);
 		}		
 	}
-	
+		
 }
-
-

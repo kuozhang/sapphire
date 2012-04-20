@@ -9,26 +9,20 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.editor;
-
-import org.eclipse.sapphire.ui.Point;
+package org.eclipse.sapphire.ui.diagram.layout;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class DiagramNodeMoveEvent extends DiagramNodeEvent 
+public abstract class DiagramLayoutPersistenceServiceListener 
 {
-	private Point newPosition;
+    public void markClean()
+    {
+    }       
 	
-	public DiagramNodeMoveEvent(final DiagramNodePart nodePart, final Point nodePosition)
-	{
-		super(nodePart);
-		this.newPosition = new Point(nodePosition.getX(), nodePosition.getY());
-	}
-	
-	public Point getNewPosition()
-	{
-		return this.newPosition;
-	}
+    public void markDirty()
+    {
+    	
+    }
 }

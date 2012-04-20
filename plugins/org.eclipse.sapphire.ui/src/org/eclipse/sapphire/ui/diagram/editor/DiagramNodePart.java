@@ -68,11 +68,9 @@ public class DiagramNodePart
 	private SapphireActionHandler defaultActionHandler;
 	private ModelPropertyListener modelPropertyListener;
 	private PropertiesViewContributionManager propertiesViewContributionManager; 
-	private Point leftTopPos = new Point(-1, -1);
-	private int nodeWidth = -1;
-	private int nodeHeight = -1;
-		
-    @Override
+	private DiagramNodeBounds nodeBounds = new DiagramNodeBounds();
+
+	@Override
     protected void init()
     {
         super.init();
@@ -350,56 +348,40 @@ public class DiagramNodePart
 		return this.definition.isResizable().getContent();
 	}
 	
-	public int getNodeWidth()
+	public DiagramNodeBounds getNodeBounds()
 	{
-		if (this.nodeWidth == -1)
-		{
-			if (this.definition.getWidth().getContent() != null)
-			{
-				return this.definition.getWidth().getContent();
-			}
-			else
-			{
-				return -1;
-			}
-		}
-		else
-		{
-			return this.nodeWidth;
-		}
+		return new DiagramNodeBounds(this.nodeBounds);
 	}
-		
-	public int getNodeHeight()
+	
+	public void setNodeBounds(int x, int y)
 	{
-		if (this.nodeHeight == -1)
+		setNodeBounds(new DiagramNodeBounds(x, y, -1, -1, false, false));
+	}
+	
+	public void setNodeBounds(int x, int y, boolean autoLayout, boolean defaultPosition)
+	{
+		setNodeBounds(new DiagramNodeBounds(x, y, -1, -1, autoLayout, defaultPosition));
+	}
+	
+	public void setNodeBounds(Bounds bounds)
+	{
+		DiagramNodeBounds nodeBounds = new DiagramNodeBounds(bounds);
+		setNodeBounds(nodeBounds);
+	}
+	
+	public void setNodeBounds(DiagramNodeBounds bounds)
+	{
+		// TODO handle node resizing events
+		if (!this.nodeBounds.equals(bounds))
 		{
-			if (this.definition.getHeight().getContent() != null)
-			{
-				return this.definition.getHeight().getContent();
-			}
-			else
-			{
-				return -1;
-			}
-		}
-		else
-		{
-			return this.nodeHeight;
-		}
+			this.nodeBounds.setX(bounds.getX());
+			this.nodeBounds.setY(bounds.getY());
+			this.nodeBounds.setAutoLayout(bounds.isAutoLayout());
+			this.nodeBounds.setDefaultPosition(bounds.isDefaultPosition());
+			notifyNodeMove();
+		}			
 	}
 
-	public void setNodeBounds(int x, int y, int width, int height)
-	{
-		this.nodeWidth = width;
-		this.nodeHeight = height;
-		setNodePosition(x, y);
-	}
-	
-	public Bounds getNodeBounds()
-	{
-		return new Bounds(this.leftTopPos.getX(), this.leftTopPos.getY(), this.nodeWidth, this.nodeHeight);
-	}
-	
 	public int getHorizontalSpacing()
 	{
 		if (this.definition.getHorizontalSpacing().getContent() != null)
@@ -482,28 +464,7 @@ public class DiagramNodePart
 	{
 		return this.definition.getProblemDecorator();
 	}
-		
-	public void setNodePosition(int x, int y)
-	{
-		setNodePosition(x, y, false);
-	}
-	
-	public void setNodePosition(int x, int y, boolean autoLayout)
-	{
-		if (this.leftTopPos.getX() != x || this.leftTopPos.getY() != y)
-		{
-			this.leftTopPos.setX(x); 
-			this.leftTopPos.setY(y);
-			notifyNodeMove(autoLayout);
-		}
-		
-	}
-	
-	public Point getNodePosition()
-	{
-		return this.leftTopPos;
-	}
-		
+					
 	private void notifyNodeUpdate()
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
@@ -517,14 +478,14 @@ public class DiagramNodePart
 		}
 	}
 	
-	private void notifyNodeMove(boolean autoLayout)
+	private void notifyNodeMove()
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
 		{
 			if (listener instanceof SapphireDiagramPartListener)
 			{
-				DiagramNodeEvent ne = new DiagramNodeEvent(this, autoLayout);
+				DiagramNodeEvent ne = new DiagramNodeEvent(this);
 				((SapphireDiagramPartListener)listener).handleNodeMoveEvent(ne);
 			}
 		}		

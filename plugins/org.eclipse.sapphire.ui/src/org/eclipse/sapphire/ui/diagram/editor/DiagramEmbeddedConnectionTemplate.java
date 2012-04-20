@@ -318,7 +318,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         {
             if (connPart.getEndpoint1() == element || connPart.getEndpoint2() == element)
             {
-                notifyConnectionDelete(connPart);
+                notifyConnectionDelete(new DiagramConnectionEvent(connPart));
                 disposeConnectionPart(connPart);
             }
         }
