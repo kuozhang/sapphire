@@ -103,14 +103,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 			}
 			else
 			{
-				if (isDiagramLayoutChanged())
-				{
-					markDirty();
-				}
-				else
-				{
-					markClean();
-				}
+				notifyDirtyState();
 			}
 		}		
 	}
@@ -138,14 +131,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 			}
 			else
 			{
-				if (isDiagramLayoutChanged())
-				{
-					markDirty();
-				}
-				else
-				{
-					markClean();
-				}
+				notifyDirtyState();
 			}
 		}			
 	}
@@ -280,14 +266,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 				{
 					// need to add the node bounds to the persistence cache so that "revert" could work
 					addNodeToPersistenceCache(nodePart);
-					if (isDiagramLayoutChanged())
-					{
-						markDirty();
-					}
-					else
-					{
-						markClean();
-					}
+					notifyDirtyState();
 				}
 				else if (!nodeBounds.isDefaultPosition())
 				{
@@ -298,14 +277,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 			@Override
 		    public void handleNodeDeleteEvent(final DiagramNodeEvent event)
 			{
-				if (isDiagramLayoutChanged())
-				{
-					markDirty();
-				}
-				else
-				{
-					markClean();
-				}				
+				notifyDirtyState();
 			}
 			
 			@Override
@@ -313,6 +285,12 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 			{
 				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
 				read(connPart);
+			}
+			
+			@Override
+			public void handleConnectionDeleteEvent(final DiagramConnectionEvent event)
+			{
+				notifyDirtyState();
 			}
 			
 			@Override
@@ -340,15 +318,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		    	if (bendPoints.isAutoLayout())
 		    	{
 		    		addConnectionToPersistenceCache(connPart);
-					if (isDiagramLayoutChanged())
-					{
-						markDirty();
-					}
-					else
-					{
-						markClean();
-					}
-		    		
+		    		notifyDirtyState();
 		    	}
 		    	else
 		    	{
@@ -545,6 +515,18 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
         {
             listener.markDirty();
         }                		
+	}
+	
+	private void notifyDirtyState()
+	{
+		if (isDiagramLayoutChanged())
+		{
+			markDirty();
+		}
+		else
+		{
+			markClean();
+		}		
 	}
 	
     private boolean isDiagramLayoutChanged()
