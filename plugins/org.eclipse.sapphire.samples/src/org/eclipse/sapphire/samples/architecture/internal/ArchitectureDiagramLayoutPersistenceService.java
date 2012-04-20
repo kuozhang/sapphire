@@ -295,6 +295,18 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 				}
 		    }
 			
+			@Override
+		    public void handleNodeDeleteEvent(final DiagramNodeEvent event)
+			{
+				if (isDiagramLayoutChanged())
+				{
+					markDirty();
+				}
+				else
+				{
+					markClean();
+				}				
+			}
 			
 			@Override
 	        public void handleConnectionAddEvent(final DiagramConnectionEvent event)
@@ -540,7 +552,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
     	boolean changed = false;
 		for (DiagramNodePart nodePart : getDiagramEditorPagePart().getNodes())
 		{
-			if (isNodeLayoutChanged(nodePart))
+			if (!nodePart.getLocalModelElement().disposed() && isNodeLayoutChanged(nodePart))
 			{
 				changed = true;
 				break;
@@ -548,7 +560,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		}
 		for (DiagramConnectionPart connPart : getDiagramEditorPagePart().getConnections())
 		{
-			if (isConnectionLayoutChanged(connPart))
+			if (!connPart.getLocalModelElement().disposed() && isConnectionLayoutChanged(connPart))
 			{
 				changed = true;
 				break;

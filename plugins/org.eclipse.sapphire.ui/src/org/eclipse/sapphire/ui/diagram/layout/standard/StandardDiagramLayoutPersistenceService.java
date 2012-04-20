@@ -489,6 +489,19 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		    }
 			
 			@Override
+		    public void handleNodeDeleteEvent(final DiagramNodeEvent event)
+			{
+				if (isDiagramLayoutChanged())
+				{
+					markDirty();
+				}
+				else
+				{
+					markClean();
+				}				
+			}
+			
+			@Override
 	        public void handleConnectionAddEvent(final DiagramConnectionEvent event)
 			{
 				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
@@ -638,7 +651,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
     	boolean changed = false;
 		for (DiagramNodePart nodePart : getDiagramEditorPagePart().getNodes())
 		{
-			if (isNodeLayoutChanged(nodePart))
+			if (!nodePart.getLocalModelElement().disposed() && isNodeLayoutChanged(nodePart))
 			{
 				changed = true;
 				break;
@@ -646,7 +659,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		}
 		for (DiagramConnectionPart connPart : getDiagramEditorPagePart().getConnections())
 		{
-			if (isConnectionLayoutChanged(connPart))
+			if (!connPart.getLocalModelElement().disposed() && isConnectionLayoutChanged(connPart))
 			{
 				changed = true;
 				break;
