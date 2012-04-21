@@ -42,6 +42,11 @@ to 0.5 release. Only changes from the previous release are covered.</p>
 <p>Table of Contents</p>
 
 <ol>
+  <li><a href="#IModelElement">IModelElement</a></li>
+  <li><a href="#LayeredListBindingImpl">LayeredListBindingImpl</a></li>
+  <li><a href="#ListBindingImpl">ListBindingImpl</a></li>
+  <li><a href="#ModelElementList">ModelElementList</a></li>
+  <li><a href="#ModelElementType">ModelElementType</a></li>
   <li><a href="#Actuator">Actuator</a></li>
   <li><a href="#ContentOutlineNodeImage">Content Outline Node Image</a></li>
   <li><a href="#GraphitiToGef">Graphiti to GEF Transition</a></li>
@@ -51,6 +56,342 @@ to 0.5 release. Only changes from the previous release are covered.</p>
   </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
 </ol>
+
+
+<h2><a name="IModelElement">IModelElement</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">element.</font>getModelElementType<font color="#888888">();</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">element.</font>type<font color="#888888">();</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="LayeredListBindingImpl">LayeredListBindingImpl</a></h2>
+
+<p>The list binding API has been improved to more efficiently support insertion into the middle of the list along with arbitrary
+movement of existing list items.</p> 
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleListBinding extends LayeredListBindingImpl
+{</font>
+    <font color="#888888">@Override
+    protected Resource</font> createResource<font color="#888888">( Object obj )
+    {
+        ...
+    }</font>
+
+    @Override
+    protected <font color="#888888">Resource addUnderlyingObject( ModelElementType type )
+    {
+        ...
+    }</font>
+    
+    @Override
+    public <font color="#888888">void swap( Resource x, Resource y )
+    {
+        ...
+    }
+    
+    ...
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleListBinding extends LayeredListBindingImpl
+{</font>
+    <font color="#888888">@Override
+    protected Resource</font> resource<font color="#888888">( Object obj )
+    {
+        ...
+    }</font>
+
+    @Override
+    protected Object insertUnderlyingObject( ModelElementType type, int position )
+    {
+        final Object obj = addUnderlyingObject( type );
+        move( resource( obj ), position );
+        return obj;
+    }
+    
+    private <font color="#888888">Object addUnderlyingObject( ModelElementType type )
+    {
+        ...
+    }</font>
+    
+    @Override
+    public void move( Resource resource, int position )
+    {
+        List&lt;Resource&gt; list = read();
+        int size = list.size();
+        
+        if( position &lt; 0 || position &gt; size )
+        {
+            throw new IllegalArgumentException();
+        }
+        else
+        {
+            int oldPosition = list.indexOf( resource );
+            
+            if( position &lt; oldPosition )
+            {
+                for( int i = oldPosition; i &gt;= position; i-- )
+                {
+                    moveUp( list, resource );
+                }
+            }
+            else
+            {
+                for( int i = oldPosition; i &lt;= position; i++ )
+                {
+                    moveDown( list, resource );
+                }
+            }
+        }
+    }
+    
+    private void moveUp( List&lt;Resource&gt; list, Resource resource )
+    {
+        int index = list.indexOf( resource );
+        
+        if( index == -1 )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( index &gt; 0 )
+        {
+            Resource previous = list.get( index - 1 );
+            swap( resource, previous );
+        }
+    }
+    
+    private void moveDown( List&lt;Resource&gt; list, Resource resource )
+    {
+        int index = list.indexOf( resource );
+        
+        if( index == -1 )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( index &lt; list.size() - 1 )
+        {
+            Resource next = list.get( index + 1 );
+            swap( resource, next );
+        }
+    }
+    
+    private <font color="#888888">void swap( Resource x, Resource y )
+    {
+        ...
+    }
+    
+    ...
+}</font></code></pre>
+
+<p>The above represents the quickest way to migrate an existing list binding, but is far from ideal. A better 
+solution would be to implement the new insertUnderlyingObject() and move() methods directly.</p>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ListBindingImpl">ListBindingImpl</a></h2>
+
+<p>The list binding API has been improved to more efficiently support insertion into the middle of the list along with arbitrary
+movement of existing list items.</p> 
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleListBinding extends ListBindingImpl
+{</font>
+    @Override
+    public <font color="#888888">Resource add( ModelElementType type )
+    {
+        ...
+    }</font>
+    
+    @Override
+    public <font color="#888888">void swap( Resource x, Resource y )
+    {
+        ...
+    }
+    
+    ...
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleListBinding extends ListBindingImpl
+{</font>
+    @Override
+    public Resource insert( ModelElementType type, int position )
+    {
+        Resource resource = add( type );
+        move( resource, position );
+        return resource;
+    }
+    
+    private <font color="#888888">Resource add( ModelElementType type )
+    {
+        ...
+    }</font>
+    
+    @Override
+    public void move( Resource resource, int position )
+    {
+        List&lt;Resource&gt; list = read();
+        int size = list.size();
+        
+        if( position &lt; 0 || position &gt; size )
+        {
+            throw new IllegalArgumentException();
+        }
+        else
+        {
+            int oldPosition = list.indexOf( resource );
+            
+            if( position &lt; oldPosition )
+            {
+                for( int i = oldPosition; i &gt;= position; i-- )
+                {
+                    moveUp( list, resource );
+                }
+            }
+            else
+            {
+                for( int i = oldPosition; i &lt;= position; i++ )
+                {
+                    moveDown( list, resource );
+                }
+            }
+        }
+    }
+    
+    private void moveUp( List&lt;Resource&gt; list, Resource resource )
+    {
+        int index = list.indexOf( resource );
+        
+        if( index == -1 )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( index &gt; 0 )
+        {
+            Resource previous = list.get( index - 1 );
+            swap( resource, previous );
+        }
+    }
+    
+    private void moveDown( List&lt;Resource&gt; list, Resource resource )
+    {
+        int index = list.indexOf( resource );
+        
+        if( index == -1 )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( index &lt; list.size() - 1 )
+        {
+            Resource next = list.get( index + 1 );
+            swap( resource, next );
+        }
+    }
+    
+    private <font color="#888888">void swap( Resource x, Resource y )
+    {
+        ...
+    }
+    
+    ...
+}</font></code></pre>
+
+<p>The above represents the quickest way to migrate an existing list binding, but is far from ideal. A better 
+solution would be to implement the new insert() and move() methods directly.</p>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ModelElementList">ModelElementList</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">list.</font>addNewElement<font color="#888888">( ExampleElementVariant.TYPE );</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">list.</font>insert<font color="#888888">( ExampleElementVariant.TYPE );</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">list.</font>addNewElement<font color="#888888">();</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">list.</font>insert<font color="#888888">();</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ModelElementType">ModelElementType</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">ModelElementType.</font>getModelElementType<font color="#888888">( ... )</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">ModelElementType.</font>read<font color="#888888">( ... )</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">type.</font>getProperties<font color="#888888">()</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">type.</font>properties<font color="#888888">()</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">type.</font>getProperty<font color="#888888">( ... )</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">type.</font>property<font color="#888888">( ... )</font></code></pre>
+    </td>
+  </tr>
+</table>
 
 
 <h2><a name="Actuator">Actuator</a></h2>
