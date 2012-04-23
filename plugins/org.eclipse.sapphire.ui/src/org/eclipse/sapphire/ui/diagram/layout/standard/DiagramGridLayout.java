@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Greory Amerson - [377388] IDiagram{Guides/Grids}Def visible property does not affect StandardDiagramLayout persistence
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.layout.standard;
@@ -23,6 +24,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 @GenerateImpl
@@ -38,7 +40,6 @@ public interface DiagramGridLayout
 	
 	@Type( base = Boolean.class )
 	@XmlBinding( path = "visible" )
-	@DefaultValue( text = "false" )
 	@Label( standard = "show grid")
 	
 	ValueProperty PROP_VISIBLE = new ValueProperty(TYPE, "Visible");

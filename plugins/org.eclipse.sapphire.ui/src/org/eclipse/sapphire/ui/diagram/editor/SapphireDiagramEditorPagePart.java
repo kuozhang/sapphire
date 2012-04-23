@@ -227,8 +227,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	if (visible != this.showGrid)
     	{
     		this.showGrid = visible;
-    		this.
-    		notifyGridStateChange();
+    		this.notifyGridStateChange();
     	}
     }
     

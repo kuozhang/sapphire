@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Greory Amerson - [377388] IDiagram{Guides/Grids}Def visible property does not affect StandardDiagramLayout persistence
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.layout.standard;
@@ -52,6 +53,7 @@ import org.eclipse.ui.part.FileEditorInput;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public abstract class StandardDiagramLayoutPersistenceService extends DiagramLayoutPersistenceService
@@ -102,8 +104,22 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		{
 			return;
 		}
-		getDiagramEditorPagePart().setGridVisible(this.layoutModel.getGridLayout().isVisible().getContent());
-		getDiagramEditorPagePart().setShowGuides(this.layoutModel.getGuidesLayout().isVisible().getContent());
+        
+		Boolean gridVisible = this.layoutModel.getGridLayout().isVisible().getContent();
+		Boolean showGuides = this.layoutModel.getGuidesLayout().isVisible().getContent();
+        
+        // only set these if the layout file explicitly sets it.  
+		// If absent then fallback to diagram-editor-def setting
+		
+		if (gridVisible != null)
+		{
+		    getDiagramEditorPagePart().setGridVisible(gridVisible);
+		}
+		
+        if (showGuides != null)
+        {
+    		getDiagramEditorPagePart().setShowGuides(showGuides);
+        }
 		
 		ModelElementList<DiagramNodeLayout> nodes = this.layoutModel.getDiagramNodesLayout();
 		
@@ -129,7 +145,6 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 				DiagramConnectionPart connPart = IdUtil.getConnectionPart(nodePart, connId);
 				if (connPart != null)
 				{					
-					ConnectionHashKey hashKey = ConnectionHashKey.createKey(nodeId, connId);
 					int index = 0;
 					for (DiagramBendPointLayout pt : bps)
 					{
@@ -154,7 +169,6 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 			ModelElementList<DiagramBendPointLayout> bps = connLayout.getConnectionBendpoints();
 			if (connPart != null)
 			{
-				ConnectionHashKey hashKey = ConnectionHashKey.createKey(null, connId);
 				int index = 0;
 				for (DiagramBendPointLayout pt : bps)
 				{
