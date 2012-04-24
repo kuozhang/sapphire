@@ -27,12 +27,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface IAncestorAccessGalleryLevel2
-
-    extends IModelElement
-
+public interface AncestorAccessGalleryLevel2 extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IAncestorAccessGalleryLevel2.class );
+    ModelElementType TYPE = new ModelElementType( AncestorAccessGalleryLevel2.class );
     
     // *** Text ***
     
@@ -46,11 +43,11 @@ public interface IAncestorAccessGalleryLevel2
     
     // *** Child ***
     
-    @Type( base = IAncestorAccessGalleryLevel3.class )
+    @Type( base = AncestorAccessGalleryLevel3.class )
     @XmlBinding( path = "child" )
 
     ImpliedElementProperty PROP_CHILD = new ImpliedElementProperty( TYPE, "Child" );
     
-    IAncestorAccessGalleryLevel3 getChild();
+    AncestorAccessGalleryLevel3 getChild();
     
 }

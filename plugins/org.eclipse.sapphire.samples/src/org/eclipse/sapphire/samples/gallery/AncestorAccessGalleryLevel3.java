@@ -12,16 +12,12 @@
 package org.eclipse.sapphire.samples.gallery;
 
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -29,30 +25,18 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @GenerateImpl
 
-public interface IAncestorAccessGalleryLevel1
-
-    extends IModelElement
-
+public interface AncestorAccessGalleryLevel3 extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IAncestorAccessGalleryLevel1.class );
+    ModelElementType TYPE = new ModelElementType( AncestorAccessGalleryLevel3.class );
     
     // *** Text ***
     
     @XmlBinding( path = "text" )
-    @Label( standard = "level 1 text" )
+    @Label( standard = "level 3 text" )
     
     ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
     
     Value<String> getText();
     void setText( String value );
-    
-    // *** List ***
-    
-    @Type( base = IAncestorAccessGalleryLevel2.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "child", type = IAncestorAccessGalleryLevel2.class ) )
-    
-    ListProperty PROP_LIST = new ListProperty( TYPE, "List" );
-    
-    ModelElementList<IAncestorAccessGalleryLevel2> getList();
     
 }

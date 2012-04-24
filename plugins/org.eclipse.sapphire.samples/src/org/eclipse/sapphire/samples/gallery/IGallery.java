@@ -245,12 +245,12 @@ public interface IGallery extends IModelElement
     
     // *** AncestorAccessGallery ***
     
-    @Type( base = IAncestorAccessGalleryLevel1.class )
+    @Type( base = AncestorAccessGalleryLevel1.class )
     @XmlBinding( path = "ancestor-access" )
     
     ImpliedElementProperty PROP_ANCESTOR_ACCESS_GALLERY = new ImpliedElementProperty( TYPE, "AncestorAccessGallery" );
     
-    IAncestorAccessGalleryLevel1 getAncestorAccessGallery();
+    AncestorAccessGalleryLevel1 getAncestorAccessGallery();
     
     // *** SplitFormGallery ***
     
