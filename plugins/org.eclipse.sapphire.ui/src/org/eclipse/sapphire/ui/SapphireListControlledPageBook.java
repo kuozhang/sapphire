@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Konstantin Komissarchik - initial implementation
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Gregory Amerson - [363765] Page book control property should handle model paths
  *    Gregory Amerson - [377329] SapphireListControlledPageBook fails to render with model path for control property
  ******************************************************************************/
