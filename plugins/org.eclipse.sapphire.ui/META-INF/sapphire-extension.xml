@@ -11,6 +11,7 @@
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Gregory Amerson - [358295] Need access to selection in list property editor
+ *    Gregory Amerson - [377136] Add Sapphire.Diagram.Node to possible contexts for Sapphire.Add  
  ******************************************************************************
 -->
 
@@ -33,12 +34,13 @@
         <id>Sapphire.Add</id>
         <context>Sapphire.ListPropertyEditor</context>
         <context>Sapphire.EditorPage.Outline.Node</context>
+        <context>Sapphire.Diagram.Editor</context>
+        <context>Sapphire.Diagram.Node</context>
         <label>${ Handlers.Size == 1 ? Concat( &quot;add &quot;, Handlers[ 0 ].Label ) : &quot;add&quot; }</label>
         <image>org/eclipse/sapphire/ui/actions/Add.png</image>
         <group>Sapphire.AddDeleteGroup</group>
         <key-binding>SHIFT+CONTROL+ALT+n</key-binding>
         <description>Adds an entity. A common use is to add a new element to the model.</description>
-        <context>Sapphire.Diagram.Editor</context>
     </action>
     <action>
         <id>Sapphire.Assist</id>
