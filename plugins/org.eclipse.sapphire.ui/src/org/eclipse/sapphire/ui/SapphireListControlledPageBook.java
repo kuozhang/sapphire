@@ -8,6 +8,7 @@
  * Contributors:
  *    Konstantin Komissarchik - initial implementation
  *    Gregory Amerson - [363765] Page book control property should handle model paths
+ *    Gregory Amerson - [377329] SapphireListControlledPageBook fails to render with model path for control property
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -153,7 +154,7 @@ public final class SapphireListControlledPageBook extends PageBookPart
     {
         super.render( context );
 
-        final PropertyEditorPart listPropertyEditorPart = findPropertyEditor( context.getPart(), this.element, this.property );
+        final PropertyEditorPart listPropertyEditorPart = findPropertyEditor( this, this.element, this.property );
         final ListSelectionService listSelectionService = listPropertyEditorPart.service( ListSelectionService.class );
         
         final MutableReference<IModelElement> selectedModelElementRef = new MutableReference<IModelElement>();
