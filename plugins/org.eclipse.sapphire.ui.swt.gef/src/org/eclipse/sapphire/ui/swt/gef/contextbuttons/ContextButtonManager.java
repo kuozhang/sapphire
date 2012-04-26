@@ -37,6 +37,7 @@ import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.tools.AbstractConnectionCreationTool;
 import org.eclipse.gef.tools.CreationTool;
+import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
@@ -379,8 +380,10 @@ public class ContextButtonManager {
 	{
 		ContextButtonPadData contextButtonPadData = new ContextButtonPadData();
 		org.eclipse.draw2d.geometry.Rectangle bounds = nodeEditPart.getFigure().getBounds();
-		contextButtonPadData.getPadLocation().set(bounds.getLocation().x, bounds.getLocation().y,
-				bounds.width(), bounds.height());
+		Point loc = bounds.getLocation();
+		Point botRight = bounds.getBottomRight();
+		contextButtonPadData.getPadLocation().set(loc.x, loc.y,
+				botRight.x - loc.x, botRight.y - loc.y);
 		
 		DiagramNodePart nodePart = nodeEditPart.getCastedModel().getModelPart();
 		SapphireActionGroup actionGroup = nodePart.getActions(SapphireActionSystem.CONTEXT_DIAGRAM_NODE);
