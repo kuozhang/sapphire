@@ -68,6 +68,7 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceServiceListener;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.gef.contextbuttons.ContextButtonManager;
 import org.eclipse.sapphire.ui.swt.gef.dnd.ObjectsTransferDropTargetListener;
 import org.eclipse.sapphire.ui.swt.gef.dnd.SapphireTemplateTransferDropTargetListener;
 import org.eclipse.sapphire.ui.swt.gef.layout.HorizontalGraphLayout;
@@ -75,6 +76,7 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModelBase;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.SapphireDiagramEditorEditPartFactory;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
@@ -110,6 +112,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	private DiagramConfigurationManager configManager;
 	private GraphicalViewerKeyHandler graphicalViewerKeyHandler;
 	private SapphireDiagramKeyHandler diagramKeyHandler;
+	private ContextButtonManager contextButtonManager = null;
 
 	public SapphireDiagramEditor(
 		final SapphireEditor editor, final IModelElement rootModelElement, final IPath pageDefinitionLocation )
@@ -294,6 +297,11 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);
 	}
 
+	@Override
+	public DefaultEditDomain getEditDomain() {
+		return super.getEditDomain();
+	}
+	
 	protected void removeConnection(DiagramConnectionPart connPart) {
 		if (diagramModel == null) {
 			return;
@@ -616,9 +624,19 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		return this.diagramModel;
 	}
 	
+	public DiagramResourceCache getResourceCache()
+	{
+		return this.diagramModel.getResourceCache();
+	}
+	
 	public DiagramConfigurationManager getConfigurationManager()
 	{
 		return this.configManager;
+	}
+	
+	public ContextButtonManager getContextButtonManager() 
+	{
+		return contextButtonManager;
 	}
 	
 	protected void configureGraphicalViewer() {
@@ -685,6 +703,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
             	}
             }
         });
+		
+		// context button manager
+		contextButtonManager = new ContextButtonManager(this);
 		
 	}
 			

@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
-import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Point;
@@ -38,6 +37,7 @@ import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.commands.DoubleClickNodeCommand;
+import org.eclipse.sapphire.ui.swt.gef.contextbuttons.ContextButtonManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.NodeFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
@@ -88,14 +88,18 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart
 		if (!isActive()) {
 			super.activate();
 			getCastedModel().addPropertyChangeListener(this);
+			ContextButtonManager contextButtonManager = getConfigurationManager().getDiagramEditor().getContextButtonManager();
+			contextButtonManager.register(this);			
 		}
 	}
 
 	@Override
 	public void deactivate() {
 		if (isActive()) {
+			ContextButtonManager contextButtonManager = getConfigurationManager().getDiagramEditor().getContextButtonManager();
+			contextButtonManager.deRegister(this);
+			getCastedModel().removePropertyChangeListener(this);			
 			super.deactivate();
-			getCastedModel().removePropertyChangeListener(this);
 		}
 	}
 

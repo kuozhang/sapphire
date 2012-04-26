@@ -46,6 +46,7 @@ public abstract class SapphireActionSystemPart
     private String id;
     private FunctionResult labelFunctionResult;
     private FunctionResult toolTipFunctionResult;
+    private String description;
     private final List<ImageData> images = new CopyOnWriteArrayList<ImageData>();
     private final List<SapphireActionLocationHint> locationHints = new CopyOnWriteArrayList<SapphireActionLocationHint>();
     private final List<SapphireActionLocationHint> locationHintsReadOnly = Collections.unmodifiableList( this.locationHints );
@@ -93,6 +94,8 @@ public abstract class SapphireActionSystemPart
                 }
             );
 
+            this.description = def.getDescription().getContent();
+            
             for( ImageReference image : def.getImages() )
             {
                 final Function imageFunction = FailSafeFunction.create( image.getImage().getContent(), Literal.create( ImageData.class ) );
@@ -174,6 +177,12 @@ public abstract class SapphireActionSystemPart
         broadcast( new LabelChangedEvent() );
     }
     
+    public final String getDescription()
+    {
+    	return this.description;
+    }
+    
+
     public final String getToolTip()
     {
         synchronized( this )
