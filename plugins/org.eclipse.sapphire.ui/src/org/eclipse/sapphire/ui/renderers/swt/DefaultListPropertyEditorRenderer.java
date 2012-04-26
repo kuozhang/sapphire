@@ -1197,7 +1197,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                     
                     if( valueImageData != null )
                     {
-                        image = getPart().getImageCache().getImage( valueImageData, element.validate().severity() );
+                        image = getPart().getImageCache().getImage( valueImageData, element.validation().severity() );
                     }
                 }
                 
@@ -1244,7 +1244,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             
             boolean canEdit;
             
-            if( element.isPropertyEnabled( property ) )
+            if( element.enabled( property ) )
             {
                 final PropertyEditorPart propertyEditor = this.columnHandler.getListPropertyEditor().getChildPropertyEditor( element, property );
                 canEdit = ( ! propertyEditor.isReadOnly() );
@@ -1600,7 +1600,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                     final TableItem item = (TableItem) event.item;
                     final IModelElement element = ( (TableRow) item.getData() ).element();
                     
-                    if( element.isPropertyEnabled( getProperty() ) )
+                    if( element.enabled( getProperty() ) )
                     {
                         final boolean value = getPropertyValueAsBoolean( element );
                         
@@ -2014,7 +2014,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             }
             else
             {
-                return getPart().getImageCache().getImage( this.imageService.image(), this.element.validate().severity() );
+                return getPart().getImageCache().getImage( this.imageService.image(), this.element.validation().severity() );
             }
         }
         

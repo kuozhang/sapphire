@@ -228,7 +228,7 @@ public final class SapphireWithDirective extends PageBookPart
                                 final IModelElement subModelElement = element.read( property ).element();
                                 
                                 masterCheckBox.setSelection( subModelElement != null );
-                                masterCheckBox.setEnabled( element.isPropertyEnabled( property ) );
+                                masterCheckBox.setEnabled( element.enabled( property ) );
                             }
                         };
                         
@@ -316,7 +316,7 @@ public final class SapphireWithDirective extends PageBookPart
                                     radioButtonsGroup.setSelection( button );
                                 }
                                 
-                                radioButtonsGroup.setEnabled( element.isPropertyEnabled( property ) );
+                                radioButtonsGroup.setEnabled( element.enabled( property ) );
                             }
                         };
                         
@@ -407,7 +407,7 @@ public final class SapphireWithDirective extends PageBookPart
                                     combo.select( index );
                                 }
                                 
-                                combo.setEnabled( element.isPropertyEnabled( property ) );
+                                combo.setEnabled( element.enabled( property ) );
                             }
                         };
                         
@@ -529,7 +529,7 @@ public final class SapphireWithDirective extends PageBookPart
         if( this.property != null )
         {
             final Status.CompositeStatusFactory factory = Status.factoryForComposite();
-            factory.merge( this.element.read( this.property ).validate( false ) );
+            factory.merge( this.element.read( this.property ).validation( false ) );
             factory.merge( state );
             
             state = factory.create();
@@ -564,7 +564,7 @@ public final class SapphireWithDirective extends PageBookPart
         {
             final ModelPath tail = path.makeRelativeTo( this.path );
             
-            if( this.property == null || ( this.element.isPropertyEnabled( this.property ) && this.element.read( this.property ) != null ) )
+            if( this.property == null || ( this.element.enabled( this.property ) && this.element.read( this.property ) != null ) )
             {
                 return super.setFocus( tail );
             }

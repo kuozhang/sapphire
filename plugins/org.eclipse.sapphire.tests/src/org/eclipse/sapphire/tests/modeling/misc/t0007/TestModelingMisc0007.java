@@ -53,7 +53,7 @@ public final class TestModelingMisc0007 extends SapphireTestCase
         final TestChildElement y = children.insert();
         y.setId( "123" );
         
-        final Status status = root.validate();
+        final Status status = root.validation();
         
         assertEquals( "Unique id required. Another occurrence of \"123\" was found.", status.message() );
         assertEquals( 0, status.children().size() );

@@ -14,22 +14,19 @@ package org.eclipse.sapphire.modeling;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.services.DefaultValueService;
-import org.eclipse.sapphire.services.ValidationService;
+import org.eclipse.sapphire.services.ValidationAggregationService;
 import org.eclipse.sapphire.services.ValueSerializationMasterService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class Value<T>
-
-    extends ModelParticle
-    
+public class Value<T> extends ModelParticle
 {
     private final ValueProperty property;
     private final String raw;
     private final T parsed;
-    private Status valres;
+    private Status validation;
     private boolean defaultValueInitialized;
     private String defaultText;
     private T defaultContent;
@@ -43,7 +40,7 @@ public class Value<T>
         this.property = property;
         this.raw = normalize( value );
         this.parsed = parse( property.decodeKeywords( this.raw ) );
-        this.valres = null;
+        this.validation = null;
         this.defaultValueInitialized = false;
         this.defaultText = null;
         this.defaultContent = null;
@@ -65,23 +62,9 @@ public class Value<T>
     
     private void initValidation()
     {
-        if( this.valres == null )
+        if( this.validation == null )
         {
-            final Status.CompositeStatusFactory factory = Status.factoryForComposite();
-            
-            for( ValidationService svc : parent().services( this.property, ValidationService.class ) )
-            {
-                try
-                {
-                    factory.merge( svc.validate() );
-                }
-                catch( Exception e )
-                {
-                    LoggingService.log( e );
-                }
-            }
-            
-            this.valres = factory.create();
+            this.validation = parent().service( this.property, ValidationAggregationService.class ).validation();
         }
     }
 
@@ -206,10 +189,10 @@ public class Value<T>
         }
     }
     
-    public Status validate()
+    public Status validation()
     {
         initValidation();
-        return this.valres;
+        return this.validation;
     }
     
     @Override
@@ -230,7 +213,7 @@ public class Value<T>
         final Value<?> value = (Value<?>) val;
         
         return ( parent() == value.parent() ) && ( this.property == value.property ) &&
-               ( MiscUtil.equal( this.raw, value.raw ) ) && this.valres.equals( value.valres ) &&
+               ( MiscUtil.equal( this.raw, value.raw ) ) && this.validation.equals( value.validation ) &&
                ( MiscUtil.equal( this.defaultText, value.defaultText ) ); 
     }
     

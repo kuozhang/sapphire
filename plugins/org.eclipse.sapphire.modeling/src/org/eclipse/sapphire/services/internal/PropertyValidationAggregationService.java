@@ -12,42 +12,30 @@
 package org.eclipse.sapphire.services.internal;
 
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
-import org.eclipse.sapphire.services.EnablementServiceData;
-import org.eclipse.sapphire.services.EnablementService;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
+import org.eclipse.sapphire.services.ValidationAggregationService;
+import org.eclipse.sapphire.services.ValidationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ParentBasedEnablementService extends EnablementService
+public final class PropertyValidationAggregationService extends ValidationAggregationService
 {
-    private IModelElement parentElement;
-    private ModelProperty parentProperty;
-    private ModelPropertyListener listener;
-    
     @Override
-    protected void initEnablementService()
+    protected void initDataService()
     {
         final IModelElement element = context( IModelElement.class );
+        final ModelProperty property = context( ModelProperty.class );
         
-        IModelParticle parent = element.parent();
-        
-        if( ! ( parent instanceof IModelElement ) )
-        {
-            parent = parent.parent();
-        }
-        
-        this.parentElement = (IModelElement) parent;
-        this.parentProperty = element.getParentProperty();
-        
-        this.listener = new ModelPropertyListener()
+        final ModelPropertyListener listener = new ModelPropertyListener()
         {
             @Override
             public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
@@ -56,41 +44,53 @@ public final class ParentBasedEnablementService extends EnablementService
             }
         };
         
-        this.parentElement.addListener( this.listener, this.parentProperty.getName() );
+        element.addListener( listener, property.getName() );
     }
 
     @Override
-    public EnablementServiceData compute()
+    protected Status compute()
     {
-        return new EnablementServiceData( this.parentElement.enabled( this.parentProperty ) );
-    }
-
-    @Override
-    public void dispose()
-    {
-        super.dispose();
+        final IModelElement element = context( IModelElement.class );
+        final ModelProperty property = context( ModelProperty.class );
+        final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         
-        if( this.listener != null )
+        for( ValidationService service : element.services( property, ValidationService.class ) )
         {
-            this.parentElement.removeListener( this.listener, this.parentProperty.getName() );
+            try
+            {
+                factory.merge( service.validate() );
+            }
+            catch( Exception e )
+            {
+                LoggingService.log( e );
+            }
         }
+        
+        return factory.create();
     }
     
+    @Override
+    protected Status data()
+    {
+        refresh();
+        return super.data();
+    }
+
     public static final class Factory extends ServiceFactory
     {
         @Override
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            return ( context.find( IModelElement.class ).getParentProperty() != null );
+            return true;
         }
 
         @Override
         public Service create( final ServiceContext context,
                                final Class<? extends Service> service )
         {
-            return new ParentBasedEnablementService();
+            return new PropertyValidationAggregationService();
         }
     }
-    
+
 }

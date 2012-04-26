@@ -116,13 +116,13 @@ public abstract class SapphireTestCase
     
     protected static final void assertValidationOk( final Value<?> value )
     {
-        assertEquals( Status.Severity.OK, value.validate().severity() );
+        assertEquals( Status.Severity.OK, value.validation().severity() );
     }
     
     protected static final void assertValidationError( final Value<?> value,
                                                        final String expectedMessage )
     {
-        final Status st = value.validate();
+        final Status st = value.validation();
         
         assertEquals( Status.Severity.ERROR, st.severity() );
         assertEquals( expectedMessage, st.message() );

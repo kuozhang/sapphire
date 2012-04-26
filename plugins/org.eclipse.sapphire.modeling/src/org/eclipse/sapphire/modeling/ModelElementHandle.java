@@ -15,7 +15,7 @@ package org.eclipse.sapphire.modeling;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.services.PossibleTypesService;
-import org.eclipse.sapphire.services.ValidationService;
+import org.eclipse.sapphire.services.ValidationAggregationService;
 
 
 /**
@@ -157,12 +157,12 @@ public final class ModelElementHandle<T extends IModelElement>
         return this.element;
     }
     
-    public Status validate()
+    public Status validation()
     {
-        return validate( true );
+        return validation( true );
     }
     
-    public Status validate( final boolean includeChildValidation )
+    public Status validation( final boolean includeChildValidation )
     {
         synchronized( this )
         {
@@ -174,7 +174,7 @@ public final class ModelElementHandle<T extends IModelElement>
     {
         synchronized( this )
         {
-            return this.parent.isPropertyEnabled( this.property );
+            return this.parent.enabled( this.property );
         }
     }
     
@@ -256,40 +256,27 @@ public final class ModelElementHandle<T extends IModelElement>
     
     private boolean refreshValidationState()
     {
-        final Status oldValidationStateFull = this.validationStateFull;
-        final Status.CompositeStatusFactory newValidationStateLocalFactory = Status.factoryForComposite();
+        final Status newValidationStateLocal;
         final Status.CompositeStatusFactory newValidationStateFullFactory = Status.factoryForComposite();
         
         if( enabled() )
         {
-            for( ValidationService svc : parent().services( this.property, ValidationService.class ) )
-            {
-                Status st = null;
-                
-                try
-                {
-                    st = svc.validate();
-                }
-                catch( Exception e )
-                {
-                    LoggingService.log( e );
-                }
-                
-                if( st != null )
-                {
-                    newValidationStateLocalFactory.merge( st );
-                    newValidationStateFullFactory.merge( st );
-                }
-            }
+            newValidationStateLocal = parent().service( this.property, ValidationAggregationService.class ).validation();
+            
+            newValidationStateFullFactory.merge( newValidationStateLocal );
             
             if( this.element != null )
             {
-                newValidationStateFullFactory.merge( this.element.validate() );
+                newValidationStateFullFactory.merge( this.element.validation() );
             }
         }
+        else
+        {
+            newValidationStateLocal = Status.createOkStatus();
+        }
         
-        final Status newValidationStateLocal = newValidationStateLocalFactory.create();
         final Status newValidationStateFull = newValidationStateFullFactory.create();
+        final Status oldValidationStateFull = this.validationStateFull;
 
         if( ! newValidationStateFull.equals( oldValidationStateFull ) )
         {

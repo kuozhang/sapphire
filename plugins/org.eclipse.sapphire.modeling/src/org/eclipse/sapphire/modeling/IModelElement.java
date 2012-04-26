@@ -154,7 +154,7 @@ public interface IModelElement extends IModelParticle
     <S extends Service> S service( ModelProperty property, Class<S> serviceType );
     <S extends Service> List<S> services( ModelProperty property, Class<S> serviceType );
     
-    boolean isPropertyEnabled( ModelProperty property );
+    boolean enabled( ModelProperty property );
     
     void addListener( ModelElementListener listener );
     void addListener( ModelPropertyListener listener, String path );

@@ -142,7 +142,7 @@ public final class MasterDetailsContentNode
         Class<?> visibleWhenConditionClass = null;
         String visibleWhenConditionParameter = null;
         
-        final Status visibleWhenConditionClassValidation = this.definition.getVisibleWhenConditionClass().validate();
+        final Status visibleWhenConditionClassValidation = this.definition.getVisibleWhenConditionClass().validation();
         
         if( visibleWhenConditionClassValidation.severity() != Status.Severity.ERROR )
         {

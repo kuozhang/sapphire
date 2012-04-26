@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.services;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.util.ReadOnlySetFactory;
 
 /**
  * Aggregates the data from all applicable dependencies services in order to produce a single set of dependencies.
@@ -32,14 +32,14 @@ public final class DependenciesAggregationService extends DataService<Dependenci
     @Override
     protected DependenciesServiceData compute()
     {
-        final Set<ModelPath> dependencies = new HashSet<ModelPath>();
+        final ReadOnlySetFactory<ModelPath> dependencies = ReadOnlySetFactory.create();
         
         for( DependenciesService ds : context( IModelElement.class ).services( context( ModelProperty.class ), DependenciesService.class ) )
         {
-            dependencies.addAll( ds.dependencies() );
+            dependencies.add( ds.dependencies() );
         }
         
-        return new DependenciesServiceData( dependencies );
+        return new DependenciesServiceData( dependencies.export() );
     }
     
     public final Set<ModelPath> dependencies()

@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.eclipse.sapphire.services.PossibleTypesService;
-import org.eclipse.sapphire.services.ValidationService;
+import org.eclipse.sapphire.services.ValidationAggregationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -38,7 +38,7 @@ public final class ModelElementList<T extends IModelElement>
     private final PossibleTypesService possibleTypesService;
     private ListBindingImpl binding;
     private List<IModelElement> data;
-    private Status valres;
+    private Status validation;
     private ModelElementListener listMemberListener;
     
     public ModelElementList( final IModelElement parent,
@@ -50,7 +50,7 @@ public final class ModelElementList<T extends IModelElement>
         this.readonly = property.isReadOnly();
         this.possibleTypesService = parent.service( property, PossibleTypesService.class );
         this.data = Collections.emptyList();
-        this.valres = null;
+        this.validation = null;
         
         this.listMemberListener = new ModelElementListener()
         {
@@ -79,14 +79,14 @@ public final class ModelElementList<T extends IModelElement>
         return this.property;
     }
     
-    public synchronized Status validate()
+    public synchronized Status validation()
     {
-        if( this.valres == null )
+        if( this.validation == null )
         {
             refreshValidationResult( false );
         }
         
-        return this.valres;
+        return this.validation;
     }
 
     public boolean refresh()
@@ -200,32 +200,22 @@ public final class ModelElementList<T extends IModelElement>
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         
-        for( ValidationService svc : parent().services( this.property, ValidationService.class ) )
-        {
-            try
-            {
-                factory.merge( svc.validate() );
-            }
-            catch( Exception e )
-            {
-                LoggingService.log( e );
-            }
-        }
+        factory.add( parent().service( this.property, ValidationAggregationService.class ).validation() );
         
         for( T item : this )
         {
-            factory.add( item.validate() );
+            factory.add( item.validation() );
         }
         
         final Status st = factory.create();
         
-        if( this.valres == null )
+        if( this.validation == null )
         {
-            this.valres = st;
+            this.validation = st;
         }
-        else if( ! this.valres.equals( st ) )
+        else if( ! this.validation.equals( st ) )
         {
-            this.valres = st;
+            this.validation = st;
             
             if( notifyListenersIfChanged )
             {

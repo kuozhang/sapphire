@@ -9,18 +9,24 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling;
+package org.eclipse.sapphire.services;
+
+import org.eclipse.sapphire.modeling.Status;
 
 /**
+ * Aggregates the data from all applicable validation services in order to produce a single validation result.
+ * 
+ * <p>Implementations of this service are provided with Sapphire. This service is not intended to
+ * be implemented by adopters.</p>
+ * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface IModelParticle
+public abstract class ValidationAggregationService extends DataService<Status>
 {
-    Resource resource();
-    IModelParticle root();
-    IModelParticle parent();
-    <T> T nearest( Class<T> particleType );    
-    Status validation();
-    <A> A adapt( Class<A> adapterType );
+    public final Status validation()
+    {
+        return data();
+    }
+
 }

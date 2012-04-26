@@ -483,7 +483,7 @@ public abstract class PropertyEditorRenderer
         
         this.controls.add( control );
         
-        control.setEnabled( element.isPropertyEnabled( property ) );
+        control.setEnabled( element.enabled( property ) );
         
         control.addDisposeListener
         (
@@ -526,7 +526,7 @@ public abstract class PropertyEditorRenderer
     
     protected void handlePropertyChangedEvent()
     {
-        final boolean enabled = getModelElement().isPropertyEnabled( getProperty() );
+        final boolean enabled = getModelElement().enabled( getProperty() );
         
         for( Control control : this.controls )
         {

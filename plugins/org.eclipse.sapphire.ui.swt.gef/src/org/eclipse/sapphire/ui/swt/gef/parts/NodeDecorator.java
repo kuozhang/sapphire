@@ -118,7 +118,7 @@ public class NodeDecorator {
 	private void addNodeProblemDecorator(DiagramNodePart nodePart, List<ImageDecorator> decoratorList) {
 		IModelElement model = nodePart.getModelElement();
 		IDiagramNodeProblemDecoratorDef decoratorDef = nodePart.getProblemIndicatorDef();
-		Status status = model.validate();
+		Status status = model.validation();
 		ImageDecorator imageRenderingDecorator = null;
 		if (status.severity() != Status.Severity.OK) {
 			if (status.severity() == Status.Severity.WARNING) {

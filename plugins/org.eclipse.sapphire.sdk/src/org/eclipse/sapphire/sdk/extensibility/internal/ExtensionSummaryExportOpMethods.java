@@ -189,7 +189,7 @@ public final class ExtensionSummaryExportOpMethods
             final List<ModelProperty> columns = new ArrayList<ModelProperty>();
             columns.add( ServiceDef.PROP_TYPE );
             columns.add( ServiceDef.PROP_FACTORY );
-            columns.add( ServiceDef.PROP_CONTEXT );
+            columns.add( ServiceDef.PROP_CONTEXTS );
             return columns;
         }
     }
@@ -661,13 +661,41 @@ public final class ExtensionSummaryExportOpMethods
         protected String getCellText( final IModelElement element, 
                                       final ModelProperty property )
         {
-            String text = element.read( (ValueProperty) property ).getText();
+            String text = null;
             
-            final Reference ref = property.getAnnotation( Reference.class );
-            
-            if( ref != null && ref.target() == Class.class )
+            if( property instanceof ValueProperty )
             {
-                text = formatClassName( text );
+                text = element.read( (ValueProperty) property ).getText();
+                
+                final Reference ref = property.getAnnotation( Reference.class );
+                
+                if( ref != null && ref.target() == Class.class )
+                {
+                    text = formatClassName( text );
+                }
+            }
+            else if( property instanceof ListProperty )
+            {
+                final ListProperty listProperty = (ListProperty) property;
+                final ValueProperty entryValueProperty = (ValueProperty) listProperty.getType().properties().get( 0 );
+                final StringBuilder buf = new StringBuilder();
+                
+                for( IModelElement entry : element.read( listProperty ) )
+                {
+                    final String entryValuePropertyText = entry.read( entryValueProperty ).getText();
+                    
+                    if( entryValuePropertyText != null )
+                    {
+                        if( buf.length() > 0 )
+                        {
+                            buf.append( "<br/>" );
+                        }
+                        
+                        buf.append( entryValuePropertyText );
+                    }
+                }
+                
+                text = buf.toString();
             }
             
             if( text == null )

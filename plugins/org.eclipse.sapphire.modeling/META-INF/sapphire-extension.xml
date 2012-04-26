@@ -47,6 +47,20 @@
         <id>Sapphire.PossibleValuesService.Enum</id>
     </service>
     <service>
+        <context>Sapphire.Element.Instance</context>
+        <factory>org.eclipse.sapphire.services.internal.ElementValidationAggregationService$Factory</factory>
+        <id>Sapphire.ValidationAggregationService.Element</id>
+        <type>org.eclipse.sapphire.services.ValidationAggregationService</type>
+        <description>Implementation of ValidationAggregationService for element instance context.</description>
+    </service>
+    <service>
+        <context>Sapphire.Property.Instance</context>
+        <factory>org.eclipse.sapphire.services.internal.PropertyValidationAggregationService$Factory</factory>
+        <id>Sapphire.ValidationAggregationService.Property</id>
+        <type>org.eclipse.sapphire.services.ValidationAggregationService</type>
+        <description>Implementation of ValidationAggregationService for property instance context.</description>
+    </service>
+    <service>
         <type>org.eclipse.sapphire.services.ValidationService</type>
         <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.CountConstraintValidationService$Factory</factory>
@@ -99,6 +113,12 @@
         <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.NumericRangeValidationService$Factory</factory>
         <id>Sapphire.ValidationService.NumericRange</id>
+    </service>
+    <service>
+        <id>Sapphire.ValidationService.Element.Standard</id>
+        <type>org.eclipse.sapphire.services.ValidationService</type>
+        <factory>org.eclipse.sapphire.services.internal.StandardElementValidationService$Factory</factory>
+        <context>Sapphire.Element.Instance</context>
     </service>
     <service>
         <type>org.eclipse.sapphire.services.EnablementService</type>

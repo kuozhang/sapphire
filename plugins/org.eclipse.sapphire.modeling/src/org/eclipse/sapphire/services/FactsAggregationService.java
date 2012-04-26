@@ -11,12 +11,11 @@
 
 package org.eclipse.sapphire.services;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 
 /**
  * Aggregates the data from all applicable facts services in order to produce a single list of facts. A fact
@@ -32,14 +31,14 @@ public final class FactsAggregationService extends Service
 {
     public final List<String> facts()
     {
-        final List<String> facts = new ArrayList<String>();
+        final ReadOnlyListFactory<String> facts = ReadOnlyListFactory.create();
         
         for( FactsService fs : context( IModelElement.class ).services( context( ModelProperty.class ), FactsService.class ) )
         {
-            facts.addAll( fs.facts() );
+            facts.add( fs.facts() );
         }
         
-        return Collections.unmodifiableList( facts );
+        return facts.export();
     }
 
 }

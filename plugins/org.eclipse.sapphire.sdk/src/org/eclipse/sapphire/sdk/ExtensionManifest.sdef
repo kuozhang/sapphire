@@ -16,6 +16,7 @@
     <import>
         <package>org.eclipse.sapphire.sdk.internal</package>
         <definition>org/eclipse/sapphire/sdk/Common.sdef</definition>
+        <package>org.eclipse.sapphire.ui.renderers.swt</package>
     </import>
 
     <editor-page>
@@ -50,8 +51,24 @@
                                     <property>Description</property>
                                     <height>75</height>
                                 </property-editor>
-                                <property-editor>Context</property-editor>
-                                <property-editor>Overrides</property-editor>
+                                <property-editor>
+                                    <hint>
+                                        <name>factory</name>
+                                        <value>CheckBoxListPropertyEditorRenderer$Factory</value>
+                                    </hint>
+                                    <property>Contexts</property>
+                                    <hint>
+                                        <name>show.header</name>
+                                        <value>false</value>
+                                    </hint>
+                                </property-editor>
+                                <property-editor>
+                                    <hint>
+                                        <name>show.header</name>
+                                        <value>false</value>
+                                    </hint>
+                                    <property>Overrides</property>
+                                </property-editor>
                             </content>
                         </section>
                     </case>

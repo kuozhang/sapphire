@@ -40,6 +40,7 @@ import org.eclipse.sapphire.services.EqualityService;
 import org.eclipse.sapphire.services.InitialValueService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ValidationAggregationService;
 import org.eclipse.sapphire.services.ValidationService;
 import org.eclipse.sapphire.services.internal.ElementInstanceServiceContext;
 import org.eclipse.sapphire.services.internal.PropertyInstanceServiceContext;
@@ -57,7 +58,7 @@ public abstract class ModelElement
 {
     private final ModelElementType type;
     private final ModelProperty parentProperty;
-    private Status valres;
+    private Status validation;
     private Set<ModelElementListener> listeners;
     private Map<ModelProperty,Set<ModelPropertyListener>> propertyListeners;
     private final Map<ModelProperty,Boolean> enablementStatuses;
@@ -75,7 +76,7 @@ public abstract class ModelElement
         
         this.type = type;
         this.parentProperty = parentProperty;
-        this.valres = null;
+        this.validation = null;
         this.listeners = null;
         this.propertyListeners = null;
         this.enablementStatuses = new HashMap<ModelProperty,Boolean>();
@@ -694,7 +695,7 @@ public abstract class ModelElement
         return context.services( serviceType );
     }
 
-    public final boolean isPropertyEnabled( final ModelProperty property )
+    public final boolean enabled( final ModelProperty property )
     {
         synchronized( root() )
         {
@@ -777,67 +778,30 @@ public abstract class ModelElement
         }
     }
 
-    public Status validate()
+    public Status validation()
     {
-        if( this.valres == null )
+        if( this.validation == null )
         {
             refreshValidationResult();
         }
         
-        return this.valres;
+        return this.validation;
     }
     
     private void refreshValidationResult()
     {
-        final Status.CompositeStatusFactory factory = Status.factoryForComposite();
+        final Status st = service( ValidationAggregationService.class ).validation();
         
-        for( ModelProperty property : this.type.properties() )
+        if( this.validation == null )
         {
-            if( isPropertyEnabled( property ) )
-            {
-                final Status x;
-                
-                if( property instanceof ValueProperty )
-                {
-                    x = read( (ValueProperty) property ).validate();
-                }
-                else if( property instanceof ListProperty )
-                {
-                    x = read( (ListProperty) property ).validate();
-                }
-                else if( property instanceof ImpliedElementProperty )
-                {
-                    x = read( (ImpliedElementProperty) property ).validate();
-                }
-                else if( property instanceof ElementProperty )
-                {
-                    x = read( (ElementProperty) property ).validate();
-                }
-                else if( property instanceof TransientProperty )
-                {
-                    x = read( (TransientProperty) property ).validate();
-                }
-                else
-                {
-                    throw new IllegalStateException();
-                }
-                
-                factory.add( x );
-            }
+            this.validation = st;
         }
-        
-        final Status st = factory.create();
-        
-        if( this.valres == null )
+        else if( ! this.validation.equals( st ) )
         {
-            this.valres = st;
-        }
-        else if( ! this.valres.equals( st ) )
-        {
-            final Status oldValidationState = this.valres;
-            this.valres = st;
+            final Status oldValidationState = this.validation;
+            this.validation = st;
             
-            notifyValidationStateChangeListeners( oldValidationState, this.valres );
+            notifyValidationStateChangeListeners( oldValidationState, this.validation );
             
             final IModelParticle parent = parent();
             
@@ -1174,7 +1138,7 @@ public abstract class ModelElement
     
     public final void notifyPropertyChangeListeners( final ModelProperty property )
     {
-        final boolean enabled = isPropertyEnabled( property );
+        final boolean enabled = enabled( property );
         notifyPropertyChangeListeners( new ModelPropertyChangeEvent( this, property, enabled, enabled ) );
     }
     
@@ -1188,7 +1152,7 @@ public abstract class ModelElement
     {
         synchronized( root() )
         {
-            if( this.valres != null )
+            if( this.validation != null )
             {
                 refreshValidationResult();
             }

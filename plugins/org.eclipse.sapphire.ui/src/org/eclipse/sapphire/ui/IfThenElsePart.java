@@ -42,7 +42,7 @@ public final class IfThenElsePart extends SapphirePart
         this.def = (ISapphireIfElseDirectiveDef) this.definition;
         
         final Class<?> conditionClass;
-        final Status conditionClassValidation = this.def.getConditionClass().validate();
+        final Status conditionClassValidation = this.def.getConditionClass().validation();
         
         if( conditionClassValidation.severity() != Status.Severity.ERROR )
         {

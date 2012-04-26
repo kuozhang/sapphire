@@ -164,7 +164,7 @@ public abstract class AbstractBinding
     {
         if( ! this.control.isDisposed() ) 
         {
-            final boolean enabled = getModelElement().isPropertyEnabled( getProperty() );
+            final boolean enabled = getModelElement().enabled( getProperty() );
             this.control.setEnabled( enabled );
             
             final Object relatedControls = this.control.getData( PropertyEditorPart.RELATED_CONTROLS );

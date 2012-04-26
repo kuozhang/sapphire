@@ -81,7 +81,7 @@ public class Transient<T>
         return this.content;
     }
     
-    public Status validate()
+    public Status validation()
     {
         initValidation();
         return this.valres;

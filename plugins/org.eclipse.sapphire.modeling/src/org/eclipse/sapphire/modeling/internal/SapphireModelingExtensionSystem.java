@@ -16,9 +16,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,6 +33,7 @@ import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.services.ServiceFactoryProxy;
+import org.eclipse.sapphire.util.ReadOnlySetFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -124,11 +123,11 @@ public final class SapphireModelingExtensionSystem
                             {
                                 if( elname.equals( EL_SERVICE ) )
                                 {
-                                    final String id = text( child( el, EL_ID ) );
-                                    final Class<? extends Service> serviceType = handle.findClass( text( child( el, EL_TYPE ) ) );
-                                    final Class<? extends ServiceFactory> serviceFactory = handle.findClass( text( child( el, EL_FACTORY ) ) );
-                                    final String context = text( child( el, EL_CONTEXT ) );
-                                    final Set<String> overrides = parseOverrides( el );
+                                    final String id = value( el, EL_ID );
+                                    final Class<? extends Service> serviceType = handle.findClass( value( el, EL_TYPE ) );
+                                    final Class<? extends ServiceFactory> serviceFactory = handle.findClass( value( el, EL_FACTORY ) );
+                                    final Set<String> contexts = set( el, EL_CONTEXT );
+                                    final Set<String> overrides = set( el, EL_OVERRIDES );
                                     
                                     if( serviceType == null || serviceFactory == null )
                                     {
@@ -136,21 +135,21 @@ public final class SapphireModelingExtensionSystem
                                     }
                                     else
                                     {
-                                        serviceFactories.add( new ServiceFactoryProxyImpl( id, serviceType, serviceFactory, context, overrides ) );
+                                        serviceFactories.add( new ServiceFactoryProxyImpl( id, serviceType, serviceFactory, contexts, overrides ) );
                                     }
                                 }
                                 else if( elname.equals( EL_FUNCTION ) )
                                 {
-                                    final String name = text( child( el, EL_NAME ) );
-                                    final Class<? extends Function> impl = handle.findClass( text( child( el, EL_IMPL ) ) );
+                                    final String name = value( el, EL_NAME );
+                                    final Class<? extends Function> impl = handle.findClass( value( el, EL_IMPL ) );
 
                                     functionFactories.put( name.toLowerCase(), new FunctionFactory( impl ) );
                                 }
                                 else if( elname.equals( EL_TYPE_CAST ) )
                                 {
-                                    final Class<?> source = handle.findClass( text( child( el, EL_SOURCE ) ) );
-                                    final Class<?> target = handle.findClass( text( child( el, EL_TARGET ) ) );
-                                    final Class<? extends TypeCast> impl = handle.findClass( text( child( el, EL_IMPL ) ) );
+                                    final Class<?> source = handle.findClass( value( el, EL_SOURCE ) );
+                                    final Class<?> target = handle.findClass( value( el, EL_TARGET ) );
+                                    final Class<? extends TypeCast> impl = handle.findClass( value( el, EL_IMPL ) );
                                     
                                     typeCasts.add( new TypeCastProxy( source, target, impl ) );
                                 }
@@ -163,39 +162,6 @@ public final class SapphireModelingExtensionSystem
         }
     }
     
-    private static Set<String> parseOverrides( final Element root )
-    {
-        Set<String> overrides = null;
-        final NodeList nodes = root.getChildNodes();
-
-        for( int i = 0, n = nodes.getLength(); i < n; i++ )
-        {
-            final Node node = nodes.item( i );
-
-            if( node instanceof Element && node.getLocalName().equals( EL_OVERRIDES ) )
-            {
-                final String text = text( (Element) node );
-                
-                if( text.length() > 0 )
-                {
-                    if( overrides == null )
-                    {
-                        overrides = new HashSet<String>();
-                    }
-                    
-                    overrides.add( text );
-                }
-            }
-        }
-        
-        if( overrides == null )
-        {
-            overrides = Collections.emptySet();
-        }
-        
-        return overrides;
-    }
-
     private static Element parse( final URL url )
     {
         try
@@ -244,8 +210,26 @@ public final class SapphireModelingExtensionSystem
         }
     }
 
-    private static Element child( final Element element,
-                                  final String name )
+    private static String value( final Element element )
+    {
+        final StringBuilder buf = new StringBuilder();
+        final NodeList nodes = element.getChildNodes();
+    
+        for( int i = 0, n = nodes.getLength(); i < n; i++ )
+        {
+            final Node node = nodes.item( i );
+    
+            if( node instanceof Text )
+            {
+                buf.append( ( (Text) node ).getData() );
+            }
+        }
+    
+        return buf.toString().trim();
+    }
+
+    private static String value( final Element element,
+                                 final String valueElementName )
     {
         final NodeList nodes = element.getChildNodes();
 
@@ -257,9 +241,9 @@ public final class SapphireModelingExtensionSystem
             {
                 final Element el = (Element) node;
 
-                if( name.equals( el.getLocalName() ) )
+                if( valueElementName.equals( el.getLocalName() ) )
                 {
-                    return el;
+                    return value( el );
                 }
             }
         }
@@ -268,22 +252,28 @@ public final class SapphireModelingExtensionSystem
         throw new InvalidExtensionException();
     }
 
-    private static String text( final Element element )
+    private static Set<String> set( final Element root,
+                                    final String entryElementName )
     {
-        final StringBuilder buf = new StringBuilder();
-        final NodeList nodes = element.getChildNodes();
-
+        final ReadOnlySetFactory<String> factory = ReadOnlySetFactory.create();
+        final NodeList nodes = root.getChildNodes();
+    
         for( int i = 0, n = nodes.getLength(); i < n; i++ )
         {
             final Node node = nodes.item( i );
-
-            if( node instanceof Text )
+    
+            if( node instanceof Element && node.getLocalName().equals( entryElementName ) )
             {
-                buf.append( ( (Text) node ).getData() );
+                final String text = value( (Element) node );
+                
+                if( text.length() > 0 )
+                {
+                    factory.add( text );
+                }
             }
         }
-
-        return buf.toString().trim();
+        
+        return factory.export();
     }
 
     public static final class InvalidExtensionException extends RuntimeException
@@ -298,19 +288,19 @@ public final class SapphireModelingExtensionSystem
         private final Class<? extends ServiceFactory> factoryClass;
         private ServiceFactory factoryInstance;
         private boolean factoryInstantiationFailed;
-        private final String context;
+        private final Set<String> contexts;
         private final Set<String> overrides;
 
         public ServiceFactoryProxyImpl( final String id,
                                         final Class<? extends Service> type,
                                         final Class<? extends ServiceFactory> factoryClass,
-                                        final String context,
+                                        final Set<String> contexts,
                                         final Set<String> overrides )
         {
             this.id = id;
             this.type = type;
             this.factoryClass = factoryClass;
-            this.context = context;
+            this.contexts = contexts;
             this.overrides = overrides;
         }
         
@@ -339,7 +329,7 @@ public final class SapphireModelingExtensionSystem
             boolean result = false;
             final ServiceFactory factory = factory();
             
-            if( factory != null && context.type().equals( this.context ) )
+            if( factory != null && this.contexts.contains( context.type() ) )
             {
                 result = factory.applicable( context, service );
             }

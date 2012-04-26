@@ -15,7 +15,7 @@ package org.eclipse.sapphire.services;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class DataService<T extends Data> extends Service
+public abstract class DataService<T> extends Service
 {
     private T data;
     

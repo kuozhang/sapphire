@@ -45,7 +45,7 @@ public final class UrlJumpActionHandler
         if( super.computeEnablementState() == true )
         {
             final Value<URL> value = getModelElement().read( getProperty() );
-            return ( value.validate().severity() != Status.Severity.ERROR );
+            return ( value.validation().severity() != Status.Severity.ERROR );
         }
         
         return false;

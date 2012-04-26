@@ -430,7 +430,7 @@ public final class PropertyEditorPart extends FormPart
     {
         final Value<Integer> relatedContentWidth = definition().getRelatedContentWidth();
         
-        if( relatedContentWidth.validate().ok() )
+        if( relatedContentWidth.validation().ok() )
         {
             return relatedContentWidth.getContent();
         }
@@ -538,21 +538,21 @@ public final class PropertyEditorPart extends FormPart
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         
-        if( this.element.isPropertyEnabled( this.property ) )
+        if( this.element.enabled( this.property ) )
         {
             final Object particle = this.element.read( this.property );
             
             if( particle instanceof Value<?> )
             {
-                factory.add( ( (Value<?>) particle ).validate() );
+                factory.add( ( (Value<?>) particle ).validation() );
             }
             else if( particle instanceof ModelElementList<?> )
             {
-                factory.add( ( (ModelElementList<?>) particle ).validate() );
+                factory.add( ( (ModelElementList<?>) particle ).validation() );
             }
             else if( particle instanceof ModelElementHandle<?> )
             {
-                factory.add( ( (ModelElementHandle<?>) particle ).validate() );
+                factory.add( ( (ModelElementHandle<?>) particle ).validation() );
             }
         }
         
@@ -568,7 +568,7 @@ public final class PropertyEditorPart extends FormPart
     
     public boolean setFocus()
     {
-        if( this.element.isPropertyEnabled( this.property ) )
+        if( this.element.enabled( this.property ) )
         {
             broadcast( new FocusReceivedEvent( this ) );
             return true;

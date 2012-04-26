@@ -41,7 +41,7 @@ public final class PropertyEnabledCondition extends SapphireModelCondition
     {
         final IModelElement element = getPart().getModelElement();
         final ModelProperty property = element.property( this.property );
-        return element.isPropertyEnabled( property );
+        return element.enabled( property );
     }
 
     @Override

@@ -20,15 +20,14 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
-import org.eclipse.sapphire.modeling.Status.Severity;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -36,7 +35,6 @@ import org.eclipse.sapphire.modeling.annotations.Whitespace;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.services.ServiceContext;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -126,29 +124,16 @@ public interface ServiceDef extends IModelElement
     void setFactory( String value );
     void setFactory( JavaTypeName value );
     
-    // *** Context ***
+    // *** Contexts ***
+
+    @Type( base = ServiceContextRef.class )
+    @Label( standard = "contexts" )
+    @CountConstraint( min = 1 )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "context", type = ServiceContextRef.class ) )
     
-    @Label( standard = "context" )
-    @Required
-    @XmlBinding( path = "context" )
-    
-    @PossibleValues
-    (
-        values = 
-        {
-            ServiceContext.ID_ELEMENT_INSTANCE,
-            ServiceContext.ID_ELEMENT_METAMODEL,
-            ServiceContext.ID_PROPERTY_INSTANCE,
-            ServiceContext.ID_PROPERTY_METAMODEL,
-            "Sapphire.Part"
-        },
-        invalidValueSeverity = Severity.OK
-    )
-    
-    ValueProperty PROP_CONTEXT = new ValueProperty( TYPE, "Context" );
-    
-    Value<String> getContext();
-    void setContext( String value );
+    ListProperty PROP_CONTEXTS = new ListProperty(TYPE, "Contexts");
+
+    ModelElementList<ServiceContextRef> getContexts();
     
     // *** Overrides ***
     

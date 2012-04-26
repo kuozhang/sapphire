@@ -354,24 +354,24 @@ public final class PropertyEditorAssistDecorator
     
     private void refresh()
     {
-        final boolean enabled  = ( this.element == null ? false : this.element.isPropertyEnabled( this.property ) );
+        final boolean enabled  = ( this.element == null ? false : this.element.enabled( this.property ) );
         
         if( enabled )
         {
             if( this.property instanceof ValueProperty )
             {
                 final Value<?> value = this.element.read( (ValueProperty) this.property );
-                this.problem = value.validate();
+                this.problem = value.validation();
             }
             else if( this.property instanceof ListProperty )
             {
                 final ModelElementList<?> list = this.element.read( (ListProperty) this.property );
-                this.problem = list.validate();
+                this.problem = list.validation();
             }
             else if( this.property instanceof ElementProperty )
             {
                 final ModelElementHandle<?> handle = this.element.read( (ElementProperty) this.property );
-                this.problem = handle.validate( false );
+                this.problem = handle.validation( false );
             }
             else
             {

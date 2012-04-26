@@ -91,7 +91,7 @@ public abstract class SapphirePropertyEditorActionHandler extends SapphireAction
     
     protected boolean computeEnablementState()
     {
-        return getModelElement().isPropertyEnabled( getProperty() );
+        return getModelElement().enabled( getProperty() );
     }
     
 }

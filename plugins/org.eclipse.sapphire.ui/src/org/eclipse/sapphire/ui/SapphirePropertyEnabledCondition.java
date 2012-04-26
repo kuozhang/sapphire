@@ -44,7 +44,7 @@ public class SapphirePropertyEnabledCondition
         if( this.property != null )
         {
             final IModelElement element = getPart().getModelElement();
-            return element.isPropertyEnabled( this.property );
+            return element.enabled( this.property );
         }
 
         return false;
