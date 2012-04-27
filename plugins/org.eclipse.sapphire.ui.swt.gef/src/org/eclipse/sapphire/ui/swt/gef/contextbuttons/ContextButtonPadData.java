@@ -1,18 +1,14 @@
-/*******************************************************************************
- * <copyright>
- *
- * Copyright (c) 2005, 2010 SAP AG.
+/******************************************************************************
+ * Copyright (c) 2012 SAP and Oracle
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    SAP AG - initial API, implementation and documentation
- *
- * </copyright>
- *
- *******************************************************************************/
+ *    SAP - initial implementation
+ *    Shenxue Zhou - adaptation for Sapphire and ongoing maintenance
+ ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.contextbuttons;
 
@@ -20,10 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.sapphire.ui.Rectangle;
-
-/**
- * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
- */
 
 /**
  * A very simple implementation of {@link IContextButtonPadData} without any
@@ -38,8 +30,10 @@ import org.eclipse.sapphire.ui.Rectangle;
  * view it is advisable in such cases to stick to the Graphiti standard, and to
  * only change it in case you really need to.
  * 
- * @noinstantiate This class is not intended to be instantiated by clients.
+ * @author SAP
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
+
 public class ContextButtonPadData {
 
 	private List<ContextButtonEntry> topContextButtons;

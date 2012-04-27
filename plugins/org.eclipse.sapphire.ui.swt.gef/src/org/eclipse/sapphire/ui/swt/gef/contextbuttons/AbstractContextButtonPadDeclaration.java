@@ -1,18 +1,14 @@
-/*******************************************************************************
- * <copyright>
- *
- * Copyright (c) 2005, 2010 SAP AG.
+/******************************************************************************
+ * Copyright (c) 2012 SAP and Oracle
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    SAP AG - initial API, implementation and documentation
- *
- * </copyright>
- *
- *******************************************************************************/
+ *    SAP - initial implementation
+ *    Shenxue Zhou - adaptation for Sapphire and ongoing maintenance
+ ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.contextbuttons;
 
@@ -22,18 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
- */
-
-/**
  * An implementation of {@link IContextButtonPadDeclaration}. The calculation of
  * the visual definition of the context button pad is based on a reference
  * rectangle (around which the context pad is aligned) and on the context button
  * entries (which provided the functionality of the context buttons).
  * 
- * @noinstantiate This class is not intended to be instantiated by clients.
- * @noextend This class is not intended to be subclassed by clients.
+ * @author SAP
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
+
 public abstract class AbstractContextButtonPadDeclaration implements IContextButtonPadDeclaration {
 
 	// ===================== fields set in constructor ========================

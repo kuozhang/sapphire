@@ -1,18 +1,14 @@
-/*******************************************************************************
- * <copyright>
- *
- * Copyright (c) 2005, 2010 SAP AG.
+/******************************************************************************
+ * Copyright (c) 2012 SAP and Oracle
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    SAP AG - initial API, implementation and documentation
- *
- * </copyright>
- *
- *******************************************************************************/
+ *    SAP - initial implementation
+ *    Shenxue Zhou - adaptation for Sapphire and ongoing maintenance
+ ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.contextbuttons;
 
@@ -21,16 +17,13 @@ import java.awt.Rectangle;
 import org.eclipse.sapphire.ui.Color;
 
 /**
- * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
- */
-
-/**
  * An implementation of {@link IContextButtonPadDeclaration} which is based on
  * the UX guidelines.
  * 
- * @noinstantiate This class is not intended to be instantiated by clients.
- * @noextend This class is not intended to be subclassed by clients.
+ * @author SAP
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
+
 public class StandardContextButtonPadDeclaration extends AbstractContextButtonPadDeclaration {
 
 	private static final Color PAD_OUTER_LINE_COLOR = new Color(173, 191, 204);

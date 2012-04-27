@@ -1,19 +1,15 @@
-/*******************************************************************************
- * <copyright>
- *
- * Copyright (c) 2005, 2010 SAP AG.
+/******************************************************************************
+ * Copyright (c) 2012 SAP and Oracle
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    SAP AG - initial API, implementation and documentation
- *
- * </copyright>
- *
- *  Gregory Amerson - [376200] Support floating palette around diagram node
- *******************************************************************************/
+ *    SAP - initial implementation
+ *    Shenxue Zhou - adaptation for Sapphire and ongoing maintenance
+ *    Gregory Amerson - [376200] Support floating palette around diagram node
+ ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.contextbuttons;
 
@@ -36,6 +32,7 @@ import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
 
 /**
+ * @author SAP
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
