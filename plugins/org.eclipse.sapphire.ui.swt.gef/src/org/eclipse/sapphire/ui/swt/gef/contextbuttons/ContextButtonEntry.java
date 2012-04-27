@@ -12,6 +12,7 @@
  *
  * </copyright>
  *
+ *  Gregory Amerson - [376200] Support floating palette around diagram node
  *******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.contextbuttons;
@@ -34,6 +35,7 @@ import org.osgi.framework.Bundle;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public class ContextButtonEntry 
@@ -41,6 +43,7 @@ public class ContextButtonEntry
 	private SapphireDiagramEditor editor;
 	private ISapphirePart sapphirePart;
 	private SapphireAction action;
+	private SapphireActionHandler handler;
 	private List<ContextButtonEntry> contextButtonMenuEntries = new ArrayList<ContextButtonEntry>();
 	private static ImageDescriptor defaultImageDescriptor = null;
 
@@ -62,33 +65,63 @@ public class ContextButtonEntry
 	public List<ContextButtonEntry> getContextButtonMenuEntries() {
 		return this.contextButtonMenuEntries;
 	}
-		
-	public ContextButtonEntry(SapphireDiagramEditor editor, ISapphirePart part, SapphireAction action)
+
+	public ContextButtonEntry(SapphireDiagramEditor editor, ISapphirePart part, SapphireAction action, SapphireActionHandler handler)
 	{
 		this.editor = editor;
 		this.sapphirePart = part;
 		this.action = action;
+		this.handler = handler;
 	}
-	
-	public SapphireAction getAction()
+
+	public SapphireActionHandler getActionHandler()
 	{
-		return this.action;
+		return this.handler;
 	}
-	
+
+	public SapphireAction getAction()
+    {
+        return this.action;
+    }
+
 	public String getText()
 	{
-		return this.action.getLabel();
+	    if (this.action.getActiveHandlers().size() > 1 && this.handler != null)
+	    {
+    		return this.handler.getLabel();
+	    }
+	    else
+	    {
+	        return this.action.getLabel();
+	    }
 	}
-	
+
 	public String getDescription()
 	{
-		return this.action.getDescription();
+	    if (this.action.getActiveHandlers().size() > 1 && this.handler != null)
+        {
+            return this.handler.getDescription();
+        }
+        else
+        {
+            return this.action.getDescription();
+        }
 	}
-	
+
 	public Image getImage()
 	{
-		ImageData imageData = this.getAction().getImage(16);
-		ImageDescriptor imageDescriptor;
+	    ImageData imageData = null;
+
+        if (this.action.getActiveHandlers().size() > 1 && this.handler != null)
+        {
+            imageData = this.getActionHandler().getImage(16);
+        }
+        else
+        {
+            imageData = this.getAction().getImage(16);
+        }
+
+        ImageDescriptor imageDescriptor;
 		if (imageData == null)
 		{
 			imageDescriptor = getDefaultImageDescriptor();
@@ -97,25 +130,31 @@ public class ContextButtonEntry
 		{
 			imageDescriptor = SwtRendererUtil.toImageDescriptor(imageData);
 		}
-		return imageDescriptor.createImage();				
+		return imageDescriptor.createImage();
 	}
-	
+
 	public boolean canExecute()
 	{
-		return this.action.isEnabled();
+        if (this.action.getActiveHandlers().size() > 1 && this.handler != null)
+        {
+    		return this.handler.isEnabled();
+        }
+        else
+        {
+    		return this.action.isEnabled();
+        }
 	}
-	
+
 	public void execute()
-	{
-		SapphireActionHandler handler = this.action.getFirstActiveHandler();
-		if (handler != null)
-		{
-			DiagramRenderingContext context = 
-					this.editor.getConfigurationManager().getDiagramRenderingContextCache().get(this.sapphirePart);
-			handler.execute(context);
-		}
-	}
-	
+    {
+        if (handler != null)
+        {
+            DiagramRenderingContext context =
+                    this.editor.getConfigurationManager().getDiagramRenderingContextCache().get(this.sapphirePart);
+            handler.execute(context);
+        }
+    }
+
 	private static ImageDescriptor getDefaultImageDescriptor()
 	{
 		if (defaultImageDescriptor == null)

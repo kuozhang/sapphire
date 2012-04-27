@@ -12,6 +12,7 @@
  *
  * </copyright>
  *
+ *  Gregory Amerson - [376200] Support floating palette around diagram node
  *******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.contextbuttons;
@@ -37,9 +38,10 @@ import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.tools.AbstractConnectionCreationTool;
 import org.eclipse.gef.tools.CreationTool;
-import org.eclipse.osgi.service.datalocation.Location;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
@@ -47,6 +49,7 @@ import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 /**
@@ -59,7 +62,6 @@ import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 public class ContextButtonManager {
 	
 	private static final String DIAGRAM_NODE_DEFAULT_ACTION = "Sapphire.Diagram.Node.Default";
-	private static final String SAPPHIRE_ADD_ACTION = "Sapphire.Add";
 	/**
 	 * The context button pad is not shown, when the zoom level is below this
 	 * minimum value.
@@ -389,12 +391,11 @@ public class ContextButtonManager {
 		SapphireActionGroup actionGroup = nodePart.getActions(SapphireActionSystem.CONTEXT_DIAGRAM_NODE);
 		List<SapphireAction> originalActions = actionGroup.getActions();		
 		
-		// Filter out the "default" action and "add" action
+		// Filter out the "default" action and disabled actions
 		List<SapphireAction> actions = new ArrayList<SapphireAction>(originalActions.size());
 		for (SapphireAction action : originalActions)
 		{
-			if (!(action.getId().equals(DIAGRAM_NODE_DEFAULT_ACTION)) && 
-					!(action.getId().equals(SAPPHIRE_ADD_ACTION)))
+			if (!(action.getId().equals(DIAGRAM_NODE_DEFAULT_ACTION)) && action.isEnabled())
 			{
 				actions.add(action);
 			}
@@ -442,17 +443,41 @@ public class ContextButtonManager {
 		for (int i = numTopActions - 1; i >= 0; i--)
 		{
 			SapphireAction action = actions.get(i);
-			ContextButtonEntry entry = new ContextButtonEntry(getEditor(), nodePart, action);
-			contextButtonPadData.getTopContextButtons().add(entry);
-			
+
+		    ContextButtonEntry entry = createContextButtonEntry(action, nodePart);
+            contextButtonPadData.getTopContextButtons().add(entry);
 		}
 		for (int i = numTopActions; i < numOfActions; i++)
 		{
 			SapphireAction action = actions.get(i);
-			ContextButtonEntry entry = new ContextButtonEntry(getEditor(), nodePart, action);
-			contextButtonPadData.getRightContextButtons().add(entry);
+
+		    ContextButtonEntry entry = createContextButtonEntry(action, nodePart);
+		    contextButtonPadData.getRightContextButtons().add(entry);
 		}
 		return contextButtonPadData;
 	}
-	
+
+    private ContextButtonEntry createContextButtonEntry(SapphireAction action, ISapphirePart nodePart)
+    {
+        ContextButtonEntry entry = null;
+
+        if (action.getActiveHandlers().size() > 1)
+        {
+            entry = new ContextButtonEntry(getEditor(), nodePart, action, null);
+
+            for (SapphireActionHandler handler : action.getActiveHandlers())
+            {
+                entry.addContextButtonMenuEntry( new ContextButtonEntry(getEditor(), nodePart, action, handler));
+            }
+        }
+        else
+        {
+            entry = new ContextButtonEntry(getEditor(), nodePart, action, action.getFirstActiveHandler());
+        }
+
+        return entry;
+    }
+
+
+
 }
