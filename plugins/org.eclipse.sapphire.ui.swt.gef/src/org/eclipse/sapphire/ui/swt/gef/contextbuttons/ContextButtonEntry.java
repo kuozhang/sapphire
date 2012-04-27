@@ -23,7 +23,9 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -86,14 +88,17 @@ public class ContextButtonEntry
 
 	public String getText()
 	{
+		String label = null;
 	    if (this.action.getActiveHandlers().size() > 1 && this.handler != null)
 	    {
-    		return this.handler.getLabel();
+    		label = this.handler.getLabel();
 	    }
 	    else
 	    {
-	        return this.action.getLabel();
+	        label = this.action.getLabel();
 	    }
+	    label = LabelTransformer.transform( label, CapitalizationType.TITLE_STYLE, false );
+	    return label;
 	}
 
 	public String getDescription()

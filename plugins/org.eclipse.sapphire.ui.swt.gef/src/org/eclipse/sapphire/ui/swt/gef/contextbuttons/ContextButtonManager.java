@@ -391,11 +391,11 @@ public class ContextButtonManager {
 		SapphireActionGroup actionGroup = nodePart.getActions(SapphireActionSystem.CONTEXT_DIAGRAM_NODE);
 		List<SapphireAction> originalActions = actionGroup.getActions();		
 		
-		// Filter out the "default" action and disabled actions
+		// Filter out the "default" action and actions without active handlers
 		List<SapphireAction> actions = new ArrayList<SapphireAction>(originalActions.size());
 		for (SapphireAction action : originalActions)
 		{
-			if (!(action.getId().equals(DIAGRAM_NODE_DEFAULT_ACTION)) && action.isEnabled())
+			if (!(action.getId().equals(DIAGRAM_NODE_DEFAULT_ACTION)) && action.getActiveHandlers().size() > 0)
 			{
 				actions.add(action);
 			}
@@ -477,7 +477,5 @@ public class ContextButtonManager {
 
         return entry;
     }
-
-
 
 }
