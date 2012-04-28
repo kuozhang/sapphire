@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [377989] ActuatorPart background color does match parent 
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -51,6 +52,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public final class ActuatorPart extends SapphirePart
@@ -389,6 +391,7 @@ public final class ActuatorPart extends SapphirePart
             final Composite composite = new Composite( parent, SWT.NONE );
             composite.setLayoutData( gdhalign( gdhindent( gdhspan( gd(), hSpan ), 8 ), hAlignCode ) );
             composite.setLayout( glayout( ( image == null ? 1 : 2 ), 0, 0 ) );
+            composite.setBackground( parent.getBackground() );
 
             final Label imageControl;
             
@@ -398,6 +401,7 @@ public final class ActuatorPart extends SapphirePart
                 imageControl.setImage( getImageCache().getImage( image ) );
                 imageControl.setLayoutData( gdvalign( gd(), SWT.CENTER ) );
                 imageControl.setEnabled( enabled() );
+                imageControl.setBackground( parent.getBackground() );
             }
             else
             {
