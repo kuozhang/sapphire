@@ -44,10 +44,7 @@ import org.w3c.dom.Text;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class XmlElement
-
-    extends XmlNode
-    
+public final class XmlElement extends XmlNode
 {
     private final IdentityCache<Element,XmlElement> elementsCache = new IdentityCache<Element,XmlElement>();
     private final IdentityCache<Attr,XmlAttribute> attributesCache = new IdentityCache<Attr,XmlAttribute>();
@@ -888,11 +885,39 @@ public final class XmlElement
         {
             validateEdit();
             
-            final Element domElement = getDomNode();
-            final Node parent = domElement.getParentNode();
+            // In order to preserve the formatting, must move the element with all of its preceding
+            // whitespace. Similarly, the insertion position must be before all of the reference
+            // element's preceding whitespace.
             
-            parent.removeChild( domElement );
-            parent.insertBefore( domElement, ref.getDomNode() );
+            final Element domElement = getDomNode();
+            final Node domParentNode = domElement.getParentNode();
+
+            final ReadOnlyListFactory<Node> domNodesToMove = ReadOnlyListFactory.create();
+            
+            domNodesToMove.add( domElement );
+            
+            for( Node prev = domElement.getPreviousSibling(); 
+                 prev != null && prev.getNodeType() == Node.TEXT_NODE && prev.getNodeValue().trim().length() == 0; 
+                 prev = prev.getPreviousSibling() )
+            {
+                domNodesToMove.add( prev );
+            }
+            
+            Node domRefNode = ref.getDomNode();
+
+            for( Node prev = domRefNode.getPreviousSibling(); 
+                 prev != null && prev.getNodeType() == Node.TEXT_NODE && prev.getNodeValue().trim().length() == 0; 
+                 prev = prev.getPreviousSibling() )
+            {
+                domRefNode = prev;
+            }
+            
+            for( Node node : domNodesToMove.export() )
+            {
+                domParentNode.removeChild( node );
+                domParentNode.insertBefore( node, domRefNode );
+                domRefNode = node;
+            }
         }
     }
     
