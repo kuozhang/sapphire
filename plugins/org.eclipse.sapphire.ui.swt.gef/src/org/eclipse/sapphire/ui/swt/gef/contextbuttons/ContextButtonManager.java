@@ -394,6 +394,8 @@ public class ContextButtonManager {
 			}
 		}
 		
+		// Split actions into two sets according to their groups.
+		
 		int numOfActions = actions.size();
 		int half = numOfActions / 2;
 
@@ -418,7 +420,8 @@ public class ContextButtonManager {
 			numTopActions = half;
 		}
 		else 
-		{		
+		{	
+			int i = 0;
 			for( List<SapphireAction> bucket : buckets.values() )
 			{
 				numTopActions += bucket.size();
@@ -426,11 +429,13 @@ public class ContextButtonManager {
 				{
 					break;
 				}
-				if (numTopActions >= half)
+				if (numTopActions >= half || i == buckets.size() - 2)
 				{
 					break;
 				}
+				i++;
 			}
+			
 		}
 		// Add top actions in reverse order
 		for (int i = numTopActions - 1; i >= 0; i--)
