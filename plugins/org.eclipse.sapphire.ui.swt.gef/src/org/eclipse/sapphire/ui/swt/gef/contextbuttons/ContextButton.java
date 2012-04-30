@@ -29,8 +29,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.commands.ContextEntryCommand;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Path;
@@ -79,16 +77,6 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 	 * shortly disabled (e.g. on button-pressed).
 	 */
 	private Tooltip tooltip;
-
-	/**
-	 * Used in the mouse-drag scenario (see {@link #mouseDragged(MouseEvent)})
-	 */
-	private MouseMoveListener mouseDragMoveListener;
-
-	/**
-	 * Used in the mouse-drag scenario (see {@link #mouseDragged(MouseEvent)})
-	 */
-	private MouseListener mouseDragUpListener;
 
 	// ============================ inner classes =============================
 
@@ -154,12 +142,11 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 		// (drag&drop, click with popup, single click)
 //		if (getEntry().getDragAndDropFeatures().size() > 0) {
 //			setEnabled(true);
-//		} else if (getEntry().getContextButtonMenuEntries().size() > 0) {
-//			setEnabled(getExecutableMenuEntries().size() > 0);
-//		} else {
-//			setEnabled(getEntry().canExecute());
-//		}
-		setEnabled(getEntry().canExecute());
+		if (getEntry().getContextButtonMenuEntries().size() > 0) {
+			setEnabled(getExecutableMenuEntries().size() > 0);
+		} else {
+			setEnabled(getEntry().canExecute());
+		}
 	}
 
 	// ========================= getter and setter ============================
@@ -338,35 +325,6 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 		graphics.fillPolygon(pl);
 	}
 
-	/**
-	 * Paints a drag-only indicator on the context button (can be dragged but
-	 * not clicked)
-	 */
-	private void paintDragOnlyIndicator(Graphics graphics, Rectangle newRect) {
-		int x = newRect.x;
-		int y = newRect.y;
-		int w = newRect.width;
-		int h = newRect.height;
-
-		preparePaintIndicator(graphics);
-		graphics.drawRectangle(x + w * 3 / 4, y + h / 2, w / 8, h / 8);
-		graphics.fillRectangle(x + w * 3 / 4, y + h / 2, w / 8, h / 8);
-	}
-
-	/**
-	 * Paints a drag-or-click indicator on the context button (can either be
-	 * dragged or be clicked).
-	 */
-	private void paintDragOrClickIndicator(Graphics graphics, Rectangle newRect) {
-		int x = newRect.x;
-		int y = newRect.y;
-		int w = newRect.width;
-		int h = newRect.height;
-
-		preparePaintIndicator(graphics);
-		graphics.drawOval(x + w * 3 / 4, y + h / 4, w / 8, h / 8);
-		graphics.fillOval(x + w * 3 / 4, y + h / 4, w / 8, h / 8);
-	}
 
 	/**
 	 * Prepares the given graphics for painting an indicator (sets colors,
@@ -496,53 +454,7 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 	 * button.
 	 */
 	public void mouseDragged(MouseEvent me) {
-//		if (getEntry().getDragAndDropFeatures().size() == 0) {
-//			return;
-//		}
-//
-//		me.consume();
-//
-//		if (mouseDragMoveListener == null) { // not already in dragging
-//
-//			// creates a new drag-connection tool on each mouse move
-//			mouseDragMoveListener = new MouseMoveListener() {
-//				public void mouseMove(org.eclipse.swt.events.MouseEvent e) {
-//					EditPart targetEditPart = getEditor().getGraphicalViewer().findObjectAt(new Point(e.x, e.y));
-//					createNewGFDragConnectionTool().continueConnection(getEditPart(), getEditor(), getEntry(), targetEditPart);
-//				}
-//			};
-//
-//			// removes the mouse-drag listeners on mouse up
-//			mouseDragUpListener = new MouseAdapter() {
-//				@Override
-//				public void mouseUp(org.eclipse.swt.events.MouseEvent e) {
-//					getEditor().getGraphicalViewer().getControl().removeMouseListener(mouseDragUpListener);
-//					getEditor().getGraphicalViewer().getControl().removeMouseMoveListener(mouseDragMoveListener);
-//					mouseDragUpListener = null;
-//					mouseDragMoveListener = null;
-//				}
-//			};
-//
-//			// adds the mouse-drag listeners
-//			getEditor().getGraphicalViewer().getControl().addMouseListener(mouseDragUpListener);
-//			getEditor().getGraphicalViewer().getControl().addMouseMoveListener(mouseDragMoveListener);
-//		}
 	}
-
-//	/**
-//	 * Returns a new GFDragConnectionTool, which is initialized and set as
-//	 * active tool.
-//	 * 
-//	 * @return A new GFDragConnectionTool, which is initialized and set as
-//	 *         active tool.
-//	 */
-//	private GFDragConnectionTool createNewGFDragConnectionTool() {
-//		DefaultEditDomain editDomain = getEditor().getEditDomain();
-//		GFDragConnectionTool dragConnectionTool = new GFDragConnectionTool();
-//		dragConnectionTool.setEditDomain(editDomain);
-//		editDomain.setActiveTool(dragConnectionTool);
-//		return dragConnectionTool;
-//	}
 
 	public void mouseEntered(MouseEvent me) {
 	}
