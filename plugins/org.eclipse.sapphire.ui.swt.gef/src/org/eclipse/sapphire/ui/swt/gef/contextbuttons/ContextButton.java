@@ -12,9 +12,11 @@
 
 package org.eclipse.sapphire.ui.swt.gef.contextbuttons;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.ActionEvent;
 import org.eclipse.draw2d.ActionListener;
 import org.eclipse.draw2d.Clickable;
@@ -24,15 +26,24 @@ import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.modeling.localization.LabelTransformer;
+import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
+import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
-import org.eclipse.sapphire.ui.swt.gef.commands.ContextEntryCommand;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.widgets.Display;
+import org.osgi.framework.Bundle;
 
 /**
  * A context button, which is used for example in the context button pad. It
@@ -53,12 +64,7 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 	 */
 	private PositionedContextButton positionedContextButton;
 
-	/**
-	 * The {@link ContextButtonEntry} contains the logical and identifying
-	 * information for the context button (command, name, image, ...). It is set
-	 * in the constructor.
-	 */
-	private ContextButtonEntry contextButtonEntry;
+	private SapphireAction sapphireAction;
 
 	/**
 	 * The {@link ContextButtonPad} is used to access the environment (editor,
@@ -77,6 +83,8 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 	 * shortly disabled (e.g. on button-pressed).
 	 */
 	private Tooltip tooltip;
+	
+	private static ImageDescriptor defaultImageDescriptor = null;
 
 	// ============================ inner classes =============================
 
@@ -87,13 +95,14 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 	private class PopupMenuLabelProvider extends LabelProvider {
 		@Override
 		public String getText(Object element) {
-			return ((ContextButtonEntry) element).getText();
+			SapphireActionHandler handler  = (SapphireActionHandler) element;
+			return getLabel(handler);
 		}
 
 		@Override
 		public Image getImage(Object element) {
-			ContextButtonEntry entry = (ContextButtonEntry) element;
-			return entry.getImage();
+			SapphireActionHandler handler  = (SapphireActionHandler) element;
+			return getActionHandlerImage(handler);
 		}
 	};
 
@@ -105,8 +114,7 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 	 * @param positionedContextButton
 	 *            The {@link PositionedContextButton} contains the visual
 	 *            information for the context button (colors, position, size,
-	 *            opacity, ...). It also provides access to the
-	 *            {@link ContextButtonEntry}.
+	 *            opacity, ...).
 	 * @param contextButtonPad
 	 *            The {@link ContextButtonPad} is used to access the environment
 	 *            (editor, ...).
@@ -114,23 +122,24 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 	public ContextButton(PositionedContextButton positionedContextButton, ContextButtonPad contextButtonPad) {
 		this.positionedContextButton = positionedContextButton;
 		this.contextButtonPad = contextButtonPad;
-		this.contextButtonEntry = (ContextButtonEntry) positionedContextButton.getContextButtonEntry();
+		this.sapphireAction = positionedContextButton.getSapphireAction();
 
 		setBorder(null); // get rid of default border
 		setCurrentTransparency(contextButtonPad.getCurrentTransparency());
 		setOpacity(getPositionedContextButton().getDefaultOpacity());
 
-		if (getEntry().getText() != null && getEntry().getText().length() > 0) {
+		String label = getLabel(getSapphireAction());
+		if (label != null && label.length() > 0) {
 			if (tooltip == null) {
 				tooltip = new Tooltip();
-			}
-			tooltip.setHeader(getEntry().getText());
+			}			
+			tooltip.setHeader(label);
 		}
-		if (getEntry().getDescription() != null && getEntry().getDescription().length() > 0) {
+		if (getSapphireAction().getDescription() != null && getSapphireAction().getDescription().length() > 0) {
 			if (tooltip == null) {
 				tooltip = new Tooltip();
 			}
-			tooltip.setDescription(getEntry().getDescription());
+			tooltip.setDescription(getSapphireAction().getDescription());
 		}
 		setToolTip(tooltip);
 
@@ -140,12 +149,10 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 		// disable the context button, if it is not executable.
 		// Note, that this has to be done dependent on the context button functionality
 		// (drag&drop, click with popup, single click)
-//		if (getEntry().getDragAndDropFeatures().size() > 0) {
-//			setEnabled(true);
-		if (getEntry().getContextButtonMenuEntries().size() > 0) {
+		if (getSapphireAction().getActiveHandlers().size() > 1) {
 			setEnabled(getExecutableMenuEntries().size() > 0);
 		} else {
-			setEnabled(getEntry().canExecute());
+			setEnabled(getSapphireAction().isEnabled());
 		}
 	}
 
@@ -163,17 +170,8 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 		return positionedContextButton;
 	}
 
-	/**
-	 * Returns the {@link ContextButtonEntry} which contains the logical and
-	 * identifying information for the context button (command, name, image,
-	 * ...). It is set in the constructor.
-	 * 
-	 * @return The {@link ContextButtonEntry} which contains the logical and
-	 *         identifying information for the context button (command, name,
-	 *         image, ...). It is set in the constructor.
-	 */
-	public final ContextButtonEntry getEntry() {
-		return contextButtonEntry;
+	public final SapphireAction getSapphireAction() {
+		return sapphireAction;
 	}
 
 	/**
@@ -276,7 +274,7 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 		graphics.setAlpha((int) (imageOpacity * 255));
 
 		// create image
-		Image originalImage = getEntry().getImage();
+		Image originalImage = getActionImage(getSapphireAction());
 		if (originalImage == null) {
 			return;
 		}
@@ -298,8 +296,8 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 		image.dispose();
 
 		// paint indicators
-		List<ContextButtonEntry> menuEntries = getEntry().getContextButtonMenuEntries();
-		boolean isSubmenuButton = menuEntries != null && menuEntries.size() > 0;
+		List<SapphireActionHandler> menuEntries = getSapphireAction().getActiveHandlers();
+		boolean isSubmenuButton = menuEntries != null && menuEntries.size() > 1;
 		if (isSubmenuButton) {
 			paintSubmenuIndicator(graphics, newRect);
 		}
@@ -473,8 +471,8 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 	 * selection of multiple commands to perform.
 	 */
 	public void actionPerformed(ActionEvent event) {
-		if (getEntry().getContextButtonMenuEntries().size() > 0) {
-			List<ContextButtonEntry> menuEntries = getExecutableMenuEntries();
+		if (getSapphireAction().getActiveHandlers().size() > 1) {
+			List<SapphireActionHandler> menuEntries = getExecutableMenuEntries();
 			if (menuEntries.size() == 0) {
 				return;
 			}
@@ -484,31 +482,98 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 
 			boolean b = popupMenu.show(Display.getCurrent().getActiveShell());
 			if (b) {
-				((ContextButtonEntry) popupMenu.getResult()).execute();
+				SapphireActionHandler handler = (SapphireActionHandler)popupMenu.getResult();
+				executeActionHandler(handler);
 			}
-		} else if (getEntry().canExecute()) {
+		} else if (getSapphireAction().isEnabled()) {
 			// has no ContextButtonMenuEntries -> execute ContextButton
-			getEditor().getEditDomain().getCommandStack().execute(new ContextEntryCommand(getEntry()));
+			executeActionHandler(getSapphireAction().getFirstActiveHandler());
+			
 		}
 
-		getContextButtonPad().getEditor().getContextButtonManager().hideContextButtonsInstantly();
+		getEditor().getContextButtonManager().hideContextButtonsInstantly();
 	}
 
 	/**
-	 * Returns all context button menu entries, which are executable.
+	 * Returns all action handlers, which are executable.
 	 * 
-	 * @return All context button menu entries, which are executable.
+	 * @return All action handlers, which are executable.
 	 */
-	private List<ContextButtonEntry> getExecutableMenuEntries() {
+	private List<SapphireActionHandler> getExecutableMenuEntries() {
 		// has ContextButtonMenuEntries -> create popup
-		List<ContextButtonEntry> contextButtonMenuEntries = getEntry().getContextButtonMenuEntries();
-		List<ContextButtonEntry> menuEntries = new ArrayList<ContextButtonEntry>();
-		for (ContextButtonEntry contextButtonEntry : contextButtonMenuEntries) {
-			if (contextButtonEntry.canExecute()) {
-				menuEntries.add(contextButtonEntry);
+		List<SapphireActionHandler> activeHandlers = getSapphireAction().getActiveHandlers();
+		List<SapphireActionHandler> menuEntries = new ArrayList<SapphireActionHandler>();
+		for (SapphireActionHandler handler : activeHandlers) {
+			if (handler.isEnabled()) {
+				menuEntries.add(handler);
 			}
 		}
 		return menuEntries;
+	}
+	
+	private static ImageDescriptor getDefaultImageDescriptor()
+	{
+		if (defaultImageDescriptor == null)
+		{
+			Bundle bundle = Platform.getBundle("org.eclipse.sapphire.ui");
+			URL url = bundle.getResource("org/eclipse/sapphire/ui/actions/Default.png");
+			defaultImageDescriptor = ImageDescriptor.createFromURL(url);
+		}
+		return defaultImageDescriptor;
+	}
+	
+	private Image getActionHandlerImage(SapphireActionHandler handler)
+	{
+	    ImageData imageData = handler.getImage(16);
+	    
+        ImageDescriptor imageDescriptor;
+		if (imageData == null)
+		{
+			imageDescriptor = getDefaultImageDescriptor();
+		}
+		else
+		{
+			imageDescriptor = SwtRendererUtil.toImageDescriptor(imageData);
+		}
+		return imageDescriptor.createImage();
+	}
+
+	private Image getActionImage(SapphireAction action)
+	{
+	    ImageData imageData = action.getImage(16);
+	    
+        ImageDescriptor imageDescriptor;
+		if (imageData == null)
+		{
+			imageDescriptor = getDefaultImageDescriptor();
+		}
+		else
+		{
+			imageDescriptor = SwtRendererUtil.toImageDescriptor(imageData);
+		}
+		return imageDescriptor.createImage();
+	}
+	
+	private String getLabel(SapphireAction action)
+	{
+		String label = action.getLabel();
+	    label = LabelTransformer.transform( label, CapitalizationType.TITLE_STYLE, false );
+	    return label;		
+	}
+	
+	private String getLabel(SapphireActionHandler handler)
+	{
+		String label = handler.getLabel();
+	    label = LabelTransformer.transform( label, CapitalizationType.TITLE_STYLE, false );
+	    return label;		
+	}
+	
+	private void executeActionHandler(SapphireActionHandler handler)
+	{
+		DiagramNodePart nodePart = this.contextButtonPad.getNodePart();
+        DiagramRenderingContext context =
+                getEditor().getConfigurationManager().getDiagramRenderingContextCache().get(nodePart);
+        handler.execute(context);		
 	}
 
 	public double getCurrentTransparency() {

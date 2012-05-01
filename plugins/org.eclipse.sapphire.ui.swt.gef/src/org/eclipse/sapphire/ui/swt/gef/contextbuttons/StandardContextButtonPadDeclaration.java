@@ -15,6 +15,7 @@ package org.eclipse.sapphire.ui.swt.gef.contextbuttons;
 import java.awt.Rectangle;
 
 import org.eclipse.sapphire.ui.Color;
+import org.eclipse.sapphire.ui.SapphireAction;
 
 /**
  * An implementation of {@link IContextButtonPadDeclaration} which is based on
@@ -119,8 +120,8 @@ public class StandardContextButtonPadDeclaration extends AbstractContextButtonPa
 	// ===================== overwritten button creators ======================
 
 	@Override
-	public PositionedContextButton createButton(ContextButtonEntry entry, Rectangle position) {
-		PositionedContextButton ret = new PositionedContextButton(entry, position);
+	public PositionedContextButton createButton(SapphireAction action, Rectangle position) {
+		PositionedContextButton ret = new PositionedContextButton(action, position);
 		ret.setLine(1, 4);
 		ret.setColors(BUTTON_OUTER_LINE_COLOR, BUTTON_MIDDLE_LINE_COLOR, BUTTON_FILL_COLOR);
 		ret.setOpacity(0.0, 0.7, 1.0);

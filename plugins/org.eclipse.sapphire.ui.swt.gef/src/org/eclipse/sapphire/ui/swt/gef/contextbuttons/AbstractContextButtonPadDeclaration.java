@@ -17,6 +17,8 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.ui.SapphireAction;
+
 /**
  * An implementation of {@link IContextButtonPadDeclaration}. The calculation of
  * the visual definition of the context button pad is based on a reference
@@ -54,19 +56,19 @@ public abstract class AbstractContextButtonPadDeclaration implements IContextBut
 	 * The combined list of the collapse button and the generic context buttons
 	 * as described in {@link #getCollapseAndGenericButtons()}
 	 */
-	private List<ContextButtonEntry> collapseAndGenericButtons;
+	private List<SapphireAction> collapseAndGenericButtons;
 
 	/**
 	 * The right domain-specific context buttons as described in
 	 * {@link #getDomainButtonsRight()}
 	 */
-	private List<ContextButtonEntry> domainButtonsRight;
+	private List<SapphireAction> domainButtonsRight;
 
 	/**
 	 * The left domain-specific context buttons as described in
 	 * {@link #getDomainButtonsLeft()}
 	 */
-	private List<ContextButtonEntry> domainButtonsBottom;
+	private List<SapphireAction> domainButtonsBottom;
 
 	/**
 	 * The bounds of the top pad as described in {@link #getTopPad()}
@@ -216,7 +218,7 @@ public abstract class AbstractContextButtonPadDeclaration implements IContextBut
 	 * entry and position. This method can be implemented to set all the visual
 	 * attributes of the context buttons (line-width, color, opacity, ...).
 	 */
-	public abstract PositionedContextButton createButton(ContextButtonEntry entry, Rectangle position);
+	public abstract PositionedContextButton createButton(SapphireAction entry, Rectangle position);
 
 	// =========================== field getter ===============================
 
@@ -307,19 +309,8 @@ public abstract class AbstractContextButtonPadDeclaration implements IContextBut
 	 * 
 	 * @return The list of generic, domain-independent context button entries.
 	 */
-	protected final List<ContextButtonEntry> getGenericButtons() {
+	protected final List<SapphireAction> getGenericButtons() {
 		return contextButtonPadData.getTopContextButtons();
-	}
-
-	/**
-	 * Returns the context button entry for the collapse/expand functionality.
-	 * It was given in the constructor. It can be null.
-	 * 
-	 * @return The context button entry for the collapse/expand functionality.
-	 *         It was given in the constructor. It can be null.
-	 */
-	protected final ContextButtonEntry getCollapseButton() {
-		return contextButtonPadData.getCollapseContextButton();
 	}
 
 	/**
@@ -331,11 +322,9 @@ public abstract class AbstractContextButtonPadDeclaration implements IContextBut
 	 * @return The combined list of the collapse button and the generic context
 	 *         button entries.
 	 */
-	protected final List<ContextButtonEntry> getCollapseAndGenericButtons() {
+	protected final List<SapphireAction> getCollapseAndGenericButtons() {
 		if (collapseAndGenericButtons == null) {
-			collapseAndGenericButtons = new ArrayList<ContextButtonEntry>(getGenericButtons().size() + 1);
-			if (getCollapseButton() != null)
-				collapseAndGenericButtons.add(getCollapseButton());
+			collapseAndGenericButtons = new ArrayList<SapphireAction>(getGenericButtons().size() + 1);
 			collapseAndGenericButtons.addAll(getGenericButtons());
 		}
 		return collapseAndGenericButtons;
@@ -348,7 +337,7 @@ public abstract class AbstractContextButtonPadDeclaration implements IContextBut
 	 * 
 	 * @return The list of domain-specific context button entries.
 	 */
-	protected final List<ContextButtonEntry> getDomainButtons() {
+	protected final List<SapphireAction> getDomainButtons() {
 		return contextButtonPadData.getRightContextButtons();
 	}
 
@@ -363,7 +352,7 @@ public abstract class AbstractContextButtonPadDeclaration implements IContextBut
 	 * 
 	 * @see #getDomainButtons()
 	 */
-	protected final List<ContextButtonEntry> getDomainButtonsRight() {
+	protected final List<SapphireAction> getDomainButtonsRight() {
 		return domainButtonsRight;
 	}
 
@@ -378,7 +367,7 @@ public abstract class AbstractContextButtonPadDeclaration implements IContextBut
 	 * 
 	 * @see #getDomainButtons()
 	 */
-	protected final List<ContextButtonEntry> getDomainButtonsBottom() {
+	protected final List<SapphireAction> getDomainButtonsBottom() {
 		return domainButtonsBottom;
 	}
 
@@ -441,14 +430,14 @@ public abstract class AbstractContextButtonPadDeclaration implements IContextBut
 		}
 
 		// determine domain buttons right
-		domainButtonsRight = new ArrayList<ContextButtonEntry>();
+		domainButtonsRight = new ArrayList<SapphireAction>();
 		for (int i = 0; i < maxNumberOfButtons && i < getDomainButtons().size(); i++) {
 			domainButtonsRight.add(getDomainButtons().get(i));
 		}
 
 		// determine domain buttons bottom
 		int rightSize = getDomainButtonsRight().size();
-		domainButtonsBottom = new ArrayList<ContextButtonEntry>();
+		domainButtonsBottom = new ArrayList<SapphireAction>();
 		for (int i = rightSize; i < getDomainButtons().size(); i++) {
 			domainButtonsBottom.add(getDomainButtons().get(i));
 		}
@@ -473,10 +462,6 @@ public abstract class AbstractContextButtonPadDeclaration implements IContextBut
 		if (getCollapseAndGenericButtons().size() != 0) {
 			top = new Rectangle();
 			top.width = getPadDynamicSize(getCollapseAndGenericButtons().size());
-			if (getCollapseButton() != null && getGenericButtons().size() > 0) {
-				// adjust with different padding of collapse button
-				top.width += getCollapseButtonPadding() - getButtonPadding();
-			}
 			top.height = getPadConstantSize();
 			top.x = innerTop.x - top.width + getPadHorizontalOverlap();
 			top.y = innerTop.y - top.height;
@@ -522,10 +507,6 @@ public abstract class AbstractContextButtonPadDeclaration implements IContextBut
 		for (int i = 0; i < getCollapseAndGenericButtons().size(); i++) {
 			int iBackwards = getCollapseAndGenericButtons().size() - 1 - i;
 			int x = top.x + getPadPaddingOutside() + (iBackwards * (getButtonSize() + getButtonPadding()));
-			if (i == 0 && getCollapseButton() != null && getGenericButtons().size() > 0) {
-				// adjust with different padding of collapse button
-				x += getCollapseButtonPadding() - getButtonPadding();
-			}
 			int y = top.y + getPadPaddingInside();
 			Rectangle position = new Rectangle(x, y, getButtonSize(), getButtonSize());
 			positionedButtons.add(createButton(getCollapseAndGenericButtons().get(i), position));

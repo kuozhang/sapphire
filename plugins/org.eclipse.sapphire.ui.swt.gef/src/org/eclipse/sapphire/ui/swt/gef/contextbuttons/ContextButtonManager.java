@@ -34,10 +34,8 @@ import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.tools.AbstractConnectionCreationTool;
 import org.eclipse.gef.tools.CreationTool;
-import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
-import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
@@ -113,7 +111,9 @@ public class ContextButtonManager {
 
 		private void reactOnMouse(MouseEvent me) {
 			SapphireDiagramEditor ed = getEditor();
-
+			
+			// TODO Evaluate whether we should allow context pad to show when the 
+			// editor is in direct edit mode. 
 //			if (ed.isDirectEditingActive()) {
 //				return;
 //			}
@@ -331,8 +331,7 @@ public class ContextButtonManager {
 			
 			
 			if (contextButtonPadData.getRightContextButtons().size() == 0
-					&& contextButtonPadData.getTopContextButtons().size() == 0
-					&& contextButtonPadData.getCollapseContextButton() == null) {
+					&& contextButtonPadData.getTopContextButtons().size() == 0) {					
 				return; // no context buttons to show
 			}
 
@@ -442,38 +441,15 @@ public class ContextButtonManager {
 		{
 			SapphireAction action = actions.get(i);
 
-		    ContextButtonEntry entry = createContextButtonEntry(action, nodePart);
-            contextButtonPadData.getTopContextButtons().add(entry);
+            contextButtonPadData.getTopContextButtons().add(action);
 		}
 		for (int i = numTopActions; i < numOfActions; i++)
 		{
 			SapphireAction action = actions.get(i);
 
-		    ContextButtonEntry entry = createContextButtonEntry(action, nodePart);
-		    contextButtonPadData.getRightContextButtons().add(entry);
+		    contextButtonPadData.getRightContextButtons().add(action);
 		}
 		return contextButtonPadData;
 	}
-
-    private ContextButtonEntry createContextButtonEntry(SapphireAction action, ISapphirePart nodePart)
-    {
-        ContextButtonEntry entry = null;
-
-        if (action.getActiveHandlers().size() > 1)
-        {
-            entry = new ContextButtonEntry(getEditor(), nodePart, action, null);
-
-            for (SapphireActionHandler handler : action.getActiveHandlers())
-            {
-                entry.addContextButtonMenuEntry( new ContextButtonEntry(getEditor(), nodePart, action, handler));
-            }
-        }
-        else
-        {
-            entry = new ContextButtonEntry(getEditor(), nodePart, action, action.getFirstActiveHandler());
-        }
-
-        return entry;
-    }
 
 }

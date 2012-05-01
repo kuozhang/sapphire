@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.sapphire.ui.Rectangle;
+import org.eclipse.sapphire.ui.SapphireAction;
 
 /**
  * A very simple implementation of {@link IContextButtonPadData} without any
@@ -36,36 +37,65 @@ import org.eclipse.sapphire.ui.Rectangle;
 
 public class ContextButtonPadData {
 
-	private List<ContextButtonEntry> topContextButtons;
-	private List<ContextButtonEntry> rightContextButtons;
-	private ContextButtonEntry collapseContextButton;
+	private List<SapphireAction> topContextButtons;
+	private List<SapphireAction> rightContextButtons;
 	private Rectangle location;
 
 	/**
 	 * Creates a new {@link ContextButtonPadData}.
 	 */
 	public ContextButtonPadData() {
-		this.topContextButtons = new ArrayList<ContextButtonEntry>();
-		this.rightContextButtons = new ArrayList<ContextButtonEntry>();
+		this.topContextButtons = new ArrayList<SapphireAction>();
+		this.rightContextButtons = new ArrayList<SapphireAction>();
 		this.location = new Rectangle(0, 0, 0, 0);
 	}
 
-	public List<ContextButtonEntry> getTopContextButtons() {
+	/**
+	 * Returns the context buttons to show along the top edge
+	 * of context button pad. It can not be null, but it can be empty. 
+	 * <p>
+	 * The button list can be changed by working directly on the result list
+	 * (e.g. getGenericContextButtons().add()).
+	 * <p>
+	 * 
+	 * @return  The context buttons to show along the top edge of context button pad.
+	 * 
+	 */
+	
+	public List<SapphireAction> getTopContextButtons() {
 		return this.topContextButtons;
 	}
 
-	public List<ContextButtonEntry> getRightContextButtons() {
+	/**
+	 * Returns the context buttons to show along the right edge
+	 * of context button pad. It can not be null, but it can be empty. 
+	 * If the right edge of the context pad is not long enough, buttons
+	 * will wrap to the bottom edge of the context pad
+	 * <p>
+	 * The button list can be changed by working directly on the result list
+	 * (e.g. getGenericContextButtons().add()).
+	 * <p>
+	 * 
+	 * @return  The context buttons to show along the right edge of context button pad.
+	 * 
+	 */
+	public List<SapphireAction> getRightContextButtons() {
 		return this.rightContextButtons;
 	}
 
-	public ContextButtonEntry getCollapseContextButton() {
-		return this.collapseContextButton;
-	}
-
-	public void setCollapseContextButton(ContextButtonEntry collapseContextButton) {
-		this.collapseContextButton = collapseContextButton;
-	}
-
+	/**
+	 * Returns the location of the context button pad. It can not be null. These
+	 * are not the outer bounds of the context button pad, but the inner
+	 * rectangle, around which the context button pad is shown. Often these are
+	 * the outer bounds of the figure, for which the context button pad is
+	 * shown. But in some cases it makes sense to use the outer bounds of an
+	 * inner figure or to shrink/enlarge the rectangle.
+	 * <p>
+	 * The location can be changed by working directly on the result rectangle
+	 * (e.g. getPadLocation().setRectangle()).
+	 * 
+	 * @return The location of the context button pad.
+	 */	
 	public Rectangle getPadLocation() {
 		return this.location;
 	}

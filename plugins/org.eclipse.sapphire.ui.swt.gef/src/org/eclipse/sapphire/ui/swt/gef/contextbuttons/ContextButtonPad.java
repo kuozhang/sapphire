@@ -21,8 +21,10 @@ import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.IContextButtonPadDeclaration.PadStyle;
+import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
@@ -80,6 +82,8 @@ public class ContextButtonPad extends Shape {
 	 * The edit-part as described in {@link #getEditPart()}.
 	 */
 	private EditPart editPart;
+	
+	private DiagramNodePart nodePart;
 
 	private Path pathOuterLine;
 
@@ -152,6 +156,8 @@ public class ContextButtonPad extends Shape {
 		this.zoomLevel = zoomLevel;
 		this.editor = editor;
 		this.editPart = editPart;
+		DiagramNodeEditPart nodeEditPart = (DiagramNodeEditPart)editPart;
+		this.nodePart = nodeEditPart.getCastedModel().getModelPart();
 
 		initialize();
 	}
@@ -206,6 +212,10 @@ public class ContextButtonPad extends Shape {
 		return editPart;
 	}
 
+	public final DiagramNodePart getNodePart() {
+		return this.nodePart;
+	}
+	
 	// =========================== initialization =============================
 
 	/**

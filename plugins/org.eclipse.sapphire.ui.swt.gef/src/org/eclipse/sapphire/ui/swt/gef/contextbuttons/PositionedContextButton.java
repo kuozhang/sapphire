@@ -15,11 +15,9 @@ package org.eclipse.sapphire.ui.swt.gef.contextbuttons;
 import java.awt.Rectangle;
 
 import org.eclipse.sapphire.ui.Color;
+import org.eclipse.sapphire.ui.SapphireAction;
 
 /**
- * A positioned context button is a container for an {@link IContextButtonEntry}
- * and several graphical attributes used to paint a context button.
- * 
  * @author SAP
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
@@ -27,10 +25,10 @@ import org.eclipse.sapphire.ui.Color;
 public class PositionedContextButton {
 
 	/**
-	 * The context button entry as described in {@link #getContextButtonEntry()}
+	 * The context button entry as described in {@link #getSapphireAction()}
 	 * .
 	 */
-	private ContextButtonEntry contextButtonEntry;
+	private SapphireAction sapphireAction;
 
 	/**
 	 * The position as described in {@link #getPosition()}.
@@ -84,12 +82,12 @@ public class PositionedContextButton {
 	 * 
 	 * @param contextButtonEntry
 	 *            The context button entry as defined in
-	 *            {@link #getContextButtonEntry()}.
+	 *            {@link #getSapphireAction()}.
 	 * @param position
 	 *            The position as described in {@link #getPosition()}.
 	 */
-	public PositionedContextButton(ContextButtonEntry contextButtonEntry, Rectangle position) {
-		this.contextButtonEntry = contextButtonEntry;
+	public PositionedContextButton(SapphireAction action, Rectangle position) {
+		this.sapphireAction = action;
 		this.position = position;
 	}
 
@@ -155,8 +153,8 @@ public class PositionedContextButton {
 	 * @return The context button entry, which contains the logical definition
 	 *         of the context button.
 	 */
-	public final ContextButtonEntry getContextButtonEntry() {
-		return contextButtonEntry;
+	public final SapphireAction getSapphireAction() {
+		return sapphireAction;
 	}
 
 	/**
