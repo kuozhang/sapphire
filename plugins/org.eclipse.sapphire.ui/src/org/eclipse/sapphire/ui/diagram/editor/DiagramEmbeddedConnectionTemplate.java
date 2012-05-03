@@ -110,7 +110,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     public void refreshConnections(IModelElement srcNodeModel)
     {
     	ModelProperty connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);
-    	srcNodeModel.notifyPropertyChangeListeners(connProp);
+    	handleConnectionListChange(srcNodeModel, (ListProperty)connProp);
     }
     
     @Override

@@ -569,6 +569,43 @@ public class DiagramConnectionTemplate extends SapphirePart
         return fr;
     }
     
+    protected void handleConnectionListChange(IModelElement connListParent, ListProperty listProperty)
+    {
+    	ModelElementList<?> newList = connListParent.read(listProperty);
+        List<DiagramConnectionPart> connParts = getDiagramConnections(connListParent);
+        List<IModelElement> oldList = new ArrayList<IModelElement>(connParts.size());
+        for (DiagramConnectionPart connPart : connParts)
+        {
+            oldList.add(connPart.getLocalModelElement());
+        }
+        List<IModelElement> deletedConns = ListUtil.ListDiff(oldList, newList);
+        List<IModelElement> newConns = ListUtil.ListDiff(newList, oldList);
+        
+        // Handle deleted connections
+        for (IModelElement deletedConn : deletedConns)
+        {
+            DiagramConnectionPart connPart = getConnectionPart(connListParent, deletedConn);
+            if (connPart != null)
+            {
+                notifyConnectionDelete(new DiagramConnectionEvent(connPart));
+                disposeConnectionPart(connPart);
+            }
+        }
+        // Handle newly created connections
+        for (IModelElement newConn : newConns)
+        {                    
+            DiagramConnectionPart connPart = createNewConnectionPart(newConn, connListParent);
+            if (connPart.getEndpoint1() != null && connPart.getEndpoint2() != null)
+            {
+                notifyConnectionAdd(new DiagramConnectionEvent(connPart));
+            }
+            else
+            {
+                disposeConnectionPart(connPart);
+            }
+        }
+        
+    }
     protected void handleModelPropertyChange(final ModelPropertyChangeEvent event)
     {
         final IModelElement element = event.getModelElement();
@@ -577,39 +614,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         
         if (property == this.connListProperty)
         {
-            List<DiagramConnectionPart> connParts = getDiagramConnections(element);
-            List<IModelElement> oldList = new ArrayList<IModelElement>(connParts.size());
-            for (DiagramConnectionPart connPart : connParts)
-            {
-                oldList.add(connPart.getLocalModelElement());
-            }
-            List<IModelElement> deletedConns = ListUtil.ListDiff(oldList, newList);
-            List<IModelElement> newConns = ListUtil.ListDiff(newList, oldList);
-            
-            // Handle deleted connections
-            for (IModelElement deletedConn : deletedConns)
-            {
-                DiagramConnectionPart connPart = getConnectionPart(element, deletedConn);
-                if (connPart != null)
-                {
-                    notifyConnectionDelete(new DiagramConnectionEvent(connPart));
-                    disposeConnectionPart(connPart);
-                }
-            }
-            // Handle newly created connections
-            for (IModelElement newConn : newConns)
-            {                    
-                DiagramConnectionPart connPart = createNewConnectionPart(newConn, element);
-                if (connPart.getEndpoint1() != null && connPart.getEndpoint2() != null)
-                {
-                    notifyConnectionAdd(new DiagramConnectionEvent(connPart));
-                }
-                else
-                {
-                    disposeConnectionPart(connPart);
-                }
-            }
-            
+        	handleConnectionListChange(element, property);
         }  
         else if (property == this.modelProperty)
         {
@@ -652,7 +657,7 @@ public class DiagramConnectionTemplate extends SapphirePart
             for (IModelElement newConnParent : newConnParents)
             {
                 newConnParent.addListener(this.modelPropertyListener, head.getPropertyName());
-                newConnParent.notifyPropertyChangeListeners(this.connListProperty);
+                handleConnectionListChange(newConnParent, this.connListProperty);
             }
 
         }
