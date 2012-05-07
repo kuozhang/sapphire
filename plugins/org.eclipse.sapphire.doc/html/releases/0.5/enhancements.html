@@ -36,7 +36,8 @@
     <li><a href="#DiagramContextHelp">Diagram Context Help</a></li>
     <li><a href="#NewDiagramActions">New Diagram Actions</a></li>
     <li><a href="#MutipleDiagramPartsActions">Actions for Multiple Diagram Parts</a></li>
-    <li><a href="#FloatingPalette">Floating Palette Around Diagram Nodes</a></li>   
+    <li><a href="#FloatingPalette">Floating Palette Around Diagram Nodes</a></li>
+    <li><a href="#DiagramHeader">Diagram Header</a></li>   
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
@@ -294,6 +295,15 @@ actions should specify "Sapphire.Diagram.MultipleParts" context and be contribut
 over them. The floating palette displays all the actions that are applicable to a node. User can click 
 on them to execute the actions. The floating palette will disappear when the mouse leaves the node area.</p>
 
+<h2><a name="DiagramHeader">Diagram Header</a></h2>
+
+<p>Diagram Editor now displays a header similar to Form Editor. The header initially displays the text 
+specified in the <font color="#888888">PageHeaderText</font> property of the diagram page. SapphireDiagramEditor also provides API to
+allow third party developers to change the text dynamically. The method is <font color="#888888">setDiagramHeaderText</font>.</p>
+
+<p>Diagram header also has a tool bar at its right to display actions associated with the diagram page part.
+The context for those actions is <font color="#888888">Sapphire.Diagram.Header</font>. Refer to the map sample
+for details.</p>
 
 <h2><a name="ExpressionLanguage"><a name="ImageFunction">Image Function</a></a></h2>
 

@@ -9,6 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Gregory Amerson - [342771] Support "image+label" hint for when actions are presented in a toolbar
  *    Gregory Amerson - [374622] Add ability to specify action tooltips
+ *    Shenxue Zhou - display a default image for actions without images
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.renderer;
@@ -21,6 +22,7 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
+import org.eclipse.sapphire.ui.DefaultActionImage;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
@@ -48,6 +50,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
 public final class SapphireToolBarActionPresentation extends SapphireHotSpotsActionPresentation
@@ -145,7 +148,14 @@ public final class SapphireToolBarActionPresentation extends SapphireHotSpotsAct
             if( ActionDef.HINT_VALUE_STYLE_IMAGE.equals( hint ) || 
                 ActionDef.HINT_VALUE_STYLE_IMAGE_TEXT.equals( hint ) )
             {
-                toolItem.setImage( context.getImageCache().getImage( action.getImage( 16 ) ) );
+            	if (action.getImage( 16 ) != null)
+            	{
+            		toolItem.setImage( context.getImageCache().getImage( action.getImage( 16 ) ) );
+            	}
+            	else
+            	{
+            		toolItem.setImage(  DefaultActionImage.getDefaultActionImage() );
+            	}
             }
             
             toolItem.setData( action );

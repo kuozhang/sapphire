@@ -12,11 +12,9 @@
 
 package org.eclipse.sapphire.ui.swt.gef.contextbuttons;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.ActionEvent;
 import org.eclipse.draw2d.ActionListener;
 import org.eclipse.draw2d.Clickable;
@@ -32,6 +30,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
+import org.eclipse.sapphire.ui.DefaultActionImage;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -43,7 +42,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.widgets.Display;
-import org.osgi.framework.Bundle;
 
 /**
  * A context button, which is used for example in the context button pad. It
@@ -84,8 +82,6 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 	 */
 	private Tooltip tooltip;
 	
-	private static ImageDescriptor defaultImageDescriptor = null;
-
 	// ============================ inner classes =============================
 
 	/**
@@ -511,17 +507,6 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 		return menuEntries;
 	}
 	
-	private static ImageDescriptor getDefaultImageDescriptor()
-	{
-		if (defaultImageDescriptor == null)
-		{
-			Bundle bundle = Platform.getBundle("org.eclipse.sapphire.ui");
-			URL url = bundle.getResource("org/eclipse/sapphire/ui/actions/Default.png");
-			defaultImageDescriptor = ImageDescriptor.createFromURL(url);
-		}
-		return defaultImageDescriptor;
-	}
-	
 	private Image getActionHandlerImage(SapphireActionHandler handler)
 	{
 	    ImageData imageData = handler.getImage(16);
@@ -529,13 +514,14 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
         ImageDescriptor imageDescriptor;
 		if (imageData == null)
 		{
-			imageDescriptor = getDefaultImageDescriptor();
+			return DefaultActionImage.getDefaultActionImage();
 		}
 		else
 		{
 			imageDescriptor = SwtRendererUtil.toImageDescriptor(imageData);
+			return imageDescriptor.createImage();
 		}
-		return imageDescriptor.createImage();
+		
 	}
 
 	private Image getActionImage(SapphireAction action)
@@ -545,13 +531,13 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
         ImageDescriptor imageDescriptor;
 		if (imageData == null)
 		{
-			imageDescriptor = getDefaultImageDescriptor();
+			return DefaultActionImage.getDefaultActionImage();
 		}
 		else
 		{
 			imageDescriptor = SwtRendererUtil.toImageDescriptor(imageData);
-		}
-		return imageDescriptor.createImage();
+			return imageDescriptor.createImage();
+		}		
 	}
 	
 	private String getLabel(SapphireAction action)

@@ -104,6 +104,7 @@
             <key-binding>CONTROL+ALT+SHIFT+s</key-binding>
             <key-binding-behavior>propagated</key-binding-behavior>
             <context>Sapphire.Diagram.Editor</context>
+            <context>Sapphire.Diagram.Header</context>
         </action>
         <action-handler>
             <action>Sapphire.Samples.Map.OpenHomepage</action>
@@ -114,7 +115,7 @@
         <action>
             <id>Sapphire.Samples.Map.ShowStatistics</id>
             <label>show statistics</label>
-            <context>Sapphire.Diagram.Editor</context>
+            <context>Sapphire.Diagram.Editor</context>            
             <context>Sapphire.Diagram.MultipleParts</context>
             <location>after:Sapphire.Diagram.Guides.Toggle</location>
             <location>before:Sapphire.Diagram.Layout</location>

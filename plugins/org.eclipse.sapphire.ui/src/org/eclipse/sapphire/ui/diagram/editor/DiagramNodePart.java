@@ -15,7 +15,6 @@
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +28,6 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
-import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireAction;

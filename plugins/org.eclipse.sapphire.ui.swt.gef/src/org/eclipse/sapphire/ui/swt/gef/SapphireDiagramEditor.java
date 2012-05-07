@@ -45,12 +45,17 @@ import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.SapphireActionGroup;
+import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SapphireHelpContext;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -79,17 +84,30 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.SapphireDiagramEditorEditPartFactory;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarManagerActionPresentation;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.HelpEvent;
 import org.eclipse.swt.events.HelpListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartConstants;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.FormColors;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.widgets.ILayoutExtension;
+import org.eclipse.ui.forms.widgets.SizeCache;
+import org.eclipse.ui.internal.forms.widgets.FormHeading;
+import org.eclipse.ui.internal.forms.widgets.FormUtil;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -113,6 +131,14 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	private GraphicalViewerKeyHandler graphicalViewerKeyHandler;
 	private SapphireDiagramKeyHandler diagramKeyHandler;
 	private ContextButtonManager contextButtonManager = null;
+	
+	// Diagram header, borrowed from org.eclipse.ui.forms.widgets.Form class
+	private FormHeading head;
+	private String headerText;
+	private Composite body;
+	private SizeCache bodyCache = new SizeCache();
+	private SizeCache headCache = new SizeCache();	
+	private FormColors formColors;
 
 	public SapphireDiagramEditor(
 		final SapphireEditor editor, final IModelElement rootModelElement, final IPath pageDefinitionLocation )
@@ -269,6 +295,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		};
 		
 		this.layoutPersistenceService.addListener(this.layoutPersistenceServiceListener);
+		
     }
     
     public IDiagramEditorPageDef getDiagramEditorPageDef()
@@ -571,6 +598,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	private void postInit()
 	{						
 		initRenderingContext();
+		configureDiagramHeading();
 
 		// If the layout file doesn't exist or no layout is written to the layout file, apply auto layout
 		if (hasNoExistingLayout()) 
@@ -639,9 +667,24 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		return contextButtonManager;
 	}
 	
-	protected void configureGraphicalViewer() {
+	@Override
+	public void createPartControl(Composite parent) 
+	{
+		final Composite main = new Composite( parent, SWT.NONE );
+		main.setLayout(new FormLayout());
+		this.head = new FormHeading(main, SWT.NULL);
+		this.headerText = this.diagramPageDef.getPageHeaderText().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
+		this.formColors = new FormColors(parent.getDisplay());
+		        
+		super.createPartControl(main);
+		this.body = getGraphicalControl().getParent();
+	}
+	
+	@Override
+	protected void configureGraphicalViewer() 
+	{
 		super.configureGraphicalViewer();
-
+				
 		GraphicalViewer viewer = getGraphicalViewer();		
 		
 		viewer.setEditPartFactory(new SapphireDiagramEditorEditPartFactory(getConfigurationManager()));
@@ -878,5 +921,126 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			layoutPersistenceService.dispose();
 		}
 	}
+	
+	/**
+	 * Sets the text displayed by the diagram header
+	 * @param text
+	 */
+	public void setDiagramHeaderText(String text)
+	{
+		this.headerText = LabelTransformer.transform( text, CapitalizationType.TITLE_STYLE, false );
+		if (this.head != null)
+		{
+			this.head.setText(this.headerText);
+			this.head.layout();
+		}
+	}
+	
+	private void configureDiagramHeading()
+	{
+		decorateHeading();
+		this.head.setText( this.headerText );
 		
+        final SapphireActionGroup actions = this.diagramPart.getActions( SapphireActionSystem.CONTEXT_DIAGRAM_HEADER );
+        if (actions != null && !actions.isEmpty())
+        {
+	        DiagramRenderingContext context = this.configManager.getDiagramRenderingContextCache().get(this.diagramPart);
+	        final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager(context, actions);
+	        final SapphireToolBarManagerActionPresentation actionPresentation = new SapphireToolBarManagerActionPresentation( actionPresentationManager );
+	        actionPresentation.setToolBarManager( this.head.getToolBarManager() );
+	        actionPresentation.render();
+        }		
+	}
+	
+	/**
+	 * Takes advantage of the gradients and other capabilities to decorate the
+	 * form heading using colors computed based on the current skin and
+	 * operating system.
+	 * 
+	 * @since 3.3
+	 */
+
+	private void decorateHeading() 
+	{
+		Color top = this.formColors.getColor(IFormColors.H_GRADIENT_END);
+		Color bot = this.formColors.getColor(IFormColors.H_GRADIENT_START);
+		this.head.setTextBackground(new Color[] { top, bot }, new int[] { 100 },
+				true);
+		this.head.putColor(IFormColors.H_BOTTOM_KEYLINE1, this.formColors
+				.getColor(IFormColors.H_BOTTOM_KEYLINE1));
+		this.head.putColor(IFormColors.H_BOTTOM_KEYLINE2, this.formColors
+				.getColor(IFormColors.H_BOTTOM_KEYLINE2));
+		this.head.putColor(IFormColors.H_HOVER_LIGHT, this.formColors
+				.getColor(IFormColors.H_HOVER_LIGHT));
+		this.head.putColor(IFormColors.H_HOVER_FULL, this.formColors
+				.getColor(IFormColors.H_HOVER_FULL));
+		this.head.putColor(IFormColors.TB_TOGGLE, this.formColors
+				.getColor(IFormColors.TB_TOGGLE));
+		this.head.putColor(IFormColors.TB_TOGGLE_HOVER, this.formColors
+				.getColor(IFormColors.TB_TOGGLE_HOVER));
+		this.head.setSeparatorVisible(true);
+		this.head.setFont(JFaceResources.getHeaderFont());
+		this.head.setForeground(this.formColors.getColor(IFormColors.TITLE));
+	}
+	
+	// -----------------------------------------------------------------------------------------------
+	// Inner classes
+	//------------------------------------------------------------------------------------------------
+	
+	private class FormLayout extends Layout implements ILayoutExtension {
+		public int computeMinimumWidth(Composite composite, boolean flushCache) {
+			return computeSize(composite, 5, SWT.DEFAULT, flushCache).x;
+		}
+
+		public int computeMaximumWidth(Composite composite, boolean flushCache) {
+			return computeSize(composite, SWT.DEFAULT, SWT.DEFAULT, flushCache).x;
+		}
+
+		public org.eclipse.swt.graphics.Point computeSize(Composite composite, int wHint, int hHint,
+				boolean flushCache) {
+			if (flushCache) {
+				bodyCache.flush();
+				headCache.flush();
+			}
+			bodyCache.setControl(body);
+			headCache.setControl(head);
+
+			int width = 0;
+			int height = 0;
+
+			org.eclipse.swt.graphics.Point hsize = headCache.computeSize(FormUtil.getWidthHint(wHint,
+					head), SWT.DEFAULT);
+			width = Math.max(hsize.x, width);
+			height = hsize.y;
+			
+			boolean ignoreBody = false;
+			
+			org.eclipse.swt.graphics.Point bsize;
+			if (ignoreBody)
+				bsize = new org.eclipse.swt.graphics.Point(0,0);
+			else
+				bsize = bodyCache.computeSize(FormUtil.getWidthHint(wHint,
+					body), SWT.DEFAULT);
+			width = Math.max(bsize.x, width);
+			height += bsize.y;
+			return new org.eclipse.swt.graphics.Point(width, height);
+		}
+
+		protected void layout(Composite composite, boolean flushCache) {
+			if (flushCache) {
+				bodyCache.flush();
+				headCache.flush();
+			}
+			bodyCache.setControl(body);
+			headCache.setControl(head);
+			Rectangle carea = composite.getClientArea();
+
+			org.eclipse.swt.graphics.Point hsize = headCache.computeSize(carea.width, SWT.DEFAULT);
+			headCache.setBounds(0, 0, carea.width, hsize.y);
+			bodyCache
+					.setBounds(0, hsize.y, carea.width, carea.height - hsize.y);
+		}
+	}
+
+	
 }

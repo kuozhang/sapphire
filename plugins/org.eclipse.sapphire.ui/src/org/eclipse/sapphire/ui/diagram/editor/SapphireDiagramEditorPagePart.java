@@ -381,6 +381,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM);
         contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR);
         contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_MULTIPLE_PARTS);
+        contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_HEADER);
         return contextSet;
     }
         
