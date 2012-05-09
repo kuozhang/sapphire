@@ -108,5 +108,14 @@ public abstract class SapphireDiagramPartListener extends SapphirePartListener
     {
     	// The default implementation doesn't do anything.
     }
+    
+    public void handleSelectAllEvent(final DiagramPageEvent event)
+    {
+    	// The default implementation doesn't do anything.
+    }
             
+    public void handleSelectAllNodesEvent(final DiagramPageEvent event)
+    {
+    	// The default implementation doesn't do anything.
+    }
 }

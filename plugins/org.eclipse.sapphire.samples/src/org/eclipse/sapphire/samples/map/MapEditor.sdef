@@ -17,6 +17,7 @@
 <definition>
 
     <import>
+        <package>org.eclipse.sapphire.samples</package>
         <package>org.eclipse.sapphire.samples.map</package>
         <package>org.eclipse.sapphire.samples.map.ui</package>
         <package>org.eclipse.sapphire.samples.map.internal</package>
@@ -26,6 +27,8 @@
     
     <diagram-page>
         <id>diagram</id>
+        <page-header-text>map</page-header-text>
+        <page-header-image>SapphireFile.png</page-header-image>        
         <connection>
             <id>railway_routes</id>
             <tool-palette-label>railway route</tool-palette-label>

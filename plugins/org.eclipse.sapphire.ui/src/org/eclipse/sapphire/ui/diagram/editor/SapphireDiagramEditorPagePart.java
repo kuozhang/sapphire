@@ -384,7 +384,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_HEADER);
         return contextSet;
     }
-        
+    
     @Override
     public String getMainActionContext()
     {
@@ -396,21 +396,21 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         return this.selections;
     }
     
-    public void setSelection( final ISapphirePart selection )
-    {
-        if( this.selections.size() != 1 || this.selections.get(0) != selection )
-        {
-            this.selections.clear();
-            this.selections.add(selection);
-            broadcast( new SelectionChangedEvent( this ) );
-        }
-    }
-    
     public void setSelections(final List<ISapphirePart> selections)
     {
     	this.selections.clear();
     	this.selections.addAll(selections);
     	broadcast( new SelectionChangedEvent( this ) );
+    }
+    
+    public void selectAll()
+    {
+    	this.notifySelectAll();
+    }
+    
+    public void selectAllNodes()
+    {
+    	this.notifySelectAllNodes();
     }
     
     private void refreshPropertiesViewContribution()
@@ -881,6 +881,32 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 		}		
 	}
 	
+	private void notifySelectAll()
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramPageEvent pageEvent = new DiagramPageEvent(this);
+				((SapphireDiagramPartListener)listener).handleSelectAllEvent(pageEvent);
+			}
+		}				
+	}
+	
+	private void notifySelectAllNodes()
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramPageEvent pageEvent = new DiagramPageEvent(this);
+				((SapphireDiagramPartListener)listener).handleSelectAllNodesEvent(pageEvent);
+			}
+		}				
+	}
+
 	// --------------------------------------------------------------------
 	// Inner classes
 	//---------------------------------------------------------------------

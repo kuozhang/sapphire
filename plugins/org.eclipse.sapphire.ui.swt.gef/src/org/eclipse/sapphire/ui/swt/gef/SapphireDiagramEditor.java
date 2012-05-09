@@ -16,6 +16,8 @@
 
 package org.eclipse.sapphire.ui.swt.gef;
 
+import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescriptor;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -49,8 +51,11 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.ISapphirePart;
@@ -59,6 +64,7 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SapphireHelpContext;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
@@ -93,6 +99,7 @@ import org.eclipse.swt.events.HelpListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
@@ -133,12 +140,13 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	private ContextButtonManager contextButtonManager = null;
 	
 	// Diagram header, borrowed from org.eclipse.ui.forms.widgets.Form class
-	private FormHeading head;
+	private FormHeading header;
 	private String headerText;
 	private Composite body;
 	private SizeCache bodyCache = new SizeCache();
 	private SizeCache headCache = new SizeCache();	
 	private FormColors formColors;
+	private Listener diagramHeaderImageListener;
 
 	public SapphireDiagramEditor(
 		final SapphireEditor editor, final IModelElement rootModelElement, final IPath pageDefinitionLocation )
@@ -277,6 +285,19 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			{
 				refreshPalette();
 			}
+			
+			@Override
+		    public void handleSelectAllEvent(final DiagramPageEvent event)
+		    {
+		    	selectAll();
+		    }
+		    
+			@Override
+		    public void handleSelectAllNodesEvent(final DiagramPageEvent event)
+		    {
+		    	selectAllNodes();
+		    }
+			
 		};
 		
 		this.diagramPart.addListener(this.diagramPartListener);
@@ -296,6 +317,20 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		
 		this.layoutPersistenceService.addListener(this.layoutPersistenceServiceListener);
 		
+        this.diagramHeaderImageListener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
+            {
+                if( event instanceof ImageChangedEvent )
+                {
+                    refreshFormHeaderImage();
+                }
+            }
+        };
+        
+        this.diagramPart.attach( this.diagramHeaderImageListener );
+				
     }
     
     public IDiagramEditorPageDef getDiagramEditorPageDef()
@@ -487,8 +522,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
         }
         if (editorIsActive) 
         {			
-        	// TODO figure out sapphire actions in the menu
-        	//updateActions(getSelectionActions());
 			// Bug 339360 - MultiPage Editor's selectionProvider does not notify PropertySheet (edit) 
 			// bypass the selection provider
 			if (selection instanceof StructuredSelection) 
@@ -508,15 +541,17 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 					{
 						editPart = (EditPart) ((IAdaptable) object).getAdapter(EditPart.class);						
 					}
-					if (editPart != null && editPart.getModel() instanceof DiagramModelBase) {
+					if (editPart != null && editPart.getModel() instanceof DiagramModelBase) 
+					{
 						SapphirePart sp = ((DiagramModelBase)editPart.getModel()).getSapphirePart();
 						partList.add(sp);
 						editPartList.add((GraphicalEditPart)editPart);
 					}
-					getPart().setSelections(partList);
-					this.selectedParts = partList;
-					this.selectedEditParts = editPartList;
 				}
+				getPart().setSelections(partList);
+				this.selectedParts = partList;
+				this.selectedEditParts = editPartList;
+				
 			}
 			updateKeyHandler();
 		}
@@ -524,6 +559,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	
 	private void updateKeyHandler()
 	{
+    	// TODO figure out sapphire actions in the menu
+    	updateActions(getSelectionActions());
+		
         if (this.diagramKeyHandler != null)
         {
         	this.diagramKeyHandler.dispose();
@@ -672,7 +710,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	{
 		final Composite main = new Composite( parent, SWT.NONE );
 		main.setLayout(new FormLayout());
-		this.head = new FormHeading(main, SWT.NULL);
+		this.header = new FormHeading(main, SWT.NULL);
 		this.headerText = this.diagramPageDef.getPageHeaderText().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
 		this.formColors = new FormColors(parent.getDisplay());
 		        
@@ -851,6 +889,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	public void selectAllNodes()
 	{
 		GraphicalViewer viewer = this.getGraphicalViewer();
+		viewer.deselectAll();
 		for (Object obj : viewer.getEditPartRegistry().values())
 		{
 			if (obj instanceof DiagramNodeEditPart)
@@ -920,6 +959,13 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		{
 			layoutPersistenceService.dispose();
 		}
+		
+        this.diagramPart.detach( this.diagramHeaderImageListener );        
+        final Image image = this.header.getImage();        
+        if( image != null )
+        {
+            image.dispose();
+        }		
 	}
 	
 	/**
@@ -929,17 +975,17 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	public void setDiagramHeaderText(String text)
 	{
 		this.headerText = LabelTransformer.transform( text, CapitalizationType.TITLE_STYLE, false );
-		if (this.head != null)
+		if (this.header != null)
 		{
-			this.head.setText(this.headerText);
-			this.head.layout();
+			this.header.setText(this.headerText);
+			this.header.layout();
 		}
 	}
 	
 	private void configureDiagramHeading()
 	{
 		decorateHeading();
-		this.head.setText( this.headerText );
+		this.header.setText( this.headerText );
 		
         final SapphireActionGroup actions = this.diagramPart.getActions( SapphireActionSystem.CONTEXT_DIAGRAM_HEADER );
         if (actions != null && !actions.isEmpty())
@@ -947,9 +993,11 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	        DiagramRenderingContext context = this.configManager.getDiagramRenderingContextCache().get(this.diagramPart);
 	        final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager(context, actions);
 	        final SapphireToolBarManagerActionPresentation actionPresentation = new SapphireToolBarManagerActionPresentation( actionPresentationManager );
-	        actionPresentation.setToolBarManager( this.head.getToolBarManager() );
+	        actionPresentation.setToolBarManager( this.header.getToolBarManager() );
 	        actionPresentation.render();
-        }		
+        }
+        
+        refreshFormHeaderImage();
 	}
 	
 	/**
@@ -964,25 +1012,46 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	{
 		Color top = this.formColors.getColor(IFormColors.H_GRADIENT_END);
 		Color bot = this.formColors.getColor(IFormColors.H_GRADIENT_START);
-		this.head.setTextBackground(new Color[] { top, bot }, new int[] { 100 },
+		this.header.setTextBackground(new Color[] { top, bot }, new int[] { 100 },
 				true);
-		this.head.putColor(IFormColors.H_BOTTOM_KEYLINE1, this.formColors
+		this.header.putColor(IFormColors.H_BOTTOM_KEYLINE1, this.formColors
 				.getColor(IFormColors.H_BOTTOM_KEYLINE1));
-		this.head.putColor(IFormColors.H_BOTTOM_KEYLINE2, this.formColors
+		this.header.putColor(IFormColors.H_BOTTOM_KEYLINE2, this.formColors
 				.getColor(IFormColors.H_BOTTOM_KEYLINE2));
-		this.head.putColor(IFormColors.H_HOVER_LIGHT, this.formColors
+		this.header.putColor(IFormColors.H_HOVER_LIGHT, this.formColors
 				.getColor(IFormColors.H_HOVER_LIGHT));
-		this.head.putColor(IFormColors.H_HOVER_FULL, this.formColors
+		this.header.putColor(IFormColors.H_HOVER_FULL, this.formColors
 				.getColor(IFormColors.H_HOVER_FULL));
-		this.head.putColor(IFormColors.TB_TOGGLE, this.formColors
+		this.header.putColor(IFormColors.TB_TOGGLE, this.formColors
 				.getColor(IFormColors.TB_TOGGLE));
-		this.head.putColor(IFormColors.TB_TOGGLE_HOVER, this.formColors
+		this.header.putColor(IFormColors.TB_TOGGLE_HOVER, this.formColors
 				.getColor(IFormColors.TB_TOGGLE_HOVER));
-		this.head.setSeparatorVisible(true);
-		this.head.setFont(JFaceResources.getHeaderFont());
-		this.head.setForeground(this.formColors.getColor(IFormColors.TITLE));
+		this.header.setSeparatorVisible(true);
+		this.header.setFont(JFaceResources.getHeaderFont());
+		this.header.setForeground(this.formColors.getColor(IFormColors.TITLE));
 	}
 	
+	private void refreshFormHeaderImage()
+	{
+        final Image oldImage = this.header.getImage();
+        
+        if( oldImage != null )
+        {
+            oldImage.dispose();
+        }
+        
+        final ImageData newImageData = this.diagramPart.getPageHeaderImage();
+        
+        if( newImageData == null )
+        {
+            this.header.setImage( null );
+        }
+        else
+        {
+            this.header.setImage( toImageDescriptor( newImageData ).createImage() );
+        }
+		
+	}
 	// -----------------------------------------------------------------------------------------------
 	// Inner classes
 	//------------------------------------------------------------------------------------------------
@@ -1003,13 +1072,13 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 				headCache.flush();
 			}
 			bodyCache.setControl(body);
-			headCache.setControl(head);
+			headCache.setControl(header);
 
 			int width = 0;
 			int height = 0;
 
 			org.eclipse.swt.graphics.Point hsize = headCache.computeSize(FormUtil.getWidthHint(wHint,
-					head), SWT.DEFAULT);
+					header), SWT.DEFAULT);
 			width = Math.max(hsize.x, width);
 			height = hsize.y;
 			
@@ -1032,7 +1101,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 				headCache.flush();
 			}
 			bodyCache.setControl(body);
-			headCache.setControl(head);
+			headCache.setControl(header);
 			Rectangle carea = composite.getClientArea();
 
 			org.eclipse.swt.graphics.Point hsize = headCache.computeSize(carea.width, SWT.DEFAULT);

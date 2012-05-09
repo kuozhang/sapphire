@@ -9,36 +9,24 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.gef.actions;
+package org.eclipse.sapphire.ui.diagram.actions;
 
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
-import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
-import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class DiagramSelectAllNodesActionHandler extends
-		SapphireDiagramActionHandler 
+public class DiagramSelectAllNodesActionHandler extends SapphireActionHandler
 {
 
 	@Override
-	public boolean canExecute(Object obj) 
-	{
-		return true;
-	}
-
-	@Override
 	protected Object run(SapphireRenderingContext context) 
-	{
-		DiagramRenderingContext diagramContext = (DiagramRenderingContext)context;
-		SapphireDiagramEditor diagramEditor = diagramContext.getDiagramEditor();
-		if (diagramEditor != null)
-		{
-			diagramEditor.selectAllNodes();
-		}
+	{		
+		SapphireDiagramEditorPagePart editorPart = context.getPart().nearest(SapphireDiagramEditorPagePart.class);
+		editorPart.selectAllNodes();
 		return null;
 	}
 
