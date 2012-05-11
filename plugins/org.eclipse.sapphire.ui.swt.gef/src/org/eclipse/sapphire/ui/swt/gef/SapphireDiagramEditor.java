@@ -548,12 +548,17 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 						editPartList.add((GraphicalEditPart)editPart);
 					}
 				}
-				getPart().setSelections(partList);
-				this.selectedParts = partList;
-				this.selectedEditParts = editPartList;
-				
+				// If the properties sheet has multiple tabs, switching tabs would trigger selection changed
+				// event. But the selection would be empty. So we don't want to update the properties sheet or
+				// the key handler in this case.
+				if (!partList.isEmpty())
+				{	
+					getPart().setSelections(partList);
+					this.selectedParts = partList;
+					this.selectedEditParts = editPartList;
+					updateKeyHandler();
+				}				
 			}
-			updateKeyHandler();
 		}
 	}    
 	
