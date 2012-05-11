@@ -13,6 +13,7 @@
  *   Kamesh Sampath - [354292] Actions, Handlers and Filters not shown @ Node Level
  *   Rob Cernich - [360362] Allow creation of custom form editor pages
  *   Gregory Amerson - [374847] Actions and Handlers node not available on Diagram page
+ *   Gregory Amerson - [355566] Sapphire Diagram editor should support header similar to form editor
  ******************************************************************************
 -->
 
@@ -1315,6 +1316,7 @@
                     <include>PartId</include>
                     <property-editor>PageName</property-editor>
                     <property-editor>PageHeaderText</property-editor>
+                    <property-editor>PageHeaderImage</property-editor>
                     <property-editor>Property</property-editor>
                     <with>
                         <path>GridDefinition</path>
