@@ -55,14 +55,19 @@ import org.eclipse.sapphire.ui.swt.SapphirePropertySheetPage;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.internal.EditorActionBars;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
+import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.osgi.service.prefs.BackingStoreException;
@@ -81,6 +86,57 @@ public abstract class SapphireEditor
     implements ISapphirePart
     
 {
+	
+	private static class SapphireEditorActionBarContributor extends MultiPageEditorActionBarContributor 
+	{
+		private MultiPageEditorPart multiPageEditor = null;
+		
+		public void setActiveEditor(IEditorPart targetEditor) 
+		{
+			if (targetEditor instanceof MultiPageEditorPart) 
+			{
+				this.multiPageEditor = (MultiPageEditorPart) targetEditor;
+			}
+
+			super.setActiveEditor(targetEditor);		
+		}
+		
+		@Override
+		public void setActivePage(IEditorPart activeEditor) 
+		{
+			ISapphireEditorActionContributor actionContributor = null;
+			if (this.multiPageEditor != null) 
+			{
+				if ((activeEditor != null) && (activeEditor instanceof ISapphireEditorActionContributor)) 
+				{
+					actionContributor = (ISapphireEditorActionContributor)activeEditor;
+				}
+				else if (activeEditor == null)
+				{
+					Object obj = this.multiPageEditor.getSelectedPage();
+					if (obj instanceof ISapphireEditorActionContributor)
+					{
+						actionContributor = (ISapphireEditorActionContributor)obj;
+					}
+				}
+			}
+
+			IActionBars actionBars = getActionBars();
+			if (actionBars != null && actionContributor != null)
+			{
+				
+				/** The global actions to be connected with editor actions */
+				actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), 
+						actionContributor.getAction(ActionFactory.DELETE.getId()));
+				actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), 
+						actionContributor.getAction(ActionFactory.SELECT_ALL.getId()));
+				
+				actionBars.updateActionBars();
+			}
+
+		}
+	}	
+	
     private static final String PREFS_LAST_ACTIVE_PAGE = "LastActivePage"; //$NON-NLS-1$
     private static final String PREFS_GLOBAL = "Global"; //$NON-NLS-1$
     private static final String PREFS_INSTANCE_BY_URI = "InstanceByUri"; //$NON-NLS-1$
@@ -354,9 +410,20 @@ public abstract class SapphireEditor
         setPartName( input.getName() );
     }
 
+    @Override
     protected final void addPages() 
     {
-        String error = null;
+    	// Insert an action bar contributor if none is specified in the editor
+		if (getEditorSite().getActionBarContributor() == null)
+		{
+			IActionBars actionBars = getEditorSite().getActionBars();
+			EditorActionBars editorActionBars = (EditorActionBars)actionBars;
+			SapphireEditorActionBarContributor actionBarContributor = new SapphireEditorActionBarContributor();
+			actionBarContributor.init(actionBars, this.getSite().getPage());
+			editorActionBars.setEditorContributor(actionBarContributor);
+		}    	
+
+		String error = null;
         
         final IFile file = getFile();
         

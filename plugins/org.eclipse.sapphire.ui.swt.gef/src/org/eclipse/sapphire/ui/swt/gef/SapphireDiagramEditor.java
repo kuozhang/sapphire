@@ -47,6 +47,7 @@ import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -58,8 +59,10 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.Bounds;
+import org.eclipse.sapphire.ui.ISapphireEditorActionContributor;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SapphireHelpContext;
@@ -108,6 +111,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartConstants;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -120,8 +124,8 @@ import org.eclipse.ui.internal.forms.widgets.FormUtil;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
-
+public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette implements ISapphireEditorActionContributor
+{
     private DiagramLayoutPersistenceService layoutPersistenceService;
 	private PaletteRoot root;
     private IDiagramEditorPageDef diagramPageDef;
@@ -147,6 +151,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 	private SizeCache headCache = new SizeCache();	
 	private FormColors formColors;
 	private Listener diagramHeaderImageListener;
+	
+	private SapphireActionHandlerDelegate selectAllAction;
+	private SapphireActionHandlerDelegate deleteAction;
 
 	public SapphireDiagramEditor(
 		final SapphireEditor editor, final IModelElement rootModelElement, final IPath pageDefinitionLocation )
@@ -170,7 +177,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
         this.diagramModel = new DiagramModel(diagramPart, this.configManager);
 
 		setEditDomain(new DefaultEditDomain(this));
-
+		
+		initActions();
+		
 		this.diagramPartListener = new SapphireDiagramPartListener() 
         {
             @Override
@@ -562,11 +571,24 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		}
 	}    
 	
+	private void initActions()
+	{
+		SapphireActionHandler selectAllActionHandler = 
+				this.diagramPart.getAction("Sapphire.Diagram.SelectAll").getFirstActiveHandler();
+		this.selectAllAction = new SapphireActionHandlerDelegate(this, selectAllActionHandler);
+		SapphireActionHandler deleteActionHandler = 
+				this.diagramPart.getAction("Sapphire.Delete").getFirstActiveHandler();
+		this.deleteAction = new SapphireActionHandlerDelegate(this, deleteActionHandler);
+		
+	}
+	private void updateActions()
+	{
+		this.deleteAction.setEnabled(this.deleteAction.getSapphireActionHandler().isEnabled());
+	}
+	
 	private void updateKeyHandler()
 	{
-    	// TODO figure out sapphire actions in the menu
-    	updateActions(getSelectionActions());
-		
+		updateActions();
         if (this.diagramKeyHandler != null)
         {
         	this.diagramKeyHandler.dispose();
@@ -628,7 +650,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 			}
 		});
 		
-				
 		// set the contents of this editor
 		viewer.setContents(diagramModel);
 		
@@ -809,7 +830,19 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette {
 		};
 	}
 	
-
+	public IAction getAction(String actionId)
+	{
+		if (actionId.equals(ActionFactory.SELECT_ALL.getId()))
+		{
+			return this.selectAllAction;
+		}
+		else if (actionId.equals(ActionFactory.DELETE.getId()))
+		{
+			return this.deleteAction;
+		}
+		return getActionRegistry().getAction(actionId);
+	}
+	
 	public SapphireDiagramEditorPagePart getPart() {
 		return this.diagramPart;
 	}

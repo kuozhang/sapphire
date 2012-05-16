@@ -101,7 +101,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     private ModelProperty endpoint1Property;
     private ModelProperty endpoint2Property;
     
-    private List<DiagramConnectionPart> diagramConnections;
+    private List<DiagramConnectionPart> diagramConnections = new ArrayList<DiagramConnectionPart>();
     
     public DiagramConnectionTemplate() {}
     
@@ -116,8 +116,6 @@ public class DiagramConnectionTemplate extends SapphirePart
         this.diagramEditor = (SapphireDiagramEditorPagePart)getParentPart();
         this.modelElement = getModelElement();
         this.connectionDef = (IDiagramConnectionDef)super.definition();
-        
-        this.diagramConnections = new ArrayList<DiagramConnectionPart>();
         
         this.propertyName = this.bindingDef.getProperty().getContent();
         this.modelProperty = (ListProperty)ModelUtil.resolve(this.modelElement, this.propertyName);

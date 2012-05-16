@@ -24,6 +24,7 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.def.KeyBindingBehavior;
 import org.eclipse.sapphire.ui.def.SapphireKeySequence;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentation;
@@ -91,18 +92,20 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 		final SapphireActionPresentationManager manager = getManager();
 		final SapphireActionGroup localGroupOfActions = manager.getActionGroup();
         
-		if( handleKeyEvent( event, manager, localGroupOfActions, false ) )
-        {
-            return true;
-        }
-		if (this.hiddenActions != null)
+		if (!(this.sapphirePart instanceof DiagramImplicitConnectionPart))
 		{
-			if( handleKeyEvent( event, getHiddenManager(), this.hiddenActions, false ) )
+			if( handleKeyEvent( event, manager, localGroupOfActions, false ) )
 	        {
 	            return true;
 	        }
-		}
-		
+			if (this.hiddenActions != null)
+			{
+				if( handleKeyEvent( event, getHiddenManager(), this.hiddenActions, false ) )
+		        {
+		            return true;
+		        }
+			}
+		}		
 		if (this.sapphireParts.size() == 1)
 		{
 	        ISapphirePart part = this.sapphirePart.getParentPart();

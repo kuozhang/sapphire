@@ -42,10 +42,32 @@ public class DiagramDeleteActionHandler extends SapphireDiagramActionHandler
                       final ActionHandlerDef def )
     {
         super.init( action, def );
-        ISapphirePart part = getPart();
-        setEnabled(!(part instanceof DiagramImplicitConnectionPart));
+         
+        setEnabled(calculateEnabled());
     }
     
+    private boolean calculateEnabled()
+    {
+    	boolean enabled = false;
+    	SapphireDiagramEditorPagePart diagramPart = getPart().nearest(SapphireDiagramEditorPagePart.class);
+    	List<ISapphirePart> selectedParts = diagramPart.getSelections();
+    	for (ISapphirePart part : selectedParts)
+    	{
+    		if (part instanceof DiagramNodePart ||
+    				(part instanceof DiagramConnectionPart && !(part instanceof DiagramImplicitConnectionPart)))
+    		{
+    			enabled = true;
+    		}
+    	}
+    	return enabled;
+    }
+    
+    @Override
+    public boolean isEnabled()
+    {
+    	return calculateEnabled();
+    }
+
     @Override
     public boolean canExecute(Object obj) 
     {

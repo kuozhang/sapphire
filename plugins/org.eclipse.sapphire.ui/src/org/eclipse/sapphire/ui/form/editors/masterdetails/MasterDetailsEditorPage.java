@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -67,6 +68,7 @@ import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
+import org.eclipse.sapphire.ui.ISapphireEditorActionContributor;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
@@ -156,7 +158,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MasterDetailsEditorPage extends SapphireEditorFormPage
+public final class MasterDetailsEditorPage extends SapphireEditorFormPage implements ISapphireEditorActionContributor
 {
     private IMasterDetailsEditorPageDef definition;
     private RootSection mainSection;
@@ -1453,6 +1455,12 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage
                 this.actionPresentationManager = null;
             }
         }
+    }
+        
+    public IAction getAction(String actionId)
+    {
+    	// TODO return action handlers for the global actions such as Delete, Select All
+    	return null;
     }
     
     private final class RootSection 
