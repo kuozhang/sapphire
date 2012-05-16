@@ -37,20 +37,23 @@ public abstract class ModelMetadataItem
     
     private void initAnnotations()
     {
-        if( this.annotations == null )
+        synchronized( this )
         {
-            final ReadOnlyListFactory<Annotation> annotationsListFactory = ReadOnlyListFactory.create();
-            initAnnotations( annotationsListFactory );
-            this.annotations = annotationsListFactory.export();
-            
-            final ReadOnlyMapFactory<Class<? extends Annotation>,Annotation> annotationByTypeMapFactory = ReadOnlyMapFactory.create();
-            
-            for( Annotation annotation : this.annotations )
+            if( this.annotations == null )
             {
-                annotationByTypeMapFactory.add( annotation.annotationType(), annotation );
+                final ReadOnlyListFactory<Annotation> annotationsListFactory = ReadOnlyListFactory.create();
+                initAnnotations( annotationsListFactory );
+                this.annotations = annotationsListFactory.export();
+                
+                final ReadOnlyMapFactory<Class<? extends Annotation>,Annotation> annotationByTypeMapFactory = ReadOnlyMapFactory.create();
+                
+                for( Annotation annotation : this.annotations )
+                {
+                    annotationByTypeMapFactory.add( annotation.annotationType(), annotation );
+                }
+                
+                this.annotationByType = annotationByTypeMapFactory.export();
             }
-            
-            this.annotationByType = annotationByTypeMapFactory.export();
         }
     }
     
