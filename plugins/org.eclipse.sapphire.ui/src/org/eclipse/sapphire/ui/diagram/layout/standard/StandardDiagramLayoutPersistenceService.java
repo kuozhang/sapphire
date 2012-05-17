@@ -7,7 +7,8 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
- *    Greory Amerson - [377388] IDiagram{Guides/Grids}Def visible property does not affect StandardDiagramLayout persistence
+ *    Gregory Amerson - [377388] IDiagram{Guides/Grids}Def visible property does not affect StandardDiagramLayout persistence
+ *    Konstantin Komissarchik - [376245] Revert action in StructuredTextEditor does not revert diagram nodes and connections in SapphireDiagramEditor
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.layout.standard;
@@ -44,7 +45,6 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.diagram.layout.ConnectionHashKey;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
-import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceServiceListener;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
@@ -54,6 +54,7 @@ import org.eclipse.ui.part.FileEditorInput;
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public abstract class StandardDiagramLayoutPersistenceService extends DiagramLayoutPersistenceService
@@ -64,15 +65,17 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	private Map<String, DiagramNodeBounds> nodeBounds;
 	private Map<ConnectionHashKey, DiagramConnectionBendPoints> connectionBendPoints;
 	private Map<ConnectionHashKey, Point> connectionLabelPositions;
+	private boolean dirty;
 	
     @Override
     protected void init()
     {
         super.init();
-    	this.editorInput = getDiagramEditorPagePart().getLocalModelElement().adapt(IEditorInput.class);
+    	this.editorInput = context( SapphireDiagramEditorPagePart.class ).getLocalModelElement().adapt(IEditorInput.class);
     	this.nodeBounds = new HashMap<String, DiagramNodeBounds>();
     	this.connectionBendPoints = new HashMap<ConnectionHashKey, DiagramConnectionBendPoints>();
     	this.connectionLabelPositions = new HashMap<ConnectionHashKey, Point>();
+    	this.dirty = false;
 		try
 		{
 			load();
@@ -90,7 +93,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	{
 		if (this.diagramPartListener != null)
 		{
-			getDiagramEditorPagePart().removeListener(this.diagramPartListener);
+		    context( SapphireDiagramEditorPagePart.class ).removeListener(this.diagramPartListener);
 		}
 	}
 	
@@ -113,12 +116,12 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		
 		if (gridVisible != null)
 		{
-		    getDiagramEditorPagePart().setGridVisible(gridVisible);
+		    context( SapphireDiagramEditorPagePart.class ).setGridVisible(gridVisible);
 		}
 		
         if (showGuides != null)
         {
-    		getDiagramEditorPagePart().setShowGuides(showGuides);
+            context( SapphireDiagramEditorPagePart.class ).setShowGuides(showGuides);
         }
 		
 		ModelElementList<DiagramNodeLayout> nodes = this.layoutModel.getDiagramNodesLayout();
@@ -126,7 +129,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		for (DiagramNodeLayout node : nodes)
 		{
 			String nodeId = node.getNodeId().getContent();
-			DiagramNodePart nodePart = IdUtil.getNodePart(getDiagramEditorPagePart(), nodeId);
+			DiagramNodePart nodePart = IdUtil.getNodePart(context( SapphireDiagramEditorPagePart.class ), nodeId);
 			int x = node.getX().getContent();
 			int y = node.getY().getContent();
 			int width = node.getWidth().getContent();
@@ -165,7 +168,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		for (DiagramConnectionLayout connLayout : connList)
 		{
 			String connId = connLayout.getConnectionId().getContent();
-			DiagramConnectionPart connPart = IdUtil.getConnectionPart(getDiagramEditorPagePart(), connId);
+			DiagramConnectionPart connPart = IdUtil.getConnectionPart(context( SapphireDiagramEditorPagePart.class ), connId);
 			ModelElementList<DiagramBendPointLayout> bps = connLayout.getConnectionBendpoints();
 			if (connPart != null)
 			{
@@ -253,14 +256,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
         
 	private void write(DiagramNodePart nodePart) 
 	{
-		if (isNodeLayoutChanged(nodePart))
-		{
-			markDirty();
-		}
-		else
-		{
-			notifyDirtyState();
-		}
+	    refreshDirtyState();
 	}
     
     private void read(DiagramConnectionPart connPart)
@@ -282,14 +278,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
         
 	private void write(DiagramConnectionPart connPart)
 	{
-		if (isConnectionLayoutChanged(connPart))
-		{
-			markDirty();
-		}
-		else
-		{
-			notifyDirtyState();
-		}
+	    refreshDirtyState();
 	}
 	
     private void setGridVisible(boolean visible)
@@ -311,7 +300,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	private void addNodeBoundsToModel()
 	{
 		this.layoutModel.getDiagramNodesLayout().clear();
-		for (DiagramNodeTemplate nodeTemplate : getDiagramEditorPagePart().getNodeTemplates())
+		for (DiagramNodeTemplate nodeTemplate : context( SapphireDiagramEditorPagePart.class ).getNodeTemplates())
 		{
 			for (DiagramNodePart nodePart : nodeTemplate.getDiagramNodes())
 			{
@@ -376,7 +365,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	private void addConnectionsToModel()
 	{
 		this.layoutModel.getDiagramConnectionsLayout().clear();
-		for (DiagramConnectionTemplate connTemplate : getDiagramEditorPagePart().getConnectionTemplates())
+		for (DiagramConnectionTemplate connTemplate : context( SapphireDiagramEditorPagePart.class ).getConnectionTemplates())
 		{
 			for (DiagramConnectionPart connPart : connTemplate.getDiagramConnections(null))
 			{
@@ -429,11 +418,11 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	{
 		this.nodeBounds.clear();
 		this.connectionBendPoints.clear();
-		for (DiagramConnectionPart connPart : getDiagramEditorPagePart().getConnections())
+		for (DiagramConnectionPart connPart : context( SapphireDiagramEditorPagePart.class ).getConnections())
 		{
 			addConnectionToPersistenceCache(connPart);
 		}
-		for (DiagramNodePart nodePart : getDiagramEditorPagePart().getNodes())
+		for (DiagramNodePart nodePart : context( SapphireDiagramEditorPagePart.class ).getNodes())
 		{
 			addNodeToPersistenceCache(nodePart);
 		}		
@@ -473,7 +462,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 				{
 					// need to add the node bounds to the persistence cache so that "revert" could work
 					addNodeToPersistenceCache(nodePart);
-					notifyDirtyState();
+					refreshDirtyState();
 				}
 				else if (!nodeBounds.isDefaultPosition())
 				{
@@ -484,7 +473,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 			@Override
 		    public void handleNodeDeleteEvent(final DiagramNodeEvent event)
 			{
-				notifyDirtyState();
+			    refreshDirtyState();
 			}
 			
 			@Override
@@ -497,7 +486,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 			@Override
 			public void handleConnectionDeleteEvent(final DiagramConnectionEvent event)
 			{
-				notifyDirtyState();
+			    refreshDirtyState();
 			}
 			
 			@Override
@@ -525,7 +514,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		    	if (bendPoints.isAutoLayout())
 		    	{
 		    		addConnectionToPersistenceCache(connPart);
-		    		notifyDirtyState();
+		    		refreshDirtyState();
 		    	}
 		    	else
 		    	{
@@ -556,38 +545,10 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		    }			
 			
 		};
-		getDiagramEditorPagePart().addListener(this.diagramPartListener);
+		context( SapphireDiagramEditorPagePart.class ).addListener(this.diagramPartListener);
 	}
 		
-	private void markClean()
-	{
-        for( DiagramLayoutPersistenceServiceListener listener : getListeners() )
-        {
-            listener.markClean();
-        }		
-	}
-	
-	private void markDirty()
-	{
-        for( DiagramLayoutPersistenceServiceListener listener : getListeners() )
-        {
-            listener.markDirty();
-        }                		
-	}
-	
-	private void notifyDirtyState()
-	{
-		if (isDiagramLayoutChanged())
-		{
-			markDirty();
-		}
-		else
-		{
-			markClean();
-		}		
-	}
-	
-    private boolean isNodeLayoutChanged(DiagramNodePart nodePart)
+	private boolean isNodeLayoutChanged(DiagramNodePart nodePart)
     {
 		DiagramNodeBounds newBounds = nodePart.getNodeBounds();
 		boolean changed = false;
@@ -645,7 +606,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
     private boolean isDiagramLayoutChanged()
     {
     	boolean changed = false;
-		for (DiagramNodePart nodePart : getDiagramEditorPagePart().getNodes())
+		for (DiagramNodePart nodePart : context( SapphireDiagramEditorPagePart.class ).getNodes())
 		{
 			if (!nodePart.getLocalModelElement().disposed() && isNodeLayoutChanged(nodePart))
 			{
@@ -653,7 +614,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 				break;
 			}
 		}
-		for (DiagramConnectionPart connPart : getDiagramEditorPagePart().getConnections())
+		for (DiagramConnectionPart connPart : context( SapphireDiagramEditorPagePart.class ).getConnections())
 		{
 			if (!connPart.getLocalModelElement().disposed() && isConnectionLayoutChanged(connPart))
 			{
@@ -664,4 +625,24 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		
     	return changed;
     }
+    
+    @Override
+    public boolean dirty()
+    {
+        return this.dirty;
+    }
+
+    private void refreshDirtyState()
+    {
+        final boolean after = isDiagramLayoutChanged();
+        
+        if( this.dirty != after )
+        {
+            final boolean before = this.dirty;
+            this.dirty = after;
+            
+            broadcast( new DirtyStateEvent( before, after ) );
+        }
+    }
+    
 }

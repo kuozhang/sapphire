@@ -7,11 +7,10 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
- *    Shenxue Zhou - Customized grid layer, grid state save and restore; 
- *                   DND fixes.
- *    Shenxue Zhou - [bugzilla 365019] - SapphireDiagramEditor does not work on 
- *                   non-workspace files 
- *    Gregory Amerson - [374022] - SapphireGraphicalEditor init with SapphireEditor
+ *    Shenxue Zhou - Customized grid layer, grid state save and restore; DND fixes.
+ *    Shenxue Zhou - [365019] SapphireDiagramEditor does not work on non-workspace files 
+ *    Gregory Amerson - [374022] SapphireGraphicalEditor init with SapphireEditor
+ *    Konstantin Komissarchik - [376245] Revert action in StructuredTextEditor does not revert diagram nodes and connections in SapphireDiagramEditor
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef;
@@ -81,7 +80,6 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramPartEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
-import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceServiceListener;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.ContextButtonManager;
 import org.eclipse.sapphire.ui.swt.gef.dnd.ObjectsTransferDropTargetListener;
@@ -124,6 +122,9 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette implements ISapphireEditorActionContributor
@@ -134,7 +135,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
     private SapphireDiagramEditorPagePart diagramPart;
     private DiagramModel diagramModel;
     private SapphireDiagramPartListener diagramPartListener;
-    private DiagramLayoutPersistenceServiceListener layoutPersistenceServiceListener;
+    private Listener layoutPersistenceServiceListener;
     private List<ISapphirePart> selectedParts = null;
     private List<GraphicalEditPart> selectedEditParts = null;
     private boolean editorIsDirty = false;
@@ -315,20 +316,28 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		
 		this.diagramPart.addListener(this.diagramPartListener);
 		
-		this.layoutPersistenceServiceListener = new DiagramLayoutPersistenceServiceListener() 
+		this.layoutPersistenceServiceListener = new Listener() 
 		{
-		    public void markClean()
-		    {
-		    	markEditorClean();
-		    }       
-			
-		    public void markDirty()
-		    {
-		    	markEditorDirty();
-		    }			
+            @Override
+            public void handle( final Event event )
+            {
+                if( event instanceof DiagramLayoutPersistenceService.DirtyStateEvent )
+                {
+                    final DiagramLayoutPersistenceService.DirtyStateEvent evt = (DiagramLayoutPersistenceService.DirtyStateEvent) event;
+                    
+                    if( evt.after() == true )
+                    {
+                        markEditorDirty();
+                    }
+                    else
+                    {
+                        markEditorClean();
+                    }
+                }
+            }			
 		};
 		
-		this.layoutPersistenceService.addListener(this.layoutPersistenceServiceListener);
+		this.layoutPersistenceService.attach(this.layoutPersistenceServiceListener);
 		
         this.diagramHeaderImageListener = new Listener()
         {
@@ -1007,7 +1016,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		diagramModel.dispose();
 		diagramPart.dispose();
 		diagramPart.removeListener(this.diagramPartListener);
-		layoutPersistenceService.removeListener(this.layoutPersistenceServiceListener);
+		layoutPersistenceService.detach(this.layoutPersistenceServiceListener);
 		if (layoutPersistenceService != null)
 		{
 			layoutPersistenceService.dispose();
