@@ -36,6 +36,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.KeyHandler;
+import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
@@ -119,6 +120,7 @@ import org.eclipse.ui.forms.widgets.ILayoutExtension;
 import org.eclipse.ui.forms.widgets.SizeCache;
 import org.eclipse.ui.internal.forms.widgets.FormHeading;
 import org.eclipse.ui.internal.forms.widgets.FormUtil;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -155,6 +157,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	private SapphireActionHandlerDelegate selectAllAction;
 	private SapphireActionHandlerDelegate deleteAction;
 
+	private SapphireDiagramOutline diagramOutline;
+	
 	public SapphireDiagramEditor(
 		final SapphireEditor editor, final IModelElement rootModelElement, final IPath pageDefinitionLocation )
 	{
@@ -565,6 +569,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 					getPart().setSelections(partList);
 					this.selectedParts = partList;
 					this.selectedEditParts = editPartList;
+					updateActions();
 					updateKeyHandler();
 				}				
 			}
@@ -581,6 +586,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		this.deleteAction = new SapphireActionHandlerDelegate(this, deleteActionHandler);
 		
 	}
+	
 	private void updateActions()
 	{
 		this.deleteAction.setEnabled(this.deleteAction.getSapphireActionHandler().isEnabled());
@@ -588,7 +594,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	
 	private void updateKeyHandler()
 	{
-		updateActions();
         if (this.diagramKeyHandler != null)
         {
         	this.diagramKeyHandler.dispose();
@@ -843,6 +848,16 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		return getActionRegistry().getAction(actionId);
 	}
 	
+	@Override 
+	public Object getAdapter(Class type)
+	{
+		if (type == IContentOutlinePage.class)
+		{
+			return getDiagramOutline();
+		}		
+		return super.getAdapter(type);
+	}
+	
 	public SapphireDiagramEditorPagePart getPart() {
 		return this.diagramPart;
 	}
@@ -1090,6 +1105,20 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
         }
 		
 	}
+	
+	private SapphireDiagramOutline getDiagramOutline()
+	{
+		if (this.diagramOutline == null && getGraphicalViewer() != null)
+		{
+			RootEditPart rootEditPart = getGraphicalViewer().getRootEditPart();
+			if (rootEditPart instanceof ScalableFreeformRootEditPart)
+			{
+				this.diagramOutline = new SapphireDiagramOutline((ScalableFreeformRootEditPart)rootEditPart);
+			}
+		}
+		return this.diagramOutline;			
+	}
+	
 	// -----------------------------------------------------------------------------------------------
 	// Inner classes
 	//------------------------------------------------------------------------------------------------

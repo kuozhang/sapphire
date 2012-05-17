@@ -793,7 +793,13 @@ public abstract class SapphireEditor
             final MasterDetailsEditorPage mdpage = (MasterDetailsEditorPage) page;
             return mdpage.getContentOutlinePage();
         }
-        
+        else if (page instanceof IEditorPart)
+        {
+        	if (((IEditorPart)page).getAdapter( IContentOutlinePage.class ) != null)
+        	{
+        		return (IContentOutlinePage)((IEditorPart)page).getAdapter( IContentOutlinePage.class );
+        	}
+        }
         return null;
     }
     
