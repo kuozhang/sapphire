@@ -27,6 +27,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -255,6 +256,10 @@ public class DiagramModel extends DiagramModelBase {
 			y = Math.max(y,  height);
 		}
 		return new org.eclipse.sapphire.ui.Point(x, y);
+	}
+	
+	public SapphireDiagramEditor getSapphireDiagramEditor() {
+		return this.configManager.getDiagramEditor();
 	}
 
 	public void dispose() {
