@@ -74,6 +74,12 @@ public class SapphirePaletteRoot extends PaletteRoot
 		IDiagramEditorPageDef diagramPageDef = (IDiagramEditorPageDef)diagramPart.definition();
 		add(createModelIndependentTools());
 		
+		List<DiagramNodeTemplate> nodeTemplates = diagramPart.getVisibleNodeTemplates();
+		if (nodeTemplates.isEmpty())
+		{
+			return;
+		}
+		
 		List<DiagramPaletteDrawer> drawers = new ArrayList<DiagramPaletteDrawer>();
 		Map<String, List<ToolEntry>> entries = new HashMap<String, List<ToolEntry>>();
 		ModelElementList<IDiagramPaletteCompartmentDef> compartmentDefs = diagramPageDef.getPaletteCompartments();
@@ -89,7 +95,6 @@ public class SapphirePaletteRoot extends PaletteRoot
 					CapitalizationType.TITLE_STYLE, true);			
 			DiagramPaletteDrawer nodesDrawer = new DiagramPaletteDrawer(label2, DiagramPaletteCompartmentConstants.NODES_COMPARTMENT_ID);
 			drawers.add(nodesDrawer);
-
 			defaultContainer = connectionDrawer;
 		}
 		else
@@ -143,7 +148,6 @@ public class SapphirePaletteRoot extends PaletteRoot
 			}
 		}
 		
-        List<DiagramNodeTemplate> nodeTemplates = diagramPart.getVisibleNodeTemplates();
         for (DiagramNodeTemplate nodeTemplate : nodeTemplates) 
         {
         	IDiagramNodeDef nodeDef = nodeTemplate.definition();
