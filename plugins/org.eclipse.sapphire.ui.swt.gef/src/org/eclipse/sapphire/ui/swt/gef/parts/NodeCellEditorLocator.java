@@ -36,7 +36,7 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 		rect.translate(trim.x, trim.y);
 		rect.width += trim.width;
 		rect.height += trim.height;
-		text.setBounds(rect.x, rect.y, rect.width, rect.height);
+		text.setBounds(rect.x + 4, rect.y, rect.width - 8, rect.height);
 	}
 
 	protected Label getLabel() {

@@ -78,7 +78,7 @@ public class NodeDirectEditManager extends DirectEditManager {
 	}
 
 	protected CellEditor createCellEditorOn(Composite composite) {
-		return new TextCellEditor(composite, SWT.NONE);
+		return new TextCellEditor(composite, SWT.CENTER);
 	}
 
 	private void disposeScaledFont() {
