@@ -125,6 +125,8 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
     }
     
     @Override
+    @SuppressWarnings( "deprecation" )
+
     protected Object run( final SapphireRenderingContext context )
     {
         final IModelElement element = getModelElement();
