@@ -49,15 +49,23 @@ public class DiagramDeleteActionHandler extends SapphireDiagramActionHandler
     private boolean calculateEnabled()
     {
     	boolean enabled = false;
-    	SapphireDiagramEditorPagePart diagramPart = getPart().nearest(SapphireDiagramEditorPagePart.class);
-    	List<ISapphirePart> selectedParts = diagramPart.getSelections();
-    	for (ISapphirePart part : selectedParts)
+    	if (getPart() instanceof DiagramNodePart ||
+    			getPart() instanceof DiagramConnectionPart)
     	{
-    		if (part instanceof DiagramNodePart ||
-    				(part instanceof DiagramConnectionPart && !(part instanceof DiagramImplicitConnectionPart)))
-    		{
-    			enabled = true;
-    		}
+    		enabled = true;
+    	}
+    	else
+    	{
+	    	SapphireDiagramEditorPagePart diagramPart = getPart().nearest(SapphireDiagramEditorPagePart.class);
+	    	List<ISapphirePart> selectedParts = diagramPart.getSelections();
+	    	for (ISapphirePart part : selectedParts)
+	    	{
+	    		if (part instanceof DiagramNodePart ||
+	    				(part instanceof DiagramConnectionPart && !(part instanceof DiagramImplicitConnectionPart)))
+	    		{
+	    			enabled = true;
+	    		}
+	    	}
     	}
     	return enabled;
     }
