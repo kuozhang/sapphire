@@ -49,7 +49,7 @@ public class MoveNodeCommand extends Command {
 		DiagramNodeBounds bounds = node.getModelPart().getNodeBounds();
 		int deltaX = this.rectangle.x - bounds.getX();
 		int deltaY = this.rectangle.y - bounds.getY();
-		if (deltaX != 0 && deltaY != 0) {
+		if (deltaX != 0 || deltaY != 0) {
 			SapphireDiagramEditor editor = node.getDiagramModel().getSapphireDiagramEditor();
 			List<DiagramConnectionModel> srcConnections = node.getSourceConnections();
 			for (GraphicalEditPart part : editor.getSelectedEditParts()) {
