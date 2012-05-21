@@ -8,6 +8,7 @@
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
  *    Shenxue Zhou - double click handling
+ *    Shenxue Zhou - [Bug 348640] - Disable click-wait-click editing activation
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.parts;
@@ -48,6 +49,7 @@ import org.eclipse.sapphire.ui.swt.gef.policies.NodeLayoutEditPolicy;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
 public class DiagramNodeEditPart extends AbstractGraphicalEditPart 
@@ -116,20 +118,10 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart
 	{
 		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT)
 		{
-			Point pt = null;
 			if (!(request instanceof DirectEditRequest))
 			{
 				// Direct edit invoked using key command
 				performDirectEdit();
-			}
-			else
-			{
-				DirectEditRequest deReq = (DirectEditRequest)request;
-				pt = deReq.getLocation();
-				if (mouseInLabelRegion(pt))
-				{
-					performDirectEdit();
-				}
 			}
 		}
 		else if (request.getType().equals(REQ_OPEN))
