@@ -93,6 +93,7 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModelBase;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
+import org.eclipse.sapphire.ui.swt.gef.parts.DiagramConnectionEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.SapphireDiagramEditorEditPartFactory;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
@@ -949,8 +950,11 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		GraphicalViewer viewer = this.getGraphicalViewer();
 		for (Object obj : viewer.getEditPartRegistry().values())
 		{
-			EditPart editPart = (EditPart)obj;
-			viewer.appendSelection(editPart);
+			if (obj instanceof DiagramConnectionEditPart ||
+					obj instanceof DiagramNodeEditPart)
+			{
+				viewer.appendSelection((EditPart)obj);
+			}
 		}
 	}
 	
