@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [346172] Support zoom, print and save as image actions in the diagram editor
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.def;
@@ -55,6 +56,7 @@ public interface ActionContextRef extends IModelElement
             SapphireActionSystem.CONTEXT_SECTION,
             SapphireActionSystem.CONTEXT_VALUE_PROPERTY_EDITOR,
             SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR,
+            SapphireActionSystem.CONTEXT_DIAGRAM_HEADER,
             SapphireActionSystem.CONTEXT_DIAGRAM,
             SapphireActionSystem.CONTEXT_DIAGRAM_NODE,
             SapphireActionSystem.CONTEXT_DIAGRAM_NODE_HIDDEN,

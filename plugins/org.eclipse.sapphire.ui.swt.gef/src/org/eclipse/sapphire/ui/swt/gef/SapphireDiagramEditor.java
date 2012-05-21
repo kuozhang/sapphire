@@ -11,6 +11,8 @@
  *    Shenxue Zhou - [365019] SapphireDiagramEditor does not work on non-workspace files 
  *    Gregory Amerson - [374022] SapphireGraphicalEditor init with SapphireEditor
  *    Konstantin Komissarchik - [376245] Revert action in StructuredTextEditor does not revert diagram nodes and connections in SapphireDiagramEditor
+ *    Gregory Amerson - [346172] Support zoom, print and save as image actions in the diagram editor
+ *    Konstantin Komissarchik - [346172] Support zoom, print and save as image actions in the diagram editor
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef;
@@ -78,6 +80,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPartEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart.ZoomLevelEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -153,7 +156,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	private SizeCache bodyCache = new SizeCache();
 	private SizeCache headCache = new SizeCache();	
 	private FormColors formColors;
-	private Listener diagramHeaderImageListener;
+	private Listener diagramEditorPagePartListener;
 	
 	private SapphireActionHandlerDelegate selectAllAction;
 	private SapphireActionHandlerDelegate deleteAction;
@@ -339,7 +342,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		
 		this.layoutPersistenceService.attach(this.layoutPersistenceServiceListener);
 		
-        this.diagramHeaderImageListener = new Listener()
+        this.diagramEditorPagePartListener = new Listener()
         {
             @Override
             public void handle( final Event event )
@@ -348,11 +351,14 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
                 {
                     refreshFormHeaderImage();
                 }
+                else if( event instanceof ZoomLevelEvent )
+                {
+                    refreshZoomLevel();
+                }
             }
         };
         
-        this.diagramPart.attach( this.diagramHeaderImageListener );
-				
+        this.diagramPart.attach( this.diagramEditorPagePartListener );
     }
     
     public IDiagramEditorPageDef getDiagramEditorPageDef()
@@ -1022,7 +1028,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			layoutPersistenceService.dispose();
 		}
 		
-        this.diagramPart.detach( this.diagramHeaderImageListener );        
+        this.diagramPart.detach( this.diagramEditorPagePartListener );        
         final Image image = this.header.getImage();        
         if( image != null )
         {
@@ -1112,7 +1118,17 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
         {
             this.header.setImage( toImageDescriptor( newImageData ).createImage() );
         }
-		
+	}
+    
+	private void refreshZoomLevel()
+	{
+	    final int zoomLevel = this.diagramPart.getZoomLevel();
+	    final double zoom = (double) zoomLevel / 100;
+	    
+	    final GraphicalViewer graphicalViewer = (GraphicalViewer) getAdapter( GraphicalViewer.class );
+	    final ZoomManager zoomManager = (ZoomManager) graphicalViewer.getProperty( ZoomManager.class.toString() );
+        
+	    zoomManager.setZoom( zoom );
 	}
 	
 	private SapphireDiagramOutline getDiagramOutline()

@@ -94,11 +94,19 @@ public enum CapitalizationType
                                 }
                             }
                             
-                            i = ( endOfWord == -1 ? n - 1 : endOfWord );
-                            
-                            if( ! WORDS_NOT_TO_CAPITALIZE.contains( word.toString() ) )
+                            if( endOfWord == -1 )
                             {
+                                i = n - 1;
                                 capitalize = true;
+                            }
+                            else
+                            {
+                                i = endOfWord;
+                                
+                                if( ! WORDS_NOT_TO_CAPITALIZE.contains( word.toString() ) )
+                                {
+                                    capitalize = true;
+                                }
                             }
                         }
                     }

@@ -12,6 +12,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Gregory Amerson - [358295] Need access to selection in list property editor
  *    Gregory Amerson - [377136] Add Sapphire.Diagram.Node to possible contexts for Sapphire.Add  
+ *    Gregory Amerson - [346172] Support zoom, print and save as image actions in the diagram editor
  ******************************************************************************
 -->
 
@@ -216,6 +217,36 @@
         <group>Sapphire.Diagram.Appearance</group>       
     </action>
     <action>
+        <id>Sapphire.Diagram.Zoom.In</id>
+        <label>zoom in</label>
+        <image>org/eclipse/sapphire/ui/actions/ZoomIn.gif</image>
+        <description>Zoom in the diagram.</description>
+        <location>after:Sapphire.Diagram.Layout</location>
+        <group>Sapphire.Diagram.Zoom</group>
+        <context>Sapphire.Diagram.Editor</context>
+        <context>Sapphire.Diagram.Header</context>
+    </action>
+    <action>
+        <id>Sapphire.Diagram.Zoom.Out</id>
+        <label>zoom out</label>
+        <image>org/eclipse/sapphire/ui/actions/ZoomOut.gif</image>
+        <description>Zoom out the diagram.</description>
+        <location>after:Sapphire.Diagram.Zoom.In</location>
+        <group>Sapphire.Diagram.Zoom</group>
+        <context>Sapphire.Diagram.Editor</context>
+        <context>Sapphire.Diagram.Header</context>
+    </action>
+    <action>
+        <id>Sapphire.Diagram.Zoom.Actual</id>
+        <label>zoom actual</label>
+        <image>org/eclipse/sapphire/ui/actions/ZoomActual.gif</image>
+        <description>Zoom the diagram to actual size.</description>
+        <location>after:Sapphire.Diagram.Zoom.Out</location>
+        <group>Sapphire.Diagram.Zoom</group>
+        <context>Sapphire.Diagram.Editor</context>
+        <context>Sapphire.Diagram.Header</context>
+    </action>
+    <action>
         <id>Sapphire.Diagram.Node.Default</id>
         <context>Sapphire.Diagram.Node</context>
         <label>default action</label>
@@ -246,6 +277,26 @@
         <description>Select all node edit parts in the diagram</description>
         <location>after:Sapphire.Diagram.SelectAll</location>
         <group>Sapphire.Diagram.SelectAll</group>
+    </action>
+    <action>
+        <id>Sapphire.Diagram.SaveAsImage</id>
+        <label>save as image</label>
+        <image>org/eclipse/sapphire/ui/actions/SaveAsImage.gif</image>
+        <description>Save the diagram as an image.</description>
+        <location>after:Sapphire.Diagram.SelectAllNodes</location>
+        <group>Sapphire.Diagram.Export</group>
+        <context>Sapphire.Diagram.Editor</context>
+        <context>Sapphire.Diagram.Header</context>
+    </action>
+    <action>
+        <id>Sapphire.Diagram.Print</id>
+        <label>Print</label>
+        <image>org/eclipse/sapphire/ui/actions/Print.gif</image>
+        <description>Print the diagram.</description>
+        <location>after:Sapphire.Diagram.Save.As.Image</location>
+        <group>Sapphire.Diagram.Export</group>
+        <context>Sapphire.Diagram.Editor</context>
+        <context>Sapphire.Diagram.Header</context>
     </action>
    
     <action-handler>
@@ -368,11 +419,13 @@
     <action-handler>
         <action>Sapphire.Diagram.Grid.Toggle</action>
         <impl>org.eclipse.sapphire.ui.diagram.actions.ToggleDiagramGridActionHandler</impl>
+        <id>Sapphire.Diagram.Grid.Toggle</id>
         <description>Show/Hide diagram grid</description>
     </action-handler>
     <action-handler>
         <action>Sapphire.Diagram.Guides.Toggle</action>
         <impl>org.eclipse.sapphire.ui.diagram.actions.ToggleDiagramGuidesActionHandler</impl>
+        <id>Sapphire.Diagram.Guides.Toggle</id>
         <description>Show/Hide guides</description>
     </action-handler>
     <action-handler>
@@ -390,13 +443,36 @@
     <action-handler>
         <action>Sapphire.Diagram.SelectAll</action>
         <impl>org.eclipse.sapphire.ui.diagram.actions.DiagramSelectAllActionHandler</impl>
+        <id>Sapphire.Diagram.SelectAll</id>
         <context>Sapphire.Diagram.Editor</context>
     </action-handler>
     <action-handler>
         <action>Sapphire.Diagram.SelectAllNodes</action>
         <impl>org.eclipse.sapphire.ui.diagram.actions.DiagramSelectAllNodesActionHandler</impl>
+        <id>Sapphire.Diagram.SelectAllNodes</id>
         <context>Sapphire.Diagram.Editor</context>
-    </action-handler>    
+    </action-handler>
+    <action-handler>
+        <action>Sapphire.Diagram.Zoom.In</action>
+        <id>Sapphire.Diagram.Zoom.In</id>
+        <context>Sapphire.Diagram.Editor</context>
+        <context>Sapphire.Diagram.Header</context>
+        <impl>org.eclipse.sapphire.ui.diagram.actions.ZoomInDiagramActionHandler</impl>
+    </action-handler>
+    <action-handler>
+        <action>Sapphire.Diagram.Zoom.Out</action>
+        <id>Sapphire.Diagram.Zoom.Out</id>
+        <context>Sapphire.Diagram.Editor</context>
+        <context>Sapphire.Diagram.Header</context>
+        <impl>org.eclipse.sapphire.ui.diagram.actions.ZoomOutDiagramActionHandler</impl>
+    </action-handler>
+    <action-handler>
+        <action>Sapphire.Diagram.Zoom.Actual</action>
+        <id>Sapphire.Diagram.Zoom.Actual</id>
+        <context>Sapphire.Diagram.Editor</context>
+        <context>Sapphire.Diagram.Header</context>
+        <impl>org.eclipse.sapphire.ui.diagram.actions.ZoomActualDiagramActionHandler</impl>
+    </action-handler>
     <action-handler-factory>
         <action>Sapphire.Add</action>
         <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeAddActionHandlerFactory</impl>

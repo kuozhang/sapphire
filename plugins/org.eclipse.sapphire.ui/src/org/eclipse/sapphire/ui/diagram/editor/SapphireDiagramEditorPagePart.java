@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,9 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
  *    Ling Hao - [344319] Image specification for diagram parts inconsistent with the rest of sdef
- *    Konstantin Komissarchik - [375770] Support context menu actions when multiple diagram parts are selected 
+ *    Konstantin Komissarchik - [375770] Support context menu actions when multiple diagram parts are selected
+ *    Gregory Amerson - [346172] Support zoom, print and save as image actions in the diagram editor
+ *    Konstantin Komissarchik - [346172] Support zoom, print and save as image actions in the diagram editor
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -37,6 +39,7 @@ import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
@@ -52,7 +55,7 @@ import org.eclipse.sapphire.util.ReadOnlyListFactory;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
+public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 {
     private IModelElement modelElement;
     private IDiagramEditorPageDef diagramPageDef = null;
@@ -73,6 +76,7 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     private int verticalGridUnit;
 	private List<FunctionResult> connectionImageDataFunctionResults;
 	private Point mouseLocation;
+    private int zoomLevel = 100; // zoomLevel corresponds to 100%, 25 would be 25%, 200 would be 200%
 
     @Override
     protected void init()
@@ -243,6 +247,52 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     		this.showGuides = showGuides;
     		notifyGuideStateChange();
     	}
+    }
+    
+    public int getMinZoomLevel()
+    {
+        return 50;
+    }
+    
+    public int getMaxZoomLevel()
+    {
+        return 200;
+    }
+    
+    public int getZoomLevel()
+    {
+        return this.zoomLevel;
+    }
+    
+    public void setZoomLevel( final int level )
+    {
+        if( this.zoomLevel != level )
+        {
+            int newZoomLevel = level;
+            
+            final int min = getMinZoomLevel();
+            
+            if( level < min )
+            {
+                newZoomLevel = min;
+            }
+            else
+            {
+                final int max = getMaxZoomLevel();
+                
+                if( level > max )
+                {
+                    newZoomLevel = max;
+                }
+            }
+            
+            if( this.zoomLevel != newZoomLevel )
+            {
+                final int oldZoomLevel = this.zoomLevel;
+                this.zoomLevel = level;
+                broadcast( new ZoomLevelEvent( this, oldZoomLevel, newZoomLevel ) );
+            }
+        }
     }
     
     public int getGridUnit()
@@ -1031,4 +1081,31 @@ public class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	}
     	
     }
+    
+    public static final class ZoomLevelEvent extends PartEvent
+    {
+        private final int before;
+        private final int after;
+        
+        public ZoomLevelEvent( final SapphirePart part,
+                               final int before,
+                               final int after )
+        {
+            super( part );
+            
+            this.before = before;
+            this.after = after;
+        }
+        
+        public int before()
+        {
+            return this.before;
+        }
+        
+        public int after()
+        {
+            return this.after;
+        }
+    }
+    
 }
