@@ -131,6 +131,8 @@ public abstract class SapphireEditor
 						actionContributor.getAction(ActionFactory.DELETE.getId()));
 				actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), 
 						actionContributor.getAction(ActionFactory.SELECT_ALL.getId()));
+				actionBars.setGlobalActionHandler(ActionFactory.PRINT.getId(), 
+						actionContributor.getAction(ActionFactory.PRINT.getId()));
 				
 				actionBars.updateActionBars();
 			}

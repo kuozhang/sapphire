@@ -21,8 +21,10 @@ import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescr
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
@@ -158,9 +160,10 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	private SizeCache headCache = new SizeCache();	
 	private FormColors formColors;
 	private Listener diagramEditorPagePartListener;
-	
-	private SapphireActionHandlerDelegate selectAllAction;
-	private SapphireActionHandlerDelegate deleteAction;
+
+	private Map<String, SapphireActionHandlerDelegate> globalActions;
+//	private SapphireActionHandlerDelegate selectAllAction;
+//	private SapphireActionHandlerDelegate deleteAction;
 
 	private SapphireDiagramOutline diagramOutline;
 	
@@ -594,18 +597,26 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	
 	private void initActions()
 	{
+		this.globalActions = new HashMap<String, SapphireActionHandlerDelegate>();
 		SapphireActionHandler selectAllActionHandler = 
 				this.diagramPart.getAction("Sapphire.Diagram.SelectAll").getFirstActiveHandler();
-		this.selectAllAction = new SapphireActionHandlerDelegate(this, selectAllActionHandler);
+		this.globalActions.put(ActionFactory.SELECT_ALL.getId(), 
+				new SapphireActionHandlerDelegate(this, selectAllActionHandler));
 		SapphireActionHandler deleteActionHandler = 
 				this.diagramPart.getAction("Sapphire.Delete").getFirstActiveHandler();
-		this.deleteAction = new SapphireActionHandlerDelegate(this, deleteActionHandler);
+		this.globalActions.put(ActionFactory.DELETE.getId(), 
+				new SapphireActionHandlerDelegate(this, deleteActionHandler));		
+		SapphireActionHandler printActionHandler = 
+				this.diagramPart.getAction("Sapphire.Diagram.Print").getFirstActiveHandler();
+		this.globalActions.put(ActionFactory.PRINT.getId(), 
+				new SapphireActionHandlerDelegate(this, printActionHandler));
 		
 	}
 	
 	private void updateActions()
 	{
-		this.deleteAction.setEnabled(this.deleteAction.getSapphireActionHandler().isEnabled());
+		SapphireActionHandlerDelegate deleteAction = this.globalActions.get(ActionFactory.DELETE.getId());
+		deleteAction.setEnabled(deleteAction.getSapphireActionHandler().isEnabled());
 	}
 	
 	private void updateKeyHandler()
@@ -859,12 +870,17 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	{
 		if (actionId.equals(ActionFactory.SELECT_ALL.getId()))
 		{
-			return this.selectAllAction;
+			return this.globalActions.get(ActionFactory.SELECT_ALL.getId());
 		}
 		else if (actionId.equals(ActionFactory.DELETE.getId()))
 		{
-			return this.deleteAction;
+			return this.globalActions.get(ActionFactory.DELETE.getId());
 		}
+		else if (actionId.equals(ActionFactory.PRINT.getId()))
+		{
+			return this.globalActions.get(ActionFactory.PRINT.getId());
+		}
+		
 		return getActionRegistry().getAction(actionId);
 	}
 	
