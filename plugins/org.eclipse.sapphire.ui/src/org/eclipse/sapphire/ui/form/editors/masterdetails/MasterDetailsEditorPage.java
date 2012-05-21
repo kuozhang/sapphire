@@ -28,7 +28,6 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.util.CollectionsUtil.findPrecedingItem;
 import static org.eclipse.sapphire.util.CollectionsUtil.findTrailingItem;
 
-import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
@@ -64,10 +63,7 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.util.NLS;
-import org.eclipse.sapphire.modeling.xml.RootXmlResource;
-import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.ui.ISapphireEditorActionContributor;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -86,7 +82,6 @@ import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEditorPageDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.state.IMasterDetailsEditorPageState;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.ModelElementsTransfer;
 import org.eclipse.sapphire.ui.swt.SapphireToolTip;
@@ -182,20 +177,6 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         
         final MasterDetailsEditorPagePart part = getPart();
         
-        IMasterDetailsEditorPageState state;
-        
-        try
-        {
-            final File stateFile = editor.getDefaultStateStorageFile( this );
-            state = IMasterDetailsEditorPageState.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( stateFile ) ) );
-        }
-        catch( ResourceStoreException e )
-        {
-            state = IMasterDetailsEditorPageState.TYPE.instantiate();
-        }
-        
-        part.setState( state );
-
         this.definition = part.definition();
         
         String partName = pageName;

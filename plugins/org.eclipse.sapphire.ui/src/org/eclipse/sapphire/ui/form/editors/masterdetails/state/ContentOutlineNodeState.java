@@ -29,9 +29,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @GenerateImpl
 
-public interface IContentOutlineNodeState extends IModelElement
+public interface ContentOutlineNodeState extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IContentOutlineNodeState.class );
+    ModelElementType TYPE = new ModelElementType( ContentOutlineNodeState.class );
     
     // *** Label ***
     
@@ -68,11 +68,11 @@ public interface IContentOutlineNodeState extends IModelElement
     
     // *** Children ***
     
-    @Type( base = IContentOutlineNodeState.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "node", type = IContentOutlineNodeState.class ) )
+    @Type( base = ContentOutlineNodeState.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "node", type = ContentOutlineNodeState.class ) )
     
     ListProperty PROP_CHILDREN = new ListProperty( TYPE, "Children" );
     
-    ModelElementList<IContentOutlineNodeState> getChildren();
+    ModelElementList<ContentOutlineNodeState> getChildren();
     
 }

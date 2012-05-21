@@ -835,6 +835,10 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		// context button manager
 		contextButtonManager = new ContextButtonManager(this);
 		
+		final int zoomLevel = getPart().getState().getZoomLevel().getContent();
+		final double zoom = (double) zoomLevel / 100;
+        
+        getZoomManager().setZoom( zoom );
 	}
 			
 	@Override
@@ -1000,7 +1004,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	 */
 	public Point calculateRealMouseLocation(Point nativeLocation) 
 	{
-
 		Point ret = new Point(nativeLocation);
 		Point viewLocation;
 		// view location depends on the current scroll bar position
@@ -1008,17 +1011,17 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 
 		ret.x += viewLocation.x;
 		ret.y += viewLocation.y;
+		
+		final ZoomManager zoomManager = getZoomManager();
 
-		ZoomManager zoomManager = (ZoomManager) getGraphicalViewer().getProperty(ZoomManager.class.toString());
-		if (zoomManager != null)
+		if( zoomManager != null )
 		{
-			ret = ret.getScaled(1 / zoomManager.getZoom());
+			ret = ret.getScaled( 1 / zoomManager.getZoom() );
 		}
 
 		return ret;
 	}
-	
-
+    
 	@Override
 	public void dispose() {
 		super.dispose();
@@ -1129,13 +1132,15 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	    final int zoomLevel = this.diagramPart.getZoomLevel();
 	    final double zoom = (double) zoomLevel / 100;
 	    
-	    final GraphicalViewer graphicalViewer = (GraphicalViewer) getAdapter( GraphicalViewer.class );
-	    final ZoomManager zoomManager = (ZoomManager) graphicalViewer.getProperty( ZoomManager.class.toString() );
-        
-	    zoomManager.setZoom( zoom );
+	    getZoomManager().setZoom( zoom );
 	}
 	
-	private SapphireDiagramOutline getDiagramOutline()
+	private ZoomManager getZoomManager()
+    {
+        return (ZoomManager) getGraphicalViewer().getProperty( ZoomManager.class.toString() );
+    }
+
+    private SapphireDiagramOutline getDiagramOutline()
 	{
 		if (this.diagramOutline == null && getGraphicalViewer() != null)
 		{

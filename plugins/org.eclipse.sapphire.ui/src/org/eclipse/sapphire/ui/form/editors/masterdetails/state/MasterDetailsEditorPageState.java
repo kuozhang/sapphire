@@ -27,17 +27,17 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 @XmlBinding( path = "master-details-editor-page-state" )
 @GenerateImpl
 
-public interface IMasterDetailsEditorPageState extends IModelElement
+public interface MasterDetailsEditorPageState extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IMasterDetailsEditorPageState.class );
+    ModelElementType TYPE = new ModelElementType( MasterDetailsEditorPageState.class );
     
     // *** ContentOutlineState ***
     
-    @Type( base = IContentOutlineState.class )
+    @Type( base = ContentOutlineState.class )
     @XmlBinding( path = "content-outline" )
 
     ImpliedElementProperty PROP_CONTENT_OUTLINE_STATE = new ImpliedElementProperty( TYPE, "ContentOutlineState" );
     
-    IContentOutlineState getContentOutlineState();
+    ContentOutlineState getContentOutlineState();
     
 }

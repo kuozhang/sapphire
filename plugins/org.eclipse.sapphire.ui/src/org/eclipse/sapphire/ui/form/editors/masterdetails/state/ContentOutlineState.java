@@ -27,9 +27,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface IContentOutlineState extends IModelElement
+public interface ContentOutlineState extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IContentOutlineState.class );
+    ModelElementType TYPE = new ModelElementType( ContentOutlineState.class );
     
     // *** Visible ***
     
@@ -57,11 +57,11 @@ public interface IContentOutlineState extends IModelElement
     
     // *** Root ***
     
-    @Type( base = IContentOutlineNodeState.class )
+    @Type( base = ContentOutlineNodeState.class )
     @XmlBinding( path = "root" )
 
     ImpliedElementProperty PROP_ROOT = new ImpliedElementProperty( TYPE, "Root" );
     
-    IContentOutlineNodeState getRoot();
+    ContentOutlineNodeState getRoot();
     
 }

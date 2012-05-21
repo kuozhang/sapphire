@@ -9,7 +9,8 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Ling Hao - [329114] rewrite context help binding feature
  *    Shenxue Zhou - [365019] SapphireDiagramEditor does not work on non-workspace files 
- *    Gregory Amerson - [372816] Provide adapt mechanism for SapphirePart 
+ *    Gregory Amerson - [372816] Provide adapt mechanism for SapphirePart
+ *    Gregory Amerson - [346172] Support zoom, print and save as image actions in the diagram editor
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -279,7 +280,7 @@ public abstract class SapphireEditor
         return null;
     }
 
-    public final File getDefaultStateStorageFile( final Object page )
+    public final File getDefaultStateStorageFile( final SapphireEditorPagePart part )
     {
         final StringBuilder key = new StringBuilder();
         
@@ -304,14 +305,7 @@ public abstract class SapphireEditor
             key.append( '#' );
         }
         
-        for( Map.Entry<String,Object> entry : this.pagesById.entrySet() )
-        {
-            if( entry.getValue() == page )
-            {
-                key.append( entry.getKey() );
-                break;
-            }
-        }
+        key.append( part.definition().getPageName().getContent() );
         
         final String digest = createStringDigest( key.toString() );
         

@@ -100,7 +100,7 @@
             <impl>MapDropActionHandler</impl>
         </action-handler>
         <action>
-            <id>Sapphire.Samples.Map.OpenHomepage</id>
+            <id>Sapphire.Samples.Map.Open.Homepage</id>
             <label>Sapphire Homepage</label>
             <tooltip>Open Sapphire Homepage (Ctrl+Alt+Shift+S)</tooltip>
             <description>Open Sapphire project homepage.</description>
@@ -108,10 +108,15 @@
             <key-binding-behavior>propagated</key-binding-behavior>
             <context>Sapphire.Diagram.Editor</context>
             <context>Sapphire.Diagram.Header</context>
+            <image>Web.png</image>
+            <hint>
+                <name>style</name>
+                <value>image+text</value>
+            </hint>
         </action>
         <action-handler>
-            <action>Sapphire.Samples.Map.OpenHomepage</action>
-            <id>Sapphire.Samples.Map.OpenHomepage</id>
+            <action>Sapphire.Samples.Map.Open.Homepage</action>
+            <id>Sapphire.Samples.Map.Open.Homepage</id>
             <label>Sapphire Homepage</label>
             <impl>OpenHomepageActionHandler</impl>
         </action-handler>

@@ -10,6 +10,7 @@
  *    Ling Hao - [329114] rewrite context help binding feature
  *    Gregory Amerson - [372816] Provide adapt mechanism for SapphirePart
  *    Gregory Amerson - [373614] Suppport AdapterService in SapphirePart
+ *    Gregory Amerson - [346172] Support zoom, print and save as image actions
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -539,7 +540,12 @@ public abstract class SapphirePart implements ISapphirePart
 
         if( result == null )
         {
-            result = getLocalModelElement().adapt( adapterType );
+            final IModelElement element = getLocalModelElement();
+            
+            if( element != null )
+            {
+                result = element.adapt( adapterType );
+            }
         }
     
         if( result == null && this.parent != null )

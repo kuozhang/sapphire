@@ -23,8 +23,8 @@ import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEditorPageDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.state.IContentOutlineNodeState;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.state.IMasterDetailsEditorPageState;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.state.ContentOutlineNodeState;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.state.MasterDetailsEditorPageState;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.util.ReadOnlyListFactory;
 
@@ -328,11 +328,11 @@ public final class MasterDetailsContentOutline
     {
         final List<MasterDetailsContentNode> selection = new ArrayList<MasterDetailsContentNode>();
         
-        final IMasterDetailsEditorPageState editorPageState = this.editorPagePart.getState();
+        final MasterDetailsEditorPageState editorPageState = this.editorPagePart.getState();
         
         if( editorPageState != null )
         {
-            final IContentOutlineNodeState rootNodeState = editorPageState.getContentOutlineState().getRoot();
+            final ContentOutlineNodeState rootNodeState = editorPageState.getContentOutlineState().getRoot();
             
             for( MasterDetailsContentNode node : this.root.getChildNodes() )
             {
@@ -374,13 +374,13 @@ public final class MasterDetailsContentOutline
         }
     }
     
-    private void loadTreeState( final IContentOutlineNodeState parentNodeState,
+    private void loadTreeState( final ContentOutlineNodeState parentNodeState,
                                 final MasterDetailsContentNode node,
                                 final List<MasterDetailsContentNode> selection )
     {
         final String nodeLabel = node.getLabel();
         
-        for( IContentOutlineNodeState childNodeState : parentNodeState.getChildren() )
+        for( ContentOutlineNodeState childNodeState : parentNodeState.getChildren() )
         {
             if( nodeLabel.equals( childNodeState.getLabel().getText() ) )
             {
@@ -403,11 +403,11 @@ public final class MasterDetailsContentOutline
     
     private void saveTreeState()
     {
-        final IMasterDetailsEditorPageState editorPageState = this.editorPagePart.getState();
+        final MasterDetailsEditorPageState editorPageState = this.editorPagePart.getState();
         
         if( editorPageState != null )
         {
-            final IContentOutlineNodeState rootNodeState = editorPageState.getContentOutlineState().getRoot();
+            final ContentOutlineNodeState rootNodeState = editorPageState.getContentOutlineState().getRoot();
             
             rootNodeState.getChildren().clear();
             
@@ -429,7 +429,7 @@ public final class MasterDetailsContentOutline
         }
     }
 
-    private void saveTreeState( final IContentOutlineNodeState parentNodeState,
+    private void saveTreeState( final ContentOutlineNodeState parentNodeState,
                                 final MasterDetailsContentNode node,
                                 final List<MasterDetailsContentNode> selection )
     {
@@ -438,7 +438,7 @@ public final class MasterDetailsContentOutline
         
         if( isExpanded || isSelected )
         {
-            final IContentOutlineNodeState childNodeState = parentNodeState.getChildren().insert();
+            final ContentOutlineNodeState childNodeState = parentNodeState.getChildren().insert();
             
             childNodeState.setLabel( node.getLabel() );
             

@@ -16,6 +16,7 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,13 +32,17 @@ import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.xml.RootXmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
+import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
@@ -47,12 +52,16 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
+import org.eclipse.sapphire.ui.diagram.state.DiagramEditorPageState;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.state.MasterDetailsEditorPageState;
+import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.util.ReadOnlyListFactory;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
@@ -76,12 +85,22 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     private int verticalGridUnit;
 	private List<FunctionResult> connectionImageDataFunctionResults;
 	private Point mouseLocation;
-    private int zoomLevel = 100; // zoomLevel corresponds to 100%, 25 would be 25%, 200 would be 200%
+    private DiagramEditorPageState state;
 
     @Override
     protected void init()
     {
         super.init();
+        
+        try
+        {
+            final File stateFile = adapt( SapphireEditor.class ).getDefaultStateStorageFile( this );
+            this.state = DiagramEditorPageState.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( stateFile ) ) );
+        }
+        catch( ResourceStoreException e )
+        {
+            this.state = DiagramEditorPageState.TYPE.instantiate();
+        }
             
         this.diagramPageDef = (IDiagramEditorPageDef)super.definition;
         ImpliedElementProperty modelElementProperty = (ImpliedElementProperty)resolve(this.diagramPageDef.getProperty().getContent());
@@ -256,17 +275,19 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     
     public int getMaxZoomLevel()
     {
-        return 200;
+        return 400;
     }
     
     public int getZoomLevel()
     {
-        return this.zoomLevel;
+        return getState().getZoomLevel().getContent();
     }
     
     public void setZoomLevel( final int level )
     {
-        if( this.zoomLevel != level )
+        final int currentZoomLevel = getState().getZoomLevel().getContent();
+        
+        if( currentZoomLevel != level )
         {
             int newZoomLevel = level;
             
@@ -286,13 +307,27 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
                 }
             }
             
-            if( this.zoomLevel != newZoomLevel )
+            if( currentZoomLevel != newZoomLevel )
             {
-                final int oldZoomLevel = this.zoomLevel;
-                this.zoomLevel = level;
-                broadcast( new ZoomLevelEvent( this, oldZoomLevel, newZoomLevel ) );
+                getState().setZoomLevel( newZoomLevel );
+                
+                try
+                {
+                    getState().resource().save();
+                }
+                catch( ResourceStoreException e )
+                {
+                    SapphireUiFrameworkPlugin.log( e );
+                }
+                
+                broadcast( new ZoomLevelEvent( this, currentZoomLevel, newZoomLevel ) );
             }
         }
+    }
+    
+    public final DiagramEditorPageState getState()
+    {
+        return this.state;
     }
     
     public int getGridUnit()

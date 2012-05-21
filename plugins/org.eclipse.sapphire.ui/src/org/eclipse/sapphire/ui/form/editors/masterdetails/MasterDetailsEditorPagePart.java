@@ -13,17 +13,22 @@ package org.eclipse.sapphire.ui.form.editors.masterdetails;
 
 import static org.eclipse.sapphire.ui.SapphireActionSystem.CONTEXT_EDITOR_PAGE_OUTLINE_HEADER;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.modeling.ResourceStoreException;
+import org.eclipse.sapphire.modeling.xml.RootXmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
+import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEditorPageDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.state.IMasterDetailsEditorPageState;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.state.MasterDetailsEditorPageState;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -31,7 +36,7 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.state.IMasterDetailsEd
 
 public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
 {
-    private IMasterDetailsEditorPageState state;
+    private MasterDetailsEditorPageState state;
     private MasterDetailsContentOutline contentOutline;
     
     @Override
@@ -39,6 +44,16 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
     {
         super.init();
         
+        try
+        {
+            final File stateFile = adapt( SapphireEditor.class ).getDefaultStateStorageFile( this );
+            this.state = MasterDetailsEditorPageState.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( stateFile ) ) );
+        }
+        catch( ResourceStoreException e )
+        {
+            this.state = MasterDetailsEditorPageState.TYPE.instantiate();
+        }
+
         this.contentOutline = new MasterDetailsContentOutline( this );
         
         this.contentOutline.attach
@@ -109,14 +124,9 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
         }
     }
     
-    public final IMasterDetailsEditorPageState getState()
+    public final MasterDetailsEditorPageState getState()
     {
         return this.state;
-    }
-    
-    public final void setState( final IMasterDetailsEditorPageState state )
-    {
-        this.state = state;
     }
     
     public final void setFocusOnDetails()
