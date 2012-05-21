@@ -37,8 +37,9 @@ public class MoveConnectionLabelCommand extends Command {
 		int x = rectangle.x;
 		int y = rectangle.y;
 		Connection connection = (Connection)editPart.getFigure().getParent();
-		SapphireMidpointLocator location = new SapphireMidpointLocator(connection);
+		SapphireMidpointLocator location = new SapphireMidpointLocator(editPart.getConfigurationManager(), connection);
 		Point midpoint = location.getMidpoint();
+		midpoint = editPart.getConfigurationManager().getDiagramEditor().calculateRealMouseLocation(midpoint);
 		org.eclipse.sapphire.ui.Point newPos = new org.eclipse.sapphire.ui.Point(x - midpoint.x, y - midpoint.y);
 		editPart.getDiagramConnectionPart().setLabelPosition(newPos);
 	}

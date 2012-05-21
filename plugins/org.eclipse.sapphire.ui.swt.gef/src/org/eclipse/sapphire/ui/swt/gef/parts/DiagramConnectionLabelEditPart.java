@@ -19,6 +19,7 @@ import java.beans.PropertyChangeListener;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
@@ -52,7 +53,14 @@ public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart
     
     @Override
 	protected IFigure createFigure() {
-    	Label label = new Label();
+    	Label label = new Label() {
+
+			@Override
+			public Insets getInsets() {
+				return new Insets(0,2,0,2);
+			}
+    		
+    	};
 		
     	// let text change color when the parent connection is selected 
 //    	DiagramResourceCache resourceCache = getCastedModel().getDiagramModel().getResourceCache();
@@ -137,7 +145,9 @@ public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart
 	private void refreshLabelLocation() {
 		PolylineConnection parent = (PolylineConnection)getFigure().getParent(); 
 		Point position = getDiagramConnectionPart().getLabelPosition();
-		SapphireMidpointLocator locator = position == null ? new SapphireMidpointLocator(parent) : new SapphireMidpointLocator(parent, position.getX(), position.getY());
+		SapphireMidpointLocator locator = position == null ? 
+						new SapphireMidpointLocator(getConfigurationManager(), parent) : 
+						new SapphireMidpointLocator(getConfigurationManager(), parent, position.getX(), position.getY());
 		parent.getLayoutManager().setConstraint(getFigure(), locator);
 	}
 

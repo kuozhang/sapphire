@@ -17,6 +17,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -25,13 +26,16 @@ import org.eclipse.draw2d.geometry.Rectangle;
 public class SapphireMidpointLocator extends ConnectionLocator {
 	
 	private Point delta = null;
+	private DiagramConfigurationManager manager;
 
-	public SapphireMidpointLocator(Connection connection) {
+	public SapphireMidpointLocator(DiagramConfigurationManager manager, Connection connection) {
 		super(connection);
+		this.manager = manager;
 	}
 
-	public SapphireMidpointLocator(Connection connection, int deltaX, int deltaY) {
+	public SapphireMidpointLocator(DiagramConfigurationManager manager, Connection connection, int deltaX, int deltaY) {
 		super(connection);
+		this.manager = manager;
 		
 		delta = new Point(deltaX, deltaY);
 	}
@@ -51,8 +55,11 @@ public class SapphireMidpointLocator extends ConnectionLocator {
 	protected Point getReferencePoint() {
 		Point midPoint = super.getReferencePoint();
 		if (delta != null) {
-			midPoint.x += delta.x;
-			midPoint.y += delta.y;
+			Point realDelta = new Point(delta.x, delta.y);
+			double zoom = manager.getDiagramEditor().getZoomLevel();
+			realDelta = realDelta.getScaled(zoom);
+			midPoint.x += realDelta.x;
+			midPoint.y += realDelta.y;
 		} else {
 			Connection conn = getConnection();
 			PointList points = conn.getPoints();

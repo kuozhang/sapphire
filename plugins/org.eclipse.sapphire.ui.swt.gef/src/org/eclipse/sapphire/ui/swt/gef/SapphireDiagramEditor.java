@@ -995,6 +995,18 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		return (FigureCanvas) viewer.getControl();
 	}
 	
+	public double getZoomLevel() {
+		ZoomManager zoomManager = getZoomManager();
+		if (zoomManager == null)
+			return 1;
+
+		/*
+		 * avoid long running calculations for large diagrams and zoom factors
+		 * below 5%
+		 */
+		return Math.max(0.05D, zoomManager.getZoom());
+	}
+
 	/**
 	 * Calculates the location in dependence from scrollbars and zoom factor.
 	 * 
