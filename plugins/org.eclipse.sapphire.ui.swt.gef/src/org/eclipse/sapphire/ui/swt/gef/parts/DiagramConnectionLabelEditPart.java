@@ -24,6 +24,7 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
@@ -113,9 +114,20 @@ public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart
 		manager.show();
 	}
 
-	public void performRequest(Request request) {
-		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT || request.getType().equals(REQ_OPEN))
+	public void performRequest(Request request) 
+	{
+		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT)
+		{
+			if (!(request instanceof DirectEditRequest))
+			{
+				// Direct edit invoked using key command
+				performDirectEdit();
+			}
+		}
+		else if (request.getType().equals(REQ_OPEN))
+		{
 			performDirectEdit();
+		}		
 	}
 	
 	private void refreshLabel() {
