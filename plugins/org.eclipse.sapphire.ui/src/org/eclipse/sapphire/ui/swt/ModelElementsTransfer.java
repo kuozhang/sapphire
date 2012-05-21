@@ -109,45 +109,48 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
         
         for( ModelProperty property : element.properties() )
         {
-            if( property instanceof ValueProperty )
+            if( ! property.isReadOnly() )
             {
-                final String value = element.read( (ValueProperty) property ).getText( false );
-                
-                if( value != null )
+                if( property instanceof ValueProperty )
                 {
-                    out.writeByte( 1 );
-                    out.writeUTF( property.getName() );
-                    out.writeUTF( value );
+                    final String value = element.read( (ValueProperty) property ).getText( false );
+                    
+                    if( value != null )
+                    {
+                        out.writeByte( 1 );
+                        out.writeUTF( property.getName() );
+                        out.writeUTF( value );
+                    }
                 }
-            }
-            else if( property instanceof ImpliedElementProperty )
-            {
-                final IModelElement child = element.read( (ImpliedElementProperty) property );
-                
-                out.writeByte( 1 );
-                out.writeUTF( property.getName() );
-                javaToNative( child, out );
-            }
-            else if( property instanceof ElementProperty )
-            {
-                final IModelElement child = element.read( (ElementProperty) property ).element();
-                
-                if( child != null )
+                else if( property instanceof ImpliedElementProperty )
                 {
+                    final IModelElement child = element.read( (ImpliedElementProperty) property );
+                    
                     out.writeByte( 1 );
                     out.writeUTF( property.getName() );
                     javaToNative( child, out );
                 }
-            }
-            else if( property instanceof ListProperty )
-            {
-                final List<IModelElement> list = element.read( (ListProperty) property );
-                
-                if( ! list.isEmpty() )
+                else if( property instanceof ElementProperty )
                 {
-                    out.writeByte( 1 );
-                    out.writeUTF( property.getName() );
-                    javaToNative( list, out );
+                    final IModelElement child = element.read( (ElementProperty) property ).element();
+                    
+                    if( child != null )
+                    {
+                        out.writeByte( 1 );
+                        out.writeUTF( property.getName() );
+                        javaToNative( child, out );
+                    }
+                }
+                else if( property instanceof ListProperty )
+                {
+                    final List<IModelElement> list = element.read( (ListProperty) property );
+                    
+                    if( ! list.isEmpty() )
+                    {
+                        out.writeByte( 1 );
+                        out.writeUTF( property.getName() );
+                        javaToNative( list, out );
+                    }
                 }
             }
         }
@@ -199,7 +202,7 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
         {
             final String propertyName = in.readUTF();
             final ModelProperty property = element.property( propertyName );
-            
+
             if( property instanceof ValueProperty )
             {
                 final String value = in.readUTF();
