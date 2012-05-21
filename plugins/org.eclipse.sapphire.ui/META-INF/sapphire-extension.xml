@@ -293,7 +293,7 @@
         <label>Print</label>
         <image>org/eclipse/sapphire/ui/actions/Print.gif</image>
         <description>Print the diagram.</description>
-        <location>after:Sapphire.Diagram.Save.As.Image</location>
+        <location>after:Sapphire.Diagram.SaveAsImage</location>
         <group>Sapphire.Diagram.Export</group>
         <context>Sapphire.Diagram.Editor</context>
         <context>Sapphire.Diagram.Header</context>
