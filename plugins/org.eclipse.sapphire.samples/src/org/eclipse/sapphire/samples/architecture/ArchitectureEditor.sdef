@@ -15,6 +15,7 @@
 
 <definition>
     <import>
+        <package>org.eclipse.sapphire.samples</package>
         <package>org.eclipse.sapphire.samples.architecture</package>
         <package>org.eclipse.sapphire.samples.architecture.internal</package>
         <package>org.eclipse.sapphire.ui.diagram.layout</package>
@@ -22,6 +23,28 @@
     <diagram-page>
         <id>DiagramPage</id>
         <layout-storage>custom</layout-storage>
+        <action>
+            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <label>Sapphire Web Site</label>
+            <tooltip>Open Sapphire Web Site (Ctrl+Alt+Shift+S)</tooltip>
+            <key-binding>CONTROL+ALT+SHIFT+s</key-binding>
+            <key-binding-behavior>propagated</key-binding-behavior>
+            <context>Sapphire.Diagram.Editor</context>
+            <context>Sapphire.Diagram.Header</context>
+            <location>after:Sapphire.Diagram.Print</location>
+            <group>Sapphire.Samples.OpenSapphireWebSite</group>
+            <image>Web.png</image>
+            <hint>
+                <name>style</name>
+                <value>image+text</value>
+            </hint>
+        </action>
+        <action-handler>
+            <action>Sapphire.Samples.OpenSapphireWebSite</action>
+            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <label>Sapphire Web Site</label>
+            <impl>OpenSapphireWebSiteActionHandler</impl>
+        </action-handler>
         <node>
             <instance-id>${ Name }</instance-id>
             <tool-palette-label>component</tool-palette-label>
@@ -123,6 +146,27 @@
         <id>DetailsPage</id>
         <page-name>details</page-name>
         <page-header-text>architecture</page-header-text>
+        <action>
+            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <label>Sapphire Web Site</label>
+            <tooltip>Open Sapphire Web Site (Ctrl+Alt+Shift+S)</tooltip>
+            <key-binding>CONTROL+ALT+SHIFT+s</key-binding>
+            <key-binding-behavior>propagated</key-binding-behavior>
+            <image>Web.png</image>
+            <context>Sapphire.EditorPage</context>
+            <group>Sapphire.Samples.OpenSapphireWebSite</group>
+            <location>after:Sapphire.Outline.Hide</location>
+            <hint>
+                <name>style</name>
+                <value>image+text</value>
+            </hint>
+        </action>
+        <action-handler>
+            <action>Sapphire.Samples.OpenSapphireWebSite</action>
+            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <label>Sapphire Web Site</label>
+            <impl>OpenSapphireWebSiteActionHandler</impl>
+        </action-handler>
         <root-node>
             <node>
                 <label>components</label>

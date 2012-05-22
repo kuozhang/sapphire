@@ -16,6 +16,7 @@
 <definition>
 
     <import>
+        <package>org.eclipse.sapphire.samples</package>
         <package>org.eclipse.sapphire.samples.ezbug</package>
     </import>
     
@@ -156,6 +157,27 @@
         <id>editor.page</id>
         <page-header-text>bug database (sapphire sample)</page-header-text>
         <initial-selection>bug reports</initial-selection>
+        <action>
+            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <label>Sapphire Web Site</label>
+            <tooltip>Open Sapphire Web Site (Ctrl+Alt+Shift+S)</tooltip>
+            <key-binding>CONTROL+ALT+SHIFT+s</key-binding>
+            <key-binding-behavior>propagated</key-binding-behavior>
+            <image>Web.png</image>
+            <context>Sapphire.EditorPage</context>
+            <group>Sapphire.Samples.OpenSapphireWebSite</group>
+            <location>after:Sapphire.Outline.Hide</location>
+            <hint>
+                <name>style</name>
+                <value>image+text</value>
+            </hint>
+        </action>
+        <action-handler>
+            <action>Sapphire.Samples.OpenSapphireWebSite</action>
+            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <label>Sapphire Web Site</label>
+            <impl>OpenSapphireWebSiteActionHandler</impl>
+        </action-handler>
         <root-node>
             <node>
                 <label>bug reports</label>

@@ -9,7 +9,7 @@
  *    Greg Amerson - initial implementation
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.ui;
+package org.eclipse.sapphire.samples;
 
 import java.net.URL;
 
@@ -24,7 +24,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  * @author <a href="mailto:gregory.amerson@liferay.com">Greg Amerson</a>
  */
 
-public final class OpenHomepageActionHandler extends SapphireActionHandler
+public final class OpenSapphireWebSiteActionHandler extends SapphireActionHandler
 {
     @Override
     protected Object run(SapphireRenderingContext context) 

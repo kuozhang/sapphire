@@ -26,10 +26,7 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPag
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ContactDetailsJumpHandler
-
-    extends SapphireJumpActionHandler
-    
+public final class ContactDetailsJumpHandler extends SapphireJumpActionHandler
 {
     @Override
     protected void initDependencies( final List<String> dependencies )
@@ -80,7 +77,7 @@ public final class ContactDetailsJumpHandler
             if( contact != null )
             {
                 final MasterDetailsEditorPage contactsFormPage = (MasterDetailsEditorPage) editor.getPage( "Contacts" );
-                final MasterDetailsContentOutline content = contactsFormPage.getContentTree();
+                final MasterDetailsContentOutline content = contactsFormPage.outline();
                 final MasterDetailsContentNode contactNode = content.getRoot().findNodeByModelElement( contact );
                 
                 if( contactNode != null )

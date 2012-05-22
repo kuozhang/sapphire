@@ -104,6 +104,7 @@ import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
+import org.eclipse.sapphire.ui.swt.ModelElementsTransfer;
 import org.eclipse.sapphire.ui.swt.internal.PopUpListFieldCellEditorPresentation;
 import org.eclipse.sapphire.ui.swt.internal.PopUpListFieldStyle;
 import org.eclipse.sapphire.ui.swt.renderer.HyperlinkTable;
@@ -114,6 +115,14 @@ import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
 import org.eclipse.sapphire.util.MutableReference;
 import org.eclipse.sapphire.util.ReadOnlyListFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSource;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.DragSourceListener;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetAdapter;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.MouseEvent;
@@ -123,6 +132,7 @@ import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -773,6 +783,129 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 
                 moveUpAction.attach( moveActionHandlerListener );
                 moveDownAction.attach( moveActionHandlerListener );
+                
+                final ModelElementsTransfer transfer = new ModelElementsTransfer( getModelElement().type().getModelElementClass().getClassLoader() );
+                final Transfer[] transfers = new Transfer[] { transfer };
+                
+                final DragSource dragSource = new DragSource( this.table, DND.DROP_MOVE );
+                dragSource.setTransfer( transfers );
+
+                final List<IModelElement> dragElements = new ArrayList<IModelElement>();
+                
+                dragSource.addDragListener
+                (
+                    new DragSourceListener()
+                    {
+                        public void dragStart( final DragSourceEvent event )
+                        {
+                            if( DefaultListPropertyEditorRenderer.this.tableViewer.getComparator() == null )
+                            {
+                                dragElements.addAll( getSelectedElements() );
+                                event.doit = true;
+                            }
+                            else
+                            {
+                                event.doit = false;
+                            }
+                        }
+                        
+                        public void dragSetData( final DragSourceEvent event )
+                        {
+                            event.data = dragElements;
+                        }
+                        
+                        public void dragFinished( final DragSourceEvent event )
+                        {
+                            dragElements.clear();
+                        }
+                    }
+                );
+                
+                final DropTarget target = new DropTarget( this.table, DND.DROP_MOVE );
+                target.setTransfer( transfers );
+                
+                target.addDropListener
+                (
+                    new DropTargetAdapter()
+                    {
+                        public void dragOver( final DropTargetEvent event )
+                        {
+                            if( event.item != null )
+                            {
+                                final TableItem dragOverItem = (TableItem) event.item;
+
+                                final Point pt = dragOverItem.getDisplay().map( null, DefaultListPropertyEditorRenderer.this.table, event.x, event.y );
+                                final Rectangle bounds = dragOverItem.getBounds();
+                                
+                                if( pt.y < bounds.y + bounds.height / 2 )
+                                {
+                                    event.feedback = DND.FEEDBACK_INSERT_BEFORE;
+                                }
+                                else
+                                {
+                                    event.feedback = DND.FEEDBACK_INSERT_AFTER;
+                                }
+                            }
+                            
+                            event.feedback |= DND.FEEDBACK_SCROLL;
+                        }
+
+                        @SuppressWarnings( "unchecked" )
+                        
+                        public void drop( final DropTargetEvent event ) 
+                        {
+                            if( event.data == null )
+                            {
+                                event.detail = DND.DROP_NONE;
+                                return;
+                            }
+                            
+                            final List<IModelElement> droppedElements = (List<IModelElement>) event.data;
+                            final TableItem dropTargetItem = (TableItem) event.item;
+                            final TableRow dropTargetRow = (TableRow) dropTargetItem.getData();
+                            final IModelElement dropTargetElement = dropTargetRow.element();
+                            
+                            final Point pt = DefaultListPropertyEditorRenderer.this.table.getDisplay().map( null, DefaultListPropertyEditorRenderer.this.table, event.x, event.y );
+                            final Rectangle bounds = dropTargetItem.getBounds();
+                            
+                            final ModelElementList<IModelElement> list = getList();
+                            
+                            int position = getList().indexOf( dropTargetElement );
+                            
+                            if( pt.y >= bounds.y + bounds.height / 2 ) 
+                            {
+                                position++;
+                            }
+                            
+                            for( IModelElement dragElement : dragElements )
+                            {
+                                final ModelElementList<IModelElement> dragElementContainer = (ModelElementList<IModelElement>) dragElement.parent();
+                                
+                                if( dragElementContainer == list && dragElementContainer.indexOf( dragElement ) < position )
+                                {
+                                    position--;
+                                }
+                                
+                                dragElementContainer.remove( dragElement );
+                            }
+        
+                            final List<IModelElement> newSelection = new ArrayList<IModelElement>();
+                            
+                            for( IModelElement droppedElement : droppedElements )
+                            {
+                                final IModelElement insertedElement = list.insert( droppedElement.type(), position );
+                                insertedElement.copy( droppedElement );
+                                
+                                newSelection.add( insertedElement );
+                                
+                                position++;
+                            }
+                            
+                            DefaultListPropertyEditorRenderer.this.tableViewer.refresh();
+                            setSelectedElements( newSelection );
+                        }
+                    }
+                );
             }
             
             final ToolBar toolbar = new ToolBar( mainComposite, SWT.FLAT | SWT.VERTICAL );

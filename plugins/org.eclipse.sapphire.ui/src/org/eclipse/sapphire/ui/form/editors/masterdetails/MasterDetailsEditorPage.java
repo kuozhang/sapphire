@@ -63,9 +63,10 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.ISapphireEditorActionContributor;
-import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -246,7 +247,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         return getPartName();
     }
 
-    public MasterDetailsContentOutline getContentTree()
+    public MasterDetailsContentOutline outline()
     {
         return getPart().getContentOutline();
     }
@@ -975,8 +976,9 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 public void dragStart( final DragSourceEvent event )
                 {
                     final TreeItem[] selection = tree.getSelection();
+                    final String filter = outline().getFilterText();
                     
-                    if( draggable( selection ) )
+                    if( ( filter == null || filter.length() == 0 ) && draggable( selection ) )
                     {
                         event.doit = true;
                         
@@ -1016,17 +1018,8 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 {
                     final IModelElement element = node.getModelElement();
                     
-                    if( element.parent() instanceof ModelElementList<?> )
+                    if( element.parent() instanceof ModelElementList<?> && node.controls( element ) )
                     {
-                        final ISapphirePart parentPart = node.getParentPart();
-                        
-                        if( parentPart != null && parentPart instanceof MasterDetailsContentNode )
-                        {
-                            final MasterDetailsContentNode parentNode = (MasterDetailsContentNode) parentPart;
-                            
-                            return ( element != parentNode.getLocalModelElement() );
-                        }
-                        
                         return true;
                     }
                     
@@ -1054,23 +1047,63 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             {
                 public void dragOver( final DropTargetEvent event )
                 {
-                    event.feedback = DND.FEEDBACK_SCROLL;
-                    
                     if( event.item != null )
                     {
-                        final TreeItem item = (TreeItem) event.item;
-                        final Point pt = item.getDisplay().map( null, tree, event.x, event.y );
-                        final Rectangle bounds = item.getBounds();
+                        final TreeItem dragOverItem = (TreeItem) event.item;
+                        final MasterDetailsContentNode dragOverNode = (MasterDetailsContentNode) dragOverItem.getData();
+                        final MasterDetailsContentNode parentNode = dragOverNode.getParentNode();
+                        final List<MasterDetailsContentNode> siblingNodes = parentNode.getChildNodes();
+
+                        final Point pt = dragOverItem.getDisplay().map( null, tree, event.x, event.y );
+                        final Rectangle bounds = dragOverItem.getBounds();
                         
+                        MasterDetailsContentNode precedingNode = null;
+                        MasterDetailsContentNode trailingNode = null;
+
                         if( pt.y < bounds.y + bounds.height / 2 )
                         {
-                            event.feedback |= DND.FEEDBACK_INSERT_BEFORE;
+                            precedingNode = findPrecedingItem( siblingNodes, dragOverNode );
+                            trailingNode = dragOverNode;
+                            
+                            event.feedback = DND.FEEDBACK_INSERT_BEFORE;
                         }
                         else
                         {
-                            event.feedback |= DND.FEEDBACK_INSERT_AFTER;
+                            precedingNode = dragOverNode;
+                            trailingNode = findTrailingItem( siblingNodes, dragOverNode );
+
+                            event.feedback = DND.FEEDBACK_INSERT_AFTER;
+                        }
+                        
+                        boolean ok = false;
+                        
+                        if( precedingNode != null )
+                        {
+                            final IModelElement precedingElement = precedingNode.getModelElement();
+                            
+                            if( precedingElement.parent() instanceof ModelElementList<?> && precedingNode.controls( precedingElement ) )
+                            {
+                                ok = true;
+                            }
+                        }
+                        
+                        if( ! ok && trailingNode != null )
+                        {
+                            final IModelElement trailingElement = trailingNode.getModelElement();
+                            
+                            if( trailingElement.parent() instanceof ModelElementList<?> && trailingNode.controls( trailingElement ) )
+                            {
+                                ok = true;
+                            }
+                        }
+                        
+                        if( ! ok )
+                        {
+                            event.feedback = DND.FEEDBACK_NONE;
                         }
                     }
+                    
+                    event.feedback |= DND.FEEDBACK_SCROLL;
                 }
 
                 @SuppressWarnings( "unchecked" )
@@ -1083,6 +1116,9 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                         return;
                     }
                     
+                    // Determine where something was dropped.
+                    
+                    final List<IModelElement> droppedElements = (List<IModelElement>) event.data;
                     final TreeItem dropTargetItem = (TreeItem) event.item;
                     final MasterDetailsContentNode dropTargetNode = (MasterDetailsContentNode) dropTargetItem.getData();
                     final MasterDetailsContentNode parentNode = dropTargetNode.getParentNode();
@@ -1105,22 +1141,89 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                         trailingNode = findTrailingItem( siblingNodes, dropTargetNode );
                     }
                     
-                    final IModelElement precedingElement = precedingNode.getModelElement();
-                    final ModelElementList<IModelElement> list = (ModelElementList<IModelElement>) precedingElement.parent();
+                    // Determine whether the drop was valid from model standpoint and figure out
+                    // where in the model the dropped elements are to be inserted.
+                    
+                    ModelElementList<IModelElement> list = null;
+                    int position = -1;
+                    
+                    if( precedingNode != null )
+                    {
+                        final IModelElement precedingElement = precedingNode.getModelElement();
+                        
+                        if( precedingElement.parent() instanceof ModelElementList<?> && precedingNode.controls( precedingElement ) )
+                        {
+                            list = (ModelElementList<IModelElement>) precedingElement.parent();
+                            
+                            final Set<ModelElementType> possibleListElementTypes = list.getParentProperty().service( PossibleTypesService.class ).types();
+                            
+                            for( IModelElement droppedElement : droppedElements )
+                            {
+                                if( ! possibleListElementTypes.contains( droppedElement.type() ) )
+                                {
+                                    list = null;
+                                    break;
+                                }
+                            }
+                            
+                            if( list != null )
+                            {
+                                position = list.indexOf( precedingElement ) + 1;
+                            }
+                        }
+                    }
+                    
+                    if( list == null && trailingNode != null )
+                    {
+                        final IModelElement trailingElement = trailingNode.getModelElement();
+                        
+                        if( trailingElement.parent() instanceof ModelElementList<?> && trailingNode.controls( trailingElement ) )
+                        {
+                            list = (ModelElementList<IModelElement>) trailingElement.parent();
+                            
+                            final Set<ModelElementType> possibleListElementTypes = list.getParentProperty().service( PossibleTypesService.class ).types();
+                            
+                            for( IModelElement droppedElement : droppedElements )
+                            {
+                                if( ! possibleListElementTypes.contains( droppedElement.type() ) )
+                                {
+                                    list = null;
+                                    break;
+                                }
+                            }
+                            
+                            if( list != null )
+                            {
+                                position = list.indexOf( trailingElement );
+                            }
+                        }
+                    }
+                    
+                    if( list == null )
+                    {
+                        event.detail = DND.DROP_NONE;
+                        return;
+                    }
+                    
+                    // Perform the removal and insertion into the new location.
                     
                     try
                     {
                         outline.listeners().suspend( MasterDetailsContentOutline.SelectionChangedEvent.class );
                     
-                        for( IModelElement element : dragElements )
+                        for( IModelElement dragElement : dragElements )
                         {
-                            list.remove( element );
+                            final ModelElementList<IModelElement> dragElementContainer = (ModelElementList<IModelElement>) dragElement.parent();
+                            
+                            if( dragElementContainer == list && dragElementContainer.indexOf( dragElement ) < position )
+                            {
+                                position--;
+                            }
+                            
+                            dragElementContainer.remove( dragElement );
                         }
     
-                        final List<IModelElement> droppedElements = (List<IModelElement>) event.data;
                         final List<MasterDetailsContentNode> newSelection = new ArrayList<MasterDetailsContentNode>();
-                        
-                        int position = list.indexOf( precedingElement ) + 1;
                         
                         for( IModelElement droppedElement : droppedElements )
                         {
@@ -1182,7 +1285,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
     {
         super.dispose();
         
-        getContentTree().dispose();
+        outline().dispose();
         
         if( this.mainSection != null ) 
         {
@@ -1284,7 +1387,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             this.outerComposite.setLayout( glayout( 1, 5, 5 ) );
             this.outerComposite.setBackground( Display.getCurrent().getSystemColor( SWT.COLOR_WHITE ) );
             
-            this.filteredTree = createContentOutline( this.outerComposite, getContentTree(), false );
+            this.filteredTree = createContentOutline( this.outerComposite, outline(), false );
             this.filteredTree.setLayoutData( gdfill() );
             
             this.treeViewer = this.filteredTree.getViewer();
@@ -1477,7 +1580,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 SapphireUiFrameworkPlugin.log( e );
             }
             
-            this.masterSection.handleSelectionChangedEvent( getContentTree().getSelectedNodes() );
+            this.masterSection.handleSelectionChangedEvent( outline().getSelectedNodes() );
             
             setDetailsMaximized( isDetailsMaximized() );
         }
@@ -1601,7 +1704,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             
             this.managedForm = managedForm;
             
-            final MasterDetailsContentOutline contentTree = getContentTree();
+            final MasterDetailsContentOutline contentTree = outline();
             
             final FilteredTree filteredTree = createContentOutline( client, contentTree, true );
             this.treeViewer = filteredTree.getViewer();

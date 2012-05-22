@@ -757,6 +757,23 @@ public final class MasterDetailsContentNode
         throw new UnsupportedOperationException();
     }
     
+    public boolean controls( final IModelElement element )
+    {
+        if( element == getModelElement() )
+        {
+            final ISapphirePart parentPart = getParentPart();
+            
+            if( parentPart != null && parentPart instanceof MasterDetailsContentNode )
+            {
+                final MasterDetailsContentNode parentNode = (MasterDetailsContentNode) parentPart;
+                
+                return ( element != parentNode.getLocalModelElement() );
+            }
+        }
+        
+        return false;
+    }
+    
     private abstract class NodeFactory
     {
         private final IMasterDetailsContentNodeFactoryDef definition;

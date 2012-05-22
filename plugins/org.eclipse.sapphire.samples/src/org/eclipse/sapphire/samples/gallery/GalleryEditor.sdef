@@ -42,12 +42,32 @@
     <editor-page>
         <id>main</id>
         <page-header-text>sapphire gallery</page-header-text>
-        <page-header-image>SapphireFile.png</page-header-image>
         <initial-selection>simple values</initial-selection>
         <documentation>
             <title>Sapphire Gallery</title>
             <content>content help for Sapphire Gallery</content>
         </documentation>
+        <action>
+            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <label>Sapphire Web Site</label>
+            <tooltip>Open Sapphire Web Site (Ctrl+Alt+Shift+S)</tooltip>
+            <key-binding>CONTROL+ALT+SHIFT+s</key-binding>
+            <key-binding-behavior>propagated</key-binding-behavior>
+            <image>Web.png</image>
+            <context>Sapphire.EditorPage</context>
+            <group>Sapphire.Samples.OpenSapphireWebSite</group>
+            <location>after:Sapphire.Outline.Hide</location>
+            <hint>
+                <name>style</name>
+                <value>image+text</value>
+            </hint>
+        </action>
+        <action-handler>
+            <action>Sapphire.Samples.OpenSapphireWebSite</action>
+            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <label>Sapphire Web Site</label>
+            <impl>OpenSapphireWebSiteActionHandler</impl>
+        </action-handler>
         <root-node>
             <node>
                 <label>value properties</label>

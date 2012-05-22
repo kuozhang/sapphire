@@ -38,7 +38,8 @@
       default="true"
       filenames="contacts.xml"
       id="org.eclipse.sapphire.samples.contacts.ui.ContactsDatabaseEditor"
-      name="Contacts Database Editor"/>
+      name="Contacts Database Editor"
+      icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
   </extension>
   
   <!-- 
@@ -61,7 +62,8 @@
       default="true"
       filenames="calendar.xml"
       id="org.eclipse.sapphire.samples.calendar.ui.CalendarEditor"
-      name="Calendar Editor"/>
+      name="Calendar Editor"
+      icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
   </extension>
 
   <!-- 
@@ -76,7 +78,8 @@
       default="true"
       filenames="sapphire-gallery.xml"
       id="org.eclipse.sapphire.samples.gallery.ui.SapphireGallerySampleEditor"
-      name="Sapphire Gallery Sample Editor"/>
+      name="Sapphire Gallery Sample Editor"
+      icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
   </extension>
 
   <!-- 
@@ -142,7 +145,8 @@
       default="true"
       filenames="bugs.xml"
       id="org.eclipse.sapphire.samples.ezbug.ui.BugDatabaseEditor"
-      name="Bug Database Editor (Sapphire Sample)"/>
+      name="Bug Database Editor (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
   </extension>
 
   <!-- 
@@ -157,16 +161,8 @@
       default="true"
       filenames="map.xml"
       id="org.eclipse.sapphire.samples.map.ui.MapEditor"
-      name="Map Editor"/>
-  </extension>
-
-  <extension point="org.eclipse.ui.editors">
-    <editor
-      class="org.eclipse.sapphire.samples.map.ui.Map2Editor"
-      default="true"
-      filenames="map2.xml"
-      id="org.eclipse.sapphire.samples.map.ui.Map2Editor"
-      name="Map2 Editor"/>
+      name="Map Editor"
+      icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
   </extension>
 
   <extension point="org.eclipse.ui.editors">
@@ -175,16 +171,8 @@
       default="true"
       filenames="architecture.xml"
       id="org.eclipse.sapphire.samples.architecture.ui.ArchitectureEditor"
-      name="Architecture Editor"/>
-  </extension>
-
-  <extension point="org.eclipse.ui.editors">
-    <editor
-      class="org.eclipse.sapphire.samples.architecture.ui.Architecture2Editor"
-      default="true"
-      filenames="architecture2.xml"
-      id="org.eclipse.sapphire.samples.architecture.ui.Architecture2Editor"
-      name="Architecture2 Editor"/>
+      name="Architecture Editor"
+      icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
   </extension>
 
   <!-- 
@@ -199,7 +187,8 @@
       default="true"
       filenames="*.po"
       id="org.eclipse.sapphire.samples.po.PurchaseOrderEditor"
-      name="Purchase Order Editor"/>
+      name="Purchase Order Editor"
+      icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
   </extension>
   
   <extension point="org.eclipse.core.runtime.contentTypes">

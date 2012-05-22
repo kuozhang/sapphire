@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.def.internal;
 
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.def.ActionDef;
@@ -28,16 +27,13 @@ import org.eclipse.sapphire.ui.def.PropertyEditorDef;
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-public final class SapphireHintValuePossibleValuesService
-
-    extends PossibleValuesService
-    
+public final class SapphireHintValuePossibleValuesService extends PossibleValuesService
 {
     @Override
     protected void fillPossibleValues( final SortedSet<String> values )
     {
         final ISapphireHint element = context( ISapphireHint.class );
-        final IModelParticle partdef = element.parent().parent();
+        final PartDef partdef = element.nearest( PartDef.class );
         final String hint = element.getName().getText();
         
         if( hint != null )

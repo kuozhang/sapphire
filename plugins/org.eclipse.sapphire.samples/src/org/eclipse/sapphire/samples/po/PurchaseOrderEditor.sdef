@@ -18,6 +18,26 @@
         <id>GeneralPage</id>
         <page-name>general</page-name>
         <page-header-text>purchase order</page-header-text>
+        <action>
+            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <label>Sapphire Web Site</label>
+            <tooltip>Open Sapphire Web Site (Ctrl+Alt+Shift+S)</tooltip>
+            <key-binding>CONTROL+ALT+SHIFT+s</key-binding>
+            <key-binding-behavior>propagated</key-binding-behavior>
+            <image>Web.png</image>
+            <context>Sapphire.EditorPage</context>
+            <group>Sapphire.Samples.OpenSapphireWebSite</group>
+            <hint>
+                <name>style</name>
+                <value>image+text</value>
+            </hint>
+        </action>
+        <action-handler>
+            <action>Sapphire.Samples.OpenSapphireWebSite</action>
+            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <label>Sapphire Web Site</label>
+            <impl>OpenSapphireWebSiteActionHandler</impl>
+        </action-handler>
         <content>
             <split-form>
                 <orientation>horizontal</orientation>
@@ -83,6 +103,27 @@
         <id>EntriesPage</id>
         <page-name>entries</page-name>
         <page-header-text>purchase order</page-header-text>
+        <action>
+            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <label>Sapphire Web Site</label>
+            <tooltip>Open Sapphire Web Site (Ctrl+Alt+Shift+S)</tooltip>
+            <key-binding>CONTROL+ALT+SHIFT+s</key-binding>
+            <key-binding-behavior>propagated</key-binding-behavior>
+            <image>Web.png</image>
+            <context>Sapphire.EditorPage</context>
+            <group>Sapphire.Samples.OpenSapphireWebSite</group>
+            <location>after:Sapphire.Outline.Hide</location>
+            <hint>
+                <name>style</name>
+                <value>image+text</value>
+            </hint>
+        </action>
+        <action-handler>
+            <action>Sapphire.Samples.OpenSapphireWebSite</action>
+            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <label>Sapphire Web Site</label>
+            <impl>OpenSapphireWebSiteActionHandler</impl>
+        </action-handler>
         <content>
             <split-form>
                 <orientation>horizontal</orientation>
@@ -130,4 +171,7 @@
             </split-form>
         </content>
     </form-editor-page>
+    <import>
+        <package>org.eclipse.sapphire.samples</package>
+    </import>
 </definition>
