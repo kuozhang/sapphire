@@ -13,24 +13,18 @@ package org.eclipse.sapphire.ui.diagram.actions;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SourceEditorService;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
 public class DiagramShowInSourceActionHandler extends
-        SapphireDiagramActionHandler 
+        SapphireActionHandler 
 {
     
-    @Override
-    public boolean canExecute(Object obj) 
-    {
-        return true;
-    }
-
     @Override
     protected Object run(SapphireRenderingContext context) 
     {

@@ -16,8 +16,8 @@ import java.net.URL;
 
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.samples.map.IDestination;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -31,7 +31,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class DestinationShowInWikipediaActionHandler extends SapphireDiagramActionHandler
+public final class DestinationShowInWikipediaActionHandler extends SapphireActionHandler
 {
     @Override
     protected Object run( final SapphireRenderingContext context )
@@ -64,10 +64,4 @@ public final class DestinationShowInWikipediaActionHandler extends SapphireDiagr
         return null;
     }
 
-    @Override
-    public boolean canExecute( final Object obj )
-    {
-        return true;
-    }
-    
 }

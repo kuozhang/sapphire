@@ -15,9 +15,9 @@ package org.eclipse.sapphire.ui.diagram.actions;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
@@ -26,7 +26,7 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class DiagramNodeAddActionHandler extends SapphireDiagramActionHandler 
+public class DiagramNodeAddActionHandler extends SapphireActionHandler 
 {
 	public static final String ID_BASE = "Sapphire.Add.";
 	private DiagramNodeTemplate nodeTemplate;
@@ -61,12 +61,6 @@ public class DiagramNodeAddActionHandler extends SapphireDiagramActionHandler
     	return diagramPart.isNodeTemplateVisible(this.nodeTemplate);
     }
     
-	@Override
-	public boolean canExecute(Object obj) 
-	{
-		return isEnabled();
-	}
-
 	@Override
 	protected Object run(SapphireRenderingContext context) 
 	{

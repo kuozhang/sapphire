@@ -53,6 +53,7 @@ to 0.5 release. Only changes from the previous release are covered.</p>
   <ol type="A">
     <li><a href="#SapphireDiagramEditor">SapphireDiagramEditor</a></li>
     <li><a href="#DiagramImage">Diagram Image</a></li>
+    <li><a href="#SapphireDiagramActionHandler">SapphireDiagramActionHandler, Drag and Drop Service</a></li>
   </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
 </ol>
@@ -602,7 +603,48 @@ Images are now referenced at the point of use, rather than defined separately an
   </tr>
 </table>
 
+<h2><a name="SapphireDiagramActionHandler">SapphireDiagramActionHandler, Drag and Drop Service</a></h2>
 
+<p>SapphireDiagramActionHandler class was introduced to support Drag and Drop on Diagram canvas. 
+Its canExecute(Object obj) method needs to be implemented by the "Sapphire.Drop" action handler to return whether
+it'd accept the dropped object. But for other diagram action handlers, this method is not really needed. Callers
+can use SapphireActionHandler's isEnabled() method instead.</p>
+
+<p>We have redesigned how Drag and Drop works. Drag and Drop is now supported through Sapphire's service mechanism:
+<pre class="source-code"><code>public abstract class DragAndDropService extends Service 
+{
+    public abstract boolean canDrop(Object obj);
+    
+    public abstract Object handleDrop(DropContext context);
+    
+    public static class DropContext
+    {
+        private final Object droppedObj;
+        private final Point dropPosition;
+        
+        public DropContext(Object droppedObj, Point dropPosition)
+        {
+            this.droppedObj = droppedObj;
+            this.dropPosition = new Point(dropPosition);
+        }
+        
+        public Object getDroppedObject()
+        {
+            return this.droppedObj;
+        }
+        
+        public Point getDropPosition()
+        {
+            return this.dropPosition;
+        }
+    }
+}
+</code></pre>
+</p>
+
+<p>As a result, SapphireDiagramActionHandler class has been removed.</p>
+<p>Map sample's MapDropService is a good example of how this service should be implemented.
+MapEditor.sdef has been modified to declare it as a service on the diagram page part. </p> 
 <h2><a name="Miscellaneous">Miscellaneous</a></h2>
 
 <table>

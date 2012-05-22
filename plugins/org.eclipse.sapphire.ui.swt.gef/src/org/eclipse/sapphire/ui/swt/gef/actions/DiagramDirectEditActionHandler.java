@@ -14,8 +14,8 @@ package org.eclipse.sapphire.ui.swt.gef.actions;
 import java.util.List;
 
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -27,14 +27,8 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class DiagramDirectEditActionHandler extends SapphireDiagramActionHandler
+public class DiagramDirectEditActionHandler extends SapphireActionHandler
 {
-
-	@Override
-	public boolean canExecute(Object obj) 
-	{
-		return true;
-	}
 
 	@Override
 	protected Object run(SapphireRenderingContext context) 

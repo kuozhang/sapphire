@@ -6,8 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Shenxue Zhou - [348673] Problem with drop action handler API
+ *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.map.internal;
@@ -24,30 +23,27 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.samples.map.IDestination;
 import org.eclipse.sapphire.samples.map.IMap;
-import org.eclipse.sapphire.ui.Point;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
+import org.eclipse.sapphire.ui.DragAndDropService;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 
 /**
- * Action handler for Sapphire.Drop action for the map editor. The implementation reads city names
- * from the dropped text file (one line per city name) and adds these cities to the map. 
- * 
- * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public final class MapDropActionHandler extends SapphireDiagramActionHandler
+public class MapDropService extends DragAndDropService 
 {
-    @Override
-    protected Object run( final SapphireRenderingContext context )
-    {
-        DiagramRenderingContext diagramCtx = (DiagramRenderingContext)context;
-        SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)diagramCtx.getPart();
-        
-        Object obj = diagramCtx.getObject();
-        
+
+	@Override
+	public boolean canDrop(Object obj) 
+	{
+		return true;
+	}
+
+	@Override
+	public Object handleDrop(DropContext context) 
+	{
+		Object obj = context.getDroppedObject();
         if( obj instanceof IFile )
         {
             final List<String> cities = new ArrayList<String>();
@@ -94,11 +90,11 @@ public final class MapDropActionHandler extends SapphireDiagramActionHandler
             
             if( ! cities.isEmpty() )
             {
-                final IMap map = (IMap) getModelElement();
-                final Point currentMousePos = diagramCtx.getCurrentMouseLocation();
+            	SapphireDiagramEditorPagePart diagramPart = context( SapphireDiagramEditorPagePart.class );
+            	final IMap map = (IMap)diagramPart.getLocalModelElement();
                 List<DiagramNodePart> cityParts = new ArrayList<DiagramNodePart>();
-                int x = currentMousePos.getX();
-                int y = currentMousePos.getY();
+                int x = context.getDropPosition().getX();
+                int y = context.getDropPosition().getY();
                 for (String cityName : cities)
                 {
                     final IDestination city = map.getDestinations().insert();
@@ -116,12 +112,6 @@ public final class MapDropActionHandler extends SapphireDiagramActionHandler
             }
         }
         return null;
-    }
+	}
 
-    @Override
-    public boolean canExecute( final Object obj )
-    {
-        return true;
-    }
-    
 }

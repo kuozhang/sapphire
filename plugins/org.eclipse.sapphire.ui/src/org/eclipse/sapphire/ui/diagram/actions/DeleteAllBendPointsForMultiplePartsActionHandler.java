@@ -13,8 +13,8 @@
 package org.eclipse.sapphire.ui.diagram.actions;
 
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
@@ -23,13 +23,8 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class DeleteAllBendPointsForMultiplePartsActionHandler extends SapphireDiagramActionHandler 
+public class DeleteAllBendPointsForMultiplePartsActionHandler extends SapphireActionHandler 
 {
-    @Override
-    public boolean canExecute(Object obj) 
-    {
-        return isEnabled();
-    }
     
     @Override
     public boolean isEnabled()

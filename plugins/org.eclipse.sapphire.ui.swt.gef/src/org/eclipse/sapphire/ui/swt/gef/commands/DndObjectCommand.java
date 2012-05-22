@@ -20,12 +20,9 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.sapphire.ui.SapphireAction;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
-import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
-import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
+import org.eclipse.sapphire.ui.DragAndDropService;
+import org.eclipse.sapphire.ui.DragAndDropService.DropContext;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
-import org.eclipse.sapphire.ui.swt.gef.parts.IConfigurationManagerHolder;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -33,21 +30,18 @@ import org.eclipse.sapphire.ui.swt.gef.parts.IConfigurationManagerHolder;
 
 public class DndObjectCommand extends Command 
 {
-	private static final String SAPPHIRE_DROP_ACTION = "Sapphire.Drop";
 	private DiagramModel diagramModel;
-	private SapphireDiagramActionHandler dropHandler;
+	private DragAndDropService dndService;
 	private List<Object> droppedObjs;
 	private Point location;
-	private IConfigurationManagerHolder configHolder;
 	
-	public DndObjectCommand(DiagramModel diagramModel, IConfigurationManagerHolder configHolder, 
-			ISelection sel, Point location)
+	public DndObjectCommand(DiagramModel diagramModel, ISelection sel, Point location)
 	{
 		this.diagramModel = diagramModel;
+		this.dndService = this.diagramModel.getSapphirePart().service(DragAndDropService.class);
 		this.location = location;
-		this.configHolder = configHolder;
 		
-		droppedObjs = new ArrayList<Object>();
+		this.droppedObjs = new ArrayList<Object>();
 		
 		IStructuredSelection s = (IStructuredSelection) sel;
 		if (s == null) 
@@ -58,30 +52,25 @@ public class DndObjectCommand extends Command
 		for (Iterator<?> iter = s.iterator(); iter.hasNext();) 
 		{
 			Object next = iter.next();
-			droppedObjs.add(next);
+			this.droppedObjs.add(next);
 		}
 	}
 	
 	@Override
 	public boolean canExecute() 
 	{
-		SapphireAction dropAction = this.diagramModel.getSapphirePart().getAction(SAPPHIRE_DROP_ACTION);
-		this.dropHandler = (SapphireDiagramActionHandler)dropAction.getFirstActiveHandler();
-		boolean canDrop = true;
-		if (this.dropHandler != null)
+		if (this.dndService == null)
 		{
-			for (Object droppedObj : this.droppedObjs)
-			{
-				if (!dropHandler.canExecute(droppedObj))
-				{
-					canDrop = false;
-					break;
-				}
-			}
+			return false;
 		}
-		else
+		boolean canDrop = true;
+		for (Object droppedObj : this.droppedObjs)
 		{
-			canDrop = false;
+			if (!this.dndService.canDrop(droppedObj))
+			{
+				canDrop = false;
+				break;
+			}
 		}
 		return canDrop;
 	}
@@ -91,15 +80,12 @@ public class DndObjectCommand extends Command
 	{
 		int currX = this.location.x;
 		int currY = this.location.y;
-		DiagramConfigurationManager configManager = this.configHolder.getConfigurationManager();
-		DiagramRenderingContext diagramCtx = configManager.getDiagramRenderingContextCache().get(this.diagramModel.getSapphirePart());
 		for (Object droppedObj : this.droppedObjs)
 		{
-			diagramCtx.setCurrentMouseLocation(currX, currY);
+			DropContext context = new DropContext(droppedObj, new org.eclipse.sapphire.ui.Point(currX, currY));
+			this.dndService.handleDrop(context);
 			currX += 20;
 			currY += 20;
-			diagramCtx.setObject(droppedObj);
-			dropHandler.execute(diagramCtx);			
 		}
 	}
 }

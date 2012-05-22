@@ -22,8 +22,8 @@ import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.swt.SWT;
@@ -41,14 +41,8 @@ import org.eclipse.ui.IFileEditorInput;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SaveAsImageDiagramActionHandler extends SapphireDiagramActionHandler
+public final class SaveAsImageDiagramActionHandler extends SapphireActionHandler
 {
-    @Override
-    public boolean canExecute( final Object obj )
-    {
-        return true;
-    }
-
     @Override
     protected Object run( final SapphireRenderingContext context )
     {

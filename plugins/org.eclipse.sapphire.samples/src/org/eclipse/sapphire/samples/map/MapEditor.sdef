@@ -92,11 +92,6 @@
             </endpoint2>
             <instance-id>${FromDestination}-${ToDestination}</instance-id>
         </connection-binding>
-        <action-handler>
-            <action>Sapphire.Drop</action>
-            <id>Sapphire.Samples.Map.Drop</id>
-            <impl>MapDropActionHandler</impl>
-        </action-handler>
         <action>
             <id>Sapphire.Samples.OpenSapphireWebSite</id>
             <label>Sapphire Web Site</label>
@@ -133,7 +128,9 @@
             <id>Sapphire.Samples.Map.ShowStatistics</id>
             <impl>ShowStatisticsActionHandler</impl>
         </action-handler>
-                
+        <service>
+            <implementation>MapDropService</implementation>
+        </service>                
     </diagram-page>
     
     <editor-page>

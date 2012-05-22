@@ -15,9 +15,9 @@ package org.eclipse.sapphire.ui.diagram.actions;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart.ZoomLevelEvent;
 
@@ -26,13 +26,8 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart.Zoom
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ZoomInDiagramActionHandler extends SapphireDiagramActionHandler
+public final class ZoomInDiagramActionHandler extends SapphireActionHandler
 {
-    @Override
-    public boolean canExecute( Object obj )
-    {
-        return true;
-    }
     
     @Override
     public void init( SapphireAction action, ActionHandlerDef def )

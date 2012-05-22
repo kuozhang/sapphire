@@ -21,4 +21,27 @@ public abstract class DragAndDropService extends Service
 {
 	public abstract boolean canDrop(Object obj);
 	
+	public abstract Object handleDrop(DropContext context);
+	
+	public static class DropContext
+	{
+		private final Object droppedObj;
+		private final Point dropPosition;
+		
+		public DropContext(Object droppedObj, Point dropPosition)
+		{
+			this.droppedObj = droppedObj;
+			this.dropPosition = new Point(dropPosition);
+		}
+		
+		public Object getDroppedObject()
+		{
+			return this.droppedObj;
+		}
+		
+		public Point getDropPosition()
+		{
+			return this.dropPosition;
+		}
+	}
 }

@@ -100,7 +100,7 @@ public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy
 			// DND from project explorer
 			ISelection selection = (ISelection)request.getNewObject();
 			DiagramModel diagramModel = (DiagramModel)getHost().getModel();
-			cmd = new DndObjectCommand(diagramModel, host, selection, pt);
+			cmd = new DndObjectCommand(diagramModel, selection, pt);
 		}
 		return cmd;
 	}

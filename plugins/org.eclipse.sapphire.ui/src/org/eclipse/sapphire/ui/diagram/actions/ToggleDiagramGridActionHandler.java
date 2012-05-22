@@ -12,17 +12,17 @@
 package org.eclipse.sapphire.ui.diagram.actions;
 
 import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class ToggleDiagramGridActionHandler extends SapphireDiagramActionHandler 
+public class ToggleDiagramGridActionHandler extends SapphireActionHandler 
 {		
     @Override
     public void init( final SapphireAction action,
@@ -35,13 +35,7 @@ public class ToggleDiagramGridActionHandler extends SapphireDiagramActionHandler
     		setChecked(diagramPart.isGridVisible());
     	}
     }
-    
-	@Override
-	public boolean canExecute(Object obj) 
-	{		
-		return true;
-	}
-		
+    		
 	@Override
 	protected Object run(SapphireRenderingContext context) 
 	{

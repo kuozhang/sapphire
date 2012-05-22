@@ -19,9 +19,9 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
@@ -34,7 +34,7 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class DiagramDeleteActionHandler extends SapphireDiagramActionHandler
+public class DiagramDeleteActionHandler extends SapphireActionHandler
 {
     
     @Override
@@ -74,12 +74,6 @@ public class DiagramDeleteActionHandler extends SapphireDiagramActionHandler
     public boolean isEnabled()
     {
     	return calculateEnabled();
-    }
-
-    @Override
-    public boolean canExecute(Object obj) 
-    {
-        return isEnabled();
     }
 
     @Override

@@ -13,8 +13,8 @@
 package org.eclipse.sapphire.ui.swt.gef.actions;
 
 import org.eclipse.gef.ui.actions.PrintAction;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 
@@ -23,14 +23,8 @@ import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PrintDiagramActionHandler extends SapphireDiagramActionHandler
+public final class PrintDiagramActionHandler extends SapphireActionHandler
 {
-    @Override
-    public boolean canExecute( final Object obj )
-    {
-        return true;
-    }
-
     @Override
     protected Object run( final SapphireRenderingContext context )
     {

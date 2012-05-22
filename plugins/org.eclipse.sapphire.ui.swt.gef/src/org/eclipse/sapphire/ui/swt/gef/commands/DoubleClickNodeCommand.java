@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui.swt.gef.commands;
 
 import org.eclipse.gef.commands.Command;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
@@ -36,15 +36,15 @@ public class DoubleClickNodeCommand extends Command
 	@Override
 	public boolean canExecute()
 	{
-        SapphireDiagramActionHandler handler = (SapphireDiagramActionHandler)this.nodePart.getDefaultActionHandler();
-        return (handler != null && handler.canExecute(this.nodePart));		
+        SapphireActionHandler handler = (SapphireActionHandler)this.nodePart.getDefaultActionHandler();
+        return (handler != null && handler.isEnabled());		
 	}
 	
 	@Override
 	public void execute() 
 	{
-        SapphireDiagramActionHandler handler = (SapphireDiagramActionHandler)this.nodePart.getDefaultActionHandler();
-        if (handler != null && handler.canExecute(this.nodePart))
+        SapphireActionHandler handler = (SapphireActionHandler)this.nodePart.getDefaultActionHandler();
+        if (handler != null && handler.isEnabled())
         {
         	DiagramConfigurationManager configManager = configHolder.getConfigurationManager();
         	DiagramRenderingContext context = configManager.getDiagramRenderingContextCache().get(this.nodePart);

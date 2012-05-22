@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui.swt.gef.actions;
 
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.SapphireDiagramActionHandler;
 import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.layout.HorizontalGraphLayout;
@@ -21,14 +21,8 @@ import org.eclipse.sapphire.ui.swt.gef.layout.HorizontalGraphLayout;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class HorizontalGraphLayoutActionHandler extends SapphireDiagramActionHandler 
+public class HorizontalGraphLayoutActionHandler extends SapphireActionHandler 
 {
-	@Override
-	public boolean canExecute(Object obj) 
-	{
-		return true;
-	}
-
 	@Override
 	protected Object run(SapphireRenderingContext context) 
 	{
