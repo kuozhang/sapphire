@@ -71,13 +71,14 @@ import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.ElementEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.Status.Severity;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -1087,7 +1088,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     }
     
     @Override
-    protected void handleListElementChangedEvent( final ModelPropertyChangeEvent event )
+    protected void handleListElementChangedEvent( final Event event )
     {
         super.handleListElementChangedEvent( event );
         
@@ -1099,7 +1100,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 {
                     public void run()
                     {
-                        update( event.getModelElement() );
+                        update( event instanceof ElementEvent ? ( (ElementEvent) event ).element() : ( (PropertyEvent) event ).element() );
                         
                         // Cause the overall list editor decorator to be updated.
                         

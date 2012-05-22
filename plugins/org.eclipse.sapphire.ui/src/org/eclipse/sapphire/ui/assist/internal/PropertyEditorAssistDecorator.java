@@ -21,24 +21,25 @@ import java.util.List;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
@@ -102,7 +103,7 @@ public final class PropertyEditorAssistDecorator
     private Status problem;
     private boolean mouseOverEditorControl;
     private EditorControlMouseTrackListener mouseTrackListener;
-    private ModelPropertyListener modelPropertyListener;
+    private Listener modelPropertyListener;
     
     public PropertyEditorAssistDecorator( final PropertyEditorPart part,
                                           final SapphireRenderingContext context,
@@ -154,10 +155,10 @@ public final class PropertyEditorAssistDecorator
             }
         }
         
-        this.modelPropertyListener = new ModelPropertyListener()
+        this.modelPropertyListener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
                 Display.getDefault().asyncExec
                 (
@@ -268,14 +269,14 @@ public final class PropertyEditorAssistDecorator
     {
         if( this.element != null )
         {
-            this.element.removeListener( this.modelPropertyListener, this.property.getName() );
+            this.element.detach( this.modelPropertyListener, this.property.getName() );
         }
         
         this.element = element;
         
         if( this.element != null )
         {
-            this.element.addListener( this.modelPropertyListener, this.property.getName() );
+            this.element.attach( this.modelPropertyListener, this.property.getName() );
         }
     }
     

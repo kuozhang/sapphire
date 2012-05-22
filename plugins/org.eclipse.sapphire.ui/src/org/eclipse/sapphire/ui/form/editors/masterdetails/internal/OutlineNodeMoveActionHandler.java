@@ -13,12 +13,12 @@ package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementListener;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
@@ -67,19 +67,16 @@ public abstract class OutlineNodeMoveActionHandler extends SapphireActionHandler
         final IModelElement parent = ( (MasterDetailsContentNode) getPart().getParentPart() ).getLocalModelElement();
         final ListProperty property = getList().getParentProperty();
         
-        final ModelElementListener listPropertyListener = new ModelElementListener()
+        final Listener listPropertyListener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
-            public void propertyChanged( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                if( event.getProperty() == property )
-                {
-                    Display.getDefault().asyncExec( op );
-                }
+                Display.getDefault().asyncExec( op );
             }
         };
         
-        parent.addListener( listPropertyListener );
+        parent.attach( listPropertyListener, property.getName() );
         
         refreshEnabledState();
         
@@ -92,7 +89,7 @@ public abstract class OutlineNodeMoveActionHandler extends SapphireActionHandler
                 {
                     if( event instanceof DisposeEvent )
                     {
-                        parent.removeListener( listPropertyListener );
+                        parent.detach( listPropertyListener, property.getName() );
                         OutlineNodeMoveActionHandler.this.contentTree.detach( contentTreeListener );
                     }
                 }

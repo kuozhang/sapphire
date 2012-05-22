@@ -11,9 +11,8 @@
 
 package org.eclipse.sapphire.ui;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
@@ -24,7 +23,7 @@ public abstract class SapphireCondition
 {
     private ISapphirePart part;
     private boolean conditionState;
-    private final List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
+    private final ListenerContext listeners = new ListenerContext();
     
     public static SapphireCondition create( final ISapphirePart part,
                                             final Class<?> conditionClass,
@@ -86,7 +85,7 @@ public abstract class SapphireCondition
         if( this.conditionState != newConditionState )
         {
             this.conditionState = newConditionState;
-            notifyListeners();
+            this.listeners.broadcast();
         }
     }
     
@@ -94,34 +93,14 @@ public abstract class SapphireCondition
     {
     }
     
-    public final void addListener( final Listener listener )
+    public final void attach( final Listener listener )
     {
-        this.listeners.add( listener );
+        this.listeners.attach( listener );
     }
     
-    public final void removeListener( final Listener listener )
+    public final void detach( final Listener listener )
     {
-        this.listeners.remove( listener );
-    }
-    
-    private final void notifyListeners()
-    {
-        for( Listener listener : this.listeners )
-        {
-            try
-            {
-                listener.handleConditionChanged();
-            }
-            catch( Exception e )
-            {
-                SapphireUiFrameworkPlugin.log( e );
-            }
-        }
-    }
-    
-    public static abstract class Listener
-    {
-        public abstract void handleConditionChanged();
+        this.listeners.detach( listener );
     }
     
 }

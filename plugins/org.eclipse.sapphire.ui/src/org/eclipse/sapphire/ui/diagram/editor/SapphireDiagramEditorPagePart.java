@@ -9,9 +9,14 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
  *    Ling Hao - [344319] Image specification for diagram parts inconsistent with the rest of sdef
+<<<<<<< SapphireDiagramEditorPagePart.java
+ *    Konstantin Komissarchik - [375770] Support context menu actions when multiple diagram parts are selected 
+ *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
+=======
  *    Konstantin Komissarchik - [375770] Support context menu actions when multiple diagram parts are selected
  *    Gregory Amerson - [346172] Support zoom, print and save as image actions in the diagram editor
  *    Konstantin Komissarchik - [346172] Support zoom, print and save as image actions in the diagram editor
+>>>>>>> 1.40
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -52,8 +57,10 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate.DiagramConnectionTemplateListener;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate.DiagramImplicitConnectionTemplateListener;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate.DiagramNodeTemplateListener;
 import org.eclipse.sapphire.ui.diagram.state.DiagramEditorPageState;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.state.MasterDetailsEditorPageState;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.util.ReadOnlyListFactory;
 
@@ -996,7 +1003,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 	// Inner classes
 	//---------------------------------------------------------------------
 	
-	private class NodeTemplateListener extends DiagramNodeTemplate.Listener
+	private class NodeTemplateListener extends DiagramNodeTemplateListener
 	{
         @Override
         public void handleNodeUpdate(final DiagramNodePart nodePart)
@@ -1023,7 +1030,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         }		
 	}
 	
-	private class ConnectionTemplateListener extends DiagramConnectionTemplate.Listener
+	private class ConnectionTemplateListener extends DiagramConnectionTemplateListener
 	{
         @Override
         public void handleConnectionUpdate(final DiagramConnectionEvent event)
@@ -1080,7 +1087,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         }
 	}
     
-    private class ImplicitConnectionTemplateListener extends DiagramImplicitConnectionTemplate.Listener
+    private class ImplicitConnectionTemplateListener extends DiagramImplicitConnectionTemplateListener
     {
 
         @Override

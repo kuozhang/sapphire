@@ -11,25 +11,23 @@
 
 package org.eclipse.sapphire.modeling;
 
+import org.eclipse.sapphire.Event;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ModelElementListener
+public abstract class ElementEvent extends Event
 {
-    public void propertyChanged( final ModelPropertyChangeEvent event )
+    private final IModelElement element;
+    
+    protected ElementEvent( final IModelElement element )
     {
-        // The default implementation doesn't do anything.
+        this.element = element;
     }
     
-    public void validationStateChanged( final ValidationStateChangeEvent event )
+    public IModelElement element()
     {
-        // The default implementation doesn't do anything.
+        return this.element;
     }
-    
-    public void handleElementDisposedEvent( final ModelElementDisposedEvent event )
-    {
-        // The default implementation doesn't do anything.
-    }
-    
 }

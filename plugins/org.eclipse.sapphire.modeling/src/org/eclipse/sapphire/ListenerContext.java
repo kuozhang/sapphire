@@ -12,9 +12,11 @@
 package org.eclipse.sapphire;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.sapphire.modeling.LoggingService;
 
@@ -24,27 +26,36 @@ import org.eclipse.sapphire.modeling.LoggingService;
 
 public final class ListenerContext
 {
-    private final List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
+    private final Set<Listener> listeners = new CopyOnWriteArraySet<Listener>();
+    private Queue<Runnable> queue = new ConcurrentLinkedQueue<Runnable>();
     private final Map<Class<? extends Event>,Event> suspended = new HashMap<Class<? extends Event>,Event>();
     
-    public void attach( final Listener listener )
+    public void coordinate( final ListenerContext context )
     {
-        if( listener == null )
+        synchronized( this )
         {
-            throw new IllegalArgumentException();
+            this.queue = context.queue;
         }
-        
-        this.listeners.add( listener );
     }
     
-    public void detach( final Listener listener )
+    public boolean attach( final Listener listener )
     {
         if( listener == null )
         {
             throw new IllegalArgumentException();
         }
         
-        this.listeners.remove( listener );
+        return this.listeners.add( listener );
+    }
+    
+    public boolean detach( final Listener listener )
+    {
+        if( listener == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return this.listeners.remove( listener );
     }
     
     public void broadcast( final Event event )
@@ -67,16 +78,29 @@ public final class ListenerContext
         
         if( broadcast )
         {
-            for( Listener listener : this.listeners )
+            for( final Listener listener : this.listeners )
             {
-                try
+                final Runnable job = new Runnable()
                 {
-                    listener.handle( event );
-                }
-                catch( Exception e )
-                {
-                    LoggingService.log( e );
-                }
+                    public void run()
+                    {
+                        try
+                        {
+                            listener.handle( event );
+                        }
+                        catch( Exception e )
+                        {
+                            LoggingService.log( e );
+                        }
+                    }
+                };
+                
+                this.queue.add( job );
+            }
+            
+            for( Runnable job = this.queue.poll(); job != null; job = this.queue.poll() )
+            {
+                job.run();
             }
         }
     }

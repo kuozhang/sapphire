@@ -22,10 +22,10 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ValueLabelService;
@@ -203,16 +203,16 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
         
         possibleValuesService.attach( possibleValuesServiceListener );
         
-        final ModelPropertyListener propertyListener = new ModelPropertyListener()
+        final Listener propertyListener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyContentEvent event )
             {
                 updateComboSelectionOp.run();
             }
         };
         
-        element.addListener( propertyListener, property.getName() );
+        element.attach( propertyListener, property.getName() );
         
         final Runnable updateModelOp = new Runnable()
         {
@@ -240,7 +240,7 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                 public void run()
                 {
                     possibleValuesService.detach( possibleValuesServiceListener );
-                    element.removeListener( propertyListener, property.getName() );
+                    element.detach( propertyListener, property.getName() );
                 }
             }
         );

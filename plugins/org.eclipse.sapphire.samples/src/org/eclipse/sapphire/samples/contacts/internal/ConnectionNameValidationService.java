@@ -15,7 +15,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.samples.contacts.IContact;
+import org.eclipse.sapphire.samples.contacts.Contact;
 import org.eclipse.sapphire.services.ValidationService;
 
 /**
@@ -29,7 +29,7 @@ public abstract class ConnectionNameValidationService extends ValidationService
     {
         final Value<?> value = context( IModelElement.class ).read( context( ValueProperty.class ) );
         final String assistantName = value.getText();
-        final String contactName = value.nearest( IContact.class ).getName().getText();
+        final String contactName = value.nearest( Contact.class ).getName().getText();
         
         if( assistantName != null && contactName != null && assistantName.equals( contactName ) )
         {

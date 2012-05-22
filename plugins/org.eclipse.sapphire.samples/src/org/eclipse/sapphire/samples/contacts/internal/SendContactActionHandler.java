@@ -12,8 +12,8 @@
 package org.eclipse.sapphire.samples.contacts.internal;
 
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.sapphire.samples.contacts.IContact;
-import org.eclipse.sapphire.samples.contacts.ISendContactOp;
+import org.eclipse.sapphire.samples.contacts.Contact;
+import org.eclipse.sapphire.samples.contacts.SendContactOp;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.swt.SapphireWizard;
@@ -30,13 +30,13 @@ public final class SendContactActionHandler
     @Override
     protected Object run( final SapphireRenderingContext context )
     {
-        final IContact contact = (IContact) getModelElement();
+        final Contact contact = (Contact) getModelElement();
         
-        final ISendContactOp op = ISendContactOp.TYPE.instantiate();
+        final SendContactOp op = SendContactOp.TYPE.instantiate();
         op.setContact( contact );
         
-        final SapphireWizard<ISendContactOp> wizard 
-            = new SapphireWizard<ISendContactOp>( op, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/contacts/ContactsDatabaseEditor.sdef!SendContactWizard" );
+        final SapphireWizard<SendContactOp> wizard 
+            = new SapphireWizard<SendContactOp>( op, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/contacts/ContactsDatabaseEditor.sdef!SendContactWizard" );
         
         final WizardDialog dialog = new WizardDialog( context.getShell(), wizard );
         

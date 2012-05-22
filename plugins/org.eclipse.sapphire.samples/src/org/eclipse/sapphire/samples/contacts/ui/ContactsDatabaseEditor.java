@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.samples.contacts.ui;
 
-import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
+import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
 import org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml;
 
 /**
@@ -27,7 +27,7 @@ public final class ContactsDatabaseEditor
     {
         super( "org.eclipse.sapphire.samples" );
         
-        setRootModelElementType( IContactsDatabase.TYPE );
+        setRootModelElementType( ContactsDatabase.TYPE );
         setEditorDefinitionPath( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/contacts/ContactsDatabaseEditor.sdef/main" );
     }
     

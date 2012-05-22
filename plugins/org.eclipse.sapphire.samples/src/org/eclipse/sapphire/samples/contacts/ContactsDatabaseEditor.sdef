@@ -160,7 +160,7 @@
                                         <path>Assistant</path>
                                         <label>delegate some tasks to an assistant</label>
                                         <panel>
-                                            <key>IAssistant</key>
+                                            <key>Assistant</key>
                                             <content>
                                                 <property-editor>
                                                     <property>Name</property>
@@ -202,7 +202,7 @@
                                     <with>
                                         <path>PrimaryOccupation</path>
                                         <panel>
-                                            <key>IJobOccupation</key>
+                                            <key>JobOccupation</key>
                                             <content>
                                                 <property-editor>Employer</property-editor>
                                                 <property-editor>Title</property-editor>
@@ -216,7 +216,7 @@
                                             </content>
                                         </panel>
                                         <panel>
-                                            <key>IStudentOccupation</key>
+                                            <key>StudentOccupation</key>
                                             <content>
                                                 <property-editor>EducationalInstitution</property-editor>
                                                 <property-editor>Program</property-editor>

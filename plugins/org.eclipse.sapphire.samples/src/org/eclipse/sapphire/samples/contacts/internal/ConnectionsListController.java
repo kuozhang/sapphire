@@ -14,7 +14,7 @@ package org.eclipse.sapphire.samples.contacts.internal;
 import org.eclipse.sapphire.modeling.xml.StandardXmlNamespaceResolver;
 import org.eclipse.sapphire.modeling.xml.XmlDelimitedListBindingImpl;
 import org.eclipse.sapphire.modeling.xml.XmlPath;
-import org.eclipse.sapphire.samples.contacts.IContact;
+import org.eclipse.sapphire.samples.contacts.Contact;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -25,7 +25,7 @@ public final class ConnectionsListController
     extends XmlDelimitedListBindingImpl
 
 {
-    private static final StandardXmlNamespaceResolver NAMESPACE_RESOLVER = new StandardXmlNamespaceResolver( IContact.TYPE );
+    private static final StandardXmlNamespaceResolver NAMESPACE_RESOLVER = new StandardXmlNamespaceResolver( Contact.TYPE );
     private static final XmlPath PATH_CONNECTIONS = new XmlPath( "connections", NAMESPACE_RESOLVER );
     
     public ConnectionsListController()

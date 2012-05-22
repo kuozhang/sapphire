@@ -13,7 +13,7 @@ package org.eclipse.sapphire.samples.contacts.internal;
 
 import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 
-import org.eclipse.sapphire.samples.contacts.IContact;
+import org.eclipse.sapphire.samples.contacts.Contact;
 import org.eclipse.sapphire.services.EqualityService;
 
 /**
@@ -25,10 +25,10 @@ public final class ContactEqualityService extends EqualityService
     @Override
     public boolean doEquals( final Object obj )
     {
-        if( obj instanceof IContact )
+        if( obj instanceof Contact )
         {
-            final IContact c1 = context( IContact.class );
-            final IContact c2 = (IContact) obj;
+            final Contact c1 = context( Contact.class );
+            final Contact c2 = (Contact) obj;
             
             return equal( c1.getName().getText(), c2.getName().getText() );
         }
@@ -41,7 +41,7 @@ public final class ContactEqualityService extends EqualityService
     @Override
     public int doHashCode()
     {
-        final IContact c = context( IContact.class );
+        final Contact c = context( Contact.class );
         final String name = c.getName().getText();
         
         return ( name == null ? 1 : name.hashCode() );

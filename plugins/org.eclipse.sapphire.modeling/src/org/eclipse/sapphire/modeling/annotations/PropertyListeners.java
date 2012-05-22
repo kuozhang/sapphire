@@ -16,7 +16,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.Listener;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,5 +27,5 @@ import org.eclipse.sapphire.modeling.ModelPropertyListener;
 
 public @interface PropertyListeners
 {
-    Class<? extends ModelPropertyListener>[] value();
+    Class<? extends Listener>[] value();
 }

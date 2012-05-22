@@ -14,16 +14,16 @@ package org.eclipse.sapphire.modeling;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.modeling.ModelPath.AllDescendentsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.AllSiblingsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ModelRootSegment;
@@ -50,17 +50,12 @@ import org.eclipse.sapphire.services.internal.PropertyInstanceServiceContext;
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-public abstract class ModelElement
-
-    extends ModelParticle
-    implements IModelElement
-    
+public abstract class ModelElement extends ModelParticle implements IModelElement
 {
     private final ModelElementType type;
     private final ModelProperty parentProperty;
     private Status validation;
-    private Set<ModelElementListener> listeners;
-    private Map<ModelProperty,Set<ModelPropertyListener>> propertyListeners;
+    private final ListenerContext listeners = new ListenerContext();
     private final Map<ModelProperty,Boolean> enablementStatuses;
     private boolean enablementServicesInitialized;
     private ElementInstanceServiceContext elementServiceContext;
@@ -77,14 +72,18 @@ public abstract class ModelElement
         this.type = type;
         this.parentProperty = parentProperty;
         this.validation = null;
-        this.listeners = null;
-        this.propertyListeners = null;
         this.enablementStatuses = new HashMap<ModelProperty,Boolean>();
         this.propertyServiceContexts = new HashMap<ModelProperty,PropertyInstanceServiceContext>();
         
+        if( parent != null )
+        {
+            final ModelElement p = (ModelElement) parent.nearest( IModelElement.class );
+            this.listeners.coordinate( p.listeners );
+        }
+        
         resource.init( this );
         
-        final Map<ModelProperty,ModelPropertyListener> listenerByProperty = new HashMap<ModelProperty,ModelPropertyListener>();
+        final Map<ModelProperty,Listener> listenerByProperty = new HashMap<ModelProperty,Listener>();
         final Map<ModelProperty,Set<ModelPath>> dependenciesByProperty = new HashMap<ModelProperty,Set<ModelPath>>();
         
         for( final ModelProperty property : type.properties() )
@@ -93,10 +92,10 @@ public abstract class ModelElement
             
             if( ! dependencies.isEmpty() )
             {
-                final ModelPropertyListener listener = new ModelPropertyListener()
+                final Listener listener = new FilteredListener<PropertyEvent>()
                 {
                     @Override
-                    public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                    protected void handleTypedEvent( final PropertyEvent event )
                     {
                         if( ! disposed() )
                         {
@@ -110,7 +109,7 @@ public abstract class ModelElement
     
                 for( ModelPath dependency : dependencies )
                 {
-                    addListener( listener, dependency );
+                    attach( listener, dependency );
                 }
             }
 
@@ -147,18 +146,18 @@ public abstract class ModelElement
 
             if( property.hasAnnotation( ClearOnDisable.class ) )
             {
-                ModelPropertyListener listener = null;
+                Listener listener = null;
                 
                 if( property instanceof ValueProperty )
                 {
                     final ValueProperty prop = (ValueProperty) property;
                     
-                    listener = new ModelPropertyListener()
+                    listener = new FilteredListener<PropertyEnablementEvent>()
                     {
                         @Override
-                        public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                        protected void handleTypedEvent( final PropertyEnablementEvent event )
                         {
-                            if( event.getOldEnablementState() == true && event.getNewEnablementState() == false )
+                            if( event.before() == true && event.after() == false )
                             {
                                 write( prop, null );
                             }
@@ -169,12 +168,12 @@ public abstract class ModelElement
                 {
                     final ListProperty prop = (ListProperty) property;
                     
-                    listener = new ModelPropertyListener()
+                    listener = new FilteredListener<PropertyEnablementEvent>()
                     {
                         @Override
-                        public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                        protected void handleTypedEvent( final PropertyEnablementEvent event )
                         {
-                            if( event.getOldEnablementState() == true && event.getNewEnablementState() == false )
+                            if( event.before() == true && event.after() == false )
                             {
                                 read( prop ).clear();
                             }
@@ -185,12 +184,12 @@ public abstract class ModelElement
                 {
                     final ElementProperty prop = (ElementProperty) property;
                     
-                    listener = new ModelPropertyListener()
+                    listener = new FilteredListener<PropertyEnablementEvent>()
                     {
                         @Override
-                        public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                        protected void handleTypedEvent( final PropertyEnablementEvent event )
                         {
-                            if( event.getOldEnablementState() == true && event.getNewEnablementState() == false )
+                            if( event.before() == true && event.after() == false )
                             {
                                 read( prop ).remove();
                             }
@@ -200,35 +199,35 @@ public abstract class ModelElement
                 
                 if( listener != null )
                 {
-                    addListener( listener, property.getName() );
+                    attach( listener, property.getName() );
                 }
             }
         }
         
         if( ! listenerByProperty.isEmpty() )
         {
-            final ModelElementListener disposeListener = new ModelElementListener()
+            final Listener disposeListener = new FilteredListener<ElementDisposeEvent>()
             {
                 @Override
-                public void handleElementDisposedEvent( final ModelElementDisposedEvent event )
+                protected void handleTypedEvent( final ElementDisposeEvent event )
                 {
-                    for( Map.Entry<ModelProperty,ModelPropertyListener> entry : listenerByProperty.entrySet() )
+                    for( Map.Entry<ModelProperty,Listener> entry : listenerByProperty.entrySet() )
                     {
                         final ModelProperty property = entry.getKey();
-                        final ModelPropertyListener listener = entry.getValue();
+                        final Listener listener = entry.getValue();
                         
                         for( ModelPath dependency : dependenciesByProperty.get( property ) )
                         {
-                            removeListener( listener, dependency );
+                            detach( listener, dependency );
                         }
                     }
                 }
             };
             
-            addListener( disposeListener );
+            attach( disposeListener );
         }
     }
-
+    
     public ModelElementType type()
     {
         return this.type;
@@ -770,7 +769,7 @@ public abstract class ModelElement
                 
                 if( notifyListenersIfNecessary )
                 {
-                    notifyPropertyChangeListeners( new ModelPropertyChangeEvent( this, property, oldState, newState ) );
+                    broadcast( new PropertyEnablementEvent( this, property, oldState, newState ) );
                 }
             }
             
@@ -790,336 +789,104 @@ public abstract class ModelElement
     
     private void refreshValidationResult()
     {
-        final Status st = service( ValidationAggregationService.class ).validation();
+        final ValidationAggregationService service = service( ValidationAggregationService.class );
+        final Status validation = service.validation();
         
         if( this.validation == null )
         {
-            this.validation = st;
+            this.validation = validation;
+            
+            final Listener validationAggregationServiceListener = new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    refreshValidationResult();
+                }
+            };
+            
+            service.attach( validationAggregationServiceListener );
         }
-        else if( ! this.validation.equals( st ) )
+        else if( ! this.validation.equals( validation ) )
         {
             final Status oldValidationState = this.validation;
-            this.validation = st;
+            this.validation = validation;
             
-            notifyValidationStateChangeListeners( oldValidationState, this.validation );
-            
-            final IModelParticle parent = parent();
-            
-            if( parent != null && parent instanceof IModelElement )
-            {
-                ( (IModelElement) parent ).notifyPropertyChangeListeners( this.parentProperty );
-            }
-        }
-    }
-
-    public final void addListener( final ModelElementListener listener )
-    {
-        synchronized( root() )
-        {
-            if( this.listeners == null )
-            {
-                this.listeners = new CopyOnWriteArraySet<ModelElementListener>();
-            }
-            
-            this.listeners.add( listener );
+            broadcast( new ElementValidationEvent( this, oldValidationState, this.validation ) );
         }
     }
     
-    public final void addListener( final ModelPropertyListener listener,
-                                   final String path )
+    public final boolean attach( final Listener listener )
     {
-        addListener( listener, new ModelPath( path ) );
+        return this.listeners.attach( listener );
     }
     
-    public final void addListener( final ModelPropertyListener listener,
-                                   final ModelPath path )
+    public final void attach( final Listener listener,
+                              final String path )
     {
-        synchronized( root() )
+        attach( listener, new ModelPath( path ) );
+    }
+    
+    public final void attach( final Listener listener,
+                              final ModelPath path )
+    {
+        final ModelPath.Segment head = path.head();
+        
+        if( head instanceof ModelRootSegment )
         {
-            final ModelPath.Segment head = path.head();
+            ( (IModelElement) root() ).attach( listener, path.tail() );
+        }
+        else if( head instanceof ParentElementSegment )
+        {
+            IModelParticle parent = parent();
             
-            if( head instanceof ModelRootSegment )
+            if( parent == null )
             {
-                ( (IModelElement) root() ).addListener( listener, path.tail() );
-            }
-            else if( head instanceof ParentElementSegment )
-            {
-                IModelParticle parent = parent();
-                
-                if( parent == null )
-                {
-                    logInvalidModelPathMessage( path );
-                    return;
-                }
-                else
-                {
-                    if( parent instanceof ModelElementList<?> )
-                    {
-                        parent = parent.parent();
-                    }
-                }
-                
-                ( (IModelElement) parent ).addListener( listener, path.tail() );
-            }
-            else if( head instanceof AllSiblingsSegment )
-            {
-                IModelParticle parent = parent();
-                
-                if( parent == null || ! ( parent instanceof ModelElementList<?> ) )
-                {
-                    logInvalidModelPathMessage( path );
-                    return;
-                }
-                
-                parent = parent.parent();
-                
-                final ModelPath p = ( new ModelPath( this.parentProperty.getName() ) ).append( path.tail() );
-                ( (IModelElement) parent ).addListener( listener, p );
-            }
-            else if( head instanceof AllDescendentsSegment )
-            {
-                for( ModelProperty property : this.type.properties() )
-                {
-                    final Set<ModelPropertyListener> listeners = getListenersForEdit( property );
-                    
-                    listeners.add( listener );
-                    
-                    if( property instanceof ListProperty || property instanceof ElementProperty )
-                    {
-                        final PropagationListener pListener 
-                            = new PropagationListener( property, path, listener );
-                        
-                        if( listeners.add( pListener ) )
-                        {
-                            pListener.handlePropertyChangedEvent( null );
-                        }
-                    }
-                }
-            }
-            else if( head instanceof TypeFilterSegment )
-            {
-                final String t = this.type.getSimpleName();
-                boolean match = false;
-                
-                for( String type : ( (TypeFilterSegment) head ).getTypes() )
-                {
-                    if( type.equalsIgnoreCase( t ) )
-                    {
-                        match = true;
-                        break;
-                    }
-                }
-                
-                if( match )
-                {
-                    addListener( listener, path.tail() );
-                }
+                logInvalidModelPathMessage( path );
+                return;
             }
             else
             {
-                final String propertyName = ( (ModelPath.PropertySegment) head ).getPropertyName();
-                final ModelProperty property = this.type.property( propertyName );
-                
-                if( property == null )
+                if( parent instanceof ModelElementList<?> )
                 {
-                    logInvalidModelPathMessage( path );
-                    return;
-                }
-
-                final Set<ModelPropertyListener> listeners = getListenersForEdit( property );
-                
-                if( path.length() == 1 )
-                {
-                    listeners.add( listener );
-                }
-                else
-                {
-                    if( property instanceof ValueProperty )
-                    {
-                        logInvalidModelPathMessage( path );
-                        return;
-                    }
-                    else if( property instanceof ListProperty || property instanceof ElementProperty )
-                    {
-                        final PropagationListener pListener 
-                            = new PropagationListener( property, path.tail(), listener );
-                        
-                        if( listeners.add( pListener ) )
-                        {
-                            pListener.handlePropertyChangedEvent( null );
-                        }
-                    }
+                    parent = parent.parent();
                 }
             }
-        }
-    }
-    
-    public final void removeListener( final ModelElementListener listener )
-    {
-        synchronized( root() )
-        {
-            if( this.listeners != null )
-            {
-                this.listeners.remove( listener );
-            }
-        }
-    }
-    
-    public final void removeListener( final ModelPropertyListener listener,
-                                      final String path )
-    {
-        removeListener( listener, new ModelPath( path ) );
-    }
-    
-    public final void removeListener( final ModelPropertyListener listener,
-                                      final ModelPath path )
-    {
-        synchronized( root() )
-        {
-            final ModelPath.Segment head = path.head();
             
-            if( head instanceof ModelRootSegment )
+            ( (IModelElement) parent ).attach( listener, path.tail() );
+        }
+        else if( head instanceof AllSiblingsSegment )
+        {
+            IModelParticle parent = parent();
+            
+            if( parent == null || ! ( parent instanceof ModelElementList<?> ) )
             {
-                ( (IModelElement) root() ).removeListener( listener, path.tail() );
+                logInvalidModelPathMessage( path );
+                return;
             }
-            else if( head instanceof ParentElementSegment )
-            {
-                IModelParticle parent = parent();
-                
-                if( parent == null )
-                {
-                    logInvalidModelPathMessage( path );
-                    return;
-                }
-                else
-                {
-                    if( parent instanceof ModelElementList<?> )
-                    {
-                        parent = parent.parent();
-                    }
-                }
-                
-                ( (IModelElement) parent ).removeListener( listener, path.tail() );
-            }
-            else if( head instanceof AllSiblingsSegment )
-            {
-                IModelParticle parent = parent();
-                
-                if( parent == null || ! ( parent instanceof ModelElementList<?> ) )
-                {
-                    logInvalidModelPathMessage( path );
-                    return;
-                }
-                
-                parent = parent.parent();
-                
-                final ModelPath p = ( new ModelPath( this.parentProperty.getName() ) ).append( path.tail() );
-                ( (IModelElement) parent ).removeListener( listener, p );
-            }
-            else if( head instanceof AllDescendentsSegment )
+            
+            parent = parent.parent();
+            
+            final ModelPath p = ( new ModelPath( this.parentProperty.getName() ) ).append( path.tail() );
+            ( (IModelElement) parent ).attach( listener, p );
+        }
+        else if( head instanceof AllDescendentsSegment )
+        {
+            if( attach( new PropagationListener( path, listener ) ) )
             {
                 for( ModelProperty property : this.type.properties() )
                 {
-                    final Set<ModelPropertyListener> listeners = getListenersForEdit( property );
-                    
-                    listeners.remove( listener );
-                    
-                    if( ! ( property instanceof ValueProperty ) )
+                    if( property instanceof ImpliedElementProperty )
                     {
-                        final PropagationListener pListener 
-                            = new PropagationListener( property, path, listener );
-                        
-                        listeners.remove( pListener );
-                        
-                        if( property instanceof ElementProperty )
-                        {
-                            IModelElement element = null;
-                            if( property instanceof ImpliedElementProperty )
-                            {
-                                element = read( (ImpliedElementProperty) property );
-                            }
-                            else
-                            {
-                                element = read( (ElementProperty) property ).element();
-                            }
-                                                                                
-                            if( element != null )
-                            {
-                                element.removeListener( listener, path );
-                            }
-                        }
-                        else if( property instanceof ListProperty )
-                        {
-                            final ModelElementList<?> list = read( (ListProperty) property );
-                            
-                            for( IModelElement x : list )
-                            {
-                                x.removeListener( listener, path );
-                            }
-                        }
+                        read( (ImpliedElementProperty) property ).attach( listener, path );
                     }
-                }
-            }
-            else if( head instanceof TypeFilterSegment )
-            {
-                final String t = this.type.getSimpleName();
-                boolean match = false;
-                
-                for( String type : ( (TypeFilterSegment) head ).getTypes() )
-                {
-                    if( type.equalsIgnoreCase( t ) )
+                    else if( property instanceof ElementProperty )
                     {
-                        match = true;
-                        break;
-                    }
-                }
-                
-                if( match )
-                {
-                    removeListener( listener, path.tail() );
-                }
-            }
-            else
-            {
-                final String propertyName = ( (ModelPath.PropertySegment) head ).getPropertyName();
-                final ModelProperty property = this.type.property( propertyName );
-                
-                if( property == null )
-                {
-                    logInvalidModelPathMessage( path );
-                    return;
-                }
-
-                final Set<ModelPropertyListener> listeners = getListenersForEdit( property );
-                
-                if( path.length() == 1 )
-                {
-                    listeners.remove( listener );
-                }
-                else
-                {
-                    final PropagationListener pListener 
-                        = new PropagationListener( property, path.tail(), listener );
-                    
-                    listeners.remove( pListener );
-                    
-                    final ModelPath tail = path.tail();
-                    
-                    if( property instanceof ElementProperty )
-                    {
-                        IModelElement element = null;
-                        if( property instanceof ImpliedElementProperty )
-                        {
-                            element = read( (ImpliedElementProperty) property );
-                        }
-                        else
-                        {
-                            element = read( (ElementProperty) property ).element();
-                        }
-                                                
+                        final IModelElement element = read( (ElementProperty) property ).element();
+                        
                         if( element != null )
                         {
-                            element.removeListener( listener, tail );
+                            element.attach( listener, path );
                         }
                     }
                     else if( property instanceof ListProperty )
@@ -1128,129 +895,270 @@ public abstract class ModelElement
                         
                         for( IModelElement x : list )
                         {
-                            x.removeListener( listener, tail );
+                            x.attach( listener, path );
                         }
+                    }
+                    else
+                    {
+                        attach( PropertyEvent.filter( listener ) );
                     }
                 }
             }
         }
-    }
-    
-    public final void notifyPropertyChangeListeners( final ModelProperty property )
-    {
-        final boolean enabled = enabled( property );
-        notifyPropertyChangeListeners( new ModelPropertyChangeEvent( this, property, enabled, enabled ) );
-    }
-    
-    protected final void notifyPropertyChangeListeners( final ModelProperty property,
-                                                        final EnablementRefreshResult enablementRefreshResult )
-    {
-        notifyPropertyChangeListeners( new ModelPropertyChangeEvent( this, property, enablementRefreshResult.before(), enablementRefreshResult.after() ) );
-    }
-
-    private void notifyPropertyChangeListeners( final ModelPropertyChangeEvent event )
-    {
-        synchronized( root() )
+        else if( head instanceof TypeFilterSegment )
         {
-            if( this.validation != null )
-            {
-                refreshValidationResult();
-            }
+            final String t = this.type.getSimpleName();
+            boolean match = false;
             
-            if( this.listeners != null )
+            for( String type : ( (TypeFilterSegment) head ).getTypes() )
             {
-                for( ModelElementListener listener : this.listeners )
+                if( type.equalsIgnoreCase( t ) )
                 {
-                    try
-                    {
-                        listener.propertyChanged( event );
-                    }
-                    catch( Exception e )
-                    {
-                        LoggingService.log( e );
-                    }
+                    match = true;
+                    break;
                 }
             }
             
-            if( this.propertyListeners != null )
+            if( match )
             {
-                final Set<ModelPropertyListener> listeners = this.propertyListeners.get( event.getProperty() );
-                
-                if( listeners != null )
-                {
-                    for( ModelPropertyListener listener : listeners )
-                    {
-                        try
-                        {
-                            listener.handlePropertyChangedEvent( event );
-                        }
-                        catch( Exception e )
-                        {
-                            LoggingService.log( e );
-                        }
-                    }
-                }
+                attach( listener, path.tail() );
             }
-            
-            for( ModelPropertyListener listener : event.getProperty().getListeners() )
-            {
-                try
-                {
-                    listener.handlePropertyChangedEvent( event );
-                }
-                catch( Exception e )
-                {
-                    LoggingService.log( e );
-                }
-            }
-        }
-    }
-
-    private void notifyValidationStateChangeListeners( final Status oldValidationState,
-                                                       final Status newValidationState )
-    {
-        final ValidationStateChangeEvent event = new ValidationStateChangeEvent( this, oldValidationState, newValidationState );
-        
-        synchronized( root() )
-        {
-            if( this.listeners != null )
-            {
-                for( ModelElementListener listener : this.listeners )
-                {
-                    try
-                    {
-                        listener.validationStateChanged( event );
-                    }
-                    catch( Exception e )
-                    {
-                        LoggingService.log( e );
-                    }
-                }
-            }
-        }
-    }
-    
-    private Set<ModelPropertyListener> getListenersForEdit( final ModelProperty property )
-    {
-        if( this.propertyListeners == null )
-        {
-            this.propertyListeners = new HashMap<ModelProperty,Set<ModelPropertyListener>>();
-        }
-        
-        Set<ModelPropertyListener> set = this.propertyListeners.get( property );
-        
-        if( set == null )
-        {
-            set = new HashSet<ModelPropertyListener>();
         }
         else
         {
-            set = new HashSet<ModelPropertyListener>( set );
+            final String propertyName = ( (ModelPath.PropertySegment) head ).getPropertyName();
+            final ModelProperty property = this.type.property( propertyName );
+            
+            if( property == null )
+            {
+                logInvalidModelPathMessage( path );
+                return;
+            }
+
+            if( path.length() == 1 )
+            {
+                attach( PropertyEvent.filter( listener, property ) );
+            }
+            else
+            {
+                final ModelPath tail = path.tail();
+                
+                if( property instanceof ImpliedElementProperty )
+                {
+                    read( (ImpliedElementProperty) property ).attach( listener, tail );
+                }
+                else if( property instanceof ElementProperty )
+                {
+                    if( attach( PropertyEvent.filter( new PropagationListener( tail, listener ), property ) ) )
+                    {
+                        final IModelElement element = read( (ElementProperty) property ).element();
+                        
+                        if( element != null )
+                        {
+                            element.attach( listener, tail );
+                        }
+                    }
+                }
+                else if( property instanceof ListProperty )
+                {
+                    if( attach( PropertyEvent.filter( new PropagationListener( tail, listener ), property ) ) )
+                    {
+                        final ModelElementList<?> list = read( (ListProperty) property );
+                        
+                        for( IModelElement x : list )
+                        {
+                            x.attach( listener, tail );
+                        }
+                    }
+                }
+                else
+                {
+                    logInvalidModelPathMessage( path );
+                }
+            }
         }
+    }
+    
+    public final boolean detach( final Listener listener )
+    {
+        return this.listeners.detach( listener );
+    }
+    
+    public final void detach( final Listener listener,
+                              final String path )
+    {
+        detach( listener, new ModelPath( path ) );
+    }
+    
+    public final void detach( final Listener listener,
+                              final ModelPath path )
+    {
+        final ModelPath.Segment head = path.head();
         
-        this.propertyListeners.put( property, set );
-        
-        return set;
+        if( head instanceof ModelRootSegment )
+        {
+            ( (IModelElement) root() ).detach( listener, path.tail() );
+        }
+        else if( head instanceof ParentElementSegment )
+        {
+            IModelParticle parent = parent();
+            
+            if( parent == null )
+            {
+                logInvalidModelPathMessage( path );
+                return;
+            }
+            else
+            {
+                if( parent instanceof ModelElementList<?> )
+                {
+                    parent = parent.parent();
+                }
+            }
+            
+            ( (IModelElement) parent ).detach( listener, path.tail() );
+        }
+        else if( head instanceof AllSiblingsSegment )
+        {
+            IModelParticle parent = parent();
+            
+            if( parent == null || ! ( parent instanceof ModelElementList<?> ) )
+            {
+                logInvalidModelPathMessage( path );
+                return;
+            }
+            
+            parent = parent.parent();
+            
+            final ModelPath p = ( new ModelPath( this.parentProperty.getName() ) ).append( path.tail() );
+            ( (IModelElement) parent ).detach( listener, p );
+        }
+        else if( head instanceof AllDescendentsSegment )
+        {
+            detach( new PropagationListener( path, listener ) );
+            
+            for( ModelProperty property : this.type.properties() )
+            {
+                if( property instanceof ImpliedElementProperty )
+                {
+                    read( (ImpliedElementProperty) property ).detach( listener, path );
+                }
+                else if( property instanceof ElementProperty )
+                {
+                    final IModelElement element = read( (ElementProperty) property ).element();
+                    
+                    if( element != null )
+                    {
+                        element.detach( listener, path );
+                    }
+                }
+                else if( property instanceof ListProperty )
+                {
+                    final ModelElementList<?> list = read( (ListProperty) property );
+                    
+                    for( IModelElement x : list )
+                    {
+                        x.detach( listener, path );
+                    }
+                }
+                else
+                {
+                    detach( PropertyEvent.filter( listener ) );
+                }
+            }
+        }
+        else if( head instanceof TypeFilterSegment )
+        {
+            final String t = this.type.getSimpleName();
+            boolean match = false;
+            
+            for( String type : ( (TypeFilterSegment) head ).getTypes() )
+            {
+                if( type.equalsIgnoreCase( t ) )
+                {
+                    match = true;
+                    break;
+                }
+            }
+            
+            if( match )
+            {
+                detach( listener, path.tail() );
+            }
+        }
+        else
+        {
+            final String propertyName = ( (ModelPath.PropertySegment) head ).getPropertyName();
+            final ModelProperty property = this.type.property( propertyName );
+            
+            if( property == null )
+            {
+                logInvalidModelPathMessage( path );
+                return;
+            }
+            
+            if( path.length() == 1 )
+            {
+                detach( PropertyEvent.filter( listener, property ) );
+            }
+            else
+            {
+                final ModelPath tail = path.tail();
+                
+                if( property instanceof ImpliedElementProperty )
+                {
+                    read( (ImpliedElementProperty) property ).detach( listener, tail );
+                }
+                else if( property instanceof ElementProperty )
+                {
+                    detach( PropertyEvent.filter( new PropagationListener( tail, listener ), property ) );
+
+                    final IModelElement element = read( (ElementProperty) property ).element();
+                        
+                    if( element != null )
+                    {
+                        element.detach( listener, tail );
+                    }
+                }
+                else if( property instanceof ListProperty )
+                {
+                    detach( PropertyEvent.filter( new PropagationListener( tail, listener ), property ) );
+                    
+                    final ModelElementList<?> list = read( (ListProperty) property );
+                    
+                    for( IModelElement x : list )
+                    {
+                        x.detach( listener, tail );
+                    }
+                }
+                else
+                {
+                    logInvalidModelPathMessage( path );
+                }
+            }
+        }
+    }
+    
+    protected final void broadcast( final Event event )
+    {
+        this.listeners.broadcast( event );
+    }
+    
+    protected final void broadcast()
+    {
+        this.listeners.broadcast();
+    }
+    
+    final void broadcastPropertyContentEvent( final ModelProperty property )
+    {
+        broadcast( new PropertyContentEvent( this, property ) );
+    }
+
+    final void broadcastPropertyValidationEvent( final ModelProperty property,
+                                                 final Status before,
+                                                 final Status after )
+    {
+        broadcast( new PropertyValidationEvent( this, property, before, after ) );
     }
     
     public final boolean disposed()
@@ -1267,22 +1175,7 @@ public abstract class ModelElement
         {
             this.disposed = true;
             
-            if( this.listeners != null )
-            {
-                final ModelElementDisposedEvent event = new ModelElementDisposedEvent( this );
-                
-                for( ModelElementListener listener : this.listeners )
-                {
-                    try
-                    {
-                        listener.handleElementDisposedEvent( event );
-                    }
-                    catch( Exception e )
-                    {
-                        LoggingService.log( e );
-                    }
-                }
-            }
+            broadcast( new ElementDisposeEvent( this ) );
             
             for( ModelProperty property : this.type.properties() )
             {
@@ -1425,27 +1318,16 @@ public abstract class ModelElement
         }
     }
     
-    private final class PropagationListener
-    
-        extends ModelPropertyListener
-        
+    private final class PropagationListener extends Listener
     {
-        private final ModelProperty property;
         private final ModelPath path;
-        private final ModelPropertyListener listener;
+        private final Listener listener;
         
-        public PropagationListener( final ModelProperty property,
-                                    final ModelPath path,
-                                    final ModelPropertyListener listener )
+        public PropagationListener( final ModelPath path,
+                                    final Listener listener )
         {
-            if( property instanceof ValueProperty )
-            {
-                throw new IllegalArgumentException();
-            }
-            
-            this.property = property;
             this.path = path;
-            this.listener = listener;
+            this.listener = PropertyEvent.filter( listener );
         }
         
         @Override
@@ -1454,10 +1336,7 @@ public abstract class ModelElement
             if( obj instanceof PropagationListener )
             {
                 final PropagationListener pl = (PropagationListener) obj;
-                
-                return this.property == pl.property &&
-                       this.path.equals( pl.path ) && 
-                       this.listener == pl.listener;
+                return this.path.equals( pl.path ) && ( this.listener == pl.listener );
             }
             
             return false;
@@ -1466,41 +1345,39 @@ public abstract class ModelElement
         @Override
         public int hashCode()
         {
-            return this.property.hashCode() ^ this.path.hashCode();
+            return this.path.hashCode() ^ this.listener.hashCode();
         }
         
         @Override
-        public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+        public void handle( final Event event )
         {
-            if( this.property instanceof ElementProperty )
+            if( event instanceof PropertyContentEvent )
             {
-                final IModelElement element;
+                final ModelProperty property = ( (PropertyContentEvent) event ).property();
                 
-                if( this.property instanceof ImpliedElementProperty )
+                if( property instanceof ListProperty )
                 {
-                    element = read( (ImpliedElementProperty) this.property );
+                    final ModelElementList<?> list = read( (ListProperty) property );
+                    
+                    for( IModelElement x : list )
+                    {
+                        x.attach( this.listener, this.path );
+                    }
+                    
+                    this.listener.handle( event );
                 }
-                else
+                else if( property instanceof ElementProperty && ! ( property instanceof ImpliedElementProperty ) )
                 {
-                    element = read( (ElementProperty) this.property ).element();
-                }
-                
-                if( element != null )
-                {
-                    element.addListener( this.listener, this.path );
+                    final IModelElement element = read( (ElementProperty) property ).element();
+                    
+                    if( element != null )
+                    {
+                        element.attach( this.listener, this.path );
+                    }
+                    
+                    this.listener.handle( event );
                 }
             }
-            else
-            {
-                final ModelElementList<?> list = read( (ListProperty) this.property );
-                
-                for( IModelElement x : list )
-                {
-                    x.addListener( this.listener, this.path );
-                }
-            }
-            
-            this.listener.handlePropertyChangedEvent( event );
         }
     }
     

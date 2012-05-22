@@ -25,10 +25,7 @@ import org.eclipse.sapphire.tests.workspace.WorkspaceTestSuite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireTestSuite
-
-    extends TestCase
-    
+public final class SapphireTestSuite extends TestCase
 {
     private SapphireTestSuite( final String name )
     {

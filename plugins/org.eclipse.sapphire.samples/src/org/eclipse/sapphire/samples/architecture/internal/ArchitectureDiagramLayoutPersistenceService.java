@@ -7,7 +7,11 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+<<<<<<< ArchitectureDiagramLayoutPersistenceService.java
+ *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
+=======
  *    Konstantin Komissarchik - [376245] Revert action in StructuredTextEditor does not revert diagram nodes and connections in SapphireDiagramEditor
+>>>>>>> 1.10
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.architecture.internal;
@@ -17,9 +21,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.samples.architecture.ConnectionBendpoint;
 import org.eclipse.sapphire.samples.architecture.IArchitecture;
 import org.eclipse.sapphire.samples.architecture.IComponent;
@@ -48,8 +53,8 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 {
 	private IArchitecture architecture;
 	private SapphireDiagramPartListener diagramPartListener;
-	private ModelPropertyListener componentListener;	
-	private ModelPropertyListener componentDependencyListener;
+	private Listener componentListener;	
+	private Listener componentDependencyListener;
 	private Map<String, DiagramNodeBounds> nodeBounds;
 	private Map<ConnectionHashKey, DiagramConnectionBendPoints> connectionBendPoints;
 	private boolean dirty;
@@ -99,9 +104,9 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		{
 			if (isNodeLayoutChanged(nodePart))
 			{				
-				this.architecture.removeListener(this.componentListener, "/Components/Bounds/*");
+				this.architecture.detach(this.componentListener, "/Components/Bounds/*");
 				writeComponentBounds(component, nodePart);
-				this.architecture.addListener(this.componentListener, "/Components/Bounds/*");
+				this.architecture.attach(this.componentListener, "/Components/Bounds/*");
 			}
 			
 			refreshDirtyState();
@@ -124,9 +129,9 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		{
 			if (isConnectionLayoutChanged(connPart))
 			{
-				this.architecture.removeListener(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
+				this.architecture.detach(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
 				writeDependencyBendPoints(dependency, connPart);
-				this.architecture.addListener(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
+				this.architecture.attach(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
 			}
 			
 			refreshDirtyState();
@@ -142,11 +147,11 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		}
 		if (this.componentListener != null)
 		{
-			this.architecture.removeListener(this.componentListener, "/Components/Bounds/*");
+			this.architecture.detach(this.componentListener, "/Components/Bounds/*");
 		}
 		if (this.componentDependencyListener != null)
 		{
-			this.architecture.removeListener(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
+			this.architecture.detach(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
 		}
 	}
 
@@ -360,30 +365,30 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	
 	private void addModelListeners()
 	{
-		this.componentListener = new ModelPropertyListener() 
+		this.componentListener = new FilteredListener<PropertyEvent>() 
 		{
-		    public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+		    @Override
+		    protected void handleTypedEvent( final PropertyEvent event )
 		    {
-		    	if (event != null && event.getModelElement() != null)
+		    	if (event != null && event.element() != null)
 		    	{
-		    		IComponent component = event.getModelElement().nearest(IComponent.class);
+		    		IComponent component = event.element().nearest(IComponent.class);
 		    		if (component != null)
 		    		{
 		    			handleNodeLayoutChange(component);
 		    		}
 		    	}
 		    }
-			
 		};
 		
-		this.componentDependencyListener = new ModelPropertyListener()
+		this.componentDependencyListener = new FilteredListener<PropertyEvent>()
 		{
 			@Override
-			public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+			protected void handleTypedEvent( final PropertyEvent event )
 			{
-				if (event != null && event.getModelElement() != null)
+				if (event != null && event.element() != null)
 				{
-					IComponentDependency componentDependency = event.getModelElement().nearest(IComponentDependency.class);
+					IComponentDependency componentDependency = event.element().nearest(IComponentDependency.class);
 					if (componentDependency != null)
 					{
 						handleConnectionBendpointChange(componentDependency);
@@ -392,8 +397,8 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 			}
 		};
 		
-		this.architecture.addListener(this.componentListener, "/Components/Bounds/*");
-		this.architecture.addListener(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
+		this.architecture.attach(this.componentListener, "/Components/Bounds/*");
+		this.architecture.attach(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
 		
 	}
 	
@@ -431,8 +436,8 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		// are calculated using connection router, we don't modify the corresponding model properties
 		// in order to allow "revert" in source editor to work correctly.
 		// So we need to do an explicit save of the node bounds and connection bend points here.
-		this.architecture.removeListener(this.componentListener, "/Components/Bounds/*");
-		this.architecture.removeListener(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
+		this.architecture.detach(this.componentListener, "/Components/Bounds/*");
+		this.architecture.detach(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
 		
 		for (DiagramNodePart nodePart : context( SapphireDiagramEditorPagePart.class ).getNodes())
 		{
@@ -452,9 +457,8 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 			}
 		}
 		
-		this.architecture.addListener(this.componentListener, "/Components/Bounds/*");
-		this.architecture.addListener(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
-		
+		this.architecture.attach(this.componentListener, "/Components/Bounds/*");
+		this.architecture.attach(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
 	}
 	
     private boolean isNodeLayoutChanged(DiagramNodePart nodePart)

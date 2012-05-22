@@ -20,21 +20,20 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementDisposedEvent;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Status.Severity;
 import org.eclipse.sapphire.modeling.Value;
@@ -95,7 +94,7 @@ public final class PropertyEditorPart extends FormPart
     private Map<String,Object> hints;
     private List<SapphirePart> relatedContentParts;
     private List<SapphirePart> relatedContentPartsReadOnly;
-    private ModelPropertyListener listener;
+    private Listener listener;
     private FunctionResult labelFunctionResult;
     
     @Override
@@ -150,10 +149,10 @@ public final class PropertyEditorPart extends FormPart
             throw new RuntimeException( NLS.bind( Resources.invalidPath, pathString ) );
         }
         
-        this.listener = new ModelPropertyListener()
+        this.listener = new FilteredListener<PropertyValidationEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyValidationEvent event )
             {
                 final Runnable op = new Runnable()
                 {
@@ -173,7 +172,7 @@ public final class PropertyEditorPart extends FormPart
             }
         };
         
-        this.element.addListener( this.listener, this.property.getName() );
+        this.element.attach( this.listener, this.property.getName() );
         
         this.childProperties = new ArrayList<ModelProperty>();
         this.childPropertiesReadOnly = Collections.unmodifiableList( this.childProperties );
@@ -324,12 +323,12 @@ public final class PropertyEditorPart extends FormPart
             
             final Map<ModelProperty,PropertyEditorPart> finalPropertyEditorsForElement = propertyEditorsForElement;
             
-            element.addListener
+            element.attach
             (
-                new ModelElementListener()
+                new FilteredListener<ElementDisposeEvent>()
                 {
                     @Override
-                    public void handleElementDisposedEvent( final ModelElementDisposedEvent event )
+                    protected void handleTypedEvent( final ElementDisposeEvent event )
                     {
                         for( PropertyEditorPart propertyEditor : finalPropertyEditorsForElement.values() )
                         {
@@ -649,7 +648,7 @@ public final class PropertyEditorPart extends FormPart
         
         if( this.listener != null )
         {
-            this.element.removeListener( this.listener, this.property.getName() );
+            this.element.detach( this.listener, this.property.getName() );
         }
         
         if( this.labelFunctionResult != null )

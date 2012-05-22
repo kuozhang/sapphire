@@ -23,19 +23,22 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementProperty;
+import org.eclipse.sapphire.modeling.ElementValidationEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelElementListener;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
@@ -82,7 +85,7 @@ public final class MasterDetailsContentNode
     private IMasterDetailsContentNodeDef definition;
     private IModelElement modelElement;
     private ImpliedElementProperty modelElementProperty;
-    private ModelElementListener modelElementListener;
+    private Listener modelElementListener;
     private MasterDetailsContentNode parentNode;
     private FunctionResult labelFunctionResult;
     private ImageManager imageManager;
@@ -121,16 +124,16 @@ public final class MasterDetailsContentNode
         {
             this.modelElement = getModelElement().read( this.modelElementProperty );
             
-            this.modelElementListener = new ModelElementListener()
+            this.modelElementListener = new FilteredListener<PropertyEvent>()
             {
                 @Override
-                public void propertyChanged( final ModelPropertyChangeEvent event )
+                protected void handleTypedEvent( final PropertyEvent event )
                 {
                     handleModelElementChange( event );
                 }
             };
             
-            this.modelElement.addListener( this.modelElementListener );
+            this.modelElement.attach( this.modelElementListener );
         }
         else
         {
@@ -179,12 +182,12 @@ public final class MasterDetailsContentNode
             {
                 this.allConditions.add( this.visibleWhenCondition );
                 
-                this.visibleWhenCondition.addListener
+                this.visibleWhenCondition.attach
                 (
-                    new SapphireCondition.Listener()
+                    new Listener()
                     {
                         @Override
-                        public void handleConditionChanged()
+                        public void handle( final Event event )
                         {
                             getContentTree().refresh();
                         }
@@ -194,6 +197,32 @@ public final class MasterDetailsContentNode
         }
         
         this.expanded = false;
+        
+        final Listener elementValidationListener = new FilteredListener<ElementValidationEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final ElementValidationEvent event )
+            {
+                updateValidationState();
+            }
+        };
+        
+        this.modelElement.attach( elementValidationListener );
+        
+        attach
+        (
+            new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    if( event instanceof DisposeEvent )
+                    {
+                        getModelElement().detach( elementValidationListener );
+                    }
+                }
+            }
+        );
         
         this.childPartListener = new Listener()
         {
@@ -681,6 +710,11 @@ public final class MasterDetailsContentNode
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         
+        if( basis() )
+        {
+            factory.add( getModelElement().validation() );
+        }
+        
         for( SapphirePart child : this.sections )
         {
             factory.add( child.getValidationState() );
@@ -694,12 +728,31 @@ public final class MasterDetailsContentNode
         return factory.create();
     }
     
+    private boolean basis()
+    {
+        final IModelElement element = getModelElement();
+        
+        if( element.parent() instanceof ModelElementList<?> )
+        {
+            final ISapphirePart parentPart = getParentPart();
+            
+            if( parentPart != null && parentPart instanceof MasterDetailsContentNode )
+            {
+                final MasterDetailsContentNode parentNode = (MasterDetailsContentNode) parentPart;
+                
+                return ( element != parentNode.getLocalModelElement() );
+            }
+        }
+        
+        return false;
+    }
+    
     @Override
-    protected void handleModelElementChange( final ModelPropertyChangeEvent event )
+    protected void handleModelElementChange( final Event event )
     {
         super.handleModelElementChange( event );
         
-        if( isChildNodeFactoryProperty( event.getProperty() ) )
+        if( event instanceof PropertyEvent && isChildNodeFactoryProperty( ( (PropertyEvent) event ).property() ) )
         {
             runOnDisplayThread
             (
@@ -722,7 +775,7 @@ public final class MasterDetailsContentNode
         
         if( this.modelElementListener != null )
         {
-            this.modelElement.removeListener( this.modelElementListener );
+            this.modelElement.detach( this.modelElementListener );
         }
         
         for( SapphirePart child : this.sections )

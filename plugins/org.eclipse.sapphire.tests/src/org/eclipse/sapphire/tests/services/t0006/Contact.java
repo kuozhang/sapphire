@@ -9,50 +9,43 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.contacts;
+package org.eclipse.sapphire.tests.services.t0006;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
-import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.annotations.Service;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @GenerateImpl
-@Label( standard = "student" )
+@Service( impl = FakeNameValidationService.class )
 
-public interface IStudentOccupation
-
-    extends IOccupation
-    
+public interface Contact extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IStudentOccupation.class );
+    ModelElementType TYPE = new ModelElementType( Contact.class );
     
-    // *** EducationalInstitution ***
+    // *** FirstName ***
     
-    @Label( standard = "educational institution" )
     @Required
-    @XmlBinding( path = "educational-institution" )
     
-    ValueProperty PROP_EDUCATIONAL_INSTITUTION = new ValueProperty( TYPE, "EducationalInstitution" );
+    ValueProperty PROP_FIRST_NAME = new ValueProperty( TYPE, "FirstName" );
     
-    Value<String> getEducationalInstitution();
-    void setEducationalInstitution( String value );
+    Value<String> getFirstName();
+    void setFirstName( String value );
     
-    // *** Program ***
+    // *** LastName ***
     
-    @Label( standard = "program" )
     @Required
-    @XmlBinding( path = "program" )
     
-    ValueProperty PROP_PROGRAM = new ValueProperty( TYPE, "Program" );
+    ValueProperty PROP_LAST_NAME = new ValueProperty( TYPE, "LastName" );
     
-    Value<String> getProgram();
-    void setProgram( String value );
-
+    Value<String> getLastName();
+    void setLastName( String value );
+    
 }

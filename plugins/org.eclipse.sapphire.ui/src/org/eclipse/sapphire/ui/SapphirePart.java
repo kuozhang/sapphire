@@ -33,11 +33,9 @@ import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -91,7 +89,7 @@ public abstract class SapphirePart implements ISapphirePart
     private IModelElement modelElement;
     protected PartDef definition;
     protected Map<String,String> params;
-    private ModelElementListener modelElementListener;
+    private Listener modelElementListener;
     private Status validationState;
     private final ListenerContext listeners = new ListenerContext();
     private Set<SapphirePartListener> listenersDeprecated;
@@ -116,16 +114,16 @@ public abstract class SapphirePart implements ISapphirePart
         
         this.modelElement = modelElement;
         
-        this.modelElementListener = new ModelElementListener()
+        this.modelElementListener = new Listener()
         {
             @Override
-            public void propertyChanged( final ModelPropertyChangeEvent event )
+            public void handle( final Event event )
             {
                 handleModelElementChange( event );
             }
         };
         
-        this.modelElement.addListener( this.modelElementListener );
+        this.modelElement.attach( this.modelElementListener );
         
         this.validationState = Status.createOkStatus();
         
@@ -314,19 +312,19 @@ public abstract class SapphirePart implements ISapphirePart
         return this.imageCache;
     }
     
-    protected void handleModelElementChange( final ModelPropertyChangeEvent event )
+    protected void handleModelElementChange( final Event event )
     {
         // The default implement doesn't do anything.
     }
     
-    public final void attach( final Listener listener )
+    public final boolean attach( final Listener listener )
     {
-        this.listeners.attach( listener );
+        return this.listeners.attach( listener );
     }
     
-    public final void detach( final Listener listener )
+    public final boolean detach( final Listener listener )
     {
-        this.listeners.detach( listener );
+        return this.listeners.detach( listener );
     }
     
     protected final void broadcast( final Event event )
@@ -574,7 +572,7 @@ public abstract class SapphirePart implements ISapphirePart
     
     public void dispose()
     {
-        this.modelElement.removeListener( this.modelElementListener );
+        this.modelElement.detach( this.modelElementListener );
         
         if( this.parent == null )
         {

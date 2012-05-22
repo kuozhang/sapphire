@@ -12,8 +12,8 @@
 package org.eclipse.sapphire.samples.contacts.internal;
 
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.samples.contacts.IContact;
-import org.eclipse.sapphire.samples.contacts.IPhoneNumber;
+import org.eclipse.sapphire.samples.contacts.Contact;
+import org.eclipse.sapphire.samples.contacts.PhoneNumber;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -21,12 +21,12 @@ import org.eclipse.sapphire.samples.contacts.IPhoneNumber;
 
 public final class ContactMethods
 {
-    public static void removePhoneNumbersByAreaCode( final IContact contact,
+    public static void removePhoneNumbersByAreaCode( final Contact contact,
                                                      final String areaCode )
     {
-        final ModelElementList<IPhoneNumber> list = contact.getPhoneNumbers();
+        final ModelElementList<PhoneNumber> list = contact.getPhoneNumbers();
         
-        for( IPhoneNumber pn : list )
+        for( PhoneNumber pn : list )
         {
             if( areaCode.equals( pn.getAreaCode().getText() ) )
             {

@@ -13,11 +13,11 @@ package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -41,16 +41,16 @@ public final class OutlineNodeShowInSourceActionHandler extends SapphireActionHa
         
         final IModelElement element = ( (MasterDetailsContentNode) getPart() ).getLocalModelElement();
         
-        final ModelPropertyListener listener = new ModelPropertyListener()
+        final Listener listener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyContentEvent event )
             {
                 refreshEnablementState();
             }
         };
         
-        element.addListener( listener, ModelPath.ALL_DESCENDENTS );
+        element.attach( listener, ModelPath.ALL_DESCENDENTS );
 
         refreshEnablementState();
         
@@ -63,7 +63,7 @@ public final class OutlineNodeShowInSourceActionHandler extends SapphireActionHa
                 {
                     if( event instanceof DisposeEvent )
                     {
-                        element.removeListener( listener, ModelPath.ALL_DESCENDENTS );
+                        element.detach( listener, ModelPath.ALL_DESCENDENTS );
                     }
                 }
             }

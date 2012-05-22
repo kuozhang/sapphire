@@ -12,11 +12,10 @@
 package org.eclipse.sapphire.samples.gallery.internal;
 
 import org.eclipse.sapphire.DisposeEvent;
-import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.samples.gallery.IValuePropertyActionsGallery;
 import org.eclipse.sapphire.samples.gallery.IValuePropertyActionsGalleryEntity;
@@ -36,10 +35,10 @@ public final class ValuePropertyActionsGalleryReferenceCreateActionHandler1 exte
     {
         super.init( action, def );
         
-        final ModelPropertyListener listener = new ModelPropertyListener()
+        final Listener listener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyContentEvent event )
             {
                 refreshActionState();
             }
@@ -49,23 +48,20 @@ public final class ValuePropertyActionsGalleryReferenceCreateActionHandler1 exte
         final IValuePropertyActionsGallery gallery = element.nearest( IValuePropertyActionsGallery.class );
         final String propertyName = getProperty().getName();
         
-        gallery.addListener( listener, "Entities/*" );
-        element.addListener( listener, propertyName );
+        gallery.attach( listener, "Entities/*" );
+        element.attach( listener, propertyName );
         
         refreshActionState();
         
         attach
         (
-            new Listener()
+            new FilteredListener<DisposeEvent>()
             {
                 @Override
-                public void handle( final Event event )
+                protected void handleTypedEvent( final DisposeEvent event )
                 {
-                    if( event instanceof DisposeEvent )
-                    {
-                        gallery.removeListener( listener, "Entities/*" );
-                        element.addListener( listener, propertyName );
-                    }
+                    gallery.detach( listener, "Entities/*" );
+                    element.detach( listener, propertyName );
                 }
             }
         );

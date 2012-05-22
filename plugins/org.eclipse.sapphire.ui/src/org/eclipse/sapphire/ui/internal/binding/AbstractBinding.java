@@ -13,11 +13,12 @@ package org.eclipse.sapphire.ui.internal.binding;
 
 import java.util.Collection;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -32,7 +33,7 @@ import org.eclipse.swt.widgets.Control;
 public abstract class AbstractBinding
 {
     private PropertyEditorPart editor;
-    private ModelPropertyListener propertyChangeListener;
+    private Listener propertyChangeListener;
     private SapphireRenderingContext context;
     private Control control;
     
@@ -44,16 +45,16 @@ public abstract class AbstractBinding
         this.context = context;
         this.control = control;
 
-        this.propertyChangeListener = new ModelPropertyListener()
+        this.propertyChangeListener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
                 updateTarget();
             }
         };
 
-        getModelElement().addListener( this.propertyChangeListener, this.editor.getProperty().getName() );
+        getModelElement().attach( this.propertyChangeListener, this.editor.getProperty().getName() );
         
         this.control.addDisposeListener
         (
@@ -191,7 +192,7 @@ public abstract class AbstractBinding
     
     public void dispose()
     {
-        getModelElement().removeListener( this.propertyChangeListener, getProperty().getName() );            
+        getModelElement().detach( this.propertyChangeListener, getProperty().getName() );            
     }
     
     protected void initialize( PropertyEditorPart editor,

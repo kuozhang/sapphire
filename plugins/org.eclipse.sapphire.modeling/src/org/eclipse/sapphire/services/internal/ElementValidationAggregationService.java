@@ -11,11 +11,10 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -34,18 +33,18 @@ public final class ElementValidationAggregationService extends ValidationAggrega
     {
         final IModelElement element = context( IModelElement.class );
         
-        final ModelPropertyListener listener = new ModelPropertyListener()
+        final Listener validationServiceListener = new Listener()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            public void handle( final Event event )
             {
                 refresh();
             }
         };
         
-        for( ModelProperty property : element.properties() )
+        for( ValidationService service : element.services( ValidationService.class ) )
         {
-            element.addListener( listener, property.getName() );
+            service.attach( validationServiceListener );
         }
     }
 

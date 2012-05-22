@@ -9,6 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
  *    Konstantin Komissarchik - [342775] Support EL in IMasterDetailsTreeNodeDef.ImagePath
+ *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -21,14 +22,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -47,11 +49,12 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public class DiagramConnectionTemplate extends SapphirePart
 {
-    public static abstract class Listener
+    public static abstract class DiagramConnectionTemplateListener
     {
         public void handleConnectionUpdate(final DiagramConnectionEvent event)
         {
@@ -90,9 +93,9 @@ public class DiagramConnectionTemplate extends SapphirePart
     protected String propertyName;
     private ListProperty modelProperty;
     protected ListProperty connListProperty;
-    protected ModelPropertyListener modelPropertyListener;
+    protected Listener modelPropertyListener;
     protected SapphireDiagramPartListener connPartListener;
-    protected Set<Listener> templateListeners;
+    protected Set<DiagramConnectionTemplateListener> templateListeners;
     // The model path specified in the sdef file
     private ModelPath originalEndpoint2Path;
     // The converted model path for the endpoints. The path is based on the connection element
@@ -121,7 +124,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         this.modelProperty = (ListProperty)ModelUtil.resolve(this.modelElement, this.propertyName);
         
         this.connPartListener = new ConnectionPartListener(); 
-        this.templateListeners = new CopyOnWriteArraySet<Listener>();
+        this.templateListeners = new CopyOnWriteArraySet<DiagramConnectionTemplateListener>();
                     
         String endpt1PropStr = this.bindingDef.getEndpoint1().element().getProperty().getContent();
         String endpt2PropStr = this.bindingDef.getEndpoint2().element().getProperty().getContent();
@@ -181,10 +184,10 @@ public class DiagramConnectionTemplate extends SapphirePart
         }
                 
         // Add model property listener
-        this.modelPropertyListener = new ModelPropertyListener()
+        this.modelPropertyListener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
                 handleModelPropertyChange( event );
             }
@@ -287,7 +290,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     
     public void addModelListener()
     {
-        this.modelElement.addListener(this.modelPropertyListener, this.propertyName);
+        this.modelElement.attach(this.modelPropertyListener, this.propertyName);
         if (getConnectionType() == ConnectionType.OneToMany)
         {
             // it's a 1xn connection type; need to listen to each connection list property
@@ -295,14 +298,14 @@ public class DiagramConnectionTemplate extends SapphirePart
             ModelPath.PropertySegment head = (ModelPath.PropertySegment)this.originalEndpoint2Path.head();
             for( IModelElement listEntryModelElement : list )
             {                
-                listEntryModelElement.addListener(this.modelPropertyListener, head.getPropertyName());                
+                listEntryModelElement.attach(this.modelPropertyListener, head.getPropertyName());                
             }
         }
     }
     
     public void removeModelListener()
     {
-        this.modelElement.removeListener(this.modelPropertyListener, this.propertyName);
+        this.modelElement.detach(this.modelPropertyListener, this.propertyName);
         if (getConnectionType() == ConnectionType.OneToMany)
         {
             // it's a 1xn connection type; need to listen to each connection list property
@@ -310,17 +313,17 @@ public class DiagramConnectionTemplate extends SapphirePart
             for( IModelElement listEntryModelElement : list )
             {
                 ModelPath.PropertySegment head = (ModelPath.PropertySegment)this.originalEndpoint2Path.head();
-                listEntryModelElement.removeListener(this.modelPropertyListener, head.getPropertyName());                
+                listEntryModelElement.detach(this.modelPropertyListener, head.getPropertyName());                
             }
         }
     }
     
-    public void addTemplateListener( final Listener listener )
+    public void addTemplateListener( final DiagramConnectionTemplateListener listener )
     {
         this.templateListeners.add( listener );
     }
     
-    public void removeTemplateListener( final Listener listener )
+    public void removeTemplateListener( final DiagramConnectionTemplateListener listener )
     {
         this.templateListeners.remove( listener );
     }
@@ -604,10 +607,10 @@ public class DiagramConnectionTemplate extends SapphirePart
         }
         
     }
-    protected void handleModelPropertyChange(final ModelPropertyChangeEvent event)
+    protected void handleModelPropertyChange(final PropertyEvent event)
     {
-        final IModelElement element = event.getModelElement();
-        final ListProperty property = (ListProperty)event.getProperty();
+        final IModelElement element = event.element();
+        final ListProperty property = (ListProperty)event.property();
         ModelElementList<?> newList = element.read(property);
         
         if (property == this.connListProperty)
@@ -654,7 +657,7 @@ public class DiagramConnectionTemplate extends SapphirePart
             ModelPath.PropertySegment head = (ModelPath.PropertySegment)this.originalEndpoint2Path.head();
             for (IModelElement newConnParent : newConnParents)
             {
-                newConnParent.addListener(this.modelPropertyListener, head.getPropertyName());
+                newConnParent.attach(this.modelPropertyListener, head.getPropertyName());
                 handleConnectionListChange(newConnParent, this.connListProperty);
             }
 
@@ -704,7 +707,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     
     protected void notifyConnectionUpdate(DiagramConnectionEvent event)
     {
-        for( Listener listener : this.templateListeners )
+        for( DiagramConnectionTemplateListener listener : this.templateListeners )
         {
             listener.handleConnectionUpdate(event);
         }        
@@ -712,7 +715,7 @@ public class DiagramConnectionTemplate extends SapphirePart
 
     protected void notifyConnectionEndpointUpdate(DiagramConnectionEvent event)
     {
-        for( Listener listener : this.templateListeners )
+        for( DiagramConnectionTemplateListener listener : this.templateListeners )
         {
             listener.handleConnectionEndpointUpdate(event);
         }        
@@ -720,7 +723,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     
     public void notifyConnectionAdd(DiagramConnectionEvent event)
     {
-        for( Listener listener : this.templateListeners )
+        for( DiagramConnectionTemplateListener listener : this.templateListeners )
         {
             listener.handleConnectionAdd(event);
         }        
@@ -728,7 +731,7 @@ public class DiagramConnectionTemplate extends SapphirePart
 
     protected void notifyConnectionDelete(DiagramConnectionEvent event)
     {
-        for( Listener listener : this.templateListeners )
+        for( DiagramConnectionTemplateListener listener : this.templateListeners )
         {
             listener.handleConnectionDelete(event);
         }        
@@ -736,7 +739,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     
     protected void notifyAddBendpoint(DiagramConnectionEvent event)
     {
-        for( Listener listener : this.templateListeners )
+        for( DiagramConnectionTemplateListener listener : this.templateListeners )
         {
             listener.handleAddBendpoint(event);
         }        
@@ -744,7 +747,7 @@ public class DiagramConnectionTemplate extends SapphirePart
 
     protected void notifyRemoveBendpoint(DiagramConnectionEvent event)
     {
-        for( Listener listener : this.templateListeners )
+        for( DiagramConnectionTemplateListener listener : this.templateListeners )
         {
             listener.handleRemoveBendpoint(event);
         }        
@@ -752,7 +755,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     
     protected void notifyMoveBendpoint(DiagramConnectionEvent event)
     {
-        for( Listener listener : this.templateListeners )
+        for( DiagramConnectionTemplateListener listener : this.templateListeners )
         {
             listener.handleMoveBendpoint(event);
         }        
@@ -760,7 +763,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     
     protected void notifyResetBendpoints(DiagramConnectionEvent event)
     {
-        for( Listener listener : this.templateListeners )
+        for( DiagramConnectionTemplateListener listener : this.templateListeners )
         {
             listener.handleResetBendpoints(event);
         }        
@@ -768,7 +771,7 @@ public class DiagramConnectionTemplate extends SapphirePart
 
     protected void notifyMoveLabel(DiagramConnectionEvent event)
     {
-        for( Listener listener : this.templateListeners )
+        for( DiagramConnectionTemplateListener listener : this.templateListeners )
         {
             listener.handleMoveLabel(event);
         }        

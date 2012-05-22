@@ -18,6 +18,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.ValidationAggregationService;
 
@@ -39,7 +41,7 @@ public final class ModelElementList<T extends IModelElement>
     private ListBindingImpl binding;
     private List<IModelElement> data;
     private Status validation;
-    private ModelElementListener listMemberListener;
+    private Listener listMemberListener;
     
     public ModelElementList( final IModelElement parent,
                              final ListProperty property )
@@ -52,10 +54,10 @@ public final class ModelElementList<T extends IModelElement>
         this.data = Collections.emptyList();
         this.validation = null;
         
-        this.listMemberListener = new ModelElementListener()
+        this.listMemberListener = new FilteredListener<ElementValidationEvent>()
         {
             @Override
-            public void validationStateChanged( final ValidationStateChangeEvent event )
+            protected void handleTypedEvent( final ElementValidationEvent event )
             {
                 refreshValidationResult( true );
             }
@@ -179,7 +181,7 @@ public final class ModelElementList<T extends IModelElement>
                 
                 for( T modelElement : this )
                 {
-                    modelElement.addListener( this.listMemberListener );
+                    modelElement.attach( this.listMemberListener );
                 }
                 
                 changed = true;
@@ -188,7 +190,7 @@ public final class ModelElementList<T extends IModelElement>
         
         if( changed )
         {
-            parent().notifyPropertyChangeListeners( this.property );
+            ( (ModelElement) parent() ).broadcastPropertyContentEvent( this.property );
         }
         
         refreshValidationResult( true );
@@ -215,11 +217,12 @@ public final class ModelElementList<T extends IModelElement>
         }
         else if( ! this.validation.equals( st ) )
         {
+            final Status before = this.validation;
             this.validation = st;
             
             if( notifyListenersIfChanged )
             {
-                parent().notifyPropertyChangeListeners( this.property );
+                ( (ModelElement) parent() ).broadcastPropertyValidationEvent( this.property, before, st );
             }
         }
     }

@@ -14,9 +14,9 @@ package org.eclipse.sapphire.samples.contacts.internal;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.samples.contacts.IContact;
-import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
-import org.eclipse.sapphire.samples.contacts.ISendContactOp;
+import org.eclipse.sapphire.samples.contacts.Contact;
+import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
+import org.eclipse.sapphire.samples.contacts.SendContactOp;
 import org.eclipse.sapphire.services.PossibleValuesService;
 
 /**
@@ -28,12 +28,12 @@ public final class SendContactToPossibleValuesService extends PossibleValuesServ
     @Override
     protected void fillPossibleValues( final SortedSet<String> values )
     {
-        final ISendContactOp op = context( ISendContactOp.class );
-        final IContact contact = op.getContact().content();
+        final SendContactOp op = context( SendContactOp.class );
+        final Contact contact = op.getContact().content();
         
         if( contact != null )
         {
-            for( IContact c : contact.nearest( IContactsDatabase.class ).getContacts() )
+            for( Contact c : contact.nearest( ContactsDatabase.class ).getContacts() )
             {
                 final String email = c.getEMail().getText();
                 

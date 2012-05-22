@@ -47,7 +47,6 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.services.PossibleTypesService;
@@ -338,7 +337,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
     }
 
     @Override
-    protected void handleListElementChangedEvent( final ModelPropertyChangeEvent event )
+    protected void handleListElementChangedEvent( final Event event )
     {
         super.handleListElementChangedEvent( event );
         

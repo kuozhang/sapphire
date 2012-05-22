@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
@@ -35,8 +36,8 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleTypesService;
@@ -71,7 +72,7 @@ public final class SapphireWithDirective extends PageBookPart
     private IModelElement element;
     private ElementProperty property;
     private IModelElement elementForChildParts;
-    private ModelPropertyListener listener;
+    private Listener listener;
     
     @Override
     protected void init()
@@ -92,16 +93,16 @@ public final class SapphireWithDirective extends PageBookPart
         
         setExposePageValidationState( true );
         
-        this.listener = new ModelPropertyListener()
+        this.listener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyContentEvent event )
             {
                 updateCurrentPage( false );
             }
         };
         
-        this.element.addListener( this.listener, this.property.getName() );
+        this.element.attach( this.listener, this.property.getName() );
         
         updateCurrentPage( true );
     }
@@ -170,7 +171,7 @@ public final class SapphireWithDirective extends PageBookPart
                     
                     final SortedSet<ModelElementType> allPossibleTypes = possibleTypesService.types();
                     final int allPossibleTypesCount = allPossibleTypes.size();
-                    final ModelPropertyListener modelPropertyListener;
+                    final Listener modelPropertyListener;
                     
                     final Style defaultStyle;
                     
@@ -220,10 +221,10 @@ public final class SapphireWithDirective extends PageBookPart
                         actionPresentationKeyboard.attach( masterCheckBox );
                         context.setHelp( masterCheckBox, element, property );
             
-                        modelPropertyListener = new ModelPropertyListener()
+                        modelPropertyListener = new FilteredListener<PropertyEvent>()
                         {
                             @Override
-                            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                            protected void handleTypedEvent( final PropertyEvent event )
                             {
                                 final IModelElement subModelElement = element.read( property ).element();
                                 
@@ -294,10 +295,10 @@ public final class SapphireWithDirective extends PageBookPart
                             context.setHelp( button, element, property );
                         }
                         
-                        modelPropertyListener = new ModelPropertyListener()
+                        modelPropertyListener = new FilteredListener<PropertyEvent>()
                         {
                             @Override
-                            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                            protected void handleTypedEvent( final PropertyEvent event )
                             {
                                 final IModelElement subModelElement = element.read( property ).element();
                                 final Button button;
@@ -385,10 +386,10 @@ public final class SapphireWithDirective extends PageBookPart
                             index++;
                         }
                         
-                        modelPropertyListener = new ModelPropertyListener()
+                        modelPropertyListener = new FilteredListener<PropertyEvent>()
                         {
                             @Override
-                            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                            protected void handleTypedEvent( final PropertyEvent event )
                             {
                                 final IModelElement subModelElement = element.read( property ).element();
                                 final int index;
@@ -457,8 +458,8 @@ public final class SapphireWithDirective extends PageBookPart
                     
                     actionPresentationKeyboard.render();
                     
-                    modelPropertyListener.handlePropertyChangedEvent( null );
-                    element.addListener( modelPropertyListener, property.getName() );
+                    modelPropertyListener.handle( new PropertyContentEvent( element, property ) );
+                    element.attach( modelPropertyListener, property.getName() );
                     
                     typeSelectorComposite.layout( true, true );
                     
@@ -468,7 +469,7 @@ public final class SapphireWithDirective extends PageBookPart
                         {
                             public void widgetDisposed( final DisposeEvent event )
                             {
-                                element.removeListener( modelPropertyListener, property.getName() );
+                                element.detach( modelPropertyListener, property.getName() );
                                 actionPresentationManager.dispose();
                                 actionPresentationKeyboard.dispose();
                             }
@@ -586,7 +587,7 @@ public final class SapphireWithDirective extends PageBookPart
         
         if( this.listener != null )
         {
-            this.element.removeListener( this.listener, this.property.getName() );
+            this.element.detach( this.listener, this.property.getName() );
         }
     }
     

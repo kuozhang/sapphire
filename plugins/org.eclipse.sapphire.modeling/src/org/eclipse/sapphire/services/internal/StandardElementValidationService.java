@@ -11,11 +11,13 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.TransientProperty;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -30,6 +32,24 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class StandardElementValidationService extends ValidationService
 {
+    @Override
+    protected void init()
+    {
+        final IModelElement element = context( IModelElement.class );
+        
+        element.attach
+        (
+            new FilteredListener<PropertyValidationEvent>()
+            {
+                @Override
+                protected void handleTypedEvent( final PropertyValidationEvent event )
+                {
+                    broadcast();
+                }
+            }
+        );
+    }
+
     @Override
     public Status validate()
     {

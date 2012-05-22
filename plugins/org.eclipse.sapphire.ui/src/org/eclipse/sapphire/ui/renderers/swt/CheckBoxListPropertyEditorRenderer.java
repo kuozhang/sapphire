@@ -52,7 +52,6 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
@@ -431,7 +430,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
     }
     
     @Override
-    protected void handleListElementChangedEvent( final ModelPropertyChangeEvent event )
+    protected void handleListElementChangedEvent( final Event event )
     {
         super.handleListElementChangedEvent( event );
         refresh();

@@ -14,21 +14,19 @@ package org.eclipse.sapphire.ui;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphireModelCondition
-
-    extends SapphireCondition
-    
+public abstract class SapphireModelCondition extends SapphireCondition
 {
     private List<String> dependencies;
-    private ModelPropertyListener listener;
+    private Listener listener;
     
     protected void initCondition( final ISapphirePart part,
                                   final String parameter )
@@ -37,10 +35,10 @@ public abstract class SapphireModelCondition
         
         if( this.dependencies != null && ! this.dependencies.isEmpty() )
         {
-            this.listener = new ModelPropertyListener()
+            this.listener = new FilteredListener<PropertyEvent>()
             {
                 @Override
-                public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                protected void handleTypedEvent( final PropertyEvent event )
                 {
                     updateConditionState();
                 }
@@ -50,7 +48,7 @@ public abstract class SapphireModelCondition
             
             for( String dependency : this.dependencies )
             {
-                contextModelElement.addListener( this.listener, dependency );
+                contextModelElement.attach( this.listener, dependency );
             }
         }
     }
@@ -68,7 +66,7 @@ public abstract class SapphireModelCondition
             
             for( String dependency : this.dependencies )
             {
-                contextModelElement.addListener( this.listener, dependency );
+                contextModelElement.detach( this.listener, dependency );
             }
         }
     }

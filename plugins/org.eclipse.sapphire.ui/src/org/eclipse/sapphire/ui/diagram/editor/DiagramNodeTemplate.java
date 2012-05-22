@@ -10,6 +10,7 @@
  *    Konstantin Komissarchik - [342897] Integrate with properties view
  *    Konstantin Komissarchik - [348813] Generalize Sapphire.Diagram.Drop action
  *    Ling Hao - [44319] Image specification for diagram parts inconsistent with the rest of sdef 
+ *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -21,6 +22,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -29,8 +32,7 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
@@ -42,11 +44,12 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public class DiagramNodeTemplate extends SapphirePart
 {
-    public static abstract class Listener
+    public static abstract class DiagramNodeTemplateListener
     {
         public void handleNodeUpdate(final DiagramNodePart nodePart)
         {
@@ -72,9 +75,9 @@ public class DiagramNodeTemplate extends SapphirePart
 	private String toolPaletteDesc;
 	private FunctionResult toolPaletteImageFunctionResult;
 	private DiagramEmbeddedConnectionTemplate embeddedConnTemplate;
-	private ModelPropertyListener modelPropertyListener;
+	private Listener modelPropertyListener;
 	private SapphireDiagramPartListener nodePartListener;
-	private Set<Listener> listeners;	
+	private Set<DiagramNodeTemplateListener> listeners;	
 	private List<DiagramNodePart> diagramNodes;
 	    
 	@Override
@@ -93,7 +96,7 @@ public class DiagramNodeTemplate extends SapphirePart
         this.toolPaletteDesc = this.definition.getToolPaletteDescription().getContent();
         
         this.diagramNodes = new ArrayList<DiagramNodePart>();
-        this.listeners = new CopyOnWriteArraySet<Listener>();
+        this.listeners = new CopyOnWriteArraySet<DiagramNodeTemplateListener>();
         
         this.propertyName = this.definition.getProperty().getContent();
         this.modelProperty = (ListProperty)resolve(this.modelElement, this.propertyName);
@@ -146,10 +149,10 @@ public class DiagramNodeTemplate extends SapphirePart
         );
 
         // Add model property listener
-        this.modelPropertyListener = new ModelPropertyListener()
+        this.modelPropertyListener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
                 handleModelPropertyChange( event );
             }
@@ -262,20 +265,20 @@ public class DiagramNodeTemplate extends SapphirePart
     
     public void addModelListener()
     {
-        this.modelElement.addListener(this.modelPropertyListener, this.propertyName);
+        this.modelElement.attach(this.modelPropertyListener, this.propertyName);
     }
     
     public void removeModelLister()
     {
-        this.modelElement.removeListener(this.modelPropertyListener, this.propertyName);
+        this.modelElement.detach(this.modelPropertyListener, this.propertyName);
     }
     
-    public void addTemplateListener( final Listener listener )
+    public void addTemplateListener( final DiagramNodeTemplateListener listener )
     {
         this.listeners.add( listener );
     }
     
-    public void removeTemplateListener( final Listener listener )
+    public void removeTemplateListener( final DiagramNodeTemplateListener listener )
     {
         this.listeners.remove( listener );
     }
@@ -286,10 +289,10 @@ public class DiagramNodeTemplate extends SapphirePart
 		throw new UnsupportedOperationException();
 	}	
     
-    private void handleModelPropertyChange(final ModelPropertyChangeEvent event)
+    private void handleModelPropertyChange(final PropertyEvent event)
     {
-    	final IModelElement element = event.getModelElement();
-    	final ModelProperty property = event.getProperty();
+    	final IModelElement element = event.element();
+    	final ModelProperty property = event.property();
     	ModelElementList<?> tempList = (ModelElementList<?>)element.read(property);
     	
     	// filter the list property with specified element type
@@ -425,7 +428,7 @@ public class DiagramNodeTemplate extends SapphirePart
     
     private void notifyNodeUpdate(DiagramNodePart nodePart)
     {
-        for( Listener listener : this.listeners )
+        for( DiagramNodeTemplateListener listener : this.listeners )
         {
             listener.handleNodeUpdate(nodePart);
         }        
@@ -433,7 +436,7 @@ public class DiagramNodeTemplate extends SapphirePart
     
     private void notifyNodeAdd(DiagramNodePart nodePart)
     {
-        for( Listener listener : this.listeners )
+        for( DiagramNodeTemplateListener listener : this.listeners )
         {
             listener.handleNodeAdd(nodePart);
         }                
@@ -441,7 +444,7 @@ public class DiagramNodeTemplate extends SapphirePart
     
     private void notifyNodeDelete(DiagramNodePart nodePart)
     {
-        for( Listener listener : this.listeners )
+        for( DiagramNodeTemplateListener listener : this.listeners )
         {
             listener.handleNodeDelete(nodePart);
         }				
@@ -449,7 +452,7 @@ public class DiagramNodeTemplate extends SapphirePart
 
 	private void notifyNodeMoveEvent(DiagramNodeEvent event)
 	{
-		for( Listener listener : this.listeners )
+		for( DiagramNodeTemplateListener listener : this.listeners )
         {
             listener.handleNodeMove(event);
         }				

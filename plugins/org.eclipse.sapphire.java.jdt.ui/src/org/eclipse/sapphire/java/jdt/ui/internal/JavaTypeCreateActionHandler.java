@@ -49,6 +49,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraintBehavior;
@@ -58,15 +59,14 @@ import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.util.NLS;
-import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
+import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -97,16 +97,16 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
         final IModelElement element = getModelElement();
         final ValueProperty property = (ValueProperty) getProperty();
         
-        final ModelPropertyListener listener = new ModelPropertyListener()
+        final Listener listener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
                 refreshEnablementState();
             }
         };
         
-        element.addListener( listener, property.getName() );
+        element.attach( listener, property.getName() );
         
         attach
         (
@@ -117,7 +117,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
                 {
                     if( event instanceof DisposeEvent )
                     {
-                        element.removeListener( listener, property.getName() );
+                        element.detach( listener, property.getName() );
                     }
                 }
             }

@@ -9,49 +9,47 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.contacts;
+package org.eclipse.sapphire.tests.modeling.events.t0001;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
-import org.eclipse.sapphire.modeling.annotations.Image;
-import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Image( path = "Contact.png" )
 @GenerateImpl
 
-public interface IConnection
-
-    extends IModelElement
-
+public interface RootElement extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IConnection.class );
-
-    // *** Name ***
+    ModelElementType TYPE = new ModelElementType( RootElement.class );
     
-    @Label( standard = "name" )
+    // *** Enablement ***
+
+    @Type( base = Boolean.class )
+    @DefaultValue( text = "true" )
+
+    ValueProperty PROP_ENABLEMENT = new ValueProperty( TYPE, "Enablement" );
+
+    Value<Boolean> getEnablement();
+    void setEnablement( String value );
+    void setEnablement( Boolean value );
+    
+    // *** RequiredStringValue ***
+
     @Required
-    @NoDuplicates
+    @Enablement( expr = "${ Enablement }" )
     
-    @PossibleValues
-    ( 
-        property = "/Contacts/Name", 
-        caseSensitive = false, 
-        invalidValueMessage = "Could not find contact name \"{0}\" in the database." 
-    )
+    ValueProperty PROP_REQUIRED_STRING_VALUE = new ValueProperty( TYPE, "RequiredStringValue" );
 
-    ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+    Value<String> getRequiredStringValue();
+    void setRequiredStringValue( String value );
 
-    Value<String> getName();
-    void setName( String name );
-    
 }

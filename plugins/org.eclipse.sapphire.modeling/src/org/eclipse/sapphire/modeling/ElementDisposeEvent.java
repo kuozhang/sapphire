@@ -9,24 +9,17 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.contacts;
-
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
-import org.eclipse.sapphire.modeling.annotations.Label;
+package org.eclipse.sapphire.modeling;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateImpl
-@Label( standard = "homemaker" )
-
-public interface IHomemakerOccupation
-
-    extends IOccupation
-    
+public final class ElementDisposeEvent extends ElementEvent
 {
-    ModelElementType TYPE = new ModelElementType( IHomemakerOccupation.class );
-    
+    public ElementDisposeEvent( final IModelElement element )
+    {
+        super( element );
+    }
+
 }

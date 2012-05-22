@@ -21,7 +21,7 @@ import org.eclipse.sapphire.ListenerContext;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class MutableReference<T>
+public final class MutableReference<T>
 {
     private T value;
     private final ListenerContext listeners = new ListenerContext();
@@ -57,14 +57,14 @@ public class MutableReference<T>
         this.listeners.broadcast( new ReferenceChangedEvent( oldValue, value ) );
     }
     
-    public void attach( final Listener listener )
+    public boolean attach( final Listener listener )
     {
-        this.listeners.attach( listener );
+        return this.listeners.attach( listener );
     }
     
-    public void detach( final Listener listener )
+    public boolean detach( final Listener listener )
     {
-        this.listeners.detach( listener );
+        return this.listeners.detach( listener );
     }
     
     public final class ReferenceChangedEvent extends Event

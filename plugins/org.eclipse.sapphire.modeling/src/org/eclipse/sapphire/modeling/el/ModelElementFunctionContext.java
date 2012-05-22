@@ -11,14 +11,15 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationService;
 import org.eclipse.sapphire.modeling.util.NLS;
@@ -27,10 +28,7 @@ import org.eclipse.sapphire.modeling.util.NLS;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class ModelElementFunctionContext
-
-    extends FunctionContext
-    
+public class ModelElementFunctionContext extends FunctionContext
 {
     private final IModelElement element;
     private final LocalizationService localizationService;
@@ -174,23 +172,23 @@ public class ModelElementFunctionContext
             
             return new FunctionResult( this, context )
             {
-                private ModelPropertyListener listener;
+                private Listener listener;
                 
                 @Override
                 protected void init()
                 {
                     super.init();
                     
-                    this.listener = new ModelPropertyListener()
+                    this.listener = new FilteredListener<PropertyEvent>()
                     {
                         @Override
-                        public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                        protected void handleTypedEvent( final PropertyEvent event )
                         {
                             refresh();
                         }
                     };
                     
-                    element.addListener( this.listener, property.getName() );
+                    element.attach( this.listener, property.getName() );
                 }
 
                 @Override
@@ -203,7 +201,7 @@ public class ModelElementFunctionContext
                 public void dispose()
                 {
                     super.dispose();
-                    element.removeListener( this.listener, property.getName() );
+                    element.detach( this.listener, property.getName() );
                 }
             };
         }

@@ -10,6 +10,7 @@
  *    Konstantin Komissarchik - [342897] Integrate with properties view
  *    Konstantin Komissarchik - [342775] Support EL in IMasterDetailsTreeNodeDef.ImagePath
  *    Ling Hao - [44319] Image specification for diagram parts inconsistent with the rest of sdef 
+ *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -19,11 +20,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.Bounds;
@@ -43,6 +45,7 @@ import org.eclipse.sapphire.ui.diagram.def.ImagePlacement;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public class DiagramNodePart 
@@ -64,7 +67,7 @@ public class DiagramNodePart
 	private ValueProperty labelProperty;
 	private SapphireAction defaultAction;
 	private SapphireActionHandler defaultActionHandler;
-	private ModelPropertyListener modelPropertyListener;
+	private Listener modelPropertyListener;
 	private PropertiesViewContributionManager propertiesViewContributionManager; 
 	private DiagramNodeBounds nodeBounds = new DiagramNodeBounds();
 
@@ -168,15 +171,15 @@ public class DiagramNodePart
         
         // Add model property listener. It listens to all the properties so that the
         // validation status change would trigger node update
-        this.modelPropertyListener =  new ModelPropertyListener()
+        this.modelPropertyListener =  new FilteredListener<PropertyEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
                 notifyNodeUpdate();
             }
         };
-        this.modelElement.addListener(this.modelPropertyListener, "*");
+        this.modelElement.attach(this.modelPropertyListener, "*");
     }
     
     public DiagramNodeTemplate getDiagramNodeTemplate()
@@ -274,9 +277,8 @@ public class DiagramNodePart
                 result.dispose();
             }
         }
-        
 
-        this.modelElement.removeListener(this.modelPropertyListener, "*");
+        this.modelElement.detach(this.modelPropertyListener, "*");
     }
     
     public String getLabel()

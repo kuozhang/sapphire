@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.services.Service;
 
 /**
@@ -156,13 +157,12 @@ public interface IModelElement extends IModelParticle
     
     boolean enabled( ModelProperty property );
     
-    void addListener( ModelElementListener listener );
-    void addListener( ModelPropertyListener listener, String path );
-    void addListener( ModelPropertyListener listener, ModelPath path );
-    void removeListener( ModelElementListener listener );
-    void removeListener( ModelPropertyListener listener, String path );
-    void removeListener( ModelPropertyListener listener, ModelPath path );
-    void notifyPropertyChangeListeners( ModelProperty property );
+    boolean attach( Listener listener );
+    void attach( Listener listener, String path );
+    void attach( Listener listener, ModelPath path );
+    boolean detach( Listener listener );
+    void detach( Listener listener, String path );
+    void detach( Listener listener, ModelPath path );
     
     void dispose();
     boolean disposed();

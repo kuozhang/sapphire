@@ -9,24 +9,24 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling;
+package org.eclipse.sapphire.samples.contacts;
+
+import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Label;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ModelElementDisposedEvent
-{
-    private final IModelElement modelElement;
-    
-    public ModelElementDisposedEvent( final IModelElement modelElement )
-    {
-        this.modelElement = modelElement;
-    }
-    
-    public IModelElement getModelElement()
-    {
-        return this.modelElement;
-    }
+@GenerateImpl
+@Label( standard = "homemaker" )
 
+public interface HomemakerOccupation
+
+    extends Occupation
+    
+{
+    ModelElementType TYPE = new ModelElementType( HomemakerOccupation.class );
+    
 }

@@ -11,16 +11,17 @@
 
 package org.eclipse.sapphire.samples.calendar.integrated.internal;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.BindingImpl;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ValueBindingImpl;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
-import org.eclipse.sapphire.samples.contacts.IContact;
-import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
+import org.eclipse.sapphire.samples.contacts.Contact;
+import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -29,8 +30,8 @@ import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
 public final class AttendeeResource extends Resource
 {
     private final org.eclipse.sapphire.samples.calendar.IAttendee base;
-    private final IContactsDatabase contacts;
-    private final ModelElementListener listener;
+    private final ContactsDatabase contacts;
+    private final Listener listener;
     
     public AttendeeResource( final Resource parent,
                              final org.eclipse.sapphire.samples.calendar.IAttendee base )
@@ -38,14 +39,14 @@ public final class AttendeeResource extends Resource
         super( parent );
         
         this.base = base;
-        this.contacts = adapt( IContactsDatabase.class );
+        this.contacts = adapt( ContactsDatabase.class );
         
-        this.listener = new ModelElementListener()
+        this.listener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            public void propertyChanged( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
-                final ModelProperty property = event.getProperty();
+                final ModelProperty property = event.property();
                 final IModelElement element = element();
                 
                 if( property == org.eclipse.sapphire.samples.calendar.IAttendee.PROP_NAME )
@@ -58,25 +59,25 @@ public final class AttendeeResource extends Resource
                 {
                     element.refresh( IAttendee.PROP_TYPE );
                 }
-                else if( property == IContactsDatabase.PROP_CONTACTS )
+                else if( property == ContactsDatabase.PROP_CONTACTS )
                 {
                     element.refresh( IAttendee.PROP_IN_CONTACTS_DATABASE );
                     element.refresh( IAttendee.PROP_E_MAIL );
                 }
-                else if( property == IContact.PROP_NAME )
+                else if( property == Contact.PROP_NAME )
                 {
                     element.refresh( IAttendee.PROP_IN_CONTACTS_DATABASE );
                     element.refresh( IAttendee.PROP_E_MAIL );
                 }
-                else if( property == IContact.PROP_E_MAIL )
+                else if( property == Contact.PROP_E_MAIL )
                 {
                     element.refresh( IAttendee.PROP_E_MAIL );
                 }
             }
         };
         
-        this.base.addListener( this.listener );
-        this.contacts.addListener( this.listener );
+        this.base.attach( this.listener );
+        this.contacts.attach( this.listener );
     }
     
     public org.eclipse.sapphire.samples.calendar.IAttendee getBase()
@@ -128,14 +129,14 @@ public final class AttendeeResource extends Resource
                 @Override
                 public String read()
                 {
-                    final IContact c = findContactRecord( false );
+                    final Contact c = findContactRecord( false );
                     return ( c != null ? c.getEMail().getText() : null );
                 }
                 
                 @Override
                 public void write( final String value )
                 {
-                    final IContact c = findContactRecord( value != null );
+                    final Contact c = findContactRecord( value != null );
                     
                     if( c != null )
                     {
@@ -165,14 +166,14 @@ public final class AttendeeResource extends Resource
         return null;
     }
 
-    private IContact findContactRecord( final boolean createIfNecessary )
+    private Contact findContactRecord( final boolean createIfNecessary )
     {
-        IContact c = null;
+        Contact c = null;
         final String name = this.base.getName().getText();
         
         if( name != null )
         {
-            for( IContact contact : this.contacts.getContacts() )
+            for( Contact contact : this.contacts.getContacts() )
             {
                 if( name.equals( contact.getName().getText() ) )
                 {
@@ -187,9 +188,9 @@ public final class AttendeeResource extends Resource
                 c.setName( name );
             }
     
-            for( IContact contact : this.contacts.getContacts() )
+            for( Contact contact : this.contacts.getContacts() )
             {
-                contact.addListener( this.listener );
+                contact.attach( this.listener );
             }
         }
         

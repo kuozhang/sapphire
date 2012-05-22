@@ -12,11 +12,10 @@
 package org.eclipse.sapphire.samples.calendar.ui;
 
 import org.eclipse.sapphire.DisposeEvent;
-import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -38,30 +37,27 @@ public final class ShowContactDetailsActionHandler extends SapphireActionHandler
         
         final IModelElement element = getModelElement();
         
-        final ModelPropertyListener listener = new ModelPropertyListener()
+        final Listener listener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyContentEvent event )
             {
                 refreshEnablementState();
             }
         };
         
-        element.addListener( listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
+        element.attach( listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
         
         refreshEnablementState();
         
         attach
         (
-            new Listener()
+            new FilteredListener<DisposeEvent>()
             {
                 @Override
-                public void handle( final Event event )
+                protected void handleTypedEvent( final DisposeEvent event )
                 {
-                    if( event instanceof DisposeEvent )
-                    {
-                        element.removeListener( listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
-                    }
+                    element.detach( listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
                 }
             }
         );

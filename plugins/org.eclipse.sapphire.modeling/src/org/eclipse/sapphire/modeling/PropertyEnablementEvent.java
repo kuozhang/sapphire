@@ -15,11 +15,30 @@ package org.eclipse.sapphire.modeling;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ModelPropertyListener
+public final class PropertyEnablementEvent extends PropertyEvent
 {
-    public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+    private final boolean before;
+    private final boolean after;
+    
+    public PropertyEnablementEvent( final IModelElement element,
+                                    final ModelProperty property,
+                                    final boolean before,
+                                    final boolean after )
     {
-        // The default implementation doesn't do anything.
+        super( element, property );
+        
+        this.before = before;
+        this.after = after;
     }
     
+    public boolean before()
+    {
+        return this.before;
+    }
+    
+    public boolean after()
+    {
+        return this.after;
+    }
+
 }

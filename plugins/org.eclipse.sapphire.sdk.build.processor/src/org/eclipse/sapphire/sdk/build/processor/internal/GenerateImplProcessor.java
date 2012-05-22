@@ -36,6 +36,9 @@ import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
+import org.eclipse.sapphire.modeling.PropertyEnablementEvent;
+import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.Transient;
@@ -207,6 +210,10 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         c2.addParameter( new MethodParameterModel( "resource", Resource.class ) );
         c2.getBody().append( "super( TYPE, null, null, resource );" );
+        
+        elImplClass.addImport( PropertyContentEvent.class );
+        elImplClass.addImport( PropertyValidationEvent.class );
+        elImplClass.addImport( PropertyEnablementEvent.class );
         
         final Map<String,PropertyFieldDeclaration> propFields = new TreeMap<String,PropertyFieldDeclaration>();
         
@@ -546,11 +553,23 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                    "    if( this.#1.equals( oldValue ) )\n" +
                    "    {\n" + 
                    "        this.#1 = oldValue;\n" + 
-                   "    }\n" + 
-                   "    \n" +
-                   "    if( this.#1 != oldValue || enablementRefreshResult.changed() )\n" +
+                   "    }\n" +
+                   "    else\n" +
                    "    {\n" +
-                   "        notifyPropertyChangeListeners( #3, enablementRefreshResult );\n" +
+                   "        if( ! equal( this.#1.getText( false ), oldValue.getText( false ) ) || ! equal( this.#1.getDefaultText(), oldValue.getDefaultText() ) )\n" +
+                   "        {\n" +
+                   "            broadcast( new PropertyContentEvent( this, #3 ) );\n" +
+                   "        }\n" +
+                   "        \n" +
+                   "        if( ! this.#1.validation().equals( oldValue.validation() ) )\n" +
+                   "        {\n" +
+                   "            broadcast( new PropertyValidationEvent( this, #3, oldValue.validation(), this.#1.validation() ) );\n" +
+                   "        }\n" +
+                   "    }\n" +
+                   "    \n" +
+                   "    if( enablementRefreshResult.changed() )\n" +
+                   "    {\n" +
+                   "        broadcast( new PropertyEnablementEvent( this, #3, enablementRefreshResult.before(), enablementRefreshResult.after() ) );\n" +
                    "    }\n" +
                    "}",
                    variableName, wrapperType.getSimpleName(), propField.name );
@@ -820,7 +839,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                    "    \n" +
                    "    if( ! notified && enablementRefreshResult.changed() )\n" +
                    "    {\n" +
-                   "        notifyPropertyChangeListeners( #2, enablementRefreshResult );\n" +
+                   "        broadcast( new PropertyEnablementEvent( this, #2, enablementRefreshResult.before(), enablementRefreshResult.after() ) );\n" +
                    "    }\n" +
                    "}",
                    variableName, propField.name, memberType.getSimpleName() );
@@ -943,7 +962,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                    "    \n" +
                    "    if( ! notified && enablementRefreshResult.changed() )\n" +
                    "    {\n" +
-                   "        notifyPropertyChangeListeners( #2, enablementRefreshResult );\n" +
+                   "        broadcast( new PropertyEnablementEvent( this, #2, enablementRefreshResult.before(), enablementRefreshResult.after() ) );\n" +
                    "    }\n" +
                    "}",
                    variableName, propField.name, memberType.getSimpleName() );
@@ -1118,7 +1137,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                    "    {\n" +
                    "        if( object != null )\n" +
                    "        {\n" +
-                   "            notifyPropertyChangeListeners( #3, enablementRefreshResult );\n" +
+                   "            broadcast( new PropertyContentEvent( this, #3 ) );\n" +
                    "        }\n" +
                    "    }\n" +
                    "    else\n" +
@@ -1127,11 +1146,15 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                    "        {\n" + 
                    "            this.#1 = oldTransient;\n" + 
                    "        }\n" + 
-                   "        \n" +
-                   "        if( this.#1 != oldTransient || enablementRefreshResult.changed() )\n" +
+                   "        else\n" +
                    "        {\n" +
-                   "            notifyPropertyChangeListeners( #3, enablementRefreshResult );\n" +
+                   "            broadcast( new PropertyContentEvent( this, #3 ) );\n" +
                    "        }\n" +
+                   "    }\n" +
+                   "    \n" +
+                   "    if( enablementRefreshResult.changed() )\n" +
+                   "    {\n" +
+                   "        broadcast( new PropertyEnablementEvent( this, #3, enablementRefreshResult.before(), enablementRefreshResult.after() ) );\n" +
                    "    }\n" +
                    "}",
                    variableName, wrapperType.getSimpleName(), propField.name );

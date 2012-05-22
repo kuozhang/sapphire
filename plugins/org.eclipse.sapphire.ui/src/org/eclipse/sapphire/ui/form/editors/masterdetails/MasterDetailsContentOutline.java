@@ -227,14 +227,14 @@ public final class MasterDetailsContentOutline
         return this.listeners;
     }
     
-    public final void attach( final Listener listener )
+    public final boolean attach( final Listener listener )
     {
-        this.listeners.attach( listener );
+        return this.listeners.attach( listener );
     }
     
-    public final void detach( final Listener listener )
+    public final boolean detach( final Listener listener )
     {
-        this.listeners.detach( listener );
+        return this.listeners.detach( listener );
     }
     
     public void notifyOfNodeUpdate( final MasterDetailsContentNode node )

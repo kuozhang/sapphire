@@ -14,15 +14,16 @@ package org.eclipse.sapphire.samples.gallery.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.samples.gallery.ElementPropertyCustomGallery;
 import org.eclipse.sapphire.samples.gallery.IChildElement;
 import org.eclipse.sapphire.samples.gallery.IChildElementWithEnum;
 import org.eclipse.sapphire.samples.gallery.IChildElementWithInteger;
-import org.eclipse.sapphire.services.PossibleTypesServiceData;
 import org.eclipse.sapphire.services.PossibleTypesService;
+import org.eclipse.sapphire.services.PossibleTypesServiceData;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -37,18 +38,18 @@ public final class ElementPropertyCustomGalleryServices
         @Override
         protected void initPossibleTypesService()
         {
-            final ModelPropertyListener listener = new ModelPropertyListener()
+            final Listener listener = new FilteredListener<PropertyContentEvent>()
             {
                 @Override
-                public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                protected void handleTypedEvent( final PropertyContentEvent event )
                 {
                     refresh();
                 }
             };
             
             final ElementPropertyCustomGallery gallery = context( ElementPropertyCustomGallery.class );
-            gallery.addListener( listener, ElementPropertyCustomGallery.PROP_ALLOW_CHILD_ELEMENT_WITH_INTEGER.getName() );
-            gallery.addListener( listener, ElementPropertyCustomGallery.PROP_ALLOW_CHILD_ELEMENT_WITH_ENUM.getName() );
+            gallery.attach( listener, ElementPropertyCustomGallery.PROP_ALLOW_CHILD_ELEMENT_WITH_INTEGER.getName() );
+            gallery.attach( listener, ElementPropertyCustomGallery.PROP_ALLOW_CHILD_ELEMENT_WITH_ENUM.getName() );
         }
         
         @Override

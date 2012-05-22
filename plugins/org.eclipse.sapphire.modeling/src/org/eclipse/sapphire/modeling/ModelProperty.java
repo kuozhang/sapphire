@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.annotations.PropertyListeners;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
@@ -45,8 +46,8 @@ public abstract class ModelProperty extends ModelMetadataItem
     private final Class<?> typeClass;
     private final ModelElementType type;
     
-    private Set<ModelPropertyListener> listeners;
-    private Set<ModelPropertyListener> listenersReadOnly;
+    private Set<Listener> listeners;
+    private Set<Listener> listenersReadOnly;
     private ServiceContext serviceContext;
     
     public ModelProperty( final ModelElementType modelElementType,
@@ -63,7 +64,7 @@ public abstract class ModelProperty extends ModelMetadataItem
             
             if( propertyListenersAnnotation != null )
             {
-                for( Class<? extends ModelPropertyListener> cl : propertyListenersAnnotation.value() )
+                for( Class<? extends Listener> cl : propertyListenersAnnotation.value() )
                 {
                     try
                     {
@@ -242,7 +243,7 @@ public abstract class ModelProperty extends ModelMetadataItem
         return hasAnnotation( Derived.class );
     }
     
-    public Set<ModelPropertyListener> getListeners()
+    public Set<Listener> getListeners()
     {
         synchronized( this )
         {
@@ -257,13 +258,13 @@ public abstract class ModelProperty extends ModelMetadataItem
         }
     }
     
-    public void addListener( final ModelPropertyListener listener )
+    public void addListener( final Listener listener )
     {
         synchronized( this )
         {
             if( this.listeners == null )
             {
-                this.listeners = new CopyOnWriteArraySet<ModelPropertyListener>();
+                this.listeners = new CopyOnWriteArraySet<Listener>();
                 this.listenersReadOnly = Collections.unmodifiableSet( this.listeners );
             }
             

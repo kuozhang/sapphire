@@ -37,18 +37,18 @@ import org.eclipse.sapphire.samples.contacts.internal.SendContactToPossibleValue
 
 @GenerateImpl
 
-public interface ISendContactOp extends IExecutableModelElement
+public interface SendContactOp extends IExecutableModelElement
 {
-    ModelElementType TYPE = new ModelElementType(ISendContactOp.class);
+    ModelElementType TYPE = new ModelElementType(SendContactOp.class);
     
     // *** Contact ***
 
-    @Type( base = IContact.class )
+    @Type( base = Contact.class )
 
     TransientProperty PROP_CONTACT = new TransientProperty( TYPE, "Contact" );
 
-    Transient<IContact> getContact();
-    void setContact( IContact value );
+    Transient<Contact> getContact();
+    void setContact( Contact value );
 
     // *** To ***
 

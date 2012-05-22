@@ -15,13 +15,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 
@@ -35,7 +36,7 @@ public abstract class AggregateFunction extends Function
     {
         private IModelElement lastListParentElement;
         private String lastListenerModelPath;
-        private ModelPropertyListener listener;
+        private Listener listener;
         
         public AggregateFunctionResult( final Function function,
                                         final FunctionContext context )
@@ -109,7 +110,7 @@ public abstract class AggregateFunction extends Function
                     {
                         if( this.lastListParentElement != null )
                         {
-                            this.lastListParentElement.removeListener( this.listener, this.lastListenerModelPath );
+                            this.lastListParentElement.detach( this.listener, this.lastListenerModelPath );
                         }
                         
                         this.lastListParentElement = listParentElement;
@@ -117,17 +118,17 @@ public abstract class AggregateFunction extends Function
                         
                         if( this.listener == null )
                         {
-                            this.listener = new ModelPropertyListener()
+                            this.listener = new FilteredListener<PropertyContentEvent>()
                             {
                                 @Override
-                                public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                                protected void handleTypedEvent( final PropertyContentEvent event )
                                 {
                                     refresh();
                                 }
                             };
                         }
                         
-                        listParentElement.addListener( this.listener, listenerModelPath );
+                        listParentElement.attach( this.listener, listenerModelPath );
                     }
                 }
                 else if( collection instanceof Object[] )
@@ -155,7 +156,7 @@ public abstract class AggregateFunction extends Function
             
             if( this.lastListParentElement != null )
             {
-                this.lastListParentElement.removeListener( this.listener, this.lastListenerModelPath );
+                this.lastListParentElement.detach( this.listener, this.lastListenerModelPath );
             }
         }
     }

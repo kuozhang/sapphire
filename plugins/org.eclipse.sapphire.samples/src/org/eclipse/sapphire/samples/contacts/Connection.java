@@ -11,59 +11,37 @@
 
 package org.eclipse.sapphire.samples.contacts;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
-import org.eclipse.sapphire.modeling.annotations.Service;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.samples.contacts.internal.ManagerNameValidationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
+@Image( path = "Contact.png" )
 @GenerateImpl
-@Label( standard = "job" )
 
-public interface IJobOccupation
+public interface Connection
 
-    extends IOccupation
-    
+    extends IModelElement
+
 {
-    ModelElementType TYPE = new ModelElementType( IJobOccupation.class );
-    
-    // *** Employer ***
-    
-    @Label( standard = "employer" )
-    @Required
-    @XmlBinding( path = "employer" )
-    
-    ValueProperty PROP_EMPLOYER = new ValueProperty( TYPE, "Employer" );
-    
-    Value<String> getEmployer();
-    void setEmployer( String value );
-    
-    // *** Title ***
-    
-    @Label( standard = "title" )
-    @Required
-    @XmlBinding( path = "title" )
-    
-    ValueProperty PROP_TITLE = new ValueProperty( TYPE, "Title" );
-    
-    Value<String> getTitle();
-    void setTitle( String value );
-    
-    // *** Manager ***
-    
-    @Label( standard = "manager" )
-    @Service( impl = ManagerNameValidationService.class )
-    @XmlBinding( path = "manager" )
+    ModelElementType TYPE = new ModelElementType( Connection.class );
 
+    // *** Name ***
+    
+    @Label( standard = "name" )
+    @Required
+    @NoDuplicates
+    
     @PossibleValues
     ( 
         property = "/Contacts/Name", 
@@ -71,9 +49,9 @@ public interface IJobOccupation
         invalidValueMessage = "Could not find contact name \"{0}\" in the database." 
     )
 
-    ValueProperty PROP_MANAGER = new ValueProperty( TYPE, "Manager" );
+    ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
 
-    Value<String> getManager();
-    void setManager( String value );
-
+    Value<String> getName();
+    void setName( String name );
+    
 }

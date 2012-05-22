@@ -12,13 +12,12 @@
 package org.eclipse.sapphire.samples.gallery.internal;
 
 import org.eclipse.sapphire.DisposeEvent;
-import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
@@ -43,10 +42,10 @@ public final class PrefixActionHandlerForList extends SapphirePropertyEditorActi
         
         final IModelElement element = getModelElement();
         
-        final ModelPropertyListener listener = new ModelPropertyListener()
+        final Listener listener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyContentEvent event )
             {
                 refreshEnabledState();
                 refreshCheckedState();
@@ -55,22 +54,19 @@ public final class PrefixActionHandlerForList extends SapphirePropertyEditorActi
         
         final String path = getProperty().getName() + "/*";
         
-        element.addListener( listener, path );
+        element.attach( listener, path );
         
         refreshEnabledState();
         refreshCheckedState();
         
         attach
         (
-            new Listener()
+            new FilteredListener<DisposeEvent>()
             {
                 @Override
-                public void handle( final Event event )
+                protected void handleTypedEvent( final DisposeEvent event )
                 {
-                    if( event instanceof DisposeEvent )
-                    {
-                        element.removeListener( listener, path );                        
-                    }
+                    element.detach( listener, path );                        
                 }
             }
         );

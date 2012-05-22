@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -82,8 +83,6 @@ public class ServiceContext
         
         if( services == null )
         {
-            services = new ArrayList<Service>();
-            
             // Find all applicable service factories declared via the extension system.
             
             final Map<String,ServiceFactoryProxy> applicable = new HashMap<String,ServiceFactoryProxy>();
@@ -109,29 +108,32 @@ public class ServiceContext
             
             // Process local service definitions.
             
+            final ReadOnlyListFactory<Service> servicesListFactory = ReadOnlyListFactory.create();
+            
             for( ServiceFactoryProxy factory : local() )
             {
                 if( factory.applicable( this, serviceType ) )
                 {
-                    Service instance = null;
+                    Service service = null;
                     
                     try
                     {
-                        instance = factory.create( this, serviceType );
+                        service = factory.create( this, serviceType );
+                        service.init( this, factory.parameters() );
                     }
                     catch( Exception e )
                     {
                         LoggingService.log( e );
                     }
                     
-                    if( instance != null )
+                    if( service != null )
                     {
                         for( String overriddenServiceId : factory.overrides() )
                         {
                             applicable.remove( overriddenServiceId );
                         }
                         
-                        services.add( instance );
+                        servicesListFactory.add( service );
                     }
                 }
             }
@@ -140,39 +142,45 @@ public class ServiceContext
             
             for( ServiceFactoryProxy factory : applicable.values() )
             {
+                Service service = null;
+                
                 try
                 {
-                    final Service service = factory.create( this, serviceType );
-                    
-                    if( service != null )
-                    {
-                        services.add( service );
-                    }
+                    service = factory.create( this, serviceType );
+                    service.init( this, factory.parameters() );
+                }
+                catch( Exception e )
+                {
+                    LoggingService.log( e );
+                }
+
+                if( service != null )
+                {
+                    servicesListFactory.add( service );
+                }
+            }
+            
+            // Store the list of services for future use.
+            
+            services = servicesListFactory.export();
+            this.services.put( serviceType, services );
+            
+            // Initialize services. This happens last because initialization can cause a reentrant call
+            // to this method, so we need to ensure that instantiated services are stored prior to initialization.
+            // Note the implication of this is that it is possible to access a service prior to it being
+            // initialized. It is up to service implementation to handle this condition gracefully.
+            
+            for( Service service : services )
+            {
+                try
+                {
+                    service.init();
                 }
                 catch( Exception e )
                 {
                     LoggingService.log( e );
                 }
             }
-            
-            // Store the list of services for future use.
-            
-            final int count = services.size();
-            
-            if( count == 0 )
-            {
-                services = Collections.emptyList();
-            }
-            else if( count == 1 )
-            {
-                services = Collections.singletonList( services.get( 0 ) );
-            }
-            else
-            {
-                services = Collections.unmodifiableList( services );
-            }
-            
-            this.services.put( serviceType, services );
         }
         
         if( services.isEmpty() && this.parent != null )

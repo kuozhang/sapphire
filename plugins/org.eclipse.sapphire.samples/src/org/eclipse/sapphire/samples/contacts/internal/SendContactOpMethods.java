@@ -13,7 +13,7 @@ package org.eclipse.sapphire.samples.contacts.internal;
 
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.samples.contacts.ISendContactOp;
+import org.eclipse.sapphire.samples.contacts.SendContactOp;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -21,7 +21,7 @@ import org.eclipse.sapphire.samples.contacts.ISendContactOp;
 
 public final class SendContactOpMethods
 {
-    public static Status execute( final ISendContactOp op,
+    public static Status execute( final SendContactOp op,
                                   final ProgressMonitor monitor )
     {
         return Status.createOkStatus();

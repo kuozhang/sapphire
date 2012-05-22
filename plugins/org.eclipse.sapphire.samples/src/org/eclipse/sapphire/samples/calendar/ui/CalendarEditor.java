@@ -20,7 +20,7 @@ import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.samples.calendar.ICalendar;
 import org.eclipse.sapphire.samples.calendar.integrated.internal.CalendarResource;
-import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
+import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
 import org.eclipse.sapphire.ui.CorruptedResourceExceptionInterceptorImpl;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
@@ -44,7 +44,7 @@ public final class CalendarEditor
     
     private ICalendar modelCalendar;
     private org.eclipse.sapphire.samples.calendar.integrated.ICalendar modelCalendarIntegrated;
-    private IContactsDatabase modelContacts;
+    private ContactsDatabase modelContacts;
     
     private MasterDetailsEditorPage calendarDesignPage;
     private MasterDetailsEditorPage contactsDesignPage;
@@ -81,7 +81,7 @@ public final class CalendarEditor
     protected IModelElement createModel()
     {
         this.modelCalendar = ICalendar.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.calendarSourceEditor ) ) );
-        this.modelContacts = IContactsDatabase.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.contactsSourceEditor ) ) );
+        this.modelContacts = ContactsDatabase.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.contactsSourceEditor ) ) );
         this.modelCalendarIntegrated = org.eclipse.sapphire.samples.calendar.integrated.ICalendar.TYPE.instantiate( new CalendarResource( this.modelCalendar, this.modelContacts ) );
         
         return this.modelCalendarIntegrated;
@@ -137,7 +137,7 @@ public final class CalendarEditor
         return this.modelCalendarIntegrated;
     }
     
-    public IContactsDatabase getContactsDatabase()
+    public ContactsDatabase getContactsDatabase()
     {
         return this.modelContacts;
     }

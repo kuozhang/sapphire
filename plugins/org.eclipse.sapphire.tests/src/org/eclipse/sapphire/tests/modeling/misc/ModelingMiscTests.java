@@ -32,9 +32,9 @@ import org.eclipse.sapphire.tests.modeling.misc.t0012.TestModelingMisc0012;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SuiteModelingMisc extends TestCase
+public final class ModelingMiscTests extends TestCase
 {
-    private SuiteModelingMisc( final String name )
+    private ModelingMiscTests( final String name )
     {
         super( name );
     }
@@ -43,7 +43,7 @@ public final class SuiteModelingMisc extends TestCase
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "SuiteModelingMisc" );
+        suite.setName( "ModelingMiscTests" );
 
         suite.addTest( TestModelingMisc0001.suite() );
         suite.addTest( TestModelingMisc0002.suite() );

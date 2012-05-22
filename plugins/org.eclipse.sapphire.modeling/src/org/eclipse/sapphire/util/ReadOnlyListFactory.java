@@ -23,7 +23,7 @@ import java.util.List;
 public final class ReadOnlyListFactory<E>
 {
     private E firstElement = null;
-    private List<E> list = null;
+    private ArrayList<E> list = null;
     private boolean exported = false;
     
     private ReadOnlyListFactory() {}
@@ -105,6 +105,7 @@ public final class ReadOnlyListFactory<E>
         
         if( this.list != null )
         {
+            this.list.trimToSize();
             return Collections.unmodifiableList( this.list );
         }
         else if( this.firstElement != null )

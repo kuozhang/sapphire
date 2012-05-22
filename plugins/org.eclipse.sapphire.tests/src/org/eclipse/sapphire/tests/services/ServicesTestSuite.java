@@ -20,6 +20,7 @@ import org.eclipse.sapphire.tests.services.t0002.TestServices0002;
 import org.eclipse.sapphire.tests.services.t0003.TestServices0003;
 import org.eclipse.sapphire.tests.services.t0004.TestServices0004;
 import org.eclipse.sapphire.tests.services.t0005.TestServices0005;
+import org.eclipse.sapphire.tests.services.t0006.TestServices0006;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -43,6 +44,7 @@ public final class ServicesTestSuite extends TestCase
         suite.addTest( TestServices0003.suite() );
         suite.addTest( TestServices0004.suite() );
         suite.addTest( TestServices0005.suite() );
+        suite.addTest( TestServices0006.suite() );
         
         return suite;
     }

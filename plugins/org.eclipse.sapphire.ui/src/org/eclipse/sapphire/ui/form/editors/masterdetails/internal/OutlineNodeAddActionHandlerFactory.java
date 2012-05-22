@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
@@ -29,8 +30,7 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -290,17 +290,17 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
         {
             super.init( action, def );
             
-            final ModelPropertyListener listener = new ModelPropertyListener()
+            final Listener listener = new FilteredListener<PropertyEvent>()
             {
                 @Override
-                public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                protected void handleTypedEvent( final PropertyEvent event )
                 {
                     refreshEnablementState();
                 }
             };
             
             final IModelElement element = ( (MasterDetailsContentNode) getPart() ).getLocalModelElement();
-            element.addListener( listener, property().getName() );
+            element.attach( listener, property().getName() );
             
             attach
             (
@@ -311,7 +311,7 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
                     {
                         if( event instanceof DisposeEvent )
                         {
-                            element.removeListener( listener, property().getName() );
+                            element.detach( listener, property().getName() );
                         }
                     }
                 }

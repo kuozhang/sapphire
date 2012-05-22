@@ -36,16 +36,16 @@ import org.eclipse.sapphire.samples.contacts.internal.ContactDatabaseImageServic
 @Service( impl = ContactDatabaseImageService.class )
 @GenerateImpl
 
-public interface IContactsDatabase extends IModelElement
+public interface ContactsDatabase extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IContactsDatabase.class );
+    ModelElementType TYPE = new ModelElementType( ContactsDatabase.class );
     
     // *** Contacts ***
 
-    @Type( base = IContact.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "contact", type = IContact.class ) )
+    @Type( base = Contact.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "contact", type = Contact.class ) )
     
     ListProperty PROP_CONTACTS = new ListProperty( TYPE, "Contacts" );
     
-    ModelElementList<IContact> getContacts();
+    ModelElementList<Contact> getContacts();
 }

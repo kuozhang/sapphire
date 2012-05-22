@@ -9,6 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342775] Support EL in IMasterDetailsTreeNodeDef.ImagePath
  *    Konstantin Komissarchik - [374154] IllegalStateException in ServiceContext when disposing diagram connection templates
+ *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -21,17 +22,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IModelElementTypeDef;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate.DiagramNodeTemplateListener;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -40,7 +43,7 @@ import org.eclipse.sapphire.ui.diagram.def.IModelElementTypeDef;
 
 public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate 
 {
-    public static abstract class Listener
+    public static abstract class DiagramImplicitConnectionTemplateListener
     {
         public void handleConnectionAdd(final DiagramConnectionEvent event)
         {            
@@ -59,8 +62,8 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     private ListProperty modelProperty;
     private List<Class<?>> modelElementTypes;
     private List<DiagramImplicitConnectionPart> implicitConnections;
-    private ModelPropertyListener modelPropertyListener;
-    private Set<Listener> templateListeners;
+    private Listener modelPropertyListener;
+    private Set<DiagramImplicitConnectionTemplateListener> templateListeners;
     private Map<IModelElement, FunctionResult> listEntryFunctionMap;
     private DiagramNodeTemplate nodeTemplate;
     private NodeTemplateListener nodeTemplateListener;
@@ -88,13 +91,13 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
         }
         initImplicitConnectionParts();
         
-        this.templateListeners = new CopyOnWriteArraySet<Listener>();
+        this.templateListeners = new CopyOnWriteArraySet<DiagramImplicitConnectionTemplateListener>();
         
         // Add model property listener
-        this.modelPropertyListener = new ModelPropertyListener()
+        this.modelPropertyListener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
                 refreshImplicitConnections();
             }
@@ -124,17 +127,17 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     @Override
     public void addModelListener()
     {
-        this.modelElement.addListener(this.modelPropertyListener, this.propertyName);
+        this.modelElement.attach(this.modelPropertyListener, this.propertyName);
         String temp = this.propertyName + "/*";
         this.allDescendentsPath = new ModelPath(temp);
-        this.modelElement.addListener(this.modelPropertyListener, this.allDescendentsPath);
+        this.modelElement.attach(this.modelPropertyListener, this.allDescendentsPath);
     }
     
     @Override
     public void removeModelListener()
     {
-        this.modelElement.removeListener(this.modelPropertyListener, this.propertyName);
-        this.modelElement.removeListener(this.modelPropertyListener, this.allDescendentsPath);
+        this.modelElement.detach(this.modelPropertyListener, this.propertyName);
+        this.modelElement.detach(this.modelPropertyListener, this.allDescendentsPath);
     }
     
     public void refreshImplicitConnections()
@@ -253,19 +256,19 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
         throw new UnsupportedOperationException();        
     }
     
-    public void addTemplateListener( final Listener listener )
+    public void addTemplateListener( final DiagramImplicitConnectionTemplateListener listener )
     {
         this.templateListeners.add( listener );
     }
     
-    public void removeTemplateListener( final Listener listener )
+    public void removeTemplateListener( final DiagramImplicitConnectionTemplateListener listener )
     {
         this.templateListeners.remove( listener );
     }    
 
     public void notifyConnectionAdd(DiagramImplicitConnectionPart connPart)
     {
-        for( Listener listener : this.templateListeners )
+        for( DiagramImplicitConnectionTemplateListener listener : this.templateListeners )
         {
             listener.handleConnectionAdd(new DiagramConnectionEvent(connPart));
         }        
@@ -273,7 +276,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
 
     public void notifyConnectionDelete(DiagramImplicitConnectionPart connPart)
     {
-        for( Listener listener : this.templateListeners )
+        for( DiagramImplicitConnectionTemplateListener listener : this.templateListeners )
         {
             listener.handleConnectionDelete(new DiagramConnectionEvent(connPart));
         }        
@@ -297,7 +300,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
         }
     }
     
-	private class NodeTemplateListener extends DiagramNodeTemplate.Listener
+	private class NodeTemplateListener extends DiagramNodeTemplateListener
 	{
         
         @Override

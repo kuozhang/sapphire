@@ -16,10 +16,10 @@ import java.util.List;
 
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 
@@ -40,10 +40,10 @@ public abstract class SapphireJumpActionHandler extends SapphirePropertyEditorAc
         this.dependencies = new ArrayList<String>();
         initDependencies( this.dependencies );
         
-        final ModelPropertyListener listener = new ModelPropertyListener()
+        final Listener listener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEvent event)
             {
                 refreshEnablementState();
             }
@@ -53,7 +53,7 @@ public abstract class SapphireJumpActionHandler extends SapphirePropertyEditorAc
         
         for( String dependency : this.dependencies )
         {
-            element.addListener( listener, dependency );
+            element.attach( listener, dependency );
         }
         
         refreshEnablementState();
@@ -71,7 +71,7 @@ public abstract class SapphireJumpActionHandler extends SapphirePropertyEditorAc
                         
                         for( String dependency : SapphireJumpActionHandler.this.dependencies )
                         {
-                            element.removeListener( listener, dependency );
+                            element.detach( listener, dependency );
                         }
                     }
                 }

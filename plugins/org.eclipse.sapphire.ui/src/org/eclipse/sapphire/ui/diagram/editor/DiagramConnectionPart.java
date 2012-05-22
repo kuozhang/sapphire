@@ -10,25 +10,25 @@
  *    Konstantin Komissarchik - [341856] NPE when a diagram connection doesn't define a label
  *    Konstantin Komissarchik - [342897] Integrate with properties view
  *    Konstantin Komissarchik - [342775] Support EL in IMasterDetailsTreeNodeDef.ImagePath
+ *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -48,6 +48,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramLabelDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public class DiagramConnectionPart 
@@ -66,7 +67,7 @@ public class DiagramConnectionPart
 	private IDiagramConnectionEndpointBindingDef endpoint2Def;
 	private IModelElement srcNodeModel;
 	private IModelElement targetNodeModel;
-	private ModelElementListener endpointModelListener;
+	private Listener endpointModelListener;
 	private FunctionResult endpoint1FunctionResult;
 	private FunctionResult endpoint2FunctionResult;
 	private ModelProperty endpoint1Property;
@@ -74,7 +75,7 @@ public class DiagramConnectionPart
 	protected FunctionResult labelFunctionResult;
 	protected ValueProperty labelProperty;
 	protected FunctionResult idFunctionResult;
-	protected ModelPropertyListener modelPropertyListener;
+	protected Listener modelPropertyListener;
 	private PropertiesViewContributionManager propertiesViewContributionManager;
 	private DiagramConnectionBendPoints bendPoints = new DiagramConnectionBendPoints();
 	private Point labelPosition;
@@ -138,10 +139,10 @@ public class DiagramConnectionPart
     {
         initLabelId();
         
-        this.endpointModelListener = new ModelElementListener()
+        this.endpointModelListener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            public void propertyChanged( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
             	handlEndpointModelPropertyChange( event );
             }
@@ -189,10 +190,10 @@ public class DiagramConnectionPart
         this.endpoint2Property = ModelUtil.resolve(this.modelElement, this.endpoint2Path);
         
         // Add model property listener
-        this.modelPropertyListener = new ModelPropertyListener()
+        this.modelPropertyListener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
                 handleModelPropertyChange( event );
             }
@@ -462,37 +463,37 @@ public class DiagramConnectionPart
     
     public void addModelListener()
     {
-        this.modelElement.addListener(this.modelPropertyListener, this.endpoint1Path);
-        this.modelElement.addListener(this.modelPropertyListener, this.endpoint2Path);
+        this.modelElement.attach(this.modelPropertyListener, this.endpoint1Path);
+        this.modelElement.attach(this.modelPropertyListener, this.endpoint2Path);
         if (this.srcNodeModel != null)
         {
-        	this.srcNodeModel.addListener(this.endpointModelListener);
+        	this.srcNodeModel.attach(this.endpointModelListener);
         }
         if (this.targetNodeModel != null)
         {
-        	this.targetNodeModel.addListener(this.endpointModelListener);
+        	this.targetNodeModel.attach(this.endpointModelListener);
         }
     }
     
     public void removeModelListener()
     {
-        this.modelElement.removeListener(this.modelPropertyListener, this.endpoint1Path);
-        this.modelElement.removeListener(this.modelPropertyListener, this.endpoint2Path);
+        this.modelElement.detach(this.modelPropertyListener, this.endpoint1Path);
+        this.modelElement.detach(this.modelPropertyListener, this.endpoint2Path);
         if (this.srcNodeModel != null)
         {
-        	this.srcNodeModel.removeListener(this.endpointModelListener);
+        	this.srcNodeModel.detach(this.endpointModelListener);
         }
         if (this.targetNodeModel != null)
         {
-        	this.targetNodeModel.removeListener(this.endpointModelListener);
+        	this.targetNodeModel.detach(this.endpointModelListener);
         }
     }
     
-    protected void handlEndpointModelPropertyChange(final ModelPropertyChangeEvent event)
+    protected void handlEndpointModelPropertyChange(final PropertyEvent event)
     {
     	boolean endpointChanged = false;
     	boolean sourceChange = false;
-    	if (this.srcNodeModel == null || event.getModelElement() == this.srcNodeModel)
+    	if (this.srcNodeModel == null || event.element() == this.srcNodeModel)
     	{
     		IModelElement newSrcModel = resolveEndpoint(this.modelElement, this.endpoint1Path);
     		if (newSrcModel != this.srcNodeModel)
@@ -501,7 +502,7 @@ public class DiagramConnectionPart
     			sourceChange = true;
     		}
     	}
-    	else if (this.targetNodeModel == null || event.getModelElement() == this.targetNodeModel)
+    	else if (this.targetNodeModel == null || event.element() == this.targetNodeModel)
     	{
     		IModelElement newTargetModel = resolveEndpoint(this.modelElement, this.endpoint2Path);
     		if (newTargetModel != this.targetNodeModel)
@@ -516,9 +517,9 @@ public class DiagramConnectionPart
     	}
     }
     
-    protected void handleModelPropertyChange(final ModelPropertyChangeEvent event)
+    protected void handleModelPropertyChange(final PropertyEvent event)
     {
-        final ModelProperty property = event.getProperty();
+        final ModelProperty property = event.property();
                 
         if (property.getName().equals(this.endpoint1Property.getName()) || 
                 property.getName().equals(this.endpoint2Property.getName()))

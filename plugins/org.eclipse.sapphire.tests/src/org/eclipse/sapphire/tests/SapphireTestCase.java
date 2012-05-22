@@ -22,6 +22,14 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.modeling.ElementDisposeEvent;
+import org.eclipse.sapphire.modeling.ElementValidationEvent;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
+import org.eclipse.sapphire.modeling.PropertyEnablementEvent;
+import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
@@ -30,10 +38,7 @@ import org.eclipse.sapphire.modeling.util.MiscUtil;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphireTestCase
-
-    extends TestCase
-    
+public abstract class SapphireTestCase extends TestCase
 {
     private IProject project;
     
@@ -116,16 +121,123 @@ public abstract class SapphireTestCase
     
     protected static final void assertValidationOk( final Value<?> value )
     {
-        assertEquals( Status.Severity.OK, value.validation().severity() );
+        assertValidationOk( value.validation() );
+    }
+    
+    protected static final void assertValidationOk( final IModelElement element )
+    {
+        assertValidationOk( element.validation() );
+    }
+    
+    protected static final void assertValidationOk( final Status status )
+    {
+        assertEquals( Status.Severity.OK, status.severity() );
+    }
+    
+    protected static final void assertValidationWarning( final Value<?> value,
+                                                         final String expectedMessage )
+    {
+        assertValidationWarning( value.validation(), expectedMessage );
+    }
+
+    protected static final void assertValidationWarning( final IModelElement element,
+                                                         final String expectedMessage )
+    {
+        assertValidationWarning( element.validation(), expectedMessage );
+    }
+
+    protected static final void assertValidationWarning( final Status status,
+                                                         final String expectedMessage )
+    {
+        assertEquals( Status.Severity.WARNING, status.severity() );
+        assertEquals( expectedMessage, status.message() );
     }
     
     protected static final void assertValidationError( final Value<?> value,
                                                        final String expectedMessage )
     {
-        final Status st = value.validation();
+        assertValidationError( value.validation(), expectedMessage );
+    }
+
+    protected static final void assertValidationError( final IModelElement element,
+                                                       final String expectedMessage )
+    {
+        assertValidationError( element.validation(), expectedMessage );
+    }
+
+    protected static final void assertValidationError( final Status status,
+                                                       final String expectedMessage )
+    {
+        assertEquals( Status.Severity.ERROR, status.severity() );
+        assertEquals( expectedMessage, status.message() );
+    }
+
+    protected static void assertElementValidationEvent( final Event event,
+                                                        final IModelElement element,
+                                                        final Status before,
+                                                        final Status after )
+    {
+        assertTrue( event instanceof ElementValidationEvent );
         
-        assertEquals( Status.Severity.ERROR, st.severity() );
-        assertEquals( expectedMessage, st.message() );
+        final ElementValidationEvent evt = (ElementValidationEvent) event;
+        
+        assertSame( element, evt.element() );
+        assertEquals( before, evt.before() );
+        assertEquals( after, evt.after() );
+    }
+    
+    protected static void assertElementDisposeEvent( final Event event,
+                                                     final IModelElement element )
+    {
+        assertTrue( event instanceof ElementDisposeEvent );
+        
+        final ElementDisposeEvent evt = (ElementDisposeEvent) event;
+        
+        assertSame( element, evt.element() );
+    }
+
+    protected static void assertPropertyContentEvent( final Event event,
+                                                      final IModelElement element,
+                                                      final ModelProperty property )
+    {
+        assertTrue( event instanceof PropertyContentEvent );
+        
+        final PropertyContentEvent evt = (PropertyContentEvent) event;
+        
+        assertSame( element, evt.element() );
+        assertSame( property, evt.property() );
+    }
+    
+    protected static void assertPropertyValidationEvent( final Event event,
+                                                         final IModelElement element,
+                                                         final ModelProperty property,
+                                                         final Status before,
+                                                         final Status after )
+    {
+        assertTrue( event instanceof PropertyValidationEvent );
+        
+        final PropertyValidationEvent evt = (PropertyValidationEvent) event;
+        
+        assertSame( element, evt.element() );
+        assertSame( property, evt.property() );
+        assertEquals( before, evt.before() );
+        assertEquals( after, evt.after() );
+    }
+
+    protected static void assertPropertyEnablementEvent( final Event event,
+                                                         final IModelElement element,
+                                                         final ModelProperty property,
+                                                         final boolean before,
+                                                         final boolean after )
+    {
+        assertTrue( event instanceof PropertyEnablementEvent );
+        
+        final PropertyEnablementEvent evt = (PropertyEnablementEvent) event;
+        
+        assertSame( element, evt.element() );
+        assertSame( property, evt.property() );
+        assertEquals( before, evt.before() );
+        assertEquals( after, evt.after() );
     }
     
     protected static <T> List<T> list( final T... items )

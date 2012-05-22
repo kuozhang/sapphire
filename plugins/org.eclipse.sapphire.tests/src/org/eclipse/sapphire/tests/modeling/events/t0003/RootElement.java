@@ -9,41 +9,49 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.contacts;
+package org.eclipse.sapphire.tests.modeling.events.t0003;
 
+import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
-import org.eclipse.sapphire.modeling.annotations.Image;
-import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Image( path = "org/eclipse/sapphire/samples/Web.png" )
 @GenerateImpl
 
-public interface IWebSite
-
-    extends IModelElement
-
+public interface RootElement extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IWebSite.class );
-
-    // *** Url ***
+    ModelElementType TYPE = new ModelElementType( RootElement.class );
     
-    @XmlBinding( path = "url" )
-    @Label( standard = "URL" )
+    // *** Enablement ***
+
+    @Type( base = Boolean.class )
+    @DefaultValue( text = "true" )
+
+    ValueProperty PROP_ENABLEMENT = new ValueProperty( TYPE, "Enablement" );
+
+    Value<Boolean> getEnablement();
+    void setEnablement( String value );
+    void setEnablement( Boolean value );
+    
+    // *** Child ***
+
+    @Type( base = ChildElement.class )
     @Required
-
-    ValueProperty PROP_URL = new ValueProperty( TYPE, "Url" );
-
-    Value<String> getUrl();
-    void setUrl( String url );
+    @Enablement( expr = "${ Enablement }" )
     
+    ElementProperty PROP_CHILD = new ElementProperty( TYPE, "Child" );
+
+    ModelElementHandle<ChildElement> getChild();
+
 }

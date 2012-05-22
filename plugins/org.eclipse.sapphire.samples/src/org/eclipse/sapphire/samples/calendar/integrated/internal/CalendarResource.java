@@ -13,19 +13,20 @@ package org.eclipse.sapphire.samples.calendar.integrated.internal;
 
 import java.util.List;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.BindingImpl;
 import org.eclipse.sapphire.modeling.LayeredListBindingImpl;
 import org.eclipse.sapphire.modeling.ListBindingImpl;
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.samples.calendar.integrated.ICalendar;
 import org.eclipse.sapphire.samples.calendar.integrated.IEvent;
-import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
+import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -34,22 +35,22 @@ import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
 public final class CalendarResource extends Resource
 {
     private final org.eclipse.sapphire.samples.calendar.ICalendar base;
-    private final IContactsDatabase contacts;
+    private final ContactsDatabase contacts;
     
     public CalendarResource( final org.eclipse.sapphire.samples.calendar.ICalendar base,
-                             final IContactsDatabase contacts )
+                             final ContactsDatabase contacts )
     {
         super( null );
         
         this.base = base;
         this.contacts = contacts;
         
-        final ModelElementListener listener = new ModelElementListener()
+        final Listener listener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            public void propertyChanged( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
-                final ModelProperty property = event.getProperty();
+                final ModelProperty property = event.property();
                 
                 if( property == org.eclipse.sapphire.samples.calendar.ICalendar.PROP_EVENTS )
                 {
@@ -58,7 +59,7 @@ public final class CalendarResource extends Resource
             }
         };
         
-        this.base.addListener( listener );
+        this.base.attach( listener );
     }
     
     public org.eclipse.sapphire.samples.calendar.ICalendar getBase()
@@ -73,7 +74,7 @@ public final class CalendarResource extends Resource
     {
         A res;
         
-        if( adapterType == IContactsDatabase.class )
+        if( adapterType == ContactsDatabase.class )
         {
             res = (A) this.contacts;
         }

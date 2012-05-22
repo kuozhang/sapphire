@@ -11,11 +11,13 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -35,16 +37,30 @@ public final class PropertyValidationAggregationService extends ValidationAggreg
         final IModelElement element = context( IModelElement.class );
         final ModelProperty property = context( ModelProperty.class );
         
-        final ModelPropertyListener listener = new ModelPropertyListener()
+        final Listener listener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
                 refresh();
             }
         };
         
-        element.addListener( listener, property.getName() );
+        element.attach( listener, property.getName() );
+        
+        final Listener validationServiceListener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
+            {
+                refresh();
+            }
+        };
+        
+        for( ValidationService service : element.services( property, ValidationService.class ) )
+        {
+            service.attach( validationServiceListener );
+        }
     }
 
     @Override

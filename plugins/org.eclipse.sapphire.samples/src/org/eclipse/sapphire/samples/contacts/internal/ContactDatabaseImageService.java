@@ -11,12 +11,13 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
-import org.eclipse.sapphire.samples.contacts.IContact;
-import org.eclipse.sapphire.samples.contacts.IContactsDatabase;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
+import org.eclipse.sapphire.samples.contacts.Contact;
+import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
 import org.eclipse.sapphire.services.ImageService;
 import org.eclipse.sapphire.services.ImageServiceData;
 
@@ -26,24 +27,24 @@ import org.eclipse.sapphire.services.ImageServiceData;
 
 public final class ContactDatabaseImageService extends ImageService
 {
-    private static final ImageServiceData IMG_PERSON = new ImageServiceData( ImageData.readFromClassLoader( IContact.class, "Contact.png" ) );
-    private static final ImageServiceData IMG_PERSON_FADED = new ImageServiceData( ImageData.readFromClassLoader( IContact.class, "ContactFaded.png" ) );
+    private static final ImageServiceData IMG_PERSON = new ImageServiceData( ImageData.readFromClassLoader( Contact.class, "Contact.png" ) );
+    private static final ImageServiceData IMG_PERSON_FADED = new ImageServiceData( ImageData.readFromClassLoader( Contact.class, "ContactFaded.png" ) );
     
-    private ModelPropertyListener listener;
+    private Listener listener;
     
     @Override
     protected void initImageService()
     {
-        this.listener = new ModelPropertyListener()
+        this.listener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyContentEvent event )
             {
                 refresh();
             }
         };
         
-        context( IModelElement.class ).addListener( this.listener, "Contacts/EMail" );
+        context( IModelElement.class ).attach( this.listener, "Contacts/EMail" );
     }
 
     @Override
@@ -51,7 +52,7 @@ public final class ContactDatabaseImageService extends ImageService
     {
         boolean foundContactWithEMail = false;
         
-        for( IContact contact : context( IContactsDatabase.class ).getContacts() )
+        for( Contact contact : context( ContactsDatabase.class ).getContacts() )
         {
             if( contact.getEMail().getContent() != null )
             {
@@ -68,7 +69,7 @@ public final class ContactDatabaseImageService extends ImageService
     {
         super.dispose();
         
-        context( IModelElement.class ).removeListener( this.listener, "Contacts/EMail" );
+        context( IModelElement.class ).detach( this.listener, "Contacts/EMail" );
     }
     
 }

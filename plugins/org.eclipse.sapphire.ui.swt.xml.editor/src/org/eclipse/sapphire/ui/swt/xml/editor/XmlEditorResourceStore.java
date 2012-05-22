@@ -31,15 +31,16 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.TextSelection;
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
+import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementDisposedEvent;
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
@@ -82,7 +83,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
     private IModelElement rootModelElement;
     private final Map<Node,List<IModelElement>> nodeToModelElementsMap;
     private final Scrubber scrubber;
-    private final ModelElementListener modelElementDisposeListener;
+    private final Listener modelElementDisposeListener;
     private final XmlSourceEditorService sourceEditorService;
     
     public XmlEditorResourceStore( final SapphireEditor sapphireEditor,
@@ -98,12 +99,12 @@ public class XmlEditorResourceStore extends XmlResourceStore
         this.scrubber.start();
         this.sourceEditorService = new XmlSourceEditorService();
         
-        this.modelElementDisposeListener = new ModelElementListener()
+        this.modelElementDisposeListener = new FilteredListener<ElementDisposeEvent>()
         {
             @Override
-            public void handleElementDisposedEvent( final ModelElementDisposedEvent event )
+            protected void handleTypedEvent( final ElementDisposeEvent event )
             {
-                handleElementDisposed( event.getModelElement() );
+                handleElementDisposed( event.element() );
             }
         };
         
@@ -310,7 +311,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
             }
             
             elements.add( element );
-            element.addListener( this.modelElementDisposeListener );
+            element.attach( this.modelElementDisposeListener );
         }
     }
     

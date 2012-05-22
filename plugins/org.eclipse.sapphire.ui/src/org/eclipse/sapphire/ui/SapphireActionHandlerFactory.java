@@ -56,14 +56,14 @@ public abstract class SapphireActionHandlerFactory
 
     public abstract List<SapphireActionHandler> create();
     
-    public final void attach( final Listener listener )
+    public final boolean attach( final Listener listener )
     {
-        this.listeners.attach( listener );
+        return this.listeners.attach( listener );
     }
     
-    public final void detach( final Listener listener )
+    public final boolean detach( final Listener listener )
     {
-        this.listeners.detach( listener );
+        return this.listeners.detach( listener );
     }
     
     protected final void broadcast( final Event event )

@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
-import org.eclipse.sapphire.samples.contacts.IContact;
+import org.eclipse.sapphire.samples.contacts.Contact;
 import org.eclipse.sapphire.ui.SapphireJumpActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
@@ -63,9 +63,9 @@ public final class ContactDetailsJumpHandler extends SapphireJumpActionHandler
         
         if( name != null )
         {
-            IContact contact = null;
+            Contact contact = null;
             
-            for( IContact c : editor.getContactsDatabase().getContacts() )
+            for( Contact c : editor.getContactsDatabase().getContacts() )
             {
                 if( name.equals( c.getName().getText() ) )
                 {

@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
-import org.eclipse.sapphire.samples.contacts.IAddress;
-import org.eclipse.sapphire.samples.contacts.IContact;
-import org.eclipse.sapphire.samples.contacts.IPhoneNumber;
-import org.eclipse.sapphire.samples.contacts.ISendContactOp;
+import org.eclipse.sapphire.samples.contacts.ContactAddress;
+import org.eclipse.sapphire.samples.contacts.Contact;
+import org.eclipse.sapphire.samples.contacts.PhoneNumber;
+import org.eclipse.sapphire.samples.contacts.SendContactOp;
 import org.eclipse.sapphire.services.DerivedValueServiceData;
 import org.eclipse.sapphire.services.DerivedValueService;
 
@@ -27,8 +27,8 @@ public final class SendContactOpMessageBodyDerivedValueService extends DerivedVa
     @Override
     protected DerivedValueServiceData compute()
     {
-        final ISendContactOp op = context( ISendContactOp.class );
-        final IContact contact = op.getContact().content();
+        final SendContactOp op = context( SendContactOp.class );
+        final Contact contact = op.getContact().content();
         final StringBuilder buf = new StringBuilder();
         
         buf.append( "<html><body>\n" );
@@ -44,7 +44,7 @@ public final class SendContactOpMessageBodyDerivedValueService extends DerivedVa
             {
                 buf.append( "<p><table>\n" );
                 
-                for( IPhoneNumber phone : contact.getPhoneNumbers() )
+                for( PhoneNumber phone : contact.getPhoneNumbers() )
                 {
                     buf.append( "<tr><td><i>" );
                     buf.append( phone.getType().getText() );
@@ -68,7 +68,7 @@ public final class SendContactOpMessageBodyDerivedValueService extends DerivedVa
                 buf.append( "</table></p>\n" );
             }
             
-            final IAddress address = contact.getAddress();
+            final ContactAddress address = contact.getAddress();
             
             if( address != null && address.getStreet().getContent() != null )
             {

@@ -40,18 +40,27 @@ import org.eclipse.sapphire.samples.contacts.internal.ContactCategoryPossibleVal
 import org.eclipse.sapphire.samples.contacts.internal.ContactEqualityService;
 import org.eclipse.sapphire.samples.contacts.internal.ContactImageService;
 import org.eclipse.sapphire.samples.contacts.internal.ContactMethods;
+import org.eclipse.sapphire.samples.contacts.internal.DuplicateContactValidator;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Image( path = "Contact.png" )
-@Services( { @Service( impl = ContactImageService.class ), @Service( impl = ContactEqualityService.class ) } )
 @GenerateImpl
 
-public interface IContact extends IModelElement
+@Services
+(
+    { 
+        @Service( impl = ContactImageService.class ), 
+        @Service( impl = ContactEqualityService.class ),
+        @Service( impl = DuplicateContactValidator.class )
+    }
+)
+
+public interface Contact extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IContact.class );
+    ModelElementType TYPE = new ModelElementType( Contact.class );
 
     // *** Name ***
     
@@ -90,23 +99,23 @@ public interface IContact extends IModelElement
     
     // *** PhoneNumbers ***
     
-    @Type( base = IPhoneNumber.class )
+    @Type( base = PhoneNumber.class )
     @Label( standard = "phone numbers" )
-    @XmlListBinding( path = "phone-numbers", mappings = @XmlListBinding.Mapping( element = "phone-number", type = IPhoneNumber.class ) )
+    @XmlListBinding( path = "phone-numbers", mappings = @XmlListBinding.Mapping( element = "phone-number", type = PhoneNumber.class ) )
                              
     ListProperty PROP_PHONE_NUMBERS = new ListProperty( TYPE, "PhoneNumbers" );
     
-    ModelElementList<IPhoneNumber> getPhoneNumbers();
+    ModelElementList<PhoneNumber> getPhoneNumbers();
     
     // *** WebSites ***
     
-    @Type( base = IWebSite.class )
+    @Type( base = WebSite.class )
     @Label( standard = "web sites" )
-    @XmlListBinding( path = "web-sites", mappings = @XmlListBinding.Mapping( element = "web-site", type = IWebSite.class ) )
+    @XmlListBinding( path = "web-sites", mappings = @XmlListBinding.Mapping( element = "web-site", type = WebSite.class ) )
                              
     ListProperty PROP_WEB_SITES = new ListProperty( TYPE, "WebSites" );
     
-    ModelElementList<IWebSite> getWebSites();
+    ModelElementList<WebSite> getWebSites();
     
     // *** METHOD: removePhoneNumbersByAreaCode ***
     
@@ -116,16 +125,16 @@ public interface IContact extends IModelElement
     
     // *** Address ***
     
-    @Type( base = IAddress.class )
+    @Type( base = ContactAddress.class )
     @XmlBinding( path = "address" )
     
     ImpliedElementProperty PROP_ADDRESS = new ImpliedElementProperty( TYPE, "Address" );
 
-    IAddress getAddress();
+    ContactAddress getAddress();
 
     // *** Assistant ***
 
-    @Type( base = IAssistant.class )
+    @Type( base = Assistant.class )
     @Label( standard = "assistant" )
     @XmlBinding( path = "assistant" )
     
@@ -136,28 +145,28 @@ public interface IContact extends IModelElement
     
     ElementProperty PROP_ASSISTANT = new ElementProperty( TYPE, "Assistant" );
 
-    ModelElementHandle<IAssistant> getAssistant();
+    ModelElementHandle<Assistant> getAssistant();
     
     // *** Connections ***
     
     @Label( standard = "connections" )
-    @Type( base = IConnection.class )
+    @Type( base = Connection.class )
     @CustomXmlListBinding( impl = ConnectionsListController.class )
                              
     ListProperty PROP_CONNECTIONS = new ListProperty( TYPE, "Connections" );
     
-    ModelElementList<IConnection> getConnections();
+    ModelElementList<Connection> getConnections();
     
     // *** PrimaryOccupation ***
     
     @Type
     ( 
-        base = IOccupation.class, 
+        base = Occupation.class, 
         possible = 
         { 
-            IJobOccupation.class, 
-            IStudentOccupation.class, 
-            IHomemakerOccupation.class 
+            JobOccupation.class, 
+            StudentOccupation.class, 
+            HomemakerOccupation.class 
         }
     )
     
@@ -168,9 +177,9 @@ public interface IContact extends IModelElement
         path = "primary-occupation",
         mappings = 
         {
-            @XmlElementBinding.Mapping( element = "job", type = IJobOccupation.class ),
-            @XmlElementBinding.Mapping( element = "student", type = IStudentOccupation.class ),
-            @XmlElementBinding.Mapping( element = "homemaker", type = IHomemakerOccupation.class )
+            @XmlElementBinding.Mapping( element = "job", type = JobOccupation.class ),
+            @XmlElementBinding.Mapping( element = "student", type = StudentOccupation.class ),
+            @XmlElementBinding.Mapping( element = "homemaker", type = HomemakerOccupation.class )
         }
     )
     
@@ -181,6 +190,6 @@ public interface IContact extends IModelElement
     
     ElementProperty PROP_PRIMARY_OCCUPATION = new ElementProperty( TYPE, "PrimaryOccupation" );
     
-    ModelElementHandle<IOccupation> getPrimaryOccupation();
+    ModelElementHandle<Occupation> getPrimaryOccupation();
     
 }

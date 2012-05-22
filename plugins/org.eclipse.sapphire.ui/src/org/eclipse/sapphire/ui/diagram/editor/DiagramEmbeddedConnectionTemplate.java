@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -19,17 +20,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementDisposedEvent;
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
@@ -37,13 +38,14 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
 {
     private DiagramNodeTemplate nodeTemplate;
     private Map<IModelElement, List<DiagramConnectionPart>> diagramConnectionMap;
-    private ModelElementListener modelElementListener;
+    private Listener modelElementListener;
     private ModelPath endpointPath;
         
     public DiagramEmbeddedConnectionTemplate(IDiagramExplicitConnectionBindingDef connBindingDef)
@@ -67,21 +69,21 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         
         this.connPartListener = new ConnectionPartListener();
         
-        this.templateListeners = new CopyOnWriteArraySet<Listener>();
+        this.templateListeners = new CopyOnWriteArraySet<DiagramConnectionTemplateListener>();
         
-        this.modelPropertyListener = new ModelPropertyListener()
+        this.modelPropertyListener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
                 handleModelPropertyChange( event );
             }
         };
         
-        this.modelElementListener = new ModelElementListener() 
+        this.modelElementListener = new FilteredListener<ElementDisposeEvent>() 
         {
             @Override
-            public void handleElementDisposedEvent( final ModelElementDisposedEvent event )
+            protected void handleTypedEvent( final ElementDisposeEvent event )
             {
                 handleModelElementDispose(event);
             }
@@ -232,14 +234,14 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         
     public void addModelListener(IModelElement srcNodeModel)
     {
-        srcNodeModel.addListener(this.modelPropertyListener, this.propertyName);
-        srcNodeModel.addListener(this.modelElementListener);
+        srcNodeModel.attach(this.modelPropertyListener, this.propertyName);
+        srcNodeModel.attach(this.modelElementListener);
     }
     
     public void removeModelListener(IModelElement srcNodeModel)
     {
-        srcNodeModel.removeListener(this.modelPropertyListener, this.propertyName);
-        srcNodeModel.removeListener(this.modelElementListener);
+        srcNodeModel.detach(this.modelPropertyListener, this.propertyName);
+        srcNodeModel.detach(this.modelElementListener);
     } 
     
     @Override
@@ -309,9 +311,9 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     	}
     }
     
-    private void handleModelElementDispose(final ModelElementDisposedEvent event)
+    private void handleModelElementDispose(final ElementDisposeEvent event)
     {
-        IModelElement element = event.getModelElement();
+        IModelElement element = event.element();
         List<DiagramConnectionPart> connParts = getDiagramConnections(null);
         
         for (DiagramConnectionPart connPart : connParts)

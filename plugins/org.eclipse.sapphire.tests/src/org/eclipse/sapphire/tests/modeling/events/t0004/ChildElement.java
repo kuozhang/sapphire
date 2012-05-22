@@ -9,16 +9,14 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.contacts;
+package org.eclipse.sapphire.tests.modeling.events.t0004;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
-import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Required;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -26,22 +24,18 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface IAssistantTask
-
-    extends IModelElement
-
+public interface ChildElement extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IAssistantTask.class );
-
-    // *** Name ***
+    ModelElementType TYPE = new ModelElementType( ChildElement.class );
     
-    @XmlBinding( path = "" )
-    @Label( standard = "name" )
-    @Required
+    // *** IntegerValue ***
 
-    ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+    @Type( base = Integer.class )
 
-    Value<String> getName();
-    void setName( String name );
-    
+    ValueProperty PROP_INTEGER_VALUE = new ValueProperty( TYPE, "IntegerValue" );
+
+    Value<Integer> getIntegerValue();
+    void setIntegerValue(String value);
+    void setIntegerValue(Integer value);
+
 }

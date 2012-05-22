@@ -11,11 +11,12 @@
 
 package org.eclipse.sapphire.samples.calendar.integrated.internal;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.BindingImpl;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ValueBindingImpl;
 import org.eclipse.sapphire.samples.calendar.integrated.IEventAttachment;
@@ -35,12 +36,12 @@ public final class EventAttachmentResource extends Resource
         
         this.base = base;
         
-        final ModelElementListener listener = new ModelElementListener()
+        final Listener listener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            public void propertyChanged( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
-                final ModelProperty property = event.getProperty();
+                final ModelProperty property = event.property();
                 final IModelElement element = element();
                 
                 if( property == org.eclipse.sapphire.samples.calendar.IEventAttachment.PROP_LOCAL_COPY_LOCATION )
@@ -54,7 +55,7 @@ public final class EventAttachmentResource extends Resource
             }
         };
         
-        this.base.addListener( listener );
+        this.base.attach( listener );
     }
     
     public org.eclipse.sapphire.samples.calendar.IEventAttachment getBase()

@@ -14,12 +14,11 @@ package org.eclipse.sapphire.ui;
 import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.runOnDisplayThread;
 
 import org.eclipse.sapphire.DisposeEvent;
-import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 
 /**
@@ -28,7 +27,7 @@ import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 
 public abstract class SapphirePropertyEditorActionHandler extends SapphireActionHandler
 {
-    private ModelPropertyListener listener;
+    private Listener listener;
     
     @Override
     public void init( final SapphireAction action,
@@ -36,30 +35,27 @@ public abstract class SapphirePropertyEditorActionHandler extends SapphireAction
     {
         super.init( action, def );
         
-        this.listener = new ModelPropertyListener()
+        this.listener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
                 refreshEnablementState();
             }
         };
         
-        getModelElement().addListener( this.listener, getProperty().getName() );
+        getModelElement().attach( this.listener, getProperty().getName() );
         
         refreshEnablementState();
         
         attach
         (
-            new Listener()
+            new FilteredListener<DisposeEvent>()
             {
                 @Override
-                public void handle( final Event event )
+                protected void handleTypedEvent( final DisposeEvent event )
                 {
-                    if( event instanceof DisposeEvent )
-                    {
-                        getModelElement().removeListener( SapphirePropertyEditorActionHandler.this.listener, getProperty().getName() );
-                    }
+                    getModelElement().detach( SapphirePropertyEditorActionHandler.this.listener, getProperty().getName() );
                 }
             }
         );

@@ -18,4 +18,5 @@ package org.eclipse.sapphire;
 public abstract class Listener
 {
     public abstract void handle( Event event );
+    
 }

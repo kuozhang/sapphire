@@ -61,12 +61,12 @@ public final class IfThenElsePart extends SapphirePart
             
             if( this.condition != null )
             {
-                this.condition.addListener
+                this.condition.attach
                 (
-                    new SapphireCondition.Listener()
+                    new Listener()
                     {
                         @Override
-                        public void handleConditionChanged()
+                        public void handle( final Event event )
                         {
                             IfThenElsePart.this.handleConditionChanged();
                         }

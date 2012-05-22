@@ -63,14 +63,7 @@ public abstract class ServiceFactoryProxy
     public final Service create( final ServiceContext context,
                                  final Class<? extends Service> service )
     {
-        Service result = createHandOff( context, service );
-    
-        if( result != null )
-        {
-            result.init( context, parameters() );
-        }
-    
-        return result;
+        return createHandOff( context, service );
     }
 
     protected abstract Service createHandOff( ServiceContext context,

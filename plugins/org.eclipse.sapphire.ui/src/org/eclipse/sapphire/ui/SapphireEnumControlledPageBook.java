@@ -14,11 +14,12 @@ package org.eclipse.sapphire.ui;
 
 import java.lang.reflect.Field;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
@@ -34,7 +35,7 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
 {
     private IModelElement element;
     private ValueProperty property;
-    private ModelPropertyListener listener;
+    private Listener listener;
     
     @Override
     protected void init()
@@ -81,19 +82,16 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
             }
         }
         
-        this.listener = new ModelPropertyListener()
+        this.listener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                if( event.getProperty() == SapphireEnumControlledPageBook.this.property )
-                {
-                    updateCurrentPage();
-                }
+                updateCurrentPage();
             }
         };
         
-        this.element.addListener( this.listener, this.property.getName() );
+        this.element.attach( this.listener, this.property.getName() );
         
         setExposePageValidationState( true );
         updateCurrentPage();
@@ -144,7 +142,7 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
         
         if( this.listener != null )
         {
-            this.element.removeListener( this.listener, this.property.getName() );
+            this.element.detach( this.listener, this.property.getName() );
         }
     }
 

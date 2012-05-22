@@ -14,9 +14,9 @@ package org.eclipse.sapphire.modeling;
 
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.ValidationAggregationService;
-
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -24,11 +24,10 @@ import org.eclipse.sapphire.services.ValidationAggregationService;
 
 public final class ModelElementHandle<T extends IModelElement>
 {
-    private final IModelElement parent;
+    private final ModelElement parent;
     private final ElementProperty property;
     private final PossibleTypesService possibleTypesService;
     private final ElementBindingImpl binding;
-    private final ModelPropertyListener listener;
     private T element;
     private Status validationStateLocal;
     private Status validationStateFull;
@@ -36,24 +35,15 @@ public final class ModelElementHandle<T extends IModelElement>
     public ModelElementHandle( final IModelElement parent,
                                final ElementProperty property )
     {
-        this.parent = parent;
+        this.parent = (ModelElement) parent;
         this.property = property;
         this.possibleTypesService = parent.service( property, PossibleTypesService.class );
         this.binding = parent.resource().binding( property );
-        
-        this.listener = new ModelPropertyListener()
-        {
-            @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
-            {
-                refresh();
-            }
-        };
     }
     
     public void init()
     {
-        refreshInternal();
+        refresh();
     }
     
     public IModelElement root()
@@ -127,12 +117,17 @@ public final class ModelElementHandle<T extends IModelElement>
                     this.element = t.instantiate( this.parent, this.property, resource );
                     this.element.initialize();
                     
-                    for( ModelProperty property : t.properties() )
-                    {
-                        this.element.addListener( this.listener, property.getName() );
-                    }
-                    
-                    refreshValidationState();
+                    this.element.attach
+                    (
+                        new FilteredListener<ElementValidationEvent>()
+                        {
+                            @Override
+                            protected void handleTypedEvent( final ElementValidationEvent event )
+                            {
+                                refreshValidationResult();
+                            }
+                        }
+                    );
                     
                     changed = true;
                 }
@@ -151,7 +146,12 @@ public final class ModelElementHandle<T extends IModelElement>
         
         if( changed )
         {
-            this.parent.notifyPropertyChangeListeners( this.property );
+            if( ! ( this.property instanceof ImpliedElementProperty ) ) 
+            {
+                this.parent.broadcastPropertyContentEvent( this.property );
+            }
+            
+            refreshValidationResult();
         }
         
         return this.element;
@@ -178,17 +178,7 @@ public final class ModelElementHandle<T extends IModelElement>
         }
     }
     
-    public void remove()
-    {
-        final boolean changed = removeInternal();
-        
-        if( changed )
-        {
-            this.parent.notifyPropertyChangeListeners( this.property );
-        }
-    }
-    
-    private boolean removeInternal()
+    public boolean remove()
     {
         synchronized( this )
         {
@@ -197,7 +187,7 @@ public final class ModelElementHandle<T extends IModelElement>
             if( this.element != null )
             {
                 this.binding.remove();
-                changed = refreshInternal();
+                changed = refresh();
             }
             
             return changed;
@@ -214,27 +204,27 @@ public final class ModelElementHandle<T extends IModelElement>
 
     public boolean refresh()
     {
-        final boolean changed = refreshInternal();
+        boolean changed = false;
         
-        if( changed )
-        {
-            this.parent.notifyPropertyChangeListeners( this.property );
-        }
-        
-        return changed;
-    }
-    
-    private boolean refreshInternal()
-    {
         synchronized( this )
         {
-            boolean changed = false;
-            
             final Resource oldResource = ( this.element == null ? null : this.element.resource() );
             final Resource newResource = this.binding.read();
             
             if( newResource != oldResource )
             {
+                if( this.element != null )
+                {
+                    try
+                    {
+                        this.element.dispose();
+                    }
+                    catch( Exception e )
+                    {
+                        LoggingService.log( e );
+                    }
+                }
+                
                 if( newResource == null )
                 {
                     this.element = null;
@@ -243,49 +233,87 @@ public final class ModelElementHandle<T extends IModelElement>
                 {
                     final ModelElementType type = this.binding.type( newResource );
                     this.element = type.instantiate( this.parent, this.property, newResource );
+                    
+                    this.element.attach
+                    (
+                        new FilteredListener<ElementValidationEvent>()
+                        {
+                            @Override
+                            protected void handleTypedEvent( final ElementValidationEvent event )
+                            {
+                                refreshValidationResult();
+                            }
+                        }
+                    );
                 }
                 
                 changed = true;
             }
-            
-            changed = refreshValidationState() || changed;
-            
-            return changed;
         }
-    }
-    
-    private boolean refreshValidationState()
-    {
-        final Status newValidationStateLocal;
-        final Status.CompositeStatusFactory newValidationStateFullFactory = Status.factoryForComposite();
         
-        if( enabled() )
+        if( changed )
         {
-            newValidationStateLocal = parent().service( this.property, ValidationAggregationService.class ).validation();
-            
-            newValidationStateFullFactory.merge( newValidationStateLocal );
-            
-            if( this.element != null )
+            if( ! ( this.property instanceof ImpliedElementProperty ) )
             {
-                newValidationStateFullFactory.merge( this.element.validation() );
+                this.parent.broadcastPropertyContentEvent( this.property );
             }
         }
-        else
+        
+        changed = changed | refreshValidationResult();
+        
+        return changed;
+    }
+    
+    private boolean refreshValidationResult()
+    {
+        boolean changed = false;
+        Status before = null;
+        Status after = null;
+        
+        synchronized( this )
         {
-            newValidationStateLocal = Status.createOkStatus();
+            final Status newValidationStateLocal;
+            final Status.CompositeStatusFactory newValidationStateFullFactory = Status.factoryForComposite();
+            
+            if( enabled() )
+            {
+                newValidationStateLocal = parent().service( this.property, ValidationAggregationService.class ).validation();
+                
+                newValidationStateFullFactory.merge( newValidationStateLocal );
+                
+                if( this.element != null )
+                {
+                    newValidationStateFullFactory.merge( this.element.validation() );
+                }
+            }
+            else
+            {
+                newValidationStateLocal = Status.createOkStatus();
+            }
+            
+            final Status newValidationStateFull = newValidationStateFullFactory.create();
+            final Status oldValidationStateFull = this.validationStateFull;
+    
+            if( ! newValidationStateFull.equals( oldValidationStateFull ) )
+            {
+                this.validationStateLocal = newValidationStateLocal;
+                this.validationStateFull = newValidationStateFull;
+                
+                if( oldValidationStateFull != null )
+                {
+                    changed = true;
+                    before = oldValidationStateFull;
+                    after = this.validationStateFull;
+                }
+            }
         }
         
-        final Status newValidationStateFull = newValidationStateFullFactory.create();
-        final Status oldValidationStateFull = this.validationStateFull;
-
-        if( ! newValidationStateFull.equals( oldValidationStateFull ) )
+        if( changed )
         {
-            this.validationStateLocal = newValidationStateLocal;
-            this.validationStateFull = newValidationStateFull;
-            return ( oldValidationStateFull != null );
+            ( (ModelElement) parent() ).broadcastPropertyValidationEvent( this.property, before, after );
         }
         
-        return false;
+        return changed;
     }
     
 }

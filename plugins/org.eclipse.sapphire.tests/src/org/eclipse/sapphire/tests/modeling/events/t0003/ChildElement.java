@@ -9,20 +9,33 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.contacts;
+package org.eclipse.sapphire.tests.modeling.events.t0003;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface IOccupation
+@GenerateImpl
 
-    extends IModelElement
-    
+public interface ChildElement extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IOccupation.class );
+    ModelElementType TYPE = new ModelElementType( ChildElement.class );
     
+    // *** IntegerValue ***
+
+    @Type( base = Integer.class )
+
+    ValueProperty PROP_INTEGER_VALUE = new ValueProperty( TYPE, "IntegerValue" );
+
+    Value<Integer> getIntegerValue();
+    void setIntegerValue(String value);
+    void setIntegerValue(Integer value);
+
 }

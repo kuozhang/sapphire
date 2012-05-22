@@ -25,7 +25,7 @@ import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
 
 public final class ContactsDatabaseFactory
 {
-    public static IContactsDatabase load( final File file )
+    public static ContactsDatabase load( final File file )
     
         throws ResourceStoreException
         
@@ -33,7 +33,7 @@ public final class ContactsDatabaseFactory
         return load( new XmlResourceStore( file ) );
     }
     
-    public static IContactsDatabase load( final IFile file )
+    public static ContactsDatabase load( final IFile file )
     
         throws ResourceStoreException
         
@@ -41,9 +41,9 @@ public final class ContactsDatabaseFactory
         return load( new XmlResourceStore( new WorkspaceFileResourceStore( file ) ) );
     }
     
-    public static IContactsDatabase load( final XmlResourceStore resourceStore )
+    public static ContactsDatabase load( final XmlResourceStore resourceStore )
     {
-        return IContactsDatabase.TYPE.instantiate( new RootXmlResource( resourceStore ) );
+        return ContactsDatabase.TYPE.instantiate( new RootXmlResource( resourceStore ) );
     }
     
 }

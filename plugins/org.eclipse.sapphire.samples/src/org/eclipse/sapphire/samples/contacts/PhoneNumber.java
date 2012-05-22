@@ -32,12 +32,12 @@ import org.eclipse.sapphire.samples.contacts.internal.LocalNumberBinding;
 
 @GenerateImpl
 
-public interface IPhoneNumber
+public interface PhoneNumber
 
     extends IModelElement
     
 {
-    ModelElementType TYPE = new ModelElementType( IPhoneNumber.class );
+    ModelElementType TYPE = new ModelElementType( PhoneNumber.class );
     
     // *** Type ***
     

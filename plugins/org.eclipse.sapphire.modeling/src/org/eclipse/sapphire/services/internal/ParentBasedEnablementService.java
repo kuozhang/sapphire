@@ -11,13 +11,14 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
-import org.eclipse.sapphire.services.EnablementServiceData;
+import org.eclipse.sapphire.modeling.PropertyEnablementEvent;
 import org.eclipse.sapphire.services.EnablementService;
+import org.eclipse.sapphire.services.EnablementServiceData;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
@@ -30,7 +31,7 @@ public final class ParentBasedEnablementService extends EnablementService
 {
     private IModelElement parentElement;
     private ModelProperty parentProperty;
-    private ModelPropertyListener listener;
+    private Listener listener;
     
     @Override
     protected void initEnablementService()
@@ -47,16 +48,16 @@ public final class ParentBasedEnablementService extends EnablementService
         this.parentElement = (IModelElement) parent;
         this.parentProperty = element.getParentProperty();
         
-        this.listener = new ModelPropertyListener()
+        this.listener = new FilteredListener<PropertyEnablementEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEnablementEvent event )
             {
                 refresh();
             }
         };
         
-        this.parentElement.addListener( this.listener, this.parentProperty.getName() );
+        this.parentElement.attach( this.listener, this.parentProperty.getName() );
     }
 
     @Override
@@ -72,7 +73,7 @@ public final class ParentBasedEnablementService extends EnablementService
         
         if( this.listener != null )
         {
-            this.parentElement.removeListener( this.listener, this.parentProperty.getName() );
+            this.parentElement.detach( this.listener, this.parentProperty.getName() );
         }
     }
     

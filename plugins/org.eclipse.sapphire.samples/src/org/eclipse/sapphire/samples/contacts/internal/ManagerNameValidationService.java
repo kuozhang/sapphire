@@ -18,10 +18,7 @@ import org.eclipse.sapphire.modeling.util.NLS;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ManagerNameValidationService
-
-    extends ConnectionNameValidationService
-    
+public final class ManagerNameValidationService extends ConnectionNameValidationService
 {
     protected Status createErrorStatus()
     {

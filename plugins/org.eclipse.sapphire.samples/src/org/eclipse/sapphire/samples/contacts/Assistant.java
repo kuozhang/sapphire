@@ -36,12 +36,12 @@ import org.eclipse.sapphire.samples.contacts.internal.AssistantNameValidationSer
 @Image( path = "Contact.png" )
 @GenerateImpl
 
-public interface IAssistant
+public interface Assistant
 
     extends IModelElement
 
 {
-    ModelElementType TYPE = new ModelElementType( IAssistant.class );
+    ModelElementType TYPE = new ModelElementType( Assistant.class );
 
     // *** Name ***
     
@@ -75,12 +75,12 @@ public interface IAssistant
     
     // *** DelegatedTasks ***
     
-    @Type( base = IAssistantTask.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "task", type = IAssistantTask.class ) )
+    @Type( base = AssistantTask.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "task", type = AssistantTask.class ) )
     @Label( standard = "delegated tasks" )
                              
     ListProperty PROP_DELEGATED_TASKS = new ListProperty( TYPE, "DelegatedTasks" );
     
-    ModelElementList<IAssistantTask> getDelegatedTasks();
+    ModelElementList<AssistantTask> getDelegatedTasks();
     
 }

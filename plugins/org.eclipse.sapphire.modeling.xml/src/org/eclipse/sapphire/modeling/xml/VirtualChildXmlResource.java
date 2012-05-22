@@ -11,10 +11,9 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.w3c.dom.Node;
 
 /**
@@ -35,23 +34,21 @@ public class VirtualChildXmlResource extends XmlResource
     }
     
     @Override
-    public void init( final IModelElement modelElement )
+    public void init( final IModelElement element )
     {
-        super.init( modelElement );
+        super.init( element );
         
-        final ModelPropertyListener listener = new ModelPropertyListener()
-        {
-            @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+        element.attach
+        (
+            new FilteredListener<PropertyContentEvent>()
             {
-                removeIfEmpty();
+                @Override
+                protected void handleTypedEvent( final PropertyContentEvent event )
+                {
+                    removeIfEmpty();
+                }
             }
-        };
-        
-        for( ModelProperty property : modelElement.properties() )
-        {
-            modelElement.addListener( listener, property.getName() );
-        }
+        );
     }
 
     @Override

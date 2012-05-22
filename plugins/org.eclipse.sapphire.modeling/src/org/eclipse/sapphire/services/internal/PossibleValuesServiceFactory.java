@@ -17,12 +17,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementDisposedEvent;
-import org.eclipse.sapphire.modeling.ModelElementListener;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
@@ -176,25 +176,25 @@ public final class PossibleValuesServiceFactory
             
             final IModelElement element = context( IModelElement.class );
             
-            final ModelPropertyListener listener = new ModelPropertyListener()
+            final Listener listener = new FilteredListener<PropertyContentEvent>()
             {
                 @Override
-                public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+                protected void handleTypedEvent( final PropertyContentEvent event )
                 {
                     refresh();
                 }
             };
             
-            element.addListener( listener, this.path );
+            element.attach( listener, this.path );
             
-            element.addListener
+            element.attach
             (
-                new ModelElementListener()
+                new FilteredListener<ElementDisposeEvent>()
                 {
                     @Override
-                    public void handleElementDisposedEvent( final ModelElementDisposedEvent event )
+                    protected void handleTypedEvent( final ElementDisposeEvent event )
                     {
-                        element.removeListener( listener, PossibleValuesServiceFromModel.this.path );
+                        element.detach( listener, PossibleValuesServiceFromModel.this.path );
                     }
                 }
             );

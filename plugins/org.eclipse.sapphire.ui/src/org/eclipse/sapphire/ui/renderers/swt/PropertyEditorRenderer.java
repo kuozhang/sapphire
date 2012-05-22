@@ -29,11 +29,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
-import org.eclipse.sapphire.modeling.ModelPropertyListener;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
@@ -58,7 +59,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Sash;
 
 /**
@@ -188,10 +188,10 @@ public abstract class PropertyEditorRenderer
         final IModelElement modelElement = getModelElement();
         final ModelProperty property = getProperty();
         
-        final ModelPropertyListener propertyChangeListener = new ModelPropertyListener()
+        final Listener propertyChangeListener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
                 Display.getDefault().asyncExec
                 (
@@ -206,7 +206,7 @@ public abstract class PropertyEditorRenderer
             }
         };
 
-        modelElement.addListener( propertyChangeListener, property.getName() );
+        modelElement.attach( propertyChangeListener, property.getName() );
         
         handlePropertyChangedEvent();
 
@@ -233,7 +233,7 @@ public abstract class PropertyEditorRenderer
                 public void run()
                 {
                     part.detach( partListener );
-                    modelElement.removeListener( propertyChangeListener, property.getName() );
+                    modelElement.detach( propertyChangeListener, property.getName() );
                 }
             }
         );
@@ -397,7 +397,7 @@ public abstract class PropertyEditorRenderer
             composite.addListener
             ( 
                 SWT.Resize,
-                new Listener()
+                new org.eclipse.swt.widgets.Listener()
                 {
                     public void handleEvent( final Event event )
                     {
@@ -409,7 +409,7 @@ public abstract class PropertyEditorRenderer
             sash.addListener
             (
                 SWT.Selection, 
-                new Listener()
+                new org.eclipse.swt.widgets.Listener()
                 {
                     public void handleEvent( final Event event )
                     {
