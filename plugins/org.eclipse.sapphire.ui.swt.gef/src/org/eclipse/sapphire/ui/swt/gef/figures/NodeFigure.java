@@ -12,9 +12,12 @@
 package org.eclipse.sapphire.ui.swt.gef.figures;
 
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.LayoutListener;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.RoundedRectangle;
+import org.eclipse.draw2d.TextUtilities;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -70,6 +73,13 @@ public class NodeFigure extends RoundedRectangle {
 			iconFigure = new Label();
 			this.add(iconFigure);
 		}
+		
+		this.addLayoutListener(new LayoutListener.Stub() {
+			public void postLayout(IFigure container) {
+				setTooltipText();
+			}
+		});
+		
 	}
 	
 	public void refreshConstraints(Bounds labelBounds, Bounds iconBounds) {
@@ -91,7 +101,20 @@ public class NodeFigure extends RoundedRectangle {
 	
 	public void setText(String text) {
 		labelFigure.setText(text);
-		this.setToolTip(new Label(text));
+		setTooltipText(text);
+	}
+	
+	private void setTooltipText() {
+		setTooltipText(labelFigure.getText());
+	}
+ 	
+	private void setTooltipText(String text) {
+		Dimension d = TextUtilities.INSTANCE.getStringExtents(text, labelFigure.getFont());
+		if (d.width + 5 >= getBounds().width) {
+			this.setToolTip(new Label(text));
+		} else {
+			this.setToolTip(null);
+		}
 	}
 	
 	public void setImage(Image image) {
