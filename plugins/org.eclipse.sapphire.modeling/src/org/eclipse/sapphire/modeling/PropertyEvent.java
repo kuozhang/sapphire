@@ -78,7 +78,7 @@ public abstract class PropertyEvent extends Event
             if( obj instanceof FilteredListener )
             {
                 final FilteredListener x = (FilteredListener) obj;
-                return ( this.listener == x.listener && this.property == x.property );
+                return ( this.listener.equals( x.listener ) && this.property == x.property );
             }
             
             return false;

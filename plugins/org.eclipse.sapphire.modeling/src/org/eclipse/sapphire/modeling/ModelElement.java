@@ -1336,7 +1336,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             if( obj instanceof PropagationListener )
             {
                 final PropagationListener pl = (PropagationListener) obj;
-                return this.path.equals( pl.path ) && ( this.listener == pl.listener );
+                return this.path.equals( pl.path ) && this.listener.equals( pl.listener );
             }
             
             return false;

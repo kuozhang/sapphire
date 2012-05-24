@@ -66,7 +66,7 @@ public class Event
             if( obj instanceof FilteredListenerForZero )
             {
                 final FilteredListenerForZero x = (FilteredListenerForZero) obj;
-                return ( this.listener == x.listener );
+                return this.listener.equals( x.listener );
             }
             
             return false;
@@ -106,7 +106,7 @@ public class Event
             if( obj instanceof FilteredListenerForOne )
             {
                 final FilteredListenerForOne x = (FilteredListenerForOne) obj;
-                return ( this.listener == x.listener && this.eventType == x.eventType );
+                return ( this.listener.equals( x.listener ) && this.eventType == x.eventType );
             }
             
             return false;
@@ -149,7 +149,7 @@ public class Event
             if( obj instanceof FilteredListenerForTwo )
             {
                 final FilteredListenerForTwo x = (FilteredListenerForTwo) obj;
-                return ( this.listener == x.listener && this.eventType1 == x.eventType1 && this.eventType2 == x.eventType2 );
+                return ( this.listener.equals( x.listener ) && this.eventType1 == x.eventType1 && this.eventType2 == x.eventType2 );
             }
             
             return false;
@@ -195,7 +195,7 @@ public class Event
             if( obj instanceof FilteredListenerForThree )
             {
                 final FilteredListenerForThree x = (FilteredListenerForThree) obj;
-                return ( this.listener == x.listener && this.eventType1 == x.eventType1 && this.eventType2 == x.eventType2 && this.eventType3 == x.eventType3 );
+                return ( this.listener.equals( x.listener ) && this.eventType1 == x.eventType1 && this.eventType2 == x.eventType2 && this.eventType3 == x.eventType3 );
             }
             
             return false;
@@ -246,7 +246,7 @@ public class Event
             if( obj instanceof FilteredListenerForMultiple )
             {
                 final FilteredListenerForMultiple x = (FilteredListenerForMultiple) obj;
-                return ( this.listener == x.listener && Arrays.equals( this.eventTypes, x.eventTypes ) );
+                return ( this.listener.equals( x.listener ) && Arrays.equals( this.eventTypes, x.eventTypes ) );
             }
             
             return false;
