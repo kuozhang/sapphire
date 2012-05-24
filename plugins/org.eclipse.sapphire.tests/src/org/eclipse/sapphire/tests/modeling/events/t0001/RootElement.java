@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Listeners;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
@@ -26,6 +27,7 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  */
 
 @GenerateImpl
+@Listeners( GlobalRootElementEventLog.class )
 
 public interface RootElement extends IModelElement
 {
@@ -46,6 +48,7 @@ public interface RootElement extends IModelElement
 
     @Required
     @Enablement( expr = "${ Enablement }" )
+    @Listeners( GlobalRequiredStringValueEventLog.class )
     
     ValueProperty PROP_REQUIRED_STRING_VALUE = new ValueProperty( TYPE, "RequiredStringValue" );
 

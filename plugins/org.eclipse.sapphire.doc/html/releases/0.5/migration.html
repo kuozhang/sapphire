@@ -49,7 +49,9 @@ to 0.5 release. Only changes from the previous release are covered.</p>
   <li><a href="#ModelElementList">ModelElementList</a></li>
   <li><a href="#ModelElementListener">ModelElementListener</a></li>
   <li><a href="#ModelElementType">ModelElementType</a></li>
+  <li><a href="#ModelProperty">ModelProperty</a></li>
   <li><a href="#ModelPropertyListener">ModelPropertyListener</a></li>
+  <li><a href="#PropertyListeners">PropertyListeners</a></li>
   <li><a href="#Actuator">Actuator</a></li>
   <li><a href="#ContentOutlineNodeImage">Content Outline Node Image</a></li>
   <li><a href="#GraphitiToGef">Graphiti to GEF Transition</a></li>
@@ -540,6 +542,33 @@ solution would be to implement the new insert() and move() methods directly.</p>
 </table>
 
 
+<h2><a name="ModelProperty">ModelProperty</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">property.</font>addListener( <font color="#888888">...</font> )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">property.</font>attach( <font color="#888888">...</font> )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">property.</font>getListeners()</code></pre>
+    </td>
+    <td>
+      <p>No replacement has been provided. This method was an internal implementation detail. Any adopter with a dependency
+      on this method is urged to post details to <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="ModelPropertyListener">ModelPropertyListener</a></h2>
 
 <table>
@@ -586,6 +615,23 @@ solution would be to implement the new insert() and move() methods directly.</p>
   </tr>
 </table>
 
+
+<h2><a name="PropertyListeners">PropertyListeners</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>@PropertyListeners<font color="#888888">( ... )</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>@Listeners<font color="#888888">( ... )</font></code></pre>
+    </td>
+  </tr>
+</table>
 
 
 <h2><a name="Actuator">Actuator</a></h2>

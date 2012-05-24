@@ -11,16 +11,12 @@
 
 package org.eclipse.sapphire.tests.modeling.events.t0001;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.Event;
-import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.eclipse.sapphire.tests.modeling.events.EventLog;
 
 /**
  * Tests delivery of value property events.
@@ -41,27 +37,55 @@ public final class TestModelingEvents0001 extends SapphireTestCase
         
         suite.setName( "TestModelingEvents0001" );
 
-        suite.addTest( new TestModelingEvents0001( "testValuePropertyEvents" ) );
+        suite.addTest( new TestModelingEvents0001( "testElementListenerInstance" ) );
+        suite.addTest( new TestModelingEvents0001( "testElementListenerGlobal" ) );
+        suite.addTest( new TestModelingEvents0001( "testPropertyListenerInstance" ) );
+        suite.addTest( new TestModelingEvents0001( "testPropertyListenerGlobal" ) );
         
         return suite;
     }
     
-    public void testValuePropertyEvents() throws Exception
+    public void testElementListenerInstance() throws Exception
+    {
+        final RootElement root = RootElement.TYPE.instantiate();
+        final EventLog log = new EventLog();
+        
+        root.attach( log );
+        
+        testElementListener( root, log );
+    }
+
+    public void testElementListenerGlobal() throws Exception
     {
         final RootElement root = RootElement.TYPE.instantiate();
         
-        final List<Event> events = new ArrayList<Event>();
+        testElementListener( root, GlobalRootElementEventLog.INSTANCE );
+    }
+
+    public void testPropertyListenerInstance() throws Exception
+    {
+        final RootElement root = RootElement.TYPE.instantiate();
+        final EventLog log = new EventLog();
         
-        final Listener listener = new Listener()
-        {
-            @Override
-            public void handle( final Event event )
-            {
-                events.add( event );
-            }
-        };
+        root.attach( log, RootElement.PROP_REQUIRED_STRING_VALUE.getName() );
         
-        root.attach( listener );
+        testPropertyListener( root, log );
+    }
+
+    public void testPropertyListenerGlobal() throws Exception
+    {
+        final RootElement root = RootElement.TYPE.instantiate();
+        
+        testPropertyListener( root, GlobalRequiredStringValueEventLog.INSTANCE );
+    }
+
+    private void testElementListener( final RootElement root,
+                                      final EventLog log ) 
+                                                  
+        throws Exception
+        
+    {
+        log.clear();
         
         final Status initialPropertyValidation = root.getRequiredStringValue().validation();
         final Status initialElementValidation = root.validation();
@@ -69,55 +93,107 @@ public final class TestModelingEvents0001 extends SapphireTestCase
         assertValidationError( initialPropertyValidation, "Required string value must be specified." );
         assertValidationError( initialElementValidation, "Required string value must be specified." );
         
-        assertEquals( 2, events.size() );
-        assertPropertyInitializationEvent( events.get( 0 ), root, RootElement.PROP_ENABLEMENT );
-        assertPropertyInitializationEvent( events.get( 1 ), root, RootElement.PROP_REQUIRED_STRING_VALUE );
+        assertEquals( 2, log.size() );
+        assertPropertyInitializationEvent( log.event( 0 ), root, RootElement.PROP_ENABLEMENT );
+        assertPropertyInitializationEvent( log.event( 1 ), root, RootElement.PROP_REQUIRED_STRING_VALUE );
         
-        events.clear();
+        log.clear();
         
         root.setRequiredStringValue( "abc" );
         
-        assertEquals( 3, events.size() );
-        assertPropertyContentEvent( events.get( 0 ), root, RootElement.PROP_REQUIRED_STRING_VALUE );
-        assertPropertyValidationEvent( events.get( 1 ), root, RootElement.PROP_REQUIRED_STRING_VALUE, initialPropertyValidation, Status.createOkStatus() );
-        assertElementValidationEvent( events.get( 2 ), root, initialPropertyValidation, Status.createOkStatus() );
-        
-        events.clear();
-        
-        root.detach( listener );
+        assertEquals( 3, log.size() );
+        assertPropertyContentEvent( log.event( 0 ), root, RootElement.PROP_REQUIRED_STRING_VALUE );
+        assertPropertyValidationEvent( log.event( 1 ), root, RootElement.PROP_REQUIRED_STRING_VALUE, initialPropertyValidation, Status.createOkStatus() );
+        assertElementValidationEvent( log.event( 2 ), root, initialPropertyValidation, Status.createOkStatus() );
         
         root.setRequiredStringValue( null );
         
-        assertEquals( 0, events.size() );
-        
-        root.attach( listener );
+        log.clear();
         
         root.setRequiredStringValue( "abc" );
         root.setRequiredStringValue( "xyz" );
         
-        assertEquals( 4, events.size() );
-        assertPropertyContentEvent( events.get( 0 ), root, RootElement.PROP_REQUIRED_STRING_VALUE );
-        assertPropertyValidationEvent( events.get( 1 ), root, RootElement.PROP_REQUIRED_STRING_VALUE, initialPropertyValidation, Status.createOkStatus() );
-        assertElementValidationEvent( events.get( 2 ), root, initialPropertyValidation, Status.createOkStatus() );
-        assertPropertyContentEvent( events.get( 3 ), root, RootElement.PROP_REQUIRED_STRING_VALUE );
+        assertEquals( 4, log.size() );
+        assertPropertyContentEvent( log.event( 0 ), root, RootElement.PROP_REQUIRED_STRING_VALUE );
+        assertPropertyValidationEvent( log.event( 1 ), root, RootElement.PROP_REQUIRED_STRING_VALUE, initialPropertyValidation, Status.createOkStatus() );
+        assertElementValidationEvent( log.event( 2 ), root, initialPropertyValidation, Status.createOkStatus() );
+        assertPropertyContentEvent( log.event( 3 ), root, RootElement.PROP_REQUIRED_STRING_VALUE );
         
-        events.clear();
+        log.clear();
         
         root.setEnablement( false );
         root.setEnablement( true );
         
-        assertEquals( 4, events.size() );
-        assertPropertyContentEvent( events.get( 0 ), root, RootElement.PROP_ENABLEMENT );
-        assertPropertyEnablementEvent( events.get( 1 ), root, RootElement.PROP_REQUIRED_STRING_VALUE, true, false );
-        assertPropertyContentEvent( events.get( 2 ), root, RootElement.PROP_ENABLEMENT );
-        assertPropertyEnablementEvent( events.get( 3 ), root, RootElement.PROP_REQUIRED_STRING_VALUE, false, true );
+        assertEquals( 4, log.size() );
+        assertPropertyContentEvent( log.event( 0 ), root, RootElement.PROP_ENABLEMENT );
+        assertPropertyEnablementEvent( log.event( 1 ), root, RootElement.PROP_REQUIRED_STRING_VALUE, true, false );
+        assertPropertyContentEvent( log.event( 2 ), root, RootElement.PROP_ENABLEMENT );
+        assertPropertyEnablementEvent( log.event( 3 ), root, RootElement.PROP_REQUIRED_STRING_VALUE, false, true );
         
-        events.clear();
+        log.clear();
         
         root.dispose();
         
-        assertEquals( 1, events.size() );
-        assertElementDisposeEvent( events.get( 0 ), root );
+        assertEquals( 1, log.size() );
+        assertElementDisposeEvent( log.event( 0 ), root );
+    }
+    
+    /**
+     * Identical scenario to testElementListener() method, but only expect to see events related to RequireStringValue
+     * property.
+     */
+
+    private void testPropertyListener( final RootElement root,
+                                       final EventLog log ) 
+                                                  
+        throws Exception
+        
+    {
+        log.clear();
+        
+        final Status initialPropertyValidation = root.getRequiredStringValue().validation();
+        final Status initialElementValidation = root.validation();
+        
+        assertValidationError( initialPropertyValidation, "Required string value must be specified." );
+        assertValidationError( initialElementValidation, "Required string value must be specified." );
+        
+        assertEquals( 1, log.size() );
+        assertPropertyInitializationEvent( log.event( 0 ), root, RootElement.PROP_REQUIRED_STRING_VALUE );
+        
+        log.clear();
+        
+        root.setRequiredStringValue( "abc" );
+        
+        assertEquals( 2, log.size() );
+        assertPropertyContentEvent( log.event( 0 ), root, RootElement.PROP_REQUIRED_STRING_VALUE );
+        assertPropertyValidationEvent( log.event( 1 ), root, RootElement.PROP_REQUIRED_STRING_VALUE, initialPropertyValidation, Status.createOkStatus() );
+        
+        root.setRequiredStringValue( null );
+        
+        log.clear();
+        
+        root.setRequiredStringValue( "abc" );
+        root.setRequiredStringValue( "xyz" );
+        
+        assertEquals( 3, log.size() );
+        assertPropertyContentEvent( log.event( 0 ), root, RootElement.PROP_REQUIRED_STRING_VALUE );
+        assertPropertyValidationEvent( log.event( 1 ), root, RootElement.PROP_REQUIRED_STRING_VALUE, initialPropertyValidation, Status.createOkStatus() );
+        assertPropertyContentEvent( log.event( 2 ), root, RootElement.PROP_REQUIRED_STRING_VALUE );
+        
+        log.clear();
+        
+        root.setEnablement( false );
+        root.setEnablement( true );
+        
+        assertEquals( 2, log.size() );
+        assertPropertyEnablementEvent( log.event( 0 ), root, RootElement.PROP_REQUIRED_STRING_VALUE, true, false );
+        assertPropertyEnablementEvent( log.event( 1 ), root, RootElement.PROP_REQUIRED_STRING_VALUE, false, true );
+        
+        log.clear();
+        
+        root.dispose();
+        
+        assertEquals( 0, log.size() );
     }
 
 }

@@ -21,8 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
+import org.eclipse.sapphire.modeling.annotations.Listeners;
 import org.eclipse.sapphire.modeling.internal.MemoryResource;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.LocalizationSystem;
@@ -48,6 +52,7 @@ public final class ModelElementType extends ModelMetadataItem
     private final LocalizationService localizationService;
     private ImageData image;
     private boolean imageInitialized;
+    private final ListenerContext listeners;
     private ServiceContext serviceContext;
     
     public ModelElementType( final Class<?> typeClass )
@@ -69,6 +74,25 @@ public final class ModelElementType extends ModelMetadataItem
         }
         
         this.baseTypes = baseTypesFactory.export();
+        
+        this.listeners = new ListenerContext();
+        
+        final Listeners listenersAnnotation = getAnnotation( Listeners.class );
+        
+        if( listenersAnnotation != null )
+        {
+            for( Class<? extends Listener> cl : listenersAnnotation.value() )
+            {
+                try
+                {
+                    this.listeners.attach( cl.newInstance() );
+                }
+                catch( Exception e )
+                {
+                    LoggingService.log( e );
+                }
+            }
+        }
     }
     
     public static ModelElementType read( final ClassLoader classLoader,
@@ -493,6 +517,16 @@ public final class ModelElementType extends ModelMetadataItem
         return this.image;
     }
     
+    public final void attach( final Listener listener )
+    {
+        this.listeners.attach( listener );
+    }
+    
+    final void broadcast( final Event event )
+    {
+        this.listeners.broadcast( event );
+    }
+
     public <S extends Service> S service( final Class<S> serviceType )
     {
         final List<S> services = services( serviceType );

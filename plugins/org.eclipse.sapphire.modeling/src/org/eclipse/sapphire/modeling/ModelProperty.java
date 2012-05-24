@@ -15,14 +15,12 @@ import static org.eclipse.sapphire.modeling.localization.LocalizationUtil.transf
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.modeling.annotations.Derived;
-import org.eclipse.sapphire.modeling.annotations.PropertyListeners;
+import org.eclipse.sapphire.modeling.annotations.Listeners;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -46,41 +44,34 @@ public abstract class ModelProperty extends ModelMetadataItem
     private final Class<?> typeClass;
     private final ModelElementType type;
     
-    private Set<Listener> listeners;
-    private Set<Listener> listenersReadOnly;
+    private final ListenerContext listeners;
     private ServiceContext serviceContext;
     
     public ModelProperty( final ModelElementType modelElementType,
                           final String propertyName,
                           final ModelProperty baseProperty )
     {
-        try
+        this.modelElementType = modelElementType;
+        this.propertyName = propertyName;
+        this.baseProperty = baseProperty;
+        
+        this.listeners = new ListenerContext();
+        
+        final Listeners listenersAnnotation = getAnnotation( Listeners.class );
+        
+        if( listenersAnnotation != null )
         {
-            this.modelElementType = modelElementType;
-            this.propertyName = propertyName;
-            this.baseProperty = baseProperty;
-            
-            final PropertyListeners propertyListenersAnnotation = getAnnotation( PropertyListeners.class );
-            
-            if( propertyListenersAnnotation != null )
+            for( Class<? extends Listener> cl : listenersAnnotation.value() )
             {
-                for( Class<? extends Listener> cl : propertyListenersAnnotation.value() )
+                try
                 {
-                    try
-                    {
-                        addListener( cl.newInstance() );
-                    }
-                    catch( Exception e )
-                    {
-                        LoggingService.log( e );
-                    }
+                    this.listeners.attach( cl.newInstance() );
+                }
+                catch( Exception e )
+                {
+                    LoggingService.log( e );
                 }
             }
-        }
-        catch( RuntimeException e )
-        {
-            LoggingService.log( e );
-            throw e;
         }
         
         try
@@ -243,35 +234,6 @@ public abstract class ModelProperty extends ModelMetadataItem
         return hasAnnotation( Derived.class );
     }
     
-    public Set<Listener> getListeners()
-    {
-        synchronized( this )
-        {
-            if( this.listeners == null )
-            {
-                return Collections.emptySet();
-            }
-            else
-            {
-                return this.listenersReadOnly;
-            }
-        }
-    }
-    
-    public void addListener( final Listener listener )
-    {
-        synchronized( this )
-        {
-            if( this.listeners == null )
-            {
-                this.listeners = new CopyOnWriteArraySet<Listener>();
-                this.listenersReadOnly = Collections.unmodifiableSet( this.listeners );
-            }
-            
-            this.listeners.add( listener );
-        }
-    }
-
     protected RuntimeException convertReflectiveInvocationException( final Exception e )
     {
         final Throwable cause = e.getCause();
@@ -308,7 +270,16 @@ public abstract class ModelProperty extends ModelMetadataItem
         }
     }
     
+    public final void attach( final Listener listener )
+    {
+        this.listeners.attach( listener );
+    }
     
+    final void broadcast( final PropertyEvent event )
+    {
+        this.listeners.broadcast( event );
+    }
+
     public <S extends Service> S service( final Class<S> serviceType )
     {
         final List<S> services = services( serviceType );

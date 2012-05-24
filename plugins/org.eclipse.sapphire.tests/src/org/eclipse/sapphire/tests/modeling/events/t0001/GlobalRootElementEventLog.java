@@ -9,23 +9,24 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.annotations;
+package org.eclipse.sapphire.tests.modeling.events.t0001;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
+import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.tests.modeling.events.EventLog;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Retention( RetentionPolicy.RUNTIME )
-@Target( ElementType.FIELD )
-
-public @interface PropertyListeners
+public final class GlobalRootElementEventLog extends Listener
 {
-    Class<? extends Listener>[] value();
+    public static final EventLog INSTANCE = new EventLog();
+    
+    @Override
+    public void handle( final Event event )
+    {
+        INSTANCE.handle( event );
+    }
+    
 }
