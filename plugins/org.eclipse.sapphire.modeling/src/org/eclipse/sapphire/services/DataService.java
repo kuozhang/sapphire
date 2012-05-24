@@ -42,16 +42,15 @@ public abstract class DataService<T> extends Service
     protected final void refresh()
     {
         final T newData = compute();
-        final boolean notifyListeners = ( this.data != null );
+        
+        // Due to possibility of the service being accessed in reentrant fashion during service
+        // initialization it isn't safe to assume that data hasn't been seen before the initial
+        // refresh call. As such, a service event must be broadcast even after the initial refresh.
         
         if( this.data == null || ! this.data.equals( newData ) )
         {
             this.data = newData;
-            
-            if( notifyListeners )
-            {
-                broadcast();
-            }
+            broadcast();
         }
     }
 
