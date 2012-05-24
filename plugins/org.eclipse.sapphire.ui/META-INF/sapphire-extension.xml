@@ -163,11 +163,6 @@
         <description>Restores properties in a section to their default values. For value properties, it means setting the property to null. For list properties, it means clearing the list.</description>
     </action>
     <action>
-        <id>Sapphire.Drop</id>
-        <context>Sapphire.Diagram</context>
-        <label>drop</label>
-    </action>
-    <action>
         <id>Sapphire.Outline.CollapseAll</id>
         <context>Sapphire.EditorPage.Outline.Header</context>
         <label>collapse all</label>

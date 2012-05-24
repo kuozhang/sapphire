@@ -35,81 +35,77 @@ public class MapDropService extends DragAndDropService
 {
 
 	@Override
-	public boolean canDrop(Object obj) 
+	public boolean droppable(DropContext context) 
 	{
-		return true;
+		return context.object() instanceof IFile;
 	}
 
 	@Override
-	public Object handleDrop(DropContext context) 
+	public Object drop(DropContext context) 
 	{
-		Object obj = context.getDroppedObject();
-        if( obj instanceof IFile )
+		IFile ifile = (IFile)context.object();
+        final List<String> cities = new ArrayList<String>();
+        InputStream in = null;
+        
+        try
         {
-            final List<String> cities = new ArrayList<String>();
-
-            InputStream in = null;
+            in = ifile.getContents();
+            final BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
             
-            try
+            for( String line = br.readLine(); line != null; line = br.readLine() )
             {
-                in = ( (IFile) obj ).getContents();
-                final BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
-                
-                for( String line = br.readLine(); line != null; line = br.readLine() )
+                if( line != null )
                 {
-                    if( line != null )
+                    line = line.trim();
+                    
+                    if( line.length() > 0 )
                     {
-                        line = line.trim();
-                        
-                        if( line.length() > 0 )
-                        {
-                            cities.add( line );
-                        }
+                        cities.add( line );
                     }
                 }
             }
-            catch( CoreException e )
+        }
+        catch( CoreException e )
+        {
+            LoggingService.log( e );
+        }
+        catch( IOException e )
+        {
+            LoggingService.log( e );
+        }
+        finally
+        {
+            if( in != null )
             {
-                LoggingService.log( e );
-            }
-            catch( IOException e )
-            {
-                LoggingService.log( e );
-            }
-            finally
-            {
-                if( in != null )
+                try
                 {
-                    try
-                    {
-                        in.close();
-                    }
-                    catch( IOException e ) {}
+                    in.close();
+                }
+                catch( IOException e ) {}
+            }
+        }
+        
+        if( ! cities.isEmpty() )
+        {
+        	SapphireDiagramEditorPagePart diagramPart = context( SapphireDiagramEditorPagePart.class );
+        	final IMap map = (IMap)diagramPart.getLocalModelElement();
+            List<DiagramNodePart> cityParts = new ArrayList<DiagramNodePart>();
+            int x = context.position().getX();
+            int y = context.position().getY();
+            for (String cityName : cities)
+            {
+                final IDestination city = map.getDestinations().insert();
+                city.setName( cityName );
+                DiagramNodePart cityPart = diagramPart.getDiagramNodePart(city);
+                if (cityPart != null)
+                {
+                    cityPart.setNodeBounds(x, y);
+                    cityParts.add(cityPart);
+                    x += 50;
+                    y += 50;
                 }
             }
-            
-            if( ! cities.isEmpty() )
-            {
-            	SapphireDiagramEditorPagePart diagramPart = context( SapphireDiagramEditorPagePart.class );
-            	final IMap map = (IMap)diagramPart.getLocalModelElement();
-                List<DiagramNodePart> cityParts = new ArrayList<DiagramNodePart>();
-                int x = context.getDropPosition().getX();
-                int y = context.getDropPosition().getY();
-                for (String cityName : cities)
-                {
-                    final IDestination city = map.getDestinations().insert();
-                    city.setName( cityName );
-                    DiagramNodePart cityPart = diagramPart.getDiagramNodePart(city);
-                    if (cityPart != null)
-                    {
-                        cityPart.setNodeBounds(x, y);
-                        cityParts.add(cityPart);
-                        x += 50;
-                        y += 50;
-                    }
-                }
-                return cityParts;
-            }
+            return cityParts;
         }
         return null;
 	}

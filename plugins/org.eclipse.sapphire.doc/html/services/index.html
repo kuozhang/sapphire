@@ -39,7 +39,8 @@
   <li><a href="#InitialValueService">InitialValueService</a></li>
   <li><a href="#JavaTypeConstraintService">JavaTypeConstraintService</a></li>
   <li><a href="#ListSelectionService">ListSelectionService</a></li>
-  <li><a href="#PossibleTypesService">PossibleTypesService</a></li>  
+  <li><a href="#PossibleTypesService">PossibleTypesService</a></li>
+  <li><a href="#DragAndDropService">DragAndDropService</a></li>  
 </ul>
 
 
@@ -646,6 +647,38 @@ ModelElementList&lt;Shape> getShapes();</font></code></pre>
 implementation, the set of possible types is defined to be a singleton set composed of the property's base
 type.</p>
 
+<a name="DragAndDropService"><h2>DragAndDropService</h2></a>
+
+<p>Drag and Drop to Sapphire Diagram page is now supported through a part service.
+All the DND services should extend from DragAndDropService:</p>
+
+<pre class="source-code"><code>public class MapDropService extends DragAndDropService
+{
+    @Override
+    public boolean droppable(DropContext context) 
+    {
+        return context.object() instanceof IFile;
+    }
+
+    @Override
+    public Object drop(DropContext context) 
+    {
+        IFile ifile = (IFile)context.object();
+        final List<String> cities = new ArrayList<String>();
+        InputStream in = null;
+        
+        ...
+                
+    }
+}</code></pre>
+
+<p>The service needs to be associated with the diagram page part at the sdef file:</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;diagram-page></font>
+    &lt;service>
+        &lt;implementation>MapDropService&lt;/implementation>
+    &lt;/service>
+<font color="#888888">&lt;/diagram-page></font></code></pre>
 
 <div class="copyright">Copyright (c) 2012 Oracle and Liferay<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>

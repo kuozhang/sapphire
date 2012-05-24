@@ -19,27 +19,30 @@ import org.eclipse.sapphire.services.Service;
 
 public abstract class DragAndDropService extends Service 
 {
-	public abstract boolean canDrop(Object obj);
+	public abstract boolean droppable(DropContext context);
 	
-	public abstract Object handleDrop(DropContext context);
+	public abstract Object drop(DropContext context);
 	
 	public static class DropContext
 	{
 		private final Object droppedObj;
-		private final Point dropPosition;
+		private Point dropPosition;
 		
 		public DropContext(Object droppedObj, Point dropPosition)
 		{
 			this.droppedObj = droppedObj;
-			this.dropPosition = new Point(dropPosition);
+			if (dropPosition != null)
+			{
+				this.dropPosition = new Point(dropPosition);
+			}
 		}
 		
-		public Object getDroppedObject()
+		public Object object()
 		{
 			return this.droppedObj;
 		}
 		
-		public Point getDropPosition()
+		public Point position()
 		{
 			return this.dropPosition;
 		}

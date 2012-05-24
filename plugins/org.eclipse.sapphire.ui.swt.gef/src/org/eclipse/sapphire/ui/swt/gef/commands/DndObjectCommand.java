@@ -66,7 +66,7 @@ public class DndObjectCommand extends Command
 		boolean canDrop = true;
 		for (Object droppedObj : this.droppedObjs)
 		{
-			if (!this.dndService.canDrop(droppedObj))
+			if (!this.dndService.droppable(new DropContext(droppedObj, null)))
 			{
 				canDrop = false;
 				break;
@@ -83,7 +83,7 @@ public class DndObjectCommand extends Command
 		for (Object droppedObj : this.droppedObjs)
 		{
 			DropContext context = new DropContext(droppedObj, new org.eclipse.sapphire.ui.Point(currX, currY));
-			this.dndService.handleDrop(context);
+			this.dndService.drop(context);
 			currX += 20;
 			currY += 20;
 		}
