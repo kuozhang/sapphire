@@ -65,7 +65,12 @@ public final class TestModelingEvents0003 extends SapphireTestCase
         
         assertValidationError( root.getChild().validation(), "Child must be specified." );
         assertValidationError( root.validation(), "Child must be specified." );
-        assertEquals( 0, events.size() );
+
+        assertEquals( 2, events.size() );
+        assertPropertyInitializationEvent( events.get( 0 ), root, RootElement.PROP_ENABLEMENT );
+        assertPropertyInitializationEvent( events.get( 1 ), root, RootElement.PROP_CHILD );
+        
+        events.clear();
         
         final ChildElement child1 = root.getChild().element( true );
         child1.attach( listener );

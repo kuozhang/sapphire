@@ -38,6 +38,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.PropertyEnablementEvent;
+import org.eclipse.sapphire.modeling.PropertyInitializationEvent;
 import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Resource;
@@ -211,6 +212,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         c2.addParameter( new MethodParameterModel( "resource", Resource.class ) );
         c2.getBody().append( "super( TYPE, null, null, resource );" );
         
+        elImplClass.addImport( PropertyInitializationEvent.class );
         elImplClass.addImport( PropertyContentEvent.class );
         elImplClass.addImport( PropertyValidationEvent.class );
         elImplClass.addImport( PropertyEnablementEvent.class );
@@ -548,7 +550,11 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                    "\n" +
                    "final EnablementRefreshResult enablementRefreshResult = refreshPropertyEnablement( #3 );\n" +
                    "\n" +
-                   "if( oldValue != null )\n" +
+                   "if( oldValue == null )\n" +
+                   "{\n" +
+                   "    broadcast( new PropertyInitializationEvent( this, #3 ) );\n" +
+                   "}\n" +
+                   "else\n" +
                    "{\n" + 
                    "    if( this.#1.equals( oldValue ) )\n" +
                    "    {\n" + 
@@ -830,6 +836,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                    "        this.#1 = new ModelElementHandle<#3>( this, #2 );\n" +
                    "        this.#1.init();\n" +
                    "        refreshPropertyEnablement( #2 );\n" +
+                   "        broadcast( new PropertyInitializationEvent( this, #2 ) );\n" +
                    "    }\n" +
                    "}\n" +
                    "else\n" +
@@ -953,6 +960,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                    "        final ListBindingImpl binding = resource().binding( #2 );\n" +
                    "        this.#1.init( binding );\n" +
                    "        refreshPropertyEnablement( #2 );\n" +
+                   "        broadcast( new PropertyInitializationEvent( this, #2 ) );\n" +
                    "    }\n" +
                    "}\n" +
                    "else\n" +
@@ -1135,6 +1143,8 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                    "    \n" +
                    "    if( oldTransient == null )\n" +
                    "    {\n" +
+                   "        broadcast( new PropertyInitializationEvent( this, #3 ) );\n" +
+                   "        \n" +
                    "        if( object != null )\n" +
                    "        {\n" +
                    "            broadcast( new PropertyContentEvent( this, #3 ) );\n" +

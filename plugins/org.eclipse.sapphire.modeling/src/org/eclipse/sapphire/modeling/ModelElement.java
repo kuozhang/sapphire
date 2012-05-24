@@ -83,149 +83,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         
         resource.init( this );
         
-        final Map<ModelProperty,Listener> listenerByProperty = new HashMap<ModelProperty,Listener>();
-        final Map<ModelProperty,Set<ModelPath>> dependenciesByProperty = new HashMap<ModelProperty,Set<ModelPath>>();
-        
-        for( final ModelProperty property : type.properties() )
-        {
-            final Set<ModelPath> dependencies = service( property, DependenciesAggregationService.class ).dependencies();
-            
-            if( ! dependencies.isEmpty() )
-            {
-                final Listener listener = new FilteredListener<PropertyEvent>()
-                {
-                    @Override
-                    protected void handleTypedEvent( final PropertyEvent event )
-                    {
-                        if( ! disposed() )
-                        {
-                            refresh( property );
-                        }
-                    }
-                };
-                
-                listenerByProperty.put( property, listener );
-                dependenciesByProperty.put( property, dependencies );
-    
-                for( ModelPath dependency : dependencies )
-                {
-                    attach( listener, dependency );
-                }
-            }
-
-            final Listener triggerRefreshOnServiceEventListener = new Listener()
-            {
-                @Override
-                public void handle( final Event event )
-                {
-                    if( ! disposed() )
-                    {
-                        refresh( property );
-                    }
-                }
-            };
-            
-            for( ValidationService validationService : services( property, ValidationService.class ) )
-            {
-                validationService.attach( triggerRefreshOnServiceEventListener );
-            }
-            
-            final DefaultValueService defaultValueService = service( property, DefaultValueService.class );
-            
-            if( defaultValueService != null )
-            {
-                defaultValueService.attach( triggerRefreshOnServiceEventListener );
-            }
-            
-            final DerivedValueService derivedValueService = service( property, DerivedValueService.class );
-            
-            if( derivedValueService != null )
-            {
-                derivedValueService.attach( triggerRefreshOnServiceEventListener );
-            }
-
-            if( property.hasAnnotation( ClearOnDisable.class ) )
-            {
-                Listener listener = null;
-                
-                if( property instanceof ValueProperty )
-                {
-                    final ValueProperty prop = (ValueProperty) property;
-                    
-                    listener = new FilteredListener<PropertyEnablementEvent>()
-                    {
-                        @Override
-                        protected void handleTypedEvent( final PropertyEnablementEvent event )
-                        {
-                            if( event.before() == true && event.after() == false )
-                            {
-                                write( prop, null );
-                            }
-                        }
-                    };
-                }
-                else if( property instanceof ListProperty )
-                {
-                    final ListProperty prop = (ListProperty) property;
-                    
-                    listener = new FilteredListener<PropertyEnablementEvent>()
-                    {
-                        @Override
-                        protected void handleTypedEvent( final PropertyEnablementEvent event )
-                        {
-                            if( event.before() == true && event.after() == false )
-                            {
-                                read( prop ).clear();
-                            }
-                        }
-                    };
-                }
-                else if( property instanceof ElementProperty && ! ( property instanceof ImpliedElementProperty ) )
-                {
-                    final ElementProperty prop = (ElementProperty) property;
-                    
-                    listener = new FilteredListener<PropertyEnablementEvent>()
-                    {
-                        @Override
-                        protected void handleTypedEvent( final PropertyEnablementEvent event )
-                        {
-                            if( event.before() == true && event.after() == false )
-                            {
-                                read( prop ).remove();
-                            }
-                        }
-                    };
-                }
-                
-                if( listener != null )
-                {
-                    attach( listener, property.getName() );
-                }
-            }
-        }
-        
-        if( ! listenerByProperty.isEmpty() )
-        {
-            final Listener disposeListener = new FilteredListener<ElementDisposeEvent>()
-            {
-                @Override
-                protected void handleTypedEvent( final ElementDisposeEvent event )
-                {
-                    for( Map.Entry<ModelProperty,Listener> entry : listenerByProperty.entrySet() )
-                    {
-                        final ModelProperty property = entry.getKey();
-                        final Listener listener = entry.getValue();
-                        
-                        for( ModelPath dependency : dependenciesByProperty.get( property ) )
-                        {
-                            detach( listener, dependency );
-                        }
-                    }
-                }
-            };
-            
-            attach( disposeListener );
-        }
+        attach( new PropertyInitializationListener() );
     }
     
     public ModelElementType type()
@@ -1377,6 +1235,133 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                     
                     this.listener.handle( event );
                 }
+            }
+        }
+    }
+    
+    private static final class PropertyInitializationListener extends FilteredListener<PropertyInitializationEvent>
+    {
+        @Override
+        protected void handleTypedEvent( final PropertyInitializationEvent event )
+        {
+            final IModelElement element = event.element();
+            final ModelProperty property = event.property();
+            
+            final Listener triggerRefreshListener = new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    if( ! element.disposed() )
+                    {
+                        element.refresh( property );
+                    }
+                }
+            };
+            
+            final Set<ModelPath> dependencies = element.service( property, DependenciesAggregationService.class ).dependencies();
+            
+            for( ModelPath dependency : dependencies )
+            {
+                element.attach( triggerRefreshListener, dependency );
+            }
+            
+            for( ValidationService validationService : element.services( property, ValidationService.class ) )
+            {
+                validationService.attach( triggerRefreshListener );
+            }
+            
+            final DefaultValueService defaultValueService = element.service( property, DefaultValueService.class );
+            
+            if( defaultValueService != null )
+            {
+                defaultValueService.attach( triggerRefreshListener );
+            }
+            
+            final DerivedValueService derivedValueService = element.service( property, DerivedValueService.class );
+            
+            if( derivedValueService != null )
+            {
+                derivedValueService.attach( triggerRefreshListener );
+            }
+
+            if( property.hasAnnotation( ClearOnDisable.class ) )
+            {
+                Listener clearOnDisableListener = null;
+                
+                if( property instanceof ValueProperty )
+                {
+                    final ValueProperty prop = (ValueProperty) property;
+                    
+                    clearOnDisableListener = new FilteredListener<PropertyEnablementEvent>()
+                    {
+                        @Override
+                        protected void handleTypedEvent( final PropertyEnablementEvent event )
+                        {
+                            if( event.before() == true && event.after() == false )
+                            {
+                                element.write( prop, null );
+                            }
+                        }
+                    };
+                }
+                else if( property instanceof ListProperty )
+                {
+                    final ListProperty prop = (ListProperty) property;
+                    
+                    clearOnDisableListener = new FilteredListener<PropertyEnablementEvent>()
+                    {
+                        @Override
+                        protected void handleTypedEvent( final PropertyEnablementEvent event )
+                        {
+                            if( event.before() == true && event.after() == false )
+                            {
+                                element.read( prop ).clear();
+                            }
+                        }
+                    };
+                }
+                else if( property instanceof ElementProperty && ! ( property instanceof ImpliedElementProperty ) )
+                {
+                    final ElementProperty prop = (ElementProperty) property;
+                    
+                    clearOnDisableListener = new FilteredListener<PropertyEnablementEvent>()
+                    {
+                        @Override
+                        protected void handleTypedEvent( final PropertyEnablementEvent event )
+                        {
+                            if( event.before() == true && event.after() == false )
+                            {
+                                element.read( prop ).remove();
+                            }
+                        }
+                    };
+                }
+                
+                if( clearOnDisableListener != null )
+                {
+                    element.attach( clearOnDisableListener, property.getName() );
+                }
+            }
+            
+            // Note that only need to detach triggerRefreshListener from dependencies on element dispose. It isn't
+            // necessary to detach from the services as these services have the same lifespan as the element.
+            
+            if( ! dependencies.isEmpty() )
+            {
+                final Listener disposeListener = new FilteredListener<ElementDisposeEvent>()
+                {
+                    @Override
+                    protected void handleTypedEvent( final ElementDisposeEvent event )
+                    {
+                        for( ModelPath dependency : dependencies )
+                        {
+                            element.detach( triggerRefreshListener, dependency );
+                        }
+                    }
+                };
+                
+                element.attach( disposeListener );
             }
         }
     }

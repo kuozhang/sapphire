@@ -29,6 +29,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.PropertyEnablementEvent;
+import org.eclipse.sapphire.modeling.PropertyInitializationEvent;
 import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
@@ -196,6 +197,18 @@ public abstract class SapphireTestCase extends TestCase
         assertSame( element, evt.element() );
     }
 
+    protected static void assertPropertyInitializationEvent( final Event event,
+                                                             final IModelElement element,
+                                                             final ModelProperty property )
+    {
+        assertTrue( event instanceof PropertyInitializationEvent );
+        
+        final PropertyInitializationEvent evt = (PropertyInitializationEvent) event;
+        
+        assertSame( element, evt.element() );
+        assertSame( property, evt.property() );
+    }
+    
     protected static void assertPropertyContentEvent( final Event event,
                                                       final IModelElement element,
                                                       final ModelProperty property )

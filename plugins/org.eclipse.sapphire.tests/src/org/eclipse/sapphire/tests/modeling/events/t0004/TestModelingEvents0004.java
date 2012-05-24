@@ -63,7 +63,13 @@ public final class TestModelingEvents0004 extends SapphireTestCase
         
         root.attach( listener );
         
-        root.validation(); // suspect
+        root.validation();
+        
+        assertEquals( 2, events.size() );
+        assertPropertyInitializationEvent( events.get( 0 ), root, RootElement.PROP_ENABLEMENT );
+        assertPropertyInitializationEvent( events.get( 1 ), root, RootElement.PROP_CHILD );
+        
+        events.clear();
         
         final ChildElement child = root.getChild();
         child.attach( listener );

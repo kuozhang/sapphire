@@ -68,7 +68,12 @@ public final class TestModelingEvents0001 extends SapphireTestCase
         
         assertValidationError( initialPropertyValidation, "Required string value must be specified." );
         assertValidationError( initialElementValidation, "Required string value must be specified." );
-        assertEquals( 0, events.size() );
+        
+        assertEquals( 2, events.size() );
+        assertPropertyInitializationEvent( events.get( 0 ), root, RootElement.PROP_ENABLEMENT );
+        assertPropertyInitializationEvent( events.get( 1 ), root, RootElement.PROP_REQUIRED_STRING_VALUE );
+        
+        events.clear();
         
         root.setRequiredStringValue( "abc" );
         

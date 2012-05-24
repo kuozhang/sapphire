@@ -68,7 +68,12 @@ public final class TestModelingEvents0002 extends SapphireTestCase
         
         assertValidationError( initialPropertyValidation, "At least one child element must be specified." );
         assertValidationError( initialElementValidation, "At least one child element must be specified." );
-        assertEquals( 0, events.size() );
+        
+        assertEquals( 2, events.size() );
+        assertPropertyInitializationEvent( events.get( 0 ), root, RootElement.PROP_ENABLEMENT );
+        assertPropertyInitializationEvent( events.get( 1 ), root, RootElement.PROP_CHILDREN );
+        
+        events.clear();
         
         final ChildElement child = root.getChildren().insert();
         child.attach( listener );
