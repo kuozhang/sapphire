@@ -12,10 +12,8 @@
 package org.eclipse.sapphire.tests.modeling.misc.t0013;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
@@ -25,29 +23,16 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 
 @GenerateImpl
 
-public interface ChildElement extends IModelElement
+public interface TestRootElement extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( ChildElement.class );
+    ModelElementType TYPE = new ModelElementType( TestRootElement.class );
     
-    // *** DefaultIntegerValue ***
+    // *** Child ***
+
+    @Type( base = TestChildElement.class )
     
-    @Type( base = Integer.class )
+    ImpliedElementProperty PROP_CHILD = new ImpliedElementProperty( TYPE, "Child" );
 
-    ValueProperty PROP_DEFAULT_INTEGER_VALUE = new ValueProperty( TYPE, "DefaultIntegerValue" );
-    
-    Value<Integer> getDefaultIntegerValue();
-    void setDefaultIntegerValue( String value );
-    void setDefaultIntegerValue( Integer value );
-    
-    // *** IntegerValue ***
-
-    @Type( base = Integer.class )
-    @DependsOn( "/Child/DefaultIntegerValue" )
-
-    ValueProperty PROP_INTEGER_VALUE = new ValueProperty( TYPE, "IntegerValue" );
-
-    Value<Integer> getIntegerValue();
-    void setIntegerValue(String value);
-    void setIntegerValue(Integer value);
+    TestChildElement getChild();
 
 }

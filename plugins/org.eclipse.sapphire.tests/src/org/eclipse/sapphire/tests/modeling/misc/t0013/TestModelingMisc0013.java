@@ -43,8 +43,15 @@ public final class TestModelingMisc0013 extends SapphireTestCase
     
     public void test() throws Exception
     {
-        final RootElement root = RootElement.TYPE.instantiate();
-        root.getChild();
+        final TestRootElement root = TestRootElement.TYPE.instantiate();
+        final TestChildElement child = root.getChild();
+        
+        assertNull( child.getDefaultIntegerValue().getContent() );
+        assertNull( child.getIntegerValue().getContent() );
+        
+        child.setDefaultIntegerValue( 123 );
+        
+        assertEquals( Integer.valueOf( 123 ), child.getIntegerValue().getContent() );
     }
 
 }

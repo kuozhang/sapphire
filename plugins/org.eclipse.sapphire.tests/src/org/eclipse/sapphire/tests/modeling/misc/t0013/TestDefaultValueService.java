@@ -11,28 +11,27 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0013;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
-import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.services.DefaultValueService;
+import org.eclipse.sapphire.services.DefaultValueServiceData;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateImpl
-
-public interface RootElement extends IModelElement
+public final class TestDefaultValueService extends DefaultValueService
 {
-    ModelElementType TYPE = new ModelElementType( RootElement.class );
-    
-    // *** Child ***
+    @Override
+    protected DefaultValueServiceData data()
+    {
+        refresh();
+        return super.data();
+    }
 
-    @Type( base = ChildElement.class )
-    
-    ImpliedElementProperty PROP_CHILD = new ImpliedElementProperty( TYPE, "Child" );
-
-    ChildElement getChild();
+    @Override
+    protected DefaultValueServiceData compute()
+    {
+        final TestChildElement element = context( TestChildElement.class );
+        return new DefaultValueServiceData( element.getDefaultIntegerValue().getText() );
+    }
 
 }
