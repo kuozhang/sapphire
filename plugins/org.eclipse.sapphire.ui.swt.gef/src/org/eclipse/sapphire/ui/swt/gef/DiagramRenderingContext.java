@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.swt.gef;
 
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -24,14 +23,6 @@ public class DiagramRenderingContext extends SapphireRenderingContext
 {
 	private SapphireDiagramEditor diagramEditor;
 	
-	public DiagramRenderingContext(ISapphirePart part) {
-		super(part, null);
-	}
-
-	public DiagramRenderingContext(ISapphirePart part, Shell shell) {
-		super(part, shell);
-	}
-
 	public DiagramRenderingContext(ISapphirePart part, SapphireDiagramEditor diagramEditor) {
 		super(part, diagramEditor.getSite().getShell());
 		this.diagramEditor = diagramEditor;
