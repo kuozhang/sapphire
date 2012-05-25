@@ -141,11 +141,12 @@
         <service>
             <implementation>ArchitectureDiagramLayoutPersistenceService</implementation>
         </service>
+        <page-name>architecture</page-name>
     </diagram-page>
     <editor-page>
         <id>DetailsPage</id>
         <page-name>details</page-name>
-        <page-header-text>architecture</page-header-text>
+        <page-header-text>architecture details</page-header-text>
         <action>
             <id>Sapphire.Samples.OpenSapphireWebSite</id>
             <label>Sapphire Web Site</label>

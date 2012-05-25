@@ -15,7 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.samples.map.IDestination;
+import org.eclipse.sapphire.samples.map.Location;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -25,29 +25,29 @@ import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 /**
- * Action handler for Sapphire.Diagram.Node.Default and Sapphire.Samples.Map.Destination.ShowInWikipedia actions 
+ * Action handler for Sapphire.Diagram.Node.Default and Sapphire.Samples.Map.Location.ShowInWikipedia actions 
  * for destination nodes. The implementation opens a browser to the Wikipedia entry for the destination.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class DestinationShowInWikipediaActionHandler extends SapphireActionHandler
+public final class LocationShowInWikipediaActionHandler extends SapphireActionHandler
 {
     @Override
     protected Object run( final SapphireRenderingContext context )
     {
         final DiagramNodePart part = (DiagramNodePart) context.getPart();
-        final IDestination destination = (IDestination) part.getModelElement();
-        final String destinationName = destination.getName().getText();
+        final Location location = (Location) part.getModelElement();
+        final String locationName = location.getName().getText();
 
-        if( destinationName != null )
+        if( locationName != null )
         {
             try
             {
                 final IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
                 final IWebBrowser browser = support.getExternalBrowser();
                 
-                final URL url = new URL( "http://en.wikipedia.org/wiki/" + destinationName );
+                final URL url = new URL( "http://en.wikipedia.org/wiki/" + locationName );
                 
                 browser.openURL( url );
             }

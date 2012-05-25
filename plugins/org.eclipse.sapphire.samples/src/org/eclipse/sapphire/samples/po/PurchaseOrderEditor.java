@@ -58,11 +58,9 @@ public final class PurchaseOrderEditor extends SapphireEditor
     {
         this.pageGeneral = new FormEditorPage( this, this.model, new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/po/PurchaseOrderEditor.sdef/GeneralPage" ) );
         addPage( 0, this.pageGeneral );
-        setPageId( this.pages.get( 1 ), "General", this.pageGeneral.getPart() );        
 
         this.pageEntries = new FormEditorPage( this, this.model, new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/po/PurchaseOrderEditor.sdef/EntriesPage" ) );
         addPage( 1, this.pageEntries );
-        setPageId( this.pages.get( 0 ), "Entries", this.pageEntries.getPart() );        
     }
     
 }

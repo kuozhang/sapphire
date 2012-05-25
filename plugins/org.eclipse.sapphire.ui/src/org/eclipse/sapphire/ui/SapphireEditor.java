@@ -66,6 +66,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.internal.EditorActionBars;
+import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 import org.eclipse.ui.part.MultiPageEditorPart;
@@ -404,6 +405,17 @@ public abstract class SapphireEditor
     private void doSetInput( final IEditorInput input )
     {
         setPartName( input.getName() );
+    }
+    
+    public int addEditorPage(EditorPart page) throws PartInitException {
+        int i = super.addPage(page, getEditorInput());
+        setPageText( i, page.getTitle() );
+        return i;
+    }
+
+    public void addEditorPage(int index, EditorPart page) throws PartInitException {
+        super.addPage(index, page, getEditorInput());
+        setPageText( index, page.getTitle());
     }
 
     @Override

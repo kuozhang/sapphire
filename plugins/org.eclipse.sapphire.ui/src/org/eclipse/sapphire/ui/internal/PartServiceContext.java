@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.services.Service;
@@ -52,6 +53,22 @@ public final class PartServiceContext extends ServiceContext
             if( type.isInstance( this.part ) )
             {
                 obj = type.cast( this.part );
+            }
+            else if( IModelElement.class.isAssignableFrom( type ) )
+            {
+                final IModelElement element = this.part.getLocalModelElement();
+                
+                if( element != null )
+                {
+                    if( type == IModelElement.class )
+                    {
+                        obj = type.cast( element );
+                    }
+                    else
+                    {
+                        obj = element.nearest( type );
+                    }
+                }
             }
         }
         

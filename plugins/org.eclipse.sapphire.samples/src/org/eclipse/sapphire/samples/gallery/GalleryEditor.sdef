@@ -2303,6 +2303,7 @@
             <label>Sapphire Homepage</label>
             <impl>OpenHomepageActionHandler</impl>
         </action-handler>
+        <page-name>gallery</page-name>
     </editor-page>
     <dialog>
         <id>SplitFormDialog</id>

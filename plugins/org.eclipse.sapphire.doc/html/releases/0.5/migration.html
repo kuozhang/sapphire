@@ -52,13 +52,14 @@ to 0.5 release. Only changes from the previous release are covered.</p>
   <li><a href="#ModelProperty">ModelProperty</a></li>
   <li><a href="#ModelPropertyListener">ModelPropertyListener</a></li>
   <li><a href="#PropertyListeners">PropertyListeners</a></li>
+  <li><a href="#SapphireDiagramActionHandler">SapphireDiagramActionHandler</a></li>
   <li><a href="#Actuator">Actuator</a></li>
   <li><a href="#ContentOutlineNodeImage">Content Outline Node Image</a></li>
+  <li><a href="#DiagramDragAndDrop">Diagram Drag-n-Drop</a></li>
   <li><a href="#GraphitiToGef">Graphiti to GEF Transition</a></li>
   <ol type="A">
     <li><a href="#SapphireDiagramEditor">SapphireDiagramEditor</a></li>
     <li><a href="#DiagramImage">Diagram Image</a></li>
-    <li><a href="#SapphireDiagramActionHandler">SapphireDiagramActionHandler, Drag and Drop Service</a></li>
   </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
 </ol>
@@ -634,6 +635,36 @@ solution would be to implement the new insert() and move() methods directly.</p>
 </table>
 
 
+<h2><a name="SapphireDiagramActionHandler">SapphireDiagramActionHandler</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleActionHandler extends</font> SapphireDiagramActionHandler
+<font color="#888888">{</font>
+    @Override
+    public boolean canExecute( Object obj )
+    {
+        ...
+    }
+    
+    <font color="#888888">...
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleActionHandler extends</font> SapphireActionHandler
+<font color="#888888">{
+    ...
+}</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="Actuator">Actuator</a></h2>
 
 <p>The action link facility in sdef language has been generalized to support other presentations. In the
@@ -721,6 +752,75 @@ to capture the same semantics.</p>
 <nobr>Replace: &nbsp;&lt;image>\${ Image() }&lt;/image></nobr></p>
 
 
+<h2><a name="DiagramDragAndDrop">Diagram Drag-n-Drop</a></h2>
+
+<p>Drag-n-drop support in the diagram editor has been reworked to use service mechanism instead of action mechanism.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class</font> ExampleDragAndDropActionHandler <font color="#888888">extends</font> SapphireDiagramActionHandler
+<font color="#888888">{</font>
+    @Override
+    public boolean canExecute( Object obj )
+    {
+        <font color="#888888">...</font>
+    }
+    
+    @Override
+    protected Object run( SapphireRenderingContext context )
+    {
+        DiagramRenderingContext ctx = (DiagramRenderingContext) context;
+        Object obj = ctx.getObject();
+        
+        <font color="#888888">...</font>
+    }
+<font color="#888888">}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class</font> ExampleDragAndDropService <font color="#888888">extends</font> DragAndDropService
+<font color="#888888">{</font>
+    @Override
+    public boolean droppable( DropContext context ) 
+    {
+        Object obj = context.object();
+        
+        <font color="#888888">...</font>
+    }
+    
+    @Override
+    public void drop( DropContext context ) 
+    {
+        Object obj = context.object();
+        
+        <font color="#888888">...</font>
+    }
+<font color="#888888">}</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;diagram-page></font>
+    &lt;action-handler>
+        &lt;action>Sapphire.Drop&lt;/action>
+        &lt;impl>ExampleDragAndDropActionHandler&lt;/impl>
+    &lt;/action-handler>       
+<font color="#888888">&lt;/diagram-page></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;diagram-page></font>
+    &lt;service>
+        &lt;implementation>ExampleDragAndDropService&lt;/implementation>
+    &lt;/service>       
+<font color="#888888">&lt;/diagram-page></font></code></pre>
+    </td>
+  </tr>  
+</table>
+
 
 <h2><a name="GraphitiToGef">Graphiti to GEF Transition</a></h2>
 
@@ -771,6 +871,7 @@ addPage( 0, pageDiagram, getEditorInput() );</code></pre>
     </td>
   </tr>
 </table>
+
 
 <h2><a name="DiagramImage">Diagram Image</a></h2>
 
@@ -842,114 +943,6 @@ Images are now referenced at the point of use, rather than defined separately an
   </tr>
 </table>
 
-<h2><a name="SapphireDiagramActionHandler">SapphireDiagramActionHandler, Drag and Drop Service</a></h2>
-
-<p>SapphireDiagramActionHandler class was introduced to support Drag and Drop on Diagram canvas. 
-Its canExecute(Object obj) method needs to be implemented by the "Sapphire.Drop" action handler to return whether
-it'd accept the dropped object. But for other diagram action handlers, this method is not really needed. Callers
-can use SapphireActionHandler's isEnabled() method instead.</p>
-
-<p>We have redesigned how Drag and Drop works. Drag and Drop is now supported through Sapphire's service mechanism.
-As a result, SapphireDiagramActionHandler class has been removed. All the actions that extend from SapphireDiagramActionHandler
-need to be modified to extend from SapphireActionHandler directly.</p>
-
-<table>
-  <tr>
-    <th>Before</th>
-    <th>After</th>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code>public class MapDropActionHandler extends SapphireDiagramActionHandler
-{
-    @Override
-    public boolean canExecute( final Object obj )
-    {
-        return true;
-    }
-    
-    @Override
-    protected Object run( final SapphireRenderingContext context )
-    {
-        DiagramRenderingContext diagramCtx = (DiagramRenderingContext)context;
-        Object obj = diagramCtx.getObject();
-        
-        if( obj instanceof IFile )
-        
-        ...
-    }
-    
-}</code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code>public class MapDropService extends DragAndDropService
-{
-    @Override
-    public boolean droppable(DropContext context) 
-    {
-        return context.object() instanceof IFile;
-    }
-
-    @Override
-    public void drop(DropContext context) 
-    {
-        IFile ifile = (IFile)context.object();
-        final List<String> cities = new ArrayList<String>();
-        InputStream in = null;
-        
-        ...        
-    }
-}</code></pre>
-    </td>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code>&lt;diagram-page>
-    &lt;action-handler>
-        &lt;action>Sapphire.Drop&lt;/action>
-        &lt;id>Sapphire.Samples.Map.Drop&lt;/id>
-        &lt;impl>MapDropActionHandler&lt;/impl>
-    &lt;/action-handler>       
-&lt;/diagram-page></code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code>&lt;diagram-page>
-    &lt;service>
-        &lt;implementation>MapDropService&lt;/implementation>
-    &lt;/service>       
-&lt;/diagram-page></code></pre>
-    </td>
-  </tr>  
-  <tr>
-    <td>
-<pre class="source-code"><code>public class DestinationShowInWikipediaActionHandler extends SapphireDiagramActionHandler
-{
-    @Override
-    public boolean canExecute( final Object obj )
-    {
-        return true;
-    }
-    
-    @Override
-    protected Object run( final SapphireRenderingContext context )
-    {
-        ...
-    }
-    
-}</code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code>public class DestinationShowInWikipediaActionHandler extends SapphireActionHandler
-{
-    @Override
-    protected Object run( final SapphireRenderingContext context )
-    {        
-        ...
-    }
-}</code></pre>
-    </td>
-  </tr>
-</table>
 
 <h2><a name="Miscellaneous">Miscellaneous</a></h2>
 

@@ -64,9 +64,7 @@ public final class ArchitectureEditor extends SapphireEditor
     {
         IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/architecture/ArchitectureEditor.sdef/DiagramPage" );
 		this.pageDiagram = new SapphireDiagramEditor( this, this.architectureModel, path );
-        addPage( 0, this.pageDiagram, getEditorInput() );
-        setPageText( 0, "Diagram" );
-        setPageId( this.pages.get( 0 ), "Diagram", this.pageDiagram.getPart() );
+        addEditorPage( 0, this.pageDiagram );
     }
     
     @Override
@@ -75,8 +73,6 @@ public final class ArchitectureEditor extends SapphireEditor
         IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/architecture/ArchitectureEditor.sdef/DetailsPage" );
         this.pageDetails = new MasterDetailsEditorPage( this, this.architectureModel, path );
         addPage( 1, this.pageDetails );
-        setPageText( 1, "Details" );
-        setPageId( this.pages.get( 1 ), "Details", this.pageDetails.getPart() );        
     }
 
     @Override

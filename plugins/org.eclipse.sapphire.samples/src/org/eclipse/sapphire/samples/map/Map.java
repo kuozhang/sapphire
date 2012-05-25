@@ -7,7 +7,8 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation
- *    Kamesh Sampath - [355751] General improvement of XML root binding API    
+ *    Kamesh Sampath - [355751] General improvement of XML root binding API
+ *    Konstantin Komissarchik - miscellaneous improvements    
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.map;
@@ -16,39 +17,54 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.samples.map.internal.MapMethods;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @GenerateImpl
 @XmlBinding( path = "map")
 
-public interface IMap extends IModelElement
+public interface Map extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IMap.class );
+    ModelElementType TYPE = new ModelElementType( Map.class );
     
-    // *** Destinations ***
+    // *** Locations ***
 
-    @Type( base = IDestination.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "destination", type = IDestination.class ) )
+    @Type( base = Location.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "location", type = Location.class ) )
     
-    ListProperty PROP_DESTINATIONS = new ListProperty( TYPE, "Destinations" );
+    ListProperty PROP_LOCATIONS = new ListProperty( TYPE, "Locations" );
     
-    ModelElementList<IDestination> getDestinations();
+    ModelElementList<Location> getLocations();
+    
+    // ** Method: findLocation
+    
+    @DelegateImplementation( MapMethods.class )
+    
+    Location findLocation( String name );
+    
+    // ** Method: hasLocation
+    
+    @DelegateImplementation( MapMethods.class )
+    
+    boolean hasLocation( String name );
     
     // *** Routes ***
     
-    @Type( base = IRoute.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "route", type = IRoute.class ) )
+    @Type( base = Route.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "route", type = Route.class ) )
     
     ListProperty PROP_ROUTES = new ListProperty( TYPE, "Routes" );
     
-    ModelElementList<IRoute> getRoutes();
+    ModelElementList<Route> getRoutes();
     
 }

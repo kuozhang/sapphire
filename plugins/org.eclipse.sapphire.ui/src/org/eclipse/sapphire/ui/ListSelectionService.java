@@ -26,7 +26,7 @@ import org.eclipse.sapphire.util.ReadOnlyListFactory;
  * Serves as a conduit between the presentation layer and anything that may want 
  * to see or change the selection.
  * 
- * @author <a href="mailto:gregory.amerson@liferay.com">Greory Amerson</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 

@@ -32,6 +32,7 @@
   <li><a href="#ContentProposalService">ContentProposalService</a></li>
   <li><a href="#DependenciesAggregationService">DependenciesAggregationService</a></li>
   <li><a href="#DependenciesService">DependenciesService</a></li>
+  <li><a href="#DragAndDropService">DragAndDropService</a></li>  
   <li><a href="#EqualityService">EqualityService</a></li>
   <li><a href="#FactsAggregationService">FactsAggregationService</a></li>
   <li><a href="#FactsService">FactsService</a></li>
@@ -40,7 +41,6 @@
   <li><a href="#JavaTypeConstraintService">JavaTypeConstraintService</a></li>
   <li><a href="#ListSelectionService">ListSelectionService</a></li>
   <li><a href="#PossibleTypesService">PossibleTypesService</a></li>
-  <li><a href="#DragAndDropService">DragAndDropService</a></li>  
 </ul>
 
 
@@ -154,6 +154,104 @@ adds "#/Name" dependency.</p>
 
 Value&lt;String> getName();
 void setName( String value );</font></code></pre>
+
+
+<a name="DragAndDropService"><h2>DragAndDropService</h2></a>
+
+<p>The DragAndDropService provides means to implement drag-n-drop behavior in a diagram editor.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class MapDragAndDropService extends DragAndDropService 
+{
+    @Override
+    public boolean droppable( DropContext context ) 
+    {
+        return context.object() instanceof IFile;
+    }
+
+    @Override
+    public void drop( DropContext context ) 
+    {
+        IFile file = (IFile) context.object();
+        List<String> locations = new ArrayList<String>();
+        
+        InputStream in = null;
+        
+        try
+        {
+            in = file.getContents();
+            final BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
+            
+            for( String line = br.readLine(); line != null; line = br.readLine() )
+            {
+                if( line != null )
+                {
+                    line = line.trim();
+                    
+                    if( line.length() > 0 )
+                    {
+                        locations.add( line );
+                    }
+                }
+            }
+        }
+        catch( CoreException e )
+        {
+            LoggingService.log( e );
+        }
+        catch( IOException e )
+        {
+            LoggingService.log( e );
+        }
+        finally
+        {
+            if( in != null )
+            {
+                try
+                {
+                    in.close();
+                }
+                catch( IOException e ) {}
+            }
+        }
+        
+        if( ! locations.isEmpty() )
+        {
+            SapphireDiagramEditorPagePart diagram = context( SapphireDiagramEditorPagePart.class );
+            Map map = context( Map.class );
+            
+            Point initialDropPosition = context.position();
+            
+            int x = initialDropPosition.getX();
+            int y = initialDropPosition.getY();
+            
+            for( String locationName : locations )
+            {
+                if( ! map.hasLocation( locationName ) )
+                {
+                    Location location = map.getLocations().insert();
+                    location.setName( locationName );
+                    
+                    DiagramNodePart locationNodePart = diagram.getDiagramNodePart(location);
+                    locationNodePart.setNodeBounds( x, y );
+                    
+                    x += 50;
+                    y += 50;
+                }
+            }
+        }
+    }
+}</code></pre>
+
+<p style="margin-left: 20px;">The DragAndDropService is typically registered as part of diagram page
+definition in the sdef file.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;diagram-page></font>
+    &lt;service>
+        &lt;implementation>MapDropService&lt;/implementation>
+    &lt;/service>
+<font color="#888888">&lt;/diagram-page></font></code></pre>
 
 
 <a name="EqualityService"><h2>EqualityService</h2></a>
@@ -534,6 +632,7 @@ ReferenceValue&lt;JavaTypeName,JavaType> getServletFilterImpl();
 void setServletFilterImpl( JavaTypeName value );
 void setServletFilterImpl( String value );</font></code></pre>
 
+
 <a name="ListSelectionService"><h2>ListSelectionService</h2></a>
 
 <p>The ListSelectionService functions as a conduit between the presentation layer and anything that may want to see or 
@@ -584,6 +683,7 @@ refresh action handler's enablement state when selection changes.</p>
         );
     <font color="#888888">}
 }</font></code></pre>
+
 
 <a name="PossibleTypesService"><h2>PossibleTypesService</h2></a>
 
@@ -646,39 +746,6 @@ ModelElementList&lt;Shape> getShapes();</font></code></pre>
 <p>If the set of possible types is not specified via @Type annotation or via a custom PossibleTypesService
 implementation, the set of possible types is defined to be a singleton set composed of the property's base
 type.</p>
-
-<a name="DragAndDropService"><h2>DragAndDropService</h2></a>
-
-<p>Drag and Drop to Sapphire Diagram page is now supported through a part service.
-All the DND services should extend from DragAndDropService:</p>
-
-<pre class="source-code"><code>public class MapDropService extends DragAndDropService
-{
-    @Override
-    public boolean droppable(DropContext context) 
-    {
-        return context.object() instanceof IFile;
-    }
-
-    @Override
-    public void drop(DropContext context) 
-    {
-        IFile ifile = (IFile)context.object();
-        final List<String> cities = new ArrayList<String>();
-        InputStream in = null;
-        
-        ...
-                
-    }
-}</code></pre>
-
-<p>The service needs to be associated with the diagram page part at the sdef file:</p>
-
-<pre class="source-code"><code><font color="#888888">&lt;diagram-page></font>
-    &lt;service>
-        &lt;implementation>MapDropService&lt;/implementation>
-    &lt;/service>
-<font color="#888888">&lt;/diagram-page></font></code></pre>
 
 <div class="copyright">Copyright (c) 2012 Oracle and Liferay<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>

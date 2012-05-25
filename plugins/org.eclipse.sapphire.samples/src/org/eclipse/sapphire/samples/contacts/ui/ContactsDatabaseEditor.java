@@ -18,10 +18,7 @@ import org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ContactsDatabaseEditor
-
-    extends SapphireEditorForXml
-    
+public final class ContactsDatabaseEditor extends SapphireEditorForXml
 {
     public ContactsDatabaseEditor()
     {

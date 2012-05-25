@@ -29,9 +29,6 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public abstract class SapphireEditorForXml extends SapphireEditor
 {
-    private static final String PAGE_MAIN_FORM = "main.form";
-    private static final String PAGE_MAIN_SOURCE = "main.source";
-
     private MasterDetailsEditorPage mainPage;
     private StructuredTextEditor sourceEditor;
     private ModelElementType rootModelElementType;
@@ -86,7 +83,6 @@ public abstract class SapphireEditorForXml extends SapphireEditor
         
         final int index = addPage( this.sourceEditor, getEditorInput() );
         setPageText( index, Resources.sourcePageTitle );
-        setPageId( this.sourceEditor, PAGE_MAIN_SOURCE, null );
     }
     
     @Override
@@ -94,7 +90,6 @@ public abstract class SapphireEditorForXml extends SapphireEditor
     {
         this.mainPage = new MasterDetailsEditorPage( this, getModelElement(), new Path( getEditorDefinitionPath() ) );
         addPage( 0, this.mainPage );
-        setPageId( this.mainPage, PAGE_MAIN_FORM, this.mainPage.getPart());
     }
 
     @Override

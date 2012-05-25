@@ -175,6 +175,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
         final ISapphireUiDef def = SapphireUiDefFactory.load( bundleId, relPath );
         
         this.diagramPageDef = (IDiagramEditorPageDef) def.getPartDef( pageId, true, IDiagramEditorPageDef.class );
+        
+        final String partName = this.diagramPageDef.getPageName().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
+        setPartName( partName );
 
         this.diagramPart = new SapphireDiagramEditorPagePart();
 		this.diagramPart.init( editor, rootModelElement, this.diagramPageDef, Collections.<String, String> emptyMap() );

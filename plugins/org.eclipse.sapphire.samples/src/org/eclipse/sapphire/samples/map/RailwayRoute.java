@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - miscellaneous improvements
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.map;
@@ -22,17 +23,18 @@ import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.samples.map.internal.DestinationReferenceService;
+import org.eclipse.sapphire.samples.map.internal.LocationReferenceService;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @GenerateImpl
 
-public interface IRailwayDestination extends IModelElement 
+public interface RailwayRoute extends IModelElement 
 {
-    ModelElementType TYPE = new ModelElementType( IRailwayDestination.class );
+    ModelElementType TYPE = new ModelElementType( RailwayRoute.class );
     
     // *** Distance ***
     
@@ -45,17 +47,17 @@ public interface IRailwayDestination extends IModelElement
     Value<String> getDistance();
     void setDistance( String distance );
 
-    // *** ToDestination ***
+    // *** ToLocation ***
     
-    @Reference( target = IDestination.class )
-    @Service( impl = DestinationReferenceService.class )
-    @XmlBinding( path = "to-destination")
+    @Reference( target = Location.class )
+    @Service( impl = LocationReferenceService.class )
+    @XmlBinding( path = "to")
     @Required
-    @Label(standard = "to destination")
+    @Label(standard = "to location")
 
-    ValueProperty PROP_TO_DESTINATION = new ValueProperty( TYPE, "ToDestination" );
+    ValueProperty PROP_TO_LOCATION = new ValueProperty( TYPE, "ToLocation" );
 
-    ReferenceValue<String,IDestination> getToDestination();
-    void setToDestination( String name );
+    ReferenceValue<String,Location> getToLocation();
+    void setToLocation( String name );
     
 }

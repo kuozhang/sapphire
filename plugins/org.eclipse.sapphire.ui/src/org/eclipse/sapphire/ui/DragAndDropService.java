@@ -14,6 +14,8 @@ package org.eclipse.sapphire.ui;
 import org.eclipse.sapphire.services.Service;
 
 /**
+ * Provides means to implement drag-n-drop behavior in a diagram editor.
+ * 
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 

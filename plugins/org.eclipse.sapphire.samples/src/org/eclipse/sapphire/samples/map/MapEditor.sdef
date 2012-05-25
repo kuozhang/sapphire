@@ -11,6 +11,7 @@
  * Contributors:
  *   Shenxue Zhou - initial implementation and ongoing maintenance
  *   Konstantin Komissarchik - [341518] Sample needed for diagram drop and default node actions
+ *   Konstantin Komissarchik - miscellaneous improvements
  ******************************************************************************
 -->
 
@@ -25,7 +26,7 @@
     </import>
     
     <diagram-page>
-        <id>diagram</id>
+        <id>DiagramPage</id>
         <page-header-text>map</page-header-text>        
         <connection>
             <id>railway_routes</id>
@@ -45,37 +46,37 @@
             </endpoint2>        
         </connection>
         <node>
-            <id>destinations</id>
-            <tool-palette-label>destination</tool-palette-label>
-            <tool-palette-desc>map destination</tool-palette-desc>
-            <property>Destinations</property>
-            <label>${Name == null ? &quot;&lt;destination&gt;&quot; : Name}</label>
+            <id>locations</id>
+            <tool-palette-label>location</tool-palette-label>
+            <tool-palette-desc>map location</tool-palette-desc>
+            <property>Locations</property>
+            <label>${Name == null ? &quot;&lt;location&gt;&quot; : Name}</label>
             <instance-id>${Name}</instance-id>
             <connection-binding>
                 <connection-id>railway_routes</connection-id>
                 <property>RailwayRoutes</property>
                 <label>${Distance == null ? &quot;&lt;distance&gt;&quot; : Distance}</label>
                 <endpoint2>
-                    <property>ToDestination</property>
+                    <property>ToLocation</property>
                     <value>${Name}</value>
                 </endpoint2>
-                <instance-id>${ToDestination}</instance-id>                
+                <instance-id>${ToLocation}</instance-id>                
             </connection-binding>
             <action>
-                <id>Sapphire.Samples.Map.Destination.ShowInWikipedia</id>
+                <id>Sapphire.Samples.Map.Location.ShowInWikipedia</id>
                 <label>show in Wikipedia</label>
                 <image>org/eclipse/sapphire/samples/map/internal/ShowInWikipedia.png</image>
                 <location>after:Sapphire.ShowInSource</location>
             </action>
             <action-handler>
                 <action>Sapphire.Diagram.Node.Default</action>
-                <id>Sapphire.Samples.Map.Destination.Default</id>
-                <impl>DestinationShowInWikipediaActionHandler</impl>
+                <id>Sapphire.Samples.Map.Location.Default</id>
+                <impl>LocationShowInWikipediaActionHandler</impl>
             </action-handler>
             <action-handler>
-                <action>Sapphire.Samples.Map.Destination.ShowInWikipedia</action>
-                <id>Sapphire.Samples.Map.Destination.ShowInWikipedia</id>
-                <impl>DestinationShowInWikipediaActionHandler</impl>
+                <action>Sapphire.Samples.Map.Location.ShowInWikipedia</action>
+                <id>Sapphire.Samples.Map.Location.ShowInWikipedia</id>
+                <impl>LocationShowInWikipediaActionHandler</impl>
             </action-handler>
         </node>
         <connection-binding>
@@ -83,14 +84,14 @@
             <property>Routes</property>
             <label>${Distance == null ? &quot;&lt;distance&gt;&quot; : Distance}</label>
             <endpoint1>
-                <property>FromDestination</property>
+                <property>FromLocation</property>
                 <value>${Name}</value>
             </endpoint1>
             <endpoint2>
-                <property>ToDestination</property>
+                <property>ToLocation</property>
                 <value>${Name}</value>
             </endpoint2>
-            <instance-id>${FromDestination}-${ToDestination}</instance-id>
+            <instance-id>${FromLocation}-${ToLocation}</instance-id>
         </connection-binding>
         <action>
             <id>Sapphire.Samples.OpenSapphireWebSite</id>
@@ -129,14 +130,15 @@
             <impl>ShowStatisticsActionHandler</impl>
         </action-handler>
         <service>
-            <implementation>MapDropService</implementation>
-        </service>                
+            <implementation>MapDragAndDropService</implementation>
+        </service>
+        <page-name>map</page-name>                
     </diagram-page>
     
     <editor-page>
-        <id>overview</id>
-        <page-name>Overview</page-name>
-        <page-header-text>Overview</page-header-text>
+        <id>DetailsPage</id>
+        <page-name>details</page-name>
+        <page-header-text>map details</page-header-text>
         <action>
             <id>Sapphire.Samples.OpenSapphireWebSite</id>
             <label>Sapphire Web Site</label>
@@ -160,28 +162,28 @@
         </action-handler>
         <root-node>
             <node>
-                <label>Destinations</label>
+                <label>Locations</label>
                 <section>
                     <content>
-                        <label>Destinations in the map</label>
+                        <label>Locations in the map</label>
                         <spacer/>
-                        <property-editor>Destinations</property-editor>
+                        <property-editor>Locations</property-editor>
                         <separator>
                             <label>Railway Routes</label>
                         </separator>
                         <switching-panel>
                             <list-selection-controller>
-                                <property>Destinations</property>
+                                <property>Locations</property>
                             </list-selection-controller>
                             <panel>
-                                <key>IDestination</key>
+                                <key>Location</key>
                                 <content>
                                     <property-editor>RailwayRoutes</property-editor>
                                 </content>                    
                             </panel>
                             <default-panel>
                                 <content>
-                                    <label>Select a destination above to configure additional properties.</label>
+                                    <label>Select a location above to configure additional properties.</label>
                                 </content>
                             </default-panel>
                         </switching-panel>                        

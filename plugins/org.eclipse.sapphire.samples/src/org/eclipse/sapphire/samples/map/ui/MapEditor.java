@@ -7,7 +7,8 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
- *    Gregory Amerson - [374022] - SapphireGraphicalEditor init with SapphireEditor
+ *    Gregory Amerson - [374022] SapphireGraphicalEditor init with SapphireEditor
+ *    Konstantin Komissarchik - miscellaneous improvements
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.map.ui;
@@ -17,7 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
-import org.eclipse.sapphire.samples.map.IMap;
+import org.eclipse.sapphire.samples.map.Map;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
@@ -27,14 +28,16 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public class MapEditor extends SapphireEditor 
 {
-    private IMap modelMap;
+    private Map modelMap;
     private StructuredTextEditor mapSourceEditor;
     private SapphireDiagramEditor mapDiagram;
-    private MasterDetailsEditorPage mapOverviewPage;
+    private MasterDetailsEditorPage mapDetailsPage;
     
     public MapEditor()
     {
@@ -54,31 +57,27 @@ public class MapEditor extends SapphireEditor
     @Override
     protected IModelElement createModel() 
     {
-        this.modelMap = IMap.TYPE.instantiate(new RootXmlResource(new XmlEditorResourceStore(this, this.mapSourceEditor)));
+        this.modelMap = Map.TYPE.instantiate(new RootXmlResource(new XmlEditorResourceStore(this, this.mapSourceEditor)));
         return this.modelMap;
     }
 
     @Override
     protected void createDiagramPages() throws PartInitException
     {
-        IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/map/MapEditor.sdef/diagram" );
+        IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/map/MapEditor.sdef/DiagramPage" );
 		this.mapDiagram = new SapphireDiagramEditor( this, this.modelMap, path );
-        addPage(0, mapDiagram, getEditorInput());
-        setPageText( 0, "Diagram" );
-        setPageId(this.pages.get(0), "Diagram", this.mapDiagram.getPart());
+        addEditorPage(0, this.mapDiagram);
     }
     
     @Override
     protected void createFormPages() throws PartInitException 
     {
-        IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/map/MapEditor.sdef/overview" );
-        this.mapOverviewPage = new MasterDetailsEditorPage(this, this.modelMap, path);
-        addPage(1, this.mapOverviewPage);
-        setPageText(1, "Overview");
-        setPageId(this.pages.get(1), "Overview", this.mapOverviewPage.getPart());        
+        IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/map/MapEditor.sdef/DetailsPage" );
+        this.mapDetailsPage = new MasterDetailsEditorPage(this, this.modelMap, path);
+        addPage(1, this.mapDetailsPage);
     }
 
-    public IMap getMap()
+    public Map getMap()
     {
         return this.modelMap;
     }

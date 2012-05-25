@@ -231,6 +231,7 @@
             </node>
         </root-node>
         <page-header-image>${ Image() }</page-header-image>
+        <page-name>contacts</page-name>
     </editor-page>
     
     <wizard>

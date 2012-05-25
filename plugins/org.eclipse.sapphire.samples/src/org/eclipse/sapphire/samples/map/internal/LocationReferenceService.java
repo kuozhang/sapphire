@@ -7,33 +7,33 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - miscellaneous improvements
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.map.internal;
 
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.samples.map.IDestination;
-import org.eclipse.sapphire.samples.map.IMap;
+import org.eclipse.sapphire.samples.map.Location;
+import org.eclipse.sapphire.samples.map.Map;
 import org.eclipse.sapphire.services.ReferenceService;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class DestinationReferenceService extends ReferenceService 
+public class LocationReferenceService extends ReferenceService 
 {
     @Override
     public Object resolve(String reference) 
     {
         if (reference != null)
         {
-            IMap map = context( IMap.class );
-            ModelElementList<IDestination> dests = map.getDestinations();
-            for (IDestination dest : dests)
+            Map map = context( Map.class );
+            for (Location location : map.getLocations())
             {
-                if (reference.equals(dest.getName().getContent()))
+                if (reference.equals(location.getName().getContent()))
                 {
-                    return dest;
+                    return location;
                 }
             }
         }

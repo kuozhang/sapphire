@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - miscellaneous improvements
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.map;
@@ -26,13 +27,14 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @GenerateImpl
 
-public interface IDestination extends IModelElement 
+public interface Location extends IModelElement 
 {
-    ModelElementType TYPE = new ModelElementType( IDestination.class );
+    ModelElementType TYPE = new ModelElementType( Location.class );
     
     // *** Name ***
     
@@ -47,13 +49,12 @@ public interface IDestination extends IModelElement
     
     // *** RailwayRoutes ***
     
-    @Type( base = IRailwayDestination.class )
-    @XmlListBinding( path = "railway-destinations", 
-            mappings = @XmlListBinding.Mapping( element = "railway-destination", type = IRailwayDestination.class ) )
+    @Type( base = RailwayRoute.class )
+    @XmlListBinding( path = "railway", mappings = @XmlListBinding.Mapping( element = "route", type = RailwayRoute.class ) )
     
     ListProperty PROP_RAILWAY_ROUTES = new ListProperty( TYPE, "RailwayRoutes" );
     
-    ModelElementList<IRailwayDestination> getRailwayRoutes();
+    ModelElementList<RailwayRoute> getRailwayRoutes();
     
     
 }
