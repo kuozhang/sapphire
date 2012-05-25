@@ -408,14 +408,37 @@ public abstract class SapphireEditor
     }
     
     public int addEditorPage(EditorPart page) throws PartInitException {
-        int i = super.addPage(page, getEditorInput());
-        setPageText( i, page.getTitle() );
-        return i;
+        return addPage(page, getEditorInput());
     }
 
     public void addEditorPage(int index, EditorPart page) throws PartInitException {
-        super.addPage(index, page, getEditorInput());
-        setPageText( index, page.getTitle());
+        addPage(index, page, getEditorInput());
+    }
+    
+    @Override
+    
+    public int addPage( final IEditorPart page, 
+                        final IEditorInput input )
+    
+        throws PartInitException
+        
+    {
+        int index = super.addPage(page, input);
+        setPageText( index, page.getTitle() );
+        return index;
+    }
+
+    @Override
+    
+    public void addPage( final int index, 
+                         final IEditorPart page, 
+                         final IEditorInput input) 
+    
+        throws PartInitException
+        
+    {
+        super.addPage(index, page, input);
+        setPageText( index, page.getTitle() );
     }
 
     @Override
