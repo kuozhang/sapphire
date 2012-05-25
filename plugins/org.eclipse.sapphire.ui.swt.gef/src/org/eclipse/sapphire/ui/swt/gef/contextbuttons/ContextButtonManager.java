@@ -117,6 +117,12 @@ public class ContextButtonManager {
 //			if (ed.isDirectEditingActive()) {
 //				return;
 //			}
+			
+			// Bug 380728 - Floating toolbar appears on a node when multiple nodes are selected 
+			if (ed.getSelectedParts().size() > 1) {
+				return;
+			}
+				
 			Tool activeTool = ed.getEditDomain().getActiveTool();
 			if (activeTool instanceof CreationTool || activeTool instanceof AbstractConnectionCreationTool) {
 				return;
