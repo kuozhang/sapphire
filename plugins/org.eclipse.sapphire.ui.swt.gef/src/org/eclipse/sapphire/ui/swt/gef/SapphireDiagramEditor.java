@@ -591,6 +591,12 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 					this.selectedEditParts = editPartList;
 					updateActions();
 					updateKeyHandler();
+					
+					// [Bug 380728] Floating toolbar appears on a node when multiple nodes are selected
+					if (partList.size() > 1)
+					{
+						this.contextButtonManager.hideContextButtonsInstantly();
+					}
 				}				
 			}
 		}
