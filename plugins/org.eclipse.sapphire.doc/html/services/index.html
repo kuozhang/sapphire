@@ -661,7 +661,7 @@ All the DND services should extend from DragAndDropService:</p>
     }
 
     @Override
-    public Object drop(DropContext context) 
+    public void drop(DropContext context) 
     {
         IFile ifile = (IFile)context.object();
         final List<String> cities = new ArrayList<String>();

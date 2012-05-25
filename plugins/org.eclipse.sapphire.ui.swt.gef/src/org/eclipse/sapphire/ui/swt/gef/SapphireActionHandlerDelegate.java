@@ -84,8 +84,6 @@ public class SapphireActionHandlerDelegate extends Action
 		});
 		DiagramConfigurationManager configManager = this.diagramEditor.getConfigurationManager();
 		DiagramRenderingContext context = configManager.getDiagramRenderingContextCache().get(this.sapphireActionHandler.getPart());
-		Point pt = diagramEditor.getMouseLocation();
-		context.setCurrentMouseLocation(pt.x, pt.y);
 		this.sapphireActionHandler.execute(context);
 	}
 		

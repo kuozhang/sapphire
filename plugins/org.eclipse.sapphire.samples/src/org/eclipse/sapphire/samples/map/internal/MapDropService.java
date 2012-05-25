@@ -41,7 +41,7 @@ public class MapDropService extends DragAndDropService
 	}
 
 	@Override
-	public Object drop(DropContext context) 
+	public void drop(DropContext context) 
 	{
 		IFile ifile = (IFile)context.object();
         final List<String> cities = new ArrayList<String>();
@@ -105,9 +105,7 @@ public class MapDropService extends DragAndDropService
                     y += 50;
                 }
             }
-            return cityParts;
         }
-        return null;
 	}
 
 }

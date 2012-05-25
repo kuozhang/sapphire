@@ -13,7 +13,6 @@
 package org.eclipse.sapphire.ui.swt.gef;
 
 import org.eclipse.sapphire.ui.ISapphirePart;
-import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.swt.widgets.Shell;
 
@@ -24,8 +23,6 @@ import org.eclipse.swt.widgets.Shell;
 public class DiagramRenderingContext extends SapphireRenderingContext 
 {
 	private SapphireDiagramEditor diagramEditor;
-	private Point currentMouseLocation = new Point(0, 0);
-	private Object object;
 	
 	public DiagramRenderingContext(ISapphirePart part) {
 		super(part, null);
@@ -45,25 +42,4 @@ public class DiagramRenderingContext extends SapphireRenderingContext
 		return this.diagramEditor;
 	}
 	
-	public void setCurrentMouseLocation(int x, int y)
-	{
-		this.currentMouseLocation.setX(x);
-		this.currentMouseLocation.setY(y);
-	}
-	
-	public Point getCurrentMouseLocation()
-	{
-		return new Point(this.currentMouseLocation.getX(), 
-				this.currentMouseLocation.getY());
-	}
-	
-	public Object getObject()
-	{
-		return this.object;
-	}
-	
-	public void setObject(Object object)
-	{
-		this.object = object;
-	}
 }

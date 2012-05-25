@@ -891,7 +891,7 @@ need to be modified to extend from SapphireActionHandler directly.</p>
     }
 
     @Override
-    public Object drop(DropContext context) 
+    public void drop(DropContext context) 
     {
         IFile ifile = (IFile)context.object();
         final List<String> cities = new ArrayList<String>();

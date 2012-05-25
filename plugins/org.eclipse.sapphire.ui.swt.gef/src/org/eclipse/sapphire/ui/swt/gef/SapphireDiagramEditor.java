@@ -162,8 +162,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	private Listener diagramEditorPagePartListener;
 
 	private Map<String, SapphireActionHandlerDelegate> globalActions;
-//	private SapphireActionHandlerDelegate selectAllAction;
-//	private SapphireActionHandlerDelegate deleteAction;
 
 	private SapphireDiagramOutline diagramOutline;
 	
@@ -775,7 +773,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		super.createPartControl(main);
 		this.body = getGraphicalControl().getParent();
 	}
-	
+		
 	@Override
 	protected void configureGraphicalViewer() 
 	{

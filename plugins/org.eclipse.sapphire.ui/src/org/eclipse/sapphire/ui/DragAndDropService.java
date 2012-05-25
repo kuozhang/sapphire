@@ -21,7 +21,7 @@ public abstract class DragAndDropService extends Service
 {
 	public abstract boolean droppable(DropContext context);
 	
-	public abstract Object drop(DropContext context);
+	public abstract void drop(DropContext context);
 	
 	public static class DropContext
 	{
