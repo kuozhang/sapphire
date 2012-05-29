@@ -175,11 +175,17 @@
               <rule bundle="*" expr="[M1.M2.M3,T1+1.0.0)"/>
             </set-bundle-version-constraints>
 
+            <!-- Stage 6 -->
+
+            <echo message="Setting versions of Export-Package entries..."/>
+
+            <set-export-package-version bundles="${build.dir}/repository/temp"/>
+            
             <zip-dirs source.dir="${build.dir}/repository/temp" dest.dir="${build.dir}/repository/plugins" suffix="jar"/>
 
             <delete dir="${build.dir}/repository/temp"/>
             
-            <!-- Stage 6 -->
+            <!-- Stage 7 -->
             
             <echo message="Generating samples test translation..."/>
             
@@ -201,13 +207,13 @@
               Repository="${build.dir}/repository"
               WorkArea="${build.dir}/test-translation"/>
               
-            <!-- Stage 7 -->
+            <!-- Stage 8 -->
             
             <echo message="Performing repository verification..."/>
             
             <VerifyAboutHtml Repository="${build.dir}/repository"/>
 
-            <!-- Stage 8 -->
+            <!-- Stage 9 -->
             
             <property-from-set property=".sapphire.feature">
               <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire.modeling_*.jar"/>
@@ -236,7 +242,7 @@
               </then>
             </if>
 
-            <!-- Stage 9 -->
+            <!-- Stage 10 -->
 
             <echo message="Packaging the repository..."/>
 

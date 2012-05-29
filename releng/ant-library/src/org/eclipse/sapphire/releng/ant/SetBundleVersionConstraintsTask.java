@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2010 Oracle
+ * Copyright (c) 2012 Oracle
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,10 +25,7 @@ import org.apache.tools.ant.BuildException;
  * @author <a href="konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SetBundleVersionConstraintsTask
-
-    extends AbstractTask
-
+public final class SetBundleVersionConstraintsTask extends AbstractTask
 {
     private static final String PROP_REQUIRE_BUNDLE = "Require-Bundle";
     private static final String ATTR_BUNDLE_VERSION = "bundle-version";
@@ -175,26 +172,13 @@ public final class SetBundleVersionConstraintsTask
                 
                 info( id + " : processing..." );
                 
-                final List<RequireBundleEntry> entries = new ArrayList<RequireBundleEntry>();
-                final int length = existingRequireBundle.length();
-                final MutableReference<Integer> position = new MutableReference<Integer>( 0 );
+                final List<ManifestBundlesListEntry> entries = ManifestBundlesListEntry.parse( existingRequireBundle );
                 
-                while( position.get() < length )
-                {
-                    final RequireBundleEntry entry 
-                        = RequireBundleEntry.parse( existingRequireBundle, position );
-                    
-                    if( entry != null )
-                    {
-                        entries.add( entry );
-                    }
-                }
-                
-                for( RequireBundleEntry entry : entries )
+                for( ManifestBundlesListEntry entry : entries )
                 {
                     boolean hasVersionConstraint = false;
                     
-                    for( String attribute : entry.getAttributes() )
+                    for( String attribute : entry.attributes() )
                     {
                         if( attribute.startsWith( ATTR_BUNDLE_VERSION ) )
                         {
@@ -217,7 +201,7 @@ public final class SetBundleVersionConstraintsTask
                         }
                     }
                     
-                    final String bundleId = entry.getBundleId();
+                    final String bundleId = entry.bundle();
                     
                     BundleInfo minPlatformBundleInfo;
                     BundleInfo targetPlatformBundleInfo;
@@ -287,13 +271,13 @@ public final class SetBundleVersionConstraintsTask
                     constraint.append( range );
                     constraint.append( "\"" );
                     
-                    entry.addAttribute( constraint.toString() );
+                    entry.attributes().add( constraint.toString() );
                 }
                 
                 final StringBuilder newRequireBundle = new StringBuilder();
                 boolean isFirst = true;
                 
-                for( RequireBundleEntry entry : entries )
+                for( ManifestBundlesListEntry entry : entries )
                 {
                     if( isFirst )
                     {
@@ -582,123 +566,6 @@ public final class SetBundleVersionConstraintsTask
             {
                 return this.a.evaluate( substitutions ) - this.b.evaluate( substitutions );
             }
-        }
-    }
-    
-    private static class RequireBundleEntry
-    {
-        private String bundleId;
-        private List<String> attributes;
-        
-        public RequireBundleEntry( final String bundleId,
-                                   final List<String> attributes )
-        {
-            this.bundleId = bundleId;
-            this.attributes = attributes;
-        }
-        
-        public String getBundleId()
-        {
-            return this.bundleId;
-        }
-        
-        public List<String> getAttributes()
-        {
-            return this.attributes;
-        }
-        
-        public void addAttribute( final String attribute )
-        {
-            this.attributes.add( attribute );
-        }
-        
-        public String toString()
-        {
-            final StringBuilder buf = new StringBuilder();
-            
-            buf.append( this.bundleId );
-            
-            for( String attribute : attributes )
-            {
-                buf.append( ';' );
-                buf.append( attribute );
-            }
-            
-            return buf.toString();
-        }
-        
-        public static RequireBundleEntry parse( final String string,
-                                                final MutableReference<Integer> position )
-        {
-            int stopChar;
-            
-            final StringBuilder bundleIdBuffer = new StringBuilder();
-            stopChar = readUntil( string, position, bundleIdBuffer, ";," );
-            
-            if( stopChar == -1 )
-            {
-                return null;
-            }
-            
-            final List<String> attributes = new ArrayList<String>();
-            
-            while( stopChar == ';' )
-            {
-                final StringBuilder attribute = new StringBuilder();
-                stopChar = readUntil( string, position, attribute, ";," );
-                attributes.add( attribute.toString() );
-            }
-            
-            final String bundleId = bundleIdBuffer.toString().trim();
-            
-            if( bundleId.length() > 0 )
-            {
-                return new RequireBundleEntry( bundleId, attributes );
-            }
-            else
-            {
-                return null;
-            }
-        }
-        
-        private static int readUntil( final String string,
-                                      final MutableReference<Integer> position,
-                                      final StringBuilder buffer,
-                                      final String stopChars )
-        {
-            int pos = position.get();
-            int ch = -1;
-            boolean stop = false;
-            
-            for( int len = string.length(); pos < len && ! stop; pos++ )
-            {
-                ch = string.charAt( pos );
-                
-                if( stopChars.indexOf( ch ) != -1 )
-                {
-                    stop = true;
-                }
-                else
-                {
-                    buffer.append( (char) ch );
-                    
-                    if( ch == '"' )
-                    {
-                        position.set( pos + 1 );
-                        
-                        if( readUntil( string, position, buffer, "\"" ) != -1 )
-                        {
-                            buffer.append( '"' );
-                        }
-                        
-                        pos = position.get() - 1;
-                    }
-                }
-            }
-            
-            position.set( pos );
-            
-            return ch;
         }
     }
     
