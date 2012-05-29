@@ -50,7 +50,7 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
     {
     	boolean enabled = false;
     	if (getPart() instanceof DiagramNodePart ||
-    			getPart() instanceof DiagramConnectionPart)
+    			(getPart() instanceof DiagramConnectionPart && !(getPart() instanceof DiagramImplicitConnectionPart)))
     	{
     		enabled = true;
     	}

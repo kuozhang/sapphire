@@ -951,7 +951,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		if (part instanceof DiagramNodePart || part instanceof DiagramConnectionPart)
 		{
 			GraphicalViewer viewer = this.getGraphicalViewer();
-			viewer.getControl().forceFocus();
+			// Bug 370869 - DND from the tool palette would show an invalid cursor before placing the new node 
+			// in direct edit mode. TODO why?
+			//viewer.getControl().forceFocus();
 			
 			GraphicalEditPart editpart = getGraphicalEditPart(part);
 			if (editpart != null) 
@@ -966,8 +968,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 				else if (part instanceof DiagramConnectionPart)
 				{
 					this.getDiagramModel().handleDirectEditing((DiagramConnectionPart)part);
-				}
-				
+				}				
 			}
 		}
 	}
