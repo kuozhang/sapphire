@@ -46,6 +46,7 @@ to 0.5 release. Only changes from the previous release are covered.</p>
   <li><a href="#LayeredListBindingImpl">LayeredListBindingImpl</a></li>
   <li><a href="#ListBindingImpl">ListBindingImpl</a></li>
   <li><a href="#MasterDetailsEditorPage">MasterDetailsEditorPage</a></li>
+  <li><a href="#MasterDetailsEditorPagePart">MasterDetailsEditorPagePart</a></li>
   <li><a href="#ModelElementList">ModelElementList</a></li>
   <li><a href="#ModelElementListener">ModelElementListener</a></li>
   <li><a href="#ModelElementType">ModelElementType</a></li>
@@ -53,6 +54,7 @@ to 0.5 release. Only changes from the previous release are covered.</p>
   <li><a href="#ModelPropertyListener">ModelPropertyListener</a></li>
   <li><a href="#PropertyListeners">PropertyListeners</a></li>
   <li><a href="#SapphireDiagramActionHandler">SapphireDiagramActionHandler</a></li>
+  <li><a href="#SapphireEditor">SapphireEditor</a></li>
   <li><a href="#Actuator">Actuator</a></li>
   <li><a href="#ContentOutlineNodeImage">Content Outline Node Image</a></li>
   <li><a href="#DiagramDragAndDrop">Diagram Drag-n-Drop</a></li>
@@ -407,6 +409,24 @@ solution would be to implement the new insert() and move() methods directly.</p>
 </table>
 
 
+<h2><a name="MasterDetailsEditorPagePart">MasterDetailsEditorPagePart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">page.</font>getContentTree<font color="#888888">();</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">page.</font>outline<font color="#888888">();</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="ModelElementList">ModelElementList</a></h2>
 
 <table>
@@ -660,6 +680,24 @@ solution would be to implement the new insert() and move() methods directly.</p>
 <font color="#888888">{
     ...
 }</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireEditor">SapphireEditor</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>setPageId( editorPage, editorPageId, editorPagePart )</code></pre>
+    </td>
+    <td>
+      <p>Remove method call. It is no longer necessary.</p>
     </td>
   </tr>
 </table>
