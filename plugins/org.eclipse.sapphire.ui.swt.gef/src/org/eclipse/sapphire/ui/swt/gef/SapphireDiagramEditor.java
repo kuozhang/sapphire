@@ -86,6 +86,7 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart.Zoom
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.EditorPagePresentation;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.ContextButtonManager;
 import org.eclipse.sapphire.ui.swt.gef.dnd.ObjectsTransferDropTargetListener;
 import org.eclipse.sapphire.ui.swt.gef.dnd.SapphireTemplateTransferDropTargetListener;
@@ -133,7 +134,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette implements ISapphireEditorActionContributor
+public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette implements ISapphireEditorActionContributor, EditorPagePresentation
 {
     private DiagramLayoutPersistenceService layoutPersistenceService;
 	private PaletteRoot root;
