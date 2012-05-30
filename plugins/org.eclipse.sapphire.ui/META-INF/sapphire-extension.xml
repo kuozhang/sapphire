@@ -250,6 +250,7 @@
         <id>Sapphire.Diagram.DeleteAllBendPoints</id>
         <context>Sapphire.Diagram.Connection</context>
         <label>delete all bend points</label>
+        <image>org/eclipse/sapphire/ui/actions/DeleteBendPoints.png</image>
         <description>Deletes all bend points from a connection.</description>
         <location>after:Sapphire.Delete</location>
         <group>Sapphire.AddDeleteGroup</group>
