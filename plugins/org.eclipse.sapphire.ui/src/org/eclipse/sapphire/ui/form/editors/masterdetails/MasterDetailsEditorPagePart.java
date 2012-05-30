@@ -103,7 +103,7 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
         return SapphireActionSystem.CONTEXT_EDITOR_PAGE;
     }
     
-    public final MasterDetailsContentOutline getContentOutline()
+    public final MasterDetailsContentOutline outline()
     {
         return this.contentOutline;
     }

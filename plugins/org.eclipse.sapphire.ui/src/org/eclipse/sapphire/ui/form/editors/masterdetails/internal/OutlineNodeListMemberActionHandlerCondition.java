@@ -41,13 +41,13 @@ public class OutlineNodeListMemberActionHandlerCondition
         else if( part instanceof MasterDetailsEditorPagePart )
         {
             final MasterDetailsEditorPagePart page = (MasterDetailsEditorPagePart) part;
-            final List<MasterDetailsContentNode> nodes = page.getContentOutline().getSelectedNodes();
+            final List<MasterDetailsContentNode> nodes = page.outline().getSelectedNodes();
             
             if( ! nodes.isEmpty() )
             {
                 MasterDetailsContentNode parent = null;
                 
-                for( MasterDetailsContentNode node : page.getContentOutline().getSelectedNodes() )
+                for( MasterDetailsContentNode node : page.outline().getSelectedNodes() )
                 {
                     if( parent == null )
                     {
@@ -59,7 +59,7 @@ public class OutlineNodeListMemberActionHandlerCondition
                     }
                 }
                 
-                for( MasterDetailsContentNode node : page.getContentOutline().getSelectedNodes() )
+                for( MasterDetailsContentNode node : page.outline().getSelectedNodes() )
                 {
                     if( ! check( node ) )
                     {

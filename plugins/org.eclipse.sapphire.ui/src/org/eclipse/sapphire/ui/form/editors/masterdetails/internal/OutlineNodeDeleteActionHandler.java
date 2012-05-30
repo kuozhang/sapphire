@@ -55,7 +55,7 @@ public final class OutlineNodeDeleteActionHandler
         }
         else if( part instanceof MasterDetailsEditorPagePart )
         {
-            nodesToDelete = ( (MasterDetailsEditorPagePart) part ).getContentOutline().getSelectedNodes();
+            nodesToDelete = ( (MasterDetailsEditorPagePart) part ).outline().getSelectedNodes();
         }
         else
         {

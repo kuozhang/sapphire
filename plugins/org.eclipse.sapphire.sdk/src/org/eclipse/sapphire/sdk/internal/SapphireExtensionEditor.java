@@ -26,10 +26,7 @@ import org.eclipse.ui.PartInitException;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireExtensionEditor
-
-    extends SapphireEditorForXml
-    
+public final class SapphireExtensionEditor extends SapphireEditorForXml
 {
     private Browser browser;
     
@@ -52,7 +49,6 @@ public final class SapphireExtensionEditor
         this.browser = new Browser( getContainer(), SWT.NONE );
         
         addPage( 2, this.browser );
-        setPageId( this.browser, "summary", null );
         setPageText( 2, Resources.summaryPageTitle );
     }
     

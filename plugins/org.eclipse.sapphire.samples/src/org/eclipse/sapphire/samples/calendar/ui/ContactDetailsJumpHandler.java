@@ -20,7 +20,7 @@ import org.eclipse.sapphire.ui.SapphireJumpActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentOutline;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPagePart;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -76,14 +76,14 @@ public final class ContactDetailsJumpHandler extends SapphireJumpActionHandler
             
             if( contact != null )
             {
-                final MasterDetailsEditorPage contactsFormPage = (MasterDetailsEditorPage) editor.getPage( "Contacts" );
-                final MasterDetailsContentOutline content = contactsFormPage.outline();
-                final MasterDetailsContentNode contactNode = content.getRoot().findNodeByModelElement( contact );
+                final MasterDetailsEditorPagePart contactsFormPage = (MasterDetailsEditorPagePart) editor.getEditorPagePart( "Contacts" );
+                final MasterDetailsContentOutline outline = contactsFormPage.outline();
+                final MasterDetailsContentNode contactNode = outline.getRoot().findNodeByModelElement( contact );
                 
                 if( contactNode != null )
                 {
                     contactNode.select();
-                    editor.showPage( "Contacts" );
+                    editor.showPage( contactsFormPage );
                 }
             }
         }

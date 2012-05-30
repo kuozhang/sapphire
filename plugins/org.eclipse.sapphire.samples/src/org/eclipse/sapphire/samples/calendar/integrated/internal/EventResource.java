@@ -23,6 +23,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.PropertyEvent;
+import org.eclipse.sapphire.modeling.PropertyInitializationEvent;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ValueBindingImpl;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
@@ -49,36 +50,39 @@ public final class EventResource extends Resource
             @Override
             protected void handleTypedEvent( final PropertyEvent event )
             {
-                final ModelProperty property = event.property();
-                final IModelElement element = element();
-                
-                if( property == org.eclipse.sapphire.samples.calendar.IEvent.PROP_SUBJECT )
+                if( ! ( event instanceof PropertyInitializationEvent ) )
                 {
-                    element.refresh( IEvent.PROP_SUBJECT );
-                }
-                else if( property == org.eclipse.sapphire.samples.calendar.IEvent.PROP_LOCATION )
-                {
-                    element.refresh( IEvent.PROP_LOCATION );
-                }
-                else if( property == org.eclipse.sapphire.samples.calendar.IEvent.PROP_NOTES )
-                {
-                    element.refresh( IEvent.PROP_NOTES );
-                }
-                else if( property == org.eclipse.sapphire.samples.calendar.IEvent.PROP_START_TIME )
-                {
-                    element.refresh( IEvent.PROP_START_TIME );
-                }
-                else if( property == org.eclipse.sapphire.samples.calendar.IEvent.PROP_END_TIME )
-                {
-                    element.refresh( IEvent.PROP_END_TIME );
-                }
-                else if( property == org.eclipse.sapphire.samples.calendar.IEvent.PROP_ATTENDEES )
-                {
-                    element.refresh( IEvent.PROP_ATTENDEES );
-                }
-                else if( property == org.eclipse.sapphire.samples.calendar.IEvent.PROP_ATTACHMENTS )
-                {
-                    element.refresh( IEvent.PROP_ATTACHMENTS );
+                    final ModelProperty property = event.property();
+                    final IModelElement element = element();
+                    
+                    if( property == org.eclipse.sapphire.samples.calendar.IEvent.PROP_SUBJECT )
+                    {
+                        element.refresh( IEvent.PROP_SUBJECT );
+                    }
+                    else if( property == org.eclipse.sapphire.samples.calendar.IEvent.PROP_LOCATION )
+                    {
+                        element.refresh( IEvent.PROP_LOCATION );
+                    }
+                    else if( property == org.eclipse.sapphire.samples.calendar.IEvent.PROP_NOTES )
+                    {
+                        element.refresh( IEvent.PROP_NOTES );
+                    }
+                    else if( property == org.eclipse.sapphire.samples.calendar.IEvent.PROP_START_TIME )
+                    {
+                        element.refresh( IEvent.PROP_START_TIME );
+                    }
+                    else if( property == org.eclipse.sapphire.samples.calendar.IEvent.PROP_END_TIME )
+                    {
+                        element.refresh( IEvent.PROP_END_TIME );
+                    }
+                    else if( property == org.eclipse.sapphire.samples.calendar.IEvent.PROP_ATTENDEES )
+                    {
+                        element.refresh( IEvent.PROP_ATTENDEES );
+                    }
+                    else if( property == org.eclipse.sapphire.samples.calendar.IEvent.PROP_ATTACHMENTS )
+                    {
+                        element.refresh( IEvent.PROP_ATTACHMENTS );
+                    }
                 }
             }
         };

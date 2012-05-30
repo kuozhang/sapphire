@@ -22,6 +22,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.PropertyEvent;
+import org.eclipse.sapphire.modeling.PropertyInitializationEvent;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.samples.calendar.integrated.ICalendar;
@@ -50,11 +51,14 @@ public final class CalendarResource extends Resource
             @Override
             protected void handleTypedEvent( final PropertyEvent event )
             {
-                final ModelProperty property = event.property();
-                
-                if( property == org.eclipse.sapphire.samples.calendar.ICalendar.PROP_EVENTS )
+                if( ! ( event instanceof PropertyInitializationEvent ) )
                 {
-                    element().refresh( ICalendar.PROP_EVENTS );
+                    final ModelProperty property = event.property();
+                    
+                    if( property == org.eclipse.sapphire.samples.calendar.ICalendar.PROP_EVENTS )
+                    {
+                        element().refresh( ICalendar.PROP_EVENTS );
+                    }
                 }
             }
         };

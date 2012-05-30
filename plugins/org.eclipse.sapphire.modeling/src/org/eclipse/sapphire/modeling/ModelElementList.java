@@ -66,8 +66,13 @@ public final class ModelElementList<T extends IModelElement>
     
     public final void init( final ListBindingImpl binding )
     {
+        if( binding == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
         this.binding = binding;
-        refresh();
+        refresh( false );
     }
 
     @Override
@@ -92,6 +97,11 @@ public final class ModelElementList<T extends IModelElement>
     }
 
     public boolean refresh()
+    {
+        return refresh( true );
+    }
+    
+    private boolean refresh( final boolean broadcastChangeIfNecessary )
     {
         if( this.binding == null )
         {
@@ -188,17 +198,17 @@ public final class ModelElementList<T extends IModelElement>
             }
         }
         
-        if( changed )
+        if( changed && broadcastChangeIfNecessary )
         {
             ( (ModelElement) parent() ).broadcastPropertyContentEvent( this.property );
         }
         
-        refreshValidationResult( true );
+        refreshValidationResult( broadcastChangeIfNecessary );
         
         return changed;
     }
     
-    private void refreshValidationResult( final boolean notifyListenersIfChanged )
+    private void refreshValidationResult( final boolean broadcastChangeIfNecessary )
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         
@@ -220,7 +230,7 @@ public final class ModelElementList<T extends IModelElement>
             final Status before = this.validation;
             this.validation = st;
             
-            if( notifyListenersIfChanged )
+            if( broadcastChangeIfNecessary )
             {
                 ( (ModelElement) parent() ).broadcastPropertyValidationEvent( this.property, before, st );
             }

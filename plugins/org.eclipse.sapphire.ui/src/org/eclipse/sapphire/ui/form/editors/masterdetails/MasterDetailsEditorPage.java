@@ -249,7 +249,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
 
     public MasterDetailsContentOutline outline()
     {
-        return getPart().getContentOutline();
+        return getPart().outline();
     }
     
     public IDetailsPage getCurrentDetailsPage()

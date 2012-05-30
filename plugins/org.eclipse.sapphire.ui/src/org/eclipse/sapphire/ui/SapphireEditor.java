@@ -22,9 +22,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import java.io.File;
 import java.net.URI;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
@@ -52,8 +50,10 @@ import org.eclipse.sapphire.ui.internal.PartServiceContext;
 import org.eclipse.sapphire.ui.internal.SapphireActionManager;
 import org.eclipse.sapphire.ui.internal.SapphireEditorContentOutline;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.EditorPagePresentation;
 import org.eclipse.sapphire.ui.swt.SapphirePropertySheetPage;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
@@ -88,7 +88,6 @@ public abstract class SapphireEditor
     implements ISapphirePart
     
 {
-	
 	private static class SapphireEditorActionBarContributor extends MultiPageEditorActionBarContributor 
 	{
 		private MultiPageEditorPart multiPageEditor = null;
@@ -150,8 +149,6 @@ public abstract class SapphireEditor
     private IModelElement model;
     private IResourceChangeListener fileChangeListener;
     private final SapphireImageCache imageCache;
-    private final Map<String,Object> pagesById;
-    private final Map<Object,SapphireEditorPagePart> partByPage;
     private SapphireEditorContentOutline outline;
     private final SapphireActionManager actionsManager;
     private SapphirePropertySheetPage propertiesViewPage;
@@ -162,8 +159,6 @@ public abstract class SapphireEditor
     {
         this.pluginId = pluginId;
         this.imageCache = new SapphireImageCache();
-        this.pagesById = new HashMap<String,Object>();
-        this.partByPage = new HashMap<Object,SapphireEditorPagePart>();
         this.outline = null;
         this.actionsManager = new SapphireActionManager( this, getActionContexts() );
     }
@@ -319,9 +314,9 @@ public abstract class SapphireEditor
         return file;
     }
 
-    public final String getLastActivePage()
+    private final int getLastActivePage()
     {
-        String lastActivePage = getPageId( this.pages.get( 0 ) );
+        int lastActivePage = 0;
         
         try
         {
@@ -329,7 +324,7 @@ public abstract class SapphireEditor
             
             if( prefs != null )
             {
-                lastActivePage = prefs.get( PREFS_LAST_ACTIVE_PAGE, lastActivePage );
+                lastActivePage = prefs.getInt( PREFS_LAST_ACTIVE_PAGE, lastActivePage );
             }
         }
         catch( BackingStoreException e )
@@ -340,7 +335,7 @@ public abstract class SapphireEditor
         return lastActivePage;
     }
 
-    public final void setLastActivePage( final String pageId )
+    private final void setLastActivePage( final int index )
     {
         try
         {
@@ -348,7 +343,7 @@ public abstract class SapphireEditor
             
             if( prefs != null )
             {
-                prefs.put( PREFS_LAST_ACTIVE_PAGE, pageId );
+                prefs.putInt( PREFS_LAST_ACTIVE_PAGE, index );
                 prefs.flush();
             }
         }
@@ -502,26 +497,7 @@ public abstract class SapphireEditor
                     SapphireUiFrameworkPlugin.log( e );
                 }
                 
-                final String lastActivePage = getLastActivePage();
-                int page = 0;
-                
-                if( lastActivePage != null )
-                {
-                    int count = getPageCount();
-                    
-                    for( int i = 0; i < count; i++ ) 
-                    {
-                        final String title = getPageText( i );
-                        
-                        if( lastActivePage.equals( title ) ) 
-                        {
-                            page = i;
-                            break;
-                        }
-                    }
-                }
-                
-                setActivePage( page );
+                setActivePage( getLastActivePage() );
             }
         }
         
@@ -550,18 +526,6 @@ public abstract class SapphireEditor
         
     }
     
-    protected final void setPageId( final Object page,
-                                    final String id,
-                                    final SapphireEditorPagePart editorPagePart )
-    {
-        this.pagesById.put( id, page );
-        
-        if( editorPagePart != null )
-        {
-            this.partByPage.put( page, editorPagePart );
-        }
-    }
-    
     public final Object getPage()
     {
         final int pageIndex = getActivePage();
@@ -576,59 +540,24 @@ public abstract class SapphireEditor
         }
     }
     
-    public final Object getPage( final String id )
-    {
-        Object page = this.pagesById.get( id );
-        
-        if( page == null )
-        {
-            for( Object p : this.pages )
-            {
-                if( p instanceof SapphireEditorFormPage && ( (SapphireEditorFormPage) p ).getId().equals( id ) )
-                {
-                    page = p;
-                    break;
-                }
-            }
-        }
-        
-        return page;
-    }
-    
-    public final String getPageId( final Object page )
-    {
-        String retId = null;
-        
-        for( String id : this.pagesById.keySet() )
-        {
-            final Object p = this.pagesById.get( id );
-            
-            if( p == page )
-            {
-                retId = id;
-                break;
-            }
-        }
-        
-        return retId;
-    }
-    
-    public final void showPage( final String id )
-    {
-        final Object page = getPage( id );
-        
-        if( page != null )
-        {
-            showPage( page );
-            final int index = this.pages.indexOf( page );
-            setActivePage( index );
-        }
-    }
-    
     public final void showPage( final Object page )
     {
         final int index = this.pages.indexOf( page );
         setActivePage( index );
+    }
+    
+    public final void showPage( final SapphireEditorPagePart editorPagePart )
+    {
+        for( int i = 0, n = getPageCount(); i < n; i++ )
+        {
+            final Object page = this.pages.get( i );
+            
+            if( page instanceof EditorPagePresentation && ( (EditorPagePresentation) page ).getPart() == editorPagePart )
+            {
+                setActivePage( i );
+                return;
+            }
+        }
     }
 
     @Override
@@ -636,7 +565,7 @@ public abstract class SapphireEditor
     {
         super.pageChange( pageIndex );
         
-        setLastActivePage( getPageText( pageIndex ) );
+        setLastActivePage( pageIndex );
         
         if( this.outline != null && ! this.outline.isDisposed() )
         {
@@ -783,27 +712,53 @@ public abstract class SapphireEditor
         return super.getAdapter( type );
     }
     
+    public final List<SapphireEditorPagePart> getEditorPageParts()
+    {
+        final ReadOnlyListFactory<SapphireEditorPagePart> parts = ReadOnlyListFactory.create();
+        
+        for( Object page : this.pages )
+        {
+            if( page instanceof EditorPagePresentation )
+            {
+                parts.add( ( (EditorPagePresentation) page  ).getPart() );
+            }
+        }
+        
+        return parts.export();
+    }
+
+    public final SapphireEditorPagePart getEditorPagePart( final String name )
+    {
+        for( Object page : this.pages )
+        {
+            if( page instanceof EditorPagePresentation && ( (EditorPagePresentation) page ).getPart().definition().getPageName().getContent().equalsIgnoreCase( name ) )
+            {
+                return ( (EditorPagePresentation) page ).getPart();
+            }
+        }
+        
+        return null;
+    }
+    
     private void refreshPropertiesViewContribution()
     {
         if( this.propertiesViewPage != null )
         {
-            for( SapphireEditorPagePart editorPagePart : this.partByPage.values() )
+            for( SapphireEditorPagePart editorPagePart : getEditorPageParts() )
             {
                 editorPagePart.detach( this.propertiesViewContributionChangeListener );
             }
             
-            final Object page = getPage();
-            final SapphireEditorPagePart editorPagePart = this.partByPage.get( page );
-            final PropertiesViewContributionPart contribution;
+            PropertiesViewContributionPart contribution = null;
             
-            if( editorPagePart != null )
+            final Object page = getPage();
+
+            if( page instanceof EditorPagePresentation )
             {
+                final SapphireEditorPagePart editorPagePart = ( (EditorPagePresentation) page ).getPart();
+                
                 editorPagePart.attach( this.propertiesViewContributionChangeListener );
                 contribution = editorPagePart.getPropertiesViewContribution();
-            }
-            else
-            {
-                contribution = null;
             }
             
             this.propertiesViewPage.setPart( contribution );

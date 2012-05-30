@@ -17,6 +17,7 @@ import org.eclipse.sapphire.modeling.BindingImpl;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.PropertyEvent;
+import org.eclipse.sapphire.modeling.PropertyInitializationEvent;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ValueBindingImpl;
 import org.eclipse.sapphire.samples.calendar.integrated.IEventAttachment;
@@ -41,16 +42,19 @@ public final class EventAttachmentResource extends Resource
             @Override
             protected void handleTypedEvent( final PropertyEvent event )
             {
-                final ModelProperty property = event.property();
-                final IModelElement element = element();
-                
-                if( property == org.eclipse.sapphire.samples.calendar.IEventAttachment.PROP_LOCAL_COPY_LOCATION )
+                if( ! ( event instanceof PropertyInitializationEvent ) )
                 {
-                    element.refresh( IEventAttachment.PROP_LOCAL_COPY_LOCATION );
-                }
-                else if( property == org.eclipse.sapphire.samples.calendar.IEventAttachment.PROP_PUBLIC_COPY_LOCATION )
-                {
-                    element.refresh( IEventAttachment.PROP_PUBLIC_COPY_LOCATION );
+                    final ModelProperty property = event.property();
+                    final IModelElement element = element();
+                    
+                    if( property == org.eclipse.sapphire.samples.calendar.IEventAttachment.PROP_LOCAL_COPY_LOCATION )
+                    {
+                        element.refresh( IEventAttachment.PROP_LOCAL_COPY_LOCATION );
+                    }
+                    else if( property == org.eclipse.sapphire.samples.calendar.IEventAttachment.PROP_PUBLIC_COPY_LOCATION )
+                    {
+                        element.refresh( IEventAttachment.PROP_PUBLIC_COPY_LOCATION );
+                    }
                 }
             }
         };

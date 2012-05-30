@@ -20,6 +20,7 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
+import org.eclipse.sapphire.ui.swt.EditorPagePresentation;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -33,7 +34,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphireEditorFormPage extends FormPage
+public abstract class SapphireEditorFormPage extends FormPage implements EditorPagePresentation
 {
     private final SapphireEditor editor;
     private final SapphireEditorPagePart part;

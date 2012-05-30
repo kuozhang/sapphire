@@ -17,6 +17,7 @@ import org.eclipse.sapphire.modeling.BindingImpl;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.PropertyEvent;
+import org.eclipse.sapphire.modeling.PropertyInitializationEvent;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ValueBindingImpl;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
@@ -46,32 +47,35 @@ public final class AttendeeResource extends Resource
             @Override
             protected void handleTypedEvent( final PropertyEvent event )
             {
-                final ModelProperty property = event.property();
-                final IModelElement element = element();
-                
-                if( property == org.eclipse.sapphire.samples.calendar.IAttendee.PROP_NAME )
+                if( ! ( event instanceof PropertyInitializationEvent ) )
                 {
-                    element.refresh( IAttendee.PROP_NAME );
-                    element.refresh( IAttendee.PROP_IN_CONTACTS_DATABASE );
-                    element.refresh( IAttendee.PROP_E_MAIL );
-                }
-                else if( property == org.eclipse.sapphire.samples.calendar.IAttendee.PROP_TYPE )
-                {
-                    element.refresh( IAttendee.PROP_TYPE );
-                }
-                else if( property == ContactsDatabase.PROP_CONTACTS )
-                {
-                    element.refresh( IAttendee.PROP_IN_CONTACTS_DATABASE );
-                    element.refresh( IAttendee.PROP_E_MAIL );
-                }
-                else if( property == Contact.PROP_NAME )
-                {
-                    element.refresh( IAttendee.PROP_IN_CONTACTS_DATABASE );
-                    element.refresh( IAttendee.PROP_E_MAIL );
-                }
-                else if( property == Contact.PROP_E_MAIL )
-                {
-                    element.refresh( IAttendee.PROP_E_MAIL );
+                    final ModelProperty property = event.property();
+                    final IModelElement element = element();
+                    
+                    if( property == org.eclipse.sapphire.samples.calendar.IAttendee.PROP_NAME )
+                    {
+                        element.refresh( IAttendee.PROP_NAME );
+                        element.refresh( IAttendee.PROP_IN_CONTACTS_DATABASE );
+                        element.refresh( IAttendee.PROP_E_MAIL );
+                    }
+                    else if( property == org.eclipse.sapphire.samples.calendar.IAttendee.PROP_TYPE )
+                    {
+                        element.refresh( IAttendee.PROP_TYPE );
+                    }
+                    else if( property == ContactsDatabase.PROP_CONTACTS )
+                    {
+                        element.refresh( IAttendee.PROP_IN_CONTACTS_DATABASE );
+                        element.refresh( IAttendee.PROP_E_MAIL );
+                    }
+                    else if( property == Contact.PROP_NAME )
+                    {
+                        element.refresh( IAttendee.PROP_IN_CONTACTS_DATABASE );
+                        element.refresh( IAttendee.PROP_E_MAIL );
+                    }
+                    else if( property == Contact.PROP_E_MAIL )
+                    {
+                        element.refresh( IAttendee.PROP_E_MAIL );
+                    }
                 }
             }
         };

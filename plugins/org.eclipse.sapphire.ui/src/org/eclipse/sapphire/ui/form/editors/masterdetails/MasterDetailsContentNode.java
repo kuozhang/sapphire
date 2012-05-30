@@ -115,7 +115,7 @@ public final class MasterDetailsContentNode
             this.parentNode = null;
         }
         
-        this.contentTree = nearest( MasterDetailsEditorPagePart.class ).getContentOutline();
+        this.contentTree = nearest( MasterDetailsEditorPagePart.class ).outline();
         this.definition = (IMasterDetailsContentNodeDef) super.definition;
         
         this.modelElementProperty = (ImpliedElementProperty) resolve( this.definition.getProperty().getContent() );
