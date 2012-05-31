@@ -889,27 +889,36 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                         
                         public void drop( final DropTargetEvent event ) 
                         {
-                            if( event.data == null || event.item == null )
+                            if( event.data == null )
                             {
                                 event.detail = DND.DROP_NONE;
                                 return;
                             }
                             
                             final List<IModelElement> droppedElements = (List<IModelElement>) event.data;
-                            final TableItem dropTargetItem = (TableItem) event.item;
-                            final TableRow dropTargetRow = (TableRow) dropTargetItem.getData();
-                            final IModelElement dropTargetElement = dropTargetRow.element();
-                            
-                            final Point pt = DefaultListPropertyEditorRenderer.this.table.getDisplay().map( null, DefaultListPropertyEditorRenderer.this.table, event.x, event.y );
-                            final Rectangle bounds = dropTargetItem.getBounds();
-                            
                             final ModelElementList<IModelElement> list = getList();
                             
-                            int position = getList().indexOf( dropTargetElement );
+                            int position;
                             
-                            if( pt.y >= bounds.y + bounds.height / 2 ) 
+                            if( event.item == null )
                             {
-                                position++;
+                                position = list.size();
+                            }
+                            else
+                            {
+                                final TableItem dropTargetItem = (TableItem) event.item;
+                                final TableRow dropTargetRow = (TableRow) dropTargetItem.getData();
+                                final IModelElement dropTargetElement = dropTargetRow.element();
+                                
+                                final Point pt = DefaultListPropertyEditorRenderer.this.table.getDisplay().map( null, DefaultListPropertyEditorRenderer.this.table, event.x, event.y );
+                                final Rectangle bounds = dropTargetItem.getBounds();
+                                
+                                position = list.indexOf( dropTargetElement );
+                                
+                                if( pt.y >= bounds.y + bounds.height / 2 ) 
+                                {
+                                    position++;
+                                }
                             }
                             
                             for( IModelElement dragElement : dragElements )

@@ -63,8 +63,10 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.ISapphireEditorActionContributor;
@@ -1247,6 +1249,36 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                             if( list != null )
                             {
                                 position = list.indexOf( trailingElement );
+                            }
+                        }
+                    }
+                    
+                    if( list == null )
+                    {
+                        for( ModelProperty dropTargetChildProperty : dropTargetNode.getChildNodeFactoryProperties() )
+                        {
+                            if( dropTargetChildProperty instanceof ListProperty )
+                            {
+                                final ListProperty dropTargetChildListProperty = (ListProperty) dropTargetChildProperty;
+                                
+                                boolean compatible = true;
+                                
+                                final Set<ModelElementType> possibleListElementTypes = dropTargetChildListProperty.service( PossibleTypesService.class ).types();
+                                
+                                for( IModelElement droppedElement : droppedElements )
+                                {
+                                    if( ! possibleListElementTypes.contains( droppedElement.type() ) )
+                                    {
+                                        compatible = false;
+                                        break;
+                                    }
+                                }
+                                
+                                if( compatible )
+                                {
+                                    list = dropTargetNode.getLocalModelElement().read( dropTargetChildListProperty );
+                                    position = list.size();
+                                }
                             }
                         }
                     }
