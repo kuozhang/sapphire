@@ -1181,7 +1181,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                                     final Listener listener )
         {
             this.path = path;
-            this.listener = PropertyEvent.filter( listener );
+            this.listener = listener;
         }
         
         @Override
