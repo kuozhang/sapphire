@@ -143,7 +143,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
     private DiagramModel diagramModel;
     private SapphireDiagramPartListener diagramPartListener;
     private Listener layoutPersistenceServiceListener;
-    private List<ISapphirePart> selectedParts = null;
+    private List<ISapphirePart> selectedParts = new ArrayList<ISapphirePart>();
     private List<GraphicalEditPart> selectedEditParts = null;
     private boolean editorIsDirty = false;
 
