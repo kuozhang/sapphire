@@ -25,6 +25,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.util.MiscUtil.findSelectionPostDelete;
 import static org.eclipse.sapphire.util.CollectionsUtil.findPrecedingItem;
 import static org.eclipse.sapphire.util.CollectionsUtil.findTrailingItem;
 
@@ -1031,8 +1032,59 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                     event.data = dragElements;
                 }
                 
+                @SuppressWarnings( "unchecked" )
+                
                 public void dragFinished( final DragSourceEvent event )
                 {
+                    if( event.detail == DND.DROP_MOVE )
+                    {
+                        // When drop target is the same editor as drag source, the drop handler takes care of removing
+                        // elements from their original location. The following block of code accounts for the case when 
+                        // dropping into another editor.
+                        
+                        boolean droppedIntoAnotherEditor = false;
+                        
+                        for( IModelElement dragElement : dragElements )
+                        {
+                            if( ! dragElement.disposed() )
+                            {
+                                droppedIntoAnotherEditor = true;
+                                break;
+                            }
+                        }
+                        
+                        if( droppedIntoAnotherEditor )
+                        {
+                            final TreeItem[] selection = tree.getSelection();
+                            final List<MasterDetailsContentNode> dragNodes = new ArrayList<MasterDetailsContentNode>();
+                            
+                            for( TreeItem item : selection )
+                            {
+                                dragNodes.add( (MasterDetailsContentNode) item.getData() );
+                            }
+                            
+                            final MasterDetailsContentNode parentNode = dragNodes.get( 0 ).getParentNode();
+                            final MasterDetailsContentNode selectionPostDelete = findSelectionPostDelete( parentNode.getChildNodes(), dragNodes );
+                            
+                            try
+                            {
+                                outline.listeners().suspend( MasterDetailsContentOutline.SelectionChangedEvent.class );
+                            
+                                for( IModelElement dragElement : dragElements )
+                                {
+                                    final ModelElementList<IModelElement> dragElementContainer = (ModelElementList<IModelElement>) dragElement.parent();
+                                    dragElementContainer.remove( dragElement );
+                                }
+                            }
+                            finally
+                            {
+                                outline.listeners().resume( MasterDetailsContentOutline.SelectionChangedEvent.class );
+                            }
+                            
+                            parentNode.getContentTree().setSelectedNode( selectionPostDelete );
+                        }
+                    }
+                    
                     dragElements.clear();
                 }
             }

@@ -34,6 +34,7 @@ import static org.eclipse.sapphire.util.CollectionsUtil.equalsBasedOnEntryIdenti
 
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -815,8 +816,41 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                             event.data = dragElements;
                         }
                         
+                        @SuppressWarnings( "unchecked" )
+                        
                         public void dragFinished( final DragSourceEvent event )
                         {
+                            if( event.detail == DND.DROP_MOVE )
+                            {
+                                // When drop target is the same editor as drag source, the drop handler takes care of removing
+                                // elements from their original location. The following block of code accounts for the case when 
+                                // dropping into another editor.
+                                
+                                boolean droppedIntoAnotherEditor = false;
+                                
+                                for( IModelElement dragElement : dragElements )
+                                {
+                                    if( ! dragElement.disposed() )
+                                    {
+                                        droppedIntoAnotherEditor = true;
+                                        break;
+                                    }
+                                }
+                                
+                                if( droppedIntoAnotherEditor )
+                                {
+                                    final IModelElement selectionPostDelete = findSelectionPostDelete( getList(), dragElements );
+                                    
+                                    for( IModelElement dragElement : dragElements )
+                                    {
+                                        final ModelElementList<IModelElement> dragElementContainer = (ModelElementList<IModelElement>) dragElement.parent();
+                                        dragElementContainer.remove( dragElement );
+                                    }
+                                    
+                                    setSelectedElement( selectionPostDelete );
+                                }
+                            }
+                            
                             dragElements.clear();
                         }
                     }
@@ -1037,6 +1071,11 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         }
         
         return elements.export();
+    }
+    
+    public final void setSelectedElement( final IModelElement element )
+    {
+        setSelectedElements( element == null ? Collections.<IModelElement>emptyList() : Collections.singletonList( element ) );
     }
     
     public final void setSelectedElements( final List<IModelElement> elements )
