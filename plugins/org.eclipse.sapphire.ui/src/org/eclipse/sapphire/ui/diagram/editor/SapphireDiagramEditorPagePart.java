@@ -9,14 +9,10 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
  *    Ling Hao - [344319] Image specification for diagram parts inconsistent with the rest of sdef
-<<<<<<< SapphireDiagramEditorPagePart.java
- *    Konstantin Komissarchik - [375770] Support context menu actions when multiple diagram parts are selected 
- *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
-=======
  *    Konstantin Komissarchik - [375770] Support context menu actions when multiple diagram parts are selected
+ *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
  *    Gregory Amerson - [346172] Support zoom, print and save as image actions in the diagram editor
  *    Konstantin Komissarchik - [346172] Support zoom, print and save as image actions in the diagram editor
->>>>>>> 1.40
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;

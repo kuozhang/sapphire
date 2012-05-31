@@ -335,8 +335,18 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     {
         synchronized( root() )
         {
+            assertNotDisposed();
+            
             for( ModelProperty property : properties() )
             {
+                // The second disposed check is to catch the case where refreshing one property
+                // triggers a listener that causes this element to be disposed.
+                
+                if( disposed() )
+                {
+                    break;
+                }
+                
                 refresh( property, force, deep );
             }
         }
@@ -357,6 +367,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                                final boolean force,
                                final boolean deep )
     {
+        assertNotDisposed();
+        
         refreshProperty( property, force );
         
         if( deep )
@@ -1076,6 +1088,15 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         }
     }
     
+    protected final void assertNotDisposed()
+    {
+        if( disposed() )
+        {
+            final String msg = NLS.bind( Resources.elementAlreadyDisposed, this.type.getSimpleName() );
+            throw new IllegalStateException( msg );
+        }
+    }
+    
     private void logInvalidModelPathMessage( final ModelPath path )
     {
         final String message 
@@ -1382,6 +1403,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         public static String invalidModelPath;
         public static String cannotReadProperty;
         public static String cannotWriteProperty;
+        public static String elementAlreadyDisposed;
         
         static
         {

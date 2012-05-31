@@ -7,14 +7,14 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
-<<<<<<< ArchitectureDiagramLayoutPersistenceService.java
  *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
-=======
  *    Konstantin Komissarchik - [376245] Revert action in StructuredTextEditor does not revert diagram nodes and connections in SapphireDiagramEditor
->>>>>>> 1.10
+ *    Konstantin Komissarchik - [381233] IllegalStateException in ServiceContext when modifying xml in source editor in Architecture sample
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.architecture.internal;
+
+import static java.lang.Math.min;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -418,15 +418,38 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	
 	private void writeDependencyBendPoints(IComponentDependency dependency, DiagramConnectionPart connPart)
 	{
-		dependency.getConnectionBendpoints().clear();
-		List<Point> bendpoints = connPart.getConnectionBendpoints().getBendPoints();
-		for (Point bendpoint : bendpoints)
-		{
-			ConnectionBendpoint bpLayout = dependency.getConnectionBendpoints().insert();
-			bpLayout.setX(bendpoint.getX());
-			bpLayout.setY(bendpoint.getY());
-		}
-		
+	    final ModelElementList<ConnectionBendpoint> bpInModelList = dependency.getConnectionBendpoints();
+	    final int bpInModelSize = bpInModelList.size();
+	    final List<Point> bpInPartList = connPart.getConnectionBendpoints().getBendPoints();
+	    final int bpInPartSize = bpInPartList.size();
+	    
+	    for( int i = 0, n = min( bpInModelSize, bpInPartSize ); i < n; i++ )
+	    {
+	        final ConnectionBendpoint bpInModel = bpInModelList.get( i );
+	        final Point bpInPart = bpInPartList.get( i );
+	        
+	        bpInModel.setX( bpInPart.getX() );
+	        bpInModel.setY( bpInPart.getY() );
+	    }
+	    
+	    if( bpInModelSize < bpInPartSize )
+	    {
+	        for( int i = bpInModelSize; i < bpInPartSize; i++ )
+	        {
+	            final ConnectionBendpoint bpInModel = bpInModelList.insert();
+	            final Point bpInPart = bpInPartList.get( i );
+	            
+	            bpInModel.setX( bpInPart.getX() );
+	            bpInModel.setY( bpInPart.getY() );
+	        }
+	    }
+	    else if( bpInModelSize > bpInPartSize )
+	    {
+	        for( int i = bpInModelSize - 1; i >= bpInPartSize; i-- )
+	        {
+	            bpInModelList.remove( i );
+	        }
+	    }
 	}
 		
 	private void doSave()
