@@ -12,12 +12,9 @@
 package org.eclipse.sapphire.modeling;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.ExtensionsLocator.Handle;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
@@ -41,93 +38,69 @@ public final class ExtensionsLocatorFactory extends ExtensionsLocator.Factory
     {
         return new ExtensionsLocator()
         {
+            private List<Handle> handles;
+            
             @Override
-            public List<Handle> find()
+            public synchronized List<Handle> find()
             {
-                final BundleContext context = FrameworkUtil.getBundle( ExtensionsLocatorFactory.class ).getBundleContext();
-                final List<Handle> handles = new ArrayList<Handle>();
-                
-                for( final Bundle bundle : context.getBundles() )
+                if( this.handles == null )
                 {
-                    final int state = bundle.getState();
+                    final BundleContext context = FrameworkUtil.getBundle( ExtensionsLocatorFactory.class ).getBundleContext();
+                    final ReadOnlyListFactory<Handle> handlesListFactory = ReadOnlyListFactory.create();
                     
-                    if( state == Bundle.RESOLVED || state == Bundle.STARTING || state == Bundle.ACTIVE )
+                    for( final Bundle bundle : context.getBundles() )
                     {
-                        Enumeration<URL> urls = null;
+                        final int state = bundle.getState();
                         
-                        try
+                        if( state == Bundle.RESOLVED || state == Bundle.STARTING || state == Bundle.ACTIVE )
                         {
-                            urls = bundle.getResources( DEFAULT_PATH );
-                        }
-                        catch( Exception e )
-                        {
-                            LoggingService.log( e );
-                        }
-                        
-                        if( urls != null )
-                        {
-                            while( urls.hasMoreElements() )
+                            final URL url = bundle.getEntry( DEFAULT_PATH );
+                            
+                            if( url != null )
                             {
-                                final URL url = urls.nextElement();
-                                
-                                if( ! contains( handles, url ) )
+                                final Handle handle = new Handle()
                                 {
-                                    final Handle handle = new Handle()
+                                    @Override
+                                    public URL extension()
                                     {
-                                        @Override
-                                        public URL extension()
-                                        {
-                                            return url;
-                                        }
-    
-                                        @Override
-                                        public URL findResource( final String name )
-                                        {
-                                            return bundle.getResource( name );
-                                        }
-    
-                                        @Override
-                                        @SuppressWarnings( "unchecked" )
-                                        
-                                        public <T> Class<T> findClass( final String name )
-                                        {
-                                            try
-                                            {
-                                                return (Class<T>) bundle.loadClass( name );
-                                            }
-                                            catch( ClassNotFoundException e )
-                                            {
-                                                // Intentionally converting ClassNotFoundException to null return.
-                                            }
-    
-                                            return null;
-                                        }
-                                    };
+                                        return url;
+                                    }
+
+                                    @Override
+                                    public URL findResource( final String name )
+                                    {
+                                        return bundle.getResource( name );
+                                    }
+
+                                    @Override
+                                    @SuppressWarnings( "unchecked" )
                                     
-                                    handles.add( handle );
-                                }
+                                    public <T> Class<T> findClass( final String name )
+                                    {
+                                        try
+                                        {
+                                            return (Class<T>) bundle.loadClass( name );
+                                        }
+                                        catch( ClassNotFoundException e )
+                                        {
+                                            // Intentionally converting ClassNotFoundException to null return.
+                                        }
+
+                                        return null;
+                                    }
+                                };
+                                
+                                handlesListFactory.add( handle );
                             }
                         }
                     }
+                    
+                    this.handles = handlesListFactory.export();
                 }
                 
-                return Collections.unmodifiableList( handles );
+                return this.handles;
             }
         };
-    }
-    
-    private static boolean contains( final List<Handle> handles,
-                                     final URL url )
-    {
-        for( Handle handle : handles )
-        {
-            if( url.toString().equals( handle.extension().toString() ) )
-            {
-                return true;
-            }
-        }
-        
-        return false;
     }
 
 }
