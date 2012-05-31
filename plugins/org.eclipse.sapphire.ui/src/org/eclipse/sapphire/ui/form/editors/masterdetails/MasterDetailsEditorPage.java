@@ -1110,7 +1110,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 
                 public void drop( final DropTargetEvent event ) 
                 {
-                    if( event.data == null )
+                    if( event.data == null || event.item == null)
                     {
                         event.detail = DND.DROP_NONE;
                         return;
