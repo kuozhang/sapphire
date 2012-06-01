@@ -110,7 +110,7 @@ public abstract class SapphireEditor
 			ITextEditor textEditor = null;
 			if (this.multiPageEditor != null) 
 			{
-				if ((activeEditor != null) && (activeEditor instanceof ISapphireEditorActionContributor)) 
+				if (activeEditor instanceof ISapphireEditorActionContributor)
 				{
 					actionContributor = (ISapphireEditorActionContributor)activeEditor;
 				}
