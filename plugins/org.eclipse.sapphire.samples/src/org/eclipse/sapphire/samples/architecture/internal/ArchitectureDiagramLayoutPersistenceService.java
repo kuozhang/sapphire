@@ -58,6 +58,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	private Map<String, DiagramNodeBounds> nodeBounds;
 	private Map<ConnectionHashKey, DiagramConnectionBendPoints> connectionBendPoints;
 	private boolean dirty;
+	private boolean bendPointModelChange;
 	
 	@Override
     protected void init()
@@ -67,6 +68,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
     	this.nodeBounds = new HashMap<String, DiagramNodeBounds>();
     	this.connectionBendPoints = new HashMap<ConnectionHashKey, DiagramConnectionBendPoints>();
     	this.dirty = false;
+    	this.bendPointModelChange = false;
     	load();
     	refreshPersistedPartsCache();
     	addDiagramPartListener();
@@ -124,6 +126,13 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	
 	private void write(DiagramConnectionPart connPart) 
 	{
+		if (this.bendPointModelChange)
+		{
+			// The bend point event from the connection part is triggered by the model change in source editor
+			// We can bypass the writing bend points to the model
+			this.bendPointModelChange = false;
+			return;
+		}
 		IComponentDependency dependency = (IComponentDependency)connPart.getLocalModelElement();
 		if (!dependency.disposed())
 		{
@@ -232,6 +241,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 					bendpoints.add(new Point(bendpoint.getX().getContent(), bendpoint.getY().getContent()));
 				}
 			}
+			this.bendPointModelChange = true;
 			connPart.resetBendpoints(bendpoints, false, false);
 		}
 	}
