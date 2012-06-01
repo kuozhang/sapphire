@@ -22,7 +22,6 @@
     <editor-page>
         <id>main</id>
         <page-header-text>Sapphire Extension</page-header-text>
-        <page-header-image>SapphireFile.png</page-header-image>
         <initial-selection>Model Element Services</initial-selection>
         <root-node>
             <node>

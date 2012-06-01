@@ -31,7 +31,6 @@
     <editor-page>
         <id>main</id>
         <page-header-text>Sapphire UI Definition</page-header-text>
-        <page-header-image>SapphireFile.png</page-header-image>
         <root-node>
             <node>
                 <label>imports</label>
