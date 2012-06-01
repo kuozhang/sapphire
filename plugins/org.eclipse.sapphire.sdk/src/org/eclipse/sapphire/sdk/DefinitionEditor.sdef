@@ -529,7 +529,7 @@
                             <property>ContentSourceType</property>
                         </enum-controller>
                         <panel>
-                            <key>HtmlContentSourceType.EMBEDDED</key>
+                            <key>embedded</key>
                             <content>
                                 <property-editor>
                                     <property>Content</property>
@@ -540,7 +540,7 @@
                             </content>
                         </panel>
                         <panel>
-                            <key>HtmlContentSourceType.REMOTE</key>
+                            <key>remote</key>
                             <content>
                                 <property-editor>ContentUrl</property-editor>
                             </content>

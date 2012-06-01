@@ -40,8 +40,6 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
     @Override
     protected void init()
     {
-        super.init();
-        
         final String pathString = ( (PageBookExtDef) this.definition ).getControlProperty().getContent();
         final String pathStringSubstituted = substituteParams( pathString, this.params );
         final ModelPath path = new ModelPath( pathStringSubstituted );
@@ -73,12 +71,12 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
 
                 if ( i + 1 != n )
                 {
-                    throw new RuntimeException( NLS.bind( Resources.invalidPath, pathStringSubstituted ) );
+                    throw new RuntimeException( NLS.bind( Resources.invalidPathMsg, pathStringSubstituted ) );
                 }
             }
             else
             {
-                throw new RuntimeException( NLS.bind( Resources.invalidPath, pathStringSubstituted ) );
+                throw new RuntimeException( NLS.bind( Resources.invalidPathMsg, pathStringSubstituted ) );
             }
         }
         
@@ -93,6 +91,8 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
         
         this.element.attach( this.listener, this.property.getName() );
         
+        super.init();
+        
         setExposePageValidationState( true );
         updateCurrentPage();
     }
@@ -100,21 +100,47 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
     @Override
     protected Object parsePageKey( final String panelKeyString )
     {
+        final Class<?> enumType = this.property.getTypeClass();
         final int lastDot = panelKeyString.lastIndexOf( '.' );
-        final String className = panelKeyString.substring( 0, lastDot );
-        final String enumItemName = panelKeyString.substring( lastDot + 1 );
+        final String enumItemName;
         
-        final ISapphireUiDef rootdef = this.definition.nearest( ISapphireUiDef.class );
-        final Class<?> classObject = rootdef.resolveClass( className );
-        final Field field;
-        
-        try
+        if( lastDot == -1 )
         {
-            field = classObject.getField( enumItemName );
+            enumItemName = panelKeyString;
         }
-        catch( NoSuchFieldException e )
+        else
         {
-            throw new RuntimeException( e );
+            final String className = panelKeyString.substring( 0, lastDot );
+            enumItemName = panelKeyString.substring( lastDot + 1 );
+            
+            final ISapphireUiDef rootdef = this.definition.nearest( ISapphireUiDef.class );
+            final Class<?> specifiedEnumType = rootdef.resolveClass( className );
+            
+            if( specifiedEnumType == null )
+            {
+                throw new RuntimeException( NLS.bind( Resources.invalidPageKeyClassNotResolvedMsg, panelKeyString, className ) );
+            }
+            
+            if( specifiedEnumType != enumType )
+            {
+                throw new RuntimeException( NLS.bind( Resources.invalidPageKeyClassNotMatchedMsg, panelKeyString, className ) );
+            }
+        }
+        
+        Field field = null;
+        
+        for( Field f : enumType.getFields() )
+        {
+            if( f.isEnumConstant() && f.getName().equalsIgnoreCase( enumItemName ) )
+            {
+                field = f;
+                break;
+            }
+        }
+        
+        if( field == null )
+        {
+            throw new RuntimeException( NLS.bind( Resources.invalidPageKeyEnumItemMsg, panelKeyString, enumType.getSimpleName(), enumItemName ) );
         }
         
         try
@@ -148,7 +174,10 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
 
     private static final class Resources extends NLS
     {
-        public static String invalidPath;
+        public static String invalidPathMsg;
+        public static String invalidPageKeyClassNotResolvedMsg;
+        public static String invalidPageKeyClassNotMatchedMsg;
+        public static String invalidPageKeyEnumItemMsg;
 
         static
         {
