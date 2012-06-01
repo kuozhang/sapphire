@@ -15,6 +15,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -32,7 +33,8 @@ public interface ConnectionBendpoint extends IModelElement
     // *** X ***
     
     @Type( base = Integer.class )
-    @XmlBinding( path = "@x" )    
+    @XmlBinding( path = "@x" )
+    @DefaultValue( text = "0" )
     
     ValueProperty PROP_X = new ValueProperty( TYPE, "X");
     
@@ -44,6 +46,7 @@ public interface ConnectionBendpoint extends IModelElement
     
     @Type( base = Integer.class )
     @XmlBinding( path = "@y" )
+    @DefaultValue( text = "0" )
 
     ValueProperty PROP_Y = new ValueProperty( TYPE, "Y");
     
