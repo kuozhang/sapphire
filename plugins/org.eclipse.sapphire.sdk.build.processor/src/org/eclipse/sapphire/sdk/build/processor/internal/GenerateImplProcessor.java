@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.eclipse.sapphire.modeling.ElementProperty;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListBindingImpl;
@@ -98,6 +99,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
     private static final String DATA_WRITE_VALUE_METHOD = "write.value.method";
     private static final String DATA_WRITE_TRANSIENT_METHOD = "write.transient.method";
     private static final String DATA_REFRESH_METHOD = "refresh.method";
+    private static final String DATA_DISPOSE_PROPERTIES_METHOD = "dispose.properties.method";
     private static final String DATA_HAS_CONTENTS = "has.contents";
     
     @Override
@@ -853,6 +855,21 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         rb.closeBlock();
         
+        final Body db = prepareDisposePropertiesMethodBlock( implClassModel );
+        
+        db.append( "if( this.#1 != null )\n" +
+                   "{\n" +
+                   "    final IModelElement element = this.#1.element( false );\n" +
+                   "    \n" +
+                   "    if( element != null )\n" +
+                   "    {\n" +
+                   "        element.dispose();\n" +
+                   "    }\n" +
+                   "}",
+                   variableName );
+        
+        implClassModel.addImport( IModelElement.class );
+        
         // Contribute read method block.
         
         contributeReadMethodBlock( implClassModel, propField );
@@ -978,6 +995,19 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         implClassModel.addImport( ListBindingImpl.class );
         
         rb.closeBlock();
+        
+        final Body db = prepareDisposePropertiesMethodBlock( implClassModel );
+        
+        db.append( "if( this.#1 != null )\n" +
+                   "{\n" +
+                   "    for( IModelElement element : this.#1 )\n" +
+                   "    {\n" +
+                   "        element.dispose();\n" +
+                   "    }\n" +
+                   "}",
+                   variableName );
+        
+        implClassModel.addImport( IModelElement.class );
         
         // Contribute read method block.
         
@@ -1559,6 +1589,40 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         rb.openBlock();
 
         return rb;
+    }
+
+    private static MethodModel getDisposePropertiesMethod( final ClassModel implClassModel,
+                                                           final boolean createIfNecessary )
+    {
+        MethodModel disposePropertiesMethod = (MethodModel) implClassModel.getData( DATA_DISPOSE_PROPERTIES_METHOD );
+        
+        if( disposePropertiesMethod == null && createIfNecessary )
+        {
+            disposePropertiesMethod = implClassModel.addMethod( "disposeProperties" );
+            disposePropertiesMethod.setAccessModifier( AccessModifier.PROTECTED );
+            disposePropertiesMethod.setData( DATA_HAS_CONTENTS, Boolean.FALSE );
+            implClassModel.setData( DATA_DISPOSE_PROPERTIES_METHOD, disposePropertiesMethod );
+        }
+        
+        return disposePropertiesMethod;
+    }
+    
+    private static Body prepareDisposePropertiesMethodBlock( final ClassModel implClassModel )
+    {
+        final MethodModel disposePropertiesMethod = getDisposePropertiesMethod( implClassModel, true );
+        final Body db = disposePropertiesMethod.getBody();
+        final boolean hasPriorContent;
+        
+        if( disposePropertiesMethod.getData( DATA_HAS_CONTENTS ) == Boolean.TRUE )
+        {
+            db.appendEmptyLine();
+        }
+        else
+        {
+            disposePropertiesMethod.setData( DATA_HAS_CONTENTS, Boolean.TRUE );
+        }
+
+        return db;
     }
     
     private static TypeReference toTypeReference( final TypeMirror typeMirror )

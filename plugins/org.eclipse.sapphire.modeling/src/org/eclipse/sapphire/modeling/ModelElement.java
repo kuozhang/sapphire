@@ -1043,29 +1043,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             
             broadcast( new ElementDisposeEvent( this ) );
             
-            for( ModelProperty property : this.type.properties() )
-            {
-                if( property instanceof ListProperty )
-                {
-                    for( IModelElement child : read( (ListProperty) property ) )
-                    {
-                        child.dispose();
-                    }
-                }
-                else if( property instanceof ImpliedElementProperty )
-                {
-                    read( (ImpliedElementProperty) property ).dispose();
-                }
-                else if( property instanceof ElementProperty )
-                {
-                    final IModelElement child = read( (ElementProperty) property ).element( false );
-                    
-                    if( child != null )
-                    {
-                        child.dispose();
-                    }
-                }
-            }
+            disposeProperties();
             
             try
             {
@@ -1086,6 +1064,11 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                 context.dispose();
             }
         }
+    }
+    
+    protected void disposeProperties()
+    {
+        // The default implementation does not do anything.
     }
     
     protected final void assertNotDisposed()
