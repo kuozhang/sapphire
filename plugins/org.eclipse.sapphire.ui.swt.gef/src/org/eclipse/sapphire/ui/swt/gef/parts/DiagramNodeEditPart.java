@@ -155,7 +155,7 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart
 	{
 		Point realLocation = this.configManager.getDiagramEditor().calculateRealMouseLocation(pt);
 		NodeFigure nodeFig = getNodeFigure();
-		Rectangle bounds = nodeFig.getLabelFigure().getBounds();
+		Rectangle bounds = nodeFig.getLabelFigure().getTextBounds();
 		if (bounds.contains(realLocation))
 		{
 			return true;
