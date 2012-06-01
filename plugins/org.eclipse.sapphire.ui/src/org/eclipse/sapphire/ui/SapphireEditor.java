@@ -70,6 +70,7 @@ import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 import org.eclipse.ui.part.MultiPageEditorPart;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.osgi.service.prefs.BackingStoreException;
@@ -106,11 +107,16 @@ public abstract class SapphireEditor
 		public void setActivePage(IEditorPart activeEditor) 
 		{
 			ISapphireEditorActionContributor actionContributor = null;
+			ITextEditor textEditor = null;
 			if (this.multiPageEditor != null) 
 			{
 				if ((activeEditor != null) && (activeEditor instanceof ISapphireEditorActionContributor)) 
 				{
 					actionContributor = (ISapphireEditorActionContributor)activeEditor;
+				}
+				else if (activeEditor instanceof ITextEditor)
+				{
+					textEditor = (ITextEditor)activeEditor;
 				}
 				else if (activeEditor == null)
 				{
@@ -123,17 +129,27 @@ public abstract class SapphireEditor
 			}
 
 			IActionBars actionBars = getActionBars();
-			if (actionBars != null && actionContributor != null)
+			if (actionBars != null && (actionContributor != null || textEditor != null))
 			{
-				
 				/** The global actions to be connected with editor actions */
-				actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), 
-						actionContributor.getAction(ActionFactory.DELETE.getId()));
-				actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), 
-						actionContributor.getAction(ActionFactory.SELECT_ALL.getId()));
-				actionBars.setGlobalActionHandler(ActionFactory.PRINT.getId(), 
-						actionContributor.getAction(ActionFactory.PRINT.getId()));
-				
+				if (actionContributor != null)
+				{				
+					actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), 
+							actionContributor.getAction(ActionFactory.DELETE.getId()));
+					actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), 
+							actionContributor.getAction(ActionFactory.SELECT_ALL.getId()));
+					actionBars.setGlobalActionHandler(ActionFactory.PRINT.getId(), 
+							actionContributor.getAction(ActionFactory.PRINT.getId()));
+				}
+				else if (textEditor != null)
+				{
+					actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), 
+							textEditor.getAction(ActionFactory.DELETE.getId()));
+					actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), 
+							textEditor.getAction(ActionFactory.SELECT_ALL.getId()));
+					actionBars.setGlobalActionHandler(ActionFactory.PRINT.getId(), 
+							textEditor.getAction(ActionFactory.PRINT.getId()));					
+				}
 				actionBars.updateActionBars();
 			}
 
