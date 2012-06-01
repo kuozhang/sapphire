@@ -118,6 +118,7 @@ public class PropertyEditorAssistDialog
                 td = new TableWrapData();
                 td.align = TableWrapData.FILL;
                 td.grabHorizontal = true;
+                td.maxWidth = 600;
                 text.setLayoutData( td );
                 
                 for( Map.Entry<String,ImageData> image : contribution.images().entrySet() )
