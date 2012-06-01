@@ -33,7 +33,7 @@ public interface Bounds extends IModelElement
     
     @Type( base = Integer.class )
     @XmlBinding( path = "@x" )
-    @DefaultValue( text = "-1" )
+    @DefaultValue( text = "0" )
     
     ValueProperty PROP_X = new ValueProperty( TYPE, "X");
     
@@ -45,37 +45,12 @@ public interface Bounds extends IModelElement
     
     @Type( base = Integer.class )
     @XmlBinding( path = "@y" )
-    @DefaultValue( text = "-1" )
+    @DefaultValue( text = "0" )
 
     ValueProperty PROP_Y = new ValueProperty( TYPE, "Y");
     
     Value<Integer> getY();
     void setY(Integer value);
     void setY(String value);
-    
-    // *** Width ***
-    
-    @Type( base = Integer.class )
-    @XmlBinding( path = "@width" )
-    @DefaultValue( text = "-1" )
-    
-    ValueProperty PROP_WIDTH = new ValueProperty( TYPE, "Width");
-    
-    Value<Integer> getWidth();
-    void setWidth(Integer value);
-    void setWidth(String value);
-    
-    // *** Height ***
-    
-    @Type( base = Integer.class )
-    @XmlBinding( path = "@height" )
-    @DefaultValue( text = "-1" )
-    
-    ValueProperty PROP_HEIGHT = new ValueProperty( TYPE, "Height");
-    
-    Value<Integer> getHeight();
-    void setHeight(Integer value);
-    void setHeight(String value);
-    
-	
+    	
 }

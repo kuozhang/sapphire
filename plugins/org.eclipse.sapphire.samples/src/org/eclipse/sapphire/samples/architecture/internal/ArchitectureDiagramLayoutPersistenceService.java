@@ -168,16 +168,10 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 			{
 				String nodeId = IdUtil.computeNodeId(nodePart);
 				DiagramNodeBounds bounds = null;
-				if (component.getBounds().getX().getContent(false) != null && component.getBounds().getY().getContent(false) != null)
-				{
-					bounds = new DiagramNodeBounds(component.getBounds().getX().getContent(), 
-							component.getBounds().getY().getContent(), 
-							component.getBounds().getWidth().getContent(), 
-							component.getBounds().getHeight().getContent(),
-							false, false);
-					nodePart.setNodeBounds(bounds);					
-					
-				}
+				bounds = new DiagramNodeBounds(component.getBounds().getX().getContent(), 
+						component.getBounds().getY().getContent(), -1, -1,
+						false, false);
+				nodePart.setNodeBounds(bounds);					
 				
 				// load the embedded connection layout
 				ModelElementList<IComponentDependency> dependencies = component.getDependencies();
@@ -185,11 +179,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 				{
 					DiagramConnectionPart connPart = context( SapphireDiagramEditorPagePart.class ).getDiagramConnectionPart(dependency);
 					if (connPart != null)
-					{
-						String connId = IdUtil.computeConnectionId(connPart);
-						ConnectionHashKey connKey = ConnectionHashKey.createKey(nodeId, connId);
-						List<Point> pts = new ArrayList<Point>();
-						
+					{						
 						ModelElementList<ConnectionBendpoint> bendpoints = dependency.getConnectionBendpoints();
 						if (bendpoints.size() > 0)
 						{
@@ -198,7 +188,6 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 							{
 								connPart.addBendpoint(index++, bendpoint.getX().getContent(), 
 										bendpoint.getY().getContent());
-								pts.add(new Point(bendpoint.getX().getContent(), bendpoint.getY().getContent()));
 							}							
 						}
 					}
@@ -210,13 +199,9 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	private void handleNodeLayoutChange(IComponent component)
 	{
 		DiagramNodePart nodePart = context( SapphireDiagramEditorPagePart.class ).getDiagramNodePart(component);
-		if (nodePart != null && component.getBounds().getX().getContent(false) != null && 
-				component.getBounds().getY().getContent(false) != null)
-		{
-			DiagramNodeBounds nodeBounds = new DiagramNodeBounds(component.getBounds().getX().getContent(),
-					component.getBounds().getY().getContent());
-			nodePart.setNodeBounds(nodeBounds);
-		}
+		DiagramNodeBounds nodeBounds = new DiagramNodeBounds(component.getBounds().getX().getContent(),
+				component.getBounds().getY().getContent());
+		nodePart.setNodeBounds(nodeBounds);
 	}
 	
 	private void handleConnectionBendpointChange(IComponentDependency componentDependency)
@@ -402,15 +387,14 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	private void writeComponentBounds(IComponent component, DiagramNodePart node)
 	{
 		Bounds bounds = node.getNodeBounds();
-		component.getBounds().setX(bounds.getX());
-		component.getBounds().setY(bounds.getY());
-		if (node.canResizeShape())
+		if (bounds.getX() != component.getBounds().getX().getContent())
 		{
-			if (bounds.getWidth() > 0)
-				component.getBounds().setWidth(bounds.getWidth());
-			if (bounds.getHeight() > 0)
-				component.getBounds().setHeight(bounds.getHeight());
-		}		
+			component.getBounds().setX(bounds.getX());
+		}
+		if (bounds.getY() != component.getBounds().getY().getContent())
+		{
+			component.getBounds().setY(bounds.getY());
+		}
 	}
 	
 	private void writeDependencyBendPoints(IComponentDependency dependency, DiagramConnectionPart connPart)
