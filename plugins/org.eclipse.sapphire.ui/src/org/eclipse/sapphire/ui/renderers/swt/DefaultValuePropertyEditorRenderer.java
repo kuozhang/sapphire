@@ -13,12 +13,12 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
+import static org.eclipse.sapphire.ui.PropertyEditorPart.DATA_BINDING;
+import static org.eclipse.sapphire.ui.PropertyEditorPart.RELATED_CONTROLS;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_ASSIST;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_BROWSE;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_JUMP;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.createFilterByActionId;
-import static org.eclipse.sapphire.ui.PropertyEditorPart.DATA_BINDING;
-import static org.eclipse.sapphire.ui.PropertyEditorPart.RELATED_CONTROLS;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
@@ -46,13 +46,13 @@ import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.SensitiveData;
 import org.eclipse.sapphire.services.ContentProposal;
 import org.eclipse.sapphire.services.ContentProposalService;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandler.PostExecuteEvent;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFilter;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
@@ -197,43 +197,44 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
         this.context.adapt( this.textField );
         decorator.addEditorControl( this.textField, true );
 
-        final TextOverlayPainter.Controller textOverlayPainterController;
-        
-        if( jumpActionHandler != null )
+        final TextOverlayPainter.Controller textOverlayPainterController = new TextOverlayPainter.Controller()
         {
-            textOverlayPainterController = new TextOverlayPainter.Controller()
+            @Override
+            public boolean isHyperlinkEnabled()
             {
-                @Override
-                public boolean isHyperlinkEnabled()
-                {
-                    return jumpActionHandler.isEnabled();
-                }
+                return ( jumpActionHandler == null ? false : jumpActionHandler.isEnabled() );
+            }
 
-                @Override
-                public void handleHyperlinkEvent()
+            @Override
+            public void handleHyperlinkEvent()
+            {
+                if( jumpActionHandler != null )
                 {
                     jumpActionHandler.execute( DefaultValuePropertyEditorRenderer.this.context );
                 }
+            }
 
-                @Override
-                public String getDefaultText()
-                {
-                    return element.read( getProperty() ).getDefaultText();
-                }
-            };
-        }
-        else
-        {
-            textOverlayPainterController = new TextOverlayPainter.Controller()
+            @Override
+            public String getDefaultText()
             {
-                @Override
-                public String getDefaultText()
+                String def = element.read( getProperty() ).getDefaultText();
+                
+                if( isSensitiveData )
                 {
-                    return element.read( getProperty() ).getDefaultText();
+                    final StringBuilder buf = new StringBuilder();
+                    
+                    for( int i = 0, n = def.length(); i < n; i++ )
+                    {
+                        buf.append( "\u25CF" );
+                    }
+                    
+                    def = buf.toString();
                 }
-            };
-        }
-        
+                
+                return def;
+            }
+        };
+            
         TextOverlayPainter.install( this.textField, textOverlayPainterController );
         
         if( isBrowseOnly || isReadOnly )

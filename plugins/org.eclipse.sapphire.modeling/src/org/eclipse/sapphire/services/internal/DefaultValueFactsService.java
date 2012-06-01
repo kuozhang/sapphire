@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.SensitiveData;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.Service;
@@ -35,11 +36,21 @@ public final class DefaultValueFactsService extends FactsService
     @Override
     protected void facts( final List<String> facts )
     {
-        final String defaultValue = getDefaultValueLabel( context( IModelElement.class ), context( ValueProperty.class ) );
+        final IModelElement element = context( IModelElement.class );
+        final ValueProperty property = context( ValueProperty.class );
         
-        if( defaultValue != null )
+        if( property.hasAnnotation( SensitiveData.class ) )
         {
-            facts.add( NLS.bind( Resources.statement, defaultValue ) );
+            facts.add( Resources.statementForSensitive );
+        }
+        else
+        {
+            final String defaultValue = getDefaultValueLabel( element, property );
+            
+            if( defaultValue != null )
+            {
+                facts.add( NLS.bind( Resources.statement, defaultValue ) );
+            }
         }
     }
     
@@ -63,6 +74,7 @@ public final class DefaultValueFactsService extends FactsService
     private static final class Resources extends NLS
     {
         public static String statement;
+        public static String statementForSensitive;
         
         static
         {
