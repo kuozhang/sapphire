@@ -20,6 +20,9 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
@@ -51,6 +54,12 @@ public class SapphireComposite extends SapphirePartContainer
     public ISapphireCompositeDef definition()
     {
         return (ISapphireCompositeDef) super.definition();
+    }
+    
+    @Override
+    public Set<String> getActionContexts()
+    {
+        return Collections.singleton( SapphireActionSystem.CONTEXT_FORM );
     }
 
     @Override
