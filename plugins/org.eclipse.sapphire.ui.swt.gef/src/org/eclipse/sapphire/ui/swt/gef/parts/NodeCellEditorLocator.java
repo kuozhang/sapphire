@@ -14,6 +14,7 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -30,13 +31,16 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 
 	public void relocate(CellEditor celleditor) {
 		Text text = (Text) celleditor.getControl();
-		Rectangle rect = label.getClientArea();
+		Rectangle labelRect = label.getClientArea();
+		label.translateToAbsolute(labelRect);
+		Point pref = text.computeSize(-1, -1);
+		Rectangle rect = label.getTextBounds().getCopy();
+		pref.x = Math.min(pref.x, labelRect.width);
+		if (text.getText().length() == 0) {
+			pref.x = 10;
+		}
 		label.translateToAbsolute(rect);
-		org.eclipse.swt.graphics.Rectangle trim = text.computeTrim(0, 0, 0, 0);
-		rect.translate(trim.x, trim.y);
-		rect.width += trim.width;
-		rect.height += trim.height;
-		text.setBounds(rect.x, rect.y, rect.width, rect.height);
+		text.setBounds(rect.x, rect.y, pref.x + 1, pref.y + 1);
 	}
 
 	protected Label getLabel() {
