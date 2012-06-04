@@ -35,12 +35,12 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 		label.translateToAbsolute(labelRect);
 		Point pref = text.computeSize(-1, -1);
 		Rectangle rect = label.getTextBounds().getCopy();
-		pref.x = Math.min(pref.x, labelRect.width);
+		pref.x = Math.min(pref.x + 1, labelRect.width - 3);
 		if (text.getText().length() == 0) {
 			pref.x = 10;
 		}
 		label.translateToAbsolute(rect);
-		text.setBounds(rect.x, rect.y, pref.x + 1, pref.y + 1);
+		text.setBounds(rect.x, rect.y, pref.x, pref.y + 1);
 	}
 
 	protected Label getLabel() {
