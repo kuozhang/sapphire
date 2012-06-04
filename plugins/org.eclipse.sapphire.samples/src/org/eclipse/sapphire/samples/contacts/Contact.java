@@ -40,7 +40,7 @@ import org.eclipse.sapphire.samples.contacts.internal.ContactCategoryPossibleVal
 import org.eclipse.sapphire.samples.contacts.internal.ContactEqualityService;
 import org.eclipse.sapphire.samples.contacts.internal.ContactImageService;
 import org.eclipse.sapphire.samples.contacts.internal.ContactMethods;
-import org.eclipse.sapphire.samples.contacts.internal.DuplicateContactValidator;
+import org.eclipse.sapphire.samples.contacts.internal.DuplicateContactValidationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -54,7 +54,7 @@ import org.eclipse.sapphire.samples.contacts.internal.DuplicateContactValidator;
     { 
         @Service( impl = ContactImageService.class ), 
         @Service( impl = ContactEqualityService.class ),
-        @Service( impl = DuplicateContactValidator.class )
+        @Service( impl = DuplicateContactValidationService.class )
     }
 )
 

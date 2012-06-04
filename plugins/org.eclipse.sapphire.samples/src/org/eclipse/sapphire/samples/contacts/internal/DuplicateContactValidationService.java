@@ -30,7 +30,7 @@ import org.eclipse.sapphire.services.ValidationService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class DuplicateContactValidator extends ValidationService
+public final class DuplicateContactValidationService extends ValidationService
 {
     private Listener listener;
     
@@ -110,7 +110,7 @@ public final class DuplicateContactValidator extends ValidationService
         
         static
         {
-            initializeMessages( DuplicateContactValidator.class.getName(), Resources.class );
+            initializeMessages( DuplicateContactValidationService.class.getName(), Resources.class );
         }
     }
     

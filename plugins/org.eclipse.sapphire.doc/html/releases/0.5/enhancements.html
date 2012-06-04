@@ -54,6 +54,7 @@
     <li><a href="#DragAndDropService">DragAndDropService</a></li>
     <li><a href="#EqualityService">EqualityService</a></li>
     <li><a href="#ListSelectionService">ListSelectionService</a></li>
+    <li><a href="#ValidationServiceAtElementLevel">ValidationService at Element Level</a></li>
   </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
@@ -566,6 +567,15 @@ can be useful for other purposes.</p>
     }
 }</code></pre>
 
+<pre class="source-code"><code><font color="#888888">@Services( {</font> @Service( impl = ContactEqualityService.class )<font color="#888888">, ... } )
+
+public interface Contact extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( Contact.class );
+
+    ...
+}</font></code></pre>
+
 
 <a name="ListSelectionService"><h2>ListSelectionService</h2></a>
 
@@ -616,6 +626,102 @@ refresh action handler's enablement state when selection changes.</p>
             }
         );
     <font color="#888888">}
+}</font></code></pre>
+
+
+<a name="ValidationServiceAtElementLevel"><h2>ValidationService at Element Level</h2></a>
+
+<p>The ValidationService provides means to check integrity constraints and to communicate problems to the user. In
+prior releases, the developer could only attach a ValidationService to properties. Now, a ValidationService can also be
+attached to elements.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, a validation service is used for detecting likely duplicate contacts. Two
+contacts are defined as duplicates of each other if e-mail and at least one of the phone numbers matches.</p>
+
+<pre class="source-code"><code>public class DuplicateContactValidationService extends ValidationService
+{
+    private Listener listener;
+    
+    @Override
+    protected void init()
+    {
+        final ContactsDatabase contacts = context( Contact.class ).nearest( ContactsDatabase.class );
+        
+        if( contacts != null )
+        {
+            this.listener = new FilteredListener&lt;PropertyContentEvent>()
+            {
+                @Override
+                protected void handleTypedEvent( PropertyContentEvent event )
+                {
+                    broadcast();
+                }
+            };
+            
+            contacts.attach( this.listener, "Contacts/EMail" );
+            contacts.attach( this.listener, "Contacts/PhoneNumbers/*" );
+        }
+    }
+    
+    @Override
+    public Status validate() 
+    {
+        Contact contact = context( Contact.class );
+        ContactsDatabase contacts = contact.nearest( ContactsDatabase.class );
+        
+        if( contacts != null )
+        {
+            String email = contact.getEMail().getContent();
+            ModelElementList&lt;PhoneNumber> numbers = contact.getPhoneNumbers();
+            
+            if( email != null && ! numbers.isEmpty() )
+            {
+                for( Contact x : contacts.getContacts() )
+                {
+                    if( x != contact && email.equals( x.getEMail().getContent() ) && ! x.getPhoneNumbers().isEmpty() )
+                    {
+                        for( PhoneNumber cn : numbers )
+                        {
+                            for( PhoneNumber xn : x.getPhoneNumbers() )
+                            {
+                                if( equal( cn.getAreaCode().getContent(), xn.getAreaCode().getContent() ) &&
+                                    equal( cn.getLocalNumber().getContent(), xn.getLocalNumber().getContent() ) )
+                                {
+                                    String msg = "Likely the same contact as " + x.getName() + ".";
+                                    return createWarningStatus( msg );
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return createOkStatus();
+    }
+    
+    @Override
+    public void dispose()
+    {
+        ContactsDatabase contacts = context( Contact.class ).nearest( ContactsDatabase.class );
+        
+        if( contacts != null )
+        {
+            contacts.detach( this.listener, "Contacts/EMail" );
+            contacts.detach( this.listener, "Contacts/PhoneNumbers/*" );
+        }
+    }
+}</code></pre>
+
+<pre class="source-code"><code><font color="#888888">@Services( {</font> @Service( impl = DuplicateContactValidationService.class )<font color="#888888">, ... } )
+
+public interface Contact extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( Contact.class );
+
+    ...
 }</font></code></pre>
 
 

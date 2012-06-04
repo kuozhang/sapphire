@@ -300,6 +300,15 @@ can be useful for other purposes.</p>
     }
 }</code></pre>
 
+<pre class="source-code"><code><font color="#888888">@Services( {</font> @Service( impl = ContactEqualityService.class )<font color="#888888">, ... } )
+
+public interface Contact extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( Contact.class );
+
+    ...
+}</font></code></pre>
+
 
 <a name="FactsAggregationService"><h2>FactsAggregationService</h2></a>
 
