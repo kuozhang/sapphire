@@ -23,10 +23,10 @@ import org.eclipse.sapphire.ui.def.SapphireKeySequence;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -34,8 +34,8 @@ import org.eclipse.swt.widgets.Control;
 
 public final class SapphireKeyboardActionPresentation extends SapphireHotSpotsActionPresentation
 {
-    private final List<Control> attachedControls = new ArrayList<Control>();
-    private KeyListener keyListener;
+    private final List<Widget> attachedControls = new ArrayList<Widget>();
+    private Listener keyListener;
 
     public SapphireKeyboardActionPresentation( final SapphireActionPresentationManager manager )
     {
@@ -65,22 +65,21 @@ public final class SapphireKeyboardActionPresentation extends SapphireHotSpotsAc
     
     public void render()
     {
-        this.keyListener = new KeyAdapter()
+        this.keyListener = new Listener()
         {
-            @Override
-            public void keyPressed( final KeyEvent event )
+            public void handleEvent( final Event event )
             {
                 handleKeyEvent( event );
             }
         };
         
-        for( Control control : this.attachedControls )
+        for( Widget control : this.attachedControls )
         {
-            control.addKeyListener( this.keyListener );
+            control.addListener( SWT.KeyDown, this.keyListener );
         }
     }
     
-    private void handleKeyEvent( final KeyEvent event )
+    private void handleKeyEvent( final Event event )
     {
         final SapphireActionGroup localGroupOfActions = getManager().getActionGroup();
 
@@ -89,7 +88,10 @@ public final class SapphireKeyboardActionPresentation extends SapphireHotSpotsAc
             return;
         }
         
-        ISapphirePart part = localGroupOfActions.getPart().getParentPart();
+        // Account for propagated key bindings. Start the search with this part's 
+        // main action context and continue up the parts hierarchy.
+        
+        ISapphirePart part = localGroupOfActions.getPart();
         
         while( part != null )
         {
@@ -109,7 +111,7 @@ public final class SapphireKeyboardActionPresentation extends SapphireHotSpotsAc
         }
     }
     
-    private boolean handleKeyEvent( final KeyEvent event,
+    private boolean handleKeyEvent( final Event event,
                                     final SapphireActionGroup groupOfActions,
                                     final boolean onlyPropagatedKeyBindings )
     {
@@ -182,11 +184,11 @@ public final class SapphireKeyboardActionPresentation extends SapphireHotSpotsAc
     {
         super.dispose();
         
-        for( Control control : this.attachedControls )
+        for( Widget widget : this.attachedControls )
         {
-            if( ! control.isDisposed() )
+            if( ! widget.isDisposed() )
             {
-                control.removeKeyListener( this.keyListener );
+                widget.removeListener( SWT.KeyDown, this.keyListener );
             }
         }
         

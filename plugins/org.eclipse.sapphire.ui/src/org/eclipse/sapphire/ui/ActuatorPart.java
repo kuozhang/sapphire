@@ -37,6 +37,8 @@ import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.ActuatorDef;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.def.ImageReference;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.sapphire.util.ReadOnlyListFactory;
 import org.eclipse.swt.SWT;
@@ -295,6 +297,10 @@ public final class ActuatorPart extends SapphirePart
     
     public void render( final SapphireRenderingContext context )
     {
+        final SapphireActionGroup actions = getActions( getMainActionContext() );
+        final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager( context, actions );
+        final SapphireKeyboardActionPresentation keyboardActionPresentation = new SapphireKeyboardActionPresentation( actionPresentationManager );
+        
         final ActuatorDef def = definition();
         final Composite parent = context.getComposite();
         
@@ -315,6 +321,8 @@ public final class ActuatorPart extends SapphirePart
         {
             final Button button = new Button( parent, SWT.PUSH );
             button.setLayoutData( gdhspan( gdhindent( gdhalign( gd(), hAlignCode ), 8 ), hSpan ) );
+            
+            keyboardActionPresentation.attach( button );
             
             final String label = label( CapitalizationType.TITLE_STYLE );
             
@@ -379,6 +387,7 @@ public final class ActuatorPart extends SapphirePart
                 {
                     public void widgetDisposed( final DisposeEvent event )
                     {
+                        actionPresentationManager.dispose();
                         detach( listener );
                     }
                 }
@@ -410,7 +419,9 @@ public final class ActuatorPart extends SapphirePart
             
             final SapphireFormText text = new SapphireFormText( composite, SWT.NONE );
             text.setLayoutData( gdvalign( gdhfill(), SWT.CENTER ) );
+            
             context.adapt( text );
+            keyboardActionPresentation.attach( text );
             
             String label = label( CapitalizationType.FIRST_WORD_ONLY );
             label = ( label == null ? Resources.labelNotSpecified : label );
@@ -486,11 +497,14 @@ public final class ActuatorPart extends SapphirePart
                 {
                     public void widgetDisposed( final DisposeEvent event )
                     {
+                        actionPresentationManager.dispose();
                         detach( listener );
                     }
                 }
             );
         }
+        
+        keyboardActionPresentation.render();
     }
 
     @Override

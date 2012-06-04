@@ -18,12 +18,19 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.reflowOnResize;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.swt.SapphireTextPopup;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -33,25 +40,35 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireLabel
-
-    extends SapphirePart
-    
+public final class LabelPart extends SapphirePart
 {
     private final static String BREAK_TOKEN = "###brk###";
     
-    private SapphireFormText labelFormText;
+    private SapphireFormText text;
     private String labelExtendedContent;
     private FunctionResult labelFunctionResult;
+    
+    @Override
+    public Set<String> getActionContexts()
+    {
+        return Collections.singleton( SapphireActionSystem.CONTEXT_LABEL );
+    }
 
     @Override
     public void render( final SapphireRenderingContext context )
     {
         final ISapphireLabelDef def = (ISapphireLabelDef) this.definition;
         
-        this.labelFormText = new SapphireFormText( context.getComposite(), SWT.NONE );
-        this.labelFormText.setLayoutData( gdhindent( gdwhint( gdhspan( gdhfill(), 2 ), 100 ), 9 ) );
-        context.adapt( this.labelFormText );
+        this.text = new SapphireFormText( context.getComposite(), SWT.NONE );
+        this.text.setLayoutData( gdhindent( gdwhint( gdhspan( gdhfill(), 2 ), 100 ), 9 ) );
+        context.adapt( this.text );
+        
+        final SapphireActionGroup actions = getActions( getMainActionContext() );
+        final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager( context, actions );
+        final SapphireKeyboardActionPresentation keyboardActionPresentation = new SapphireKeyboardActionPresentation( actionPresentationManager );
+        
+        keyboardActionPresentation.attach( this.text );
+        keyboardActionPresentation.render();
         
         this.labelFunctionResult = initExpression
         (
@@ -68,7 +85,7 @@ public final class SapphireLabel
             }
         );
 
-        this.labelFormText.addHyperlinkListener
+        this.text.addHyperlinkListener
         (
             new HyperlinkAdapter()
             {
@@ -82,7 +99,18 @@ public final class SapphireLabel
 
         refreshLabel();
 
-        reflowOnResize( this.labelFormText );
+        reflowOnResize( this.text );
+        
+        this.text.addDisposeListener
+        (
+            new DisposeListener()
+            {
+                public void widgetDisposed( final DisposeEvent event )
+                {
+                    actionPresentationManager.dispose();
+                }
+            }
+        );
     }
     
     private void refreshLabel()
@@ -129,16 +157,16 @@ public final class SapphireLabel
         }
         
         buf.append( "</p></form>" );
-        this.labelFormText.setText( buf.toString(), true, false );
+        this.text.setText( buf.toString(), true, false );
     }
 
     private void activateExtendedDescriptionContentPopup()
     {
         if( this.labelExtendedContent != null )
         {
-            final Point cursor = this.labelFormText.getDisplay().getCursorLocation();
-            final Rectangle bounds = this.labelFormText.getBounds();
-            final Point location = this.labelFormText.toDisplay( new Point( bounds.x, bounds.y ) );
+            final Point cursor = this.text.getDisplay().getCursorLocation();
+            final Rectangle bounds = this.text.getBounds();
+            final Point location = this.text.toDisplay( new Point( bounds.x, bounds.y ) );
             final Rectangle displayBounds = new Rectangle( location.x, location.y, bounds.width, bounds.height );
             
             Point position;
@@ -154,23 +182,20 @@ public final class SapphireLabel
                 //position = new Point( location.x, location.y + bounds.height + 2 );
             }
             
-            final SapphireTextPopup popup = new SapphireTextPopup( this.labelFormText.getShell(), position );
+            final SapphireTextPopup popup = new SapphireTextPopup( this.text.getShell(), position );
             popup.setText( this.labelExtendedContent );
             popup.open();
         }
     }
     
-    private static final class Resources
-    
-        extends NLS
-    
+    private static final class Resources extends NLS
     {
         public static String moreDetails;
         
         static
         {
-            initializeMessages( SapphireLabel.class.getName(), Resources.class );
+            initializeMessages( LabelPart.class.getName(), Resources.class );
         }
-}
+    }
 
 }

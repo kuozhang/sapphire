@@ -218,6 +218,8 @@ public class SapphireFormText extends Canvas {
     private SelectionData selData;
     
     private final List<Image> imagesToDispose = new ArrayList<Image>();
+    
+    private String text;
 
     private static final String INTERNAL_MENU = "__internal_menu__"; //$NON-NLS-1$
 
@@ -681,6 +683,7 @@ public class SapphireFormText extends Canvas {
      *            converted into hyperlinks.
      */
     public void setText(String text, boolean parseTags, boolean expandURLs) {
+        this.text = text;
         disposeResourceTable(false);
         entered = null;
         if (parseTags)
@@ -690,6 +693,11 @@ public class SapphireFormText extends Canvas {
         hookControlSegmentFocus();
         layout();
         redraw();
+    }
+    
+    public String getText()
+    {
+        return this.text;
     }
 
     /**

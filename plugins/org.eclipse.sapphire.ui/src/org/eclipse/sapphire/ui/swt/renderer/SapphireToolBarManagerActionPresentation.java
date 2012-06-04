@@ -30,10 +30,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireToolBarManagerActionPresentation
-
-    extends SapphireHotSpotsActionPresentation
-    
+public final class SapphireToolBarManagerActionPresentation extends SapphireHotSpotsActionPresentation
 {
     private IToolBarManager toolBarManager;
     private ToolBarContribution toolBarContribution;
@@ -72,6 +69,11 @@ public final class SapphireToolBarManagerActionPresentation
         this.toolBarManager.update( true ); // call update so our embedded toolbar will get created
     }
     
+    public ToolBar getToolBar()
+    {
+        return this.toolBarActionPresentation.getToolBar();
+    }
+    
     private static void setCursor( final IToolBarManager toolBarManager,
                                    final Cursor cursor )
     {
@@ -94,6 +96,11 @@ public final class SapphireToolBarManagerActionPresentation
             super( "sapphire" );
         }
         
+        public ToolBar getToolBar()
+        {
+            return this.toolBar;
+        }
+        
         @Override
         public boolean isDynamic() 
         {
@@ -101,7 +108,7 @@ public final class SapphireToolBarManagerActionPresentation
         }
         
         @Override
-        protected Control createControl(Composite parent)
+        protected Control createControl( final Composite parent )
         {
             this.toolBar = new ToolBar( parent, SWT.FLAT | SWT.RIGHT );
             this.toolBar.setBackground( null );

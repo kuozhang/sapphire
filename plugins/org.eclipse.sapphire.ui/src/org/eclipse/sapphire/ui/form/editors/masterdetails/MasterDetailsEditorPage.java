@@ -47,6 +47,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -298,9 +300,18 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             }
             
             final SapphireActionGroup actions = part.getActions( CONTEXT_EDITOR_PAGE );
-            final SapphireToolBarManagerActionPresentation actionPresentation = new SapphireToolBarManagerActionPresentation( part, getSite().getShell(), actions );
-            actionPresentation.setToolBarManager( form.getToolBarManager() );
-            actionPresentation.render();
+            
+            final SapphireActionPresentationManager actionPresentationManager 
+                = new SapphireActionPresentationManager( new SapphireRenderingContext( part, getSite().getShell() ),  actions );
+            
+            final SapphireToolBarManagerActionPresentation toolbarActionPresentation = new SapphireToolBarManagerActionPresentation( actionPresentationManager );
+            final IToolBarManager toolbarManager = form.getToolBarManager();
+            toolbarActionPresentation.setToolBarManager( toolbarManager );
+            toolbarActionPresentation.render();
+            
+            final SapphireKeyboardActionPresentation keyboardActionPresentation = new SapphireKeyboardActionPresentation( actionPresentationManager );
+            keyboardActionPresentation.attach( toolbarActionPresentation.getToolBar() );
+            keyboardActionPresentation.render();
             
             this.editorPagePartListener = new Listener()
             {
@@ -1480,11 +1491,17 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             
             final SapphireActionGroup actions = part.getActions( CONTEXT_EDITOR_PAGE_OUTLINE_HEADER );
             
-            final SapphireToolBarManagerActionPresentation actionsPresentation 
-                = new SapphireToolBarManagerActionPresentation( part, getSite().getShell(), actions );
+            final SapphireActionPresentationManager actionPresentationManager 
+                = new SapphireActionPresentationManager( new SapphireRenderingContext( part, getSite().getShell() ), actions );
             
-            actionsPresentation.setToolBarManager( getSite().getActionBars().getToolBarManager() );
-            actionsPresentation.render();
+            final SapphireToolBarManagerActionPresentation toolbarActionsPresentation = new SapphireToolBarManagerActionPresentation( actionPresentationManager );
+            
+            toolbarActionsPresentation.setToolBarManager( getSite().getActionBars().getToolBarManager() );
+            toolbarActionsPresentation.render();
+            
+            final SapphireKeyboardActionPresentation keyboardActionsPresentation = new SapphireKeyboardActionPresentation( actionPresentationManager );
+            keyboardActionsPresentation.attach( this.filteredTree.getFilterControl() );
+            keyboardActionsPresentation.render();
         }
         
         @Override
@@ -1820,11 +1837,17 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             
             final SapphireActionGroup actions = part.getActions( CONTEXT_EDITOR_PAGE_OUTLINE_HEADER );
             
-            final SapphireToolBarActionPresentation actionsPresentation 
-                = new SapphireToolBarActionPresentation( part, getSite().getShell(), actions );
+            final SapphireActionPresentationManager actionPresentationManager 
+                = new SapphireActionPresentationManager( new SapphireRenderingContext( part, getSite().getShell() ), actions );
             
-            actionsPresentation.setToolBar( toolbar );
-            actionsPresentation.render();
+            final SapphireToolBarActionPresentation toolbarActionsPresentation = new SapphireToolBarActionPresentation( actionPresentationManager );
+            
+            toolbarActionsPresentation.setToolBar( toolbar );
+            toolbarActionsPresentation.render();
+            
+            final SapphireKeyboardActionPresentation keyboardActionsPresentation = new SapphireKeyboardActionPresentation( actionPresentationManager );
+            keyboardActionsPresentation.attach( filteredTree.getFilterControl() );
+            keyboardActionsPresentation.render();
             
             toolkit.paintBordersFor( this );
             setClient( client );

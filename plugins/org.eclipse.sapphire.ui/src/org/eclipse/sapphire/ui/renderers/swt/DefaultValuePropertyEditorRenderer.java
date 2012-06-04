@@ -169,6 +169,7 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
         );
         
         this.context.adapt( textFieldParent );
+        addControl( textFieldParent );
 
         int textFieldParentColumns = 1;
         if( isActionsToolBarNeeded ) textFieldParentColumns++;
@@ -179,7 +180,9 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
         final Composite nestedComposite = new Composite( textFieldParent, SWT.NONE );
         nestedComposite.setLayoutData( isLongString ? gdfill() : gdvalign( gdhfill(), SWT.CENTER ) );
         nestedComposite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
+        
         this.context.adapt( nestedComposite );
+        addControl( nestedComposite );
         
         final PropertyEditorAssistDecorator decorator = createDecorator( nestedComposite ); 
         

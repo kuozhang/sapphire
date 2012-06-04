@@ -796,7 +796,7 @@ public abstract class SapphirePart implements ISapphirePart
         }
         else if( definition instanceof ISapphireLabelDef )
         {
-            part = new SapphireLabel();
+            part = new LabelPart();
         }
         else if( definition instanceof ISapphireSeparatorDef )
         {

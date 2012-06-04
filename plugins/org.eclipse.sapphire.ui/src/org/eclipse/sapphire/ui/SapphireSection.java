@@ -32,6 +32,7 @@ import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.swt.SWT;
@@ -144,6 +145,10 @@ public class SapphireSection extends SapphireComposite
         toolBarActionsPresentation.setToolBar( toolbar );
         toolBarActionsPresentation.render();
         this.section.setTextClient( toolbar );
+        
+        final SapphireKeyboardActionPresentation keyboardActionsPresentation = new SapphireKeyboardActionPresentation( actionPresentationManager );
+        keyboardActionsPresentation.attach( toolbar );
+        keyboardActionsPresentation.render();
         
         toolkit.paintBordersFor( this.section );
         this.section.setClient( sectionContentComposite );

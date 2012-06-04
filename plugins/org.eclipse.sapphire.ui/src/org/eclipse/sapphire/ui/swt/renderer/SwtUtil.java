@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.sapphire.ui.renderers.swt.ColumnSortComparator;
+import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -33,10 +34,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 
@@ -284,6 +290,107 @@ public final class SwtUtil
     public static void runOnDisplayThread( final Runnable op )
     {
         runOnDisplayThread( op, PlatformUI.getWorkbench().getDisplay() );
+    }
+    
+    public static String describe( final Widget widget )
+    {
+        return describe( widget, 0 );
+    }
+    
+    public static String describe( final Widget widget,
+                                   final int ancestorLevels )
+    {
+        Widget start = widget;
+        
+        if( widget instanceof Control )
+        {
+            for( int i = 0; i < ancestorLevels; i++ )
+            {
+                final Control parent = ( (Control) start ).getParent();
+                
+                if( parent == null )
+                {
+                    break;
+                }
+                else
+                {
+                    start = parent;
+                }
+            }
+        }
+        
+        final StringBuilder buf = new StringBuilder();
+        describe( widget, start, buf, "" );
+        return buf.toString();
+    }
+    
+    private static void describe( final Widget target,
+                                  final Widget widget,
+                                  final StringBuilder buf,
+                                  final String indent )
+    {
+        if( widget instanceof ToolBar )
+        {
+            buf.append( indent ).append( widget == target ? "**" : "" ).append( "ToolBar" ).append( '\n' );
+            buf.append( indent ).append( '{' ).append( '\n' );
+            
+            final String innerIndent = indent + "    ";
+            
+            for( ToolItem item : ( (ToolBar) widget ).getItems() )
+            {
+                describe( target, item, buf, innerIndent );
+            }
+            
+            buf.append( indent ).append( '}' ).append( '\n' );
+        }
+        else if( widget instanceof ToolItem )
+        {
+            buf.append( indent ).append( widget == target ? "**" : "" ).append( "ToolItem( " ).append( ( (ToolItem) widget ).getToolTipText() ).append( " )" ).append( '\n' );
+        }
+        else if( widget instanceof SapphireFormText )
+        {
+            buf.append( indent ).append( widget == target ? "**" : "" ).append( "SapphireFormText( " ).append( ( (SapphireFormText) widget ).getText() ).append( " )" ).append( '\n' );
+        }
+        else if( widget instanceof Composite )
+        {
+            String name = widget.getClass().getSimpleName();
+            
+            if( name.length() == 0 )
+            {
+                name = "Composite( Anonymous Subclass )";
+            }
+            
+            buf.append( indent ).append( widget == target ? "**" : "" ).append( name ).append( '\n' );
+            buf.append( indent ).append( '{' ).append( '\n' );
+            
+            final String innerIndent = indent + "    ";
+            
+            for( Control child : ( (Composite) widget ).getChildren() )
+            {
+                describe( target, child, buf, innerIndent );
+            }
+            
+            buf.append( indent ).append( '}' ).append( '\n' );
+        }
+        else if( widget instanceof Label )
+        {
+            buf.append( indent ).append( widget == target ? "**" : "" ).append( "Label( " ).append( ( (Label) widget ).getText() ).append( " )" ).append( '\n' );
+        }
+        else if( widget instanceof Text )
+        {
+            buf.append( indent ).append( widget == target ? "**" : "" ).append( "Text( " ).append( ( (Text) widget ).getText() ).append( " )" ).append( '\n' );
+        }
+        else
+        {
+            String name = widget.getClass().getSimpleName();
+            
+            if( name.length() == 0 )
+            {
+                name = "Widget( Anonymous Subclass )";
+            }
+            
+            buf.append( indent ).append( widget == target ? "**" : "" ).append( widget ).append( "()" ).append( '\n' );
+        }
     }
 
 }
