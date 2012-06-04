@@ -104,9 +104,9 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		{
 			if (isNodeLayoutChanged(nodePart))
 			{				
-				this.architecture.detach(this.componentListener, "/Components/Bounds/*");
+				this.architecture.detach(this.componentListener, "/Components/Position/*");
 				writeComponentBounds(component, nodePart);
-				this.architecture.attach(this.componentListener, "/Components/Bounds/*");
+				this.architecture.attach(this.componentListener, "/Components/Position/*");
 			}
 			
 			refreshDirtyState();
@@ -147,7 +147,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		}
 		if (this.componentListener != null)
 		{
-			this.architecture.detach(this.componentListener, "/Components/Bounds/*");
+			this.architecture.detach(this.componentListener, "/Components/Position/*");
 		}
 		if (this.componentDependencyListener != null)
 		{
@@ -166,10 +166,9 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 			DiagramNodePart nodePart = context( SapphireDiagramEditorPagePart.class ).getDiagramNodePart(component);
 			if (nodePart != null)
 			{
-				String nodeId = IdUtil.computeNodeId(nodePart);
 				DiagramNodeBounds bounds = null;
-				bounds = new DiagramNodeBounds(component.getBounds().getX().getContent(), 
-						component.getBounds().getY().getContent(), -1, -1,
+				bounds = new DiagramNodeBounds(component.getPosition().getX().getContent(), 
+						component.getPosition().getY().getContent(), -1, -1,
 						false, false);
 				nodePart.setNodeBounds(bounds);					
 				
@@ -199,8 +198,8 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	private void handleNodeLayoutChange(IComponent component)
 	{
 		DiagramNodePart nodePart = context( SapphireDiagramEditorPagePart.class ).getDiagramNodePart(component);
-		DiagramNodeBounds nodeBounds = new DiagramNodeBounds(component.getBounds().getX().getContent(),
-				component.getBounds().getY().getContent());
+		DiagramNodeBounds nodeBounds = new DiagramNodeBounds(component.getPosition().getX().getContent(),
+				component.getPosition().getY().getContent());
 		nodePart.setNodeBounds(nodeBounds);
 	}
 	
@@ -379,7 +378,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 			}
 		};
 		
-		this.architecture.attach(this.componentListener, "/Components/Bounds/*");
+		this.architecture.attach(this.componentListener, "/Components/Position/*");
 		this.architecture.attach(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
 		
 	}
@@ -387,13 +386,13 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	private void writeComponentBounds(IComponent component, DiagramNodePart node)
 	{
 		Bounds bounds = node.getNodeBounds();
-		if (bounds.getX() != component.getBounds().getX().getContent())
+		if (bounds.getX() != component.getPosition().getX().getContent())
 		{
-			component.getBounds().setX(bounds.getX());
+			component.getPosition().setX(bounds.getX());
 		}
-		if (bounds.getY() != component.getBounds().getY().getContent())
+		if (bounds.getY() != component.getPosition().getY().getContent())
 		{
-			component.getBounds().setY(bounds.getY());
+			component.getPosition().setY(bounds.getY());
 		}
 	}
 	
@@ -446,7 +445,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		// are calculated using connection router, we don't modify the corresponding model properties
 		// in order to allow "revert" in source editor to work correctly.
 		// So we need to do an explicit save of the node bounds and connection bend points here.
-		this.architecture.detach(this.componentListener, "/Components/Bounds/*");
+		this.architecture.detach(this.componentListener, "/Components/Position/*");
 		this.architecture.detach(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
 		
 		for (DiagramNodePart nodePart : context( SapphireDiagramEditorPagePart.class ).getNodes())
@@ -467,7 +466,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 			}
 		}
 		
-		this.architecture.attach(this.componentListener, "/Components/Bounds/*");
+		this.architecture.attach(this.componentListener, "/Components/Position/*");
 		this.architecture.attach(this.componentDependencyListener, "/Components/Dependencies/ConnectionBendpoints/*");
 	}
 	

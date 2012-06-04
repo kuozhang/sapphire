@@ -19,14 +19,12 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramGridDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -87,13 +85,13 @@ public interface IComponent extends IModelElement
     Value<String> getCopyright();
     void setCopyright( String value );
     
-    // *** Bounds ***
+    // *** Position ***
     
-    @Type( base = Bounds.class )
-    @XmlBinding( path = "bounds")
+    @Type( base = Position.class )
+    @XmlBinding( path = "position")
     
-    ImpliedElementProperty PROP_BOUNDS = new ImpliedElementProperty( TYPE, "Bounds" );
+    ImpliedElementProperty PROP_POSITION = new ImpliedElementProperty( TYPE, "Position" );
 
-    Bounds getBounds();    
+    Position getPosition();    
     
 }

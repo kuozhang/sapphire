@@ -25,9 +25,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @GenerateImpl
-public interface Bounds extends IModelElement
+public interface Position extends IModelElement
 {
-	ModelElementType TYPE = new ModelElementType( Bounds.class );
+	ModelElementType TYPE = new ModelElementType( Position.class );
 	
     // *** X ***
     
