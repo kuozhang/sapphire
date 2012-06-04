@@ -55,9 +55,18 @@ public abstract class LayeredListBindingImpl extends ListBindingImpl
                                   final int position )
     {
         final Object obj = insertUnderlyingObject( type, position );
-        final Resource resource = resource( obj );
         
-        this.cache.put( obj, resource );
+        // Check the cache first before creating a new resource, because insertUnderlyingObject may have
+        // caused a re-entrant call to read() and so the resource for the inserted underlying object may
+        // have already been created.
+        
+        Resource resource = this.cache.get( obj );
+        
+        if( resource == null )
+        {
+            resource = resource( obj );
+            this.cache.put( obj, resource );
+        }
         
         return resource;
     }
