@@ -219,7 +219,7 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
             {
                 String def = element.read( getProperty() ).getDefaultText();
                 
-                if( isSensitiveData )
+                if( def != null && isSensitiveData )
                 {
                     final StringBuilder buf = new StringBuilder();
                     
