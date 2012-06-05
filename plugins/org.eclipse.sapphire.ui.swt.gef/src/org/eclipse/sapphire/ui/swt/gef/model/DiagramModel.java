@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [381794] Cleanup needed in presentation code for diagram context menu
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.model;
@@ -31,6 +32,7 @@ import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public class DiagramModel extends DiagramModelBase {
@@ -142,7 +144,7 @@ public class DiagramModel extends DiagramModelBase {
 
 	private void contructNodes() {
 		for (DiagramNodeTemplate nodeTemplate : getModelPart().getNodeTemplates()) {
-			if (getModelPart().isNodeTemplateVisible(nodeTemplate)) {
+			if (nodeTemplate.visible()) {
 				for (DiagramNodePart nodePart : nodeTemplate.getDiagramNodes()) {
 					nodes.add(new DiagramNodeModel(this, nodePart));
 				}

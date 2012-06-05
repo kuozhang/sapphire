@@ -7,7 +7,8 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
- *    Shenxue Zhou - [374433] - DiagramNodeAddActionHandlerFactory issues 
+ *    Shenxue Zhou - [374433] DiagramNodeAddActionHandlerFactory issues
+ *    Konstantin Komissarchik - [381794] Cleanup needed in presentation code for diagram context menu
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.actions;
@@ -24,9 +25,11 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class DiagramNodeAddActionHandler extends SapphireActionHandler 
+public final class DiagramNodeAddActionHandler extends SapphireActionHandler 
 {
 	public static final String ID_BASE = "Sapphire.Add.";
 	private DiagramNodeTemplate nodeTemplate;
@@ -51,14 +54,6 @@ public class DiagramNodeAddActionHandler extends SapphireActionHandler
 		{
 			addImage(typeSpecificAddImage);
 		}
-    }
-    
-    @Override
-    public boolean isEnabled()
-    {
-    	SapphireDiagramEditorPagePart diagramPart = 
-    			(SapphireDiagramEditorPagePart)this.nodeTemplate.getParentPart();
-    	return diagramPart.isNodeTemplateVisible(this.nodeTemplate);
     }
     
 	@Override

@@ -24,11 +24,11 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.sapphire.modeling.IdentityCache;
 import org.eclipse.sapphire.modeling.xml.schema.XmlContentModel;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchemasCache;
 import org.eclipse.sapphire.modeling.xml.schema.XmlElementDefinition;
+import org.eclipse.sapphire.util.IdentityCache;
 import org.eclipse.sapphire.util.ReadOnlyListFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Comment;

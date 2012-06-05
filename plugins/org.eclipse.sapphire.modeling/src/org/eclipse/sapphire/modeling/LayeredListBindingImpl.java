@@ -13,6 +13,7 @@ package org.eclipse.sapphire.modeling;
 
 import java.util.List;
 
+import org.eclipse.sapphire.util.IdentityCache;
 import org.eclipse.sapphire.util.ReadOnlyListFactory;
 
 /**

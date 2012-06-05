@@ -13,6 +13,7 @@
  *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
  *    Gregory Amerson - [346172] Support zoom, print and save as image actions in the diagram editor
  *    Konstantin Komissarchik - [346172] Support zoom, print and save as image actions in the diagram editor
+ *    Konstantin Komissarchik - [381794] Cleanup needed in presentation code for diagram context menu
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -20,13 +21,12 @@ package org.eclipse.sapphire.ui.diagram.editor;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
@@ -74,7 +74,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     private List<IDiagramNodeDef> nodeDefs;
     private List<IDiagramConnectionDef> connectionDefs;
     private List<DiagramNodeTemplate> nodeTemplates;
-    private Map<DiagramNodeTemplate, FunctionResult> nodeTemplateFunctionResults;
     private List<DiagramConnectionTemplate> connectionTemplates;
     private List<DiagramImplicitConnectionTemplate> implicitConnectionTemplates;
     private NodeTemplateListener nodeTemplateListener;
@@ -127,7 +126,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         this.implicitConnTemplateListener = new ImplicitConnectionTemplateListener();
         
         this.nodeTemplates = new ArrayList<DiagramNodeTemplate>();
-        this.nodeTemplateFunctionResults = new HashMap<DiagramNodeTemplate, FunctionResult>();
         this.nodeDefs = this.diagramPageDef.getDiagramNodeDefs();
         this.connectionDefs = this.diagramPageDef.getDiagramConnectionDefs();
         
@@ -136,28 +134,19 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
             final DiagramNodeTemplate nodeTemplate = new DiagramNodeTemplate();
             nodeTemplate.init(this, this.modelElement, nodeDef, Collections.<String,String>emptyMap());
             this.nodeTemplates.add(nodeTemplate);
-            nodeTemplate.addTemplateListener(this.nodeTemplateListener);	            
-        	
-        	FunctionResult visibleWhen = null;
-        	if (nodeDef.getVisibleWhen().getContent() != null)
-        	{
-	        	// Support "visible-when" expression
-	            visibleWhen = initExpression
-	            ( 
-	                this.modelElement,
-	                nodeDef.getVisibleWhen().getContent(),
-	                String.class,
-	                null,
-	                new Runnable()
-	                {
-	                    public void run()
-	                    {      
-	                    	refreshDiagramPalette(nodeTemplate);
-	                    }
-	                }
-	            );
-	            this.nodeTemplateFunctionResults.put(nodeTemplate, visibleWhen);
-        	}        	
+            nodeTemplate.addTemplateListener(this.nodeTemplateListener);
+            
+            nodeTemplate.attach
+            (
+                 new FilteredListener<VisibilityChangedEvent>()
+                 {
+                    @Override
+                    protected void handleTypedEvent( final VisibilityChangedEvent event )
+                    {
+                        refreshDiagramPalette( (DiagramNodeTemplate) event.part() );
+                    }
+                 }
+            );
         }
         
         // Need to initialize the embedded connections after all the diagram node parts are created
@@ -386,27 +375,12 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	List<DiagramNodeTemplate> visibleNodeTemplates = new ArrayList<DiagramNodeTemplate>();
     	for (DiagramNodeTemplate nodeTemplate : getNodeTemplates())
     	{
-    		if (isNodeTemplateVisible(nodeTemplate))
+    		if (nodeTemplate.visible())
     		{
     			visibleNodeTemplates.add(nodeTemplate);
     		}
     	}
     	return visibleNodeTemplates;
-    }
-    
-    public boolean isNodeTemplateVisible(DiagramNodeTemplate nodeTemplate)
-    {
-    	boolean visible = true;
-    	FunctionResult fr = this.nodeTemplateFunctionResults.get(nodeTemplate);
-    	if (fr != null)
-    	{
-    		String valStr = (String)fr.value();
-    		if (valStr != null && valStr.equals("false"))
-    		{
-    			visible = false;
-    		}
-    	}
-    	return visible;
     }
     
     public List<ConnectionPalette> getConnectionPalettes() {
@@ -528,7 +502,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     
     private void refreshDiagramPalette(DiagramNodeTemplate nodeTemplate)
     {
-    	if (isNodeTemplateVisible(nodeTemplate))
+    	if( nodeTemplate.visible() )
     	{
     		// Restore all the connection PEs if they are associated with the 
     		// nodes for the node template
@@ -712,11 +686,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     {
     	for (DiagramNodeTemplate nodeTemplate : this.nodeTemplates)
         {
-        	FunctionResult fr = this.nodeTemplateFunctionResults.get(nodeTemplate);
-        	if (fr != null)
-        	{
-        		fr.dispose();
-        	}        	
             nodeTemplate.dispose();
         }
         this.nodeTemplates.clear();

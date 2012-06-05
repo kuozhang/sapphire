@@ -13,6 +13,7 @@
  *    Konstantin Komissarchik - [376245] Revert action in StructuredTextEditor does not revert diagram nodes and connections in SapphireDiagramEditor
  *    Gregory Amerson - [346172] Support zoom, print and save as image actions in the diagram editor
  *    Konstantin Komissarchik - [346172] Support zoom, print and save as image actions in the diagram editor
+ *    Konstantin Komissarchik - [381794] Cleanup needed in presentation code for diagram context menu
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef;
@@ -66,7 +67,6 @@ import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.ISapphireEditorActionContributor;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
-import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SapphireHelpContext;
@@ -86,10 +86,13 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart.Zoom
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.ActionBridge;
+import org.eclipse.sapphire.ui.swt.ActionSystemPartBridge;
 import org.eclipse.sapphire.ui.swt.EditorPagePresentation;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.ContextButtonManager;
 import org.eclipse.sapphire.ui.swt.gef.dnd.ObjectsTransferDropTargetListener;
 import org.eclipse.sapphire.ui.swt.gef.dnd.SapphireTemplateTransferDropTargetListener;
+import org.eclipse.sapphire.ui.swt.gef.internal.DiagramEditorContextMenuProvider;
 import org.eclipse.sapphire.ui.swt.gef.layout.HorizontalGraphLayout;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
@@ -162,7 +165,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	private FormColors formColors;
 	private Listener diagramEditorPagePartListener;
 
-	private Map<String, SapphireActionHandlerDelegate> globalActions;
+	private Map<String,ActionBridge> globalActions;
 
 	private SapphireDiagramOutline diagramOutline;
 	
@@ -590,7 +593,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 					getPart().setSelections(partList);
 					this.selectedParts = partList;
 					this.selectedEditParts = editPartList;
-					updateActions();
 					updateKeyHandler();
 					
 					// [Bug 380728] Floating toolbar appears on a node when multiple nodes are selected
@@ -605,26 +607,18 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	
 	private void initActions()
 	{
-		this.globalActions = new HashMap<String, SapphireActionHandlerDelegate>();
-		SapphireActionHandler selectAllActionHandler = 
-				this.diagramPart.getAction("Sapphire.Diagram.SelectAll").getFirstActiveHandler();
-		this.globalActions.put(ActionFactory.SELECT_ALL.getId(), 
-				new SapphireActionHandlerDelegate(this, selectAllActionHandler));
-		SapphireActionHandler deleteActionHandler = 
-				this.diagramPart.getAction("Sapphire.Delete").getFirstActiveHandler();
-		this.globalActions.put(ActionFactory.DELETE.getId(), 
-				new SapphireActionHandlerDelegate(this, deleteActionHandler));		
-		SapphireActionHandler printActionHandler = 
-				this.diagramPart.getAction("Sapphire.Diagram.Print").getFirstActiveHandler();
-		this.globalActions.put(ActionFactory.PRINT.getId(), 
-				new SapphireActionHandlerDelegate(this, printActionHandler));
+	    final DiagramRenderingContext diagramRenderingContext = getConfigurationManager().getDiagramRenderingContextCache().get( this.diagramPart );
+	    
+	    this.globalActions = new HashMap<String,ActionBridge>();
 		
-	}
-	
-	private void updateActions()
-	{
-		SapphireActionHandlerDelegate deleteAction = this.globalActions.get(ActionFactory.DELETE.getId());
-		deleteAction.setEnabled(deleteAction.getSapphireActionHandler().isEnabled());
+		final ActionBridge selectAllBridge = new ActionBridge( diagramRenderingContext, this.diagramPart.getAction( "Sapphire.Diagram.SelectAll" ) );
+		this.globalActions.put( ActionFactory.SELECT_ALL.getId(), selectAllBridge );
+		
+        final ActionBridge deleteBridge = new ActionBridge( diagramRenderingContext, this.diagramPart.getAction( "Sapphire.Delete" ) );
+        this.globalActions.put( ActionFactory.DELETE.getId(), deleteBridge );
+
+        final ActionBridge printBridge = new ActionBridge( diagramRenderingContext, this.diagramPart.getAction( "Sapphire.Diagram.Print" ) );
+        this.globalActions.put( ActionFactory.PRINT.getId(), printBridge );
 	}
 	
 	private void updateKeyHandler()
@@ -803,7 +797,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		});
 		
 		// configure the context menu provider
-		ContextMenuProvider cmProvider = new SapphireDiagramEditorContextMenuProvider(this);
+		ContextMenuProvider cmProvider = new DiagramEditorContextMenuProvider(this);
 		viewer.setContextMenu(cmProvider);
 		
 		// Configure grid and guide properties
@@ -1077,7 +1071,12 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
         if( image != null )
         {
             image.dispose();
-        }		
+        }
+        
+        for( ActionSystemPartBridge bridge : this.globalActions.values() )
+        {
+            bridge.dispose();
+        }
 	}
 	
 	/**

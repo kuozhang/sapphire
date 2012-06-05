@@ -11,6 +11,7 @@
  *    Konstantin Komissarchik - [348813] Generalize Sapphire.Diagram.Drop action
  *    Ling Hao - [44319] Image specification for diagram parts inconsistent with the rest of sdef 
  *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
+ *    Konstantin Komissarchik - [381794] Cleanup needed in presentation code for diagram context menu
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -35,6 +36,7 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -47,7 +49,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class DiagramNodeTemplate extends SapphirePart
+public final class DiagramNodeTemplate extends SapphirePart
 {
     public static abstract class DiagramNodeTemplateListener
     {
@@ -79,6 +81,7 @@ public class DiagramNodeTemplate extends SapphirePart
 	private SapphireDiagramPartListener nodePartListener;
 	private Set<DiagramNodeTemplateListener> listeners;	
 	private List<DiagramNodePart> diagramNodes;
+	private FunctionResult visibleWhenFunctionResult;
 	    
 	@Override
     public void init()
@@ -101,6 +104,21 @@ public class DiagramNodeTemplate extends SapphirePart
         this.propertyName = this.definition.getProperty().getContent();
         this.modelProperty = (ListProperty)resolve(this.modelElement, this.propertyName);
         this.modelElementType = this.definition.getElementType().resolve();
+        
+        this.visibleWhenFunctionResult = initExpression
+        ( 
+            this.modelElement,
+            this.definition.getVisibleWhen().getContent(),
+            Boolean.class,
+            Literal.create( Boolean.TRUE ),
+            new Runnable()
+            {
+                public void run()
+                {
+                    broadcast( new VisibilityChangedEvent( DiagramNodeTemplate.this ) );
+                }
+            }
+        );
         
         this.nodePartListener = new SapphireDiagramPartListener() 
         {
@@ -180,6 +198,11 @@ public class DiagramNodeTemplate extends SapphirePart
     public IDiagramNodeDef definition()
     {
         return this.definition;
+    }
+    
+    public boolean visible()
+    {
+        return (Boolean) this.visibleWhenFunctionResult.value();
     }
     
     public List<DiagramNodePart> getDiagramNodes()
@@ -335,7 +358,7 @@ public class DiagramNodeTemplate extends SapphirePart
 		for (IModelElement newNode : newNodes)
 		{
 	    	DiagramNodePart nodePart = createNewNodePart(newNode);
-	    	if (this.diagramEditor.isNodeTemplateVisible(this))
+	    	if (visible())
 	    	{
 	    		notifyNodeAdd(nodePart);
 	    	}
@@ -418,6 +441,11 @@ public class DiagramNodeTemplate extends SapphirePart
         if( this.toolPaletteImageFunctionResult != null )
         {
             this.toolPaletteImageFunctionResult.dispose();
+        }
+        
+        if( this.visibleWhenFunctionResult != null )
+        {
+            this.visibleWhenFunctionResult.dispose();
         }
     }
     
