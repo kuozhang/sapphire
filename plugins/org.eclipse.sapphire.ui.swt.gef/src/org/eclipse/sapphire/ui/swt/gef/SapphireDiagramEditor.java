@@ -48,6 +48,8 @@ import org.eclipse.gef.editparts.GridLayer;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.palette.PaletteRoot;
+import org.eclipse.gef.ui.palette.FlyoutPaletteComposite;
+import org.eclipse.gef.ui.palette.FlyoutPaletteComposite.FlyoutPreferences;
 import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
@@ -99,6 +101,7 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModelBase;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
+import org.eclipse.sapphire.ui.swt.gef.palette.DefaultFlyoutPalettePreferences;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramConnectionEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.SapphireDiagramEditorEditPartFactory;
@@ -675,7 +678,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	@Override
 	protected void initializeGraphicalViewer() {
 		super.initializeGraphicalViewer();
-		
+
 		GraphicalViewer viewer = getGraphicalViewer();
 		
 		viewer.getControl().addMouseMoveListener(new MouseMoveListener() {
@@ -703,7 +706,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		{
 			new HorizontalGraphLayout().layout(this, true);
 			markEditorClean();
-		}		
+		}
+		
 	}
 	
 	private void initRenderingContext()
@@ -867,6 +871,13 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			}
 		};
 	}
+	
+	@Override
+	protected FlyoutPreferences getPalettePreferences() 
+	{
+		return new DefaultFlyoutPalettePreferences(getPart().getState());
+	}
+	
 	
 	public IAction getAction(String actionId)
 	{

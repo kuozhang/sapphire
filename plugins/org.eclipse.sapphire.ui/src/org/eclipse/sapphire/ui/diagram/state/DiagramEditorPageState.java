@@ -13,6 +13,7 @@
 package org.eclipse.sapphire.ui.diagram.state;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -44,4 +45,13 @@ public interface DiagramEditorPageState extends IModelElement
     Value<Integer> getZoomLevel();
     void setZoomLevel( String value );
     void setZoomLevel( Integer value );
+
+    // *** PalettePreferences ***
+    
+    @Type( base = PalettePreferences.class )
+    @XmlBinding( path = "palette-preferences")
+    
+    ImpliedElementProperty PROP_PALETTE_PREFERENCES = new ImpliedElementProperty( TYPE, "PalettePreferences" );
+
+    PalettePreferences getPalettePreferences();    
 }
