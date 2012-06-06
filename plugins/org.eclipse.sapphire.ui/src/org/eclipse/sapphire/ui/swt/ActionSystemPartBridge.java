@@ -16,7 +16,10 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
+import org.eclipse.sapphire.ui.SapphireAction;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart;
+import org.eclipse.sapphire.ui.def.SapphireActionType;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 
 /**
@@ -59,9 +62,14 @@ public abstract class ActionSystemPartBridge extends Action
 		this.sapphireActionSystemPart.attach( this.listener );
 		
 		refreshEnablement();
-		refreshCheckedState();
 		refreshText();
 		refreshImage();
+		
+		if( ( this.sapphireActionSystemPart instanceof SapphireAction && ( (SapphireAction) this.sapphireActionSystemPart ).getType() == SapphireActionType.TOGGLE ) || 
+		    ( this.sapphireActionSystemPart instanceof SapphireActionHandler && ( (SapphireActionHandler) this.sapphireActionSystemPart ).getAction().getType() == SapphireActionType.TOGGLE ) )
+		{
+		    refreshCheckedState();
+		}
 	}
 	
 	private void refreshEnablement()
