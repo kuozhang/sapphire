@@ -29,7 +29,7 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class DiagramNodeAddActionHandler extends SapphireActionHandler 
+public class DiagramNodeAddActionHandler extends SapphireActionHandler 
 {
 	public static final String ID_BASE = "Sapphire.Add.";
 	private DiagramNodeTemplate nodeTemplate;
