@@ -28,6 +28,7 @@ public final class ActionHandlerBridge extends ActionSystemPartBridge
 	{
 	    super( sapphireActionHandler );
 	    
+	    this.sapphireRenderingContext = sapphireRenderingContext;
 	    this.sapphireActionHandler = sapphireActionHandler;
 	}
 	

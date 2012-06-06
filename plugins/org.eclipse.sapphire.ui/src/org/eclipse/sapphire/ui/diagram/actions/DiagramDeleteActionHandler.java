@@ -8,6 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [348811] Eliminate separate Sapphire.Diagram.Part.Delete action
+ *    Konstantin Komissarchik - [381794] Cleanup needed in presentation code for diagram context menu
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.actions;
@@ -15,11 +16,13 @@ package org.eclipse.sapphire.ui.diagram.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphireEditorPagePart.SelectionChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
@@ -32,50 +35,64 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public class DiagramDeleteActionHandler extends SapphireActionHandler
 {
-    
     @Override
     public void init( final SapphireAction action,
                       final ActionHandlerDef def )
     {
         super.init( action, def );
+        
+        final ISapphirePart part = getPart();
+        
+        if( part instanceof SapphireDiagramEditorPagePart )
+        {
+            ( (SapphireDiagramEditorPagePart) part ).attach
+            (
+                new FilteredListener<SelectionChangedEvent>()
+                {
+                    @Override
+                    protected void handleTypedEvent( final SelectionChangedEvent event )
+                    {
+                        refreshEnablement();
+                    }
+                }
+            );
+        }
          
-        setEnabled(calculateEnabled());
+        refreshEnablement();
     }
     
-    private boolean calculateEnabled()
+    private void refreshEnablement()
     {
+        final ISapphirePart part = getPart();
     	boolean enabled = false;
-    	if (getPart() instanceof DiagramNodePart ||
-    			(getPart() instanceof DiagramConnectionPart && !(getPart() instanceof DiagramImplicitConnectionPart)))
+    	
+    	if( part instanceof DiagramNodePart ||
+    			(part instanceof DiagramConnectionPart && !(part instanceof DiagramImplicitConnectionPart)))
     	{
     		enabled = true;
     	}
     	else
     	{
-	    	SapphireDiagramEditorPagePart diagramPart = getPart().nearest(SapphireDiagramEditorPagePart.class);
+	    	SapphireDiagramEditorPagePart diagramPart = part.nearest(SapphireDiagramEditorPagePart.class);
 	    	List<ISapphirePart> selectedParts = diagramPart.getSelections();
-	    	for (ISapphirePart part : selectedParts)
+	    	for (ISapphirePart selectedPart : selectedParts)
 	    	{
-	    		if (part instanceof DiagramNodePart ||
-	    				(part instanceof DiagramConnectionPart && !(part instanceof DiagramImplicitConnectionPart)))
+	    		if (selectedPart instanceof DiagramNodePart ||
+	    				(selectedPart instanceof DiagramConnectionPart && !(part instanceof DiagramImplicitConnectionPart)))
 	    		{
 	    			enabled = true;
 	    		}
 	    	}
     	}
-    	return enabled;
+    	
+    	setEnabled( enabled );
     }
     
-    @Override
-    public boolean isEnabled()
-    {
-    	return calculateEnabled();
-    }
-
     @Override
     protected Object run(SapphireRenderingContext context) 
     {

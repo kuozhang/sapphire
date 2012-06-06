@@ -198,8 +198,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 
 		setEditDomain(new DefaultEditDomain(this));
 		
-		initActions();
-		
 		this.diagramPartListener = new SapphireDiagramPartListener() 
         {
             @Override
@@ -699,6 +697,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	private void postInit()
 	{						
 		initRenderingContext();
+		initActions();
 		configureDiagramHeading();
 
 		// If the layout file doesn't exist or no layout is written to the layout file, apply auto layout

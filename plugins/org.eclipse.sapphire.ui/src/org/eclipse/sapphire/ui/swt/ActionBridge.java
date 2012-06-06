@@ -24,11 +24,12 @@ public final class ActionBridge extends ActionSystemPartBridge
 	private SapphireAction sapphireAction;
 	
 	public ActionBridge( final SapphireRenderingContext sapphireRenderingContext, 
-			             final SapphireAction sapphireActionHandler)
+			             final SapphireAction sapphireAction)
 	{
-	    super( sapphireActionHandler );
+	    super( sapphireAction );
 	    
-	    this.sapphireAction = sapphireActionHandler;
+	    this.sapphireRenderingContext = sapphireRenderingContext;
+	    this.sapphireAction = sapphireAction;
 	}
 	
 	@Override
