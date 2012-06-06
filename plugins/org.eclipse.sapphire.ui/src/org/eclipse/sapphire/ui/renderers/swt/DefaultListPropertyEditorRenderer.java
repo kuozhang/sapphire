@@ -956,6 +956,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             toolbar.setLayoutData( gdvfill() );
             toolBarActionsPresentation.setToolBar( toolbar );
             toolBarActionsPresentation.render();
+            addControl( toolbar );
             this.context.adapt( toolbar );
             this.decorator.addEditorControl( toolbar );
             

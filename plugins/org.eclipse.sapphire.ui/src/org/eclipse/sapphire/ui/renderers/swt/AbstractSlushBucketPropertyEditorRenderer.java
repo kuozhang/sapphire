@@ -21,12 +21,12 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
 import java.util.List;
 
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFilter;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
-import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
@@ -84,6 +84,7 @@ public abstract class AbstractSlushBucketPropertyEditorRenderer extends DefaultL
         
         final ToolBar toolbar = new ToolBar( toolbarComposite, SWT.FLAT | SWT.VERTICAL );
         toolbar.setLayoutData( gd() );
+        addControl( toolbar );
         this.context.adapt( toolbar );
         
         final Composite tableComposite = new Composite( mainComposite, SWT.NONE );

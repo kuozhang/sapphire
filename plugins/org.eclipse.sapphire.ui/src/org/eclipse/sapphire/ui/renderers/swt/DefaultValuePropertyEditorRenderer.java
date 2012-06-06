@@ -294,6 +294,7 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
             toolbar.setLayoutData( gdvfill() );
             toolBarActionsPresentation.setToolBar( toolbar );
             toolBarActionsPresentation.render();
+            addControl( toolbar );
             this.context.adapt( toolbar );
             decorator.addEditorControl( toolbar );
             relatedControls.add( toolbar );
