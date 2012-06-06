@@ -896,6 +896,17 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                             }
                             
                             final List<IModelElement> droppedElements = (List<IModelElement>) event.data;
+                            final Set<ModelElementType> possibleTypesService = property.service( PossibleTypesService.class ).types();
+                            
+                            for( IModelElement droppedElement : droppedElements )
+                            {
+                                if( ! possibleTypesService.contains( droppedElement.type() ) )
+                                {
+                                    event.detail = DND.DROP_NONE;
+                                    return;
+                                }
+                            }
+                            
                             final ModelElementList<IModelElement> list = getList();
                             
                             int position;
