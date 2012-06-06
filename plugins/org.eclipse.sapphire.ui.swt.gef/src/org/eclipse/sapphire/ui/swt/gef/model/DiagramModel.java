@@ -163,10 +163,13 @@ public class DiagramModel extends DiagramModelBase {
 		// Add embedded connections. This needs to be done after all the nodes
 		// have been added.
 		for (DiagramNodeTemplate nodeTemplate : this.part.getNodeTemplates()) {
-			DiagramEmbeddedConnectionTemplate embeddedConnTemplate = nodeTemplate.getEmbeddedConnectionTemplate();
-			if (embeddedConnTemplate != null) {
-				for (DiagramConnectionPart connPart : embeddedConnTemplate.getDiagramConnections(null)) {
-					addConnection(connPart);
+			// Bug 381795 - Connections do not show correctly when editor is started with connections hidden
+			if (nodeTemplate.visible()) {
+				DiagramEmbeddedConnectionTemplate embeddedConnTemplate = nodeTemplate.getEmbeddedConnectionTemplate();
+				if (embeddedConnTemplate != null) {
+					for (DiagramConnectionPart connPart : embeddedConnTemplate.getDiagramConnections(null)) {
+						addConnection(connPart);
+					}
 				}
 			}
 		}
