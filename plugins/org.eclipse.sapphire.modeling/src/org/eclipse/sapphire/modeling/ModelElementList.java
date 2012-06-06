@@ -212,11 +212,11 @@ public final class ModelElementList<T extends IModelElement>
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         
-        factory.add( parent().service( this.property, ValidationAggregationService.class ).validation() );
+        factory.merge( parent().service( this.property, ValidationAggregationService.class ).validation() );
         
         for( T item : this )
         {
-            factory.add( item.validation() );
+            factory.merge( item.validation() );
         }
         
         final Status st = factory.create();

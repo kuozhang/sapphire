@@ -18,10 +18,7 @@ import org.eclipse.sapphire.services.ValidationService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class Transient<T>
-
-    extends ModelParticle
-    
+public class Transient<T> extends ModelParticle
 {
     private final TransientProperty property;
     private final T content;

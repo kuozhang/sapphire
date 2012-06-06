@@ -187,7 +187,7 @@ public final class TabGroupPart extends SapphirePart
 
         for( TabGroupPagePart page : this.pages )
         {
-            factory.add( page.getValidationState() );
+            factory.merge( page.getValidationState() );
         }
         
         return factory.create();

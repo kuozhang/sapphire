@@ -286,44 +286,36 @@ public final class Status
             // No direct public instantiation. Use factoryForComposite() method instead.
         }
         
-        public CompositeStatusFactory add( final Status status ) 
+        public CompositeStatusFactory merge( final Status status ) 
         {
             if( status != null )
             {
-                final Severity sev = status.severity();
+                final List<Status> children = status.children();
                 
-                if( sev != Severity.OK )
+                if( children.isEmpty() )
                 {
-                    if( ! this.children.contains( status ) )
+                    final Severity sev = status.severity();
+                    
+                    if( sev != Severity.OK )
                     {
-                        if( sev.code() > this.severity.code() )
+                        if( ! this.children.contains( status ) )
                         {
-                            this.severity = sev;
-                            this.message = status.message();
-                            this.exception = status.exception();
+                            if( sev.code() > this.severity.code() )
+                            {
+                                this.severity = sev;
+                                this.message = status.message();
+                                this.exception = status.exception();
+                            }
+                            
+                            this.children.add( status );
                         }
-                        
-                        this.children.add( status );
                     }
-                }
-            }
-            
-            return this;
-        }
-        
-        public CompositeStatusFactory merge( final Status status )
-        {
-            if( status != null )
-            {
-                if( status.children().isEmpty() )
-                {
-                    add( status );
                 }
                 else
                 {
-                    for( Status st : status.children() )
+                    for( Status st : children )
                     {
-                        add( st );
+                        merge( st );
                     }
                 }
             }

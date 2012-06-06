@@ -82,7 +82,7 @@ public final class FormEditorPagePart extends SapphireEditorPagePart
 
         for( SapphirePart child : getChildParts() )
         {
-            factory.add( child.getValidationState() );
+            factory.merge( child.getValidationState() );
         }
         
         return factory.create();

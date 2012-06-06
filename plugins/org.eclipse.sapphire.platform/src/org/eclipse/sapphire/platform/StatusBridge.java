@@ -107,7 +107,7 @@ public final class StatusBridge
             
             for( IStatus st : status.getChildren() )
             {
-                factory.add( create( st ) );
+                factory.merge( create( st ) );
             }
             
             return factory.create();

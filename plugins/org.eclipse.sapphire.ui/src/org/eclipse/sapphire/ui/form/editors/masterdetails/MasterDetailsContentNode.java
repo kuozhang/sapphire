@@ -712,17 +712,17 @@ public final class MasterDetailsContentNode
         
         if( basis() )
         {
-            factory.add( getModelElement().validation() );
+            factory.merge( getModelElement().validation() );
         }
         
         for( SapphirePart child : this.sections )
         {
-            factory.add( child.getValidationState() );
+            factory.merge( child.getValidationState() );
         }
 
         for( SapphirePart child : getChildNodes() )
         {
-            factory.add( child.getValidationState() );
+            factory.merge( child.getValidationState() );
         }
         
         return factory.create();

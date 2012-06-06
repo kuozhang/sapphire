@@ -87,7 +87,7 @@ public final class StandardElementValidationService extends ValidationService
                     throw new IllegalStateException();
                 }
                 
-                factory.add( x );
+                factory.merge( x );
             }
         }
         

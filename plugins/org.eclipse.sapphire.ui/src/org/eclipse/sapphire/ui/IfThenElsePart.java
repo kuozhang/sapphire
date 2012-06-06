@@ -152,7 +152,7 @@ public final class IfThenElsePart extends SapphirePart
 
         for( SapphirePart child : this.currentBranchContent )
         {
-            factory.add( child.getValidationState() );
+            factory.merge( child.getValidationState() );
         }
         
         return factory.create();

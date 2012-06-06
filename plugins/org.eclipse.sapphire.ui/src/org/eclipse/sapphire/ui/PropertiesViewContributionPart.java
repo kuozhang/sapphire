@@ -95,7 +95,7 @@ public final class PropertiesViewContributionPart extends SapphirePart
 
         for( PropertiesViewContributionPagePart pagePart : this.pages )
         {
-            factory.add( pagePart.getValidationState() );
+            factory.merge( pagePart.getValidationState() );
         }
         
         return factory.create();

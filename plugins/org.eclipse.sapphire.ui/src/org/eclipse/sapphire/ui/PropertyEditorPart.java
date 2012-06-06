@@ -543,21 +543,21 @@ public final class PropertyEditorPart extends FormPart
             
             if( particle instanceof Value<?> )
             {
-                factory.add( ( (Value<?>) particle ).validation() );
+                factory.merge( ( (Value<?>) particle ).validation() );
             }
             else if( particle instanceof ModelElementList<?> )
             {
-                factory.add( ( (ModelElementList<?>) particle ).validation() );
+                factory.merge( ( (ModelElementList<?>) particle ).validation() );
             }
             else if( particle instanceof ModelElementHandle<?> )
             {
-                factory.add( ( (ModelElementHandle<?>) particle ).validation() );
+                factory.merge( ( (ModelElementHandle<?>) particle ).validation() );
             }
         }
         
         for( SapphirePart relatedContentPart : this.relatedContentParts )
         {
-            factory.add( relatedContentPart.getValidationState() );
+            factory.merge( relatedContentPart.getValidationState() );
         }
         
         return factory.create();
