@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Text;
 final public class NodeCellEditorLocator implements CellEditorLocator {
 
 	private Label label;
-
+  
 	public NodeCellEditorLocator(Label stickyNote) {
 		setLabel(stickyNote);
 	}
@@ -33,14 +33,17 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 		Text text = (Text) celleditor.getControl();
 		Rectangle labelRect = label.getClientArea();
 		label.translateToAbsolute(labelRect);
-		Point pref = text.computeSize(-1, -1);
-		Rectangle rect = label.getTextBounds().getCopy();
-		pref.x = Math.min(pref.x + 1, labelRect.width - 3);
+		Point size = text.computeSize(-1, -1);
+		size.x = Math.min(size.x, labelRect.width - 2);
 		if (text.getText().length() == 0) {
-			pref.x = 10;
+			size.x = 10;
 		}
-		label.translateToAbsolute(rect);
-		text.setBounds(rect.x, rect.y, pref.x, pref.y + 1);
+		// center the cell editor
+		int offset = 0;
+		if (size.x < labelRect.width) {
+			offset = (labelRect.width - size.x + 1) / 2;
+		}
+		text.setBounds(labelRect.x + offset, labelRect.y + 1, size.x, size.y + 1);
 	}
 
 	protected Label getLabel() {
