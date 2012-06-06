@@ -26,6 +26,7 @@ import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.palette.PanningSelectionToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.CreationFactory;
+import org.eclipse.gef.tools.CreationTool;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ImageData;
@@ -170,7 +171,7 @@ public class SapphirePaletteRoot extends PaletteRoot
 								tpDesc, CapitalizationType.TITLE_STYLE, false);
 			}
     		ToolEntry tool = new CombinedTemplateCreationEntry(tpLabel, tpDesc, factory, imageDescriptor, imageDescriptor);
-    		tool.setToolClass(SapphireCreationTool.class);
+    		tool.setToolClass(CreationTool.class);
 
     		// find the right drawer
     		DiagramPaletteDrawer drawer = getDiagramPaletteDrawer(drawers, nodeDef.getToolPaletteCompartment().getContent());
