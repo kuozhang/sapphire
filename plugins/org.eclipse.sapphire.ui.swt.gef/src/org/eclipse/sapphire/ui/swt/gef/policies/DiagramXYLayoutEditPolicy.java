@@ -93,8 +93,10 @@ public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy
 		}
 		IConfigurationManagerHolder host = (IConfigurationManagerHolder)getHost();
 		if (request.getNewObjectType() == DiagramNodeTemplate.class) {
-			DiagramNodeTemplate nodeTemplate = (DiagramNodeTemplate)request.getNewObject();				
-			cmd = new CreateNodeCommand(this.model, host, nodeTemplate, pt);
+			DiagramNodeTemplate nodeTemplate = (DiagramNodeTemplate)request.getNewObject();
+			if (nodeTemplate.getDiagramEditorPart() == this.model.getModelPart()) {
+				cmd = new CreateNodeCommand(this.model, host, nodeTemplate, pt);	
+			}			
 		}
 		else if (request.getNewObjectType() == ISelection.class) {
 			// DND from project explorer
