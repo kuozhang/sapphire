@@ -400,7 +400,7 @@ public final class ActuatorPart extends SapphirePart
             final Composite composite = new Composite( parent, SWT.NONE );
             composite.setLayoutData( gdhalign( gdhindent( gdhspan( gd(), hSpan ), 8 ), hAlignCode ) );
             composite.setLayout( glayout( ( image == null ? 1 : 2 ), 0, 0 ) );
-            composite.setBackground( parent.getBackground() );
+            context.adapt(composite);
 
             final Label imageControl;
             
@@ -410,7 +410,7 @@ public final class ActuatorPart extends SapphirePart
                 imageControl.setImage( getImageCache().getImage( image ) );
                 imageControl.setLayoutData( gdvalign( gd(), SWT.CENTER ) );
                 imageControl.setEnabled( enabled() );
-                imageControl.setBackground( parent.getBackground() );
+                context.adapt(imageControl);
             }
             else
             {
