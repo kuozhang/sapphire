@@ -1077,7 +1077,13 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                             }
                             
                             final MasterDetailsContentNode parentNode = dragNodes.get( 0 ).getParentNode();
-                            final MasterDetailsContentNode selectionPostDelete = findSelectionPostDelete( parentNode.getChildNodes(), dragNodes );
+                            
+                            MasterDetailsContentNode selectionPostDelete = findSelectionPostDelete( parentNode.getChildNodes(), dragNodes );
+                            
+                            if( selectionPostDelete == null )
+                            {
+                                selectionPostDelete = parentNode;
+                            }
                             
                             try
                             {

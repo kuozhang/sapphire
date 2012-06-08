@@ -38,7 +38,9 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.PropertyEvent;
+import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
@@ -62,6 +64,8 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsCont
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeFactoryCaseDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeFactoryDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeInclude;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ReadOnlyMapFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -332,7 +336,7 @@ public final class MasterDetailsContentNode
                         @Override
                         protected List<IModelElement> elements()
                         {
-                            return getLocalModelElement().read( prop );
+                            return ReadOnlyListFactory.create( getLocalModelElement().read( prop ) );
                         }
                     };
                 }
@@ -754,17 +758,32 @@ public final class MasterDetailsContentNode
         
         if( event instanceof PropertyEvent && isChildNodeFactoryProperty( ( (PropertyEvent) event ).property() ) )
         {
-            runOnDisplayThread
-            (
-                new Runnable()
-                {
-                    public void run()
+            if( event instanceof PropertyContentEvent )
+            {
+                runOnDisplayThread
+                (
+                    new Runnable()
                     {
-                        getContentTree().notifyOfNodeStructureChange( MasterDetailsContentNode.this );
-                        updateValidationState();
+                        public void run()
+                        {
+                            getContentTree().notifyOfNodeStructureChange( MasterDetailsContentNode.this );
+                        }
                     }
-                }
-            );
+                );
+            }
+            else if( event instanceof PropertyValidationEvent )
+            {
+                runOnDisplayThread
+                (
+                    new Runnable()
+                    {
+                        public void run()
+                        {
+                            updateValidationState();
+                        }
+                    }
+                );
+            }
         }
     }
 
@@ -832,7 +851,7 @@ public final class MasterDetailsContentNode
         private final IMasterDetailsContentNodeFactoryDef definition;
         private final Map<String,String> params;
         private SapphireCondition visibleWhenCondition;
-        private Map<IModelElement,MasterDetailsContentNode> nodesCache;
+        private final Map<IModelElement,MasterDetailsContentNode> nodesCache = new IdentityHashMap<IModelElement,MasterDetailsContentNode>();
         
         public NodeFactory( final IMasterDetailsContentNodeFactoryDef definition,
                             final Map<String,String> params )
@@ -870,71 +889,68 @@ public final class MasterDetailsContentNode
         
         public final List<MasterDetailsContentNode> nodes()
         {
-            final Map<IModelElement,MasterDetailsContentNode> newCache = new IdentityHashMap<IModelElement,MasterDetailsContentNode>();
-            final List<MasterDetailsContentNode> nodes = new ArrayList<MasterDetailsContentNode>();
+            final Map<IModelElement,MasterDetailsContentNode> oldCache = ReadOnlyMapFactory.create( this.nodesCache );
+            final ReadOnlyListFactory<MasterDetailsContentNode> nodes = ReadOnlyListFactory.create();
             
             for( IModelElement element : elements() )
             {
-                MasterDetailsContentNode node = ( this.nodesCache != null ? this.nodesCache.remove( element ) : null );
+                MasterDetailsContentNode node = this.nodesCache.get( element );
                 
                 if( node == null )
                 {
-                    node = node( element );
+                    IMasterDetailsContentNodeDef relevantCaseDef = null;
+                    
+                    for( IMasterDetailsContentNodeFactoryCaseDef entry : this.definition.getCases() )
+                    {
+                        final JavaType type = entry.getType().resolve();
+                        
+                        if( type == null )
+                        {
+                            relevantCaseDef = entry;
+                            break;
+                        }
+                        else
+                        {
+                            final Class<?> cl = type.artifact();
+        
+                            if( cl == null || cl.isAssignableFrom( element.getClass() ) )
+                            {
+                                relevantCaseDef = entry;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if( relevantCaseDef == null )
+                    {
+                        throw new RuntimeException();
+                    }
+                    
+                    node = new MasterDetailsContentNode();
+                    
+                    // It is very important to put the node into the cache prior to initializing the node as
+                    // initialization can case a re-entrant call into this function and we must avoid creating
+                    // two nodes for the same element.
+                    
+                    this.nodesCache.put( element, node );
+                    
+                    node.init( MasterDetailsContentNode.this, element, relevantCaseDef, this.params );
+                    node.attach( MasterDetailsContentNode.this.childPartListener );
+                    node.transformLabelCase = false;
                 }
                 
                 nodes.add( node );
-                newCache.put( element, node );
             }
             
-            if( this.nodesCache != null )
+            for( Map.Entry<IModelElement,MasterDetailsContentNode> entry : oldCache.entrySet() )
             {
-                for( MasterDetailsContentNode node : this.nodesCache.values() )
+                if( ! this.nodesCache.containsKey( entry.getKey() ) )
                 {
-                    node.dispose();
+                    entry.getValue().dispose();
                 }
             }
             
-            this.nodesCache = newCache;
-            
-            return nodes;
-        }
-        
-        private final MasterDetailsContentNode node( final IModelElement element )
-        {
-            IMasterDetailsContentNodeDef relevantCaseDef = null;
-            
-            for( IMasterDetailsContentNodeFactoryCaseDef entry : this.definition.getCases() )
-            {
-                final JavaType type = entry.getType().resolve();
-                
-                if( type == null )
-                {
-                    relevantCaseDef = entry;
-                    break;
-                }
-                else
-                {
-                    final Class<?> cl = type.artifact();
-
-                    if( cl == null || cl.isAssignableFrom( element.getClass() ) )
-                    {
-                        relevantCaseDef = entry;
-                        break;
-                    }
-                }
-            }
-            
-            if( relevantCaseDef == null )
-            {
-                throw new RuntimeException();
-            }
-            
-            final MasterDetailsContentNode node = new MasterDetailsContentNode();
-            node.init( MasterDetailsContentNode.this, element, relevantCaseDef, this.params );
-            node.attach( MasterDetailsContentNode.this.childPartListener );
-            node.transformLabelCase = false;
-            
-            return node;
+            return nodes.export();
         }
     }
     
