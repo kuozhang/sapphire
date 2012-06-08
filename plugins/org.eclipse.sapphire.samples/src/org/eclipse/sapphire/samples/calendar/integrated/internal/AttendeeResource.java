@@ -215,4 +215,13 @@ public final class AttendeeResource extends Resource
         return res;
     }
 
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        this.base.detach( this.listener );
+        this.contacts.detach( this.listener );
+    }
+
 }
