@@ -23,6 +23,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.reflowOnResize;
+import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.runOnDisplayThread;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -56,7 +57,6 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Sash;
@@ -193,7 +193,7 @@ public abstract class PropertyEditorRenderer
             @Override
             protected void handleTypedEvent( final PropertyEvent event )
             {
-                Display.getDefault().asyncExec
+                runOnDisplayThread
                 (
                     new Runnable()
                     {
