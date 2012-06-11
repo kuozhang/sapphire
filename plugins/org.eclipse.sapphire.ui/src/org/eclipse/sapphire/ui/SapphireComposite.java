@@ -30,8 +30,6 @@ import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.def.PartDef;
-import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
-import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -164,13 +162,6 @@ public class SapphireComposite extends SapphirePartContainer
             composite.setLayoutData( gd );
         }
         
-        final SapphireActionGroup actions = getActions( getMainActionContext() );
-        final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager( context, actions );
-        final SapphireKeyboardActionPresentation keyboardActionPresentation = new SapphireKeyboardActionPresentation( actionPresentationManager );
-        
-        keyboardActionPresentation.attach( composite );
-        keyboardActionPresentation.render();
-        
         final ISapphireDocumentation doc = this.definition.getDocumentation().element();
         
         if( doc != null )
@@ -260,7 +251,6 @@ public class SapphireComposite extends SapphirePartContainer
                 public void widgetDisposed( final DisposeEvent event )
                 {
                     detach( partListener );
-                    actionPresentationManager.dispose();
                 }
             }
         );

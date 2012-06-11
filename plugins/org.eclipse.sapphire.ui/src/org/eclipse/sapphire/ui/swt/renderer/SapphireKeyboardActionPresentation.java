@@ -20,12 +20,15 @@ import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.def.KeyBindingBehavior;
 import org.eclipse.sapphire.ui.def.SapphireKeySequence;
+import org.eclipse.sapphire.ui.internal.binding.RadioButtonsGroup;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Widget;
 
 /**
@@ -36,6 +39,7 @@ public final class SapphireKeyboardActionPresentation extends SapphireHotSpotsAc
 {
     private final List<Widget> attachedControls = new ArrayList<Widget>();
     private Listener keyListener;
+    private Listener traverseListener;
 
     public SapphireKeyboardActionPresentation( final SapphireActionPresentationManager manager )
     {
@@ -44,18 +48,24 @@ public final class SapphireKeyboardActionPresentation extends SapphireHotSpotsAc
     
     public void attach( final Control control )
     {
-        this.attachedControls.add( control );
-        
-        control.addDisposeListener
-        (
-            new DisposeListener()
-            {
-                public void widgetDisposed( final DisposeEvent event )
+        // Ignore plain composites. Attaching a key listener to a control forces it to become a tab stop,
+        // which is undesirable for plain composites. See discussion in KeyEvent and TraverseEvent. 
+
+        if( control.getClass() != Composite.class && ! ( control instanceof RadioButtonsGroup ) )
+        {
+            this.attachedControls.add( control );
+            
+            control.addDisposeListener
+            (
+                new DisposeListener()
                 {
-                    detach( control );
+                    public void widgetDisposed( final DisposeEvent event )
+                    {
+                        detach( control );
+                    }
                 }
-            }
-        );
+            );
+        }
     }
     
     public void detach( final Control control )
@@ -73,9 +83,24 @@ public final class SapphireKeyboardActionPresentation extends SapphireHotSpotsAc
             }
         };
         
+        this.traverseListener = new Listener()
+        {
+            public void handleEvent( Event event )
+            {
+                if( event.widget instanceof ToolBar )
+                {
+                    event.doit = true;
+                }
+            }
+        };
+        
         for( Widget control : this.attachedControls )
         {
-            control.addListener( SWT.KeyDown, this.keyListener );
+            if( control.getClass() != Composite.class )
+            {
+                control.addListener( SWT.KeyDown, this.keyListener );
+                control.addListener( SWT.Traverse, this.traverseListener );
+            }
         }
     }
     
@@ -189,6 +214,7 @@ public final class SapphireKeyboardActionPresentation extends SapphireHotSpotsAc
             if( ! widget.isDisposed() )
             {
                 widget.removeListener( SWT.KeyDown, this.keyListener );
+                widget.removeListener( SWT.Traverse, this.traverseListener );
             }
         }
         
