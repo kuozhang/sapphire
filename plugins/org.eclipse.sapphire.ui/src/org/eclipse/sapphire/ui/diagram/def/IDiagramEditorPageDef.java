@@ -8,7 +8,8 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
- *    Ling Hao - [344319] Image specification for diagram parts inconsistent with the rest of sdef 
+ *    Ling Hao - [344319] Image specification for diagram parts inconsistent with the rest of sdef
+ *    Konstantin Komissarchik - [382431] Inconsistent terminology: layout storage and layout persistence 
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.def;
@@ -31,6 +32,8 @@ import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Label( standard = "diagram editor page" )
@@ -61,19 +64,19 @@ public interface IDiagramEditorPageDef
 
     IDiagramGuidesDef getGuidesDefinition(); 
     
-    // *** LayoutStorage ***
+    // *** LayoutPersistence ***
     
-    @Type( base = LayoutStorage.class )
-    @Label( standard = "layout-storage")
+    @Type( base = LayoutPersistence.class )
+    @Label( standard = "layout persistence")
     @Localizable
-    @XmlBinding( path = "layout-storage" )
+    @XmlBinding( path = "layout-persistence" )
     @DefaultValue( text = "workspace" )
     
-    ValueProperty PROP_LAYOUT_STORAGE = new ValueProperty( TYPE, "LayoutStorage" );
+    ValueProperty PROP_LAYOUT_PERSISTENCE = new ValueProperty( TYPE, "LayoutPersistence" );
     
-    Value<LayoutStorage> getLayoutStorage();
-    void setLayoutStorage( String value );
-    void setLayoutStorage( LayoutStorage value );
+    Value<LayoutPersistence> getLayoutPersistence();
+    void setLayoutPersistence( String value );
+    void setLayoutPersistence( LayoutPersistence value );
     
     // *** PaletteCompartments ***
     

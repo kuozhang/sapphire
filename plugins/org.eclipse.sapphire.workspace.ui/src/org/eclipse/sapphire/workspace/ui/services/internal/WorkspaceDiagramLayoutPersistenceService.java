@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [382431] Inconsistent terminology: layout storage and layout persistence
  ******************************************************************************/
 
 package org.eclipse.sapphire.workspace.ui.services.internal;
@@ -25,7 +26,7 @@ import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
-import org.eclipse.sapphire.ui.diagram.def.LayoutStorage;
+import org.eclipse.sapphire.ui.diagram.def.LayoutPersistence;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.layout.standard.StandardDiagramLayout;
 import org.eclipse.sapphire.ui.diagram.layout.standard.StandardDiagramLayoutPersistenceService;
@@ -33,6 +34,7 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public class WorkspaceDiagramLayoutPersistenceService extends
@@ -85,7 +87,7 @@ public class WorkspaceDiagramLayoutPersistenceService extends
         	{
         		SapphireDiagramEditorPagePart diagramPagePart = (SapphireDiagramEditorPagePart)part;
         		IDiagramEditorPageDef pageDef = diagramPagePart.getPageDef();
-        		if (pageDef.getLayoutStorage().getContent() == LayoutStorage.WORKSPACE)
+        		if (pageDef.getLayoutPersistence().getContent() == LayoutPersistence.WORKSPACE)
         		{
         			return true;
         		}

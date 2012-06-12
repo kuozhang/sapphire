@@ -1317,12 +1317,19 @@
                     <property-editor>PageHeaderText</property-editor>
                     <property-editor>PageHeaderImage</property-editor>
                     <property-editor>Property</property-editor>
+                    <property-editor>LayoutPersistence</property-editor>
                     <with>
                         <path>GridDefinition</path>
                         <panel>
                             <key>IDiagramGridDef</key>
                             <content>
-                                <property-editor>Visible</property-editor>
+                                <property-editor>
+                                    <hint>
+                                        <name>checkbox.layout</name>
+                                        <value>leading.label</value>
+                                    </hint>
+                                    <property>Visible</property>
+                                </property-editor>
                             </content>
                         </panel>
                     </with>
@@ -1331,11 +1338,16 @@
                         <panel>
                             <key>IDiagramGuidesDef</key>
                             <content>
-                                <property-editor>Visible</property-editor>
+                                <property-editor>
+                                    <hint>
+                                        <name>checkbox.layout</name>
+                                        <value>leading.label</value>
+                                    </hint>
+                                    <property>Visible</property>
+                                </property-editor>
                             </content>
                         </panel>
                     </with>
-                    <property-editor>LayoutStorage</property-editor>
                 </content>
             </section>
             <section>

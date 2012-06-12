@@ -22,7 +22,7 @@
     </import>
     <diagram-page>
         <id>DiagramPage</id>
-        <layout-storage>custom</layout-storage>
+        <layout-persistence>custom</layout-persistence>
         <action>
             <id>Sapphire.Samples.OpenSapphireWebSite</id>
             <label>Sapphire Web Site</label>

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - [382431] Inconsistent terminology: layout storage and layout persistence
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.def;
@@ -16,9 +17,12 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public enum LayoutStorage 
+@Label( standard = "layout persistence" )
+
+public enum LayoutPersistence 
 {
     @Label( standard = "side-by-side" )
     @EnumSerialization( primary = "side-by-side" )
