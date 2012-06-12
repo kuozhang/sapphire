@@ -19,6 +19,11 @@ import java.util.Arrays;
 
 public class Event
 {
+    public boolean supersedes( final Event event )
+    {
+        return false;
+    }
+    
     public static final Listener filter( final Listener listener,
                                          final Class<?>... types )
     {

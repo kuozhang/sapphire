@@ -27,7 +27,7 @@ import org.eclipse.sapphire.modeling.LoggingService;
 public final class ListenerContext
 {
     private final Set<Listener> listeners = new CopyOnWriteArraySet<Listener>();
-    private Queue<Runnable> queue = new ConcurrentLinkedQueue<Runnable>();
+    private Queue<BroadcastJob> queue = new ConcurrentLinkedQueue<BroadcastJob>();
     private final Map<Class<? extends Event>,Event> suspended = new HashMap<Class<? extends Event>,Event>();
     
     public void coordinate( final ListenerContext context )
@@ -55,7 +55,20 @@ public final class ListenerContext
             throw new IllegalArgumentException();
         }
         
-        return this.listeners.remove( listener );
+        if( this.listeners.remove( listener ) )
+        {
+            for( BroadcastJob job : this.queue )
+            {
+                if( job.listener().equals( listener ) )
+                {
+                    this.queue.remove( job );
+                }
+            }
+            
+            return true;
+        }
+        
+        return false;
     }
     
     public void broadcast( final Event event )
@@ -78,27 +91,20 @@ public final class ListenerContext
         
         if( broadcast )
         {
-            for( final Listener listener : this.listeners )
+            for( BroadcastJob job : this.queue )
             {
-                final Runnable job = new Runnable()
+                if( event.supersedes( job.event() ) )
                 {
-                    public void run()
-                    {
-                        try
-                        {
-                            listener.handle( event );
-                        }
-                        catch( Exception e )
-                        {
-                            LoggingService.log( e );
-                        }
-                    }
-                };
-                
-                this.queue.add( job );
+                    this.queue.remove( job );
+                }
             }
             
-            for( Runnable job = this.queue.poll(); job != null; job = this.queue.poll() )
+            for( Listener listener : this.listeners )
+            {
+                this.queue.add( new BroadcastJob( listener, event ) );
+            }
+            
+            for( BroadcastJob job = this.queue.poll(); job != null; job = this.queue.poll() )
             {
                 job.run();
             }
@@ -133,6 +139,41 @@ public final class ListenerContext
         if( event != null )
         {
             broadcast( event );
+        }
+    }
+    
+    private static final class BroadcastJob
+    {
+        private final Listener listener;
+        private final Event event;
+         
+        public BroadcastJob( final Listener listener,
+                             final Event event )
+        {
+            this.listener = listener;
+            this.event = event;
+        }
+        
+        public Listener listener()
+        {
+            return this.listener;
+        }
+        
+        public Event event()
+        {
+            return this.event;
+        }
+
+        public void run()
+        {
+            try
+            {
+                this.listener.handle( this.event );
+            }
+            catch( Exception e )
+            {
+                LoggingService.log( e );
+            }
         }
     }
 

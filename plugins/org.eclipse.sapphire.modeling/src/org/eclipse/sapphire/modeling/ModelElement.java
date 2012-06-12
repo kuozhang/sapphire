@@ -1041,6 +1041,16 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         {
             this.disposed = true;
             
+            if( this.elementServiceContext != null )
+            {
+                this.elementServiceContext.dispose();
+            }
+            
+            for( ServiceContext context : this.propertyServiceContexts.values() )
+            {
+                context.dispose();
+            }
+            
             broadcast( new ElementDisposeEvent( this ) );
             
             disposeProperties();
@@ -1052,16 +1062,6 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             catch( Exception e )
             {
                 LoggingService.log( e );
-            }
-            
-            if( this.elementServiceContext != null )
-            {
-                this.elementServiceContext.dispose();
-            }
-            
-            for( ServiceContext context : this.propertyServiceContexts.values() )
-            {
-                context.dispose();
             }
         }
     }
