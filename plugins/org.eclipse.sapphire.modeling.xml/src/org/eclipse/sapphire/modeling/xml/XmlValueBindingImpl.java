@@ -17,10 +17,7 @@ import org.eclipse.sapphire.modeling.ValueBindingImpl;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class XmlValueBindingImpl
-
-    extends ValueBindingImpl
-    
+public abstract class XmlValueBindingImpl extends ValueBindingImpl
 {
     public XmlNode getXmlNode()
     {
@@ -78,7 +75,7 @@ public abstract class XmlValueBindingImpl
     
     protected final XmlResource resource()
     {
-        return element().adapt( XmlResource.class );
+        return (XmlResource) element().resource();
     }
     
 }
