@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -63,6 +62,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -1095,6 +1095,19 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                                     dragElementContainer.remove( dragElement );
                                 }
                             }
+                            catch( Exception e )
+                            {
+                                // Log this exception unless the cause is EditFailedException. These exception
+                                // are the result of the user declining a particular action that is necessary
+                                // before the edit can happen (such as making a file writable).
+                                
+                                final EditFailedException editFailedException = EditFailedException.findAsCause( e );
+                                
+                                if( editFailedException == null )
+                                {
+                                    SapphireUiFrameworkPlugin.log( e );
+                                }
+                            }
                             finally
                             {
                                 outline.listeners().resume( MasterDetailsContentOutline.SelectionChangedEvent.class );
@@ -1337,6 +1350,21 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                         }
                         
                         parentNode.getContentTree().setSelectedNodes( newSelection );
+                    }
+                    catch( Exception e )
+                    {
+                        // Log this exception unless the cause is EditFailedException. These exception
+                        // are the result of the user declining a particular action that is necessary
+                        // before the edit can happen (such as making a file writable).
+                        
+                        final EditFailedException editFailedException = EditFailedException.findAsCause( e );
+                        
+                        if( editFailedException == null )
+                        {
+                            SapphireUiFrameworkPlugin.log( e );
+                        }
+                        
+                        event.detail = DND.DROP_NONE;
                     }
                     finally
                     {

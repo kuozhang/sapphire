@@ -72,6 +72,7 @@ import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.modeling.ElementEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
@@ -105,6 +106,7 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
+import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
 import org.eclipse.sapphire.ui.swt.ModelElementsTransfer;
 import org.eclipse.sapphire.ui.swt.internal.PopUpListFieldCellEditorPresentation;
@@ -839,15 +841,31 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                                 
                                 if( droppedIntoAnotherEditor )
                                 {
-                                    final IModelElement selectionPostDelete = findSelectionPostDelete( getList(), dragElements );
-                                    
-                                    for( IModelElement dragElement : dragElements )
+                                    try
                                     {
-                                        final ModelElementList<IModelElement> dragElementContainer = (ModelElementList<IModelElement>) dragElement.parent();
-                                        dragElementContainer.remove( dragElement );
+                                        final IModelElement selectionPostDelete = findSelectionPostDelete( getList(), dragElements );
+                                        
+                                        for( IModelElement dragElement : dragElements )
+                                        {
+                                            final ModelElementList<IModelElement> dragElementContainer = (ModelElementList<IModelElement>) dragElement.parent();
+                                            dragElementContainer.remove( dragElement );
+                                        }
+                                        
+                                        setSelectedElement( selectionPostDelete );
                                     }
-                                    
-                                    setSelectedElement( selectionPostDelete );
+                                    catch( Exception e )
+                                    {
+                                        // Log this exception unless the cause is EditFailedException. These exception
+                                        // are the result of the user declining a particular action that is necessary
+                                        // before the edit can happen (such as making a file writable).
+                                        
+                                        final EditFailedException editFailedException = EditFailedException.findAsCause( e );
+                                        
+                                        if( editFailedException == null )
+                                        {
+                                            SapphireUiFrameworkPlugin.log( e );
+                                        }
+                                    }
                                 }
                             }
                             
@@ -932,32 +950,50 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                                 }
                             }
                             
-                            for( IModelElement dragElement : dragElements )
+                            try
                             {
-                                final ModelElementList<IModelElement> dragElementContainer = (ModelElementList<IModelElement>) dragElement.parent();
-                                
-                                if( dragElementContainer == list && dragElementContainer.indexOf( dragElement ) < position )
+                                for( IModelElement dragElement : dragElements )
                                 {
-                                    position--;
+                                    final ModelElementList<IModelElement> dragElementContainer = (ModelElementList<IModelElement>) dragElement.parent();
+                                    
+                                    if( dragElementContainer == list && dragElementContainer.indexOf( dragElement ) < position )
+                                    {
+                                        position--;
+                                    }
+                                    
+                                    dragElementContainer.remove( dragElement );
+                                }
+            
+                                final List<IModelElement> newSelection = new ArrayList<IModelElement>();
+                                
+                                for( IModelElement droppedElement : droppedElements )
+                                {
+                                    final IModelElement insertedElement = list.insert( droppedElement.type(), position );
+                                    insertedElement.copy( droppedElement );
+                                    
+                                    newSelection.add( insertedElement );
+                                    
+                                    position++;
                                 }
                                 
-                                dragElementContainer.remove( dragElement );
+                                DefaultListPropertyEditorRenderer.this.tableViewer.refresh();
+                                setSelectedElements( newSelection );
                             }
-        
-                            final List<IModelElement> newSelection = new ArrayList<IModelElement>();
-                            
-                            for( IModelElement droppedElement : droppedElements )
+                            catch( Exception e )
                             {
-                                final IModelElement insertedElement = list.insert( droppedElement.type(), position );
-                                insertedElement.copy( droppedElement );
+                                // Log this exception unless the cause is EditFailedException. These exception
+                                // are the result of the user declining a particular action that is necessary
+                                // before the edit can happen (such as making a file writable).
                                 
-                                newSelection.add( insertedElement );
+                                final EditFailedException editFailedException = EditFailedException.findAsCause( e );
                                 
-                                position++;
+                                if( editFailedException == null )
+                                {
+                                    SapphireUiFrameworkPlugin.log( e );
+                                }
+                                
+                                event.detail = DND.DROP_NONE;
                             }
-                            
-                            DefaultListPropertyEditorRenderer.this.tableViewer.refresh();
-                            setSelectedElements( newSelection );
                         }
                     }
                 );

@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui;
 
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
@@ -94,7 +95,16 @@ public abstract class SapphireActionHandler extends SapphireActionSystemPart
         }
         catch( Exception e )
         {
-            SapphireUiFrameworkPlugin.log( e );
+            // Log this exception unless the cause is EditFailedException. These exception
+            // are the result of the user declining a particular action that is necessary
+            // before the edit can happen (such as making a file writable).
+            
+            final EditFailedException editFailedException = EditFailedException.findAsCause( e );
+            
+            if( editFailedException == null )
+            {
+                SapphireUiFrameworkPlugin.log( e );
+            }
         }
         
         broadcast( new PostExecuteEvent( result ) );
