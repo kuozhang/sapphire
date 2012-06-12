@@ -127,7 +127,9 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart
 		if (modelChildren == null) {
 			// add the label
 			modelChildren = new ArrayList<DiagramConnectionLabelModel>(1);
-			modelChildren.add(new DiagramConnectionLabelModel(getCastedModel()));
+			if (getCastedModel().getModelPart().canEditLabel()) {
+				modelChildren.add(new DiagramConnectionLabelModel(getCastedModel()));
+			}
 		}
 		return modelChildren;
 	}
