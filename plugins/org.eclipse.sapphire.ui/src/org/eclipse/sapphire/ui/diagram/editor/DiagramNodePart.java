@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.modeling.ElementValidationEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -68,6 +69,7 @@ public class DiagramNodePart
 	private SapphireAction defaultAction;
 	private SapphireActionHandler defaultActionHandler;
 	private Listener modelPropertyListener;
+	private FilteredListener<ElementValidationEvent> elementValidationListener;
 	private PropertiesViewContributionManager propertiesViewContributionManager; 
 	private DiagramNodeBounds nodeBounds = new DiagramNodeBounds();
 
@@ -180,6 +182,16 @@ public class DiagramNodePart
             }
         };
         this.modelElement.attach(this.modelPropertyListener, "*");
+        
+        this.elementValidationListener = new FilteredListener<ElementValidationEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final ElementValidationEvent event )
+            {
+                notifyNodeUpdate();
+            }
+        };
+        this.modelElement.attach(this.elementValidationListener);        
     }
     
     public DiagramNodeTemplate getDiagramNodeTemplate()
@@ -279,6 +291,7 @@ public class DiagramNodePart
         }
 
         this.modelElement.detach(this.modelPropertyListener, "*");
+        this.modelElement.detach(this.elementValidationListener);
     }
     
     public String getLabel()
