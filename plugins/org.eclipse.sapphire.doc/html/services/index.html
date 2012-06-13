@@ -32,6 +32,7 @@
   <li><a href="#ContentProposalService">ContentProposalService</a></li>
   <li><a href="#DependenciesAggregationService">DependenciesAggregationService</a></li>
   <li><a href="#DependenciesService">DependenciesService</a></li>
+  <li><a href="#DiagramLayoutPersistenceService">DiagramLayoutPersistenceService</a></li>
   <li><a href="#DragAndDropService">DragAndDropService</a></li>  
   <li><a href="#EqualityService">EqualityService</a></li>
   <li><a href="#FactsAggregationService">FactsAggregationService</a></li>
@@ -56,14 +57,14 @@ provide a custom method for adopting IModelElement to IProject.</p>
 <p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code><font color="#888888">@GenerateImpl</font>
-@Service( impl = NewProjectFileOpAdapter.class )
+@Service( impl = NewProjectFileOpAdapterService.class )
 
 <font color="#888888">public interface INewProjectFileOp extends IModelElement
 {
     ...
 }</font></code></pre>
 
-<pre class="source-code"><code>public class NewProjectFileOpAdapter extends AdapterService
+<pre class="source-code"><code>public class NewProjectFileOpAdapterService extends AdapterService
 {
     @Override
     public &lt;A&gt; A adapt( Class&lt;A&gt; adapterType )
@@ -72,13 +73,13 @@ provide a custom method for adopting IModelElement to IProject.</p>
         {
             INewProjectFileOp op = context( INewProjectFileOp.class );
             IProject project = op.getProject().resolve();
-
+            
             if( project != null )
             {
                 return adapterType.cast( project );
             }
         }
-
+        
         return null;
     }
 }</code></pre>
@@ -156,6 +157,29 @@ Value&lt;String> getName();
 void setName( String value );</font></code></pre>
 
 
+<a name="DiagramLayoutPersistenceService"><h2>DiagramLayoutPersistenceService</h2></a>
+
+<p>The DiagramLayoutPersistenceService is responsible for persisting layout of the diagram, such a location and
+size of nodes, connection bend points, etc.</p>
+
+<p>Unlike other services, DiagramLayoutPersistenceService is not defined by methods that must be
+implemented, but rather by its expected behavior.</p>
+
+<ol>
+  <li>During service initialization, the implementation is expected to load layout information and transfer it to
+    diagram parts using API such as DiagramNodePart.setNodeBounds().</li>
+  <li>After initialization, the implementation is expected to listen for changes to diagram parts and persist
+    layout information. Persistence can happen immediately or be deferred until the save event is received.</li>
+  <li>If implementation defers layout persistence until save, it is expected to implement dirty() method and to
+   issue DirtyStateEvent when this state changes.</li>
+ </ol>
+ 
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The architecture sample provides a comprehensive example of a custom 
+implementation that persists layout in the same file as data.</p>
+
+
 <a name="DragAndDropService"><h2>DragAndDropService</h2></a>
 
 <p>The DragAndDropService provides means to implement drag-n-drop behavior in a diagram editor.</p>
@@ -169,7 +193,7 @@ void setName( String value );</font></code></pre>
     {
         return context.object() instanceof IFile;
     }
-
+    
     @Override
     public void drop( DropContext context ) 
     {
@@ -305,7 +329,7 @@ can be useful for other purposes.</p>
 public interface Contact extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( Contact.class );
-
+    
     ...
 }</font></code></pre>
 
@@ -361,7 +385,7 @@ at the property level using @Service annotation.</p>
         Since since = property().getAnnotation( Since.class );
         facts.add( "Since version " + since.version() + "." );
     }
-
+    
     public static class Factory extends ServiceFactory
     {
         @Override
@@ -370,7 +394,7 @@ at the property level using @Service annotation.</p>
         {
             return context.find( ModelProperty.class ).hasAnnotation( Since.class );
         }
-
+        
         @Override
         public Service create( ServiceContext context,
                                Class&lt;? extends Service> service )
@@ -461,7 +485,7 @@ be supplied.</p>
         // Optionally register listeners to invoke refresh method when the list of extensions
         // may need to be updated.
     }
-
+    
     @Override
     protected FileExtensionsServiceData compute()
     {
@@ -473,12 +497,12 @@ be supplied.</p>
         
         return new FileExtensionsServiceData( extensions );
     }
-
+    
     @Override
     public void dispose()
     {
         super.dispose();
-
+        
         // Remove any listeners that were added during initialization.
     }
 }</code></pre>
@@ -553,12 +577,12 @@ be provided.</p>
         
         return new InitialValueServiceData( value );
     }
-
+    
     @Override
     public void dispose()
     {
         super.dispose();
-
+        
         // Remove any listeners that were added during initialization.
     }
 }</code></pre>
@@ -621,12 +645,12 @@ void setServletFilterImpl( String value );</font></code></pre>
         
         return new JavaTypeConstraintServiceData( kinds, types, behavior );
     }
-
+    
     @Override
     public void dispose()
     {
         super.dispose();
-
+        
         // Remove any listeners that were added during initialization.
     }
 }</code></pre>
@@ -723,7 +747,7 @@ of PossibleTypesService can be provided.</p>
         // Register listeners to invoke refresh() method when the list of possible types
         // may have changed.
     }
-
+    
     @Override
     protected PossibleTypesServiceData compute()
     {
@@ -735,12 +759,12 @@ of PossibleTypesService can be provided.</p>
         
         return new PossibleTypesServiceData( types );
     }
-
+    
     @Override
     public void dispose()
     {
         super.dispose();
-
+        
         // Remove any listeners that were added during initialization.
     }
 }</code></pre>

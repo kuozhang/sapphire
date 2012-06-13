@@ -24,122 +24,202 @@
 <body>
 <h1>Enhancements in 0.5</h1>
 <ol>
-  <li><a href="#UI">User Interface</a></li>
-  <ol type="A">
-    <li><a href="#MoreFlexibleActuatorPresentation">More Flexible Actuator Presentation</a></li>
-    <li><a href="#PropagatedKeyBindings">Propagated Key Bindings</a></li>
-    <li><a href="#ActionToolTips">Action Tool Tips</a></li>
-    <li><a href="#PopUpListFieldForPossibleValues">Pop-Up List Field Presentation for Possible Value Properties</a></li>
-    <li><a href="#FormDragAndDrop">Drag-n-Drop in Forms</a></li>
+  <li><a href="#Diagrams">Diagrams</a></li>
+  <ol type="a">
+    <li><a href="#Diagrams-GEF">Straight to GEF</a></li>
+    <li><a href="#Diagrams-FlexibleLayoutPersistence">Flexible Layout Persistence</a></li>
+    <li><a href="#Diagrams-ContextHelp">Context Help</a></li>
+    <li><a href="#Diagrams-Header">Header</a></li>
+    <li><a href="#Diagrams-NewActions">New Actions</a></li>
+    <li><a href="#Diagrams-MultiSelectActions">Multi-Select Actions</a></li>
+    <li><a href="#Diagrams-FloatingToolBar">Floating Tool Bar</a></li>
   </ol>
-  <li><a href="#DiagramEditor">Diagram Editor</a></li>
-  <ol type="A">
-    <li><a href="#DiagramLayout">Diagram Layout Storage</a></li>
-    <li><a href="#DiagramContextHelp">Diagram Context Help</a></li>
-    <li><a href="#NewDiagramActions">New Diagram Actions</a></li>
-    <li><a href="#MutipleDiagramPartsActions">Actions for Multiple Diagram Parts</a></li>
-    <li><a href="#FloatingPalette">Floating Palette Around Diagram Nodes</a></li>
-    <li><a href="#DiagramHeader">Diagram Header</a></li>
-    <li><a href="#DirectEdit">Direct Edit Invocation</a></li>   
-  </ol>
-  <li><a href="#ExpressionLanguage">Expression Language</a></li>
-  <ol type="A">
-    <li><a href="#ImageFunction">Image Function</a></li>
-    <li><a href="#ExprInPropertyEditorLabel">Use in Property Editor Label</a></li>
+  <li><a href="#Forms">Forms</a></li>
+  <ol type="a">
+    <li><a href="#Forms-DragAndDrop">Drag-n-Drop</a></li>
+    <li><a href="#Forms-PopUpListFieldForPossibleValues">Pop-Up List Field Presentation for Possible Value Properties</a></li>
+    <li><a href="#Forms-FlexibleActuatorPresentation">Flexible Actuator Presentation</a></li>
+    <li><a href="#Forms-ExprForPropertyEditorLabel">Expression for Property Editor Label</a></li>
   </ol>
   <li><a href="#Services">Services</a></li>
   <ol type="A">
-    <li><a href="#PartServices">Part Services</a></li>
-    <li><a href="#AdapterService">AdapterService</a></li>
-    <li><a href="#DragAndDropService">DragAndDropService</a></li>
-    <li><a href="#EqualityService">EqualityService</a></li>
-    <li><a href="#ListSelectionService">ListSelectionService</a></li>
-    <li><a href="#ValidationServiceAtElementLevel">ValidationService at Element Level</a></li>
+    <li><a href="#Services-PartServices">Part Services</a></li>
+    <li><a href="#Services-AdapterService">AdapterService</a></li>
+    <li><a href="#Services-DiagramLayoutPersistenceService">DiagramLayoutPersistenceService</a></li>
+    <li><a href="#Services-DragAndDropService">DragAndDropService</a></li>
+    <li><a href="#Services-EqualityService">EqualityService</a></li>
+    <li><a href="#Services-ListSelectionService">ListSelectionService</a></li>
+    <li><a href="#Services-ValidationServiceAtElementLevel">ValidationService at Element Level</a></li>
   </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
-    <li><a href="#ModelElementDisposed">IModelElement.disposed()</a></li>
+    <li><a href="#Miscellaneous-ModelElementDisposed">IModelElement.disposed()</a></li>
+    <li><a href="#Miscellaneous-ImageFunction">Image Function</a></li>
+    <li><a href="#Miscellaneous-PropagatedKeyBindings">Propagated Key Bindings</a></li>
+    <li><a href="#Miscellaneous-ActionToolTips">Action Tool Tips</a></li>
   </ol>
 </ol>
 
 
-<h2><a name="UI"><a name="MoreFlexibleActuatorPresentation">More Flexible Actuator Presentation</a></a></h2>
+<h2><a name="Diagrams"><a name="Diagrams-GEF">Straight to GEF</a></a></h2>
 
-<p>An actuator provides means to invoke an action. The action could be drawn from the context where actuator 
-is placed or provided as part of actuator's definition. Actuators were formerly limited to links and were
-referred to as action links. New for this release is the ability to choose either link or button presentation
-along with ability to control horizontal alignment.</p>
-
-<p style="margin-left: 20px;"><b>Example</b></p>
-
-<pre class="source-code"><code><font color="#888888">&lt;actuator>
-    &lt;action-id>Sapphire.Gallery.Actuators.DoubleTheNumber&lt;/action-id>
-    &lt;action>
-        &lt;id>Sapphire.Gallery.Actuators.DoubleTheNumber&lt;/id>
-        &lt;label>double the number&lt;/label>
-    &lt;/action>
-    &lt;action-handler>
-        &lt;id>Sapphire.Gallery.Actuators.DoubleTheNumber&lt;/id>
-        &lt;action>Sapphire.Gallery.Actuators.DoubleTheNumber&lt;/action>
-        &lt;impl>ActuatorsGalleryDoubleTheNumberActionHandler&lt;/impl>
-    &lt;/action-handler></font>
-    &lt;span>false&lt;/span>
-    &lt;horizontal-align>right&lt;/horizontal-align>
-    &lt;style>Sapphire.Actuator.Button&lt;/style>
-<font color="#888888">&lt;/actuator></font></code></pre>
-
-<p style="margin-left: 20px;"><img src="images/MoreFlexibleActuatorPresentation.png"/></p>
+<p>The Graphiti-based diagram presentation (introduced in 0.4 release) has been replaced with a presentation 
+written directly on top of GEF. This has significantly reduced Sapphire's dependencies and enabled diagram 
+support to more tightly integrate with the rest of Sapphire.</p> 
 
 
-<h2><a name="PropagatedKeyBindings">Propagated Key Bindings</a></h2>
+<h2><a name="Diagrams-FlexibleLayoutPersistence">Flexible Diagram Layout Persistence</a></h2>
 
-<p>When processing keyboard events, the system now takes into account actions defined in part's hierarchy rather
-than just the local ones. For instance, an action defined at editor page level can be made accessible via its
-key binding even if the focus is on a property editor. This is done by specifying propagated key binding behavior
-as part of action definition.</p> 
+<p>Customize how diagram layout is persisted by implementing 
+<a href="../../services/index.html#DiagramLayoutPersistenceService">DiagramLayoutPersistenceService</a>
+or take advantage of one of the provided implementations:</p>
+
+<ol>
+  <li><b>side-by-side</b> - Layout is persisted in a separate file alongside the file being edited.</li>
+  <li><b>project</b> - Layout is persisted in a semi-hidden file in project's .settings folder.</li>
+  <li><b>workspace (default)</b> - Layout is persisted in workspace's .metadata folder.</li>
+</ol>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
 
-<pre class="source-code"><code><font color="#888888">&lt;action>
-    &lt;id>Sapphire.Gallery.Open.Homepage&lt;/id>
-    &lt;label>Sapphire Homepage&lt;/label>
-    &lt;tooltip>Open Sapphire Homepage (Ctrl+Alt+Shift+S)&lt;/tooltip>
-    &lt;image>Web.png&lt;/image>
-    &lt;description>Open Sapphire project homepage.&lt;/description>
-    &lt;key-binding>CONTROL+ALT+SHIFT+s&lt;/key-binding></font>
-    &lt;key-binding-behavior>propagated&lt;/key-binding-behavior>
-    <font color="#888888">&lt;context>Sapphire.EditorPage&lt;/context>
-    &lt;hint>
-        &lt;name>style&lt;/name>
-        &lt;value>image+text&lt;/value>
-    &lt;/hint>
-&lt;/action></font></code></pre>
-
-
-<h2><a name="ActionToolTips">Action Tool Tips</a></h2>
-
-<p>By default, action label is used when a tool tip is necessary. If that's not appropriate, developer can now
-set the action tool tip explicitly.</p>
+<pre class="source-code"><code><font color="#888888">&lt;diagram-page></font>
+  &lt;layout-persistence>project&lt;/layout-persistence>                
+<font color="#888888">&lt;/diagram-page></font></code></pre>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
 
-<pre class="source-code"><code><font color="#888888">&lt;action>
-    &lt;id>Sapphire.Gallery.Open.Homepage&lt;/id>
-    &lt;label>Sapphire Homepage&lt;/label></font>
-    &lt;tooltip>Open Sapphire Homepage (Ctrl+Alt+Shift+S)&lt;/tooltip>
-    <font color="#888888">&lt;image>Web.png&lt;/image>
-    &lt;description>Open Sapphire project homepage.&lt;/description>
+<p style="margin-left: 20px;">The architecture sample provides a comprehensive example of a custom 
+<a href="../../services/index.html#DiagramLayoutPersistenceService">DiagramLayoutPersistenceService</a> 
+implementation that persists layout in the same file as data.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;diagram-page></font>
+  &lt;layout-persistence>custom&lt;/layout-persistence>
+  &lt;service>
+    &lt;implementation>ArchitectureDiagramLayoutPersistenceService&lt;/implementation>
+  &lt;/service>
+<font color="#888888">&lt;/diagram-page></font></code></pre>
+
+
+<h2><a name="Diagrams-ContextHelp">Diagram Context Help</a></h2>
+
+<p>Expose context sensitive help in a diagram by annotating the model being edited with @Documentation
+annotations. When "F1" is pressed in a diagram, context help will come from the model element associated
+with the selected node or connection. If nothing is selected, the context help will come from the model element
+associated with the diagram.</p>
+
+
+<h2><a name="Diagrams-Header">Diagram Header</a></h2>
+
+<p>Diagram editor page now displays a header just like the form editor page. The header shows page title and provides 
+another place for page-level actions. To contribute actions to the header, use Sapphire.Diagram.Header context at
+diagram page level.</p>
+
+<p style="margin-left: 20px;"><img src="images/DiagramHeader.png"/></p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;diagram-page>
+  &lt;action>
+    &lt;id>Sapphire.Samples.OpenSapphireWebSite&lt;/id>
+    &lt;label>Sapphire Web Site&lt;/label>
+    &lt;tooltip>Open Sapphire Web Site (Ctrl+Alt+Shift+S)&lt;/tooltip>
     &lt;key-binding>CONTROL+ALT+SHIFT+s&lt;/key-binding>
     &lt;key-binding-behavior>propagated&lt;/key-binding-behavior>
-    &lt;context>Sapphire.EditorPage&lt;/context>
+    &lt;context>Sapphire.Diagram.Editor&lt;/context></font>
+    &lt;context>Sapphire.Diagram.Header&lt;/context>
+    <font color="#888888">&lt;location>after:Sapphire.Diagram.Print&lt;/location>
+    &lt;group>Sapphire.Samples.OpenSapphireWebSite&lt;/group>
+    &lt;image>Web.png&lt;/image>
     &lt;hint>
-        &lt;name>style&lt;/name>
-        &lt;value>image+text&lt;/value>
+      &lt;name>style&lt;/name>
+      &lt;value>image+text&lt;/value>
     &lt;/hint>
-&lt;/action></font></code></pre>
+  &lt;/action>
+  &lt;action-handler>
+    &lt;action>Sapphire.Samples.OpenSapphireWebSite&lt;/action>
+    &lt;id>Sapphire.Samples.OpenSapphireWebSite&lt;/id>
+    &lt;label>Sapphire Web Site&lt;/label>
+    &lt;impl>OpenSapphireWebSiteActionHandler&lt;/impl>
+  &lt;/action-handler>
+&lt;/diagram-page></font></code></pre>
 
 
-<h2><a name="PopUpListFieldForPossibleValues">Pop-Up List Field Presentation for Possible Value Properties</a></h2>
+<h2><a name="Diagrams-NewActions">New Diagram Actions</a></h2>
+
+<p>Easily delete all bend points for one or more connections.</p>
+
+<p>Select all diagram parts or just the nodes using a pair of new actions. Alternatively, use
+Ctrl + A key binding to select everything.</p>
+
+<p>Use zoom actions to magnify or shrink the diagram for a better view. The zoom level is persisted between
+editing sessions.</p>
+
+<p>Print the diagram or save it as an image to share with others.</p>
+
+<p style="margin-left: 20px;"><img src="images/DiagramActions.png"/></p>
+
+
+<h2><a name="Diagrams-MultiSelectActions">Multi-Select Actions in Diagrams</a></h2>
+
+<p>Develop actions that work in the context where multiple nodes and/or connections are selected. Such
+actions should specify Sapphire.Diagram.MultipleParts context and be contributed at diagram page level.</P>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class ExampleActionHandler extends SapphireActionHandler
+{
+    @Override
+    protected Object run( SapphireRenderingContext context ) 
+    {
+        final SapphireDiagramEditorPagePart page = (SapphireDiagramEditorPagePart) getPart();
+        
+        for( ISapphirePart selectedPart : page.getSelections() )
+        {
+            if( selectedPart instanceof DiagramNodePart )
+            {
+                ...
+            }
+            else if( selectedPart instanceof DiagramConnectionPart )
+            {
+                ...
+            }
+        }
+        
+        ...
+        
+        return null;
+    }
+}</code></pre>
+
+<pre class="source-code"><code><font color="#888888">&lt;diagram-page>
+    &lt;action>
+        &lt;id>Example&lt;/id>
+        &lt;label>example&lt;/label></font>
+        &lt;context>Sapphire.Diagram.MultipleParts&lt;/context>
+    <font color="#888888">&lt;/action>
+    &lt;action-handler>
+        &lt;action>Example&lt;/action>
+        &lt;impl>ExampleActionHandler&lt;/impl>
+    &lt;/action-handler>
+&lt;/diagram-page></font></code></pre>
+
+
+<h2><a name="Diagrams-FloatingToolBar">Floating Tool Bar on Diagram Nodes</a></h2>
+
+<p>A floating toolbar is now displayed around a diagram node when the mouse hovers
+over it. It contains all the actions that are applicable to the node.</p>
+
+<p style="margin-left: 20px;"><img src="images/DiagramFloatingToolBar.png"/></p>
+
+
+<h2><a name="Forms"><a name="Forms-DragAndDrop">Drag-n-Drop in Forms</a></a></h2>
+
+<p>Use drag-n-drop to arrange the elements in the content outline and in table property editors.</p>
+
+<p style="margin-left: 20px;"><img src="images/FormDragAndDrop.png"/></p>
+
+
+<h2><a name="Forms-PopUpListFieldForPossibleValues">Pop-Up List Field Presentation for Possible Value Properties</a></h2>
 
 <p>Two pop-up list field presentations (editable and strict) have been added for properties with a possible
 values constraint. The default presentation remains a text field with a browse button and content
@@ -220,129 +300,37 @@ a table.</p>
 <p style="margin-left: 20px;"><img src="images/PopUpListFieldForPossibleValues-5.png"/></p>
 
 
-<h2><a name="FormDragAndDrop">Drag-n-Drop in Forms</a></h2>
+<h2><a name="Forms-FlexibleActuatorPresentation">Flexible Actuator Presentation</a></h2>
 
-<p>Use drag-n-drop to arrange the elements in the content outline and in table property editors.</p>
-
-<p style="margin-left: 20px;"><img src="images/FormDragAndDrop.png"/></p>
-
-
-<h2><a name="DiagramEditor"><a name="DiagramLayout">More Flexible Diagram Layout Storage</a></a></h2>
-
-<p>Diagram Editor can now open workspace files, non-workspace files and non-local files. Developer can
-choose to store diagram's layout information in a separate file in the same folder as the file being
-edited, or a computed unique folder in project's .setting directory or in current workspace's .metadata directory.
-Third party developers can also provide a customized layout storage service. The service should extend
-<font color="#888888">DiagramLayoutPersistenceService</font> class. The architecture sample has been
-modified to provide an "in place" layout storage which stores the diagram layout info in  
-architecture.xml file. Developers can use that as an example if they want to implement their own
-layout storage service.</p>
-
-<p>The diagram layout storage mechanism is controlled by diagram page definition's "LayoutStorage" property.</p>
-
-
-<h2><a name="DiagramContextHelp">Diagram Context Help</a></h2>
-
-<p>Diagram Editor now supports context sensitive help. When a node or connection is selected, hitting "F1"
-will display the context help associated with the node/connection model element through the @Documentation 
-annotation. If nothing is selected in the diagram editor, hitting "F1" will display the context help associated
-with the root model element for the diagram editor.</p>
-
-
-<h2><a name="NewDiagramActions">New Diagram Actions</a></h2>
-
-<p>Easily delete all bend points for one or more connections.</p>
-
-<p>Select all diagram parts or just the nodes using a pair of new actions. Alternatively, use
-Ctrl + A key binding to select everything.</p>
-
-<p>Use zoom actions to magnify or shrink the diagram for a better view. The zoom level is persistent between
-editing sessions.</p>
-
-<p>Print the diagram or save it as an image to share with others.</p>
-
-<p style="margin-left: 20px;"><img src="images/DiagramEditorActions.png"/></p>
-
-<h2><a name="MutipleDiagramPartsActions">Actions for Multiple Diagram Parts</a></h2>
-
-<p>Develop actions that work in the context where multiple nodes and/or connections are selected. Such
-actions should specify "Sapphire.Diagram.MultipleParts" context and be contributed at diagram page level.</P>
+<p>An actuator provides means to invoke an action. The action could be drawn from the context where actuator 
+is placed or provided as part of actuator's definition. Actuators were formerly limited to links and were
+referred to as action links. New for this release is the ability to choose either link or button presentation
+along with ability to control horizontal alignment.</p>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
 
-<pre class="source-code"><code>public class ExampleActionHandler extends SapphireActionHandler
-{
-    @Override
-    protected Object run( SapphireRenderingContext context ) 
-    {
-        final SapphireDiagramEditorPagePart page = (SapphireDiagramEditorPagePart) getPart();
-        
-        for( ISapphirePart selectedPart : page.getSelections() )
-        {
-            if( selectedPart instanceof DiagramNodePart )
-            {
-                ...
-            }
-            else if( selectedPart instanceof DiagramConnectionPart )
-            {
-                ...
-            }
-        }
-        
-        ...
-        
-        return null;
-    }
-}</code></pre>
-
-<pre class="source-code"><code>&lt;diagram-page>
+<pre class="source-code"><code><font color="#888888">&lt;actuator>
+    &lt;action-id>Sapphire.Gallery.Actuators.DoubleTheNumber&lt;/action-id>
     &lt;action>
-        &lt;id>Example&lt;/id>
-        &lt;label>example&lt;/label>
-        &lt;context>Sapphire.Diagram.MultipleParts&lt;/context>
+        &lt;id>Sapphire.Gallery.Actuators.DoubleTheNumber&lt;/id>
+        &lt;label>double the number&lt;/label>
     &lt;/action>
     &lt;action-handler>
-        &lt;action>Example&lt;/action>
-        &lt;impl>ExampleActionHandler&lt;/impl>
-    &lt;/action-handler>
-&lt;/diagram-page></code></pre>
+        &lt;id>Sapphire.Gallery.Actuators.DoubleTheNumber&lt;/id>
+        &lt;action>Sapphire.Gallery.Actuators.DoubleTheNumber&lt;/action>
+        &lt;impl>ActuatorsGalleryDoubleTheNumberActionHandler&lt;/impl>
+    &lt;/action-handler></font>
+    &lt;span>false&lt;/span>
+    &lt;horizontal-align>right&lt;/horizontal-align>
+    &lt;style>Sapphire.Actuator.Button&lt;/style>
+<font color="#888888">&lt;/actuator></font></code></pre>
 
-<h2><a name="FloatingPalette">Floating Palette Around Diagram Nodes</a></h2>
-
-<p>Diagram Editor now displays a floating palette around diagram nodes when the mouse hovers
-over them. The floating palette displays all the actions that are applicable to a node. User can click 
-on them to execute the actions. The floating palette will disappear when the mouse leaves the node area.</p>
-
-<h2><a name="DiagramHeader">Diagram Header</a></h2>
-
-<p>Diagram Editor now displays a header similar to Form Editor. The header initially displays the text 
-specified in the <font color="#888888">PageHeaderText</font> property of the diagram page. SapphireDiagramEditor also provides API to
-allow third party developers to change the text dynamically. The method is <font color="#888888">setDiagramHeaderText</font>.</p>
-
-<p>Diagram header also has a tool bar at its right to display actions associated with the diagram page part.
-The context for those actions is <font color="#888888">Sapphire.Diagram.Header</font>. Refer to the map sample
-for details.</p>
-
-<h2><a name="DirectEdit">Direct Edit Invocation</a></h2>
-
-<p>Direct edit invocation has been simplified. The click-wait-click direct edit invocation has been disabled.
-Direct edit mode can be invoked by either double clicking on a node/connection label or hitting F2 when the node
-or connection label is selected.
-
-<h2><a name="ExpressionLanguage"><a name="ImageFunction">Image Function</a></a></h2>
-
-<p>Returns the image associated with the context model element.</p>
-
-<p style="margin-left: 20px;"><b>Examples</b></p>
-
-<pre class="source-code"><code>${ Image() }
-${ Address.Image() }
-${ BusinessExpense ? BusinessAccount.Image() : PersonalAccount.Image() }</code></pre>
+<p style="margin-left: 20px;"><img src="images/MoreFlexibleActuatorPresentation.png"/></p>
 
 
-<h2><a name="ExprInPropertyEditorLabel">Use in Property Editor Label</a></h2>
+<h2><a name="Forms-ExprForPropertyEditorLabel">Expression for Property Editor Label</a></h2>
 
-<p>Use expression language when overriding the label in a property editor.</p>
+<p>Use the expression language when overriding the label in a property editor.</p>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
 
@@ -352,7 +340,7 @@ ${ BusinessExpense ? BusinessAccount.Image() : PersonalAccount.Image() }</code><
 <font color="#888888">&lt;/property-editor></font></code></pre>
 
 
-<h2><a name="Services"><a name="PartServices">Part Services</a></a></h2>
+<h2><a name="Services"><a name="Services-PartServices">Part Services</a></a></h2>
 
 <p>Services can now be attached to parts. This enhancement allows extensibility for parts to be handled with
 the same API that adopters should already be familiar with from the model layer.</p>
@@ -383,7 +371,7 @@ the same API that adopters should already be familiar with from the model layer.
 &lt;/definition></font></code></pre>
 
 
-<h2><a name="AdapterService">AdapterService</a></h2>
+<h2><a name="Services-AdapterService">AdapterService</a></h2>
 
 <p>The AdapterService provides means to extend the behavior of the adapt method in a given context.</p>
 
@@ -395,14 +383,14 @@ provide a custom method for adopting IModelElement to IProject.</p>
 <p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code><font color="#888888">@GenerateImpl</font>
-@Service( impl = NewProjectFileOpAdapter.class )
+@Service( impl = NewProjectFileOpAdapterService.class )
 
 <font color="#888888">public interface INewProjectFileOp extends IModelElement
 {
     ...
 }</font></code></pre>
 
-<pre class="source-code"><code>public class NewProjectFileOpAdapter extends AdapterService
+<pre class="source-code"><code>public class NewProjectFileOpAdapterService extends AdapterService
 {
     @Override
     public &lt;A&gt; A adapt( Class&lt;A&gt; adapterType )
@@ -411,19 +399,49 @@ provide a custom method for adopting IModelElement to IProject.</p>
         {
             INewProjectFileOp op = context( INewProjectFileOp.class );
             IProject project = op.getProject().resolve();
-
+            
             if( project != null )
             {
                 return adapterType.cast( project );
             }
         }
-
+        
         return null;
     }
 }</code></pre>
 
 
-<a name="DragAndDropService"><h2>DragAndDropService</h2></a>
+<a name="Services-DiagramLayoutPersistenceService"><h2>DiagramLayoutPersistenceService</h2></a>
+
+<p>The DiagramLayoutPersistenceService is responsible for persisting layout of the diagram, such a location and
+size of nodes, connection bend points, etc.</p>
+
+<p>Unlike other services, DiagramLayoutPersistenceService is not defined by methods that must be
+implemented, but rather by its expected behavior.</p>
+
+<ol>
+  <li>During service initialization, the implementation is expected to load layout information and transfer it to
+    diagram parts using API such as DiagramNodePart.setNodeBounds().</li>
+  <li>After initialization, the implementation is expected to listen for changes to diagram parts and persist
+    layout information. Persistence can happen immediately or be deferred until the save event is received.</li>
+  <li>If implementation defers layout persistence until save, it is expected to implement dirty() method and to
+   issue DirtyStateEvent when this state changes.</li>
+ </ol>
+ 
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The architecture sample provides a comprehensive example of a custom 
+implementation that persists layout in the same file as data.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;diagram-page></font>
+  &lt;layout-persistence>custom&lt;/layout-persistence>
+  &lt;service>
+    &lt;implementation>ArchitectureDiagramLayoutPersistenceService&lt;/implementation>
+  &lt;/service>
+<font color="#888888">&lt;/diagram-page></font></code></pre>
+
+
+<a name="Services-DragAndDropService"><h2>DragAndDropService</h2></a>
 
 <p>The DragAndDropService provides means to implement drag-n-drop behavior in a diagram editor.</p>
 
@@ -436,7 +454,7 @@ provide a custom method for adopting IModelElement to IProject.</p>
     {
         return context.object() instanceof IFile;
     }
-
+    
     @Override
     public void drop( DropContext context ) 
     {
@@ -521,7 +539,7 @@ definition in the sdef file.</p>
 <font color="#888888">&lt;/diagram-page></font></code></pre>
 
 
-<h2><a name="EqualityService">EqualityService</a></h2>
+<h2><a name="Services-EqualityService">EqualityService</a></h2>
 
 <p>The EqualityService provides means to implement equals() and hashCode() methods when the context object doesn't support
 implementing these methods directly. One such context is model elements, where the framework does not rely on a particular
@@ -572,12 +590,12 @@ can be useful for other purposes.</p>
 public interface Contact extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( Contact.class );
-
+    
     ...
 }</font></code></pre>
 
 
-<a name="ListSelectionService"><h2>ListSelectionService</h2></a>
+<a name="Services-ListSelectionService"><h2>ListSelectionService</h2></a>
 
 <p>The ListSelectionService functions as a conduit between the presentation layer and anything that may want to see or 
 change the selection. The presentation layer pushes selection changes made by the user to ListSelectionService and at
@@ -629,7 +647,7 @@ refresh action handler's enablement state when selection changes.</p>
 }</font></code></pre>
 
 
-<a name="ValidationServiceAtElementLevel"><h2>ValidationService at Element Level</h2></a>
+<a name="Services-ValidationServiceAtElementLevel"><h2>ValidationService at Element Level</h2></a>
 
 <p>The ValidationService provides means to check integrity constraints and to communicate problems to the user. In
 prior releases, the developer could only attach a ValidationService to properties. Now, a ValidationService can also be
@@ -720,15 +738,74 @@ contacts are defined as duplicates of each other if e-mail and at least one of t
 public interface Contact extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( Contact.class );
-
+    
     ...
 }</font></code></pre>
 
 
-<h2><a name="Miscellaneous"><a name="ModelElementDisposed">IModelElement.disposed()</a></a></h2>
+<h2><a name="Miscellaneous"><a name="Miscellaneous-ModelElementDisposed">IModelElement.disposed()</a></a></h2>
 
 <p>The new IModelElement.disposed() method provides a way to check if a model element has been disposed
 already.</p>
+
+
+<h2><a name="Miscellaneous-ImageFunction">Image Function</a></h2>
+
+<p>Returns the image associated with the context model element.</p>
+
+<p style="margin-left: 20px;"><b>Examples</b></p>
+
+<pre class="source-code"><code>${ Image() }
+${ Address.Image() }
+${ BusinessExpense ? BusinessAccount.Image() : PersonalAccount.Image() }</code></pre>
+
+
+<h2><a name="Miscellaneous-PropagatedKeyBindings">Propagated Key Bindings</a></h2>
+
+<p>When processing keyboard events, the system now takes into account actions defined in part's hierarchy rather
+than just the local ones. For instance, an action defined at editor page level can be made accessible via its
+key binding even if the focus is on a property editor. This is done by specifying propagated key binding behavior
+as part of action definition.</p> 
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;action>
+    &lt;id>Sapphire.Gallery.Open.Homepage&lt;/id>
+    &lt;label>Sapphire Homepage&lt;/label>
+    &lt;tooltip>Open Sapphire Homepage (Ctrl+Alt+Shift+S)&lt;/tooltip>
+    &lt;image>Web.png&lt;/image>
+    &lt;description>Open Sapphire project homepage.&lt;/description>
+    &lt;key-binding>CONTROL+ALT+SHIFT+s&lt;/key-binding></font>
+    &lt;key-binding-behavior>propagated&lt;/key-binding-behavior>
+    <font color="#888888">&lt;context>Sapphire.EditorPage&lt;/context>
+    &lt;hint>
+        &lt;name>style&lt;/name>
+        &lt;value>image+text&lt;/value>
+    &lt;/hint>
+&lt;/action></font></code></pre>
+
+
+<h2><a name="Miscellaneous-ActionToolTips">Action Tool Tips</a></h2>
+
+<p>By default, action label is used when a tool tip is necessary. If that's not appropriate, developer can now
+set the action tool tip explicitly.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;action>
+    &lt;id>Sapphire.Gallery.Open.Homepage&lt;/id>
+    &lt;label>Sapphire Homepage&lt;/label></font>
+    &lt;tooltip>Open Sapphire Homepage (Ctrl+Alt+Shift+S)&lt;/tooltip>
+    <font color="#888888">&lt;image>Web.png&lt;/image>
+    &lt;description>Open Sapphire project homepage.&lt;/description>
+    &lt;key-binding>CONTROL+ALT+SHIFT+s&lt;/key-binding>
+    &lt;key-binding-behavior>propagated&lt;/key-binding-behavior>
+    &lt;context>Sapphire.EditorPage&lt;/context>
+    &lt;hint>
+        &lt;name>style&lt;/name>
+        &lt;value>image+text&lt;/value>
+    &lt;/hint>
+&lt;/action></font></code></pre>
 
 
 <div class="copyright">Copyright (c) 2012 Oracle and Liferay<br/>

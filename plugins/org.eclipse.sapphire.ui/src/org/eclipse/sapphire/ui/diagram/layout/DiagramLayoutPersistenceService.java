@@ -16,6 +16,20 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.services.Service;
 
 /**
+ * <p>Responsible for persisting layout of the diagram, such a location and size of nodes, connection bend points, etc.</p>
+ * 
+ * <p>Unlike other services, DiagramLayoutPersistenceService is not defined by methods that must be
+ * implemented, but rather by its expected behavior.</p>
+ * 
+ * <ol>
+ *   <li>During service initialization, the implementation is expected to load layout information and transfer it to
+ *     diagram parts using API such as DiagramNodePart.setNodeBounds().</li>
+ *   <li>After initialization, the implementation is expected to listen for changes to diagram parts and persist
+ *     layout information. Persistence can happen immediately or be deferred until the save event is received.</li>
+ *   <li>If implementation defers layout persistence until save, it is expected to implement dirty() method and to
+ *     issue DirtyStateEvent when this state changes.</li>
+ * </ol>
+ * 
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
