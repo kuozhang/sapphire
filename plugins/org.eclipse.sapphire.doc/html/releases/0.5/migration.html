@@ -54,17 +54,14 @@ to 0.5 release. Only changes from the previous release are covered.</p>
   <li><a href="#ModelProperty">ModelProperty</a></li>
   <li><a href="#ModelPropertyListener">ModelPropertyListener</a></li>
   <li><a href="#PropertyListeners">PropertyListeners</a></li>
+  <li><a href="#SapphireActionHandler">SapphireActionHandler</a></li>
   <li><a href="#SapphireDiagramActionHandler">SapphireDiagramActionHandler</a></li>
   <li><a href="#SapphireEditor">SapphireEditor</a></li>
   <li><a href="#Actuator">Actuator</a></li>
   <li><a href="#ContentOutlineNodeImage">Content Outline Node Image</a></li>
   <li><a href="#DiagramDragAndDrop">Diagram Drag-n-Drop</a></li>
+  <li><a href="#DiagramImage">Diagram Image</a></li>
   <li><a href="#GraphitiToGef">Graphiti to GEF Transition</a></li>
-  <ol type="A">
-    <li><a href="#SapphireDiagramEditor">SapphireDiagramEditor</a></li>
-    <li><a href="#DiagramImage">Diagram Image</a></li>
-  </ol>
-  <li><a href="#Miscellaneous">Miscellaneous</a></li>
 </ol>
 
 
@@ -674,6 +671,54 @@ solution would be to implement the new insert() and move() methods directly.</p>
 </table>
 
 
+<h2><a name="SapphireActionHandler">SapphireActionHandler</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">import org.eclipse.sapphire.ui.def.</font>ISapphireActionHandlerDef<font color="#888888">;</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">import org.eclipse.sapphire.ui.def.</font>ActionHandlerDef<font color="#888888">;</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomActionHandler extends SapphireActionHandler
+{
+    @Override
+    public void init( SapphireAction action,</font> ISapphireActionHandlerDef <font color="#888888">def )
+    {
+        super.init( action, def );
+        
+        ...
+    }
+    
+    ...
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class CustomActionHandler extends SapphireActionHandler
+{
+    @Override
+    public void init( SapphireAction action,</font> ActionHandlerDef <font color="#888888">def )
+    {
+        super.init( action, def );
+        
+        ...
+    }
+    
+    ...
+}</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="SapphireDiagramActionHandler">SapphireDiagramActionHandler</a></h2>
 
 <table>
@@ -879,57 +924,6 @@ to capture the same semantics.</p>
 </table>
 
 
-<h2><a name="GraphitiToGef">Graphiti to GEF Transition</a></h2>
-
-<p>In this release the dependency on Graphiti has been removed and the Sapphire Diagram UI has been rebased on straight GEF. The changes that will be required to existing diagram editors in previous 0.4 release are detailed below.</p> 
-
-<h2><a name="SapphireDiagramEditor">SapphireDiagramEditor</a></h2>
-
-<p>The use of SapphireDiagramEditor in 0.5 requires the following changes for adopters in previous 0.4.x release.  
-<ol>
-  <li>Package namespace changed from org.eclipse.sapphire.ui.gef.diagram.editor to org.eclipse.sapphire.ui.swt.gef</li>
-  <li>Constructor for SapphireDiagramEditor now requires passing in the parent SapphireEditor.</li>
-  <li>No longer need to create DiagramEditorInput</li>
-</ol>
-
-<table>
-  <tr>
-    <th>Before</th>
-    <th>After</th>
-  </tr>
-  <tr>
-    <td> 
-<pre class="source-code"><code>import org.eclipse.sapphire.ui.gef.diagram.editor.SapphireDiagramEditor;
-</code></pre>
-    </td>
-    <td>
-   <pre class="source-code"><code>import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
-</code></pre>
-    </td>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code>this.pageDiagram = new SapphireDiagramEditor( this.model, path );</code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code>this.pageDiagram = new SapphireDiagramEditor( sapphireEditor, this.architectureModel, path );</code></pre>
-    </td>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code>pageDiagram = new SapphireDiagramEditor( model, path );
-SapphireDiagramEditorInput diagramEditorInput = 
-	SapphireDiagramEditorFactory.createEditorInput( file );
-addPage( 0, pageDiagram, diagramEditorInput );</code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code>pageDiagram = new SapphireDiagramEditor( sapphireEditor, model, path );
-addPage( 0, pageDiagram, getEditorInput() );</code></pre>
-    </td>
-  </tr>
-</table>
-
-
 <h2><a name="DiagramImage">Diagram Image</a></h2>
 
 <p>Image specifications inside diagram parts are now consistent with the rest of the sdef. 
@@ -1001,56 +995,38 @@ Images are now referenced at the point of use, rather than defined separately an
 </table>
 
 
-<h2><a name="Miscellaneous">Miscellaneous</a></h2>
+<h2><a name="GraphitiToGef">Graphiti to GEF Transition</a></h2>
 
+<p>The Graphiti-based diagram presentation (introduced in 0.4 release) has been replaced with a presentation 
+written directly on top of GEF. This has significantly reduced Sapphire's dependencies and enabled diagram 
+support to more tightly integrate with the rest of Sapphire.</p>
+ 
 <table>
   <tr>
     <th>Before</th>
     <th>After</th>
   </tr>
   <tr>
-    <td>
-<pre class="source-code"><code><font color="#888888">import org.eclipse.sapphire.ui.def.</font>ISapphireActionHandlerDef<font color="#888888">;</font></code></pre>
+    <td> 
+<pre class="source-code"><code><font color="#888888">import</font> org.eclipse.sapphire.ui.gef.diagram.editor<font color="#888888">.[etc];</font>
+</code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">import org.eclipse.sapphire.ui.def.</font>ActionHandlerDef<font color="#888888">;</font></code></pre>
+   <pre class="source-code"><code><font color="#888888">import</font> org.eclipse.sapphire.ui.swt.gef<font color="#888888">.[etc];</font>
+</code></pre>
     </td>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">public class CustomActionHandler extends SapphireActionHandler
-{
-    @Override
-    public void init( SapphireAction action,</font> ISapphireActionHandlerDef <font color="#888888">def )
-    {
-        super.init( action, def );
-        
-        ...
-    }
-    
-    ...
-}</font></code></pre>
+<pre class="source-code"><code><font color="#888888">page = new SapphireDiagramEditor( model, path );</font>
+<font color="#888888">addPage( 0, page,</font> SapphireDiagramEditorFactory.createEditorInput( file ) <font color="#888888">);</font></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">public class CustomActionHandler extends SapphireActionHandler
-{
-    @Override
-    public void init( SapphireAction action,</font> ActionHandlerDef <font color="#888888">def )
-    {
-        super.init( action, def );
-        
-        ...
-    }
-    
-    ...
-}</font></code></pre>
+<pre class="source-code"><code><font color="#888888">page = new SapphireDiagramEditor(</font> this, <font color="#888888">model, path );
+addPage( 0, page );</font></code></pre>
     </td>
   </tr>
 </table>
-
-<p style="margin-left: 20px;"><code>Scope: &nbsp;&nbsp;&nbsp;*.java<br/>
-<nobr>Search: &nbsp;&nbsp;ISapphireActionHandlerDef</nobr><br/>
-<nobr>Replace: &nbsp;ActionHandlerDef</nobr></p>
 
 
 <div class="copyright">Copyright (c) 2012 Oracle<br/>
