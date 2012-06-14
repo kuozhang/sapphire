@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -251,6 +252,26 @@ public abstract class SapphireTestCase extends TestCase
         assertSame( property, evt.property() );
         assertEquals( before, evt.before() );
         assertEquals( after, evt.after() );
+    }
+    
+    protected static void assertContainsInstanceOf( final Collection<?> collection,
+                                                    final Class<?> type )
+    {
+        boolean found = false;
+        
+        for( Object obj : collection )
+        {
+            if( type.isInstance( obj ) )
+            {
+                found = true;
+                break;
+            }
+        }
+        
+        if( ! found )
+        {
+            fail( "Collection does not contain instance of " + type.getName() + " type." );
+        }
     }
     
     protected static <T> List<T> list( final T... items )

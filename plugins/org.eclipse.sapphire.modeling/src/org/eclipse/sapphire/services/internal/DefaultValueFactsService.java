@@ -39,15 +39,15 @@ public final class DefaultValueFactsService extends FactsService
         final IModelElement element = context( IModelElement.class );
         final ValueProperty property = context( ValueProperty.class );
         
-        if( property.hasAnnotation( SensitiveData.class ) )
+        final String defaultValue = getDefaultValueLabel( element, property );
+        
+        if( defaultValue != null )
         {
-            facts.add( Resources.statementForSensitive );
-        }
-        else
-        {
-            final String defaultValue = getDefaultValueLabel( element, property );
-            
-            if( defaultValue != null )
+            if( property.hasAnnotation( SensitiveData.class ) )
+            {
+                facts.add( Resources.statementForSensitive );
+            }
+            else
             {
                 facts.add( NLS.bind( Resources.statement, defaultValue ) );
             }

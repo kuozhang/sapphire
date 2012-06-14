@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.services.internal;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
@@ -93,9 +94,9 @@ public abstract class PropertyServiceContext extends AnnotationsAwareServiceCont
     
     @Override
     
-    protected <A extends Annotation> A annotation( final Class<A> type )
+    protected <A extends Annotation> List<A> annotations( final Class<A> type )
     {
-        return this.property.getAnnotation( type );
+        return this.property.getAnnotations( type );
     }
     
 }
