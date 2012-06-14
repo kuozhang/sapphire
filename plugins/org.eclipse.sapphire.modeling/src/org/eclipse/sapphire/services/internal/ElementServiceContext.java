@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.services.internal;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -53,9 +54,9 @@ public abstract class ElementServiceContext extends AnnotationsAwareServiceConte
     
     @Override
     
-    protected <A extends Annotation> A annotation( final Class<A> type )
+    protected <A extends Annotation> List<A> annotations( final Class<A> type )
     {
-        return this.elementMetaModel.getAnnotation( type );
+        return this.elementMetaModel.getAnnotations( type );
     }
     
 }

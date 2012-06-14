@@ -41,7 +41,6 @@ public abstract class AnnotationsAwareServiceContext extends ServiceContext
     }
     
     @Override
-    
     protected final List<ServiceFactoryProxy> local()
     {
         final List<ServiceFactoryProxy> local = new ArrayList<ServiceFactoryProxy>();
@@ -49,17 +48,9 @@ public abstract class AnnotationsAwareServiceContext extends ServiceContext
         final List<org.eclipse.sapphire.modeling.annotations.Service> serviceAnnotations 
             = new ArrayList<org.eclipse.sapphire.modeling.annotations.Service>();
         
-        final org.eclipse.sapphire.modeling.annotations.Service serviceAnnotation 
-            = annotation( org.eclipse.sapphire.modeling.annotations.Service.class );
-        
-        if( serviceAnnotation != null )
-        {
-            serviceAnnotations.add( serviceAnnotation );
-        }
-        
-        final Services servicesAnnotation = annotation( Services.class );
-        
-        if( servicesAnnotation != null )
+        serviceAnnotations.addAll( annotations( org.eclipse.sapphire.modeling.annotations.Service.class ) );
+
+        for( Services servicesAnnotation : annotations( Services.class ) )
         {
             for( org.eclipse.sapphire.modeling.annotations.Service svc : servicesAnnotation.value() )
             {
@@ -161,6 +152,6 @@ public abstract class AnnotationsAwareServiceContext extends ServiceContext
         return local;
     }
     
-    protected abstract <A extends Annotation> A annotation( Class<A> type );
+    protected abstract <A extends Annotation> List<A> annotations( Class<A> type );
     
 }
