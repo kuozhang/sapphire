@@ -32,6 +32,7 @@ import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.annotations.SensitiveData;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.tests.EmptyModelElement;
@@ -46,12 +47,21 @@ public interface TestRootElement extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( TestRootElement.class );
     
-    // *** NoFacts ***
+    // *** Plain ***
     
-    ValueProperty PROP_NO_FACTS = new ValueProperty( TYPE, "NoFacts" );
+    ValueProperty PROP_PLAIN = new ValueProperty( TYPE, "Plain" );
     
-    Value<String> getNoFacts();
-    void setNoFacts( String value );
+    Value<String> getPlain();
+    void setPlain( String value );
+    
+    // *** Sensitive ***
+    
+    @SensitiveData
+    
+    ValueProperty PROP_SENSITIVE = new ValueProperty( TYPE, "Sensitive" );
+    
+    Value<String> getSensitive();
+    void setSensitive( String value );
     
     // *** DefaultValue ***
     
@@ -61,6 +71,16 @@ public interface TestRootElement extends IModelElement
     
     Value<String> getDefaultValue();
     void setDefaultValue( String value );
+    
+    // *** DefaultValueSensitive ***
+    
+    @SensitiveData
+    @DefaultValue( text = "123" )
+    
+    ValueProperty PROP_DEFAULT_VALUE_SENSITIVE = new ValueProperty( TYPE, "DefaultValueSensitive" );
+    
+    Value<String> getDefaultValueSensitive();
+    void setDefaultValueSensitive( String value );
     
     // *** NumericRangeMin ***
     

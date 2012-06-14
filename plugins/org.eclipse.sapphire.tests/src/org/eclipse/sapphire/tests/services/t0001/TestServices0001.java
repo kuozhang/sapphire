@@ -41,8 +41,10 @@ public final class TestServices0001 extends SapphireTestCase
         
         suite.setName( "TestServices0001" );
 
-        suite.addTest( new TestServices0001( "testNoFacts" ) );
+        suite.addTest( new TestServices0001( "testPlain" ) );
+        suite.addTest( new TestServices0001( "testSensitive" ) );
         suite.addTest( new TestServices0001( "testDefaultValue" ) );
+        suite.addTest( new TestServices0001( "testDefaultValueSensitive" ) );
         suite.addTest( new TestServices0001( "testNumericRangeMin" ) );
         suite.addTest( new TestServices0001( "testNumericRangeMax" ) );
         suite.addTest( new TestServices0001( "testNumericRangeMinMax" ) );
@@ -67,14 +69,24 @@ public final class TestServices0001 extends SapphireTestCase
         return suite;
     }
     
-    public void testNoFacts() throws Exception
+    public void testPlain() throws Exception
     {
-        test( TestRootElement.PROP_NO_FACTS );
+        test( TestRootElement.PROP_PLAIN );
+    }
+
+    public void testSensitive() throws Exception
+    {
+        test( TestRootElement.PROP_SENSITIVE );
     }
 
     public void testDefaultValue() throws Exception
     {
         test( TestRootElement.PROP_DEFAULT_VALUE, "Default value is \"123\"." );
+    }
+
+    public void testDefaultValueSensitive() throws Exception
+    {
+        test( TestRootElement.PROP_DEFAULT_VALUE_SENSITIVE, "Has default value." );
     }
 
     public void testNumericRangeMin() throws Exception
