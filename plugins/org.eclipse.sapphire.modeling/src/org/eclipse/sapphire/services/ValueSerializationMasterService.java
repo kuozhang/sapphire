@@ -88,7 +88,7 @@ public final class ValueSerializationMasterService extends Service
             }
             else
             {
-                result = this.valueSerializationService.decode( value.trim() );
+                result = this.valueSerializationService.decode( value );
             }
         }
         

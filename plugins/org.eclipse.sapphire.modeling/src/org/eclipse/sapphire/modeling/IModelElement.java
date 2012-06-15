@@ -157,6 +157,8 @@ public interface IModelElement extends IModelParticle
     
     boolean enabled( ModelProperty property );
     
+    Status validation( ModelProperty property );
+    
     boolean attach( Listener listener );
     void attach( Listener listener, String path );
     void attach( Listener listener, ModelPath path );

@@ -337,8 +337,6 @@ public final class ModelElementType extends ModelMetadataItem
                 throw new RuntimeException( msg, e );
             }
             
-            element.initialize();
-            
             return element;                
         }
         

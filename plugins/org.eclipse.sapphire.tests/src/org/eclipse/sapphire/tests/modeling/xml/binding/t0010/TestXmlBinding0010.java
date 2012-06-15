@@ -8,6 +8,7 @@
  * Contributors:
  *    Kamesh Sampath - initial implementation
  *    Konstantin Komissarchik - initial implementation review and related changes    
+ *    Konstantin Komissarchik - [382453] @InitialValue annotation can cause problems for XML resources with invalid schemas
  ******************************************************************************/
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0010;
@@ -24,6 +25,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * Tests InitialValueService and InitialValue annotation in the context of XML binding.
  * 
  * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public final class TestXmlBinding0010 extends SapphireTestCase
@@ -38,7 +40,6 @@ public final class TestXmlBinding0010 extends SapphireTestCase
         suite.setName("TestXmlBinding0010");
 
         suite.addTest(new TestXmlBinding0010("test"));
-        suite.addTest(new TestXmlBinding0010("testImpliedProperty"));
         return suite;
     }
 
@@ -48,25 +49,11 @@ public final class TestXmlBinding0010 extends SapphireTestCase
         final XmlResourceStore xmlResourceStore = new XmlResourceStore(
                 byteArrayResourceStore);
 
-        final TestModelRoot root = TestModelRoot.TYPE
-                .instantiate(new RootXmlResource(xmlResourceStore));
+        final TestModelRoot root = TestModelRoot.TYPE.instantiate(new RootXmlResource(xmlResourceStore));
+        root.initialize();
         root.resource().save();
-        assertEqualsIgnoreNewLineDiffs(loadResource("test-case-result-1.txt"),
-                new String(byteArrayResourceStore.getContents(), "UTF-8"));
-
-    }
-
-    public void testImpliedProperty() throws Exception {
-        final ByteArrayResourceStore byteArrayResourceStore = new ByteArrayResourceStore();
-        final XmlResourceStore xmlResourceStore = new XmlResourceStore(
-                byteArrayResourceStore);
-        final TestModelRoot root = TestModelRoot.TYPE
-                .instantiate(new RootXmlResource(xmlResourceStore));
-        root.getProp5();
-        root.resource().save();
-        assertEqualsIgnoreNewLineDiffs(loadResource("test-case-result-2.txt"),
-                new String(byteArrayResourceStore.getContents(), "UTF-8"));
-
+        
+        assertEqualsIgnoreNewLineDiffs(loadResource("result.txt"), new String(byteArrayResourceStore.getContents(), "UTF-8"));
     }
 
 }
