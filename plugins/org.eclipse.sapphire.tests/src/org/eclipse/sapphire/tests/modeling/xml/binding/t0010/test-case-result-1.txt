@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<root attributeProp1="AttributeProp1">
-    <prop1>Default Prop1</prop1>
-    <prop2>Default Prop2</prop2>
-</root>

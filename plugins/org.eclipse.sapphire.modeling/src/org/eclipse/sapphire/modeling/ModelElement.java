@@ -110,6 +110,10 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                     write( (ValueProperty) property, initialValueService.value() );
                 }
             }
+            else if( property instanceof ImpliedElementProperty )
+            {
+                read( ( (ImpliedElementProperty) property ) ).initialize();
+            }
         }
     }
     
@@ -648,7 +652,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         }
     }
 
-    public Status validation()
+    public final Status validation()
     {
         if( this.validation == null )
         {
@@ -656,6 +660,38 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         }
         
         return this.validation;
+    }
+    
+    public final Status validation( final ModelProperty property )
+    {
+        final Status validation;
+        
+        if( property instanceof ValueProperty )
+        {
+            validation = read( (ValueProperty) property ).validation();
+        }
+        else if( property instanceof ListProperty )
+        {
+            validation = read( (ListProperty) property ).validation();
+        }
+        else if( property instanceof ImpliedElementProperty )
+        {
+            validation = read( (ImpliedElementProperty) property ).validation();
+        }
+        else if( property instanceof ElementProperty )
+        {
+            validation = read( (ElementProperty) property ).validation();
+        }
+        else if( property instanceof TransientProperty )
+        {
+            validation = read( (TransientProperty) property ).validation();
+        }
+        else
+        {
+            throw new IllegalStateException();
+        }
+        
+        return validation;
     }
     
     private void refreshValidationResult()

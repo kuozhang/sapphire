@@ -11,6 +11,12 @@
 
 package org.eclipse.sapphire.ui.assist;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ListenerContext;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelProperty;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -42,6 +48,13 @@ public abstract class PropertyEditorAssistContributor
     private String id = getClass().getName();
     private int priority = 1000;
     
+    private final ListenerContext listeners = new ListenerContext();
+    
+    public void init( final IModelElement element, final ModelProperty property )
+    {
+        // Nothing to do by default.
+    }
+    
     public String getId()
     {
         return this.id;
@@ -63,6 +76,31 @@ public abstract class PropertyEditorAssistContributor
     }
     
     public abstract void contribute( PropertyEditorAssistContext context );
+    
+    public final boolean attach( final Listener listener )
+    {
+        return this.listeners.attach( listener );
+    }
+    
+    public final boolean detach( final Listener listener )
+    {
+        return this.listeners.detach( listener );
+    }
+    
+    protected final void broadcast( final Event event )
+    {
+        this.listeners.broadcast( event );
+    }
+
+    protected final void broadcast()
+    {
+        this.listeners.broadcast();
+    }
+    
+    public void dispose()
+    {
+        // Nothing to do by default.
+    }
     
     protected static String escapeForXml( final String string )
     {

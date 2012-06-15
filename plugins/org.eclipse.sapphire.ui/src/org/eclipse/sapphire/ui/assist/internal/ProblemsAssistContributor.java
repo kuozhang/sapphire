@@ -11,7 +11,11 @@
 
 package org.eclipse.sapphire.ui.assist.internal;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
@@ -25,25 +29,47 @@ import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
 
 public final class ProblemsAssistContributor extends PropertyEditorAssistContributor
 {
-    private final Status status;
+    private IModelElement element;
+    private ModelProperty property;
+    private FilteredListener<PropertyValidationEvent> propertyValidationListener;
     
-    public ProblemsAssistContributor( final Status status )
+    public ProblemsAssistContributor()
     {
         setId( ID_PROBLEMS_CONTRIBUTOR );
         setPriority( PRIORITY_PROBLEMS_CONTRIBUTOR );
-        this.status = status;
     }
     
     @Override
+    public void init( final IModelElement element,
+                      final ModelProperty property )
+    {
+        this.element = element;
+        this.property = property;
+        
+        this.propertyValidationListener = new FilteredListener<PropertyValidationEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final PropertyValidationEvent event )
+            {
+                broadcast();
+            }
+        };
+        
+        this.element.attach( this.propertyValidationListener, this.property.getName() );
+    }
+
+    @Override
     public void contribute( final PropertyEditorAssistContext context )
     {
-        if( this.status.children().isEmpty() )
+        final Status validation = this.element.validation( this.property );
+        
+        if( validation.children().isEmpty() )
         {
-            contribute( context, this.status );
+            contribute( context, validation );
         }
         else
         {
-            for( Status child : this.status.children() )
+            for( Status child : validation.children() )
             {
                 contribute( context, child );
             }
@@ -73,6 +99,15 @@ public final class ProblemsAssistContributor extends PropertyEditorAssistContrib
             
             final PropertyEditorAssistSection section = context.getSection( SECTION_ID_PROBLEMS );
             section.addContribution( contribution.create() );
+        }
+    }
+
+    @Override
+    public void dispose()
+    {
+        if( this.propertyValidationListener != null )
+        {
+            this.element.detach( this.propertyValidationListener, this.property.getName() );
         }
     }
     

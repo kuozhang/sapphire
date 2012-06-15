@@ -12,15 +12,10 @@
 package org.eclipse.sapphire.services.internal;
 
 import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.TransientProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
@@ -60,34 +55,7 @@ public final class StandardElementValidationService extends ValidationService
         {
             if( element.enabled( property ) )
             {
-                final Status x;
-                
-                if( property instanceof ValueProperty )
-                {
-                    x = element.read( (ValueProperty) property ).validation();
-                }
-                else if( property instanceof ListProperty )
-                {
-                    x = element.read( (ListProperty) property ).validation();
-                }
-                else if( property instanceof ImpliedElementProperty )
-                {
-                    x = element.read( (ImpliedElementProperty) property ).validation();
-                }
-                else if( property instanceof ElementProperty )
-                {
-                    x = element.read( (ElementProperty) property ).validation();
-                }
-                else if( property instanceof TransientProperty )
-                {
-                    x = element.read( (TransientProperty) property ).validation();
-                }
-                else
-                {
-                    throw new IllegalStateException();
-                }
-                
-                factory.merge( x );
+                factory.merge( element.validation( property ) );
             }
         }
         
