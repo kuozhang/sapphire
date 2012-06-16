@@ -38,6 +38,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.PropertyEvent;
+import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleTypesService;
@@ -93,12 +94,19 @@ public final class SapphireWithDirective extends PageBookPart
         
         setExposePageValidationState( true );
         
-        this.listener = new FilteredListener<PropertyContentEvent>()
+        this.listener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            protected void handleTypedEvent( final PropertyContentEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
-                updateCurrentPage( false );
+                if( event instanceof PropertyContentEvent )
+                {
+                    updateCurrentPage( false );
+                }
+                else if( event instanceof PropertyValidationEvent )
+                {
+                    updateValidationState();
+                }
             }
         };
         
