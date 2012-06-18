@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.swt.SWT;
@@ -29,14 +31,14 @@ import org.eclipse.swt.widgets.Display;
 
 public class DiagramResourceCache {
 	
-	public final String DEFAULT_FONT = "Arial"; //$NON-NLS-1$
-
 	private List<Color> colors = new ArrayList<Color>();
 	private Font defaultFont;
 	
 	public DiagramResourceCache() {
-		FontData fontData = new FontData(DEFAULT_FONT, 8, 0);
-		defaultFont = new Font(null, new FontData[] { fontData });
+		FontDescriptor descriptor = JFaceResources.getDefaultFontDescriptor();
+		FontData[] fontData = descriptor.getFontData();
+		FontData smallerFontData = new FontData(fontData[0].getName(), fontData[0].getHeight()-1, 0);
+		defaultFont = new Font(null, new FontData[] { smallerFontData });
 	}
 	
     public int getLinkStyle(IDiagramConnectionDef def) {
@@ -82,7 +84,7 @@ public class DiagramResourceCache {
     }
     
     public Font getDefaultFont() {
-    	return defaultFont;
+		return defaultFont;
     }
     
     public void dispose() {
