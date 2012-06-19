@@ -465,9 +465,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		}
 		if (oldSrcNode != newSrcNode || oldTargetNode != newTargetNode)
 		{
+			removeConnection(connPart);
 			if (newSrcNode != null && newTargetNode != null)
 			{
-				removeConnection(connPart);
 				addConnection(connPart);				
 			}
 		}			
