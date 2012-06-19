@@ -108,7 +108,7 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart
 	private void performDirectEdit() {
 		if (manager == null) {
 			Label label = getNodeFigure().getLabelFigure();
-			manager = new NodeDirectEditManager(this, new NodeCellEditorLocator(label), label);
+			manager = new NodeDirectEditManager(this, new NodeCellEditorLocator(getConfigurationManager(), label), label);
 		}
 		manager.show();
 	}
