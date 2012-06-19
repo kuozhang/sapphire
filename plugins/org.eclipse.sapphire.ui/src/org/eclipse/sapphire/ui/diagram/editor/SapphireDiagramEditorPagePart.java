@@ -460,9 +460,21 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     
     public void setSelections(final List<ISapphirePart> selections)
     {
-    	this.selections.clear();
-    	this.selections.addAll(selections);
-    	broadcast( new SelectionChangedEvent( this ) );
+    	boolean selectionChanged = false;
+    	if (this.selections.size() != selections.size())
+    	{
+    		selectionChanged = true;
+    	}
+    	else if (!this.selections.containsAll(selections) || !selections.containsAll(this.selections))
+    	{
+    		selectionChanged = true;
+    	}
+    	if (selectionChanged)
+    	{
+	    	this.selections.clear();
+	    	this.selections.addAll(selections);
+	    	broadcast( new SelectionChangedEvent( this ) );
+    	}
     }
     
     public void selectAll()
