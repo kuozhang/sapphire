@@ -73,6 +73,7 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SapphireHelpContext;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.SapphireEditorPagePart.SelectionChangedEvent;
 import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
@@ -329,6 +330,21 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		
 		this.diagramPart.addListener(this.diagramPartListener);
 		
+		this.diagramPart.attach
+        (
+            new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    if( event instanceof SelectionChangedEvent )
+                    {
+                        selectParts(diagramPart.getSelections());
+                    }
+                }
+            }
+        );
+        
 		this.layoutPersistenceServiceListener = new Listener() 
 		{
             @Override
@@ -591,9 +607,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 				// the key handler in this case.
 				if (!partList.isEmpty())
 				{	
-					getPart().setSelections(partList);
 					this.selectedParts = partList;
 					this.selectedEditParts = editPartList;
+					getPart().setSelections(partList);
 					updateKeyHandler();
 					
 					// [Bug 380728] Floating toolbar appears on a node when multiple nodes are selected
@@ -1004,6 +1020,49 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		}
 	}
 
+	public void selectParts(final List<ISapphirePart> selections)
+	{
+		boolean selectionChanged = false;
+    	if (this.selectedParts.size() != selections.size())
+    	{
+    		selectionChanged = true;
+    	}
+    	else if (!this.selectedParts.containsAll(selections) || !selections.containsAll(this.selectedParts))
+    	{
+    		selectionChanged = true;
+    	}
+    	if (selectionChanged)
+    	{
+    		GraphicalViewer viewer = this.getGraphicalViewer();
+    		viewer.deselectAll();
+    		
+    		for (ISapphirePart sapphirePart : selections)
+    		{
+    			Object editpartObj = null;
+    			DiagramNodePart nodePart = null;
+    			DiagramConnectionPart connPart = null;
+    			
+    			if (sapphirePart instanceof DiagramNodePart)
+    			{
+    				nodePart = (DiagramNodePart)sapphirePart;
+    				DiagramNodeModel nodeModel = this.getDiagramModel().getDiagramNodeModel(nodePart);
+    				editpartObj = viewer.getEditPartRegistry().get(nodeModel);
+    			}
+    			else if (sapphirePart instanceof DiagramConnectionPart)
+    			{
+    				connPart = (DiagramConnectionPart)sapphirePart;
+    				DiagramConnectionModel connModel = this.getDiagramModel().getDiagramConnectionModel(connPart);
+    				editpartObj = viewer.getEditPartRegistry().get(connModel);				
+    			}
+    			if (editpartObj != null)
+    			{
+    				viewer.appendSelection((EditPart)editpartObj);
+    				viewer.reveal((EditPart)editpartObj);
+    			}
+    		}    		
+    	}
+	}
+	
 	public Point getMouseLocation() {
 		if (mouseLocation == null) {
 			mouseLocation = new Point();
