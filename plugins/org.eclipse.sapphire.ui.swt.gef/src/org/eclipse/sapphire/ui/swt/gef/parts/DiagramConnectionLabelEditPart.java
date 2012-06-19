@@ -31,6 +31,7 @@ import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionLabelModel;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.policies.ConnectionLabelDirectEditPolicy;
 
 /**
@@ -61,6 +62,8 @@ public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart
 			}
     		
     	};
+    	DiagramResourceCache resourceCache = getCastedModel().getDiagramModel().getResourceCache();
+    	label.setFont(resourceCache.getDefaultFont());
 		
     	// let text change color when the parent connection is selected 
 //    	DiagramResourceCache resourceCache = getCastedModel().getDiagramModel().getResourceCache();
