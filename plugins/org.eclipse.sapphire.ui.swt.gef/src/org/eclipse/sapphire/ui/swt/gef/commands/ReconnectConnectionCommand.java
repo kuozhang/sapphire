@@ -87,6 +87,10 @@ public class ReconnectConnectionCommand extends Command {
 
         final IModelElement oldConnElement = connectionPart.getLocalModelElement();
         newConnPart.getLocalModelElement().copy(oldConnElement);
+        // Bug 382912 - Reconnecting an existing connection adds a bend point 
+        // After the copy, connection endpoint event is triggered which causes SapphireConnectionRouter
+        // to be called. Since the old connection hasn't been deleted, a default bend point will be added. 
+        newConnPart.removeAllBendpoints();        
 		
 		if (newSource != null) 
 		{
