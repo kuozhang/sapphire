@@ -11,10 +11,6 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
-import static org.eclipse.sapphire.modeling.xml.RootElementController.XSI_NAMESPACE;
-import static org.eclipse.sapphire.modeling.xml.RootElementController.XSI_NAMESPACE_PREFIX;
-import static org.eclipse.sapphire.modeling.xml.RootElementController.XSI_SCHEMA_LOCATION_ATTR;
-
 import java.util.Map;
 
 import javax.xml.namespace.QName;
@@ -38,11 +34,16 @@ public final class XmlUtil
 {
     public static final String EMPTY_STRING = "";
     
-    public static final String PI_XML_TARGET = "xml"; //$NON-NLS-1$
-    public static final String PI_XML_DATA = "version=\"1.0\" encoding=\"UTF-8\""; //$NON-NLS-1$
+    public static final String PI_XML_TARGET = "xml";
+    public static final String PI_XML_DATA = "version=\"1.0\" encoding=\"UTF-8\"";
 
-    private static final String XMLNS = "xmlns"; //$NON-NLS-1$
-    private static final String XMLNS_COLON = "xmlns:"; //$NON-NLS-1$
+    public static final String XMLNS = "xmlns";
+    public static final String XMLNS_COLON = "xmlns:";
+    
+    public static final String XSI_NAMESPACE_PREFIX = "xsi";
+    public static final String XSI_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance";
+    public static final String XSI_SCHEMA_LOCATION_ATTR = "schemaLocation";
+    public static final String XSI_SCHEMA_LOCATION_ATTR_QUALIFIED = XSI_NAMESPACE_PREFIX + ":" + XSI_SCHEMA_LOCATION_ATTR;
     
     public static void changeNamespace( final Document document,
                                         final String oldNamespace,
@@ -110,7 +111,7 @@ public final class XmlUtil
                     attrValue = newNamespace;
                     updatedNamespace = true;
                 }
-                else if( attr.getLocalName() != null && attr.getLocalName().equals( "schemaLocation" ) )
+                else if( attr.getLocalName() != null && attr.getLocalName().equals( XSI_SCHEMA_LOCATION_ATTR ) )
                 {
                     attrValue = createSchemaLocationAttrValue( newSchemaLocation );
                     updatedSchemaLocation = true;
@@ -138,7 +139,7 @@ public final class XmlUtil
         final String schemaLocationAttrValue = createSchemaLocationAttrValue( primarySchemaLocation );
         
         element.setAttributeNS( null, XMLNS_COLON + XSI_NAMESPACE_PREFIX, XSI_NAMESPACE );
-        element.setAttributeNS( XSI_NAMESPACE, XSI_SCHEMA_LOCATION_ATTR, schemaLocationAttrValue );
+        element.setAttributeNS( XSI_NAMESPACE, XSI_SCHEMA_LOCATION_ATTR_QUALIFIED, schemaLocationAttrValue );
     }
 
     private static String createSchemaLocationAttrValue( final String primarySchemaLocation )
@@ -159,6 +160,112 @@ public final class XmlUtil
         }
         
         return buf.toString();
+    }
+    
+    public static void convertToNamespaceForm( final Document document,
+                                               final String namespace,
+                                               final String schemaLocation )
+    {
+        final Element oldRootElement = document.getDocumentElement();
+        
+        if( oldRootElement != null )
+        {
+            final Node nodeAfterRootElement = oldRootElement.getNextSibling();
+            final Node newRootElement = convertToNamespaceForm( oldRootElement, namespace, schemaLocation );
+            document.removeChild( oldRootElement );
+            document.insertBefore( newRootElement, nodeAfterRootElement );
+        }
+    }
+    
+    private static Node convertToNamespaceForm( final Node node,
+                                                final String namespace,
+                                                final String schemaLocation )
+    {
+        if( node instanceof Element )
+        {
+            final Document document = node.getOwnerDocument();
+            final Element newElement = document.createElementNS( namespace, node.getLocalName() );
+            final NodeList children = node.getChildNodes();
+            
+            if( node.getParentNode() instanceof Document )
+            {
+                newElement.setAttributeNS( null, XMLNS, namespace );
+                configSchemaLocation( newElement, schemaLocation );
+            }
+            
+            for( int i = 0, n = children.getLength(); i < n; i++ )
+            {
+                final Node oldChildNode = children.item( i );
+                final Node newChildNode = convertToNamespaceForm( oldChildNode, namespace, schemaLocation );
+                
+                newElement.appendChild( newChildNode );
+            }
+            
+            final NamedNodeMap attributes = node.getAttributes();
+            
+            for( int i = 0, n = attributes.getLength(); i < n; i++ )
+            {
+                final Attr attr = (Attr) attributes.item( i );
+                newElement.setAttributeNS( null, attr.getNodeName(), attr.getValue() );
+            }
+            
+            return newElement;
+        }
+        else
+        {
+            return node.cloneNode( true );
+        }
+    }
+    
+    public static void convertFromNamespaceForm( final Document document )
+    {
+        final Element oldRootElement = document.getDocumentElement();
+        
+        if( oldRootElement != null )
+        {
+            final Node nodeAfterRootElement = oldRootElement.getNextSibling();
+            final Node newRootElement = convertFromNamespaceForm( oldRootElement );
+            document.removeChild( oldRootElement );
+            document.insertBefore( newRootElement, nodeAfterRootElement );
+        }
+    }
+    
+    private static Node convertFromNamespaceForm( final Node node )
+    {
+        if( node instanceof Element )
+        {
+            final Document document = node.getOwnerDocument();
+            final Element newElement = document.createElementNS( null, node.getLocalName() );
+            final NodeList children = node.getChildNodes();
+            
+            for( int i = 0, n = children.getLength(); i < n; i++ )
+            {
+                final Node oldChildNode = children.item( i );
+                final Node newChildNode = convertFromNamespaceForm( oldChildNode );
+                
+                newElement.appendChild( newChildNode );
+            }
+            
+            final NamedNodeMap attributes = node.getAttributes();
+            
+            for( int i = 0, n = attributes.getLength(); i < n; i++ )
+            {
+                final Attr attr = (Attr) attributes.item( i );
+                final String attrQualifiedName = attr.getNodeName();
+                final String attrLocalName = attr.getLocalName();
+                
+                if( ! attrQualifiedName.equals( XMLNS ) && ! attrQualifiedName.startsWith( XMLNS_COLON ) && ! attrLocalName.equals( XSI_SCHEMA_LOCATION_ATTR ) )
+                {
+                    newElement.setAttributeNS( null, attrLocalName, attr.getValue() );
+                }
+            }
+            
+            return newElement;
+        }
+        else
+        {
+            return node.cloneNode( true );
+        }
     }
     
     public static QName createQualifiedName( final String name,

@@ -17,11 +17,11 @@ package org.eclipse.sapphire.modeling.xml;
 
 public abstract class RootElementController
 {
-    public static final String XMLNS = "xmlns"; //$NON-NLS-1$
-    public static final String XMLNS_COLON = XMLNS + ":"; //$NON-NLS-1$
-    public static final String XSI_NAMESPACE_PREFIX = "xsi"; //$NON-NLS-1$
-    public static final String XSI_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance"; //$NON-NLS-1$
-    public static final String XSI_SCHEMA_LOCATION_ATTR = "xsi:schemaLocation"; //$NON-NLS-1$
+    public static final String XMLNS = XmlUtil.XMLNS;
+    public static final String XMLNS_COLON = XmlUtil.XMLNS_COLON;
+    public static final String XSI_NAMESPACE_PREFIX = XmlUtil.XSI_NAMESPACE_PREFIX;
+    public static final String XSI_NAMESPACE = XmlUtil.XSI_NAMESPACE;
+    public static final String XSI_SCHEMA_LOCATION_ATTR = XmlUtil.XSI_SCHEMA_LOCATION_ATTR_QUALIFIED;
     
     private XmlResource resource;
     
