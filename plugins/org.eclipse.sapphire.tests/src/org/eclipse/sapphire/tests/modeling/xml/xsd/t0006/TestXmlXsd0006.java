@@ -54,8 +54,8 @@ public final class TestXmlXsd0006 extends SapphireTestCase
     {
         testConvertToNamespaceForm
         (
-            "ConvertToNamespaceForm-1-Initial.xml",
-            "ConvertToNamespaceForm-1-Expected.xml",
+            "ConvertToNamespaceForm-1-Initial.txt",
+            "ConvertToNamespaceForm-1-Expected.txt",
             "http://www.eclipse.org/sapphire/tests/xml/xsd/0006"
         );
     }
@@ -64,8 +64,8 @@ public final class TestXmlXsd0006 extends SapphireTestCase
     {
         testConvertToNamespaceForm
         (
-            "ConvertToNamespaceForm-2-Initial.xml",
-            "ConvertToNamespaceForm-2-Expected.xml",
+            "ConvertToNamespaceForm-2-Initial.txt",
+            "ConvertToNamespaceForm-2-Expected.txt",
             "http://www.eclipse.org/sapphire/tests/xml/xsd/0006",
             null
         );
@@ -75,8 +75,8 @@ public final class TestXmlXsd0006 extends SapphireTestCase
     {
         testConvertToNamespaceForm
         (
-            "ConvertToNamespaceForm-3-Initial.xml",
-            "ConvertToNamespaceForm-3-Expected.xml",
+            "ConvertToNamespaceForm-3-Initial.txt",
+            "ConvertToNamespaceForm-3-Expected.txt",
             "http://www.eclipse.org/sapphire/tests/xml/xsd/0006",
             "http://www.eclipse.org/sapphire/tests/xml/xsd/0006"
         );
@@ -86,8 +86,8 @@ public final class TestXmlXsd0006 extends SapphireTestCase
     {
         testConvertToNamespaceForm
         (
-            "ConvertToNamespaceForm-4-Initial.xml",
-            "ConvertToNamespaceForm-4-Expected.xml",
+            "ConvertToNamespaceForm-4-Initial.txt",
+            "ConvertToNamespaceForm-4-Expected.txt",
             "http://www.eclipse.org/sapphire/tests/xml/xsd/0006",
             "http://www.eclipse.org/sapphire/tests/xml/xsd/0006/v1"
         );
@@ -142,8 +142,8 @@ public final class TestXmlXsd0006 extends SapphireTestCase
     {
         testConvertFromNamespaceForm
         (
-            "ConvertFromNamespaceForm-1-Initial.xml",
-            "ConvertFromNamespaceForm-1-Expected.xml"
+            "ConvertFromNamespaceForm-1-Initial.txt",
+            "ConvertFromNamespaceForm-1-Expected.txt"
         );
     }
 
@@ -151,8 +151,8 @@ public final class TestXmlXsd0006 extends SapphireTestCase
     {
         testConvertFromNamespaceForm
         (
-            "ConvertFromNamespaceForm-2-Initial.xml",
-            "ConvertFromNamespaceForm-2-Expected.xml"
+            "ConvertFromNamespaceForm-2-Initial.txt",
+            "ConvertFromNamespaceForm-2-Expected.txt"
         );
     }
 
