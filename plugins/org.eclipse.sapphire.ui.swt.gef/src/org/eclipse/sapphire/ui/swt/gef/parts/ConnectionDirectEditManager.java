@@ -79,9 +79,10 @@ public class ConnectionDirectEditManager extends DirectEditManager {
 				GC gc = new GC(text);
 				Point size = gc.textExtent(leftText + event.text + rightText);
 				gc.dispose();
-				if (size.x != 0)
+				if (size.x != 0) {
 					size = text.computeSize(size.x, SWT.DEFAULT);
-				getCellEditor().getControl().setSize(size.x, size.y);
+					getCellEditor().getControl().setSize(size.x, size.y);
+				}
 			}
 		};
 		text.addVerifyListener(verifyListener);
