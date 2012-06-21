@@ -483,7 +483,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		{
 			removeConnection(connPart);
 			if (newSrcNode != null && newTargetNode != null)
-			{
+			{                
 				addConnection(connPart);				
 			}
 		}			
