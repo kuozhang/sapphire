@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
-import static org.eclipse.sapphire.modeling.xml.XmlUtil.PI_XML_DATA;
-import static org.eclipse.sapphire.modeling.xml.XmlUtil.PI_XML_TARGET;
+import static org.eclipse.sapphire.modeling.xml.XmlUtil.XML_DECLARATION;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -42,9 +41,6 @@ import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.ProcessingInstruction;
-import org.w3c.dom.Text;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -167,26 +163,10 @@ public class XmlResourceStore extends ResourceStore
         {
             if( this.document.getDocumentElement() != null )
             {
-                final NodeList nodes = this.document.getChildNodes();
-                
-                for( int i = 0, n = nodes.getLength(); i < n; i++ )
-                {
-                    final Node node = nodes.item( i );
-                    
-                    if( node != null && node.getNodeType() == Node.TEXT_NODE && 
-                        node.getNodeValue().trim().length() == 0 )
-                    {
-                        this.document.removeChild( node );
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                
-                addXmlProcessingInstruction( this.document );
-                
                 final StringWriter sw = new StringWriter();
+                
+                sw.append( XML_DECLARATION );
+                sw.append( '\n' );
                 
                 final DOMSource source = new DOMSource( this.document );
                 final StreamResult result = new StreamResult( sw );
@@ -340,35 +320,6 @@ public class XmlResourceStore extends ResourceStore
         {
             throw new RuntimeException( e );
         }
-    }
-    
-    private static void addXmlProcessingInstruction( final Document document )
-    {
-        final NodeList nodes = document.getChildNodes();
-        
-        for( int i = 0, n = nodes.getLength(); i < n; i++ )
-        {
-            final Node node = nodes.item( i );
-            
-            if( node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE )
-            {
-                final ProcessingInstruction pi = (ProcessingInstruction) node;
-                
-                if( pi.getTarget().equals( PI_XML_TARGET ) )
-                {
-                    pi.setData( PI_XML_DATA );
-                    return;
-                }
-            }
-        }
-        
-        final Node insertionReference = document.getFirstChild();
-        
-        final ProcessingInstruction pi = document.createProcessingInstruction( PI_XML_TARGET, PI_XML_DATA );
-        document.insertBefore( pi, insertionReference );
-        
-        final Text newLineTextNode = document.createTextNode( "\n" );
-        document.insertBefore( newLineTextNode, insertionReference );
     }
     
 }

@@ -34,8 +34,7 @@ public final class XmlUtil
 {
     public static final String EMPTY_STRING = "";
     
-    public static final String PI_XML_TARGET = "xml";
-    public static final String PI_XML_DATA = "version=\"1.0\" encoding=\"UTF-8\"";
+    public static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
     public static final String XMLNS = "xmlns";
     public static final String XMLNS_COLON = "xmlns:";

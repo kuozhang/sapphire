@@ -165,7 +165,7 @@ public abstract class XmlNode
         final Node parent = this.domNode.getParentNode();
          
         if( parent.getNodeType() == Node.ELEMENT_NODE ||
-            parent.getNodeType() == Node.DOCUMENT_NODE )
+            ( parent.getNodeType() == Node.DOCUMENT_NODE && this.domNode.getPreviousSibling() != null ) )
         {
             final Text textBeforeOpeningTag = document.createTextNode( formatting );
             parent.insertBefore( textBeforeOpeningTag, this.domNode );
