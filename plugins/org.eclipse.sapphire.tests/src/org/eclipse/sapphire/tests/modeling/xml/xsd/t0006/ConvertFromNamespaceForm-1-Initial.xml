@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workbook xmlns="http://www.eclipse.org/sapphire/tests/xml/xsd/0006">
+    <circle>
+        <x>1</x>
+        <y>2</y>
+        <radius>3</radius>
+    </circle>
+    <rectangle>
+        <x>1</x>
+        <y>2</y>
+        <width>3</width>
+        <height>4</height>
+    </rectangle>
+</workbook>

@@ -162,6 +162,27 @@ public final class XmlUtil
         return buf.toString();
     }
     
+    /**
+     * Converts the document into namespace-qualified form.
+     * 
+     * @param document the document to convert
+     * @param namespace the namespace to use
+     */
+    
+    public static void convertToNamespaceForm( final Document document,
+                                               final String namespace )
+    {
+        convertToNamespaceForm( document, namespace, null );
+    }
+    
+    /**
+     * Converts the document into namespace-qualified form.
+     * 
+     * @param document the document to convert
+     * @param namespace the namespace to use
+     * @param schemaLocation the schema location to use
+     */
+    
     public static void convertToNamespaceForm( final Document document,
                                                final String namespace,
                                                final String schemaLocation )
@@ -190,7 +211,11 @@ public final class XmlUtil
             if( node.getParentNode() instanceof Document )
             {
                 newElement.setAttributeNS( null, XMLNS, namespace );
-                configSchemaLocation( newElement, schemaLocation );
+                
+                if( schemaLocation != null && ! schemaLocation.equals( namespace ) )
+                {
+                    configSchemaLocation( newElement, schemaLocation );
+                }
             }
             
             for( int i = 0, n = children.getLength(); i < n; i++ )
@@ -216,6 +241,13 @@ public final class XmlUtil
             return node.cloneNode( true );
         }
     }
+    
+    /**
+     * Converts the document from namespace-qualified form into unqualified form by removing all 
+     * namespace information.
+     * 
+     * @param document the document to convert
+     */
     
     public static void convertFromNamespaceForm( final Document document )
     {
