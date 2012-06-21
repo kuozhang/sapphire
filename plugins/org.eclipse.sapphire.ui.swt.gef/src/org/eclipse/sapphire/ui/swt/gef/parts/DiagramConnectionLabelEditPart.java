@@ -120,7 +120,7 @@ public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart
 	private void performDirectEdit() {
 		if (manager == null) {
 			Label label = (Label)getFigure();
-            manager = new ConnectionDirectEditManager(this, TextCellEditor.class, new ConnectionEditorLocator(this, label), label);
+			manager = new ConnectionDirectEditManager(this, TextCellEditor.class, new ConnectionEditorLocator(this, label), label);
 		}
 		manager.show();
 	}
