@@ -52,7 +52,7 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 			if (object instanceof DecoratorImageFigure) {
 				Rectangle imageRect = ((DecoratorImageFigure)object).getBounds();
 				if (labelRect.x == imageRect.x && labelRect.y == imageRect.y) {
-					imageWidth = ((DecoratorImageFigure)object).getBounds().width + 1;
+					imageWidth = ((DecoratorImageFigure)object).getBounds().width + 2;
 					imageWidth = (int) (imageWidth * zoom);
 				}
 			}
@@ -66,7 +66,7 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 				offset = imageWidth;
 			}
 		}
-		size.x = Math.min(size.x, labelRect.width - imageWidth);
+		size.x = Math.min(size.x, imageWidth == 0 ? labelRect.width : labelRect.width - imageWidth - 2);
 		
 		label.translateToAbsolute(labelRect);
 		

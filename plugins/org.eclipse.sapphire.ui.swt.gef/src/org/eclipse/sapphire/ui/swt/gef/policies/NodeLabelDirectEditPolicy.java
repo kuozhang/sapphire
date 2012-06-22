@@ -15,7 +15,6 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.DirectEditPolicy;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.sapphire.ui.swt.gef.commands.LabelNodeCommand;
-import org.eclipse.sapphire.ui.swt.gef.figures.NodeFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 
@@ -39,8 +38,6 @@ public class NodeLabelDirectEditPolicy extends DirectEditPolicy {
 	 * @see DirectEditPolicy#showCurrentEditValue(DirectEditRequest)
 	 */
 	protected void showCurrentEditValue(DirectEditRequest request) {
-		String value = (String) request.getCellEditor().getValue();
-		((NodeFigure) getHostFigure()).setText(value);
 		// hack to prevent async layout from placing the cell editor twice.
 		getHostFigure().getUpdateManager().performUpdate();
 
