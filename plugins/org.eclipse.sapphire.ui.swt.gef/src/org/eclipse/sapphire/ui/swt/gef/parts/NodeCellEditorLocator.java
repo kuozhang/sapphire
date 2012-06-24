@@ -36,7 +36,10 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 	public void relocate(CellEditor celleditor) {
 		double zoom = manager.getDiagramEditor().getZoomLevel();
 		Rectangle labelRect = label.getClientArea();
-		labelRect = labelRect.getShrinked(2, 0);
+		// shrink horizontal by 2
+		labelRect.x += 2;
+		labelRect.width -= 4;
+		// zoom
 		labelRect.width = (int) (labelRect.width * zoom);
 		
 		Text text = (Text) celleditor.getControl();
