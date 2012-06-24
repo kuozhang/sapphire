@@ -36,6 +36,7 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 	public void relocate(CellEditor celleditor) {
 		double zoom = manager.getDiagramEditor().getZoomLevel();
 		Rectangle labelRect = label.getClientArea();
+		labelRect = labelRect.getShrinked(2, 0);
 		labelRect.width = (int) (labelRect.width * zoom);
 		
 		Text text = (Text) celleditor.getControl();
@@ -47,13 +48,16 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 		}
 		
 		// calculate error image width
-		int imageWidth = 0;
+		int rightOffset = 0;
 		for (Object object : label.getParent().getChildren()) {
 			if (object instanceof DecoratorImageFigure) {
 				Rectangle imageRect = ((DecoratorImageFigure)object).getBounds();
-				if (labelRect.x == imageRect.x && labelRect.y == imageRect.y) {
-					imageWidth = ((DecoratorImageFigure)object).getBounds().width + 2;
-					imageWidth = (int) (imageWidth * zoom);
+				int imageWidth = ((DecoratorImageFigure)object).getBounds().width;
+				imageWidth = (int) (imageWidth * zoom);
+				int newX = imageRect.x + imageWidth + 4;
+				if (newX < labelRect.x + (labelRect.width / 2)) {
+					// right aligned image
+					rightOffset = newX - labelRect.x; 
 				}
 			}
 		}
@@ -62,15 +66,15 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 		int offset = 0;
 		if (size.x < labelRect.width) {
 			offset = (labelRect.width - size.x + 1) / 2;
-			if (imageWidth > 0 && offset < imageWidth) {
-				offset = imageWidth;
+			if (rightOffset > 0 && offset < rightOffset) {
+				offset = rightOffset;
 			}
 		}
-		size.x = Math.min(size.x, imageWidth == 0 ? labelRect.width : labelRect.width - imageWidth - 2);
+		size.x = Math.min(size.x, rightOffset == 0 ? labelRect.width : labelRect.width - rightOffset - 1);
 		
 		label.translateToAbsolute(labelRect);
 		
-		text.setBounds(labelRect.x + offset, labelRect.y + 1, size.x, size.y + 1);
+		text.setBounds(labelRect.x + offset, labelRect.y + 1, size.x - 1, size.y + 1);
 	}
 	
 	protected Label getLabel() {
