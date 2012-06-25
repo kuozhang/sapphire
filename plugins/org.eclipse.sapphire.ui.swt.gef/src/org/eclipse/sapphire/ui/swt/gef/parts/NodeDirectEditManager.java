@@ -46,11 +46,11 @@ public class NodeDirectEditManager extends DirectEditManager {
 			updateScaledFont(newZoom);
 		}
 	};
-	private Label stickyNote;
+	private Label label;
 
-	public NodeDirectEditManager(GraphicalEditPart source, CellEditorLocator locator, Label stickyNote) {
+	public NodeDirectEditManager(GraphicalEditPart source, CellEditorLocator locator, Label label) {
 		super(source, null, locator);
-		this.stickyNote = stickyNote; 
+		this.label = label; 
 	}
 
 	/**
@@ -90,7 +90,8 @@ public class NodeDirectEditManager extends DirectEditManager {
 
 	protected void initCellEditor() {
 		// update text
-		getCellEditor().setValue(stickyNote.getText());
+		getCellEditor().setValue(label.getText());
+		label.setText("");
 		// update font
 		ZoomManager zoomMgr = (ZoomManager) getEditPart().getViewer()
 				.getProperty(ZoomManager.class.toString());
@@ -100,7 +101,7 @@ public class NodeDirectEditManager extends DirectEditManager {
 			updateScaledFont(zoomMgr.getZoom());
 			zoomMgr.addZoomListener(zoomListener);
 		} else
-			getCellEditor().getControl().setFont(stickyNote.getFont());
+			getCellEditor().getControl().setFont(label.getFont());
 
 		// Hook the cell editor's copy/paste actions to the actionBars so that
 		// they can
@@ -144,7 +145,7 @@ public class NodeDirectEditManager extends DirectEditManager {
 			return;
 
 		Text text = (Text) getCellEditor().getControl();
-		Font font = this.stickyNote.getFont();
+		Font font = this.label.getFont();
 
 		disposeScaledFont();
 		cachedZoom = zoom;

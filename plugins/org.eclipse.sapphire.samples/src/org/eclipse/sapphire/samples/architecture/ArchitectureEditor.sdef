@@ -49,7 +49,10 @@
             <instance-id>${ Name }</instance-id>
             <tool-palette-label>component</tool-palette-label>
             <property>Components</property>
-            <label>${ Name == null ? &quot;&lt;component&gt;&quot; : Name }</label>
+            <label>
+                <width>120</width>
+                <text>${ Name == null ? &quot;&lt;component&gt;&quot; : Name }</text>
+            </label>
             <connection-binding>
                 <connection-id>Dependency</connection-id>
                 <property>Dependencies</property>

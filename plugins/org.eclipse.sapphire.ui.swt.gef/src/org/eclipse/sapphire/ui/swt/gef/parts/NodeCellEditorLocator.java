@@ -16,6 +16,7 @@ import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.DecoratorImageFigure;
+import org.eclipse.sapphire.ui.swt.gef.figures.NodeFigure;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Text;
 
@@ -36,6 +37,16 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 	public void relocate(CellEditor celleditor) {
 		double zoom = manager.getDiagramEditor().getZoomLevel();
 		Rectangle labelRect = label.getClientArea();
+		// shrink horizontal, may need to pad for border
+		int margin = 2;
+		if (label.getParent() instanceof NodeFigure) {
+			if (((NodeFigure)label.getParent()).hasBorder()) {
+				margin = 4;
+			}
+		}
+		labelRect.x += margin;
+		labelRect.width -= margin + margin;
+		// zoom
 		labelRect.width = (int) (labelRect.width * zoom);
 		
 		Text text = (Text) celleditor.getControl();
@@ -47,13 +58,17 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 		}
 		
 		// calculate error image width
-		int imageWidth = 0;
+		int rightOffset = 0;
 		for (Object object : label.getParent().getChildren()) {
 			if (object instanceof DecoratorImageFigure) {
 				Rectangle imageRect = ((DecoratorImageFigure)object).getBounds();
-				if (labelRect.x == imageRect.x && labelRect.y == imageRect.y) {
-					imageWidth = ((DecoratorImageFigure)object).getBounds().width + 1;
-					imageWidth = (int) (imageWidth * zoom);
+				int imageWidth = ((DecoratorImageFigure)object).getBounds().width;
+				imageWidth = (int) (imageWidth * zoom);
+				int newX = imageRect.x + imageWidth + margin;
+				if ((imageRect.x - 2 < labelRect.x && newX < labelRect.x + (labelRect.width / 2)) && 
+					(imageRect.y - 2 <= labelRect.y && labelRect.y <= imageRect.y + 2)) {
+					// right aligned image
+					rightOffset = newX - labelRect.x; 
 				}
 			}
 		}
@@ -62,11 +77,11 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 		int offset = 0;
 		if (size.x < labelRect.width) {
 			offset = (labelRect.width - size.x + 1) / 2;
-			if (imageWidth > 0 && offset < imageWidth) {
-				offset = imageWidth;
+			if (rightOffset > 0 && offset < rightOffset) {
+				offset = rightOffset;
 			}
 		}
-		size.x = Math.min(size.x, labelRect.width - imageWidth);
+		size.x = Math.min(size.x, rightOffset == 0 ? labelRect.width : labelRect.width - rightOffset - 1);
 		
 		label.translateToAbsolute(labelRect);
 		

@@ -55,6 +55,8 @@ public class NodeDecorator {
     private static final int SMALL_ERROR_DECORATOR_HEIGHT = 8;
     private static final int LARGE_ERROR_DECORATOR_WIDTH = 16;
     private static final int LARGE_ERROR_DECORATOR_HEIGHT = 16;
+    
+    private static final int MARGIN = 2;
 
     private DiagramNodeModel nodeModel;
 	private Bounds labelBounds;
@@ -156,7 +158,11 @@ public class NodeDecorator {
 		if (decoratorDef.getDecoratorPlacement().getContent() == DecoratorPlacement.IMAGE && imageBounds.getWidth() > 0 && imageBounds.getHeight() > 0) {
 			bounds = imageBounds;
 		} else {
-			bounds = labelBounds;
+			// set margin if there is room
+			int hMargin = ((labelBounds.getWidth() - MARGIN - MARGIN) > decoratorWidth) ? MARGIN : 0;  
+			int vMargin = ((labelBounds.getHeight() - MARGIN - MARGIN) > decoratorHeight) ? MARGIN : 0;
+			bounds = new Bounds(labelBounds.getX() + hMargin, labelBounds.getY() + vMargin,
+								labelBounds.getWidth() - hMargin - hMargin, labelBounds.getHeight() - vMargin - vMargin);
 		}
 
 		HorizontalAlignment horizontalAlign = decoratorDef.getHorizontalAlignment().getContent();

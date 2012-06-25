@@ -85,7 +85,7 @@ public class CreateConnectionCommand extends Command {
 		
 		// activate direct editing after object creation
 		if (connection.canEditLabel()) {
-			source.getDiagramModel().handleDirectEditing(connection);
+			diagramPart.selectAndDirectEdit(connection);
 		}
 	}
 
