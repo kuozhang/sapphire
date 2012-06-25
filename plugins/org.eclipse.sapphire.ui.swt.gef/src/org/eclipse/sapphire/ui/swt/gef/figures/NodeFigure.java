@@ -82,6 +82,10 @@ public class NodeFigure extends RoundedRectangle {
 		
 	}
 	
+	public boolean hasBorder() {
+		return !hasImage;
+	}
+	
 	public void refreshConstraints(Bounds labelBounds, Bounds iconBounds) {
 		Rectangle labelFigureConstraint = new Rectangle(labelBounds.getX(), labelBounds.getY(), labelBounds.getWidth(), labelBounds.getHeight());
 		getLayoutManager().setConstraint(labelFigure, labelFigureConstraint);

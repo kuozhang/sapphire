@@ -16,6 +16,7 @@ import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.DecoratorImageFigure;
+import org.eclipse.sapphire.ui.swt.gef.figures.NodeFigure;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Text;
 
@@ -36,9 +37,15 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 	public void relocate(CellEditor celleditor) {
 		double zoom = manager.getDiagramEditor().getZoomLevel();
 		Rectangle labelRect = label.getClientArea();
-		// shrink horizontal by 2 pixel, need to pad 1 for border
-		labelRect.x += 3;
-		labelRect.width -= 6;
+		// shrink horizontal, may need to pad for border
+		int margin = 2;
+		if (label.getParent() instanceof NodeFigure) {
+			if (((NodeFigure)label.getParent()).hasBorder()) {
+				margin = 4;
+			}
+		}
+		labelRect.x += margin;
+		labelRect.width -= margin + margin;
 		// zoom
 		labelRect.width = (int) (labelRect.width * zoom);
 		
@@ -57,7 +64,7 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 				Rectangle imageRect = ((DecoratorImageFigure)object).getBounds();
 				int imageWidth = ((DecoratorImageFigure)object).getBounds().width;
 				imageWidth = (int) (imageWidth * zoom);
-				int newX = imageRect.x + imageWidth + 3;
+				int newX = imageRect.x + imageWidth + margin;
 				if ((imageRect.x - 2 < labelRect.x && newX < labelRect.x + (labelRect.width / 2)) && 
 					(imageRect.y - 2 <= labelRect.y && labelRect.y <= imageRect.y + 2)) {
 					// right aligned image
