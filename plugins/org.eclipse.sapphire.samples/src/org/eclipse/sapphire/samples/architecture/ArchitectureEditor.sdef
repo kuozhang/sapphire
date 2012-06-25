@@ -118,9 +118,6 @@
                 </page>
             </properties-view>
             <visible-when>${ Root().DetailLevel == 1 }</visible-when>
-            <problem-decorator>
-                <horizontal-margin>1</horizontal-margin>
-            </problem-decorator>
         </node>
         <page-header-text>architecture</page-header-text>
         <connection>

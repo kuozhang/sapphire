@@ -52,9 +52,6 @@
             <property>Locations</property>
             <label>${Name == null ? &quot;&lt;location&gt;&quot; : Name}</label>
             <instance-id>${Name}</instance-id>
-		    <problem-decorator>
-		        <horizontal-margin>1</horizontal-margin>
-		    </problem-decorator>
             <connection-binding>
                 <connection-id>railway_routes</connection-id>
                 <property>RailwayRoutes</property>

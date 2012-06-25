@@ -8,6 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
+ *    Ling Hao - [383372] Better spacing when showing problem markers in samples
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.def;
@@ -80,7 +81,7 @@ public interface IDiagramDecoratorDef
     
     @Type( base = Integer.class )
     @Label( standard = "vertical margin" )
-    @DefaultValue( text = "0" )
+    @DefaultValue( text = "1" )
     @XmlBinding( path = "vertical-margin" )
     
     ValueProperty PROP_VERTICAL_MARGIN = new ValueProperty( TYPE, "VerticalMargin" );
@@ -93,7 +94,7 @@ public interface IDiagramDecoratorDef
     
     @Type( base = Integer.class )
     @Label( standard = "horizontal margin" )
-    @DefaultValue( text = "0" )
+    @DefaultValue( text = "1" )
     @XmlBinding( path = "horizontal-margin" )
     
     ValueProperty PROP_HORIZONTAL_MARGIN = new ValueProperty( TYPE, "HorizontalMargin" );

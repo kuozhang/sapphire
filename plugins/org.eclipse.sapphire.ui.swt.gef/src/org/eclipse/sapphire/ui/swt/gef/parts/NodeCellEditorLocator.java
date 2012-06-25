@@ -36,9 +36,9 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 	public void relocate(CellEditor celleditor) {
 		double zoom = manager.getDiagramEditor().getZoomLevel();
 		Rectangle labelRect = label.getClientArea();
-		// shrink horizontal by 2
-		labelRect.x += 2;
-		labelRect.width -= 4;
+		// shrink horizontal by 2 pixel, need to pad 1 for border
+		labelRect.x += 3;
+		labelRect.width -= 6;
 		// zoom
 		labelRect.width = (int) (labelRect.width * zoom);
 		
@@ -57,8 +57,9 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 				Rectangle imageRect = ((DecoratorImageFigure)object).getBounds();
 				int imageWidth = ((DecoratorImageFigure)object).getBounds().width;
 				imageWidth = (int) (imageWidth * zoom);
-				int newX = imageRect.x + imageWidth + 4;
-				if (newX < labelRect.x + (labelRect.width / 2)) {
+				int newX = imageRect.x + imageWidth + 3;
+				if ((imageRect.x - 2 < labelRect.x && newX < labelRect.x + (labelRect.width / 2)) && 
+					(imageRect.y - 2 <= labelRect.y && labelRect.y <= imageRect.y + 2)) {
 					// right aligned image
 					rightOffset = newX - labelRect.x; 
 				}
@@ -77,7 +78,7 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 		
 		label.translateToAbsolute(labelRect);
 		
-		text.setBounds(labelRect.x + offset, labelRect.y + 1, size.x - 1, size.y + 1);
+		text.setBounds(labelRect.x + offset, labelRect.y + 1, size.x, size.y + 1);
 	}
 	
 	protected Label getLabel() {
