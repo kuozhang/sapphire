@@ -38,6 +38,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
+import org.w3c.dom.Text;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -269,40 +270,18 @@ public class RootXmlResource extends XmlResource
             this.document.removeChild( node );
         }
         
-        // Add a new XML processing instruction and the root element.
+        // Add a new XML declaration and the root element.
         
         if( store().isXmlDeclarationNeeded() )
         {
-            addXmlProcessingInstruction( this.document );
+            final ProcessingInstruction xmlDeclarationNode = this.document.createProcessingInstruction( PI_XML_TARGET, PI_XML_DATA );
+            this.document.insertBefore( xmlDeclarationNode, null );
+            
+            final Text newLineTextNode = this.document.createTextNode( "\n" );
+            this.document.insertBefore( newLineTextNode, null );
         }
         
         this.rootElementController.createRootElement();
-    }
-    
-    private void addXmlProcessingInstruction( final Document document )
-    {
-        final NodeList nodes = document.getChildNodes();
-        
-        for( int i = 0, n = nodes.getLength(); i < n; i++ )
-        {
-            final Node node = nodes.item( i );
-            
-            if( node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE )
-            {
-                final ProcessingInstruction pi = (ProcessingInstruction) node;
-                
-                if( pi.getTarget().equals( PI_XML_TARGET ) )
-                {
-                    pi.setData( PI_XML_DATA );
-                    return;
-                }
-            }
-        }
-        
-        final ProcessingInstruction pi 
-            = document.createProcessingInstruction( PI_XML_TARGET, PI_XML_DATA );
-        
-        document.insertBefore( pi, document.getFirstChild() );
     }
     
 }
