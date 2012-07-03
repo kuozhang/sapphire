@@ -19,6 +19,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -33,9 +34,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @GenerateImpl
 
-public interface IComponent extends IModelElement
+public interface Component extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IComponent.class );
+    ModelElementType TYPE = new ModelElementType( Component.class );
     
     // *** Name ***
     
@@ -59,16 +60,17 @@ public interface IComponent extends IModelElement
     
     // *** Dependencies ***
     
-    @Type( base = IComponentDependency.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "dependency", type = IComponentDependency.class ) )
+    @Type( base = ComponentDependency.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "dependency", type = ComponentDependency.class ) )
 
     ListProperty PROP_DEPENDENCIES = new ListProperty( TYPE, "Dependencies" );
     
-    ModelElementList<IComponentDependency> getDependencies();
+    ModelElementList<ComponentDependency> getDependencies();
     
     // *** Provider ***
     
     @Label( standard = "provider" )
+    @Enablement( expr = "${ VersionMatches( Root().Version, '[1.1' ) }" )
     @XmlBinding( path = "provider" )
     
     ValueProperty PROP_PROVIDER = new ValueProperty( TYPE, "Provider" );
@@ -79,6 +81,7 @@ public interface IComponent extends IModelElement
     // *** Copyright ***
     
     @Label( standard = "copyright" )
+    @Enablement( expr = "${ VersionMatches( Root().Version, '[1.1' ) }" )
     @LongString
     @XmlBinding( path = "copyright" )
     

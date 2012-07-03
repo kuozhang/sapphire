@@ -35,16 +35,16 @@ import org.eclipse.sapphire.samples.architecture.internal.ComponentReferenceServ
 
 @GenerateImpl
 
-public interface IComponentDependency 
+public interface ComponentDependency 
 
     extends IModelElement
     
 {
-    ModelElementType TYPE = new ModelElementType( IComponentDependency.class );
+    ModelElementType TYPE = new ModelElementType( ComponentDependency.class );
     
     // *** Name ***
     
-    @Reference( target = IComponent.class )
+    @Reference( target = Component.class )
     @Service( impl = ComponentReferenceService.class )
     @Required
     @PossibleValues( property = "/Components/Name" )
@@ -52,7 +52,7 @@ public interface IComponentDependency
 
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
 
-    ReferenceValue<String,IComponent> getName();
+    ReferenceValue<String,Component> getName();
     void setName( String value );
     
     // *** Description ***

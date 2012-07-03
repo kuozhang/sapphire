@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
-import org.eclipse.sapphire.samples.architecture.IArchitecture;
+import org.eclipse.sapphire.samples.architecture.Architecture;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
@@ -32,7 +32,7 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public final class ArchitectureEditor extends SapphireEditor
 {
-    private IArchitecture architectureModel;
+    private Architecture architectureModel;
     private StructuredTextEditor pageSource;
     private SapphireDiagramEditor pageDiagram;
     private MasterDetailsEditorPage pageDetails;
@@ -55,7 +55,7 @@ public final class ArchitectureEditor extends SapphireEditor
     @Override
     protected IModelElement createModel() 
     {
-        this.architectureModel = IArchitecture.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.pageSource ) ) );
+        this.architectureModel = Architecture.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.pageSource ) ) );
         return this.architectureModel;
     }
 

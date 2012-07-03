@@ -107,7 +107,7 @@
                 </page>
                 <page>
                     <label>provider</label>
-                    <visible-when>${ Root().DetailLevel GE 2 }</visible-when>
+                    <visible-when>${ Root().DetailLevel GE 2 AND VersionMatches( Root().Version, '[1.1' ) }</visible-when>
                     <content>
                         <property-editor>Provider</property-editor>
                         <property-editor>
@@ -117,7 +117,6 @@
                     </content>
                 </page>
             </properties-view>
-            <visible-when>${ Root().DetailLevel == 1 }</visible-when>
         </node>
         <page-header-text>architecture</page-header-text>
         <connection>
@@ -131,6 +130,7 @@
             <page>
                 <label>general</label>
                 <content>
+                    <property-editor>Version</property-editor>
                     <property-editor>DetailLevel</property-editor>
                     <property-editor>
                         <property>Description</property>
@@ -177,7 +177,6 @@
                 <node-factory>
                     <property>Components</property>
                     <case>
-                        <model-element-type>IComponent</model-element-type>
                         <label>${ Name == null ? &quot;&lt;component&gt;&quot; : Name }</label>
                         <section>
                             <label>component</label>
@@ -226,7 +225,7 @@
                             </page>
                             <page>
                                 <label>provider</label>
-                                <visible-when>${ Root().DetailLevel GE 2 }</visible-when>
+                                <visible-when>${ Root().DetailLevel GE 2 AND VersionMatches( Root().Version, '[1.1' ) }</visible-when>
                                 <content>
                                     <property-editor>Provider</property-editor>
                                     <property-editor>
@@ -242,7 +241,9 @@
                 <section>
                     <label>architecture</label>
                     <content>
+                        <property-editor>Version</property-editor>
                         <property-editor>DetailLevel</property-editor>
+                        <property-editor>Description</property-editor>
                     </content>
                 </section>
                 <image>Components.png</image>

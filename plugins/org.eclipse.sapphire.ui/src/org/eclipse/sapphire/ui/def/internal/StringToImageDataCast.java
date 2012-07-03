@@ -26,10 +26,7 @@ import org.eclipse.sapphire.ui.def.ISapphireUiDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class StringToImageDataCast
-
-    extends TypeCast
-    
+public final class StringToImageDataCast extends TypeCast
 {
     @Override
     public boolean applicable( final FunctionContext context,

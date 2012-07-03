@@ -13,6 +13,7 @@
 
 package org.eclipse.sapphire.samples.architecture;
 
+import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -36,9 +37,22 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 @GenerateImpl
 @XmlBinding( path = "architecture" )
 
-public interface IArchitecture extends IModelElement
+public interface Architecture extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IArchitecture.class );
+    ModelElementType TYPE = new ModelElementType( Architecture.class );
+    
+    // *** Version ***
+    
+    @Type( base = Version.class )
+    @Label( standard = "version" )
+    @DefaultValue( text = "1.1" )
+    @XmlBinding( path = "version" )
+    
+    ValueProperty PROP_VERSION = new ValueProperty( TYPE, "Version" );
+    
+    Value<Version> getVersion();
+    void setVersion( String value );
+    void setVersion( Version value );
     
     // *** Description ***
     
@@ -52,12 +66,12 @@ public interface IArchitecture extends IModelElement
     
     // *** Components ***
     
-    @Type( base = IComponent.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "component", type = IComponent.class ) )
+    @Type( base = Component.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "component", type = Component.class ) )
     
     ListProperty PROP_COMPONENTS = new ListProperty( TYPE, "Components" );
     
-    ModelElementList<IComponent> getComponents();
+    ModelElementList<Component> getComponents();
     
     // *** DetailLevel ***
     

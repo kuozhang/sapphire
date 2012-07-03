@@ -11,13 +11,25 @@
 
 package org.eclipse.sapphire;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+
+import org.eclipse.sapphire.modeling.LoggingService;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public final class Sapphire
 {
+    private static final String VERSION_QUALIFIER_SUFFIX = ".qualifier";
+    
     private static boolean devmode = Boolean.parseBoolean( System.getProperty( "sapphire.dev.mode" ) );
+    private static Version version;
     
     /**
      * This class is not meant to be instantiated.
@@ -30,6 +42,97 @@ public final class Sapphire
     public static boolean isDevMode()
     {
         return devmode;
+    }
+    
+    /**
+     * Determines the version of Sapphire.
+     * 
+     * @return the version of Sapphire
+     */
+    
+    public static synchronized Version version()
+    {
+        if( version == null )
+        {
+            Enumeration<URL> itr = null;
+            
+            try
+            {
+                itr = Sapphire.class.getClassLoader().getResources( "META-INF/MANIFEST.MF" );
+            }
+            catch( Exception e )
+            {
+                LoggingService.log( e );
+                version = new Version( 0 );
+            }
+            
+            if( itr != null )
+            {
+                while( itr.hasMoreElements() && version == null )
+                {
+                    InputStream stream = null;
+                    Manifest manifest = null;
+                    
+                    try
+                    {
+                        stream = itr.nextElement().openStream();
+                        manifest = new Manifest( stream );
+                    }
+                    catch( IOException e )
+                    {
+                        // Do not actually want to log this as we could be reading some other JAR's corrupted manifest.
+                    }
+                    finally
+                    {
+                        if( stream != null )
+                        {
+                            try
+                            {
+                                stream.close();
+                            }
+                            catch( IOException e ) {}
+                        }
+                    }
+                    
+                    if( manifest != null )
+                    {
+                        final Attributes attributes = manifest.getMainAttributes();
+                        final String bundleSymbolicName = attributes.getValue( "Bundle-SymbolicName" );
+                        
+                        if( bundleSymbolicName != null && bundleSymbolicName.equals( "org.eclipse.sapphire.modeling" ) )
+                        {
+                            String bundleVersion = attributes.getValue( "Bundle-Version" );
+                            
+                            if( bundleVersion != null )
+                            {
+                                bundleVersion = bundleVersion.trim();
+                                
+                                if( bundleVersion.endsWith( VERSION_QUALIFIER_SUFFIX ) )
+                                {
+                                    bundleVersion = bundleVersion.substring( 0, bundleVersion.length() - VERSION_QUALIFIER_SUFFIX.length() );
+                                }
+                                
+                                try
+                                {
+                                    version = new Version( bundleVersion );
+                                }
+                                catch( IllegalArgumentException e )
+                                {
+                                    LoggingService.log( e );
+                                }
+                            }
+                            
+                            if( version == null )
+                            {
+                                version = new Version( 0 );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return version;
     }
     
 }

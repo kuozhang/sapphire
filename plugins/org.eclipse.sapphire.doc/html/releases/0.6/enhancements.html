@@ -21,11 +21,91 @@
 <body>
 <h1>Enhancements in 0.6</h1>
 <ol>
+  <li><a href="#VersionsAndVersionConstraints">Versions and Version Constraints</a></li>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
     <li><a href="#Miscellaneous-ConvertToFromNamespace">XmlUtil.convertToNamespaceFrom and convertFromNamespaceForm</a></li>
   </ol>
 </ol>
+
+
+<h2><a name="VersionsAndVersionConstraints">Versions and Version Constraints</a></h2>
+
+<p>In many complex Sapphire models, it is useful to be able to constrain functionality based on a version. To simplify these scenarios,
+Sapphire now has native constructs for dealing with versions and version constraints.</p>
+
+<p><b>Version</b> - Represents a version as a sequence of long integers. In string format, it is represented as a dot-separated
+list of numeric segments, such as "1.2.3" or "5.7.3.2012070310003".</p>
+
+<p><b>VersionConstraint</b> - A boolean expression that can check versions for applicability. In string 
+format, it is represented as a comma-separated list of specific versions, closed 
+ranges (expressed using "[1.2.3-4.5)" syntax and open ranges (expressed using "[1.2.3" or "4.5)" 
+syntax). The square brackets indicate that the range includes the specified version. The parenthesis 
+indicate that the range goes up to, but does not actually include the specified version.</p>
+
+<p><b>Sapphire.version()</b> - Determines the version of Sapphire.</p>
+
+<p>Both Version and VersionConstraint classes can be used as a type of a value property.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">// *** Version ***</font>
+    
+@Type( base = Version.class )
+
+<font color="#888888">ValueProperty PROP_VERSION = new ValueProperty( TYPE, "Version" );
+    
+Value&lt;</font>Version<font color="#888888">> getVersion();
+void setVersion( String value );
+void setVersion(</font> Version <font color="#888888">value );
+    
+// *** VersionConstraint ***</font>
+    
+@Type( base = VersionConstraint.class )
+
+<font color="#888888">ValueProperty PROP_VERSION_CONSTRAINT = new ValueProperty( TYPE, "VersionConstraint" );
+    
+Value&lt;</font>VersionConstraint<font color="#888888">> getVersionConstraint();
+void setVersionConstraint( String value );
+void setVersionConstraint(</font> VersionConstraint <font color="#888888">value );</font></code></pre>
+
+<p>Further, version constraints can be evaluated in an expression via a pair of new functions. The VersionMatches function takes a version
+as the first parameter, a version constraint as a second parameter and returns a boolean. The SapphireVersionMatches function takes a version
+constraint as the sole parameter, evaluates it against Sapphire version and returns a boolean.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, the VersionMatches function is used to control property enablement.</p>
+
+<pre class="source-code"><code><font color="#888888">// *** Provider ***
+    
+@Label( standard = "provider" )</font>
+@Enablement( expr = "${ VersionMatches( Root().Version, '[1.1' ) }" )
+<font color="#888888">@XmlBinding( path = "provider" )
+
+ValueProperty PROP_PROVIDER = new ValueProperty( TYPE, "Provider" );
+
+Value<String> getProvider();
+void setProvider( String value );</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, the VersionMatches function is used in sdef to control visibility of a properties
+view page.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;properties-view>
+    &lt;page>
+        &lt;label>provider&lt;/label></font>
+        &lt;visible-when>${ VersionMatches( Root().Version, '[1.1' ) }&lt;/visible-when>
+        <font color="#888888">&lt;content>
+            &lt;property-editor>Provider&lt;/property-editor>
+            &lt;property-editor>
+                &lt;property>Copyright&lt;/property>
+                &lt;scale-vertically>true&lt;/scale-vertically>
+            &lt;/property-editor>
+        &lt;/content>
+    &lt;/page>
+&lt;/properties-view></font></code></pre>
 
 
 <h2><a name="Miscellaneous-ConvertToFromNamespace">XmlUtil.convertToNamespaceFrom and convertFromNamespaceForm</a></h2>

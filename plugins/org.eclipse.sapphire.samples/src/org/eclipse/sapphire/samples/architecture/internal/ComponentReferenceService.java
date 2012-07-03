@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.samples.architecture.internal;
 
-import org.eclipse.sapphire.samples.architecture.IArchitecture;
-import org.eclipse.sapphire.samples.architecture.IComponent;
+import org.eclipse.sapphire.samples.architecture.Architecture;
+import org.eclipse.sapphire.samples.architecture.Component;
 import org.eclipse.sapphire.services.ReferenceService;
 
 /**
@@ -26,9 +26,9 @@ public final class ComponentReferenceService extends ReferenceService
     {
         if( reference != null )
         {
-            final IArchitecture arch = context( IArchitecture.class );
+            final Architecture arch = context( Architecture.class );
             
-            for( IComponent component : arch.getComponents() )
+            for( Component component : arch.getComponents() )
             {
                 if( reference.equals( component.getName().getText() ) )
                 {

@@ -9,26 +9,23 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests;
+package org.eclipse.sapphire.tests.misc;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.tests.java.JavaTestSuite;
-import org.eclipse.sapphire.tests.misc.TestMisc;
-import org.eclipse.sapphire.tests.modeling.SapphireModelingFrameworkTests;
-import org.eclipse.sapphire.tests.services.ServicesTestSuite;
-import org.eclipse.sapphire.tests.ui.UiTestSuite;
-import org.eclipse.sapphire.tests.workspace.WorkspaceTestSuite;
+import org.eclipse.sapphire.tests.misc.t0001.TestMisc0001;
+import org.eclipse.sapphire.tests.misc.t0002.TestMisc0002;
+import org.eclipse.sapphire.tests.misc.t0003.TestMisc0003;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireTestSuite extends TestCase
+public final class TestMisc extends TestCase
 {
-    private SapphireTestSuite( final String name )
+    private TestMisc( final String name )
     {
         super( name );
     }
@@ -37,14 +34,11 @@ public final class SapphireTestSuite extends TestCase
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "Sapphire" );
-        
-        suite.addTest( TestMisc.suite() );
-        suite.addTest( SapphireModelingFrameworkTests.suite() );
-        suite.addTest( JavaTestSuite.suite() );
-        suite.addTest( UiTestSuite.suite() );
-        suite.addTest( WorkspaceTestSuite.suite() );
-        suite.addTest( ServicesTestSuite.suite() );
+        suite.setName( "TestMisc" );
+
+        suite.addTest( TestMisc0001.suite() );
+        suite.addTest( TestMisc0002.suite() );
+        suite.addTest( TestMisc0003.suite() );
         
         return suite;
     }

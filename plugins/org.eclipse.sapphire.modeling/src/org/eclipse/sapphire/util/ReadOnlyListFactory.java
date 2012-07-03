@@ -94,6 +94,88 @@ public final class ReadOnlyListFactory<E>
         return this;
     }
     
+    public E remove( final int index )
+    {
+        final int size = size();
+        
+        if( index < 0 || index >= size )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        E removed;
+        
+        if( this.list != null )
+        {
+            if( size == 2 )
+            {
+                removed = this.list.get( index );
+                this.firstElement = this.list.get( index == 0 ? 1 : 0 );
+                this.list = null;
+            }
+            else
+            {
+                removed = this.list.remove( index );
+            }
+        }
+        else if( this.firstElement != null )
+        {
+            removed = this.firstElement;
+            this.firstElement = null;
+        }
+        else
+        {
+            throw new IllegalStateException();
+        }
+        
+        return removed;
+    }
+    
+    public E get( final int index )
+    {
+        if( index < 0 || index >= size() )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        E element;
+        
+        if( this.list != null )
+        {
+            element = this.list.get( index );
+        }
+        else if( this.firstElement != null )
+        {
+            element = this.firstElement;
+        }
+        else
+        {
+            throw new IllegalStateException();
+        }
+        
+        return element;
+    }
+
+    public int size()
+    {
+        final int size;
+        
+        if( this.list != null )
+        {
+            size = this.list.size();
+        }
+        else if( this.firstElement != null)
+        {
+            size = 1;
+        }
+        else
+        {
+            size = 0;
+        }
+        
+        return size;
+    }
+    
     public List<E> export()
     {
         if( this.exported )

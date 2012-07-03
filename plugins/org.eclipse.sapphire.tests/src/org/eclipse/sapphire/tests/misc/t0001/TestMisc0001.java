@@ -9,26 +9,27 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests;
+package org.eclipse.sapphire.tests.misc.t0001;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.tests.java.JavaTestSuite;
-import org.eclipse.sapphire.tests.misc.TestMisc;
-import org.eclipse.sapphire.tests.modeling.SapphireModelingFrameworkTests;
-import org.eclipse.sapphire.tests.services.ServicesTestSuite;
-import org.eclipse.sapphire.tests.ui.UiTestSuite;
-import org.eclipse.sapphire.tests.workspace.WorkspaceTestSuite;
+import org.eclipse.sapphire.Sapphire;
+import org.eclipse.sapphire.Version;
+import org.eclipse.sapphire.VersionConstraint;
+import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
+ * Tests Sapphire.version() method.
+ * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireTestSuite extends TestCase
+public final class TestMisc0001 extends SapphireTestCase
 {
-    private SapphireTestSuite( final String name )
+    private static final String EXPECTED_VERSION_CONSTRAINT = "[0.6-0.6.1)";
+
+    private TestMisc0001( final String name )
     {
         super( name );
     }
@@ -37,16 +38,22 @@ public final class SapphireTestSuite extends TestCase
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "Sapphire" );
-        
-        suite.addTest( TestMisc.suite() );
-        suite.addTest( SapphireModelingFrameworkTests.suite() );
-        suite.addTest( JavaTestSuite.suite() );
-        suite.addTest( UiTestSuite.suite() );
-        suite.addTest( WorkspaceTestSuite.suite() );
-        suite.addTest( ServicesTestSuite.suite() );
+        suite.setName( "TestMisc0001" );
+
+        suite.addTest( new TestMisc0001( "testSapphireVersion" ) );
         
         return suite;
     }
     
+    public void testSapphireVersion() throws Exception
+    {
+        final Version version = Sapphire.version();
+        
+        assertNotNull( version );
+        
+        final VersionConstraint constraint = new VersionConstraint( EXPECTED_VERSION_CONSTRAINT );
+        
+        assertTrue( constraint.check( version ) );
+    }
+
 }

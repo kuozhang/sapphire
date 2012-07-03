@@ -26,9 +26,9 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.samples.architecture.ConnectionBendpoint;
-import org.eclipse.sapphire.samples.architecture.IArchitecture;
-import org.eclipse.sapphire.samples.architecture.IComponent;
-import org.eclipse.sapphire.samples.architecture.IComponentDependency;
+import org.eclipse.sapphire.samples.architecture.Architecture;
+import org.eclipse.sapphire.samples.architecture.Component;
+import org.eclipse.sapphire.samples.architecture.ComponentDependency;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionBendPoints;
@@ -51,7 +51,7 @@ import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
 
 public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPersistenceService 
 {
-	private IArchitecture architecture;
+	private Architecture architecture;
 	private SapphireDiagramPartListener diagramPartListener;
 	private Listener componentListener;	
 	private Listener componentDependencyListener;
@@ -63,7 +63,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
     protected void init()
     {
     	super.init();    	
-    	this.architecture = (IArchitecture)context( SapphireDiagramEditorPagePart.class ).getLocalModelElement();
+    	this.architecture = (Architecture)context( SapphireDiagramEditorPagePart.class ).getLocalModelElement();
     	this.nodeBounds = new HashMap<String, DiagramNodeBounds>();
     	this.connectionBendPoints = new HashMap<ConnectionHashKey, DiagramConnectionBendPoints>();
     	this.dirty = false;
@@ -86,7 +86,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	private void read(DiagramNodePart nodePart)
 	{
 		
-		IComponent component = (IComponent)nodePart.getLocalModelElement();
+		Component component = (Component)nodePart.getLocalModelElement();
 		if (!component.disposed())
 		{
 			String nodeId = IdUtil.computeNodeId(nodePart);
@@ -99,7 +99,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	
 	private void write(DiagramNodePart nodePart) 
 	{
-		IComponent component = (IComponent)nodePart.getLocalModelElement();
+		Component component = (Component)nodePart.getLocalModelElement();
 		if (!component.disposed())
 		{
 			if (isNodeLayoutChanged(nodePart))
@@ -124,7 +124,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	
 	private void write(DiagramConnectionPart connPart) 
 	{
-		IComponentDependency dependency = (IComponentDependency)connPart.getLocalModelElement();
+		ComponentDependency dependency = (ComponentDependency)connPart.getLocalModelElement();
 		if (!dependency.disposed())
 		{
 			if (isConnectionLayoutChanged(connPart))
@@ -160,8 +160,8 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	    context( SapphireDiagramEditorPagePart.class ).setGridVisible(this.architecture.isShowGrid().getContent());
 	    context( SapphireDiagramEditorPagePart.class ).setShowGuides(this.architecture.isShowGuides().getContent());
 		
-		ModelElementList<IComponent> components = this.architecture.getComponents();
-		for (IComponent component : components)
+		ModelElementList<Component> components = this.architecture.getComponents();
+		for (Component component : components)
 		{
 			DiagramNodePart nodePart = context( SapphireDiagramEditorPagePart.class ).getDiagramNodePart(component);
 			if (nodePart != null)
@@ -173,8 +173,8 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 				nodePart.setNodeBounds(bounds);					
 				
 				// load the embedded connection layout
-				ModelElementList<IComponentDependency> dependencies = component.getDependencies();
-				for (IComponentDependency dependency : dependencies)
+				ModelElementList<ComponentDependency> dependencies = component.getDependencies();
+				for (ComponentDependency dependency : dependencies)
 				{
 					DiagramConnectionPart connPart = context( SapphireDiagramEditorPagePart.class ).getDiagramConnectionPart(dependency);
 					if (connPart != null)
@@ -195,7 +195,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		}		
 	}
 	
-	private void handleNodeLayoutChange(IComponent component)
+	private void handleNodeLayoutChange(Component component)
 	{
 		DiagramNodePart nodePart = context( SapphireDiagramEditorPagePart.class ).getDiagramNodePart(component);
 		DiagramNodeBounds nodeBounds = new DiagramNodeBounds(component.getPosition().getX().getContent(),
@@ -203,7 +203,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		nodePart.setNodeBounds(nodeBounds);
 	}
 	
-	private void handleConnectionBendpointChange(IComponentDependency componentDependency)
+	private void handleConnectionBendpointChange(ComponentDependency componentDependency)
 	{
 		DiagramConnectionPart connPart = context( SapphireDiagramEditorPagePart.class ).getDiagramConnectionPart(componentDependency);
 		if (connPart != null)
@@ -353,7 +353,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		    {
 		    	if (event != null && event.element() != null)
 		    	{
-		    		IComponent component = event.element().nearest(IComponent.class);
+		    		Component component = event.element().nearest(Component.class);
 		    		if (component != null)
 		    		{
 		    			handleNodeLayoutChange(component);
@@ -369,7 +369,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 			{
 				if (event != null && event.element() != null)
 				{
-					IComponentDependency componentDependency = event.element().nearest(IComponentDependency.class);
+					ComponentDependency componentDependency = event.element().nearest(ComponentDependency.class);
 					if (componentDependency != null)
 					{
 						handleConnectionBendpointChange(componentDependency);
@@ -383,7 +383,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		
 	}
 	
-	private void writeComponentBounds(IComponent component, DiagramNodePart node)
+	private void writeComponentBounds(Component component, DiagramNodePart node)
 	{
 		Bounds bounds = node.getNodeBounds();
 		if (bounds.getX() != component.getPosition().getX().getContent())
@@ -396,7 +396,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		}
 	}
 	
-	private void writeDependencyBendPoints(IComponentDependency dependency, DiagramConnectionPart connPart)
+	private void writeDependencyBendPoints(ComponentDependency dependency, DiagramConnectionPart connPart)
 	{
 	    final ModelElementList<ConnectionBendpoint> bpInModelList = dependency.getConnectionBendpoints();
 	    final int bpInModelSize = bpInModelList.size();
@@ -450,7 +450,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		
 		for (DiagramNodePart nodePart : context( SapphireDiagramEditorPagePart.class ).getNodes())
 		{
-			IComponent component = (IComponent)nodePart.getLocalModelElement();
+			Component component = (Component)nodePart.getLocalModelElement();
 			if (!component.disposed())
 			{
 				writeComponentBounds(component, nodePart);
@@ -459,7 +459,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		
 		for (DiagramConnectionPart connPart : context( SapphireDiagramEditorPagePart.class ).getConnections())
 		{
-			IComponentDependency dependency = (IComponentDependency)connPart.getLocalModelElement();
+			ComponentDependency dependency = (ComponentDependency)connPart.getLocalModelElement();
 			if (!dependency.disposed())
 			{
 				writeDependencyBendPoints(dependency, connPart);

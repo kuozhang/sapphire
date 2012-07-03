@@ -225,28 +225,28 @@ public abstract class FunctionResult
         {
             if( obj instanceof String )
             {
-                return (X) obj;
+                return type.cast( obj );
             }
             else if( obj == null )
             {
-                return (X) "";
+                return type.cast( "" );
             }
             else if( obj instanceof Enum )
             {
-                return (X) ( (Enum) obj ).name();
+                return type.cast( ( (Enum<?>) obj ).name() );
             }
             else if( obj instanceof Value )
             {
-                String res = ( (Value) obj ).getText();
+                String res = ( (Value<?>) obj ).getText();
                 res = ( res == null ? "" : res );
-                return (X) res;
+                return type.cast( res );
             }
             else if( obj instanceof List || obj instanceof Set )
             {
                 final StringBuilder res = new StringBuilder();
                 boolean first = true;
                 
-                for( Object entry : ( (Collection) obj ) )
+                for( Object entry : ( (Collection<?>) obj ) )
                 {
                     if( first )
                     {
@@ -265,7 +265,7 @@ public abstract class FunctionResult
                     }
                 }
                 
-                return (X) res.toString();
+                return type.cast( res.toString() );
             }
             else if( obj.getClass().isArray() )
             {
@@ -286,11 +286,11 @@ public abstract class FunctionResult
                     }
                 }
                 
-                return (X) res.toString();
+                return type.cast( res.toString() );
             }
             else
             {
-                return (X) obj.toString();
+                return type.cast( obj.toString() );
             }
         }
         else if( Number.class.isAssignableFrom( type ) )
@@ -315,7 +315,7 @@ public abstract class FunctionResult
             
             if( obj.getClass() == type )
             {
-                return (X) obj;
+                return type.cast( obj );
             }
             else if( obj instanceof Number )
             {
@@ -323,82 +323,82 @@ public abstract class FunctionResult
                 {
                     if( obj instanceof BigDecimal )
                     {
-                        return (X) ( (BigDecimal) obj ).toBigInteger();
+                        return type.cast( ( (BigDecimal) obj ).toBigInteger() );
                     }
                     else
                     {
-                        return (X) BigInteger.valueOf( ( (Number) obj ).longValue() );
+                        return type.cast( BigInteger.valueOf( ( (Number) obj ).longValue() ) );
                     }
                 }
                 else if( type == BigDecimal.class )
                 {
                     if( obj instanceof BigInteger )
                     {
-                        return (X) new BigDecimal( (BigInteger) obj );
+                        return type.cast( new BigDecimal( (BigInteger) obj ) );
                     }
                     else
                     {
-                        return (X) new BigDecimal( ( (Number) obj ).doubleValue() );
+                        return type.cast( new BigDecimal( ( (Number) obj ).doubleValue() ) );
                     }
                 }
                 else if( type == Byte.class )
                 {
-                    return (X) new Byte( ( (Number) obj ).byteValue() );
+                    return type.cast( new Byte( ( (Number) obj ).byteValue() ) );
                 }
                 else if( type == Short.class )
                 {
-                    return (X) new Short( ( (Number) obj ).shortValue() );
+                    return type.cast( new Short( ( (Number) obj ).shortValue() ) );
                 }
                 else if( type == Integer.class )
                 {
-                    return (X) new Integer( ( (Number) obj ).intValue() );
+                    return type.cast( new Integer( ( (Number) obj ).intValue() ) );
                 }
                 else if( type == Long.class )
                 {
-                    return (X) new Long( ( (Number) obj ).longValue() );
+                    return type.cast( new Long( ( (Number) obj ).longValue() ) );
                 }
                 else if( type == Float.class )
                 {
-                    return (X) new Float( ( (Number) obj ).floatValue() );
+                    return type.cast( new Float( ( (Number) obj ).floatValue() ) );
                 }
                 else if( type == Double.class )
                 {
-                    return (X) new Double( ( (Number) obj ).doubleValue() );
+                    return type.cast( new Double( ( (Number) obj ).doubleValue() ) );
                 }
             }
             else if( obj instanceof String )
             {
                 if( type == BigDecimal.class )
                 {
-                    return (X) new BigDecimal( (String) obj );
+                    return type.cast( new BigDecimal( (String) obj ) );
                 }
                 else if( type == BigInteger.class )
                 {
-                    return (X) new BigInteger( (String) obj );
+                    return type.cast( new BigInteger( (String) obj ) );
                 }
                 else if( type == Byte.class )
                 {
-                    return (X) Byte.valueOf( (String) obj );
+                    return type.cast( Byte.valueOf( (String) obj ) );
                 }
                 else if( type == Short.class )
                 {
-                    return (X) Short.valueOf( (String) obj );
+                    return type.cast( Short.valueOf( (String) obj ) );
                 }
                 else if( type == Integer.class )
                 {
-                    return (X) Integer.valueOf( (String) obj );
+                    return type.cast( Integer.valueOf( (String) obj ) );
                 }
                 else if( type == Long.class )
                 {
-                    return (X) Long.valueOf( (String) obj );
+                    return type.cast( Long.valueOf( (String) obj ) );
                 }
                 else if( type == Float.class )
                 {
-                    return (X) Float.valueOf( (String) obj );
+                    return type.cast( Float.valueOf( (String) obj ) );
                 }
                 else if( type == Double.class )
                 {
-                    return (X) Double.valueOf( (String) obj );
+                    return type.cast( Double.valueOf( (String) obj ) );
                 }
             }
 
@@ -413,11 +413,11 @@ public abstract class FunctionResult
             
             if( obj == null || ( obj instanceof String && ( (String) obj ).length() == 0 ) )
             {
-                return (X) (Character) (char) 0;
+                return type.cast( (char) 0 );
             }
             else if( obj instanceof Character )
             {
-                return (X) obj;
+                return type.cast( obj );
             }
             else if( obj instanceof Boolean )
             {
@@ -425,11 +425,11 @@ public abstract class FunctionResult
             }
             else if( obj instanceof Number )
             {
-                return (X) (Character) (char) (short) cast( obj, Short.class );
+                return type.cast( (char) (short) cast( obj, Short.class ) );
             }
             else if( obj instanceof String )
             {
-                return (X) (Character) ( (String) obj ).charAt( 0 );
+                return type.cast( ( (String) obj ).charAt( 0 ) );
             }
 
             throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
@@ -443,15 +443,15 @@ public abstract class FunctionResult
             
             if( obj == null || ( obj instanceof String && ( (String) obj ).length() == 0 ) )
             {
-                return (X) Boolean.FALSE;
+                return type.cast( Boolean.FALSE );
             }
             else if( obj instanceof Boolean )
             {
-                return (X) obj;
+                return type.cast( obj );
             }
             else if( obj instanceof String )
             {
-                return (X) Boolean.valueOf( (String) obj );
+                return type.cast( Boolean.valueOf( (String) obj ) );
             }
 
             throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
@@ -469,7 +469,7 @@ public abstract class FunctionResult
             }
             else if( type.isInstance( obj ) )
             {
-                return (X) obj;
+                return type.cast( obj );
             }
             else if( obj instanceof String )
             {
@@ -481,7 +481,7 @@ public abstract class FunctionResult
                 }
                 else
                 {
-                    return (X) Enum.valueOf( (Class<Enum>) type, str );
+                    return type.cast( Enum.valueOf( (Class<Enum>) type, str ) );
                 }
             }
 
@@ -500,11 +500,11 @@ public abstract class FunctionResult
             }
             else if( obj instanceof List )
             {
-                return (X) obj;
+                return type.cast( obj );
             }
             else if( obj instanceof Collection )
             {
-                return (X) new ArrayList<Object>( (Collection<?>) obj );
+                return type.cast( new ArrayList<Object>( (Collection<?>) obj ) );
             }
             else if( obj.getClass().isArray() )
             {
@@ -515,7 +515,7 @@ public abstract class FunctionResult
                     list.add( Array.get( obj, i ) );
                 }
                 
-                return (X) list;
+                return type.cast( list );
             }
             else if( obj instanceof String )
             {
@@ -523,16 +523,16 @@ public abstract class FunctionResult
                 
                 if( str.length() == 0 )
                 {
-                    return (X) Collections.emptyList();
+                    return type.cast( Collections.emptyList() );
                 }
                 else
                 {
-                    return (X) Arrays.asList( ( (String) obj ).split( "\\," ) );
+                    return type.cast( Arrays.asList( ( (String) obj ).split( "\\," ) ) );
                 }
             }
             else
             {
-                return (X) Collections.singletonList( obj );
+                return type.cast( Collections.singletonList( obj ) );
             }
         }
         else
@@ -548,7 +548,7 @@ public abstract class FunctionResult
             }
             else if( type.isInstance( obj ) )
             {
-                return (X) obj;
+                return type.cast( obj );
             }
             else if( obj instanceof String && ( (String) obj ).length() == 0 )
             {
@@ -560,7 +560,12 @@ public abstract class FunctionResult
                 {
                     if( cast.applicable( this.context, this.function, obj, type ) )
                     {
-                        return (X) cast.evaluate( this.context, this.function, obj, type );
+                        final X result = type.cast( cast.evaluate( this.context, this.function, obj, type ) );
+                        
+                        if( result != null )
+                        {
+                            return result;
+                        }
                     }
                 }
             }

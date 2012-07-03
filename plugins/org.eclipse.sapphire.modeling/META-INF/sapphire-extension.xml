@@ -445,6 +445,18 @@
         <description>Determines if an object is of specified type. The object to be checked is the first operand and the type is the second operand. The type must be a fully-qualified Java class name.</description>
     </function>
     <service>
+        <id>Sapphire.ValueSerializationService.Version</id>
+        <type>org.eclipse.sapphire.services.ValueSerializationService</type>
+        <context>Sapphire.Property.Instance</context>
+        <factory>org.eclipse.sapphire.services.internal.VersionSerializationService$Factory</factory>
+    </service>
+    <service>
+        <id>Sapphire.ValueSerializationService.VersionConstraint</id>
+        <type>org.eclipse.sapphire.services.ValueSerializationService</type>
+        <context>Sapphire.Property.Instance</context>
+        <factory>org.eclipse.sapphire.services.internal.VersionConstraintSerializationService$Factory</factory>
+    </service>
+    <service>
         <id>Sapphire.PossibleTypesService.Standard</id>
         <type>org.eclipse.sapphire.services.PossibleTypesService</type>
         <context>Sapphire.Property.MetaModel</context>
@@ -489,4 +501,24 @@
         <impl>org.eclipse.sapphire.modeling.el.MaxFunction</impl>
         <description>Finds the largest number in a collection. Typically, this function takes the collection as the sole parameter. However, when the collection is a model element list, a second parameter may be necessary to specify the name (in the form of a string) of the list entry's value property to use in aggregation. If the the collection is a model element list and the second parameter is not specified, this function will use list entry's first value property for aggregation.</description>
     </function>
+    <function>
+        <name>VersionMatches</name>
+        <impl>org.eclipse.sapphire.modeling.el.VersionMatchesFunction</impl>
+        <description>Determines whether a version matches a version constraint. A version constraint is a comma-separated list of specific versions, closed ranges (expressed using &quot;[1.2.3-4.5)&quot; syntax and open ranges (expressed using &quot;[1.2.3&quot; or &quot;4.5)&quot; syntax). The square brackets indicate that the range includes the specified version. The parenthesis indicate that the range goes up to, but does not actually include the specified version.</description>
+    </function>
+    <function>
+        <name>SapphireVersionMatches</name>
+        <impl>org.eclipse.sapphire.modeling.el.SapphireVersionMatchesFunction</impl>
+        <description>Determines whether Sapphire version matches a version constraint. A version constraint is a comma-separated list of specific versions, closed ranges (expressed using &quot;[1.2.3-4.5)&quot; syntax and open ranges (expressed using &quot;[1.2.3&quot; or &quot;4.5)&quot; syntax). The square brackets indicate that the range includes the specified version. The parenthesis indicate that the range goes up to, but does not actually include the specified version.</description>
+    </function>
+    <type-cast>
+        <source>java.lang.String</source>
+        <target>org.eclipse.sapphire.Version</target>
+        <impl>org.eclipse.sapphire.modeling.el.internal.StringToVersionTypeCast</impl>
+    </type-cast>
+    <type-cast>
+        <source>java.lang.String</source>
+        <target>org.eclipse.sapphire.VersionConstraint</target>
+        <impl>org.eclipse.sapphire.modeling.el.internal.StringToVersionConstraintTypeCast</impl>
+    </type-cast>
 </extension>
