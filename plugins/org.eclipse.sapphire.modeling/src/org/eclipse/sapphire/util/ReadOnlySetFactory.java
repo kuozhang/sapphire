@@ -94,6 +94,65 @@ public final class ReadOnlySetFactory<E>
         return this;
     }
     
+    public boolean remove( final E element )
+    {
+        boolean removed = false;
+        
+        if( this.set != null )
+        {
+            removed = this.set.remove( element );
+            
+            if( this.set.size() == 1 )
+            {
+                this.firstElement = this.set.iterator().next();
+                this.set = null;
+            }
+        }
+        else if( this.firstElement != null && this.firstElement.equals( element ) )
+        {
+            removed = true;
+            this.firstElement = null;
+        }
+        
+        return removed;
+    }
+    
+    public boolean contains( final E element )
+    {
+        boolean contains = false;
+        
+        if( this.set != null )
+        {
+            contains = this.set.contains( element );
+        }
+        else if( this.firstElement != null && this.firstElement.equals( element ) )
+        {
+            contains = true;
+        }
+        
+        return contains;
+    }
+
+    public int size()
+    {
+        final int size;
+        
+        if( this.set != null )
+        {
+            size = this.set.size();
+        }
+        else if( this.firstElement != null)
+        {
+            size = 1;
+        }
+        else
+        {
+            size = 0;
+        }
+        
+        return size;
+    }
+
     public Set<E> export()
     {
         if( this.exported )

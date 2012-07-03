@@ -83,6 +83,105 @@ public final class ReadOnlyMapFactory<K,V>
         return this;
     }
     
+    public V remove( final K key )
+    {
+        V removed = null;
+        
+        if( this.map != null )
+        {
+            removed = this.map.remove( key );
+            
+            if( this.map.size() == 1 )
+            {
+                final Map.Entry<K,V> entry = this.map.entrySet().iterator().next();
+                this.firstKey = entry.getKey();
+                this.firstValue = entry.getValue();
+                this.map = null;
+            }
+        }
+        else if( this.firstKey != null && this.firstKey.equals( key ) )
+        {
+            removed = this.firstValue;
+            this.firstKey = null;
+            this.firstValue = null;
+        }
+        
+        return removed;
+    }
+    
+    public V get( final K key )
+    {
+        V value = null;
+        
+        if( this.map != null )
+        {
+            value = this.map.get( key );
+        }
+        else if( this.firstKey != null && this.firstKey.equals( key ) )
+        {
+            value = this.firstValue;
+        }
+        
+        return value;
+    }
+    
+    public boolean contains( final K key )
+    {
+        return containsKey( key );
+    }
+    
+    public boolean containsKey( final K key )
+    {
+        boolean contains = false;
+        
+        if( this.map != null )
+        {
+            contains = this.map.containsKey( key );
+        }
+        else if( this.firstKey != null && this.firstKey.equals( key ) )
+        {
+            contains = true;
+        }
+        
+        return contains;
+    }
+    
+    public boolean containsValue( final V value )
+    {
+        boolean contains = false;
+        
+        if( this.map != null )
+        {
+            contains = this.map.containsValue( value );
+        }
+        else if( this.firstValue != null && this.firstValue.equals( value ) )
+        {
+            contains = true;
+        }
+        
+        return contains;
+    }
+
+    public int size()
+    {
+        final int size;
+        
+        if( this.map != null )
+        {
+            size = this.map.size();
+        }
+        else if( this.firstKey != null)
+        {
+            size = 1;
+        }
+        else
+        {
+            size = 0;
+        }
+        
+        return size;
+    }
+    
     public Map<K,V> export()
     {
         if( this.exported )

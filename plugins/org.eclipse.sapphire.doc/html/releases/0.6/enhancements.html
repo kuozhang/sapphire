@@ -25,6 +25,7 @@
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
     <li><a href="#Miscellaneous-ConvertToFromNamespace">XmlUtil.convertToNamespaceFrom and convertFromNamespaceForm</a></li>
+    <li><a href="#Miscellaneous-ReadOnlyCollectionFactoriesEnhancements">Enhancements to Read-Only Collection Factories</a></li>
   </ol>
 </ol>
 
@@ -115,6 +116,36 @@ view page.</p>
 <pre class="source-code"><code>public static void convertToNamespaceForm( Document document, String namespace )
 public static void convertToNamespaceForm( Document document, String namespace, String schemaLocation )
 public static void convertFromNamespaceForm( Document document )</code></pre>
+
+
+<h2><a name="Miscellaneous-ReadOnlyCollectionFactoriesEnhancements">Enhancements to Read-Only Collection Factories</a></h2>
+
+<p>The read-only collection factories have been enhanced with new methods to support broader range of use cases.</p>
+
+<pre class="source-code"><code><font color="#888888">ReadOnlyListFactory
+{</font>
+    E remove( int index )
+    E get( int index )
+    boolean contains( E element )
+    int size()
+<font color="#888888">}
+
+ReadOnlySetFactory
+{</font>
+    boolean remove( E element )
+    boolean contains( E element )
+    int size()
+<font color="#888888">}
+
+ReadOnlyMapFactory
+{</font>
+    V remove( K key )
+    V get( K key )
+    boolean contains( K key )
+    boolean containsKey( K key )
+    boolean containsValue( V value )
+    int size()
+<font color="#888888">}</font></code></pre>
 
 
 <div class="copyright">Copyright (c) 2012 Oracle and Liferay<br/>

@@ -155,6 +155,22 @@ public final class ReadOnlyListFactory<E>
         
         return element;
     }
+    
+    public boolean contains( final E element )
+    {
+        boolean contains = false;
+        
+        if( this.list != null )
+        {
+            contains = this.list.contains( element );
+        }
+        else if( this.firstElement != null && this.firstElement.equals( element ) )
+        {
+            contains = true;
+        }
+        
+        return contains;
+    }
 
     public int size()
     {
